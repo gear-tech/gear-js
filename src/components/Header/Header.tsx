@@ -1,11 +1,12 @@
 import React from 'react';
 
 import './Header.scss';
+import logo from '../../images/logo.svg'
 
 const Header = () =>{
     return (
         <div className='header'>
-            <picture className='header__logo'/>
+            <img alt='logo gear' className='header__logo' src={logo}/>
             <nav className='header__nav'>
                 <button className='header__nav-button'>What is GEAR?</button>
                 <button className='header__nav-button'>How it works</button>
