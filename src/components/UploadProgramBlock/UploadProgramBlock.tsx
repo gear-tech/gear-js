@@ -2,15 +2,26 @@ import React from 'react';
 import ProgramSwitch from '../ProgramSwitch';
 import UploadProgram from '../UploadProgram';
 import BlocksList from '../BlocksList';
+import BlocksListUploaded from '../BlocksList/BlocksListUploaded';
 
 import './UploadProgramBlock.scss';
 
-const UploadProgramBlock = () => {
+type UploadProgramBlock = {
+  showUploaded: boolean;
+};
+
+const UploadProgramBlock = ({ showUploaded }: UploadProgramBlock) => {
   return (
     <div>
       <ProgramSwitch/>
-      <UploadProgram/>
-      <BlocksList/>
+      {
+        !showUploaded &&
+        <>
+          < UploadProgram/>
+          < BlocksList/>
+        </>
+      }
+      {showUploaded && <BlocksListUploaded/> }
     </div>
   );
 };

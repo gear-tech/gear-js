@@ -7,6 +7,7 @@ import Footer from '../Footer';
 import SignIn from '../SignIn';
 import UploadProgramBlock from '../UploadProgramBlock';
 import Header from '../Header';
+import Error from '../Error';
 
 function App() {
   return (
@@ -16,7 +17,13 @@ function App() {
         <main className="main">
           <Route path='/sign-in' component={SignIn} exact/>
           <Route path='/upload-program' component={UploadProgramBlock} exact/>
+          <Route path='/uploaded-programs'
+                 render={() => {
+                   return <UploadProgramBlock showUploaded />;
+                 }}
+                 exact/>
         </main>
+        <Error/>
         <Footer/>
       </div>
     </BrowserRouter>
