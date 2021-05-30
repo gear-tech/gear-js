@@ -1,0 +1,50 @@
+@import '../../assets/scss/variables';
+
+.block-list {
+  padding-bottom: 4px;
+
+  &__header {
+    color: $textColorSecondary;
+    font-size: $fontSizeLarge;
+    font-weight: 600;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+  }
+
+  &__button {
+    background-color: $bkgButtonColor;
+    border: none;
+    border-radius: $borderRadiusBase;
+    color: $textColor;
+    cursor: pointer;
+    padding: 8px 18px 9px;
+  }
+}
+
+.programs-list {
+
+  &__item {
+    padding-bottom: 23px;
+
+    &::before {
+      border-top: 1px solid $separateLineColor;
+      content: "";
+      display: block;
+      margin-bottom: 23px;
+      opacity: 0.6;
+      width: 100%;
+    }
+  }
+
+  &__number {
+    color: $textColorSecondary;
+    font-size: $fontSizeLarge;
+    font-weight: 600;
+    padding-right: 24px;
+  }
+
+  &__hash {
+    color: $textColor;
+    font-size: $fontSizeBase;
+  }
+}
