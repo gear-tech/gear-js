@@ -1,8 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+@import './fonts/fonts.scss';
+
+html {
+    box-sizing: border-box;
+}
 
 * {
-    font-family: Prompt;
-    background: #282828;
+    font-family: Prompt, sans-serif;
     margin: 0;
     box-sizing: border-box;
+}
+
+body {
+    background: #282828;
+    font-size: 14px;
+}
+
+ul {
+    list-style: none;
+}
+
+ul, p {
+    margin: 0;
+    padding: 0;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
 }
