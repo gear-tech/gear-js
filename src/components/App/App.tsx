@@ -1,5 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Route} from 'react-router-dom';
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import './App.scss';
 
@@ -10,16 +12,23 @@ import Header from '../Header';
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app"> 
-        <Header/>
-        <main className="main">
-          <Route path='/sign-in' component={SignIn} exact/>
-          <Route path='/upload-program' component={UploadProgramBlock} exact/>
-        </main>
-        <Footer/>
-      </div>
-    </BrowserRouter>
+    <DndProvider backend={HTML5Backend}>
+      <BrowserRouter>
+        <div className="app">
+          <Header/>
+          <main className="main">
+            <Route path='/sign-in' component={SignIn} exact/>
+            <Route path='/upload-program' component={UploadProgramBlock} exact/>
+            <Route path='/uploaded-programs'
+                   render={() => {
+                     return <UploadProgramBlock showUploaded/>;
+                   }}
+                   exact/>
+          </main>
+          <Footer/>
+        </div>
+      </BrowserRouter>
+    </DndProvider>
   );
 }
 

@@ -24,14 +24,19 @@
 .programs-list {
 
   &__item {
-    padding-bottom: 23px;
+    align-items: center;
+    display: flex;
+    gap: 24px;
+    padding: 23px 0;
+    position: relative;
 
     &::before {
       border-top: 1px solid $separateLineColor;
       content: "";
       display: block;
-      margin-bottom: 23px;
       opacity: 0.6;
+      position: absolute;
+      top: 0;
       width: 100%;
     }
   }
@@ -40,11 +45,29 @@
     color: $textColorSecondary;
     font-size: $fontSizeLarge;
     font-weight: 600;
-    padding-right: 24px;
   }
 
-  &__hash {
+  &__name {
     color: $textColor;
+    flex-grow: 1;
     font-size: $fontSizeBase;
+  }
+
+  &__info {
+    color: $textColorSecondary;
+  }
+
+  &__info-data {
+    color: $textColor;
+    display: inline-block;
+    min-width: 56px;
+    padding-left: 16px;
+  }
+
+  &__refresh-btn {
+    background: url("../../images/refresh.svg") no-repeat;
+    height: 20px;
+    margin-left: 20px;
+    width: 20px;
   }
 }

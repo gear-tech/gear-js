@@ -15,7 +15,10 @@ function SignIn(){
           <button type='button' className='sign-in__button sign-in__button-github'>
             <img className='sign-in__telegram-logo' alt='github' src={github}/>Continue with Github
             </button>
-          <button type='button' className='sign-in__terms-privacy'>Terms Privacy</button>
+          <div className="sign-in__terms-privacy">
+            <button type='button' className='sign-in__terms-privacy-buttons'>Terms</button>
+            <button type='button' className='sign-in__terms-privacy-buttons'>Privacy</button>
+          </div>
         </div>
       </div>
     );
