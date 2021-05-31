@@ -6,14 +6,14 @@ import BlocksListUploaded from '../BlocksList/BlocksListUploaded';
 
 import './UploadProgramBlock.scss';
 
-type UploadProgramBlock = {
+type UploadProgramBlockType = {
   showUploaded: boolean;
 };
 
-const UploadProgramBlock = ({ showUploaded }: UploadProgramBlock) => {
+const UploadProgramBlock = ({ showUploaded }: UploadProgramBlockType) => {
   return (
     <div>
-      <ProgramSwitch/>
+      <ProgramSwitch showUploaded={showUploaded}/>
       {
         !showUploaded &&
         <>
