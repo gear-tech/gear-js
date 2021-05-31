@@ -1,13 +1,20 @@
 import React from 'react';
+import classNames from 'classnames';
+import {Link} from 'react-router-dom';
 
 import './ProgramSwitch.scss';
 
-const ProgramSwitch = () => {
+type ProgramSwitchType = {
+  showUploaded: boolean;
+}
+
+const ProgramSwitch = ({showUploaded}: ProgramSwitchType) => {
+  console.log(showUploaded);
   return (
     <div className="switch-block">
       <div className="switch-buttons">
-        <button className="switch-buttons__item switch-buttons__item--active" type="button">Upload program</button>
-        <button className="switch-buttons__item" type="button">Recent uploaded programs</button>
+        <Link to="/upload-program" className={classNames("switch-buttons__item", {"switch-buttons__item--active": !showUploaded})} >Upload program</Link>
+        <Link to="/uploaded-programs" className={classNames("switch-buttons__item", {"switch-buttons__item--active": showUploaded})} >Recent uploaded programs</Link>
       </div>
       <div className="switch-block__info switch-info">
         <div className="switch-info__col">
