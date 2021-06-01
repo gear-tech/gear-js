@@ -10,6 +10,10 @@
   justify-content: center;
   margin-bottom: 54px;
 
+  &__input-file {
+    display: none;
+  }
+
   &__no-file-hover {
     align-items: center;
     display: flex;

@@ -18,10 +18,19 @@
     color: $textColor;
     cursor: pointer;
     padding: 8px 18px 9px;
+
+    &--hidden {
+      display: none;
+    }
   }
 }
 
 .programs-list {
+
+  &--short-list {
+    height: 234px;
+    overflow: hidden;
+  }
 
   &__item {
     align-items: center;
