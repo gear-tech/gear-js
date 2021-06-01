@@ -15,8 +15,10 @@
   &__item {
     border-radius: 40px;
     color: $textColorSecondary;
+    display: inline-block;
     font-size: $fontSizeSmall;
     padding: 12px 18px;
+    text-decoration: none;
 
     &--active {
       background-color: $bkgActiveButtonColor;
