@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 import './Header.scss';
 import logo from '../../images/logo.svg'
@@ -15,7 +16,9 @@ const Header = () =>{
                 <button className='header__nav-button'>Team</button>
                 <button className='header__nav-button'>Tokenomics</button>
                 <button className='header__nav-button'>Timeline</button>
-                <button className='header__nav-button'>Contact us</button>
+                <Link to='/sign-in'>
+                    <button className='header__nav-button'>Contact us</button>
+                </Link>
             </nav>
         </header>
     )
