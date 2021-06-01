@@ -1,0 +1,14 @@
+@import '../../assets/scss/variables';
+
+.main {
+  flex-grow: 1;
+  margin: $desktopSidesMargin;
+  margin-bottom: 50px;
+}
+
+.app{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+}
