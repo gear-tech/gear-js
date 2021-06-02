@@ -7,17 +7,21 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'gear_user',
-    password: 'gear_pwd',
-    database: 'gear',
-    autoLoadEntities: true,
-    synchronize: true,
-  }), UsersModule,],
+  imports: [
+    AuthModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'gear_user',
+      password: 'gear_pwd',
+      database: 'gear',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+    UsersModule,
+  ],
   controllers: [AppController, AuthController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
