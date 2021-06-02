@@ -1,0 +1,10 @@
+@import '../../assets/scss/variables';
+
+.main {
+    background: $backgroundColor;
+    flex-grow: 1;
+    padding-bottom: 50px;
+    &--light-colored {
+      background: $mainBackground;
+    }
+  }

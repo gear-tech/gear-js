@@ -12,7 +12,7 @@ type UploadProgramBlockType = {
 
 const UploadProgramBlock = ({ showUploaded }: UploadProgramBlockType) => {
   return (
-    <div>
+    <div className="main-content-wrapper">
       <ProgramSwitch showUploaded={showUploaded}/>
       {
         !showUploaded &&

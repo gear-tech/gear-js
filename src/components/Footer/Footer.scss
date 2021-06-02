@@ -1,10 +1,15 @@
 @import '../../assets/scss/variables';
 
 .footer {
-  margin: $desktopSidesMargin;
+  background: $backgroundColor;
+  padding: $desktopSidesMargin;
   padding-bottom: 33px;
   text-align: center;
 
+  &--light-colored {
+    background: $mainBackground;
+  }
+  
   &::before {
     border-top: 1px solid $separateLineColor;
     content: "";
