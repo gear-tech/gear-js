@@ -1,7 +1,9 @@
+@import '../../assets/scss/variables';
+
 .header{
     display:flex;
     align-items: center;
-    margin-top: 22px;
+    margin: 22px 0;
     padding: 0 40px;
     color: white;
     justify-content: space-between;
@@ -27,5 +29,33 @@
     }
     &__nav-button:active, &__nav-button:focus, &__nav-button:hover{
         background: #3D3D3D;
+    }
+}
+
+.user-block {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    
+    &__name {
+        color: $textColorSecondary;
+        padding-left: 30px;
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            background: url(../../images/github_gray.svg) no-repeat;
+            height: 22px;
+            width: 23px;
+            left: 0;
+        }
+    }
+
+    &__logout {
+        background: url(../../images/logout.svg) no-repeat;
+        height: 18px;
+        width: 20px;
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route} from 'react-router-dom';
+import {BrowserRouter, Route, useLocation} from 'react-router-dom';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 
@@ -9,6 +9,7 @@ import Footer from '../Footer';
 import SignIn from '../SignIn';
 import UploadProgramBlock from '../UploadProgramBlock';
 import Header from '../Header';
+import Main from '../Main';
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
       <BrowserRouter>
         <div className="app">
           <Header/>
-          <main className="main">
+          <Main>
+            <Route path='/' component={SignIn} exact/>
             <Route path='/sign-in' component={SignIn} exact/>
             <Route path='/upload-program' component={UploadProgramBlock} exact/>
             <Route path='/uploaded-programs'
@@ -24,7 +26,7 @@ function App() {
                      return <UploadProgramBlock showUploaded/>;
                    }}
                    exact/>
-          </main>
+          </Main>
           <Footer/>
         </div>
       </BrowserRouter>
