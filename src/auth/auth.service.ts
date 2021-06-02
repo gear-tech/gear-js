@@ -1,9 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { Injectable } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
 import { createHash, createHmac } from 'crypto';
-import { TelegramConstants } from './constants/telegram.constantc';
+import { TelegramConstants } from './constants/telegram.constants';
 import { JwtService } from '@nestjs/jwt';
-
 @Injectable()
 export class AuthService {
   constructor(
