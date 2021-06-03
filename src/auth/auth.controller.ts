@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Query, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -8,5 +8,11 @@ export class AuthController {
   @Post('login/telegram')
   async loginTelegram(@Body() body) {
     return this.authService.loginTelegram(body);
+  }
+
+  @Get('login/github')
+  async loginGithub(@Query() queryParams) {
+    const code = queryParams.code;
+    return this.authService.loginGithub(code);
   }
 }

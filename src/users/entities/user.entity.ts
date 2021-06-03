@@ -8,11 +8,14 @@ export class User {
   @Column({ nullable: true, unique: true })
   telegramId: string;
 
-  @Column({ nullable: true })
-  firstName: string;
+  @Column({ nullable: true, unique: true })
+  githubId: string;
+
+  @Column({ nullable: true, unique: true })
+  email: string;
 
   @Column({ nullable: true })
-  lastName: string;
+  name: string;
 
   @Column({ nullable: true })
   username: string;
@@ -25,4 +28,7 @@ export class User {
 
   @Column({ nullable: true })
   authKey: string;
+
+  @Column({ nullable: true })
+  accessToken: string;
 }
