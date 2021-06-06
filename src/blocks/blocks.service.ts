@@ -27,4 +27,11 @@ export class BlocksService {
       })),
     );
   }
+
+  async totalIssuance() {
+    const api = await this.getApiPromise();
+    const total = await api.query.balances.totalIssuance();
+
+    return { totalIssuance: total.toHuman() };
+  }
 }
