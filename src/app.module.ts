@@ -6,7 +6,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { configuration } from 'config/configuration';
+import { configuration } from './config/configuration';
 import { BlocksModule } from './blocks/blocks.module';
 
 @Module({
