@@ -37,7 +37,7 @@ $ pm2 start path/to/dist/main.js --name gear-backend
 $ pm2 restart gear-backend
 ```
 
-## Pm2 usefull commands
+## Pm2 useful commands
 
 ```bash
 # shows available processes
