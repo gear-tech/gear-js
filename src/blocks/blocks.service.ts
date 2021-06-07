@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ApiPromise, ApiRx, WsProvider } from '@polkadot/api';
+import { json } from 'express';
 import { map } from 'rxjs/operators';
 
 @Injectable()
@@ -32,6 +33,6 @@ export class BlocksService {
     const api = await this.getApiPromise();
     const total = await api.query.balances.totalIssuance();
 
-    return { totalIssuance: total.toHuman() };
+    return JSON.stringify({ totalIssuance: total.toHuman() });
   }
 }
