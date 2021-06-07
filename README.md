@@ -37,6 +37,36 @@ $ pm2 start path/to/dist/main.js --name gear-backend
 $ pm2 restart gear-backend
 ```
 
+## Pm2 usefull commands
+
+```bash
+# shows available processes
+$ pm2 status
+# opens monitoring window
+$ pm2 monit
+# logs
+pm2 logs --help
+
+  Usage: logs [options] [id|name|namespace]
+
+  stream logs file. Default stream all logs
+
+  Options:
+
+    --json                json log output
+    --format              formated log output
+    --raw                 raw output
+    --err                 only shows error output
+    --out                 only shows standard output
+    --lines <n>           output the last N lines, instead of the last 15 by default
+    --timestamp [format]  add timestamps (default format YYYY-MM-DD-HH:mm:ss)
+    --nostream            print logs without lauching the log stream
+    --highlight [value]   highlights the given value
+    -h, --help            output usage information
+# example shows gear-backend error logs
+$ pm2 logs gear-backend --err
+```
+
 ## Test
 
 ```bash
