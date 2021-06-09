@@ -41,7 +41,12 @@ export class UsersService {
   }
 
   signMessage(userId, message: string, mnemonic: string) {
-    const pair = this.getPair(userId, mnemonic);
+    let pair = null;
+    try {
+      pair = this.getPair(userId, mnemonic);
+    } catch (error) {
+      return { result: 'failed' };
+    }
 
     const signature = pair.sign(stringToU8a(message));
     if (signatureVerify(message, signature, pair.address).isValid) {
