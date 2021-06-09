@@ -1,7 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import {
+  SwaggerModule,
+  DocumentBuilder,
+  SwaggerDocumentOptions,
+} from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +17,7 @@ async function bootstrap() {
     .setTitle('Gear API')
     .setDescription('The gear io API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
