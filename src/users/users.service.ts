@@ -32,7 +32,7 @@ export class UsersService {
     const mnemonic = mnemonicGenerate();
     const pair = this.getPair(user.id, mnemonic);
     user.publicKey = pair.address;
-
+    this.userRepository.save(user);
     return {
       mnemonic: mnemonic,
       name: pair.meta.name,
