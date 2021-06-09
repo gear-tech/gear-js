@@ -2,7 +2,7 @@ import React from 'react';
 
 import './ProgramDetails.scss';
 
-import cancel from '../../images/cancel.svg';
+import cancel from '../../../images/cancel.svg';
 
 const ProgramDetails = () => {
     return(

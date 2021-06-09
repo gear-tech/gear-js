@@ -1,8 +1,8 @@
 import React from 'react';
 
 import './SignIn.scss'
-import telegram from '../../images/telegram.svg';
-import github from '../../images/github.svg';
+import telegram from '../../../images/telegram.svg';
+import github from '../../../images/github.svg';
 
 function SignIn(){
     return (

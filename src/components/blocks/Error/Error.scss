@@ -1,4 +1,4 @@
-@import '../../assets/scss/variables';
+@import '../../../assets/scss/variables';
 
 .error-block {
   align-items: center;
@@ -19,7 +19,7 @@
   }
 
   &__close-btn {
-    background: url("../../images/error_close.svg");
+    background: url("../../../images/error_close.svg");
     height: 14px;
     width: 14px;
   }

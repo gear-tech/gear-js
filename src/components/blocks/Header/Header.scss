@@ -1,4 +1,4 @@
-@import '../../assets/scss/variables';
+@import '../../../assets/scss/variables';
 
 .header{
     display:flex;
@@ -10,7 +10,7 @@
     
 
     &__logo{
-        background: url('../../images/logo.svg') center no-repeat;
+        background: url('../../../images/logo.svg') center no-repeat;
         width: 136px;
         height: 32px;
     }
@@ -46,7 +46,7 @@
         &::before {
             content: "";
             position: absolute;
-            background: url(../../images/github_gray.svg) no-repeat;
+            background: url(../../../images/github_gray.svg) no-repeat;
             height: 22px;
             width: 23px;
             left: 0;
@@ -54,7 +54,7 @@
     }
 
     &__logout {
-        background: url(../../images/logout.svg) no-repeat;
+        background: url(../../../images/logout.svg) no-repeat;
         height: 18px;
         width: 20px;
     }
