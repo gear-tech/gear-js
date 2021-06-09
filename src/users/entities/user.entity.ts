@@ -31,4 +31,7 @@ export class User {
 
   @Column({ nullable: true })
   accessToken: string;
+
+  @Column({ nullable: true })
+  publicKey: string;
 }

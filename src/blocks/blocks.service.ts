@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ApiPromise, ApiRx, WsProvider } from '@polkadot/api';
-import { json } from 'express';
 import { map } from 'rxjs/operators';
 
 @Injectable()

@@ -101,4 +101,17 @@ export class AuthService {
       accessToken: accessToken,
     };
   }
+
+  async getToken(id) {
+    const user = await this.userService.findOne(id);
+    if (!user) {
+      return null;
+    }
+    return {
+      access_token: this.jwtService.sign({
+        username: user.name,
+        id: user.id,
+      }),
+    };
+  }
 }

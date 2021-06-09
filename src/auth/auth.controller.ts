@@ -15,4 +15,10 @@ export class AuthController {
     const code = queryParams.code;
     return this.authService.loginGithub(code);
   }
+
+  // TODO! убрать! Только для теста
+  @Get('login')
+  login(@Query() queryParam) {
+    return this.authService.getToken(queryParam.id);
+  }
 }
