@@ -1,3 +1,3 @@
 export const TelegramConstants = {
-  botToken: '',
+  botToken: process.env.TELEGRAM_BOT_TOKEN,
 };
