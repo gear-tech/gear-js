@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration } from './config/configuration';
 import { BlocksModule } from './blocks/blocks.module';
+import { ProgramsModule } from './programs/programs.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { BlocksModule } from './blocks/blocks.module';
     AuthModule,
     UsersModule,
     BlocksModule,
+    ProgramsModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService],
