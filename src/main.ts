@@ -6,12 +6,15 @@ import {
   DocumentBuilder,
   SwaggerDocumentOptions,
 } from '@nestjs/swagger';
+import { join } from 'path';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
+  app.use('/api/test/', express.static(join(__dirname, '..', 'static')));
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
-  app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
     .setTitle('Gear API')

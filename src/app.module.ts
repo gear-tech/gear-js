@@ -7,8 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration } from './config/configuration';
-import { BlocksModule } from './blocks/blocks.module';
 import { ProgramsModule } from './programs/programs.module';
+import { GearNodeModule } from './gear-node/gear-node.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { BlocksGateway } from './ws/ws.gateway';
 
 @Module({
   imports: [
@@ -31,10 +33,11 @@ import { ProgramsModule } from './programs/programs.module';
     }),
     AuthModule,
     UsersModule,
-    BlocksModule,
     ProgramsModule,
+    GearNodeModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService],
+  providers: [AppService, BlocksGateway],
 })
 export class AppModule {}

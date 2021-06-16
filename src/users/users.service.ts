@@ -2,10 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { Keyring } from '@polkadot/keyring';
-import { mnemonicGenerate, signatureVerify } from '@polkadot/util-crypto';
-import { stringToU8a } from '@polkadot/util';
-import { use } from 'passport';
 
 @Injectable()
 export class UsersService {
@@ -16,47 +12,6 @@ export class UsersService {
 
   getAll() {
     return this.userRepository.find();
-  }
-
-  getPair(userId, mnemonic) {
-    const keyring = new Keyring({ type: 'sr25519', ss58Format: 2 });
-    const pair = keyring.addFromUri(
-      `${mnemonic}//${userId}`,
-      { name: 'key pair' },
-      'ed25519',
-    );
-    return pair;
-  }
-
-  createKeyPair(user: User) {
-    const mnemonic = mnemonicGenerate();
-    const pair = this.getPair(user.id, mnemonic);
-    user.publicKey = pair.address;
-    this.userRepository.save(user);
-    return {
-      mnemonic: mnemonic,
-      name: pair.meta.name,
-      public: pair.address,
-    };
-  }
-
-  signMessage(userId, message: string, mnemonic: string) {
-    let pair = null;
-    try {
-      pair = this.getPair(userId, mnemonic);
-    } catch (error) {
-      return { result: 'failed' };
-    }
-
-    const signature = pair.sign(stringToU8a(message));
-    if (signatureVerify(message, signature, pair.address).isValid) {
-      return {
-        result: 'success',
-      };
-    }
-    return {
-      result: 'failed',
-    };
   }
 
   async findOne(id: number) {
@@ -109,5 +64,10 @@ export class UsersService {
     } else {
       return this.userRepository.save(userData);
     }
+  }
+
+  addPublicKey(user: User, pubKey) {
+    user.publicKey = pubKey;
+    this.userRepository.save(user);
   }
 }

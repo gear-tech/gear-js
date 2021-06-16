@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ProgramsService } from './programs.service';
-import { ProgramsController } from './programs.controller';
+import { GearNodeModule } from 'src/gear-node/gear-node.module';
 
 @Module({
+  imports: [GearNodeModule],
   providers: [ProgramsService],
-  controllers: [ProgramsController],
+  exports: [ProgramsService],
 })
 export class ProgramsModule {}

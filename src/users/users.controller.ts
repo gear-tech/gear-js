@@ -1,13 +1,6 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { KeyPairDto } from './dto/keypair.dto';
-import { SignMessageDto } from './dto/sign-message.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('users')
@@ -22,20 +15,24 @@ export class UsersController {
     return this.usersService.getAll();
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('keypair')
-  @ApiOkResponse({ type: KeyPairDto })
-  createKeyPair(@Req() request) {
-    return this.usersService.createKeyPair(request.user);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('keypair')
+  // @ApiOkResponse({ type: KeyPairDto })
+  // createKeyPair(@Req() request) {
+  //   return this.gearNodeService.createKeyPair(request.user);
+  // }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('sign')
-  @ApiBody({ type: SignMessageDto })
-  @ApiOkResponse({ description: 'success' })
-  signMessage(@Req() request, @Body() body) {
-    const message = body.message;
-    const mnemonic = body.mnemonic;
-    return this.usersService.signMessage(request.user.id, message, mnemonic);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post('sign')
+  // @ApiBody({ type: SignMessageDto })
+  // @ApiOkResponse({ description: 'success' })
+  // signMessage(@Req() request, @Body() body) {
+  //   const message = body.message;
+  //   const mnemonic = body.mnemonic;
+  //   const keyPair = this.gearNodeService.getKeyringByMnemonic(
+  //     request.user,
+  //     mnemonic,
+  //   );
+  //   return this.gearNodeService.checkSign(keyPair, message);
+  // }
 }

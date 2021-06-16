@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Gear WebSockets</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-simple-notify/dist/vue-simple-notify.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+
+  <body>
+    <main id="v-app">
+      <section class="chat">
+        <h1>Gear WebSockets Test</h1>
+        <button @click.prevent="getTotalIssuance()">Total Issuance</button>
+        <b><span>{{totalIssuance}} </span></b>
+
+        <div style="width: 100%">
+          <div class="blocks" style="width: 40%; float: left">
+            <h3>Blocks</h3>
+            <button @click.prevent="subscribeNewBlocks()">Subscribe</button>
+            <hr />
+            <ul>
+              <li v-for="block of blocks">
+                <strong>number: {{ block.number }} </strong> <br />
+                hash: {{ block.hash }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="programs" style="margin-left: 50%">
+            <h3>Programs</h3>
+            <form>
+              <input
+                type="file"
+                name="wasm"
+                ref="file"
+                v-on:change="handleFileUpload()"
+              /><br />
+              <button type="submit" @click.prevent="sendWasm()">Send</button>
+            </form>
+            <hr />
+            <ul>
+              <li v-for="program of programs">
+                <strong>{{ program.status }}</strong>
+                <br />
+                programHash: {{ program.programHash }} <br />
+                blockHash: {{ program.blockHash }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script>
+      Vue.component('alerts-component', VueSimpleNotify.VueSimpleNotify);
+      var app = new Vue({
+        el: '#v-app',
+        data: {
+          file: '',
+          blocks: [],
+          programs: [],
+          totalIssuance: '',
+          socket: { chat: null },
+        },
+        methods: {
+          subscribeNewBlocks() {
+            this.socket.blocks.emit('subscribeNewBlocks');
+          },
+
+          getTotalIssuance() {
+            this.socket.blocks.emit('totalIssuance');
+          },
+
+          recieveNewBlock(block) {
+            this.blocks.push(block);
+          },
+
+          recieveNewProgram(program) {
+            this.programs.push(program);
+          },
+
+          recieveTotalIssuance(total) {
+            this.totalIssuance = total.totalIssuance;
+          },
+
+          sendWasm() {
+            this.socket.blocks.emit('uploadProgram', {
+              file: this.file,
+            });
+          },
+          handleFileUpload() {
+            this.file = this.$refs.file.files[0];
+          },
+        },
+        created() {
+          this.socket.blocks = io('http://localhost:3000/api/ws');
+
+          this.socket.blocks.on('newBlock', (data) => {
+            this.recieveNewBlock(data);
+          });
+          this.socket.blocks.on('totalIssuance', (data) => {
+            this.recieveTotalIssuance(data);
+          });
+          this.socket.blocks.on('submitProgram.success', (data) => {
+            this.recieveNewProgram(data);
+          });
+        },
+      });
+    </script>
+  </body>
+</html>
