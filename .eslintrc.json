@@ -27,6 +27,7 @@
     ],
     "react/state-in-constructor": ["off"],
     "react/jsx-props-no-spreading": ["off"],
+    "no-console": "off",
     "react/static-property-placement": "off"
   },
   "settings": {
