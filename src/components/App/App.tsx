@@ -11,8 +11,7 @@ import UploadProgramBlock from '../pages/UploadProgramPage';
 import Header from '../blocks/Header';
 import Main from '../layouts/Main';
 
-function App() {
-  return (
+const App = () => (
     <DndProvider backend={HTML5Backend}>
       <BrowserRouter>
         <div className="app">
@@ -22,9 +21,7 @@ function App() {
             <Route path='/sign-in' component={SignIn} exact/>
             <Route path='/upload-program' component={UploadProgramBlock} exact/>
             <Route path='/uploaded-programs'
-                   render={() => {
-                     return <UploadProgramBlock showUploaded/>;
-                   }}
+                   render={() => <UploadProgramBlock showUploaded/>}
                    exact/>
           </Main>
           <Footer/>
@@ -32,6 +29,5 @@ function App() {
       </BrowserRouter>
     </DndProvider>
   );
-}
 
 export default App;

@@ -5,9 +5,7 @@ import './BlocksList.scss';
 const BlocksList = () => {
 
   const showMoreClick = () => {
-    console.log('click');
     const list = document.querySelector('.programs-list--short-list');
-    console.log(list?.classList);
     list?.classList.remove('programs-list--short-list');
     const showMoreBtn = document.querySelector('.block-list__button');
     if ( showMoreBtn !== null ) {

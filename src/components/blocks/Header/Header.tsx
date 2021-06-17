@@ -17,15 +17,15 @@ const Header = () => {
         </div>
       ) ||
        <nav className="header__nav">
-          <button className="header__nav-button">What is GEAR?</button>
-          <button className="header__nav-button">How it works</button>
-          <button className="header__nav-button">Use cases</button>
-          <button className="header__nav-button">Competitive analyze</button>
-          <button className="header__nav-button">Team</button>
-          <button className="header__nav-button">Tokenomics</button>
-          <button className="header__nav-button">Timeline</button>
+          <button className="header__nav-button" type="button">What is GEAR?</button>
+          <button className="header__nav-button" type="button">How it works</button>
+          <button className="header__nav-button" type="button">Use cases</button>
+          <button className="header__nav-button" type="button">Competitive analyze</button>
+          <button className="header__nav-button" type="button">Team</button>
+          <button className="header__nav-button" type="button">Tokenomics</button>
+          <button className="header__nav-button" type="button">Timeline</button>
           <Link to="/upload-program">
-            <button className="header__nav-button">Upload</button>
+            <button className="header__nav-button" type="button">Upload</button>
           </Link>
         </nav>
       }

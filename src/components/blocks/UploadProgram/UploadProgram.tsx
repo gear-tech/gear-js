@@ -1,5 +1,4 @@
-import React from 'react';
-import {useState, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {NativeTypes} from 'react-dnd-html5-backend';
 import {useDrop, DropTargetMonitor} from 'react-dnd';
 import Error from '../Error';
@@ -19,8 +18,10 @@ const UploadProgram = () => {
   const handleFileDrop = useCallback(
     (item) => {
       if (item) {
-        const files = item.files;
+        const { files } = item;
         setDroppedFile(files);
+        // eslint-disable-next-line no-console
+        console.log(droppedFile);
         if ( typeof files[0]?.name === 'string' ) {
           const fileExt: string = files[0].name.split(".").pop().toLowerCase();
           setWrongFormat(fileExt !== 'tbd');
@@ -29,7 +30,7 @@ const UploadProgram = () => {
         }
       }
     },
-    [setDroppedFile],
+    [setDroppedFile, droppedFile],
   );
 
   const [{canDrop, isOver}, drop] = useDrop(
@@ -47,9 +48,7 @@ const UploadProgram = () => {
     }),
     [handleFileDrop],
   );
-
-  console.log(droppedFile[0]?.name);
-
+  
   const isActive = canDrop && isOver;
   const dropBlockClassName = isActive ? "drop-block drop-block--file-over" : "drop-block";
 
@@ -64,9 +63,9 @@ const UploadProgram = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
-    const files = target.files;
+    const { files } = target;
     if ( files?.length ) {
-      //setDroppedFile(files);
+      // setDroppedFile(files);
     }
   };
 

@@ -2,81 +2,78 @@
 
 .block-list {
   padding-bottom: 4px;
-
-  &__header {
-    color: $textColorSecondary;
-    font-size: $fontSizeLarge;
-    font-weight: 600;
-    margin-bottom: 40px;
-    text-transform: uppercase;
-  }
-
-  &__button {
-    background-color: $bkgButtonColor;
-    border: none;
-    border-radius: $borderRadiusBase;
-    color: $textColor;
-    cursor: pointer;
-    padding: 8px 18px 9px;
-
-    &--hidden {
-      display: none;
-    }
-  }
 }
 
-.programs-list {
+.block-list__header {
+  color: $textColorSecondary;
+  font-size: $fontSizeLarge;
+  font-weight: 600;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+}
 
-  &--short-list {
-    height: 234px;
-    overflow: hidden;
-  }
+.block-list__button {
+  background-color: $bkgButtonColor;
+  border: none;
+  border-radius: $borderRadiusBase;
+  color: $textColor;
+  cursor: pointer;
+  padding: 8px 18px 9px;
+}
 
-  &__item {
-    align-items: center;
-    display: flex;
-    gap: 24px;
-    padding: 23px 0;
-    position: relative;
+.block-list__button--hidden {
+  display: none;
+}
 
-    &::before {
-      border-top: 1px solid $separateLineColor;
-      content: "";
-      display: block;
-      opacity: 0.6;
-      position: absolute;
-      top: 0;
-      width: 100%;
-    }
-  }
+.programs-list--short-list {
+  height: 234px;
+  overflow: hidden;
+}
 
-  &__number {
-    color: $textColorSecondary;
-    font-size: $fontSizeLarge;
-    font-weight: 600;
-  }
+.programs-list__item {
+  align-items: center;
+  display: flex;
+  gap: 24px;
+  padding: 23px 0;
+  position: relative;
+}
 
-  &__name {
-    color: $textColor;
-    flex-grow: 1;
-    font-size: $fontSizeBase;
-  }
+.programs-list__item::before {
+  border-top: 1px solid $separateLineColor;
+  content: '';
+  display: block;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
 
-  &__info {
-    color: $textColorSecondary;
-  }
+.programs-list__number {
+  color: $textColorSecondary;
+  font-size: $fontSizeLarge;
+  font-weight: 600;
+}
 
-  &__info-data {
-    color: $textColor;
-    display: inline-block;
-    min-width: 56px;
-    padding-left: 16px;
-  }
+.programs-list__name {
+  color: $textColor;
+  flex-grow: 1;
+  font-size: $fontSizeBase;
+}
 
-  &__refresh-btn {
-    background: url("../../../images/refresh.svg") no-repeat;
-    height: 20px;
-    margin-left: 20px;
-    width: 20px;
-  }
+.programs-list__info {
+  color: $textColorSecondary;
+}
+
+.programs-list__info-data {
+  color: $textColor;
+  display: inline-block;
+  min-width: 56px;
+  padding-left: 16px;
+}
+
+.programs-list__refresh-btn {
+  background: url('../../../images/refresh.svg') no-repeat;
+  height: 20px;
+  margin-left: 20px;
+  width: 20px;
 }

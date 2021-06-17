@@ -10,20 +10,17 @@ type UploadProgramPageType = {
   showUploaded: boolean;
 };
 
-const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => {
-  return (
-    <div className="main-content-wrapper">
-      <ProgramSwitch showUploaded={showUploaded}/>
-      {
-        !showUploaded &&
-        <>
-          < UploadProgram/>
-          < BlocksList/>
-        </>
-      }
-      {showUploaded && <BlocksListUploaded/> }
-    </div>
-  );
-};
+const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => (
+  <div className="main-content-wrapper">
+    <ProgramSwitch showUploaded={showUploaded} />
+    {!showUploaded && (
+      <>
+        <UploadProgram />
+        <BlocksList />
+      </>
+    )}
+    {showUploaded && <BlocksListUploaded />}
+  </div>
+);
 
 export default UploadProgramPage;

@@ -13,14 +13,13 @@
   padding: 13px 16px;
   position: fixed;
   z-index: 10;
+}
+.error-block__msg {
+  color: $textColor;
+}
 
-  &__msg {
-    color: $textColor;
-  }
-
-  &__close-btn {
-    background: url("../../../images/error_close.svg");
-    height: 14px;
-    width: 14px;
-  }
+.error-block__close-btn {
+  background: url('../../../images/error_close.svg');
+  height: 14px;
+  width: 14px;
 }
