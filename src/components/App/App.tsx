@@ -1,18 +1,17 @@
 import React from 'react';
-import {BrowserRouter, Route, useLocation} from 'react-router-dom';
+import {BrowserRouter, Route} from 'react-router-dom';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import './App.scss';
 
-import Footer from '../Footer';
-import SignIn from '../SignIn';
-import UploadProgramBlock from '../UploadProgramBlock';
-import Header from '../Header';
-import Main from '../Main';
+import Footer from '../blocks/Footer';
+import SignIn from '../pages/SignIn';
+import UploadProgramBlock from '../pages/UploadProgramPage';
+import Header from '../blocks/Header';
+import Main from '../layouts/Main';
 
-function App() {
-  return (
+const App = () => (
     <DndProvider backend={HTML5Backend}>
       <BrowserRouter>
         <div className="app">
@@ -22,9 +21,7 @@ function App() {
             <Route path='/sign-in' component={SignIn} exact/>
             <Route path='/upload-program' component={UploadProgramBlock} exact/>
             <Route path='/uploaded-programs'
-                   render={() => {
-                     return <UploadProgramBlock showUploaded/>;
-                   }}
+                   render={() => <UploadProgramBlock showUploaded/>}
                    exact/>
           </Main>
           <Footer/>
@@ -32,6 +29,5 @@ function App() {
       </BrowserRouter>
     </DndProvider>
   );
-}
 
 export default App;

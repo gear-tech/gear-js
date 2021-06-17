@@ -1,0 +1,79 @@
+@import '../../../assets/scss/variables';
+
+.block-list {
+  padding-bottom: 4px;
+}
+
+.block-list__header {
+  color: $textColorSecondary;
+  font-size: $fontSizeLarge;
+  font-weight: 600;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+}
+
+.block-list__button {
+  background-color: $bkgButtonColor;
+  border: none;
+  border-radius: $borderRadiusBase;
+  color: $textColor;
+  cursor: pointer;
+  padding: 8px 18px 9px;
+}
+
+.block-list__button--hidden {
+  display: none;
+}
+
+.programs-list--short-list {
+  height: 234px;
+  overflow: hidden;
+}
+
+.programs-list__item {
+  align-items: center;
+  display: flex;
+  gap: 24px;
+  padding: 23px 0;
+  position: relative;
+}
+
+.programs-list__item::before {
+  border-top: 1px solid $separateLineColor;
+  content: '';
+  display: block;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.programs-list__number {
+  color: $textColorSecondary;
+  font-size: $fontSizeLarge;
+  font-weight: 600;
+}
+
+.programs-list__name {
+  color: $textColor;
+  flex-grow: 1;
+  font-size: $fontSizeBase;
+}
+
+.programs-list__info {
+  color: $textColorSecondary;
+}
+
+.programs-list__info-data {
+  color: $textColor;
+  display: inline-block;
+  min-width: 56px;
+  padding-left: 16px;
+}
+
+.programs-list__refresh-btn {
+  background: url('../../../images/refresh.svg') no-repeat;
+  height: 20px;
+  margin-left: 20px;
+  width: 20px;
+}

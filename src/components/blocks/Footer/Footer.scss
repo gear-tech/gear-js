@@ -1,0 +1,26 @@
+@import '../../../assets/scss/variables';
+
+.footer {
+  background: $backgroundColor;
+  padding: $desktopSidesMargin;
+  padding-bottom: 33px;
+  text-align: center;
+}
+.footer--light-colored {
+  background: $mainBackground;
+}
+
+.footer::before {
+  border-top: 1px solid $separateLineColor;
+  content: '';
+  display: block;
+  height: 1px;
+  margin-bottom: 23px;
+  opacity: 0.6;
+  width: 100%;
+}
+
+.footer__content {
+  color: $textColorSecondary;
+  font-size: $fontSizeBase;
+}
