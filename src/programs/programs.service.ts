@@ -1,48 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { GearNodeService } from 'src/gear-node/gear-node.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Program } from './entities/program.entity';
 
 @Injectable()
 export class ProgramsService {
-  constructor(private readonly gearNodeService: GearNodeService) {}
+  constructor(
+    @InjectRepository(Program)
+    private readonly programRepository: Repository<Program>,
+  ) {}
 
-  private parseWASM(file) {
+  parseWASM(file) {
     const code = new Uint8Array(file.buffer);
     return code;
   }
 
-  async uploadProgram(client, file) {
-    const parsedFile = this.parseWASM(file);
-    const bob = this.gearNodeService.getKeyring('//Bob', 'Bob default');
-
-    await this.gearNodeService.submitProgram(
-      client,
-      bob,
-      parsedFile,
-      '0x323232',
-      '0x424242',
-      2,
-      2,
-    );
+  async saveProgram({ user, hash, blockHash, name, uploadedAt }) {
+    const program = this.programRepository.create({
+      hash: hash,
+      blockHash: blockHash,
+      name: name,
+      user: user,
+      uploadedAt: uploadedAt,
+      programNumber: (await this.getLastProgramNumber(user)) + 1,
+    });
+    return this.programRepository.save(program);
   }
 
-  async testFunc() {
-    const api = await this.gearNodeService.getApiPromise();
-    const alice = this.gearNodeService.getKeyring('//Alice', 'Alice default');
-    const bob = this.gearNodeService.getKeyring('//Bob', 'Bob default');
-
-    const transfer = api.tx.gear.sendMessage(
-      '0x3242456362772634532632527365463626364545362737464536273746453465',
-      '0x4636',
-      0,
-      0,
-    );
-    await transfer.signAndSend(alice, ({ events = [], status }) => {
-      console.log(status);
-      console.log('-----------------------------------------');
-      console.log(events);
+  async getLastProgramNumber(user) {
+    const userPrograms = await this.programRepository.find({
+      where: { user: user },
+      select: ['programNumber'],
+      order: { programNumber: 'ASC' },
     });
-    return {
-      gear: 'b',
-    };
+    if (userPrograms.length === 0) {
+      return 0;
+    }
+    return userPrograms[userPrograms.length - 1].programNumber;
+  }
+
+  getAllPrograms() {
+    return this.programRepository.find();
   }
 }

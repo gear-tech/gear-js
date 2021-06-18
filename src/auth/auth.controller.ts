@@ -21,4 +21,10 @@ export class AuthController {
     const code = queryParams.code;
     return this.authService.loginGithub(code);
   }
+
+  @Get('login/test')
+  loginTest(@Query() queryParams) {
+    const id = queryParams.id;
+    return this.authService.testLogin(id);
+  }
 }

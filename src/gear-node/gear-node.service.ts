@@ -1,14 +1,22 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ApiPromise, ApiRx, Keyring, WsProvider } from '@polkadot/api';
 import { stringToU8a } from '@polkadot/util';
-import { mnemonicGenerate, signatureVerify } from '@polkadot/util-crypto';
+import {
+  mnemonicGenerate,
+  randomAsHex,
+  signatureVerify,
+} from '@polkadot/util-crypto';
 import { User } from 'src/users/entities/user.entity';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { UsersService } from '../users/users.service';
+import { ProgramsService } from 'src/programs/programs.service';
 
 @Injectable()
 export class GearNodeService {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly programService: ProgramsService,
+  ) {}
 
   private logger = new Logger('GearNodeService');
 
@@ -56,43 +64,57 @@ export class GearNodeService {
     }
   }
 
-  async submitProgram(
-    client,
-    keyring: KeyringPair,
-    code: Uint8Array,
-    salt: string,
-    init_payload: string,
-    gasLimit: number,
-    value: number,
-  ) {
+  async uploadProgram(client, data) {
+    if (!data.gasLimit) {
+      client.emit('submitProgram.failed', { detail: 'no gas limit specified' });
+      return null;
+    } else if (!data.value) {
+      client.emit('submitProgram.failed', {
+        detail: 'no initial value specified',
+      });
+      return null;
+    }
+
+    const code = this.programService.parseWASM(data.file);
+
+    const programData = {
+      user: client.user,
+      name: data.filename,
+      hash: null,
+      blockHash: null,
+      uploadedAt: null,
+    };
+
     const api = await this.getApiPromise();
+    const keyring = this.getKeyring('//Bob', 'Bob default');
+    const salt = data.salt || randomAsHex(20);
+
     const program = api.tx.gear.submitProgram(
       code,
       salt,
-      init_payload,
-      gasLimit,
-      value,
+      data.init_payload || '',
+      data.gasLimit,
+      data.value,
     );
 
-    const programData = {
-      blockHash: '',
-      programHash: '',
-      status: '',
-    };
     program.signAndSend(keyring, ({ events = [], status }) => {
       if (status.isInBlock) {
         programData.blockHash = status.asInBlock.toHex();
-        programData.status = 'inBlock';
+        programData.uploadedAt = new Date().toString();
       } else if (status.isFinalized) {
         programData.blockHash = status.asFinalized.toHex();
-        programData.status = 'finalized';
+        this.programService.saveProgram(programData);
       }
 
       events.forEach(({ phase, event: { data, method, section } }) => {
         try {
           if (method === 'NewProgram') {
-            programData.programHash = data.toString();
-            client.emit('submitProgram.success', programData);
+            programData.hash = data[0].toString();
+            client.emit('submitProgram.success', {
+              status: status.type,
+              blockHash: programData.blockHash,
+              programHash: programData.hash,
+            });
           }
         } catch (error) {
           this.logger.error(error);
@@ -104,12 +126,13 @@ export class GearNodeService {
   async subscribeNewHeads(client) {
     const api = await this.getApiPromise();
 
-    api.rpc.chain.subscribeNewHeads((header) => {
+    const unsub = await api.rpc.chain.subscribeNewHeads((header) => {
       client.emit('newBlock', {
         hash: header.hash.toHex(),
         number: header.number,
       });
     });
+    return unsub;
   }
 
   async totalIssuance(client) {

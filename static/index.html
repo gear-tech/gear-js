@@ -15,8 +15,18 @@
     <main id="v-app">
       <section class="chat">
         <h1>Gear WebSockets Test</h1>
-        <button @click.prevent="getTotalIssuance()">Total Issuance</button>
-        <b><span>{{totalIssuance}} </span></b>
+        Authorization Token (Bearer)
+        <input
+          type="text"
+          name="jwt"
+          ref="token"
+          v-on:change="jwtTokenChange()"
+        />
+        <button @click.prevent="connect()">Connect</button>
+        <p>
+          <button @click.prevent="getTotalIssuance()">Total Issuance</button>
+          <b><span>{{totalIssuance}} </span></b>
+        </p>
 
         <div style="width: 100%">
           <div class="blocks" style="width: 40%; float: left">
@@ -34,12 +44,20 @@
           <div class="programs" style="margin-left: 50%">
             <h3>Programs</h3>
             <form>
+              Program:
               <input
                 type="file"
+                accept="application/wasm"
                 name="wasm"
                 ref="file"
                 v-on:change="handleFileUpload()"
               /><br />
+              Gas Limit: <input type="number" ref="gasLimit" /> <br />
+              Initial Value:
+              <input type="number" name="value" ref="value" /><br />
+              Initial Payload:
+              <input type="text" name="payload" ref="payload" />
+              <br />
               <button type="submit" @click.prevent="sendWasm()">Send</button>
             </form>
             <hr />
@@ -63,16 +81,37 @@
           file: '',
           blocks: [],
           programs: [],
+          token:
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRtaXRyeSBPc2lwb3YiLCJpZCI6MjMsImlhdCI6MTYyNDAxNjAzNSwiZXhwIjoxNjI0NjIwODM1fQ.tbxfMAsJu6Qjj_2IsOAyb1GwZQ2jHLz4dSUkVh79JiI',
           totalIssuance: '',
-          socket: { chat: null },
+          socket: null, //{ blocks: null },
         },
         methods: {
+          connect() {
+            console.log('connecting');
+            this.socket = io('http://localhost:3000/api/ws', {
+              query: { Authorization: this.token },
+            });
+
+            this.socket.on('newBlock', (data) => {
+              this.recieveNewBlock(data);
+            });
+            this.socket.on('totalIssuance', (data) => {
+              this.recieveTotalIssuance(data);
+            });
+            this.socket.on('submitProgram.success', (data) => {
+              this.recieveNewProgram(data);
+            });
+          },
+          jwtTokenChange() {
+            this.token = this.$refs.token.value;
+          },
           subscribeNewBlocks() {
-            this.socket.blocks.emit('subscribeNewBlocks');
+            this.socket.emit('subscribeNewBlocks');
           },
 
           getTotalIssuance() {
-            this.socket.blocks.emit('totalIssuance');
+            this.socket.emit('totalIssuance');
           },
 
           recieveNewBlock(block) {
@@ -88,26 +127,17 @@
           },
 
           sendWasm() {
-            this.socket.blocks.emit('uploadProgram', {
+            this.socket.emit('uploadProgram', {
               file: this.file,
+              filename: this.file.name,
+              gasLimit: this.$refs.gasLimit.value,
+              value: this.$refs.value.value,
+              initPayload: this.$refs.payload.value,
             });
           },
           handleFileUpload() {
             this.file = this.$refs.file.files[0];
           },
-        },
-        created() {
-          this.socket.blocks = io('http://localhost:3000/api/ws');
-
-          this.socket.blocks.on('newBlock', (data) => {
-            this.recieveNewBlock(data);
-          });
-          this.socket.blocks.on('totalIssuance', (data) => {
-            this.recieveTotalIssuance(data);
-          });
-          this.socket.blocks.on('submitProgram.success', (data) => {
-            this.recieveNewProgram(data);
-          });
         },
       });
     </script>

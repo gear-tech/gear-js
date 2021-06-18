@@ -3,39 +3,57 @@ import {
   WebSocketGateway,
   OnGatewayInit,
   WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { Logger } from '@nestjs/common';
+import { Logger, Req, UseGuards } from '@nestjs/common';
 import { GearNodeService } from 'src/gear-node/gear-node.service';
-import { ProgramsService } from 'src/programs/programs.service';
+import { WsAuthGuard } from './guards/ws-auth.guard';
 
 @WebSocketGateway({ namespace: '/api/ws' })
-export class BlocksGateway implements OnGatewayInit {
-  constructor(
-    private gearService: GearNodeService,
-    private programService: ProgramsService,
-  ) {}
+export class BlocksGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
+  constructor(private gearService: GearNodeService) {}
+
+  newBlocksUnsub = null;
 
   @WebSocketServer() wss: Server;
 
   private logger: Logger = new Logger('GearGateway');
 
-  afterInit(server: any) {
+  afterInit(server: Server) {
     this.logger.log('Initialized!');
   }
 
-  @SubscribeMessage('subscribeNewBlocks')
-  newBlocks(client: Socket) {
-    this.gearService.subscribeNewHeads(client);
+  @UseGuards(WsAuthGuard)
+  handleConnection(client: Socket, ...args: any[]) {
+    this.logger.log('Client connected');
   }
 
+  handleDisconnect(client: any) {
+    this.logger.log('Client disconnected');
+    if (this.newBlocksUnsub) {
+      this.newBlocksUnsub();
+    }
+  }
+
+  @UseGuards(WsAuthGuard)
+  @SubscribeMessage('subscribeNewBlocks')
+  async newBlocks(client: Socket) {
+    this.newBlocksUnsub = await this.gearService.subscribeNewHeads(client);
+  }
+
+  @UseGuards(WsAuthGuard)
   @SubscribeMessage('totalIssuance')
-  totalIssuance(client: Socket) {
+  totalIssuance(client: Socket, data: any) {
     this.gearService.totalIssuance(client);
   }
 
+  @UseGuards(WsAuthGuard)
   @SubscribeMessage('uploadProgram')
   uploadProgram(client: Socket, data: any) {
-    this.programService.uploadProgram(client, data.file);
+    this.gearService.uploadProgram(client, data);
   }
 }

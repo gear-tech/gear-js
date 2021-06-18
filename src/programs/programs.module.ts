@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Program } from './entities/program.entity';
 import { ProgramsService } from './programs.service';
-import { GearNodeModule } from 'src/gear-node/gear-node.module';
+import { ProgramsController } from './programs.controller';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
-  imports: [GearNodeModule],
+  imports: [TypeOrmModule.forFeature([Program, User]), Program],
   providers: [ProgramsService],
   exports: [ProgramsService],
+  controllers: [ProgramsController],
 })
 export class ProgramsModule {}
