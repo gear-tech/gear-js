@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
 import './ProgramSwitch.scss';
+import { routes } from 'routes';
 
 type ProgramSwitchType = {
   showUploaded: boolean;
@@ -12,13 +13,13 @@ const ProgramSwitch = ({ showUploaded }: ProgramSwitchType) => (
   <div className="switch-block">
     <div className="switch-buttons">
       <Link
-        to="/upload-program"
+        to={routes.main}
         className={classNames('switch-buttons__item', { 'switch-buttons__item--active': !showUploaded })}
       >
         Upload program
       </Link>
       <Link
-        to="/uploaded-programs"
+        to={routes.uploadedPrograms}
         className={classNames('switch-buttons__item', { 'switch-buttons__item--active': showUploaded })}
       >
         Recent uploaded programs

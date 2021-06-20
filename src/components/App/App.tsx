@@ -1,16 +1,20 @@
 import React from 'react';
-import {BrowserRouter, Route} from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import './App.scss';
 
-import Footer from '../blocks/Footer';
-import SignIn from '../pages/SignIn';
-import UploadProgramBlock from '../pages/UploadProgramPage';
-import Header from '../blocks/Header';
-import Main from '../layouts/Main';
-import Callback from '../Callback';
+import { routes } from 'routes';
+import { PrivateRoute } from 'components/PrivateRoute';
+
+import Footer from 'components/blocks/Footer';
+import SignIn from 'components/pages/SignIn';
+import UploadProgramPage from 'components/pages/UploadProgramPage';
+import Header from 'components/blocks/Header';
+import Main from 'components/layouts/Main';
+import Callback from 'components/Callback';
+import Logout from 'components/pages/Logout';
 
 const App = () => (
   <DndProvider backend={HTML5Backend}>
@@ -18,13 +22,23 @@ const App = () => (
       <div className="app">
         <Header/>
         <Main>
-          <Route path='/' component={SignIn} exact/>
-          <Route path='/sign-in' component={SignIn} exact/>
-          <Route path='/upload-program' component={UploadProgramBlock} exact/>
-          <Route path='/uploaded-programs'
-                 render={() => <UploadProgramBlock showUploaded/>}
-                 exact/>
-          <Route path='/callback' component={Callback}/>
+          <Switch>
+            <PrivateRoute exact path={routes.main}>
+              <UploadProgramPage showUploaded={false}/>
+            </PrivateRoute>
+            <PrivateRoute exact path={routes.uploadedPrograms}>
+              <UploadProgramPage showUploaded/>
+            </PrivateRoute>
+            <Route exact path={routes.signIn}>
+              <SignIn/>
+            </Route>
+            <Route path={routes.callback} exact>
+              <Callback/>
+            </Route>
+            <Route path={routes.logout}>
+              <Logout />
+            </Route>
+          </Switch>
         </Main>
         <Footer/>
       </div>
