@@ -2,7 +2,6 @@ import React, {useState, useCallback} from 'react';
 import {NativeTypes} from 'react-dnd-html5-backend';
 import {useDrop, DropTargetMonitor} from 'react-dnd';
 import Error from '../Error';
-
 import ProgramDetails from '../ProgramDetails';
 
 import './UploadProgram.scss';

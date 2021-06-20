@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { routes } from 'routes';
 
 import './Header.scss';
-import logo from '../../../images/logo.svg';
+import logo from 'images/logo.svg';
 
 const Header = () => {
   const location = useLocation();
