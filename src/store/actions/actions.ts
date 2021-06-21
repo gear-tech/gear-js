@@ -12,11 +12,9 @@ const gitService = new GitRequestService();
 
 export const getGitUserJwtAction = (code: string) => (dispatch: any)  => {
   dispatch(fetchUserAction());
-  console.log('get git jwt action', code);
   gitService
     .authWithGit(code)
     .then((result: any) => {
-      console.log(result);
       window.localStorage.setItem(GEAR_STORAGE_KEY, result.access_token);
       dispatch(fetchUserSuccessAction(result));
     })
@@ -25,11 +23,9 @@ export const getGitUserJwtAction = (code: string) => (dispatch: any)  => {
 
 export const getTelegramUserJwtAction = (user: any) => (dispatch: any) => {
   dispatch(fetchUserAction());
-  console.log('get telegram jwt action', user);
   gitService
     .authWithTelegram(user)
     .then((result: {}) => {
-      console.log(result);
       dispatch(fetchUserSuccessAction(result));
     })
     .catch(() => dispatch(fetchUserErrorAction()));
@@ -37,6 +33,5 @@ export const getTelegramUserJwtAction = (user: any) => (dispatch: any) => {
 
 export const logoutFromAccountAction = () => (dispatch: any) => {
   localStorage.clear();
-  console.log('asdfasdfasdfsadf')
   dispatch(resetUserAction());
 }
