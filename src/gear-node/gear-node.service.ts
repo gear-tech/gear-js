@@ -43,10 +43,10 @@ export class GearNodeService {
     return keyPair;
   }
 
-  createKeyPair(user: User) {
+  async createKeyPair(user: User) {
     const mnemonic = mnemonicGenerate();
-    const uri = `${mnemonic}//${user.id}`;
-    const keyPair = this.getKeyring(uri, `${user.name}`);
+    const suri = `${mnemonic}//${user.id}`;
+    const keyPair = this.getKeyring(suri, `${user.name}`);
     this.userService.addPublicKey(user, keyPair.address);
     return {
       mnemonic,
@@ -76,7 +76,6 @@ export class GearNodeService {
     }
 
     const code = this.programService.parseWASM(data.file);
-
     const programData = {
       user: client.user,
       name: data.filename,
@@ -86,7 +85,7 @@ export class GearNodeService {
     };
 
     const api = await this.getApiPromise();
-    const keyring = this.getKeyring('//Bob', 'Bob default');
+    const keyring = this.getKeyringByMnemonic(client.user, data.mnemonic);
     const salt = data.salt || randomAsHex(20);
 
     const program = api.tx.gear.submitProgram(
@@ -141,5 +140,23 @@ export class GearNodeService {
     client.emit('totalIssuance', {
       totalIssuance: total.toHuman(),
     });
+  }
+
+  async balanceTransfer(publicKey: string, value) {
+    const api = await this.getApiPromise();
+    const unsub = await api.tx.balances
+      .transfer(publicKey, value)
+      .signAndSend(this.getKeyring('//Alice', 'Alice default'), (result) => {
+        if (result.status.isInBlock) {
+          this.logger.log(
+            `Transaction included at blockHash ${result.status.asInBlock}`,
+          );
+        } else if (result.status.isFinalized) {
+          this.logger.log(
+            `Transaction finalized at blockHash ${result.status.asFinalized}`,
+          );
+          unsub();
+        }
+      });
   }
 }

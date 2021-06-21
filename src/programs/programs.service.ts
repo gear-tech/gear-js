@@ -39,7 +39,7 @@ export class ProgramsService {
     return userPrograms[userPrograms.length - 1].programNumber;
   }
 
-  getAllPrograms() {
-    return this.programRepository.find();
+  getAllPrograms(user) {
+    return this.programRepository.find({ user: user });
   }
 }

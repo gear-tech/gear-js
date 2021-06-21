@@ -58,6 +58,8 @@
               Initial Payload:
               <input type="text" name="payload" ref="payload" />
               <br />
+              mnemonic phrase:
+              <input type="text" ref="mnemonic" /><br />
               <button type="submit" @click.prevent="sendWasm()">Send</button>
             </form>
             <hr />
@@ -81,8 +83,7 @@
           file: '',
           blocks: [],
           programs: [],
-          token:
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRtaXRyeSBPc2lwb3YiLCJpZCI6MjMsImlhdCI6MTYyNDAxNjAzNSwiZXhwIjoxNjI0NjIwODM1fQ.tbxfMAsJu6Qjj_2IsOAyb1GwZQ2jHLz4dSUkVh79JiI',
+          token: '',
           totalIssuance: '',
           socket: null, //{ blocks: null },
         },
@@ -133,6 +134,7 @@
               gasLimit: this.$refs.gasLimit.value,
               value: this.$refs.value.value,
               initPayload: this.$refs.payload.value,
+              mnemonic: this.$refs.mnemonic.value,
             });
           },
           handleFileUpload() {
