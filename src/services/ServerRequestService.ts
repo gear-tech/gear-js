@@ -19,7 +19,7 @@ export default class ServerRequestService {
     const queryString = this.makeQueryString({
       ...getParams,
     });
-    const url = `${this.DEV_API_PATH}${path}?${queryString}`;
+    const url = `${this.API_PATH}${path}?${queryString}`;
     const params: any = { method, headers };
 
     if (method !== 'GET') {
