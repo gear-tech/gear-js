@@ -35,7 +35,7 @@ const App = () => (
             <Route path={routes.callback} exact>
               <Callback/>
             </Route>
-            <Route path={routes.logout}>
+            <Route path={routes.logout} exact>
               <Logout />
             </Route>
           </Switch>
