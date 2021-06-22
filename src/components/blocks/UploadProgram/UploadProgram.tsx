@@ -27,8 +27,6 @@ const UploadProgram = () => {
       query: { Authorization: localStorage.getItem(GEAR_STORAGE_KEY) || "" },
     });
 
-    socketClientReference.current.emit(emitEvents.uploadProgram)
-
     if (!localStorage.getItem(GEAR_MNEMONIC_KEY)) {
       dispatch(generateKeypairAction())
     }
