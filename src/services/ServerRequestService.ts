@@ -1,6 +1,6 @@
 export default class ServerRequestService {
 
-  protected readonly API_PATH = 'https://gear-tech.io/api';
+  protected readonly API_PATH = 'https://idea.gear-tech.io/api';
   
   protected readonly DEV_API_PATH = 'http://localhost:3000/api';
 
