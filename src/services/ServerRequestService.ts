@@ -19,10 +19,11 @@ export default class ServerRequestService {
     const queryString = this.makeQueryString({
       ...getParams,
     });
-    const url = `${this.DEV_API_PATH}${path}?${queryString}`;
+    let url = `${this.DEV_API_PATH}${path}?${queryString}`;
     const params: any = { method, headers };
 
     if (method !== 'GET') {
+      url = url.replace("?", "");
       params.body = JSON.stringify(postParams);
       params.headers['Content-Type'] = 'application/json;charset=utf-8';
     }
