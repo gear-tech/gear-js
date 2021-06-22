@@ -21,7 +21,7 @@ function SignIn(){
   }
 
   const handleAuthViaGithub = () => {
-    window.location.href = "https://github.com/login/oauth/authorize?client_id=d48a88d171386837281a&redirect_uri=https://gear-tech.io/idea/callback"
+    window.location.href = "https://github.com/login/oauth/authorize?client_id=d48a88d171386837281a&redirect_uri=https://idea.gear-tech.io/callback"
   }
 
   if (localStorage.getItem(GEAR_STORAGE_KEY)) {
