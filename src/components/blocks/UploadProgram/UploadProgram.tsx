@@ -1,12 +1,9 @@
-import React, {useState, useCallback, useEffect, useRef} from 'react';
-
+import React, {useState, useCallback, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 
 import {NativeTypes} from 'react-dnd-html5-backend';
 import {useDrop, DropTargetMonitor} from 'react-dnd';
-import { io, Socket } from 'socket.io-client';
-import { DefaultEventsMap } from 'socket.io-client/build/typed-events';
-import { emitEvents, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
+import { GEAR_MNEMONIC_KEY, socketService } from 'consts';
 
 import { generateKeypairAction } from 'store/actions/actions';
 
@@ -19,14 +16,7 @@ const UploadProgram = () => {
 
   const dispatch = useDispatch();
 
-  const socketClientReference = useRef<Socket<DefaultEventsMap, DefaultEventsMap>>()
-
   useEffect(() => {
-
-    socketClientReference.current = io("http://localhost:3000/api/ws", {
-      query: { Authorization: localStorage.getItem(GEAR_STORAGE_KEY) || "" },
-    });
-
     if (!localStorage.getItem(GEAR_MNEMONIC_KEY)) {
       dispatch(generateKeypairAction())
     }
@@ -44,21 +34,12 @@ const UploadProgram = () => {
     if ( typeof files[0]?.name === 'string' ) {
       const fileExt: string = files[0].name.split(".").pop().toLowerCase();
       return fileExt !== 'wasm';
-    } 
+    }
     return true
   }, [])
 
   const handleFilesUpload = useCallback((file) => {
-    if (socketClientReference.current) {
-      socketClientReference.current.emit(emitEvents.uploadProgram, {
-        file,
-        filename: file.name,
-        gasLimit: 2,
-        value: 2,
-        initPayload: "",
-        mnemonic: localStorage.getItem(GEAR_MNEMONIC_KEY) || "",
-      });
-    }
+    socketService.uploadProgram(file);
   }, [])
 
   const handleFileDrop = useCallback(
@@ -104,14 +85,13 @@ const UploadProgram = () => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
-    const { files } = target;
+    const { target: { files } } = event;
     if ( files?.length ) {
       const isCorrectFormat = checkFileFormat(files);
       setWrongFormat(isCorrectFormat);
       if (!isCorrectFormat) {
         handleFilesUpload(files[0])
-      }    
+      }
     }
   };
 
