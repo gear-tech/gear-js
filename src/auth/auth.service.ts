@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { createHash, createHmac } from 'crypto';
 import { TelegramConstants } from './constants/telegram.constants';
-import { GithubConstants } from './constants/github.constants';
 import { JwtService } from '@nestjs/jwt';
 const fetch = require('node-fetch');
 
@@ -69,8 +68,8 @@ export class AuthService {
     const urlAccessToken = 'https://github.com/login/oauth/access_token';
     const data = {
       code: code,
-      client_id: GithubConstants.clientId,
-      client_secret: GithubConstants.clientSecret,
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
     };
     const res = await fetch(urlAccessToken, {
       method: 'POST',
@@ -84,7 +83,7 @@ export class AuthService {
   async githubUserData(accessToken: string) {
     const urlUserData = 'https://api.github.com/user';
     const res = await fetch(
-      `${urlUserData}?client_id=${GithubConstants.clientId}&client_secret=${GithubConstants.clientSecret}`,
+      `${urlUserData}?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`,
       {
         method: 'GET',
         headers: { Authorization: `token ${accessToken}` },
