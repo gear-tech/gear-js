@@ -42,4 +42,9 @@ export class ProgramsService {
   getAllPrograms(user) {
     return this.programRepository.find({ user: user });
   }
+
+  async getProgram(hash) {
+    const program = await this.programRepository.findOne({ hash: hash });
+    return program;
+  }
 }
