@@ -23,7 +23,7 @@ const Callback = ({user, getGitUserJwt}: CallbackType) => {
     }},
     [ getGitUserJwt, code ]);
   if (typeof code === 'string' && code.length > 5) {
-    if ('access_token' in user.user) {
+    if (user.accessToken !== "") {
       return <Redirect to={routes.main}/>
     }
     return <div className="callback-content">Loading...</div>;
