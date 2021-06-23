@@ -61,18 +61,16 @@
 @media (max-width: 600px) {
   .drop-block {
     align-items: unset;
-    margin-bottom: 40px;
+    margin-bottom: 26px;
     height: fit-content;
     &__no-file-hover {
       margin-top: 14px;
       justify-content: unset;
       width: 100%;
+      margin-bottom: 14px;
     }
     &__info {
       display: none;
     }
-  }
-  .program-details {
-    display: none;
   }
 }

@@ -36,13 +36,19 @@ const BlocksListUploaded = () => {
         programs && programs.length && programs.map((program) => (
           <li className="programs-list__item" key={program.hash}>
             <span className="programs-list__number">{program.programNumber}</span>
-            <span className="programs-list__name">{program.name}</span>
-            <span className="programs-list__info">
-              Number of calls:<span className="programs-list__info-data">{program.callCount}</span>
-            </span>
-            <span className="programs-list__info">
-              Uploaded at:<span className="programs-list__info-data">{formatProgramDate(program.uploadedAt)}</span>
-            </span>
+            <div className="program-wrapper">
+              <div className="program-wrapper__name">
+                <span className="programs-list__name">{program.name}</span>
+              </div>
+              <div className="program-wrapper__data">
+                <div className="programs-list__info">
+                  Number of calls:<span className="programs-list__info-data">{program.callCount}</span>
+                </div>
+                <div className="programs-list__info">
+                  Uploaded at:<span className="programs-list__info-data">{formatProgramDate(program.uploadedAt)}</span>
+                </div>
+              </div>
+            </div>
             <button 
               className="programs-list__refresh-btn" 
               type="button" 

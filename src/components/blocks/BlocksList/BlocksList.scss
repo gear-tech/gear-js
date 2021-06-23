@@ -33,7 +33,6 @@
 .programs-list__item {
   align-items: center;
   display: flex;
-  gap: 24px;
   padding: 23px 0;
   position: relative;
 }
@@ -56,8 +55,8 @@
 
 .programs-list__name {
   color: $textColor;
-  flex-grow: 1;
   font-size: $fontSizeBase;
+  margin-left: 24px;
 }
 
 .programs-list__info {
@@ -74,8 +73,22 @@
 .programs-list__refresh-btn {
   background: url('../../../images/refresh.svg') no-repeat;
   height: 20px;
-  margin-left: 20px;
   width: 20px;
+  position: absolute;
+  right: 0;
+}
+
+.program-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-right: 60px;
+  &__data {
+    display: flex;
+    flex: 0 1 440px;
+    margin-left: auto;
+  }
+
 }
 
 @media (max-width: 600px) {
@@ -85,6 +98,34 @@
     }
     &__button {
       width: 100%;
+    }
+  }
+  .program-wrapper {
+    flex-direction: column;
+    padding-right: 0;
+    padding-left: 16px;
+    &__name {
+      width: 100%;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #3E3E3E;
+      span {
+        margin-left: 0;
+      };
+    }
+    &__data {
+      width: 100%;
+      margin-left: unset;
+      flex: unset;
+      justify-content: space-between;
+      div {
+        display: flex;
+        flex-direction: column;
+        span {
+          padding: 0;
+          color: #858585;
+        }
+      }
     }
   }
   .programs-list {
@@ -97,6 +138,7 @@
     &__name {
       font-size: 14px;
       word-break: break-all;
+      margin-left: 16px;
     }
   }
 }

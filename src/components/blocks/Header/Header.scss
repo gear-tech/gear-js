@@ -69,6 +69,7 @@
 @media ( max-width: 600px ) {
   .header {
     width: 100%;
+    padding: 0 16px;
     &__logo {
       z-index: 100;
     }

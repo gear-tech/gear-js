@@ -125,3 +125,63 @@
   color: #ffffff;
   opacity: 0.8;
 }
+
+.program-details__close {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .program-details {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 111;
+    background-color: #181818;
+    &__header {
+      padding: 16px;
+    }
+    &__close {
+      position: absolute;
+      top: 24px;
+      right: 16px;
+      display: block;
+      width: 14px;
+    }
+    &__cancel {
+      display: none;
+    }
+    &__wrapper, &__info {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    &__wrapper {
+      padding: 26px 16px;
+    }
+    &__info {
+      margin-bottom: 32px;
+    }
+    &__field {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    &__value {
+      overflow: unset;
+      display: flex;
+      justify-content: space-between;
+      max-width: unset;
+    }
+    &__filename {
+      font-size: 22px;
+      padding: 0;
+    }
+    &__buttons {
+      button {
+        width: 100%;
+        margin: 0;
+      }
+    }
+  }
+}
