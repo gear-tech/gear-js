@@ -51,9 +51,14 @@
   font-size: $fontSizeLarge;
 }
 
+.switch-info__timer {
+  display: flex;
+}
+
 .switch-info__num {
   color: $textColor;
   font-weight: bold;
+  width: 1ch;
 }
 
 @media (max-width: 600px) {
