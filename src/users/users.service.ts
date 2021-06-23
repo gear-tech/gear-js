@@ -22,6 +22,22 @@ export class UsersService {
     return user;
   }
 
+  async profile(user) {
+    if (!user) {
+      return { error: 'user not found' };
+    }
+    const {
+      id,
+      telegramId,
+      githubId,
+      authDate,
+      authKey,
+      accessToken,
+      ...result
+    } = user;
+    return result;
+  }
+
   async findOneTg(telegramId: string) {
     const user = await this.userRepository.findOne({ telegramId: telegramId });
 
