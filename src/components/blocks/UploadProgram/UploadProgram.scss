@@ -57,3 +57,22 @@
   text-align: center;
   width: 259px;
 }
+
+@media (max-width: 600px) {
+  .drop-block {
+    align-items: unset;
+    margin-bottom: 40px;
+    height: fit-content;
+    &__no-file-hover {
+      margin-top: 14px;
+      justify-content: unset;
+      width: 100%;
+    }
+    &__info {
+      display: none;
+    }
+  }
+  .program-details {
+    display: none;
+  }
+}

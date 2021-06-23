@@ -79,3 +79,17 @@
   align-items: center;
   justify-content: center;
 }
+
+
+@media (max-width: 600px) {
+  .main {
+    padding-bottom: 0!important;
+  }
+  .sign-in {
+    margin-top: 0;
+    height: 100%;
+    &__wrapper-buttons {
+      width: 100%;
+    }
+  }
+}

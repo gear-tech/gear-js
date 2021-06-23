@@ -6,7 +6,6 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 import './App.scss';
 
 import { routes } from 'routes';
-import { PrivateRoute } from 'components/PrivateRoute';
 
 import Footer from 'components/blocks/Footer';
 import SignIn from 'components/pages/SignIn';
@@ -23,12 +22,12 @@ const App = () => (
         <Header/>
         <Main>
           <Switch>
-            <PrivateRoute exact path={routes.main}>
+            <Route exact path={routes.main}>
               <UploadProgramPage showUploaded={false}/>
-            </PrivateRoute>
-            <PrivateRoute exact path={routes.uploadedPrograms}>
+            </Route>
+            <Route exact path={routes.uploadedPrograms}>
               <UploadProgramPage showUploaded/>
-            </PrivateRoute>
+            </Route>
             <Route exact path={routes.signIn}>
               <SignIn/>
             </Route>

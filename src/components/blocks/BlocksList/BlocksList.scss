@@ -77,3 +77,26 @@
   margin-left: 20px;
   width: 20px;
 }
+
+@media (max-width: 600px) {
+  .block-list {
+    &__header {
+      margin-bottom: 16px;
+    }
+    &__button {
+      width: 100%;
+    }
+  }
+  .programs-list {
+    &__item {
+      align-items: unset;
+    }
+    &__number {
+      font-size: 14px;
+    }
+    &__name {
+      font-size: 14px;
+      word-break: break-all;
+    }
+  }
+}

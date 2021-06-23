@@ -2,7 +2,7 @@ import React from 'react';
 import ProgramSwitch from '../../blocks/ProgramSwitch';
 import UploadProgram from '../../blocks/UploadProgram';
 import BlocksList from '../../blocks/BlocksList';
-import BlocksListUploaded from '../../blocks/BlocksList/BlocksListUploaded';
+// import BlocksListUploaded from '../../blocks/BlocksList/BlocksListUploaded';
 
 import './UploadProgramPage.scss';
 
@@ -16,10 +16,10 @@ const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => (
     {!showUploaded && (
       <>
         <UploadProgram />
-        <BlocksList />
+        <BlocksList/>
       </>
     )}
-    {showUploaded && <BlocksListUploaded />}
+    {/* {showUploaded && <BlocksListUploaded />} */}
   </div>
 );
 
