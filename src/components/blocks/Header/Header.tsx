@@ -26,6 +26,10 @@ const Header = () => {
     }
   }
 
+  const handleMenuClick = () => {
+    setIsMobileMenuOpened(!isMobileMenuOpened)
+  }
+
   return (
     <header className="header">
       <div className="header__logo">
@@ -37,7 +41,9 @@ const Header = () => {
             <img src={user?.photoUrl} alt="avatar"/>
             <span className="user-block__name">{userInfo}</span>
           </div>
-          <Link to={routes.logout} className="user-block__logout">
+          <Link to={routes.logout} className="user-block__logout"
+            aria-label="menuLink"
+            onClick={handleMenuClick}>
             <LogoutIcon color={isMobileMenuOpened ? "#282828" : "#fff"}/>
             <span>Sign out</span>
           </Link>
@@ -46,15 +52,47 @@ const Header = () => {
       ||
       (
         <nav className={`header__nav ${isMobileMenuOpened ? "show" : ""}`}>
-          <button className="header__nav-button" type="button">What is GEAR?</button>
-          <button className="header__nav-button" type="button">How it works</button>
-          <button className="header__nav-button" type="button">Use cases</button>
-          <button className="header__nav-button" type="button">Competitive analyze</button>
-          <button className="header__nav-button" type="button">Team</button>
-          <button className="header__nav-button" type="button">Tokenomics</button>
-          <button className="header__nav-button" type="button">Timeline</button>
+          <button
+            className="header__nav-button"
+            type="button"
+            aria-label="menuLink"
+            onClick={handleMenuClick}>What is GEAR?</button>
+          <button 
+            className="header__nav-button"
+            type="button"
+            aria-label="menuLink"
+            onClick={handleMenuClick}>How it works</button>
+          <button 
+            className="header__nav-button" 
+            type="button"
+            aria-label="menuLink"
+            onClick={handleMenuClick}>Use cases</button>
+          <button 
+            className="header__nav-button" 
+            type="button"
+            aria-label="menuLink"
+            onClick={handleMenuClick}>Competitive analyze</button>
+          <button 
+            className="header__nav-button" 
+            type="button"
+            aria-label="menuLink"
+            onClick={handleMenuClick}>Team</button>
+          <button 
+            className="header__nav-button" 
+            type="button"
+            aria-label="menuLink"
+            onClick={handleMenuClick}>Tokenomics</button>
+          <button 
+            className="header__nav-button"
+            type="button"
+            aria-label="menuLink"
+            onClick={handleMenuClick}>Timeline</button>
           <Link to={routes.main}>
-            <button className="header__nav-button" type="button">Upload</button>
+            <button 
+              className="header__nav-button" 
+              type="button"
+              aria-label="menuLink"
+              onClick={handleMenuClick}>Upload</button>
           </Link>
         </nav>
       )
@@ -63,7 +101,7 @@ const Header = () => {
         className={`header__burger ${isMobileMenuOpened ? "active" : ""}`}
         type="button"
         aria-label="burger"
-        onClick={() => setIsMobileMenuOpened(!isMobileMenuOpened)}
+        onClick={handleMenuClick}
       >
         <span/>
         <span/>

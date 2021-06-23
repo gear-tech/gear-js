@@ -68,6 +68,9 @@ export const getTelegramUserJwtAction = (user: any) => (dispatch: any) => {
     .then((result: any) => {
       window.localStorage.setItem(GEAR_STORAGE_KEY, result.access_token);
       dispatch(fetchTokenSuccessAction(result));
+      if (result.access_token) {
+        window.location.reload();
+      }
     })
     .catch(() => dispatch(fetchTokenErrorAction()));
 }
@@ -79,6 +82,9 @@ export const getTestUserJwtAction = (userId: string) => (dispatch: any) => {
     .then((result: any) => {
       window.localStorage.setItem(GEAR_STORAGE_KEY, result.access_token);
       dispatch(fetchTokenSuccessAction(result));
+      if (result.access_token) {
+        window.location.reload();
+      }
     })
     .catch(() => dispatch(fetchTokenErrorAction()));
 }

@@ -7,10 +7,9 @@ import { Redirect } from "react-router-dom";
 import { GEAR_STORAGE_KEY } from 'consts';
 import { routes } from 'routes';
 
-import {getTelegramUserJwtAction, getTestUserJwtAction} from 'store/actions/actions';
+import {getTelegramUserJwtAction} from 'store/actions/actions';
 
 import './SignIn.scss'
-import telegram from 'images/telegram.svg';
 import github from 'images/github.svg';
 
 
@@ -21,11 +20,7 @@ function SignIn(){
   const handleTelegramResponse = (userObject: {}) => {
     dispatch(getTelegramUserJwtAction(userObject));
   }
-
-  const handleAuthViaTelegram = () => {
-    dispatch(getTestUserJwtAction('43'));
-  }
-
+  
   const handleAuthViaGithub = () => {
     window.location.href = "https://github.com/login/oauth/authorize?client_id=d48a88d171386837281a&redirect_uri=https://idea.gear-tech.io/callback"
   }
@@ -46,12 +41,6 @@ function SignIn(){
           requestAccess="write"
           usePic="true"
         />
-        <button 
-          type='button' 
-          className='sign-in__button sign-in__button-telegram'
-          onClick={handleAuthViaTelegram}>
-            <img className='sign-in__telegram-logo' alt='telegram' src={telegram}/>Continue with Telegram
-          </button>
         <button 
           type='button' 
           className='sign-in__button sign-in__button-github'
