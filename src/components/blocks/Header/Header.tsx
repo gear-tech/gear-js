@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/reducers';
 
 import { routes } from 'routes';
 
 import { LogoIcon, LogoutIcon } from 'Icons';
 
 import './Header.scss';
-import GithubAvatar from "images/github_gray.svg";
 
 const Header = () => {
-  const dispatch = useDispatch();
-
   const location = useLocation();
   const showUser = location.pathname === routes.main || location.pathname === routes.uploadedPrograms;
 
+  const { user } = useSelector((state: RootState) => state.user)
+
   const [isMobileMenuOpened, setIsMobileMenuOpened] =  useState(false);
 
-  useEffect(() => {
-    console.log('haha')
-  }, [dispatch])
+  let userInfo = "";
+  if (user) {
+    if (user.email) {
+      userInfo = user.email;
+    } else if (user.username) {
+      userInfo = user.username;
+    }
+  }
 
   return (
     <header className="header">
@@ -29,8 +34,8 @@ const Header = () => {
       {(showUser && 
         <div className={`header__user-block user-block ${isMobileMenuOpened ? "show" : ""}`}>
           <div className="user-block--wrapper">
-            <img src={GithubAvatar} alt="avatar"/>
-            <span className="user-block__name">k.konstantinopolski@gmail.com</span>
+            <img src={user?.photoUrl} alt="avatar"/>
+            <span className="user-block__name">{userInfo}</span>
           </div>
           <Link to={routes.logout} className="user-block__logout">
             <LogoutIcon color={isMobileMenuOpened ? "#282828" : "#fff"}/>

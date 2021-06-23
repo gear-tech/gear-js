@@ -1,4 +1,9 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect} from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserDataAction } from 'store/actions/actions';
+import { RootState } from 'store/reducers';
+
 import ProgramSwitch from '../../blocks/ProgramSwitch';
 import UploadProgram from '../../blocks/UploadProgram';
 import BlocksList from '../../blocks/BlocksList';
@@ -12,20 +17,19 @@ type UploadProgramPageType = {
 
 const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => {
 
+  const dispatch = useDispatch();
 
-  const [timeLeft, setTimeLeft] = useState(0)
+  const { user } = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const decreasedTime = timeLeft + 0.1 >= 7 ? 0 : timeLeft + 0.1;
-      setTimeLeft(decreasedTime);
-    }, 100);
-    return () => clearInterval(intervalId);
-  }, [setTimeLeft, timeLeft])
+    if (!user) {
+      dispatch(getUserDataAction());
+    }    
+  }, [dispatch, user])
 
   return (
     <div className="main-content-wrapper">
-      <ProgramSwitch showUploaded={showUploaded} timeLeft={timeLeft}/>
+      <ProgramSwitch showUploaded={showUploaded}/>
       {!showUploaded && (
         <>
           <UploadProgram />

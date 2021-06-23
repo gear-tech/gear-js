@@ -9,11 +9,11 @@ export default class ProgramRequestService {
   
   protected readonly API_REFRESH_PROGRAM = '/programs/data';
   
-  public fetchAllPrograms(): Promise<{ programs: ProgramModel[] }> {
+  public fetchAllPrograms(): Promise<ProgramModel[]> {
     return this.apiRequest.getResource(this.API_PROGRAMS_ALL, undefined, undefined, undefined, {Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`})
   }
 
-  public fetchProgram(hash: string): Promise<{ program: ProgramModel }> {
+  public fetchProgram(hash: string): Promise<ProgramModel> {
     return this.apiRequest.getResource(this.API_REFRESH_PROGRAM, {hash}, undefined, undefined, {Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`})
   }
 }

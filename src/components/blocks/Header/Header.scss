@@ -42,6 +42,9 @@
   &--wrapper {
     display: flex;
     align-items: center;
+    img {
+      width: 22px;
+    }
   }
 }
 .user-block__name {

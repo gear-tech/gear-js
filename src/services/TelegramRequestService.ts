@@ -5,7 +5,7 @@ export default class GitRequestService {
 
   protected readonly API_TELEGRAM_LOGIN_PATH = '/auth/login/telegram';
 
-  public authWithTelegram(authParams: object): Promise<{ token: any }> {
-    return this.apiRequest.getResource(this.API_TELEGRAM_LOGIN_PATH, {params: authParams})
+  public authWithTelegram(authParams: {}): Promise<{ token: any }> {
+    return this.apiRequest.getResource(this.API_TELEGRAM_LOGIN_PATH, undefined, "POST",  {...authParams})
   }
 }

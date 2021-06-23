@@ -40,10 +40,10 @@ export const generateKeypairAction = () => (dispatch: any) => {
   dispatch(fetchUserKeypairAction());
   userService
     .generateKeypair()
-    .then((value: {generatedKeypair: UserKeypairModel}) => {
-      window.localStorage.setItem(GEAR_MNEMONIC_KEY, value.generatedKeypair.mnemonic);
-      dispatch(fetchUserKeypairSuccessAction(value.generatedKeypair));
-      if (value.generatedKeypair.mnemonic) {
+    .then((generatedKeypair: UserKeypairModel) => {
+      window.localStorage.setItem(GEAR_MNEMONIC_KEY, generatedKeypair.mnemonic);
+      dispatch(fetchUserKeypairSuccessAction(generatedKeypair));
+      if (generatedKeypair.mnemonic) {
         userService.balanceTransfer(GEAR_BALANCE_TRANSFER_VALUE)
       }
     })
@@ -72,12 +72,23 @@ export const getTelegramUserJwtAction = (user: any) => (dispatch: any) => {
     .catch(() => dispatch(fetchTokenErrorAction()));
 }
 
+export const getTestUserJwtAction = (userId: string) => (dispatch: any) => {
+  dispatch(fetchTokenAction());
+  userService
+    .authWithTest(userId)
+    .then((result: any) => {
+      window.localStorage.setItem(GEAR_STORAGE_KEY, result.access_token);
+      dispatch(fetchTokenSuccessAction(result));
+    })
+    .catch(() => dispatch(fetchTokenErrorAction()));
+}
+
 export const getUserDataAction = () => (dispatch: any) => {
   dispatch(fetchUserAction());
   userService
     .fetchUserData()
-    .then((result: {user: UserModel}) => {
-      dispatch(fetchUserSuccessAction(result.user));
+    .then((user: UserModel) => {
+      dispatch(fetchUserSuccessAction(user));
     })
     .catch(() => dispatch(fetchUserErrorAction()));
 }
@@ -86,8 +97,8 @@ export const getProgramsAction = () => (dispatch: any) => {
   dispatch(fetchProgramsAction());
   programService
     .fetchAllPrograms()
-    .then((value: {programs: ProgramModel[]}) => {
-      dispatch(fetchProgramsSuccessAction(value.programs));
+    .then((programs: ProgramModel[]) => {
+      dispatch(fetchProgramsSuccessAction(programs));
     })
     .catch(() => dispatch(fetchProgramsErrorAction()))
 }
@@ -96,8 +107,8 @@ export const getProgramAction = (hash: string) => (dispatch: any) => {
   dispatch(fetchProgramAction());
   programService
     .fetchProgram(hash)
-    .then((value: {program: ProgramModel}) => {
-      dispatch(fetchProgramSuccessAction(value.program));
+    .then((program: ProgramModel) => {
+      dispatch(fetchProgramSuccessAction(program));
     })
     .catch(() => dispatch(fetchProgramErrorAction()))
 }

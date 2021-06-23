@@ -3,6 +3,8 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 
+import {PrivateRoute} from "components/PrivateRoute"
+
 import './App.scss';
 
 import { routes } from 'routes';
@@ -22,12 +24,12 @@ const App = () => (
         <Header/>
         <Main>
           <Switch>
-            <Route exact path={routes.main}>
+            <PrivateRoute exact path={routes.main}>
               <UploadProgramPage showUploaded={false}/>
-            </Route>
-            <Route exact path={routes.uploadedPrograms}>
+            </PrivateRoute>
+            <PrivateRoute exact path={routes.uploadedPrograms}>
               <UploadProgramPage showUploaded/>
-            </Route>
+            </PrivateRoute>
             <Route exact path={routes.signIn}>
               <SignIn/>
             </Route>

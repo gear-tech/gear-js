@@ -12,7 +12,7 @@ const BlocksListUploaded = () => {
   const { programs } = useSelector((state: RootState) => state.programs)
 
   const formatProgramDate = (rawDate: string) => {
-    const date = new Date(rawDate);
+    const date = new Date(Number(rawDate));
     const programTime = date.toLocaleTimeString('en-GB');
     const programDate = date.toLocaleDateString('en-US').replaceAll('/', '-')
     return `${programDate} ${programTime}`;
@@ -23,15 +23,18 @@ const BlocksListUploaded = () => {
   }
 
   useEffect(() => {
-    dispatch(getProgramsAction());
-  }, [dispatch])
+    console.log(programs)
+    if (!programs) {
+      dispatch(getProgramsAction());
+    }
+  }, [dispatch, programs])
 
   return (
     <div className="block-list">
     <ul className="programs-list">
       {
         programs && programs.length && programs.map((program) => (
-          <li className="programs-list__item">
+          <li className="programs-list__item" key={program.hash}>
             <span className="programs-list__number">{program.programNumber}</span>
             <span className="programs-list__name">{program.name}</span>
             <span className="programs-list__info">

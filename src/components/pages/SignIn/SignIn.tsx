@@ -7,17 +7,23 @@ import { Redirect } from "react-router-dom";
 import { GEAR_STORAGE_KEY } from 'consts';
 import { routes } from 'routes';
 
+import {getTelegramUserJwtAction, getTestUserJwtAction} from 'store/actions/actions';
+
 import './SignIn.scss'
-import github from '../../../images/github.svg';
-import {getTelegramUserJwtAction} from '../../../store/actions/actions';
+import telegram from 'images/telegram.svg';
+import github from 'images/github.svg';
 
 
 function SignIn(){
 
   const dispatch = useDispatch();
 
-  const handleTelegramResponse = (userObject: any) => {
+  const handleTelegramResponse = (userObject: {}) => {
     dispatch(getTelegramUserJwtAction(userObject));
+  }
+
+  const handleAuthViaTelegram = () => {
+    dispatch(getTestUserJwtAction('43'));
   }
 
   const handleAuthViaGithub = () => {
@@ -40,6 +46,12 @@ function SignIn(){
           requestAccess="write"
           usePic="true"
         />
+        <button 
+          type='button' 
+          className='sign-in__button sign-in__button-telegram'
+          onClick={handleAuthViaTelegram}>
+            <img className='sign-in__telegram-logo' alt='telegram' src={telegram}/>Continue with Telegram
+          </button>
         <button 
           type='button' 
           className='sign-in__button sign-in__button-github'

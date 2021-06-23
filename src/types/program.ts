@@ -8,7 +8,7 @@ export interface ProgramModel {
 }
 
 export interface ProgramState {
-    programs: ProgramModel[];
+    programs: ProgramModel[] | null;
     loading: boolean,
     error: null|string;
 }
@@ -28,7 +28,7 @@ interface FetchProgramsAction{
 }
 interface FetchProgramsSuccessAction{
     type: ProgramActionTypes.FETCH_PROGRAMS_SUCCESS;
-    payload: [];
+    payload: ProgramModel[];
 }
 interface FetchProgramsErrorAction{
     type: ProgramActionTypes.FETCH_PROGRAMS_ERROR;
