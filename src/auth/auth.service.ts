@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { createHash, createHmac } from 'crypto';
-import { TelegramConstants } from './constants/telegram.constants';
 import { JwtService } from '@nestjs/jwt';
 const fetch = require('node-fetch');
 
@@ -13,7 +12,7 @@ export class AuthService {
   ) {}
 
   verifyTelegramLogin(hash: string, userData: object) {
-    const botToken = TelegramConstants.botToken;
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const checkStr = Object.keys(userData)
       .sort()
       .map((key) => `${key}=${userData[key]}`)
