@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import {NativeTypes} from 'react-dnd-html5-backend';
 import {useDrop, DropTargetMonitor} from 'react-dnd';
-import { GEAR_MNEMONIC_KEY, socketService } from 'consts';
+import { GEAR_MNEMONIC_KEY } from 'consts';
 
 import { generateKeypairAction } from 'store/actions/actions';
 
@@ -24,6 +24,7 @@ const UploadProgram = () => {
 
   // const [droppedFile, setDroppedFile] = useState<File[]>([]);
   const [wrongFormat, setWrongFormat] = useState(false);
+  const [droppedFile, setDroppedFile] = useState<File | null>(null);
 
   if ( wrongFormat ) {
     setTimeout( () => setWrongFormat(false), 3000);
@@ -39,8 +40,8 @@ const UploadProgram = () => {
   }, [])
 
   const handleFilesUpload = useCallback((file) => {
-    socketService.uploadProgram(file);
-  }, [])
+    setDroppedFile(file)
+  }, [setDroppedFile])
 
   const handleFileDrop = useCallback(
     (item) => {
@@ -95,6 +96,8 @@ const UploadProgram = () => {
     }
   };
 
+  console.log(droppedFile)
+
   return (
     <>
       <div className={dropBlockClassName} ref={drop}>
@@ -111,7 +114,7 @@ const UploadProgram = () => {
         </div>
       </div>
       {wrongFormat && <Error onClose={() => setWrongFormat(false)}/>}
-      <ProgramDetails/>
+      {droppedFile && <ProgramDetails setDroppedFile={setDroppedFile} />}
     </>
   );
 };

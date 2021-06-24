@@ -1,30 +1,23 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
 import './ProgramDetails.scss';
 
 import cancel from 'images/cancel.svg';
 import close from 'images/close.svg';
 
-const ProgramDetails = () => {
+type ProgramDetailsTypes = {
+  setDroppedFile: (param: File | null) => void;
+}
 
-  const programDetailsRef = useRef<HTMLDivElement | null>(null)
-
-  const handleCloseUpload = () => {
-    if (programDetailsRef.current) {
-      programDetailsRef.current.style.display = "none";
-    }
-  }
-
-  return (
+const ProgramDetails = ({setDroppedFile}: ProgramDetailsTypes) => (
     <div 
       className="program-details"
-      ref={programDetailsRef}
     >
       <h3 className="program-details__header">UPLOAD NEW PROGRAM</h3>
       <button
         type="button"
         aria-label="closeButton"
-        onClick={handleCloseUpload}>
+        onClick={() => setDroppedFile(null)}>
         <img 
           src={close} 
           alt="close" 
@@ -71,13 +64,17 @@ const ProgramDetails = () => {
           <button type="button" className="program-details__upload">
             Upload program
           </button>
-          <button type="button" className="program-details__cancel">
+          <button 
+            type="button" 
+            className="program-details__cancel"
+            aria-label="closeProgramDetails"
+            onClick={() => setDroppedFile(null)}
+          >
             Cancel upload
           </button>
         </div>
       </div>
     </div>
-  )
-};
+)
 
 export default ProgramDetails;

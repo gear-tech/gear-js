@@ -12,7 +12,6 @@ import {getTelegramUserJwtAction} from 'store/actions/actions';
 import './SignIn.scss'
 import github from 'images/github.svg';
 
-
 function SignIn(){
 
   const dispatch = useDispatch();
