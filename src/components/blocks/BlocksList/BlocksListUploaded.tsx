@@ -5,7 +5,7 @@ import { RootState } from 'store/reducers';
 
 import './BlocksList.scss';
 
-const BlocksListUploaded = () => {
+export const BlocksListUploaded = () => {
 
   const dispatch = useDispatch();
 
@@ -62,5 +62,3 @@ const BlocksListUploaded = () => {
   </div>
   )
 };
-
-export default BlocksListUploaded;

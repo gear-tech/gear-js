@@ -106,11 +106,11 @@ const UploadProgram = () => {
           <button className="drop-block__button" type="button" onClick={handleClick}>Upload program</button>
           <div className="drop-block__info">
             Click “Upload program” to browse or
-            drag and drop your .TBD files here
+            drag and drop your .wasm files here
           </div>
         </div>
         <div className="drop-block__file-hover">
-          <span className="drop-block__hover-info">Drop your .TBD files here to upload</span>
+          <span className="drop-block__hover-info">Drop your .wasm files here to upload</span>
         </div>
       </div>
       {wrongFormat && <Error onClose={() => setWrongFormat(false)}/>}
