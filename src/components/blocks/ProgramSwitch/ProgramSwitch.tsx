@@ -7,9 +7,10 @@ import { routes } from 'routes';
 
 type ProgramSwitchType = {
   showUploaded: boolean;
+  timeLeft: number;
 };
 
-const ProgramSwitch = ({ showUploaded }: ProgramSwitchType) => (
+const ProgramSwitch = ({ showUploaded, timeLeft }: ProgramSwitchType) => (
   <div className="switch-block">
     <div className="switch-buttons">
       <Link
@@ -28,9 +29,11 @@ const ProgramSwitch = ({ showUploaded }: ProgramSwitchType) => (
     <div className="switch-block__info switch-info">
       <div className="switch-info__col">
         <span className="switch-info__title">Last block</span>
-        <span className="switch-info__data">
-          <b className="switch-info__num">2,9</b> s
-        </span>
+        <div className="switch-info__data switch-info__timer">
+          <div className="switch-info__num">{timeLeft.toFixed(1).slice(0, 1)}</div>
+          .
+          <div className="switch-info__num">{timeLeft.toFixed(1).slice(-1)}</div> s
+        </div>
       </div>
       <div className="switch-info__separator" />
       <div className="switch-info__col">
