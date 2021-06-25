@@ -74,37 +74,43 @@ const ProgramDetails = ({setDroppedFile, droppedFile}: ProgramDetailsTypes) => {
               </div>
               <div className="program-details__info">
                 <label htmlFor="gasLimit" className="program-details__field-limit program-details__field">Gas limit:</label>
-                <Field 
-                  id="gasLimit" 
-                  name="gasLimit" 
-                  placeholder="20000" 
-                  className="program-details__limit-value program-details__value" 
-                  type="number"
-                />
-                {errors.gasLimit && touched.gasLimit ? <div className="program-details__error">{errors.gasLimit}</div> : null}
+                <div className="program-details__field-wrapper">
+                  <Field 
+                    id="gasLimit" 
+                    name="gasLimit" 
+                    placeholder="20000" 
+                    className="program-details__limit-value program-details__value" 
+                    type="number"
+                  />
+                  {errors.gasLimit && touched.gasLimit ? <div className="program-details__error">{errors.gasLimit}</div> : null}
+                </div>
               </div>
             </div>
             <div className="program-details__wrapper-column2">
               <div className="program-details__info">
                 <label htmlFor="initPayload" className="program-details__field-init-parameters program-details__field">Initial parameters:</label>
-                <Field 
-                  id="initPayload" 
-                  name="initPayload" 
-                  className="program-details__init-parameters-value program-details__value"
-                />
-                {errors.initPayload && touched.initPayload ? <div className="program-details__error">{errors.initPayload}</div> : null}
+                <div className="program-details__field-wrapper">
+                  <Field 
+                    id="initPayload" 
+                    name="initPayload" 
+                    className="program-details__init-parameters-value program-details__value"
+                  />
+                  {errors.initPayload && touched.initPayload ? <div className="program-details__error">{errors.initPayload}</div> : null}
+                </div>
               </div>
 
               <div className="program-details__info">
                 <label htmlFor="value" className="program-details__field-init-value program-details__field">Initial value:</label>
-                <Field 
-                  id="value" 
-                  name="value" 
-                  placeholder="20000" 
-                  className="program-details__init-value program-details__value" 
-                  type="number"
-                />
-                {errors.value && touched.value ? <div className="program-details__error">{errors.value}</div> : null}
+                <div className="program-details__field-wrapper">
+                  <Field 
+                    id="value" 
+                    name="value" 
+                    placeholder="20000" 
+                    className="program-details__init-value program-details__value" 
+                    type="number"
+                  />
+                  {errors.value && touched.value ? <div className="program-details__error">{errors.value}</div> : null}
+                </div>
               </div>
             </div>
 

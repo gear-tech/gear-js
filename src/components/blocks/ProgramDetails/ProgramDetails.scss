@@ -89,7 +89,8 @@
 
 .program-details__error {
   color: #ff0000;
-  font-size: 16px;
+  font-size: 14px;
+  position: absolute;
 }
 
 .program-details__field {
@@ -99,7 +100,7 @@
   color: $textColorSecondary;
   font-weight: 300;
   min-width: 200px;
-  //font-size: 21px;//в макете кажется наглая ложь
+  font-size: 21px;
   line-height: 130%;
 }
 
@@ -120,7 +121,7 @@
   line-height: 24px;
   color: #ffffff;
   padding: 12px 24px;
-  margin: 32px;
+  margin: 32px 32px 32px 0;
 }
 
 .program-details__cancel {
@@ -144,9 +145,6 @@
     left: 0;
     z-index: 111;
     background-color: #181818;
-    &__error {
-      font-size: 18px;
-    }
     &__header {
       padding: 16px;
     }
