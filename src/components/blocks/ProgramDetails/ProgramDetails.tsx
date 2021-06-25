@@ -20,7 +20,7 @@ const ProgramDetails = () => (
           <span className="program-details__field-file program-details__field">File:</span>
           <span className="program-details__filename program-details__value">
             awesomeprogramnam...
-            <span>.tbd</span>
+            <span>.wasm</span>
             <button type="button">
               <img alt="cancel" src={cancel} />
             </button>
