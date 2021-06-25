@@ -96,8 +96,6 @@ const UploadProgram = () => {
     }
   };
 
-  console.log(droppedFile)
-
   return (
     <>
       <div className={dropBlockClassName} ref={drop}>
@@ -114,7 +112,7 @@ const UploadProgram = () => {
         </div>
       </div>
       {wrongFormat && <Error onClose={() => setWrongFormat(false)}/>}
-      {droppedFile && <ProgramDetails setDroppedFile={setDroppedFile} />}
+      {droppedFile && <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile}/>}
     </>
   );
 };

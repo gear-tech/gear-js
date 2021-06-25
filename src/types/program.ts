@@ -13,6 +13,12 @@ export interface ProgramState {
     error: null|string;
 }
 
+export interface UploadProgramModel {
+    initPayload: string;
+    gasLimit: number;
+    value: number;
+}
+
 export enum ProgramActionTypes{
     FETCH_PROGRAMS = 'FETCH_PROGRAMS',
     FETCH_PROGRAMS_SUCCESS = 'FETCH_PROGRAMS_SUCCESS',
