@@ -104,7 +104,12 @@ const UploadProgram = ({ socketService }: UploadProgramType) => {
 
   return (
     <>
-      <div className={dropBlockClassName} ref={drop}>
+      {droppedFile 
+      &&
+      <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile} socketService={socketService}/>
+      ||
+      (
+        <div className={dropBlockClassName} ref={drop}>
         <div className="drop-block__no-file-hover">
           <input className="drop-block__input-file" ref={hiddenFileInput} type="file" onChange={handleChange}/>
           <button className="drop-block__button" type="button" onClick={handleClick}>Upload program</button>
@@ -117,8 +122,8 @@ const UploadProgram = ({ socketService }: UploadProgramType) => {
           <span className="drop-block__hover-info">Drop your .wasm files here to upload</span>
         </div>
       </div>
+      )}
       {wrongFormat && <Error onClose={() => setWrongFormat(false)}/>}
-      {droppedFile && <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile} socketService={socketService}/>}
     </>
   );
 };

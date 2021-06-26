@@ -23,11 +23,14 @@ const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => {
 
   const { user } = useSelector((state: RootState) => state.user)
 
-  const socketServiceRef = useRef(new SocketService(dispatch));
+  const socketServiceRef = useRef<any>(null);
 
   useEffect(() => {
     if (!user) {
       dispatch(getUserDataAction());
+    }
+    if (!socketServiceRef.current) {
+      socketServiceRef.current = new SocketService(dispatch);
     }
   }, [dispatch, user])
 

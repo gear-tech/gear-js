@@ -18,22 +18,40 @@ const ProgramSwitch = ({ showUploaded, socketService }: ProgramSwitchType) => {
   const dispatch = useDispatch();
 
   const [timeInstance, setTimeInstance] = useState(0)
-  const [isTotalIssuance, setIsTotalIssuance] = useState(false);
+  const [isSocketsConnected, setIsSocketsConnected] = useState(false);
 
-  const { totalIssuance } = useSelector((state: RootState) => state.blocks)
+  const { totalIssuance, blocks } = useSelector((state: RootState) => state.blocks)
+
+  const [prevBlocksLength, setPrevBlocksLength] = useState(0);
   
   useEffect(() => {
-    if (!isTotalIssuance && socketService) {
-      socketService.getTotalIssuance();
-      socketService.subscribeNewBlocks();
-      setIsTotalIssuance(true);
-    }
+
     const intervalId = setInterval(() => {
-      const decreasedTime = timeInstance + 0.1 >= 7 ? 0 : timeInstance + 0.1;
+      const decreasedTime = timeInstance + 0.1;
       setTimeInstance(decreasedTime);
     }, 100);
+
+    if (blocks.length > prevBlocksLength) {
+      setPrevBlocksLength(blocks.length);
+      setTimeInstance(0)
+    }
+
+    if (!isSocketsConnected && socketService) {
+      socketService.getTotalIssuance();
+      socketService.subscribeNewBlocks();
+      setIsSocketsConnected(true);
+    }
+
     return () => clearInterval(intervalId);
-  }, [dispatch, setTimeInstance, timeInstance, setIsTotalIssuance, isTotalIssuance, socketService])
+  }, [dispatch, 
+    setTimeInstance, 
+    timeInstance, 
+    setIsSocketsConnected, 
+    isSocketsConnected, 
+    setPrevBlocksLength,
+    prevBlocksLength,
+    blocks,
+    socketService])
 
   return (
     <div className="switch-block">
