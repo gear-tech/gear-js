@@ -38,22 +38,26 @@ const ProgramDetails = ({setDroppedFile, droppedFile}: ProgramDetailsTypes) => {
         onSubmit={(
           values: UploadProgramModel,
         ) => {
-          console.log(values)
           socketService.uploadProgram(droppedFile, values);
+       }}
+       onReset={() => {
+         setDroppedFile(null)
        }}
     >
       {({ errors, touched }) => (
         <Form>
+          {/* eslint-disable react/button-has-type */}
           <button
-            type="button"
+            type="reset"
             aria-label="closeButton"
-            onClick={() => setDroppedFile(null)}>
+          >
             <img 
               src={close} 
               alt="close" 
               className="program-details__close"
             />
           </button>
+          {/* eslint-disable react/button-has-type */}
           <div className="program-details__download">
             <progress className="program-details__progress" max="100" value="65"/>
             <div className="program-details__progress-value"/>
@@ -122,14 +126,15 @@ const ProgramDetails = ({setDroppedFile, droppedFile}: ProgramDetailsTypes) => {
                 >
                 Upload program
               </button>
+              {/* eslint-disable react/button-has-type */}
               <button 
-                type="button" 
+                type="reset"
                 className="program-details__cancel"
                 aria-label="closeProgramDetails"
-                onClick={() => setDroppedFile(null)}
               >
                 Cancel upload
               </button>
+              {/* eslint-enable react/button-has-type */}
             </div>
           </div>
         </Form>
