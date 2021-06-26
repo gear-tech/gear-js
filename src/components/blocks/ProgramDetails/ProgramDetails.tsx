@@ -2,8 +2,9 @@ import React from 'react';
 
 import { Formik, Form, Field } from 'formik';
 
-import { socketService } from 'consts';
 import { UploadProgramModel } from 'types/program';
+
+import { SocketService } from 'services/SocketService';
 
 import './ProgramDetails.scss';
 
@@ -15,9 +16,10 @@ import { Schema } from './Schema';
 type ProgramDetailsTypes = {
   setDroppedFile: (file: File | null) => void;
   droppedFile: File;
+  socketService: SocketService;  
 }
 
-const ProgramDetails = ({setDroppedFile, droppedFile}: ProgramDetailsTypes) => {
+const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDetailsTypes) => {
 
   const mapInitialValues = () => ({
     gasLimit: 20000,
@@ -39,6 +41,7 @@ const ProgramDetails = ({setDroppedFile, droppedFile}: ProgramDetailsTypes) => {
           values: UploadProgramModel,
         ) => {
           socketService.uploadProgram(droppedFile, values);
+          setDroppedFile(null)
        }}
        onReset={() => {
          setDroppedFile(null)

@@ -4,22 +4,36 @@ import { Link } from 'react-router-dom';
 
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
+import { useDispatch, useSelector } from 'react-redux';
+import { SocketService } from 'services/SocketService';
+import { RootState } from 'store/reducers';
 
 type ProgramSwitchType = {
   showUploaded: boolean;
+  socketService: SocketService;
 };
 
-const ProgramSwitch = ({ showUploaded }: ProgramSwitchType) => {
+const ProgramSwitch = ({ showUploaded, socketService }: ProgramSwitchType) => {
+
+  const dispatch = useDispatch();
 
   const [timeInstance, setTimeInstance] = useState(0)
+  const [isTotalIssuance, setIsTotalIssuance] = useState(false);
 
+  const { totalIssuance } = useSelector((state: RootState) => state.blocks)
+  
   useEffect(() => {
+    if (!isTotalIssuance && socketService) {
+      socketService.getTotalIssuance();
+      socketService.subscribeNewBlocks();
+      setIsTotalIssuance(true);
+    }
     const intervalId = setInterval(() => {
       const decreasedTime = timeInstance + 0.1 >= 7 ? 0 : timeInstance + 0.1;
       setTimeInstance(decreasedTime);
     }, 100);
     return () => clearInterval(intervalId);
-  }, [setTimeInstance, timeInstance])
+  }, [dispatch, setTimeInstance, timeInstance, setIsTotalIssuance, isTotalIssuance, socketService])
 
   return (
     <div className="switch-block">
@@ -50,7 +64,7 @@ const ProgramSwitch = ({ showUploaded }: ProgramSwitchType) => {
         <div className="switch-info__col">
           <span className="switch-info__title">Total issuance</span>
           <span className="switch-info__data">
-            <b className="switch-info__num">100,241</b> MUnits
+            <b className="switch-info__num">{totalIssuance?.totalIssuance.split(" ")[0]}</b> {totalIssuance?.totalIssuance.split(" ")[1]}
           </span>
         </div>
       </div>

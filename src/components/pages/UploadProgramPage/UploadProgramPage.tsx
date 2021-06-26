@@ -1,8 +1,10 @@
-import React, { useEffect} from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDataAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
+
+import { SocketService } from 'services/SocketService';
 
 import ProgramSwitch from '../../blocks/ProgramSwitch';
 import UploadProgram from '../../blocks/UploadProgram';
@@ -21,19 +23,21 @@ const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => {
 
   const { user } = useSelector((state: RootState) => state.user)
 
+  const socketServiceRef = useRef(new SocketService(dispatch));
+
   useEffect(() => {
     if (!user) {
       dispatch(getUserDataAction());
-    }    
+    }
   }, [dispatch, user])
 
   return (
     <div className="main-content-wrapper">
-      <ProgramSwitch showUploaded={showUploaded}/>
+      <ProgramSwitch showUploaded={showUploaded} socketService={socketServiceRef.current}/>
       {!showUploaded && (
         <>
-          <UploadProgram />
-          <BlocksList />
+          <UploadProgram socketService={socketServiceRef.current}/>
+          <BlocksList/>
         </>
       )}
       {showUploaded && <BlocksListUploaded />}

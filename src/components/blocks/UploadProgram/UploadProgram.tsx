@@ -7,12 +7,18 @@ import { GEAR_MNEMONIC_KEY } from 'consts';
 
 import { generateKeypairAction } from 'store/actions/actions';
 
+import { SocketService } from 'services/SocketService';
+
 import Error from '../Error';
 import ProgramDetails from '../ProgramDetails';
 
 import './UploadProgram.scss';
 
-const UploadProgram = () => {
+type UploadProgramType = {
+  socketService: SocketService;
+};
+
+const UploadProgram = ({ socketService }: UploadProgramType) => {
 
   const dispatch = useDispatch();
 
@@ -112,7 +118,7 @@ const UploadProgram = () => {
         </div>
       </div>
       {wrongFormat && <Error onClose={() => setWrongFormat(false)}/>}
-      {droppedFile && <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile}/>}
+      {droppedFile && <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile} socketService={socketService}/>}
     </>
   );
 };

@@ -26,7 +26,22 @@ export enum ProgramActionTypes{
     FETCH_PROGRAM = 'FETCH_PROGRAM',
     FETCH_PROGRAM_SUCCESS = 'FETCH_PROGRAM_SUCCESS',
     FETCH_PROGRAM_ERROR = 'FETCH_PROGRAM_ERROR',
-    RESET_PROGRAMS = 'RESET_PROGRAMS'
+    RESET_PROGRAMS = 'RESET_PROGRAMS',
+    UPLOAD_PROGRAM = 'UPLOAD_PROGRAM',
+    UPLOAD_PROGRAM_SUCCESS = 'UPLOAD_PROGRAM_SUCCESS',
+    UPLOAD_PROGRAM_ERROR = 'UPLOAD_PROGRAM_ERROR'
+}
+
+interface UploadProgramAction{
+    type: ProgramActionTypes.UPLOAD_PROGRAM;
+}
+interface UploadProgramSuccessAction{
+    type: ProgramActionTypes.UPLOAD_PROGRAM_SUCCESS;
+    payload: ProgramModel[];
+}
+interface UploadProgramErrorAction{
+    type: ProgramActionTypes.UPLOAD_PROGRAM_ERROR;
+    payload: string;
 }
 
 interface FetchProgramsAction{
@@ -59,4 +74,14 @@ interface ResetProgramsAction{
     type: ProgramActionTypes.RESET_PROGRAMS
 }
 
-export type ProgramAction = FetchProgramsAction | FetchProgramsErrorAction | FetchProgramsSuccessAction | FetchProgramAction | FetchProgramSuccessAction | FetchProgramErrorAction | ResetProgramsAction;
+export type ProgramAction = 
+    FetchProgramsAction | 
+    FetchProgramsErrorAction | 
+    FetchProgramsSuccessAction | 
+    FetchProgramAction | 
+    FetchProgramSuccessAction | 
+    FetchProgramErrorAction | 
+    UploadProgramAction | 
+    UploadProgramSuccessAction | 
+    UploadProgramErrorAction |
+    ResetProgramsAction;

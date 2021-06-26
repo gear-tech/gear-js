@@ -1,5 +1,3 @@
-import { SocketService } from './services/SocketService';
-
 export const GEAR_STORAGE_KEY = "gear_user_token";
 export const GEAR_MNEMONIC_KEY = "gear_mnemonic";
 export const GEAR_LOCAL_WS_URI = "ws://localhost:3000/api/ws";
@@ -12,4 +10,8 @@ export const emitEvents = {
     totalIssuance: "totalIssuance"
 }
 
-export const socketService = new SocketService()
+export const onEvents = {
+    newBlock: "newBlock",
+    submitProgramSuccess: "submitProgram.success",
+    totalIssuance: "totalIssuance"
+}

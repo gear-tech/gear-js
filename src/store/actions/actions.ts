@@ -7,6 +7,7 @@ import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
 
 import { GEAR_BALANCE_TRANSFER_VALUE, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
+import { BlockActionTypes } from 'types/block';
 
 const fetchTokenAction = () => ({type: UserActionTypes.FETCH_TOKEN});
 const fetchTokenSuccessAction = (payload: {}) => ({type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload});
@@ -27,6 +28,9 @@ const fetchProgramsErrorAction = () => ({type: ProgramActionTypes.FETCH_PROGRAMS
 const fetchProgramAction = () => ({type: ProgramActionTypes.FETCH_PROGRAM});
 const fetchProgramSuccessAction = (payload: ProgramModel) => ({type: ProgramActionTypes.FETCH_PROGRAM_SUCCESS, payload});
 const fetchProgramErrorAction = () => ({type: ProgramActionTypes.FETCH_PROGRAM_ERROR});
+
+export const fetchTotalIssuanceAction = (payload: {}) => ({type: BlockActionTypes.FETCH_TOTALISSUANCE_SUCCESS, payload});
+export const fetchBlockAction = (payload: {}) => ({type: BlockActionTypes.FETCH_BLOCK_SUCCESS, payload});
 
 const resetUserAction = () => ({type: UserActionTypes.RESET_USER});
 const resetProgramsAction = () => ({type: ProgramActionTypes.RESET_PROGRAMS});
@@ -118,7 +122,6 @@ export const getProgramAction = (hash: string) => (dispatch: any) => {
     })
     .catch(() => dispatch(fetchProgramErrorAction()))
 }
-
 export const logoutFromAccountAction = () => (dispatch: any) => {
   localStorage.clear();
   dispatch(resetUserAction());

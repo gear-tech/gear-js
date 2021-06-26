@@ -12,7 +12,7 @@ export const BlocksListUploaded = () => {
   const { programs } = useSelector((state: RootState) => state.programs)
 
   const formatProgramDate = (rawDate: string) => {
-    const date = new Date(Number(rawDate));
+    const date = new Date(rawDate);
     const programTime = date.toLocaleTimeString('en-GB');
     const programDate = date.toLocaleDateString('en-US').replaceAll('/', '-')
     return `${programDate} ${programTime}`;
@@ -23,7 +23,6 @@ export const BlocksListUploaded = () => {
   }
 
   useEffect(() => {
-    console.log(programs)
     if (!programs) {
       dispatch(getProgramsAction());
     }
