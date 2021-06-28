@@ -31,6 +31,8 @@ const fetchProgramErrorAction = () => ({type: ProgramActionTypes.FETCH_PROGRAM_E
 
 export const fetchTotalIssuanceAction = (payload: {}) => ({type: BlockActionTypes.FETCH_TOTALISSUANCE_SUCCESS, payload});
 export const fetchBlockAction = (payload: {}) => ({type: BlockActionTypes.FETCH_BLOCK_SUCCESS, payload});
+export const programUploadStartAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_START});
+export const programUploadSuccessAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS});
 
 const resetUserAction = () => ({type: UserActionTypes.RESET_USER});
 const resetProgramsAction = () => ({type: ProgramActionTypes.RESET_PROGRAMS});

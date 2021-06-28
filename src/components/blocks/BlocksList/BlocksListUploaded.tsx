@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProgramAction, getProgramsAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
@@ -10,6 +10,8 @@ export const BlocksListUploaded = () => {
   const dispatch = useDispatch();
 
   const { programs } = useSelector((state: RootState) => state.programs)
+
+  const [isProgramsReq, setIsProgramsReq] = useState(false);
 
   const formatProgramDate = (rawDate: string) => {
     const date = new Date(rawDate);
@@ -23,10 +25,11 @@ export const BlocksListUploaded = () => {
   }
 
   useEffect(() => {
-    if (!programs) {
+    if (!isProgramsReq) {
       dispatch(getProgramsAction());
+      setIsProgramsReq(true)
     }
-  }, [dispatch, programs])
+  }, [dispatch, setIsProgramsReq, isProgramsReq])
 
   return (
     <div className="block-list">

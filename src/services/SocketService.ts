@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import { emitEvents, onEvents, GEAR_LOCAL_WS_URI, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { UploadProgramModel } from 'types/program';
 import { BlockModel, TotalIssuanceModel } from 'types/block';
-import { fetchBlockAction, fetchTotalIssuanceAction } from 'store/actions/actions';
+import { fetchBlockAction, fetchTotalIssuanceAction, programUploadSuccessAction } from 'store/actions/actions';
 
 export interface ISocketService {
   uploadProgram(file: File, opts: UploadProgramModel): void;
@@ -28,6 +28,11 @@ export class SocketService implements ISocketService {
     this.socket.on(onEvents.newBlock, (data: BlockModel) => {
       dispatch(fetchBlockAction(data))
     });
+    this.socket.on(onEvents.submitProgramSuccess, (data: any) => {
+      if (data.status === 'Finalized') {
+        dispatch(programUploadSuccessAction())
+      }
+    })
   }
   
   public uploadProgram(file: File, opts: UploadProgramModel) {

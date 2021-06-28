@@ -4,7 +4,11 @@ import { Formik, Form, Field } from 'formik';
 
 import { UploadProgramModel } from 'types/program';
 
+import { useDispatch } from 'react-redux';
+
 import { SocketService } from 'services/SocketService';
+
+import { programUploadStartAction } from 'store/actions/actions';
 
 import './ProgramDetails.scss';
 
@@ -20,6 +24,8 @@ type ProgramDetailsTypes = {
 }
 
 const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDetailsTypes) => {
+
+  const dispatch = useDispatch();
 
   const mapInitialValues = () => ({
     gasLimit: 20000,
@@ -40,6 +46,7 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
         onSubmit={(
           values: UploadProgramModel,
         ) => {
+          dispatch(programUploadStartAction())
           socketService.uploadProgram(droppedFile, values);
           setDroppedFile(null)
        }}
