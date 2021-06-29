@@ -106,6 +106,7 @@ export class GearNodeService {
         error: 'Invalid transaction. Incorrect params',
         message: error.message,
       });
+      return null;
     }
 
     try {
@@ -129,19 +130,28 @@ export class GearNodeService {
               });
             }
           } catch (error) {
-            this.logger.error('error');
+            client.emit('submitProgram.failed', {
+              error: 'Invalid transaction.',
+              message: error.message,
+            });
+            return null;
           }
         });
       });
     } catch (error) {
       const errorCode = +error.message.split(':')[0];
-      this.logger.log(errorCode);
       if (errorCode === 1010) {
         client.emit('submitProgram.failed', {
           error: 'Invalid transaction. Account balance too low',
           message: error.message,
         });
+      } else {
+        client.emit('submitProgram.failed', {
+          error: 'Invalid transaction.',
+          message: error.message,
+        });
       }
+      return null;
     }
   }
 
