@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
@@ -23,11 +23,14 @@ import Logout from 'components/pages/Logout';
 const App = () => {
 
   const {isProgramUploading} = useSelector((state: RootState) => state.programs);
-  if (isProgramUploading) {
-    document.body.style.overflowY = "hidden"
-  } else {
-    document.body.style.overflowY = "unset"
-  }
+
+  useEffect(() => {
+    if (isProgramUploading && document.body.style.overflowY !== "hidden") {
+      document.body.style.overflowY = "hidden"
+    } else if (!isProgramUploading && document.body.style.overflowY !== "unset") {
+      document.body.style.overflowY = "unset"
+    }  
+  }, [isProgramUploading]);
 
   return (
     <DndProvider backend={HTML5Backend}>

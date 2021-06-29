@@ -1,11 +1,12 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {NativeTypes} from 'react-dnd-html5-backend';
 import {useDrop, DropTargetMonitor} from 'react-dnd';
 import { GEAR_MNEMONIC_KEY } from 'consts';
 
 import { generateKeypairAction } from 'store/actions/actions';
+import { RootState } from 'store/reducers';
 
 import { SocketService } from 'services/SocketService';
 
@@ -21,6 +22,8 @@ type UploadProgramType = {
 const UploadProgram = ({ socketService }: UploadProgramType) => {
 
   const dispatch = useDispatch();
+
+  const { programUploadingError } = useSelector((state: RootState) => state.programs);
 
   useEffect(() => {
     if (!localStorage.getItem(GEAR_MNEMONIC_KEY)) {
@@ -123,7 +126,7 @@ const UploadProgram = ({ socketService }: UploadProgramType) => {
         </div>
       </div>
       )}
-      {wrongFormat && <Error onClose={() => setWrongFormat(false)}/>}
+      {(wrongFormat || programUploadingError) && <Error onClose={() => setWrongFormat(false)} errorText={programUploadingError}/>}
     </>
   );
 };

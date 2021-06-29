@@ -6,7 +6,7 @@ import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
 
-import { GEAR_BALANCE_TRANSFER_VALUE, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
+import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes } from 'types/block';
 
 const fetchTokenAction = () => ({type: UserActionTypes.FETCH_TOKEN});
@@ -33,6 +33,7 @@ export const fetchTotalIssuanceAction = (payload: {}) => ({type: BlockActionType
 export const fetchBlockAction = (payload: {}) => ({type: BlockActionTypes.FETCH_BLOCK_SUCCESS, payload});
 export const programUploadStartAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_START});
 export const programUploadSuccessAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS});
+export const programUploadFailedAction = (payload: string) => ({type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED, payload});
 
 const resetUserAction = () => ({type: UserActionTypes.RESET_USER});
 const resetProgramsAction = () => ({type: ProgramActionTypes.RESET_PROGRAMS});
@@ -49,9 +50,9 @@ export const generateKeypairAction = () => (dispatch: any) => {
     .then((generatedKeypair: UserKeypairModel) => {
       window.localStorage.setItem(GEAR_MNEMONIC_KEY, generatedKeypair.mnemonic);
       dispatch(fetchUserKeypairSuccessAction(generatedKeypair));
-      if (generatedKeypair.mnemonic) {
-        userService.balanceTransfer(GEAR_BALANCE_TRANSFER_VALUE)
-      }
+      // if (generatedKeypair.mnemonic) {
+      //   userService.balanceTransfer(GEAR_BALANCE_TRANSFER_VALUE)
+      // }
     })
     .catch(() => dispatch(fetchUserKeypairErrorAction()));
 }

@@ -5,6 +5,7 @@ const initialState: ProgramState = {
   isProgramUploading: false,
   loading: false,
   error: null,
+  programUploadingError: null,
 };
 
 const ProgramReducer = (state = initialState, action: ProgramAction): ProgramState => {
@@ -38,10 +39,13 @@ const ProgramReducer = (state = initialState, action: ProgramAction): ProgramSta
       return { ...state, loading: false, error: action.payload, programs: null };
 
     case ProgramActionTypes.PROGRAM_UPLOAD_START:
-      return { ...state, isProgramUploading: true }
+      return { ...state, isProgramUploading: true, programUploadingError: null }
 
     case ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS:
-      return { ...state, isProgramUploading: false }
+      return { ...state, isProgramUploading: false, programUploadingError: null }
+
+    case ProgramActionTypes.PROGRAM_UPLOAD_FAILED:
+      return { ...state, isProgramUploading: false, programUploadingError: action.payload }
     
     case ProgramActionTypes.RESET_PROGRAMS:
       return { ...initialState };

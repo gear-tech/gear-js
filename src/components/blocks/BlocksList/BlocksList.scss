@@ -12,6 +12,15 @@
   text-transform: uppercase;
 }
 
+.no-message {
+  color: $textColorSecondary;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
 .block-list__button {
   background-color: $bkgButtonColor;
   border: none;

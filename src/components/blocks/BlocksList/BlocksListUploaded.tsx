@@ -33,34 +33,42 @@ export const BlocksListUploaded = () => {
 
   return (
     <div className="block-list">
-    <ul className="programs-list">
       {
-        programs && programs.length && programs.map((program) => (
-          <li className="programs-list__item" key={program.hash}>
-            <span className="programs-list__number">{program.programNumber}</span>
-            <div className="program-wrapper">
-              <div className="program-wrapper__name">
-                <span className="programs-list__name">{program.name}</span>
-              </div>
-              <div className="program-wrapper__data">
-                <div className="programs-list__info">
-                  Number of calls:<span className="programs-list__info-data">{program.callCount}</span>
+        programs && programs.length 
+        &&
+        (<ul className="programs-list">
+        {
+          programs.map((program) => (
+            <li className="programs-list__item" key={program.hash}>
+              <span className="programs-list__number">{program.programNumber}</span>
+              <div className="program-wrapper">
+                <div className="program-wrapper__name">
+                  <span className="programs-list__name">{program.name}</span>
                 </div>
-                <div className="programs-list__info">
-                  Uploaded at:<span className="programs-list__info-data">{formatProgramDate(program.uploadedAt)}</span>
+                <div className="program-wrapper__data">
+                  <div className="programs-list__info">
+                    Number of calls:<span className="programs-list__info-data">{program.callCount}</span>
+                  </div>
+                  <div className="programs-list__info">
+                    Uploaded at:<span className="programs-list__info-data">{formatProgramDate(program.uploadedAt)}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <button 
-              className="programs-list__refresh-btn" 
-              type="button" 
-              aria-label="refresh"
-              onClick={() => handleRefreshProgram(program.hash)}
-            />
-          </li>
-        ))
-      }
-    </ul>
+              <button 
+                className="programs-list__refresh-btn" 
+                type="button" 
+                aria-label="refresh"
+                onClick={() => handleRefreshProgram(program.hash)}
+              />
+            </li>
+          ))
+        }
+      </ul>)
+      ||
+      (
+        <div className="no-message">There are no uploaded programs</div>
+      )
+    }
   </div>
   )
 };

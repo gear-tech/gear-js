@@ -4,11 +4,12 @@ import './Error.scss';
 
 type ErrorType = {
   onClose: () => void;
+  errorText: string | null;
 };
 
-const Error = ({ onClose }: ErrorType) => (
+const Error = ({ onClose, errorText }: ErrorType) => (
   <div className="error-block">
-    <p className="error-block__msg">Upload error: Incorrect file format</p>
+    <p className="error-block__msg">{errorText || 'Upload error: Incorrect file format'}</p>
     <button className="error-block__close-btn" type="button" onClick={onClose} aria-label="close" />
   </div>
 );

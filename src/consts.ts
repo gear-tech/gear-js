@@ -13,5 +13,6 @@ export const emitEvents = {
 export const onEvents = {
     newBlock: "newBlock",
     submitProgramSuccess: "submitProgram.success",
+    submitProgramFailed: 'submitProgram.failed',
     totalIssuance: "totalIssuance"
 }
