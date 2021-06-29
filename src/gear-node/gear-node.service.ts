@@ -13,22 +13,24 @@ import { ProgramsService } from 'src/programs/programs.service';
 
 @Injectable()
 export class GearNodeService {
+  private provider: WsProvider;
+
   constructor(
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
-  ) {}
+  ) {
+    this.provider = new WsProvider(process.env.WS_PROVIDER);
+  }
 
   private logger = new Logger('GearNodeService');
 
   async getApiPromise() {
-    const provider = new WsProvider(process.env.WS_PROVIDER);
-    const api = await ApiPromise.create({ provider });
+    const api = await ApiPromise.create({ provider: this.provider });
     return api;
   }
 
   async getApiRx() {
-    const provider = new WsProvider(process.env.WS_PROVIDER);
-    return await ApiRx.create({ provider }).toPromise();
+    return await ApiRx.create({ provider: this.provider }).toPromise();
   }
 
   getKeyring(uri: string, name: string) {
