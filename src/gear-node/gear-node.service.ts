@@ -68,11 +68,13 @@ export class GearNodeService {
 
   async uploadProgram(client, data) {
     if (!data.gasLimit) {
-      client.emit('submitProgram.failed', { detail: 'no gas limit specified' });
+      client.emit('submitProgram.failed', {
+        error: 'Invalid transaction. No gas limit specified',
+      });
       return null;
     } else if (!data.value) {
       client.emit('submitProgram.failed', {
-        detail: 'no initial value specified',
+        error: 'Invalid transaction. No initial value specified',
       });
       return null;
     }
@@ -101,7 +103,8 @@ export class GearNodeService {
       );
     } catch (error) {
       client.emit('submitProgram.failed', {
-        detail: 'failed submit program. incorrect params',
+        error: 'Invalid transaction. Incorrect params',
+        message: error.message,
       });
     }
 
@@ -135,7 +138,7 @@ export class GearNodeService {
       this.logger.log(errorCode);
       if (errorCode === 1010) {
         client.emit('submitProgram.failed', {
-          error: 'Invalid transaction',
+          error: 'Invalid transaction. Account balance too low',
           message: error.message,
         });
       }
