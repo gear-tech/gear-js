@@ -6,7 +6,7 @@ import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
 
-import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
+import { GEAR_BALANCE_TRANSFER_VALUE, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes } from 'types/block';
 
 const fetchTokenAction = () => ({type: UserActionTypes.FETCH_TOKEN});
@@ -20,6 +20,8 @@ const fetchUserErrorAction = () => ({type: UserActionTypes.FETCH_USER_ERROR});
 const fetchUserKeypairAction = () => ({type: UserActionTypes.FETCH_USER_KEYPAIR});
 const fetchUserKeypairSuccessAction = (payload: UserKeypairModel) => ({type: UserActionTypes.FETCH_USER_KEYPAIR_SUCCESS, payload});
 const fetchUserKeypairErrorAction = () => ({type: UserActionTypes.FETCH_USER_KEYPAIR_ERROR});
+
+export const transferBalanceSuccessAction = () => ({type: UserActionTypes.TRANSFER_BALANCE_SUCCESS});
 
 const fetchProgramsAction = () => ({type: ProgramActionTypes.FETCH_PROGRAMS});
 const fetchProgramsSuccessAction = (payload: ProgramModel[]) => ({type: ProgramActionTypes.FETCH_PROGRAMS_SUCCESS, payload});
@@ -50,9 +52,10 @@ export const generateKeypairAction = () => (dispatch: any) => {
     .then((generatedKeypair: UserKeypairModel) => {
       window.localStorage.setItem(GEAR_MNEMONIC_KEY, generatedKeypair.mnemonic);
       dispatch(fetchUserKeypairSuccessAction(generatedKeypair));
-      // if (generatedKeypair.mnemonic) {
-      //   userService.balanceTransfer(GEAR_BALANCE_TRANSFER_VALUE)
-      // }
+      if (generatedKeypair.mnemonic) {
+        dispatch(transferBalanceSuccessAction())
+        userService.balanceTransfer(GEAR_BALANCE_TRANSFER_VALUE)
+      }
     })
     .catch(() => dispatch(fetchUserKeypairErrorAction()));
 }
@@ -125,6 +128,7 @@ export const getProgramAction = (hash: string) => (dispatch: any) => {
     })
     .catch(() => dispatch(fetchProgramErrorAction()))
 }
+
 export const logoutFromAccountAction = () => (dispatch: any) => {
   localStorage.clear();
   dispatch(resetUserAction());

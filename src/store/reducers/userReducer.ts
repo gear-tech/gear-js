@@ -4,6 +4,7 @@ const initialState: UserState = {
   user: null,
   accessToken: "",
   generatedKeypair: null,
+  isBalanceTransfered: false,
   loading: false,
   error: null,
 };
@@ -36,6 +37,9 @@ const userReducer = (state = initialState, action: UserAction): UserState => {
 
     case UserActionTypes.FETCH_USER_KEYPAIR_ERROR:
       return { ...state, loading: false, error: action.payload, generatedKeypair: null };
+    
+    case UserActionTypes.TRANSFER_BALANCE_SUCCESS:
+      return {...state, isBalanceTransfered: true}
     
     case UserActionTypes.RESET_USER:
       return { ...initialState };

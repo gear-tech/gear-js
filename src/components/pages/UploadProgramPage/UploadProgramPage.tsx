@@ -1,10 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserDataAction } from 'store/actions/actions';
+import { getUserDataAction, transferBalanceSuccessAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 
 import { SocketService } from 'services/SocketService';
+
+import { GEAR_BALANCE_TRANSFER_VALUE, GEAR_MNEMONIC_KEY } from 'consts';
+
+import UserRequestService from 'services/UserRequestService';
+
 
 import ProgramSwitch from '../../blocks/ProgramSwitch';
 import UploadProgram from '../../blocks/UploadProgram';
@@ -21,7 +26,7 @@ const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => {
 
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user, isBalanceTransfered } = useSelector((state: RootState) => state.user)
 
   const socketServiceRef = useRef<any>(null);
 
@@ -32,7 +37,11 @@ const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => {
     if (!socketServiceRef.current) {
       socketServiceRef.current = new SocketService(dispatch);
     }
-  }, [dispatch, user])
+    if (localStorage.getItem(GEAR_MNEMONIC_KEY) && !isBalanceTransfered) {
+      (new UserRequestService()).balanceTransfer(GEAR_BALANCE_TRANSFER_VALUE);
+      dispatch(transferBalanceSuccessAction());
+    }
+  }, [dispatch, isBalanceTransfered, user])
 
   return (
     <div className="main-content-wrapper">

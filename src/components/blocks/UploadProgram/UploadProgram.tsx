@@ -5,7 +5,7 @@ import {NativeTypes} from 'react-dnd-html5-backend';
 import {useDrop, DropTargetMonitor} from 'react-dnd';
 import { GEAR_MNEMONIC_KEY } from 'consts';
 
-import { generateKeypairAction } from 'store/actions/actions';
+import { generateKeypairAction, programUploadSuccessAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 
 import { SocketService } from 'services/SocketService';
@@ -126,7 +126,12 @@ const UploadProgram = ({ socketService }: UploadProgramType) => {
         </div>
       </div>
       )}
-      {(wrongFormat || programUploadingError) && <Error onClose={() => setWrongFormat(false)} errorText={programUploadingError}/>}
+      {(wrongFormat || programUploadingError) && <Error onClose={() => {
+        setWrongFormat(false);
+        if (programUploadingError) {
+          dispatch(programUploadSuccessAction())
+        }
+      }} errorText={programUploadingError}/>}
     </>
   );
 };
