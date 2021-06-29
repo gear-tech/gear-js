@@ -89,39 +89,57 @@ export class GearNodeService {
     const api = await this.getApiPromise();
     const keyring = this.getKeyringByMnemonic(client.user, data.mnemonic);
     const salt = data.salt || randomAsHex(20);
+    let program = null;
 
-    const program = api.tx.gear.submitProgram(
-      code,
-      salt,
-      data.init_payload || '',
-      data.gasLimit,
-      data.value,
-    );
-
-    program.signAndSend(keyring, ({ events = [], status }) => {
-      if (status.isInBlock) {
-        programData.blockHash = status.asInBlock.toHex();
-        programData.uploadedAt = new Date().toString();
-      } else if (status.isFinalized) {
-        programData.blockHash = status.asFinalized.toHex();
-        this.programService.saveProgram(programData);
-      }
-
-      events.forEach(({ phase, event: { data, method, section } }) => {
-        try {
-          if (method === 'NewProgram') {
-            programData.hash = data[0].toString();
-            client.emit('submitProgram.success', {
-              status: status.type,
-              blockHash: programData.blockHash,
-              programHash: programData.hash,
-            });
-          }
-        } catch (error) {
-          this.logger.error(error);
-        }
+    try {
+      program = api.tx.gear.submitProgram(
+        code,
+        salt,
+        data.init_payload || '',
+        data.gasLimit,
+        data.value,
+      );
+    } catch (error) {
+      client.emit('submitProgram.failed', {
+        detail: 'failed submit program. incorrect params',
       });
-    });
+    }
+
+    try {
+      await program.signAndSend(keyring, ({ events = [], status }) => {
+        if (status.isInBlock) {
+          programData.blockHash = status.asInBlock.toHex();
+          programData.uploadedAt = new Date().toString();
+        } else if (status.isFinalized) {
+          programData.blockHash = status.asFinalized.toHex();
+          this.programService.saveProgram(programData);
+        }
+
+        events.forEach(({ phase, event: { data, method, section } }) => {
+          try {
+            if (method === 'NewProgram') {
+              programData.hash = data[0].toString();
+              client.emit('submitProgram.success', {
+                status: status.type,
+                blockHash: programData.blockHash,
+                programHash: programData.hash,
+              });
+            }
+          } catch (error) {
+            this.logger.error('error');
+          }
+        });
+      });
+    } catch (error) {
+      const errorCode = +error.message.split(':')[0];
+      this.logger.log(errorCode);
+      if (errorCode === 1010) {
+        client.emit('submitProgram.failed', {
+          error: 'Invalid transaction',
+          message: error.message,
+        });
+      }
+    }
   }
 
   async subscribeNewHeads(client) {
@@ -160,5 +178,14 @@ export class GearNodeService {
           unsub();
         }
       });
+  }
+
+  async getBalance(publicKey: string) {
+    const api = await this.getApiPromise();
+    const { data: balance } = await api.query.system.account(publicKey);
+    this.logger.log(
+      `Free balance: ${balance.free}. Reserved: ${balance.reserved}`,
+    );
+    return balance.free.toNumber();
   }
 }
