@@ -14,7 +14,7 @@ const ProgramReducer = (state = initialState, action: ProgramAction): ProgramSta
       return { ...state, loading: true, error: null };
 
     case ProgramActionTypes.FETCH_PROGRAMS_SUCCESS:
-      return { ...state, loading: false, error: null, programs: action.payload };
+      return { ...state, loading: false, error: null, programs: action.payload.reverse() };
 
     case ProgramActionTypes.FETCH_PROGRAMS_ERROR:
       return { ...state, loading: false, error: action.payload, programs: null };
