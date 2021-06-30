@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { Update, Ctx, Start, Help, On, Hears } from 'nestjs-telegraf';
+import { Update, Ctx, Start, Help, On, Hears, Command } from 'nestjs-telegraf';
 import { TelegramService } from './telegram.service';
 import { Any } from 'typeorm';
 
@@ -38,8 +38,37 @@ export class TelegramUpdate {
     await this.tgService.uploadProgram(user, ctx.update.message.document, cb);
   }
 
-  @Hears('gas')
-  async gasLimit(@Ctx() ctx) {
-    console.log(ctx.update.message);
+  @Command('balanceUp')
+  async balanceUp(@Ctx() ctx) {
+    const cb = (error, result) => {
+      if (error) {
+        const msg = 'Top up balance failed.\n' + error.error;
+        ctx.reply(msg);
+      } else {
+        const msg = result.message;
+        ctx.reply(msg);
+      }
+    };
+    const user = await this.tgService.getUser(ctx.update.message.from, cb);
+    if (!user) {
+      return null;
+    }
+    await this.tgService.balanceUp(user, cb);
+  }
+
+  @Command('getBalance')
+  async getBalance(@Ctx() ctx) {
+    const cb = (error, result) => {
+      if (error) {
+      } else {
+        const msg = result.message;
+        ctx.reply(msg);
+      }
+    };
+    const user = await this.tgService.getUser(ctx.update.message.from, cb);
+    if (!user) {
+      return null;
+    }
+    await this.tgService.getBalance(user, cb);
   }
 }

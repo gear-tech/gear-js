@@ -168,30 +168,30 @@ export class GearNodeService {
     });
   }
 
-  async balanceTransfer(publicKey: string, value) {
+  async balanceTransfer(publicKey: string, value, cb?) {
     const api = await this.getApiPromise();
-    const unsub = await api.tx.balances
-      .transfer(publicKey, value)
-      .signAndSend(this.getKeyring('//Alice', 'Alice default'), (result) => {
-        if (result.status.isInBlock) {
-          this.logger.log(
-            `Transaction included at blockHash ${result.status.asInBlock}`,
-          );
-        } else if (result.status.isFinalized) {
-          this.logger.log(
-            `Transaction finalized at blockHash ${result.status.asFinalized}`,
-          );
-          unsub();
-        }
-      });
+    try {
+      const unsub = await api.tx.balances
+        .transfer(publicKey, value)
+        .signAndSend(this.getKeyring('//Alice', 'Alice default'), (result) => {
+          if (result.status.isFinalized) {
+            if (cb) {
+              cb(undefined, {
+                message: `Transfer balance succeed`,
+              });
+            }
+            unsub();
+          }
+        });
+    } catch (error) {
+      cb({ error: error.message });
+      return null;
+    }
   }
 
   async getBalance(publicKey: string) {
     const api = await this.getApiPromise();
     const { data: balance } = await api.query.system.account(publicKey);
-    this.logger.log(
-      `Free balance: ${balance.free}. Reserved: ${balance.reserved}`,
-    );
-    return balance.free.toNumber();
+    return balance.free.toHuman();
   }
 }

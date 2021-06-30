@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { GearNodeService } from 'src/gear-node/gear-node.service';
+import { User } from 'src/users/entities/user.entity';
 const fetch = require('node-fetch');
 
 @Injectable()
@@ -37,7 +38,7 @@ export class TelegramService {
     return json.result.file_path;
   }
 
-  async uploadProgram(user, fileData, cb) {
+  async uploadProgram(user: User, fileData, cb) {
     const fileName = fileData.file_name;
     if (fileName.split('.').pop() !== 'wasm') {
       cb({ error: 'Incorrect file format' });
@@ -59,5 +60,14 @@ export class TelegramService {
       },
       cb,
     );
+  }
+
+  async balanceUp(user: User, cb) {
+    this.gearService.balanceTransfer(user.publicKey, 43214321, cb);
+  }
+
+  async getBalance(user: User, cb) {
+    const curBalance = await this.gearService.getBalance(user.publicKey);
+    cb(undefined, { message: `Current free balance is ${curBalance}` });
   }
 }
