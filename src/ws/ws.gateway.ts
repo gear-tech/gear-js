@@ -54,6 +54,20 @@ export class BlocksGateway
   @UseGuards(WsAuthGuard)
   @SubscribeMessage('uploadProgram')
   uploadProgram(client: Socket, data: any) {
-    this.gearService.uploadProgram(client, data);
+    const cb = (error?, result?) => {
+      if (error) {
+        client.emit('submitProgram.failed', {
+          error: error.error,
+          message: error.message,
+        });
+      } else {
+        client.emit('submitProgram.success', {
+          status: result.status,
+          blockHash: result.blockHash,
+          programHash: result.programHash,
+        });
+      }
+    };
+    this.gearService.uploadProgram(client.user, data, cb);
   }
 }

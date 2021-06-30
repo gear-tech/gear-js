@@ -11,6 +11,8 @@ import { ProgramsModule } from './programs/programs.module';
 import { GearNodeModule } from './gear-node/gear-node.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BlocksGateway } from './ws/ws.gateway';
+import { TelegrafModule } from 'nestjs-telegraf';
+import { TelegramModule } from './telegram/telegram.module';
 
 @Module({
   imports: [
@@ -36,6 +38,11 @@ import { BlocksGateway } from './ws/ws.gateway';
     ProgramsModule,
     GearNodeModule,
     EventEmitterModule.forRoot(),
+    TelegrafModule.forRoot({
+      token: process.env.TELEGRAM_BOT_TOKEN,
+      include: [TelegramModule],
+    }),
+    TelegramModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, BlocksGateway],

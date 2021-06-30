@@ -40,14 +40,14 @@ export class GearNodeService {
   }
 
   getKeyringByMnemonic(user: User, mnemonic: string) {
-    const uri = `${mnemonic}//${user.id}`;
+    const uri = `//${user.id}`;
     const keyPair = this.getKeyring(uri, `${user.name}`);
     return keyPair;
   }
 
   async createKeyPair(user: User) {
     const mnemonic = mnemonicGenerate();
-    const suri = `${mnemonic}//${user.id}`;
+    const suri = `//${user.id}`;
     const keyPair = this.getKeyring(suri, `${user.name}`);
     this.userService.addPublicKey(user, keyPair.address);
     return {
@@ -66,22 +66,18 @@ export class GearNodeService {
     }
   }
 
-  async uploadProgram(client, data) {
+  async uploadProgram(user: User, data, cb) {
     if (!data.gasLimit) {
-      client.emit('submitProgram.failed', {
-        error: 'Invalid transaction. No gas limit specified',
-      });
+      cb({ error: 'Invalid transaction. No gas limit specified' });
       return null;
     } else if (!data.value) {
-      client.emit('submitProgram.failed', {
-        error: 'Invalid transaction. No initial value specified',
-      });
+      cb({ error: 'Invalid transaction. No initial value specified' });
       return null;
     }
 
     const code = this.programService.parseWASM(data.file);
     const programData = {
-      user: client.user,
+      user: user,
       name: data.filename,
       hash: null,
       blockHash: null,
@@ -89,7 +85,7 @@ export class GearNodeService {
     };
 
     const api = await this.getApiPromise();
-    const keyring = this.getKeyringByMnemonic(client.user, data.mnemonic);
+    const keyring = this.getKeyringByMnemonic(user, data.mnemonic);
     const salt = data.salt || randomAsHex(20);
     let program = null;
 
@@ -102,7 +98,7 @@ export class GearNodeService {
         data.value,
       );
     } catch (error) {
-      client.emit('submitProgram.failed', {
+      cb({
         error: 'Invalid transaction. Incorrect params',
         message: error.message,
       });
@@ -123,17 +119,14 @@ export class GearNodeService {
           try {
             if (method === 'NewProgram') {
               programData.hash = data[0].toString();
-              client.emit('submitProgram.success', {
+              cb(undefined, {
                 status: status.type,
                 blockHash: programData.blockHash,
                 programHash: programData.hash,
               });
             }
           } catch (error) {
-            client.emit('submitProgram.failed', {
-              error: 'Invalid transaction.',
-              message: error.message,
-            });
+            cb({ error: 'Invalid transaction.', message: error.message });
             return null;
           }
         });
@@ -141,13 +134,13 @@ export class GearNodeService {
     } catch (error) {
       const errorCode = +error.message.split(':')[0];
       if (errorCode === 1010) {
-        client.emit('submitProgram.failed', {
+        cb({
           error: 'Invalid transaction. Account balance too low',
           message: error.message,
         });
       } else {
-        client.emit('submitProgram.failed', {
-          error: 'Invalid transaction.',
+        cb({
+          error: 'Invalid transaction. Account balance too low',
           message: error.message,
         });
       }
