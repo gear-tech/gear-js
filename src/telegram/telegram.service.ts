@@ -6,12 +6,16 @@ const fetch = require('node-fetch');
 
 @Injectable()
 export class TelegramService {
+  private programs: Map<number, any>;
+
   constructor(
     private readonly userService: UsersService,
     private readonly gearService: GearNodeService,
-  ) {}
+  ) {
+    this.programs = new Map();
+  }
 
-  async getUser(userData, cb) {
+  async getUser(userData, cb?) {
     const user = await this.userService.findOneTg(userData.id);
     if (!user) {
       cb({ error: 'User is not found. Please register on gear-tech.io' });
@@ -38,28 +42,9 @@ export class TelegramService {
     return json.result.file_path;
   }
 
-  async uploadProgram(user: User, fileData, cb) {
-    const fileName = fileData.file_name;
-    if (fileName.split('.').pop() !== 'wasm') {
-      cb({ error: 'Incorrect file format' });
-      return null;
-    }
-    console.log(fileData);
-    const fileId = fileData.file_id;
-    const path = await this.getPath(fileId);
-    const file = this.getFile(path);
-    this.gearService.uploadProgram(
-      user,
-      {
-        file: file,
-        filename: fileName,
-        gasLimit: 2000,
-        value: 2000,
-        mnemonic: '',
-        init_payload: '',
-      },
-      cb,
-    );
+  async uploadProgram(user: User, cb) {
+    await this.gearService.uploadProgram(user, this.programs[user.id], cb);
+    this.programs.delete(user.id);
   }
 
   async balanceUp(user: User, cb) {
@@ -69,5 +54,30 @@ export class TelegramService {
   async getBalance(user: User, cb) {
     const curBalance = await this.gearService.getBalance(user.publicKey);
     cb(undefined, { message: `Current free balance is ${curBalance}` });
+  }
+
+  async setFile(user, fileData, cb) {
+    const fileName = fileData.file_name;
+    if (fileName.split('.').pop() !== 'wasm') {
+      cb({ error: 'Incorrect file format' });
+      return null;
+    }
+    const fileId = fileData.file_id;
+    const path = await this.getPath(fileId);
+    const file = this.getFile(path);
+    this.programs[user.id] = { file: file, filename: fileName };
+    cb(undefined, 'ok');
+  }
+
+  setGas(user, gasLimit) {
+    this.programs[user.id].gasLimit = gasLimit;
+  }
+
+  setValue(user, value) {
+    this.programs[user.id].value = value;
+  }
+
+  setPayload(user, init_payload) {
+    this.programs[user.id].value = init_payload;
   }
 }
