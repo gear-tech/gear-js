@@ -20,7 +20,7 @@ export class TelegramService {
   }
 
   private async getFile(filePath) {
-    const url = `https://api.telegram.org/file/bot1475160782:AAHxjrzaXsKoq_qDInxnVnwz4ZNKEhLD3-8/${filePath}`;
+    const url = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${filePath}`;
     const response = await fetch(url, {
       method: 'GET',
     });
@@ -29,7 +29,7 @@ export class TelegramService {
   }
 
   private async getPath(fileId) {
-    const url = `https://api.telegram.org/bot1475160782:AAHxjrzaXsKoq_qDInxnVnwz4ZNKEhLD3-8/getFile?file_id=${fileId}`;
+    const url = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`;
     const response = await fetch(url, {
       method: 'GET',
     });
