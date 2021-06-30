@@ -12,18 +12,19 @@ export class TelegramUpdate {
   @Start()
   async start(@Ctx() ctx) {
     ctx.reply(
-      'Send the file .wasm for uploading the program to Gear node\n' +
-        '/getBalance for view the account balance\n' +
-        '/balanceUp for adding funds to the account balance\n',
+      'Welcome to Gear Bot, the easiest way to launch your dreams on Polkadot Network\n' +
+        'For deploying your program to Gear Node send the file .wasm\n' +
+        'For checking your balance run /getBalance\n' +
+        'For adding funds to your wallet run /balanceUp\n',
     );
   }
 
   @Help()
   async help(@Ctx() ctx) {
     await ctx.reply(
-      'Send the file .wasm for uploading the program to Gear node\n' +
-        '/getBalance for view the account balance\n' +
-        '/balanceUp for adding funds to the account balance\n',
+      'For deploying your program to Gear Node send the file .wasm\n' +
+        'For checking your balance run /getBalance\n' +
+        'For adding funds to your wallet run /balanceUp\n',
     );
   }
 
