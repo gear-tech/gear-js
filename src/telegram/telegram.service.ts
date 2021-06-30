@@ -18,7 +18,10 @@ export class TelegramService {
   async getUser(userData, cb?) {
     const user = await this.userService.findOneTg(userData.id);
     if (!user) {
-      cb({ error: 'User is not found. Please register on gear-tech.io' });
+      cb({
+        error:
+          'User is not found. Please register on https://idea.gear-tech.io',
+      });
       return null;
     }
     return user;
