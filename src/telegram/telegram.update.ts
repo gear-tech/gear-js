@@ -11,12 +11,60 @@ export class TelegramUpdate {
 
   @Start()
   async start(@Ctx() ctx) {
-    ctx.reply('Send the file .wasm for uploading the program to Gear node');
+    ctx.reply(
+      'Send the file .wasm for uploading the program to Gear node\n' +
+        '/getBalance for view the account balance\n' +
+        '/balanceUp for adding funds to the account balance\n',
+    );
   }
 
   @Help()
   async help(@Ctx() ctx) {
-    await ctx.reply('help');
+    await ctx.reply(
+      'Send the file .wasm for uploading the program to Gear node\n' +
+        '/getBalance for view the account balance\n' +
+        '/balanceUp for adding funds to the account balance\n',
+    );
+  }
+
+  @Command('balanceUp')
+  async balanceUp(@Ctx() ctx) {
+    const cb = (error, result) => {
+      if (error) {
+        const msg = 'Top up balance failed.\n' + error.error;
+        ctx.reply(msg);
+      } else {
+        const msg = result.message;
+        this.tgService.getBalance(user, (error, result) => {
+          if (error) {
+          } else {
+            ctx.reply(result.message);
+          }
+        });
+        ctx.reply(msg);
+      }
+    };
+    const user = await this.tgService.getUser(ctx.update.message.from, cb);
+    if (!user) {
+      return null;
+    }
+    await this.tgService.balanceUp(user, cb);
+  }
+
+  @Command('getBalance')
+  async getBalance(@Ctx() ctx) {
+    const cb = (error, result) => {
+      if (error) {
+      } else {
+        const msg = result.message;
+        ctx.reply(msg);
+      }
+    };
+    const user = await this.tgService.getUser(ctx.update.message.from, cb);
+    if (!user) {
+      return null;
+    }
+    await this.tgService.getBalance(user, cb);
   }
 
   @On('text')
@@ -80,39 +128,5 @@ export class TelegramUpdate {
     }
 
     await this.tgService.setFile(user, ctx.update.message.document, cb);
-  }
-
-  @Command('balanceUp')
-  async balanceUp(@Ctx() ctx) {
-    const cb = (error, result) => {
-      if (error) {
-        const msg = 'Top up balance failed.\n' + error.error;
-        ctx.reply(msg);
-      } else {
-        const msg = result.message;
-        ctx.reply(msg);
-      }
-    };
-    const user = await this.tgService.getUser(ctx.update.message.from, cb);
-    if (!user) {
-      return null;
-    }
-    await this.tgService.balanceUp(user, cb);
-  }
-
-  @Command('getBalance')
-  async getBalance(@Ctx() ctx) {
-    const cb = (error, result) => {
-      if (error) {
-      } else {
-        const msg = result.message;
-        ctx.reply(msg);
-      }
-    };
-    const user = await this.tgService.getUser(ctx.update.message.from, cb);
-    if (!user) {
-      return null;
-    }
-    await this.tgService.getBalance(user, cb);
   }
 }
