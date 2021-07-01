@@ -3,6 +3,7 @@ import { ProgramState, ProgramAction, ProgramActionTypes } from '../../types/pro
 const initialState: ProgramState = {
   programs: null,
   isProgramUploading: false,
+  programUploadingStatus: null,
   loading: false,
   error: null,
   programUploadingError: null,
@@ -46,6 +47,9 @@ const ProgramReducer = (state = initialState, action: ProgramAction): ProgramSta
 
     case ProgramActionTypes.PROGRAM_UPLOAD_FAILED:
       return { ...state, isProgramUploading: false, programUploadingError: action.payload }
+
+    case ProgramActionTypes.PROGRAM_UPLOAD_IN_BLOCK:
+      return { ...state, isProgramUploading: true, programUploadingError: null, programUploadingStatus: "in block" }
     
     case ProgramActionTypes.RESET_PROGRAMS:
       return { ...initialState };

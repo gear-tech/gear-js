@@ -19,6 +19,7 @@ import Header from 'components/blocks/Header';
 import Main from 'components/layouts/Main';
 import Callback from 'components/Callback';
 import Logout from 'components/pages/Logout';
+import LoadingPopup from 'components/LoadingPopup'
 
 const App = () => {
 
@@ -42,7 +43,7 @@ const App = () => {
             (
               <>
                 <div className="overlay"/>
-                <div className="loader"/>
+                <LoadingPopup/>
               </>
             )
           }

@@ -10,6 +10,7 @@ export interface ProgramModel {
 export interface ProgramState {
     programs: ProgramModel[] | null;
     isProgramUploading: boolean;
+    programUploadingStatus: null | string;
     loading: boolean,
     error: null|string;
     programUploadingError: null | string;
@@ -31,7 +32,8 @@ export enum ProgramActionTypes{
     RESET_PROGRAMS = 'RESET_PROGRAMS',
     PROGRAM_UPLOAD_SUCCESS = 'PROGRAM_UPLOAD_SUCCESS',
     PROGRAM_UPLOAD_START = 'PROGRAM_UPLOAD_START',
-    PROGRAM_UPLOAD_FAILED = 'PROGRAM_UPLOAD_FAILED'
+    PROGRAM_UPLOAD_FAILED = 'PROGRAM_UPLOAD_FAILED',
+    PROGRAM_UPLOAD_IN_BLOCK = 'PROGRAM_UPLOAD_IN_BLOCK'
 }
 
 interface UploadProgramStartAction{
@@ -45,6 +47,10 @@ interface UploadProgramSuccessAction{
 interface UploadProgramFailedAction{
     type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED;
     payload: string;
+}
+
+interface UploadProgramInBlockAction{
+    type: ProgramActionTypes.PROGRAM_UPLOAD_IN_BLOCK;
 }
 
 interface FetchProgramsAction{
@@ -87,4 +93,5 @@ export type ProgramAction =
     UploadProgramStartAction |
     UploadProgramSuccessAction |
     UploadProgramFailedAction |
+    UploadProgramInBlockAction |
     ResetProgramsAction;

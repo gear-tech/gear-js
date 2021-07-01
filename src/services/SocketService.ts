@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import { emitEvents, onEvents, GEAR_LOCAL_WS_URI, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { UploadProgramModel } from 'types/program';
 import { BlockModel, TotalIssuanceModel } from 'types/block';
-import { fetchBlockAction, fetchTotalIssuanceAction, programUploadSuccessAction, programUploadFailedAction } from 'store/actions/actions';
+import { fetchBlockAction, fetchTotalIssuanceAction, programUploadSuccessAction, programUploadFailedAction, programUploadInBlockAction } from 'store/actions/actions';
 
 export interface ISocketService {
   uploadProgram(file: File, opts: UploadProgramModel): void;
@@ -29,9 +29,11 @@ export class SocketService implements ISocketService {
       dispatch(fetchBlockAction(data))
     });
     this.socket.on(onEvents.submitProgramSuccess, (data: any) => {
-      if (data.status === 'Finalized') {
+      if (data.status === 'InBlock') {
+        dispatch(programUploadInBlockAction());
+      } else if (data.status === 'Finalized') {
         window.location.pathname = "/uploaded-programs";
-        dispatch(programUploadSuccessAction())
+        dispatch(programUploadSuccessAction());
       }
     })
     this.socket.on(onEvents.submitProgramFailed, (data: any) => {
