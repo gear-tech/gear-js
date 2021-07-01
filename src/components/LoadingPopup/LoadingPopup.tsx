@@ -5,8 +5,8 @@ import { RootState } from 'store/reducers';
 
 import ProgressBar from 'components/ProgressBar';
 
-import UpGear from 'images/gear_up.png';
-import DownGear from 'images/gear_down.png';
+import UpGear from 'images/gear_up.svg';
+import DownGear from 'images/gear_down.svg';
 
 import './LoadingPopup.scss';
 
