@@ -1,15 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ApiPromise, ApiRx, Keyring, WsProvider } from '@polkadot/api';
-import { stringToU8a } from '@polkadot/util';
-import {
-  mnemonicGenerate,
-  randomAsHex,
-  signatureVerify,
-} from '@polkadot/util-crypto';
+import { ApiPromise, ApiRx, WsProvider } from '@polkadot/api';
+import { randomAsHex } from '@polkadot/util-crypto';
 import { User } from 'src/users/entities/user.entity';
-import { KeyringPair } from '@polkadot/keyring/types';
 import { UsersService } from '../users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
+import {
+  createKeyring,
+  keyringFromJson,
+  keyringFromSeed,
+  keyringFromSuri,
+} from './keyring';
 
 @Injectable()
 export class GearNodeService {
@@ -24,46 +24,24 @@ export class GearNodeService {
 
   private logger = new Logger('GearNodeService');
 
-  async getApiPromise() {
+  private async getApiPromise() {
     const api = await ApiPromise.create({ provider: this.provider });
     return api;
   }
 
-  async getApiRx() {
+  private async getApiRx() {
     return await ApiRx.create({ provider: this.provider }).toPromise();
   }
 
-  getKeyring(uri: string, name: string) {
-    const keyring = new Keyring({ type: 'sr25519' });
-    const keyPair = keyring.addFromUri(uri, { name });
-    return keyPair;
-  }
-
-  getKeyringByMnemonic(user: User, mnemonic: string) {
-    const uri = `//${user.id}`;
-    const keyPair = this.getKeyring(uri, `${user.name}`);
-    return keyPair;
-  }
-
-  async createKeyPair(user: User) {
-    const mnemonic = mnemonicGenerate();
-    const suri = `//${user.id}`;
-    const keyPair = this.getKeyring(suri, `${user.name}`);
-    this.userService.addPublicKey(user, keyPair.address);
-    return {
-      mnemonic,
-      name: keyPair.meta.name,
-      public: keyPair.address,
-    };
-  }
-
-  checkSign(keyPair: KeyringPair, message: string) {
-    const signature = keyPair.sign(stringToU8a(message));
-    if (signatureVerify(message, signature, keyPair.address).isValid) {
-      return 'success';
-    } else {
-      return 'failed';
+  createKeyPair(user: User) {
+    if (user.seed) {
+      const keyring = keyringFromSeed(user, user.seed);
+      return keyring.toJson();
     }
+    const { publicKey, seed, json } = createKeyring(user);
+    this.userService.addPublicKey(user, publicKey);
+    this.userService.addSeed(user, seed);
+    return json;
   }
 
   async uploadProgram(user: User, data, cb) {
@@ -85,7 +63,10 @@ export class GearNodeService {
     };
 
     const api = await this.getApiPromise();
-    const keyring = this.getKeyringByMnemonic(user, data.mnemonic);
+    const json = JSON.parse(data.keyPairJson);
+    const keyring = json
+      ? keyringFromJson(json)
+      : keyringFromSeed(user, user.seed);
     const salt = data.salt || randomAsHex(20);
     let program = null;
 
@@ -173,7 +154,7 @@ export class GearNodeService {
     try {
       const unsub = await api.tx.balances
         .transfer(publicKey, value)
-        .signAndSend(this.getKeyring('//Alice', 'Alice default'), (result) => {
+        .signAndSend(keyringFromSuri('//Alice', 'Alice default'), (result) => {
           if (result.status.isFinalized) {
             if (cb) {
               cb(undefined, {
