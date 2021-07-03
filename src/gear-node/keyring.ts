@@ -1,6 +1,6 @@
-import { Keyring } from '@polkadot/keyring';
+import { Keyring } from '@polkadot/api';
 import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
-import { hexToU8a, isHex, isU8a, stringToU8a, u8aToHex } from '@polkadot/util';
+import { hexToU8a, isHex, stringToU8a, u8aToHex } from '@polkadot/util';
 import {
   mnemonicGenerate,
   mnemonicToMiniSecret,
@@ -27,21 +27,26 @@ export function keyringFromJson(json: KeyringPair$Json) {
 }
 
 export function keyringFromSeed(user: User, seed: Uint8Array | string) {
+  const keyring = new Keyring({ type: 'sr25519' });
   const keypair = isHex(seed)
-    ? naclKeypairFromSeed(hexToU8a(seed))
-    : naclKeypairFromSeed(seed);
+    ? keyring.addFromSeed(hexToU8a(seed), { name: user.username })
+    : keyring.addFromSeed(seed);
+  return keypair;
+}
 
-  return keyringFromKeyPair(keypair, user.username);
+export function keyringFromMnemonic(user: User, mnemonic: string) {
+  const suri = `${mnemonic}//gear`;
+  return keyringFromSuri(suri, `${user.name}`);
 }
 
 export function createKeyring(user: User) {
   const mnemonic = mnemonicGenerate();
   const seed = mnemonicToMiniSecret(mnemonic);
-  const keyPair = naclKeypairFromSeed(seed);
-  const keyring = keyringFromKeyPair(keyPair, user.username);
+  // const keyPair = naclKeypairFromSeed(seed);
+  const keyring = keyringFromSeed(user, seed);
 
   return {
-    publicKey: u8aToHex(keyPair.publicKey),
+    publicKey: keyring.address,
     seed: seed,
     json: keyring.toJson(),
   };

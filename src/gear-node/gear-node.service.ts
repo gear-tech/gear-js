@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ApiPromise, ApiRx, WsProvider } from '@polkadot/api';
-import { randomAsHex } from '@polkadot/util-crypto';
+import { ApiPromise, ApiRx, Keyring, WsProvider } from '@polkadot/api';
+import { mnemonicGenerate, randomAsHex } from '@polkadot/util-crypto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import {
   createKeyring,
   keyringFromJson,
+  keyringFromMnemonic,
   keyringFromSeed,
   keyringFromSuri,
 } from './keyring';
@@ -63,13 +64,11 @@ export class GearNodeService {
     };
 
     const api = await this.getApiPromise();
-    const json = JSON.parse(data.keyPairJson);
-    const keyring = json
-      ? keyringFromJson(json)
-      : keyringFromSeed(user, user.seed);
+    const keyring = keyringFromSeed(user, user.seed);
+    // ? keyringFromJson(JSON.parse(data.keyPairJson))
+    // : keyringFromSeed(user, user.seed);
     const salt = data.salt || randomAsHex(20);
     let program = null;
-
     try {
       program = api.tx.gear.submitProgram(
         code,
@@ -120,8 +119,9 @@ export class GearNodeService {
           message: error.message,
         });
       } else {
+        console.error(error);
         cb({
-          error: 'Invalid transaction. Account balance too low',
+          error: 'Invalid transaction.',
           message: error.message,
         });
       }
