@@ -22,6 +22,22 @@ export interface UploadProgramModel {
     value: number;
 }
 
+export interface ProgramsInterface {
+    jsonrpc: string,
+    id: string,
+    result: ProgramModel[]
+}
+
+export interface ProgramInterface {
+    jsonrpc: string,
+    id: string,
+    result: ProgramModel
+}
+
+export interface BalanceModel {
+    value: number;
+}
+
 export enum ProgramActionTypes{
     FETCH_PROGRAMS = 'FETCH_PROGRAMS',
     FETCH_PROGRAMS_SUCCESS = 'FETCH_PROGRAMS_SUCCESS',

@@ -1,8 +1,7 @@
 import io from 'socket.io-client';
-import { emitEvents, onEvents, GEAR_LOCAL_WS_URI, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
-import { UploadProgramModel } from 'types/program';
-import { BlockModel, TotalIssuanceModel } from 'types/block';
-import { fetchBlockAction, fetchTotalIssuanceAction, programUploadSuccessAction, programUploadFailedAction, programUploadInBlockAction } from 'store/actions/actions';
+import { GEAR_LOCAL_WS_URI, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
+import { BalanceModel, UploadProgramModel } from 'types/program';
+import { fetchBlockAction, fetchTotalIssuanceAction, programUploadSuccessAction, programUploadInBlockAction } from 'store/actions/actions';
 
 export interface ISocketService {
   uploadProgram(file: File, opts: UploadProgramModel): void;
@@ -22,45 +21,77 @@ export class SocketService implements ISocketService {
       transports: ['websocket'],
       query: { Authorization: `Bearer ${this.key || ""}` },
     });
-    this.socket.on(onEvents.totalIssuance, (data: TotalIssuanceModel) => {
-      dispatch(fetchTotalIssuanceAction(data))
-    });
-    this.socket.on(onEvents.newBlock, (data: BlockModel) => {
-      dispatch(fetchBlockAction(data))
-    });
-    this.socket.on(onEvents.submitProgramSuccess, (data: any) => {
-      if (data.status === 'InBlock') {
-        dispatch(programUploadInBlockAction());
-      } else if (data.status === 'Finalized') {
-        window.location.pathname = "/uploaded-programs";
-        dispatch(programUploadSuccessAction());
+    this.socket.on('message', (data: any) => {
+      if (Object.prototype.hasOwnProperty.call(data, "result")) {
+        if (Object.prototype.hasOwnProperty.call(data.result, "totalIssuance")) {
+          dispatch(fetchTotalIssuanceAction(data.result))
+        } else if (Object.prototype.hasOwnProperty.call(data.result, "hash")) {
+          dispatch(fetchBlockAction(data.result))
+        } else if (Object.prototype.hasOwnProperty.call(data.result, "status")) {
+          if (data.result.status === 'InBlock') {
+            dispatch(programUploadInBlockAction());
+          } else if (data.result.status === 'Finalized') {
+            window.location.pathname = "/uploaded-programs";
+            dispatch(programUploadSuccessAction());
+          }
+        }
       }
     })
-    this.socket.on(onEvents.submitProgramFailed, (data: any) => {
-      dispatch(programUploadFailedAction(data.error))
-    })
   }
-  
+
+  private generateRandomId() {
+    return Math.floor(Math.random() * 1000000000);
+  }
+
   public uploadProgram(file: File, opts: UploadProgramModel) {
     const { gasLimit, value, initPayload } = opts;
     const filename = file.name;
-    const mnemonic = localStorage.getItem(GEAR_MNEMONIC_KEY) || '';
+    const generatedId = this.generateRandomId();
+    const keyPairJson = localStorage.getItem(GEAR_MNEMONIC_KEY) || '';
 
-    return this.socket.emit(emitEvents.uploadProgram, {
-      file,
-      filename,
-      gasLimit,
-      value,
-      initPayload,
-      mnemonic,
+    return this.socket.emit('message', {
+      jsonrpc: "2.0",
+      id: generatedId,
+      method: "program.upload",
+      params: {
+        file,
+        filename,
+        gasLimit,
+        value,
+        initPayload,
+        keyPairJson
+      }
     });
   }
 
   public getTotalIssuance() {
-    this.socket.emit(emitEvents.totalIssuance);
+    const generatedId = this.generateRandomId();
+
+    this.socket.emit('message', {
+      jsonrpc: "2.0",
+      id: generatedId,
+      method: "system.totalIssuance",
+    });
   }
 
   public subscribeNewBlocks() {
-    this.socket.emit(emitEvents.subscribeNewBlocks);
+    const generatedId = this.generateRandomId();
+
+    this.socket.emit('message', {
+      jsonrpc: "2.0",
+      id: generatedId,
+      method: "blocks.newBlocks",
+    });
+  }
+
+  public transferBalance(balanceValue: BalanceModel) {
+    const generatedId = this.generateRandomId();
+
+    this.socket.emit('message', {
+      jsonrpc: "2.0",
+      id: generatedId,
+      method: "balance.transfer",
+      params: balanceValue
+    })
   }
 }

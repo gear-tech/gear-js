@@ -1,12 +1,12 @@
 import UserRequestService from 'services/UserRequestService';
 
-import { UserActionTypes, UserKeypairModel, UserModel } from 'types/user';
-import { ProgramActionTypes, ProgramModel } from 'types/program';
+import { UserActionTypes, UserKeypairModel, UserKeypairInterface, UserModel, UserProfileInterface } from 'types/user';
+import { ProgramActionTypes, ProgramModel, ProgramsInterface, ProgramInterface } from 'types/program';
 import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
 
-import { GEAR_BALANCE_TRANSFER_VALUE, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
+import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes } from 'types/block';
 
 const fetchTokenAction = () => ({type: UserActionTypes.FETCH_TOKEN});
@@ -51,13 +51,9 @@ export const generateKeypairAction = () => (dispatch: any) => {
   dispatch(fetchUserKeypairAction());
   userService
     .generateKeypair()
-    .then((generatedKeypair: UserKeypairModel) => {
-      window.localStorage.setItem(GEAR_MNEMONIC_KEY, generatedKeypair.mnemonic);
-      dispatch(fetchUserKeypairSuccessAction(generatedKeypair));
-      if (generatedKeypair.mnemonic) {
-        dispatch(transferBalanceSuccessAction())
-        userService.balanceTransfer(GEAR_BALANCE_TRANSFER_VALUE)
-      }
+    .then((result: UserKeypairInterface) => {
+      window.localStorage.setItem(GEAR_MNEMONIC_KEY, JSON.stringify(result.result));
+      dispatch(fetchUserKeypairSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchUserKeypairErrorAction()));
 }
@@ -67,7 +63,7 @@ export const getGitUserJwtAction = (code: string) => (dispatch: any)  => {
   gitService
     .authWithGit(code)
     .then((result: any) => {
-      window.localStorage.setItem(GEAR_STORAGE_KEY, result.access_token);
+      window.localStorage.setItem(GEAR_STORAGE_KEY, result.result.access_token);
       dispatch(fetchTokenSuccessAction(result));
     })
     .catch(() => dispatch(fetchTokenErrorAction()));
@@ -78,9 +74,9 @@ export const getTelegramUserJwtAction = (user: any) => (dispatch: any) => {
   telegramService
     .authWithTelegram(user)
     .then((result: any) => {
-      window.localStorage.setItem(GEAR_STORAGE_KEY, result.access_token);
+      window.localStorage.setItem(GEAR_STORAGE_KEY, result.result.access_token);
       dispatch(fetchTokenSuccessAction(result));
-      if (result.access_token) {
+      if (result.result.access_token) {
         window.location.reload();
       }
     })
@@ -92,9 +88,9 @@ export const getTestUserJwtAction = (userId: string) => (dispatch: any) => {
   userService
     .authWithTest(userId)
     .then((result: any) => {
-      window.localStorage.setItem(GEAR_STORAGE_KEY, result.access_token);
+      window.localStorage.setItem(GEAR_STORAGE_KEY, result.result.access_token);
       dispatch(fetchTokenSuccessAction(result));
-      if (result.access_token) {
+      if (result.result.access_token) {
         window.location.reload();
       }
     })
@@ -105,8 +101,8 @@ export const getUserDataAction = () => (dispatch: any) => {
   dispatch(fetchUserAction());
   userService
     .fetchUserData()
-    .then((user: UserModel) => {
-      dispatch(fetchUserSuccessAction(user));
+    .then((result: UserProfileInterface) => {
+      dispatch(fetchUserSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchUserErrorAction()));
 }
@@ -115,8 +111,8 @@ export const getProgramsAction = () => (dispatch: any) => {
   dispatch(fetchProgramsAction());
   programService
     .fetchAllPrograms()
-    .then((programs: ProgramModel[]) => {
-      dispatch(fetchProgramsSuccessAction(programs));
+    .then((result: ProgramsInterface) => {
+      dispatch(fetchProgramsSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchProgramsErrorAction()))
 }
@@ -125,8 +121,8 @@ export const getProgramAction = (hash: string) => (dispatch: any) => {
   dispatch(fetchProgramAction());
   programService
     .fetchProgram(hash)
-    .then((program: ProgramModel) => {
-      dispatch(fetchProgramSuccessAction(program));
+    .then((result: ProgramInterface) => {
+      dispatch(fetchProgramSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchProgramErrorAction()))
 }

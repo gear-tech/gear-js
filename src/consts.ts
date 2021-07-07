@@ -3,12 +3,13 @@ export const GEAR_MNEMONIC_KEY = "gear_mnemonic";
 // export const GEAR_LOCAL_WS_URI = "ws://localhost:3000/api/ws";
 export const GEAR_LOCAL_WS_URI = "wss://idea.gear-tech.io/api/ws";
 
-export const GEAR_BALANCE_TRANSFER_VALUE = 4324239999;
+export const GEAR_BALANCE_TRANSFER_VALUE = 4324239999999;
 
 export const emitEvents = {
     uploadProgram: "uploadProgram",
     subscribeNewBlocks: "subscribeNewBlocks",
-    totalIssuance: "totalIssuance"
+    totalIssuance: "totalIssuance",
+    transferBalance: "transferBalance"
 }
 
 export const onEvents = {

@@ -1,11 +1,11 @@
-import ServerRequestService from './ServerRequestService';
+import ServerRPCRequestService from './ServerRPCRequestService';
 
 export default class GitRequestService {
-  apiRequest = new ServerRequestService();
+  apiRequest = new ServerRPCRequestService();
 
-  protected readonly API_TELEGRAM_LOGIN_PATH = '/auth/login/telegram';
+  protected readonly API_TELEGRAM_LOGIN_PATH = "login.telegram";
 
   public authWithTelegram(authParams: {}): Promise<{ token: any }> {
-    return this.apiRequest.getResource(this.API_TELEGRAM_LOGIN_PATH, undefined, "POST",  {...authParams})
+    return this.apiRequest.getResource(this.API_TELEGRAM_LOGIN_PATH, {...authParams})
   }
 }

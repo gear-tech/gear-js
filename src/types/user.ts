@@ -21,6 +21,18 @@ export interface UserKeypairModel {
     public: string;
 }
 
+export interface UserProfileInterface {
+    jsonrpc: string,
+    id: string,
+    result: UserModel
+}
+  
+export interface UserKeypairInterface {
+    jsonrpc: string,
+    id: string,
+    result: UserKeypairModel
+}
+
 export enum UserActionTypes{
     FETCH_TOKEN = 'FETCH_TOKEN',
     FETCH_TOKEN_SUCCESS = 'FETCH_TOKEN_SUCCESS',

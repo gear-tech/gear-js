@@ -7,6 +7,18 @@ export interface TotalIssuanceModel {
     totalIssuance: string;
 }
 
+export interface BlockInterface {
+    jsonrpc: string;
+    id: string;
+    result: BlockModel;
+}
+
+export interface TotalIssuanceInterface {
+    jsonrpc: string;
+    id: string;
+    result: TotalIssuanceModel;
+}
+
 export enum BlockActionTypes{
     FETCH_BLOCK_SUCCESS = 'FETCH_BLOCK_SUCCESS',
     FETCH_TOTALISSUANCE_SUCCESS = 'FETCH_TOTALISSUANCE_SUCCESS',

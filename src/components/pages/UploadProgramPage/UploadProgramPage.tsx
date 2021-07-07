@@ -8,9 +8,6 @@ import { SocketService } from 'services/SocketService';
 
 import { GEAR_BALANCE_TRANSFER_VALUE, GEAR_MNEMONIC_KEY } from 'consts';
 
-import UserRequestService from 'services/UserRequestService';
-
-
 import ProgramSwitch from '../../blocks/ProgramSwitch';
 import UploadProgram from '../../blocks/UploadProgram';
 import BlocksList from '../../blocks/BlocksList';
@@ -37,8 +34,10 @@ const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => {
     if (!socketServiceRef.current) {
       socketServiceRef.current = new SocketService(dispatch);
     }
-    if (localStorage.getItem(GEAR_MNEMONIC_KEY) && !isBalanceTransfered) {
-      (new UserRequestService()).balanceTransfer(GEAR_BALANCE_TRANSFER_VALUE);
+    if (localStorage.getItem(GEAR_MNEMONIC_KEY) && !isBalanceTransfered && socketServiceRef.current) {
+      socketServiceRef.current.transferBalance({
+        value: GEAR_BALANCE_TRANSFER_VALUE
+      });
       dispatch(transferBalanceSuccessAction());
     }
   }, [dispatch, isBalanceTransfered, user])
