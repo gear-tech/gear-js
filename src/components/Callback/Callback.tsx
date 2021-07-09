@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import getGitUserJwtAction from '../../store/actions/actions';
+import { Redirect, useLocation } from 'react-router-dom';
+import { routes } from 'routes';
+import {getGitUserJwtAction} from '../../store/actions/actions';
 
 import './Callback.scss';
 import {State} from '../../types/state';
@@ -18,12 +19,13 @@ const Callback = ({user, getGitUserJwt}: CallbackType) => {
   const code = query.get('code');
   useEffect(() => {
     if (typeof code === 'string' && code.length > 5) {
-      console.log('callback getting');
       getGitUserJwt(code);
     }},
     [ getGitUserJwt, code ]);
-
   if (typeof code === 'string' && code.length > 5) {
+    if ('access_token' in user.user) {
+      return <Redirect to={routes.main}/>
+    }
     return <div className="callback-content">Loading...</div>;
   }
   return <div className="callback-content callback-content--error">Error!</div>;

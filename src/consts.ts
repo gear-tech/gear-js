@@ -1,0 +1,1 @@
+export const GEAR_STORAGE_KEY = "gear_user_token";
