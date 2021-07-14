@@ -46,10 +46,16 @@ const ProgramReducer = (state = initialState, action: ProgramAction): ProgramSta
       return { ...state, isProgramUploading: false, programUploadingError: null }
 
     case ProgramActionTypes.PROGRAM_UPLOAD_FAILED:
-      return { ...state, isProgramUploading: false, programUploadingError: action.payload }
+      return { ...state, isProgramUploading: false, programUploadingError: action.payload, programUploadingStatus: null }
 
     case ProgramActionTypes.PROGRAM_UPLOAD_IN_BLOCK:
       return { ...state, isProgramUploading: true, programUploadingError: null, programUploadingStatus: "in block" }
+
+    case ProgramActionTypes.PROGRAM_UPLOAD_FINALIZED:
+      return { ...state, isProgramUploading: true, programUploadingError: null, programUploadingStatus: "finalized" }
+
+    case ProgramActionTypes.PROGRAM_UPLOAD_INITIALIZED:
+      return { ...state, isProgramUploading: true, programUploadingError: null, programUploadingStatus: "program initialized" }
     
     case ProgramActionTypes.RESET_PROGRAMS:
       return { ...initialState };

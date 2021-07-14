@@ -14,8 +14,34 @@ const LoadingPopup = () => {
 
   const { programUploadingStatus } = useSelector((state: RootState) => state.programs)
 
-  const firstStepStatus = programUploadingStatus ? "completed" : "start";
-  const secondStepStats = programUploadingStatus ? "start" : "before";
+  let firstStepStatus = "start";
+  let secondStepStats = "before";
+  let thirdStepStatus = "before";
+  let fourthStepStats = "before";
+  if (programUploadingStatus) {
+    firstStepStatus = "completed";
+  }
+
+  if (programUploadingStatus) {
+    if (programUploadingStatus === "in block") {
+      secondStepStats = "start";
+    } else {
+      secondStepStats = "completed"
+    }
+
+  }
+
+  if (firstStepStatus === "completed" && secondStepStats === "completed") {
+    if (programUploadingStatus === "finalized") {
+      thirdStepStatus = "completed"
+    } else {
+      thirdStepStatus = "start"
+    }
+  }
+
+  if (firstStepStatus === "completed" && secondStepStats === "completed" && thirdStepStatus === "completed") {
+    fourthStepStats = "start"
+  }
 
   return (
     <div className="loading-popup">
@@ -28,10 +54,12 @@ const LoadingPopup = () => {
       <div className="loading-popup--progress">
         <ProgressBar status={firstStepStatus}/>
         <ProgressBar status={secondStepStats}/>
+        <ProgressBar status={thirdStepStatus}/>
+        <ProgressBar status={fourthStepStats}/>
       </div>
       <div className="loading-popup--text-info">
         <span>Processing...Status:</span>
-        <span>{programUploadingStatus ? 'in block' : 'start'}</span>
+        <span>{programUploadingStatus || 'start'}</span>
       </div>
     </div>
   );

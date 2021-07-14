@@ -1,7 +1,14 @@
 import io from 'socket.io-client';
-import { GEAR_LOCAL_WS_URI, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
+import { GEAR_LOCAL_WS_URI, GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY, PROGRAM_UPLOAD_ERRRORS } from 'consts';
 import { BalanceModel, UploadProgramModel } from 'types/program';
-import { fetchBlockAction, fetchTotalIssuanceAction, programUploadSuccessAction, programUploadInBlockAction } from 'store/actions/actions';
+import { 
+  fetchBlockAction, 
+  fetchTotalIssuanceAction, 
+  programUploadSuccessAction, 
+  programUploadInBlockAction,
+  programUploadFinalizedAction,
+  programUploadProgramInitializedAction, 
+  programUploadFailedAction} from 'store/actions/actions';
 
 export interface ISocketService {
   uploadProgram(file: File, opts: UploadProgramModel): void;
@@ -31,8 +38,19 @@ export class SocketService implements ISocketService {
           if (data.result.status === 'InBlock') {
             dispatch(programUploadInBlockAction());
           } else if (data.result.status === 'Finalized') {
+            dispatch(programUploadFinalizedAction());
+          } else if (data.result.status === 'ProgramInitialized') {
+            dispatch(programUploadProgramInitializedAction());
+          } else if (data.result.status === 'Success') {
             window.location.pathname = "/uploaded-programs";
             dispatch(programUploadSuccessAction());
+          }
+        }
+      } else if (Object.prototype.hasOwnProperty.call(data, "error")) {
+        if (Object.prototype.hasOwnProperty.call(data.error, "message")) {
+          const uploadErrors = Object.values(PROGRAM_UPLOAD_ERRRORS).map(value => value.toLowerCase());
+          if (uploadErrors.includes(data.error.message.toLowerCase())) {
+            dispatch(programUploadFailedAction(data.error.message));
           }
         }
       }

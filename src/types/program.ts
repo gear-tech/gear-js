@@ -49,7 +49,9 @@ export enum ProgramActionTypes{
     PROGRAM_UPLOAD_SUCCESS = 'PROGRAM_UPLOAD_SUCCESS',
     PROGRAM_UPLOAD_START = 'PROGRAM_UPLOAD_START',
     PROGRAM_UPLOAD_FAILED = 'PROGRAM_UPLOAD_FAILED',
-    PROGRAM_UPLOAD_IN_BLOCK = 'PROGRAM_UPLOAD_IN_BLOCK'
+    PROGRAM_UPLOAD_IN_BLOCK = 'PROGRAM_UPLOAD_IN_BLOCK',
+    PROGRAM_UPLOAD_FINALIZED = 'PROGRAM_UPLOAD_FINALIZED',
+    PROGRAM_UPLOAD_INITIALIZED = 'PROGRAM_UPLOAD_INITIALIZED'
 }
 
 interface UploadProgramStartAction{
@@ -67,6 +69,14 @@ interface UploadProgramFailedAction{
 
 interface UploadProgramInBlockAction{
     type: ProgramActionTypes.PROGRAM_UPLOAD_IN_BLOCK;
+}
+
+interface UploadProgramFinalizedAction{
+    type: ProgramActionTypes.PROGRAM_UPLOAD_FINALIZED;
+}
+
+interface UploadProgramInitializedAction{
+    type: ProgramActionTypes.PROGRAM_UPLOAD_INITIALIZED;
 }
 
 interface FetchProgramsAction{
@@ -110,4 +120,6 @@ export type ProgramAction =
     UploadProgramSuccessAction |
     UploadProgramFailedAction |
     UploadProgramInBlockAction |
+    UploadProgramFinalizedAction |
+    UploadProgramInitializedAction |
     ResetProgramsAction;

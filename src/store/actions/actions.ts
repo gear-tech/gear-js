@@ -37,7 +37,8 @@ export const programUploadStartAction = () => ({type: ProgramActionTypes.PROGRAM
 export const programUploadSuccessAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS});
 export const programUploadFailedAction = (payload: string) => ({type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED, payload});
 export const programUploadInBlockAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_IN_BLOCK});
-
+export const programUploadFinalizedAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_FINALIZED});
+export const programUploadProgramInitializedAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_INITIALIZED});
 
 const resetUserAction = () => ({type: UserActionTypes.RESET_USER});
 const resetProgramsAction = () => ({type: ProgramActionTypes.RESET_PROGRAMS});
