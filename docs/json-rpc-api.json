@@ -1,0 +1,500 @@
+{
+  "jrgen": "1.1",
+  "jsonrpc": "2.0",
+  "info": {
+    "title": "GEAR JSONRPC API",
+    "description": [
+      "Description jsonrpc api of gear backend",
+      "This api follows the json-rpc 2.0 specification. More information available at http://www.jsonrpc.org/specification."
+    ],
+    "version": "1.0"
+  },
+  "definitions": {
+    "auth": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "description": "Bearer token of the created session.",
+          "examples": ["123456890"],
+          "type": "string"
+        }
+      },
+      "required": ["access_token"]
+    },
+    "user": {
+      "description": "User data",
+      "type": "object",
+      "properties": {
+        "email": {
+          "description": "",
+          "examples": ["user@gear.io"],
+          "type": "string"
+        },
+        "name": {
+          "description": "Fullname",
+          "examples": ["Ivan Ivanov"],
+          "type": "string"
+        },
+        "username": {
+          "description": "Username",
+          "examples": ["ivan_navi"],
+          "type": "string"
+        },
+        "photoUrl": {
+          "description": "Photo url",
+          "examples": ["http://photo.url"],
+          "type": "string"
+        },
+        "publicKey": {
+          "description": "Public key",
+          "examples": ["5GHJ54GHgh4"],
+          "type": "string"
+        }
+      }
+    },
+    "program": {
+      "type": "object",
+      "properties": {
+        "hash": {
+          "description": "program hash",
+          "examples": [
+            "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666"
+          ],
+          "type": "string"
+        },
+        "blockHash": {
+          "description": "hash of block with program",
+          "examples": [
+            "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a"
+          ],
+          "type": "string"
+        },
+        "programNumber": {
+          "description": "Number of program in order",
+          "examples": [
+            "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a"
+          ],
+          "type": "string"
+        },
+        "name": {
+          "description": "Program name",
+          "examples": ["demo.wasm"],
+          "type": "string"
+        },
+        "callCount": {
+          "description": "Number of program call",
+          "examples": [3],
+          "type": "integer"
+        },
+        "uploadedAt": {
+          "description": "Date when program was uploaded",
+          "examples": [
+            "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "hash",
+        "blockHash",
+        "programNumber",
+        "name",
+        "callCount",
+        "uploadedAt"
+      ]
+    },
+    "errors": {
+      "invalidMethodParams": {
+        "description": "The provided method parameters are invalid",
+        "code": -32602,
+        "message": "Invalid method parameters"
+      },
+      "methodNotFound": {
+        "description": "The provided method not found",
+        "code": -32601,
+        "message": "Method not found"
+      },
+      "internalServer": {
+        "description": "Internal server error",
+        "code": -32000,
+        "message": "Internal server error"
+      },
+      "gearNode": {
+        "description": "Error occured in the gear node",
+        "code": -32010,
+        "message": "Gear node error"
+      },
+      "transactionError": {
+        "description": "Error occured when transaction failed",
+        "code": -32011,
+        "message": "Invalid transaction"
+      },
+      "unathorized": {
+        "description": "The provided credentials are invalid",
+        "code": -32003,
+        "message": "Unathorized"
+      },
+      "initProgramError": {
+        "description": "Error occured when program initialization failed",
+        "code": -32012,
+        "message": "Program initialization falied"
+      }
+    }
+  },
+
+  "methods": {
+    "login.github": {
+      "summary": "Login by github",
+      "tags": ["Login", "Http"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "Code recieved after authorization on github",
+            "examples": ["42da98492849823u9"],
+            "type": "string"
+          }
+        },
+        "required": ["code"]
+      },
+      "result": {
+        "$ref": "#/definitions/auth"
+      },
+      "errors": [{ "$ref": "#/definitions/errors/invalidMethodParams" }]
+    },
+
+    "login.telegram": {
+      "summary": "Login by telegram",
+      "tags": ["Login", "Http"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Id recieved after authorization on telegram",
+            "examples": ["132321"],
+            "type": "string"
+          },
+          "first_name": {
+            "description": "First name recieved after authorization on telegram",
+            "examples": ["Ivan"],
+            "type": "string"
+          },
+          "last_name": {
+            "description": "Last name recieved after authorization on telegram",
+            "examples": ["Ivanov"],
+            "type": "string"
+          },
+          "username": {
+            "description": "Username recieved after authorization on telegram",
+            "examples": ["ivan_navi"],
+            "type": "string"
+          },
+          "photo_url": {
+            "description": "Photo url recieved after authorization on telegram",
+            "examples": ["http://photo.url"],
+            "type": "string"
+          },
+          "auth_date": {
+            "description": "Auth date recieved after authorization on telegram",
+            "examples": ["12.12.12"],
+            "type": "string"
+          },
+          "hash": {
+            "description": "Hash recieved after authorization on telegram",
+            "examples": ["hsdiufhisduhfidshfshfi47h39gfh8rewhf857"],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "first_name",
+          "last_name",
+          "username",
+          "photo_url",
+          "auth_date",
+          "hash"
+        ]
+      },
+      "result": {
+        "$ref": "#/definitions/auth"
+      },
+      "errors": [{ "$ref": "#/definitions/errors/invalidMethodParams" }]
+    },
+
+    "user.profile": {
+      "summary": "Getting user profile",
+      "tags": ["User", "Http"],
+      "result": {
+        "$ref": "#/definitions/user"
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
+    "user.generateKeypair": {
+      "summary": "Generate keypair for signing trasactions",
+      "tags": ["User", "Http"],
+      "result": {
+        "type": "object",
+        "description": "JSON encdoded keypair data",
+        "properties": {}
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
+    "user.getBalance": {
+      "summary": "Getting user balance",
+      "tags": ["User", "Http"],
+      "result": {
+        "type": "object",
+        "properties": {
+          "freeBalance": {
+            "type": "string",
+            "examples": "262.4660 mUnit"
+          }
+        },
+        "required": ["freeBalance"]
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
+    "program.data": {
+      "summary": "Getting uploaded program data",
+      "tags": ["Program", "Http"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "hash": {
+            "type": "string",
+            "description": "Hash of program",
+            "examples": ["0x746583756837658348"]
+          }
+        },
+        "required": ["hash"]
+      },
+      "result": {
+        "$ref": "#/definitions/program"
+      },
+      "errors": [
+        { "$ref": "#/definitions/errors/unathorized" },
+        { "$ref": "#/definitions/errors/invalidMethodParams" }
+      ]
+    },
+
+    "program.all": {
+      "summary": "Getting all uploaded program",
+      "tags": ["Program", "Http"],
+      "result": {
+        "type": "array",
+        "items": [{ "$ref": "#/definitions/program" }]
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
+    "balance.transfer": {
+      "summary": "Transfer balance from Alice.",
+      "tags": ["Balance", "WebSocket"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "description": "The number of units that need to be transfer",
+            "examples": [1234567]
+          }
+        },
+        "required": ["value"]
+      },
+      "result": {
+        "type": "object",
+        "description": "Information about success transaction",
+        "properties": {
+          "message": {
+            "examples": ["Transfer balance success"],
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "errors": [
+        { "$ref": "#/definitions/errors/unathorized" },
+        { "$ref": "#/definitions/errors/invalidMethodParams" },
+        { "$ref": "#/definitions/errors/transactionError" }
+      ]
+    },
+
+    "blocks.newBlocks": {
+      "summary": "Subscribe to new blocks",
+      "tags": ["Blocks", "WebSocket"],
+      "result": {
+        "type": "object",
+        "properties": {
+          "hash": {
+            "type": "string",
+            "description": "Block hash",
+            "examples": [
+              "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a"
+            ]
+          },
+          "number": {
+            "type": "string",
+            "description": "Block number",
+            "examples": ["2"]
+          }
+        },
+        "required": ["hash", "number"]
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
+    "program.upload": {
+      "summary": "Upload new program",
+      "tags": ["Program", "WebSocket"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "description": "File buffer"
+          },
+          "filename": {
+            "type": "string",
+            "description": "File name",
+            "examples": ["demo.wasm"]
+          },
+          "gasLimit": {
+            "type": "integer",
+            "description": "Gas limit",
+            "examples": [2000]
+          },
+          "value": {
+            "type": "integer",
+            "description": "Init value",
+            "examples": [2000]
+          },
+          "init_payload": {
+            "type": "string",
+            "description": "Init payload (hex)",
+            "examples": ["0x1234"]
+          },
+          "keyPairJson": {
+            "type": "string",
+            "description": "JSON Encoded KeyPair data"
+          }
+        },
+        "required": ["file", "filename", "gasLimit", "value", "init_payload"]
+      },
+      "result": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Transaction status",
+            "examples": ["InBlock", "Finalized"]
+          },
+          "blockHash": {
+            "type": "string",
+            "description": "Block hash with program",
+            "examples": [
+              "0xf3a23f7de0415463894039910a8976a7e21cba3e7e620ac10fc6b25ec805eae9"
+            ]
+          },
+          "programHash": {
+            "type": "string",
+            "description": "Program Hash",
+            "examples": [
+              "0x4467ffec533014607103dcede9c2e828ecbc8ae1469b18cbb1861e1fecfbe9fe"
+            ]
+          }
+        },
+        "required": ["status", "blockHash", "programHash"]
+      },
+      "errors": [
+        { "$ref": "#/definitions/errors/unathorized" },
+        { "$ref": "#/definitions/errors/invalidMethodParams" },
+        { "$ref": "#/definitions/errors/transactionError" },
+        { "$ref": "#/definitions/errors/initProgramError" }
+      ]
+    },
+
+    "system.totalIssuance": {
+      "summary": "Getting total issuance",
+      "tags": ["System", "WebSocket"],
+      "result": {
+        "type": "object",
+        "properties": {
+          "totalIssuance": {
+            "type": "string",
+            "description": "Total issuance value",
+            "examples": ["4.3425 MUnit"]
+          }
+        },
+        "required": ["totalIssuance"]
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
+    "message.send": {
+      "summary": "Sending message",
+      "tags": ["Message", "WebSocket"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "destination": {
+            "type": "string",
+            "description": "Program destination address (hex)",
+            "examples": [
+              "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+            ]
+          },
+          "gasLimit": {
+            "type": "integer",
+            "description": "Gas limit",
+            "examples": [2000]
+          },
+          "value": {
+            "type": "integer",
+            "description": "Init value",
+            "examples": [2000]
+          },
+          "payload": {
+            "type": "string",
+            "description": "Init payload",
+            "examples": ["PING"]
+          },
+          "keyPairJson": {
+            "type": "string",
+            "description": "JSON Encoded KeyPair data"
+          }
+        },
+        "required": ["destination", "gasLimit", "value", "payload"]
+      },
+      "result": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Transaction status",
+            "examples": ["Log", "Success"]
+          },
+          "blockHash": {
+            "type": "string",
+            "description": "Block hash with transaction",
+            "examples": [
+              "0xf3a23f7de0415463894039910a8976a7e21cba3e7e620ac10fc6b25ec805eae9"
+            ]
+          },
+          "data": {
+            "type": "string",
+            "description": "Program response to the message",
+            "examples": ["PONG"]
+          },
+          "required": ["status", "blockHash"]
+        }
+      },
+      "errors": [
+        { "$ref": "#/definitions/errors/unathorized" },
+        { "$ref": "#/definitions/errors/invalidMethodParams" },
+        { "$ref": "#/definitions/errors/transactionError" }
+      ]
+    }
+  }
+}

@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BlocksGateway } from './ws.gateway';
+import { WsRpcGateway } from './ws-rpc.gateway';
 
-describe('BlocksGateway', () => {
-  let gateway: BlocksGateway;
+describe('WsRpcGateway', () => {
+  let gateway: WsRpcGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BlocksGateway],
+      providers: [WsRpcGateway],
     }).compile();
 
-    gateway = module.get<BlocksGateway>(BlocksGateway);
+    gateway = module.get<WsRpcGateway>(WsRpcGateway);
   });
 
   it('should be defined', () => {

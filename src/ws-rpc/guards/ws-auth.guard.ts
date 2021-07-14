@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from '@polkadot/x-rxjs';
 import { jwtConstants } from 'src/auth/constants/jwt.constants';
 import { UsersService } from 'src/users/users.service';
 

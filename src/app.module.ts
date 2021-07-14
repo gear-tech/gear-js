@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
-import { AuthController } from './auth/auth.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -10,7 +9,8 @@ import { configuration } from './config/configuration';
 import { ProgramsModule } from './programs/programs.module';
 import { GearNodeModule } from './gear-node/gear-node.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { BlocksGateway } from './ws/ws.gateway';
+import { WsRpcModule } from './ws-rpc/ws-rpc.module';
+import { RpcModule } from './http-rpc/rpc.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { TelegramModule } from './telegram/telegram.module';
 
@@ -30,6 +30,7 @@ import { TelegramModule } from './telegram/telegram.module';
         database: configService.get('DB_NAME'),
         autoLoadEntities: true,
         synchronize: true,
+        entities: ['dist/**/*.entity.js'],
       }),
       inject: [ConfigService],
     }),
@@ -38,13 +39,15 @@ import { TelegramModule } from './telegram/telegram.module';
     ProgramsModule,
     GearNodeModule,
     EventEmitterModule.forRoot(),
+    RpcModule,
+    WsRpcModule,
     TelegrafModule.forRoot({
       token: process.env.TELEGRAM_BOT_TOKEN,
       include: [TelegramModule],
     }),
     TelegramModule,
   ],
-  controllers: [AppController, AuthController],
-  providers: [AppService, BlocksGateway],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

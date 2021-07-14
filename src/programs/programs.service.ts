@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { bufferToU8a } from '@polkadot/util';
 import { Repository } from 'typeorm';
 import { Program } from './entities/program.entity';
 
@@ -11,8 +12,11 @@ export class ProgramsService {
   ) {}
 
   parseWASM(file) {
-    const code = new Uint8Array(file.buffer);
-    return code;
+    if (file instanceof Buffer) {
+      return file;
+    } else {
+      return file.buffer;
+    }
   }
 
   async saveProgram({ user, hash, blockHash, name, uploadedAt }) {

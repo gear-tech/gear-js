@@ -11,7 +11,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  verifyTelegramLogin(hash: string, userData: object) {
+  private verifyTelegramLogin(hash: string, userData: object) {
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const checkStr = Object.keys(userData)
       .sort()
@@ -29,7 +29,7 @@ export class AuthService {
   async loginTelegram(data: any) {
     const { hash, ...userData } = data;
     if (!this.verifyTelegramLogin(hash, userData)) {
-      throw new BadRequestException('Incorrect Telegram data');
+      throw new Error('Incorrect telegram data');
     }
     const user = await this.userService.saveTgAcc({
       telegramId: data.id,
@@ -63,7 +63,7 @@ export class AuthService {
     };
   }
 
-  async githubAccessToken(code: string) {
+  private async githubAccessToken(code: string) {
     const urlAccessToken = 'https://github.com/login/oauth/access_token';
     const data = {
       code: code,
@@ -79,7 +79,7 @@ export class AuthService {
     return resText.split('&')[0].split('=')[1];
   }
 
-  async githubUserData(accessToken: string) {
+  private async githubUserData(accessToken: string) {
     const urlUserData = 'https://api.github.com/user';
     const res = await fetch(
       `${urlUserData}?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`,

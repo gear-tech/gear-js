@@ -28,6 +28,28 @@
           <b><span>{{totalIssuance}} </span></b>
         </p>
 
+        <p>
+          <button @click.prevent="balanceTransfer()">Update balance</button>
+        </p>
+
+        <div class="message">
+          <h3>Message</h3>
+
+          destination
+          <input type="text" ref="destination" /><br />
+          payload:
+          <input type="text" name="mespayload" ref="messagePayload" />
+          <br />
+          gas_limit:
+          <input type="number" ref="messageGasLimit" /> <br />
+          value:
+          <input type="number" name="mesvalue" ref="messageValue" /><br />
+
+          <button type="submit" @click.prevent="sendMessage()">
+            Send Message
+          </button>
+        </div>
+
         <div style="width: 100%">
           <div class="blocks" style="width: 40%; float: left">
             <h3>Blocks</h3>
@@ -58,8 +80,6 @@
               Initial Payload:
               <input type="text" name="payload" ref="payload" />
               <br />
-              mnemonic phrase:
-              <input type="text" ref="mnemonic" /><br />
               <button type="submit" @click.prevent="sendWasm()">Send</button>
             </form>
             <hr />
@@ -85,7 +105,7 @@
           programs: [],
           token: '',
           totalIssuance: '',
-          socket: null, //{ blocks: null },
+          socket: null,
         },
         methods: {
           connect() {
@@ -93,26 +113,27 @@
             this.socket = io('http://localhost:3000/api/ws', {
               query: { Authorization: this.token },
             });
-
-            this.socket.on('newBlock', (data) => {
-              this.recieveNewBlock(data);
-            });
-            this.socket.on('totalIssuance', (data) => {
-              this.recieveTotalIssuance(data);
-            });
-            this.socket.on('submitProgram.success', (data) => {
-              this.recieveNewProgram(data);
+            this.socket.on('message', (event) => {
+              console.log(event);
             });
           },
           jwtTokenChange() {
             this.token = this.$refs.token.value;
           },
           subscribeNewBlocks() {
-            this.socket.emit('subscribeNewBlocks');
+            this.socket.emit('message', {
+              jsonrpc: '2.0',
+              method: 'blocks.newBlocks',
+              id: 1,
+            });
           },
 
           getTotalIssuance() {
-            this.socket.emit('totalIssuance');
+            this.socket.emit('message', {
+              jsonrpc: '2.0',
+              method: 'system.totalIssuance',
+              id: 2,
+            });
           },
 
           recieveNewBlock(block) {
@@ -128,13 +149,40 @@
           },
 
           sendWasm() {
-            this.socket.emit('uploadProgram', {
-              file: this.file,
-              filename: this.file.name,
-              gasLimit: this.$refs.gasLimit.value,
-              value: this.$refs.value.value,
-              initPayload: this.$refs.payload.value,
-              mnemonic: this.$refs.mnemonic.value,
+            this.socket.emit('message', {
+              jsonrpc: '2.0',
+              id: 3,
+              method: 'program.upload',
+              params: {
+                file: this.file,
+                filename: this.file.name,
+                gasLimit: this.$refs.gasLimit.value,
+                value: this.$refs.value.value,
+                initPayload: this.$refs.payload.value,
+              },
+            });
+          },
+          sendMessage() {
+            this.socket.emit('message', {
+              jsonrpc: '2.0',
+              id: 3,
+              method: 'message.send',
+              params: {
+                destination: this.$refs.destination.value,
+                payload: this.$refs.messagePayload.value,
+                gasLimit: this.$refs.messageGasLimit.value,
+                value: this.$refs.messageValue.value,
+              },
+            });
+          },
+          balanceTransfer() {
+            this.socket.emit('message', {
+              jsonrpc: '2.0',
+              id: 3,
+              method: 'balance.transfer',
+              params: {
+                value: 999999999999,
+              },
             });
           },
           handleFileUpload() {

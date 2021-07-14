@@ -1,42 +1,44 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ApiPromise, ApiRx, Keyring, WsProvider } from '@polkadot/api';
-import { mnemonicGenerate, randomAsHex } from '@polkadot/util-crypto';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { randomAsHex } from '@polkadot/util-crypto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import {
   createKeyring,
   keyringFromJson,
-  keyringFromMnemonic,
   keyringFromSeed,
   keyringFromSuri,
 } from './keyring';
-
+import { GearNodeError, InvalidParamsError } from 'src/json-rpc/errors';
+import { u8aToHex } from '@polkadot/util';
+import { submitProgram } from './program.gear';
+import { sendMessage } from './message.gear';
 @Injectable()
 export class GearNodeService {
   private provider: WsProvider;
+  private api: ApiPromise;
 
   constructor(
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
   ) {
     this.provider = new WsProvider(process.env.WS_PROVIDER);
+    this.createApiPromise();
   }
 
   private logger = new Logger('GearNodeService');
 
-  private async getApiPromise() {
-    const api = await ApiPromise.create({ provider: this.provider });
-    return api;
-  }
-
-  private async getApiRx() {
-    return await ApiRx.create({ provider: this.provider }).toPromise();
+  private async createApiPromise() {
+    this.api = await ApiPromise.create({ provider: this.provider });
   }
 
   createKeyPair(user: User) {
     if (user.seed) {
       const keyring = keyringFromSeed(user, user.seed);
+      if (u8aToHex(keyring.publicKey) !== user.publicKey) {
+        this.userService.addPublicKey(user, u8aToHex(keyring.publicKey));
+      }
       return keyring.toJson();
     }
     const { publicKey, seed, json } = createKeyring(user);
@@ -46,15 +48,26 @@ export class GearNodeService {
   }
 
   async uploadProgram(user: User, data, cb) {
-    if (!data.gasLimit) {
-      cb({ error: 'Invalid transaction. No gas limit specified' });
-      return null;
-    } else if (!data.value) {
-      cb({ error: 'Invalid transaction. No initial value specified' });
-      return null;
+    if (
+      !data ||
+      !data.gasLimit ||
+      !data.value ||
+      !data.file ||
+      !data.filename
+    ) {
+      throw new InvalidParamsError();
     }
 
-    const code = this.programService.parseWASM(data.file);
+    const binary = this.programService.parseWASM(data.file);
+
+    const keyring = data.keyPairJson
+      ? keyringFromJson(data.keyPairJson)
+      : keyringFromSeed(user, user.seed);
+    if (keyring.isLocked) {
+      keyring.unlock();
+    }
+    const salt = data.salt || randomAsHex(20);
+
     const programData = {
       user: user,
       name: data.filename,
@@ -63,96 +76,90 @@ export class GearNodeService {
       uploadedAt: null,
     };
 
-    const api = await this.getApiPromise();
-    const keyring = keyringFromSeed(user, user.seed);
-    // ? keyringFromJson(JSON.parse(data.keyPairJson))
-    // : keyringFromSeed(user, user.seed);
-    const salt = data.salt || randomAsHex(20);
-    let program = null;
     try {
-      program = api.tx.gear.submitProgram(
-        code,
+      await submitProgram(
+        this.api,
+        keyring,
+        binary,
         salt,
-        data.init_payload || '',
+        data.initPayload || '',
         data.gasLimit,
         data.value,
+        programData,
+        (action, data?) => {
+          if (action === 'error') {
+            cb(data);
+          } else if (action === 'save') {
+            this.programService.saveProgram(programData);
+          } else if (action === 'gear') {
+            cb(undefined, data);
+          }
+        },
       );
     } catch (error) {
-      cb({
-        error: 'Invalid transaction. Incorrect params',
-        message: error.message,
-      });
-      return null;
+      throw error;
+    }
+  }
+
+  async sendMessage(user: User, messageData, cb) {
+    if (
+      !messageData ||
+      !messageData.destination ||
+      !messageData.payload ||
+      !messageData.gasLimit ||
+      !messageData.value
+    ) {
+      throw new InvalidParamsError();
     }
 
-    try {
-      await program.signAndSend(keyring, ({ events = [], status }) => {
-        if (status.isInBlock) {
-          programData.blockHash = status.asInBlock.toHex();
-          programData.uploadedAt = new Date().toString();
-        } else if (status.isFinalized) {
-          programData.blockHash = status.asFinalized.toHex();
-          this.programService.saveProgram(programData);
+    const keyring = messageData.keyPairJson
+      ? keyringFromJson(messageData.keyPairJson)
+      : keyringFromSeed(user, user.seed);
+    if (keyring.isLocked) {
+      keyring.unlock();
+    }
+
+    await sendMessage(
+      this.api,
+      keyring,
+      messageData.destination,
+      messageData.payload,
+      messageData.gasLimit,
+      messageData.value,
+      (action, data) => {
+        if (action === 'error') {
+          cb(data);
+        } else if (action === 'gear') {
+          cb(undefined, data);
         }
+      },
+    );
+  }
 
-        events.forEach(({ phase, event: { data, method, section } }) => {
-          try {
-            if (method === 'NewProgram') {
-              programData.hash = data[0].toString();
-              cb(undefined, {
-                status: status.type,
-                blockHash: programData.blockHash,
-                programHash: programData.hash,
-              });
-            }
-          } catch (error) {
-            cb({ error: 'Invalid transaction.', message: error.message });
-            return null;
-          }
+  async subscribeNewHeads(cb) {
+    try {
+      const unsub = this.api.rpc.chain.subscribeNewHeads((header) => {
+        cb(undefined, {
+          hash: header.hash.toHex(),
+          number: header.number.toString(),
         });
       });
+      return unsub;
     } catch (error) {
-      const errorCode = +error.message.split(':')[0];
-      if (errorCode === 1010) {
-        cb({
-          error: 'Invalid transaction. Account balance too low',
-          message: error.message,
-        });
-      } else {
-        console.error(error);
-        cb({
-          error: 'Invalid transaction.',
-          message: error.message,
-        });
-      }
-      return null;
+      throw new GearNodeError(error.message);
     }
   }
 
-  async subscribeNewHeads(client) {
-    const api = await this.getApiPromise();
-
-    const unsub = await api.rpc.chain.subscribeNewHeads((header) => {
-      client.emit('newBlock', {
-        hash: header.hash.toHex(),
-        number: header.number,
-      });
-    });
-    return unsub;
-  }
-
-  async totalIssuance(client) {
-    const api = await this.getApiPromise();
-    const total = await api.query.balances.totalIssuance();
-    client.emit('totalIssuance', {
-      totalIssuance: total.toHuman(),
-    });
+  async totalIssuance() {
+    const total = await (
+      await this.api.query.balances.totalIssuance()
+    ).toHuman();
+    return total;
   }
 
   async balanceTransfer(publicKey: string, value, cb?) {
-    const api = await this.getApiPromise();
     try {
-      const unsub = await api.tx.balances
+      const unsub = await this.api.tx.balances
         .transfer(publicKey, value)
         .signAndSend(keyringFromSuri('//Alice', 'Alice default'), (result) => {
           if (result.status.isFinalized) {
@@ -165,14 +172,12 @@ export class GearNodeService {
           }
         });
     } catch (error) {
-      cb({ error: error.message });
-      return null;
+      throw new GearNodeError(error.message);
     }
   }
 
   async getBalance(publicKey: string) {
-    const api = await this.getApiPromise();
-    const { data: balance } = await api.query.system.account(publicKey);
-    return balance.free.toHuman();
+    const { data: balance } = await this.api.query.system.account(publicKey);
+    return { freeBalance: balance.free.toHuman() };
   }
 }

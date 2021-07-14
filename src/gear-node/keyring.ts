@@ -4,10 +4,10 @@ import { hexToU8a, isHex, stringToU8a, u8aToHex } from '@polkadot/util';
 import {
   mnemonicGenerate,
   mnemonicToMiniSecret,
-  naclKeypairFromSeed,
   signatureVerify,
 } from '@polkadot/util-crypto';
 import { Keypair } from '@polkadot/util-crypto/types';
+import { isString } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 
 export function keyringFromSuri(suri: string, name: string) {
@@ -21,8 +21,9 @@ export function keyringFromKeyPair(pair: Keypair, name: string) {
   return keyring.addFromPair(pair, { name: name });
 }
 
-export function keyringFromJson(json: KeyringPair$Json) {
+export function keyringFromJson(keypairJson: KeyringPair$Json | string) {
   const keyring = new Keyring({ type: 'sr25519' });
+  const json = isString(keypairJson) ? JSON.parse(keypairJson) : keypairJson;
   return keyring.createFromJson(json);
 }
 
@@ -30,7 +31,7 @@ export function keyringFromSeed(user: User, seed: Uint8Array | string) {
   const keyring = new Keyring({ type: 'sr25519' });
   const keypair = isHex(seed)
     ? keyring.addFromSeed(hexToU8a(seed), { name: user.username })
-    : keyring.addFromSeed(seed);
+    : keyring.addFromSeed(seed, { name: user.username });
   return keypair;
 }
 
