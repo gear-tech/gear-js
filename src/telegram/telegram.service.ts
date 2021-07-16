@@ -15,15 +15,8 @@ export class TelegramService {
     this.programs = new Map();
   }
 
-  async getUser(userData, cb?) {
-    const user = await this.userService.findOneTg(userData.id);
-    if (!user) {
-      cb({
-        error:
-          'User is not found. Please register on https://idea.gear-tech.io',
-      });
-      return null;
-    }
+  async getUser(userId) {
+    const user = await this.userService.findOneTg(userId);
     return user;
   }
 
@@ -45,42 +38,84 @@ export class TelegramService {
     return json.result.file_path;
   }
 
-  async uploadProgram(user: User, cb) {
-    await this.gearService.uploadProgram(user, this.programs[user.id], cb);
-    this.programs.delete(user.id);
-  }
-
   async balanceUp(user: User, cb) {
     this.gearService.balanceTransfer(user.publicKey, 100000000, cb);
   }
 
   async getBalance(user: User, cb) {
     const curBalance = await this.gearService.getBalance(user.publicKey);
-    cb(undefined, { message: `Current free balance is ${curBalance}` });
+    cb(undefined, {
+      message: `Current free balance is ${curBalance.freeBalance}`,
+    });
   }
 
-  async setFile(user, fileData, cb) {
-    const fileName = fileData.file_name;
-    if (fileName.split('.').pop() !== 'wasm') {
-      cb({ error: 'Incorrect file format' });
-      return null;
-    }
-    const fileId = fileData.file_id;
-    const path = await this.getPath(fileId);
-    const file = this.getFile(path);
-    this.programs[user.id] = { file: file, filename: fileName };
-    cb(undefined, 'ok');
+  sendMessage(user, cb) {
+    const messageData = {};
+    return async (action, data?) => {
+      if (action === 'destination') {
+        messageData['destination'] = data;
+      } else if (action === 'payload') {
+        messageData['payload'] = data;
+      } else if (action === 'gas') {
+        messageData['gasLimit'] = data;
+      } else if (action === 'value') {
+        messageData['value'] = data;
+      } else if (action === 'send') {
+        try {
+          await this.gearService.sendMessage(
+            user,
+            messageData,
+            (error, result) => {
+              if (error) {
+              } else {
+                cb(undefined, { message: `Response: ${result.data}` });
+              }
+            },
+          );
+        } catch (error) {
+          cb({ error: error.message });
+        }
+      }
+    };
   }
 
-  setGas(user, gasLimit) {
-    this.programs[user.id].gasLimit = gasLimit;
-  }
-
-  setValue(user, value) {
-    this.programs[user.id].value = value;
-  }
-
-  setPayload(user, init_payload) {
-    this.programs[user.id].value = init_payload;
+  uploadProgram(user, cb) {
+    const programData = {};
+    return async (action, data?) => {
+      if (action === 'file') {
+        const fileName = data.file_name;
+        if (fileName.split('.').pop() !== 'wasm') {
+          cb({ error: 'Incorrect file format' });
+          return null;
+        }
+        const fileId = data.file_id;
+        const path = await this.getPath(fileId);
+        const file = await this.getFile(path);
+        programData['file'] = file;
+        programData['filename'] = fileName;
+      } else if (action === 'gas') {
+        programData['gasLimit'] = data;
+      } else if (action === 'payload') {
+        programData['initPayload'] = data;
+      } else if (action === 'value') {
+        programData['value'] = data;
+      } else if (action === 'upload') {
+        try {
+          await this.gearService.uploadProgram(
+            user,
+            programData,
+            (error, result) => {
+              if (error) {
+              } else if (result.status !== 'Success') {
+                let msg = `Program uploading status: *${result.status}*\nProgramHash: ${result.programHash}`;
+                cb(undefined, { message: msg });
+              }
+            },
+          );
+        } catch (error) {
+          cb({ error: error.message });
+        }
+      }
+    };
   }
 }

@@ -1,6 +1,20 @@
-import { Update, Ctx, Start, Help, On, Hears, Command } from 'nestjs-telegraf';
+import { UseFilters, UseGuards } from '@nestjs/common';
+import {
+  Update,
+  Ctx,
+  Start,
+  Help,
+  On,
+  Command,
+  Message,
+} from 'nestjs-telegraf';
+import { Doc, Text, User } from './decorators';
+import { TgExceptionFilter } from './exceptions';
 import { TelegramService } from './telegram.service';
+import { TgAuthGuard } from './tg-auth.guard';
 
+@UseFilters(TgExceptionFilter)
+@UseGuards(TgAuthGuard)
 @Update()
 export class TelegramUpdate {
   private users: Map<number, any>;
@@ -9,11 +23,27 @@ export class TelegramUpdate {
     this.users = new Map();
   }
 
+  setStatus(userId: number, status: string, callback?: Function) {
+    if (!this.users.has(userId)) {
+      this.users.set(userId, { status, callback });
+    } else {
+      if (callback) {
+        this.users.get(userId).callback = callback;
+      }
+      this.users.get(userId).status = status;
+    }
+  }
+
+  cleanStatus(userId: number) {
+    this.users.delete(userId);
+  }
+
   @Start()
   async start(@Ctx() ctx) {
     ctx.reply(
       'Welcome to Gear Bot, the easiest way to launch your dreams on Polkadot Network\n' +
         'For deploying your program to Gear Node send the file .wasm\n' +
+        'For sending message to uploaded program run /sendMessage\n' +
         'For checking your balance run /getBalance\n' +
         'For adding funds to your wallet run /balanceUp\n',
     );
@@ -23,13 +53,14 @@ export class TelegramUpdate {
   async help(@Ctx() ctx) {
     await ctx.reply(
       'For deploying your program to Gear Node send the file .wasm\n' +
+        'For sending message to uploaded program run /sendMessage\n' +
         'For checking your balance run /getBalance\n' +
         'For adding funds to your wallet run /balanceUp\n',
     );
   }
 
   @Command('balanceUp')
-  async balanceUp(@Ctx() ctx) {
+  async balanceUp(@Ctx() ctx, @User() user) {
     const cb = (error, result) => {
       if (error) {
         const msg = 'Top up balance failed.\n' + error.error;
@@ -45,15 +76,12 @@ export class TelegramUpdate {
         ctx.reply(msg);
       }
     };
-    const user = await this.tgService.getUser(ctx.update.message.from, cb);
-    if (!user) {
-      return null;
-    }
+
     await this.tgService.balanceUp(user, cb);
   }
 
   @Command('getBalance')
-  async getBalance(@Ctx() ctx) {
+  async getBalance(@Ctx() ctx, @User() user) {
     const cb = (error, result) => {
       if (error) {
       } else {
@@ -61,73 +89,97 @@ export class TelegramUpdate {
         ctx.reply(msg);
       }
     };
-    const user = await this.tgService.getUser(ctx.update.message.from, cb);
-    if (!user) {
-      return null;
-    }
     await this.tgService.getBalance(user, cb);
   }
 
-  @On('text')
-  async text(@Ctx() ctx) {
-    if (this.users.has(ctx.update.message.from.id)) {
-      const cb = (error, result) => {
+  @Command('sendMessage')
+  async sendMessage(@Ctx() ctx, @User() user) {
+    this.cleanStatus(user.id);
+    this.setStatus(
+      user.id,
+      'messageDest',
+      this.tgService.sendMessage(user, (error, result) => {
         if (error) {
-          const msg = 'Program upload failed.\n' + error.error;
-          this.users;
-          ctx.reply(msg);
         } else {
-          const msg = `Transaction is ${result.status}`;
+          const msg = result.message;
           ctx.reply(msg);
         }
-      };
+      }),
+    );
+    ctx.reply('Enter the hash of the target program');
+  }
 
-      const user = await this.tgService.getUser(ctx.update.message.from, cb);
+  @On('text')
+  async text(@Ctx() ctx, @User() user, @Text() text) {
+    if (!this.users.has(user.id)) {
+      ctx.reply(
+        'For deploying your program to Gear Node send the file .wasm\n' +
+          'For sending message to uploaded program run /sendMessage\n',
+      );
+      return null;
+    }
 
-      let status = this.users.get(ctx.update.message.from.id);
-      switch (status) {
-        case 'gas':
-          this.tgService.setGas(user, +ctx.update.message.text);
-          this.users.set(ctx.update.message.from.id, 'value');
-          ctx.reply('Enter init value');
-          return null;
-        case 'value':
-          this.tgService.setValue(user, +ctx.update.message.text);
-          this.users.set(ctx.update.message.from.id, 'payload');
-          ctx.reply('Enter init payload');
-          return null;
-        case 'payload':
-          this.tgService.setPayload(user, ctx.update.message.text);
-          this.tgService.uploadProgram(user, cb);
-          this.users.delete(ctx.update.message.from.id);
-          ctx.reply('Uploading...');
-          return null;
-      }
-    } else {
-      ctx.reply('Send the file .wasm for uploading the program to Gear node');
+    let { status, callback } = this.users.get(user.id);
+    switch (status) {
+      case 'gas':
+        callback('gas', +text);
+        this.setStatus(user.id, 'value');
+        ctx.reply('Enter init value');
+        return null;
+      case 'value':
+        callback('value', +text);
+        this.setStatus(user.id, 'payload');
+        ctx.reply('Enter init payload');
+        return null;
+      case 'payload':
+        callback('payload', text);
+        callback('upload');
+        this.cleanStatus(user.id);
+        ctx.reply('Uploading...');
+        return null;
+
+      case 'messageDest':
+        callback('destination', text);
+        this.setStatus(user.id, 'messagePayload');
+        ctx.reply('Enter a message');
+        return null;
+      case 'messagePayload':
+        callback('payload', text);
+        this.setStatus(user.id, 'messageGas');
+        ctx.reply('Enter gas limit');
+        return null;
+      case 'messageGas':
+        callback('gas', +text);
+        this.setStatus(user.id, 'messageValue');
+        ctx.reply('Enter initial value');
+        return null;
+      case 'messageValue':
+        callback('value', +text);
+        callback('send');
+        this.cleanStatus(user.id);
+        return null;
     }
   }
 
   @On('document')
-  async document(@Ctx() ctx) {
-    this.users.set(ctx.update.message.from.id, 'file');
-    const cb = (error, result) => {
-      if (error) {
-        const msg = 'Program upload failed.\n' + error.error;
-        this.users.delete(ctx.update.message.from.id);
-        ctx.reply(msg);
-      } else {
-        this.users.set(ctx.update.message.from.id, 'gas');
-        console.log(this.users);
-        ctx.reply('Enter Gas Limit');
-      }
-    };
+  async document(@Ctx() ctx, @User() user, @Doc() file) {
+    this.cleanStatus(user.id);
+    this.setStatus(
+      user.id,
+      'program',
+      this.tgService.uploadProgram(user, (error, result) => {
+        if (error) {
+          const msg = 'Program upload failed.\n' + error.error;
+          this.cleanStatus(user.id);
+          ctx.reply(msg);
+        } else {
+          ctx.reply(result.message, { parse_mode: 'MarkdownV2' });
+        }
+      }),
+    );
 
-    const user = await this.tgService.getUser(ctx.update.message.from, cb);
-    if (!user) {
-      return null;
-    }
-
-    await this.tgService.setFile(user, ctx.update.message.document, cb);
+    this.users.get(user.id).callback('file', file);
+    this.setStatus(user.id, 'gas');
+    ctx.reply('Enter gas limit');
   }
 }
