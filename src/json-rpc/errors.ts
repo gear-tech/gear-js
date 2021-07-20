@@ -14,6 +14,10 @@ class GearError {
       message: this.message,
     };
   }
+
+  public getStatus() {
+    return this.code;
+  }
 }
 
 export class InvalidParamsError extends GearError {

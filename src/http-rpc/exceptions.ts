@@ -23,32 +23,38 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-
-    let status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-
-    if (!(status in this.statusCodes)) {
-      status = 500;
+    let status = exception.getStatus();
+    if (status > 0) {
+      exception =
+        status in this.statusCodes
+          ? new this.statusCodes[status]()
+          : new this.statusCodes[500]();
     }
-    if (Array.isArray(request.body)) {
-      const result = [];
-      const promises = request.body.map((procedure) => {
-        result.push({
-          jsonrpc: '2.0',
-          id: procedure.id,
-          error: new this.statusCodes[status]().toJson(),
-        });
-      });
-      await Promise.all(promises);
-      response.json(result);
-    } else {
+
+    if (!request.body) {
       response.json({
         jsonrpc: '2.0',
-        id: request.body.id,
-        error: new this.statusCodes[status]().toJson(),
+        error: exception.toJson(),
       });
+    } else {
+      if (Array.isArray(request.body)) {
+        const result = [];
+        const promises = request.body.map((procedure) => {
+          result.push({
+            jsonrpc: '2.0',
+            id: procedure.id,
+            error: exception.toJson(),
+          });
+        });
+        await Promise.all(promises);
+        response.json(result);
+      } else {
+        response.json({
+          jsonrpc: '2.0',
+          id: request.body.id,
+          error: exception.toJson(),
+        });
+      }
     }
   }
 }

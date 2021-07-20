@@ -1,11 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  GearNodeError,
-  InternalServerError,
-  InvalidParamsError,
-  MethodNotFoundError,
-  TransactionError,
-} from 'src/json-rpc/errors';
+import { MethodNotFoundError } from 'src/json-rpc/errors';
 import { RpcMessageHandler } from 'src/json-rpc/handler';
 import { WsRpcMethods } from './ws-rpc.methods';
 
@@ -34,26 +28,10 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
 
     let unsub = null;
 
-    try {
-      if (procedure.params) {
-        unsub = await method(cb, client.user, procedure.params);
-      } else {
-        unsub = await method(cb, client.user);
-      }
-    } catch (error) {
-      if (
-        error instanceof InvalidParamsError ||
-        error instanceof GearNodeError ||
-        error instanceof TransactionError
-      ) {
-        this.sendResponse(client, procedure, error.toJson());
-      } else {
-        this.sendResponse(
-          client,
-          procedure,
-          new InternalServerError().toJson(),
-        );
-      }
+    if (procedure.params) {
+      unsub = await method(cb, client.user, procedure.params);
+    } else {
+      unsub = await method(cb, client.user);
     }
 
     if (unsub) {

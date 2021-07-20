@@ -1,11 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  GearNodeError,
-  InternalServerError,
-  InvalidParamsError,
-  MethodNotFoundError,
-  TransactionError,
-} from './errors';
+import { MethodNotFoundError } from './errors';
 
 @Injectable()
 export class RpcMessageHandler {
@@ -63,19 +57,7 @@ export class RpcMessageHandler {
   }
 
   async executeMethod(method, user, procedure) {
-    try {
-      const result = await method(user, procedure.params);
-      return this.getResponse(procedure, null, result);
-    } catch (error) {
-      if (
-        error instanceof InvalidParamsError ||
-        error instanceof GearNodeError ||
-        error instanceof TransactionError
-      ) {
-        return this.getResponse(procedure, error.toJson());
-      } else {
-        return this.getResponse(procedure, new InternalServerError().toJson());
-      }
-    }
+    const result = await method(user, procedure.params);
+    return this.getResponse(procedure, null, result);
   }
 }
