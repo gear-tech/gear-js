@@ -5,12 +5,12 @@ import {NativeTypes} from 'react-dnd-html5-backend';
 import {useDrop, DropTargetMonitor} from 'react-dnd';
 import { GEAR_MNEMONIC_KEY } from 'consts';
 
-import { generateKeypairAction, programUploadSuccessAction } from 'store/actions/actions';
+import { generateKeypairAction, programUploadResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 
 import { SocketService } from 'services/SocketService';
 
-import Error from '../Error';
+import StatusPanel from 'components/blocks/StatusPanel';
 import ProgramDetails from '../ProgramDetails';
 
 import './UploadProgram.scss';
@@ -126,12 +126,12 @@ const UploadProgram = ({ socketService }: UploadProgramInterface) => {
         </div>
       </div>
       )}
-      {(wrongFormat || programUploadingError) && <Error onClose={() => {
+      {(wrongFormat || programUploadingError) && <StatusPanel onClose={() => {
         setWrongFormat(false);
         if (programUploadingError) {
-          dispatch(programUploadSuccessAction())
+          dispatch(programUploadResetAction())
         }
-      }} errorText={programUploadingError}/>}
+      }} statusPanelText={programUploadingError} isError/>}
     </>
   );
 };

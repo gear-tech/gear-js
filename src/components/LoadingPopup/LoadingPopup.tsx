@@ -5,6 +5,8 @@ import { RootState } from 'store/reducers';
 
 import ProgressBar from 'components/ProgressBar';
 
+import { PROGRAM_UPLOAD_STATUSES, PROGRESS_BAR_STATUSES } from 'consts';
+
 import UpGear from 'images/gear_up.svg';
 import DownGear from 'images/gear_down.svg';
 
@@ -12,35 +14,22 @@ import './LoadingPopup.scss';
 
 const LoadingPopup = () => {
 
-  const { programUploadingStatus } = useSelector((state: RootState) => state.programs)
+  const { programUploadingStatus, isProgramUploading } = useSelector((state: RootState) => state.programs)
 
-  let firstStepStatus = "start";
-  let secondStepStats = "before";
-  let thirdStepStatus = "before";
-  let fourthStepStats = "before";
-  if (programUploadingStatus) {
-    firstStepStatus = "completed";
-  }
+  let firstStepStatus = PROGRESS_BAR_STATUSES.START;
+  let secondStepStats = PROGRESS_BAR_STATUSES.READY;
+  let thirdStepStatus = PROGRESS_BAR_STATUSES.READY;
 
   if (programUploadingStatus) {
-    if (programUploadingStatus === "in block") {
-      secondStepStats = "start";
-    } else {
-      secondStepStats = "completed"
+    firstStepStatus = PROGRESS_BAR_STATUSES.COMPLETED;
+
+    if (programUploadingStatus === PROGRAM_UPLOAD_STATUSES.IN_BLOCK) {
+      secondStepStats = PROGRESS_BAR_STATUSES.START;
+    } else if (programUploadingStatus === PROGRAM_UPLOAD_STATUSES.FINALIZED) {
+      thirdStepStatus = PROGRESS_BAR_STATUSES.START;
+      secondStepStats = PROGRESS_BAR_STATUSES.COMPLETED;
     }
 
-  }
-
-  if (firstStepStatus === "completed" && secondStepStats === "completed") {
-    if (programUploadingStatus === "finalized") {
-      thirdStepStatus = "completed"
-    } else {
-      thirdStepStatus = "start"
-    }
-  }
-
-  if (firstStepStatus === "completed" && secondStepStats === "completed" && thirdStepStatus === "completed") {
-    fourthStepStats = "start"
   }
 
   return (
@@ -53,9 +42,16 @@ const LoadingPopup = () => {
       </div>
       <div className="loading-popup--progress">
         <ProgressBar status={firstStepStatus}/>
-        <ProgressBar status={secondStepStats}/>
-        <ProgressBar status={thirdStepStatus}/>
-        <ProgressBar status={fourthStepStats}/>
+        {
+          isProgramUploading
+          &&
+          (
+          <>
+            <ProgressBar status={secondStepStats}/>
+            <ProgressBar status={thirdStepStatus}/>
+          </>
+          )
+        }
       </div>
       <div className="loading-popup--text-info">
         <span>Processing...Status:</span>

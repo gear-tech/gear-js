@@ -3,15 +3,34 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProgramAction, getProgramsAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 
+import { fileNameHandler } from 'helpers';
+
+import { Message } from 'components/Message';
+import { SocketService } from 'services/SocketService';
+
+import RefreshIllustration from 'images/refresh.svg';
+import MessageIllustration from 'images/message.svg';
+
 import './BlocksList.scss';
 
-export const BlocksListUploaded = () => {
+type Props = {
+  socketService: SocketService
+}
+
+type ProgramMessageType = {
+  programName: string;
+  programHash: string;
+}
+
+export const BlocksListUploaded = ({ socketService }: Props) => {
 
   const dispatch = useDispatch();
 
   const { programs } = useSelector((state: RootState) => state.programs)
 
   const [isProgramsReq, setIsProgramsReq] = useState(false);
+
+  const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
 
   const formatProgramDate = (rawDate: string) => {
     const date = new Date(rawDate);
@@ -24,12 +43,29 @@ export const BlocksListUploaded = () => {
     dispatch(getProgramAction(programHash))
   }
 
+  const handleSendMessage = (programHash: string, programName: string) => {
+    setProgramMessage({
+      programHash,
+      programName
+    })
+  }
+
+  const handleCloseMessageForm = () => {
+    setProgramMessage(null);
+  }
+
   useEffect(() => {
     if (!isProgramsReq) {
       dispatch(getProgramsAction());
       setIsProgramsReq(true)
     }
   }, [dispatch, setIsProgramsReq, isProgramsReq])
+
+  if (programMessage) {
+    return (
+      <Message programHash={programMessage.programHash} programName={programMessage.programName} socketService={socketService} handleClose={handleCloseMessageForm}/>
+    )
+  }
 
   return (
     <div className="block-list">
@@ -43,7 +79,7 @@ export const BlocksListUploaded = () => {
               <span className="programs-list__number">{program.programNumber}</span>
               <div className="program-wrapper">
                 <div className="program-wrapper__name">
-                  <span className="programs-list__name">{program.name}</span>
+                  <span className="programs-list__name">{fileNameHandler(program.name)}</span>
                 </div>
                 <div className="program-wrapper__data">
                   <div className="programs-list__info">
@@ -54,12 +90,24 @@ export const BlocksListUploaded = () => {
                   </div>
                 </div>
               </div>
-              <button 
-                className="programs-list__refresh-btn" 
-                type="button" 
-                aria-label="refresh"
-                onClick={() => handleRefreshProgram(program.hash)}
-              />
+              <div className="programs-list--btns">
+                <button 
+                  className="programs-list__message-btn" 
+                  type="button" 
+                  aria-label="refresh"
+                  onClick={() => handleSendMessage(program.hash, program.name)}
+                >
+                  <img src={MessageIllustration} alt="message" />
+                </button>
+                <button 
+                  className="programs-list__refresh-btn" 
+                  type="button" 
+                  aria-label="refresh"
+                  onClick={() => handleRefreshProgram(program.hash)}
+                >
+                  <img src={RefreshIllustration} alt="refresh" />
+                </button>
+              </div>
             </li>
           ))
         }

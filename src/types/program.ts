@@ -7,19 +7,35 @@ export interface ProgramModel {
     uploadedAt: string;
 }
 
+export interface MessageStatusModel {
+    status: string;
+    blockHash: string;
+    data: string;
+}
+
 export interface ProgramState {
     programs: ProgramModel[] | null;
     isProgramUploading: boolean;
+    isMessageSending: boolean;
     programUploadingStatus: null | string;
-    loading: boolean,
-    error: null|string;
+    messageSendingStatus: null | MessageStatusModel | string;
+    loading: boolean;
+    error: null | string;
     programUploadingError: null | string;
+    messageSendingError: null | string;
 }
 
 export interface UploadProgramModel {
     initPayload: string;
     gasLimit: number;
     value: number;
+}
+
+export interface MessageModel {
+    destination: string;
+    gasLimit: number;
+    value: number;
+    payload: string;
 }
 
 export interface ProgramsInterface {
@@ -49,9 +65,35 @@ export enum ProgramActionTypes{
     PROGRAM_UPLOAD_SUCCESS = 'PROGRAM_UPLOAD_SUCCESS',
     PROGRAM_UPLOAD_START = 'PROGRAM_UPLOAD_START',
     PROGRAM_UPLOAD_FAILED = 'PROGRAM_UPLOAD_FAILED',
-    PROGRAM_UPLOAD_IN_BLOCK = 'PROGRAM_UPLOAD_IN_BLOCK',
-    PROGRAM_UPLOAD_FINALIZED = 'PROGRAM_UPLOAD_FINALIZED',
-    PROGRAM_UPLOAD_INITIALIZED = 'PROGRAM_UPLOAD_INITIALIZED'
+    PROGRAM_UPLOAD_STATUS = 'PROGRAM_UPLOAD_STATUS',
+    PROGRAM_UPLOAD_RESET = 'PROGRAM_UPLOAD_RESET',
+    SEND_MESSAGE_START = 'SEND_MESSAGE_START',
+    SEND_MESSAGE_SUCCESS = 'SEND_MESSAGE_SUCCESS',
+    SEND_MESSAGE_STATUS = 'SEND_MESSAGE_STATUS',
+    SEND_MESSAGE_FAILED = 'SEND_MESSAGE_FAILED',
+    SEND_MESSAGE_RESET = 'SEND_MESSAGE_RESET'
+}
+
+interface SendMessageStartAction{
+    type: ProgramActionTypes.SEND_MESSAGE_START;
+}
+
+interface SendMessageSuccessAction{
+    type: ProgramActionTypes.SEND_MESSAGE_SUCCESS;
+}
+
+interface SendMessageStatusAction{
+    type: ProgramActionTypes.SEND_MESSAGE_STATUS;
+    payload: MessageStatusModel;
+}
+
+interface SendMessageFailedAction{
+    type: ProgramActionTypes.SEND_MESSAGE_FAILED;
+    payload: string;
+}
+
+interface SendMessageResetAction {
+    type: ProgramActionTypes.SEND_MESSAGE_RESET
 }
 
 interface UploadProgramStartAction{
@@ -67,16 +109,13 @@ interface UploadProgramFailedAction{
     payload: string;
 }
 
-interface UploadProgramInBlockAction{
-    type: ProgramActionTypes.PROGRAM_UPLOAD_IN_BLOCK;
+interface UploadProgramStatusAction{
+    type: ProgramActionTypes.PROGRAM_UPLOAD_STATUS;
+    payload: string;
 }
 
-interface UploadProgramFinalizedAction{
-    type: ProgramActionTypes.PROGRAM_UPLOAD_FINALIZED;
-}
-
-interface UploadProgramInitializedAction{
-    type: ProgramActionTypes.PROGRAM_UPLOAD_INITIALIZED;
+interface UploadProgramResetAction{
+    type: ProgramActionTypes.PROGRAM_UPLOAD_RESET;
 }
 
 interface FetchProgramsAction{
@@ -119,7 +158,11 @@ export type ProgramAction =
     UploadProgramStartAction |
     UploadProgramSuccessAction |
     UploadProgramFailedAction |
-    UploadProgramInBlockAction |
-    UploadProgramFinalizedAction |
-    UploadProgramInitializedAction |
+    UploadProgramStatusAction |
+    UploadProgramResetAction |
+    SendMessageStartAction |
+    SendMessageSuccessAction |
+    SendMessageStatusAction |
+    SendMessageFailedAction |
+    SendMessageResetAction |
     ResetProgramsAction;

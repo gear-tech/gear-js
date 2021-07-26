@@ -24,15 +24,15 @@ import DocumentPage from 'components/pages/DocumentPage';
 
 const App = () => {
 
-  const {isProgramUploading} = useSelector((state: RootState) => state.programs);
+  const {isProgramUploading, isMessageSending} = useSelector((state: RootState) => state.programs);
 
   useEffect(() => {
-    if (isProgramUploading && document.body.style.overflowY !== "hidden") {
+    if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== "hidden") {
       document.body.style.overflowY = "hidden"
-    } else if (!isProgramUploading && document.body.style.overflowY !== "unset") {
+    } else if (!(isProgramUploading || isMessageSending) && document.body.style.overflowY !== "unset") {
       document.body.style.overflowY = "unset"
     }  
-  }, [isProgramUploading]);
+  }, [isProgramUploading, isMessageSending]);
 
   const isFooterShown = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');
@@ -46,7 +46,7 @@ const App = () => {
       <BrowserRouter>
         <div className="app">
           {
-            isProgramUploading
+            (isProgramUploading || isMessageSending)
             &&
             (
               <>

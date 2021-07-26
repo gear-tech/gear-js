@@ -30,7 +30,10 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
   const mapInitialValues = () => ({
     gasLimit: 20000,
     value: 20000,
-    initPayload: ""
+    initPayload: "",
+    initType: "",
+    incomingType: "",
+    expectedType: ""
   })
 
   return (
@@ -81,7 +84,7 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
                 <span className="program-details__field-file program-details__field">File:</span>
                 <div className="program-details__filename program-details__value">
                   {droppedFile.name.replace(`.${droppedFile.name.split('.').pop()}`, "")}.{droppedFile.name.split('.').pop()}
-                  <button type="button">
+                  <button type="reset">
                     <img alt="cancel" src={cancel} />
                   </button>
                 </div>
@@ -99,8 +102,6 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
                   {errors.gasLimit && touched.gasLimit ? <div className="program-details__error">{errors.gasLimit}</div> : null}
                 </div>
               </div>
-            </div>
-            <div className="program-details__wrapper-column2">
               <div className="program-details__info">
                 <label htmlFor="initPayload" className="program-details__field-init-parameters program-details__field">Initial parameters:</label>
                 <div className="program-details__field-wrapper">
@@ -124,6 +125,47 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
                     type="number"
                   />
                   {errors.value && touched.value ? <div className="program-details__error">{errors.value}</div> : null}
+                </div>
+              </div>
+            </div>
+            <div className="program-details__wrapper-column2">
+              <div className="program-details__info">
+                <label htmlFor="initType" className="program-details__field-limit program-details__field">Initial type:</label>
+                <div className="program-details__field-wrapper">
+                  <Field 
+                    id="initType" 
+                    name="initType" 
+                    placeholder="" 
+                    className="program-details__limit-value program-details__value" 
+                    type="text"
+                  />
+                  {errors.initType && touched.initType ? <div className="program-details__error">{errors.initType}</div> : null}
+                </div>
+              </div>
+              <div className="program-details__info">
+                <label htmlFor="incomingType" className="program-details__field-limit program-details__field">Incoming type:</label>
+                <div className="program-details__field-wrapper">
+                  <Field 
+                    id="incomingType" 
+                    name="incomingType" 
+                    placeholder="" 
+                    className="program-details__limit-value program-details__value" 
+                    type="text"
+                  />
+                  {errors.incomingType && touched.incomingType ? <div className="program-details__error">{errors.incomingType}</div> : null}
+                </div>
+              </div>
+              <div className="program-details__info">
+                <label htmlFor="expectedType" className="program-details__field-init-value program-details__field">Expected type:</label>
+                <div className="program-details__field-wrapper">
+                  <Field 
+                    id="expectedType" 
+                    name="expectedType" 
+                    placeholder="" 
+                    className="program-details__init-value program-details__value" 
+                    type="text"
+                  />
+                  {errors.expectedType && touched.expectedType ? <div className="program-details__error">{errors.expectedType}</div> : null}
                 </div>
               </div>
             </div>

@@ -1,8 +1,8 @@
 @import '../../../assets/scss/variables';
 
-.error-block {
+.status-panel-block {
   align-items: center;
-  background-color: $errorColor;
+  background-color: $successColor;
   border-radius: $borderRadiusBase;
   bottom: 0;
   display: flex;
@@ -13,19 +13,25 @@
   padding: 13px 16px;
   position: fixed;
   z-index: 10;
+  &.error {
+    background-color: $errorColor;
+  }
 }
-.error-block__msg {
+.status-panel-block__msg {
   color: $textColor;
 }
 
-.error-block__close-btn {
-  background: url('../../../images/error_close.svg');
+.status-panel-block__close-btn {
+  background: url('../../../images/close.svg');
+  &.error {
+    background: url('../../../images/error_close.svg');
+  }
   height: 14px;
   width: 14px;
 }
 
-@media (max-width: 600px) {
-  .error-block {
+@media (max-width: 767px) {
+  .status-panel-block {
     width: 92%;
     justify-content: space-between;
   }

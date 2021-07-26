@@ -74,7 +74,6 @@
   font-style: normal;
   font-weight: normal;
   border: none;
-  //font-size: 21px;
   line-height: 130%;
   color: #e0e0e0;
   font-size: 14px;
@@ -136,15 +135,16 @@
   display: none;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .program-details {
     height: 100%;
     width: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 111;
     background-color: #181818;
+    overflow: scroll;
     &__header {
       padding: 16px;
     }

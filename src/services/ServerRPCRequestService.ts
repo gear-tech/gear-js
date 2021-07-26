@@ -13,7 +13,7 @@ export default class ServerRPCRequestService {
         const url = this.API_PATH;
         const requestId = this.generateRandomId();
 
-        const params: any = { 
+        const params: any = {
             method: "POST",
             headers 
         };

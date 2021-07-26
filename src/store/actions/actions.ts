@@ -1,13 +1,14 @@
 import UserRequestService from 'services/UserRequestService';
 
 import { UserActionTypes, UserKeypairModel, UserKeypairInterface, UserModel, UserProfileInterface } from 'types/user';
-import { ProgramActionTypes, ProgramModel, ProgramsInterface, ProgramInterface } from 'types/program';
+import { ProgramActionTypes, ProgramModel, ProgramsInterface, ProgramInterface, MessageStatusModel} from 'types/program';
 import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
 
 import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes } from 'types/block';
+import { routes } from 'routes';
 
 const fetchTokenAction = () => ({type: UserActionTypes.FETCH_TOKEN});
 const fetchTokenSuccessAction = (payload: {}) => ({type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload});
@@ -33,12 +34,18 @@ const fetchProgramErrorAction = () => ({type: ProgramActionTypes.FETCH_PROGRAM_E
 
 export const fetchTotalIssuanceAction = (payload: {}) => ({type: BlockActionTypes.FETCH_TOTALISSUANCE_SUCCESS, payload});
 export const fetchBlockAction = (payload: {}) => ({type: BlockActionTypes.FETCH_BLOCK_SUCCESS, payload});
+
 export const programUploadStartAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_START});
-export const programUploadSuccessAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS});
-export const programUploadFailedAction = (payload: string) => ({type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED, payload});
-export const programUploadInBlockAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_IN_BLOCK});
-export const programUploadFinalizedAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_FINALIZED});
-export const programUploadProgramInitializedAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_INITIALIZED});
+export const programUploadStatusAction = (payload: string) => ({type: ProgramActionTypes.PROGRAM_UPLOAD_STATUS, payload});
+export const programUploadResetAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_RESET});
+const programUploadSuccessAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS});
+const programUploadFailedAction = (payload: string) => ({type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED, payload});
+
+export const sendMessageStartAction = () => ({type: ProgramActionTypes.SEND_MESSAGE_START});
+export const sendMessageStatusAction = (payload: MessageStatusModel) => ({type: ProgramActionTypes.SEND_MESSAGE_STATUS, payload});
+export const sendMessageResetAction = () => ({type: ProgramActionTypes.SEND_MESSAGE_RESET});
+const sendMessageSuccessAction = () => ({type: ProgramActionTypes.SEND_MESSAGE_SUCCESS});
+const sendMessageFailedAction = (payload: string) => ({type: ProgramActionTypes.SEND_MESSAGE_FAILED, payload});
 
 const resetUserAction = () => ({type: UserActionTypes.RESET_USER});
 const resetProgramsAction = () => ({type: ProgramActionTypes.RESET_PROGRAMS});
@@ -126,6 +133,25 @@ export const getProgramAction = (hash: string) => (dispatch: any) => {
       dispatch(fetchProgramSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchProgramErrorAction()))
+}
+
+export const handleProgramError = (error: string) => (dispatch: any, getState: any) => {
+  const { programs } = getState();
+  if (programs.isProgramUploading) {
+    dispatch(programUploadFailedAction(error));
+  } else if (programs.isMessageSending) {
+    dispatch(sendMessageFailedAction(error));
+  }
+}
+
+export const handleProgramSuccess = () => (dispatch: any, getState: any) => {
+  const { programs } = getState();
+  if (programs.isProgramUploading) {
+    window.location.pathname = routes.uploadedPrograms
+    dispatch(programUploadSuccessAction());
+  } else if (programs.isMessageSending) {
+    dispatch(sendMessageSuccessAction());
+  }
 }
 
 export const logoutFromAccountAction = () => (dispatch: any) => {

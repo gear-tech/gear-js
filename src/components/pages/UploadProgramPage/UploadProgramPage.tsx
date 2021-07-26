@@ -51,7 +51,7 @@ const UploadProgramPage = ({ showUploaded }: UploadProgramPageType) => {
           <BlocksList/>
         </>
       )}
-      {showUploaded && <BlocksListUploaded />}
+      {showUploaded && <BlocksListUploaded socketService={socketServiceRef.current}/>}
     </div>
   )
 };
