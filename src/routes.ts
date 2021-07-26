@@ -5,4 +5,6 @@ export const routes = {
     callback: '/callback',
     uploadProgram: '/upload-program',
     uploadedPrograms: '/uploaded-programs',
+    privacyPolicy: '/privacy-policy',
+    termsOfUse: '/terms-of-use'
 }

@@ -19,7 +19,8 @@ import Header from 'components/blocks/Header';
 import Main from 'components/layouts/Main';
 import Callback from 'components/Callback';
 import Logout from 'components/pages/Logout';
-import LoadingPopup from 'components/LoadingPopup'
+import LoadingPopup from 'components/LoadingPopup';
+import DocumentPage from 'components/pages/DocumentPage';
 
 const App = () => {
 
@@ -32,6 +33,13 @@ const App = () => {
       document.body.style.overflowY = "unset"
     }  
   }, [isProgramUploading]);
+
+  const isFooterShown = () => {
+    const locationPath = window.location.pathname.replaceAll('/', '');
+    const privacyPath = routes.privacyPolicy.replaceAll('/', '');
+    const termsOfUsePath = routes.termsOfUse.replaceAll('/', '');
+    return locationPath === privacyPath || locationPath === termsOfUsePath;
+  }
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -59,6 +67,9 @@ const App = () => {
               <Route exact path={routes.signIn}>
                 <SignIn/>
               </Route>
+              <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
+                <DocumentPage/>
+              </Route>
               <Route path={routes.callback} exact>
                 <Callback/>
               </Route>
@@ -67,7 +78,11 @@ const App = () => {
               </Route>
             </Switch>
           </Main>
-          <Footer/>
+          {
+            isFooterShown()
+            ||
+            <Footer/>
+          }
         </div>
       </BrowserRouter>
     </DndProvider>

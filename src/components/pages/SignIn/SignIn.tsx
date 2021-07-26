@@ -2,7 +2,7 @@ import React from 'react';
 
 import TelegramLoginButton from 'react-telegram-login';
 import { useDispatch } from 'react-redux';
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 import { GEAR_STORAGE_KEY } from 'consts';
 import { routes } from 'routes';
@@ -19,7 +19,7 @@ function SignIn(){
   const handleTelegramResponse = (userObject: {}) => {
     dispatch(getTelegramUserJwtAction(userObject));
   }
-  
+
   const handleAuthViaGithub = () => {
     window.location.href = "https://github.com/login/oauth/authorize?client_id=d48a88d171386837281a&redirect_uri=https://idea.gear-tech.io/callback"
   }
@@ -47,8 +47,8 @@ function SignIn(){
           <img className='sign-in__telegram-logo' alt='github' src={github}/>Continue with Github
           </button>
         <div className="sign-in__terms-privacy">
-          <button type='button' className='sign-in__terms-privacy-buttons'>Terms</button>
-          <button type='button' className='sign-in__terms-privacy-buttons'>Privacy</button>
+          <Link to={routes.termsOfUse}><button type='button' className='sign-in__terms-privacy-buttons'>Terms</button></Link>
+          <Link to={routes.privacyPolicy}><button type='button' className='sign-in__terms-privacy-buttons'>Privacy</button></Link>
         </div>
       </div>
     </div>
