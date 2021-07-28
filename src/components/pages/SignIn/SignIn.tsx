@@ -2,21 +2,21 @@ import React from 'react';
 
 import TelegramLoginButton from 'react-telegram-login';
 import { useDispatch } from 'react-redux';
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 import { GEAR_STORAGE_KEY } from 'consts';
 import { routes } from 'routes';
 
-import './SignIn.scss'
-import github from '../../../images/github.svg';
-import {getTelegramUserJwtAction} from '../../../store/actions/actions';
+import {getTelegramUserJwtAction} from 'store/actions/actions';
 
+import './SignIn.scss';
+import github from 'images/github.svg';
 
 function SignIn(){
 
   const dispatch = useDispatch();
 
-  const handleTelegramResponse = (userObject: any) => {
+  const handleTelegramResponse = (userObject: {}) => {
     dispatch(getTelegramUserJwtAction(userObject));
   }
 
@@ -47,8 +47,8 @@ function SignIn(){
           <img className='sign-in__telegram-logo' alt='github' src={github}/>Continue with Github
           </button>
         <div className="sign-in__terms-privacy">
-          <button type='button' className='sign-in__terms-privacy-buttons'>Terms</button>
-          <button type='button' className='sign-in__terms-privacy-buttons'>Privacy</button>
+          <Link to={routes.termsOfUse}><button type='button' className='sign-in__terms-privacy-buttons'>Terms</button></Link>
+          <Link to={routes.privacyPolicy}><button type='button' className='sign-in__terms-privacy-buttons'>Privacy</button></Link>
         </div>
       </div>
     </div>

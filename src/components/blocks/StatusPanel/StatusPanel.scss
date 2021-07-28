@@ -1,0 +1,38 @@
+@import '../../../assets/scss/variables';
+
+.status-panel-block {
+  align-items: center;
+  background-color: $successColor;
+  border-radius: $borderRadiusBase;
+  bottom: 0;
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 13px 16px;
+  position: fixed;
+  z-index: 10;
+  &.error {
+    background-color: $errorColor;
+  }
+}
+.status-panel-block__msg {
+  color: $textColor;
+}
+
+.status-panel-block__close-btn {
+  background: url('../../../images/close.svg');
+  &.error {
+    background: url('../../../images/error_close.svg');
+  }
+  height: 14px;
+  width: 14px;
+}
+
+@media (max-width: 767px) {
+  .status-panel-block {
+    width: 92%;
+    justify-content: space-between;
+  }
+}

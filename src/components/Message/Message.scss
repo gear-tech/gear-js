@@ -1,0 +1,14 @@
+.message-form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: #232323;
+}
+
+@media (max-width: 767px) {
+    .message-form {
+        z-index: 100;
+    }
+}

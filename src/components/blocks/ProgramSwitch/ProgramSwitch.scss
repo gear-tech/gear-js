@@ -51,7 +51,31 @@
   font-size: $fontSizeLarge;
 }
 
+.switch-info__timer {
+  display: flex;
+}
+
 .switch-info__num {
   color: $textColor;
   font-weight: bold;
+  width: 1ch;
+}
+
+@media (max-width: 767px) {
+  .main-content-wrapper {
+    margin: 0 16px!important;
+  }
+  .switch-block {
+    flex-direction: column-reverse;
+    margin: 14px 0;
+  }
+  .switch-buttons {
+    display: flex;  
+    margin-top: 22px;
+    &__item {
+      font-size: 14px;
+      text-align: center;
+      line-height: 14px;
+    }
+  }
 }

@@ -70,19 +70,26 @@
   width: 100%;
   max-width: 310px;
   height: 38px;
-  background: #000000;
+  background-color: #000000;
   font-style: normal;
   font-weight: normal;
-  //font-size: 21px;
+  border: none;
   line-height: 130%;
   color: #e0e0e0;
   font-size: 14px;
   padding: 0 16px;
+  outline: none;
 }
 
 .program-details__info {
   display: flex;
   margin-bottom: 16px;
+}
+
+.program-details__error {
+  color: #ff0000;
+  font-size: 14px;
+  position: absolute;
 }
 
 .program-details__field {
@@ -92,7 +99,7 @@
   color: $textColorSecondary;
   font-weight: 300;
   min-width: 200px;
-  //font-size: 21px;//в макете кажется наглая ложь
+  font-size: 21px;
   line-height: 130%;
 }
 
@@ -105,7 +112,6 @@
 
 .program-details__upload {
   background: #2bd071;
-  opacity: 0.2;
   box-shadow: 0px 0px 24px rgba(43, 208, 113, 0.12);
   border-radius: 2px;
   font-style: normal;
@@ -113,9 +119,8 @@
   font-size: 16px;
   line-height: 24px;
   color: #ffffff;
-  opacity: 0.2;
   padding: 12px 24px;
-  margin: 32px;
+  margin: 32px 32px 32px 0;
 }
 
 .program-details__cancel {
@@ -124,4 +129,65 @@
   line-height: 24px;
   color: #ffffff;
   opacity: 0.8;
+}
+
+.program-details__close {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .program-details {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 111;
+    background-color: #181818;
+    overflow: scroll;
+    &__header {
+      padding: 16px;
+    }
+    &__close {
+      position: absolute;
+      top: 24px;
+      right: 16px;
+      display: block;
+      width: 14px;
+    }
+    &__cancel {
+      display: none;
+    }
+    &__wrapper, &__info {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    &__wrapper {
+      padding: 26px 16px;
+    }
+    &__info {
+      margin-bottom: 32px;
+    }
+    &__field {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    &__value {
+      overflow: unset;
+      display: flex;
+      justify-content: space-between;
+      max-width: unset;
+    }
+    &__filename {
+      font-size: 22px;
+      padding: 0;
+    }
+    &__buttons {
+      button {
+        width: 100%;
+        margin: 0;
+      }
+    }
+  }
 }

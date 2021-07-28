@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
+import { useSelector } from 'react-redux';
+
+import { RootState } from 'store/reducers';
+
+import {PrivateRoute} from "components/PrivateRoute"
 
 import './App.scss';
 
 import { routes } from 'routes';
-import { PrivateRoute } from 'components/PrivateRoute';
 
 import Footer from 'components/blocks/Footer';
 import SignIn from 'components/pages/SignIn';
@@ -15,35 +19,74 @@ import Header from 'components/blocks/Header';
 import Main from 'components/layouts/Main';
 import Callback from 'components/Callback';
 import Logout from 'components/pages/Logout';
+import LoadingPopup from 'components/LoadingPopup';
+import DocumentPage from 'components/pages/DocumentPage';
 
-const App = () => (
-  <DndProvider backend={HTML5Backend}>
-    <BrowserRouter>
-      <div className="app">
-        <Header/>
-        <Main>
-          <Switch>
-            <PrivateRoute exact path={routes.main}>
-              <UploadProgramPage showUploaded={false}/>
-            </PrivateRoute>
-            <PrivateRoute exact path={routes.uploadedPrograms}>
-              <UploadProgramPage showUploaded/>
-            </PrivateRoute>
-            <Route exact path={routes.signIn}>
-              <SignIn/>
-            </Route>
-            <Route path={routes.callback} exact>
-              <Callback/>
-            </Route>
-            <Route path={routes.logout} exact>
-              <Logout />
-            </Route>
-          </Switch>
-        </Main>
-        <Footer/>
-      </div>
-    </BrowserRouter>
-  </DndProvider>
-);
+const App = () => {
+
+  const {isProgramUploading, isMessageSending} = useSelector((state: RootState) => state.programs);
+
+  useEffect(() => {
+    if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== "hidden") {
+      document.body.style.overflowY = "hidden"
+    } else if (!(isProgramUploading || isMessageSending) && document.body.style.overflowY !== "unset") {
+      document.body.style.overflowY = "unset"
+    }  
+  }, [isProgramUploading, isMessageSending]);
+
+  const isFooterShown = () => {
+    const locationPath = window.location.pathname.replaceAll('/', '');
+    const privacyPath = routes.privacyPolicy.replaceAll('/', '');
+    const termsOfUsePath = routes.termsOfUse.replaceAll('/', '');
+    return locationPath === privacyPath || locationPath === termsOfUsePath;
+  }
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <BrowserRouter>
+        <div className="app">
+          {
+            (isProgramUploading || isMessageSending)
+            &&
+            (
+              <>
+                <div className="overlay"/>
+                <LoadingPopup/>
+              </>
+            )
+          }
+          <Header/>
+          <Main>
+            <Switch>
+              <PrivateRoute exact path={routes.main}>
+                <UploadProgramPage showUploaded={false}/>
+              </PrivateRoute>
+              <PrivateRoute exact path={routes.uploadedPrograms}>
+                <UploadProgramPage showUploaded/>
+              </PrivateRoute>
+              <Route exact path={routes.signIn}>
+                <SignIn/>
+              </Route>
+              <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
+                <DocumentPage/>
+              </Route>
+              <Route path={routes.callback} exact>
+                <Callback/>
+              </Route>
+              <Route path={routes.logout} exact>
+                <Logout />
+              </Route>
+            </Switch>
+          </Main>
+          {
+            isFooterShown()
+            ||
+            <Footer/>
+          }
+        </div>
+      </BrowserRouter>
+    </DndProvider>
+  )
+};
 
 export default App;

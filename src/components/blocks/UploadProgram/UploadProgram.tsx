@@ -1,35 +1,69 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {NativeTypes} from 'react-dnd-html5-backend';
 import {useDrop, DropTargetMonitor} from 'react-dnd';
-import Error from '../Error';
+import { GEAR_MNEMONIC_KEY } from 'consts';
+
+import { generateKeypairAction, programUploadResetAction } from 'store/actions/actions';
+import { RootState } from 'store/reducers';
+
+import { SocketService } from 'services/SocketService';
+
+import StatusPanel from 'components/blocks/StatusPanel';
 import ProgramDetails from '../ProgramDetails';
 
 import './UploadProgram.scss';
 
-const UploadProgram = () => {
-  const [droppedFile, setDroppedFile] = useState<File[]>([]);
+type UploadProgramInterface = {
+  socketService: SocketService;
+};
+
+const UploadProgram = ({ socketService }: UploadProgramInterface) => {
+
+  const dispatch = useDispatch();
+
+  const { programUploadingError } = useSelector((state: RootState) => state.programs);
+
+  useEffect(() => {
+    if (!localStorage.getItem(GEAR_MNEMONIC_KEY)) {
+      dispatch(generateKeypairAction())
+    }
+  }, [dispatch]);
+
+  // const [droppedFile, setDroppedFile] = useState<File[]>([]);
   const [wrongFormat, setWrongFormat] = useState(false);
+  const [droppedFile, setDroppedFile] = useState<File | null>(null);
 
   if ( wrongFormat ) {
     setTimeout( () => setWrongFormat(false), 3000);
   }
 
+  const checkFileFormat = useCallback((files: any) => {
+    // eslint-disable-next-line no-console
+    if ( typeof files[0]?.name === 'string' ) {
+      const fileExt: string = files[0].name.split(".").pop().toLowerCase();
+      return fileExt !== 'wasm';
+    }
+    return true
+  }, [])
+
+  const handleFilesUpload = useCallback((file) => {
+    setDroppedFile(file)
+  }, [setDroppedFile])
+
   const handleFileDrop = useCallback(
     (item) => {
       if (item) {
         const { files } = item;
-        setDroppedFile(files);
-        // eslint-disable-next-line no-console
-        console.log(droppedFile);
-        if ( typeof files[0]?.name === 'string' ) {
-          const fileExt: string = files[0].name.split(".").pop().toLowerCase();
-          setWrongFormat(fileExt !== 'tbd');
-        } else {
-          setWrongFormat(true);
+        const isCorrectFormat = checkFileFormat(files);
+        setWrongFormat(isCorrectFormat);
+        if (!isCorrectFormat) {
+          handleFilesUpload(files[0])
         }
       }
     },
-    [setDroppedFile, droppedFile],
+    [checkFileFormat, handleFilesUpload],
   );
 
   const [{canDrop, isOver}, drop] = useDrop(
@@ -47,7 +81,7 @@ const UploadProgram = () => {
     }),
     [handleFileDrop],
   );
-  
+
   const isActive = canDrop && isOver;
   const dropBlockClassName = isActive ? "drop-block drop-block--file-over" : "drop-block";
 
@@ -61,30 +95,43 @@ const UploadProgram = () => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const target = event.target as HTMLInputElement;
-    const { files } = target;
+    const { target: { files } } = event;
     if ( files?.length ) {
-      // setDroppedFile(files);
+      const isCorrectFormat = checkFileFormat(files);
+      setWrongFormat(isCorrectFormat);
+      if (!isCorrectFormat) {
+        handleFilesUpload(files[0])
+      }
     }
   };
 
   return (
     <>
-      <div className={dropBlockClassName} ref={drop}>
+      {droppedFile 
+      &&
+      <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile} socketService={socketService}/>
+      ||
+      (
+        <div className={dropBlockClassName} ref={drop}>
         <div className="drop-block__no-file-hover">
           <input className="drop-block__input-file" ref={hiddenFileInput} type="file" onChange={handleChange}/>
           <button className="drop-block__button" type="button" onClick={handleClick}>Upload program</button>
           <div className="drop-block__info">
             Click “Upload program” to browse or
-            drag and drop your .TBD files here
+            drag and drop your .wasm files here
           </div>
         </div>
         <div className="drop-block__file-hover">
-          <span className="drop-block__hover-info">Drop your .TBD files here to upload</span>
+          <span className="drop-block__hover-info">Drop your .wasm files here to upload</span>
         </div>
       </div>
-      {wrongFormat && <Error onClose={() => setWrongFormat(false)}/>}
-      <ProgramDetails/>
+      )}
+      {(wrongFormat || programUploadingError) && <StatusPanel onClose={() => {
+        setWrongFormat(false);
+        if (programUploadingError) {
+          dispatch(programUploadResetAction())
+        }
+      }} statusPanelText={programUploadingError} isError/>}
     </>
   );
 };
