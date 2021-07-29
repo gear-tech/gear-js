@@ -12,7 +12,15 @@ export class WsExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToWs();
     const data = ctx.getData();
     const client = ctx.getClient();
-    let status = exception.getStatus();
+    let status;
+    if (exception.getStatus) {
+      status = exception.getStatus();
+    } else {
+      switch (exception.message) {
+        case 'Forbidden resource':
+          status = 401;
+      }
+    }
 
     if (status > 0) {
       exception =
