@@ -21,6 +21,7 @@ import Callback from 'components/Callback';
 import Logout from 'components/pages/Logout';
 import LoadingPopup from 'components/LoadingPopup';
 import DocumentPage from 'components/pages/DocumentPage';
+import { EditorPage } from 'features/Editor/EditorPage';
 
 const App = () => {
 
@@ -63,6 +64,9 @@ const App = () => {
               </PrivateRoute>
               <PrivateRoute exact path={routes.uploadedPrograms}>
                 <UploadProgramPage showUploaded/>
+              </PrivateRoute>
+              <PrivateRoute path={routes.editor} exact>
+                <EditorPage />
               </PrivateRoute>
               <Route exact path={routes.signIn}>
                 <SignIn/>

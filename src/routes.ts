@@ -6,5 +6,6 @@ export const routes = {
     uploadProgram: '/upload-program',
     uploadedPrograms: '/uploaded-programs',
     privacyPolicy: '/privacy-policy',
-    termsOfUse: '/terms-of-use'
+    termsOfUse: '/terms-of-use',
+    editor: '/editor'
 }
