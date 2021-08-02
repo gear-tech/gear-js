@@ -32,7 +32,7 @@ const Message = ({ programHash, programName, socketService, handleClose }: Props
     } else if (messageSendingStatus && typeof messageSendingStatus === "string") {
         statusPanelText = messageSendingStatus;
     } 
-    
+
     return (
         <div className="message-form">  
             <MessageHeader programName={programName} handleClose={handleClose} isMessageForm={isMessageForm}/>
@@ -44,13 +44,9 @@ const Message = ({ programHash, programName, socketService, handleClose }: Props
             {
                 messageSendingStatus && typeof messageSendingStatus !== "string"
                 &&
-                <MessageStatus 
-                    status={messageSendingStatus.status} 
-                    blockHash={messageSendingStatus.blockHash} 
-                    data={messageSendingStatus.data}
-                    programName={programName}
-                />
+                <MessageStatus data={messageSendingStatus.data}/>
             }
+            <MessageStatus data="Pong"/>
             {statusPanelText && <StatusPanel onClose={() => {
                 dispatch(sendMessageResetAction())
             }} statusPanelText={statusPanelText} isError={!!messageSendingError}/>}

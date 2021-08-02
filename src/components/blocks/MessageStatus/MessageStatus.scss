@@ -8,10 +8,6 @@
         display: flex;
         flex-direction: row;
         gap: 57px;
-        margin-bottom: 15px;
-        &:first-child {
-            display: none;
-        }
         &__title {
             width: 107px;
             font-weight: 300;
@@ -43,9 +39,6 @@
             flex-direction: column;
             gap: 10px;
             margin-bottom: 32px;
-            &:first-child {
-                display: flex;
-            }
             &__text {
                 font-weight: normal;
                 color: #E0E0E0;

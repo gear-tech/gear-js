@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProgramAction, getProgramsAction } from 'store/actions/actions';
+import { getProgramAction, getProgramsAction, sendMessageResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 
 import { fileNameHandler } from 'helpers';
@@ -51,6 +51,7 @@ export const BlocksListUploaded = ({ socketService }: Props) => {
   }
 
   const handleCloseMessageForm = () => {
+    dispatch(sendMessageResetAction())
     setProgramMessage(null);
   }
 

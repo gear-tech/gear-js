@@ -2,7 +2,7 @@
 
 .status-panel-block {
   align-items: center;
-  background-color: $successColor;
+  background-color: $textColor;
   border-radius: $borderRadiusBase;
   bottom: 0;
   display: flex;
@@ -15,16 +15,21 @@
   z-index: 10;
   &.error {
     background-color: $errorColor;
+    .status-panel-block__msg {
+      color: $textColor!important;
+    }    
   }
 }
+
 .status-panel-block__msg {
-  color: $textColor;
+  color: $bkgInputColor;
 }
 
+
 .status-panel-block__close-btn {
-  background: url('../../../images/close.svg');
+  background: url('../../../images/close-success.svg');
   &.error {
-    background: url('../../../images/error_close.svg');
+    background: url('../../../images/close.svg');
   }
   height: 14px;
   width: 14px;
