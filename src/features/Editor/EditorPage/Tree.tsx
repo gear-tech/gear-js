@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-
-type File = {
-  name: string;
-  ext: string;
-  value: string;
-  folder?: string;
-};
+import { EditorFile } from '../../../types/editor';
 
 interface Props {
-  files: File[];
+  files: EditorFile[];
   selectFile: (name: string) => void;
 }
 
@@ -26,7 +20,7 @@ export const Tree = ({ files, selectFile }: Props) => {
       tabIndex={0}
       aria-hidden="true"
     >
-      {`${item.name}.${item.ext}`}
+      {`${item.name}`}
     </div>
   ));
   return <div className="editor-tree">{items}</div>;

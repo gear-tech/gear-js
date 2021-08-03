@@ -1,95 +1,55 @@
 import React, { useEffect, useRef, useState } from 'react';
-import * as monaco from 'monaco-editor';
 import { saveAs } from 'file-saver';
+import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
 import io from 'socket.io-client';
 import { Tree } from './Tree';
 import { GEAR_LOCAL_IDE_URI, GEAR_STORAGE_KEY } from '../../../consts';
-
-interface IMonaco {
-  options: any;
-  code: string;
-}
-
-// @ts-ignore
-// eslint-disable-next-line no-restricted-globals
-self.MonacoEnvironment = {
-  getWorkerUrl(_moduleId: any, label: string) {
-    if (label === 'json') {
-      return './json.worker.bundle.js';
-    }
-    if (label === 'toml') {
-      return './toml.worker.bundle.js';
-    }
-    if (label === 'rust') {
-      return './rust.worker.bundle.js';
-    }
-    return './editor.worker.bundle.js';
-  },
-};
-
-const Monaco = ({ options, code }: IMonaco) => {
-  const editorEl = useRef<HTMLDivElement>(null);
-  const editor = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-
-  useEffect(() => {
-    if (editorEl.current) {
-      editor.current = monaco.editor.create(editorEl.current, { ...options, value: code });
-    }
-    return () => {
-      if (editor.current) {
-        editor.current.dispose();
-      }
-    };
-  });
-
-  return <div className="editor-element" ref={editorEl} />;
-};
-
-const files = [
-  {
-    name: 'lib',
-    ext: 'rs',
-    value:
-      '#![no_std]\n' +
-      '#![feature(default_alloc_error_handler)]\n' +
-      '\n' +
-      'use gstd::{msg, prelude::*};\n' +
-      '\n' +
-      '#[no_mangle]\n' +
-      'pub unsafe extern "C" fn handle() {\n' +
-      '    msg::reply(b"Hello world!", 0, 0);\n' +
-      '}\n' +
-      '\n' +
-      '#[no_mangle]\n' +
-      'pub unsafe extern "C" fn init() {}\n' +
-      '\n' +
-      '#[panic_handler]\n' +
-      'fn panic(_info: &panic::PanicInfo) -> ! {\n' +
-      '    loop {}\n' +
-      '}',
-    folder: 'src',
-  },
-  {
-    name: 'Cargo',
-    ext: 'toml',
-    value:
-      '[package]\n' +
-      'name = "demo-minimal"\n' +
-      'version = "0.1.0"\n' +
-      'authors = ["Gear Technologies"]\n' +
-      'edition = "2018"\n' +
-      'license = "GPL-3.0"\n' +
-      '\n' +
-      '[lib]\n' +
-      'crate-type = ["cdylib"]\n' +
-      '\n' +
-      '[dependencies]\n' +
-      'gstd = { path = "../../gstd", features = ["debug"] }',
-  },
-];
+import { EditorFile, Languages } from '../../../types/editor';
 
 export const EditorPage = () => {
+  const [files] = useState<EditorFile[]>([
+    {
+      name: 'lib.rs',
+      lang: Languages.Rust,
+      value:
+        '#![no_std]\n' +
+        '#![feature(default_alloc_error_handler)]\n' +
+        '\n' +
+        'use gstd::{msg, prelude::*};\n' +
+        '\n' +
+        '#[no_mangle]\n' +
+        'pub unsafe extern "C" fn handle() {\n' +
+        '    msg::reply(b"Hello world!", 0, 0);\n' +
+        '}\n' +
+        '\n' +
+        '#[no_mangle]\n' +
+        'pub unsafe extern "C" fn init() {}\n' +
+        '\n' +
+        '#[panic_handler]\n' +
+        'fn panic(_info: &panic::PanicInfo) -> ! {\n' +
+        '    loop {}\n' +
+        '}',
+      folder: 'src',
+    },
+    {
+      name: 'Cargo.toml',
+      lang: Languages.Toml,
+      value:
+        '[package]\n' +
+        'name = "demo-minimal"\n' +
+        'version = "0.1.0"\n' +
+        'authors = ["Gear Technologies"]\n' +
+        'edition = "2018"\n' +
+        'license = "GPL-3.0"\n' +
+        '\n' +
+        '[lib]\n' +
+        'crate-type = ["cdylib"]\n' +
+        '\n' +
+        '[dependencies]\n' +
+        'gstd = { path = "../../gstd", features = ["debug"] }',
+    },
+  ]);
   const [file, setFile] = useState(files.filter((i) => i.value)[0]);
   const options = {
     selectOnLineNumbers: true,
@@ -136,9 +96,9 @@ export const EditorPage = () => {
     files.forEach((item) => {
       if (item.folder) {
         // @ts-ignore
-        zip.folder(item.folder).file(`${item.name}.${item.ext}`, item.value);
+        zip.folder(item.folder).file(`${item.name}`, item.value);
       } else {
-        zip.file(`${item.name}.${item.ext}`, item.value);
+        zip.file(`${item.name}`, item.value);
       }
     });
     return await zip.generateAsync({ type: 'blob' });
@@ -180,8 +140,7 @@ export const EditorPage = () => {
             Build
           </button>
         </div>
-        {/* @ts-ignore */}
-        <Monaco options={options} code={file.value} />
+        <Editor theme="vs-dark" options={options} value={file.value} language={file.lang} />
       </div>
     </div>
   );
