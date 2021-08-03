@@ -8,7 +8,7 @@ import { GEAR_LOCAL_IDE_URI, GEAR_STORAGE_KEY } from '../../../consts';
 import { EditorFile, Languages } from '../../../types/editor';
 
 export const EditorPage = () => {
-  const [files] = useState<EditorFile[]>([
+  const [files, setFiles] = useState<EditorFile[]>([
     {
       name: 'lib.rs',
       lang: Languages.Rust,
@@ -50,7 +50,8 @@ export const EditorPage = () => {
         'gstd = { path = "../../gstd", features = ["debug"] }',
     },
   ]);
-  const [file, setFile] = useState(files.filter((i) => i.value)[0]);
+  const [currentFile, setCurrentFile] = useState(0);
+
   const options = {
     selectOnLineNumbers: true,
     fontSize: 14,
@@ -67,7 +68,6 @@ export const EditorPage = () => {
 
   useEffect(() => {
     socket.current.on('build', (payload: { files?: { file: ArrayBuffer; fileName: string }[]; error?: string }) => {
-      console.log(payload);
       if (payload.error) {
         // eslint-disable-next-line no-alert
         alert(payload.error);
@@ -84,11 +84,8 @@ export const EditorPage = () => {
     });
   });
 
-  function handleFileSelect(name: string) {
-    const item = files.find((i) => i.name === name);
-    if (item) {
-      setFile(item);
-    }
+  function handleFileSelect(index: number) {
+    setCurrentFile(index);
   }
 
   async function createArchive() {
@@ -128,6 +125,14 @@ export const EditorPage = () => {
       });
   }
 
+  function handleEditorChange(value: string | undefined) {
+    if (value) {
+      const copy = [...files];
+      copy[currentFile].value = value;
+      setFiles(copy);
+    }
+  }
+
   return (
     <div className="editor-container">
       <Tree files={files} selectFile={handleFileSelect} />
@@ -140,7 +145,13 @@ export const EditorPage = () => {
             Build
           </button>
         </div>
-        <Editor theme="vs-dark" options={options} value={file.value} language={file.lang} />
+        <Editor
+          theme="vs-dark"
+          options={options}
+          value={files[currentFile].value}
+          language={files[currentFile].lang}
+          onChange={handleEditorChange}
+        />
       </div>
     </div>
   );

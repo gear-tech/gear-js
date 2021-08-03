@@ -4,7 +4,7 @@ import { EditorFile } from '../../../types/editor';
 
 interface Props {
   files: EditorFile[];
-  selectFile: (name: string) => void;
+  selectFile: (index: number) => void;
 }
 
 export const Tree = ({ files, selectFile }: Props) => {
@@ -13,7 +13,7 @@ export const Tree = ({ files, selectFile }: Props) => {
     <div
       className={clsx('editor-tree__item', index === selected && 'is-active')}
       onClick={() => {
-        selectFile(item.name);
+        selectFile(index);
         setSelected(index);
       }}
       role="button"
