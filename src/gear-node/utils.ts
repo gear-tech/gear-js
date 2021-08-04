@@ -58,7 +58,10 @@ export function toBytes(api: ApiPromise, type: string, data: any) {
       return api.createType('Bytes', data);
     } else if (['utf8', 'utf-8'].indexOf(type) !== -1) {
       return api.createType('Bytes', Array.from(toU8a(data)));
-    } else if (['i32', 'i64', 'f32', 'f64'].indexOf(type) !== -1) {
+    } else if (
+      ['i32', 'i64', 'f32', 'f64', 'u32', 'u64', 'u32', 'u64'].indexOf(type) !==
+      -1
+    ) {
       return api.createType(
         'Bytes',
         Array.from(this.api.createType(type, data).toU8a()),

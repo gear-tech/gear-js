@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { bufferToU8a } from '@polkadot/util';
 import { Repository } from 'typeorm';
 import { Program } from './entities/program.entity';
 
@@ -19,7 +18,16 @@ export class ProgramsService {
     }
   }
 
-  async saveProgram({ user, hash, blockHash, name, uploadedAt }) {
+  async saveProgram({
+    user,
+    hash,
+    blockHash,
+    name,
+    uploadedAt,
+    initType,
+    incomingType,
+    expectedType,
+  }) {
     const program = this.programRepository.create({
       hash: hash,
       blockHash: blockHash,
@@ -27,6 +35,9 @@ export class ProgramsService {
       user: user,
       uploadedAt: uploadedAt,
       programNumber: (await this.getLastProgramNumber(user)) + 1,
+      initType,
+      incomingType,
+      expectedType,
     });
     return this.programRepository.save(program);
   }

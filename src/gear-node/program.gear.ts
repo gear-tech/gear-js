@@ -1,13 +1,7 @@
 import { ApiPromise } from '@polkadot/api';
 import { Bytes } from '@polkadot/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-import {
-  GearNodeError,
-  InvalidParamsError,
-  ProgramInitializedFailed,
-  TransactionError,
-} from 'src/json-rpc/errors';
-import { getNextBlock } from './utils';
+import { InvalidParamsError, TransactionError } from 'src/json-rpc/errors';
 import { Logger } from '@nestjs/common';
 
 const logger = new Logger('Program Upload');
@@ -94,56 +88,6 @@ export async function submitProgram(
         reject(new TransactionError('Account balance too low'));
       } else {
         reject(new TransactionError(error.message));
-      }
-      return null;
-    }
-  });
-}
-
-async function programInitInfo(
-  api: ApiPromise,
-  blockHash: string,
-  programHash: string,
-  callback,
-): Promise<string | number> {
-  return new Promise(async (resolve, reject) => {
-    const nextBlockHash = await getNextBlock(api, blockHash);
-    let events = await api.query.system.events.at(nextBlockHash);
-    let initialized = false;
-
-    try {
-      // Check program initialization error
-      events
-        .filter(({ event }) => api.events.gear.InitFailure.is(event))
-        .forEach(({ event: { data } }) => {
-          if (data[0].toString() === programHash) {
-            reject(new ProgramInitializedFailed());
-          }
-        });
-
-      events
-        .filter(({ event }) => api.events.gear.ProgramInitialized.is(event))
-        .forEach(({ event: { data } }) => {
-          if (data[0].toString() === programHash) {
-            callback('save');
-            initialized = true;
-            callback('gear', {
-              status: 'ProgramInitialized',
-              blockHash: nextBlockHash,
-              programHash: data[0].toString(),
-            });
-            callback('gear', {
-              status: 'Success',
-            });
-          }
-        });
-    } catch (error) {
-      reject(new GearNodeError());
-    } finally {
-      if (initialized) {
-        resolve(0);
-      } else {
-        resolve(nextBlockHash.toHex());
       }
     }
   });

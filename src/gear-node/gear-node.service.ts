@@ -124,9 +124,7 @@ export class GearNodeService {
         data.value,
         programData,
         (action, data?) => {
-          if (action === 'error') {
-            cb(data);
-          } else if (action === 'save') {
+          if (action === 'save') {
             this.programService.saveProgram(programData);
           } else if (action === 'gear') {
             cb(undefined, data);
