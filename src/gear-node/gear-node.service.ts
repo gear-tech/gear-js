@@ -10,27 +10,58 @@ import {
   keyringFromSeed,
   keyringFromSuri,
 } from './keyring';
-import { GearNodeError, InvalidParamsError } from 'src/json-rpc/errors';
+import {
+  GearNodeError,
+  InvalidParamsError,
+  ProgramNotFound,
+} from 'src/json-rpc/errors';
 import { u8aToHex } from '@polkadot/util';
 import { submitProgram } from './program.gear';
 import { sendMessage } from './message.gear';
+import definitions from 'sample-polkadotjs-typegen/interfaces/definitions';
+import { toBytes } from './utils';
+import { subscribetEvents } from './events';
+import { Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { EventsService } from 'sample-polkadotjs-typegen/events/events.service';
 @Injectable()
 export class GearNodeService {
   private provider: WsProvider;
   private api: ApiPromise;
+  private blocksSubject: Subject<any>;
+  private eventsSubject: Subject<any>;
+  private userEventSubject: Subject<any>;
 
   constructor(
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
+    private readonly eventService: EventsService,
   ) {
     this.provider = new WsProvider(process.env.WS_PROVIDER);
-    this.createApiPromise();
+    this.createApiPromise().then((api: ApiPromise) => {
+      subscribetEvents(api, ({ events, blocks }) => {
+        this.blocksSubject = blocks;
+        this.eventsSubject = events;
+        this.saveEvents();
+      });
+      this.userEventSubject = this.eventService.eventSubject;
+    });
   }
 
-  private logger = new Logger('GearNodeService');
-
   private async createApiPromise() {
-    this.api = await ApiPromise.create({ provider: this.provider });
+    return new Promise(async (resolve, reject) => {
+      const types = Object.values(definitions).reduce(
+        (res, types): object => ({ ...res, ...types }),
+        {},
+      );
+      this.api = await ApiPromise.create({
+        provider: this.provider,
+        types: {
+          ...types,
+        },
+      });
+      resolve(this.api);
+    });
   }
 
   createKeyPair(user: User) {
@@ -59,6 +90,7 @@ export class GearNodeService {
     }
 
     const binary = this.programService.parseWASM(data.file);
+    const code = toBytes(this.api, 'bytes', Array.from(binary));
 
     const keyring = data.keyPairJson
       ? keyringFromJson(data.keyPairJson)
@@ -74,15 +106,20 @@ export class GearNodeService {
       hash: null,
       blockHash: null,
       uploadedAt: null,
+      initType: data.initType || null,
+      expectedType: data.expectedType || null,
+      incomingType: data.incomingType || null,
     };
+
+    const payload = toBytes(this.api, data.initType, data.initPayload);
 
     try {
       await submitProgram(
         this.api,
         keyring,
-        binary,
+        code,
         salt,
-        data.initPayload || '',
+        payload || '0x00',
         data.gasLimit,
         data.value,
         programData,
@@ -93,6 +130,8 @@ export class GearNodeService {
             this.programService.saveProgram(programData);
           } else if (action === 'gear') {
             cb(undefined, data);
+          } else if (action === 'remove') {
+            this.programService.removeProgram(programData.hash);
           }
         },
       );
@@ -119,11 +158,26 @@ export class GearNodeService {
       keyring.unlock();
     }
 
+    const program = await this.programService.getProgram(
+      messageData.destination,
+    );
+    if (!program) {
+      cb(new ProgramNotFound(messageData.destination).toJson());
+      return null;
+    }
+
+    let payload = messageData.payload;
+    if (program.incomingType) {
+      payload = toBytes(this.api, program.incomingType, messageData.payload);
+    } else {
+      payload = messageData.payload;
+    }
+
     await sendMessage(
       this.api,
       keyring,
-      messageData.destination,
-      messageData.payload,
+      program.hash,
+      payload,
       messageData.gasLimit,
       messageData.value,
       (action, data) => {
@@ -134,20 +188,6 @@ export class GearNodeService {
         }
       },
     );
-  }
-
-  async subscribeNewHeads(cb) {
-    try {
-      const unsub = this.api.rpc.chain.subscribeNewHeads((header) => {
-        cb(undefined, {
-          hash: header.hash.toHex(),
-          number: header.number.toString(),
-        });
-      });
-      return unsub;
-    } catch (error) {
-      throw new GearNodeError(error.message);
-    }
   }
 
   async totalIssuance() {
@@ -179,5 +219,50 @@ export class GearNodeService {
   async getBalance(publicKey: string) {
     const { data: balance } = await this.api.query.system.account(publicKey);
     return { freeBalance: balance.free.toHuman() };
+  }
+
+  async saveEvents() {
+    this.eventsSubject.subscribe({
+      next: (event) => {
+        switch (event.type) {
+          case 'log':
+            this.eventService.log({ ...event });
+            break;
+          case 'program':
+            this.eventService.program({ ...event });
+            break;
+        }
+      },
+    });
+  }
+
+  async subscribeEvents(user: User, callback) {
+    const filtered = this.userEventSubject.pipe(
+      filter((event) => {
+        return event.dest === user.publicKey;
+      }),
+    );
+    const unsub = filtered.subscribe({
+      next: (event) => {
+        callback(undefined, event);
+      },
+    });
+    return unsub;
+  }
+
+  async subscribeNewHeads(cb) {
+    try {
+      const unsub = this.blocksSubject.subscribe({
+        next: (head) => {
+          cb(undefined, {
+            hash: head.hash.toHex(),
+            number: head.number.toString(),
+          });
+        },
+      });
+      return unsub;
+    } catch (error) {
+      throw new GearNodeError(error.message);
+    }
   }
 }

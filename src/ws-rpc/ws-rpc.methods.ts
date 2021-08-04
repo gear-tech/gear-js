@@ -13,7 +13,11 @@ export class WsRpcMethods extends RpcMethods {
 
   program = {
     upload: async (cb, user, params) => {
-      await this.gearService.uploadProgram(user, params, cb);
+      try {
+        await this.gearService.uploadProgram(user, params, cb);
+      } catch (error) {
+        throw error;
+      }
       return null;
     },
   };
@@ -60,6 +64,13 @@ export class WsRpcMethods extends RpcMethods {
   message = {
     send: async (cb, user, params) => {
       return await this.gearService.sendMessage(user, params, cb);
+    },
+  };
+
+  events = {
+    subscribe: async (cb, user) => {
+      const unsub = await this.gearService.subscribeEvents(user, cb);
+      return unsub;
     },
   };
 }

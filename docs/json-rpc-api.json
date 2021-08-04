@@ -370,10 +370,25 @@
             "description": "Init value",
             "examples": [2000]
           },
-          "init_payload": {
+          "initPayload": {
             "type": "string",
             "description": "Init payload (hex)",
             "examples": ["0x1234"]
+          },
+          "initType": {
+            "type": "string",
+            "description": "Type of initial payload",
+            "examples": ["utf8"]
+          },
+          "incomingType": {
+            "type": "string",
+            "description": "Type of incoming message",
+            "examples": ["utf8"]
+          },
+          "expectedType": {
+            "type": "string",
+            "description": "Expected type of reponse message",
+            "examples": ["utf8"]
           },
           "keyPairJson": {
             "type": "string",

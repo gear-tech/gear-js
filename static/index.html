@@ -53,7 +53,9 @@
         <div style="width: 100%">
           <div class="blocks" style="width: 40%; float: left">
             <h3>Blocks</h3>
-            <button @click.prevent="subscribeNewBlocks()">Subscribe</button>
+            <button @click.prevent="subscribeNewBlocks()">Subscribe</button
+            ><br />
+            <button @click.prevent="subscribeEvents()">Subscribe Events</button>
             <hr />
             <ul>
               <li v-for="block of blocks">
@@ -65,23 +67,30 @@
 
           <div class="programs" style="margin-left: 50%">
             <h3>Programs</h3>
-            <form>
-              Program:
-              <input
-                type="file"
-                accept="application/wasm"
-                name="wasm"
-                ref="file"
-                v-on:change="handleFileUpload()"
-              /><br />
-              Gas Limit: <input type="number" ref="gasLimit" /> <br />
-              Initial Value:
-              <input type="number" name="value" ref="value" /><br />
-              Initial Payload:
-              <input type="text" name="payload" ref="payload" />
-              <br />
-              <button type="submit" @click.prevent="sendWasm()">Send</button>
-            </form>
+            Program:
+            <input
+              type="file"
+              accept="application/wasm"
+              name="wasm"
+              ref="file"
+              v-on:change="handleFileUpload()"
+            /><br />
+            Gas Limit: <input type="number" ref="gasLimit" /> <br />
+            Initial Value:
+            <input type="number" name="value" ref="value" /><br />
+            Initial Payload:
+            <input type="text" name="payload" ref="payload" />
+            <br />
+            Init Type:
+            <input type="text" name="initType" ref="initType" />
+            <br />
+            Incomnig Type:
+            <input type="text" name="incoming" ref="incoming" />
+            <br />
+            Expected Type:
+            <input type="text" name="excpected" ref="expected" />
+            <br />
+            <button type="submit" @click.prevent="sendWasm()">Send</button>
             <hr />
             <ul>
               <li v-for="program of programs">
@@ -127,7 +136,13 @@
               id: 1,
             });
           },
-
+          subscribeEvents() {
+            this.socket.emit('message', {
+              jsonrpc: '2.0',
+              method: 'events.subscribe',
+              id: 1343,
+            });
+          },
           getTotalIssuance() {
             this.socket.emit('message', {
               jsonrpc: '2.0',
@@ -159,6 +174,15 @@
                 gasLimit: this.$refs.gasLimit.value,
                 value: this.$refs.value.value,
                 initPayload: this.$refs.payload.value,
+                initType: this.$refs.initType
+                  ? this.$refs.initType.value
+                  : undefined,
+                incomnigType: this.$refs.incoming
+                  ? this.$refs.incoming.value
+                  : undefined,
+                expected: this.$refs.expected
+                  ? this.$refs.expected.value
+                  : undefined,
               },
             });
           },

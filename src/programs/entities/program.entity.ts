@@ -23,4 +23,13 @@ export class Program {
 
   @Column()
   uploadedAt: string;
+
+  @Column({ nullable: true })
+  incomingType: string;
+
+  @Column({ nullable: true })
+  expectedType: string;
+
+  @Column({ nullable: true })
+  initType: string;
 }

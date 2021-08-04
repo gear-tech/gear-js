@@ -19,7 +19,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "types:build": "npm run generate:defs && npm run generate:meta",
+    "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces",
+    "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint ./edgeware.json --output ./src/interfaces",
+    "types:lint": "tsc --noEmit --pretty"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.15",
@@ -40,7 +44,7 @@
     "@polkadot/api": "^4.12.1",
     "@polkadot/api-contract": "^4.13.1",
     "@polkadot/keyring": "^6.10.1",
-    "@polkadot/util": "^6.7.1",
+    "@polkadot/util": "^6.11.1",
     "@polkadot/util-crypto": "^6.7.1",
     "@types/socket.io": "^3.0.2",
     "class-transformer": "^0.4.0",
@@ -62,6 +66,7 @@
     "@nestjs/cli": "^7.6.0",
     "@nestjs/schematics": "^7.3.0",
     "@nestjs/testing": "^7.6.15",
+    "@polkadot/typegen": "^5.3.1",
     "@types/express": "^4.17.11",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.36",

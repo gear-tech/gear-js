@@ -502,15 +502,18 @@ Upload new program
 
 ### Parameters
 
-| Name                | Type    | Constraints | Description               |
-| ------------------- | ------- | ----------- | ------------------------- |
-| params              | object  |             |                           |
-| params.file         |         |             | File buffer               |
-| params.filename     | string  |             | File name                 |
-| params.gasLimit     | integer |             | Gas limit                 |
-| params.value        | integer |             | Init value                |
-| params.init_payload | string  |             | Init payload (hex)        |
-| params?.keyPairJson | string  |             | JSON Encoded KeyPair data |
+| Name                 | Type    | Constraints | Description                      |
+| -------------------- | ------- | ----------- | -------------------------------- |
+| params               | object  |             |                                  |
+| params.file          |         |             | File buffer                      |
+| params.filename      | string  |             | File name                        |
+| params.gasLimit      | integer |             | Gas limit                        |
+| params.value         | integer |             | Init value                       |
+| params?.initPayload  | string  |             | Init payload (hex)               |
+| params?.initType     | string  |             | Type of initial payload          |
+| params?.incomingType | string  |             | Type of incoming message         |
+| params?.expectedType | string  |             | Expected type of reponse message |
+| params?.keyPairJson  | string  |             | JSON Encoded KeyPair data        |
 
 ### Result
 
@@ -543,7 +546,10 @@ Upload new program
     "filename": "demo.wasm",
     "gasLimit": 2000,
     "value": 2000,
-    "init_payload": "0x1234"
+    "initPayload": "0x1234",
+    "initType": "utf8",
+    "incomingType": "utf8",
+    "expectedType": "utf8"
   }
 }
 ```

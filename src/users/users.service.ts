@@ -23,6 +23,14 @@ export class UsersService {
     return user;
   }
 
+  async findOneByPublicKey(publicKey: string) {
+    const user = await this.userRepository.findOne({ publicKey: publicKey });
+    if (!user) {
+      return false;
+    }
+    return user;
+  }
+
   async profile(user) {
     if (!user) {
       return { error: 'user not found' };

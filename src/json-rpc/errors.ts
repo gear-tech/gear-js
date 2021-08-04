@@ -64,3 +64,15 @@ export class ProgramInitializedFailed extends GearError {
   code = -32012;
   message = 'Program initialization falied';
 }
+
+export class ProgramNotFound extends GearError {
+  code = -32013;
+  message = 'Program not found';
+
+  constructor(hash?) {
+    super();
+    if (hash) {
+      this.message = `Program with hash ${hash} not found`;
+    }
+  }
+}

@@ -8,7 +8,7 @@ import { HttpExceptionFilter } from './http-rpc/exceptions';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   app.setGlobalPrefix('api');
-  app.useGlobalFilters(new HttpExceptionFilter());
+  // app.useGlobalFilters(new HttpExceptionFilter());
   app.use('/api/docs/', express.static(join(__dirname, '..', 'docs')));
   app.use('/api/test/', express.static(join(__dirname, '..', 'static')));
   const configService = app.get(ConfigService);

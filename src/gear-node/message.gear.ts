@@ -1,23 +1,25 @@
 import { ApiPromise } from '@polkadot/api';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { hexToString, isHex, isU8a, u8aToHex } from '@polkadot/util';
 import {
   GearNodeError,
   InvalidParamsError,
   TransactionError,
 } from 'src/json-rpc/errors';
-import { getNextBlock, toHex, valueToString } from './utils';
+import { getNextBlock, valueToString } from './utils';
+import { Bytes } from '@polkadot/types';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('Send Message');
 
 export async function sendMessage(
   api: ApiPromise,
   keyring: KeyringPair,
   destination: string,
-  payload: string,
+  payload: Bytes | string,
   gasLimit: number,
   value: number,
   callback,
 ) {
-  payload = toHex(payload);
   let message: any;
   try {
     message = await api.tx.gear.sendMessage(
@@ -42,11 +44,12 @@ export async function sendMessage(
         throw new TransactionError();
       }
 
-      events.forEach(({ event: { data, section, method } }) => {
-        if (section === 'system' && method === 'ExtrinsicFailed') {
+      // Check transaction errors
+      events
+        .filter(({ event }) => api.events.system.ExtrinsicFailed.is(event))
+        .forEach(({ event: { data } }) => {
           throw new TransactionError();
-        }
-      });
+        });
     });
   } catch (error) {
     throw new GearNodeError();
@@ -60,39 +63,29 @@ async function messageResponse(
   callback,
 ) {
   const nextBlockHash = await getNextBlock(api, blockHash);
-  let res: any;
+  let events: any;
   try {
-    res = await api.query.system.events.at(nextBlockHash);
+    events = await api.query.system.events.at(nextBlockHash);
   } catch (error) {
-    console.error(error.message);
+    logger.error(error.message);
     callback('error', new GearNodeError().toJson());
     return null;
   }
 
   try {
-    res.forEach(({ event: { data, method, section } }) => {
-      if (section === 'gear') {
-        if (method === 'Log') {
-          if (data[0].toString() === destination) {
-            callback('gear', {
-              status: 'Log',
-              blockHash: nextBlockHash,
-              data: valueToString(data[1]),
-            });
-          }
-        }
-      } else if (section === 'system' && method === 'ExtrinsicSuccess') {
-        const dataJSON = data[0].toJSON();
-        if (dataJSON['class'] && dataJSON['class'] === 'Normal') {
+    events
+      .filter(({ event }) => api.events.gear.Log.is(event))
+      .forEach(({ event: { data } }) => {
+        if (data[0].toString() === destination) {
           callback('gear', {
-            status: 'Success',
+            status: 'Log',
             blockHash: nextBlockHash,
+            data: valueToString(data[1]),
           });
         }
-      }
-    });
+      });
   } catch (error) {
-    console.error(error.message);
+    logger.error(error.message);
     callback('error', new GearNodeError().toJson());
     return null;
   }

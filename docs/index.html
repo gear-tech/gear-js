@@ -1324,10 +1324,28 @@
                           <td>Init value</td>
                         </tr>
                         <tr>
-                          <td>params.init_payload</td>
+                          <td>params?.initPayload</td>
                           <td>string</td>
                           <td></td>
                           <td>Init payload (hex)</td>
+                        </tr>
+                        <tr>
+                          <td>params?.initType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of initial payload</td>
+                        </tr>
+                        <tr>
+                          <td>params?.incomingType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of incoming message</td>
+                        </tr>
+                        <tr>
+                          <td>params?.expectedType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Expected type of reponse message</td>
                         </tr>
                         <tr>
                           <td>params?.keyPairJson</td>
@@ -1419,7 +1437,10 @@
     "filename": "demo.wasm",
     "gasLimit": 2000,
     "value": 2000,
-    "init_payload": "0x1234"
+    "initPayload": "0x1234",
+    "initType": "utf8",
+    "incomingType": "utf8",
+    "expectedType": "utf8"
   }
 }</pre
                     >

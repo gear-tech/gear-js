@@ -48,7 +48,19 @@ export class ProgramsService {
   }
 
   async getProgram(hash) {
-    const program = await this.programRepository.findOne({ hash: hash });
+    const program = await this.programRepository.findOne(
+      { hash: hash },
+      { relations: ['user'] },
+    );
     return program;
+  }
+
+  async removeProgram(hash) {
+    setTimeout(async () => {
+      const program = await this.getProgram(hash);
+      if (program) {
+        this.programRepository.remove(program);
+      }
+    }, 10000);
   }
 }

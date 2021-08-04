@@ -13,6 +13,7 @@ import { WsRpcModule } from './ws-rpc/ws-rpc.module';
 import { RpcModule } from './http-rpc/rpc.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { TelegramModule } from './telegram/telegram.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { TelegramModule } from './telegram/telegram.module';
       include: [TelegramModule],
     }),
     TelegramModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
