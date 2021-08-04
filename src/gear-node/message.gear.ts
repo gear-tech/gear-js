@@ -5,7 +5,6 @@ import {
   InvalidParamsError,
   TransactionError,
 } from 'src/json-rpc/errors';
-import { getNextBlock, valueToString } from './utils';
 import { Bytes } from '@polkadot/types';
 import { Logger } from '@nestjs/common';
 
@@ -20,73 +19,48 @@ export async function sendMessage(
   value: number,
   callback,
 ) {
-  let message: any;
-  try {
-    message = await api.tx.gear.sendMessage(
-      destination,
-      payload,
-      gasLimit,
-      value,
-    );
-  } catch (error) {
-    throw new InvalidParamsError();
-  }
+  return new Promise(async (resolve, reject) => {
+    let message: any;
+    try {
+      message = await api.tx.gear.sendMessage(
+        destination,
+        payload,
+        gasLimit,
+        value,
+      );
+    } catch (error) {
+      reject(new InvalidParamsError());
+    }
 
-  try {
-    let blockHash: string;
-    await message.signAndSend(keyring, ({ events = [], status }) => {
-      if (status.isInBlock) {
-        blockHash = status.asInBlock.toHex();
-      } else if (status.isFinalized) {
-        blockHash = status.asFinalized.toHex();
-        messageResponse(api, blockHash, destination, callback);
-      } else if (status.isInvalid) {
-        throw new TransactionError();
-      }
-
-      // Check transaction errors
-      events
-        .filter(({ event }) => api.events.system.ExtrinsicFailed.is(event))
-        .forEach(({ event: { data } }) => {
-          throw new TransactionError();
-        });
-    });
-  } catch (error) {
-    throw new GearNodeError();
-  }
-}
-
-async function messageResponse(
-  api: ApiPromise,
-  blockHash: string,
-  destination: string,
-  callback,
-) {
-  const nextBlockHash = await getNextBlock(api, blockHash);
-  let events: any;
-  try {
-    events = await api.query.system.events.at(nextBlockHash);
-  } catch (error) {
-    logger.error(error.message);
-    callback('error', new GearNodeError().toJson());
-    return null;
-  }
-
-  try {
-    events
-      .filter(({ event }) => api.events.gear.Log.is(event))
-      .forEach(({ event: { data } }) => {
-        if (data[0].toString() === destination) {
-          callback('gear', {
-            status: 'Log',
-            blockHash: nextBlockHash,
-            data: valueToString(data[1]),
-          });
+    try {
+      let blockHash: string;
+      await message.signAndSend(keyring, ({ events = [], status }) => {
+        if (status.isInBlock) {
+          blockHash = status.asInBlock.toHex();
+        } else if (status.isFinalized) {
+          blockHash = status.asFinalized.toHex();
+        } else if (status.isInvalid) {
+          reject(new TransactionError());
         }
+
+        // Check transaction errors
+        events
+          .filter(({ event }) => api.events.system.ExtrinsicFailed.is(event))
+          .forEach(({ event: { data } }) => {
+            reject(new TransactionError());
+          });
+
+        events
+          .filter(({ event }) => api.events.system.ExtrinsicSuccess.is(event))
+          .forEach(({ event: { data } }) => {
+            callback({
+              status: status.type,
+              blockHash: blockHash,
+            });
+          });
       });
-  } catch (error) {
-    logger.error(error.message);
-    callback('error', new GearNodeError().toJson());
-    return null;
-  }
+    } catch (error) {
+      reject(new GearNodeError(error.message));
+    }
+  });
 }

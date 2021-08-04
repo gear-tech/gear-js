@@ -171,21 +171,21 @@ export class GearNodeService {
       payload = messageData.payload;
     }
 
-    await sendMessage(
-      this.api,
-      keyring,
-      program.hash,
-      payload,
-      messageData.gasLimit,
-      messageData.value,
-      (action, data) => {
-        if (action === 'error') {
-          cb(data);
-        } else if (action === 'gear') {
+    try {
+      await sendMessage(
+        this.api,
+        keyring,
+        program.hash,
+        payload,
+        messageData.gasLimit,
+        messageData.value,
+        (data) => {
           cb(undefined, data);
-        }
-      },
-    );
+        },
+      );
+    } catch (error) {
+      cb(error.toJson());
+    }
   }
 
   async totalIssuance() {
