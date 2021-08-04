@@ -28,10 +28,10 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
 
     let unsub = null;
 
-    if (procedure.params) {
+    try {
       unsub = await method(cb, client.user, procedure.params);
-    } else {
-      unsub = await method(cb, client.user);
+    } catch (error) {
+      this.sendResponse(client, procedure, error);
     }
 
     if (unsub) {

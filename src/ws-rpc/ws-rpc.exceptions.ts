@@ -19,6 +19,10 @@ export class WsExceptionFilter implements ExceptionFilter {
       switch (exception.message) {
         case 'Forbidden resource':
           status = 401;
+          break;
+        default:
+          status = 500;
+          break;
       }
     }
 

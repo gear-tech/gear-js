@@ -23,7 +23,20 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-    let status = exception.getStatus();
+    let status;
+    if (exception.getStatus) {
+      status = exception.getStatus();
+    } else {
+      switch (exception.message) {
+        case 'Forbidden resource':
+          status = 401;
+          break;
+        default:
+          status = 500;
+          break;
+      }
+    }
+
     if (status > 0) {
       exception =
         status in this.statusCodes

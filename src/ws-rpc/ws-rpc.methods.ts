@@ -63,7 +63,8 @@ export class WsRpcMethods extends RpcMethods {
 
   message = {
     send: async (cb, user, params) => {
-      return await this.gearService.sendMessage(user, params, cb);
+      await this.gearService.sendMessage(user, params, cb);
+      return null;
     },
   };
 

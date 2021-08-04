@@ -82,7 +82,7 @@ export class GearNodeService {
     if (
       !data ||
       !data.gasLimit ||
-      !data.value ||
+      (!data.value && data.value !== 0) ||
       !data.file ||
       !data.filename
     ) {
