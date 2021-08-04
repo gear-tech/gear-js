@@ -1,9 +1,9 @@
+import { isProd } from "consts";
+
 export default class ServerRPCRequestService {
 
-    protected readonly API_PATH = 'https://idea.gear-tech.io/api';
+    protected readonly API_PATH = isProd ? 'https://idea.gear-tech.io/api' : 'http://localhost:3000/api';
     
-    protected readonly DEV_API_PATH = 'http://localhost:3000/api';
-
     private generateRandomId() {
         return Math.floor(Math.random() * 1000000000);
     }

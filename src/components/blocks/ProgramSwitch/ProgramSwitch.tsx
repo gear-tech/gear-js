@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketService } from 'services/SocketService';
 import { RootState } from 'store/reducers';
+
+import { EditorMenu } from 'components/blocks/EditorMenu';
+
+import Editor from 'images/editor_icon.svg';
 
 type ProgramSwitchType = {
   showUploaded: boolean;
@@ -19,10 +23,14 @@ const ProgramSwitch = ({ showUploaded, socketService }: ProgramSwitchType) => {
 
   const [timeInstance, setTimeInstance] = useState(0)
   const [isSocketsConnected, setIsSocketsConnected] = useState(false);
+  const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
+  const [chosenTemplateId, setChosenTemplateId] = useState<number>(-1);
 
   const { totalIssuance, blocks } = useSelector((state: RootState) => state.blocks)
 
   const [prevBlocksLength, setPrevBlocksLength] = useState(0);
+
+  const editorMenuRef = useRef<HTMLDivElement | null>(null);
   
   useEffect(() => {
 
@@ -42,7 +50,18 @@ const ProgramSwitch = ({ showUploaded, socketService }: ProgramSwitchType) => {
       setIsSocketsConnected(true);
     }
 
-    return () => clearInterval(intervalId);
+    const handleClickOutsideDropdown = (event: MouseEvent) => {
+      if (isEditorDropdownOpened && editorMenuRef && !editorMenuRef.current?.contains(event.target as Node)) {
+        setIsEditorDropdownOpened(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutsideDropdown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideDropdown);
+      clearInterval(intervalId)
+    };
   }, [dispatch, 
     setTimeInstance, 
     timeInstance, 
@@ -51,23 +70,58 @@ const ProgramSwitch = ({ showUploaded, socketService }: ProgramSwitchType) => {
     setPrevBlocksLength,
     prevBlocksLength,
     blocks,
-    socketService])
+    socketService, 
+    isEditorDropdownOpened, 
+    setIsEditorDropdownOpened])
+
+  const handleEditorDropdown = () => {
+    if (!isEditorDropdownOpened) {
+      setIsEditorDropdownOpened(true);
+    }
+  }
+
+  const handleTemplate = (index: number) => {
+    setChosenTemplateId(index)
+  }
+
+  if (chosenTemplateId > -1) {
+    return <Redirect to={{
+      pathname: routes.editor,
+    }}/>
+  }
 
   return (
     <div className="switch-block">
-      <div className="switch-buttons">
-        <Link
-          to={routes.main}
-          className={classNames('switch-buttons__item', { 'switch-buttons__item--active': !showUploaded })}
-        >
-          Upload program
-        </Link>
-        <Link
-          to={routes.uploadedPrograms}
-          className={classNames('switch-buttons__item', { 'switch-buttons__item--active': showUploaded })}
-        >
-          Recent uploaded programs
-        </Link>
+      <div className="switch-block--wrapper">
+        <div className="switch-buttons">
+          <Link
+            to={routes.main}
+            className={classNames('switch-buttons__item', { 'switch-buttons__item--active': !showUploaded })}
+          >
+            Upload program
+          </Link>
+          <Link
+            to={routes.uploadedPrograms}
+            className={classNames('switch-buttons__item', { 'switch-buttons__item--active': showUploaded })}
+          >
+            Recent uploaded programs
+          </Link>
+        </div>
+        <div className="switch-block--editor">
+          <button 
+            className="switch-block--editor__btn"
+            type="button"
+            onClick={handleEditorDropdown}
+          >
+            <img src={Editor} alt="editor-icon"/>
+            Write code
+          </button>
+          {
+            isEditorDropdownOpened
+            &&
+            <EditorMenu editorMenuRef={editorMenuRef} handleTemplate={handleTemplate}/>
+          }
+        </div>
       </div>
       <div className="switch-block__info switch-info">
         <div className="switch-info__col">

@@ -7,9 +7,10 @@ import { sendMessageResetAction } from 'store/actions/actions';
 import StatusPanel from 'components/blocks/StatusPanel';
 import { MessageForm } from "components/blocks/MessageForm";
 import { MessageStatus } from "components/blocks/MessageStatus";
-import { MessageHeader } from "components/blocks/MessageHeader";
+import { PageHeader } from "components/blocks/PageHeader";
 
 import './Message.scss'
+import { PAGE_TYPES } from "consts";
 
 type Props = {
     programHash: string;
@@ -27,6 +28,8 @@ const Message = ({ programHash, programName, socketService, handleClose }: Props
     let statusPanelText: string | null = null;
     const isMessageForm = messageSendingStatus == null || typeof messageSendingStatus === "string";
 
+    const pageType = isMessageForm ? PAGE_TYPES.MESSAGE_FORM_PAGE : PAGE_TYPES.ANSWER_PAGE
+
     if (messageSendingError) {
         statusPanelText = messageSendingError
     } else if (messageSendingStatus && typeof messageSendingStatus === "string") {
@@ -35,7 +38,7 @@ const Message = ({ programHash, programName, socketService, handleClose }: Props
 
     return (
         <div className="message-form">  
-            <MessageHeader programName={programName} handleClose={handleClose} isMessageForm={isMessageForm}/>
+            <PageHeader programName={programName} handleClose={handleClose} pageType={pageType}/>
             {
                 isMessageForm
                 &&

@@ -5,6 +5,31 @@
   display: flex;
   justify-content: space-between;
   margin: 48px 0;
+  &--wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  &--editor {
+    position: relative;
+    &__btn {
+      padding: 12px 24px;
+      background: #161616;
+      border-radius: 2px;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 24px;
+      color: #FFFFFF;
+      opacity: 0.5;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-left: 32px;
+      img {
+        margin-right: 8px;
+      }
+    }
+  }
 }
 
 .switch-buttons {
