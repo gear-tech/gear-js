@@ -7,6 +7,18 @@ export interface ProgramModel {
     uploadedAt: string;
 }
 
+export interface UploadedProgramModel {
+    hash: string;
+}
+
+export interface ProgramPaginationModel {
+    next: string;
+    prev: string;
+    count: string;
+    result: UploadedProgramModel[];
+}
+
+
 export interface MessageStatusModel {
     status: string;
     blockHash: string;
@@ -15,6 +27,8 @@ export interface MessageStatusModel {
 
 export interface ProgramState {
     programs: ProgramModel[] | null;
+    allUploadedPrograms: UploadedProgramModel[] | null;
+    uploadedProgramsCount: number;
     isProgramUploading: boolean;
     isMessageSending: boolean;
     programUploadingStatus: null | string;
@@ -44,6 +58,12 @@ export interface ProgramsInterface {
     result: ProgramModel[]
 }
 
+export interface ProgramsListInterface {
+    jsonrpc: string,
+    id: string,
+    result: ProgramPaginationModel
+}
+
 export interface ProgramInterface {
     jsonrpc: string,
     id: string,
@@ -54,9 +74,14 @@ export interface BalanceModel {
     value: number;
 }
 
+export interface SearchModel {
+    programHash: string;
+}
+
 export enum ProgramActionTypes{
     FETCH_PROGRAMS = 'FETCH_PROGRAMS',
     FETCH_PROGRAMS_SUCCESS = 'FETCH_PROGRAMS_SUCCESS',
+    FETCH_ALL_PROGRAMS_SUCCESS = 'FETCH_ALL_PROGRAMS_SUCCESS',
     FETCH_PROGRAMS_ERROR = 'FETCH_PROGRAMS_ERROR',
     FETCH_PROGRAM = 'FETCH_PROGRAM',
     FETCH_PROGRAM_SUCCESS = 'FETCH_PROGRAM_SUCCESS',
@@ -125,6 +150,10 @@ interface FetchProgramsSuccessAction{
     type: ProgramActionTypes.FETCH_PROGRAMS_SUCCESS;
     payload: ProgramModel[];
 }
+interface FetchProgramsAllSuccessAction{
+    type: ProgramActionTypes.FETCH_ALL_PROGRAMS_SUCCESS;
+    payload: ProgramModel[];
+}
 interface FetchProgramsErrorAction{
     type: ProgramActionTypes.FETCH_PROGRAMS_ERROR;
     payload: string;
@@ -154,6 +183,7 @@ export type ProgramAction =
     FetchProgramsSuccessAction | 
     FetchProgramAction | 
     FetchProgramSuccessAction | 
+    FetchProgramsAllSuccessAction |
     FetchProgramErrorAction | 
     UploadProgramStartAction |
     UploadProgramSuccessAction |

@@ -39,7 +39,8 @@ const App = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');
     const privacyPath = routes.privacyPolicy.replaceAll('/', '');
     const termsOfUsePath = routes.termsOfUse.replaceAll('/', '');
-    return locationPath === privacyPath || locationPath === termsOfUsePath;
+    const allPrograms = routes.allPrograms.replaceAll('/', '');
+    return locationPath === privacyPath || locationPath === termsOfUsePath || locationPath === allPrograms;
   }
 
   return (
@@ -59,11 +60,8 @@ const App = () => {
           <Header/>
           <Main>
             <Switch>
-              <PrivateRoute exact path={routes.main}>
-                <UploadProgramPage showUploaded={false}/>
-              </PrivateRoute>
-              <PrivateRoute exact path={routes.uploadedPrograms}>
-                <UploadProgramPage showUploaded/>
+              <PrivateRoute exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
+                <UploadProgramPage/>
               </PrivateRoute>
               <PrivateRoute path={routes.editor} exact>
                 <EditorPage />

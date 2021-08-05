@@ -4,6 +4,7 @@ export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
 export const GEAR_LOCAL_WS_URI = isProd ? 'wss://idea.gear-tech.io/api/ws' : 'ws://localhost:3000/api/ws';
 export const GEAR_LOCAL_IDE_URI = isProd ? '//idea.gear-tech.io/ide' : 'http://localhost:3000/ide';
 export const JSONRPC_VERSION = '2.0';
+export const INITIAL_LIMIT_BY_PAGE = 13;
 
 export const GEAR_BALANCE_TRANSFER_VALUE = 4324239999999;
 
@@ -55,5 +56,10 @@ export const EDITOR_BTNS = {
   DOWNLOAD: 'DOWNLOAD',
   RUN: 'RUN',
   BUILD_RUN: 'BUILD_RUN',
+}
 
+export const SWITCH_PAGE_TYPES = {
+  UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
+  UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
+  ALL_PROGRAMS: 'ALL_PROGRAMS'
 }

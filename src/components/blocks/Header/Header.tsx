@@ -5,13 +5,16 @@ import { RootState } from 'store/reducers';
 
 import { routes } from 'routes';
 
-import { LogoIcon, LogoutIcon } from 'Icons';
+import { CodeIcon, NotificationIcon, LogoIcon, LogoutIcon } from 'Icons';
 
 import './Header.scss';
+import clsx from 'clsx';
 
 const Header = () => {
   const location = useLocation();
-  const showUser = location.pathname === routes.main || location.pathname === routes.uploadedPrograms;
+  const showUser = [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.notifications].indexOf(location.pathname) > -1;
+  const isNotifications = location.pathname === routes.notifications;
+  const isAllPrograms = location.pathname === routes.allPrograms;
 
   const { user } = useSelector((state: RootState) => state.user)
 
@@ -36,7 +39,20 @@ const Header = () => {
         <LogoIcon color={isMobileMenuOpened ? "#282828" : "#fff"}/>
       </div>
       {(showUser && 
-        <div className={`header__user-block user-block ${isMobileMenuOpened ? "show" : ""}`}>
+        <div className={clsx("header__user-block user-block", isMobileMenuOpened && "show")}>
+          <Link to={routes.allPrograms} className={clsx("user-block__programs", isAllPrograms && "selected")}
+            aria-label="menuLink"
+            onClick={handleMenuClick}>
+            <CodeIcon color={isAllPrograms ? "#ffffff" : "#858585"}/>
+            <span>Programs</span>
+          </Link>
+          <Link to={routes.notifications} className={clsx("user-block__notifications", isNotifications && "selected")}
+            aria-label="menuLink"
+            onClick={handleMenuClick}>
+            <NotificationIcon color={isNotifications ? "#ffffff" : "#858585"}/>
+            <span>Notifications</span>
+            <div className="notifications-count">99+</div>
+          </Link>
           <div className="user-block--wrapper">
             <img src={user?.photoUrl} alt="avatar"/>
             <span className="user-block__name">{userInfo}</span>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useLocation} from 'react-router-dom';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import { routes } from 'routes';
 
@@ -11,7 +11,7 @@ const Main: React.StatelessComponent<{}> = ({ children }) => {
     const location = useLocation();
     const lightColored = location.pathname !== routes.main && location.pathname !== routes.uploadedPrograms;
     return (
-        <main className={classNames('main', {'main--light-colored': lightColored})}>
+        <main className={clsx('main', lightColored && 'main--light-colored')}>
             {children}
         </main>
     );

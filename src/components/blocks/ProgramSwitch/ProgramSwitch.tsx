@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { Link, Redirect } from 'react-router-dom';
 
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
+import { SWITCH_PAGE_TYPES } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketService } from 'services/SocketService';
 import { RootState } from 'store/reducers';
@@ -13,11 +14,11 @@ import { EditorMenu } from 'components/blocks/EditorMenu';
 import Editor from 'images/editor_icon.svg';
 
 type ProgramSwitchType = {
-  showUploaded: boolean;
   socketService: SocketService;
+  pageType: string;
 };
 
-const ProgramSwitch = ({ showUploaded, socketService }: ProgramSwitchType) => {
+const ProgramSwitch = ({ socketService, pageType }: ProgramSwitchType) => {
 
   const dispatch = useDispatch();
 
@@ -96,15 +97,21 @@ const ProgramSwitch = ({ showUploaded, socketService }: ProgramSwitchType) => {
         <div className="switch-buttons">
           <Link
             to={routes.main}
-            className={classNames('switch-buttons__item', { 'switch-buttons__item--active': !showUploaded })}
+            className={clsx('switch-buttons__item', pageType === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && 'switch-buttons__item--active')}
           >
             Upload program
           </Link>
           <Link
             to={routes.uploadedPrograms}
-            className={classNames('switch-buttons__item', { 'switch-buttons__item--active': showUploaded })}
+            className={clsx('switch-buttons__item', pageType === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && 'switch-buttons__item--active')}
           >
             Recent uploaded programs
+          </Link>
+          <Link
+            to={routes.allPrograms}
+            className={clsx('switch-buttons__item', pageType === SWITCH_PAGE_TYPES.ALL_PROGRAMS && 'switch-buttons__item--active')}
+          >
+            All programs
           </Link>
         </div>
         <div className="switch-block--editor">

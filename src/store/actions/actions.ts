@@ -1,7 +1,7 @@
 import UserRequestService from 'services/UserRequestService';
 
 import { UserActionTypes, UserKeypairModel, UserKeypairInterface, UserModel, UserProfileInterface } from 'types/user';
-import { ProgramActionTypes, ProgramModel, ProgramsInterface, ProgramInterface, MessageStatusModel} from 'types/program';
+import { ProgramActionTypes, ProgramModel, ProgramsInterface, ProgramInterface, MessageStatusModel, ProgramsListInterface, UploadedProgramModel} from 'types/program';
 import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
@@ -9,6 +9,7 @@ import ProgramRequestService from 'services/ProgramsRequestService';
 import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes } from 'types/block';
 import { routes } from 'routes';
+import { PaginationParams } from 'types/common';
 
 const fetchTokenAction = () => ({type: UserActionTypes.FETCH_TOKEN});
 const fetchTokenSuccessAction = (payload: {}) => ({type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload});
@@ -26,6 +27,7 @@ export const transferBalanceSuccessAction = () => ({type: UserActionTypes.TRANSF
 
 const fetchProgramsAction = () => ({type: ProgramActionTypes.FETCH_PROGRAMS});
 const fetchProgramsSuccessAction = (payload: ProgramModel[]) => ({type: ProgramActionTypes.FETCH_PROGRAMS_SUCCESS, payload});
+const fetchAllProgramsSuccessAction = (payload: UploadedProgramModel[]) => ({type: ProgramActionTypes.FETCH_ALL_PROGRAMS_SUCCESS, payload});
 const fetchProgramsErrorAction = () => ({type: ProgramActionTypes.FETCH_PROGRAMS_ERROR});
 
 const fetchProgramAction = () => ({type: ProgramActionTypes.FETCH_PROGRAM});
@@ -124,6 +126,17 @@ export const getProgramsAction = () => (dispatch: any) => {
     })
     .catch(() => dispatch(fetchProgramsErrorAction()))
 }
+
+export const getProgramsListAction = (params: PaginationParams) => (dispatch: any) => {
+  dispatch(fetchProgramsAction());
+  programService
+    .fetchProgramsList(params)
+    .then((result: ProgramsListInterface) => {
+      dispatch(fetchAllProgramsSuccessAction(result.result.result));
+    })
+    .catch(() => dispatch(fetchProgramsErrorAction()))
+}
+
 
 export const getProgramAction = (hash: string) => (dispatch: any) => {
   dispatch(fetchProgramAction());

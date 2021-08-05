@@ -3,6 +3,8 @@ import { ProgramState, ProgramAction, ProgramActionTypes } from '../../types/pro
 
 const initialState: ProgramState = {
   programs: null,
+  allUploadedPrograms: null,
+  uploadedProgramsCount: 0,
   isProgramUploading: false,
   isMessageSending: false,
   programUploadingStatus: null,
@@ -20,6 +22,9 @@ const ProgramReducer = (state = initialState, action: ProgramAction): ProgramSta
 
     case ProgramActionTypes.FETCH_PROGRAMS_SUCCESS:
       return { ...state, loading: false, error: null, programs: action.payload.reverse() };
+
+    case ProgramActionTypes.FETCH_ALL_PROGRAMS_SUCCESS:
+      return { ...state, loading: false, error: null, allUploadedPrograms: action.payload.reverse() };
 
     case ProgramActionTypes.FETCH_PROGRAMS_ERROR:
       return { ...state, loading: false, error: action.payload, programs: null };
