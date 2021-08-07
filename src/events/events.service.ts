@@ -36,15 +36,20 @@ export class EventsService {
       return;
     }
     const program = await this.programService.getProgram(source);
+    console.log(program);
+    console.log('event');
+    console.log({ id, source, dest, payload, reply, date, type });
     if (program.expectedType) {
-      payload = await fromBytes(this.api, program.expectedType, payload);
+      payload = await fromBytes(program.expectedType, payload);
     }
+    console.log(payload);
     this.eventSubject.next({
       type: type,
       date: date,
       program: source,
       dest: dest,
       payload: payload,
+      reply: reply,
     });
     const event = this.eventRepository.create({
       id: id,

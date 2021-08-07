@@ -2,7 +2,6 @@ import { Logger } from '@nestjs/common';
 import { ApiPromise } from '@polkadot/api';
 import { Subject } from 'rxjs';
 import { GearNodeError } from 'sample-polkadotjs-typegen/json-rpc/errors';
-import { toU8a } from './utils';
 
 const logger = new Logger('EventsLogger');
 
@@ -34,7 +33,7 @@ async function getBlockEvents(api: ApiPromise, eventsSubject: Subject<any>) {
             source: res['source'],
             dest: res['dest'],
             payload: data['payload'],
-            reply: res['reply'][0],
+            reply: data['reply'] ? data['reply'][0] : null,
             date: new Date(),
           });
         });

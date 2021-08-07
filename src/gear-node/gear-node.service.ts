@@ -116,7 +116,7 @@ export class GearNodeService {
     }
 
     const binary = this.programService.parseWASM(data.file);
-    const code = await toBytes(this.api, 'bytes', Array.from(binary));
+    const code = await toBytes('bytes', Array.from(binary));
 
     const keyring = data.keyPairJson
       ? keyringFromJson(data.keyPairJson)
@@ -157,8 +157,9 @@ export class GearNodeService {
 
     let payload = data.initPayload;
     try {
-      payload = await toBytes(this.api, programData.initType, data.initPayload);
+      payload = await toBytes(programData.initType, data.initPayload);
     } catch (error) {
+      logger.error(error);
       if (error.toJson) throw error;
       else throw new InternalServerError();
     }
@@ -217,9 +218,8 @@ export class GearNodeService {
     let payload = messageData.payload;
     try {
       payload = await toBytes(
-        this.api,
         program.incomingType || 'utf8',
-        messageData.Payload,
+        messageData.payload,
       );
     } catch (error) {
       if (error.toJson) throw error;
@@ -279,7 +279,7 @@ export class GearNodeService {
     if (!program) {
       return 0;
     }
-    payload = await toBytes(this.api, program.incomingType, payload);
+    payload = await toBytes(program.incomingType, payload);
     let gasSpent = await this.api.rpc.gear.getGasSpent(hash, payload.toHex());
     return gasSpent.toNumber();
   }
