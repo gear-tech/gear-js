@@ -7,7 +7,7 @@ export default {
       payload: 'Vec<u8>',
       gas_limit: 'u64',
       value: 'u128',
-      reply: 'Option<H256>',
+      reply: 'Option<(H256, i32)>',
     },
     Node: {
       value: 'Message',
@@ -34,6 +34,9 @@ export default {
     },
     MessageError: {
       _enum: ['ValueTransfer', 'Dispatch'],
+    },
+    Reason: {
+      _enum: ['ValueTransfer', 'Dispatch', 'BlockGasLimitExceeded'],
     },
   },
 };

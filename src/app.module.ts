@@ -42,11 +42,11 @@ import { EventsModule } from './events/events.module';
     EventEmitterModule.forRoot(),
     RpcModule,
     WsRpcModule,
-    TelegrafModule.forRoot({
-      token: process.env.TELEGRAM_BOT_TOKEN,
-      include: [TelegramModule],
-    }),
-    TelegramModule,
+    // TelegrafModule.forRoot({
+    //   token: process.env.TELEGRAM_BOT_TOKEN,
+    //   include: [TelegramModule],
+    // }),
+    // TelegramModule,
     EventsModule,
   ],
   controllers: [AppController],

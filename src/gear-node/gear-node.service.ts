@@ -12,6 +12,8 @@ import {
 } from './keyring';
 import {
   GearNodeError,
+  GettingMetadataError,
+  InternalServerError,
   InvalidParamsError,
   ProgramNotFound,
 } from 'src/json-rpc/errors';
@@ -20,10 +22,13 @@ import { submitProgram } from './program.gear';
 import { sendMessage } from './message.gear';
 import definitions from 'sample-polkadotjs-typegen/interfaces/definitions';
 import { toBytes } from './utils';
-import { subscribetEvents } from './events';
+import { subscribeEvents } from './events';
 import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { EventsService } from 'sample-polkadotjs-typegen/events/events.service';
+import { getWasmMetadata } from './wasm.meta';
+
+const logger = new Logger('GearNodeService');
 @Injectable()
 export class GearNodeService {
   private provider: WsProvider;
@@ -31,6 +36,7 @@ export class GearNodeService {
   private blocksSubject: Subject<any>;
   private eventsSubject: Subject<any>;
   private userEventSubject: Subject<any>;
+  private types: any;
 
   constructor(
     private readonly userService: UsersService,
@@ -39,7 +45,7 @@ export class GearNodeService {
   ) {
     this.provider = new WsProvider(process.env.WS_PROVIDER);
     this.createApiPromise().then((api: ApiPromise) => {
-      subscribetEvents(api, ({ events, blocks }) => {
+      subscribeEvents(api, ({ events, blocks }) => {
         this.blocksSubject = blocks;
         this.eventsSubject = events;
         this.saveEvents();
@@ -48,18 +54,38 @@ export class GearNodeService {
     });
   }
 
-  private async createApiPromise() {
+  private createApiPromise() {
     return new Promise(async (resolve, reject) => {
       const types = Object.values(definitions).reduce(
         (res, types): object => ({ ...res, ...types }),
         {},
       );
+      this.types = types;
       this.api = await ApiPromise.create({
         provider: this.provider,
         types: {
           ...types,
         },
+        rpc: {
+          gear: {
+            getGasSpent: {
+              description: 'Get GasSpent',
+              params: [
+                {
+                  name: 'id',
+                  type: 'H256',
+                },
+                {
+                  name: 'payload',
+                  type: 'Bytes',
+                },
+              ],
+              type: 'u64',
+            },
+          },
+        },
       });
+      this.eventService.init(this.api, this.provider, this.types);
       resolve(this.api);
     });
   }
@@ -90,7 +116,7 @@ export class GearNodeService {
     }
 
     const binary = this.programService.parseWASM(data.file);
-    const code = toBytes(this.api, 'bytes', Array.from(binary));
+    const code = await toBytes(this.api, 'bytes', Array.from(binary));
 
     const keyring = data.keyPairJson
       ? keyringFromJson(data.keyPairJson)
@@ -99,19 +125,43 @@ export class GearNodeService {
       keyring.unlock();
     }
     const salt = data.salt || randomAsHex(20);
-
+    let meta = {
+      title: undefined,
+      init_input: undefined,
+      init_output: undefined,
+      input: undefined,
+      output: undefined,
+    };
+    if (data.meta) {
+      try {
+        meta = await getWasmMetadata(data.meta);
+        Object.keys(meta).forEach((elem) => {
+          meta[elem] = JSON.stringify(meta[elem]);
+        });
+      } catch (error) {
+        throw new GettingMetadataError();
+      }
+    }
     const programData = {
       user: user,
       name: data.filename,
       hash: null,
       blockHash: null,
       uploadedAt: null,
-      initType: data.initType || null,
-      expectedType: data.expectedType || null,
-      incomingType: data.incomingType || null,
+      title: meta.title || null,
+      initType: meta.init_input || data.initType || null,
+      initOutType: meta.init_output || data.initOutType || null,
+      incomingType: meta.input || data.incomingType || null,
+      expectedType: meta.output || data.expectedType || null,
     };
 
-    const payload = toBytes(this.api, data.initType, data.initPayload);
+    let payload = data.initPayload;
+    try {
+      payload = await toBytes(this.api, programData.initType, data.initPayload);
+    } catch (error) {
+      if (error.toJson) throw error;
+      else throw new InternalServerError();
+    }
 
     try {
       await submitProgram(
@@ -119,7 +169,7 @@ export class GearNodeService {
         keyring,
         code,
         salt,
-        payload || '0x00',
+        payload,
         data.gasLimit,
         data.value,
         programData,
@@ -165,10 +215,15 @@ export class GearNodeService {
     }
 
     let payload = messageData.payload;
-    if (program.incomingType) {
-      payload = toBytes(this.api, program.incomingType, messageData.payload);
-    } else {
-      payload = messageData.payload;
+    try {
+      payload = await toBytes(
+        this.api,
+        program.incomingType || 'utf8',
+        messageData.Payload,
+      );
+    } catch (error) {
+      if (error.toJson) throw error;
+      else throw new InternalServerError();
     }
 
     try {
@@ -217,6 +272,17 @@ export class GearNodeService {
   async getBalance(publicKey: string) {
     const { data: balance } = await this.api.query.system.account(publicKey);
     return { freeBalance: balance.free.toHuman() };
+  }
+
+  async getGasSpent(hash, payload) {
+    const program = await this.programService.getProgram(hash);
+    console.log(program);
+    if (!program) {
+      return 0;
+    }
+    payload = await toBytes(this.api, program.incomingType, payload);
+    let gasSpent = await this.api.rpc.gear.getGasSpent(hash, payload.toHex());
+    return gasSpent.toNumber();
   }
 
   async saveEvents() {

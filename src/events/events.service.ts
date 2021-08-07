@@ -1,14 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Subject } from 'rxjs';
-import { ProgramsService } from 'sample-polkadotjs-typegen/programs/programs.service';
-import { UsersService } from 'sample-polkadotjs-typegen/users/users.service';
+import { fromBytes } from 'src/gear-node/utils';
+import { ProgramsService } from 'src/programs/programs.service';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { NodeEvent } from './entities/event.entity';
 
 @Injectable()
 export class EventsService {
   eventSubject: Subject<any>;
+  api: ApiPromise;
+  provider: WsProvider;
+  types: any;
 
   constructor(
     private readonly userService: UsersService,
@@ -19,10 +24,20 @@ export class EventsService {
     this.eventSubject = new Subject();
   }
 
+  init(api: ApiPromise, provider: WsProvider, types: any) {
+    this.api = api;
+    this.provider = provider;
+    this.types = types;
+  }
+
   async log({ id, source, dest, payload, reply, date, type }) {
     const user = await this.userService.findOneByPublicKey(dest);
     if (!user) {
       return;
+    }
+    const program = await this.programService.getProgram(source);
+    if (program.expectedType) {
+      payload = await fromBytes(this.api, program.expectedType, payload);
     }
     this.eventSubject.next({
       type: type,

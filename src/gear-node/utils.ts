@@ -1,4 +1,4 @@
-import { ApiPromise } from '@polkadot/api';
+import { ApiPromise, WsProvider } from '@polkadot/api';
 import {
   bufferToU8a,
   hexToString,
@@ -12,13 +12,7 @@ import {
   u8aToHex,
   u8aToString,
 } from '@polkadot/util';
-
-export async function getNextBlock(api: ApiPromise, hash: string) {
-  const block = await api.rpc.chain.getHeader(hash);
-  const blockNumber = block.number.toNumber();
-  const nextBlockHash = await api.rpc.chain.getBlockHash(blockNumber + 1);
-  return nextBlockHash;
-}
+const CreateType = require('create-type');
 
 export function toHex(data) {
   if (isHex(data)) {
@@ -52,20 +46,38 @@ export function toU8a(data: any) {
   }
 }
 
-export function toBytes(api: ApiPromise, type: string, data: any) {
+export async function fromBytes(api: ApiPromise, type: string, payload: any) {
+  const result = await CreateType.fromBytes(
+    process.env.WS_PROVIDER,
+    type,
+    payload,
+  );
+  return result;
+}
+
+export async function toBytes(api: ApiPromise, type: string, data: any) {
   if (type && data) {
     if (type === 'bytes') {
       return api.createType('Bytes', data);
     } else if (['utf8', 'utf-8'].indexOf(type) !== -1) {
       return api.createType('Bytes', Array.from(toU8a(data)));
-    } else if (
-      ['i32', 'i64', 'f32', 'f64', 'u32', 'u64', 'u32', 'u64'].indexOf(type) !==
-      -1
-    ) {
+    } else if (type === 'i32' || type === 'i64') {
       return api.createType(
         'Bytes',
-        Array.from(this.api.createType(type, data).toU8a()),
+        Array.from(api.createType(type, data).toU8a()),
       );
+    } else if (type === 'u32' || type === 'u64') {
+      return api.createType(
+        'Bytes',
+        Array.from(api.createType(type, data).toU8a()),
+      );
+    } else {
+      const bytes = await CreateType.toBytes(
+        process.env.WS_PROVIDER,
+        type,
+        data,
+      );
+      return bytes;
     }
   }
 }

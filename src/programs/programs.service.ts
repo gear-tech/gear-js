@@ -24,7 +24,9 @@ export class ProgramsService {
     blockHash,
     name,
     uploadedAt,
+    title,
     initType,
+    initOutType,
     incomingType,
     expectedType,
   }) {
@@ -35,7 +37,9 @@ export class ProgramsService {
       user: user,
       uploadedAt: uploadedAt,
       programNumber: (await this.getLastProgramNumber(user)) + 1,
+      title,
       initType,
+      initOutType,
       incomingType,
       expectedType,
     });

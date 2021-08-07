@@ -1,0 +1,14 @@
+{
+  "name": "create-type",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@polkadot/api": "^4.5.1"
+  },
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "",
+  "license": "ISC"
+}

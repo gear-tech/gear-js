@@ -25,6 +25,9 @@ export class Program {
   uploadedAt: string;
 
   @Column({ nullable: true })
+  title: string;
+
+  @Column({ nullable: true })
   incomingType: string;
 
   @Column({ nullable: true })
@@ -32,4 +35,7 @@ export class Program {
 
   @Column({ nullable: true })
   initType: string;
+
+  @Column({ nullable: true })
+  initOutType: string;
 }

@@ -35,10 +35,7 @@ export class WsRpcMethods extends RpcMethods {
       try {
         total = await this.gearService.totalIssuance();
       } catch (error) {
-        cb({
-          code: -32002,
-          message: error.message,
-        });
+        cb({ code: -32002, message: error.message });
         return null;
       }
       cb(undefined, {
@@ -64,6 +61,20 @@ export class WsRpcMethods extends RpcMethods {
   message = {
     send: async (cb, user, params) => {
       await this.gearService.sendMessage(user, params, cb);
+      return null;
+    },
+    gasSpent: async (cb, user, params) => {
+      try {
+        const gasSpent = await this.gearService.getGasSpent(
+          params.destination,
+          params.payload,
+        );
+        cb(undefined, {
+          gasSpent: gasSpent,
+        });
+      } catch (error) {
+        cb({ code: -32002, message: error.message });
+      }
       return null;
     },
   };

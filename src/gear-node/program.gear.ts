@@ -30,7 +30,8 @@ export async function submitProgram(
       );
     } catch (error) {
       logger.error(error);
-      reject(new InvalidParamsError());
+      reject(new InvalidParamsError(error.message));
+      return;
     }
 
     try {
@@ -59,8 +60,10 @@ export async function submitProgram(
               if (error.isModule) {
                 const decoded = api.registry.findMetaError(error.asModule);
                 const { documentation, method, section } = decoded;
+                logger.error(`${documentation.join(' ')}`);
                 reject(new TransactionError(`${documentation.join(' ')}`));
               } else {
+                logger.error(`${error.toString()}`);
                 reject(new TransactionError(`${error.toString()}`));
               }
             },

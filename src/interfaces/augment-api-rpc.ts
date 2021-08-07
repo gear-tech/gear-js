@@ -699,6 +699,9 @@ declare module '@polkadot/rpc-core/types.jsonrpc' {
         (index: U256 | AnyNumber | Uint8Array) => Observable<bool>
       >;
     };
+    gear: {
+      getGasSpent: AugmentedRpc<(id, payload) => Observable<U64>>;
+    };
     grandpa: {
       /**
        * Prove finality for the range (begin; end] hash.
