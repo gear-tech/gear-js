@@ -5,6 +5,7 @@ import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import { InvalidParamsError } from 'src/json-rpc/errors';
 import { RpcMethods } from 'src/json-rpc/methods';
+import { EventsService } from 'sample-polkadotjs-typegen/events/events.service';
 
 @Injectable()
 export class HttpRpcMethods extends RpcMethods {
@@ -13,6 +14,7 @@ export class HttpRpcMethods extends RpcMethods {
     private readonly authService: AuthService,
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
+    private readonly eventService: EventsService,
   ) {
     super();
   }
@@ -63,8 +65,24 @@ export class HttpRpcMethods extends RpcMethods {
       return await this.programService.getProgram(params.hash);
     },
 
+    allUser: async (user, params?) => {
+      return await this.programService.getAllUserProgramsPagination(
+        user,
+        params,
+      );
+    },
+
     all: async (user, params?) => {
-      return await this.programService.getAllPrograms(user);
+      return await this.programService.getAllProgramsPagination(params);
+    },
+  };
+
+  event = {
+    all: async (user, params?) => {
+      return await this.eventService.getUserEventsPagination(user, params);
+    },
+    countUnread: async (user, params?) => {
+      return await this.eventService.getCountUnreadEvents(user);
     },
   };
 }

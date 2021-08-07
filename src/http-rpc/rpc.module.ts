@@ -6,9 +6,16 @@ import { HttpRpcMessageHandler } from './rpc.handler';
 import { UsersModule } from 'src/users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { ProgramsModule } from 'src/programs/programs.module';
+import { EventsModule } from 'sample-polkadotjs-typegen/events/events.module';
 
 @Module({
-  imports: [GearNodeModule, UsersModule, AuthModule, ProgramsModule],
+  imports: [
+    GearNodeModule,
+    UsersModule,
+    AuthModule,
+    ProgramsModule,
+    EventsModule,
+  ],
   providers: [HttpRpcMessageHandler, HttpRpcMethods],
   controllers: [RpcController],
 })

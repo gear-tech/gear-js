@@ -72,9 +72,22 @@ export class EventsService {
     }
   }
 
-  async getUserEvents(user) {
-    const events = await this.eventRepository.find({ destination: user });
-    return events;
+  async getUserEventsPagination(
+    user,
+    query,
+  ): Promise<{ events: NodeEvent[]; count: number }> {
+    const { limit, offset } = query;
+
+    const [result, total] = await this.eventRepository.findAndCount({
+      where: { destination: user },
+      take: limit || 13,
+      skip: offset || 0,
+    });
+
+    return {
+      events: result,
+      count: total,
+    };
   }
 
   async getCountUnreadEvents(user) {
