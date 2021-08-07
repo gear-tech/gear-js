@@ -85,6 +85,7 @@ export class EventsService {
     if (method === 'InitFailure') {
       this.programService.removeProgram(programHash);
     }
+    return this.eventRepository.save(event);
   }
 
   async getUserEventsPagination(
