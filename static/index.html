@@ -48,6 +48,9 @@
           <button type="submit" @click.prevent="getGasSpent()">
             Get GasSpent
           </button>
+          <button type="submit" @click.prevent="getPayloadType()">
+            Get Payload Type
+          </button>
           <button type="submit" @click.prevent="sendMessage()">
             Send Message
           </button>
@@ -218,6 +221,16 @@
               params: {
                 destination: this.$refs.destination.value,
                 payload: this.$refs.messagePayload.value,
+              },
+            });
+          },
+          getPayloadType() {
+            this.socket.emit('message', {
+              jsonrpc: '2.0',
+              id: 1232,
+              method: 'message.payloadType',
+              params: {
+                destination: this.$refs.destination.value,
               },
             });
           },

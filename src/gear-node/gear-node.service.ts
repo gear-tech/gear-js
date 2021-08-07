@@ -276,13 +276,20 @@ export class GearNodeService {
 
   async getGasSpent(hash, payload) {
     const program = await this.programService.getProgram(hash);
-    console.log(program);
     if (!program) {
       return 0;
     }
     payload = await toBytes(this.api, program.incomingType, payload);
     let gasSpent = await this.api.rpc.gear.getGasSpent(hash, payload.toHex());
     return gasSpent.toNumber();
+  }
+
+  async getPayloadType(hash) {
+    const program = await this.programService.getProgram(hash);
+    if (!program) {
+      throw new ProgramNotFound(hash);
+    }
+    return program.incomingType;
   }
 
   async saveEvents() {

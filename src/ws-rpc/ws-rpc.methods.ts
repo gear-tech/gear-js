@@ -77,6 +77,17 @@ export class WsRpcMethods extends RpcMethods {
       }
       return null;
     },
+    payloadType: async (cb, user, params) => {
+      try {
+        const type = await this.gearService.getPayloadType(params.destination);
+        cb(undefined, {
+          payloadType: type,
+        });
+      } catch (error) {
+        throw error;
+      }
+      return null;
+    },
   };
 
   events = {
