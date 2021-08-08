@@ -13,6 +13,7 @@ import { WsRpcModule } from './ws-rpc/ws-rpc.module';
 import { RpcModule } from './http-rpc/rpc.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { TelegramModule } from './telegram/telegram.module';
+import { IdeModule } from './ide/ide.module';
 import { EventsModule } from './events/events.module';
 
 @Module({
@@ -42,11 +43,12 @@ import { EventsModule } from './events/events.module';
     EventEmitterModule.forRoot(),
     RpcModule,
     WsRpcModule,
-    // TelegrafModule.forRoot({
-    //   token: process.env.TELEGRAM_BOT_TOKEN,
-    //   include: [TelegramModule],
-    // }),
-    // TelegramModule,
+    TelegrafModule.forRoot({
+      token: process.env.TELEGRAM_BOT_TOKEN,
+      include: [TelegramModule],
+    }),
+    TelegramModule,
+    IdeModule,
     EventsModule,
   ],
   controllers: [AppController],

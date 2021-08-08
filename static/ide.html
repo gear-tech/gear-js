@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>IDE</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-simple-notify/dist/vue-simple-notify.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+
+  <body>
+    <main id="v-app">
+      <section class="chat">
+        <h1>IDE Test</h1>
+        Authorization Token (Bearer)
+        <input
+          type="text"
+          name="jwt"
+          ref="token"
+          v-on:change="jwtTokenChange()"
+        />
+        <button @click.prevent="connect()">Connect</button>
+
+        <div class="programs">
+          <h3>Send zip archive with rust project:</h3>
+          <form>
+            Project name: <input type="text" ref="projectName" /><br />
+            <input
+              type="file"
+              accept="application/zip"
+              name="project"
+              ref="file"
+              v-on:change="handleFileUpload()"
+            /><br />
+            <button type="submit" @click.prevent="sendArchive()">Send</button>
+          </form>
+          <hr />
+        </div>
+      </section>
+    </main>
+    <script>
+      Vue.component('alerts-component', VueSimpleNotify.VueSimpleNotify);
+      var app = new Vue({
+        el: '#v-app',
+        data: {
+          file: '',
+          blocks: [],
+          programs: [],
+          token: '',
+          totalIssuance: '',
+          socket: null,
+        },
+        methods: {
+          connect() {
+            console.log('connecting');
+            this.socket = io('http://localhost:3000/ide', {
+              query: { Authorization: this.token },
+            });
+            this.socket.on('build', (event) => {
+              if (event.file) {
+                var blob = new Blob([event.file], { type: 'application/zip' });
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = 'test.zip';
+                link.click();
+              }
+            });
+          },
+          jwtTokenChange() {
+            this.token = this.$refs.token.value;
+          },
+          sendArchive() {
+            this.socket.emit('build', {
+              file: this.file,
+              projectName: this.$refs.projectName.value,
+            });
+          },
+          handleFileUpload() {
+            this.file = this.$refs.file.files[0];
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -9,7 +9,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { WsAuthGuard } from 'src/ws-rpc/guards/ws-auth.guard';
+import { WsAuthGuard } from 'src/auth/guards/ws-auth.guard';
 import { WsRpcMessageHandler } from './ws-rpc.handler';
 import { Socket, Server } from 'socket.io';
 import { WsExceptionFilter } from './ws-rpc.exceptions';
