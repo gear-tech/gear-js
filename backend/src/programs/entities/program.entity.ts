@@ -22,7 +22,7 @@ export class Program {
   callCount: number;
 
   @Column()
-  uploadedAt: string;
+  uploadedAt: Date;
 
   @Column({ nullable: true })
   title: string;

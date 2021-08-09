@@ -116,7 +116,12 @@ export class GearNodeService {
     }
 
     const binary = this.programService.parseWASM(data.file);
-    const code = await toBytes('bytes', Array.from(binary));
+    let code = null
+    try {
+      code = await toBytes('bytes', Array.from(binary));
+    } catch (error) {
+      throw new InvalidParamsError('Can\'t encode program to bytes')
+    }
 
     const keyring = data.keyPairJson
       ? keyringFromJson(data.keyPairJson)

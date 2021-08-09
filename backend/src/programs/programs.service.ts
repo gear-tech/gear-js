@@ -58,32 +58,34 @@ export class ProgramsService {
     return userPrograms[userPrograms.length - 1].programNumber;
   }
 
-  async getAllUserProgramsPagination(
+  async getAllUserPrograms(
     user,
-    query,
+    limit?, offset?
   ): Promise<{ programs: Program[]; count: number }> {
-    const { limit, offset } = query;
-
     const [result, total] = await this.programRepository.findAndCount({
       where: { user: user },
       take: limit || 13,
       skip: offset || 0,
-    });
-
+      order: {
+        uploadedAt: 'DESC'
+      }
+    })
+    
     return {
       programs: result,
       count: total,
     };
   }
 
-  async getAllProgramsPagination(
-    query,
+  async getAllPrograms(
+    limit?, offset?
   ): Promise<{ programs: Program[]; count: number }> {
-    const { limit, offset } = query;
-
     const [result, total] = await this.programRepository.findAndCount({
       take: limit || 13,
       skip: offset || 0,
+      order: {
+        uploadedAt: 'DESC'
+      }
     });
 
     return {

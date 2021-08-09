@@ -38,7 +38,7 @@ export async function submitProgram(
       await program.signAndSend(keyring, ({ events, status }) => {
         if (status.isInBlock) {
           programData.blockHash = status.asInBlock.toHex();
-          programData.uploadedAt = new Date().toString();
+          programData.uploadedAt = new Date();
         } else if (status.isFinalized) {
           programData.blockHash = status.asFinalized.toHex();
         }

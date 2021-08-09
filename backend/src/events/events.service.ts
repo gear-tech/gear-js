@@ -44,6 +44,7 @@ export class EventsService {
     }
     console.log(payload);
     this.eventSubject.next({
+      id: id,
       type: type,
       date: date,
       program: source,
@@ -73,6 +74,7 @@ export class EventsService {
     }
 
     this.eventSubject.next({
+      id: programHash,
       type: method,
       date: date,
       program: programHash,
@@ -93,16 +95,18 @@ export class EventsService {
     return this.eventRepository.save(event);
   }
 
-  async getUserEventsPagination(
+  async getUserEvents(
     user,
-    query,
+    limit?,
+    offset?,
   ): Promise<{ events: NodeEvent[]; count: number }> {
-    const { limit, offset } = query;
-
     const [result, total] = await this.eventRepository.findAndCount({
       where: { destination: user },
       take: limit || 13,
       skip: offset || 0,
+      order: {
+        date: 'DESC',
+      },
     });
 
     return {
@@ -117,5 +121,35 @@ export class EventsService {
       isRead: false,
     });
     return events.length;
+  }
+
+  async readEvent(user, id) {
+    const event = await this.eventRepository.findOne({
+      destination: user,
+      id: id,
+    });
+    if (event) {
+      event.isRead = true;
+      this.eventRepository.save(event);
+    }
+    return 0;
+  }
+
+  async programEvent(user, programHash, limit?, offset?) {
+    const program = await this.programService.getProgram(programHash);
+    if (!program) {
+      return null;
+    }
+    const events = await this.eventRepository.find({
+      where: { program: program, destination: user },
+      select: ['id', 'date', 'isRead', 'payload', 'type'],
+      order: {
+        date: 'DESC',
+      },
+      take: limit || 13,
+      skip: offset || 0,
+    });
+
+    return events;
   }
 }

@@ -66,23 +66,42 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     allUser: async (user, params?) => {
-      return await this.programService.getAllUserProgramsPagination(
+      return await this.programService.getAllUserPrograms(
         user,
-        params,
+        params ? params.limit : null,
+        params ? params.offset : null,
       );
     },
 
     all: async (user, params?) => {
-      return await this.programService.getAllProgramsPagination(params);
+      return await this.programService.getAllPrograms(
+        params ? params.limit : null,
+        params ? params.offset : null,
+      );
     },
   };
 
   event = {
     all: async (user, params?) => {
-      return await this.eventService.getUserEventsPagination(user, params);
+      return await this.eventService.getUserEvents(
+        user,
+        params ? params.limit : null,
+        params ? params.offset : null,
+      );
     },
     countUnread: async (user, params?) => {
       return await this.eventService.getCountUnreadEvents(user);
+    },
+    program: async (user, params) => {
+      if (!params){
+        throw new InvalidParamsError()
+      }
+      return await this.eventService.programEvent(
+        user,
+        params.programHash,
+        params.limit,
+        params.offset,
+      );
     },
   };
 }

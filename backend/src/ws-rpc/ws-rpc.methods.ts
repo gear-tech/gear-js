@@ -2,10 +2,14 @@ import { GearNodeService } from 'src/gear-node/gear-node.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { RpcMethods } from 'src/json-rpc/methods';
 import { InvalidParamsError } from 'src/json-rpc/errors';
+import { EventsService } from 'sample-polkadotjs-typegen/events/events.service';
 
 @Injectable()
 export class WsRpcMethods extends RpcMethods {
-  constructor(private readonly gearService: GearNodeService) {
+  constructor(
+    private readonly gearService: GearNodeService,
+    private readonly eventService: EventsService,
+  ) {
     super();
   }
 
@@ -94,6 +98,9 @@ export class WsRpcMethods extends RpcMethods {
     subscribe: async (cb, user) => {
       const unsub = await this.gearService.subscribeEvents(user, cb);
       return unsub;
+    },
+    read: async (cb, user, params) => {
+      await this.eventService.readEvent(user, params.id);
     },
   };
 }

@@ -2,7 +2,6 @@ const { ApiPromise, WsProvider } = require('@polkadot/api');
 const { stringToU8a } = require('@polkadot/util');
 
 exports.toBytes = async (wsProviderAddress, type, data) => {
-  process.on('error');
   if (!type || !data) {
     return data;
   }
@@ -11,8 +10,6 @@ exports.toBytes = async (wsProviderAddress, type, data) => {
     type = toJSON(`{"Custom": ${type}}`);
     api = await ApiPromise.create({
       provider: new WsProvider(wsProviderAddress),
-      throwOnUnknown: false,
-      throwOnConnect: true,
       types: {
         ...type,
       },
@@ -24,8 +21,6 @@ exports.toBytes = async (wsProviderAddress, type, data) => {
   } else {
     api = await ApiPromise.create({
       provider: new WsProvider(wsProviderAddress),
-      throwOnUnknown: false,
-      throwOnConnect: true,
     });
     if (['string', 'utf8', 'utf-8'].includes(type.toLowerCase())) {
       return api.createType('Bytes', Array.from(stringToU8a(data)));
@@ -71,7 +66,9 @@ function isJSON(data) {
     JSON.parse(data);
   } catch (error) {
     try {
-      JSON.stringify(data);
+      if (JSON.stringify(data)[0] !== '{') {
+        return false
+      };
     } catch (error) {
       return false;
     }
@@ -84,11 +81,6 @@ function toJSON(data) {
   try {
     return JSON.parse(data);
   } catch (error) {
-    try {
-      JSON.stringify(data);
-    } catch (error) {
-      return null;
-    }
     return data;
   }
 }
