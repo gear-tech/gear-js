@@ -103,6 +103,52 @@
         "uploadedAt"
       ]
     },
+    "event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Event id",
+          "examples": [
+            "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "description": "Event type",
+          "examples": ["Log", "ProgramInitialized"]
+        },
+        "date": {
+          "type": "string",
+          "description": "Date and time of event",
+          "examples": ["2021-08-09T12:07:54.064Z"]
+        },
+        "program": {
+          "type": "string",
+          "description": "Program hash",
+          "examples": [
+            "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+          ]
+        },
+        "dest": {
+          "type": "string",
+          "description": "Destination (user publicKey)",
+          "examples": [
+            "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+          ]
+        },
+        "payload": {
+          "type": "string",
+          "description": "Message payload",
+          "examples": ["PONG"]
+        },
+        "reply": {
+          "type": "string",
+          "description": "Message id to which the response was received"
+        },
+        "required": ["id", "type", "date", "program", "dest"]
+      }
+    },
     "errors": {
       "invalidMethodParams": {
         "description": "The provided method parameters are invalid",
@@ -280,12 +326,53 @@
       ]
     },
 
+    "program.allUser": {
+      "summary": "Getting all user's uploaded program",
+      "tags": ["Program", "Http"],
+      "result": {
+        "type": "array",
+        "items": [{ "$ref": "#/definitions/program" }]
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
     "program.all": {
       "summary": "Getting all uploaded program",
       "tags": ["Program", "Http"],
       "result": {
         "type": "array",
         "items": [{ "$ref": "#/definitions/program" }]
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
+    "event.all": {
+      "summary": "Getting all user's events",
+      "tags": ["Events", "Http"],
+      "result": {
+        "type": "array",
+        "items": [{ "$ref": "#/definitions/event" }]
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
+    "event.countUnread": {
+      "summary": "Getting count of unread events",
+      "tags": ["Events", "Http"],
+      "result": {
+        "type": "number",
+        "description": "Count unread events",
+        "examples": 10
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
+    },
+
+    "event.program": {
+      "summary": "Getting events, which was received from the program",
+      "tags": ["Events", "Http"],
+      "result": {
+        "type": "array",
+        "items": [{ "$ref": "#/definitions/event" }]
       },
       "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
     },
@@ -509,6 +596,108 @@
         { "$ref": "#/definitions/errors/unathorized" },
         { "$ref": "#/definitions/errors/invalidMethodParams" },
         { "$ref": "#/definitions/errors/transactionError" }
+      ]
+    },
+    "message.gasSpent": {
+      "summary": "Getting minimal gaslLimit for payload for the program",
+      "tags": ["Message", "WebSocket"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "destination": {
+            "type": "string",
+            "description": "Program destination address (hex)",
+            "examples": [
+              "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+            ]
+          },
+          "payload": {
+            "type": "string",
+            "description": "Init payload",
+            "examples": ["PING"]
+          }
+        },
+        "required": ["destination", "payload"]
+      },
+      "result": {
+        "type": "object",
+        "properties": {
+          "gasSpent": {
+            "type": "number",
+            "description": "GasSpent",
+            "examples": [123213312]
+          },
+          "required": ["gasSpent"]
+        }
+      },
+      "errors": [
+        { "$ref": "#/definitions/errors/unathorized" },
+        { "$ref": "#/definitions/errors/invalidMethodParams" }
+      ]
+    },
+    "message.payloadType": {
+      "summary": "Getting payload type",
+      "tags": ["Message", "WebSocket"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "destination": {
+            "type": "string",
+            "description": "Program destination address (hex)",
+            "examples": [
+              "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+            ]
+          }
+        },
+        "required": ["destination"]
+      },
+      "result": {
+        "type": "object",
+        "properties": {
+          "payloadType": {
+            "type": "string",
+            "description": "Payload type",
+            "examples": ["{\"value\": \"u64\", \"annotation\": \"String\"}"]
+          },
+          "required": ["payloadType"]
+        }
+      },
+      "errors": [
+        { "$ref": "#/definitions/errors/unathorized" },
+        { "$ref": "#/definitions/errors/invalidMethodParams" }
+      ]
+    },
+    "events.subscribe": {
+      "summary": "Subscribe to events",
+      "tags": ["Events", "WebSocket"],
+      "result": {
+        "type": "object",
+        "$ref": "#/definitions/event"
+      },
+      "errors": [
+        { "$ref": "#/definitions/errors/unathorized" },
+        { "$ref": "#/definitions/errors/invalidMethodParams" }
+      ]
+    },
+    "events.read": {
+      "summary": "Mark event as read",
+      "tags": ["Events", "WebSocket"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Event id",
+            "examples": [
+              "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+            ]
+          }
+        },
+        "required": ["destination"]
+      },
+      "errors": [
+        { "$ref": "#/definitions/errors/unathorized" },
+        { "$ref": "#/definitions/errors/invalidMethodParams" }
       ]
     }
   }

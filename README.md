@@ -5,12 +5,11 @@
   </a>
 </p>
 
-<br/>
-
 ## Description
 
 ### backend
-Gear tech API based on nodejs [Nest](https://github.com/nestjs/nest) framework uses TypeScript.
+Gear JSONRPC API
+Refer to the [API](https://github.com/gear-tech/backend/tree/master/backend) docs for details.
 
 ### ide-backend
 Service for compiling rust project to wasm
