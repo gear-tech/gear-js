@@ -1,71 +1,94 @@
 const { ApiPromise, WsProvider } = require('@polkadot/api');
-const { isString, stringToU8a } = require('@polkadot/util');
+const { stringToU8a } = require('@polkadot/util');
 
 exports.toBytes = async (wsProviderAddress, type, data) => {
-  let api;
+  process.on('error');
   if (!type || !data) {
     return data;
   }
+  let api;
   if (isJSON(type)) {
-    type = JSON.parse(`{"Custom": ${type}}`);
+    type = toJSON(`{"Custom": ${type}}`);
     api = await ApiPromise.create({
       provider: new WsProvider(wsProviderAddress),
+      throwOnUnknown: false,
+      throwOnConnect: true,
       types: {
         ...type,
       },
     });
-    result = api.createType(
+    return api.createType(
       'Bytes',
-      Array.from(api.createType('Custom', JSON.parse(data)).toU8a()),
+      Array.from(api.createType('Custom', toJSON(data)).toU8a()),
     );
-    return result;
   } else {
     api = await ApiPromise.create({
       provider: new WsProvider(wsProviderAddress),
+      throwOnUnknown: false,
+      throwOnConnect: true,
     });
     if (['string', 'utf8', 'utf-8'].includes(type.toLowerCase())) {
-      result = api.createType('Bytes', Array.from(stringToU8a(data)));
+      return api.createType('Bytes', Array.from(stringToU8a(data)));
     } else if (type.toLowerCase() === 'bytes') {
-      result = api.createType('Bytes', data);
+      return api.createType('Bytes', data);
     } else {
-      result = api.createType(
+      return api.createType(
         'Bytes',
         Array.from(api.createType(type, data).toU8a()),
       );
     }
-    return result;
   }
 };
 
 exports.fromBytes = async (wsProviderAddress, type, data) => {
-  let types = null;
+  if (!type || !data) {
+    return data;
+  }
   let api;
-  let result = null;
-  try {
-    types = JSON.parse(`{"Custom": ${type}}`);
-  } catch (error) {}
-  if (types) {
+  if (isJSON(type)) {
+    type = toJSON(`{"Custom": ${type}}`);
     api = await ApiPromise.create({
       provider: new WsProvider(wsProviderAddress),
+      throwOnUnknown: false,
+      throwOnConnect: true,
       types: {
-        ...types,
+        ...type,
       },
     });
-    result = api.createType('Custom', data);
+    return api.createType('Custom', data);
   } else {
     api = await ApiPromise.create({
       provider: new WsProvider(wsProviderAddress),
+      throwOnUnknown: false,
+      throwOnConnect: true,
     });
-    result = api.createType(type, data);
+    return api.createType(type, data);
   }
-  return result;
 };
 
 function isJSON(data) {
   try {
     JSON.parse(data);
   } catch (error) {
-    return false;
+    try {
+      JSON.stringify(data);
+    } catch (error) {
+      return false;
+    }
+    return true;
   }
   return true;
+}
+
+function toJSON(data) {
+  try {
+    return JSON.parse(data);
+  } catch (error) {
+    try {
+      JSON.stringify(data);
+    } catch (error) {
+      return null;
+    }
+    return data;
+  }
 }
