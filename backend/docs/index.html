@@ -124,13 +124,10 @@
                 <a class="nav-link" href="#program_all">program.all</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#event_all">event.all</a>
+                <a class="nav-link" href="#message_all">message.all</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#event_countUnread">event.countUnread</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#event_program">event.program</a>
+                <a class="nav-link" href="#message_countUnread">message.countUnread</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#balance_transfer">balance.transfer</a>
@@ -157,7 +154,7 @@
                 <a class="nav-link" href="#events_subscribe">events.subscribe</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#events_read">events.read</a>
+                <a class="nav-link" href="#message_markAsRead">message.markAsRead</a>
               </li>
             </ul>
           </nav>
@@ -833,6 +830,42 @@
                           <td></td>
                           <td>Date when program was uploaded</td>
                         </tr>
+                        <tr>
+                          <td>result?.title</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Title of program from metadata</td>
+                        </tr>
+                        <tr>
+                          <td>result?.incomingType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of expected message</td>
+                        </tr>
+                        <tr>
+                          <td>result?.expectedType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of reponse message</td>
+                        </tr>
+                        <tr>
+                          <td>result?.initType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of initializing message</td>
+                        </tr>
+                        <tr>
+                          <td>result?.initOutType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of message responding to the initializing message</td>
+                        </tr>
+                        <tr>
+                          <td>result.initStatus</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Program initializtaion status</td>
+                        </tr>
                       </table>
                     </div>
                     
@@ -880,7 +913,8 @@
     "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
     "name": "demo.wasm",
     "callCount": 3,
-    "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)"
+    "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
+    "initStatus": "in progress"
   }
 }</pre>
                   </div>
@@ -972,6 +1006,42 @@
                           <td></td>
                           <td>Date when program was uploaded</td>
                         </tr>
+                        <tr>
+                          <td>result[0]?.title</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Title of program from metadata</td>
+                        </tr>
+                        <tr>
+                          <td>result[0]?.incomingType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of expected message</td>
+                        </tr>
+                        <tr>
+                          <td>result[0]?.expectedType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of reponse message</td>
+                        </tr>
+                        <tr>
+                          <td>result[0]?.initType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of initializing message</td>
+                        </tr>
+                        <tr>
+                          <td>result[0]?.initOutType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of message responding to the initializing message</td>
+                        </tr>
+                        <tr>
+                          <td>result[0].initStatus</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Program initializtaion status</td>
+                        </tr>
                       </table>
                     </div>
                     
@@ -1012,7 +1082,8 @@
       "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
       "name": "demo.wasm",
       "callCount": 3,
-      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)"
+      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
+      "initStatus": "in progress"
     }
   ]
 }</pre>
@@ -1105,6 +1176,42 @@
                           <td></td>
                           <td>Date when program was uploaded</td>
                         </tr>
+                        <tr>
+                          <td>result[0]?.title</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Title of program from metadata</td>
+                        </tr>
+                        <tr>
+                          <td>result[0]?.incomingType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of expected message</td>
+                        </tr>
+                        <tr>
+                          <td>result[0]?.expectedType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of reponse message</td>
+                        </tr>
+                        <tr>
+                          <td>result[0]?.initType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of initializing message</td>
+                        </tr>
+                        <tr>
+                          <td>result[0]?.initOutType</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Type of message responding to the initializing message</td>
+                        </tr>
+                        <tr>
+                          <td>result[0].initStatus</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Program initializtaion status</td>
+                        </tr>
                       </table>
                     </div>
                     
@@ -1145,7 +1252,8 @@
       "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
       "name": "demo.wasm",
       "callCount": 3,
-      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)"
+      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
+      "initStatus": "in progress"
     }
   ]
 }</pre>
@@ -1154,24 +1262,24 @@
               </div>
             </div>
           </div>
-          <div class="card method" id="event_all">
+          <div class="card method" id="message_all">
             <div
               class="card-header text-light bg-dark"
               data-toggle="collapse"
-              href="#event_all-content"
+              href="#message_all-content"
             >
               <h4>
-                <span>event.all</span>
+                <span>message.all</span>
 
                 <div class="float-right">
-                  <span class="badge badge-light">Events</span>
+                  <span class="badge badge-light">Messages</span>
                   <span class="badge badge-light">Http</span>
                 </div>
               </h4>
             </div>
 
-            <div class="card-block collapse show" id="event_all-content">
-              <p>Getting all user&#39;s events</p>
+            <div class="card-block collapse show" id="message_all-content">
+              <p>Getting all user&#39;s messages</p>
               
 
               <hr />
@@ -1180,6 +1288,23 @@
                 <div class="row">
                   <div class="col-8 border-right">
 
+                    <h5>Parameters</h5>
+                    <div class="table-responsive">
+                      <table class="table table-striped table-hover table-sm">
+                        <tr>
+                          <th>Name</th>
+                          <th>Type</th>
+                          <th>Constraints</th>
+                          <th>Description</th>
+                        </tr>
+                        <tr>
+                          <td>params</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      </table>
+                    </div>
                     
                     <h5>Result</h5>
                     <div class="table-responsive">
@@ -1206,19 +1331,19 @@
                           <td>result[0]?.id</td>
                           <td>string</td>
                           <td></td>
-                          <td>Event id</td>
+                          <td>Message id</td>
                         </tr>
                         <tr>
-                          <td>result[0]?.type</td>
+                          <td>result[0]?.responseId</td>
                           <td>string</td>
                           <td></td>
-                          <td>Event type</td>
+                          <td>Response type</td>
                         </tr>
                         <tr>
                           <td>result[0]?.date</td>
                           <td>string</td>
                           <td></td>
-                          <td>Date and time of event</td>
+                          <td>Date and time of message</td>
                         </tr>
                         <tr>
                           <td>result[0]?.program</td>
@@ -1227,7 +1352,7 @@
                           <td>Program hash</td>
                         </tr>
                         <tr>
-                          <td>result[0]?.dest</td>
+                          <td>result[0]?.destination</td>
                           <td>string</td>
                           <td></td>
                           <td>Destination (user publicKey)</td>
@@ -1239,10 +1364,16 @@
                           <td>Message payload</td>
                         </tr>
                         <tr>
-                          <td>result[0]?.reply</td>
+                          <td>result[0]?.response</td>
                           <td>string</td>
                           <td></td>
-                          <td>Message id to which the response was received</td>
+                          <td>Response payload</td>
+                        </tr>
+                        <tr>
+                          <td>result[0]?.isRead</td>
+                          <td>boolean</td>
+                          <td></td>
+                          <td>Has the message been read</td>
                         </tr>
                         <tr>
                           <td>result[0]?.required</td>
@@ -1276,7 +1407,7 @@
                     <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "event.all"
+  "method": "message.all"
 }</pre>
 
                     <h5>Response example</h5>
@@ -1286,11 +1417,13 @@
   "result": [
     {
       "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "type": "Log",
+      "responseId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
       "date": "2021-08-09T12:07:54.064Z",
       "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "dest": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "payload": "PONG"
+      "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
+      "payload": "PING",
+      "response": "PONG",
+      "isRead": false
     }
   ]
 }</pre>
@@ -1299,24 +1432,24 @@
               </div>
             </div>
           </div>
-          <div class="card method" id="event_countUnread">
+          <div class="card method" id="message_countUnread">
             <div
               class="card-header text-light bg-dark"
               data-toggle="collapse"
-              href="#event_countUnread-content"
+              href="#message_countUnread-content"
             >
               <h4>
-                <span>event.countUnread</span>
+                <span>message.countUnread</span>
 
                 <div class="float-right">
-                  <span class="badge badge-light">Events</span>
+                  <span class="badge badge-light">Messages</span>
                   <span class="badge badge-light">Http</span>
                 </div>
               </h4>
             </div>
 
-            <div class="card-block collapse show" id="event_countUnread-content">
-              <p>Getting count of unread events</p>
+            <div class="card-block collapse show" id="message_countUnread-content">
+              <p>Getting count of unread messages</p>
               
 
               <hr />
@@ -1367,158 +1500,13 @@
                     <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "event.countUnread"
+  "method": "message.countUnread"
 }</pre>
 
                     <h5>Response example</h5>
                     <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890"
-}</pre>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card method" id="event_program">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#event_program-content"
-            >
-              <h4>
-                <span>event.program</span>
-
-                <div class="float-right">
-                  <span class="badge badge-light">Events</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
-
-            <div class="card-block collapse show" id="event_program-content">
-              <p>Getting events, which was received from the program</p>
-              
-
-              <hr />
-
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
-
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>array</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result[0]</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.id</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Event id</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.type</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Event type</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.date</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Date and time of event</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.program</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program hash</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.dest</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Destination (user publicKey)</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.payload</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Message payload</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.reply</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Message id to which the response was received</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.required</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
-
-                  </div>
-
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "event.program"
-}</pre>
-
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": [
-    {
-      "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "type": "Log",
-      "date": "2021-08-09T12:07:54.064Z",
-      "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "dest": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "payload": "PONG"
-    }
-  ]
 }</pre>
                   </div>
                 </div>
@@ -2514,46 +2502,40 @@
                           <td></td>
                         </tr>
                         <tr>
-                          <td>result?.id</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Event id</td>
-                        </tr>
-                        <tr>
-                          <td>result?.type</td>
+                          <td>result?.event</td>
                           <td>string</td>
                           <td></td>
                           <td>Event type</td>
+                        </tr>
+                        <tr>
+                          <td>result?.id</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Message id (Log)</td>
+                        </tr>
+                        <tr>
+                          <td>result?.program</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Program hash (Log, InitSuccess, InitFailed)</td>
+                        </tr>
+                        <tr>
+                          <td>result?.response</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Response payload (Log)</td>
+                        </tr>
+                        <tr>
+                          <td>result?.programName</td>
+                          <td>string</td>
+                          <td></td>
+                          <td>Name of uploaded program (InitSuccess, InitFailed)</td>
                         </tr>
                         <tr>
                           <td>result?.date</td>
                           <td>string</td>
                           <td></td>
                           <td>Date and time of event</td>
-                        </tr>
-                        <tr>
-                          <td>result?.program</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program hash</td>
-                        </tr>
-                        <tr>
-                          <td>result?.dest</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Destination (user publicKey)</td>
-                        </tr>
-                        <tr>
-                          <td>result?.payload</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Message payload</td>
-                        </tr>
-                        <tr>
-                          <td>result?.reply</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Message id to which the response was received</td>
                         </tr>
                         <tr>
                           <td>result?.required</td>
@@ -2600,12 +2582,12 @@
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
+    "event": "Log",
     "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "type": "Log",
-    "date": "2021-08-09T12:07:54.064Z",
     "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "dest": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "payload": "PONG"
+    "response": "PONG",
+    "programName": "demo_ping",
+    "date": "2021-08-09T12:07:54.064Z"
   }
 }</pre>
                   </div>
@@ -2613,24 +2595,24 @@
               </div>
             </div>
           </div>
-          <div class="card method" id="events_read">
+          <div class="card method" id="message_markAsRead">
             <div
               class="card-header text-light bg-dark"
               data-toggle="collapse"
-              href="#events_read-content"
+              href="#message_markAsRead-content"
             >
               <h4>
-                <span>events.read</span>
+                <span>message.markAsRead</span>
 
                 <div class="float-right">
-                  <span class="badge badge-light">Events</span>
+                  <span class="badge badge-light">Messages</span>
                   <span class="badge badge-light">WebSocket</span>
                 </div>
               </h4>
             </div>
 
-            <div class="card-block collapse show" id="events_read-content">
-              <p>Mark event as read</p>
+            <div class="card-block collapse show" id="message_markAsRead-content">
+              <p>Mark message as read</p>
               
 
               <hr />
@@ -2658,7 +2640,7 @@
                           <td>params?.id</td>
                           <td>string</td>
                           <td></td>
-                          <td>Event id</td>
+                          <td>Message id</td>
                         </tr>
                       </table>
                     </div>
@@ -2692,7 +2674,7 @@
                     <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "events.read",
+  "method": "message.markAsRead",
   "params": {
     "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
   }

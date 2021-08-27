@@ -962,7 +962,7 @@ import type {
   Message,
   MessageError,
   Node,
-} from 'sample-polkadotjs-typegen/interfaces/default';
+} from 'src/interfaces/default';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {

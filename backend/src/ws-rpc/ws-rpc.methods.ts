@@ -2,13 +2,14 @@ import { GearNodeService } from 'src/gear-node/gear-node.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { RpcMethods } from 'src/json-rpc/methods';
 import { InvalidParamsError } from 'src/json-rpc/errors';
-import { EventsService } from 'sample-polkadotjs-typegen/events/events.service';
+import { MessagesService } from 'src/messages/messages.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class WsRpcMethods extends RpcMethods {
   constructor(
     private readonly gearService: GearNodeService,
-    private readonly eventService: EventsService,
+    private readonly messageService: MessagesService,
   ) {
     super();
   }
@@ -19,6 +20,14 @@ export class WsRpcMethods extends RpcMethods {
     upload: async (cb, user, params) => {
       try {
         await this.gearService.uploadProgram(user, params, cb);
+      } catch (error) {
+        throw error;
+      }
+      return null;
+    },
+    addMeta: async (cb, user, params) => {
+      try {
+        await this.gearService.addMetadata(user, params, cb);
       } catch (error) {
         throw error;
       }
@@ -92,15 +101,16 @@ export class WsRpcMethods extends RpcMethods {
       }
       return null;
     },
+
+    markAsRead: async (cb, user: User, params: any) => {
+      await this.messageService.markAsRead(user, params.id);
+    },
   };
 
   events = {
     subscribe: async (cb, user) => {
       const unsub = await this.gearService.subscribeEvents(user, cb);
       return unsub;
-    },
-    read: async (cb, user, params) => {
-      await this.eventService.readEvent(user, params.id);
     },
   };
 }

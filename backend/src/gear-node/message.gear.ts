@@ -7,6 +7,8 @@ import {
 } from 'src/json-rpc/errors';
 import { Bytes } from '@polkadot/types';
 import { Logger } from '@nestjs/common';
+import { LogMessage } from 'src/messages/interface';
+import { RpcCallback } from 'src/json-rpc/interfaces';
 
 const logger = new Logger('Send Message');
 
@@ -17,50 +19,50 @@ export async function sendMessage(
   payload: Bytes | string,
   gasLimit: number,
   value: number,
-  callback,
-) {
-  return new Promise(async (resolve, reject) => {
-    let message: any;
-    try {
-      message = await api.tx.gear.sendMessage(
-        destination,
-        payload,
-        gasLimit,
-        value,
-      );
-    } catch (error) {
-      reject(new InvalidParamsError());
-    }
+  initMessage: LogMessage,
+  callback: RpcCallback,
+): Promise<void> {
+  let message: any;
+  try {
+    message = api.tx.gear.sendMessage(destination, payload, gasLimit, value);
+  } catch (error) {
+    throw new InvalidParamsError();
+  }
 
-    try {
-      let blockHash: string;
-      await message.signAndSend(keyring, ({ events = [], status }) => {
-        if (status.isInBlock) {
-          blockHash = status.asInBlock.toHex();
-        } else if (status.isFinalized) {
-          blockHash = status.asFinalized.toHex();
-        } else if (status.isInvalid) {
-          reject(new TransactionError());
-        }
+  try {
+    let blockHash: string;
+    await message.signAndSend(keyring, ({ events = [], status }) => {
+      if (status.isInBlock) {
+        blockHash = status.asInBlock.toHex();
+      } else if (status.isFinalized) {
+        blockHash = status.asFinalized.toHex();
+      } else if (status.isInvalid) {
+        throw new TransactionError();
+      }
 
-        // Check transaction errors
-        events
-          .filter(({ event }) => api.events.system.ExtrinsicFailed.is(event))
-          .forEach(({ event: { data } }) => {
-            reject(new TransactionError());
+      // Check transaction errors
+      events
+        .filter(({ event }) => api.events.system.ExtrinsicFailed.is(event))
+        .forEach(({ event: { data } }) => {
+          throw new TransactionError();
+        });
+
+      events
+        .filter(({ event }) =>
+          api.events.gear.DispatchMessageEnqueued.is(event),
+        )
+        .forEach(({ event: { data } }) => {
+          initMessage.id = data.toHuman()[0];
+          initMessage.date = new Date();
+          callback('save');
+          callback('gear', {
+            status: status.type,
+            messageId: data.toHuman()[0],
+            blockHash: blockHash,
           });
-
-        events
-          .filter(({ event }) => api.events.system.ExtrinsicSuccess.is(event))
-          .forEach(({ event: { data } }) => {
-            callback({
-              status: status.type,
-              blockHash: blockHash,
-            });
-          });
-      });
-    } catch (error) {
-      reject(new GearNodeError(error.message));
-    }
-  });
+        });
+    });
+  } catch (error) {
+    throw new GearNodeError(error.message);
+  }
 }

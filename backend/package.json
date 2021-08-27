@@ -48,7 +48,6 @@
     "@types/socket.io": "^3.0.2",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
-    "create-type": "file:createType",
     "dockerode": "^3.3.0",
     "nats": "^2.1.0",
     "nestjs-telegraf": "^2.2.3",

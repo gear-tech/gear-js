@@ -1,5 +1,11 @@
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, JoinTable, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+
+export enum InitStatus {
+  SUCCESS = 'success',
+  FAILED = 'failed',
+  PROGRESS = 'in progress',
+}
 
 @Entity()
 export class Program {
@@ -9,7 +15,7 @@ export class Program {
   @ManyToOne((type) => User, (user) => user.id)
   user: User;
 
-  @Column()
+  @Column({nullable: true})
   blockHash: string;
 
   @Column()
@@ -38,4 +44,7 @@ export class Program {
 
   @Column({ nullable: true })
   initOutType: string;
+
+  @Column({ type: 'enum', enum: InitStatus, default: InitStatus.PROGRESS })
+  initStatus: InitStatus;
 }

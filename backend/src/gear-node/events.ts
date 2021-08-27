@@ -1,57 +1,80 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ApiPromise } from '@polkadot/api';
 import { Subject } from 'rxjs';
-import { GearNodeError } from 'sample-polkadotjs-typegen/json-rpc/errors';
+import { ProgramsService } from 'src/programs/programs.service';
+import { GearNodeError } from 'src/json-rpc/errors';
+import { UnsubscribePromise } from '@polkadot/api/types';
 
 const logger = new Logger('EventsLogger');
 
-export async function subscribeEvents(api: ApiPromise, callback) {
-  try {
-    const blocksSubject = new Subject();
-    const eventsSubject = new Subject();
-    callback({ events: eventsSubject, blocks: blocksSubject });
-    const unsub = api.rpc.chain.subscribeNewHeads(async (header) => {
-      blocksSubject.next(header);
-    });
-    getBlockEvents(api, eventsSubject);
-  } catch (error) {
-    throw new GearNodeError(error.message);
-  }
-}
+@Injectable()
+export class GearNodeEvents {
+  public blocks: Subject<any>;
+  public events: Subject<any>;
 
-async function getBlockEvents(api: ApiPromise, eventsSubject: Subject<any>) {
-  await api.query.system.events((events) => {
-    events
-      .filter(({ event }) => api.events.gear.Log.is(event))
-      .forEach(({ event: { data } }) => {
-        data.forEach((data) => {
-          const res = data.toHuman();
-          console.log(res);
-          eventsSubject.next({
-            type: 'log',
-            id: res['id'],
-            source: res['source'],
-            dest: res['dest'],
-            payload: data['payload'],
-            reply: data['reply'] ? data['reply'][0] : null,
-            date: new Date(),
+  constructor(private readonly programService: ProgramsService) {
+    this.blocks = new Subject();
+    this.events = new Subject();
+  }
+
+  async subscribeBlocks(api: ApiPromise): Promise<UnsubscribePromise> {
+    try {
+      const unsub = api.rpc.chain.subscribeNewHeads(async (header) => {
+        this.blocks.next(header);
+      });
+      return unsub;
+    } catch (error) {
+      throw new GearNodeError(error.message);
+    }
+  }
+
+  async subscribeEvents(api: ApiPromise): Promise<void> {
+    try {
+      await api.query.system.events((events) => {
+        // events.forEach(({ event: { section, method, data } }) => {
+        //   if (section === 'gear') {
+        //     console.log(`${section}.${method} :: Data:`);
+        //     console.log(data.toHuman());
+        //   }
+        // });
+
+        events
+          .filter(({ event }) => api.events.gear.Log.is(event))
+          .forEach(({ event: { data } }) => {
+            data.forEach((data) => {
+              const res = data.toHuman();
+              this.events.next({
+                type: 'log',
+                id: res['reply'][0],
+                program: res['source'],
+                destination: res['dest'],
+                date: new Date(),
+                response: data['payload'],
+                responseId: data['id'],
+              });
+            });
           });
-        });
+        events
+          .filter(
+            ({ event }) =>
+              api.events.gear.InitSuccess.is(event) ||
+              api.events.gear.InitFailure.is(event),
+          )
+          .forEach(async ({ event: { method, data } }) => {
+            const programId = data[0].toHuman()['program_id'];
+            const program = await this.programService.findProgram(programId);
+            this.events.next({
+              type: 'program',
+              status: method,
+              destination: program ? program.user.publicKey : undefined,
+              hash: programId,
+              programName: program ? program.name : undefined,
+              date: new Date(),
+            });
+          });
       });
-    events
-      .filter(
-        ({ event }) =>
-          api.events.gear.ProgramInitialized.is(event) ||
-          api.events.gear.InitFailure.is(event),
-      )
-      .forEach(({ event: { method, data } }) => {
-        // console.log(data)
-        eventsSubject.next({
-          type: 'program',
-          method: method,
-          programHash: data[0].toHuman(),
-          date: new Date(),
-        });
-      });
-  });
+    } catch (error) {
+      logger.error(error);
+    }
+  }
 }

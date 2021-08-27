@@ -5,7 +5,8 @@ import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import { InvalidParamsError } from 'src/json-rpc/errors';
 import { RpcMethods } from 'src/json-rpc/methods';
-import { EventsService } from 'sample-polkadotjs-typegen/events/events.service';
+import { User } from 'src/users/entities/user.entity';
+import { MessagesService } from 'src/messages/messages.service';
 
 @Injectable()
 export class HttpRpcMethods extends RpcMethods {
@@ -14,7 +15,7 @@ export class HttpRpcMethods extends RpcMethods {
     private readonly authService: AuthService,
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
-    private readonly eventService: EventsService,
+    private readonly messageService: MessagesService,
   ) {
     super();
   }
@@ -62,7 +63,7 @@ export class HttpRpcMethods extends RpcMethods {
       if (!params || !params.hash) {
         throw new InvalidParamsError();
       }
-      return await this.programService.getProgram(params.hash);
+      return await this.programService.findProgram(params.hash);
     },
 
     allUser: async (user, params?) => {
@@ -79,29 +80,24 @@ export class HttpRpcMethods extends RpcMethods {
         params ? params.offset : null,
       );
     },
+    allNoGUI: async (user, params) => {
+      return await this.gearService.getAllNoGUIPrograms()
+    }
   };
 
-  event = {
-    all: async (user, params?) => {
-      return await this.eventService.getUserEvents(
+  message = {
+    all: async (user: User, params?: any) => {
+      return await this.messageService.getAll(
         user,
-        params ? params.limit : null,
-        params ? params.offset : null,
+        params ? params.isRead : undefined,
+        params ? params.programId : undefined,
+        params ? params.limit : undefined,
+        params ? params.offset : undefined,
       );
     },
+
     countUnread: async (user, params?) => {
-      return await this.eventService.getCountUnreadEvents(user);
-    },
-    program: async (user, params) => {
-      if (!params){
-        throw new InvalidParamsError()
-      }
-      return await this.eventService.programEvent(
-        user,
-        params.programHash,
-        params.limit,
-        params.offset,
-      );
+      return await this.messageService.getCountUnread(user);
     },
   };
 }

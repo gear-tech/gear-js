@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { Program } from './entities/program.entity';
+import { InitStatus, Program } from './entities/program.entity';
 
+const logger = new Logger('ProgramDb');
 @Injectable()
 export class ProgramsService {
   constructor(
@@ -10,7 +12,7 @@ export class ProgramsService {
     private readonly programRepository: Repository<Program>,
   ) {}
 
-  parseWASM(file) {
+  parseWASM(file: any) {
     if (file instanceof Buffer) {
       return file;
     } else {
@@ -30,7 +32,18 @@ export class ProgramsService {
     incomingType,
     expectedType,
   }) {
-    const program = this.programRepository.create({
+    let program = await this.findProgram(hash);
+    if (program) {
+      program = await this.programRepository.preload({
+        hash: program.hash,
+        name: name,
+        title,
+        incomingType,
+        expectedType,
+      });
+      return this.programRepository.save(program);
+    }
+    program = this.programRepository.create({
       hash: hash,
       blockHash: blockHash,
       name: name,
@@ -43,10 +56,11 @@ export class ProgramsService {
       incomingType,
       expectedType,
     });
-    return this.programRepository.save(program);
+
+    return await this.programRepository.save(program);
   }
 
-  async getLastProgramNumber(user) {
+  async getLastProgramNumber(user: User) {
     const userPrograms = await this.programRepository.find({
       where: { user: user },
       select: ['programNumber'],
@@ -59,33 +73,17 @@ export class ProgramsService {
   }
 
   async getAllUserPrograms(
-    user,
-    limit?, offset?
+    user: User,
+    limit?: number,
+    offset?: number,
   ): Promise<{ programs: Program[]; count: number }> {
     const [result, total] = await this.programRepository.findAndCount({
       where: { user: user },
       take: limit || 13,
       skip: offset || 0,
       order: {
-        uploadedAt: 'DESC'
-      }
-    })
-    
-    return {
-      programs: result,
-      count: total,
-    };
-  }
-
-  async getAllPrograms(
-    limit?, offset?
-  ): Promise<{ programs: Program[]; count: number }> {
-    const [result, total] = await this.programRepository.findAndCount({
-      take: limit || 13,
-      skip: offset || 0,
-      order: {
-        uploadedAt: 'DESC'
-      }
+        uploadedAt: 'DESC',
+      },
     });
 
     return {
@@ -94,20 +92,59 @@ export class ProgramsService {
     };
   }
 
-  async getProgram(hash) {
-    const program = await this.programRepository.findOne(
-      { hash: hash },
-      { relations: ['user'] },
-    );
-    return program;
+  async getAllPrograms(
+    limit?: number,
+    offset?: number,
+  ): Promise<{ programs: Program[]; count: number }> {
+    const [result, total] = await this.programRepository.findAndCount({
+      take: limit || 20,
+      skip: offset || 0,
+      order: {
+        uploadedAt: 'DESC',
+      },
+    });
+
+    return {
+      programs: result,
+      count: total,
+    };
   }
 
-  async removeProgram(hash) {
+  async findProgram(hash: string): Promise<Program> {
+    try {
+      const program = await this.programRepository.findOne(
+        { hash: hash },
+        { relations: ['user'] },
+      );
+      return program;
+    } catch (error) {
+      logger.error(error);
+      return undefined;
+    }
+  }
+
+  async removeProgram(hash: string) {
     setTimeout(async () => {
-      const program = await this.getProgram(hash);
+      const program = await this.findProgram(hash);
       if (program) {
         this.programRepository.remove(program);
       }
     }, 10000);
+  }
+
+  async initStatus(hash: string, status: string): Promise<Program> {
+    const program = await this.findProgram(hash);
+    if (program) {
+      program.initStatus =
+        status === 'InitSuccess' ? InitStatus.SUCCESS : InitStatus.FAILED;
+      return this.programRepository.save(program);
+    }
+  }
+  async isInDB(hash) {
+    if (await this.findProgram(hash)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

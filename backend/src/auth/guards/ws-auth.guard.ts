@@ -19,6 +19,7 @@ export class WsAuthGuard implements CanActivate {
     try {
       const decodedToken = this.jwtService.verify(token, {
         secret: jwtConstants.secret,
+        ignoreExpiration: true
       });
       const user = await this.userService.findOne(decodedToken.id);
       context.switchToWs().getClient().user = user;

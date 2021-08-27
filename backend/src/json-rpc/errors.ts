@@ -90,6 +90,11 @@ export class ProgramNotFound extends GearError {
   }
 }
 
+export class MessageNotFound extends GearError {
+  code = -32014;
+  message = 'Message not found';
+}
+
 export class EncodePayloadError extends GearError {
   code = -32015;
   message = 'Payload encoding failed';

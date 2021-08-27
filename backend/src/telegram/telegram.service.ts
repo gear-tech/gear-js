@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { GearNodeService } from 'src/gear-node/gear-node.service';
 import { User } from 'src/users/entities/user.entity';
+import { SendMessageData, UploadProgramData } from 'src/gear-node/interfaces';
 const fetch = require('node-fetch');
 
 @Injectable()
@@ -50,7 +51,12 @@ export class TelegramService {
   }
 
   sendMessage(user, cb) {
-    const messageData = {};
+    const messageData: SendMessageData = {
+      destination: undefined,
+      payload: undefined,
+      gasLimit: undefined,
+      value: undefined,
+    };
     return async (action, data?) => {
       if (action === 'destination') {
         messageData['destination'] = data;
@@ -80,7 +86,12 @@ export class TelegramService {
   }
 
   uploadProgram(user, cb) {
-    const programData = {};
+    const programData: UploadProgramData = {
+      gasLimit: undefined,
+      value: undefined,
+      file: undefined,
+      filename: undefined,
+    };
     return async (action, data?) => {
       if (action === 'file') {
         const fileName = data.file_name;

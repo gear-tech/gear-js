@@ -26,7 +26,7 @@ export class UsersService {
   async findOneByPublicKey(publicKey: string) {
     const user = await this.userRepository.findOne({ publicKey: publicKey });
     if (!user) {
-      return false;
+      return null;
     }
     return user;
   }

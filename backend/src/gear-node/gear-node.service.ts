@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { User } from 'src/users/entities/user.entity';
-import { UsersService } from '../users/users.service';
+import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import {
   createKeyring,
@@ -17,50 +17,49 @@ import {
   InvalidParamsError,
   ProgramNotFound,
 } from 'src/json-rpc/errors';
-import { u8aToHex } from '@polkadot/util';
+import { isJsonObject, isString, u8aToHex } from '@polkadot/util';
 import { submitProgram } from './program.gear';
 import { sendMessage } from './message.gear';
-import definitions from 'sample-polkadotjs-typegen/interfaces/definitions';
-import { toBytes } from './utils';
-import { subscribeEvents } from './events';
-import { Subject } from 'rxjs';
+import definitions from 'src/interfaces/definitions';
+import { GearNodeEvents } from './events';
+import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { EventsService } from 'sample-polkadotjs-typegen/events/events.service';
 import { getWasmMetadata } from './wasm.meta';
+import { LogMessage } from 'src/messages/interface';
+import { MessagesService } from 'src/messages/messages.service';
+import { CreateType } from 'src/gear-node/custom-types';
+import { KeyringPair$Json } from '@polkadot/keyring/types';
+import { SendMessageData, UploadProgramData } from './interfaces';
+import { Bytes } from '@polkadot/types';
+import { RpcCallback } from 'src/json-rpc/interfaces';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
 export class GearNodeService {
   private provider: WsProvider;
   private api: ApiPromise;
-  private blocksSubject: Subject<any>;
-  private eventsSubject: Subject<any>;
-  private userEventSubject: Subject<any>;
-  private types: any;
 
   constructor(
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
-    private readonly eventService: EventsService,
+    private readonly messageService: MessagesService,
+    private readonly subscription: GearNodeEvents,
+    private readonly createType: CreateType,
   ) {
     this.provider = new WsProvider(process.env.WS_PROVIDER);
     this.createApiPromise().then((api: ApiPromise) => {
-      subscribeEvents(api, ({ events, blocks }) => {
-        this.blocksSubject = blocks;
-        this.eventsSubject = events;
-        this.saveEvents();
-      });
-      this.userEventSubject = this.eventService.eventSubject;
+      this.subscription.subscribeBlocks(api);
+      this.subscription.subscribeEvents(api);
+      this.saveEvents();
     });
   }
 
-  private createApiPromise() {
+  private createApiPromise(): Promise<ApiPromise> {
     return new Promise(async (resolve, reject) => {
       const types = Object.values(definitions).reduce(
         (res, types): object => ({ ...res, ...types }),
         {},
       );
-      this.types = types;
       this.api = await ApiPromise.create({
         provider: this.provider,
         types: {
@@ -85,12 +84,11 @@ export class GearNodeService {
           },
         },
       });
-      this.eventService.init(this.api, this.provider, this.types);
       resolve(this.api);
     });
   }
 
-  createKeyPair(user: User) {
+  createKeyPair(user: User): KeyringPair$Json {
     if (user.seed) {
       const keyring = keyringFromSeed(user, user.seed);
       if (u8aToHex(keyring.publicKey) !== user.publicKey) {
@@ -104,7 +102,11 @@ export class GearNodeService {
     return json;
   }
 
-  async uploadProgram(user: User, data, cb) {
+  async uploadProgram(
+    user: User,
+    data: UploadProgramData,
+    cb: RpcCallback,
+  ): Promise<void> {
     if (
       !data ||
       !data.gasLimit ||
@@ -116,11 +118,12 @@ export class GearNodeService {
     }
 
     const binary = this.programService.parseWASM(data.file);
-    let code = null
+    let code = null;
     try {
-      code = await toBytes('bytes', Array.from(binary));
+      code = this.createType.toBytes('bytes', Array.from(binary));
     } catch (error) {
-      throw new InvalidParamsError('Can\'t encode program to bytes')
+      logger.error(error.message);
+      throw new InvalidParamsError("Can't encode program to bytes");
     }
 
     const keyring = data.keyPairJson
@@ -160,15 +163,21 @@ export class GearNodeService {
       expectedType: meta.output || data.expectedType || null,
     };
 
-    let payload = data.initPayload;
+    let payload: Bytes;
     try {
-      payload = await toBytes(programData.initType, data.initPayload);
+      payload = this.createType.toBytes(programData.initType, data.initPayload);
     } catch (error) {
       logger.error(error);
       if (error.toJson) throw error;
       else throw new InternalServerError();
     }
-
+    let initMessage: LogMessage = {
+      id: null,
+      destination: user,
+      program: null,
+      date: null,
+      payload: data.initPayload.toString(),
+    };
     try {
       await submitProgram(
         this.api,
@@ -179,13 +188,23 @@ export class GearNodeService {
         data.gasLimit,
         data.value,
         programData,
-        (action, data?) => {
-          if (action === 'save') {
-            this.programService.saveProgram(programData);
-          } else if (action === 'gear') {
-            cb(undefined, data);
-          } else if (action === 'remove') {
-            this.programService.removeProgram(programData.hash);
+        initMessage,
+        async (action: string, data?: any) => {
+          switch (action) {
+            case 'save':
+              const program = await this.programService.saveProgram(
+                programData,
+              );
+              initMessage.program = program;
+              initMessage.date = new Date();
+              this.messageService.save(initMessage);
+              break;
+            case 'gear':
+              cb(undefined, data);
+              break;
+            case 'remove':
+              this.programService.removeProgram(programData.hash);
+              break;
           }
         },
       );
@@ -194,7 +213,11 @@ export class GearNodeService {
     }
   }
 
-  async sendMessage(user: User, messageData, cb) {
+  async sendMessage(
+    user: User,
+    messageData: SendMessageData,
+    cb: RpcCallback,
+  ): Promise<void> {
     if (
       !messageData ||
       !messageData.destination ||
@@ -212,7 +235,7 @@ export class GearNodeService {
       keyring.unlock();
     }
 
-    const program = await this.programService.getProgram(
+    const program = await this.programService.findProgram(
       messageData.destination,
     );
     if (!program) {
@@ -220,9 +243,9 @@ export class GearNodeService {
       return null;
     }
 
-    let payload = messageData.payload;
+    let payload: Bytes;
     try {
-      payload = await toBytes(
+      payload = await this.createType.toBytes(
         program.incomingType || 'utf8',
         messageData.payload,
       );
@@ -230,7 +253,13 @@ export class GearNodeService {
       if (error.toJson) throw error;
       else throw new InternalServerError();
     }
-
+    let initMessage: LogMessage = {
+      id: null,
+      destination: user,
+      program: program,
+      date: null,
+      payload: messageData.payload.toString(),
+    };
     try {
       await sendMessage(
         this.api,
@@ -239,8 +268,16 @@ export class GearNodeService {
         payload,
         messageData.gasLimit,
         messageData.value,
-        (data) => {
-          cb(undefined, data);
+        initMessage,
+        async (action, data) => {
+          switch (action) {
+            case 'save':
+              this.messageService.save(initMessage);
+              break;
+            case 'gear':
+              cb(undefined, data);
+              break;
+          }
         },
       );
     } catch (error) {
@@ -248,14 +285,16 @@ export class GearNodeService {
     }
   }
 
-  async totalIssuance() {
-    const total = await (
-      await this.api.query.balances.totalIssuance()
-    ).toHuman();
+  async totalIssuance(): Promise<string> {
+    const total = (await this.api.query.balances.totalIssuance()).toHuman();
     return total;
   }
 
-  async balanceTransfer(publicKey: string, value, cb?) {
+  async balanceTransfer(
+    publicKey: string,
+    value: number,
+    cb: RpcCallback,
+  ): Promise<void> {
     try {
       const unsub = await this.api.tx.balances
         .transfer(publicKey, value)
@@ -274,63 +313,106 @@ export class GearNodeService {
     }
   }
 
-  async getBalance(publicKey: string) {
+  async getBalance(publicKey: string): Promise<{ freeBalance: string }> {
     const { data: balance } = await this.api.query.system.account(publicKey);
     return { freeBalance: balance.free.toHuman() };
   }
 
-  async getGasSpent(hash, payload) {
-    const program = await this.programService.getProgram(hash);
+  async getGasSpent(hash: string, payload: string | JSON): Promise<number> {
+    const program = await this.programService.findProgram(hash);
     if (!program) {
       return 0;
     }
-    payload = await toBytes(program.incomingType, payload);
-    let gasSpent = await this.api.rpc.gear.getGasSpent(hash, payload.toHex());
+    const bytes = this.createType.toBytes(program.incomingType, payload);
+    let gasSpent = await this.api.rpc.gear.getGasSpent(hash, bytes.toHex());
     return gasSpent.toNumber();
   }
 
-  async getPayloadType(hash) {
-    const program = await this.programService.getProgram(hash);
+  async getPayloadType(hash: string): Promise<string> {
+    const program = await this.programService.findProgram(hash);
     if (!program) {
       throw new ProgramNotFound(hash);
     }
     return program.incomingType;
   }
 
-  async saveEvents() {
-    this.eventsSubject.subscribe({
-      next: (event) => {
+  async saveEvents(): Promise<void> {
+    this.subscription.events.subscribe({
+      next: async (event) => {
         switch (event.type) {
           case 'log':
-            this.eventService.log({ ...event });
+            const program = await this.programService.findProgram(
+              event.program,
+            );
+            const response = this.createType
+              .fromBytes(program.expectedType, event.response)
+              .toJSON();
+            this.messageService.update({
+              id: event.id,
+              program: program,
+              destination: await this.userService.findOneByPublicKey(
+                event.destination,
+              ),
+              date: event.date,
+              response: isJsonObject(response)
+                ? JSON.stringify(response)
+                : response,
+              responseId: event.responseId.toHex(),
+            });
             break;
           case 'program':
-            this.eventService.program({ ...event });
+            this.programService.initStatus(event.hash, event.status);
             break;
         }
       },
     });
   }
 
-  async subscribeEvents(user: User, callback) {
-    const filtered = this.userEventSubject.pipe(
+  async subscribeEvents(user: User, callback: RpcCallback): Promise<Subscription> {
+    const filtered = this.subscription.events.pipe(
       filter((event) => {
-        return event.dest === user.publicKey;
+        return event.destination === user.publicKey;
       }),
     );
     const unsub = filtered.subscribe({
-      next: (event) => {
-        callback(undefined, event);
+      next: async (event) => {
+        switch (event.type) {
+          case 'log':
+            const program = await this.programService.findProgram(
+              event.program,
+            );
+            const response = this.createType
+              .fromBytes(program.expectedType, event.response)
+              .toJSON();
+            callback(undefined, {
+              event: 'Log',
+              id: event.id,
+              program: event.program,
+              date: event.date,
+              response: isJsonObject(response)
+                ? JSON.stringify(response)
+                : response,
+            });
+            break;
+          case 'program':
+            callback(undefined, {
+              event: event.status,
+              programName: event.programName,
+              program: event.hash,
+              date: event.date,
+            });
+            break;
+        }
       },
     });
     return unsub;
   }
 
-  async subscribeNewHeads(cb) {
+  subscribeNewHeads(callback: RpcCallback): Subscription {
     try {
-      const unsub = this.blocksSubject.subscribe({
+      const unsub = this.subscription.blocks.subscribe({
         next: (head) => {
-          cb(undefined, {
+          callback(undefined, {
             hash: head.hash.toHex(),
             number: head.number.toString(),
           });
@@ -340,5 +422,55 @@ export class GearNodeService {
     } catch (error) {
       throw new GearNodeError(error.message);
     }
+  }
+
+  async addMetadata(user, data, callback) {
+    let meta = {
+      title: undefined,
+      init_input: undefined,
+      init_output: undefined,
+      input: undefined,
+      output: undefined,
+    };
+    if (data.meta) {
+      try {
+        meta = await getWasmMetadata(data.meta);
+        Object.keys(meta).forEach((elem) => {
+          meta[elem] = JSON.stringify(meta[elem]);
+        });
+      } catch (error) {
+        throw new GettingMetadataError();
+      }
+    }
+    const programData = {
+      user: user,
+      name: data.name,
+      hash: data.hash,
+      blockHash: null,
+      uploadedAt: new Date(),
+      title: meta.title || null,
+      initType: meta.init_input || data.initType || null,
+      initOutType: meta.init_output || data.initOutType || null,
+      incomingType: meta.input || data.incomingType || null,
+      expectedType: meta.output || data.expectedType || null,
+    };
+
+    callback(undefined, await this.programService.saveProgram(programData));
+  }
+
+  async getAllNoGUIPrograms() {
+    let programs = (await this.api.rpc.state.getKeys('g::prog::')).map(
+      (prog) => {
+        return `0x${prog
+          .toHex()
+          .slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
+      },
+    );
+    const filter = async (array, condition) => {
+      const results = await Promise.all(array.map(condition));
+      return array.filter((_v, index) => results[index])
+    };
+    programs = await filter(programs, async(hash) => !(await this.programService.isInDB(hash)))
+    return programs
   }
 }

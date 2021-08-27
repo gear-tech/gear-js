@@ -1,14 +1,14 @@
-import { Program } from 'sample-polkadotjs-typegen/programs/entities/program.entity';
+import { Program } from 'src/programs/entities/program.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class NodeEvent {
+export class Message {
   @PrimaryColumn()
   id: string;
 
-  @Column()
-  type: string;
+  @Column({ nullable: true })
+  responseId: string;
 
   @ManyToOne((type) => User, (user) => user.id)
   destination: User;
@@ -18,6 +18,9 @@ export class NodeEvent {
 
   @Column({ nullable: true })
   payload: string;
+
+  @Column({ nullable: true })
+  response: string;
 
   @Column({ default: false })
   isRead: boolean;

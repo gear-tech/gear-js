@@ -3,6 +3,8 @@ import { Bytes } from '@polkadot/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { InvalidParamsError, TransactionError } from 'src/json-rpc/errors';
 import { Logger } from '@nestjs/common';
+import { LogMessage } from 'src/messages/interface';
+import { RpcCallback } from 'src/json-rpc/interfaces';
 
 const logger = new Logger('Program Upload');
 
@@ -15,11 +17,13 @@ export async function submitProgram(
   gasLimit: number,
   value: number,
   programData: any,
-  callback: Function,
+  initMessage: LogMessage,
+  callback: RpcCallback,
 ) {
   return new Promise(async (resolve, reject) => {
     let program: any;
     let saved = false;
+
     try {
       program = api.tx.gear.submitProgram(
         code,
@@ -47,8 +51,7 @@ export async function submitProgram(
         events
           .filter(
             ({ event }) =>
-              api.events.system.ExtrinsicFailed.is(event) ||
-              api.events.gear.InitFailure.is(event),
+              api.events.system.ExtrinsicFailed.is(event)
           )
           .forEach(
             ({
@@ -70,9 +73,10 @@ export async function submitProgram(
           );
 
         events
-          .filter(({ event }) => api.events.gear.NewProgram.is(event))
+          .filter(({ event }) => api.events.gear.InitMessageEnqueued.is(event))
           .forEach(async ({ event: { data } }) => {
-            programData.hash = data[0].toString();
+            programData.hash = data[0].program_id.toHex();
+            initMessage.id = data[0].message_id.toHex();
             if (!saved) {
               callback('save');
               saved = true;

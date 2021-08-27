@@ -31,7 +31,9 @@
         <p>
           <button @click.prevent="balanceTransfer()">Update balance</button>
         </p>
-
+        <p>
+          <button @click.prevent="addMeta()">Add meta</button>
+        </p>
         <div class="message">
           <h3>Message</h3>
 
@@ -247,6 +249,20 @@
           handleFileUpload() {
             this.file = this.$refs.file.files[0];
           },
+          addMeta() {
+            this.socket.emit('message', {
+              jsonrpc: '2.0',
+              id: 3456,
+              method: 'program.addMeta',
+              params: {
+                name: 'test',
+                hash: '0xd9fcd569df5b048f34fe24bfd09a39b3482490e6422a01f984aa29bfcc2',
+                incomingType: 'String',
+                expectedType: 'String',
+                meta: null
+              }
+            })
+          }
         },
       });
     </script>

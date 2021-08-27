@@ -35,8 +35,27 @@ export default {
     MessageError: {
       _enum: ['ValueTransfer', 'Dispatch'],
     },
+    ExitCode: 'i32',
     Reason: {
-      _enum: ['ValueTransfer', 'Dispatch', 'BlockGasLimitExceeded'],
+      _enum: {
+        Error: 'Null',
+        ValueTransfer: 'Null',
+        Dispatch: 'Vec<u8>',
+      },
+    },
+    ExecutionResult: {
+      _enum: {
+        Success: 'Null',
+        Failure: 'Vec<u8>',
+      },
+    },
+    DispatchOutcome: {
+      message_id: 'H256',
+      outcome: 'ExecutionResult',
+    },
+    MessageInfo: {
+      message_id: 'H256',
+      program_id: 'H256',
     },
   },
 };

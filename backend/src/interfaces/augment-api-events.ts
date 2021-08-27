@@ -18,7 +18,7 @@ import type {
 import type {
   Message,
   MessageError,
-} from 'sample-polkadotjs-typegen/interfaces/default';
+} from 'src/interfaces/default';
 import type { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/events' {
@@ -91,7 +91,7 @@ declare module '@polkadot/api/types/events' {
       /**
        * Program initialized.
        **/
-      ProgramInitialized: AugmentedEvent<ApiType, [H256]>;
+      InitSuccess: AugmentedEvent<ApiType, [H256]>;
       /**
        * Generic event
        **/

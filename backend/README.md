@@ -26,9 +26,8 @@ This api follows the json-rpc 2.0 specification. More information available at h
 - [program.data](#program.data)
 - [program.allUser](#program.allUser)
 - [program.all](#program.all)
-- [event.all](#event.all)
-- [event.countUnread](#event.countUnread)
-- [event.program](#event.program)
+- [message.all](#message.all)
+- [message.countUnread](#message.countUnread)
 - [balance.transfer](#balance.transfer)
 - [blocks.newBlocks](#blocks.newBlocks)
 - [program.upload](#program.upload)
@@ -37,7 +36,7 @@ This api follows the json-rpc 2.0 specification. More information available at h
 - [message.gasSpent](#message.gasSpent)
 - [message.payloadType](#message.payloadType)
 - [events.subscribe](#events.subscribe)
-- [events.read](#events.read)
+- [message.markAsRead](#message.markAsRead)
 
 ---
 
@@ -308,15 +307,21 @@ Getting uploaded program data
 
 ### Result
 
-| Name                 | Type    | Constraints | Description                    |
-| -------------------- | ------- | ----------- | ------------------------------ |
-| result               | object  |             |                                |
-| result.hash          | string  |             | program hash                   |
-| result.blockHash     | string  |             | hash of block with program     |
-| result.programNumber | string  |             | Number of program in order     |
-| result.name          | string  |             | Program name                   |
-| result.callCount     | integer |             | Number of program call         |
-| result.uploadedAt    | string  |             | Date when program was uploaded |
+| Name                 | Type    | Constraints | Description                                            |
+| -------------------- | ------- | ----------- | ------------------------------------------------------ |
+| result               | object  |             |                                                        |
+| result.hash          | string  |             | program hash                                           |
+| result.blockHash     | string  |             | hash of block with program                             |
+| result.programNumber | string  |             | Number of program in order                             |
+| result.name          | string  |             | Program name                                           |
+| result.callCount     | integer |             | Number of program call                                 |
+| result.uploadedAt    | string  |             | Date when program was uploaded                         |
+| result?.title        | string  |             | Title of program from metadata                         |
+| result?.incomingType | string  |             | Type of expected message                               |
+| result?.expectedType | string  |             | Type of reponse message                                |
+| result?.initType     | string  |             | Type of initializing message                           |
+| result?.initOutType  | string  |             | Type of message responding to the initializing message |
+| result.initStatus    | string  |             | Program initializtaion status                          |
 
 ### Errors
 
@@ -352,7 +357,8 @@ Getting uploaded program data
     "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
     "name": "demo.wasm",
     "callCount": 3,
-    "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)"
+    "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
+    "initStatus": "in progress"
   }
 }
 ```
@@ -365,16 +371,22 @@ Getting all user's uploaded program
 
 ### Result
 
-| Name                    | Type    | Constraints | Description                    |
-| ----------------------- | ------- | ----------- | ------------------------------ |
-| result                  | array   |             |                                |
-| result[0]               | object  |             |                                |
-| result[0].hash          | string  |             | program hash                   |
-| result[0].blockHash     | string  |             | hash of block with program     |
-| result[0].programNumber | string  |             | Number of program in order     |
-| result[0].name          | string  |             | Program name                   |
-| result[0].callCount     | integer |             | Number of program call         |
-| result[0].uploadedAt    | string  |             | Date when program was uploaded |
+| Name                    | Type    | Constraints | Description                                            |
+| ----------------------- | ------- | ----------- | ------------------------------------------------------ |
+| result                  | array   |             |                                                        |
+| result[0]               | object  |             |                                                        |
+| result[0].hash          | string  |             | program hash                                           |
+| result[0].blockHash     | string  |             | hash of block with program                             |
+| result[0].programNumber | string  |             | Number of program in order                             |
+| result[0].name          | string  |             | Program name                                           |
+| result[0].callCount     | integer |             | Number of program call                                 |
+| result[0].uploadedAt    | string  |             | Date when program was uploaded                         |
+| result[0]?.title        | string  |             | Title of program from metadata                         |
+| result[0]?.incomingType | string  |             | Type of expected message                               |
+| result[0]?.expectedType | string  |             | Type of reponse message                                |
+| result[0]?.initType     | string  |             | Type of initializing message                           |
+| result[0]?.initOutType  | string  |             | Type of message responding to the initializing message |
+| result[0].initStatus    | string  |             | Program initializtaion status                          |
 
 ### Errors
 
@@ -407,7 +419,8 @@ Getting all user's uploaded program
       "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
       "name": "demo.wasm",
       "callCount": 3,
-      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)"
+      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
+      "initStatus": "in progress"
     }
   ]
 }
@@ -421,16 +434,22 @@ Getting all uploaded program
 
 ### Result
 
-| Name                    | Type    | Constraints | Description                    |
-| ----------------------- | ------- | ----------- | ------------------------------ |
-| result                  | array   |             |                                |
-| result[0]               | object  |             |                                |
-| result[0].hash          | string  |             | program hash                   |
-| result[0].blockHash     | string  |             | hash of block with program     |
-| result[0].programNumber | string  |             | Number of program in order     |
-| result[0].name          | string  |             | Program name                   |
-| result[0].callCount     | integer |             | Number of program call         |
-| result[0].uploadedAt    | string  |             | Date when program was uploaded |
+| Name                    | Type    | Constraints | Description                                            |
+| ----------------------- | ------- | ----------- | ------------------------------------------------------ |
+| result                  | array   |             |                                                        |
+| result[0]               | object  |             |                                                        |
+| result[0].hash          | string  |             | program hash                                           |
+| result[0].blockHash     | string  |             | hash of block with program                             |
+| result[0].programNumber | string  |             | Number of program in order                             |
+| result[0].name          | string  |             | Program name                                           |
+| result[0].callCount     | integer |             | Number of program call                                 |
+| result[0].uploadedAt    | string  |             | Date when program was uploaded                         |
+| result[0]?.title        | string  |             | Title of program from metadata                         |
+| result[0]?.incomingType | string  |             | Type of expected message                               |
+| result[0]?.expectedType | string  |             | Type of reponse message                                |
+| result[0]?.initType     | string  |             | Type of initializing message                           |
+| result[0]?.initOutType  | string  |             | Type of message responding to the initializing message |
+| result[0].initStatus    | string  |             | Program initializtaion status                          |
 
 ### Errors
 
@@ -463,32 +482,40 @@ Getting all uploaded program
       "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
       "name": "demo.wasm",
       "callCount": 3,
-      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)"
+      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
+      "initStatus": "in progress"
     }
   ]
 }
 ```
 
-<a name="event.all"></a>
+<a name="message.all"></a>
 
-## event.all
+## message.all
 
-Getting all user's events
+Getting all user's messages
+
+### Parameters
+
+| Name   | Type | Constraints | Description |
+| ------ | ---- | ----------- | ----------- |
+| params |      |             |             |
 
 ### Result
 
-| Name                | Type   | Constraints | Description                                   |
-| ------------------- | ------ | ----------- | --------------------------------------------- |
-| result              | array  |             |                                               |
-| result[0]           | object |             |                                               |
-| result[0]?.id       | string |             | Event id                                      |
-| result[0]?.type     | string |             | Event type                                    |
-| result[0]?.date     | string |             | Date and time of event                        |
-| result[0]?.program  | string |             | Program hash                                  |
-| result[0]?.dest     | string |             | Destination (user publicKey)                  |
-| result[0]?.payload  | string |             | Message payload                               |
-| result[0]?.reply    | string |             | Message id to which the response was received |
-| result[0]?.required |        |             |                                               |
+| Name                   | Type    | Constraints | Description                  |
+| ---------------------- | ------- | ----------- | ---------------------------- |
+| result                 | array   |             |                              |
+| result[0]              | object  |             |                              |
+| result[0]?.id          | string  |             | Message id                   |
+| result[0]?.responseId  | string  |             | Response type                |
+| result[0]?.date        | string  |             | Date and time of message     |
+| result[0]?.program     | string  |             | Program hash                 |
+| result[0]?.destination | string  |             | Destination (user publicKey) |
+| result[0]?.payload     | string  |             | Message payload              |
+| result[0]?.response    | string  |             | Response payload             |
+| result[0]?.isRead      | boolean |             | Has the message been read    |
+| result[0]?.required    |         |             |                              |
 
 ### Errors
 
@@ -504,7 +531,7 @@ Getting all user's events
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "event.all"
+  "method": "message.all"
 }
 ```
 
@@ -517,21 +544,23 @@ Getting all user's events
   "result": [
     {
       "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "type": "Log",
+      "responseId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
       "date": "2021-08-09T12:07:54.064Z",
       "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "dest": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "payload": "PONG"
+      "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
+      "payload": "PING",
+      "response": "PONG",
+      "isRead": false
     }
   ]
 }
 ```
 
-<a name="event.countUnread"></a>
+<a name="message.countUnread"></a>
 
-## event.countUnread
+## message.countUnread
 
-Getting count of unread events
+Getting count of unread messages
 
 ### Result
 
@@ -553,7 +582,7 @@ Getting count of unread events
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "event.countUnread"
+  "method": "message.countUnread"
 }
 ```
 
@@ -563,64 +592,6 @@ Getting count of unread events
 {
   "jsonrpc": "2.0",
   "id": "1234567890"
-}
-```
-
-<a name="event.program"></a>
-
-## event.program
-
-Getting events, which was received from the program
-
-### Result
-
-| Name                | Type   | Constraints | Description                                   |
-| ------------------- | ------ | ----------- | --------------------------------------------- |
-| result              | array  |             |                                               |
-| result[0]           | object |             |                                               |
-| result[0]?.id       | string |             | Event id                                      |
-| result[0]?.type     | string |             | Event type                                    |
-| result[0]?.date     | string |             | Date and time of event                        |
-| result[0]?.program  | string |             | Program hash                                  |
-| result[0]?.dest     | string |             | Destination (user publicKey)                  |
-| result[0]?.payload  | string |             | Message payload                               |
-| result[0]?.reply    | string |             | Message id to which the response was received |
-| result[0]?.required |        |             |                                               |
-
-### Errors
-
-| Code   | Message     | Description                          |
-| ------ | ----------- | ------------------------------------ |
-| -32003 | Unathorized | The provided credentials are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "event.program"
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": [
-    {
-      "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "type": "Log",
-      "date": "2021-08-09T12:07:54.064Z",
-      "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "dest": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "payload": "PONG"
-    }
-  ]
 }
 ```
 
@@ -1028,17 +999,16 @@ Subscribe to events
 
 ### Result
 
-| Name             | Type   | Constraints | Description                                   |
-| ---------------- | ------ | ----------- | --------------------------------------------- |
-| result           | object |             |                                               |
-| result?.id       | string |             | Event id                                      |
-| result?.type     | string |             | Event type                                    |
-| result?.date     | string |             | Date and time of event                        |
-| result?.program  | string |             | Program hash                                  |
-| result?.dest     | string |             | Destination (user publicKey)                  |
-| result?.payload  | string |             | Message payload                               |
-| result?.reply    | string |             | Message id to which the response was received |
-| result?.required |        |             |                                               |
+| Name                | Type   | Constraints | Description                                        |
+| ------------------- | ------ | ----------- | -------------------------------------------------- |
+| result              | object |             |                                                    |
+| result?.event       | string |             | Event type                                         |
+| result?.id          | string |             | Message id (Log)                                   |
+| result?.program     | string |             | Program hash (Log, InitSuccess, InitFailed)        |
+| result?.response    | string |             | Response payload (Log)                             |
+| result?.programName | string |             | Name of uploaded program (InitSuccess, InitFailed) |
+| result?.date        | string |             | Date and time of event                             |
+| result?.required    |        |             |                                                    |
 
 ### Errors
 
@@ -1066,28 +1036,28 @@ Subscribe to events
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
+    "event": "Log",
     "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "type": "Log",
-    "date": "2021-08-09T12:07:54.064Z",
     "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "dest": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "payload": "PONG"
+    "response": "PONG",
+    "programName": "demo_ping",
+    "date": "2021-08-09T12:07:54.064Z"
   }
 }
 ```
 
-<a name="events.read"></a>
+<a name="message.markAsRead"></a>
 
-## events.read
+## message.markAsRead
 
-Mark event as read
+Mark message as read
 
 ### Parameters
 
 | Name       | Type   | Constraints | Description |
 | ---------- | ------ | ----------- | ----------- |
 | params     | object |             |             |
-| params?.id | string |             | Event id    |
+| params?.id | string |             | Message id  |
 
 ### Errors
 
@@ -1104,7 +1074,7 @@ Mark event as read
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "events.read",
+  "method": "message.markAsRead",
   "params": {
     "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
   }
