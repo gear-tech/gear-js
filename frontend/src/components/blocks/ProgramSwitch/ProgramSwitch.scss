@@ -1,0 +1,106 @@
+@import '../../../assets/scss/variables';
+
+.switch-block {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 48px 0;
+  &--wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  &--editor {
+    position: relative;
+    &__btn {
+      padding: 12px 24px;
+      background: #161616;
+      border-radius: 2px;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 24px;
+      color: #FFFFFF;
+      opacity: 0.5;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-left: 32px;
+      img {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+.switch-buttons {
+  background-color: $bkgButtonColor;
+  border-radius: 40px;
+  padding: 4px 5px;
+}
+
+.switch-buttons__item {
+  border-radius: 40px;
+  color: $textColorSecondary;
+  display: inline-block;
+  font-size: $fontSizeSmall;
+  padding: 12px 18px;
+  text-decoration: none;
+}
+
+.switch-buttons__item--active {
+  background-color: $bkgActiveButtonColor;
+  color: $textColor;
+}
+
+.switch-info {
+  align-items: center;
+  color: $textColorSecondary;
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+}
+.switch-info__col {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+}
+
+.switch-info__separator {
+  border-left: 1px solid $separateLineColor;
+  height: 37px;
+  opacity: 0.6;
+  width: 1px;
+}
+
+.switch-info__data {
+  font-size: $fontSizeLarge;
+}
+
+.switch-info__timer {
+  display: flex;
+}
+
+.switch-info__num {
+  color: $textColor;
+  font-weight: bold;
+  width: 1ch;
+}
+
+@media (max-width: 767px) {
+  .main-content-wrapper {
+    margin: 0 16px!important;
+  }
+  .switch-block {
+    flex-direction: column-reverse;
+    margin: 14px 0;
+  }
+  .switch-buttons {
+    display: flex;  
+    margin-top: 22px;
+    &__item {
+      font-size: 14px;
+      text-align: center;
+      line-height: 14px;
+    }
+  }
+}
