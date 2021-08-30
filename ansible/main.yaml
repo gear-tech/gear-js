@@ -1,0 +1,209 @@
+- name: "deploy to aws"
+  hosts: all
+  become: yes
+  remote_user: ec2-user
+  environment:
+        DB_NAME: "{{ lookup('env','DB_NAME') }}"
+        DB_USER: "{{ lookup('env','DB_USER') }}"
+        DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
+        DB_PORT: "{{ lookup('env','DB_PORT') }}"
+        DB_HOST: "{{ lookup('env','DB_HOST') }}"
+        WS_PROVIDER: "{{ lookup('env','WS_PROVIDER') }}"
+        GITHUB_CLIENT_SECRET: "{{ lookup('env','GITHUB_CLIENT_SECRET') }}"
+        GITHUB_CLIENT_ID: "{{ lookup('env','GITHUB_CLIENT_ID') }}"
+        TELEGRAM_BOT_TOKEN: "{{ lookup('env','TELEGRAM_BOT_TOKEN') }}"
+        TELEGRAM_BOT_USERNAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
+        IDE_SOCKET: "{{ lookup('env','IDE_SOCKET') }}"
+        PORT: "{{ lookup('env','PORT') }}"
+
+  tasks:
+    - name: Copy docker-compose
+      copy:
+        src: docker-compose.yaml
+        dest: /home/ec2-user/docker-compose.yaml
+
+    - name: Copy ide-backend service if not exist
+      copy:
+        src: idebackend.service
+        dest: /lib/systemd/system/idebackend.service
+        force: no
+      become: yes
+
+    - name: Update all packages
+      yum:
+        name: '*'
+        state: latest
+        update_only: yes
+        lock_timeout: 180
+
+    - name: Install Node JS repo
+      shell: >
+       curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash - 
+
+    - name: Ensure a list of yum packages are installed
+      yum:
+        name: "{{ packages }}"
+        state: latest
+        update_cache: yes
+      vars:
+        packages:
+        - python-pip
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+        - amazon-linux-extras
+        - gcc-c++
+        - make
+        - nodejs
+
+    - name: Add extras repository
+      shell: yum-config-manager --enable extras
+
+    - name: Enable Some packages from amazon-linux-extras packages
+      shell: "amazon-linux-extras enable python3.8 ansible2 docker nginx1"
+
+    - name: clean yum metadata cache
+      command: yum clean metadata
+      args:
+        warn: false
+
+    - name: Ensure a list of yum packages are installed
+      yum:
+        name: "{{ packages }}"
+        state: latest
+        update_cache: yes
+      vars:
+        packages:
+        - python3.8
+        - ansible
+        - docker
+        - nginx
+        - nodejs
+
+    - name: Enable Docker CE service at startup
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Upgrade pip3
+      shell: "python3.8 -m pip install pip --upgrade"
+
+    - name: Ensure Python pip packages are installed
+      pip:
+        name: "{{ packages }}"
+        executable: /usr/local/bin/pip3.8
+      vars:
+        packages:
+        - boto
+        - boto3
+        - docker-compose
+        - docker
+
+    - name: Creates Nginx cert directory
+      file:
+        path: /etc/nginx/cert
+        state: directory
+
+    - name: Copy nginx.conf
+      copy:
+        src: proxy.conf
+        dest: /etc/nginx/conf.d/ssl.conf
+
+    - name: Generates Private key
+      openssl_privatekey:
+        path: /etc/nginx/cert/private.key
+        size: 2048 
+      become: yes
+
+    - name: Generates CSR
+      openssl_csr:
+        path: /etc/nginx/cert/nginx.csr
+        privatekey_path: /etc/nginx/cert/private.key
+        common_name: "gear-gui.node"
+      become: yes
+
+    - name: Generate a Self Signed OpenSSL certificate
+      community.crypto.x509_certificate:
+        path: /etc/nginx/cert/cert.crt
+        privatekey_path: /etc/nginx/cert/private.key
+        csr_path: /etc/nginx/cert/nginx.csr
+        provider: selfsigned
+
+    - name: The Diffie-Hellman parameter file is generated
+      shell: >
+        openssl dhparam -out /etc/nginx/cert/dhparam.pem 2048
+      become: yes
+
+    - name: Stop docker-compose
+      shell: >
+       /usr/local/bin/docker-compose -f "/home/ec2-user/docker-compose.yaml" down
+      become: yes
+
+    - name: Pull docker images
+      shell: >
+       /usr/local/bin/docker-compose -f "/home/ec2-user/docker-compose.yaml" pull
+      become: yes
+
+    - name: Run docker-compose
+      shell: >
+       /usr/local/bin/docker-compose -f "/home/ec2-user/docker-compose.yaml" up -d
+      become: yes
+      environment:
+        DB_NAME: "{{ lookup('env','DB_NAME') }}"
+        DB_USER: "{{ lookup('env','DB_USER') }}"
+        DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
+        DB_PORT: "{{ lookup('env','DB_PORT') }}"
+        DB_HOST: "{{ lookup('env','DB_HOST') }}"
+        WS_PROVIDER: "{{ lookup('env','WS_PROVIDER') }}"
+        GITHUB_CLIENT_SECRET: "{{ lookup('env','GITHUB_CLIENT_SECRET') }}"
+        GITHUB_CLIENT_ID: "{{ lookup('env','GITHUB_CLIENT_ID') }}"
+        TELEGRAM_BOT_TOKEN: "{{ lookup('env','TELEGRAM_BOT_TOKEN') }}"
+        TELEGRAM_BOT_USERNAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
+        IDE_SOCKET: "{{ lookup('env','IDE_SOCKET') }}"
+        PORT: "{{ lookup('env','PORT') }}"
+
+    - name: Stop idebackend service
+      systemd:
+        name: idebackend
+        state: stopped
+        enabled: yes
+        daemon-reload: yes
+
+    - name: Delete ide-backend
+      file:
+        state: absent
+        path: /home/ec2-user/ide-backend
+
+    - name: Copy ide-backend
+      copy:
+        src: ../ide-backend/
+        dest: /home/ec2-user/ide-backend
+
+    - name: Give permissions to build-image script
+      ansible.builtin.file:
+        path: /home/ec2-user/ide-backend/wasm-build/build-image.sh
+        mode: '0777'
+
+    - name: Give permissions to build script
+      ansible.builtin.file:
+        path: /home/ec2-user/ide-backend/wasm-build/build.sh
+        mode: '0777'
+
+    - name: Install ide-backend
+      community.general.npm:
+        path: /home/ec2-user/ide-backend/
+
+    - name: Start ide-backend service
+      systemd:
+        name: idebackend
+        state: started
+        enabled: yes
+        daemon-reload: yes
+
+    - name: Restart nginx service
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
+        daemon-reload: yes

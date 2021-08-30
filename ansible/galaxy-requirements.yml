@@ -1,0 +1,2 @@
+- name: community.general
+  src: https://github.com/ansible-collections/community.general
