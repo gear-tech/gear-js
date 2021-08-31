@@ -200,16 +200,20 @@
       community.general.npm:
         path: /home/ec2-user/ide-backend/
 
+    - name: Create ide-backend file .env
+      shell: >
+        echo "PORT=$PORT">/home/ec2-user/ide-backend/.env;echo "HOST=$HOST">>/home/ec2-user/ide-backend/.env;echo "IDE_FOLDER=$IDE_FOLDER">>/home/ec2-user/ide-backend/.env
+      environment:
+        PORT: "{{ lookup('env','PORT') }}"
+        IDE_FOLDER: "{{ lookup('env','PORT') }}"
+        HOST: "{{ lookup('env','HOST') }}"
+
     - name: Start ide-backend service
       systemd:
         name: idebackend
         state: started
         enabled: yes
         daemon-reload: yes
-      environment:
-        HOST: "{{ lookup('env','HOST') }}"
-        IDE_FOLDER: "{{ lookup('env','IDE_FOLDER') }}"
-        PORT: "{{ lookup('env','PORT') }}"
 
     - name: Restart nginx service
       systemd:
