@@ -14,8 +14,9 @@
         TELEGRAM_BOT_TOKEN: "{{ lookup('env','TELEGRAM_BOT_TOKEN') }}"
         TELEGRAM_BOT_USERNAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
         IDE_SOCKET: "{{ lookup('env','IDE_SOCKET') }}"
+        HOST: "{{ lookup('env','HOST') }}"
+        IDE_FOLDER: "{{ lookup('env','IDE_FOLDER') }}"
         PORT: "{{ lookup('env','PORT') }}"
-
   tasks:
     - name: Copy docker-compose
       copy:
@@ -130,10 +131,16 @@
         csr_path: /etc/nginx/cert/nginx.csr
         provider: selfsigned
 
+    - name: Check that the Diffie-Hellman parameter file exists
+      stat:
+        path: /etc/nginx/cert/dhparam.pem
+      register: stat_result
+
     - name: The Diffie-Hellman parameter file is generated
       shell: >
         openssl dhparam -out /etc/nginx/cert/dhparam.pem 2048
       become: yes
+      when: not stat_result.stat.exists
 
     - name: Stop docker-compose
       shell: >
@@ -161,7 +168,6 @@
         TELEGRAM_BOT_TOKEN: "{{ lookup('env','TELEGRAM_BOT_TOKEN') }}"
         TELEGRAM_BOT_USERNAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
         IDE_SOCKET: "{{ lookup('env','IDE_SOCKET') }}"
-        PORT: "{{ lookup('env','PORT') }}"
 
     - name: Stop idebackend service
       systemd:
@@ -200,6 +206,10 @@
         state: started
         enabled: yes
         daemon-reload: yes
+      environment:
+        HOST: "{{ lookup('env','HOST') }}"
+        IDE_FOLDER: "{{ lookup('env','IDE_FOLDER') }}"
+        PORT: "{{ lookup('env','PORT') }}"
 
     - name: Restart nginx service
       systemd:

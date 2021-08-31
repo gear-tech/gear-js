@@ -82,6 +82,8 @@ jobs:
           TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
           IDE_SOCKET: ${{ secrets.IDE_SOCKET }}
           PORT: ${{ secrets.PORT }}
+          HOST: ${{ secrets.HOST }}
+          IDE_FOLDER: ${{ secrets.IDE_FOLDER }}
         with:
           # Required, playbook filepath
           directory: ./ansible
