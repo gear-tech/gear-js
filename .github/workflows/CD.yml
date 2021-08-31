@@ -33,8 +33,7 @@ jobs:
           push: true
           tags: schernovgear/gear-backend:nightly
 
-  Docker_frontend:
-    needs: Docker_backend
+#    needs: Docker_backend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -61,7 +60,7 @@ jobs:
           tags: schernovgear/gear-frontend:nightly
 
   Deploy:
-    needs: Docker_frontend
+    #needs: Docker_frontend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
