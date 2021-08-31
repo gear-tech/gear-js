@@ -186,6 +186,11 @@
         src: ../ide-backend/
         dest: /home/ec2-user/ide-backend
 
+    - name: Copy frontend 
+      copy:
+        src: ../frontend 
+        dest: /home/ec2-user/frontend
+
     - name: Give permissions to build-image script
       ansible.builtin.file:
         path: /home/ec2-user/ide-backend/wasm-build/build-image.sh
@@ -199,6 +204,18 @@
     - name: Install ide-backend
       community.general.npm:
         path: /home/ec2-user/ide-backend/
+
+    - name: Install frontend-backend
+      community.general.npm:
+        path: /home/ec2-user/frontend/
+
+    - name: Copy frontend build files
+      copy:
+        src: /home/ec2-user/frontend/build
+        dest: /home/gear/gear-frontend/build
+        force: no
+      become: yes
+      remote_src: true 
 
     - name: Create ide-backend file .env
       shell: >
