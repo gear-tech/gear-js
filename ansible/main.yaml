@@ -173,6 +173,10 @@
       copy:
         src: ../frontend/
         dest: /home/ec2-user/frontend
+    
+    - name: Install frontend
+      community.general.npm:
+        path: /home/ec2-user/frontend
 
     - name: Build frontend
       shell: >
@@ -212,6 +216,7 @@
       copy:
         src: ../ide-backend/
         dest: /home/ec2-user/ide-backend
+    
     - name: Install ide-backend
       community.general.npm:
         path: /home/ec2-user/ide-backend
