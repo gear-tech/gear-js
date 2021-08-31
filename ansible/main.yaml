@@ -191,13 +191,12 @@
         src: /home/ec2-user/frontend/build/
         dest: /var/www/html/
         remote_src: true 
+        owner: nginx
+        group: nginx
+        mode: '0744'
       become: yes
 
-    - name: Give permissions to frontend
-      ansible.builtin.file:
-        path: /var/www/html
-        mode: '0744'
-        recurse: yes
+
 
     - name: Delete frontend sources 
       file:
