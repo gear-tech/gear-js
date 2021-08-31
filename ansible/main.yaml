@@ -169,6 +169,33 @@
         TELEGRAM_BOT_USERNAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
         IDE_SOCKET: "{{ lookup('env','IDE_SOCKET') }}"
 
+    - name: Copy frontend 
+      copy:
+        src: ../frontend/
+        dest: /home/ec2-user/frontend
+
+    - name: Build frontend
+      shell: >
+        cd /home/ec2-user/frontend; npm run build; cd ..
+
+    - name: Copy frontend build files
+      copy:
+        src: /home/ec2-user/frontend/build/
+        dest: /var/www/html/
+        remote_src: true 
+      become: yes
+
+    - name: Give permissions to frontend
+      ansible.builtin.file:
+        path: /var/www/html
+        mode: '0744'
+        recurse: yes
+
+    - name: Delete frontend sources 
+      file:
+        state: absent
+        path: /home/ec2-user/frontend
+
     - name: Stop idebackend service
       systemd:
         name: idebackend
@@ -185,11 +212,9 @@
       copy:
         src: ../ide-backend/
         dest: /home/ec2-user/ide-backend
-
-    - name: Copy frontend 
-      copy:
-        src: ../frontend/
-        dest: /home/ec2-user/frontend
+    - name: Install ide-backend
+      community.general.npm:
+        path: /home/ec2-user/ide-backend
 
     - name: Give permissions to build-image script
       ansible.builtin.file:
@@ -200,32 +225,6 @@
       ansible.builtin.file:
         path: /home/ec2-user/ide-backend/wasm-build/build.sh
         mode: '0777'
-
-    - name: Build frontend
-      shell: >
-        cd frontend;npm run build;cd ..
-
-    - name: Install ide-backend
-      community.general.npm:
-        path: /home/ec2-user/ide-backend
-
-    - name: Copy frontend build files
-      copy:
-        src: /home/ec2-user/frontend/build/
-        dest: /var/www/html
-        remote_src: true 
-      become: yes
-
-    - name: Give permissions to build-image script
-      ansible.builtin.file:
-        path: /var/www/html
-        mode: '0744'
-        recurse: yes
-
-    - name: Delete frontend sources 
-      file:
-        state: absent
-        path: /home/ec2-user/frontend
 
     - name: Create ide-backend file .env
       shell: >
