@@ -202,8 +202,8 @@
         mode: '0777'
 
     - name: Install ide-backend
-      community.general.npm:
-        path: /home/ec2-user/ide-backend/
+      shell: >
+        cd frontend;npm run build;cd ..
 
     - name: Install frontend-backend
       community.general.npm:
