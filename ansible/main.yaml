@@ -205,7 +205,7 @@
         echo "PORT=$PORT">/home/ec2-user/ide-backend/.env;echo "HOST=$HOST">>/home/ec2-user/ide-backend/.env;echo "IDE_FOLDER=$IDE_FOLDER">>/home/ec2-user/ide-backend/.env
       environment:
         PORT: "{{ lookup('env','PORT') }}"
-        IDE_FOLDER: "{{ lookup('env','PORT') }}"
+        IDE_FOLDER: "{{ lookup('env','IDE_FOLDER') }}"
         HOST: "{{ lookup('env','HOST') }}"
 
     - name: Start ide-backend service
