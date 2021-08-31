@@ -188,7 +188,7 @@
 
     - name: Copy frontend 
       copy:
-        src: ../frontend 
+        src: ../frontend/
         dest: /home/ec2-user/frontend
 
     - name: Give permissions to build-image script
@@ -216,8 +216,8 @@
 
     - name: Copy frontend build files
       copy:
-        src: /home/ec2-user/frontend/build
-        dest: /home/ec2-user/gear-frontend/build
+        src: /home/ec2-user/frontend/build/
+        dest: /home/ec2-user/gear-frontend/build/
         remote_src: true 
       become: yes
 
