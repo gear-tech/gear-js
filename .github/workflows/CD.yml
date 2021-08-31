@@ -61,7 +61,7 @@ jobs:
           tags: schernovgear/gear-frontend:nightly
 
   Deploy:
-    needs: Docker_frontend
+ #   needs: Docker_frontend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
