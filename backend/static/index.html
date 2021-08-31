@@ -134,8 +134,9 @@
         methods: {
           connect() {
             console.log('connecting');
-            this.socket = io('https://54.176.117.80/api/ws', {
+            this.socket = io('http://localhost:3000/api/ws', {
               query: { Authorization: this.token },
+              transports: ['websocket']
             });
             this.socket.on('message', (event) => {
               console.log(event);

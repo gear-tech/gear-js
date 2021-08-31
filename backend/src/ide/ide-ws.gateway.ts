@@ -1,5 +1,5 @@
 import { Logger, UseGuards } from '@nestjs/common';
-import { OnGatewayInit } from '@nestjs/websockets';
+import { OnGatewayConnection, OnGatewayInit } from '@nestjs/websockets';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -9,22 +9,27 @@ import { Server } from 'socket.io';
 import { WsAuthGuard } from 'src/auth/guards/ws-auth.guard';
 import { IdeService } from './ide.service';
 
+const logger: Logger = new Logger('IdeGateway');
+
 @WebSocketGateway({ namespace: '/ide' })
-export class WsIdeGateway implements OnGatewayInit {
+export class WsIdeGateway implements OnGatewayInit, OnGatewayConnection {
   constructor(private readonly ideService: IdeService) {}
+
+  handleConnection(client: any, ...args: any[]) {
+    logger.log('Client connected');
+  }
 
   @WebSocketServer()
   server: Server;
 
-  private logger: Logger = new Logger('IdeGateway');
-
   afterInit(server: any) {
-    this.logger.log('Ide websocket started');
+    logger.log('Ide websocket started');
   }
 
   @UseGuards(WsAuthGuard)
   @SubscribeMessage('build')
   async buildWasm(client, payload: any) {
+    logger.log('New build request')
     await this.ideService.build(client, payload, client.user.username);
   }
 
