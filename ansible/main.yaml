@@ -191,6 +191,8 @@
       environment:
         REACT_APP_GITHUB_CLIENT_ID: "{{ lookup('env','GITHUB_CLIENT_SECRET') }}"
         REACT_APP_GITHUB_CALLBACK_URL: "https://{{ lookup('env','NODE_ADDRESS') }}/callback"
+        REACT_APP_TELEGRAM_BOT_NAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
+        REACT_APP_API_PATH: "https://{{ lookup('env','NODE_ADDRESS') }}/api"
         REACT_APP_WS_URI: "wss://{{ lookup('env','NODE_ADDRESS') }}/api/ws"
         REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
 
