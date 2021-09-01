@@ -17,6 +17,11 @@
         HOST: "{{ lookup('env','HOST') }}"
         IDE_FOLDER: "{{ lookup('env','IDE_FOLDER') }}"
         PORT: "{{ lookup('env','PORT') }}"
+        REACT_APP_GITHUB_CLIENT_ID: "{{ lookup('env','GITHUB_CLIENT_SECRET') }}"
+        REACT_APP_GITHUB_CALLBACK_URL: "https://{{ lookup('env','NODE_ADDRESS') }}/callback"
+        REACT_APP_WS_URI: "wss://{{ lookup('env','NODE_ADDRESS') }}/api/ws"
+        REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
+
   tasks:
     - name: Copy docker-compose
       copy:
@@ -181,6 +186,11 @@
     - name: Install frontend
       community.general.npm:
         path: /home/ec2-user/frontend
+      environment:
+        REACT_APP_GITHUB_CLIENT_ID: "{{ lookup('env','GITHUB_CLIENT_SECRET') }}"
+        REACT_APP_GITHUB_CALLBACK_URL: "https://{{ lookup('env','NODE_ADDRESS') }}/callback"
+        REACT_APP_WS_URI: "wss://{{ lookup('env','NODE_ADDRESS') }}/api/ws"
+        REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
 
     - name: Build frontend
       shell: >
@@ -195,8 +205,6 @@
         group: nginx
         mode: '0744'
       become: yes
-
-
 
     - name: Delete frontend sources 
       file:

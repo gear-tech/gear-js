@@ -84,6 +84,7 @@ jobs:
           PORT: ${{ secrets.PORT }}
           HOST: ${{ secrets.HOST }}
           IDE_FOLDER: ${{ secrets.IDE_FOLDER }}
+          NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
         with:
           # Required, playbook filepath
           directory: ./ansible
