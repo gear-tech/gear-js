@@ -16,7 +16,7 @@
     size: 2048 
   become: yes
 
- - name: Generates CSR
+- name: Generates CSR
   openssl_csr:
     path: /etc/nginx/cert/nginx.csr
     privatekey_path: /etc/nginx/cert/private.key
@@ -35,7 +35,7 @@
     path: /etc/nginx/cert/dhparam.pem
   register: stat_result
 
-  - name: The Diffie-Hellman parameter file is generated
+- name: The Diffie-Hellman parameter file is generated
   shell: >
     openssl dhparam -out /etc/nginx/cert/dhparam.pem 2048
   become: yes
