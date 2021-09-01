@@ -1,0 +1,36 @@
+---
+#Install frontend 
+- name: Copy frontend
+  copy:
+    src: ../../../frontend/
+    dest: /home/ec2-user/frontend
+    
+- name: Install frontend
+  community.general.npm:
+    path: /home/ec2-user/frontend
+  environment:
+    REACT_APP_GITHUB_CLIENT_ID: "{{ lookup('env','GITHUB_CLIENT_SECRET') }}"
+    REACT_APP_GITHUB_CALLBACK_URL: "https://{{ lookup('env','NODE_ADDRESS') }}/callback"
+    REACT_APP_TELEGRAM_BOT_NAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
+    REACT_APP_API_PATH: "https://{{ lookup('env','NODE_ADDRESS') }}/api"
+    REACT_APP_WS_URI: "wss://{{ lookup('env','NODE_ADDRESS') }}/api/ws"
+    REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
+
+- name: Build frontend
+  shell: >
+    cd /home/ec2-user/frontend; npm run build; cd ..
+
+- name: Copy frontend build files
+  copy:
+    src: /home/ec2-user/frontend/build/
+    dest: /var/www/html/
+    remote_src: true 
+    owner: nginx
+    group: nginx
+    mode: '0744'
+  become: yes
+
+- name: Delete frontend sources 
+  file:
+    state: absent
+    path: /home/ec2-user/frontend
