@@ -1,11 +1,12 @@
 export const isProd = process.env.NODE_ENV === 'production';
 export const GEAR_STORAGE_KEY = 'gear_user_token';
 export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
-export const GEAR_LOCAL_WS_URI = isProd ? 'wss://idea.gear-tech.io/api/ws' : 'ws://localhost:3000/api/ws';
-export const GEAR_LOCAL_IDE_URI = isProd ? '//idea.gear-tech.io/ide' : 'http://localhost:3000/ide';
+export const GEAR_LOCAL_WS_URI = isProd ? process.env.REACT_APP_WS_URI : 'ws://localhost:3000/api/ws';
+export const GEAR_LOCAL_IDE_URI = isProd ? process.env.REACT_APP_IDE_URI : 'http://localhost:3000/ide';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
-
+export const GITHUB_CALLBACK_URL = process.env.REACT_APP_GITHUB_CALLBACK_URL 
+export const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID 
 export const GEAR_BALANCE_TRANSFER_VALUE = 4324239999999;
 
 export const PROGRAM_ERRRORS = {

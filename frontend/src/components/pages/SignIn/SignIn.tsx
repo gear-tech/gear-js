@@ -4,13 +4,12 @@ import TelegramLoginButton from 'react-telegram-login';
 import { useDispatch } from 'react-redux';
 import { Redirect, Link } from "react-router-dom";
 
-import { GEAR_STORAGE_KEY, isProd } from 'consts';
+import { GEAR_STORAGE_KEY, GITHUB_CALLBACK_URL, GITHUB_CLIENT_ID } from 'consts';
 import { routes } from 'routes';
 
-import {getTelegramUserJwtAction, getTestUserJwtAction} from 'store/actions/actions';
+import { getTelegramUserJwtAction } from 'store/actions/actions';
 
 import './SignIn.scss';
-import telegram from 'images/telegram.svg';
 import github from 'images/github.svg';
 
 function SignIn(){
@@ -22,11 +21,7 @@ function SignIn(){
   }
 
   const handleAuthViaGithub = () => {
-    window.location.href = "https://github.com/login/oauth/authorize?client_id=d48a88d171386837281a&redirect_uri=https://idea.gear-tech.io/callback"
-  }
-
-  const handleAuthViaTelegram = () => {
-    dispatch(getTestUserJwtAction('43'));
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_CALLBACK_URL}`
   }
 
   if (localStorage.getItem(GEAR_STORAGE_KEY)) {
@@ -39,24 +34,13 @@ function SignIn(){
       <div className='sign-in__wrapper-buttons'>          
         <TelegramLoginButton 
           dataOnauth={handleTelegramResponse} 
-          botName="gear_tech_bot" 
+          botName="gear_test_bot" 
           cornerRadius="2"
           buttonSize="large"
           requestAccess="write"
           usePic="true"
         />
-        {
-          !isProd
-          &&
-          (
-            <button 
-            type='button' 
-            className='sign-in__button sign-in__button-telegram'
-            onClick={handleAuthViaTelegram}>
-              <img className='sign-in__telegram-logo' alt='telegram' src={telegram}/>Continue with Telegram
-            </button>
-          )
-        }
+        
         <button 
           type='button' 
           className='sign-in__button sign-in__button-github'
