@@ -1,8 +1,8 @@
 ---
 #Install frontend 
-- name: Copy frontend 
+- name: Copy frontend
   copy:
-    src: ../frontend/
+    src: ../../../frontend/
     dest: /home/ec2-user/frontend
     
 - name: Install frontend
