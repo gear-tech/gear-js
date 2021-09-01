@@ -5,9 +5,11 @@ export const GEAR_LOCAL_WS_URI = isProd ? process.env.REACT_APP_WS_URI : 'ws://l
 export const GEAR_LOCAL_IDE_URI = isProd ? process.env.REACT_APP_IDE_URI : 'http://localhost:3000/ide';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
-export const GITHUB_CALLBACK_URL = process.env.REACT_APP_GITHUB_CALLBACK_URL 
-export const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID 
+export const GITHUB_CALLBACK_URL = process.env.REACT_APP_GITHUB_CALLBACK_URL;
+export const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
+export const TELEGRAM_BOT_NAME = process.env.REACT_APP_TELEGRAM_BOT_NAME;
 export const GEAR_BALANCE_TRANSFER_VALUE = 4324239999999;
+export const API_PATH = process.env.REACT_APP_API_PATH
 
 export const PROGRAM_ERRRORS = {
   UNATHORIZED: 'Unathorized',
@@ -44,23 +46,23 @@ export const RPC_METHODS = {
   SEND_MESSAGE: 'message.send',
 };
 
-export const EDITOR_DROPDOWN = ['Empty Rust template']
+export const EDITOR_DROPDOWN = ['Empty Rust template'];
 
 export const PAGE_TYPES = {
   ANSWER_PAGE: 'ANSWER_PAGE',
   MESSAGE_FORM_PAGE: 'MESSAGE_FORM_PAGE',
-  EDITOR_PAGE: 'EDITOR_PAGE'
-}
+  EDITOR_PAGE: 'EDITOR_PAGE',
+};
 
 export const EDITOR_BTNS = {
   BUILD: 'BUILD',
   DOWNLOAD: 'DOWNLOAD',
   RUN: 'RUN',
   BUILD_RUN: 'BUILD_RUN',
-}
+};
 
 export const SWITCH_PAGE_TYPES = {
   UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
   UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
-  ALL_PROGRAMS: 'ALL_PROGRAMS'
-}
+  ALL_PROGRAMS: 'ALL_PROGRAMS',
+};

@@ -4,7 +4,7 @@ import TelegramLoginButton from 'react-telegram-login';
 import { useDispatch } from 'react-redux';
 import { Redirect, Link } from "react-router-dom";
 
-import { GEAR_STORAGE_KEY, GITHUB_CALLBACK_URL, GITHUB_CLIENT_ID } from 'consts';
+import { GEAR_STORAGE_KEY, GITHUB_CALLBACK_URL, GITHUB_CLIENT_ID, TELEGRAM_BOT_NAME } from 'consts';
 import { routes } from 'routes';
 
 import { getTelegramUserJwtAction } from 'store/actions/actions';
@@ -34,7 +34,7 @@ function SignIn(){
       <div className='sign-in__wrapper-buttons'>          
         <TelegramLoginButton 
           dataOnauth={handleTelegramResponse} 
-          botName="gear_test_bot" 
+          botName={TELEGRAM_BOT_NAME} 
           cornerRadius="2"
           buttonSize="large"
           requestAccess="write"
