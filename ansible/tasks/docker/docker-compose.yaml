@@ -30,10 +30,5 @@ services:
       - TELEGRAM_BOT_USERNAME=${TELEGRAM_BOT_USERNAME}
       - IDE_SOCKET=${IDE_SOCKET}
 
-  frontend:
-    image: schernovgear/gear-frontend:nightly
-    ports:
-      - "3000:3000"
-
 volumes:
   pg_data:
