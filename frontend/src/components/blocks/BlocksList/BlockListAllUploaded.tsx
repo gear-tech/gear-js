@@ -3,90 +3,145 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 
-import { ALL_PROGRAMS_TEST } from 'fixtures';
-
 import { Pagination } from 'components/Pagination';
-import { SearchForm } from 'components/blocks/SearchForm';
-import { getProgramsListAction } from 'store/actions/actions';
+import { getAllProgramsAction, resetGasAction, resetProgramPayloadTypeAction, sendMessageResetAction, uploadMetaResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 
-import UploadIcon from 'images/upload.svg';
-import RemoveQueryIcon from 'images/remove-query.svg';
-import { UploadedProgramModel } from 'types/program';
+import { ProgramModel } from 'types/program';
 
-const BlockListAllUploaded = () => {
+import { Message } from 'components/Message';
+import { Meta } from 'components/Meta';
+import { SocketService } from 'services/SocketService';
+
+import MessageIcon from 'images/message.svg';
+import UploadIcon from 'images/upload.svg';
+
+import { UserProgram } from './UserProgram';
+
+type ProgramMessageType = {
+    programName: string;
+    programHash: string;
+}
+
+type Props = {
+    socketService: SocketService
+}
+
+const BlockListAllUploaded = ({ socketService }: Props) => {
 
     const dispatch = useDispatch();
 
-    const { allUploadedPrograms, uploadedProgramsCount } = useSelector((state: RootState) => state.programs);
+    const { allUploadedPrograms, allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
 
     const [currentPage, setCurrentPage] = useState(0);
-    const [searchQueries, setSearchQueries] = useState<string[]>([]);
-
-    console.log(allUploadedPrograms, uploadedProgramsCount)
+    const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
+    const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
     const onPageChange = (page: number) => setCurrentPage(page);
 
     const offset = currentPage * INITIAL_LIMIT_BY_PAGE;
 
     useEffect(() => {
-        dispatch(getProgramsListAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
+        dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
     }, [dispatch, offset]);
 
-    const handleAddQuery = (searchQuery: string) => {
-        if (!searchQueries.find(item => item === searchQuery)) {
-            setSearchQueries([...searchQueries, searchQuery]);
+    const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {
+        if (programName) {
+            if (isMessage) {
+                setProgramMessage({
+                    programHash,
+                    programName
+                })
+            } else {
+                setProgramMeta({
+                    programHash,
+                    programName
+                })
+            }
         }
     }
 
-    const handleRemoveQuery = (query: string) => {
-        setSearchQueries([...searchQueries.filter(item => item !== query)])
+    const handleCloseMessageForm = () => {
+        dispatch(sendMessageResetAction());
+        dispatch(resetGasAction());
+        dispatch(resetProgramPayloadTypeAction());
+        setProgramMessage(null);
     }
 
-    const handleRemoveAllQueries = () => {
-        setSearchQueries([]);
+    const handleCloseMetaForm = () => {
+        dispatch(uploadMetaResetAction())
+        setProgramMeta(null);
+    }
+
+    if (programMessage) {
+        return (
+          <Message 
+            programHash={programMessage.programHash} 
+            programName={programMessage.programName} 
+            socketService={socketService} 
+            handleClose={handleCloseMessageForm}/>
+        )
+    }
+    
+    if (programMeta) {
+        return (
+            <Meta
+                programHash={programMeta.programHash} 
+                programName={programMeta.programName} 
+                socketService={socketService} 
+                handleClose={handleCloseMetaForm}/>
+        )
     }
 
     return (
         <div className="all-programs">
-            <SearchForm handleSearch={handleAddQuery} handleRemoveAllQueries={handleRemoveAllQueries}/>
-            <div className="all-programs--queries">
-                {
-                    searchQueries.length && searchQueries.map(query => (
-                        <div className="all-programs--query">
-                            <span>Hash: {query}</span>
-                            <button className="all-programs--query__remove" type="button" onClick={() => handleRemoveQuery(query)}>
-                                <img src={RemoveQueryIcon} alt="remove-query" />
-                            </button>
-                        </div>
-                    )) || null
-                }
-            </div>
-            <div className="all-programs--pagination">
-                <span>Total results: {ALL_PROGRAMS_TEST.length}</span>
+            <div className="pagination-wrapper">
+                <span>Total results: {allUploadedProgramsCount}</span>
                 <Pagination 
                     page={currentPage}
-                    count={13}
+                    count={allUploadedProgramsCount || 0}
                     onPageChange={onPageChange}/>
             </div>
             <div className="all-programs--list">
                 {
-                    ALL_PROGRAMS_TEST && ALL_PROGRAMS_TEST.length && ALL_PROGRAMS_TEST.map((item: UploadedProgramModel) => (
-                        <div className="all-programs--item" key={item.hash}>
-                            <p className="all-programs--item__hash">{item.hash}</p>
-                            <button className="all-programs--item__upload" type="button">
-                                <img src={UploadIcon} alt="upload-program" />
-                            </button>
-                        </div>
-                    ))
+                    allUploadedPrograms && allUploadedPrograms.length && allUploadedPrograms.map((item: ProgramModel) => {
+                        if (item.name && item.name !== "name.wasm") {
+                            return <UserProgram program={item} handleOpenForm={handleOpenForm}/>
+                        }
+                        return (
+                            <div className="all-programs--item" key={item.hash}>
+                                <p className="all-programs--item__hash">{item.hash}</p>
+                                <div className="programs-list--btns">
+                                    <button 
+                                        className="programs-list__message-btn" 
+                                        type="button" 
+                                        aria-label="refresh"
+                                        onClick={() => handleOpenForm(item.hash, item.name, true)}
+                                    >
+                                        <img src={MessageIcon} alt="message" />
+                                    </button>
+                                    <button className="all-programs--item__upload" type="button" onClick={() => handleOpenForm(item.hash, item.name)}>
+                                        <img src={UploadIcon} alt="upload-program" />
+                                    </button>
+                                </div>
+                            </div>
+                        )
+                    })
+                    || null
                 }
             </div>
-            <div className="all-programs--bottom">
-                <Pagination 
-                    page={currentPage}
-                    count={13}
-                    onPageChange={onPageChange}/>
-            </div>
+            {
+                allUploadedPrograms && allUploadedPrograms.length
+                &&
+                <div className="pagination-bottom">
+                    <Pagination 
+                        page={currentPage}
+                        count={allUploadedProgramsCount || 0}
+                        onPageChange={onPageChange}/>
+                </div>
+                ||
+                null
+            }
         </div>
     )
 }

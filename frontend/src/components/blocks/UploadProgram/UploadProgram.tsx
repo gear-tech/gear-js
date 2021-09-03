@@ -15,11 +15,11 @@ import ProgramDetails from '../ProgramDetails';
 
 import './UploadProgram.scss';
 
-type UploadProgramInterface = {
+type UploadProgramRPC = {
   socketService: SocketService;
 };
 
-const UploadProgram = ({ socketService }: UploadProgramInterface) => {
+const UploadProgram = ({ socketService }: UploadProgramRPC) => {
 
   const dispatch = useDispatch();
 

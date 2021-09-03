@@ -1,0 +1,11 @@
+export enum FILE {
+  CREATE = `FILE_CREATE`,
+  UPDATE = `FILE_UPDATE`,
+  DELETE = `FILE_DELETE`,
+}
+
+export enum FOLDER {
+  CREATE = `FOLDER_CREATE`,
+  UPDATE = `FOLDER_UPDATE`,
+  DELETE = `FOLDER_DELETE`,
+}

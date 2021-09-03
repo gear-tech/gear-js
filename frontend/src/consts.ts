@@ -16,6 +16,9 @@ export const PROGRAM_ERRRORS = {
   INVALID_PARAMS: 'Invalid method parameters',
   INVALID_TRANSACTION: 'Invalid transaction',
   PROGRAM_INIT_FAILED: 'Program initialization falied',
+  GEAR_NODE_ERROR: 'Gear node error',
+  BALANCE_LOW: 'Invalid transaction. Account balance too low',
+  PAYLOAD_ERROR: 'payload.toHex is not a function'
 };
 
 export const PROGRESS_BAR_STATUSES = {
@@ -30,29 +33,54 @@ export const PROGRAM_UPLOAD_STATUSES = {
   PROGRAM_INITIALIZED: 'program initialized',
 };
 
+export const EVENT_TYPES = {
+  PROGRAM_INITIALIZED: 'ProgramInitialized',
+  PROGRAM_INITIALIZATION_FAILURE: 'InitFailure',
+  LOG: 'log'
+};
+
 export const SOCKET_RESULT_STATUSES = {
   IN_BLOCK: 'InBlock',
   FINALIZED: 'Finalized',
   PROGRAM_INITIALIZED: 'ProgramInitialized',
   SUCCESS: 'Success',
-  LOG: 'Log',
+  LOG: 'Log'
 };
 
 export const RPC_METHODS = {
   PROGRAM_UPLOAD: 'program.upload',
   TOTAL_ISSUANCE: 'system.totalIssuance',
   SUBSCRIBE_BLOCKS: 'blocks.newBlocks',
+  SUBSCRIBE_EVENTS: 'events.subscribe',
   BALANCE_TRANSFER: 'balance.transfer',
   SEND_MESSAGE: 'message.send',
+  SEND_META: 'program.addMeta',
+  GET_GAS_SPENT: 'message.gasSpent',
+  GET_PAYLOAD_TYPE: 'message.payloadType',
+  READ_EVENTS: 'events.read'
 };
 
+<<<<<<< HEAD:frontend/src/consts.ts
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
+=======
+export const SWITCH_PAGE_TYPES = {
+  UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
+  UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
+  NOTIFICATIONS: 'NOTIFICATIONS',
+  ALL_PROGRAMS: 'ALL_PROGRAMS'
+}
+>>>>>>> frontend/develop:src/consts.ts
 
 export const PAGE_TYPES = {
-  ANSWER_PAGE: 'ANSWER_PAGE',
   MESSAGE_FORM_PAGE: 'MESSAGE_FORM_PAGE',
   EDITOR_PAGE: 'EDITOR_PAGE',
+<<<<<<< HEAD:frontend/src/consts.ts
 };
+=======
+  META_FORM_PAGE: 'META_FORM_PAGE',
+  NOTIFICATION_INFO: 'NOTIFICATION_INFO'
+}
+>>>>>>> frontend/develop:src/consts.ts
 
 export const EDITOR_BTNS = {
   BUILD: 'BUILD',
@@ -61,8 +89,15 @@ export const EDITOR_BTNS = {
   BUILD_RUN: 'BUILD_RUN',
 };
 
+<<<<<<< HEAD:frontend/src/consts.ts
 export const SWITCH_PAGE_TYPES = {
   UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
   UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
   ALL_PROGRAMS: 'ALL_PROGRAMS',
 };
+=======
+export const SEARCH_TYPES = {
+  NOTIFICATIONS: 'NOTIFICATIONS',
+  PROGRAMS: 'PROGRAMS'
+}
+>>>>>>> frontend/develop:src/consts.ts

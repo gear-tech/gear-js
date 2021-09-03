@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 
 import { Formik, Form, Field } from 'formik';
 
@@ -10,10 +10,14 @@ import { SocketService } from 'services/SocketService';
 
 import { programUploadStartAction } from 'store/actions/actions';
 
+import StatusPanel from 'components/blocks/StatusPanel';
+
 import './ProgramDetails.scss';
 
 import cancel from 'images/cancel.svg';
 import close from 'images/close.svg';
+import deselected from 'images/radio-deselected.svg';
+import selected from 'images/radio-selected.svg';
 
 import { Schema } from './Schema';
 
@@ -27,14 +31,59 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
 
   const dispatch = useDispatch();
 
+  const [isMetaByFile, setIsMetaByFile] = useState(false);
+  const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
+  const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
+
+  const metaFieldRef = useRef<any>(null);
+
+
+  if ( wrongMetaFormat ) {
+    setTimeout( () => setWrongMetaFormat(false), 3000);
+  }
+
   const mapInitialValues = () => ({
-    gasLimit: 20000,
+    gasLimit: 0,
     value: 20000,
     initPayload: "",
     initType: "",
     incomingType: "",
-    expectedType: ""
+    expectedType: "",
+    initOutType: "",
+    meta: null
   })
+
+  const removeMetaFile = () => {
+    setDroppedMetaFile(null);
+  }
+
+  const uploadMetaFile = () => {
+    metaFieldRef.current?.click();
+  }
+
+  const handleFilesUpload = useCallback((file) => {
+    setDroppedMetaFile(file)
+  }, [setDroppedMetaFile])
+
+  const checkFileFormat = useCallback((files: any) => {
+    // eslint-disable-next-line no-console
+    if ( typeof files[0]?.name === 'string' ) {
+      const fileExt: string = files[0].name.split(".").pop().toLowerCase();
+      return fileExt !== 'wasm';
+    }
+    return true
+  }, [])
+
+  const handleMetaInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { target: { files } } = event;
+    if ( files?.length ) {
+      const isCorrectFormat = checkFileFormat(files);
+      setWrongMetaFormat(isCorrectFormat);
+      if (!isCorrectFormat) {
+        handleFilesUpload(files[0])
+      }
+    }
+  };
 
   return (
   
@@ -50,7 +99,7 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
           values: UploadProgramModel,
         ) => {
           dispatch(programUploadStartAction())
-          socketService.uploadProgram(droppedFile, values);
+          socketService.uploadProgram(droppedFile, {...values, meta: droppedMetaFile});
           setDroppedFile(null)
        }}
        onReset={() => {
@@ -127,49 +176,109 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
                   {errors.value && touched.value ? <div className="program-details__error">{errors.value}</div> : null}
                 </div>
               </div>
+              <div className="program-details__info">
+                <p className="program-details__field">Metadata: </p>
+                <div className="program-details--switch-btns">
+                  <button type="button" className="program-details--switch-btns__btn" onClick={() => {
+                    setIsMetaByFile(false);
+                    setDroppedMetaFile(null);
+                  }}>
+                    <img src={isMetaByFile ? deselected : selected} alt="radio" />
+                    Manual input
+                  </button>
+                  <button type="button" className="program-details--switch-btns__btn" onClick={() => setIsMetaByFile(true)}>
+                    <img src={isMetaByFile ? selected : deselected} alt="radio" />
+                    Upload file
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="program-details__wrapper-column2">
-              <div className="program-details__info">
-                <label htmlFor="initType" className="program-details__field-limit program-details__field">Initial type:</label>
-                <div className="program-details__field-wrapper">
+              {
+                isMetaByFile
+                &&
+                <div className="program-details__info">
+                  <label className="program-details__field" htmlFor="meta">Metadata file: </label>
                   <Field 
-                    id="initType" 
-                    name="initType" 
-                    placeholder="" 
-                    className="program-details__limit-value program-details__value" 
-                    type="text"
+                    id="meta" 
+                    name="meta" 
+                    className="is-hidden" 
+                    type="file"
+                    innerRef={metaFieldRef}
+                    onChange={handleMetaInputChange}
                   />
-                  {errors.initType && touched.initType ? <div className="program-details__error">{errors.initType}</div> : null}
+                  {
+                    droppedMetaFile
+                    &&
+                    <div className="program-details__filename program-details__value">
+                      {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, "")}.{droppedMetaFile.name.split('.').pop()}
+                      <button type="button" onClick={removeMetaFile}>
+                        <img alt="cancel" src={cancel} />
+                      </button>
+                    </div>
+                    ||
+                    <button className="program-details--file-btn" type="button" onClick={uploadMetaFile}>
+                      Select file
+                    </button>
+                  }
                 </div>
-              </div>
-              <div className="program-details__info">
-                <label htmlFor="incomingType" className="program-details__field-limit program-details__field">Incoming type:</label>
-                <div className="program-details__field-wrapper">
-                  <Field 
-                    id="incomingType" 
-                    name="incomingType" 
-                    placeholder="" 
-                    className="program-details__limit-value program-details__value" 
-                    type="text"
-                  />
-                  {errors.incomingType && touched.incomingType ? <div className="program-details__error">{errors.incomingType}</div> : null}
+                ||
+                <>
+                <div className="program-details__info">
+                  <label htmlFor="initType" className="program-details__field-limit program-details__field">Initial type:</label>
+                  <div className="program-details__field-wrapper">
+                    <Field 
+                      id="initType" 
+                      name="initType" 
+                      placeholder="" 
+                      className="program-details__limit-value program-details__value" 
+                      type="text"
+                    />
+                    {errors.initType && touched.initType ? <div className="program-details__error">{errors.initType}</div> : null}
+                  </div>
                 </div>
-              </div>
-              <div className="program-details__info">
-                <label htmlFor="expectedType" className="program-details__field-init-value program-details__field">Expected type:</label>
-                <div className="program-details__field-wrapper">
-                  <Field 
-                    id="expectedType" 
-                    name="expectedType" 
-                    placeholder="" 
-                    className="program-details__init-value program-details__value" 
-                    type="text"
-                  />
-                  {errors.expectedType && touched.expectedType ? <div className="program-details__error">{errors.expectedType}</div> : null}
+                <div className="program-details__info">
+                  <label htmlFor="incomingType" className="program-details__field-limit program-details__field">Incoming type:</label>
+                  <div className="program-details__field-wrapper">
+                    <Field 
+                      id="incomingType" 
+                      name="incomingType" 
+                      placeholder="" 
+                      className="program-details__limit-value program-details__value" 
+                      type="text"
+                    />
+                    {errors.incomingType && touched.incomingType ? <div className="program-details__error">{errors.incomingType}</div> : null}
+                  </div>
                 </div>
-              </div>
+                <div className="program-details__info">
+                  <label htmlFor="expectedType" className="program-details__field-init-value program-details__field">Expected type:</label>
+                  <div className="program-details__field-wrapper">
+                    <Field 
+                      id="expectedType" 
+                      name="expectedType" 
+                      placeholder="" 
+                      className="program-details__init-value program-details__value" 
+                      type="text"
+                    />
+                    {errors.expectedType && touched.expectedType ? <div className="program-details__error">{errors.expectedType}</div> : null}
+                  </div>
+                </div>
+                <div className="program-details__info">
+                  <label htmlFor="initOutType" className="program-details__field-init-value program-details__field">Initial output type:</label>
+                  <div className="program-details__field-wrapper">
+                    <Field 
+                      id="initOutType" 
+                      name="initOutType" 
+                      placeholder="" 
+                      className="program-details__init-value program-details__value" 
+                      type="text"
+                    />
+                    {errors.initOutType && touched.initOutType ? <div className="program-details__error">{errors.initOutType}</div> : null}
+                  </div>
+                </div>
+                </>
+              }
             </div>
-
             <div className="program-details__buttons">
               <button 
                 type="submit" 
@@ -192,6 +301,9 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
         </Form>
       )}
       </Formik>
+      {(wrongMetaFormat) && <StatusPanel onClose={() => {
+        setWrongMetaFormat(false);
+      }} statusPanelText={null} isError/>}
     </div>
   )
 }

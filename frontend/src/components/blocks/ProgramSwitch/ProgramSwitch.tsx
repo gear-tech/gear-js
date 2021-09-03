@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SocketService } from 'services/SocketService';
 import { RootState } from 'store/reducers';
 
-import { EditorMenu } from 'components/blocks/EditorMenu';
+import { DropdownMenu } from 'components/blocks/DropdownMenu';
 
 import Editor from 'images/editor_icon.svg';
 
@@ -23,15 +23,14 @@ const ProgramSwitch = ({ socketService, pageType }: ProgramSwitchType) => {
   const dispatch = useDispatch();
 
   const [timeInstance, setTimeInstance] = useState(0)
-  const [isSocketsConnected, setIsSocketsConnected] = useState(false);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
   const [chosenTemplateId, setChosenTemplateId] = useState<number>(-1);
 
   const { totalIssuance, blocks } = useSelector((state: RootState) => state.blocks)
 
-  const [prevBlocksLength, setPrevBlocksLength] = useState(0);
+  const [prevBlockHash, setPrevBlockHash] = useState('');
 
-  const editorMenuRef = useRef<HTMLDivElement | null>(null);
+  const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
   
   useEffect(() => {
 
@@ -40,19 +39,19 @@ const ProgramSwitch = ({ socketService, pageType }: ProgramSwitchType) => {
       setTimeInstance(decreasedTime);
     }, 100);
 
-    if (blocks.length > prevBlocksLength) {
-      setPrevBlocksLength(blocks.length);
-      setTimeInstance(0)
+    if (blocks && blocks.length) {
+      if (blocks[0].hash !== prevBlockHash) {
+        setTimeInstance(0)
+      }
+      setPrevBlockHash(blocks[0].hash);
     }
 
-    if (!isSocketsConnected && socketService) {
+    if (!totalIssuance && socketService) {
       socketService.getTotalIssuance();
-      socketService.subscribeNewBlocks();
-      setIsSocketsConnected(true);
     }
 
     const handleClickOutsideDropdown = (event: MouseEvent) => {
-      if (isEditorDropdownOpened && editorMenuRef && !editorMenuRef.current?.contains(event.target as Node)) {
+      if (isEditorDropdownOpened && dropdownMenuRef && !dropdownMenuRef.current?.contains(event.target as Node)) {
         setIsEditorDropdownOpened(false)
       }
     }
@@ -65,13 +64,12 @@ const ProgramSwitch = ({ socketService, pageType }: ProgramSwitchType) => {
     };
   }, [dispatch, 
     setTimeInstance, 
-    timeInstance, 
-    setIsSocketsConnected, 
-    isSocketsConnected, 
-    setPrevBlocksLength,
-    prevBlocksLength,
+    timeInstance,
+    setPrevBlockHash,
+    prevBlockHash,
     blocks,
     socketService, 
+    totalIssuance,
     isEditorDropdownOpened, 
     setIsEditorDropdownOpened])
 
@@ -116,7 +114,7 @@ const ProgramSwitch = ({ socketService, pageType }: ProgramSwitchType) => {
         </div>
         <div className="switch-block--editor">
           <button 
-            className="switch-block--editor__btn"
+            className={clsx("switch-block--editor__btn", isEditorDropdownOpened && "is-active")}
             type="button"
             onClick={handleEditorDropdown}
           >
@@ -126,7 +124,7 @@ const ProgramSwitch = ({ socketService, pageType }: ProgramSwitchType) => {
           {
             isEditorDropdownOpened
             &&
-            <EditorMenu editorMenuRef={editorMenuRef} handleTemplate={handleTemplate}/>
+            <DropdownMenu dropdownMenuRef={dropdownMenuRef} handleDropdownBtnClick={handleTemplate}/>
           }
         </div>
       </div>

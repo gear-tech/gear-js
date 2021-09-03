@@ -81,15 +81,16 @@
 }
 
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .main {
     padding-bottom: 0!important;
   }
   .sign-in {
     margin-top: 0;
     height: 100%;
-    &__wrapper-buttons {
-      width: 100%;
-    }
+  }
+
+  .sign-in__wrapper-buttons {
+    width: 100%;
   }
 }

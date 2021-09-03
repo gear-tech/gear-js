@@ -1,22 +1,52 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Formik, Form, Field } from 'formik';
 
 import { SearchModel } from "types/program";
-import { SearchIcon } from "Icons";
+import { SEARCH_DROPDOWN } from "fixtures";
+import { SearchIcon, DropdownArrow } from "Icons";
+import { DropdownMenu } from "../DropdownMenu";
 import { Schema } from "./Schema";
 
 import './SearchForm.scss';
 
 type Props = {
     handleSearch: (searchQuery: string) => void;
-    handleRemoveAllQueries: () => void;
+    handleRemoveQuery: () => void;
+    handleDropdownItemSelect?: (index: number) => void;
+    searchType?: number;
 }
 
-const SearchForm = ({ handleSearch, handleRemoveAllQueries }: Props) => {
+const SearchForm = ({ handleSearch, handleRemoveQuery, handleDropdownItemSelect, searchType }: Props) => {
+
+    const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
+    const [isSearchDropdownOpened, setIsSearchDropdownOpened] = useState(false);
 
     const mapInitialValues = () => ({
-        programHash: ''
+        searchQuery: ''
     })
+
+    const handleSearchDropdown = () => {
+        if (!isSearchDropdownOpened) {
+            setIsSearchDropdownOpened(true);
+        }
+    }
+
+    const handleCloseDropdown = () => {
+        setIsSearchDropdownOpened(false);
+    }
+
+    useEffect(() => {
+
+        const handleClickOutsideDropdown = (event: MouseEvent) => {
+            if (isSearchDropdownOpened && dropdownMenuRef && !dropdownMenuRef.current?.contains(event.target as Node)) {
+                handleCloseDropdown();
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutsideDropdown);
+
+        return () => document.removeEventListener("mousedown", handleClickOutsideDropdown);
+    }, [isSearchDropdownOpened, dropdownMenuRef, setIsSearchDropdownOpened])
 
     return (
         <Formik
@@ -26,24 +56,43 @@ const SearchForm = ({ handleSearch, handleRemoveAllQueries }: Props) => {
             onSubmit={(
                 values: SearchModel
             ) => {
-                handleSearch(values.programHash);
+                handleSearch(values.searchQuery);
             }}
             onReset={() => {
-                handleRemoveAllQueries();
+                handleRemoveQuery();
             }}
         >
         {() => (
             <Form>
                 <div className="search-form">
                     <div className="search-form--field-wrapper">
-                        <SearchIcon color="#BBBBBB"/>
+                        <div className="search-form__icon">
+                            <SearchIcon color="#BBBBBB"/>
+                        </div>
                         <Field 
-                            id="programHash" 
-                            name="programHash" 
+                            id="searchQuery" 
+                            name="searchQuery" 
                             type="text"
                             className="search-form__input"
                             placeholder="Search..."
                         />
+                        {
+                            typeof searchType === "number"
+                            &&
+                            (
+                                <div className="search-form--type">
+                                    <button className="search-form--type__btn" type="button" onClick={handleSearchDropdown}>
+                                        <span>{SEARCH_DROPDOWN[searchType]}</span>
+                                        <DropdownArrow/>
+                                    </button>
+                                    {
+                                        isSearchDropdownOpened && typeof handleDropdownItemSelect === "function"
+                                        &&
+                                        <DropdownMenu dropdownMenuRef={dropdownMenuRef} handleDropdownBtnClick={handleDropdownItemSelect} handleCloseDropdown={handleCloseDropdown}/>
+                                    }
+                                </div>
+                            )
+                        }
                     </div>
                     <div className="search-form--btns">
                         <button
@@ -68,4 +117,8 @@ const SearchForm = ({ handleSearch, handleRemoveAllQueries }: Props) => {
     )
 }
 
+SearchForm.defaultProps = {
+    handleDropdownItemSelect: undefined,
+    searchType: undefined
+}
 export { SearchForm };
