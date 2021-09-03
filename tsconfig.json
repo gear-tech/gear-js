@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "declaration": true,
+    "declarationDir": "lib",
+    "outDir": "./lib",
+    "baseUrl": "./",
+    "alwaysStrict": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@gear-js": ["src/"],
+      "@gear-js/*": ["src/*"],
+      "@polkadot/api/augment": ["src/interfaces/augment-api.ts"],
+      "@polkadot/types/augment": ["src/interfaces/augment-types.ts"]
+    },
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "require": ["typescript-transform-paths/register"]
+  }
+}

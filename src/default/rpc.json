@@ -1,0 +1,20 @@
+{
+  "rpc": {
+    "gear": {
+      "getGasSpent": {
+        "description": "Get GasSpent",
+        "params": [
+          {
+            "name": "id",
+            "type": "H256"
+          },
+          {
+            "name": "payload",
+            "type": "Bytes"
+          }
+        ],
+        "type": "u64"
+      }
+    }
+  }
+}
