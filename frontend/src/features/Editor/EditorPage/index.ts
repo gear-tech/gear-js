@@ -1,3 +1,3 @@
-import './styles.css';
+import './styles.scss';
 
 export { EditorPage } from './EditorPage';

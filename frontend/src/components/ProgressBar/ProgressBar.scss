@@ -2,14 +2,16 @@
     background-color: #373C39;
     width: 100%;
     height: 1px;
-    &.green {
-        background-color: #2BD071;
-    }
-    &__indicator {
-        animation: progress_line 20s linear 1;
-        background-color: #2BD071;
-        height: 100%;
-    }
+}
+
+.progress-bar.green {
+    background-color: #2BD071;
+}
+
+.progress-bar__indicator {
+    animation: progress_line 20s linear 1;
+    background-color: #2BD071;
+    height: 100%;
 }
 
 @keyframes progress_line {

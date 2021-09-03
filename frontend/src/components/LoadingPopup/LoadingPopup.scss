@@ -12,39 +12,44 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    &--progress {
-        display: flex;
-        gap: 2px;
-        position: absolute;
-        bottom: 60px;
-        left: 0;
-        width: 100%;
-        z-index: 9999;
-    }
-    &--text-info {
-        position: absolute;
-        bottom: 30px;
-        display: flex;
-        color: #fff;
-        font-size: 14px;
-        z-index: 9999;
-        font-weight: bold;
-    }
-    &--imgs {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        position: relative;
-        img {
-            -webkit-animation: spin_top 8s linear infinite;
-            animation: spin_top 8s linear infinite;
-            &:last-child {
-                -webkit-animation: spin_bottom 8s linear infinite;
-                animation: spin_bottom 8s linear infinite;
-                margin-right: 10px;
-            }
-        }
-    }
+}
+
+.loading-popup--progress {
+    display: flex;
+    gap: 2px;
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+.loading-popup--text-info {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    color: #fff;
+    font-size: 14px;
+    z-index: 9999;
+    font-weight: bold;
+}
+
+.loading-popup--imgs {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: relative;
+}
+
+.loading-popup--imgs img {
+    -webkit-animation: spin_top 8s linear infinite;
+    animation: spin_top 8s linear infinite;
+}
+
+.loading-popup--imgs img:last-child {
+    -webkit-animation: spin_bottom 8s linear infinite;
+    animation: spin_bottom 8s linear infinite;
+    margin-right: 10px;
 }
 
 .overlay-top {

@@ -1,7 +1,1 @@
-module.exports = {
-  webpack: {
-    plugins: {
-      add: [],
-    },
-  },
-};
+module.exports = {};

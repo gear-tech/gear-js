@@ -1,15 +1,16 @@
 import UserRequestService from 'services/UserRequestService';
 
-import { UserActionTypes, UserKeypairModel, UserKeypairInterface, UserModel, UserProfileInterface } from 'types/user';
-import { ProgramActionTypes, ProgramModel, ProgramsInterface, ProgramInterface, MessageStatusModel, ProgramsListInterface, UploadedProgramModel} from 'types/program';
+import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, UserProfileRPCModel } from 'types/user';
+import { NotificationActionTypes, NotificationPaginationModel, RecentNotificationModel, NotificationUnreadRPCModel, NotificationRPCModel } from 'types/notification';
+import { ProgramActionTypes, ProgramModel, ProgramRPCModel, ProgramsPagintaionModel, ProgramPaginationModel} from 'types/program';
 import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
+import NotificationsRequestService from 'services/NotificationsRequestService';
 
 import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes } from 'types/block';
-import { routes } from 'routes';
-import { PaginationParams } from 'types/common';
+import { PaginationModel } from 'types/common';
 
 const fetchTokenAction = () => ({type: UserActionTypes.FETCH_TOKEN});
 const fetchTokenSuccessAction = (payload: {}) => ({type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload});
@@ -23,45 +24,73 @@ const fetchUserKeypairAction = () => ({type: UserActionTypes.FETCH_USER_KEYPAIR}
 const fetchUserKeypairSuccessAction = (payload: UserKeypairModel) => ({type: UserActionTypes.FETCH_USER_KEYPAIR_SUCCESS, payload});
 const fetchUserKeypairErrorAction = () => ({type: UserActionTypes.FETCH_USER_KEYPAIR_ERROR});
 
-export const transferBalanceSuccessAction = () => ({type: UserActionTypes.TRANSFER_BALANCE_SUCCESS});
-
-const fetchProgramsAction = () => ({type: ProgramActionTypes.FETCH_PROGRAMS});
-const fetchProgramsSuccessAction = (payload: ProgramModel[]) => ({type: ProgramActionTypes.FETCH_PROGRAMS_SUCCESS, payload});
-const fetchAllProgramsSuccessAction = (payload: UploadedProgramModel[]) => ({type: ProgramActionTypes.FETCH_ALL_PROGRAMS_SUCCESS, payload});
-const fetchProgramsErrorAction = () => ({type: ProgramActionTypes.FETCH_PROGRAMS_ERROR});
+const fetchUserProgramsAction = () => ({type: ProgramActionTypes.FETCH_USER_PROGRAMS});
+const fetchUserProgramsSuccessAction = (payload: ProgramPaginationModel) => ({type: ProgramActionTypes.FETCH_USER_PROGRAMS_SUCCESS, payload});
+const fetchAllProgramsSuccessAction = (payload: ProgramPaginationModel) => ({type: ProgramActionTypes.FETCH_ALL_PROGRAMS_SUCCESS, payload});
+const fetchUserProgramsErrorAction = () => ({type: ProgramActionTypes.FETCH_USER_PROGRAMS_ERROR});
 
 const fetchProgramAction = () => ({type: ProgramActionTypes.FETCH_PROGRAM});
 const fetchProgramSuccessAction = (payload: ProgramModel) => ({type: ProgramActionTypes.FETCH_PROGRAM_SUCCESS, payload});
 const fetchProgramErrorAction = () => ({type: ProgramActionTypes.FETCH_PROGRAM_ERROR});
 
-export const fetchTotalIssuanceAction = (payload: {}) => ({type: BlockActionTypes.FETCH_TOTALISSUANCE_SUCCESS, payload});
-export const fetchBlockAction = (payload: {}) => ({type: BlockActionTypes.FETCH_BLOCK_SUCCESS, payload});
+export const transferBalanceSuccessAction = () => ({type: UserActionTypes.TRANSFER_BALANCE});
+export const fetchTotalIssuanceAction = (payload: {}) => ({type: BlockActionTypes.FETCH_TOTALISSUANCE, payload});
+export const fetchBlockAction = (payload: {}) => ({type: BlockActionTypes.FETCH_BLOCK, payload});
 
 export const programUploadStartAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_START});
-export const programUploadStatusAction = (payload: string) => ({type: ProgramActionTypes.PROGRAM_UPLOAD_STATUS, payload});
 export const programUploadResetAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_RESET});
 const programUploadSuccessAction = () => ({type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS});
 const programUploadFailedAction = (payload: string) => ({type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED, payload});
 
+export const fetchProgramPayloadTypeAction = (payload: string) => ({type: ProgramActionTypes.FETCH_PROGRAM_PAYLOAD_TYPE, payload});
+export const resetProgramPayloadTypeAction = () => ({type: ProgramActionTypes.RESET_PROGRAM_PAYLOAD_TYPE});
+
 export const sendMessageStartAction = () => ({type: ProgramActionTypes.SEND_MESSAGE_START});
-export const sendMessageStatusAction = (payload: MessageStatusModel) => ({type: ProgramActionTypes.SEND_MESSAGE_STATUS, payload});
 export const sendMessageResetAction = () => ({type: ProgramActionTypes.SEND_MESSAGE_RESET});
 const sendMessageSuccessAction = () => ({type: ProgramActionTypes.SEND_MESSAGE_SUCCESS});
 const sendMessageFailedAction = (payload: string) => ({type: ProgramActionTypes.SEND_MESSAGE_FAILED, payload});
 
+export const uploadMetaStartAction = () => ({type: ProgramActionTypes.META_UPLOAD_START});
+export const uploadMetaResetAction = () => ({type: ProgramActionTypes.META_UPLOAD_RESET});
+const uploadMetaSuccessAction = () => ({type: ProgramActionTypes.META_UPLOAD_SUCCESS});
+const uploadMetaFailedAction = (payload: string) => ({type: ProgramActionTypes.META_UPLOAD_FAILED, payload});
+
+export const programStatusAction = (payload: string) => ({type: ProgramActionTypes.PROGRAM_STATUS, payload});
+
+const fetchNotificationsCountAction = () => ({type: NotificationActionTypes.FETCH_NOTIFICATIONS_COUNT});
+const fetchNotificationsCountSuccessAction = (payload: number) => ({type: NotificationActionTypes.FETCH_NOTIFICATIONS_COUNT_SUCCESS, payload});
+const fetchNotificationsCountErrorAction = () => ({type: NotificationActionTypes.FETCH_NOTIFICATIONS_COUNT_ERROR});
+
+const fetchNotificationsAction = () => ({type: NotificationActionTypes.FETCH_NOTIFICATIONS});
+const fetchNotificationsSuccessAction = (payload: NotificationPaginationModel) => ({type: NotificationActionTypes.FETCH_NOTIFICATIONS_SUCCESS, payload});
+const fetchNotificationsErrorAction = () => ({type: NotificationActionTypes.FETCH_NOTIFICATIONS_ERROR});
+
+export const fetchRecentNotificationSuccessAction = (payload: RecentNotificationModel) => ({type: NotificationActionTypes.FETCH_RECENT_NOTIFICATION, payload});
+
+export const markRecentNotificationsAsReadAction = (payload: string) => ({type: NotificationActionTypes.MARK_AS_READ_RECENT, payload});
+export const markAllRecentNotificationsAsReadAction = () => ({type: NotificationActionTypes.MARK_AS_READ_ALL_RECENT})
+export const markCertainRecentNotificationsAsReadAction = (payload: string[]) => ({type: NotificationActionTypes.MARK_AS_READ_CERTAIN_RECENT, payload})
+
+export const fetchGasAction = (payload: number) => ({type: ProgramActionTypes.FETCH_GAS, payload});
+export const resetGasAction = () => ({type: ProgramActionTypes.RESET_GAS});
+
 const resetUserAction = () => ({type: UserActionTypes.RESET_USER});
 const resetProgramsAction = () => ({type: ProgramActionTypes.RESET_PROGRAMS});
+const resetNotificationsAction = () => ({type: NotificationActionTypes.RESET_NOTIFICATIONS});
+
+export const resetBlocksAction = () => ({type: BlockActionTypes.RESET_BLOCKS});
 
 const gitService = new GitRequestService();
 const telegramService = new TelegramRequestService();
 const userService = new UserRequestService();
 const programService = new ProgramRequestService();
+const notificationService = new NotificationsRequestService();
 
 export const generateKeypairAction = () => (dispatch: any) => {
   dispatch(fetchUserKeypairAction());
   userService
     .generateKeypair()
-    .then((result: UserKeypairInterface) => {
+    .then((result: UserKeypairRPCModel) => {
       window.localStorage.setItem(GEAR_MNEMONIC_KEY, JSON.stringify(result.result));
       dispatch(fetchUserKeypairSuccessAction(result.result));
     })
@@ -111,38 +140,38 @@ export const getUserDataAction = () => (dispatch: any) => {
   dispatch(fetchUserAction());
   userService
     .fetchUserData()
-    .then((result: UserProfileInterface) => {
+    .then((result: UserProfileRPCModel) => {
       dispatch(fetchUserSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchUserErrorAction()));
 }
 
-export const getProgramsAction = () => (dispatch: any) => {
-  dispatch(fetchProgramsAction());
+export const getUserProgramsAction = (params: PaginationModel) => (dispatch: any) => {
+  dispatch(fetchUserProgramsAction());
   programService
-    .fetchAllPrograms()
-    .then((result: ProgramsInterface) => {
-      dispatch(fetchProgramsSuccessAction(result.result));
+    .fetchUserPrograms(params)
+    .then((result: ProgramsPagintaionModel) => {
+      dispatch(fetchUserProgramsSuccessAction(result.result));
     })
-    .catch(() => dispatch(fetchProgramsErrorAction()))
+    .catch(() => dispatch(fetchUserProgramsErrorAction()))
 }
 
-export const getProgramsListAction = (params: PaginationParams) => (dispatch: any) => {
-  dispatch(fetchProgramsAction());
+export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any) => {
+  dispatch(fetchUserProgramsAction());
   programService
-    .fetchProgramsList(params)
-    .then((result: ProgramsListInterface) => {
-      dispatch(fetchAllProgramsSuccessAction(result.result.result));
+    .fetchAllPrograms(params)
+    .then((result: ProgramsPagintaionModel) => {
+      dispatch(fetchAllProgramsSuccessAction(result.result));
     })
-    .catch(() => dispatch(fetchProgramsErrorAction()))
-}
+    .catch(() => dispatch(fetchUserProgramsErrorAction()))
+} 
 
 
 export const getProgramAction = (hash: string) => (dispatch: any) => {
   dispatch(fetchProgramAction());
   programService
     .fetchProgram(hash)
-    .then((result: ProgramInterface) => {
+    .then((result: ProgramRPCModel) => {
       dispatch(fetchProgramSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchProgramErrorAction()))
@@ -153,22 +182,49 @@ export const handleProgramError = (error: string) => (dispatch: any, getState: a
   if (programs.isProgramUploading) {
     dispatch(programUploadFailedAction(error));
   } else if (programs.isMessageSending) {
+    console.log('hehsash')
     dispatch(sendMessageFailedAction(error));
+  } else if (programs.isMetaUploading) {
+    dispatch(uploadMetaFailedAction(error));
   }
 }
 
 export const handleProgramSuccess = () => (dispatch: any, getState: any) => {
   const { programs } = getState();
   if (programs.isProgramUploading) {
-    window.location.pathname = routes.uploadedPrograms
     dispatch(programUploadSuccessAction());
   } else if (programs.isMessageSending) {
     dispatch(sendMessageSuccessAction());
+  } else if (programs.isMetaUploading) {
+    dispatch(uploadMetaSuccessAction());
   }
+}
+
+export const getNotificationsAction = (params: PaginationModel) => (dispatch: any) => {
+  dispatch(fetchNotificationsAction());
+  notificationService
+    .fetchAllNotifications(params)
+    .then((result: NotificationRPCModel) => {
+      dispatch(fetchNotificationsSuccessAction(result.result));
+    })
+    .catch(() => dispatch(fetchNotificationsErrorAction()));
+}
+
+export const getUnreadNotificationsCount = () => (dispatch: any) => {
+  dispatch(fetchNotificationsCountAction());
+  notificationService
+    .fetchUnreadNotificationsCount()
+    .then((result: NotificationUnreadRPCModel) => {
+      dispatch(fetchNotificationsCountSuccessAction(result.result));
+    })
+    .catch(() => dispatch(fetchNotificationsCountErrorAction()));
 }
 
 export const logoutFromAccountAction = () => (dispatch: any) => {
   localStorage.clear();
   dispatch(resetUserAction());
   dispatch(resetProgramsAction());
+  dispatch(resetNotificationsAction());
+  dispatch(resetProgramPayloadTypeAction());
+  dispatch(resetGasAction());
 }

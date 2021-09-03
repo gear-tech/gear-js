@@ -8,8 +8,9 @@ export interface TotalIssuanceModel {
 }
 
 export enum BlockActionTypes{
-    FETCH_BLOCK_SUCCESS = 'FETCH_BLOCK_SUCCESS',
-    FETCH_TOTALISSUANCE_SUCCESS = 'FETCH_TOTALISSUANCE_SUCCESS',
+    FETCH_BLOCK = 'FETCH_BLOCK',
+    FETCH_TOTALISSUANCE = 'FETCH_TOTALISSUANCE',
+    RESET_BLOCKS = 'RESET_BLOCKS'
 }
 
 export interface BlocksState {
@@ -19,13 +20,20 @@ export interface BlocksState {
     error: null|string;
 }
 
-interface FetchBlockSuccessAction{
-    type: BlockActionTypes.FETCH_BLOCK_SUCCESS;
+interface FetchBlockAction{
+    type: BlockActionTypes.FETCH_BLOCK;
     payload: BlockModel;
 }
-interface FetchTotalIssuanceSuccessAction{
-    type: BlockActionTypes.FETCH_TOTALISSUANCE_SUCCESS;
+interface FetchTotalIssuanceAction{
+    type: BlockActionTypes.FETCH_TOTALISSUANCE;
     payload: TotalIssuanceModel;
 }
 
-export type BlockAction = FetchTotalIssuanceSuccessAction | FetchBlockSuccessAction;
+interface ResetBlocksAction {
+    type: BlockActionTypes.RESET_BLOCKS;
+}
+
+export type BlockAction = 
+    FetchTotalIssuanceAction |
+    FetchBlockAction |
+    ResetBlocksAction;

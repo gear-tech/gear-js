@@ -11,23 +11,31 @@ type Props = {
     page: number;
     count: number;
     onPageChange: (count: number) => void;
+    setShouldReload?: (value: boolean) => void;
 };
 
 const Pagination = ({ 
     page,
     count,
-    onPageChange}: Props) => {
+    onPageChange, 
+    setShouldReload}: Props) => {
 
     const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
 
     const isDisabledPrev = page === 0;
-    const isDisabledNext = page === totalPages - 1;
+    const isDisabledNext = page === totalPages - 1 || totalPages === 0;
 
     const onPreviousClickHandler = () => {
+        if (setShouldReload) {
+            setShouldReload(true)
+        }
         onPageChange(page - 1);
     };
 
     const onNextClickHandler = () => {
+        if (setShouldReload) {
+            setShouldReload(true)
+        }
         onPageChange(page + 1);
     };
 
@@ -45,6 +53,10 @@ const Pagination = ({
             </button>
         </div>
     )
+}
+
+Pagination.defaultProps = {
+    setShouldReload: undefined
 }
 
 export { Pagination };

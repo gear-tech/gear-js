@@ -58,19 +58,19 @@
   width: 259px;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .drop-block {
     align-items: unset;
     margin-bottom: 26px;
     height: fit-content;
-    &__no-file-hover {
-      margin-top: 14px;
-      justify-content: unset;
-      width: 100%;
-      margin-bottom: 14px;
-    }
-    &__info {
-      display: none;
-    }
+  }
+  .drop-block__no-file-hover {
+    margin-top: 14px;
+    justify-content: unset;
+    width: 100%;
+    margin-bottom: 14px;
+  }
+  .drop-block__info {
+    display: none;
   }
 }

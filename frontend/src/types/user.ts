@@ -1,12 +1,3 @@
-export interface UserState {
-    user: UserModel | null;
-    accessToken: string;
-    generatedKeypair: UserKeypairModel | null;
-    isBalanceTransfered: boolean;
-    loading: boolean;
-    error: null|string;
-}
-
 export interface UserModel {
     email: string | null;
     name: string;
@@ -21,13 +12,22 @@ export interface UserKeypairModel {
     public: string;
 }
 
-export interface UserProfileInterface {
+export interface UserState {
+    user: UserModel | null;
+    accessToken: string;
+    generatedKeypair: UserKeypairModel | null;
+    isBalanceTransfered: boolean;
+    loading: boolean;
+    error: null|string;
+}
+
+export interface UserProfileRPCModel {
     jsonrpc: string,
     id: string,
     result: UserModel
 }
   
-export interface UserKeypairInterface {
+export interface UserKeypairRPCModel {
     jsonrpc: string,
     id: string,
     result: UserKeypairModel
@@ -43,13 +43,14 @@ export enum UserActionTypes{
     FETCH_USER_KEYPAIR = 'FETCH_KEYPAIR',
     FETCH_USER_KEYPAIR_SUCCESS = 'FETCH_USER_KEYPAIR_SUCCESS',
     FETCH_USER_KEYPAIR_ERROR = 'FETCH_USER_KEYPAIR_ERROR',
-    TRANSFER_BALANCE_SUCCESS = 'TRANSFER_BALANCE_SUCCESS',
+    TRANSFER_BALANCE = 'TRANSFER_BALANCE',
     RESET_USER = 'RESET_USER'
 }
 
 interface FetchTokenAction{
     type: UserActionTypes.FETCH_TOKEN;
 }
+
 interface FetchTokenSuccessAction{
     type: UserActionTypes.FETCH_TOKEN_SUCCESS;
     payload: string;
@@ -84,11 +85,21 @@ interface FetchUserKeypairErrorAction{
 }
 
 interface TransferBalanceAction {
-    type: UserActionTypes.TRANSFER_BALANCE_SUCCESS;
+    type: UserActionTypes.TRANSFER_BALANCE;
 }
 
 interface ResetUserAction{
     type: UserActionTypes.RESET_USER
 }
 
-export type UserAction = FetchTokenAction | FetchTokenSuccessAction | FetchTokenErrorAction |  FetchUserAction | FetchUserErrorAction | FetchUserSuccessAction | FetchUserKeypairAction | FetchUserKeypairSuccessAction | FetchUserKeypairErrorAction | TransferBalanceAction | ResetUserAction;
+export type UserAction = FetchTokenAction |
+ FetchTokenSuccessAction | 
+ FetchTokenErrorAction |  
+ FetchUserAction | 
+ FetchUserErrorAction | 
+ FetchUserSuccessAction | 
+ FetchUserKeypairAction | 
+ FetchUserKeypairSuccessAction | 
+ FetchUserKeypairErrorAction | 
+ TransferBalanceAction | 
+ ResetUserAction;

@@ -14,19 +14,16 @@ import './LoadingPopup.scss';
 
 const LoadingPopup = () => {
 
-  const { programUploadingStatus, isProgramUploading } = useSelector((state: RootState) => state.programs)
+  const { programStatus } = useSelector((state: RootState) => state.programs)
 
   let firstStepStatus = PROGRESS_BAR_STATUSES.START;
   let secondStepStats = PROGRESS_BAR_STATUSES.READY;
-  let thirdStepStatus = PROGRESS_BAR_STATUSES.READY;
 
-  if (programUploadingStatus) {
+  if (programStatus) {
     firstStepStatus = PROGRESS_BAR_STATUSES.COMPLETED;
-
-    if (programUploadingStatus === PROGRAM_UPLOAD_STATUSES.IN_BLOCK) {
+    if (programStatus === PROGRAM_UPLOAD_STATUSES.IN_BLOCK) {
       secondStepStats = PROGRESS_BAR_STATUSES.START;
-    } else if (programUploadingStatus === PROGRAM_UPLOAD_STATUSES.FINALIZED) {
-      thirdStepStatus = PROGRESS_BAR_STATUSES.START;
+    } else if (programStatus === PROGRAM_UPLOAD_STATUSES.FINALIZED) {
       secondStepStats = PROGRESS_BAR_STATUSES.COMPLETED;
     }
 
@@ -42,20 +39,11 @@ const LoadingPopup = () => {
       </div>
       <div className="loading-popup--progress">
         <ProgressBar status={firstStepStatus}/>
-        {
-          isProgramUploading
-          &&
-          (
-          <>
-            <ProgressBar status={secondStepStats}/>
-            <ProgressBar status={thirdStepStatus}/>
-          </>
-          )
-        }
+        <ProgressBar status={secondStepStats}/>
       </div>
       <div className="loading-popup--text-info">
         <span>Processing...Status:</span>
-        <span>{programUploadingStatus || 'start'}</span>
+        <span>{programStatus || 'start'}</span>
       </div>
     </div>
   );

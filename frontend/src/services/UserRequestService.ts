@@ -1,5 +1,5 @@
 import { GEAR_STORAGE_KEY } from 'consts';
-import { UserKeypairInterface, UserProfileInterface } from 'types/user';
+import { UserKeypairRPCModel, UserProfileRPCModel } from 'types/user';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 export default class UserRequestService {
@@ -15,11 +15,11 @@ export default class UserRequestService {
     return this.apiRequest.getResource(this.API_FETCH_USER_TOKEN, {id: userId})
   }
 
-  public fetchUserData(): Promise<UserProfileInterface> {
+  public fetchUserData(): Promise<UserProfileRPCModel> {
     return this.apiRequest.getResource(this.API_FETCH_USER_DATA, undefined, {Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`})
   }
 
-  public generateKeypair(): Promise<UserKeypairInterface> {
+  public generateKeypair(): Promise<UserKeypairRPCModel> {
     return this.apiRequest.getResource(this.API_GENERATE_KEYPAIR, undefined, {Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`})
   }
 }

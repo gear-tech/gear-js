@@ -5,3 +5,12 @@ export const fileNameHandler = (filename: string) => {
     }
     return transformedFileName;
 }
+
+export const formatDate = (rawDate: string) => {
+    const date = new Date(rawDate);
+    const time = date.toLocaleTimeString('en-GB');
+    const formatedDate = date.toLocaleDateString('en-US').replaceAll('/', '-')
+    return `${formatedDate} ${time}`;
+}
+
+export const generateRandomId = () => Math.floor(Math.random() * 1000000000);

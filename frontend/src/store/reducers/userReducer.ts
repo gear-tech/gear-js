@@ -38,7 +38,7 @@ const userReducer = (state = initialState, action: UserAction): UserState => {
     case UserActionTypes.FETCH_USER_KEYPAIR_ERROR:
       return { ...state, loading: false, error: action.payload, generatedKeypair: null };
     
-    case UserActionTypes.TRANSFER_BALANCE_SUCCESS:
+    case UserActionTypes.TRANSFER_BALANCE:
       return {...state, isBalanceTransfered: true}
     
     case UserActionTypes.RESET_USER:

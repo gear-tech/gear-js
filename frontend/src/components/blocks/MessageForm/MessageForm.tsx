@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form, Field, FieldArray } from 'formik';
+import clsx from 'clsx';
+
 import { SocketService } from 'services/SocketService';
 import { MessageModel } from 'types/program';
 import { sendMessageStartAction } from 'store/actions/actions';
+
+import { RootState } from 'store/reducers';
 
 import { fileNameHandler } from 'helpers';
 
@@ -17,24 +21,56 @@ type Props = {
     programHash: string;
     programName: string;
     socketService: SocketService;  
+    payloadType: object | string | null;
     handleClose: () => void;
 }
 
-const MessageForm = ({ programHash, programName, socketService, handleClose }: Props) => {
+const MessageForm = ({ programHash, programName, socketService, handleClose, payloadType }: Props) => {
 
-    const [isFormFilled, setIsFormFilled] = useState(false);
+    const getFieldsFromPayload = () => {
+
+        const transformedPayloadType: any = [];
+
+        const recursion = (object: any) => {
+            for (const key in object) {
+                if (typeof object[key] === "string") {
+                    transformedPayloadType.push({
+                        [key]: object[key],
+                    });
+                } else if (typeof object[key] === "object") {
+                    recursion(object[key]);
+                }
+            }
+        }
+
+        if (payloadType && typeof payloadType === "object") {
+            recursion(payloadType);
+        }
+        return transformedPayloadType;
+    }
 
     const dispatch = useDispatch();
+    const { gas } = useSelector((state: RootState) => state.programs);
+    const [isManualGas, setIsManualGas] = useState(false);
 
     const mapInitialValues = () => ({
-        gasLimit: 20000,
+        gasLimit: undefined,
         value: 20000,
         payload: "",
         destination: programHash
     })
 
-    const handleInputChange = (errors: any) => {
-        setIsFormFilled(Object.keys(errors).length === 0)
+    const transformPayloadVals = (data: any) => {
+        const object = {};
+        if (data && data.length) {
+            data.forEach((element: any) => {
+                const key = Object.keys(element)[0];
+
+                // @ts-ignore
+                object[key] = element[key]
+            });
+        }
+        return object;
     }
 
     return (
@@ -45,12 +81,22 @@ const MessageForm = ({ programHash, programName, socketService, handleClose }: P
             onSubmit={(
                 values: MessageModel,
             ) => {
-                socketService.sendMessageToProgram(values);
-                dispatch(sendMessageStartAction());
+                const { additional, destination } = values;
+                const pack = {...values};
+                if (additional) {
+                    delete pack.additional;
+                    pack.payload = JSON.stringify(transformPayloadVals(additional));
+                }
+                if (typeof gas !== "number" && !isManualGas) {
+                    socketService.getGasSpent(destination, pack.payload);
+                } else {
+                    socketService.sendMessageToProgram(pack);
+                    dispatch(sendMessageStartAction());
+                }
             }}
             onReset={handleClose}
         >
-        {({ errors, touched, setFieldValue }) => (
+        {({ errors, touched }) => (
             <Form id="message-form">
                 <div className="message-form--wrapper">
                     <div className="message-form--col">
@@ -65,49 +111,50 @@ const MessageForm = ({ programHash, programName, socketService, handleClose }: P
                                     id="destination" 
                                     name="destination" 
                                     type="text"
-                                    className={errors.destination && touched.destination ? "message-form__input-error" : ""}
-                                    onChange={(e: React.ChangeEvent<any>) => {
-                                        setFieldValue(e.target.name, e.target.value)
-                                        handleInputChange(errors)
-                                    }}
+                                    className={clsx('', errors.destination && touched.destination && "message-form__input-error")}
                                 />
                                 {errors.destination && touched.destination ? <div className="message-form__error">{errors.destination}</div> : null}
                             </div>
                         </div>
-                        <div className="message-form--info">
-                            <label htmlFor="payload" className="message-form__field">Payload:</label>
-                            <div className="message-form__field-wrapper">
-                                <Field 
-                                    id="payload" 
-                                    name="payload" 
-                                    type="text"
-                                    className={errors.payload && touched.payload ? "message-form__input-error" : ""}
-                                    onChange={(e: React.ChangeEvent<any>) => {
-                                        setFieldValue(e.target.name, e.target.value)
-                                        handleInputChange(errors)
-                                    }}
-                                />
-                                {errors.payload && touched.payload ? <div className="message-form__error">{errors.payload}</div> : null}
-                            </div>
-                        </div>
+                        {
+                            (typeof payloadType !== "object" || !payloadType)
+                            &&
+                            (
+                                <div className="message-form--info">
+                                    <label htmlFor="payload" className="message-form__field">Payload:</label>
+                                    <div className="message-form__field-wrapper">
+                                        <Field 
+                                            id="payload" 
+                                            name="payload" 
+                                            type="text"
+                                            className={clsx('', errors.payload && touched.payload && "message-form__input-error")}
+                                            placeholder={payloadType ? `${payloadType}` : "null"}
+                                        />
+                                        {errors.payload && touched.payload ? <div className="message-form__error">{errors.payload}</div> : null}
+                                    </div>
+                                </div>
+                            )
+                        }
 
-                        <div className="message-form--info">
-                            <label htmlFor="gasLimit" className="message-form__field">Gas limit:</label>
-                            <div className="message-form__field-wrapper">
-                                <Field 
-                                    id="gasLimit" 
-                                    name="gasLimit" 
-                                    placeholder="20000" 
-                                    type="number"
-                                    className={errors.gasLimit && touched.gasLimit ? "message-form__input-error" : ""}
-                                    onChange={(e: React.ChangeEvent<any>) => {
-                                        setFieldValue(e.target.name, e.target.value)
-                                        handleInputChange(errors)
-                                    }}
-                                />
-                                {errors.gasLimit && touched.gasLimit ? <div className="message-form__error">{errors.gasLimit}</div> : null}
+                        {
+                            (typeof gas === "number" || isManualGas)
+                            &&
+                            <div className="message-form--info">
+                                <label htmlFor="gasLimit" className="message-form__field">Gas limit:</label>
+                                <div className="message-form__field-wrapper">
+                                    <Field 
+                                        id="gasLimit" 
+                                        name="gasLimit" 
+                                        placeholder={gas}
+                                        type="number"
+                                        className={clsx('', errors.gasLimit && touched.gasLimit && "message-form__input-error")}
+                                    />
+                                    {errors.gasLimit && touched.gasLimit ? <div className="message-form__error">{errors.gasLimit}</div> : null}
+                                </div>
                             </div>
-                        </div>
+                            ||
+                            null
+                        }
                         <div className="message-form--info">
                             <label htmlFor="value" className="message-form__field">Value:</label>
                             <div className="message-form__field-wrapper">
@@ -116,51 +163,77 @@ const MessageForm = ({ programHash, programName, socketService, handleClose }: P
                                     name="value" 
                                     placeholder="20000" 
                                     type="number"
-                                    className={errors.value && touched.value ? "message-form__input-error" : ""}
-                                    onChange={(e: React.ChangeEvent<any>) => {
-                                        setFieldValue(e.target.name, e.target.value)
-                                        handleInputChange(errors)
-                                    }}
+                                    className={clsx('', errors.value && touched.value && "message-form__input-error")}
                                 />
                                 {errors.value && touched.value ? <div className="message-form__error">{errors.value}</div> : null}
                             </div>
                         </div>
-                        <button
-                            className={isFormFilled ? "message-form__button" : "message-form__button disabled"}
-                            type="submit"
-                            disabled={!isFormFilled}>
-                                <img src={MessageIllustration} alt="message"/>
-                                Send request
-                        </button>
-                    </div>
-                    <div className="message-form--col">
-                        <div className="message-form--switch">
-                            <label htmlFor="hashFile" className="switch">
-                                <Field 
-                                    id="hashFile" 
-                                    name="hashFile" 
-                                    placeholder="20000" 
-                                    type="checkbox"
-                                />
-                                <span className="slider round"/>
-                            </label>
-                            <div className="message-form--switch__name">Hash a file</div>
-                        </div>
-                        <div className="message-form--switch">
-                            <label htmlFor="fileUpload" className="switch">
-                                <Field 
-                                    id="fileUpload" 
-                                    name="fileUpload" 
-                                    type="checkbox"
-                                />
-                                <span className="slider round"/>
-                            </label>
-                            <div className="message-form--switch__name">File upload</div>
+                        {
+                            payloadType && typeof payloadType === "object"
+                            &&
+                            (
+                                <div className="message-form--payload">
+                                    <p>Payload</p>
+                                    <FieldArray
+                                        name="additional"
+                                        render={() => {
+                                            const additionalFields = getFieldsFromPayload();
+                                            console.log(additionalFields)
+                                            return (
+                                                <>
+                                                    {additionalFields && additionalFields.length && additionalFields.map((item: any, index: number) => (
+                                                        <div className="message-form--info">
+                                                            <label htmlFor="payload" className="message-form__field">{Object.keys(item)[0]}:</label>
+                                                            <Field 
+                                                                id={`additional.${index}.${Object.keys(item)[0]}`}
+                                                                name={`additional.${index}.${Object.keys(item)[0]}`}
+                                                                type="text"
+                                                                placeholder={item[Object.keys(item)[0]]}
+                                                            />
+                                                        </div>
+                                                    )) || null}
+                                                </>
+                                            )
+                                        }}
+                                    />
+                                </div>
+                            )
+                        }
+                        <div className="message-form--btns">
+                            <button
+                                className='message-form__button'
+                                type="submit">
+                                    {
+                                        typeof gas !== "number" && !isManualGas
+                                        &&
+                                        <>
+                                            Calculate Gas
+                                        </>
+                                        ||
+                                        <>
+                                            <img src={MessageIllustration} alt="message"/>
+                                            Send request
+                                        </>
+                                    }
+                            </button>
+                            {
+                                !isManualGas && typeof gas !== "number"
+                                &&
+                                <button
+                                    className="message-form__button"
+                                    type="button"
+                                    onClick={() => setIsManualGas(true)}>
+                                        Manual gas input
+                                </button>
+                                ||
+                                null
+                            }
                         </div>
                     </div>
                 </div>
             </Form>
-        )}
+            )
+        }
         </Formik>
     )
 }

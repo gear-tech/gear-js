@@ -9,11 +9,17 @@ const initialState: BlocksState = {
 
 const BlockReducer = (state = initialState, action: BlockAction): BlocksState => {
   switch (action.type) {
-    case BlockActionTypes.FETCH_TOTALISSUANCE_SUCCESS:
-        return { ...state, totalIssuance: action.payload };
+    case BlockActionTypes.FETCH_TOTALISSUANCE:
+      return { ...state, totalIssuance: action.payload };
 
-    case BlockActionTypes.FETCH_BLOCK_SUCCESS:
-        return { ...state, blocks: [action.payload, ...state.blocks] };
+    case BlockActionTypes.FETCH_BLOCK: {
+      const prevBlocks = [...state.blocks];
+      if (prevBlocks.length === 10) prevBlocks.pop();
+      return { ...state, blocks: [action.payload, ...prevBlocks] };
+    }
+
+    case BlockActionTypes.RESET_BLOCKS: 
+      return { ...initialState }
 
     default:
       return state;

@@ -1,33 +1,47 @@
-import { SOCKET_RESULT_STATUSES } from 'consts';
 import { ProgramState, ProgramAction, ProgramActionTypes } from '../../types/program';
 
 const initialState: ProgramState = {
   programs: null,
+  programsCount: null,
   allUploadedPrograms: null,
-  uploadedProgramsCount: 0,
+  allUploadedProgramsCount: null,
+
   isProgramUploading: false,
+  isMetaUploading: false,
   isMessageSending: false,
-  programUploadingStatus: null,
-  messageSendingStatus: null,
+
+  programStatus: null,
+  payloadType: null,
+
+  gas: null,
+
   loading: false,
+
   error: null,
   programUploadingError: null,
+  metaUploadingError: null,
   messageSendingError: null,
 };
 
 const ProgramReducer = (state = initialState, action: ProgramAction): ProgramState => {
   switch (action.type) {
-    case ProgramActionTypes.FETCH_PROGRAMS:
+    
+    case ProgramActionTypes.FETCH_GAS:
+      return { ...state, gas: action.payload };
+
+    case ProgramActionTypes.RESET_GAS:
+      return { ...state, gas: null }
+    case ProgramActionTypes.FETCH_USER_PROGRAMS:
       return { ...state, loading: true, error: null };
 
-    case ProgramActionTypes.FETCH_PROGRAMS_SUCCESS:
-      return { ...state, loading: false, error: null, programs: action.payload.reverse() };
+    case ProgramActionTypes.FETCH_USER_PROGRAMS_SUCCESS:
+      return { ...state, loading: false, error: null, programs: action.payload.programs, programsCount: action.payload.count };
 
     case ProgramActionTypes.FETCH_ALL_PROGRAMS_SUCCESS:
-      return { ...state, loading: false, error: null, allUploadedPrograms: action.payload.reverse() };
+      return { ...state, loading: false, error: null, allUploadedPrograms: action.payload.programs, allUploadedProgramsCount: action.payload.count };
 
-    case ProgramActionTypes.FETCH_PROGRAMS_ERROR:
-      return { ...state, loading: false, error: action.payload, programs: null };
+    case ProgramActionTypes.FETCH_USER_PROGRAMS_ERROR:
+      return { ...state, loading: false, error: action.payload, programs: null, programsCount: null, allUploadedPrograms: null, allUploadedProgramsCount: null };
 
     case ProgramActionTypes.FETCH_PROGRAM:
       return { ...state, loading: true, error: null };
@@ -48,35 +62,52 @@ const ProgramReducer = (state = initialState, action: ProgramAction): ProgramSta
     case ProgramActionTypes.FETCH_PROGRAM_ERROR:
       return { ...state, loading: false, error: action.payload, programs: null };
 
+
     case ProgramActionTypes.PROGRAM_UPLOAD_START:
-      return { ...state, isProgramUploading: true, programUploadingError: null, programUploadingStatus: null }
+      return { ...state, isProgramUploading: true, programUploadingError: null, programStatus: null }
 
     case ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS:
-      return { ...state, isProgramUploading: false, programUploadingError: null, programUploadingStatus: null }
+      return { ...state, isProgramUploading: false, programUploadingError: null, programStatus: null }
 
     case ProgramActionTypes.PROGRAM_UPLOAD_FAILED:
-      return { ...state, isProgramUploading: false, programUploadingError: action.payload, programUploadingStatus: null }
+      return { ...state, isProgramUploading: false, programUploadingError: action.payload, programStatus: null }
 
-    case ProgramActionTypes.PROGRAM_UPLOAD_STATUS:
-      return { ...state, isProgramUploading: true, programUploadingError: null, programUploadingStatus: action.payload }
+
+    case ProgramActionTypes.META_UPLOAD_START:
+      return { ...state, isMetaUploading: true, metaUploadingError: null, programStatus: null }
+
+    case ProgramActionTypes.META_UPLOAD_SUCCESS:
+      return { ...state, isMetaUploading: false, metaUploadingError: null, programStatus: null }
+
+    case ProgramActionTypes.META_UPLOAD_FAILED:
+      return { ...state, isMetaUploading: false, metaUploadingError: action.payload, programStatus: null }
+
+    case ProgramActionTypes.META_UPLOAD_RESET:
+      return { ...state, isMetaUploading: false, metaUploadingError: null, programStatus: null }
+
+    case ProgramActionTypes.PROGRAM_STATUS:
+      return { ...state, programStatus: action.payload }
+
+    case ProgramActionTypes.FETCH_PROGRAM_PAYLOAD_TYPE:
+      return { ...state, payloadType: action.payload }
 
     case ProgramActionTypes.PROGRAM_UPLOAD_RESET:
-      return { ...state, isProgramUploading: false, programUploadingError: null, programUploadingStatus: null }
+      return { ...state, isProgramUploading: false, programUploadingError: null, programStatus: null }
 
     case ProgramActionTypes.SEND_MESSAGE_START:
-      return { ...state, isMessageSending: true, messageSendingError: null, messageSendingStatus: null }
+      return { ...state, isMessageSending: true, messageSendingError: null, programStatus: null }
 
     case ProgramActionTypes.SEND_MESSAGE_SUCCESS:
-      return { ...state, isMessageSending: false, messageSendingError: null, messageSendingStatus: SOCKET_RESULT_STATUSES.SUCCESS }
-
-    case ProgramActionTypes.SEND_MESSAGE_STATUS:
-      return { ...state, isMessageSending: false, messageSendingError: null, messageSendingStatus: action.payload }
+      return { ...state, isMessageSending: false, messageSendingError: null, programStatus: null }
 
     case ProgramActionTypes.SEND_MESSAGE_FAILED:
-      return { ...state, isMessageSending: false, messageSendingError: action.payload, messageSendingStatus: null }
+      return { ...state, isMessageSending: false, messageSendingError: action.payload, programStatus: null }
 
     case ProgramActionTypes.SEND_MESSAGE_RESET:
-      return { ...state, isMessageSending: false, messageSendingError: null, messageSendingStatus: null }
+      return { ...state, isMessageSending: false, messageSendingError: null, programStatus: null }
+
+    case ProgramActionTypes.RESET_PROGRAM_PAYLOAD_TYPE:
+      return { ...state, payloadType: null }
   
     case ProgramActionTypes.RESET_PROGRAMS:
       return { ...initialState };

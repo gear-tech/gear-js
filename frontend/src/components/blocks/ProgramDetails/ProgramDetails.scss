@@ -67,9 +67,9 @@
 .program-details__value {
   display: flex;
   align-items: center;
-  width: 100%;
-  max-width: 310px;
+  width: 294px;
   height: 38px;
+  min-height: 38px;
   background-color: #000000;
   font-style: normal;
   font-weight: normal;
@@ -84,6 +84,10 @@
 .program-details__info {
   display: flex;
   margin-bottom: 16px;
+}
+
+.program-details__info .is-hidden {
+  display: none;
 }
 
 .program-details__error {
@@ -135,7 +139,40 @@
   display: none;
 }
 
-@media (max-width: 767px) {
+.program-details--switch-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 24px;
+}
+
+.program-details--switch-btns__btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 14px;
+  color: #FFFFFF;
+}
+
+.program-details--switch-btns__btn img {
+  margin-right: 8px;
+}
+
+.program-details--file-btn {
+  background: #3D3D3D;
+  border-radius: 2px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  color: #FFFFFF;
+  padding: 9px 18px;
+}
+
+@media (max-width: 768px) {
   .program-details {
     height: 100%;
     width: 100%;
@@ -145,49 +182,51 @@
     z-index: 111;
     background-color: #181818;
     overflow: scroll;
-    &__header {
-      padding: 16px;
-    }
-    &__close {
-      position: absolute;
-      top: 24px;
-      right: 16px;
-      display: block;
-      width: 14px;
-    }
-    &__cancel {
-      display: none;
-    }
-    &__wrapper, &__info {
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    &__wrapper {
-      padding: 26px 16px;
-    }
-    &__info {
-      margin-bottom: 32px;
-    }
-    &__field {
-      font-size: 22px;
-      margin-bottom: 4px;
-    }
-    &__value {
-      overflow: unset;
-      display: flex;
-      justify-content: space-between;
-      max-width: unset;
-    }
-    &__filename {
-      font-size: 22px;
-      padding: 0;
-    }
-    &__buttons {
-      button {
-        width: 100%;
-        margin: 0;
-      }
-    }
+  }
+  .program-details__header {
+    padding: 16px;
+  }
+  .program-details__close {
+    position: absolute;
+    top: 24px;
+    right: 16px;
+    display: block;
+    width: 14px;
+  }
+  .program-details__cancel {
+    display: none;
+  }
+  .program-details__wrapper, .program-details__info {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .program-details__wrapper {
+    padding: 26px 16px;
+  }
+  .program-details__info {
+    margin-bottom: 32px;
+  }
+  .program-details__field {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .program-details__value {
+    overflow: unset;
+    display: flex;
+    justify-content: space-between;
+    max-width: unset;
+    width: 100%;
+  }
+  .program-details__filename {
+    font-size: 22px;
+    padding: 0;
+  }
+  .program-details__buttons button {
+    width: 100%;
+    margin: 0;
+  }
+  .program-details--file-btn {
+    width: fit-content;
   }
 }

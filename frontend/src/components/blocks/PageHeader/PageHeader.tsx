@@ -1,9 +1,6 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 
 import { PAGE_TYPES } from "consts";
-
-import { sendMessageResetAction } from "store/actions/actions";
 
 import { fileNameHandler } from 'helpers';
 
@@ -21,52 +18,38 @@ type Props = {
 
 const PageHeader = ({ programName, pageType, handleClose }: Props) => {
 
-    const dispatch = useDispatch();
-
-    const handleArrowClick = () => {
-        if (pageType === PAGE_TYPES.MESSAGE_FORM_PAGE || pageType === PAGE_TYPES.EDITOR_PAGE) {
-            handleClose();
-        } else if (pageType === PAGE_TYPES.ANSWER_PAGE) {
-            dispatch(sendMessageResetAction());
-        }
-    }
-
-    let headInscription = 'Answer';
-    if (pageType === PAGE_TYPES.MESSAGE_FORM_PAGE) {
-        headInscription = 'New request to';
-    } else if (pageType === PAGE_TYPES.EDITOR_PAGE) {
+    let headInscription = 'New request to';
+    let formId = "message-form";
+    if (pageType === PAGE_TYPES.EDITOR_PAGE) {
         headInscription = 'Edit code';
+    } else if (pageType === PAGE_TYPES.META_FORM_PAGE) {
+        headInscription = 'Upload metadata';
+        formId = "meta-form";
+    } else if (pageType === PAGE_TYPES.NOTIFICATION_INFO) {
+        headInscription = 'Notification';
     }
 
     return (
-        <div className={pageType ? "message-header" : "message-header answer"}>
+        <div className="message-header">
             <div className="message-header--info">
                 <button
                     type="button" 
                     aria-label="arrowBack"
-                    onClick={handleArrowClick}
+                    onClick={() => handleClose()}
                     className="message-header--info__back">
                     <img src={ArrowBack} alt="back"/>
                 </button>
                 <h2 className="message-header--info__text">{headInscription}</h2>
-                {
-                    pageType !== PAGE_TYPES.ANSWER_PAGE
-                    &&
-                    (
-                        <>
-                            <img src={ProgramIllustration} alt="program" className="message-header--info__icon"/>
-                            <h2 className="message-header--info__filename">
-                                { fileNameHandler(programName) }
-                            </h2>
-                        </>
-                    )
-                }
+                <img src={ProgramIllustration} alt="program" className="message-header--info__icon"/>
+                <h2 className="message-header--info__filename">
+                    { fileNameHandler(programName) }
+                </h2>
             </div>
             {/* eslint-disable react/button-has-type */}
             <button
                 type="reset"
                 aria-label="closeButton"
-                form="message-form"
+                form={formId}
                 className="message-header--info__close"
             >
                 <img 
