@@ -1,35 +1,14 @@
 import { GearApi } from '@gear-js';
-import { gearRpc } from '@gear-js/default';
 import { CreateTypeError } from '@gear-js/errors';
 import { stringToU8a } from '@polkadot/util';
 import { Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
-import { ApiPromise, WsProvider } from '@polkadot/api';
 
 export class CreateType {
   private registry: TypeRegistry | Registry;
-  private provider: WsProvider;
-  private defaultTypes: any;
-  private defaultRpc: any;
 
   constructor(gearApi: GearApi) {
-    this.provider = gearApi.provider;
-    this.defaultRpc = gearRpc;
-    this.defaultTypes = gearApi.defaultTypes;
-    this.createRegistry();
-  }
-
-  private createRegistry(types?: any): Promise<Registry> {
-    return new Promise((resolve) => {
-      ApiPromise.create({
-        provider: this.provider,
-        types: { ...this.defaultTypes, ...types },
-        rpc: { ...this.defaultRpc }
-      }).then((api) => {
-        this.registry = api.registry;
-        resolve(this.registry);
-      });
-    });
+    this.registry = gearApi.api.registry;
   }
 
   async encode(type: any, payload: any): Promise<Bytes | string | Uint8Array> {
@@ -43,7 +22,9 @@ export class CreateType {
     if (payload instanceof Bytes || payload instanceof Uint8Array) return payload;
 
     if (isJSON(type)) {
-      await this.createRegistry(toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`));
+      const types = toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`);
+      this.registry.setKnownTypes({ types: { ...types } });
+      this.registry.register({...types})
       return this.toBytes('Custom', toJSON(payload));
     } else {
       return this.toBytes(type, isJSON(payload) ? toJSON(payload) : payload);
@@ -59,7 +40,9 @@ export class CreateType {
     }
 
     if (isJSON(type)) {
-      await this.createRegistry(toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`));
+      const types = toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`);
+      this.registry.setKnownTypes({ types: { ...types } });
+      this.registry.register({...types})
       return this.fromBytes('Custom', toJSON(payload));
     } else {
       return this.fromBytes(type, isJSON(payload) ? toJSON(payload) : payload);
