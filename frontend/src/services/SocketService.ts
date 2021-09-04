@@ -47,7 +47,7 @@ export class SocketService implements ISocketService {
         } else if (Object.prototype.hasOwnProperty.call(data.result, "hash")) {
           dispatch(fetchBlockAction(data.result))
           if (Object.prototype.hasOwnProperty.call(data.result, "uploadedAt")) {
-//            alert("Meta data uploaded")
+            alert("Meta data uploaded")
           }
         } else if (Object.prototype.hasOwnProperty.call(data.result, "status")) {
           if (data.result.status === SOCKET_RESULT_STATUSES.IN_BLOCK) {
