@@ -18,7 +18,7 @@
 
 - name: Build frontend
   shell: >
-    cd /home/ec2-user/frontend; npm install build; cd ..
+    cd /home/ec2-user/frontend; npm run build; cd ..
 
 - name: Delete old frontend files
   file:
