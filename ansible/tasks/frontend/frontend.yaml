@@ -20,6 +20,12 @@
   shell: >
     cd /home/ec2-user/frontend; npm run build; cd ..
 
+- name: Delete old frontend files
+  file:
+    state: absent
+    path: /var/www/html/
+  become: yes
+
 - name: Copy frontend build files
   copy:
     src: /home/ec2-user/frontend/build/
