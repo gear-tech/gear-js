@@ -60,27 +60,21 @@ export const RPC_METHODS = {
   READ_EVENTS: 'events.read'
 };
 
-<<<<<<< HEAD:frontend/src/consts.ts
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
-=======
+
 export const SWITCH_PAGE_TYPES = {
   UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
   UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
   NOTIFICATIONS: 'NOTIFICATIONS',
   ALL_PROGRAMS: 'ALL_PROGRAMS'
 }
->>>>>>> frontend/develop:src/consts.ts
 
 export const PAGE_TYPES = {
   MESSAGE_FORM_PAGE: 'MESSAGE_FORM_PAGE',
   EDITOR_PAGE: 'EDITOR_PAGE',
-<<<<<<< HEAD:frontend/src/consts.ts
-};
-=======
   META_FORM_PAGE: 'META_FORM_PAGE',
   NOTIFICATION_INFO: 'NOTIFICATION_INFO'
 }
->>>>>>> frontend/develop:src/consts.ts
 
 export const EDITOR_BTNS = {
   BUILD: 'BUILD',
@@ -89,15 +83,7 @@ export const EDITOR_BTNS = {
   BUILD_RUN: 'BUILD_RUN',
 };
 
-<<<<<<< HEAD:frontend/src/consts.ts
-export const SWITCH_PAGE_TYPES = {
-  UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
-  UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
-  ALL_PROGRAMS: 'ALL_PROGRAMS',
-};
-=======
 export const SEARCH_TYPES = {
   NOTIFICATIONS: 'NOTIFICATIONS',
   PROGRAMS: 'PROGRAMS'
 }
->>>>>>> frontend/develop:src/consts.ts
