@@ -39,7 +39,7 @@ const Message = ({ programHash, programName, socketService, handleClose }: Props
     const isJson = (data: string) => {
         try {
             JSON.parse(data);
-        } catch (e) {
+        } catch (eror) {
             return false;
         }
         return true;
