@@ -24,7 +24,7 @@
   file:
     state: absent
     path: /var/www/html/
-  become: ys
+  become: yes
 
 - name: Copy frontend build files
   copy:
