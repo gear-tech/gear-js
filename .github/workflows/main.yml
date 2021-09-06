@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          yarn install
+          yarn install --production
           yarn workspace @gear-js/backend run build
   build_frontend:
     # The type of runner that the job will run on
@@ -46,5 +46,5 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          npm install
-          npm run frontend:build
+          npm ci
+          npm run build --workspace=@gear-js/frontend 
