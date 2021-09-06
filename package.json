@@ -11,9 +11,6 @@
     "ide:build": "cd website/ide-backend && npm run build",
     "ide:prod": "cd website/ide-backend && npm run start:prod"
   },
-  "devDependencies": {
-    "lerna": "^4.0.0"
-  },
   "workspaces": [
     "website/*"
   ]
