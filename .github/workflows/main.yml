@@ -30,9 +30,8 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          cd website/backend
           npm ci
-          npm run build
+          npm run backend:build
   build_frontend:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -47,6 +46,5 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          cd website/frontend
-          npm install
-          npm run build
+          npm ci
+          npm run frontend:build
