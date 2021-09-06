@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          npm ci -w website/backend
+          yarn install
           yarn workspace @gear-js/backend run build
   build_frontend:
     # The type of runner that the job will run on
