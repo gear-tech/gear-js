@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          cd backend
+          cd website/backend
           npm ci
           npm run build
   build_frontend:
@@ -45,6 +45,6 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          cd frontend
+          cd website/frontend
           npm install
           npm run build
