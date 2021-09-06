@@ -30,8 +30,9 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          yarn install --production
-          yarn workspace @gear-js/backend run build
+          cd website/backend
+          npm install --package-lock-only && npm install
+          npm run build
   build_frontend:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -47,6 +48,5 @@ jobs:
           node-version: 14.x
       - run: |
           cd website/frontend
-          npm install --package-lock-only
-          npm install
+          npm install --package-lock-only && npm install
           npm run build
