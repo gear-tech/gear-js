@@ -5,11 +5,14 @@
   </a>
 </p>
 
-## Description
+## Directory Structure
+## [website](https://github.com/gear-tech/gear-js/tree/master/website)
+This directory contains the resources needed to run the Gear-Tech site.
+#### [backend](https://github.com/gear-tech/gear-js/tree/master/website/backend)
+The Gear-Tech website api
+Refer to the [API](https://github.com/gear-tech/gear-js/tree/master/website/backend/README.md) docs for details.
 
-### backend
-Gear JSONRPC API
-Refer to the [API](https://github.com/gear-tech/backend/tree/master/backend) docs for details.
-
-### ide-backend
+#### [frontend](https://github.com/gear-tech/gear-js/tree/master/website/frontend)
+The Gear-Tech website frontend
+#### [ide-backend](https://github.com/gear-tech/gear-js/tree/master/website/ide-backend)
 Service for compiling rust project to wasm
