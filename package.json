@@ -2,7 +2,7 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "backend:dev": "npm run start:dev --workspace=website/backend",
+    "backend:dev": "yarn run start:dev --workspace=website/backend",
     "backend:build": "npm run build --workspace=website/backend",
     "frontend:dev": "npm run start --workspace=website/frontend",
     "frontend:build": "npm run build --workspace=website/frontend",
@@ -10,6 +10,6 @@
     "ide:build": "npm run build --workspace=website/ide-backend"
   },
   "workspaces": [
-    "website/*"
+    "website/backend", "website/frontend", "website/ide-backend"
   ]
 }
