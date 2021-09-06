@@ -1,0 +1,20 @@
+{
+  "name": "gear-js",
+  "private": true,
+  "scripts": {
+    "backend:dev": "cd website/backend && npm run start:dev",
+    "backend:build": "cd website/backend && npm run build",
+    "backend:prod": "cd website/backend && npm run start:prod",
+    "frontend:dev": "cd website/frontend && npm run start",
+    "frontend:build": "cd website/frontend && npm run build",
+    "ide:dev": "cd website/ide-backend && npm run start:dev",
+    "ide:build": "cd website/ide-backend && npm run build",
+    "ide:prod": "cd website/ide-backend && npm run start:prod"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "workspaces": [
+    "website/*"
+  ]
+}
