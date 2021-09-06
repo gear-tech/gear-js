@@ -46,5 +46,7 @@ jobs:
         with:
           node-version: 14.x
       - run: |
-          npm ci
-          npm run build --workspace=@gear-js/frontend 
+          cd website/frontend
+          npm install --package-lock-only
+          npm install
+          npm run build
