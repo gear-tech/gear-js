@@ -1,6 +1,6 @@
-import { GearApi, CreateType } from '@gear-js';
-import { Message } from '@gear-js/interfaces';
-import { SendMessageError, TransactionError } from '@gear-js/errors';
+import { GearApi, CreateType } from '.';
+import { Message } from './interfaces';
+import { SendMessageError, TransactionError } from './errors';
 import { ApiPromise } from '@polkadot/api';
 import { Bytes } from '@polkadot/types';
 import { KeyringPair } from '@polkadot/keyring/types';

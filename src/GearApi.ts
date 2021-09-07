@@ -1,6 +1,6 @@
-import { GearProgram, GearMessage, transformTypes, GearBalance, GearEvents } from '@gear-js';
-import { gearRpc, gearTypes } from '@gear-js/default';
-import { GearApiOptions } from '@gear-js/interfaces';
+import { GearProgram, GearMessage, transformTypes, GearBalance, GearEvents } from '.';
+import { gearRpc, gearTypes } from './default';
+import { GearApiOptions } from './interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { PromiseResult } from '@polkadot/api/types';
@@ -56,15 +56,20 @@ export class GearApi {
     } else {
       this.defaultTypes = gearTypes;
     }
-    this.api = await ApiPromise.create({
-      provider: provider,
-      types: {
-        ...this.defaultTypes
-      },
-      rpc: {
-        ...gearRpc
-      }
-    });
+    console.log(this.defaultTypes)
+    try {
+      this.api = await ApiPromise.create({
+        provider: provider,
+        types: {
+          ...this.defaultTypes
+        },
+        rpc: {
+          ...gearRpc
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
     return this.api;
   }
 

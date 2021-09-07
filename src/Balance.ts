@@ -1,5 +1,5 @@
-import { GearApi, GearKeyring } from '@gear-js';
-import { TransactionError } from '@gear-js/errors';
+import { GearApi, GearKeyring } from '.';
+import { TransactionError } from './errors';
 import { ApiPromise } from '@polkadot/api';
 import { Balance } from '@polkadot/types/interfaces';
 

@@ -1,6 +1,6 @@
-import { GearApi, CreateType } from '@gear-js';
-import { Program } from '@gear-js/interfaces';
-import { SubmitProgramError, TransactionError } from '@gear-js/errors';
+import { GearApi, CreateType } from '.';
+import { Program } from './interfaces';
+import { SubmitProgramError, TransactionError } from './errors';
 import { ApiPromise } from '@polkadot/api';
 import { Bytes } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';

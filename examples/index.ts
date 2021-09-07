@@ -12,6 +12,7 @@ async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: an
     return;
   }
   const code = fs.readFileSync(program.path);
+
   const payloadTypes = program.meta
     ? await getWasmMetadata(fs.readFileSync(program.meta))
     : {
@@ -20,7 +21,8 @@ async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: an
         input: program.inputType,
         output: program.outputType
       };
-
+  console.log(payloadTypes);
+  return;
   const uploadProgram: Program = {
     code,
     gasLimit: program.gasLimit,
@@ -144,12 +146,12 @@ async function main(pathToTestSettings: string) {
     }
   }
 
-  // Send messages
-  if (settings.messages) {
-    for (const message of settings.messages) {
-      await sendMessage(api, keyring, message);
-    }
-  }
+  // // Send messages
+  // if (settings.messages) {
+  //   for (const message of settings.messages) {
+  //     await sendMessage(api, keyring, message);
+  //   }
+  // }
 
   return 0;
 }

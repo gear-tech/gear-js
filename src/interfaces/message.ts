@@ -1,4 +1,4 @@
-import { GearType } from '@gear-js/interfaces';
+import { GearType } from '.';
 import { Bytes, u64 } from '@polkadot/types';
 import { BalanceOf, H256 } from '@polkadot/types/interfaces';
 import { AnyNumber } from '@polkadot/types/types';

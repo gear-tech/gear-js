@@ -1,5 +1,5 @@
 {
-  "keyring": "/path/to/keyring.json",
+  "keyring": "../keyring.json",
   "customTypes": {
     "demo_meta": { "value": "u64", "annotation": "String" },
     "demo_meta_out": { "old_value": "u64", "new_value": "u64" }
@@ -7,23 +7,15 @@
   "programs": [
     {
       "number": 1,
-      "path": "/path/to/program",
+      "path": "/home/dima/gear/gear/examples/target/wasm32-unknown-unknown/release/demo_meta.opt.wasm",
       "gasLimit": 10000000,
       "value": 0,
-      "meta": "/path/to/wasm/with/metadata",
+      "meta": "/home/dima/gear/gear/examples/target/wasm32-unknown-unknown/release/demo_meta.meta.wasm",
       "initPayload": { "value": 123, "annotation": "initial payload" },
       "initInputType": "demo_meta",
       "initOutType": "demo_meta_out",
       "inputType": "demo_meta",
       "outType": "demo_meta_out"
-    },
-    {
-      "number": 2,
-      "path": "/path/to/program",
-      "gasLimit": 10000000,
-      "value": 0,
-      "inputType": "String",
-      "outputType": "utf8"
     }
   ],
   "messages": [
@@ -41,12 +33,6 @@
     {
       "program": 1,
       "payload": { "value": 101112, "annotation": "payload" },
-      "value": 0
-    },
-    {
-      "program": 2,
-      "payload": "PING",
-      "gasLimit": 1000000000,
       "value": 0
     }
   ]

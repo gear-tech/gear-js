@@ -24,7 +24,8 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<{
       alloc: (pages) => {
         return memory.grow(pages);
       },
-      free: (_pages) => {}
+      free: (_pages) => {},
+      gr_debug: (x) => { console.log(x) }
     }
   };
   let metadata = {

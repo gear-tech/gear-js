@@ -1,4 +1,4 @@
-import { GearType } from '@gear-js/interfaces';
+import { GearType } from '.';
 import { KeyringPair$Json } from '@polkadot/keyring/types';
 
 export interface GearApiOptions {

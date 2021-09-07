@@ -1,5 +1,3 @@
-import 'module-alias/register';
-
 export { GearApi } from './GearApi';
 export { GearKeyring } from './Keyring';
 export { GearEvents } from './Events';

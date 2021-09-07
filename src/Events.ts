@@ -1,4 +1,4 @@
-import { GearApi } from '@gear-js';
+import { GearApi } from '.';
 import { ApiPromise } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
 

@@ -1,30 +1,26 @@
 {
-  "name": "gear-js",
+  "name": "@osipov-mit/gear-js-test",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/**/*d.ts",
   "scripts": {
     "build": "tsc",
     "examples": "node lib/examples/index.js",
     "prettier": "npx prettier --write src/* examples/*",
     "tslint": "tslint -p tslint -p tsconfig.json",
-    "codestyle": "npm run prettier && npm run tslint"
+    "codestyle": "npm run prettier && npm run tslint",
+    "postinstall": "tsc"
   },
-  "author": "",
+  "author": "osipov-mit",
   "license": "MIT",
   "dependencies": {
-    "@polkadot/api": "^5.6.1",
-    "module-alias": "^2.2.2",
-    "rxjs": "^7.3.0"
+    "@polkadot/api": "^5.8.3",
+    "rxjs": "^7.3.0",
+    "typescript": "^4.4.2"
   },
   "devDependencies": {
     "prettier": "^2.3.2",
-    "tslint": "^6.1.3",
-    "typescript": "^4.4.2",
-    "typescript-transform-paths": "^3.3.1"
-  },
-  "_moduleAliases": {
-    "@gear-js": "lib/src/",
-    "@gear-js/*": "lib/src/*"
+    "tslint": "^6.1.3"
   }
 }

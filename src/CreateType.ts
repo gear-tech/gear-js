@@ -1,5 +1,5 @@
-import { GearApi } from '@gear-js';
-import { CreateTypeError } from '@gear-js/errors';
+import { GearApi } from '.';
+import { CreateTypeError } from './errors';
 import { stringToU8a } from '@polkadot/util';
 import { Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
