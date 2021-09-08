@@ -1,5 +1,5 @@
 {
-  "keyring": "keyring.json",
+  "keyring": "/path/to/keyring.json",
   "customTypes": {
     "MessageIn": { "value": "u64", "annotation": "String" },
     "MessageOut": { "old_value": "u64", "new_value": "u64" }
@@ -7,10 +7,10 @@
   "programs": [
     {
       "number": 1,
-      "path": "/Users/eugeneway/work/gear/examples/target/wasm32-unknown-unknown/release/demo_meta.wasm",
+      "path": "/path/to/programm.wasm",
       "gasLimit": 10000000,
       "value": 0,
-      "meta": "/Users/eugeneway/work/gear/examples/target/wasm32-unknown-unknown/release/demo_meta.wasm",
+      "meta": "/path/to/programm_meta.wasm",
       "initPayload": { "value": 123, "annotation": "initial payload" },
       "initInputType": "MessageIn",
       "initOutputType": "MessageOut",
@@ -19,7 +19,7 @@
     },
     {
       "number": 2,
-      "path": "/Users/eugeneway/work/gear/examples/target/wasm32-unknown-unknown/release/demo_ping.wasm",
+      "path": "/path/to/programm_2.wasm",
       "gasLimit": 10000000,
       "value": 0,
       "inputType": "String",
