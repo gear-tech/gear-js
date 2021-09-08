@@ -9,5 +9,4 @@ export interface Program {
   initPayload?: Bytes | string | GearType | Uint8Array;
   gasLimit: u64 | AnyNumber;
   value?: BalanceOf | AnyNumber;
-  initInputType?: GearType | string;
 }

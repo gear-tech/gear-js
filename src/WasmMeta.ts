@@ -1,10 +1,6 @@
-export async function getWasmMetadata(wasmBytes: Buffer): Promise<{
-  init_input: string;
-  init_output: string;
-  input: string;
-  output: string;
-  title: string;
-}> {
+import { Metadata } from "./interfaces/metadata";
+
+export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
   const memory = new WebAssembly.Memory({ initial: 256, maximum: 512 });
   const importObj = {
     env: {
@@ -25,7 +21,9 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<{
         return memory.grow(pages);
       },
       free: (_pages) => {},
-      gr_debug: (x) => { console.log(x) }
+      gr_debug: (msg) => {
+        console.log(msg);
+      }
     }
   };
   let metadata = {
@@ -33,15 +31,17 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<{
     init_output: '',
     input: '',
     output: '',
-    title: ''
+    title: '',
+    types: ''
   };
 
   let module = await WebAssembly.instantiate(wasmBytes, importObj);
 
-  metadata.init_input = JSON.parse(readMeta(memory, module.instance.exports.meta_init_input));
-  metadata.init_output = JSON.parse(readMeta(memory, module.instance.exports.meta_init_output));
-  metadata.input = JSON.parse(readMeta(memory, module.instance.exports.meta_input));
-  metadata.output = JSON.parse(readMeta(memory, module.instance.exports.meta_output));
+  metadata.types = JSON.parse(readMeta(memory, module.instance.exports.meta_types));
+  metadata.init_input = readMeta(memory, module.instance.exports.meta_init_input);
+  metadata.init_output = readMeta(memory, module.instance.exports.meta_init_output);
+  metadata.input = readMeta(memory, module.instance.exports.meta_input);
+  metadata.output = readMeta(memory, module.instance.exports.meta_output);
   metadata.title = readMeta(memory, module.instance.exports.meta_title);
 
   return metadata;

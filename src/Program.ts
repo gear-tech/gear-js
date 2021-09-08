@@ -6,6 +6,7 @@ import { Bytes } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
+import { Metadata } from './interfaces/metadata';
 
 export class GearProgram {
   private api: ApiPromise;
@@ -21,15 +22,14 @@ export class GearProgram {
    *
    * @returns ProgramId
    */
-  async submit(program: Program): Promise<string> {
+  async submit(program: Program, meta: Metadata): Promise<string> {
     if (program.initPayload) {
-      program.initPayload = await this.createType.encode(program.initInputType, program.initPayload);
+      program.initPayload = this.createType.encode(meta.init_input, program.initPayload, meta);
     } else {
       program.initPayload = '0x00';
     }
     const salt = program.salt || randomAsHex(20);
-    const code = this.codeToBytes(program.code);
-
+    const code = this.createType.encode('bytes', Array.from(program.code));
     try {
       this.program = this.api.tx.gear.submitProgram(
         code,
@@ -91,10 +91,6 @@ export class GearProgram {
     });
   }
 
-  codeToBytes(code: Buffer): Bytes {
-    return this.createType.toBytes('bytes', Array.from(code));
-  }
-
   async allUploadedPrograms(): Promise<string[]> {
     let programs = (await this.api.rpc.state.getKeys('g::prog::')).map((prog) => {
       return `0x${prog.toHex().slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
@@ -102,8 +98,8 @@ export class GearProgram {
     return programs;
   }
 
-  async getGasSpent(programId: H256, payload: any, type: any): Promise<number> {
-    const payloadBytes = await this.createType.encode(type, payload);
+  async getGasSpent(programId: H256, payload: any, type: any, meta: Metadata): Promise<number> {
+    const payloadBytes = this.createType.encode(type, payload, meta);
     const gasSpent = await this.api.rpc.gear.getGasSpent(programId, payloadBytes);
     return gasSpent.toNumber();
   }

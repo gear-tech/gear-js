@@ -7,13 +7,8 @@ const types = {};
 const initMessages = [];
 const programs = {};
 
-async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: any) {
-  if (!program.path) {
-    return;
-  }
-  const code = fs.readFileSync(program.path);
-
-  const payloadTypes = program.meta
+async function getMeta(program) {
+  const meta = program.meta
     ? await getWasmMetadata(fs.readFileSync(program.meta))
     : {
         init_input: program.initInputType,
@@ -21,19 +16,38 @@ async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: an
         input: program.inputType,
         output: program.outputType
       };
+  return meta;
+}
+
+async function getGasSpent(message, gearApi: GearApi) {
+  const destination = programs[message.program];
+  const gas = message.gasLimit
+    ? message.gasLimit
+    : await gearApi.program.getGasSpent(destination, message.payload, types[destination].input, types[destination]);
+  return gas;
+}
+
+async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: any) {
+  if (!program.path) {
+    return;
+  }
+  const code = fs.readFileSync(program.path);
+  const meta = await getMeta(program);
+
   const uploadProgram: Program = {
     code,
     gasLimit: program.gasLimit,
     value: program.value,
-    initPayload: program.initPayload,
-    initInputType: payloadTypes.init_input
+    initPayload: program.initPayload
   };
+
   try {
-    const programId = await gearApi.program.submit(uploadProgram);
-    types[programId] = payloadTypes;
+    const programId = await gearApi.program.submit(uploadProgram, meta);
+    types[programId] = meta;
     programs[program.number] = programId;
   } catch (error) {
     console.error(`${error.name}: ${error.message}`);
+    throw error;
   }
   try {
     await gearApi.program.signAndSend(keyring, (data) => {
@@ -41,8 +55,8 @@ async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: an
       initMessages.push(data.initMessageId);
     });
   } catch (error) {
-    console.log(error);
     console.error(`${error.name}: ${error.message}`);
+    throw error;
   }
   return;
 }
@@ -51,16 +65,17 @@ async function sendMessage(gearApi: GearApi, keyring: KeyringPair, message: any)
   const destination = programs[message.program];
   try {
     // Get gasSpent if it is not specified
-    const gas = message.gasLimit
-      ? message.gasLimit
-      : await gearApi.program.getGasSpent(destination, message.payload, types[destination].input);
-    await gearApi.message.submit({
-      destination: destination,
-      payload: message.payload,
-      gasLimit: gas,
-      value: message.value,
-      inputType: types[destination].input
-    });
+    const gas = await getGasSpent(message, gearApi);
+    
+    await gearApi.message.submit(
+      {
+        destination: destination,
+        payload: message.payload,
+        gasLimit: gas,
+        value: message.value
+      },
+      types[destination]
+    );
   } catch (error) {
     console.error(`${error.name}: ${error.message}`);
   }
@@ -139,15 +154,13 @@ async function main(pathToTestSettings: string) {
 const subscribeLogEvents = (api: GearApi) => {
   // Subscribe only to Log events
 
-  const createType = new CreateType(api);
-
   api.gearEvents.subscribeLogEvents(async (event) => {
     const data: any = event.data[0].toHuman();
     if (parseInt(data.reply[1]) === 0) {
       const decodeType = initMessages.some((el) => el === data.reply[0])
         ? types[data.source].init_output
         : types[data.source].output;
-      data.payload = (await createType.decode(decodeType, data.payload)).toHuman();
+      data.payload = CreateType.decode(decodeType, data.payload, types[data.source]).toHuman();
     }
     console.log(data);
   });
@@ -156,4 +169,3 @@ const subscribeLogEvents = (api: GearApi) => {
 main('./examples/settings.json').catch((error) => {
   console.error(error);
 });
-// .finally(() => process.exit());

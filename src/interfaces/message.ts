@@ -8,6 +8,5 @@ export interface Message {
   payload?: Bytes | string | GearType | Uint8Array;
   gasLimit: u64 | AnyNumber;
   value?: BalanceOf | AnyNumber;
-  inputType?: GearType | string;
   meta?: Buffer;
 }

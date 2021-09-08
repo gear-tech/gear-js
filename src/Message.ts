@@ -4,6 +4,7 @@ import { SendMessageError, TransactionError } from './errors';
 import { ApiPromise } from '@polkadot/api';
 import { Bytes } from '@polkadot/types';
 import { KeyringPair } from '@polkadot/keyring/types';
+import { Metadata } from './interfaces/metadata';
 
 export class GearMessage {
   private api: ApiPromise;
@@ -15,10 +16,10 @@ export class GearMessage {
     this.createType = new CreateType(gearApi);
   }
 
-  async submit(message: Message) {
+  async submit(message: Message, meta: Metadata) {
     let payload: Bytes | Uint8Array | string;
 
-    payload = await this.createType.encode(message.inputType, message.payload);
+    payload = this.createType.encode(meta.input, message.payload, meta);
 
     try {
       this.message = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value);
