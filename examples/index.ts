@@ -21,8 +21,6 @@ async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: an
         input: program.inputType,
         output: program.outputType
       };
-  console.log(payloadTypes);
-  return;
   const uploadProgram: Program = {
     code,
     gasLimit: program.gasLimit,
@@ -31,16 +29,15 @@ async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: an
     initInputType: payloadTypes.init_input
   };
   try {
-    await gearApi.program.submit(uploadProgram);
+    const programId = await gearApi.program.submit(uploadProgram);
+    types[programId] = payloadTypes;
+    programs[program.number] = programId;
   } catch (error) {
     console.error(`${error.name}: ${error.message}`);
   }
   try {
-    await gearApi.program.signAndSend(keyring, (event, data) => {
-      types[data.programId] = payloadTypes;
-      console.log(event);
+    await gearApi.program.signAndSend(keyring, (data) => {
       console.log(data);
-      programs[program.number] = data.programId;
       initMessages.push(data.initMessageId);
     });
   } catch (error) {
@@ -57,7 +54,6 @@ async function sendMessage(gearApi: GearApi, keyring: KeyringPair, message: any)
     const gas = message.gasLimit
       ? message.gasLimit
       : await gearApi.program.getGasSpent(destination, message.payload, types[destination].input);
-    console.log(`GAS: ${gas}`);
     await gearApi.message.submit({
       destination: destination,
       payload: message.payload,
@@ -69,9 +65,7 @@ async function sendMessage(gearApi: GearApi, keyring: KeyringPair, message: any)
     console.error(`${error.name}: ${error.message}`);
   }
   try {
-    await gearApi.message.signAndSend(keyring, (event, data) => {
-      console.log(`${message.program}: ${JSON.stringify(message.payload)}`);
-      console.log(event);
+    await gearApi.message.signAndSend(keyring, (data) => {
       console.log(data);
     });
   } catch (error) {
@@ -118,26 +112,12 @@ async function main(pathToTestSettings: string) {
   //   console.log(event.toHuman());
   // });
 
-  const createType = new CreateType(api);
-
   // Subscribe only to program initialization events
   api.gearEvents.subsribeProgramEvents((event) => {
     console.log(event.toHuman());
   });
 
-  // Subscribe only to Log events
-  api.gearEvents.subscribeLogEvents(async (event) => {
-    const data: any = event.data[0].toHuman();
-    if (parseInt(data.reply[1]) === 0) {
-      data.payload = (
-        await createType.decode(
-          data.reply[0] in initMessages ? types[data.source].init_output : types[data.source].output,
-          data.payload
-        )
-      ).toHuman();
-    }
-    console.log(data);
-  });
+  subscribeLogEvents(api);
 
   // Upload programs
   if (settings.programs) {
@@ -146,15 +126,32 @@ async function main(pathToTestSettings: string) {
     }
   }
 
-  // // Send messages
-  // if (settings.messages) {
-  //   for (const message of settings.messages) {
-  //     await sendMessage(api, keyring, message);
-  //   }
-  // }
+  // Send messages
+  if (settings.messages) {
+    for (const message of settings.messages) {
+      await sendMessage(api, keyring, message);
+    }
+  }
 
   return 0;
 }
+
+const subscribeLogEvents = (api: GearApi) => {
+  // Subscribe only to Log events
+
+  const createType = new CreateType(api);
+
+  api.gearEvents.subscribeLogEvents(async (event) => {
+    const data: any = event.data[0].toHuman();
+    if (parseInt(data.reply[1]) === 0) {
+      const decodeType = initMessages.some((el) => el === data.reply[0])
+        ? types[data.source].init_output
+        : types[data.source].output;
+      data.payload = (await createType.decode(decodeType, data.payload)).toHuman();
+    }
+    console.log(data);
+  });
+};
 
 main('./examples/settings.json').catch((error) => {
   console.error(error);

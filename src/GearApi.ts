@@ -20,9 +20,9 @@ export class GearApi {
   defaultTypes: any;
 
   constructor(options?: GearApiOptions) {
-    this.provider = new WsProvider(options.providerAddress);
+    this.provider = new WsProvider(options?.providerAddress ?? 'ws://127.0.0.1:9944');
     this._isReady = new EventEmitter();
-    this.createApiPromise(this.provider, options.customTypes).then(() => {
+    this.createApiPromise(this.provider, options?.customTypes ?? undefined).then(() => {
       this._isReady.emit('ready');
       this.program = new GearProgram(this);
       this.message = new GearMessage(this);
@@ -56,7 +56,6 @@ export class GearApi {
     } else {
       this.defaultTypes = gearTypes;
     }
-    console.log(this.defaultTypes)
     try {
       this.api = await ApiPromise.create({
         provider: provider,

@@ -15,7 +15,9 @@ export class GearEvents {
         events
           .filter(({ event }) => this.api.events.gear.Log.is(event))
           .forEach(({ event }) => {
-            callback(event);
+            setTimeout(() => {
+              callback(event);
+            }, 100);
           });
       });
     } catch (error) {}
@@ -29,7 +31,9 @@ export class GearEvents {
             ({ event }) => this.api.events.gear.InitSuccess.is(event) || this.api.events.gear.InitFailure.is(event)
           )
           .forEach(({ event }) => {
-            callback(event);
+            setTimeout(() => {
+              callback(event);
+            }, 100);
           });
       });
     } catch (error) {}

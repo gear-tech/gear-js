@@ -28,16 +28,14 @@ export class GearMessage {
     }
   }
 
-  signAndSend(keyring: KeyringPair, callback: (event: string, data?: any) => void): Promise<any> {
+  signAndSend(keyring: KeyringPair, callback?: (data: any) => void): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         let blockHash: string;
         await this.message.signAndSend(keyring, ({ events = [], status }) => {
           if (status.isInBlock) {
-            resolve(0);
             blockHash = status.asInBlock.toHex();
-          } else if (status.isFinalized) {
-            blockHash = status.asFinalized.toHex();
+            resolve(0);
           } else if (status.isInvalid) {
             reject(new TransactionError(`Transaction error. Status: isInvalid`));
           }
@@ -57,8 +55,9 @@ export class GearMessage {
 
           events
             .filter(({ event }) => this.api.events.gear.DispatchMessageEnqueued.is(event))
-            .forEach(({ event: { data } }) => {
-              callback('DispatchMessageEnqueued', {
+            .forEach(({ event: { data, method } }) => {
+              callback({
+                method,
                 status: status.type,
                 blockHash,
                 messageId: data.toHuman()[0]
