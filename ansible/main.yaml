@@ -27,10 +27,6 @@
         REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
 #Do tasks
   tasks:
-
-    - name: test
-      shell:  env >> env
-
     - name: Install and enable required packages
       include: tasks/packages/packages.yaml
 
