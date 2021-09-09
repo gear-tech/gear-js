@@ -29,7 +29,7 @@
   tasks:
 
     - name: test
-      shell:  echo $REACT_APP_GITHUB_CLIENT_ID > env
+      shell:  echo $REACT_APP_WS_URI > env; echo $REACT_APP_API_PATH >> env; $REACT_APP_IDE_URI >> env;
       environment:
         REACT_APP_API_PATH: "https://{{ lookup('env','NODE_ADDRESS') }}/api"
         REACT_APP_WS_URI: "wss://{{ lookup('env','NODE_ADDRESS') }}/api/ws"
