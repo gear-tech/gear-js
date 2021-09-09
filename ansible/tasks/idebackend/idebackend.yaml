@@ -21,7 +21,7 @@
 
 - name: Copy ide-backend
   copy:
-    src: ../../../ide-backend/
+    src: ../../../website/ide-backend/
     dest: /home/ec2-user/ide-backend
     
 - name: Install ide-backend

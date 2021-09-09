@@ -1,5 +1,5 @@
 {
-  "name": "a-project",
+  "name": "@gear-js/frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -36,7 +36,7 @@
     "react-feather": "^2.0.9",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^4.0.3",
     "react-telegram-login": "^1.1.2",
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",

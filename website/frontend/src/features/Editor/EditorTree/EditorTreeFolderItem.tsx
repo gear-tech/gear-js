@@ -69,6 +69,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
   function handleAddFile(event: React.SyntheticEvent) {
     event.stopPropagation();
     setIsOpen(true);
+      /* eslint-disable react/jsx-no-bind */
     setChildrenCopy([
       ...childrenCopy,
       <EditorTreeInput
@@ -83,6 +84,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
   function handleAddFolder(event: React.SyntheticEvent) {
     event.stopPropagation();
     setIsOpen(true);
+      /* eslint-disable react/jsx-no-bind */
     setChildrenCopy([
       ...childrenCopy,
       <EditorTreeInput
@@ -94,6 +96,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
     ]);
   }
 
+  /* eslint-disable react/jsx-no-bind */
   return (
     <div className={clsx('editor-tree__folder', isOpen && 'is-open')}>
       <div role="button" tabIndex={0} aria-hidden="true" className="editor-tree__item is-folder" onClick={handleClick}>

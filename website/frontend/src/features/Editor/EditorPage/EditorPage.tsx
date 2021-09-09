@@ -172,7 +172,8 @@ export const EditorPage = () => {
   }
 
   // @ts-ignore
-  return (
+      /* eslint-disable react/jsx-no-bind */
+      return (
     <div className="editor-page">
       <PageHeader programName={programName} pageType={PAGE_TYPES.EDITOR_PAGE} handleClose={handleClose} />
       <div className="editor-content">
