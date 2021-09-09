@@ -29,11 +29,8 @@
   tasks:
 
     - name: test
-      shell:  env >> env; "$REACT_APP_IDE_URI" >> env;
-      environment:
-        REACT_APP_API_PATH: "https://{{ lookup('env','NODE_ADDRESS') }}/api"
-        REACT_APP_WS_URI: "wss://{{ lookup('env','NODE_ADDRESS') }}/api/ws"
-        REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
+      shell:  env >> env
+
     - name: Install and enable required packages
       include: tasks/packages/packages.yaml
 
