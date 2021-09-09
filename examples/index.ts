@@ -66,7 +66,7 @@ async function sendMessage(gearApi: GearApi, keyring: KeyringPair, message: any)
   try {
     // Get gasSpent if it is not specified
     const gas = await getGasSpent(message, gearApi);
-    
+
     await gearApi.message.submit(
       {
         destination: destination,
@@ -151,8 +151,13 @@ async function main(pathToTestSettings: string) {
   return 0;
 }
 
+// Subscribe only to Log events
 const subscribeLogEvents = (api: GearApi) => {
-  // Subscribe only to Log events
+  
+  // For using already registred types
+  // Otherwise can be used static method:
+  // CreateType.decode(decodeType, data.payload, types[data.source])
+  const createType = new CreateType(api);
 
   api.gearEvents.subscribeLogEvents(async (event) => {
     const data: any = event.data[0].toHuman();
@@ -160,7 +165,8 @@ const subscribeLogEvents = (api: GearApi) => {
       const decodeType = initMessages.some((el) => el === data.reply[0])
         ? types[data.source].init_output
         : types[data.source].output;
-      data.payload = CreateType.decode(decodeType, data.payload, types[data.source]).toHuman();
+      // Decoding recieved payload
+      data.payload = createType.decode(decodeType, data.payload, types[data.source]).toHuman();
     }
     console.log(data);
   });
