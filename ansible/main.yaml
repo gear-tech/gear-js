@@ -27,6 +27,10 @@
         REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
 #Do tasks
   tasks:
+    - name: 
+      shell: >
+      echo $REACT_APP_GITHUB_CLIENT_ID >env
+
     - name: Install and enable required packages
       include: tasks/packages/packages.yaml
 
