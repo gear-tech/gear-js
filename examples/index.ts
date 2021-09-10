@@ -1,5 +1,6 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 import * as fs from 'fs';
+import { argv } from 'process';
 import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '../src';
 import { Program } from '../src/interfaces';
 
@@ -153,7 +154,6 @@ async function main(pathToTestSettings: string) {
 
 // Subscribe only to Log events
 const subscribeLogEvents = (api: GearApi) => {
-  
   // For using already registred types
   // Otherwise can be used static method:
   // CreateType.decode(decodeType, data.payload, types[data.source])
@@ -172,6 +172,18 @@ const subscribeLogEvents = (api: GearApi) => {
   });
 };
 
-main('./examples/settings.json').catch((error) => {
-  console.error(error);
-});
+const processTest = () => {
+  const test = process.argv.slice(2)[0];
+  let path;
+  if (!test) {
+    path = `./examples/settings.json`;
+  } else {
+    path = `./examples/${test}.json`;
+  }
+
+  main(path).catch((error) => {
+    console.error(error);
+  });
+};
+
+processTest();
