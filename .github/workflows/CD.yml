@@ -59,6 +59,8 @@ jobs:
           HOST: ${{ secrets.HOST }}
           IDE_FOLDER: ${{ secrets.IDE_FOLDER }}
           NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
+          SUDO_SEED: ${{secrets.SUDO_SEED}}
+          ACCOUNT_SEED: ${{secrets.ACCOUNT_SEED}}
         with:
           # Required, playbook filepath
           directory: ./ansible

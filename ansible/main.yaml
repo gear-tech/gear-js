@@ -25,6 +25,8 @@
         REACT_APP_API_PATH: "https://{{ lookup('env','NODE_ADDRESS') }}/api"
         REACT_APP_WS_URI: "wss://{{ lookup('env','NODE_ADDRESS') }}/api/ws"
         REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
+        ACCOUNT_SEED: "{{ lookup('env','ACCOUNT_SEED') }}"
+        SUDO_SEED: "{{ lookup('env','SUDO_SEED') }}"
 #Do tasks
   tasks:
     - name: Install and enable required packages

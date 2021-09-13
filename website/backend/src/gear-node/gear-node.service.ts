@@ -4,12 +4,7 @@ import { randomAsHex } from '@polkadot/util-crypto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
-import {
-  createKeyring,
-  keyringFromJson,
-  keyringFromSeed,
-  keyringFromSuri,
-} from './keyring';
+import { createKeyring, keyringFromJson, keyringFromSeed } from './keyring';
 import {
   GearNodeError,
   GettingMetadataError,
@@ -17,7 +12,7 @@ import {
   InvalidParamsError,
   ProgramNotFound,
 } from 'src/json-rpc/errors';
-import { isJsonObject, isString, u8aToHex } from '@polkadot/util';
+import { isJsonObject, u8aToHex } from '@polkadot/util';
 import { submitProgram } from './program.gear';
 import { sendMessage } from './message.gear';
 import definitions from 'src/interfaces/definitions';
@@ -28,7 +23,7 @@ import { getWasmMetadata } from './wasm.meta';
 import { LogMessage } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';
 import { CreateType } from 'src/gear-node/custom-types';
-import { KeyringPair$Json } from '@polkadot/keyring/types';
+import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
 import { SendMessageData, UploadProgramData } from './interfaces';
 import { Bytes } from '@polkadot/types';
 import { RpcCallback } from 'src/json-rpc/interfaces';
@@ -38,6 +33,7 @@ const logger = new Logger('GearNodeService');
 export class GearNodeService {
   private provider: WsProvider;
   private api: ApiPromise;
+  private keyring: KeyringPair;
 
   constructor(
     private readonly userService: UsersService,
@@ -51,6 +47,7 @@ export class GearNodeService {
       this.subscription.subscribeBlocks(api);
       this.subscription.subscribeEvents(api);
       this.saveEvents();
+      this.updateWebsiteAccountBalance();
     });
   }
 
@@ -88,15 +85,41 @@ export class GearNodeService {
     });
   }
 
+  async updateWebsiteAccountBalance() {
+    const accountSeed = process.env.ACCOUNT_SEED;
+    const sudoSeed = process.env.SUDO_SEED;
+    const sudoKeyring = keyringFromSeed('websiteAccount', sudoSeed);
+    if (!accountSeed) {
+      const { keyring } = createKeyring('websiteAccount');
+      this.keyring = keyring;
+    } else {
+      this.keyring = keyringFromSeed('websiteAccount', accountSeed);
+    }
+
+    const currentBalance = await this.getBalance(this.keyring.address);
+    this.balanceTransfer({
+      from: sudoKeyring,
+      to: this.keyring.address,
+      value: 999999999999999 - currentBalance.freeBalance,
+      cb: (error, data) => {
+        if (error) {
+          logger.error(error);
+        } else {
+          logger.log(data);
+        }
+      },
+    });
+  }
+
   createKeyPair(user: User): KeyringPair$Json {
     if (user.seed) {
-      const keyring = keyringFromSeed(user, user.seed);
+      const keyring = keyringFromSeed(user.username, user.seed);
       if (u8aToHex(keyring.publicKey) !== user.publicKey) {
         this.userService.addPublicKey(user, u8aToHex(keyring.publicKey));
       }
       return keyring.toJson();
     }
-    const { publicKey, seed, json } = createKeyring(user);
+    const { publicKey, seed, json } = createKeyring(user.username);
     this.userService.addPublicKey(user, publicKey);
     this.userService.addSeed(user, seed);
     return json;
@@ -128,7 +151,7 @@ export class GearNodeService {
 
     const keyring = data.keyPairJson
       ? keyringFromJson(data.keyPairJson)
-      : keyringFromSeed(user, user.seed);
+      : keyringFromSeed(user.username, user.seed);
     if (keyring.isLocked) {
       keyring.unlock();
     }
@@ -230,7 +253,7 @@ export class GearNodeService {
 
     const keyring = messageData.keyPairJson
       ? keyringFromJson(messageData.keyPairJson)
-      : keyringFromSeed(user, user.seed);
+      : keyringFromSeed(user.username, user.seed);
     if (keyring.isLocked) {
       keyring.unlock();
     }
@@ -290,32 +313,43 @@ export class GearNodeService {
     return total;
   }
 
-  async balanceTransfer(
-    publicKey: string,
-    value: number,
-    cb: RpcCallback,
-  ): Promise<void> {
-    try {
-      const unsub = await this.api.tx.balances
-        .transfer(publicKey, value)
-        .signAndSend(keyringFromSuri('//Alice', 'Alice default'), (result) => {
-          if (result.status.isFinalized) {
-            if (cb) {
-              cb(undefined, {
-                message: `Transfer balance succeed`,
-              });
-            }
-            unsub();
-          }
-        });
-    } catch (error) {
-      throw new GearNodeError(error.message);
+  async balanceTransfer(options: {
+    from?: KeyringPair;
+    to: string;
+    value: number;
+    cb?: RpcCallback;
+  }): Promise<void> {
+    if (
+      options.to !== this.keyring.address &&
+      (await this.getBalance(this.keyring.address)).freeBalance <= options.value
+    ) {
+      await this.updateWebsiteAccountBalance();
     }
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const unsub = await this.api.tx.balances
+          .transfer(options.to, options.value)
+          .signAndSend(options.from ? options.from : this.keyring, (result) => {
+            if (result.status.isFinalized) {
+              if (options.cb) {
+                options.cb(undefined, {
+                  message: `Transfer balance succeed`,
+                });
+              }
+              unsub();
+              resolve();
+            }
+          });
+      } catch (error) {
+        reject(new GearNodeError(error.message));
+      }
+    });
   }
 
-  async getBalance(publicKey: string): Promise<{ freeBalance: string }> {
+  async getBalance(publicKey: string): Promise<{ freeBalance: number }> {
     const { data: balance } = await this.api.query.system.account(publicKey);
-    return { freeBalance: balance.free.toHuman() };
+    return { freeBalance: balance.free.toNumber() };
   }
 
   async getGasSpent(hash: string, payload: string | JSON): Promise<number> {
@@ -368,7 +402,10 @@ export class GearNodeService {
     });
   }
 
-  async subscribeEvents(user: User, callback: RpcCallback): Promise<Subscription> {
+  async subscribeEvents(
+    user: User,
+    callback: RpcCallback,
+  ): Promise<Subscription> {
     const filtered = this.subscription.events.pipe(
       filter((event) => {
         return event.destination === user.publicKey;
@@ -468,9 +505,12 @@ export class GearNodeService {
     );
     const filter = async (array, condition) => {
       const results = await Promise.all(array.map(condition));
-      return array.filter((_v, index) => results[index])
+      return array.filter((_v, index) => results[index]);
     };
-    programs = await filter(programs, async(hash) => !(await this.programService.isInDB(hash)))
-    return programs
+    programs = await filter(
+      programs,
+      async (hash) => !(await this.programService.isInDB(hash)),
+    );
+    return programs;
   }
 }
