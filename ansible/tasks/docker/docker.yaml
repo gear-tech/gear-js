@@ -37,4 +37,3 @@
     IDE_SOCKET: "{{ lookup('env','IDE_SOCKET') }}"
     ACCOUNT_SEED: "{{ lookup('env','ACCOUNT_SEED') }}"
     SUDO_SEED: "{{ lookup('env','SUDO_SEED') }}"
-
