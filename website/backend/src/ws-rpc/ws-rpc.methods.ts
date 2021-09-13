@@ -63,11 +63,11 @@ export class WsRpcMethods extends RpcMethods {
       if (!params || !params.value) {
         throw new InvalidParamsError();
       }
-      return await this.gearService.balanceTransfer(
-        user.publicKey,
-        params.value,
-        cb,
-      );
+      return await this.gearService.balanceTransfer({
+        to: user.publicKey,
+        value: params.value,
+        cb: cb,
+      });
     },
   };
 
