@@ -1,6 +1,6 @@
 {
-  "name": "@gear-js/lib",
-  "version": "1.0.0",
+  "name": "@gear-js/api",
+  "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/**/*d.ts",
@@ -13,8 +13,7 @@
     "codestyle": "npm run prettier && npm run tslint",
     "postinstall": "tsc"
   },
-  "author": "osipov-mit",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "dependencies": {
     "@polkadot/api": "^5.8.3",
     "rxjs": "^7.3.0",

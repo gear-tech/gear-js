@@ -19,7 +19,8 @@ export class GearProgram {
   }
 
   /**
-   *
+   * @param program Uploading program data
+   * @param meta Metadata
    * @returns ProgramId
    */
   async submit(program: Program, meta: Metadata): Promise<string> {

@@ -121,8 +121,8 @@ function toJSON(data: any) {
 
 function typeIsString(type: any, data?: any): boolean {
   if (data) {
-    return ['string', 'utf8', 'utf-8'].includes(type.toLowerCase());
-  } else {
     return ['string', 'utf8', 'utf-8'].includes(type.toLowerCase()) && typeof data === 'string';
+  } else {
+    return ['string', 'utf8', 'utf-8'].includes(type.toLowerCase());
   }
 }

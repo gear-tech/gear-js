@@ -1,6 +1,6 @@
 import { Keyring } from '@polkadot/api';
 import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
-import { hexToU8a, isHex, stringToU8a, isString } from '@polkadot/util';
+import { hexToU8a, isHex, stringToU8a, isString, u8aToHex } from '@polkadot/util';
 import { mnemonicGenerate, mnemonicToMiniSecret, signatureVerify } from '@polkadot/util-crypto';
 import { Keypair } from '@polkadot/util-crypto/types';
 import { waitReady } from '@polkadot/wasm-crypto';
@@ -46,14 +46,20 @@ export class GearKeyring {
     return GearKeyring.fromSuri(suri, `${name}`);
   }
 
-  static async create(name: string) {
+  static async create(name: string): Promise<{
+    keyring: KeyringPair;
+    mnemonic: string;
+    seed: string;
+    json: KeyringPair$Json;
+  }> {
     const mnemonic = mnemonicGenerate();
     const seed = mnemonicToMiniSecret(mnemonic);
     const keyring = await GearKeyring.fromSeed(seed, name);
 
     return {
       keyring,
-      seed: seed,
+      mnemonic: mnemonic,
+      seed: u8aToHex(seed),
       json: keyring.toJson()
     };
   }

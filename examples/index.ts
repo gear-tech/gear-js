@@ -1,6 +1,5 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 import * as fs from 'fs';
-import { argv } from 'process';
 import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '../src';
 import { Program } from '../src/interfaces';
 

@@ -7,6 +7,13 @@ async function testMeta(test: any) {
   if (test.meta_file) {
     meta = await getWasmMetadata(fs.readFileSync(test.meta_file));
     types = meta.types;
+  } else {
+    types = {
+      init_input: test.types.init_input,
+      init_output: test.types.init_output,
+      input: test.types.input,
+      output: test.types.output
+    }
   }
   
   test.payloads.forEach((payload) => {
