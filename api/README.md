@@ -8,12 +8,18 @@
 
 A JavaScript library that provides functionality to connect GEAR Component APIs.
 
+## Installation
+
+```sh
+npm install @gear-js/api 
+```
+
 ## Getting started
 
 Start an API connection to a running node on localhost
 
 ```javascript
-import { GearApi } from 'gear-js/api';
+import { GearApi } from '@gear-js/api';
 
 const gearApi = await GearApi.create();
 ```
@@ -125,7 +131,7 @@ const keyring = GearKeyring.fromJson(jsonKeyring);
 Getting metadata from program.meta.wasm
 
 ```javascript
-import { getWasmMetadata } from 'gear-js/api';
+import { getWasmMetadata } from '@gear-js/api';
 const fileBuffer = fs.readFileSync('path/to/program.meta.wasm');
 const meta = await getWasmMetadata(fileBuffer);
 ```
