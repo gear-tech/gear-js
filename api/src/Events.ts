@@ -1,6 +1,6 @@
 import { GearApi } from '.';
 import { ApiPromise } from '@polkadot/api';
-import { Event } from '@polkadot/types/interfaces';
+import { Event, Header } from '@polkadot/types/interfaces';
 
 export class GearEvents {
   private api: ApiPromise;
@@ -11,7 +11,7 @@ export class GearEvents {
 
   async subscribeLogEvents(callback: (event: Event) => void) {
     try {
-      await this.api.query.system.events((events) => {
+      return this.api.query.system.events((events) => {
         events
           .filter(({ event }) => this.api.events.gear.Log.is(event))
           .forEach(({ event }) => {
@@ -25,7 +25,7 @@ export class GearEvents {
 
   async subsribeProgramEvents(callback: (event: Event) => void) {
     try {
-      await this.api.query.system.events((events) => {
+      return this.api.query.system.events((events) => {
         events
           .filter(
             ({ event }) => this.api.events.gear.InitSuccess.is(event) || this.api.events.gear.InitFailure.is(event)
@@ -35,6 +35,14 @@ export class GearEvents {
               callback(event);
             }, 100);
           });
+      });
+    } catch (error) {}
+  }
+
+  async subscribeNewBlocks(callback: (header: Header) => void) {
+    try {
+      return this.api.rpc.chain.subscribeNewHeads(async (header) => {
+        callback(header);
       });
     } catch (error) {}
   }

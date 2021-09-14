@@ -3,6 +3,9 @@
     <img src="https://gear-tech.io/images/logo-black.svg" width="240" alt="GEAR">
   </a>
 </p>
+<p align=center>
+    <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
+</p>
 
 ## Description
 
@@ -11,7 +14,7 @@ A JavaScript library that provides functionality to connect GEAR Component APIs.
 ## Installation
 
 ```sh
-npm install @gear-js/api 
+npm install @gear-js/api
 ```
 
 ## Getting started
@@ -74,8 +77,16 @@ gearApi.gearEvents.subscribeLogEvents((event) => {
 Subscribe to Program events
 
 ```javascript
-gearApi.gearEvents.subsribeProgramEvents((event) => {
-  console.log(event.toHuman());
+gearApi.gearEvents.subscribeNewBlocks((header) => {
+  console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
+});
+```
+
+Subscribe to new blocks
+
+```javascript
+gearApi.gearEvents.subscribeNewBlocks((header) => {
+  console.log(header.toHuman());
 });
 ```
 
