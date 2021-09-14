@@ -11,7 +11,8 @@
     "prettier": "npx prettier --write src/* examples/*",
     "tslint": "tslint -p tslint -p tsconfig.json",
     "codestyle": "npm run prettier && npm run tslint",
-    "postinstall": "tsc"
+    "postinstall": "tsc",
+    "test": "mocha"
   },
   "license": "GPL-3.0",
   "dependencies": {
@@ -20,6 +21,7 @@
     "typescript": "^4.4.2"
   },
   "devDependencies": {
+    "mocha": "^9.1.1",
     "prettier": "^2.3.2",
     "tslint": "^6.1.3"
   }
