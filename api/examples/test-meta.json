@@ -1,0 +1,49 @@
+[
+  {
+    "meta_file": "/path/to/demo_meta.meta.wasm",
+    "payloads": [
+      {
+        "name": "init_input",
+        "value": { "amount": 12, "currency": "USD" }
+      },
+      {
+        "name": "input",
+        "value": {
+          "id": {
+            "decimal": 12345,
+            "hex": "0x4f0725fcc6fc8b1802793bf73f9b41a9263fe932f9f3213edb66dd5da879bfb0"
+          }
+        }
+      },
+      {
+        "name": "output",
+        "value": {
+          "res": [
+            {
+              "ok": {
+                "id": {
+                  "decimal": 12345,
+                  "hex": "0x4f0725fcc6fc8b1802793bf73f9b41a9263fe932f9f3213edb66dd5da879bfb0"
+                },
+                "person": {
+                  "name": "Vladimir",
+                  "patronymic": "Vladimirovich",
+                  "surname": "Putin"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "init_output",
+        "value": {
+          "exchange_rate": {
+            "err": 1
+          },
+          "sum": 31
+        }
+      }
+    ]
+  }
+]

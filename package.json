@@ -5,17 +5,18 @@
     "build:backend": "cd website/backend && npm run build",
     "build:frontend": "cd website/frontend && npm run build",
     "build:ide": "cd website/fronted && npm run build",
-    "build": "npm run build:backend && npm run build:frontend && npm run build:ide",
     "start:backend": "npm run start:dev --workspace=website/backend",
     "start:frontend": "npm run start --workspace=website/frontend",
     "start:ide": "npm run start:dev --workspace=website/ide-backend"
   },
   "workspaces": [
-    "website/*"
+    "website/*",
+    "api"
   ],
   "dependencies": {
     "@gear-js/backend": "file:website/backend",
     "@gear-js/frontend": "file:website/frontend",
-    "@gear-js/ide-backend": "file:website/ide-backend"
+    "@gear-js/ide-backend": "file:website/ide-backend",
+    "@gear-js/api": "file:api"
   }
 }

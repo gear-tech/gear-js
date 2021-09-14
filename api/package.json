@@ -1,0 +1,26 @@
+{
+  "name": "@gear-js/api",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/**/*d.ts",
+  "scripts": {
+    "build": "tsc",
+    "examples": "node lib/examples/index.js",
+    "test:meta": "node lib/examples/test-meta.js",
+    "prettier": "npx prettier --write src/* examples/*",
+    "tslint": "tslint -p tslint -p tsconfig.json",
+    "codestyle": "npm run prettier && npm run tslint",
+    "postinstall": "tsc"
+  },
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@polkadot/api": "^5.8.3",
+    "rxjs": "^7.3.0",
+    "typescript": "^4.4.2"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.2",
+    "tslint": "^6.1.3"
+  }
+}

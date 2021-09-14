@@ -1,0 +1,53 @@
+{
+  "keyring": "/path/to/keyring.json",
+  "customTypes": {
+    "MessageIn": { "value": "u64", "annotation": "String" },
+    "MessageOut": { "old_value": "u64", "new_value": "u64" }
+  },
+  "programs": [
+    {
+      "number": 1,
+      "path": "/path/to/programm.wasm",
+      "gasLimit": 10000000,
+      "value": 0,
+      "meta": "/path/to/programm_meta.wasm",
+      "initPayload": { "value": 123, "annotation": "initial payload" },
+      "initInputType": "MessageIn",
+      "initOutputType": "MessageOut",
+      "inputType": "MessageIn",
+      "outputType": "MessageOut"
+    },
+    {
+      "number": 2,
+      "path": "/path/to/programm_2.wasm",
+      "gasLimit": 10000000,
+      "value": 0,
+      "inputType": "String",
+      "outputType": "utf8"
+    }
+  ],
+  "messages": [
+    {
+      "program": 1,
+      "payload": { "value": 456, "annotation": "payload" },
+      "gasLimit": 1000000000,
+      "value": 0
+    },
+    {
+      "program": 1,
+      "payload": { "value": 789, "annotation": "payload" },
+      "value": 0
+    },
+    {
+      "program": 1,
+      "payload": { "value": 101112, "annotation": "payload" },
+      "value": 0
+    },
+    {
+      "program": 2,
+      "payload": "PING",
+      "gasLimit": 1000000000,
+      "value": 0
+    }
+  ]
+}

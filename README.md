@@ -6,6 +6,10 @@
 
 ## Directory Structure
 
+## [api](https://github.com/gear-tech/gear-js/tree/master/api)
+
+This directory contatins the javascript library that provides functionality to connect GEAR Component APIs.
+
 ## [website](https://github.com/gear-tech/gear-js/tree/master/website)
 
 This directory contains the resources needed to run the Gear-Tech site.
