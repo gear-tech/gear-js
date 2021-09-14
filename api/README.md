@@ -3,17 +3,26 @@
     <img src="https://gear-tech.io/images/logo-black.svg" width="240" alt="GEAR">
   </a>
 </p>
+<p align=center>
+    <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
+</p>
 
 ## Description
 
 A JavaScript library that provides functionality to connect GEAR Component APIs.
+
+## Installation
+
+```sh
+npm install @gear-js/api
+```
 
 ## Getting started
 
 Start an API connection to a running node on localhost
 
 ```javascript
-import { GearApi } from 'gear-js/api';
+import { GearApi } from '@gear-js/api';
 
 const gearApi = await GearApi.create();
 ```
@@ -68,8 +77,16 @@ gearApi.gearEvents.subscribeLogEvents((event) => {
 Subscribe to Program events
 
 ```javascript
-gearApi.gearEvents.subsribeProgramEvents((event) => {
+gearApi.gearEvents.subscribeProgramEvents((event) => {
   console.log(event.toHuman());
+});
+```
+
+Subscribe to new blocks
+
+```javascript
+gearApi.gearEvents.subscribeNewBlocks((header) => {
+  console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
 });
 ```
 
@@ -125,7 +142,7 @@ const keyring = GearKeyring.fromJson(jsonKeyring);
 Getting metadata from program.meta.wasm
 
 ```javascript
-import { getWasmMetadata } from 'gear-js/api';
+import { getWasmMetadata } from '@gear-js/api';
 const fileBuffer = fs.readFileSync('path/to/program.meta.wasm');
 const meta = await getWasmMetadata(fileBuffer);
 ```

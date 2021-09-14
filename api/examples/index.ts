@@ -148,6 +148,10 @@ async function main(pathToTestSettings: string) {
     }
   }
 
+  api.gearEvents.subscribeNewBlocks((header) => {
+    console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
+  });
+
   return 0;
 }
 
