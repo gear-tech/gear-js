@@ -77,8 +77,8 @@ gearApi.gearEvents.subscribeLogEvents((event) => {
 Subscribe to Program events
 
 ```javascript
-gearApi.gearEvents.subscribeNewBlocks((header) => {
-  console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
+gearApi.gearEvents.subscribeProgramEvents((event) => {
+  console.log(event.toHuman());
 });
 ```
 
@@ -86,7 +86,7 @@ Subscribe to new blocks
 
 ```javascript
 gearApi.gearEvents.subscribeNewBlocks((header) => {
-  console.log(header.toHuman());
+  console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
 });
 ```
 
