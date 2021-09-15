@@ -169,7 +169,7 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
                   <Field 
                     id="value" 
                     name="value" 
-                    placeholder="20000" 
+                    placeholder="0" 
                     className="program-details__init-value program-details__value" 
                     type="number"
                   />
@@ -276,9 +276,24 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
                     {errors.initOutType && touched.initOutType ? <div className="program-details__error">{errors.initOutType}</div> : null}
                   </div>
                 </div>
+                <div className="program-details__info">
+                  <label htmlFor="describeTypes" className="program-details__field-init-value program-details__field">Types:</label>
+                  <div className="program-details__field-wrapper">
+                    <Field as="textarea" 
+                      id="describeTypes" 
+                      name="describeTypes" 
+                      placeholder="{&#10;JSON&#10;}" 
+                      className="program-details__types program-details__value" 
+                      type="text"
+                    />
+                    {errors.initOutType && touched.initOutType ? <div className="program-details__error">{errors.initOutType}</div> : null}
+                  </div>
+                </div>
                 </>
               }
             </div>
+            
+
             <div className="program-details__buttons">
               <button 
                 type="submit" 
