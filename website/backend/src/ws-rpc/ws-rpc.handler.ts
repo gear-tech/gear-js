@@ -35,7 +35,17 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
     }
 
     if (unsub) {
-      this.unsubs.push(unsub);
+      if (unsub.unsub) {
+        this.unsubs.push(unsub);
+      } else {
+        const unsubIndex = this.unsubs.findIndex(
+          (element) => element.name === unsub.name,
+        );
+        this.unsubs[unsubIndex].unsub.complete();
+        this.unsubs = this.unsubs.filter(
+          (value, index, arr) => index === unsubIndex,
+        );
+      }
     }
     return null;
   }
@@ -44,6 +54,7 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
     this.unsubs.forEach((element) => {
       element.unsubscribe();
     });
+    this.unsubs = [];
   }
 
   async checkProcedure(procedure, cb) {
