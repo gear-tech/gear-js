@@ -1,29 +1,5 @@
 const assert = require('assert');
-const { GearApi, CreateType } = require('../lib/src');
-
-after(() => {
-    process.exit()
-})
-
-describe('GearApi test', () => {
-    before(async () => {
-        this.gearApi = await GearApi.create();
-    })
-
-    describe('Api connected', () => {
-        it('connected to localhost', () => {
-            assert.equal(this.gearApi.api.isConnected, true)
-        })
-    })
-
-    describe('Total issuance', async () => {
-        it('totalIssuance', () => {
-            assert.doesNotThrow(() => { this.gearApi.totalIssuance(); })
-        })
-    })
-})
-
-
+const { CreateType } = require('../lib/src');
 
 describe('Create custom types test', () => {
     function checkPayload(payload, decoded) {
