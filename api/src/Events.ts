@@ -1,6 +1,7 @@
 import { GearApi } from '.';
 import { ApiPromise } from '@polkadot/api';
 import { Event, Header } from '@polkadot/types/interfaces';
+import { UnsubscribePromise } from '@polkadot/api/types';
 
 export class GearEvents {
   private api: ApiPromise;
@@ -9,7 +10,7 @@ export class GearEvents {
     this.api = gearApi.api;
   }
 
-  async subscribeLogEvents(callback: (event: Event) => void) {
+  subscribeLogEvents(callback: (event: Event) => void | Promise<void>): UnsubscribePromise {
     try {
       return this.api.query.system.events((events) => {
         events
@@ -23,7 +24,7 @@ export class GearEvents {
     } catch (error) {}
   }
 
-  async subsribeProgramEvents(callback: (event: Event) => void) {
+  subsribeProgramEvents(callback: (event: Event) => void | Promise<void>): UnsubscribePromise {
     try {
       return this.api.query.system.events((events) => {
         events
@@ -39,9 +40,9 @@ export class GearEvents {
     } catch (error) {}
   }
 
-  async subscribeNewBlocks(callback: (header: Header) => void) {
+  async subscribeNewBlocks(callback: (header: Header) => void | Promise<void>): UnsubscribePromise {
     try {
-      return this.api.rpc.chain.subscribeNewHeads(async (header) => {
+      return this.api.rpc.chain.subscribeNewHeads((header) => {
         callback(header);
       });
     } catch (error) {}
