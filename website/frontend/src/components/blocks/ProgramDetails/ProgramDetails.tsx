@@ -13,7 +13,6 @@ import { programUploadStartAction } from 'store/actions/actions';
 
 import StatusPanel from 'components/blocks/StatusPanel';
 
-
 import './ProgramDetails.scss';
 
 import cancel from 'images/cancel.svg';
@@ -22,7 +21,7 @@ import deselected from 'images/radio-deselected.svg';
 import selected from 'images/radio-selected.svg';
 
 import { Schema } from './Schema';
-import { readFileAsync } from '../../../helpers'
+import { readFileAsync } from '../../../helpers';
 
 type ProgramDetailsTypes = {
   setDroppedFile: (file: File | null) => void;
@@ -41,7 +40,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
   const [type, setType] = useState(null);
   const [typeInput, setTypeInput] = useState('');
 
-  const [program, setProgram] = useState<any>({
+  const [program, setProgram] = useState<UploadProgramModel>({
     gasLimit: 20000,
     value: 0,
     initPayload: '',
@@ -71,7 +70,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
       try {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
-        console.log(meta)
+        console.log(meta);
         setProgram({
           ...program,
           init_input: meta.init_input,
@@ -80,8 +79,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
           output: meta.output,
           types: meta.types,
         });
-
-      } catch(err) {
+      } catch (err) {
         console.log(err);
       }
       setDroppedMetaFile(file);
@@ -132,13 +130,17 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
         validateOnBlur
         onSubmit={(values: UploadProgramModel) => {
           dispatch(programUploadStartAction());
-          try {
-            const typesObj = JSON.parse(values.types);
-            socketService.uploadProgram(droppedFile, { ...values, types: typesObj });
-            setDroppedFile(null);
-          } catch(err){
-            console.log(err)
+          if (isMetaByFile) {
+            socketService.uploadProgram(droppedFile, { ...program });
+          } else {
+            try {
+              const types = JSON.parse(values.types);
+              socketService.uploadProgram(droppedFile, { ...values, types });
+            } catch (err) {
+              console.log(err);
+            }
           }
+          setDroppedFile(null);
         }}
         onReset={() => {
           setDroppedFile(null);
@@ -226,7 +228,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                 <div className="program-details__info">
                   <p className="program-details__field">Metadata: </p>
                   <div className="program-details--switch-btns">
-                  <button
+                    <button
                       type="button"
                       className="program-details--switch-btns__btn"
                       onClick={() => setIsMetaByFile(true)}
@@ -313,10 +315,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label
-                        htmlFor="output"
-                        className="program-details__field-init-value program-details__field"
-                      >
+                      <label htmlFor="output" className="program-details__field-init-value program-details__field">
                         Expected type:
                       </label>
                       <div className="program-details__field-wrapper">
@@ -350,10 +349,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label
-                        htmlFor="types"
-                        className="program-details__field-init-value program-details__field"
-                      >
+                      <label htmlFor="types" className="program-details__field-init-value program-details__field">
                         Types:
                       </label>
                       <div className="program-details__field-wrapper">
