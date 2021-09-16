@@ -129,18 +129,21 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: UploadProgramModel) => {
-          dispatch(programUploadStartAction());
           if (isMetaByFile) {
+            dispatch(programUploadStartAction());
             socketService.uploadProgram(droppedFile, { ...program });
+            setDroppedFile(null);
           } else {
             try {
-              const types = JSON.parse(values.types);
+              const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
+              dispatch(programUploadStartAction());
               socketService.uploadProgram(droppedFile, { ...values, types });
+              setDroppedFile(null);
             } catch (err) {
+              setWrongJSON(true);
               console.log(err);
             }
           }
-          setDroppedFile(null);
         }}
         onReset={() => {
           setDroppedFile(null);
@@ -394,6 +397,15 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
             setWrongMetaFormat(false);
           }}
           statusPanelText={null}
+          isError
+        />
+      )}
+      {wrongJSON && (
+        <StatusPanel
+          onClose={() => {
+            setWrongJSON(false);
+          }}
+          statusPanelText="Invalid JSON format"
           isError
         />
       )}
