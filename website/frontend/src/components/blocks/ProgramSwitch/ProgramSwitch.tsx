@@ -4,7 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
-import { SWITCH_PAGE_TYPES } from 'consts';
+import { SWITCH_PAGE_TYPES, GEAR_BALANCE_TRANSFER_VALUE } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketService } from 'services/SocketService';
 import { RootState } from 'store/reducers';
@@ -79,6 +79,13 @@ const ProgramSwitch = ({ socketService, pageType }: ProgramSwitchType) => {
     }
   }
 
+  const handleTransferBalance = () => {
+    socketService.transferBalance({
+      value: GEAR_BALANCE_TRANSFER_VALUE
+    });
+    console.log(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
+  }
+
   const handleTemplate = (index: number) => {
     setChosenTemplateId(index)
   }
@@ -126,6 +133,15 @@ const ProgramSwitch = ({ socketService, pageType }: ProgramSwitchType) => {
             &&
             <DropdownMenu dropdownMenuRef={dropdownMenuRef} handleDropdownBtnClick={handleTemplate}/>
           }
+        </div>
+        <div className="switch-block--transfer">
+          <button 
+            className="switch-block--transfer__btn"
+            type="button"
+            onClick={handleTransferBalance}
+          >
+            Make transfer
+          </button>
         </div>
       </div>
       <div className="switch-block__info switch-info">

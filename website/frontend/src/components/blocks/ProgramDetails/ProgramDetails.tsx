@@ -43,8 +43,8 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
   }
 
   const mapInitialValues = () => ({
-    gasLimit: 0,
-    value: 20000,
+    gasLimit: 20000,
+    value: 0,
     initPayload: "",
     initType: "",
     incomingType: "",
