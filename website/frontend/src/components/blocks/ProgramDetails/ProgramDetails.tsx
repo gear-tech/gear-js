@@ -33,7 +33,7 @@ type ProgramDetailsTypes = {
 const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramDetailsTypes) => {
   const dispatch = useDispatch();
 
-  const [isMetaByFile, setIsMetaByFile] = useState(false);
+  const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
   const [wrongJSON, setWrongJSON] = useState(false);
@@ -226,6 +226,14 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                 <div className="program-details__info">
                   <p className="program-details__field">Metadata: </p>
                   <div className="program-details--switch-btns">
+                  <button
+                      type="button"
+                      className="program-details--switch-btns__btn"
+                      onClick={() => setIsMetaByFile(true)}
+                    >
+                      <img src={isMetaByFile ? selected : deselected} alt="radio" />
+                      Upload file
+                    </button>
                     <button
                       type="button"
                       className="program-details--switch-btns__btn"
@@ -236,14 +244,6 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                     >
                       <img src={isMetaByFile ? deselected : selected} alt="radio" />
                       Manual input
-                    </button>
-                    <button
-                      type="button"
-                      className="program-details--switch-btns__btn"
-                      onClick={() => setIsMetaByFile(true)}
-                    >
-                      <img src={isMetaByFile ? selected : deselected} alt="radio" />
-                      Upload file
                     </button>
                   </div>
                 </div>
