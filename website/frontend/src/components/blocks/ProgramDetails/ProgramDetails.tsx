@@ -36,26 +36,27 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
   const [isMetaByFile, setIsMetaByFile] = useState(false);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
+  const [wrongJSON, setWrongJSON] = useState(false);
 
   const [type, setType] = useState(null);
   const [typeInput, setTypeInput] = useState('');
+
+  const [program, setProgram] = useState<any>({
+    gasLimit: 20000,
+    value: 0,
+    initPayload: '',
+    init_input: '',
+    init_output: '',
+    input: '',
+    output: '',
+    types: '',
+  });
 
   const metaFieldRef = useRef<any>(null);
 
   if (wrongMetaFormat) {
     setTimeout(() => setWrongMetaFormat(false), 3000);
   }
-
-  const mapInitialValues = () => ({
-    gasLimit: 20000,
-    value: 0,
-    initPayload: '',
-    initType: '',
-    incomingType: '',
-    expectedType: '',
-    initOutType: '',
-    types: '',
-  });
 
   const removeMetaFile = () => {
     setDroppedMetaFile(null);
@@ -65,23 +66,27 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
     metaFieldRef.current?.click();
   };
 
-
-
   const handleFilesUpload = useCallback(
     async (file) => {
       try {
         const fileBuffer: any = await readFileAsync(file);
-        console.log(fileBuffer);
         const meta = await getWasmMetadata(fileBuffer);
-        console.log(meta);
+        console.log(meta)
+        setProgram({
+          ...program,
+          init_input: meta.init_input,
+          init_output: meta.init_output,
+          input: meta.input,
+          output: meta.output,
+          types: meta.types,
+        });
+
       } catch(err) {
         console.log(err);
       }
-      
       setDroppedMetaFile(file);
-      
     },
-    [setDroppedMetaFile]
+    [setDroppedMetaFile, program]
   );
 
   const checkFileFormat = useCallback((files: any) => {
@@ -122,13 +127,18 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
     <div className="program-details">
       <h3 className="program-details__header">UPLOAD NEW PROGRAM</h3>
       <Formik
-        initialValues={mapInitialValues()}
+        initialValues={program}
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: UploadProgramModel) => {
           dispatch(programUploadStartAction());
-          socketService.uploadProgram(droppedFile, { ...values, types: type });
-          setDroppedFile(null);
+          try {
+            const typesObj = JSON.parse(values.types);
+            socketService.uploadProgram(droppedFile, { ...values, types: typesObj });
+            setDroppedFile(null);
+          } catch(err){
+            console.log(err)
+          }
         }}
         onReset={() => {
           setDroppedFile(null);
@@ -269,79 +279,79 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                 )) || (
                   <>
                     <div className="program-details__info">
-                      <label htmlFor="initType" className="program-details__field-limit program-details__field">
+                      <label htmlFor="init_input" className="program-details__field-limit program-details__field">
                         Initial type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="initType"
-                          name="initType"
+                          id="init_input"
+                          name="init_input"
                           placeholder=""
                           className="program-details__limit-value program-details__value"
                           type="text"
                         />
-                        {errors.initType && touched.initType ? (
-                          <div className="program-details__error">{errors.initType}</div>
+                        {errors.init_input && touched.init_input ? (
+                          <div className="program-details__error">{errors.init_input}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label htmlFor="incomingType" className="program-details__field-limit program-details__field">
+                      <label htmlFor="input" className="program-details__field-limit program-details__field">
                         Incoming type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="incomingType"
-                          name="incomingType"
+                          id="input"
+                          name="input"
                           placeholder=""
                           className="program-details__limit-value program-details__value"
                           type="text"
                         />
-                        {errors.incomingType && touched.incomingType ? (
-                          <div className="program-details__error">{errors.incomingType}</div>
+                        {errors.input && touched.input ? (
+                          <div className="program-details__error">{errors.input}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
                       <label
-                        htmlFor="expectedType"
+                        htmlFor="output"
                         className="program-details__field-init-value program-details__field"
                       >
                         Expected type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="expectedType"
-                          name="expectedType"
+                          id="output"
+                          name="output"
                           placeholder=""
                           className="program-details__init-value program-details__value"
                           type="text"
                         />
-                        {errors.expectedType && touched.expectedType ? (
-                          <div className="program-details__error">{errors.expectedType}</div>
+                        {errors.output && touched.output ? (
+                          <div className="program-details__error">{errors.output}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label htmlFor="initOutType" className="program-details__field-init-value program-details__field">
+                      <label htmlFor="init_output" className="program-details__field-init-value program-details__field">
                         Initial output type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="initOutType"
-                          name="initOutType"
+                          id="init_output"
+                          name="init_output"
                           placeholder=""
                           className="program-details__init-value program-details__value"
                           type="text"
                         />
-                        {errors.initOutType && touched.initOutType ? (
-                          <div className="program-details__error">{errors.initOutType}</div>
+                        {errors.init_output && touched.init_output ? (
+                          <div className="program-details__error">{errors.init_output}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
                       <label
-                        htmlFor="describeTypes"
+                        htmlFor="types"
                         className="program-details__field-init-value program-details__field"
                       >
                         Types:
@@ -349,12 +359,10 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                       <div className="program-details__field-wrapper">
                         <Field
                           as="textarea"
-                          id="describeTypes"
-                          name="describeTypes"
+                          id="types"
+                          name="types"
                           placeholder="{&#10;...&#10;}"
                           className="program-details__types program-details__value"
-                          onChange={handleTypesInput}
-                          value={typeInput}
                         />
                         <p>
                           <a href="#" className="program-details__link" onClick={prettyPrint}>

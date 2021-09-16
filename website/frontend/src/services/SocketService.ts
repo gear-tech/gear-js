@@ -89,7 +89,8 @@ export class SocketService implements ISocketService {
   }
 
   public uploadProgram(file: File, opts: UploadProgramModel) {
-    const { gasLimit, value, initPayload, initType, incomingType, expectedType, initOutType, types } = opts;
+    /* eslint-disable @typescript-eslint/naming-convention */
+    const { gasLimit, value, initPayload, init_input, init_output, input, output, types } = opts;
     const filename = file.name;
     const generatedId = this.generateRandomId();
     const keyPairJson = localStorage.getItem(GEAR_MNEMONIC_KEY) || '';

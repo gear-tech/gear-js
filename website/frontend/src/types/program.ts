@@ -22,12 +22,12 @@ export interface UploadProgramModel {
     initPayload: string;
     gasLimit: number;
     value: number;
-    initType: string;
-    incomingType: string;
-    expectedType: string;
-    initOutType: string;
+    init_input: string;
+    init_output: string;
+    input: string;
+    output: string;
     hash?: string;
-    types: string | null;
+    types: string;
 }
 
 export interface MessageModel {
