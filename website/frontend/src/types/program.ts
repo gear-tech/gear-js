@@ -27,7 +27,7 @@ export interface UploadProgramModel {
     expectedType: string;
     initOutType: string;
     hash?: string;
-    meta: File | null;
+    types: string | null;
 }
 
 export interface MessageModel {

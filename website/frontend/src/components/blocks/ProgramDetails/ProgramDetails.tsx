@@ -34,6 +34,9 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
   const [isMetaByFile, setIsMetaByFile] = useState(false);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
+  
+  const [type, setType] = useState(null);
+  const [typeInput, setTypeInput] = useState('');
 
   const metaFieldRef = useRef<any>(null);
 
@@ -50,7 +53,7 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
     incomingType: "",
     expectedType: "",
     initOutType: "",
-    meta: null
+    types: ""
   })
 
   const removeMetaFile = () => {
@@ -85,6 +88,18 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
     }
   };
 
+  const prettyPrint = () => {
+    const pretty = JSON.stringify(type, undefined, 4);
+    setTypeInput(pretty);
+  }
+
+  const handleTypesInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTypeInput(event.target.value);
+    const types = JSON.parse(typeInput);
+    console.log(types)
+    setType(types);
+  }
+
   return (
   
     <div 
@@ -99,7 +114,7 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
           values: UploadProgramModel,
         ) => {
           dispatch(programUploadStartAction())
-          socketService.uploadProgram(droppedFile, {...values, meta: droppedMetaFile});
+          socketService.uploadProgram(droppedFile, {...values, types: type});
           setDroppedFile(null)
        }}
        onReset={() => {
@@ -282,11 +297,13 @@ const ProgramDetails = ({setDroppedFile, droppedFile, socketService}: ProgramDet
                     <Field as="textarea" 
                       id="describeTypes" 
                       name="describeTypes" 
-                      placeholder="{&#10;JSON&#10;}" 
-                      className="program-details__types program-details__value" 
-                      type="text"
+                      placeholder="{&#10;...&#10;}" 
+                      className="program-details__types program-details__value"
+                      onChange={handleTypesInput}
+                      value={typeInput}
                     />
-                    {errors.initOutType && touched.initOutType ? <div className="program-details__error">{errors.initOutType}</div> : null}
+                    <p><a href="#" className="program-details__link" onClick={prettyPrint}>Prettify</a></p>
+                    {errors.types && touched.types ? <div className="program-details__error">{errors.types}</div> : null}
                   </div>
                 </div>
                 </>

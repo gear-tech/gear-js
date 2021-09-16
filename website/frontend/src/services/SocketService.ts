@@ -89,29 +89,31 @@ export class SocketService implements ISocketService {
   }
 
   public uploadProgram(file: File, opts: UploadProgramModel) {
-    const { gasLimit, value, initPayload, initType, incomingType, expectedType, initOutType, meta } = opts;
+    const { gasLimit, value, initPayload, initType, incomingType, expectedType, initOutType, types } = opts;
     const filename = file.name;
     const generatedId = this.generateRandomId();
     const keyPairJson = localStorage.getItem(GEAR_MNEMONIC_KEY) || '';
 
-    return this.socket.emit('message', {
-      jsonrpc: JSONRPC_VERSION,
-      id: generatedId,
-      method: RPC_METHODS.PROGRAM_UPLOAD,
-      params: {
-        file,
-        filename,
-        gasLimit,
-        value,
-        initPayload,
-        initType,
-        incomingType,
-        expectedType,
-        initOutType,
-        meta,
-        keyPairJson
-      }
-    });
+    console.log(opts)
+
+    // return this.socket.emit('message', {
+    //   jsonrpc: JSONRPC_VERSION,
+    //   id: generatedId,
+    //   method: RPC_METHODS.PROGRAM_UPLOAD,
+    //   params: {
+    //     file,
+    //     filename,
+    //     gasLimit,
+    //     value,
+    //     initPayload,
+    //     initType,
+    //     incomingType,
+    //     expectedType,
+    //     initOutType,
+    //     meta,
+    //     keyPairJson
+    //   }
+    // });
   }
 
   public getTotalIssuance() {
