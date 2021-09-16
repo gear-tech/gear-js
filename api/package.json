@@ -1,9 +1,9 @@
 {
   "name": "@gear-js/api",
-  "version": "0.1.3",
+  "version": "0.1.6",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
-  "main": "lib/index.js",
-  "types": "lib/**/*d.ts",
+  "main": "lib/src/index.js",
+  "types": "lib/types/index.d.ts",
   "scripts": {
     "build": "tsc",
     "examples": "node lib/examples/index.js",
@@ -11,7 +11,7 @@
     "prettier": "npx prettier --write src/* examples/*",
     "tslint": "tslint -p tslint -p tsconfig.json",
     "codestyle": "npm run prettier && npm run tslint",
-    "postinstall": "tsc"
+    "prepare": "npm run build"
   },
   "license": "GPL-3.0",
   "dependencies": {
