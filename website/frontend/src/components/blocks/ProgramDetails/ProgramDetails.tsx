@@ -33,14 +33,12 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
   const dispatch = useDispatch();
 
   const [isMetaByFile, setIsMetaByFile] = useState(true);
+  const [metaWasm, setMetaWasm] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
   const [wrongJSON, setWrongJSON] = useState(false);
 
-  const [type, setType] = useState(null);
-  const [typeInput, setTypeInput] = useState('');
-
-  const [program, setProgram] = useState<UploadProgramModel>({
+  const program = {
     gasLimit: 20000,
     value: 0,
     initPayload: '',
@@ -49,7 +47,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
     input: '',
     output: '',
     types: '',
-  });
+  };
 
   const metaFieldRef = useRef<any>(null);
 
@@ -59,6 +57,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
 
   const removeMetaFile = () => {
     setDroppedMetaFile(null);
+    setMetaWasm(null);
   };
 
   const uploadMetaFile = () => {
@@ -70,21 +69,14 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
       try {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
-        console.log(meta);
-        setProgram({
-          ...program,
-          init_input: meta.init_input,
-          init_output: meta.init_output,
-          input: meta.input,
-          output: meta.output,
-          types: meta.types,
-        });
+        setMetaWasm(meta);
       } catch (err) {
+        // TODO ERROR STATUS ACTION
         console.log(err);
       }
       setDroppedMetaFile(file);
     },
-    [setDroppedMetaFile, program]
+    [setDroppedMetaFile]
   );
 
   const checkFileFormat = useCallback((files: any) => {
@@ -110,15 +102,10 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
   };
 
   const prettyPrint = () => {
-    const pretty = JSON.stringify(type, undefined, 4);
-    setTypeInput(pretty);
-  };
-
-  const handleTypesInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTypeInput(event.target.value);
-    const types = JSON.parse(typeInput);
-    console.log(types);
-    setType(types);
+      const ugly = (document.getElementById("types") as HTMLInputElement).value;
+      const obj = JSON.parse(ugly);
+      const pretty = JSON.stringify(obj, undefined, 4);
+      (document.getElementById("types") as HTMLInputElement).innerText = pretty
   };
 
   return (
@@ -131,7 +118,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
         onSubmit={(values: UploadProgramModel) => {
           if (isMetaByFile) {
             dispatch(programUploadStartAction());
-            socketService.uploadProgram(droppedFile, { ...program });
+            socketService.uploadProgram(droppedFile, { ...values, ...metaWasm });
             setDroppedFile(null);
           } else {
             try {
@@ -255,6 +242,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
               </div>
               <div className="program-details__wrapper-column2">
                 {(isMetaByFile && (
+                  <>
                   <div className="program-details__info">
                     <label className="program-details__field" htmlFor="meta">
                       Metadata file:{' '}
@@ -281,6 +269,19 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                       </button>
                     )}
                   </div>
+                  {metaWasm && (
+                    <div className="program-details__info">
+                      <Field
+                          as="textarea"
+                          id="types"
+                          name="types"
+                          placeholder=""
+                          className="program-details__meta program-details__value"
+                          value={JSON.stringify(metaWasm, undefined, 4)}
+                        />
+                    </div>
+                  )}
+                  </>
                 )) || (
                   <>
                     <div className="program-details__info">

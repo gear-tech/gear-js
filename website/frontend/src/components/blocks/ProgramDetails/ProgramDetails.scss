@@ -21,6 +21,7 @@
   overflow: hidden;
 }
 
+
 .program-details__progress {
   position: absolute;
   width: 0;
@@ -123,6 +124,13 @@
 .program-details__types {
   resize: vertical;
   min-height: 150px;
+  padding: 16px;
+}
+
+.program-details__meta {
+  width: 294px;
+  resize: vertical;
+  min-height: 200px;
   padding: 16px;
 }
 
