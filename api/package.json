@@ -1,0 +1,42 @@
+{
+  "name": "@gear-js/api",
+  "version": "0.1.6",
+  "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
+  "main": "lib/src/index.js",
+  "types": "lib/types/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "examples": "node lib/examples/index.js",
+    "test:meta": "node lib/examples/test-meta.js",
+    "prettier": "npx prettier --write src/* examples/*",
+    "tslint": "tslint -p tslint -p tsconfig.json",
+    "codestyle": "npm run prettier && npm run tslint",
+    "prepare": "npm run build"
+  },
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@polkadot/api": "^5.8.3",
+    "rxjs": "^7.3.0",
+    "typescript": "^4.4.2"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.2",
+    "tslint": "^6.1.3"
+  },
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gear-tech/gear-js.git"
+  },
+  "keywords": [
+    "gear"
+  ],
+  "author": "Gear Technologies",
+  "bugs": {
+    "url": "https://github.com/gear-tech/gear-js/issues"
+  },
+  "homepage": "https://github.com/gear-tech/gear-js/tree/master/api#readme"
+}

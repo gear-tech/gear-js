@@ -62,9 +62,9 @@ export async function submitProgram(
               callback('remove');
               if (error.isModule) {
                 const decoded = api.registry.findMetaError(error.asModule);
-                const { documentation, method, section } = decoded;
-                logger.error(`${documentation.join(' ')}`);
-                reject(new TransactionError(`${documentation.join(' ')}`));
+                const { docs, method, section } = decoded;
+                logger.error(`${docs.join(' ')}`);
+                reject(new TransactionError(`${docs.join(' ')}`));
               } else {
                 logger.error(`${error.toString()}`);
                 reject(new TransactionError(`${error.toString()}`));

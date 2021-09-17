@@ -35,4 +35,5 @@
     TELEGRAM_BOT_TOKEN: "{{ lookup('env','TELEGRAM_BOT_TOKEN') }}"
     TELEGRAM_BOT_USERNAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
     IDE_SOCKET: "{{ lookup('env','IDE_SOCKET') }}"
-
+    ACCOUNT_SEED: "{{ lookup('env','ACCOUNT_SEED') }}"
+    SUDO_SEED: "{{ lookup('env','SUDO_SEED') }}"

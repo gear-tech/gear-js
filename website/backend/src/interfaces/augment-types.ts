@@ -905,57 +905,25 @@ import type {
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import type { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import type {
-  AccountId32Junction,
-  AccountIndex64Junction,
-  AccountKey20Junction,
   AssetInstance,
   BodyId,
   BodyPart,
-  BodyPartAtLeastProportion,
-  BodyPartFraction,
-  BodyPartMoreThanProportion,
   DoubleEncodedCall,
   InboundStatus,
   Junction,
   MultiAsset,
-  MultiAssetAbstractFungible,
-  MultiAssetAbstractNonFungible,
-  MultiAssetConcreteFungible,
-  MultiAssetConcreteNonFungible,
   MultiLocation,
   NetworkId,
   OutboundStatus,
   Outcome,
-  PluralityJunction,
   QueueConfigData,
   VersionedMultiAsset,
   VersionedMultiLocation,
   VersionedXcm,
   Xcm,
-  XcmAssetEffects,
   XcmError,
-  XcmHrmpChannelAccepted,
-  XcmHrmpChannelClosing,
-  XcmHrmpNewChannelOpenRequest,
   XcmOrder,
-  XcmOrderBuyExecution,
-  XcmOrderDepositAsset,
-  XcmOrderDepositReserveAsset,
-  XcmOrderExchangeAsset,
-  XcmOrderInitiateReserveWithdraw,
-  XcmOrderInitiateTeleport,
-  XcmOrderQueryHolding,
-  XcmOrigin,
   XcmOriginKind,
-  XcmQueryResponse,
-  XcmRelayedFrom,
-  XcmReserveAssetDeposit,
-  XcmResponse,
-  XcmTeleportAsset,
-  XcmTransact,
-  XcmTransferAsset,
-  XcmTransferReserveAsset,
-  XcmWithdrawAsset,
   XcmpMessageFormat,
 } from '@polkadot/types/interfaces/xcm';
 import type {
@@ -1070,17 +1038,14 @@ declare module '@polkadot/types/types/registry' {
     'Option<AccountId>': Option<AccountId>;
     'Option<AccountId20>': Option<undefined>;
     'Option<AccountId32>': Option<undefined>;
-    'Option<AccountId32Junction>': Option<AccountId32Junction>;
     'Option<AccountIdOf>': Option<AccountIdOf>;
     'Option<AccountIndex>': Option<AccountIndex>;
-    'Option<AccountIndex64Junction>': Option<AccountIndex64Junction>;
     'Option<AccountInfo>': Option<AccountInfo>;
     'Option<AccountInfoWithDualRefCount>': Option<AccountInfoWithDualRefCount>;
     'Option<AccountInfoWithProviders>': Option<AccountInfoWithProviders>;
     'Option<AccountInfoWithRefCount>': Option<AccountInfoWithRefCount>;
     'Option<AccountInfoWithRefCountU8>': Option<AccountInfoWithRefCountU8>;
     'Option<AccountInfoWithTripleRefCount>': Option<AccountInfoWithTripleRefCount>;
-    'Option<AccountKey20Junction>': Option<AccountKey20Junction>;
     'Option<AccountStatus>': Option<AccountStatus>;
     'Option<AccountValidity>': Option<AccountValidity>;
     'Option<AccountVote>': Option<AccountVote>;
@@ -1160,9 +1125,6 @@ declare module '@polkadot/types/types/registry' {
     'Option<BlockWeights>': Option<BlockWeights>;
     'Option<BodyId>': Option<BodyId>;
     'Option<BodyPart>': Option<BodyPart>;
-    'Option<BodyPartAtLeastProportion>': Option<BodyPartAtLeastProportion>;
-    'Option<BodyPartFraction>': Option<BodyPartFraction>;
-    'Option<BodyPartMoreThanProportion>': Option<BodyPartMoreThanProportion>;
     'Option<bool>': Option<bool>;
     'Option<Bool>': Option<Bool>;
     'Option<Bounty>': Option<Bounty>;
@@ -1548,10 +1510,6 @@ declare module '@polkadot/types/types/registry' {
     'Option<MortalEra>': Option<MortalEra>;
     'Option<MultiAddress>': Option<MultiAddress>;
     'Option<MultiAsset>': Option<MultiAsset>;
-    'Option<MultiAssetAbstractFungible>': Option<MultiAssetAbstractFungible>;
-    'Option<MultiAssetAbstractNonFungible>': Option<MultiAssetAbstractNonFungible>;
-    'Option<MultiAssetConcreteFungible>': Option<MultiAssetConcreteFungible>;
-    'Option<MultiAssetConcreteNonFungible>': Option<MultiAssetConcreteNonFungible>;
     'Option<MultiDisputeStatementSet>': Option<MultiDisputeStatementSet>;
     'Option<MultiLocation>': Option<MultiLocation>;
     'Option<Multiplier>': Option<Multiplier>;
@@ -1638,7 +1596,6 @@ declare module '@polkadot/types/types/registry' {
     'Option<PhantomData>': Option<PhantomData>;
     'Option<Phase>': Option<Phase>;
     'Option<PhragmenScore>': Option<PhragmenScore>;
-    'Option<PluralityJunction>': Option<PluralityJunction>;
     'Option<Points>': Option<Points>;
     'Option<Precommits>': Option<Precommits>;
     'Option<PrefabWasmModule>': Option<PrefabWasmModule>;
@@ -1924,47 +1881,23 @@ declare module '@polkadot/types/types/registry' {
     'Option<WinningDataEntry>': Option<WinningDataEntry>;
     'Option<WithdrawReasons>': Option<WithdrawReasons>;
     'Option<Xcm>': Option<Xcm>;
-    'Option<XcmAssetEffects>': Option<XcmAssetEffects>;
     'Option<XcmError>': Option<XcmError>;
-    'Option<XcmHrmpChannelAccepted>': Option<XcmHrmpChannelAccepted>;
-    'Option<XcmHrmpChannelClosing>': Option<XcmHrmpChannelClosing>;
-    'Option<XcmHrmpNewChannelOpenRequest>': Option<XcmHrmpNewChannelOpenRequest>;
     'Option<XcmOrder>': Option<XcmOrder>;
-    'Option<XcmOrderBuyExecution>': Option<XcmOrderBuyExecution>;
-    'Option<XcmOrderDepositAsset>': Option<XcmOrderDepositAsset>;
-    'Option<XcmOrderDepositReserveAsset>': Option<XcmOrderDepositReserveAsset>;
-    'Option<XcmOrderExchangeAsset>': Option<XcmOrderExchangeAsset>;
-    'Option<XcmOrderInitiateReserveWithdraw>': Option<XcmOrderInitiateReserveWithdraw>;
-    'Option<XcmOrderInitiateTeleport>': Option<XcmOrderInitiateTeleport>;
-    'Option<XcmOrderQueryHolding>': Option<XcmOrderQueryHolding>;
-    'Option<XcmOrigin>': Option<XcmOrigin>;
     'Option<XcmOriginKind>': Option<XcmOriginKind>;
     'Option<XcmpMessageFormat>': Option<XcmpMessageFormat>;
-    'Option<XcmQueryResponse>': Option<XcmQueryResponse>;
-    'Option<XcmRelayedFrom>': Option<XcmRelayedFrom>;
-    'Option<XcmReserveAssetDeposit>': Option<XcmReserveAssetDeposit>;
-    'Option<XcmResponse>': Option<XcmResponse>;
-    'Option<XcmTeleportAsset>': Option<XcmTeleportAsset>;
-    'Option<XcmTransact>': Option<XcmTransact>;
-    'Option<XcmTransferAsset>': Option<XcmTransferAsset>;
-    'Option<XcmTransferReserveAsset>': Option<XcmTransferReserveAsset>;
-    'Option<XcmWithdrawAsset>': Option<XcmWithdrawAsset>;
     'Vec<AbridgedCandidateReceipt>': Vec<AbridgedCandidateReceipt>;
     'Vec<AbridgedHostConfiguration>': Vec<AbridgedHostConfiguration>;
     'Vec<AbridgedHrmpChannel>': Vec<AbridgedHrmpChannel>;
     'Vec<AccountData>': Vec<AccountData>;
     'Vec<AccountId>': Vec<AccountId>;
-    'Vec<AccountId32Junction>': Vec<AccountId32Junction>;
     'Vec<AccountIdOf>': Vec<AccountIdOf>;
     'Vec<AccountIndex>': Vec<AccountIndex>;
-    'Vec<AccountIndex64Junction>': Vec<AccountIndex64Junction>;
     'Vec<AccountInfo>': Vec<AccountInfo>;
     'Vec<AccountInfoWithDualRefCount>': Vec<AccountInfoWithDualRefCount>;
     'Vec<AccountInfoWithProviders>': Vec<AccountInfoWithProviders>;
     'Vec<AccountInfoWithRefCount>': Vec<AccountInfoWithRefCount>;
     'Vec<AccountInfoWithRefCountU8>': Vec<AccountInfoWithRefCountU8>;
     'Vec<AccountInfoWithTripleRefCount>': Vec<AccountInfoWithTripleRefCount>;
-    'Vec<AccountKey20Junction>': Vec<AccountKey20Junction>;
     'Vec<AccountStatus>': Vec<AccountStatus>;
     'Vec<AccountValidity>': Vec<AccountValidity>;
     'Vec<AccountVote>': Vec<AccountVote>;
@@ -2042,9 +1975,6 @@ declare module '@polkadot/types/types/registry' {
     'Vec<BlockWeights>': Vec<BlockWeights>;
     'Vec<BodyId>': Vec<BodyId>;
     'Vec<BodyPart>': Vec<BodyPart>;
-    'Vec<BodyPartAtLeastProportion>': Vec<BodyPartAtLeastProportion>;
-    'Vec<BodyPartFraction>': Vec<BodyPartFraction>;
-    'Vec<BodyPartMoreThanProportion>': Vec<BodyPartMoreThanProportion>;
     'Vec<bool>': Vec<bool>;
     'Vec<Bool>': Vec<Bool>;
     'Vec<Bounty>': Vec<Bounty>;
@@ -2416,10 +2346,6 @@ declare module '@polkadot/types/types/registry' {
     'Vec<MortalEra>': Vec<MortalEra>;
     'Vec<MultiAddress>': Vec<MultiAddress>;
     'Vec<MultiAsset>': Vec<MultiAsset>;
-    'Vec<MultiAssetAbstractFungible>': Vec<MultiAssetAbstractFungible>;
-    'Vec<MultiAssetAbstractNonFungible>': Vec<MultiAssetAbstractNonFungible>;
-    'Vec<MultiAssetConcreteFungible>': Vec<MultiAssetConcreteFungible>;
-    'Vec<MultiAssetConcreteNonFungible>': Vec<MultiAssetConcreteNonFungible>;
     'Vec<MultiDisputeStatementSet>': Vec<MultiDisputeStatementSet>;
     'Vec<MultiLocation>': Vec<MultiLocation>;
     'Vec<Multiplier>': Vec<Multiplier>;
@@ -2506,7 +2432,6 @@ declare module '@polkadot/types/types/registry' {
     'Vec<PhantomData>': Vec<PhantomData>;
     'Vec<Phase>': Vec<Phase>;
     'Vec<PhragmenScore>': Vec<PhragmenScore>;
-    'Vec<PluralityJunction>': Vec<PluralityJunction>;
     'Vec<Points>': Vec<Points>;
     'Vec<Precommits>': Vec<Precommits>;
     'Vec<PrefabWasmModule>': Vec<PrefabWasmModule>;
@@ -2792,47 +2717,23 @@ declare module '@polkadot/types/types/registry' {
     'Vec<WinningDataEntry>': Vec<WinningDataEntry>;
     'Vec<WithdrawReasons>': Vec<WithdrawReasons>;
     'Vec<Xcm>': Vec<Xcm>;
-    'Vec<XcmAssetEffects>': Vec<XcmAssetEffects>;
     'Vec<XcmError>': Vec<XcmError>;
-    'Vec<XcmHrmpChannelAccepted>': Vec<XcmHrmpChannelAccepted>;
-    'Vec<XcmHrmpChannelClosing>': Vec<XcmHrmpChannelClosing>;
-    'Vec<XcmHrmpNewChannelOpenRequest>': Vec<XcmHrmpNewChannelOpenRequest>;
     'Vec<XcmOrder>': Vec<XcmOrder>;
-    'Vec<XcmOrderBuyExecution>': Vec<XcmOrderBuyExecution>;
-    'Vec<XcmOrderDepositAsset>': Vec<XcmOrderDepositAsset>;
-    'Vec<XcmOrderDepositReserveAsset>': Vec<XcmOrderDepositReserveAsset>;
-    'Vec<XcmOrderExchangeAsset>': Vec<XcmOrderExchangeAsset>;
-    'Vec<XcmOrderInitiateReserveWithdraw>': Vec<XcmOrderInitiateReserveWithdraw>;
-    'Vec<XcmOrderInitiateTeleport>': Vec<XcmOrderInitiateTeleport>;
-    'Vec<XcmOrderQueryHolding>': Vec<XcmOrderQueryHolding>;
-    'Vec<XcmOrigin>': Vec<XcmOrigin>;
     'Vec<XcmOriginKind>': Vec<XcmOriginKind>;
     'Vec<XcmpMessageFormat>': Vec<XcmpMessageFormat>;
-    'Vec<XcmQueryResponse>': Vec<XcmQueryResponse>;
-    'Vec<XcmRelayedFrom>': Vec<XcmRelayedFrom>;
-    'Vec<XcmReserveAssetDeposit>': Vec<XcmReserveAssetDeposit>;
-    'Vec<XcmResponse>': Vec<XcmResponse>;
-    'Vec<XcmTeleportAsset>': Vec<XcmTeleportAsset>;
-    'Vec<XcmTransact>': Vec<XcmTransact>;
-    'Vec<XcmTransferAsset>': Vec<XcmTransferAsset>;
-    'Vec<XcmTransferReserveAsset>': Vec<XcmTransferReserveAsset>;
-    'Vec<XcmWithdrawAsset>': Vec<XcmWithdrawAsset>;
     AbridgedCandidateReceipt: AbridgedCandidateReceipt;
     AbridgedHostConfiguration: AbridgedHostConfiguration;
     AbridgedHrmpChannel: AbridgedHrmpChannel;
     AccountData: AccountData;
     AccountId: AccountId;
-    AccountId32Junction: AccountId32Junction;
     AccountIdOf: AccountIdOf;
     AccountIndex: AccountIndex;
-    AccountIndex64Junction: AccountIndex64Junction;
     AccountInfo: AccountInfo;
     AccountInfoWithDualRefCount: AccountInfoWithDualRefCount;
     AccountInfoWithProviders: AccountInfoWithProviders;
     AccountInfoWithRefCount: AccountInfoWithRefCount;
     AccountInfoWithRefCountU8: AccountInfoWithRefCountU8;
     AccountInfoWithTripleRefCount: AccountInfoWithTripleRefCount;
-    AccountKey20Junction: AccountKey20Junction;
     AccountStatus: AccountStatus;
     AccountValidity: AccountValidity;
     AccountVote: AccountVote;
@@ -2910,9 +2811,6 @@ declare module '@polkadot/types/types/registry' {
     BlockWeights: BlockWeights;
     BodyId: BodyId;
     BodyPart: BodyPart;
-    BodyPartAtLeastProportion: BodyPartAtLeastProportion;
-    BodyPartFraction: BodyPartFraction;
-    BodyPartMoreThanProportion: BodyPartMoreThanProportion;
     bool: bool;
     Bool: Bool;
     Bounty: Bounty;
@@ -3284,10 +3182,6 @@ declare module '@polkadot/types/types/registry' {
     MortalEra: MortalEra;
     MultiAddress: MultiAddress;
     MultiAsset: MultiAsset;
-    MultiAssetAbstractFungible: MultiAssetAbstractFungible;
-    MultiAssetAbstractNonFungible: MultiAssetAbstractNonFungible;
-    MultiAssetConcreteFungible: MultiAssetConcreteFungible;
-    MultiAssetConcreteNonFungible: MultiAssetConcreteNonFungible;
     MultiDisputeStatementSet: MultiDisputeStatementSet;
     MultiLocation: MultiLocation;
     Multiplier: Multiplier;
@@ -3374,7 +3268,6 @@ declare module '@polkadot/types/types/registry' {
     PhantomData: PhantomData;
     Phase: Phase;
     PhragmenScore: PhragmenScore;
-    PluralityJunction: PluralityJunction;
     Points: Points;
     Precommits: Precommits;
     PrefabWasmModule: PrefabWasmModule;
@@ -3660,30 +3553,8 @@ declare module '@polkadot/types/types/registry' {
     WinningDataEntry: WinningDataEntry;
     WithdrawReasons: WithdrawReasons;
     Xcm: Xcm;
-    XcmAssetEffects: XcmAssetEffects;
     XcmError: XcmError;
-    XcmHrmpChannelAccepted: XcmHrmpChannelAccepted;
-    XcmHrmpChannelClosing: XcmHrmpChannelClosing;
-    XcmHrmpNewChannelOpenRequest: XcmHrmpNewChannelOpenRequest;
     XcmOrder: XcmOrder;
-    XcmOrderBuyExecution: XcmOrderBuyExecution;
-    XcmOrderDepositAsset: XcmOrderDepositAsset;
-    XcmOrderDepositReserveAsset: XcmOrderDepositReserveAsset;
-    XcmOrderExchangeAsset: XcmOrderExchangeAsset;
-    XcmOrderInitiateReserveWithdraw: XcmOrderInitiateReserveWithdraw;
-    XcmOrderInitiateTeleport: XcmOrderInitiateTeleport;
-    XcmOrderQueryHolding: XcmOrderQueryHolding;
-    XcmOrigin: XcmOrigin;
     XcmOriginKind: XcmOriginKind;
-    XcmpMessageFormat: XcmpMessageFormat;
-    XcmQueryResponse: XcmQueryResponse;
-    XcmRelayedFrom: XcmRelayedFrom;
-    XcmReserveAssetDeposit: XcmReserveAssetDeposit;
-    XcmResponse: XcmResponse;
-    XcmTeleportAsset: XcmTeleportAsset;
-    XcmTransact: XcmTransact;
-    XcmTransferAsset: XcmTransferAsset;
-    XcmTransferReserveAsset: XcmTransferReserveAsset;
-    XcmWithdrawAsset: XcmWithdrawAsset;
   }
 }

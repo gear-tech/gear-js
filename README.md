@@ -3,8 +3,15 @@
     <img src="https://gear-tech.io/images/logo-black.svg" width="240" alt="GEAR">
   </a>
 </p>
+<p align=center>
+    <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
+</p>
 
 ## Directory Structure
+
+## [api](https://github.com/gear-tech/gear-js/tree/master/api)
+
+This directory contatins the javascript library that provides functionality to connect GEAR Component APIs.
 
 ## [website](https://github.com/gear-tech/gear-js/tree/master/website)
 

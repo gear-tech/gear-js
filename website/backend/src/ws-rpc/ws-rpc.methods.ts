@@ -38,7 +38,10 @@ export class WsRpcMethods extends RpcMethods {
   blocks = {
     newBlocks: async (cb) => {
       const unsub = await this.gearService.subscribeNewHeads(cb);
-      return unsub;
+      return { name: 'blocks', unsub: unsub };
+    },
+    unsubscribe: () => {
+      return { name: 'blocks', unsub: null };
     },
   };
 
@@ -63,11 +66,11 @@ export class WsRpcMethods extends RpcMethods {
       if (!params || !params.value) {
         throw new InvalidParamsError();
       }
-      return await this.gearService.balanceTransfer(
-        user.publicKey,
-        params.value,
-        cb,
-      );
+      await this.gearService.balanceTransfer({
+        to: user.publicKey,
+        value: params.value,
+        cb: cb,
+      });
     },
   };
 
@@ -110,7 +113,10 @@ export class WsRpcMethods extends RpcMethods {
   events = {
     subscribe: async (cb, user) => {
       const unsub = await this.gearService.subscribeEvents(user, cb);
-      return unsub;
+      return { name: 'events', unsub: unsub };
+    },
+    unsubscribe: () => {
+      return { name: 'events', unsub: null };
     },
   };
 }

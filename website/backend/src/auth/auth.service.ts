@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { createHash, createHmac } from 'crypto';
 import { JwtService } from '@nestjs/jwt';
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 @Injectable()
 export class AuthService {
@@ -89,7 +89,7 @@ export class AuthService {
       },
     );
 
-    const resJson = await res.json();
+    const resJson: any = await res.json();
     return {
       username: resJson.login,
       githubId: resJson.id,
