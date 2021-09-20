@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "declaration": true,
-    "declarationDir": "lib/types",
+    "declarationDir": "types",
     "outDir": "lib",
     "baseUrl": "./",
     "alwaysStrict": true,
