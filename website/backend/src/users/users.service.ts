@@ -100,4 +100,9 @@ export class UsersService {
     user.seed = isU8a(seed) ? u8aToHex(seed) : seed;
     this.userRepository.save(user);
   }
+
+  addJson(user: User, json: string) {
+    user.json = json;
+    this.userRepository.save(user);
+  }
 }
