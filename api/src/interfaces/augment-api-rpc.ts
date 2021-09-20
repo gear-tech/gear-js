@@ -5,7 +5,7 @@ import { H256 } from '@polkadot/types/interfaces';
 declare module '@polkadot/rpc-core/types.jsonrpc' {
   export interface RpcInterface {
     gear: {
-      getGasSpent: AugmentedRpc<(id: H256, payload: string | Bytes | Uint8Array) => Observable<U64>>;
+      getGasSpent: AugmentedRpc<(id: H256 | string, payload: string | Bytes | Uint8Array) => Observable<U64>>;
     };
   }
 }

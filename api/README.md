@@ -60,34 +60,42 @@ const gearApi = await GearApi.create({ customTypes: { ...yourCustomTypesExample 
 Subscribe to all events
 
 ```javascript
-gearApi.events((event) => {
+const unsub = await gearApi.events((event) => {
   console.log(event.toHuman());
 });
+// Unsubscribe
+unsub();
 ```
 
 Subscribe to Log events
 
 ```javascript
-gearApi.gearEvents.subscribeLogEvents((event) => {
+const unsub = await gearApi.gearEvents.subscribeLogEvents((event) => {
   const data: any = event.data[0].toHuman();
   console.log(data);
 });
+// Unsubscribe
+unsub();
 ```
 
 Subscribe to Program events
 
 ```javascript
-gearApi.gearEvents.subscribeProgramEvents((event) => {
+const unsub = await gearApi.gearEvents.subscribeProgramEvents((event) => {
   console.log(event.toHuman());
 });
+// Unsubscribe
+unsub();
 ```
 
 Subscribe to new blocks
 
 ```javascript
-gearApi.gearEvents.subscribeNewBlocks((header) => {
+const unsub = await gearApi.gearEvents.subscribeNewBlocks((header) => {
   console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
 });
+// Unsubscribe
+unsub();
 ```
 
 ### Creating custom types
