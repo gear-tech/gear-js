@@ -1,8 +1,8 @@
 import { GearApi } from '.';
 import { CreateTypeError } from './errors';
-import { stringToU8a } from '@polkadot/util';
+import { stringToU8a, isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry } from '@polkadot/types/types';
-import { Bytes, TypeRegistry } from '@polkadot/types';
+import { Bytes, TypeRegistry, GenericPortableRegistry } from '@polkadot/types';
 import { Metadata } from './interfaces/metadata';
 
 export class CreateType {
@@ -13,9 +13,29 @@ export class CreateType {
   }
 
   private getRegistry(types?: any) {
-    const registry = new TypeRegistry();
-    this.registerTypes(registry, types);
-    return registry;
+    const reg = new TypeRegistry();
+    if (!types) {
+      return reg;
+    }
+
+    if (isHex(types)) {
+      types = this.getTypesFromTypeDef(reg, hexToU8a(types));
+    } else if (isU8a(types)) {
+      types = this.getTypesFromTypeDef(reg, types);
+    }
+    this.registerTypes(reg, types);
+    return reg;
+  }
+
+  private getTypesFromTypeDef(reg: Registry, types: Uint8Array) {
+    const result = {};
+    const genReg = new GenericPortableRegistry(reg, types);
+    const compositeTypes = genReg.types.filter(({ type: { def } }) => !def.isPrimitive);
+    compositeTypes.forEach(({ id }) => {
+      const typeDef = genReg.getTypeDef(id);
+      result[typeDef.lookupName] = typeDef.type;
+    });
+    return result;
   }
 
   private registerTypes(registry: Registry, types?: any) {
