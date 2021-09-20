@@ -2,7 +2,7 @@ import { GearApi, CreateType } from '.';
 import { Program } from './interfaces';
 import { SubmitProgramError, TransactionError } from './errors';
 import { ApiPromise } from '@polkadot/api';
-import { Bytes } from '@polkadot/types';
+import { Bytes, U64 } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
@@ -99,10 +99,10 @@ export class GearProgram {
     return programs;
   }
 
-  async getGasSpent(programId: H256, payload: any, type: any, meta: Metadata): Promise<number> {
+  async getGasSpent(programId: H256, payload: any, type: any, meta: Metadata): Promise<U64> {
     const payloadBytes = this.createType.encode(type, payload, meta);
     const gasSpent = await this.api.rpc.gear.getGasSpent(programId, payloadBytes);
-    return gasSpent.toNumber();
+    return gasSpent;
   }
 
   generateProgramId(code: Bytes, salt: string): H256 {
