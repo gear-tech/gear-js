@@ -99,7 +99,7 @@ export class GearProgram {
     return programs;
   }
 
-  async getGasSpent(programId: string | H256, payload: any, type: any, meta: Metadata): Promise<number> {
+  async getGasSpent(programId: H256, payload: any, type: any, meta: Metadata): Promise<U64> {
     const payloadBytes = this.createType.encode(type, payload, meta);
     const gasSpent = await this.api.rpc.gear.getGasSpent(programId, payloadBytes);
     return gasSpent;
