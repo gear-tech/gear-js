@@ -22,7 +22,7 @@ import { getWasmMetadata } from './wasm.meta';
 import { LogMessage } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';
 import { CreateType } from 'src/gear-node/custom-types';
-import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
+import { KeyringPair } from '@polkadot/keyring/types';
 import { SendMessageData, UploadProgramData } from './interfaces';
 import { Bytes } from '@polkadot/types';
 import { RpcCallback } from 'src/json-rpc/interfaces';
@@ -111,50 +111,6 @@ export class GearNodeService {
         }
       },
     });
-  }
-
-  async createKeyPair(user: User): Promise<KeyringPair$Json> {
-    if (user.seed) {
-      const keyring = await GearKeyring.fromSeed(user.seed, user.username);
-      if (u8aToHex(keyring.publicKey) !== user.publicKey) {
-        this.userService.addPublicKey(user, u8aToHex(keyring.publicKey));
-      }
-      return keyring.toJson();
-    }
-    const { keyring, seed, json } = await GearKeyring.create(user.username);
-    this.userService.addPublicKey(user, keyring.address);
-    this.userService.addSeed(user, seed);
-    return json;
-  }
-
-  async getKeyring(
-    user: User,
-    keypair?: KeyringPair$Json,
-  ): Promise<KeyringPair> {
-    if (keypair) {
-      return GearKeyring.fromJson(keypair);
-    }
-    if (user.seed) {
-      return await GearKeyring.fromSeed(user.seed, user.username);
-    }
-    if (user.json) {
-      return GearKeyring.fromJson(user.json);
-    }
-  }
-
-  async addKeyring(user: User, params: { json?: string; seed?: string }) {
-    const keyring = params.json
-      ? GearKeyring.fromJson(params.json)
-      : await GearKeyring.fromSeed(params.seed, user.username);
-    this.userService.addPublicKey(user, keyring.address);
-    if (params.seed) {
-      this.userService.addSeed(user, params.seed);
-    } else {
-      this.userService.addJson(
-        user,
-        isString(params.json) ? params.json : JSON.stringify(params.json),
-      );
-    }
   }
 
   async uploadProgram(

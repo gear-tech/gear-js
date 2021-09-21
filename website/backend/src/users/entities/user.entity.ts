@@ -35,10 +35,4 @@ export class User {
 
   @Column({ nullable: true })
   publicKey: string;
-
-  @Column({ nullable: true })
-  seed: string;
-
-  @Column({ nullable: true })
-  json: string;
 }
