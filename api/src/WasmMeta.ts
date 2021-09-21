@@ -37,7 +37,7 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
 
   let module = await WebAssembly.instantiate(wasmBytes, importObj);
 
-  const types = `0x${readMeta(memory, module.instance.exports.meta_types)}`;
+  metadata.types = `0x${readMeta(memory, module.instance.exports.meta_types)}`;
   metadata.init_input = readMeta(memory, module.instance.exports.meta_init_input);
   metadata.init_output = readMeta(memory, module.instance.exports.meta_init_output);
   metadata.input = readMeta(memory, module.instance.exports.meta_input);
