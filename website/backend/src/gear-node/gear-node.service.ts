@@ -1,19 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ApiPromise, WsProvider } from '@polkadot/api';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import {
   GearNodeError,
   GettingMetadataError,
-  InternalServerError,
   InvalidParamsError,
   ProgramNotFound,
 } from 'src/json-rpc/errors';
 import { isJsonObject } from '@polkadot/util';
 import { sendProgram } from './program.gear';
 import { sendMessage } from './message.gear';
-import definitions from 'src/interfaces/definitions';
 import { GearNodeEvents } from './events';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -22,17 +19,20 @@ import { MessagesService } from 'src/messages/messages.service';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { SendMessageData, UploadProgramData } from './interfaces';
 import { RpcCallback } from 'src/json-rpc/interfaces';
-import { CreateType, GearKeyring, getWasmMetadata } from '@gear-js/api';
+import {
+  CreateType,
+  GearApi,
+  GearKeyring,
+  getWasmMetadata,
+} from '@gear-js/api';
 import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
-import { callback } from 'telegraf/typings/button';
 import { Program } from 'src/programs/entities/program.entity';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
 export class GearNodeService {
-  private provider: WsProvider;
-  private api: ApiPromise;
-  private keyring: KeyringPair;
+  private api: GearApi;
+  private rootKeyring: KeyringPair;
 
   constructor(
     private readonly userService: UsersService,
@@ -40,46 +40,8 @@ export class GearNodeService {
     private readonly messageService: MessagesService,
     private readonly subscription: GearNodeEvents,
   ) {
-    this.provider = new WsProvider(process.env.WS_PROVIDER);
-    this.createApiPromise().then((api: ApiPromise) => {
-      this.subscription.subscribeBlocks(api);
-      this.subscription.subscribeEvents(api);
-      this.saveEvents();
-      this.updateWebsiteAccountBalance();
-    });
-  }
-
-  private createApiPromise(): Promise<ApiPromise> {
-    return new Promise(async (resolve, reject) => {
-      const types = Object.values(definitions).reduce(
-        (res, types): object => ({ ...res, ...types }),
-        {},
-      );
-      this.api = await ApiPromise.create({
-        provider: this.provider,
-        types: {
-          ...types,
-        },
-        rpc: {
-          gear: {
-            getGasSpent: {
-              description: 'Get GasSpent',
-              params: [
-                {
-                  name: 'id',
-                  type: 'H256',
-                },
-                {
-                  name: 'payload',
-                  type: 'Bytes',
-                },
-              ],
-              type: 'u64',
-            },
-          },
-        },
-      });
-      resolve(this.api);
+    GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then((api) => {
+      this.api = api;
     });
   }
 
@@ -91,24 +53,31 @@ export class GearNodeService {
       : await GearKeyring.fromSeed('websiteAccount', sudoSeed);
     if (!accountSeed) {
       const { keyring } = await GearKeyring.create('websiteAccount');
-      this.keyring = keyring;
+      this.rootKeyring = keyring;
     } else {
-      this.keyring = await GearKeyring.fromSeed(accountSeed, 'websiteAccount');
+      this.rootKeyring = await GearKeyring.fromSeed(
+        accountSeed,
+        'websiteAccount',
+      );
     }
 
-    const currentBalance = await this.getBalance(this.keyring.address);
-    this.balanceTransfer({
-      from: sudoKeyring,
-      to: this.keyring.address,
-      value: 999_999_999_999 - currentBalance.freeBalance,
-      cb: (error, data) => {
+    const currentBalance = await this.api.balance.findOut(
+      this.rootKeyring.address,
+    );
+    this.balanceTransfer(
+      {
+        from: sudoKeyring,
+        to: this.rootKeyring.address,
+        value: 10_000_000_000,
+      },
+      (error, data) => {
         if (error) {
           logger.error(error);
         } else {
           logger.log(data);
         }
       },
-    });
+    );
   }
 
   async uploadProgram(
@@ -239,37 +208,33 @@ export class GearNodeService {
   }
 
   async totalIssuance(): Promise<string> {
-    const total = (await this.api.query.balances.totalIssuance()).toHuman();
+    const total = await this.api.totalIssuance();
     return total;
   }
 
-  async balanceTransfer(options: {
-    from?: KeyringPair;
-    to: string;
-    value: number;
-    cb?: RpcCallback;
-  }): Promise<void> {
+  async balanceTransfer(
+    options: {
+      from?: KeyringPair;
+      to: string;
+      value: number;
+    },
+    callback?: RpcCallback,
+  ): Promise<void> {
     if (
-      options.to !== this.keyring.address &&
-      (await this.getBalance(this.keyring.address)).freeBalance <= options.value
+      options.to !== this.rootKeyring.address &&
+      (await this.api.balance.findOut(this.rootKeyring.address)).lten(
+        options.value,
+      )
     ) {
       await this.updateWebsiteAccountBalance();
     }
 
     return new Promise(async (resolve, reject) => {
       try {
-        const unsub = await this.api.tx.balances
-          .transfer(options.to, options.value)
-          .signAndSend(options.from ? options.from : this.keyring, (result) => {
-            if (result.status.isFinalized) {
-              if (options.cb) {
-                options.cb(undefined, {
-                  message: `Transfer balance succeed`,
-                });
-              }
-              unsub();
-              resolve();
-            }
+        this.api.balance
+          .transferBalance(options.from, options.to, options.value)
+          .then(() => {
+            callback(undefined, 'Transfer balance succeed');
           });
       } catch (error) {
         reject(new GearNodeError(error.message));
@@ -277,9 +242,9 @@ export class GearNodeService {
     });
   }
 
-  async getBalance(publicKey: string): Promise<{ freeBalance: number }> {
-    const { data: balance } = await this.api.query.system.account(publicKey);
-    return { freeBalance: balance.free.toNumber() };
+  async getBalance(publicKey: string): Promise<{ freeBalance: string }> {
+    const balance = await this.api.balance.findOut(publicKey);
+    return { freeBalance: balance.toHuman() };
   }
 
   async getGasSpent(hash: string, payload: string | JSON): Promise<number> {
@@ -287,8 +252,12 @@ export class GearNodeService {
     if (!program) {
       return 0;
     }
-    const bytes = CreateType.encode(program.meta.input, payload, program.meta);
-    let gasSpent = await this.api.rpc.gear.getGasSpent(hash, bytes.toHex());
+    let gasSpent = await this.api.program.getGasSpent(
+      CreateType.encode('H256', hash),
+      payload,
+      program.meta.input,
+      program.meta,
+    );
     return gasSpent.toNumber();
   }
 
@@ -424,13 +393,7 @@ export class GearNodeService {
   }
 
   async getAllNoGUIPrograms() {
-    let programs = (await this.api.rpc.state.getKeys('g::prog::')).map(
-      (prog) => {
-        return `0x${prog
-          .toHex()
-          .slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
-      },
-    );
+    let programs = await this.api.program.allUploadedPrograms();
     const filter = async (array, condition) => {
       const results = await Promise.all(array.map(condition));
       return array.filter((_v, index) => results[index]);

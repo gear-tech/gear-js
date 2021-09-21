@@ -14,7 +14,7 @@ export interface UploadProgramData {
 
 export interface SendMessageData {
   destination: string;
-  payload: string | JSON | number;
+  payload: string;
   gasLimit: number;
   value: number;
   keyPairJson?: KeyringPair$Json;
