@@ -5,20 +5,13 @@ import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import {
-  createKeyring,
-  keyringFromJson,
-  keyringFromMnemonic,
-  keyringFromSeed,
-  keyringFromSuri,
-} from './keyring';
-import {
   GearNodeError,
   GettingMetadataError,
   InternalServerError,
   InvalidParamsError,
   ProgramNotFound,
 } from 'src/json-rpc/errors';
-import { isJsonObject, u8aToHex } from '@polkadot/util';
+import { isJsonObject, u8aToHex, isString } from '@polkadot/util';
 import { submitProgram } from './program.gear';
 import { sendMessage } from './message.gear';
 import definitions from 'src/interfaces/definitions';
@@ -29,10 +22,11 @@ import { getWasmMetadata } from './wasm.meta';
 import { LogMessage } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';
 import { CreateType } from 'src/gear-node/custom-types';
-import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
+import { KeyringPair } from '@polkadot/keyring/types';
 import { SendMessageData, UploadProgramData } from './interfaces';
 import { Bytes } from '@polkadot/types';
 import { RpcCallback } from 'src/json-rpc/interfaces';
+import { GearKeyring } from '@gear-js/api';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
@@ -95,20 +89,20 @@ export class GearNodeService {
     const accountSeed = process.env.ACCOUNT_SEED;
     const sudoSeed = process.env.SUDO_SEED;
     const sudoKeyring = parseInt(process.env.DEBUG)
-      ? keyringFromSuri('//Alice', 'Alice default')
-      : keyringFromSeed('websiteAccount', sudoSeed);
+      ? GearKeyring.fromSuri('//Alice', 'Alice default')
+      : await GearKeyring.fromSeed('websiteAccount', sudoSeed);
     if (!accountSeed) {
-      const { keyring } = createKeyring('websiteAccount');
+      const { keyring } = await GearKeyring.create('websiteAccount');
       this.keyring = keyring;
     } else {
-      this.keyring = keyringFromSeed('websiteAccount', accountSeed);
+      this.keyring = await GearKeyring.fromSeed(accountSeed, 'websiteAccount');
     }
 
     const currentBalance = await this.getBalance(this.keyring.address);
     this.balanceTransfer({
       from: sudoKeyring,
       to: this.keyring.address,
-      value: 999999999999999 - currentBalance.freeBalance,
+      value: 999_999_999_999 - currentBalance.freeBalance,
       cb: (error, data) => {
         if (error) {
           logger.error(error);
@@ -117,20 +111,6 @@ export class GearNodeService {
         }
       },
     });
-  }
-
-  createKeyPair(user: User): KeyringPair$Json {
-    if (user.seed) {
-      const keyring = keyringFromSeed(user.username, user.seed);
-      if (u8aToHex(keyring.publicKey) !== user.publicKey) {
-        this.userService.addPublicKey(user, u8aToHex(keyring.publicKey));
-      }
-      return keyring.toJson();
-    }
-    const { publicKey, seed, json } = createKeyring(user.username);
-    this.userService.addPublicKey(user, publicKey);
-    this.userService.addSeed(user, seed);
-    return json;
   }
 
   async uploadProgram(
@@ -157,12 +137,8 @@ export class GearNodeService {
       throw new InvalidParamsError("Can't encode program to bytes");
     }
 
-    const keyring = data.keyPairJson
-      ? keyringFromJson(data.keyPairJson)
-      : keyringFromSeed(user.username, user.seed);
-    if (keyring.isLocked) {
-      keyring.unlock();
-    }
+    const keyring = await this.getKeyring(user, data.keyPairJson);
+
     const salt = data.salt || randomAsHex(20);
     let meta = {
       title: undefined,
@@ -246,31 +222,24 @@ export class GearNodeService {
 
   async sendMessage(
     user: User,
-    messageData: SendMessageData,
+    data: SendMessageData,
     cb: RpcCallback,
   ): Promise<void> {
     if (
-      !messageData ||
-      !messageData.destination ||
-      !messageData.payload ||
-      !messageData.gasLimit ||
-      !messageData.value
+      !data ||
+      !data.destination ||
+      !data.payload ||
+      !data.gasLimit ||
+      !data.value
     ) {
       throw new InvalidParamsError();
     }
 
-    const keyring = messageData.keyPairJson
-      ? keyringFromJson(messageData.keyPairJson)
-      : keyringFromSeed(user.username, user.seed);
-    if (keyring.isLocked) {
-      keyring.unlock();
-    }
+    const keyring = await this.getKeyring(user, data.keyPairJson);
 
-    const program = await this.programService.findProgram(
-      messageData.destination,
-    );
+    const program = await this.programService.findProgram(data.destination);
     if (!program) {
-      cb(new ProgramNotFound(messageData.destination).toJson());
+      cb(new ProgramNotFound(data.destination).toJson());
       return null;
     }
 
@@ -278,7 +247,7 @@ export class GearNodeService {
     try {
       payload = await this.createType.toBytes(
         program.incomingType || 'utf8',
-        messageData.payload,
+        data.payload,
       );
     } catch (error) {
       if (error.toJson) throw error;
@@ -289,7 +258,7 @@ export class GearNodeService {
       destination: user,
       program: program,
       date: null,
-      payload: messageData.payload.toString(),
+      payload: data.payload.toString(),
     };
     try {
       await sendMessage(
@@ -297,8 +266,8 @@ export class GearNodeService {
         keyring,
         program.hash,
         payload,
-        messageData.gasLimit,
-        messageData.value,
+        data.gasLimit,
+        data.value,
         initMessage,
         async (action, data) => {
           switch (action) {
