@@ -69,7 +69,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
   function handleAddFile(event: React.SyntheticEvent) {
     event.stopPropagation();
     setIsOpen(true);
-      /* eslint-disable react/jsx-no-bind */
+    /* eslint-disable react/jsx-no-bind */
     setChildrenCopy([
       ...childrenCopy,
       <EditorTreeInput
@@ -84,7 +84,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
   function handleAddFolder(event: React.SyntheticEvent) {
     event.stopPropagation();
     setIsOpen(true);
-      /* eslint-disable react/jsx-no-bind */
+    /* eslint-disable react/jsx-no-bind */
     setChildrenCopy([
       ...childrenCopy,
       <EditorTreeInput

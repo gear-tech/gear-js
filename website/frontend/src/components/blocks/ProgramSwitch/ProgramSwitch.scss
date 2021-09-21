@@ -24,7 +24,7 @@
   font-weight: bold;
   font-size: 16px;
   line-height: 24px;
-  color: #FFFFFF;
+  color: #ffffff;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -33,12 +33,12 @@
 
 .switch-block--transfer__btn {
   padding: 12px 24px;
-  background: #2BD071;
+  background: #2bd071;
   border-radius: 2px;
   font-weight: bold;
   font-size: 16px;
   line-height: 24px;
-  color: #FFFFFF;
+  color: #ffffff;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -109,14 +109,14 @@
 
 @media (max-width: 768px) {
   .main-content-wrapper {
-    margin: 0 16px!important;
+    margin: 0 16px !important;
   }
   .switch-block {
     flex-direction: column-reverse;
     margin: 14px 0;
   }
   .switch-buttons {
-    display: flex;  
+    display: flex;
     margin-top: 22px;
   }
   .switch-buttons__item {

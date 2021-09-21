@@ -9,7 +9,7 @@ export const GITHUB_CALLBACK_URL = process.env.REACT_APP_GITHUB_CALLBACK_URL;
 export const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
 export const TELEGRAM_BOT_NAME = process.env.REACT_APP_TELEGRAM_BOT_NAME;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10 * 1_000_000_000_000;
-export const API_PATH = process.env.REACT_APP_API_PATH
+export const API_PATH = process.env.REACT_APP_API_PATH;
 
 export const PROGRAM_ERRRORS = {
   UNATHORIZED: 'Unathorized',
@@ -18,7 +18,7 @@ export const PROGRAM_ERRRORS = {
   PROGRAM_INIT_FAILED: 'Program initialization falied',
   GEAR_NODE_ERROR: 'Gear node error',
   BALANCE_LOW: 'Invalid transaction. Account balance too low',
-  PAYLOAD_ERROR: 'payload.toHex is not a function'
+  PAYLOAD_ERROR: 'payload.toHex is not a function',
 };
 
 export const PROGRESS_BAR_STATUSES = {
@@ -36,7 +36,7 @@ export const PROGRAM_UPLOAD_STATUSES = {
 export const EVENT_TYPES = {
   PROGRAM_INITIALIZED: 'ProgramInitialized',
   PROGRAM_INITIALIZATION_FAILURE: 'InitFailure',
-  LOG: 'log'
+  LOG: 'log',
 };
 
 export const SOCKET_RESULT_STATUSES = {
@@ -44,7 +44,7 @@ export const SOCKET_RESULT_STATUSES = {
   FINALIZED: 'Finalized',
   PROGRAM_INITIALIZED: 'ProgramInitialized',
   SUCCESS: 'Success',
-  LOG: 'Log'
+  LOG: 'Log',
 };
 
 export const RPC_METHODS = {
@@ -57,7 +57,7 @@ export const RPC_METHODS = {
   SEND_META: 'program.addMeta',
   GET_GAS_SPENT: 'message.gasSpent',
   GET_PAYLOAD_TYPE: 'message.payloadType',
-  READ_EVENTS: 'events.read'
+  READ_EVENTS: 'events.read',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
@@ -66,15 +66,15 @@ export const SWITCH_PAGE_TYPES = {
   UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
   UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
   NOTIFICATIONS: 'NOTIFICATIONS',
-  ALL_PROGRAMS: 'ALL_PROGRAMS'
-}
+  ALL_PROGRAMS: 'ALL_PROGRAMS',
+};
 
 export const PAGE_TYPES = {
   MESSAGE_FORM_PAGE: 'MESSAGE_FORM_PAGE',
   EDITOR_PAGE: 'EDITOR_PAGE',
   META_FORM_PAGE: 'META_FORM_PAGE',
-  NOTIFICATION_INFO: 'NOTIFICATION_INFO'
-}
+  NOTIFICATION_INFO: 'NOTIFICATION_INFO',
+};
 
 export const EDITOR_BTNS = {
   BUILD: 'BUILD',
@@ -85,5 +85,5 @@ export const EDITOR_BTNS = {
 
 export const SEARCH_TYPES = {
   NOTIFICATIONS: 'NOTIFICATIONS',
-  PROGRAMS: 'PROGRAMS'
-}
+  PROGRAMS: 'PROGRAMS',
+};

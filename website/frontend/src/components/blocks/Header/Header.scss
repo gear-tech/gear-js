@@ -52,7 +52,7 @@
 }
 
 .user-block__logout {
-  background: url(../../../images/logout.svg) no-repeat;
+  background: url(../../../assets/images/logout.svg) no-repeat;
   height: 18px;
   width: 20px;
 }
@@ -65,7 +65,8 @@
   display: none;
 }
 
-.user-block__programs, .user-block__notifications {
+.user-block__programs,
+.user-block__notifications {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -77,10 +78,10 @@
 
 .user-block__notifications {
   margin: 0 30px 0 20px;
-
 }
 
-.user-block__programs span, .user-block__notifications span {
+.user-block__programs span,
+.user-block__notifications span {
   font-weight: bold;
   font-size: 16px;
   line-height: 24px;
@@ -88,29 +89,31 @@
   margin-left: 12px;
 }
 
-.user-block__programs.selected::after, .user-block__notifications.selected::after {
+.user-block__programs.selected::after,
+.user-block__notifications.selected::after {
   position: absolute;
-  content: "";
-  background: #2BD071;
+  content: '';
+  background: #2bd071;
   width: 100%;
   height: 3px;
   bottom: -24px;
   left: 0;
 }
 
-.user-block__programs.selected span, .user-block__notifications.selected span {
+.user-block__programs.selected span,
+.user-block__notifications.selected span {
   color: #ffffff;
 }
 
 .notifications-count {
   margin-left: 7px;
-  background: #F2994A;
+  background: #f2994a;
   border-radius: 100px;
   font-weight: 500;
   font-size: 12px;
   line-height: 18px;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
   width: 30px;
   height: 18px;
   min-height: 18px;
@@ -128,13 +131,14 @@
   display: none;
 }
 
-@media ( max-width: 768px ) {
+@media (max-width: 768px) {
   .header {
     width: 100%;
     padding: 0 16px;
   }
 
-  .user-block__programs, .user-block__notifications {
+  .user-block__programs,
+  .user-block__notifications {
     display: none;
   }
 
@@ -155,7 +159,7 @@
     width: 26px;
     border: 1px solid #fff;
     margin-bottom: 6px;
-    transition: .5s;
+    transition: 0.5s;
   }
 
   .header__burger span:last-child {
@@ -167,7 +171,7 @@
   }
 
   .header__burger.active span:first-child {
-    transform: rotate(-45deg) translate(-1px, 0)
+    transform: rotate(-45deg) translate(-1px, 0);
   }
 
   .header__burger.active span:nth-child(2) {
@@ -175,7 +179,7 @@
   }
 
   .header__burger.active span:last-child {
-    transform: rotate(45deg) translate(-5px, -5px)
+    transform: rotate(45deg) translate(-5px, -5px);
   }
 
   .header__nav {
@@ -190,18 +194,18 @@
     height: 100%;
     left: 0;
     top: -100%;
-    transition: top .5s;
-    z-index: 2 ;
+    transition: top 0.5s;
+    z-index: 2;
     text-align: center;
   }
 
   .header__nav.show {
-    top: 0!important;
+    top: 0 !important;
   }
 
   .header__nav-button {
-    font-size: 24px!important;
-    color: #282828!important;
+    font-size: 24px !important;
+    color: #282828 !important;
     margin-bottom: 16px;
   }
 
@@ -223,14 +227,14 @@
     height: 100%;
     left: 0;
     top: -100%;
-    transition: top .5s;
+    transition: top 0.5s;
     z-index: 4;
     text-align: center;
     padding: 0 16px;
   }
 
   .header__user-block.show {
-    top: 0!important;
+    top: 0 !important;
   }
 
   .header__user-block .user-block--wrapper {
@@ -286,7 +290,7 @@
     width: 8px;
     height: 8px;
     min-height: 8px;
-    max-height: 8x;
+    max-height: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -294,7 +298,7 @@
     background: #282828;
   }
 
-  .notifications-count.mobile{
+  .notifications-count.mobile {
     width: 6px;
     height: 6px;
     min-height: 6px;

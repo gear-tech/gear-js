@@ -1,20 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, VFC } from 'react';
 import { useDispatch } from 'react-redux';
-
-import { Redirect } from "react-router-dom";
-
-import { routes } from "routes";
+import { Redirect } from 'react-router-dom';
+import { routes } from 'routes';
 import { logoutFromAccountAction } from 'store/actions/actions';
 
-function Logout(){
+export const Logout: VFC = () => {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(logoutFromAccountAction());
+  });
 
-    useEffect(() => {
-        dispatch(logoutFromAccountAction());
-    });
-
-    return <Redirect to={routes.signIn} />;
-}
-
-export default Logout;
+  return <Redirect to={routes.signIn} />;
+};
