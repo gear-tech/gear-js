@@ -108,7 +108,7 @@ export class GearNodeService {
     this.balanceTransfer({
       from: sudoKeyring,
       to: this.keyring.address,
-      value: 999999999999999 - currentBalance.freeBalance,
+      value: 999_999_999_999 - currentBalance.freeBalance,
       cb: (error, data) => {
         if (error) {
           logger.error(error);
