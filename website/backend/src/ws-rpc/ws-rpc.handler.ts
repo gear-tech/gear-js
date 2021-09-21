@@ -52,7 +52,9 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
 
   unsubscribe() {
     this.unsubs.forEach((element) => {
-      element.unsubscribe();
+      try {
+        element.unsub.unsubscribe();
+      } catch (error) {}
     });
     this.unsubs = [];
   }
