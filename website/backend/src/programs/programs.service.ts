@@ -1,3 +1,4 @@
+import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
@@ -20,26 +21,14 @@ export class ProgramsService {
     }
   }
 
-  async saveProgram({
-    user,
-    hash,
-    blockHash,
-    name,
-    uploadedAt,
-    title,
-    initType,
-    initOutType,
-    incomingType,
-    expectedType,
-  }) {
+  async saveProgram({ user, hash, blockHash, name, uploadedAt, title, meta }) {
     let program = await this.findProgram(hash);
     if (program) {
       program = await this.programRepository.preload({
         hash: program.hash,
         name: name,
         title,
-        incomingType,
-        expectedType,
+        meta,
       });
       return this.programRepository.save(program);
     }
@@ -51,10 +40,7 @@ export class ProgramsService {
       uploadedAt: uploadedAt,
       programNumber: (await this.getLastProgramNumber(user)) + 1,
       title,
-      initType,
-      initOutType,
-      incomingType,
-      expectedType,
+      meta,
     });
 
     return await this.programRepository.save(program);
@@ -110,12 +96,12 @@ export class ProgramsService {
     };
   }
 
-  async findProgram(hash: string): Promise<Program> {
+  async findProgram(hash: string, user?: User): Promise<Program> {
+    const where = user ? { hash, user } : { hash };
     try {
-      const program = await this.programRepository.findOne(
-        { hash: hash },
-        { relations: ['user'] },
-      );
+      const program = await this.programRepository.findOne(where, {
+        relations: ['user'],
+      });
       return program;
     } catch (error) {
       logger.error(error);
@@ -146,5 +132,10 @@ export class ProgramsService {
     } else {
       return false;
     }
+  }
+
+  addMeta(program: Program, meta: Metadata): Promise<Program> {
+    program.meta = meta;
+    return this.programRepository.save(program);
   }
 }

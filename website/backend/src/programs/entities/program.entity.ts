@@ -1,3 +1,4 @@
+import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
@@ -15,7 +16,7 @@ export class Program {
   @ManyToOne((type) => User, (user) => user.id)
   user: User;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   blockHash: string;
 
   @Column()
@@ -31,19 +32,10 @@ export class Program {
   uploadedAt: Date;
 
   @Column({ nullable: true })
+  meta: Metadata;
+
+  @Column({ nullable: true })
   title: string;
-
-  @Column({ nullable: true })
-  incomingType: string;
-
-  @Column({ nullable: true })
-  expectedType: string;
-
-  @Column({ nullable: true })
-  initType: string;
-
-  @Column({ nullable: true })
-  initOutType: string;
 
   @Column({ type: 'enum', enum: InitStatus, default: InitStatus.PROGRESS })
   initStatus: InitStatus;

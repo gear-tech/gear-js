@@ -11,22 +11,21 @@ import {
   InvalidParamsError,
   ProgramNotFound,
 } from 'src/json-rpc/errors';
-import { isJsonObject, u8aToHex, isString } from '@polkadot/util';
+import { isJsonObject } from '@polkadot/util';
 import { submitProgram } from './program.gear';
 import { sendMessage } from './message.gear';
 import definitions from 'src/interfaces/definitions';
 import { GearNodeEvents } from './events';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { getWasmMetadata } from './wasm.meta';
 import { LogMessage } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';
-import { CreateType } from 'src/gear-node/custom-types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { SendMessageData, UploadProgramData } from './interfaces';
 import { Bytes } from '@polkadot/types';
 import { RpcCallback } from 'src/json-rpc/interfaces';
-import { GearKeyring } from '@gear-js/api';
+import { CreateType, GearKeyring, getWasmMetadata } from '@gear-js/api';
+import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
@@ -40,7 +39,6 @@ export class GearNodeService {
     private readonly programService: ProgramsService,
     private readonly messageService: MessagesService,
     private readonly subscription: GearNodeEvents,
-    private readonly createType: CreateType,
   ) {
     this.provider = new WsProvider(process.env.WS_PROVIDER);
     this.createApiPromise().then((api: ApiPromise) => {
@@ -123,7 +121,8 @@ export class GearNodeService {
       !data.gasLimit ||
       (!data.value && data.value !== 0) ||
       !data.file ||
-      !data.filename
+      !data.filename ||
+      !data.keyPairJson
     ) {
       throw new InvalidParamsError();
     }
@@ -131,16 +130,16 @@ export class GearNodeService {
     const binary = this.programService.parseWASM(data.file);
     let code = null;
     try {
-      code = this.createType.toBytes('bytes', Array.from(binary));
+      code = CreateType.encode('bytes', Array.from(binary));
     } catch (error) {
       logger.error(error.message);
       throw new InvalidParamsError("Can't encode program to bytes");
     }
 
-    const keyring = await this.getKeyring(user, data.keyPairJson);
+    const keyring = await GearKeyring.fromJson(data.keyPairJson);
 
     const salt = data.salt || randomAsHex(20);
-    let meta = {
+    let meta: Metadata = {
       title: undefined,
       init_input: undefined,
       init_output: undefined,
@@ -164,15 +163,12 @@ export class GearNodeService {
       blockHash: null,
       uploadedAt: null,
       title: meta.title || null,
-      initType: meta.init_input || data.initType || null,
-      initOutType: meta.init_output || data.initOutType || null,
-      incomingType: meta.input || data.incomingType || null,
-      expectedType: meta.output || data.expectedType || null,
+      meta,
     };
 
     let payload: Bytes;
     try {
-      payload = this.createType.toBytes(programData.initType, data.initPayload);
+      payload = CreateType.encode(meta.init_input, data.initPayload, meta);
     } catch (error) {
       logger.error(error);
       if (error.toJson) throw error;
@@ -230,12 +226,13 @@ export class GearNodeService {
       !data.destination ||
       !data.payload ||
       !data.gasLimit ||
-      !data.value
+      !data.value ||
+      !data.keyPairJson
     ) {
       throw new InvalidParamsError();
     }
 
-    const keyring = await this.getKeyring(user, data.keyPairJson);
+    const keyring = GearKeyring.fromJson(data.keyPairJson);
 
     const program = await this.programService.findProgram(data.destination);
     if (!program) {
@@ -245,9 +242,10 @@ export class GearNodeService {
 
     let payload: Bytes;
     try {
-      payload = await this.createType.toBytes(
-        program.incomingType || 'utf8',
+      payload = await CreateType.encode(
+        program.meta.input || 'utf8',
         data.payload,
+        program.meta,
       );
     } catch (error) {
       if (error.toJson) throw error;
@@ -334,17 +332,17 @@ export class GearNodeService {
     if (!program) {
       return 0;
     }
-    const bytes = this.createType.toBytes(program.incomingType, payload);
+    const bytes = CreateType.encode(program.meta.input, payload, program.meta);
     let gasSpent = await this.api.rpc.gear.getGasSpent(hash, bytes.toHex());
     return gasSpent.toNumber();
   }
 
-  async getPayloadType(hash: string): Promise<string> {
+  async getMeta(hash: string): Promise<Metadata> {
     const program = await this.programService.findProgram(hash);
     if (!program) {
       throw new ProgramNotFound(hash);
     }
-    return program.incomingType;
+    return program.meta;
   }
 
   async saveEvents(): Promise<void> {
@@ -355,9 +353,11 @@ export class GearNodeService {
             const program = await this.programService.findProgram(
               event.program,
             );
-            const response = this.createType
-              .fromBytes(program.expectedType, event.response)
-              .toJSON();
+            const response = CreateType.decode(
+              program.meta.output,
+              event.response,
+              program.meta,
+            ).toJSON();
             this.messageService.update({
               id: event.id,
               program: program,
@@ -395,9 +395,11 @@ export class GearNodeService {
             const program = await this.programService.findProgram(
               event.program,
             );
-            const response = this.createType
-              .fromBytes(program.expectedType, event.response)
-              .toJSON();
+            const response = CreateType.decode(
+              program.meta.output,
+              event.response,
+              program.meta,
+            ).toJSON();
             callback(undefined, {
               event: 'Log',
               id: event.id,
@@ -438,38 +440,32 @@ export class GearNodeService {
     }
   }
 
-  async addMetadata(user, data, callback) {
-    let meta = {
+  async addMetadata(
+    user: User,
+    data: { programId: string; file?: Buffer; types?: any },
+    callback,
+  ) {
+    const program = await this.programService.findProgram(data.programId, user);
+    if (!program) {
+      callback(new ProgramNotFound(data.programId));
+    }
+    let meta: Metadata = {
       title: undefined,
       init_input: undefined,
       init_output: undefined,
       input: undefined,
       output: undefined,
     };
-    if (data.meta) {
+    if (data.file) {
       try {
-        meta = await getWasmMetadata(data.meta);
-        Object.keys(meta).forEach((elem) => {
-          meta[elem] = JSON.stringify(meta[elem]);
-        });
+        meta = await getWasmMetadata(data.file);
       } catch (error) {
         throw new GettingMetadataError();
       }
+    } else {
+      meta = data.types;
     }
-    const programData = {
-      user: user,
-      name: data.name,
-      hash: data.hash,
-      blockHash: null,
-      uploadedAt: new Date(),
-      title: meta.title || null,
-      initType: meta.init_input || data.initType || null,
-      initOutType: meta.init_output || data.initOutType || null,
-      incomingType: meta.input || data.incomingType || null,
-      expectedType: meta.output || data.expectedType || null,
-    };
-
-    callback(undefined, await this.programService.saveProgram(programData));
+    callback(undefined, await this.programService.addMeta(program, meta));
   }
 
   async getAllNoGUIPrograms() {

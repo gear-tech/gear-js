@@ -27,7 +27,15 @@ export class WsRpcMethods extends RpcMethods {
     },
     addMeta: async (cb, user, params) => {
       try {
-        await this.gearService.addMetadata(user, params, cb);
+        await this.gearService.addMetadata(
+          user,
+          {
+            programId: params.programId,
+            file: params.meta_file,
+            types: params.meta,
+          },
+          cb,
+        );
       } catch (error) {
         throw error;
       }
@@ -95,7 +103,7 @@ export class WsRpcMethods extends RpcMethods {
     },
     payloadType: async (cb, user, params) => {
       try {
-        const type = await this.gearService.getPayloadType(params.destination);
+        const type = await this.gearService.getMeta(params.destination);
         cb(undefined, {
           payloadType: type,
         });
