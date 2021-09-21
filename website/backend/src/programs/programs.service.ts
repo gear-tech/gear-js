@@ -46,6 +46,10 @@ export class ProgramsService {
     return await this.programRepository.save(program);
   }
 
+  updateProgram(program: Program) {
+    this.programRepository.save(program);
+  }
+
   async getLastProgramNumber(user: User) {
     const userPrograms = await this.programRepository.find({
       where: { user: user },

@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { randomAsHex } from '@polkadot/util-crypto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
@@ -12,7 +11,7 @@ import {
   ProgramNotFound,
 } from 'src/json-rpc/errors';
 import { isJsonObject } from '@polkadot/util';
-import { submitProgram } from './program.gear';
+import { sendProgram } from './program.gear';
 import { sendMessage } from './message.gear';
 import definitions from 'src/interfaces/definitions';
 import { GearNodeEvents } from './events';
@@ -26,6 +25,8 @@ import { Bytes } from '@polkadot/types';
 import { RpcCallback } from 'src/json-rpc/interfaces';
 import { CreateType, GearKeyring, getWasmMetadata } from '@gear-js/api';
 import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
+import { callback } from 'telegraf/typings/button';
+import { Program } from 'src/programs/entities/program.entity';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
@@ -128,90 +129,57 @@ export class GearNodeService {
     }
 
     const binary = this.programService.parseWASM(data.file);
-    let code = null;
-    try {
-      code = CreateType.encode('bytes', Array.from(binary));
-    } catch (error) {
-      logger.error(error.message);
-      throw new InvalidParamsError("Can't encode program to bytes");
-    }
 
-    const keyring = await GearKeyring.fromJson(data.keyPairJson);
+    const keyring = GearKeyring.fromJson(data.keyPairJson);
 
-    const salt = data.salt || randomAsHex(20);
-    let meta: Metadata = {
-      title: undefined,
-      init_input: undefined,
-      init_output: undefined,
-      input: undefined,
-      output: undefined,
-    };
-    if (data.meta) {
-      try {
-        meta = await getWasmMetadata(data.meta);
-        Object.keys(meta).forEach((elem) => {
-          meta[elem] = JSON.stringify(meta[elem]);
-        });
-      } catch (error) {
-        throw new GettingMetadataError();
-      }
-    }
     const programData = {
       user: user,
       name: data.filename,
       hash: null,
       blockHash: null,
       uploadedAt: null,
-      title: meta.title || null,
-      meta,
+      title: data.meta.title || null,
+      meta: data.meta,
     };
 
-    let payload: Bytes;
-    try {
-      payload = CreateType.encode(meta.init_input, data.initPayload, meta);
-    } catch (error) {
-      logger.error(error);
-      if (error.toJson) throw error;
-      else throw new InternalServerError();
-    }
-    let initMessage: LogMessage = {
+    const initMessage: LogMessage = {
       id: null,
       destination: user,
       program: null,
       date: null,
       payload: data.initPayload.toString(),
     };
+    let program: Program;
+
     try {
-      await submitProgram(
+      await sendProgram(
         this.api,
         keyring,
-        code,
-        salt,
-        payload,
+        binary,
+        data.initPayload,
         data.gasLimit,
         data.value,
-        programData,
-        initMessage,
+        data.meta,
         async (action: string, data?: any) => {
           switch (action) {
-            case 'save':
-              const program = await this.programService.saveProgram(
-                programData,
-              );
+            case 'saveProgram':
+              programData.hash = data.programId;
+              program = await this.programService.saveProgram(programData);
               initMessage.program = program;
+              break;
+            case 'saveMessage':
+              initMessage.id = data.initMessageId;
               initMessage.date = new Date();
               this.messageService.save(initMessage);
-              break;
-            case 'gear':
-              cb(undefined, data);
-              break;
-            case 'remove':
-              this.programService.removeProgram(programData.hash);
-              break;
+              program.blockHash = data.blockHas;
+              program.uploadedAt = new Date();
+              this.programService.updateProgram(program);
+              callback(undefined, data);
           }
         },
       );
     } catch (error) {
+      this.programService.removeProgram(programData.hash);
       throw error;
     }
   }

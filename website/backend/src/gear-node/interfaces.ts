@@ -1,3 +1,4 @@
+import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
 import { KeyringPair$Json } from '@polkadot/keyring/types';
 
 export interface UploadProgramData {
@@ -8,11 +9,7 @@ export interface UploadProgramData {
   initPayload?: string | number | JSON;
   salt?: string;
   keyPairJson?: KeyringPair$Json;
-  meta?: Buffer;
-  initType?: string | JSON;
-  initOutType?: string | JSON;
-  incomingType?: string | JSON;
-  expectedType?: string | JSON;
+  meta?: Metadata;
 }
 
 export interface SendMessageData {
@@ -22,4 +19,3 @@ export interface SendMessageData {
   value: number;
   keyPairJson?: KeyringPair$Json;
 }
-
