@@ -63,6 +63,9 @@ const Header = () => {
               || null
             }
           </Link>
+          <Link to={routes.main} className="user-block__account">
+            <span>Create account</span>
+          </Link>
           <div className="user-block--wrapper">
             <img src={user?.photoUrl} alt="avatar"/>
             <span className="user-block__name">{userInfo}</span>
