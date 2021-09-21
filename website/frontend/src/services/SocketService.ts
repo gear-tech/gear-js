@@ -90,13 +90,19 @@ export class SocketService implements ISocketService {
 
   public uploadProgram(file: File, opts: UploadProgramModel) {
     /* eslint-disable @typescript-eslint/naming-convention */
-    const { gasLimit, value, initPayload, init_input, init_output, input, output } = opts;
+    const { gasLimit, value, initPayload, init_input, init_output, input, output, types } = opts;
     const filename = file.name;
     const generatedId = this.generateRandomId();
     const keyPairJson = localStorage.getItem(GEAR_MNEMONIC_KEY) || '';
 
-    console.log(opts)
-
+    const meta = {
+      init_input,
+      init_output,
+      input,
+      output,
+      types
+    }
+    
     return this.socket.emit('message', {
       jsonrpc: JSONRPC_VERSION,
       id: generatedId,
@@ -105,13 +111,9 @@ export class SocketService implements ISocketService {
         file,
         filename,
         gasLimit,
-        value,
         initPayload,
-        initType: init_input,
-        incomingType: input,
-        expectedType: output,
-        initOutType: init_output,
-        meta: null,
+        value,
+        meta,
         keyPairJson
       }
     });
