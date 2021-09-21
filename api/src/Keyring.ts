@@ -64,6 +64,17 @@ export class GearKeyring {
     };
   }
 
+  static generateMnemonic(): string {
+    return mnemonicGenerate();
+  }
+
+  static generateSeed(mnemonic?: string): { seed: `0x${string}`; mnemonic: string } {
+    if (!mnemonic) {
+      mnemonic = mnemonicGenerate();
+    }
+    return { seed: u8aToHex(mnemonicToMiniSecret(mnemonic)), mnemonic };
+  }
+
   static checkSign(keyPair: KeyringPair, message: string) {
     const signature = keyPair.sign(stringToU8a(message));
     if (signatureVerify(message, signature, keyPair.address).isValid) {
