@@ -11,7 +11,7 @@
     "prettier": "npx prettier --write src/* examples/*",
     "tslint": "tslint -p tslint -p tsconfig.json",
     "codestyle": "npm run prettier && npm run tslint",
-    "prepare": "npm run build",
+    "prepare": "rm -r lib && npm run build",
     "test-meta": "mocha examples/test-meta.js"
   },
   "license": "GPL-3.0",
