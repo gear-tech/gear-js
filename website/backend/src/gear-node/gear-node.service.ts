@@ -21,7 +21,6 @@ import { LogMessage } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { SendMessageData, UploadProgramData } from './interfaces';
-import { Bytes } from '@polkadot/types';
 import { RpcCallback } from 'src/json-rpc/interfaces';
 import { CreateType, GearKeyring, getWasmMetadata } from '@gear-js/api';
 import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
@@ -115,7 +114,7 @@ export class GearNodeService {
   async uploadProgram(
     user: User,
     data: UploadProgramData,
-    cb: RpcCallback,
+    callback: RpcCallback,
   ): Promise<void> {
     if (
       !data ||
@@ -187,7 +186,7 @@ export class GearNodeService {
   async sendMessage(
     user: User,
     data: SendMessageData,
-    cb: RpcCallback,
+    callback: RpcCallback,
   ): Promise<void> {
     if (
       !data ||
@@ -204,21 +203,10 @@ export class GearNodeService {
 
     const program = await this.programService.findProgram(data.destination);
     if (!program) {
-      cb(new ProgramNotFound(data.destination).toJson());
+      callback(new ProgramNotFound(data.destination).toJson());
       return null;
     }
 
-    let payload: Bytes;
-    try {
-      payload = await CreateType.encode(
-        program.meta.input || 'utf8',
-        data.payload,
-        program.meta,
-      );
-    } catch (error) {
-      if (error.toJson) throw error;
-      else throw new InternalServerError();
-    }
     let initMessage: LogMessage = {
       id: null,
       destination: user,
@@ -231,23 +219,22 @@ export class GearNodeService {
         this.api,
         keyring,
         program.hash,
-        payload,
+        data.payload,
         data.gasLimit,
         data.value,
-        initMessage,
+        program.meta,
         async (action, data) => {
           switch (action) {
             case 'save':
+              initMessage.id = data.messageId;
               this.messageService.save(initMessage);
-              break;
-            case 'gear':
-              cb(undefined, data);
+              callback(undefined, data);
               break;
           }
         },
       );
     } catch (error) {
-      cb(error.toJson());
+      throw error;
     }
   }
 
