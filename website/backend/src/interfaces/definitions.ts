@@ -1,11 +1,5 @@
 export default {
   types: {
-    Program: {
-      static_pages: 'u32',
-      persistent_pages: 'BTreeSet<u32>',
-      code_hash: 'H256',
-      nonce: 'u64',
-    },
     Message: {
       id: 'H256',
       source: 'H256',
@@ -22,18 +16,16 @@ export default {
     IntermediateMessage: {
       _enum: {
         InitProgram: {
-          origin: 'H256',
+          external_origin: 'H256',
           program_id: 'H256',
           code: 'Vec<u8>',
-          init_message_id: 'H256',
           payload: 'Vec<u8>',
           gas_limit: 'u64',
           value: 'u128',
         },
         DispatchMessage: {
           id: 'H256',
-          origin: 'H256',
-          destination: 'H256',
+          route: 'MessageRoute',
           payload: 'Vec<u8>',
           gas_limit: 'u64',
           value: 'u128',
@@ -64,7 +56,6 @@ export default {
     MessageInfo: {
       message_id: 'H256',
       program_id: 'H256',
-      origin: 'H256',
     },
   },
 };

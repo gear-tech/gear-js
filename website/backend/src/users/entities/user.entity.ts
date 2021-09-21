@@ -1,4 +1,3 @@
-import { json } from 'express';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -35,4 +34,7 @@ export class User {
 
   @Column({ nullable: true })
   publicKey: string;
+
+  @Column({ nullable: true })
+  seed: string;
 }
