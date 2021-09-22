@@ -68,7 +68,7 @@ export class GearNodeService {
       {
         from: sudoKeyring,
         to: this.rootKeyring.address,
-        value: 10_000_000_000,
+        value: -currentBalance.subn(10_000_000_000).toNumber(),
       },
       (error, data) => {
         if (error) {
