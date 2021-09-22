@@ -3,22 +3,24 @@ import { GearKeyring } from '@gear-js/api';
 import Identicon from '@polkadot/react-identicon';
 
 import './Keyring.scss';
-import { DropdownArrow, ReadNotificationsIcon } from "Icons";
+import { ReadNotificationsIcon } from "Icons";
 
 const Keyring = () => {
   /* eslint-disable @typescript-eslint/no-unused-vars */  
-  const [secret, setSecret] = useState('');
+  const [key, setKey] = useState('');
   const [publicKey, setPublicKey] = useState('')
   const [copySuccess, setCopySuccess] = useState(false);
+  const [isSeed, setIsSeed] = useState('');
+  const [isMnemonic, setIsMnemonic] = useState('');
 
   useEffect(() => {
     const create = async () => {
-        
         const { mnemonic, seed } = await GearKeyring.generateSeed();
         const { address } = await GearKeyring.fromSeed(seed, 'WebAccount');
-        setSecret(mnemonic)
+        setKey(mnemonic)
         setPublicKey(address);
-  
+        setIsSeed(seed);
+        setIsMnemonic(mnemonic);
     }
 
     create();
@@ -26,12 +28,25 @@ const Keyring = () => {
 
   const copyToClipboard = () => {
     try {
-      navigator.clipboard.writeText(secret);
+      navigator.clipboard.writeText(key);
       setCopySuccess(true);
       console.log('Copied!')
     } catch (err) {
       setCopySuccess(false);
     }
+  }
+
+  const handleChange = (event: any) => {
+  
+    if (event.target.value === 'seed'){
+      console.log('we are here')
+      setKey(isSeed)
+    }
+
+    if (event.target.value === 'mnemonic'){
+      setKey(isMnemonic)
+    }
+
   }
 
   return (
@@ -45,7 +60,7 @@ const Keyring = () => {
           <div className="keyring__content">
             <div className="keyring__help-container">Mnemonic phrase: <span className="keyring__help">?</span></div>
             <div className="keyring__textArea">
-              <div className="keyring__key">{secret}</div>
+              <div className="keyring__key">{key}</div>
               <div className="keyring__copy">
                 <div className="keyring__copy-wrapper">
                     <button className="keyring__copy-button" type="button" onClick={copyToClipboard}>
@@ -54,10 +69,10 @@ const Keyring = () => {
                 </div>
               </div>
               <div className="keyring__key-type">
-                <button className="keyring__key-type__btn" type="button">
-                  <span>Type</span>
-                  <DropdownArrow />
-                </button>
+                <select onChange={handleChange} className="keyring__key-type__btn">
+                  <option value="mnemonic">Mnemonic</option>
+                  <option value="seed">seed</option>
+                </select>  
               </div>
             </div>
             
