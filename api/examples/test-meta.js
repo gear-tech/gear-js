@@ -24,21 +24,3 @@ describe('Create custom types test', () => {
         testMeta(element);
     }
 })
-
-
-function check(payload, decoded) {
-    Object.getOwnPropertyNames(payload).forEach((key) => {
-        if (typeof payload[key] === 'object') {
-            if (decoded[key.toLowerCase()]) {
-                assert(payload[key], decoded[key.toLowerCase()]);
-            } else {
-                throw new Error('Assertion failed');
-            }
-        } else {
-            if (!(payload[key] === decoded[key.toLowerCase()])) {
-                throw new Error('Assertion failed');
-            }
-        }
-    });
-    return 'ok';
-}
