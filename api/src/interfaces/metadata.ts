@@ -5,5 +5,6 @@ export interface Metadata {
   init_output?: string;
   input?: string;
   output?: string;
-  types?: string | Uint8Array | AnyJson;
+  types?: any;
+  title?: string;
 }
