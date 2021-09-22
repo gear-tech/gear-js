@@ -12,6 +12,7 @@ const Keyring = () => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [isSeed, setIsSeed] = useState('');
   const [isMnemonic, setIsMnemonic] = useState('');
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     const create = async () => {
@@ -39,12 +40,11 @@ const Keyring = () => {
   const handleChange = (event: any) => {
   
     if (event.target.value === 'seed'){
-      console.log('we are here')
-      setKey(isSeed)
+      setKey(isSeed);
     }
 
     if (event.target.value === 'mnemonic'){
-      setKey(isMnemonic)
+      setKey(isMnemonic);
     }
 
   }
@@ -81,6 +81,13 @@ const Keyring = () => {
             <article className="keyring__warning">
               The secret seed value for this account. Ensure that you keep this in a safe place, with access to the seed you can re-create the account.
             </article>
+            <div className="keyring__saveToggle">
+              <input type="checkbox" checked={saved} onChange={() => setSaved(!saved)} />
+              <span>I have saved my mnemonic seed safely</span>
+            </div>
+          </div>
+          <div className="keyring__action-bar">
+            <button className="keyring__action-btn" type="button" disabled={!saved}>Add</button>
           </div>
       </div>
   )
