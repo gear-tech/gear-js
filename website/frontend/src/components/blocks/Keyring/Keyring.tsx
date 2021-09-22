@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { GearKeyring } from '@gear-js/api';
+import Identicon from '@polkadot/react-identicon';
 
 import './Keyring.scss';
 import { DropdownArrow, ReadNotificationsIcon } from "Icons";
@@ -25,7 +26,9 @@ const Keyring = () => {
   return (
       <div className="keyring__wrapper">
           <div className="keyring__address">
-            <div className="keyring__icon">1</div>
+            <div className="keyring__icon">
+            <Identicon value={publicKey} size={32} theme="polkadot"/>
+            </div>
             <div className="keyring__details">{publicKey}</div>
           </div>
           <div className="keyring__content">
