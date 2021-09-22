@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { GearKeyring } from '@gear-js/api';
 import Identicon from '@polkadot/react-identicon';
 
@@ -9,6 +9,7 @@ const Keyring = () => {
   /* eslint-disable @typescript-eslint/no-unused-vars */  
   const [secret, setSecret] = useState('');
   const [publicKey, setPublicKey] = useState('')
+  const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
     const create = async () => {
@@ -17,11 +18,21 @@ const Keyring = () => {
         const { address } = await GearKeyring.fromSeed(seed, 'WebAccount');
         setSecret(mnemonic)
         setPublicKey(address);
-        
+  
     }
 
     create();
-  },[]) 
+  },[]);
+
+  const copyToClipboard = () => {
+    try {
+      navigator.clipboard.writeText(secret);
+      setCopySuccess(true);
+      console.log('Copied!')
+    } catch (err) {
+      setCopySuccess(false);
+    }
+  }
 
   return (
       <div className="keyring__wrapper">
@@ -37,7 +48,7 @@ const Keyring = () => {
               <div className="keyring__key">{secret}</div>
               <div className="keyring__copy">
                 <div className="keyring__copy-wrapper">
-                    <button className="keyring__copy-button" type="button">
+                    <button className="keyring__copy-button" type="button" onClick={copyToClipboard}>
                       <ReadNotificationsIcon color="#ffffff"/>
                     </button>
                 </div>
@@ -53,7 +64,7 @@ const Keyring = () => {
           </div>    
           <div className="keyring__info">
             <article className="keyring__warning">
-            The secret seed value for this account. Ensure that you keep this in a safe place, with access to the seed you can re-create the account.
+              The secret seed value for this account. Ensure that you keep this in a safe place, with access to the seed you can re-create the account.
             </article>
           </div>
       </div>
