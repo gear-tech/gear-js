@@ -145,6 +145,29 @@ const jsonKeyring = fs.readFileSync('path/to/keyring.json').toString();
 const keyring = GearKeyring.fromJson(jsonKeyring);
 ```
 
+Getting a keyring from seed
+
+```javascript
+const seed = '0x496f9222372eca011351630ad276c7d44768a593cecea73685299e06acef8c0a';
+const keyring = await GearKeyring.fromSeed(seed, 'name');
+```
+
+Getting a keyring from mnemonic
+
+```javascript
+const mnemonic = 'slim potato consider exchange shiver bitter drop carpet helmet unfair cotton eagle';
+const keyring = await GearKeyring.fromMnemonic(mnemonic, 'name');
+```
+
+Generate mnemonic and seed
+
+```javascript
+const { mnemonic, seed } = GearKeyring.generateMnemonic();
+
+// Getting a seed from mnemonic
+const { seed } = GearKeyring.generateSeed(mnemonic);
+```
+
 ### Getting metadata
 
 Getting metadata from program.meta.wasm

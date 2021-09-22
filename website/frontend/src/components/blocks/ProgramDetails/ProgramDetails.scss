@@ -21,6 +21,7 @@
   overflow: hidden;
 }
 
+
 .program-details__progress {
   position: absolute;
   width: 0;
@@ -86,6 +87,12 @@
   margin-bottom: 16px;
 }
 
+.program-details__link {
+  color: #858585;
+  text-decoration: none;
+  font-size: 12px;
+}
+
 .program-details__info .is-hidden {
   display: none;
 }
@@ -112,6 +119,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   background: transparent;
+}
+
+.program-details__types {
+  resize: vertical;
+  min-height: 150px;
+  padding: 16px;
+}
+
+.program-details__meta {
+  width: 294px;
+  resize: vertical;
+  min-height: 200px;
+  padding: 16px;
 }
 
 .program-details__upload {
