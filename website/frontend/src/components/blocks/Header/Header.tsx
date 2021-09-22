@@ -11,6 +11,7 @@ import { CodeIcon, NotificationIcon, LogoIcon, LogoutIcon } from 'Icons';
 import NotificationsIcon from 'images/notifications.svg';
 import CodeIllustration from 'images/code.svg';
 import Modal from '../Modal';
+import Keyring from '../Keyring';
 
 import './Header.scss';
 
@@ -69,7 +70,7 @@ const Header = () => {
               null}
           </Link>
           <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
-            <span>Create account</span>
+            <span>Add account</span>
           </Link>
           <div className="user-block--wrapper">
             <img src={user?.photoUrl} alt="avatar" />
@@ -131,7 +132,7 @@ const Header = () => {
           <span />
         </button>
       </div>
-      {isOpen && <Modal title="Creacte new account" content="here is content" handleClose={toggleModal} />}
+      {isOpen && <Modal title="Create new account" content={<Keyring />} handleClose={toggleModal} />}
     </header>
   );
 };

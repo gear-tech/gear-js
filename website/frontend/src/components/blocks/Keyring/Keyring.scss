@@ -1,0 +1,76 @@
+.keyring__address {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.keyring__textArea {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px dotted #0e0e0e;
+  border-radius: 2px;
+  display: flex;
+  min-height: 80px;
+  justify-content: center;
+  padding: 20px 15px;
+}
+
+.keyring__details {
+  font-size: 1.25em;
+  padding: 0px;
+  margin: 20px;
+}
+
+.keyring__help-container {
+    color: #858585;
+    font-size: 12px;
+    text-align: left;
+    display: flex;
+    padding: 5px 0;
+}
+
+.keyring__warning {
+    background: #eccf71;
+    border-color: #ffc40c;
+    color: #222;
+    font-size: 12px;
+    border: 2px solid #ffc40c;
+    border-left: -29px;
+    padding: 10px;
+    margin: 20px 0;
+}
+
+.keyring__copy {
+    padding: 10px;
+}
+
+.keyring__key-type {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    justify-content: flex-end;
+    width: 100px;
+    position: relative;
+}
+
+.keyring__key-type__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    width: 80px;
+}
+
+.keyring__key-type__btn span {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #C2C2C2;
+    margin-right: 10px;
+}
+
+.keyring__copy-button {
+    padding-top: 5px;
+}
