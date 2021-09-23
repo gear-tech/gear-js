@@ -4,7 +4,13 @@ import { randomAsHex } from '@polkadot/util-crypto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
-import { createKeyring, keyringFromJson, keyringFromSeed } from './keyring';
+import {
+  createKeyring,
+  keyringFromJson,
+  keyringFromMnemonic,
+  keyringFromSeed,
+  keyringFromSuri,
+} from './keyring';
 import {
   GearNodeError,
   GettingMetadataError,
@@ -88,7 +94,9 @@ export class GearNodeService {
   async updateWebsiteAccountBalance() {
     const accountSeed = process.env.ACCOUNT_SEED;
     const sudoSeed = process.env.SUDO_SEED;
-    const sudoKeyring = keyringFromSeed('websiteAccount', sudoSeed);
+    const sudoKeyring = parseInt(process.env.DEBUG)
+      ? keyringFromSuri('//Alice', 'Alice default')
+      : keyringFromSeed('websiteAccount', sudoSeed);
     if (!accountSeed) {
       const { keyring } = createKeyring('websiteAccount');
       this.keyring = keyring;
@@ -100,7 +108,7 @@ export class GearNodeService {
     this.balanceTransfer({
       from: sudoKeyring,
       to: this.keyring.address,
-      value: 999999999999999 - currentBalance.freeBalance,
+      value: 999_999_999_999 - currentBalance.freeBalance,
       cb: (error, data) => {
         if (error) {
           logger.error(error);

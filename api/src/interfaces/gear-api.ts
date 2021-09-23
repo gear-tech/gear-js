@@ -2,7 +2,7 @@ import { GearType } from '.';
 import { KeyringPair$Json } from '@polkadot/keyring/types';
 
 export interface GearApiOptions {
-  providerAddress?: 'ws://127.0.0.1:9944';
+  providerAddress?: string;
   customTypes?: GearType;
 }
 

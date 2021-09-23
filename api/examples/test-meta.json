@@ -4,45 +4,27 @@
     "payloads": [
       {
         "name": "init_input",
-        "value": { "amount": 12, "currency": "USD" }
+        "value": { "amount": 12, "currency": [85, 83, 68] }
       },
       {
         "name": "input",
-        "value": {
-          "id": {
-            "decimal": 12345,
-            "hex": "0x4f0725fcc6fc8b1802793bf73f9b41a9263fe932f9f3213edb66dd5da879bfb0"
-          }
-        }
+        "value": { "id": { "decimal": 1, "hex": [1] } }
       },
       {
         "name": "output",
         "value": {
-          "res": [
-            {
-              "ok": {
-                "id": {
-                  "decimal": 12345,
-                  "hex": "0x4f0725fcc6fc8b1802793bf73f9b41a9263fe932f9f3213edb66dd5da879bfb0"
-                },
-                "person": {
-                  "name": "Vladimir",
-                  "patronymic": "Vladimirovich",
-                  "surname": "Putin"
-                }
-              }
+          "res": {
+            "id": { "decimal": 1, "hex": [1] },
+            "person": {
+              "surname": [83, 111, 109, 101, 83, 117, 114, 110, 97, 109, 101],
+              "name": [83, 111, 109, 101, 78, 97, 109, 101]
             }
-          ]
+          }
         }
       },
       {
         "name": "init_output",
-        "value": {
-          "exchange_rate": {
-            "err": 1
-          },
-          "sum": 31
-        }
+        "value": { "exchangeRate": { "Ok": 2 }, "sum": 24 }
       }
     ]
   }

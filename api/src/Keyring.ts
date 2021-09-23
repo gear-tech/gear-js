@@ -1,6 +1,6 @@
 import { Keyring } from '@polkadot/api';
 import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
-import { hexToU8a, isHex, stringToU8a, isString, u8aToHex } from '@polkadot/util';
+import { hexToU8a, isU8a, stringToU8a, isString, u8aToHex } from '@polkadot/util';
 import { mnemonicGenerate, mnemonicToMiniSecret, signatureVerify } from '@polkadot/util-crypto';
 import { Keypair } from '@polkadot/util-crypto/types';
 import { waitReady } from '@polkadot/wasm-crypto';
@@ -35,9 +35,9 @@ export class GearKeyring {
     const keyring = new Keyring({ type: 'sr25519' });
     await waitReady();
 
-    const keypair = isHex(seed)
-      ? keyring.addFromSeed(hexToU8a(seed), { name: name })
-      : keyring.addFromSeed(seed, { name: name });
+    const keypair = isU8a(seed)
+      ? keyring.addFromSeed(seed, { name: name })
+      : keyring.addFromSeed(hexToU8a(seed), { name: name });
     return GearKeyring.unlock(keypair);
   }
 
@@ -62,6 +62,17 @@ export class GearKeyring {
       seed: u8aToHex(seed),
       json: keyring.toJson()
     };
+  }
+
+  static generateMnemonic(): string {
+    return mnemonicGenerate();
+  }
+
+  static generateSeed(mnemonic?: string): { seed: `0x${string}`; mnemonic: string } {
+    if (!mnemonic) {
+      mnemonic = mnemonicGenerate();
+    }
+    return { seed: u8aToHex(mnemonicToMiniSecret(mnemonic)), mnemonic };
   }
 
   static checkSign(keyPair: KeyringPair, message: string) {

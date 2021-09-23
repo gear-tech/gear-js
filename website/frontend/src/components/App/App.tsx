@@ -6,13 +6,11 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { SocketService } from 'services/SocketService';
 
-import { GEAR_BALANCE_TRANSFER_VALUE, GEAR_MNEMONIC_KEY } from 'consts';
-
 import { RootState } from 'store/reducers';
 
 import {PrivateRoute} from "components/PrivateRoute";
 
-import { getUnreadNotificationsCount, getUserDataAction, transferBalanceSuccessAction } from 'store/actions/actions';
+import { getUnreadNotificationsCount, getUserDataAction } from 'store/actions/actions';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -35,7 +33,7 @@ const App = () => {
 
   const dispatch = useDispatch();
 
-  const { isBalanceTransfered, user } = useSelector((state: RootState) => state.user)
+  const { user } = useSelector((state: RootState) => state.user)
   const { countUnread } = useSelector((state: RootState) => state.notifications);
   const {isProgramUploading, isMessageSending} = useSelector((state: RootState) => state.programs);
   const [isSocketsConnected, setIsSocketsConnected] = useState(false);
@@ -52,13 +50,7 @@ const App = () => {
       socketServiceRef.current.subscribeEvents();
       setIsSocketsConnected(true);
     }
-    if (localStorage.getItem(GEAR_MNEMONIC_KEY) && !isBalanceTransfered && socketServiceRef.current) {
-      socketServiceRef.current.transferBalance({
-        value: GEAR_BALANCE_TRANSFER_VALUE
-      });
-      dispatch(transferBalanceSuccessAction());
-    }
-  }, [dispatch, isBalanceTransfered, isSocketsConnected, setIsSocketsConnected])
+  }, [dispatch, isSocketsConnected, setIsSocketsConnected])
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== "hidden") {
