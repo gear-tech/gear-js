@@ -80,6 +80,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
         if (typeof gas !== 'number' && !isManualGas) {
           socketService.getGasSpent(destination, pack.payload);
         } else {
+          pack.gasLimit = pack.gasLimit ?? gas ?? 0;
           socketService.sendMessageToProgram(pack);
           dispatch(sendMessageStartAction());
         }
