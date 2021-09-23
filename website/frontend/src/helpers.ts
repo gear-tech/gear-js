@@ -14,3 +14,17 @@ export const formatDate = (rawDate: string) => {
 };
 
 export const generateRandomId = () => Math.floor(Math.random() * 1000000000);
+
+export function readFileAsync(file: File){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsArrayBuffer(file);
+  });
+};
