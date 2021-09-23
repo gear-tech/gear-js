@@ -8,7 +8,12 @@ import {
   InvalidParamsError,
   ProgramNotFound,
 } from 'src/json-rpc/errors';
-import { isJsonObject } from '@polkadot/util';
+import {
+  hexToString,
+  isJsonObject,
+  stringToHex,
+  u8aToHex,
+} from '@polkadot/util';
 import { sendProgram } from './program.gear';
 import { sendMessage } from './message.gear';
 import { GearNodeEvents } from './events';
@@ -44,6 +49,7 @@ export class GearNodeService {
     GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then((api) => {
       this.api = api;
       this.updateWebsiteAccountBalance();
+      this.subscription.subscribeEvents(api);
     });
   }
 
@@ -174,7 +180,6 @@ export class GearNodeService {
     }
 
     const keyring = GearKeyring.fromJson(data.keyPairJson);
-
     const program = await this.programService.findProgram(data.destination);
     if (!program) {
       callback(new ProgramNotFound(data.destination).toJson());
@@ -327,11 +332,9 @@ export class GearNodeService {
               event.program,
             );
             const meta = JSON.parse(program.meta);
-            const response = CreateType.decode(
-              meta.output,
-              event.response,
-              meta,
-            ).toJSON();
+            const response = !event.error
+              ? CreateType.decode(meta.output, event.response, meta).toJSON()
+              : '';
             callback(undefined, {
               event: 'Log',
               id: event.id,

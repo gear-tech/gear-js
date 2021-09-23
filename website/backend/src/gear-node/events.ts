@@ -18,15 +18,19 @@ export class GearNodeEvents {
   async subscribeEvents(api: GearApi): Promise<void> {
     try {
       api.gearEvents.subscribeLogEvents(({ data }) => {
-        const res = data.toHuman();
-        this.events.next({
-          type: 'log',
-          id: res['reply'][0],
-          program: res['source'],
-          destination: res['dest'],
-          date: new Date(),
-          response: data['payload'],
-          responseId: data['id'],
+        data.forEach((part) => {
+          const res = part.toHuman();
+          console.log(res);
+          this.events.next({
+            type: 'log',
+            id: res['reply'][0],
+            program: res['source'],
+            destination: res['dest'],
+            date: new Date(),
+            response: res['payload'],
+            responseId: res['id'],
+            error: +res['reply'][1] !== 0 ? true : false,
+          });
         });
       });
       api.gearEvents.subsribeProgramEvents(async ({ method, data }) => {
