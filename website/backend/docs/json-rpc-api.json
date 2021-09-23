@@ -142,7 +142,9 @@
         "responseId": {
           "type": "string",
           "description": "Response type",
-          "examples": ["0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"]
+          "examples": [
+            "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+          ]
         },
         "date": {
           "type": "string",
@@ -348,13 +350,37 @@
       "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
     },
 
-    "user.generateKeypair": {
-      "summary": "Generate keypair for signing trasactions",
+    "user.addPublicKey": {
+      "summary": "Add user public key",
       "tags": ["User", "Http"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "publicKey": {
+            "type": "string",
+            "description": "Public Key",
+            "examples": ["5FHR5Ac45FSwAjpWMtsnPFsnxaWoEPs343kbqcAAnu8fNeQk"]
+          },
+          "publicKeyRaw": {
+            "type": "string",
+            "description": "Raw Public Key",
+            "examples": [
+              "0x8e66638d3bdcd46d3bdbb115ce1b71a972fd05e3ac431fa482480952e135a55d"
+            ]
+          }
+        },
+        "required": ["hash"]
+      },
       "result": {
         "type": "object",
-        "description": "JSON encdoded keypair data",
-        "properties": {}
+        "description": "Public Key",
+        "properties": {
+          "publicKey": {
+            "type": "string",
+            "description": "Public Key",
+            "examples": ["5FHR5Ac45FSwAjpWMtsnPFsnxaWoEPs343kbqcAAnu8fNeQk"]
+          }
+        }
       },
       "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
     },
@@ -421,7 +447,7 @@
     "message.all": {
       "summary": "Getting all user's messages",
       "tags": ["Messages", "Http"],
-      "params":{
+      "params": {
         "isRead": {
           "type": "boolean",
           "description": "Read or unread messages. Default - all"
@@ -542,27 +568,40 @@
             "description": "Init payload (hex)",
             "examples": ["0x1234"]
           },
-          "initType": {
-            "type": "string",
-            "description": "Type of initial payload",
-            "examples": ["utf8"]
-          },
-          "incomingType": {
-            "type": "string",
-            "description": "Type of incoming message",
-            "examples": ["utf8"]
-          },
-          "expectedType": {
-            "type": "string",
-            "description": "Expected type of reponse message",
-            "examples": ["utf8"]
+          "meta": {
+            "type": "object",
+            "description": "Program types",
+            "properties": {
+              "init_input": "string",
+              "init_output": "string",
+              "input": "string",
+              "output": "string",
+              "types": "string"
+            },
+            "examples": [
+              {
+                "init_input": "String",
+                "init_output": "Vec<u8>",
+                "input": "Person",
+                "output": "Result<u8, u8>",
+                "types": { "Person": { "name": "String", "surname": "String" } }
+              }
+            ]
           },
           "keyPairJson": {
             "type": "string",
             "description": "JSON Encoded KeyPair data"
           }
         },
-        "required": ["file", "filename", "gasLimit", "value", "init_payload"]
+        "required": [
+          "file",
+          "filename",
+          "gasLimit",
+          "value",
+          "initPayload",
+          "meta",
+          "keyPairJson"
+        ]
       },
       "result": {
         "type": "object",
