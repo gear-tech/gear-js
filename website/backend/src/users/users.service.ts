@@ -92,6 +92,6 @@ export class UsersService {
 
   addPublicKey(user: User, pubKey) {
     user.publicKey = pubKey;
-    this.userRepository.save(user);
+    return this.userRepository.save(user);
   }
 }

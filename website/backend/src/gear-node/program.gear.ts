@@ -18,9 +18,8 @@ export async function sendProgram(
   callback: RpcCallback,
 ) {
   let programId: any;
-
   try {
-    programId = api.program.submit(
+    programId = await api.program.submit(
       { code, gasLimit, value, initPayload },
       meta,
     );

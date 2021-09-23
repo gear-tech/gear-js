@@ -82,14 +82,20 @@
           Initial Payload:
           <input type="text" name="payload" ref="payload" />
           <br />
-          Init Type:
-          <input type="text" name="initType" ref="initType" />
+          Init Input Type:
+          <input type="text" name="initType" ref="init_input" />
+          <br />
+          Init Out Type:
+          <input type="text" name="initType" ref="init_output" />
           <br />
           Incomnig Type:
-          <input type="text" name="incoming" ref="incoming" />
+          <input type="text" name="incoming" ref="input" />
           <br />
           Expected Type:
-          <input type="text" name="excpected" ref="expected" />
+          <input type="text" name="excpected" ref="output" />
+          <br />
+          Types:
+          <input type="text" name="excpected" ref="types" />
           <br />
           <button type="submit" @click.prevent="sendWasm()">Send</button>
           <hr />
@@ -106,6 +112,12 @@
     </section>
   </main>
   <script>
+    const keyPairJson = {
+      encoded: 'MFMCAQEwBQYDK2VwBCIEIJj6p0rPLBwB+eQRmBm/w4qKBIU3djHk01e0nhSffJlgB1Aku48D2PFZRcc7mZ3T5BCGW27qp/TWZTOJPR9wjkehIwMhAI5mY4073NRta9uxFc4bcaly/QXjrEMfpIJICVLhNaVd',
+      encoding: { content: ['pkcs8', 'sr25519'], type: ['none'], version: '3' },
+      address: '5FHR5Ac35FSwAjpWMtsnPFsnxaWoEPs343kbqcAAnu8fNeQk',
+      meta: { name: undefined }
+    }
     Vue.component('alerts-component', VueSimpleNotify.VueSimpleNotify);
     var app = new Vue({
       el: '#v-app',
@@ -173,6 +185,14 @@
         },
 
         sendWasm() {
+          const meta = this.$refs.meta.files.length !== 0 ? this.$refs.meta.files[0] : {
+            input: this.$refs.input.value,
+            output: this.$refs.output.value,
+            init_input: this.$refs.init_input.value,
+            init_output: this.$refs.init_output.value,
+            types: this.$refs.types.value
+          }
+          console.log(meta)
           this.socket.emit('message', {
             jsonrpc: '2.0',
             id: 3,
@@ -180,19 +200,11 @@
             params: {
               file: this.file,
               filename: this.file.name,
-              meta: this.$refs.meta.files[0],
+              meta: meta,
               gasLimit: this.$refs.gasLimit.value,
               value: this.$refs.value.value,
               initPayload: this.$refs.payload.value,
-              initType: this.$refs.initType
-                ? this.$refs.initType.value
-                : undefined,
-              incomingType: this.$refs.incoming
-                ? this.$refs.incoming.value
-                : undefined,
-              expectedType: this.$refs.expected
-                ? this.$refs.expected.value
-                : undefined,
+              keyPairJson: JSON.stringify(keyPairJson)
             },
           });
         },

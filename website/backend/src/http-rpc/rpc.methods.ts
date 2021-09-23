@@ -7,7 +7,6 @@ import { InvalidParamsError } from 'src/json-rpc/errors';
 import { RpcMethods } from 'src/json-rpc/methods';
 import { User } from 'src/users/entities/user.entity';
 import { MessagesService } from 'src/messages/messages.service';
-import { async } from 'rxjs';
 
 @Injectable()
 export class HttpRpcMethods extends RpcMethods {
@@ -51,7 +50,8 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     addPublicKey: async (user, params) => {
-      return this.userService.addPublicKey(user, params.publicKey);
+      return (await this.userService.addPublicKey(user, params.publicKey))
+        .publicKey;
     },
 
     getBalance: async (user, params?) => {

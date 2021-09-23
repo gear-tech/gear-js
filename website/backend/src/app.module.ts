@@ -41,11 +41,11 @@ import { MessagesModule } from './messages/messages.module';
     EventEmitterModule.forRoot(),
     RpcModule,
     WsRpcModule,
-    TelegrafModule.forRoot({
-      token: process.env.TELEGRAM_BOT_TOKEN,
-      include: [TelegramModule],
-    }),
-    TelegramModule,
+    // TelegrafModule.forRoot({
+    //   token: process.env.TELEGRAM_BOT_TOKEN,
+    //   include: [TelegramModule],
+    // }),
+    // TelegramModule,
     IdeModule,
     MessagesModule,
   ],

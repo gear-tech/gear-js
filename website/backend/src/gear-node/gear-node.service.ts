@@ -101,7 +101,6 @@ export class GearNodeService {
     }
 
     const binary = this.programService.parseWASM(data.file);
-
     const keyring = GearKeyring.fromJson(data.keyPairJson);
 
     const programData = {
@@ -132,21 +131,23 @@ export class GearNodeService {
         data.gasLimit,
         data.value,
         data.meta,
-        async (action: string, data?: any) => {
+        async (action: string, callbackData?: any) => {
           switch (action) {
             case 'saveProgram':
-              programData.hash = data.programId;
+              programData.hash = callbackData.programId;
+              programData.uploadedAt = new Date();
               program = await this.programService.saveProgram(programData);
               initMessage.program = program;
               break;
             case 'saveMessage':
-              initMessage.id = data.initMessageId;
+              initMessage.id = callbackData.initMessageId;
               initMessage.date = new Date();
               this.messageService.save(initMessage);
-              program.blockHash = data.blockHas;
-              program.uploadedAt = new Date();
+              program.blockHash = callbackData.blockHash;
               this.programService.updateProgram(program);
-              callback(undefined, data);
+              break;
+            default:
+              callback(undefined, callbackData);
           }
         },
       );
@@ -236,7 +237,7 @@ export class GearNodeService {
     }
     try {
       this.api.balance
-        .transferBalance(options.from, options.to, options.value, () => {})
+        .transferBalance(options.from, options.to, 100_000_000, () => {})
         .then(() => {
           callback(undefined, 'Transfer balance succeed');
         });
