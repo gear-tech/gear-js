@@ -19,5 +19,5 @@
     }
   },
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"],
-  "include": ["src", "examples", "src/**/*.json"]
+  "include": ["src", "src/**/*.json"]
 }
