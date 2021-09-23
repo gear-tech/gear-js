@@ -124,7 +124,7 @@ export class CreateType {
 
   private fromBytes(registry: Registry, type: string, data: any) {
     if (typeIsString(type)) {
-      return registry.createType('Bytes', Array.from(stringToU8a(data)));
+      return registry.createType('String', data);
     } else if (type.toLowerCase() === 'bytes') {
       return data;
     }
