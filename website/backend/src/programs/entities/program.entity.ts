@@ -1,4 +1,3 @@
-import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 

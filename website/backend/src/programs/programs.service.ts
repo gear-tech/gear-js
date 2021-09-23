@@ -1,4 +1,4 @@
-import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
+import { Metadata } from '@gear-js/api/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';

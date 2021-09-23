@@ -1,4 +1,4 @@
-import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
+import { Metadata } from '@gear-js/api/types';
 import { KeyringPair$Json } from '@polkadot/keyring/types';
 
 export interface UploadProgramData {

@@ -1,3 +1,14 @@
+import {
+  CreateType,
+  GearApi,
+  GearKeyring,
+  getWasmMetadata,
+} from '@gear-js/api';
+import { Metadata } from '@gear-js/api/types';
+import { isJsonObject } from '@polkadot/util';
+import { KeyringPair } from '@polkadot/keyring/types';
+import { UnsubscribePromise } from '@polkadot/api/types';
+import { Balance } from '@polkadot/types/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -8,12 +19,6 @@ import {
   InvalidParamsError,
   ProgramNotFound,
 } from 'src/json-rpc/errors';
-import {
-  hexToString,
-  isJsonObject,
-  stringToHex,
-  u8aToHex,
-} from '@polkadot/util';
 import { sendProgram } from './program.gear';
 import { sendMessage } from './message.gear';
 import { GearNodeEvents } from './events';
@@ -21,18 +26,9 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LogMessage } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';
-import { KeyringPair } from '@polkadot/keyring/types';
 import { SendMessageData, UploadProgramData } from './interfaces';
 import { RpcCallback } from 'src/json-rpc/interfaces';
-import {
-  CreateType,
-  GearApi,
-  GearKeyring,
-  getWasmMetadata,
-} from '@gear-js/api';
-import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
 import { Program } from 'src/programs/entities/program.entity';
-import { UnsubscribePromise } from '@polkadot/api/types';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
@@ -69,7 +65,7 @@ export class GearNodeService {
       );
     }
 
-    const currentBalance = await this.api.balance.findOut(
+    const currentBalance: Balance = await this.api.balance.findOut(
       this.rootKeyring.address,
     );
     if (currentBalance.toNumber() < +process.env.SITE_ACCOUNT_BALANCE) {

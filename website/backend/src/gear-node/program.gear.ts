@@ -3,7 +3,7 @@ import { InvalidParamsError, TransactionError } from 'src/json-rpc/errors';
 import { Logger } from '@nestjs/common';
 import { RpcCallback } from 'src/json-rpc/interfaces';
 import { GearApi } from '@gear-js/api';
-import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
+import { Metadata } from '@gear-js/api/types';
 
 const logger = new Logger('Program Upload');
 
