@@ -27,6 +27,7 @@ import {
 } from '@gear-js/api';
 import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';
 import { Program } from 'src/programs/entities/program.entity';
+import { UnsubscribePromise } from '@polkadot/api/types';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
@@ -42,6 +43,7 @@ export class GearNodeService {
   ) {
     GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then((api) => {
       this.api = api;
+      this.updateWebsiteAccountBalance();
     });
   }
 
@@ -64,20 +66,22 @@ export class GearNodeService {
     const currentBalance = await this.api.balance.findOut(
       this.rootKeyring.address,
     );
-    this.balanceTransfer(
-      {
-        from: sudoKeyring,
-        to: this.rootKeyring.address,
-        value: -currentBalance.subn(10_000_000_000).toNumber(),
-      },
-      (error, data) => {
-        if (error) {
-          logger.error(error);
-        } else {
-          logger.log(data);
-        }
-      },
-    );
+    if (currentBalance.toNumber() < +process.env.SITE_ACCOUNT_BALANCE) {
+      this.balanceTransfer(
+        {
+          from: sudoKeyring,
+          to: this.rootKeyring.address,
+          value: +process.env.SITE_ACCOUNT_BALANCE - currentBalance.toNumber(),
+        },
+        (error, data) => {
+          if (error) {
+            logger.error(error);
+          } else {
+            logger.log(data);
+          }
+        },
+      );
+    }
   }
 
   async uploadProgram(
@@ -191,7 +195,7 @@ export class GearNodeService {
         data.payload,
         data.gasLimit,
         data.value,
-        program.meta,
+        JSON.parse(program.meta),
         async (action, data) => {
           switch (action) {
             case 'save':
@@ -222,24 +226,23 @@ export class GearNodeService {
   ): Promise<void> {
     if (
       options.to !== this.rootKeyring.address &&
-      (await this.api.balance.findOut(this.rootKeyring.address)).lten(
-        options.value,
-      )
+      (await this.api.balance.findOut(this.rootKeyring.address)).toNumber() <
+        options.value
     ) {
       await this.updateWebsiteAccountBalance();
     }
-
-    return new Promise(async (resolve, reject) => {
-      try {
-        this.api.balance
-          .transferBalance(options.from, options.to, options.value)
-          .then(() => {
-            callback(undefined, 'Transfer balance succeed');
-          });
-      } catch (error) {
-        reject(new GearNodeError(error.message));
-      }
-    });
+    if (!options.from) {
+      options.from = this.rootKeyring;
+    }
+    try {
+      this.api.balance
+        .transferBalance(options.from, options.to, options.value, () => {})
+        .then(() => {
+          callback(undefined, 'Transfer balance succeed');
+        });
+    } catch (error) {
+      throw new GearNodeError(error.message);
+    }
   }
 
   async getBalance(publicKey: string): Promise<{ freeBalance: string }> {
@@ -252,11 +255,12 @@ export class GearNodeService {
     if (!program) {
       return 0;
     }
+    const meta = JSON.parse(program.meta);
     let gasSpent = await this.api.program.getGasSpent(
       CreateType.encode('H256', hash),
       payload,
-      program.meta.input,
-      program.meta,
+      meta.input,
+      meta,
     );
     return gasSpent.toNumber();
   }
@@ -266,7 +270,7 @@ export class GearNodeService {
     if (!program) {
       throw new ProgramNotFound(hash);
     }
-    return program.meta;
+    return JSON.parse(program.meta);
   }
 
   async saveEvents(): Promise<void> {
@@ -277,10 +281,11 @@ export class GearNodeService {
             const program = await this.programService.findProgram(
               event.program,
             );
+            const meta = JSON.parse(program.meta);
             const response = CreateType.decode(
-              program.meta.output,
+              meta.output,
               event.response,
-              program.meta,
+              meta,
             ).toJSON();
             this.messageService.update({
               id: event.id,
@@ -319,10 +324,11 @@ export class GearNodeService {
             const program = await this.programService.findProgram(
               event.program,
             );
+            const meta = JSON.parse(program.meta);
             const response = CreateType.decode(
-              program.meta.output,
+              meta.output,
               event.response,
-              program.meta,
+              meta,
             ).toJSON();
             callback(undefined, {
               event: 'Log',
@@ -348,15 +354,13 @@ export class GearNodeService {
     return unsub;
   }
 
-  subscribeNewHeads(callback: RpcCallback): Subscription {
+  subscribeNewHeads(callback: RpcCallback): UnsubscribePromise {
     try {
-      const unsub = this.subscription.blocks.subscribe({
-        next: (head) => {
-          callback(undefined, {
-            hash: head.hash.toHex(),
-            number: head.number.toString(),
-          });
-        },
+      const unsub = this.api.gearEvents.subscribeNewBlocks((head) => {
+        callback(undefined, {
+          hash: head.hash.toHex(),
+          number: head.number.toString(),
+        });
       });
       return unsub;
     } catch (error) {

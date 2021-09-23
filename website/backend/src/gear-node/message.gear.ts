@@ -1,12 +1,7 @@
 import { KeyringPair } from '@polkadot/keyring/types';
-import {
-  GearNodeError,
-  InvalidParamsError,
-  TransactionError,
-} from 'src/json-rpc/errors';
+import { InvalidParamsError, TransactionError } from 'src/json-rpc/errors';
 import { Bytes } from '@polkadot/types';
 import { Logger } from '@nestjs/common';
-import { LogMessage } from 'src/messages/interface';
 import { RpcCallback } from 'src/json-rpc/interfaces';
 import { GearApi } from '@gear-js/api';
 import { Metadata } from '@gear-js/api/types/src/interfaces/metadata';

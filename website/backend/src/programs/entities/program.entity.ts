@@ -32,7 +32,7 @@ export class Program {
   uploadedAt: Date;
 
   @Column({ nullable: true })
-  meta: Metadata;
+  meta: string;
 
   @Column({ nullable: true })
   title: string;

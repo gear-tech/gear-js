@@ -139,7 +139,7 @@ export class ProgramsService {
   }
 
   addMeta(program: Program, meta: Metadata): Promise<Program> {
-    program.meta = meta;
+    program.meta = JSON.stringify(meta);
     return this.programRepository.save(program);
   }
 }

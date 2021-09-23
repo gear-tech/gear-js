@@ -41,7 +41,7 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
         const unsubIndex = this.unsubs.findIndex(
           (element) => element.name === unsub.name,
         );
-        this.unsubs[unsubIndex].unsub.complete();
+        this.unsubs[unsubIndex].unsub();
         this.unsubs = this.unsubs.filter(
           (value, index, arr) => index === unsubIndex,
         );
@@ -53,7 +53,7 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
   unsubscribe() {
     this.unsubs.forEach((element) => {
       try {
-        element.unsub.unsubscribe();
+        element.unsub();
       } catch (error) {}
     });
     this.unsubs = [];
