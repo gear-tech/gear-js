@@ -1,4 +1,4 @@
-import { Metadata } from "./interfaces/metadata";
+import { Metadata } from './interfaces/metadata';
 
 export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
   const memory = new WebAssembly.Memory({ initial: 256, maximum: 512 });
@@ -37,7 +37,7 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
 
   let module = await WebAssembly.instantiate(wasmBytes, importObj);
 
-  metadata.types = JSON.parse(readMeta(memory, module.instance.exports.meta_types));
+  metadata.types = `0x${readMeta(memory, module.instance.exports.meta_registry)}`;
   metadata.init_input = readMeta(memory, module.instance.exports.meta_init_input);
   metadata.init_output = readMeta(memory, module.instance.exports.meta_init_output);
   metadata.input = readMeta(memory, module.instance.exports.meta_input);
