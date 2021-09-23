@@ -8,7 +8,7 @@ export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GITHUB_CALLBACK_URL = process.env.REACT_APP_GITHUB_CALLBACK_URL;
 export const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
 export const TELEGRAM_BOT_NAME = process.env.REACT_APP_TELEGRAM_BOT_NAME;
-export const GEAR_BALANCE_TRANSFER_VALUE = 10 * 1_000_000_000_000;
+export const GEAR_BALANCE_TRANSFER_VALUE = 100_000_000;
 export const API_PATH = process.env.REACT_APP_API_PATH
 
 export const PROGRAM_ERRRORS = {
