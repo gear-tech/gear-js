@@ -19,6 +19,7 @@ type Props = {
   handleClose: () => void;
 };
 
+// todo improve form logic, refactor
 export const MessageForm: VFC<Props> = ({ programHash, programName, socketService, handleClose, payloadType }) => {
   const getFieldsFromPayload = () => {
     const transformedPayloadType: any = [];
