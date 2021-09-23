@@ -197,12 +197,13 @@ export class GearNodeService {
         data.gasLimit,
         data.value,
         JSON.parse(program.meta),
-        async (action, data) => {
+        async (action, callbackData) => {
           switch (action) {
             case 'save':
-              initMessage.id = data.messageId;
+              initMessage.id = callbackData.messageId;
+              initMessage.date = new Date();
               this.messageService.save(initMessage);
-              callback(undefined, data);
+              callback(undefined, callbackData);
               break;
           }
         },
