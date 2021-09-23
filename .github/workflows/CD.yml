@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [master, cd-remove-serfsigned-cer]
+    branches: [master, cd-remove-serfsigned-cert]
 
 env:
   CARGO_TERM_COLOR: always
