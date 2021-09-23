@@ -317,7 +317,7 @@ export class GearNodeService {
   ): Promise<Subscription> {
     const filtered = this.subscription.events.pipe(
       filter((event) => {
-        return event.destination === user.publicKey;
+        return event.destination === user.publicKeyRaw;
       }),
     );
     const unsub = filtered.subscribe({

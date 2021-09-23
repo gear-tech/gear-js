@@ -90,8 +90,11 @@ export class UsersService {
     }
   }
 
-  addPublicKey(user: User, pubKey) {
+  addPublicKey(user: User, pubKey, pubKeyRaw) {
     user.publicKey = pubKey;
+    if (pubKeyRaw) {
+      user.publicKeyRaw = pubKeyRaw;
+    }
     return this.userRepository.save(user);
   }
 }

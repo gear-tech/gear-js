@@ -35,4 +35,7 @@ export class User {
 
   @Column({ nullable: true })
   publicKey: string;
+
+  @Column({ nullable: true })
+  publicKeyRaw: string;
 }
