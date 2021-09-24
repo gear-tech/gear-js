@@ -132,7 +132,9 @@ const Header = () => {
           <span />
         </button>
       </div>
-      {isOpen && <Modal title="Create new account" content={<Keyring handleClose={toggleModal}/>} handleClose={toggleModal} />}
+      {isOpen && (
+        <Modal title="Create new account" content={<Keyring handleClose={toggleModal} />} handleClose={toggleModal} />
+      )}
     </header>
   );
 };
