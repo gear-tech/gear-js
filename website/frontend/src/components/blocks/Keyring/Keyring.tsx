@@ -10,7 +10,7 @@ type Props = {
   handleClose: () => void;
 }
 
-const Keyring = ({ handleClose }: Props) => {
+export const Keyring = ({ handleClose }: Props) => {
   /* eslint-disable @typescript-eslint/no-unused-vars */  
   const [key, setKey] = useState('');
   const [publicKey, setPublicKey] = useState('')
@@ -126,4 +126,4 @@ const Keyring = ({ handleClose }: Props) => {
   )
 }
 
-export default Keyring;
+

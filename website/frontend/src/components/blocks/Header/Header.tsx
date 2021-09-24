@@ -10,8 +10,8 @@ import { CodeIcon, NotificationIcon, LogoIcon, LogoutIcon } from 'Icons';
 
 import NotificationsIcon from 'images/notifications.svg';
 import CodeIllustration from 'images/code.svg';
-import Modal from '../Modal';
-import Keyring from '../Keyring';
+import { Modal } from '../Modal';
+import { Keyring } from '../Keyring';
 
 import './Header.scss';
 

@@ -1,3 +1,3 @@
-import Keyring from './Keyring';
+import { Keyring } from './Keyring';
 
-export default Keyring;
+export { Keyring };

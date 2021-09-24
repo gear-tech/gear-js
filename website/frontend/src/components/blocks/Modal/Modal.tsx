@@ -9,7 +9,7 @@ type Props = {
   handleClose: () => void;
 };
 
-const Modal = ({ content, title, handleClose }: Props) => (
+export const Modal = ({ content, title, handleClose }: Props) => (
   <div className="modal__wrapper">
     <div className="modal__box">
       <button className="modal__close" onClick={handleClose} type="button">
@@ -22,5 +22,3 @@ const Modal = ({ content, title, handleClose }: Props) => (
     </div>
   </div>
 );
-
-export default Modal;
