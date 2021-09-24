@@ -26,9 +26,9 @@ export const Keyring = ({ handleClose }: Props) => {
 
   useEffect(() => {
     const create = async () => {
-        const { mnemonic, seed, json } = await GearKeyring.create('name');
+        const { mnemonic, seed, json } = await GearKeyring.create('WebAccount');
         const { address } = await GearKeyring.fromSeed(seed, 'WebAccount');
-        setKey(mnemonic)
+        setKey(mnemonic);
         setPublicKey(address);
         setIsSeed(seed);
         setIsMnemonic(mnemonic);
@@ -47,6 +47,14 @@ export const Keyring = ({ handleClose }: Props) => {
     }
   }
 
+  const downloadJson = (content: any, fileName: string , contentType: string) => {
+    const a: HTMLAnchorElement = document.createElement('a');
+    const file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+  }
+
   const handleChange = (event: any) => {
   
     if (event.target.value === 'seed'){
@@ -62,17 +70,9 @@ export const Keyring = ({ handleClose }: Props) => {
   const handleCreate = () => {
     localStorage.setItem('gear_mnemonic', JSON.stringify(isJson));
     localStorage.setItem('public_key', publicKey);
+    downloadJson(JSON.stringify(isJson), `keystore_${isJson.meta.name}.json`, 'text/plain');
     handleClose();
   }
-  
-  // const downloadJson = (content: object, fileName: string , contentType: string) => void {
-  //   const a = document.createElement('a');
-  //   const file: any = new Blob([content], { type: contentType });
-  //   a.href = URL.createObjectURL(file);
-  //   a.download = fileName;
-  //   a.click();
-  // }
-
 
   return (
       <div className="keyring__wrapper">

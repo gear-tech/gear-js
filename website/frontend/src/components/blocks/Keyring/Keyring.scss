@@ -26,6 +26,12 @@
   margin: 20px 10px;
 }
 
+@media (max-width: 768px) {
+    .keyring__details {
+        font-size: 1em;
+    }
+}
+
 .keyring__help-container {
     color: #858585;
     font-size: 12px;
