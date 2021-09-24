@@ -26,8 +26,7 @@ export const Keyring = ({ handleClose }: Props) => {
 
   useEffect(() => {
     const create = async () => {
-      const { mnemonic, seed, json } = await GearKeyring.create('WebAccount');
-      const { address } = await GearKeyring.fromSeed(seed, 'WebAccount');
+      const { mnemonic, seed, json, json: { address } } = await GearKeyring.create('WebAccount');
       setKey(mnemonic);
       setPublicKey(address);
       setIsSeed(seed);
