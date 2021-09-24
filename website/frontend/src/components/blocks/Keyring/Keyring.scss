@@ -88,3 +88,19 @@
     flex-direction: row;
     align-items: center;
 }
+
+.keyring__action-btn:disabled {
+    color: #FFFFFF;
+    background: #3d3d3d;
+}   
+
+.keyring__saveToggle {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.keyring__saveToggle-checkbox {
+    margin: 5px;
+}

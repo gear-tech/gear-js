@@ -58,7 +58,7 @@ const Keyring = () => {
             <div className="keyring__details">{publicKey}</div>
           </div>
           <div className="keyring__content">
-            <div className="keyring__help-container">Mnemonic phrase: <span className="keyring__help">?</span></div>
+            <div className="keyring__help-container">Mnemonic phrase or seed: <span className="keyring__help">?</span></div>
             <div className="keyring__textArea">
               <div className="keyring__key">{key}</div>
               <div className="keyring__copy">
@@ -82,12 +82,12 @@ const Keyring = () => {
               The secret seed value for this account. Ensure that you keep this in a safe place, with access to the seed you can re-create the account.
             </article>
             <div className="keyring__saveToggle">
-              <input type="checkbox" checked={saved} onChange={() => setSaved(!saved)} />
+              <input type="checkbox" className="keyring__saveToggle-checkbox" checked={saved} onChange={() => setSaved(!saved)} />
               <span>I have saved my mnemonic seed safely</span>
             </div>
           </div>
           <div className="keyring__action-bar">
-            <button className="keyring__action-btn" type="button" disabled={!saved}>Add</button>
+            <button className="keyring__action-btn" type="button" disabled={!saved} onClick={() => { console.log("click!!!")}}>Add</button>
           </div>
       </div>
   )
