@@ -30,7 +30,7 @@ export function readFileAsync(file: File){
 };
 
 
-export default function toShortAddress(_address: string) {
+export const toShortAddress = (_address: string) => {
   const address = (_address || '').toString();
 
   return (address.length > 13)

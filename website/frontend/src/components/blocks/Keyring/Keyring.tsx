@@ -18,7 +18,7 @@ export const Keyring = ({ handleClose }: Props) => {
   const [isSeed, setIsSeed] = useState('');
   const [isMnemonic, setIsMnemonic] = useState('');
   const [saved, setSaved] = useState(false);
-  const [isJson, setIsJson] = useState<any>(null);
+  const [keyPairJson, setKeyPairJson] = useState<any>(null);
 
   if (copySuccess) {
     setTimeout(() => setCopySuccess(false), 3000);
@@ -31,7 +31,7 @@ export const Keyring = ({ handleClose }: Props) => {
       setPublicKey(address);
       setIsSeed(seed);
       setIsMnemonic(mnemonic);
-      setIsJson(json);
+      setKeyPairJson(json);
     };
 
     create();
@@ -47,11 +47,11 @@ export const Keyring = ({ handleClose }: Props) => {
   };
 
   const downloadJson = (content: any, fileName: string, contentType: string) => {
-    const a: HTMLAnchorElement = document.createElement('a');
+    const link: HTMLAnchorElement = document.createElement('a');
     const file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
+    link.href = URL.createObjectURL(file);
+    link.download = fileName;
+    link.click();
   };
 
   const handleChange = (event: any) => {
@@ -65,9 +65,9 @@ export const Keyring = ({ handleClose }: Props) => {
   };
 
   const handleCreate = () => {
-    localStorage.setItem('gear_mnemonic', JSON.stringify(isJson));
+    localStorage.setItem('gear_mnemonic', JSON.stringify(keyPairJson));
     localStorage.setItem('public_key', publicKey);
-    downloadJson(JSON.stringify(isJson), `keystore_${isJson.meta.name}.json`, 'text/plain');
+    downloadJson(JSON.stringify(keyPairJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
     handleClose();
   };
 
