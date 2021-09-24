@@ -8,6 +8,7 @@ import { CodeIcon, LogoIcon, LogoutIcon, NotificationIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
 import './Header.scss';
+import githubIcon from '../../../assets/images/github_gray.svg';
 
 export const Header: VFC = () => {
   const location = useLocation();
@@ -41,9 +42,9 @@ export const Header: VFC = () => {
 
   return (
     <header className="header">
-      <div className="header__logo">
+      <Link to={routes.main} className={clsx('header__logo')}>
         <LogoIcon color={headerIconsColor} />
-      </div>
+      </Link>
       {(showUser && (
         <div className={clsx('header__user-block user-block', isMobileMenuOpened && 'show')}>
           <Link to={routes.allPrograms} className={clsx('user-block__programs', isPrograms && 'selected')}>
@@ -59,7 +60,7 @@ export const Header: VFC = () => {
               null}
           </Link>
           <div className="user-block--wrapper">
-            <img src={user?.photoUrl} alt="avatar" />
+            <img src={user?.photoUrl ?? githubIcon} alt="avatar" />
             <span className="user-block__name">{userInfo}</span>
           </div>
           <Link to={routes.logout} className="user-block__logout" aria-label="menuLink" onClick={handleMenuClick}>
