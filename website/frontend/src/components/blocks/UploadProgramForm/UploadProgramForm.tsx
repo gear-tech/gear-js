@@ -10,13 +10,13 @@ import { SocketService } from 'services/SocketService';
 import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
 import { ProgramDetails } from '../ProgramDetails/ProgramDetails';
 
-import './UploadProgram.scss';
+import './UploadProgramForm.scss';
 
 type Props = {
   socketService: SocketService;
 };
 
-export const UploadProgram: VFC<Props> = ({ socketService }) => {
+export const UploadProgramForm: VFC<Props> = ({ socketService }) => {
   const dispatch = useDispatch();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
