@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [master, cd-remove-serfsigned-cert]
+    branches: [master]
 
 env:
   CARGO_TERM_COLOR: always
@@ -39,8 +39,8 @@ jobs:
           done < files.txt
 
   Build-backend-docker:
-#    needs: check
-#    if: needs.check.outputs.run_job == 'true'
+    needs: check
+    if: needs.check.outputs.run_job == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

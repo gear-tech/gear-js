@@ -29,8 +29,6 @@
         SUDO_SEED: "{{ lookup('env','SUDO_SEED') }}"
 #Do tasks
   tasks:
-    - name: check
-      shell: env >env.cd
     - name: Install and enable required packages
       include: tasks/packages/packages.yaml
 
