@@ -5,7 +5,11 @@ import Identicon from '@polkadot/react-identicon';
 import './Keyring.scss';
 import { ReadNotificationsIcon } from "Icons";
 
-const Keyring = () => {
+type Props = {
+  handleClose: () => void;
+}
+
+const Keyring = ({ handleClose }: Props) => {
   /* eslint-disable @typescript-eslint/no-unused-vars */  
   const [key, setKey] = useState('');
   const [publicKey, setPublicKey] = useState('')
@@ -13,15 +17,17 @@ const Keyring = () => {
   const [isSeed, setIsSeed] = useState('');
   const [isMnemonic, setIsMnemonic] = useState('');
   const [saved, setSaved] = useState(false);
+  const [isJson, setIsJson] = useState<any>(null);
 
   useEffect(() => {
     const create = async () => {
-        const { mnemonic, seed } = await GearKeyring.generateSeed();
+        const { mnemonic, seed, json } = await GearKeyring.create('name');
         const { address } = await GearKeyring.fromSeed(seed, 'WebAccount');
         setKey(mnemonic)
         setPublicKey(address);
         setIsSeed(seed);
         setIsMnemonic(mnemonic);
+        setIsJson(json);
     }
 
     create();
@@ -48,6 +54,21 @@ const Keyring = () => {
     }
 
   }
+
+  const handleCreate = () => {
+    localStorage.setItem('gear_mnemonic', JSON.stringify(isJson));
+    localStorage.setItem('public_key', publicKey);
+    handleClose();
+  }
+  
+  // const downloadJson = (content: object, fileName: string , contentType: string) => void {
+  //   const a = document.createElement('a');
+  //   const file: any = new Blob([content], { type: contentType });
+  //   a.href = URL.createObjectURL(file);
+  //   a.download = fileName;
+  //   a.click();
+  // }
+
 
   return (
       <div className="keyring__wrapper">
@@ -87,7 +108,7 @@ const Keyring = () => {
             </div>
           </div>
           <div className="keyring__action-bar">
-            <button className="keyring__action-btn" type="button" disabled={!saved} onClick={() => { console.log("click!!!")}}>Add</button>
+            <button className="keyring__action-btn" type="button" disabled={!saved} onClick={handleCreate}>Add</button>
           </div>
       </div>
   )
