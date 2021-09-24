@@ -4,6 +4,7 @@ import Identicon from '@polkadot/react-identicon';
 
 import './Keyring.scss';
 import { ReadNotificationsIcon } from "Icons";
+import StatusPanel from 'components/blocks/StatusPanel';
 
 type Props = {
   handleClose: () => void;
@@ -18,6 +19,10 @@ const Keyring = ({ handleClose }: Props) => {
   const [isMnemonic, setIsMnemonic] = useState('');
   const [saved, setSaved] = useState(false);
   const [isJson, setIsJson] = useState<any>(null);
+
+  if (copySuccess) {
+    setTimeout(() => setCopySuccess(false), 3000);
+  }
 
   useEffect(() => {
     const create = async () => {
@@ -37,7 +42,6 @@ const Keyring = ({ handleClose }: Props) => {
     try {
       navigator.clipboard.writeText(key);
       setCopySuccess(true);
-      console.log('Copied!')
     } catch (err) {
       setCopySuccess(false);
     }
@@ -110,6 +114,14 @@ const Keyring = ({ handleClose }: Props) => {
           <div className="keyring__action-bar">
             <button className="keyring__action-btn" type="button" disabled={!saved} onClick={handleCreate}>Add</button>
           </div>
+          {copySuccess && (
+            <StatusPanel
+              onClose={() => {
+                setCopySuccess(false);
+              }}
+              statusPanelText="Copied!"
+            />
+          )}
       </div>
   )
 }
