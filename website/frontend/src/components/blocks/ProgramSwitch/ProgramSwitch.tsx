@@ -129,7 +129,7 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
             All programs
           </Link>
         </div>
-        <div className="switch-block--editor">
+        {/* <div className="switch-block--editor">
           <button
             className={clsx('switch-block--editor__btn', isEditorDropdownOpened && 'is-active')}
             type="button"
@@ -141,7 +141,7 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
           {isEditorDropdownOpened && (
             <DropdownMenu dropdownMenuRef={dropdownMenuRef} handleDropdownBtnClick={handleTemplate} />
           )}
-        </div>
+        </div> */}
         <div className="switch-block--transfer">
           <button className="switch-block--transfer__btn" type="button" onClick={handleTransferBalance}>
             Make transfer
