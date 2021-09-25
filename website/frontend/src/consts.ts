@@ -9,7 +9,7 @@ export const GEAR_STORAGE_KEY = 'gear_user_token';
 export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
-export const GEAR_BALANCE_TRANSFER_VALUE = 10 * 1_000_000_000_000;
+export const GEAR_BALANCE_TRANSFER_VALUE = 100_000_000;
 
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
