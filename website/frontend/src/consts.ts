@@ -1,24 +1,24 @@
-export const isProd = process.env.NODE_ENV === 'production';
-export const GEAR_STORAGE_KEY = 'gear_user_token';
-export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
-export const GEAR_LOCAL_WS_URI = isProd ? process.env.REACT_APP_WS_URI : 'ws://localhost:3000/api/ws';
-export const GEAR_LOCAL_IDE_URI = isProd ? process.env.REACT_APP_IDE_URI : 'http://localhost:3000/ide';
-export const JSONRPC_VERSION = '2.0';
-export const INITIAL_LIMIT_BY_PAGE = 13;
+export const GEAR_LOCAL_WS_URI = process.env.REACT_APP_WS_URI;
+export const GEAR_LOCAL_IDE_URI = process.env.REACT_APP_IDE_URI;
 export const GITHUB_CALLBACK_URL = process.env.REACT_APP_GITHUB_CALLBACK_URL;
 export const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
 export const TELEGRAM_BOT_NAME = process.env.REACT_APP_TELEGRAM_BOT_NAME;
+export const API_PATH = process.env.REACT_APP_API_PATH!;
+export const isProd = process.env.NODE_ENV === 'production';
+export const GEAR_STORAGE_KEY = 'gear_user_token';
+export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
+export const JSONRPC_VERSION = '2.0';
+export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10 * 1_000_000_000_000;
-export const API_PATH = process.env.REACT_APP_API_PATH
 
-export const PROGRAM_ERRRORS = {
-  UNATHORIZED: 'Unathorized',
+export const PROGRAM_ERRORS = {
+  UNAUTHORIZED: 'Unauthorized',
   INVALID_PARAMS: 'Invalid method parameters',
   INVALID_TRANSACTION: 'Invalid transaction',
-  PROGRAM_INIT_FAILED: 'Program initialization falied',
+  PROGRAM_INIT_FAILED: 'Program initialization failed',
   GEAR_NODE_ERROR: 'Gear node error',
   BALANCE_LOW: 'Invalid transaction. Account balance too low',
-  PAYLOAD_ERROR: 'payload.toHex is not a function'
+  PAYLOAD_ERROR: 'payload.toHex is not a function',
 };
 
 export const PROGRESS_BAR_STATUSES = {
@@ -36,7 +36,7 @@ export const PROGRAM_UPLOAD_STATUSES = {
 export const EVENT_TYPES = {
   PROGRAM_INITIALIZED: 'ProgramInitialized',
   PROGRAM_INITIALIZATION_FAILURE: 'InitFailure',
-  LOG: 'log'
+  LOG: 'log',
 };
 
 export const SOCKET_RESULT_STATUSES = {
@@ -44,20 +44,21 @@ export const SOCKET_RESULT_STATUSES = {
   FINALIZED: 'Finalized',
   PROGRAM_INITIALIZED: 'ProgramInitialized',
   SUCCESS: 'Success',
-  LOG: 'Log'
+  LOG: 'Log',
 };
 
 export const RPC_METHODS = {
   PROGRAM_UPLOAD: 'program.upload',
   TOTAL_ISSUANCE: 'system.totalIssuance',
   SUBSCRIBE_BLOCKS: 'blocks.newBlocks',
+  UNSUBSCRIBE_BLOCKS: 'blocks.unsubscribe',
   SUBSCRIBE_EVENTS: 'events.subscribe',
   BALANCE_TRANSFER: 'balance.transfer',
   SEND_MESSAGE: 'message.send',
   SEND_META: 'program.addMeta',
   GET_GAS_SPENT: 'message.gasSpent',
   GET_PAYLOAD_TYPE: 'message.payloadType',
-  READ_EVENTS: 'events.read'
+  READ_EVENTS: 'events.read',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
@@ -66,15 +67,15 @@ export const SWITCH_PAGE_TYPES = {
   UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
   UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
   NOTIFICATIONS: 'NOTIFICATIONS',
-  ALL_PROGRAMS: 'ALL_PROGRAMS'
-}
+  ALL_PROGRAMS: 'ALL_PROGRAMS',
+};
 
 export const PAGE_TYPES = {
   MESSAGE_FORM_PAGE: 'MESSAGE_FORM_PAGE',
   EDITOR_PAGE: 'EDITOR_PAGE',
   META_FORM_PAGE: 'META_FORM_PAGE',
-  NOTIFICATION_INFO: 'NOTIFICATION_INFO'
-}
+  NOTIFICATION_INFO: 'NOTIFICATION_INFO',
+};
 
 export const EDITOR_BTNS = {
   BUILD: 'BUILD',
@@ -85,5 +86,5 @@ export const EDITOR_BTNS = {
 
 export const SEARCH_TYPES = {
   NOTIFICATIONS: 'NOTIFICATIONS',
-  PROGRAMS: 'PROGRAMS'
-}
+  PROGRAMS: 'PROGRAMS',
+};

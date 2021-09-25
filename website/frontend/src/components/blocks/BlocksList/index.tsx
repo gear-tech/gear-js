@@ -1,3 +1,1 @@
-import BlocksList from './BlocksList';
-
-export default BlocksList;
+export { BlocksList } from './BlocksList';
