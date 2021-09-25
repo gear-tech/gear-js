@@ -36,15 +36,19 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
 
     if (unsub) {
       if (unsub.unsub) {
+        this.unsubs.forEach((subs) => {
+          if (subs.name === unsub.name) {
+            subs.complete();
+            return null;
+          }
+        });
         this.unsubs.push(unsub);
       } else {
         const unsubIndex = this.unsubs.findIndex(
           (element) => element.name === unsub.name,
         );
         this.unsubs[unsubIndex].unsub.complete();
-        this.unsubs = this.unsubs.filter(
-          (value, index, arr) => index === unsubIndex,
-        );
+        this.unsubs.splice(unsubIndex, 1);
       }
     }
     return null;

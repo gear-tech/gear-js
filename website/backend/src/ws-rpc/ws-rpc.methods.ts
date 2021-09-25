@@ -38,7 +38,7 @@ export class WsRpcMethods extends RpcMethods {
   blocks = {
     newBlocks: async (cb) => {
       const unsub = await this.gearService.subscribeNewHeads(cb);
-      return { name: 'blocks', unsub: unsub };
+      return { name: 'blocks', unsub };
     },
     unsubscribe: () => {
       return { name: 'blocks', unsub: null };
