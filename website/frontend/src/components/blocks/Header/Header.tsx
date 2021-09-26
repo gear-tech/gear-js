@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
@@ -47,8 +47,16 @@ const Header = () => {
   };
 
   const toggleModal = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(!isOpen); 
   };
+
+  useEffect(() => {
+    if (isOpen) document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    } 
+  }, [isOpen])
 
   return (
     <header className="header">
