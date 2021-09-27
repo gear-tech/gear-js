@@ -8,6 +8,8 @@ import { CodeIcon, LogoIcon, LogoutIcon, NotificationIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
+import { Wallet } from '../Wallet';
+
 import './Header.scss';
 import githubIcon from '../../../assets/images/github_gray.svg';
 
@@ -26,6 +28,7 @@ export const Header: VFC = () => {
 
   const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isKey, setIsKey] = useState(false);
 
   let userInfo = '';
   const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
@@ -54,6 +57,12 @@ export const Header: VFC = () => {
     }
   }, [isOpen])
 
+  useEffect(() => {
+    if (localStorage.getItem('gear_mnemonic')) {
+      setIsKey(true);
+    }
+  }, [])
+
   return (
     <header className="header">
       <Link to={routes.main} className={clsx('header__logo')}>
@@ -73,9 +82,11 @@ export const Header: VFC = () => {
             )) ||
               null}
           </Link>
-          <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
-            <span>Add account</span>
-          </Link>
+          {(isKey && <Wallet />) || (
+            <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
+              <span>Add account</span>
+            </Link>
+          )}
           <div className="user-block--wrapper">
             <img src={user?.photoUrl ?? githubIcon} alt="avatar" />
             <span className="user-block__name">{userInfo}</span>
