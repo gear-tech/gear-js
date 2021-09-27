@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "declaration": true,
-    "declarationDir": "lib",
+    "declarationDir": "types",
     "outDir": "lib",
     "baseUrl": "./",
     "alwaysStrict": true,
@@ -18,6 +18,6 @@
       "@polkadot/types/augment": ["src/interfaces/augment-types.ts"]
     }
   },
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"],
-  "include": ["src", "examples", "src/**/*.json"]
+  "exclude": ["test", "examples"],
+  "include": ["src"]
 }

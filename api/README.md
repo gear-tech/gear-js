@@ -60,34 +60,42 @@ const gearApi = await GearApi.create({ customTypes: { ...yourCustomTypesExample 
 Subscribe to all events
 
 ```javascript
-gearApi.events((event) => {
+const unsub = await gearApi.events((event) => {
   console.log(event.toHuman());
 });
+// Unsubscribe
+unsub();
 ```
 
 Subscribe to Log events
 
 ```javascript
-gearApi.gearEvents.subscribeLogEvents((event) => {
+const unsub = await gearApi.gearEvents.subscribeLogEvents((event) => {
   const data: any = event.data[0].toHuman();
   console.log(data);
 });
+// Unsubscribe
+unsub();
 ```
 
 Subscribe to Program events
 
 ```javascript
-gearApi.gearEvents.subscribeProgramEvents((event) => {
+const unsub = await gearApi.gearEvents.subscribeProgramEvents((event) => {
   console.log(event.toHuman());
 });
+// Unsubscribe
+unsub();
 ```
 
 Subscribe to new blocks
 
 ```javascript
-gearApi.gearEvents.subscribeNewBlocks((header) => {
+const unsub = await gearApi.gearEvents.subscribeNewBlocks((header) => {
   console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
 });
+// Unsubscribe
+unsub();
 ```
 
 ### Creating custom types
@@ -135,6 +143,29 @@ Getting a keyring from JSON
 ```javascript
 const jsonKeyring = fs.readFileSync('path/to/keyring.json').toString();
 const keyring = GearKeyring.fromJson(jsonKeyring);
+```
+
+Getting a keyring from seed
+
+```javascript
+const seed = '0x496f9222372eca011351630ad276c7d44768a593cecea73685299e06acef8c0a';
+const keyring = await GearKeyring.fromSeed(seed, 'name');
+```
+
+Getting a keyring from mnemonic
+
+```javascript
+const mnemonic = 'slim potato consider exchange shiver bitter drop carpet helmet unfair cotton eagle';
+const keyring = await GearKeyring.fromMnemonic(mnemonic, 'name');
+```
+
+Generate mnemonic and seed
+
+```javascript
+const { mnemonic, seed } = GearKeyring.generateMnemonic();
+
+// Getting a seed from mnemonic
+const { seed } = GearKeyring.generateSeed(mnemonic);
 ```
 
 ### Getting metadata

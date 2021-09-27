@@ -95,9 +95,28 @@ async function createKeyring(path: string) {
   return keyring;
 }
 
+// Subscribe only to Log events
+const subscribeLogEvents = (api: GearApi) => {
+  // For using already registred types
+  // Otherwise can be used static method:
+  // CreateType.decode(decodeType, data.payload, types[data.source])
+  const createType = new CreateType(api);
+
+  api.gearEvents.subscribeLogEvents(async (event) => {
+    const data: any = event.data[0].toHuman();
+    if (parseInt(data.reply[1]) === 0) {
+      const decodeType = initMessages.some((el) => el === data.reply[0])
+        ? types[data.source].init_output
+        : types[data.source].output;
+      // Decoding recieved payload
+      data.payload = createType.decode(decodeType, data.payload, types[data.source]).toHuman();
+    }
+    console.log(data);
+  });
+};
+
 async function main(pathToTestSettings: string) {
   const settings = JSON.parse(fs.readFileSync(pathToTestSettings).toString());
-
   // Get keyring
   if (!settings.keyring) {
     throw new Error('Path to file with keyring is not specified');
@@ -115,7 +134,7 @@ async function main(pathToTestSettings: string) {
     : await GearApi.create();
 
   // Check balance
-  if ((await api.balance.findOut(keyring.address)).toNumber() === 0) {
+  if ((await api.balance.findOut(keyring.address)).eq(0)) {
     await api.balance.transferFromAlice(keyring.address, 999999999999999, (event, data) => {
       console.log(event);
     });
@@ -154,26 +173,6 @@ async function main(pathToTestSettings: string) {
 
   return 0;
 }
-
-// Subscribe only to Log events
-const subscribeLogEvents = (api: GearApi) => {
-  // For using already registred types
-  // Otherwise can be used static method:
-  // CreateType.decode(decodeType, data.payload, types[data.source])
-  const createType = new CreateType(api);
-
-  api.gearEvents.subscribeLogEvents(async (event) => {
-    const data: any = event.data[0].toHuman();
-    if (parseInt(data.reply[1]) === 0) {
-      const decodeType = initMessages.some((el) => el === data.reply[0])
-        ? types[data.source].init_output
-        : types[data.source].output;
-      // Decoding recieved payload
-      data.payload = createType.decode(decodeType, data.payload, types[data.source]).toHuman();
-    }
-    console.log(data);
-  });
-};
 
 const processTest = () => {
   const test = process.argv.slice(2)[0];
