@@ -61,8 +61,7 @@ const Header = () => {
   }, [isOpen])
 
   useEffect(() => {
-    if (localStorage.getItem('gear_mnemonic') !== null) {
-      console.log('account exists');
+    if (localStorage.getItem('gear_mnemonic')) {
       setIsKey(true);
     }       
   }, [])
