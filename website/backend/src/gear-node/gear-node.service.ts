@@ -322,10 +322,7 @@ export class GearNodeService {
     });
   }
 
-  async subscribeEvents(
-    user: User,
-    callback: RpcCallback,
-  ): Promise<Subscription> {
+  async subscribeEvents(user: User, callback: RpcCallback): Promise<any> {
     const filtered = this.subscription.events.pipe(
       filter((event) => {
         return event.destination === user.publicKeyRaw;
@@ -364,7 +361,7 @@ export class GearNodeService {
         }
       },
     });
-    return unsub;
+    return unsub.unsubscribe;
   }
 
   subscribeNewHeads(callback: RpcCallback): UnsubscribePromise {
