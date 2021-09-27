@@ -83,7 +83,7 @@ export class CreateType {
   }
 
   decode(type: string, payload: any, meta?: Metadata): any {
-    this.checkTypePayload(type, payload);
+    type = this.checkTypePayload(type, payload);
 
     const { registry, namespaces } = meta?.types ? this.getRegistry(meta.types) : this.getRegistry();
 
