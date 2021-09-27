@@ -339,9 +339,10 @@ export class GearNodeService {
               event.program,
             );
             const meta = JSON.parse(program.meta);
-            const response = !event.error
-              ? CreateType.decode(meta.output, event.response, meta).toJSON()
+            let response = !event.error
+              ? CreateType.decode(meta.output, event.response, meta)
               : '';
+            response = response.toJSON ? response.toJSON() : response;
             callback(undefined, {
               event: 'Log',
               id: event.id,

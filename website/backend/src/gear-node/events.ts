@@ -20,7 +20,6 @@ export class GearNodeEvents {
       api.gearEvents.subscribeLogEvents(({ data }) => {
         data.forEach((part) => {
           const res = part.toHuman();
-          console.log(res);
           this.events.next({
             type: 'log',
             id: res['reply'][0],
