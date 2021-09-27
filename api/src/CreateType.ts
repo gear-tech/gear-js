@@ -1,7 +1,7 @@
 import { GearApi } from '.';
 import { CreateTypeError } from './errors';
 import { stringToU8a, isHex, hexToU8a, isU8a } from '@polkadot/util';
-import { Registry, TypeDef } from '@polkadot/types/types';
+import { Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry, GenericPortableRegistry, getTypeDef } from '@polkadot/types';
 import { Metadata } from './interfaces/metadata';
 
@@ -54,16 +54,17 @@ export class CreateType {
   }
 
   private checkTypePayload(type: any, payload: any) {
-    if (!type) {
-      throw new CreateTypeError('Type is not specified');
-    }
     if (!payload) {
       throw new CreateTypeError('Data is not specified');
     }
+    if (!type) {
+      return 'Bytes';
+    }
+    return type;
   }
 
   encode(type: any, payload: any, meta?: Metadata): Bytes {
-    this.checkTypePayload(type, payload);
+    type = this.checkTypePayload(type, payload);
 
     if (payload instanceof Bytes) return payload;
 
@@ -82,7 +83,7 @@ export class CreateType {
   }
 
   decode(type: string, payload: any, meta?: Metadata): any {
-    this.checkTypePayload(type, payload);
+    type = this.checkTypePayload(type, payload);
 
     const { registry, namespaces } = meta?.types ? this.getRegistry(meta.types) : this.getRegistry();
 
