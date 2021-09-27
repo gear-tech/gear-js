@@ -50,10 +50,10 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "craco start -f unix",
     "build": "craco build",
     "test": "craco test",
-    "lint": "eslint ./src",
+    "lint": "eslint ./src -f unix",
     "lint:fix": "eslint ./src --fix --color",
     "format": "prettier --write src/"
   },

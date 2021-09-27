@@ -1,16 +1,16 @@
 .message-form {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100vw;
-    background: #232323;
-    overflow-y: scroll;
-    z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100vw;
+  background: #232323;
+  overflow-y: scroll;
+  z-index: 100;
 }
 
 @media (max-width: 768px) {
-    .message-form {
-        z-index: 100;
-    }
+  .message-form {
+    z-index: 100;
+  }
 }
