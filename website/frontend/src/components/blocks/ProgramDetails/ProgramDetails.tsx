@@ -1,5 +1,6 @@
-import React, { useCallback, useRef, useState, VFC } from 'react';
-import { Field, Form, Formik } from 'formik';
+import React, { useState, useCallback, useRef, VFC } from 'react';
+import { getWasmMetadata } from '@gear-js/api';
+import { Formik, Form, Field } from 'formik';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch } from 'react-redux';
 import { SocketService } from 'services/SocketService';
@@ -10,7 +11,9 @@ import cancel from 'assets/images/cancel.svg';
 import close from 'assets/images/close.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
+
 import { Schema } from './Schema';
+import { readFileAsync } from '../../../helpers';
 
 type Props = {
   setDroppedFile: (file: File | null) => void;
@@ -21,9 +24,22 @@ type Props = {
 export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socketService }) => {
   const dispatch = useDispatch();
 
-  const [isMetaByFile, setIsMetaByFile] = useState(false);
+  const [isMetaByFile, setIsMetaByFile] = useState(true);
+  const [metaWasm, setMetaWasm] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
+  const [wrongJSON, setWrongJSON] = useState(false);
+
+  const program = {
+    gasLimit: 20000,
+    value: 0,
+    initPayload: '',
+    init_input: '',
+    init_output: '',
+    input: '',
+    output: '',
+    types: '',
+  };
 
   const metaFieldRef = useRef<any>(null);
 
@@ -31,19 +47,9 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
     setTimeout(() => setWrongMetaFormat(false), 3000);
   }
 
-  const mapInitialValues = () => ({
-    gasLimit: 20000,
-    value: 0,
-    initPayload: '',
-    initType: '',
-    incomingType: '',
-    expectedType: '',
-    initOutType: '',
-    meta: null,
-  });
-
   const removeMetaFile = () => {
     setDroppedMetaFile(null);
+    setMetaWasm(null);
   };
 
   const uploadMetaFile = () => {
@@ -51,7 +57,15 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
   };
 
   const handleFilesUpload = useCallback(
-    (file) => {
+    async (file) => {
+      try {
+        const fileBuffer: any = await readFileAsync(file);
+        const meta = await getWasmMetadata(fileBuffer);
+        setMetaWasm(meta);
+      } catch (err) {
+        // TODO ERROR STATUS ACTION
+        console.log(err);
+      }
       setDroppedMetaFile(file);
     },
     [setDroppedMetaFile]
@@ -79,17 +93,36 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
     }
   };
 
+  const prettyPrint = () => {
+    const ugly = (document.getElementById("types") as HTMLInputElement).value;
+    const obj = JSON.parse(ugly);
+    const pretty = JSON.stringify(obj, undefined, 4);
+    (document.getElementById("types") as HTMLInputElement).innerText = pretty
+  };
+
   return (
     <div className="program-details">
       <h3 className="program-details__header">UPLOAD NEW PROGRAM</h3>
       <Formik
-        initialValues={mapInitialValues()}
+        initialValues={program}
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: UploadProgramModel) => {
-          dispatch(programUploadStartAction());
-          socketService.uploadProgram(droppedFile, { ...values, meta: droppedMetaFile });
-          setDroppedFile(null);
+          if (isMetaByFile) {
+            dispatch(programUploadStartAction());
+            socketService.uploadProgram(droppedFile, { ...values, ...metaWasm });
+            setDroppedFile(null);
+          } else {
+            try {
+              const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
+              dispatch(programUploadStartAction());
+              socketService.uploadProgram(droppedFile, { ...values, types });
+              setDroppedFile(null);
+            } catch (err) {
+              setWrongJSON(true);
+              console.log(err);
+            }
+          }
         }}
         onReset={() => {
           setDroppedFile(null);
@@ -165,7 +198,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
                     <Field
                       id="value"
                       name="value"
-                      placeholder="20000"
+                      placeholder="0"
                       className="program-details__init-value program-details__value"
                       type="number"
                     />
@@ -180,6 +213,14 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
                     <button
                       type="button"
                       className="program-details--switch-btns__btn"
+                      onClick={() => setIsMetaByFile(true)}
+                    >
+                      <img src={isMetaByFile ? selected : deselected} alt="radio" />
+                      Upload file
+                    </button>
+                    <button
+                      type="button"
+                      className="program-details--switch-btns__btn"
                       onClick={() => {
                         setIsMetaByFile(false);
                         setDroppedMetaFile(null);
@@ -188,121 +229,147 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
                       <img src={isMetaByFile ? deselected : selected} alt="radio" />
                       Manual input
                     </button>
-                    <button
-                      type="button"
-                      className="program-details--switch-btns__btn"
-                      onClick={() => setIsMetaByFile(true)}
-                    >
-                      <img src={isMetaByFile ? selected : deselected} alt="radio" />
-                      Upload file
-                    </button>
                   </div>
                 </div>
               </div>
               <div className="program-details__wrapper-column2">
                 {(isMetaByFile && (
-                  <div className="program-details__info">
-                    <label className="program-details__field" htmlFor="meta">
-                      Metadata file:{' '}
-                    </label>
-                    <Field
-                      id="meta"
-                      name="meta"
-                      className="is-hidden"
-                      type="file"
-                      innerRef={metaFieldRef}
-                      onChange={handleMetaInputChange}
-                    />
-                    {(droppedMetaFile && (
-                      <div className="program-details__filename program-details__value">
-                        {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, '')}.
-                        {droppedMetaFile.name.split('.').pop()}
-                        <button type="button" onClick={removeMetaFile}>
-                          <img alt="cancel" src={cancel} />
+                  <>
+                    <div className="program-details__info">
+                      <label className="program-details__field" htmlFor="meta">
+                        Metadata file:{' '}
+                      </label>
+                      <Field
+                        id="meta"
+                        name="meta"
+                        className="is-hidden"
+                        type="file"
+                        innerRef={metaFieldRef}
+                        onChange={handleMetaInputChange}
+                      />
+                      {(droppedMetaFile && (
+                        <div className="program-details__filename program-details__value">
+                          {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, '')}.
+                          {droppedMetaFile.name.split('.').pop()}
+                          <button type="button" onClick={removeMetaFile}>
+                            <img alt="cancel" src={cancel} />
+                          </button>
+                        </div>
+                      )) || (
+                        <button className="program-details--file-btn" type="button" onClick={uploadMetaFile}>
+                          Select file
                         </button>
+                      )}
+                    </div>
+                    {metaWasm && (
+                      <div className="program-details__info">
+                        <Field
+                          as="textarea"
+                          id="types"
+                          name="types"
+                          placeholder=""
+                          className="program-details__meta program-details__value"
+                          value={JSON.stringify(metaWasm, undefined, 4)}
+                        />
                       </div>
-                    )) || (
-                      <button className="program-details--file-btn" type="button" onClick={uploadMetaFile}>
-                        Select file
-                      </button>
                     )}
-                  </div>
+                  </>
                 )) || (
                   <>
                     <div className="program-details__info">
-                      <label htmlFor="initType" className="program-details__field-limit program-details__field">
+                      <label htmlFor="init_input" className="program-details__field-limit program-details__field">
                         Initial type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="initType"
-                          name="initType"
+                          id="init_input"
+                          name="init_input"
                           placeholder=""
                           className="program-details__limit-value program-details__value"
                           type="text"
                         />
-                        {errors.initType && touched.initType ? (
-                          <div className="program-details__error">{errors.initType}</div>
+                        {errors.init_input && touched.init_input ? (
+                          <div className="program-details__error">{errors.init_input}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label htmlFor="incomingType" className="program-details__field-limit program-details__field">
+                      <label htmlFor="input" className="program-details__field-limit program-details__field">
                         Incoming type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="incomingType"
-                          name="incomingType"
+                          id="input"
+                          name="input"
                           placeholder=""
                           className="program-details__limit-value program-details__value"
                           type="text"
                         />
-                        {errors.incomingType && touched.incomingType ? (
-                          <div className="program-details__error">{errors.incomingType}</div>
+                        {errors.input && touched.input ? (
+                          <div className="program-details__error">{errors.input}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label
-                        htmlFor="expectedType"
-                        className="program-details__field-init-value program-details__field"
-                      >
+                      <label htmlFor="output" className="program-details__field-init-value program-details__field">
                         Expected type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="expectedType"
-                          name="expectedType"
+                          id="output"
+                          name="output"
                           placeholder=""
                           className="program-details__init-value program-details__value"
                           type="text"
                         />
-                        {errors.expectedType && touched.expectedType ? (
-                          <div className="program-details__error">{errors.expectedType}</div>
+                        {errors.output && touched.output ? (
+                          <div className="program-details__error">{errors.output}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label htmlFor="initOutType" className="program-details__field-init-value program-details__field">
+                      <label htmlFor="init_output" className="program-details__field-init-value program-details__field">
                         Initial output type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="initOutType"
-                          name="initOutType"
+                          id="init_output"
+                          name="init_output"
                           placeholder=""
                           className="program-details__init-value program-details__value"
                           type="text"
                         />
-                        {errors.initOutType && touched.initOutType ? (
-                          <div className="program-details__error">{errors.initOutType}</div>
+                        {errors.init_output && touched.init_output ? (
+                          <div className="program-details__error">{errors.init_output}</div>
+                        ) : null}
+                      </div>
+                    </div>
+                    <div className="program-details__info">
+                      <label htmlFor="types" className="program-details__field-init-value program-details__field">
+                        Types:
+                      </label>
+                      <div className="program-details__field-wrapper">
+                        <Field
+                          as="textarea"
+                          id="types"
+                          name="types"
+                          placeholder="{&#10;...&#10;}"
+                          className="program-details__types program-details__value"
+                        />
+                        <p>
+                          <a href="#" className="program-details__link" onClick={prettyPrint}>
+                            Prettify
+                          </a>
+                        </p>
+                        {errors.types && touched.types ? (
+                          <div className="program-details__error">{errors.types}</div>
                         ) : null}
                       </div>
                     </div>
                   </>
                 )}
               </div>
+
               <div className="program-details__buttons">
                 <button type="submit" className="program-details__upload" aria-label="uploadProgramm">
                   Upload program
@@ -323,6 +390,15 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
             setWrongMetaFormat(false);
           }}
           statusPanelText={null}
+          isError
+        />
+      )}
+      {wrongJSON && (
+        <StatusPanel
+          onClose={() => {
+            setWrongJSON(false);
+          }}
+          statusPanelText="Invalid JSON format"
           isError
         />
       )}
