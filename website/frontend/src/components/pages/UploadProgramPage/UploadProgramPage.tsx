@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, VFC } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
 import { DndProvider } from 'react-dnd';
@@ -8,15 +8,14 @@ import { SWITCH_PAGE_TYPES } from 'consts';
 import { routes } from 'routes';
 import { RecentNotifications } from 'components/blocks/RecentNotifications';
 import { BlockListAllUploaded } from 'components/blocks/BlocksList/BlockListAllUploaded';
-
-import ProgramSwitch from '../../blocks/ProgramSwitch';
-import UploadProgram from '../../blocks/UploadProgram';
-import { BlocksList } from '../../blocks/BlocksList';
+import { ProgramSwitch } from '../../blocks/ProgramSwitch/ProgramSwitch';
+import { UploadProgram } from '../../blocks/UploadProgram/UploadProgram';
+import { BlocksList } from '../../blocks/BlocksList/BlocksList';
 import { BlocksListUploaded } from '../../blocks/BlocksList/BlocksListUploaded';
-
 import './UploadProgramPage.scss';
 import { AppContext } from '../../../contexts/AppContext';
 
+export const UploadProgramPage: VFC = () => {
 const UploadProgramPage = () => {
   const { socketService } = useContext(AppContext);
 
@@ -50,5 +49,3 @@ const UploadProgramPage = () => {
     )
   );
 };
-
-export default UploadProgramPage;

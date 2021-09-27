@@ -3,12 +3,12 @@ import clsx from 'clsx';
 
 import { EditorFile } from 'types/editor';
 
-import TSIcon from 'icons/typescript.svg';
-import TOMLIcon from 'icons/toml.svg';
-import JSIcon from 'icons/js.svg';
-import RUSTIcon from 'icons/rust.svg';
-import JSONIcon from 'icons/json.svg';
-import CloseIcon from 'images/close.svg';
+import TSIcon from 'assets/icons/typescript.svg';
+import TOMLIcon from 'assets/icons/toml.svg';
+import JSIcon from 'assets/icons/js.svg';
+import RUSTIcon from 'assets/icons/rust.svg';
+import JSONIcon from 'assets/icons/json.svg';
+import CloseIcon from 'assets/images/close.svg';
 
 type Props = {
   files: EditorFile[];

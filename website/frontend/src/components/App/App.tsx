@@ -1,32 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
+import { Footer } from 'components/blocks/Footer/Footer';
+import { SignIn } from 'components/pages/SignIn/SignIn';
+import { UploadProgramPage } from 'components/pages/UploadProgramPage/UploadProgramPage';
+import { Header } from 'components/blocks/Header/Header';
+import { Main } from 'components/layouts/Main/Main';
+import { Callback } from 'components/Callback/Callback';
+import { Logout } from 'components/pages/Logout/Logout';
+import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
+import { DocumentPage } from 'components/pages/DocumentPage/DocumentPage';
+import { EditorPage } from 'features/Editor/EditorPage';
+import { NotificationsPage } from 'components/pages/NotificationsPage/NotificationsPage';
 
+import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-
-import { PrivateRoute } from 'components/PrivateRoute';
-
 import { getUnreadNotificationsCount, getUserDataAction } from 'store/actions/actions';
+import store from '../../store';
 
 import './App.scss';
 import 'assets/scss/common.scss';
+import 'assets/scss/index.scss';
 
-import { routes } from 'routes';
-
-import Footer from 'components/blocks/Footer';
-import SignIn from 'components/pages/SignIn';
-import UploadProgramPage from 'components/pages/UploadProgramPage';
-import Header from 'components/blocks/Header';
-import Main from 'components/layouts/Main';
-import Callback from 'components/Callback';
-import Logout from 'components/pages/Logout';
-import LoadingPopup from 'components/LoadingPopup';
-import DocumentPage from 'components/pages/DocumentPage';
-import { EditorPage } from 'features/Editor/EditorPage';
-import { NotificationsPage } from 'components/pages/NotificationsPage';
-import { AppContextProvider } from '../../contexts/AppContext';
-
-const App = () => {
+const AppComponent: FC = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state: RootState) => state.user);
@@ -100,4 +97,8 @@ const App = () => {
   );
 };
 
-export default App;
+export const App = () => (
+  <Provider store={store}>
+    <AppComponent />
+  </Provider>
+);

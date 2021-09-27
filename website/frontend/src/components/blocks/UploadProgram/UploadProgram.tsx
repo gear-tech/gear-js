@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { NativeTypes } from 'react-dnd-html5-backend';
@@ -10,16 +10,17 @@ import { RootState } from 'store/reducers';
 
 import { SocketService } from 'services/SocketService';
 
-import StatusPanel from 'components/blocks/StatusPanel';
-import ProgramDetails from '../ProgramDetails';
+import { StatusPanel } from 'components/blocks/StatusPanel';
+import { ProgramDetails } from '../ProgramDetails';
 
 import './UploadProgram.scss';
 
-type UploadProgramRPC = {
+type Props = {
   socketService: SocketService;
 };
 
-const UploadProgram = ({ socketService }: UploadProgramRPC) => {
+export const UploadProgram: VFC<Props> = ({ socketService }) => {
+
   const dispatch = useDispatch();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
@@ -144,5 +145,3 @@ const UploadProgram = ({ socketService }: UploadProgramRPC) => {
     </>
   );
 };
-
-export default UploadProgram;

@@ -6,14 +6,14 @@ import io from 'socket.io-client';
 import { Redirect } from 'react-router-dom';
 import clsx from 'clsx';
 
-import { PageHeader } from 'components/blocks/PageHeader';
+import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import { EDITOR_BTNS, GEAR_LOCAL_IDE_URI, GEAR_STORAGE_KEY, PAGE_TYPES } from 'consts';
 import { routes } from 'routes';
 
-import EditorDownload from 'images/editor-download.svg';
-import EditorBuild from 'images/editor-build.svg';
-import EditorRun from 'images/editor-run.svg';
-import EditorBuildRun from 'images/editor-build-run.svg';
+import EditorDownload from 'assets/images/editor-download.svg';
+import EditorBuild from 'assets/images/editor-build.svg';
+import EditorRun from 'assets/images/editor-run.svg';
+import EditorBuildRun from 'assets/images/editor-build-run.svg';
 
 import { EditorFolderRecord, EditorItem, EditorTypes, Languages } from 'types/editor';
 
@@ -172,8 +172,8 @@ export const EditorPage = () => {
   }
 
   // @ts-ignore
-      /* eslint-disable react/jsx-no-bind */
-      return (
+  /* eslint-disable react/jsx-no-bind */
+  return (
     <div className="editor-page">
       <PageHeader programName={programName} pageType={PAGE_TYPES.EDITOR_PAGE} handleClose={handleClose} />
       <div className="editor-content">

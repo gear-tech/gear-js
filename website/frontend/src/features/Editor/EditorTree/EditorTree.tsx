@@ -76,9 +76,7 @@ export const EditorTree = ({ files, onNodeClick }: Props) => {
             &nbsp;New file
           </button>
         </div>
-        {state.tree && (
-          <EditorRecursiveTree files={state.tree.root.children} />
-        )}
+        {state.tree && <EditorRecursiveTree files={state.tree.root.children} />}
         {showAddFolder && (
           <div className="editor-tree__item">
             <Folder size={12} />

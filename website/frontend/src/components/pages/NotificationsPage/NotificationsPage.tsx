@@ -15,11 +15,11 @@ import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { PaginationModel, SearchQueryModel } from 'types/common';
 import { NotificationModel } from 'types/notification';
 
-import { SearchForm } from 'components/blocks/SearchForm';
-import { Pagination } from 'components/Pagination';
-import { NotificationInfo } from 'components/NotificationInfo';
-import { UnReadNotificationsIcon, ReadNotificationsIcon } from 'Icons';
-import { SearchQueries } from 'components/blocks/SearchQueries';
+import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
+import { Pagination } from 'components/Pagination/Pagination';
+import { NotificationInfo } from 'components/NotificationInfo/NotificationInfo';
+import { ReadNotificationsIcon, UnReadNotificationsIcon } from 'assets/Icons';
+import { SearchQueries } from 'components/blocks/SearchQueries/SearchQueries';
 
 import './NotificationsPage.scss';
 import { AppContext } from '../../../contexts/AppContext';
@@ -166,5 +166,3 @@ const NotificationsPage = () => {
     </div>
   );
 };
-
-export { NotificationsPage };
