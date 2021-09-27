@@ -4,7 +4,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { SignIn } from 'components/pages/SignIn/SignIn';
-import { UploadProgramPage } from 'components/pages/UploadProgramPage/UploadProgramPage';
+import { UploadProgramPage } from 'components/pages/UploadProgramPage';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
 import { Callback } from 'components/Callback/Callback';
@@ -22,6 +22,7 @@ import store from '../../store';
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
+import { AppContextProvider } from '../../contexts/AppContext';
 
 const AppComponent: FC = () => {
   const dispatch = useDispatch();

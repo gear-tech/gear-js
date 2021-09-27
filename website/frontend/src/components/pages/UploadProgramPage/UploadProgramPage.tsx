@@ -16,7 +16,6 @@ import './UploadProgramPage.scss';
 import { AppContext } from '../../../contexts/AppContext';
 
 export const UploadProgramPage: VFC = () => {
-const UploadProgramPage = () => {
   const { socketService } = useContext(AppContext);
 
   const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);

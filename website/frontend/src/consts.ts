@@ -58,6 +58,7 @@ export const RPC_METHODS = {
   SEND_META: 'program.addMeta',
   GET_GAS_SPENT: 'message.gasSpent',
   GET_PAYLOAD_TYPE: 'message.payloadType',
+  READ_EVENTS: 'events.subscribe',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];

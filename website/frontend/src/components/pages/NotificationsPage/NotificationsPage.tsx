@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import {
@@ -24,7 +24,7 @@ import { SearchQueries } from 'components/blocks/SearchQueries/SearchQueries';
 import './NotificationsPage.scss';
 import { AppContext } from '../../../contexts/AppContext';
 
-const NotificationsPage = () => {
+export const NotificationsPage: VFC = () => {
   const { socketService } = useContext(AppContext);
   const dispatch = useDispatch();
 
