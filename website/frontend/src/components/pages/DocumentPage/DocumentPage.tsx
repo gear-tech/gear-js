@@ -1,24 +1,17 @@
-import React from 'react';
+import React, { VFC } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { routes } from 'routes';
-import { PrivacyPolicy, TermsOfUse, DocumentFooter } from 'components/blocks/Documents';
+import { PrivacyPolicy } from '../../blocks/Documents/PrivacyPolicy';
+import { DocumentFooter } from '../../blocks/Documents/DocumentFooter';
+import { TermsOfUse } from '../../blocks/Documents/TermsOfUse';
 
-function DocumentPage () {
+export const DocumentPage: VFC = () => {
+  const isPrivacyPolicyPage = useRouteMatch(routes.privacyPolicy);
 
-    const isPrivacyPolicyPage = useRouteMatch(routes.privacyPolicy);
-
-    return (
-        <>
-            {
-                isPrivacyPolicyPage
-                &&
-                <PrivacyPolicy/>
-                ||
-                <TermsOfUse/>
-            }
-            <DocumentFooter/>
-        </>
-    )
-}
-
-export default DocumentPage;
+  return (
+    <>
+      {(isPrivacyPolicyPage && <PrivacyPolicy />) || <TermsOfUse />}
+      <DocumentFooter />
+    </>
+  );
+};

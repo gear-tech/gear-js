@@ -1,126 +1,125 @@
 .search-form {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
 }
 
 .search-form--field-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    background: #282828;
-    border-radius: 4px;
-    padding: 12px 20px;
-    height: 48px;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  background: #282828;
+  border-radius: 4px;
+  padding: 12px 20px;
+  height: 48px;
+  width: 100%;
 }
 
 .search-form__input {
-    background: none;
-    border: none;
-    outline: none;
-    color: #ffffff;
-    padding: 0;
-    margin-left: 20px;
-    letter-spacing: 0.15px;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  padding: 0;
+  margin-left: 20px;
+  letter-spacing: 0.15px;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  width: 100%;
 }
 
 .search-form__input::placeholder {
-    color: #858585;
+  color: #858585;
 }
 
 .search-form--btns {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0;
 }
 
 .search-form--btns__button {
-    padding: 12px 24px;
-    display: flex;
-    flex-direction: row;
-    font-weight: bold;
-    align-items: center;
-    font-size: 16px;
-    line-height: 24px;
-    background: #3D3D3D;
-    border-radius: 2px;
-    color: #FFFFFF;
+  padding: 12px 24px;
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+  align-items: center;
+  font-size: 16px;
+  line-height: 24px;
+  background: #3d3d3d;
+  border-radius: 2px;
+  color: #ffffff;
 }
 
 .search-form--btns__button:last-child {
-    background: none;
-    width: 150px;
+  background: none;
+  width: 150px;
 }
 
 .search-form--btns__button svg {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .search-form--type {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: auto;
-    justify-content: flex-end;
-    width: 200px;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: auto;
+  justify-content: flex-end;
+  width: 200px;
+  position: relative;
 }
 
 .search-form--type .dropdown-menu {
-    left: unset;
-    right: -20px;
-    top: 35px;
-    min-width: 240px;
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)), #121212;
-    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 5px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+  left: unset;
+  right: -20px;
+  top: 35px;
+  min-width: 240px;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)), #121212;
+  box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 5px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 
 .search-form--type__btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 15px;
-    width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 15px;
+  width: 100px;
 }
 
 .search-form--type__btn span {
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #C2C2C2;
-    margin-right: 15px;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  color: #c2c2c2;
+  margin-right: 15px;
 }
 
 .search-form__icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@media ( max-width: 768px ) {
-    .search-form {
-        flex-direction: column;
-        gap: 16px;
-    }
-    .search-form--btns {
-        width: 100%;
-        justify-content: center;
-        
-    }
-    .search-form--type .dropdown-menu {
-        min-width: 180px;
-    }
+@media (max-width: 768px) {
+  .search-form {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .search-form--btns {
+    width: 100%;
+    justify-content: center;
+  }
+  .search-form--type .dropdown-menu {
+    min-width: 180px;
+  }
 }

@@ -1,9 +1,10 @@
 import ReactDOM from 'react-dom';
-import { Root } from './App';
+import React from 'react';
+import { App } from './components/App/App';
 
 async function init() {
   try {
-    ReactDOM.render(Root, document.getElementById('root'));
+    ReactDOM.render(<App />, document.getElementById('root'));
   } catch (err) {
     console.log(err);
   }

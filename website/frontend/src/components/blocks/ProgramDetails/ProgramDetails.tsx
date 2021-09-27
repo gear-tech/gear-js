@@ -1,53 +1,29 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { getWasmMetadata } from '@gear-js/api';
-
-import { Formik, Form, Field } from 'formik';
-
+import React, { useCallback, useRef, useState, VFC } from 'react';
+import { Field, Form, Formik } from 'formik';
 import { UploadProgramModel } from 'types/program';
-
 import { useDispatch } from 'react-redux';
-
 import { SocketService } from 'services/SocketService';
-
 import { programUploadStartAction } from 'store/actions/actions';
-
-import StatusPanel from 'components/blocks/StatusPanel';
-
+import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
 import './ProgramDetails.scss';
-
-import cancel from 'images/cancel.svg';
-import close from 'images/close.svg';
-import deselected from 'images/radio-deselected.svg';
-import selected from 'images/radio-selected.svg';
-
+import cancel from 'assets/images/cancel.svg';
+import close from 'assets/images/close.svg';
+import deselected from 'assets/images/radio-deselected.svg';
+import selected from 'assets/images/radio-selected.svg';
 import { Schema } from './Schema';
-import { readFileAsync } from '../../../helpers';
 
-type ProgramDetailsTypes = {
+type Props = {
   setDroppedFile: (file: File | null) => void;
   droppedFile: File;
   socketService: SocketService;
 };
 
-const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramDetailsTypes) => {
+export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socketService }) => {
   const dispatch = useDispatch();
 
-  const [isMetaByFile, setIsMetaByFile] = useState(true);
-  const [metaWasm, setMetaWasm] = useState<any>(null);
+  const [isMetaByFile, setIsMetaByFile] = useState(false);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
-  const [wrongJSON, setWrongJSON] = useState(false);
-
-  const program = {
-    gasLimit: 20000,
-    value: 0,
-    initPayload: '',
-    init_input: '',
-    init_output: '',
-    input: '',
-    output: '',
-    types: '',
-  };
 
   const metaFieldRef = useRef<any>(null);
 
@@ -55,9 +31,19 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
     setTimeout(() => setWrongMetaFormat(false), 3000);
   }
 
+  const mapInitialValues = () => ({
+    gasLimit: 20000,
+    value: 0,
+    initPayload: '',
+    initType: '',
+    incomingType: '',
+    expectedType: '',
+    initOutType: '',
+    meta: null,
+  });
+
   const removeMetaFile = () => {
     setDroppedMetaFile(null);
-    setMetaWasm(null);
   };
 
   const uploadMetaFile = () => {
@@ -65,15 +51,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
   };
 
   const handleFilesUpload = useCallback(
-    async (file) => {
-      try {
-        const fileBuffer: any = await readFileAsync(file);
-        const meta = await getWasmMetadata(fileBuffer);
-        setMetaWasm(meta);
-      } catch (err) {
-        // TODO ERROR STATUS ACTION
-        console.log(err);
-      }
+    (file) => {
       setDroppedMetaFile(file);
     },
     [setDroppedMetaFile]
@@ -101,36 +79,17 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
     }
   };
 
-  const prettyPrint = () => {
-      const ugly = (document.getElementById("types") as HTMLInputElement).value;
-      const obj = JSON.parse(ugly);
-      const pretty = JSON.stringify(obj, undefined, 4);
-      (document.getElementById("types") as HTMLInputElement).innerText = pretty
-  };
-
   return (
     <div className="program-details">
       <h3 className="program-details__header">UPLOAD NEW PROGRAM</h3>
       <Formik
-        initialValues={program}
+        initialValues={mapInitialValues()}
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: UploadProgramModel) => {
-          if (isMetaByFile) {
-            dispatch(programUploadStartAction());
-            socketService.uploadProgram(droppedFile, { ...values, ...metaWasm });
-            setDroppedFile(null);
-          } else {
-            try {
-              const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
-              dispatch(programUploadStartAction());
-              socketService.uploadProgram(droppedFile, { ...values, types });
-              setDroppedFile(null);
-            } catch (err) {
-              setWrongJSON(true);
-              console.log(err);
-            }
-          }
+          dispatch(programUploadStartAction());
+          socketService.uploadProgram(droppedFile, { ...values, meta: droppedMetaFile });
+          setDroppedFile(null);
         }}
         onReset={() => {
           setDroppedFile(null);
@@ -206,7 +165,7 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                     <Field
                       id="value"
                       name="value"
-                      placeholder="0"
+                      placeholder="20000"
                       className="program-details__init-value program-details__value"
                       type="number"
                     />
@@ -221,14 +180,6 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                     <button
                       type="button"
                       className="program-details--switch-btns__btn"
-                      onClick={() => setIsMetaByFile(true)}
-                    >
-                      <img src={isMetaByFile ? selected : deselected} alt="radio" />
-                      Upload file
-                    </button>
-                    <button
-                      type="button"
-                      className="program-details--switch-btns__btn"
                       onClick={() => {
                         setIsMetaByFile(false);
                         setDroppedMetaFile(null);
@@ -237,12 +188,19 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                       <img src={isMetaByFile ? deselected : selected} alt="radio" />
                       Manual input
                     </button>
+                    <button
+                      type="button"
+                      className="program-details--switch-btns__btn"
+                      onClick={() => setIsMetaByFile(true)}
+                    >
+                      <img src={isMetaByFile ? selected : deselected} alt="radio" />
+                      Upload file
+                    </button>
                   </div>
                 </div>
               </div>
               <div className="program-details__wrapper-column2">
                 {(isMetaByFile && (
-                  <>
                   <div className="program-details__info">
                     <label className="program-details__field" htmlFor="meta">
                       Metadata file:{' '}
@@ -269,115 +227,82 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                       </button>
                     )}
                   </div>
-                  {metaWasm && (
-                    <div className="program-details__info">
-                      <Field
-                          as="textarea"
-                          id="types"
-                          name="types"
-                          placeholder=""
-                          className="program-details__meta program-details__value"
-                          value={JSON.stringify(metaWasm, undefined, 4)}
-                        />
-                    </div>
-                  )}
-                  </>
                 )) || (
                   <>
                     <div className="program-details__info">
-                      <label htmlFor="init_input" className="program-details__field-limit program-details__field">
+                      <label htmlFor="initType" className="program-details__field-limit program-details__field">
                         Initial type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="init_input"
-                          name="init_input"
+                          id="initType"
+                          name="initType"
                           placeholder=""
                           className="program-details__limit-value program-details__value"
                           type="text"
                         />
-                        {errors.init_input && touched.init_input ? (
-                          <div className="program-details__error">{errors.init_input}</div>
+                        {errors.initType && touched.initType ? (
+                          <div className="program-details__error">{errors.initType}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label htmlFor="input" className="program-details__field-limit program-details__field">
+                      <label htmlFor="incomingType" className="program-details__field-limit program-details__field">
                         Incoming type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="input"
-                          name="input"
+                          id="incomingType"
+                          name="incomingType"
                           placeholder=""
                           className="program-details__limit-value program-details__value"
                           type="text"
                         />
-                        {errors.input && touched.input ? (
-                          <div className="program-details__error">{errors.input}</div>
+                        {errors.incomingType && touched.incomingType ? (
+                          <div className="program-details__error">{errors.incomingType}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label htmlFor="output" className="program-details__field-init-value program-details__field">
+                      <label
+                        htmlFor="expectedType"
+                        className="program-details__field-init-value program-details__field"
+                      >
                         Expected type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="output"
-                          name="output"
+                          id="expectedType"
+                          name="expectedType"
                           placeholder=""
                           className="program-details__init-value program-details__value"
                           type="text"
                         />
-                        {errors.output && touched.output ? (
-                          <div className="program-details__error">{errors.output}</div>
+                        {errors.expectedType && touched.expectedType ? (
+                          <div className="program-details__error">{errors.expectedType}</div>
                         ) : null}
                       </div>
                     </div>
                     <div className="program-details__info">
-                      <label htmlFor="init_output" className="program-details__field-init-value program-details__field">
+                      <label htmlFor="initOutType" className="program-details__field-init-value program-details__field">
                         Initial output type:
                       </label>
                       <div className="program-details__field-wrapper">
                         <Field
-                          id="init_output"
-                          name="init_output"
+                          id="initOutType"
+                          name="initOutType"
                           placeholder=""
                           className="program-details__init-value program-details__value"
                           type="text"
                         />
-                        {errors.init_output && touched.init_output ? (
-                          <div className="program-details__error">{errors.init_output}</div>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div className="program-details__info">
-                      <label htmlFor="types" className="program-details__field-init-value program-details__field">
-                        Types:
-                      </label>
-                      <div className="program-details__field-wrapper">
-                        <Field
-                          as="textarea"
-                          id="types"
-                          name="types"
-                          placeholder="{&#10;...&#10;}"
-                          className="program-details__types program-details__value"
-                        />
-                        <p>
-                          <a href="#" className="program-details__link" onClick={prettyPrint}>
-                            Prettify
-                          </a>
-                        </p>
-                        {errors.types && touched.types ? (
-                          <div className="program-details__error">{errors.types}</div>
+                        {errors.initOutType && touched.initOutType ? (
+                          <div className="program-details__error">{errors.initOutType}</div>
                         ) : null}
                       </div>
                     </div>
                   </>
                 )}
               </div>
-
               <div className="program-details__buttons">
                 <button type="submit" className="program-details__upload" aria-label="uploadProgramm">
                   Upload program
@@ -401,17 +326,6 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
           isError
         />
       )}
-      {wrongJSON && (
-        <StatusPanel
-          onClose={() => {
-            setWrongJSON(false);
-          }}
-          statusPanelText="Invalid JSON format"
-          isError
-        />
-      )}
     </div>
   );
 };
-
-export default ProgramDetails;

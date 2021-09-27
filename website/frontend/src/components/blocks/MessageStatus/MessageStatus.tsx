@@ -1,22 +1,15 @@
-import React from 'react';
-
-import './MessageStatus.scss'
+import React, { VFC } from 'react';
+import './MessageStatus.scss';
 
 type Props = {
-    data: string;
-}
+  data: string;
+};
 
-const MessageStatus = ({ data }: Props) => (
-    <div className="message-status">
-        <div className="message-status--info">
-            <div className="message-status--info__title">
-                Response:
-            </div>
-            <span className="message-status--info__text">
-                {data}
-            </span>
-        </div>
+export const MessageStatus: VFC<Props> = ({ data }) => (
+  <div className="message-status">
+    <div className="message-status--info">
+      <div className="message-status--info__title">Response:</div>
+      <span className="message-status--info__text">{data}</span>
     </div>
-)
-
-export { MessageStatus };
+  </div>
+);

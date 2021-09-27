@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, VFC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
-
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
-
-import { CodeIcon, NotificationIcon, LogoIcon, LogoutIcon } from 'Icons';
-
-import NotificationsIcon from 'images/notifications.svg';
-import CodeIllustration from 'images/code.svg';
-import { Modal } from '../Modal';
+import { CodeIcon, LogoIcon, LogoutIcon, NotificationIcon } from 'assets/Icons';
+import NotificationsIcon from 'assets/images/notifications.svg';
+import CodeIllustration from 'assets/images/code.svg';import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
 import { Wallet } from '../Wallet';
 
 import './Header.scss';
 
-const Header = () => {
+export const Header: VFC = () => {
   const location = useLocation();
   const showUser =
     [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.notifications].indexOf(location.pathname) > -1;
@@ -49,7 +45,7 @@ const Header = () => {
   };
 
   const toggleModal = () => {
-    setIsOpen(!isOpen); 
+    setIsOpen(!isOpen);
   };
 
   useEffect(() => {
@@ -57,7 +53,7 @@ const Header = () => {
 
     return () => {
       document.body.style.overflow = 'unset';
-    } 
+    }
   }, [isOpen])
 
   useEffect(() => {
@@ -156,5 +152,3 @@ const Header = () => {
     </header>
   );
 };
-
-export default Header;

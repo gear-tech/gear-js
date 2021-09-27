@@ -29,7 +29,6 @@ export function readFileAsync(file: File){
   });
 };
 
-
 export const toShortAddress = (_address: string) => {
   const address = (_address || '').toString();
 
