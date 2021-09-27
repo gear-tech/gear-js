@@ -12,6 +12,7 @@ import NotificationsIcon from 'images/notifications.svg';
 import CodeIllustration from 'images/code.svg';
 import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
+import { Wallet } from '../Wallet';
 
 import './Header.scss';
 
@@ -30,6 +31,7 @@ const Header = () => {
 
   const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isKey, setIsKey] = useState(false);
 
   let userInfo = '';
   const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
@@ -58,6 +60,13 @@ const Header = () => {
     } 
   }, [isOpen])
 
+  useEffect(() => {
+    if (localStorage.getItem('gear_mnemonic') !== null) {
+      console.log('account exists');
+      setIsKey(true);
+    }       
+  }, [])
+
   return (
     <header className="header">
       <div className="header__logo">
@@ -77,9 +86,11 @@ const Header = () => {
             )) ||
               null}
           </Link>
-          <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
-            <span>Add account</span>
-          </Link>
+          {(isKey && <Wallet />) || (
+            <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
+              <span>Add account</span>
+            </Link>
+          )}
           <div className="user-block--wrapper">
             <img src={user?.photoUrl} alt="avatar" />
             <span className="user-block__name">{userInfo}</span>
