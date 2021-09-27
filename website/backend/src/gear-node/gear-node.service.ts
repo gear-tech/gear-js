@@ -102,7 +102,13 @@ export class GearNodeService {
 
     const binary = this.programService.parseWASM(data.file);
     const keyring = GearKeyring.fromJson(data.keyPairJson);
-
+    try {
+      if (data.meta instanceof Buffer) {
+        data.meta = await getWasmMetadata(data.meta);
+      }
+    } catch (error) {
+      logger.error(error);
+    }
     const programData = {
       user: user,
       name: data.filename,
@@ -226,7 +232,7 @@ export class GearNodeService {
     callback?: RpcCallback,
   ): Promise<void> {
     if (
-      options.from.address === this.rootKeyring.address &&
+      options.to !== this.rootKeyring.address &&
       (await this.api.balance.findOut(this.rootKeyring.address)).toNumber() <
         options.value
     ) {
@@ -235,6 +241,7 @@ export class GearNodeService {
     if (!options.from) {
       options.from = this.rootKeyring;
     }
+
     try {
       this.api.balance
         .transferBalance(options.from, options.to, options.value, () => {})
@@ -242,13 +249,19 @@ export class GearNodeService {
           callback(undefined, 'Transfer balance succeed');
         });
     } catch (error) {
+      logger.error(error.message);
       throw new GearNodeError(error.message);
     }
   }
 
   async getBalance(publicKey: string): Promise<{ freeBalance: string }> {
-    const balance = await this.api.balance.findOut(publicKey);
-    return { freeBalance: balance.toHuman() };
+    try {
+      const balance = await this.api.balance.findOut(publicKey);
+      return { freeBalance: balance.toHuman() };
+    } catch (error) {
+      logger.error(error);
+      throw new GearNodeError(error.message);
+    }
   }
 
   async getGasSpent(hash: string, payload: string | JSON): Promise<number> {
