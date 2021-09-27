@@ -34,15 +34,20 @@ export class GearNodeEvents {
         });
       });
       api.gearEvents.subsribeProgramEvents(async ({ method, data }) => {
-        const programId = data[0].toHuman()['program_id'];
-        const program = await this.programService.findProgram(programId);
-        this.events.next({
-          type: 'program',
-          status: method,
-          destination: program ? program.user.publicKey : undefined,
-          hash: programId,
-          programName: program ? program.name : undefined,
-          date: new Date(),
+        data.forEach(async (part) => {
+          const eventData = part.toHuman();
+          const program = await this.programService.findProgram(
+            eventData['programId'],
+          );
+          this.events.next({
+            type: 'program',
+            status: method,
+            destination: program ? program.user.publicKeyRaw : undefined,
+            hash: eventData['programId'],
+            messageId: eventData['messageId'],
+            programName: program ? program.name : undefined,
+            date: new Date(),
+          });
         });
       });
     } catch (error) {
