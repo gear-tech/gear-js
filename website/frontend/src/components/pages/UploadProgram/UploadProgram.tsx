@@ -6,16 +6,16 @@ import { SocketService } from 'services/SocketService';
 import { RecentNotifications } from 'components/blocks/RecentNotifications/RecentNotifications';
 import { BlockListAllUploaded } from 'components/blocks/BlocksList/BlockListAllUploaded';
 import { ProgramSwitch } from '../../blocks/ProgramSwitch/ProgramSwitch';
-import { UploadProgram } from '../../blocks/UploadProgram/UploadProgram';
+import { UploadProgramForm } from '../../blocks/UploadProgramForm/UploadProgramForm';
 import { BlocksList } from '../../blocks/BlocksList/BlocksList';
 import { BlocksListUploaded } from '../../blocks/BlocksList/BlocksListUploaded';
-import './UploadProgramPage.scss';
+import './UploadProgram.scss';
 
 type Props = {
   socketService: SocketService;
 };
 
-export const UploadProgramPage: VFC<Props> = ({ socketService }) => {
+export const UploadProgram: VFC<Props> = ({ socketService }) => {
   const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);
   const isAllProgramsPage = useRouteMatch(routes.allPrograms);
 
@@ -32,7 +32,7 @@ export const UploadProgramPage: VFC<Props> = ({ socketService }) => {
       <ProgramSwitch socketService={socketService} pageType={currentPage} />
       {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
         <>
-          <UploadProgram socketService={socketService} />
+          <UploadProgramForm socketService={socketService} />
           <BlocksList />
         </>
       )}
