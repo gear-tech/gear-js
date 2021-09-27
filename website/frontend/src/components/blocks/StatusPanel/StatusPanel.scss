@@ -16,8 +16,8 @@
   &.error {
     background-color: $errorColor;
     .status-panel-block__msg {
-      color: $textColor!important;
-    }    
+      color: $textColor !important;
+    }
   }
 }
 
@@ -25,11 +25,10 @@
   color: $bkgInputColor;
 }
 
-
 .status-panel-block__close-btn {
-  background: url('../../../images/close-success.svg');
+  background: url('../../../assets/images/close-success.svg');
   &.error {
-    background: url('../../../images/close.svg');
+    background: url('../../../assets/images/close.svg');
   }
   height: 14px;
   width: 14px;
