@@ -42,28 +42,27 @@ export class GearNodeService {
     private readonly messageService: MessagesService,
     private readonly subscription: GearNodeEvents,
   ) {
-    GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then((api) => {
-      this.api = api;
-      this.updateWebsiteAccountBalance();
-      this.subscription.subscribeEvents(api);
-    });
+    GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then(
+      async (api) => {
+        this.api = api;
+        this.updateWebsiteAccountBalance();
+        this.subscription.subscribeEvents(api);
+        const accountSeed = process.env.ACCOUNT_SEED;
+        this.rootKeyring = accountSeed
+          ? await GearKeyring.fromSeed(
+              process.env.ACCOUNT_SEED,
+              'websiteAccount',
+            )
+          : (await GearKeyring.create('websiteAccount')).keyring;
+      },
+    );
   }
 
   async updateWebsiteAccountBalance() {
-    const accountSeed = process.env.ACCOUNT_SEED;
     const sudoSeed = process.env.SUDO_SEED;
     const sudoKeyring = parseInt(process.env.DEBUG)
       ? GearKeyring.fromSuri('//Alice', 'Alice default')
       : await GearKeyring.fromSeed('websiteAccount', sudoSeed);
-    if (!accountSeed) {
-      const { keyring } = await GearKeyring.create('websiteAccount');
-      this.rootKeyring = keyring;
-    } else {
-      this.rootKeyring = await GearKeyring.fromSeed(
-        accountSeed,
-        'websiteAccount',
-      );
-    }
 
     const currentBalance: Balance = await this.api.balance.findOut(
       this.rootKeyring.address,
@@ -228,7 +227,7 @@ export class GearNodeService {
     callback?: RpcCallback,
   ): Promise<void> {
     if (
-      options.to !== this.rootKeyring.address &&
+      options.from.address === this.rootKeyring.address &&
       (await this.api.balance.findOut(this.rootKeyring.address)).toNumber() <
         options.value
     ) {
@@ -239,7 +238,7 @@ export class GearNodeService {
     }
     try {
       this.api.balance
-        .transferBalance(options.from, options.to, 100_000_000, () => {})
+        .transferBalance(options.from, options.to, options.value, () => {})
         .then(() => {
           callback(undefined, 'Transfer balance succeed');
         });
