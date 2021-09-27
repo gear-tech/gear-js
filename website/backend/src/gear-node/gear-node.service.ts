@@ -21,7 +21,6 @@ import {
 import { sendProgram } from './program.gear';
 import { sendMessage } from './message.gear';
 import { GearNodeEvents } from './events';
-import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LogMessage } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';

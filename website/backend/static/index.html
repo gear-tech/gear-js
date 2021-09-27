@@ -23,7 +23,9 @@
         <button @click.prevent="getTotalIssuance()">Total Issuance</button>
         <b><span>{{totalIssuance}} </span></b>
       </p>
-
+      <br>
+      KeyPair
+      <textarea type='text' name="keypair" cols="30" rows="10" ref="keypair" v-on:change="keypairChange()"></textarea>
       <p>
         <button @click.prevent="balanceTransfer()">Update balance</button>
       </p>
@@ -112,12 +114,6 @@
     </section>
   </main>
   <script>
-    const keyPairJson = {
-      encoded: 'MFMCAQEwBQYDK2VwBCIEIJj6p0rPLBwB+eQRmBm/w4qKBIU3djHk01e0nhSffJlgB1Aku48D2PFZRcc7mZ3T5BCGW27qp/TWZTOJPR9wjkehIwMhAI5mY4073NRta9uxFc4bcaly/QXjrEMfpIJICVLhNaVd',
-      encoding: { content: ['pkcs8', 'sr25519'], type: ['none'], version: '3' },
-      address: '5FHR5Ac35FSwAjpWMtsnPFsnxaWoEPs343kbqcAAnu8fNeQk',
-      meta: { name: undefined }
-    }
     Vue.component('alerts-component', VueSimpleNotify.VueSimpleNotify);
     var app = new Vue({
       el: '#v-app',
@@ -128,6 +124,7 @@
         token: '',
         totalIssuance: '',
         socket: null,
+        keyPairJson: ''
       },
       methods: {
         connect() {
@@ -142,6 +139,9 @@
         },
         jwtTokenChange() {
           this.token = this.$refs.token.value;
+        },
+        keypairChange() {
+          this.keyPairJson = this.$refs.keypair.value
         },
         subscribeNewBlocks() {
           this.socket.emit('message', {
@@ -204,7 +204,7 @@
               gasLimit: this.$refs.gasLimit.value,
               value: this.$refs.value.value,
               initPayload: this.$refs.payload.value,
-              keyPairJson: JSON.stringify(keyPairJson)
+              keyPairJson: JSON.stringify(this.keyPairJson)
             },
           });
         },
@@ -218,7 +218,7 @@
               payload: this.$refs.messagePayload.value,
               gasLimit: this.$refs.messageGasLimit.value,
               value: this.$refs.messageValue.value,
-              keyPairJson: keyPairJson,
+              keyPairJson: this.keyPairJson,
             },
           });
         },
