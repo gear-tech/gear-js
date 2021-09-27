@@ -28,3 +28,12 @@ export function readFileAsync(file: File){
     reader.readAsArrayBuffer(file);
   });
 };
+
+
+export const toShortAddress = (_address: string) => {
+  const address = (_address || '').toString();
+
+  return (address.length > 13)
+    ? `${address.slice(0, 6)}…${address.slice(-6)}`
+    : address;
+}
