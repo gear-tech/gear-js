@@ -8,7 +8,6 @@ import { Metadata } from '@gear-js/api/types';
 import { isJsonObject } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { Balance } from '@polkadot/types/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -45,7 +44,6 @@ export class GearNodeService {
     GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then(
       async (api) => {
         this.api = api;
-        this.updateWebsiteAccountBalance();
         this.subscription.subscribeEvents(api);
         const accountSeed = process.env.ACCOUNT_SEED;
         this.rootKeyring = accountSeed
@@ -54,6 +52,7 @@ export class GearNodeService {
               'websiteAccount',
             )
           : (await GearKeyring.create('websiteAccount')).keyring;
+        this.updateWebsiteAccountBalance();
       },
     );
   }
@@ -64,7 +63,7 @@ export class GearNodeService {
       ? GearKeyring.fromSuri('//Alice', 'Alice default')
       : await GearKeyring.fromSeed('websiteAccount', sudoSeed);
 
-    const currentBalance: Balance = await this.api.balance.findOut(
+    const currentBalance = await this.api.balance.findOut(
       this.rootKeyring.address,
     );
     if (currentBalance.toNumber() < +process.env.SITE_ACCOUNT_BALANCE) {
