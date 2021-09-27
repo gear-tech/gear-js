@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { CloseIcon } from 'Icons';
 import './Modal.scss';
+import { CloseIcon } from '../../../assets/Icons';
 
 type Props = {
   content: any;
