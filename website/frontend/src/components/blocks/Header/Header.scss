@@ -66,7 +66,8 @@
 }
 
 .user-block__programs,
-.user-block__notifications {
+.user-block__notifications,
+.user-block__account {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -81,7 +82,8 @@
 }
 
 .user-block__programs span,
-.user-block__notifications span {
+.user-block__notifications span,
+.user-block__account span {
   font-weight: bold;
   font-size: 16px;
   line-height: 24px;
@@ -138,7 +140,8 @@
   }
 
   .user-block__programs,
-  .user-block__notifications {
+  .user-block__notifications,
+  .user-block__account {
     display: none;
   }
 

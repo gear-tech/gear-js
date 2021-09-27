@@ -1,4 +1,4 @@
-import React, { useState, VFC } from 'react';
+import React, { useState, useEffect, VFC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
@@ -6,7 +6,8 @@ import { RootState } from 'store/reducers';
 import { routes } from 'routes';
 import { CodeIcon, LogoIcon, LogoutIcon, NotificationIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
-import CodeIllustration from 'assets/images/code.svg';
+import CodeIllustration from 'assets/images/code.svg';import { Modal } from '../Modal';
+import { Keyring } from '../Keyring';
 import './Header.scss';
 
 export const Header: VFC = () => {
@@ -23,6 +24,7 @@ export const Header: VFC = () => {
   const { countUnread } = useSelector((state: RootState) => state.notifications);
 
   const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   let userInfo = '';
   const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
@@ -38,6 +40,18 @@ export const Header: VFC = () => {
   const handleMenuClick = () => {
     setIsMobileMenuOpened(!isMobileMenuOpened);
   };
+
+  const toggleModal = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    if (isOpen) document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen])
 
   return (
     <header className="header">
@@ -57,6 +71,9 @@ export const Header: VFC = () => {
               <div className="notifications-count">{headerUnreadNotificationsCount}</div>
             )) ||
               null}
+          </Link>
+          <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
+            <span>Add account</span>
           </Link>
           <div className="user-block--wrapper">
             <img src={user?.photoUrl} alt="avatar" />
@@ -118,6 +135,9 @@ export const Header: VFC = () => {
           <span />
         </button>
       </div>
+      {isOpen && (
+        <Modal title="Create new account" content={<Keyring handleClose={toggleModal} />} handleClose={toggleModal} />
+      )}
     </header>
   );
 };
