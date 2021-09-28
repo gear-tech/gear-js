@@ -54,7 +54,7 @@
 .tree-error {
   position: absolute;
   background-color: #ff6d6d;
-  padding: .5rem;
+  padding: 0.5rem;
   top: 0;
   left: 0;
   width: 100%;
@@ -64,7 +64,7 @@
 .tree-actions__btn {
   display: flex;
   align-items: center;
-  padding: .15rem;
+  padding: 0.15rem;
   border: 0;
   outline: none;
   color: #ffffff;
@@ -82,8 +82,8 @@
 .tree-input {
   background-color: transparent;
   border: #ffffff 1px solid;
-  padding: 0 .25rem;
+  padding: 0 0.25rem;
   outline: none;
-  color: #FFFFFF;
+  color: #ffffff;
   flex: 1;
 }

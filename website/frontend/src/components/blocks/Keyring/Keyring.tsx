@@ -3,8 +3,8 @@ import { GearKeyring } from '@gear-js/api';
 import Identicon from '@polkadot/react-identicon';
 
 import './Keyring.scss';
-import { ReadNotificationsIcon } from 'Icons';
-import StatusPanel from 'components/blocks/StatusPanel';
+import { ReadNotificationsIcon } from '../../../assets/Icons';
+import { StatusPanel } from '../StatusPanel/StatusPanel';
 
 type Props = {
   handleClose: () => void;

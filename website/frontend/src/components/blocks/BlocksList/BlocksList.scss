@@ -96,10 +96,10 @@
 }
 
 .programs-list--btns button:hover {
-  background: rgba(196, 196, 196, .1);
+  background: rgba(196, 196, 196, 0.1);
 }
 
-.programs-list__message-btn img{
+.programs-list__message-btn img {
   position: absolute;
   top: 9px;
   left: 8px;
@@ -138,7 +138,7 @@
   flex-direction: row;
   justify-content: space-between;
   padding: 26px 0;
-  border-top: 1px solid #3E3E3E;
+  border-top: 1px solid #3e3e3e;
 }
 
 .all-programs--item__hash {
@@ -160,7 +160,7 @@
     margin-bottom: 16px;
   }
   .block-list__button {
-      width: 100%;
+    width: 100%;
   }
   .program-wrapper {
     flex-direction: column;
@@ -171,7 +171,7 @@
     width: 100%;
     padding-bottom: 12px;
     margin-bottom: 12px;
-    border-bottom: 1px solid #3E3E3E;
+    border-bottom: 1px solid #3e3e3e;
   }
   .program-wrapper__name span {
     margin-left: 0;

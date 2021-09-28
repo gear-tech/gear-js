@@ -1,46 +1,46 @@
 .pagination {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .pagination--box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    outline: none;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 20px;
-    color: #F2F2F2;
-    background: #232323;
-    border: 1px solid #555555;
-    box-sizing: border-box;
-    border-radius: 4px;
-    width: 32px;
-    height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+  color: #f2f2f2;
+  background: #232323;
+  border: 1px solid #555555;
+  box-sizing: border-box;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
 }
 
 .pagination__total {
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 130%;
-    text-align: right;
-    color: #858585;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 130%;
+  text-align: right;
+  color: #858585;
 }
 
 .pagination--box.selected {
-    border: none;
-    background: #000000;
+  border: none;
+  background: #000000;
 }
 
 .pagination--box.disabled {
-    opacity: 0.2;
-    cursor: default;
+  opacity: 0.2;
+  cursor: default;
 }
 
 .pagination--box:first-child svg {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }

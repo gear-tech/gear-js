@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, VFC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
-
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
-
-import { CodeIcon, NotificationIcon, LogoIcon, LogoutIcon } from 'Icons';
-
-import NotificationsIcon from 'images/notifications.svg';
-import CodeIllustration from 'images/code.svg';
-import { Modal } from '../Modal';
+import { CodeIcon, LogoIcon, LogoutIcon, NotificationIcon } from 'assets/Icons';
+import NotificationsIcon from 'assets/images/notifications.svg';
+import CodeIllustration from 'assets/images/code.svg';import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
+import { Wallet } from '../Wallet';
 
 import './Header.scss';
 
-const Header = () => {
+export const Header: VFC = () => {
   const location = useLocation();
   const showUser =
     [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.notifications].indexOf(location.pathname) > -1;
@@ -30,6 +27,7 @@ const Header = () => {
 
   const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isKey, setIsKey] = useState(false);
 
   let userInfo = '';
   const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
@@ -47,7 +45,7 @@ const Header = () => {
   };
 
   const toggleModal = () => {
-    setIsOpen(!isOpen); 
+    setIsOpen(!isOpen);
   };
 
   useEffect(() => {
@@ -55,8 +53,14 @@ const Header = () => {
 
     return () => {
       document.body.style.overflow = 'unset';
-    } 
+    }
   }, [isOpen])
+
+  useEffect(() => {
+    if (localStorage.getItem('gear_mnemonic')) {
+      setIsKey(true);
+    }       
+  }, [])
 
   return (
     <header className="header">
@@ -77,9 +81,11 @@ const Header = () => {
             )) ||
               null}
           </Link>
-          <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
-            <span>Add account</span>
-          </Link>
+          {(isKey && <Wallet />) || (
+            <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
+              <span>Add account</span>
+            </Link>
+          )}
           <div className="user-block--wrapper">
             <img src={user?.photoUrl} alt="avatar" />
             <span className="user-block__name">{userInfo}</span>
@@ -146,5 +152,3 @@ const Header = () => {
     </header>
   );
 };
-
-export default Header;

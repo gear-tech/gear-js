@@ -1,19 +1,19 @@
 import io from 'socket.io-client';
-import { 
-  GEAR_LOCAL_WS_URI, 
+import {
+  GEAR_LOCAL_WS_URI,
   GEAR_MNEMONIC_KEY,
-  GEAR_STORAGE_KEY, 
-  JSONRPC_VERSION, 
-  PROGRAM_ERRRORS, 
-  PROGRAM_UPLOAD_STATUSES, 
-  RPC_METHODS, 
-  SOCKET_RESULT_STATUSES, 
-  EVENT_TYPES, 
+  GEAR_STORAGE_KEY,
+  JSONRPC_VERSION,
+  PROGRAM_ERRRORS,
+  PROGRAM_UPLOAD_STATUSES,
+  RPC_METHODS,
+  SOCKET_RESULT_STATUSES,
+  EVENT_TYPES,
   GEAR_BALANCE_TRANSFER_VALUE} from 'consts';
 import { BalanceModel, MessageModel, MetaModel, UploadProgramModel } from 'types/program';
-import { 
-  fetchBlockAction, 
-  fetchTotalIssuanceAction, 
+import {
+  fetchBlockAction,
+  fetchTotalIssuanceAction,
   programStatusAction,
   handleProgramError,
   handleProgramSuccess,
@@ -33,7 +33,7 @@ export class SocketService implements ISocketService {
   private readonly socket: any;
 
   private readonly key: string | null;
-  
+
   constructor(dispatch: any) {
     this.key = localStorage.getItem(GEAR_STORAGE_KEY);
     this.socket = io(GEAR_LOCAL_WS_URI, {
@@ -57,8 +57,8 @@ export class SocketService implements ISocketService {
             dispatch(handleProgramSuccess());
           }
         } else if (Object.prototype.hasOwnProperty.call(data.result, "type")) {
-          if (data.result.type === EVENT_TYPES.PROGRAM_INITIALIZED || 
-            data.result.type === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE || 
+          if (data.result.type === EVENT_TYPES.PROGRAM_INITIALIZED ||
+            data.result.type === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE ||
             data.result.type === EVENT_TYPES.LOG) {
             dispatch(fetchRecentNotificationSuccessAction(data.result))
             dispatch(getUnreadNotificationsCount());
@@ -102,7 +102,7 @@ export class SocketService implements ISocketService {
       output,
       types
     }
-    
+
     return this.socket.emit('message', {
       jsonrpc: JSONRPC_VERSION,
       id: generatedId,
@@ -194,7 +194,7 @@ export class SocketService implements ISocketService {
       id: generatedId,
       method: RPC_METHODS.GET_GAS_SPENT,
       params: {
-        destination, 
+        destination,
         payload
       }
     })
