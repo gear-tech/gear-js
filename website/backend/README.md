@@ -21,7 +21,7 @@ This api follows the json-rpc 2.0 specification. More information available at h
 - [login.github](#login.github)
 - [login.telegram](#login.telegram)
 - [user.profile](#user.profile)
-- [user.generateKeypair](#user.generateKeypair)
+- [user.addPublicKey](#user.addPublicKey)
 - [user.getBalance](#user.getBalance)
 - [program.data](#program.data)
 - [program.allUser](#program.allUser)
@@ -209,17 +209,26 @@ Getting user profile
 }
 ```
 
-<a name="user.generateKeypair"></a>
+<a name="user.addPublicKey"></a>
 
-## user.generateKeypair
+## user.addPublicKey
 
-Generate keypair for signing trasactions
+Add user public key
+
+### Parameters
+
+| Name                 | Type   | Constraints | Description    |
+| -------------------- | ------ | ----------- | -------------- |
+| params               | object |             |                |
+| params?.publicKey    | string |             | Public Key     |
+| params?.publicKeyRaw | string |             | Raw Public Key |
 
 ### Result
 
-| Name   | Type   | Constraints | Description                |
-| ------ | ------ | ----------- | -------------------------- |
-| result | object |             | JSON encdoded keypair data |
+| Name              | Type   | Constraints | Description |
+| ----------------- | ------ | ----------- | ----------- |
+| result            | object |             | Public Key  |
+| result?.publicKey | string |             | Public Key  |
 
 ### Errors
 
@@ -235,7 +244,11 @@ Generate keypair for signing trasactions
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "user.generateKeypair"
+  "method": "user.addPublicKey",
+  "params": {
+    "publicKey": "5FHR5Ac45FSwAjpWMtsnPFsnxaWoEPs343kbqcAAnu8fNeQk",
+    "publicKeyRaw": "0x8e66638d3bdcd46d3bdbb115ce1b71a972fd05e3ac431fa482480952e135a55d"
+  }
 }
 ```
 
@@ -245,7 +258,9 @@ Generate keypair for signing trasactions
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "result": {}
+  "result": {
+    "publicKey": "5FHR5Ac45FSwAjpWMtsnPFsnxaWoEPs343kbqcAAnu8fNeQk"
+  }
 }
 ```
 
@@ -703,18 +718,21 @@ Upload new program
 
 ### Parameters
 
-| Name                 | Type    | Constraints | Description                      |
-| -------------------- | ------- | ----------- | -------------------------------- |
-| params               | object  |             |                                  |
-| params.file          |         |             | File buffer                      |
-| params.filename      | string  |             | File name                        |
-| params.gasLimit      | integer |             | Gas limit                        |
-| params.value         | integer |             | Init value                       |
-| params?.initPayload  | string  |             | Init payload (hex)               |
-| params?.initType     | string  |             | Type of initial payload          |
-| params?.incomingType | string  |             | Type of incoming message         |
-| params?.expectedType | string  |             | Expected type of reponse message |
-| params?.keyPairJson  | string  |             | JSON Encoded KeyPair data        |
+| Name                     | Type    | Constraints | Description               |
+| ------------------------ | ------- | ----------- | ------------------------- |
+| params                   | object  |             |                           |
+| params.file              |         |             | File buffer               |
+| params.filename          | string  |             | File name                 |
+| params.gasLimit          | integer |             | Gas limit                 |
+| params.value             | integer |             | Init value                |
+| params.initPayload       | string  |             | Init payload (hex)        |
+| params.meta              | object  |             | Program types             |
+| params.meta?.init_input  |         |             |                           |
+| params.meta?.init_output |         |             |                           |
+| params.meta?.input       |         |             |                           |
+| params.meta?.output      |         |             |                           |
+| params.meta?.types       |         |             |                           |
+| params.keyPairJson       | string  |             | JSON Encoded KeyPair data |
 
 ### Result
 
@@ -748,9 +766,18 @@ Upload new program
     "gasLimit": 2000,
     "value": 2000,
     "initPayload": "0x1234",
-    "initType": "utf8",
-    "incomingType": "utf8",
-    "expectedType": "utf8"
+    "meta": {
+      "init_input": "String",
+      "init_output": "Vec<u8>",
+      "input": "Person",
+      "output": "Result<u8, u8>",
+      "types": {
+        "Person": {
+          "name": "String",
+          "surname": "String"
+        }
+      }
+    }
   }
 }
 ```

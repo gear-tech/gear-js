@@ -38,7 +38,7 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
       if (unsub.unsub) {
         this.unsubs.forEach((subs) => {
           if (subs.name === unsub.name) {
-            subs.complete();
+            subs();
             return null;
           }
         });
@@ -47,7 +47,7 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
         const unsubIndex = this.unsubs.findIndex(
           (element) => element.name === unsub.name,
         );
-        this.unsubs[unsubIndex].unsub.complete();
+        this.unsubs[unsubIndex].unsub();
         this.unsubs.splice(unsubIndex, 1);
       }
     }
@@ -57,7 +57,7 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
   unsubscribe() {
     this.unsubs.forEach((element) => {
       try {
-        element.unsub.unsubscribe();
+        element.unsub();
       } catch (error) {}
     });
     this.unsubs = [];
