@@ -48,7 +48,7 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "nats": "^2.2.0",
-    "nestjs-telegraf": "git+https://github.com/bukhalo/nestjs-telegraf.git",
+    "nestjs-telegraf": "^2.3.0",
     "node-fetch": "^2.6.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
