@@ -76,8 +76,8 @@ export class GearProgram {
                 method,
                 status: status.type,
                 blockHash: blockHash,
-                programId: data[0].program_id.toHex(),
-                initMessageId: data[0].message_id.toHex()
+                programId: data[0].programId.toHuman(),
+                initMessageId: data[0].messageId.toHuman()
               });
             });
         });
