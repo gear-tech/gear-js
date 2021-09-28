@@ -4,18 +4,18 @@ import { SWITCH_PAGE_TYPES } from 'consts';
 import { routes } from 'routes';
 import { SocketService } from 'services/SocketService';
 import { RecentNotifications } from 'components/blocks/RecentNotifications/RecentNotifications';
-import { BlockListAllUploaded } from 'components/blocks/BlocksList/BlockListAllUploaded';
+import { All } from 'components/pages/Programs/children/All/All';
 import { ProgramSwitch } from '../../blocks/ProgramSwitch/ProgramSwitch';
-import { UploadProgramForm } from '../../blocks/UploadProgramForm/UploadProgramForm';
-import { BlocksList } from '../../blocks/BlocksList/BlocksList';
-import { BlocksListUploaded } from '../../blocks/BlocksList/BlocksListUploaded';
-import './UploadProgram.scss';
+import { Upload } from './children/Upload/Upload';
+import { BlocksList } from './children/BlocksList/BlocksList';
+import { Recent } from './children/Recent/Recent';
+import './Programs.scss';
 
 type Props = {
   socketService: SocketService;
 };
 
-export const UploadProgram: VFC<Props> = ({ socketService }) => {
+export const Programs: VFC<Props> = ({ socketService }) => {
   const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);
   const isAllProgramsPage = useRouteMatch(routes.allPrograms);
 
@@ -32,12 +32,12 @@ export const UploadProgram: VFC<Props> = ({ socketService }) => {
       <ProgramSwitch socketService={socketService} pageType={currentPage} />
       {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
         <>
-          <UploadProgramForm socketService={socketService} />
+          <Upload socketService={socketService} />
           <BlocksList />
         </>
       )}
-      {currentPage === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && <BlocksListUploaded socketService={socketService} />}
-      {currentPage === SWITCH_PAGE_TYPES.ALL_PROGRAMS && <BlockListAllUploaded socketService={socketService} />}
+      {currentPage === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && <Recent socketService={socketService} />}
+      {currentPage === SWITCH_PAGE_TYPES.ALL_PROGRAMS && <All socketService={socketService} />}
       <RecentNotifications socketService={socketService} />
     </div>
   );

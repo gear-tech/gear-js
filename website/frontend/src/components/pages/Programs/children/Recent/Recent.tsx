@@ -11,13 +11,13 @@ import { RootState } from 'store/reducers';
 
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 
-import { Message } from 'components/Message/Message';
+import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
 import { SocketService } from 'services/SocketService';
 
-import './BlocksList.scss';
-import { UserProgram } from './UserProgram';
+import styles from './Recent.module.scss'
+import { UserProgram } from '../UserProgram/UserProgram';
 
 type Props = {
   socketService: SocketService;
@@ -28,7 +28,7 @@ type ProgramMessageType = {
   programHash: string;
 };
 
-export const BlocksListUploaded: VFC<Props> = ({ socketService }) => {
+export const Recent: VFC<Props> = ({ socketService }) => {
   const dispatch = useDispatch();
 
   const { programs, programsCount } = useSelector((state: RootState) => state.programs);
@@ -94,26 +94,26 @@ export const BlocksListUploaded: VFC<Props> = ({ socketService }) => {
       />
     );
   }
-
   return (
-    <div className="block-list">
-      <div className="pagination-wrapper">
+    <div className={styles.blockList}>
+      <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
         <Pagination page={currentPage} count={programsCount || 0} onPageChange={onPageChange} />
       </div>
-      {(programs && programs.length && (
-        <div className="programs-list">
+
+      {(programs && programs.length > 0 && (
+        <div>
           {programs.map((program) => (
-            <UserProgram program={program} handleOpenForm={handleOpenForm} />
+            <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.hash} />
           ))}
         </div>
-      )) || <div className="no-message">There are no uploaded programs</div>}
-      {(programs && programs.length && (
-        <div className="pagination-bottom">
+      )) || <div className={styles.noMessage}>There are no uploaded programs</div>}
+
+      {programs && programs.length > 0 && (
+        <div className={styles.paginationBottom}>
           <Pagination page={currentPage} count={programsCount || 0} onPageChange={onPageChange} />
         </div>
-      )) ||
-        null}
+      )}
     </div>
   );
 };

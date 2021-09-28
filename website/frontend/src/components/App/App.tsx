@@ -7,7 +7,7 @@ import { SocketService } from 'services/SocketService';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { SignIn } from 'components/pages/SignIn/SignIn';
-import { UploadProgram } from 'components/pages/UploadProgram/UploadProgram';
+import { Programs } from 'components/pages/Programs/Programs';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
 import { Callback } from 'components/Callback/Callback';
@@ -86,7 +86,7 @@ const AppComponent: FC = () => {
           <Main>
             <Switch>
               <PrivateRoute exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
-                <UploadProgram socketService={socketServiceRef.current} />
+                <Programs socketService={socketServiceRef.current} />
               </PrivateRoute>
               <PrivateRoute path={routes.editor} exact>
                 <EditorPage />

@@ -7,6 +7,7 @@ import { fileNameHandler, formatDate } from 'helpers';
 import RefreshIllustration from 'assets/images/refresh.svg';
 import MessageIllustration from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
+import styles from './UserProgram.module.scss';
 
 type Props = {
   program: ProgramModel;
@@ -21,33 +22,28 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
   };
 
   return (
-    <div className="programs-list__item" key={program.hash}>
-      <span className="programs-list__number">{program.programNumber}</span>
-      <div className="program-wrapper">
-        <div className="program-wrapper__name">
-          <span className="programs-list__name">{program.name && fileNameHandler(program.name)}</span>
+    <div className={styles.programsListItem} key={program.hash}>
+      <span className={styles.programsListNumber}>{program.programNumber}</span>
+      <div className={styles.programWrapper}>
+        <div className={styles.programWrapperName}>
+          <span className={styles.programsListName}>{program.name && fileNameHandler(program.name)}</span>
         </div>
-        <div className="program-wrapper__data">
-          <div className="programs-list__info">
-            Number of calls:<span className="programs-list__info-data">{program.callCount}</span>
+        <div className={styles.programWrapperData}>
+          <div className={styles.programsListInfo}>
+            Number of calls:<span className={styles.programsListInfoData}>{program.callCount}</span>
           </div>
-          <div className="programs-list__info">
+          <div className={styles.programsListInfo}>
             Uploaded at:
-            <span className="programs-list__info-data">{program.uploadedAt && formatDate(program.uploadedAt)}</span>
+            <span className={styles.programsListInfoData}>{program.uploadedAt && formatDate(program.uploadedAt)}</span>
           </div>
         </div>
       </div>
-      <div className="programs-list--btns">
-        <button
-          className="programs-list__message-btn"
-          type="button"
-          aria-label="refresh"
-          onClick={() => handleOpenForm(program.hash, program.name, true)}
-        >
+      <div className={styles.programsListBtns}>
+        <button type="button" aria-label="refresh" onClick={() => handleOpenForm(program.hash, program.name, true)}>
           <img src={MessageIllustration} alt="message" />
         </button>
         <button
-          className="programs-list__refresh-btn"
+          className={styles.programsListRefreshBtn}
           type="button"
           aria-label="refresh"
           onClick={() => handleRefreshProgram(program.hash)}
@@ -55,7 +51,7 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
           <img src={RefreshIllustration} alt="refresh" />
         </button>
         <button
-          className="all-programs--item__upload"
+          className={styles.allProgramsItemUpload}
           type="button"
           onClick={() => handleOpenForm(program.hash, program.name)}
         >
