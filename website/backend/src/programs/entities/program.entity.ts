@@ -15,7 +15,7 @@ export class Program {
   @ManyToOne((type) => User, (user) => user.id)
   user: User;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   blockHash: string;
 
   @Column()
@@ -31,19 +31,10 @@ export class Program {
   uploadedAt: Date;
 
   @Column({ nullable: true })
+  meta: string;
+
+  @Column({ nullable: true })
   title: string;
-
-  @Column({ nullable: true })
-  incomingType: string;
-
-  @Column({ nullable: true })
-  expectedType: string;
-
-  @Column({ nullable: true })
-  initType: string;
-
-  @Column({ nullable: true })
-  initOutType: string;
 
   @Column({ type: 'enum', enum: InitStatus, default: InitStatus.PROGRESS })
   initStatus: InitStatus;

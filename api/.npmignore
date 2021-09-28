@@ -3,3 +3,6 @@ examples/
 lib/examples/
 types/examples
 /src
+tsconfig.json
+.prettierrc
+.tslint.json

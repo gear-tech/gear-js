@@ -6,7 +6,7 @@ import * as express from 'express';
 import { HttpExceptionFilter } from './http-rpc/exceptions';
 import { Logger } from '@nestjs/common';
 
-const logger = new Logger('Main')
+const logger = new Logger('Main');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
