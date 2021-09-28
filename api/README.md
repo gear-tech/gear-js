@@ -168,6 +168,20 @@ const { mnemonic, seed } = GearKeyring.generateMnemonic();
 const { seed } = GearKeyring.generateSeed(mnemonic);
 ```
 
+### Sign messages
+
+Creating signature
+
+```javascript
+import { GearKeyring } from '@gear-js/api';
+const message = 'your message';
+const signature = GearKeyring.sign(keyring, message);
+
+// Check signature
+const publicKey = keyring.address;
+const verified = GearKeyring.checkSign(publicKey, signature, message);
+```
+
 ### Getting metadata
 
 Getting metadata from program.meta.wasm

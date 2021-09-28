@@ -23,7 +23,9 @@
         <button @click.prevent="getTotalIssuance()">Total Issuance</button>
         <b><span>{{totalIssuance}} </span></b>
       </p>
-
+      <br>
+      KeyPair
+      <textarea type='text' name="keypair" cols="30" rows="10" ref="keypair" v-on:change="keypairChange()"></textarea>
       <p>
         <button @click.prevent="balanceTransfer()">Update balance</button>
       </p>
@@ -82,14 +84,20 @@
           Initial Payload:
           <input type="text" name="payload" ref="payload" />
           <br />
-          Init Type:
-          <input type="text" name="initType" ref="initType" />
+          Init Input Type:
+          <input type="text" name="initType" ref="init_input" />
+          <br />
+          Init Out Type:
+          <input type="text" name="initType" ref="init_output" />
           <br />
           Incomnig Type:
-          <input type="text" name="incoming" ref="incoming" />
+          <input type="text" name="incoming" ref="input" />
           <br />
           Expected Type:
-          <input type="text" name="excpected" ref="expected" />
+          <input type="text" name="excpected" ref="output" />
+          <br />
+          Types:
+          <input type="text" name="excpected" ref="types" />
           <br />
           <button type="submit" @click.prevent="sendWasm()">Send</button>
           <hr />
@@ -116,6 +124,7 @@
         token: '',
         totalIssuance: '',
         socket: null,
+        keyPairJson: ''
       },
       methods: {
         connect() {
@@ -130,6 +139,9 @@
         },
         jwtTokenChange() {
           this.token = this.$refs.token.value;
+        },
+        keypairChange() {
+          this.keyPairJson = this.$refs.keypair.value
         },
         subscribeNewBlocks() {
           this.socket.emit('message', {
@@ -173,6 +185,14 @@
         },
 
         sendWasm() {
+          const meta = this.$refs.meta.files.length !== 0 ? this.$refs.meta.files[0] : {
+            input: this.$refs.input.value,
+            output: this.$refs.output.value,
+            init_input: this.$refs.init_input.value,
+            init_output: this.$refs.init_output.value,
+            types: this.$refs.types.value
+          }
+          console.log(meta)
           this.socket.emit('message', {
             jsonrpc: '2.0',
             id: 3,
@@ -180,19 +200,11 @@
             params: {
               file: this.file,
               filename: this.file.name,
-              meta: this.$refs.meta.files[0],
+              meta: meta,
               gasLimit: this.$refs.gasLimit.value,
               value: this.$refs.value.value,
               initPayload: this.$refs.payload.value,
-              initType: this.$refs.initType
-                ? this.$refs.initType.value
-                : undefined,
-              incomingType: this.$refs.incoming
-                ? this.$refs.incoming.value
-                : undefined,
-              expectedType: this.$refs.expected
-                ? this.$refs.expected.value
-                : undefined,
+              keyPairJson: JSON.stringify(this.keyPairJson)
             },
           });
         },
@@ -206,6 +218,7 @@
               payload: this.$refs.messagePayload.value,
               gasLimit: this.$refs.messageGasLimit.value,
               value: this.$refs.messageValue.value,
+              keyPairJson: this.keyPairJson,
             },
           });
         },
@@ -236,7 +249,7 @@
             id: 3,
             method: 'balance.transfer',
             params: {
-              value: 999999999999,
+              value: 10000000,
             },
           });
         },

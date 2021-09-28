@@ -1,265 +1,254 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GEAR JSONRPC API</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
-      integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
-      crossorigin="anonymous"
-    ></script>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GEAR JSONRPC API</title>
 
-    <style>
-      h4 {
-        display: inline;
-      }
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
 
-      p {
-        word-wrap: break-word;
-      }
+  <style>
+    h4 {
+      display: inline;
+    }
 
-      .sidenav,
-      .content {
-        overflow-y: auto;
-        height: calc(100vh - 57px);
-        max-height: calc(100vh - 57px);
-      }
+    p {
+      word-wrap: break-word;
+    }
 
-      .sidenav {
-        padding: 0;
-        display: flex;
-        flex-wrap: nowrap;
-        flex-direction: column;
-        justify-content: start;
-        align-items: stretch;
-        align-content: start
-      }
+    .sidenav,
+    .content {
+      overflow-y: auto;
+      height: calc(100vh - 57px);
+      max-height: calc(100vh - 57px);
+    }
 
-      #toc {
-        overflow-y: auto;
-      }
+    .sidenav {
+      padding: 0;
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      justify-content: start;
+      align-items: stretch;
+      align-content: start
+    }
 
-      .card {
-        margin-bottom: 15px;
-      }
+    #toc {
+      overflow-y: auto;
+    }
 
-      .card-header {
-        cursor: pointer;
-      }
+    .card {
+      margin-bottom: 15px;
+    }
 
-      .content,
-      .card-block,
-      .search-form {
-        padding: 15px;
-      }
+    .card-header {
+      cursor: pointer;
+    }
 
-      .nav-link {
-        color: #343a40 !important;
-      }
+    .content,
+    .card-block,
+    .search-form {
+      padding: 15px;
+    }
 
-      .nav-pills .nav-link.active,
-      .nav-pills .show > .nav-link {
-        color: #f8f9fa !important;
-        background-color: #343a40 !important;
-      }
+    .nav-link {
+      color: #343a40 !important;
+    }
 
-      .card.disabled, .nav-link.disabled {
-        opacity: 0.5;
-      }
-    </style>
-  </head>
+    .nav-pills .nav-link.active,
+    .nav-pills .show>.nav-link {
+      color: #f8f9fa !important;
+      background-color: #343a40 !important;
+    }
 
-  <body class="bg-light">
-    <nav
-      class="navbar navbar-dark bg-dark justify-content-between sticky-top border-bottom"
-    >
-      <a class="navbar-brand">GEAR JSONRPC API 1.0</a>
-    </nav>
+    .card.disabled,
+    .nav-link.disabled {
+      opacity: 0.5;
+    }
+  </style>
+</head>
 
-    <div class="container-fluid">
-      <div class="row">
-        <div class="sidenav col-2 bg-white border-right">
-          <form class="search-form border-bottom" onsubmit="return false">
-            <input class="form-control search-input" type="search" placeholder="Search" />
-          </form>
+<body class="bg-light">
+  <nav class="navbar navbar-dark bg-dark justify-content-between sticky-top border-bottom">
+    <a class="navbar-brand">GEAR JSONRPC API 1.0</a>
+  </nav>
 
-          <nav id="toc">
-            <ul class="nav nav-pills flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="#login_github">login.github</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#login_telegram">login.telegram</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#user_profile">user.profile</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#user_generateKeypair">user.generateKeypair</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#user_getBalance">user.getBalance</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#program_data">program.data</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#program_allUser">program.allUser</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#program_all">program.all</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#message_all">message.all</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#message_countUnread">message.countUnread</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#balance_transfer">balance.transfer</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#blocks_newBlocks">blocks.newBlocks</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#program_upload">program.upload</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#system_totalIssuance">system.totalIssuance</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#message_send">message.send</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#message_gasSpent">message.gasSpent</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#message_payloadType">message.payloadType</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#events_subscribe">events.subscribe</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#message_markAsRead">message.markAsRead</a>
-              </li>
-            </ul>
-          </nav>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="sidenav col-2 bg-white border-right">
+        <form class="search-form border-bottom" onsubmit="return false">
+          <input class="form-control search-input" type="search" placeholder="Search" />
+        </form>
+
+        <nav id="toc">
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="#login_github">login.github</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#login_telegram">login.telegram</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#user_profile">user.profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#user_addPublicKey">user.addPublicKey</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#user_getBalance">user.getBalance</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#program_data">program.data</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#program_allUser">program.allUser</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#program_all">program.all</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#message_all">message.all</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#message_countUnread">message.countUnread</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#balance_transfer">balance.transfer</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#blocks_newBlocks">blocks.newBlocks</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#program_upload">program.upload</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#system_totalIssuance">system.totalIssuance</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#message_send">message.send</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#message_gasSpent">message.gasSpent</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#message_payloadType">message.payloadType</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#events_subscribe">events.subscribe</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#message_markAsRead">message.markAsRead</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="content col-10" data-spy="scroll" data-target="#toc">
+        <div class="card border">
+          <div class="card-block">Description jsonrpc api of gear backend<br />This api follows the json-rpc 2.0
+            specification. More information available at http://www.jsonrpc.org/specification.</div>
         </div>
 
-        <div class="content col-10" data-spy="scroll" data-target="#toc">
-          <div class="card border">
-            <div class="card-block">Description jsonrpc api of gear backend<br/>This api follows the json-rpc 2.0 specification. More information available at http://www.jsonrpc.org/specification.</div>
+        <div class="card method" id="login_github">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#login_github-content">
+            <h4>
+              <span>login.github</span>
+
+              <div class="float-right">
+                <span class="badge badge-light">Login</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
           </div>
 
-          <div class="card method" id="login_github">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#login_github-content"
-            >
-              <h4>
-                <span>login.github</span>
+          <div class="card-block collapse show" id="login_github-content">
+            <p>Login by github</p>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Login</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
 
-            <div class="card-block collapse show" id="login_github-content">
-              <p>Login by github</p>
-              
+            <hr />
 
-              <hr />
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
-
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>params.code</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Code recieved after authorization on github</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result.access_token</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Bearer token of the created session.</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
-
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.code</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Code recieved after authorization on github</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result.access_token</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Bearer token of the created session.</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "login.github",
@@ -268,150 +257,146 @@
   }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
     "access_token": "123456890"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="login_telegram">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#login_telegram-content"
-            >
-              <h4>
-                <span>login.telegram</span>
+        </div>
+        <div class="card method" id="login_telegram">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#login_telegram-content">
+            <h4>
+              <span>login.telegram</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Login</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Login</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="login_telegram-content">
-              <p>Login by telegram</p>
-              
+          <div class="card-block collapse show" id="login_telegram-content">
+            <p>Login by telegram</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>params.id</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Id recieved after authorization on telegram</td>
-                        </tr>
-                        <tr>
-                          <td>params.first_name</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>First name recieved after authorization on telegram</td>
-                        </tr>
-                        <tr>
-                          <td>params.last_name</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Last name recieved after authorization on telegram</td>
-                        </tr>
-                        <tr>
-                          <td>params.username</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Username recieved after authorization on telegram</td>
-                        </tr>
-                        <tr>
-                          <td>params.photo_url</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Photo url recieved after authorization on telegram</td>
-                        </tr>
-                        <tr>
-                          <td>params.auth_date</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Auth date recieved after authorization on telegram</td>
-                        </tr>
-                        <tr>
-                          <td>params.hash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Hash recieved after authorization on telegram</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result.access_token</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Bearer token of the created session.</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.id</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Id recieved after authorization on telegram</td>
+                      </tr>
+                      <tr>
+                        <td>params.first_name</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>First name recieved after authorization on telegram</td>
+                      </tr>
+                      <tr>
+                        <td>params.last_name</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Last name recieved after authorization on telegram</td>
+                      </tr>
+                      <tr>
+                        <td>params.username</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Username recieved after authorization on telegram</td>
+                      </tr>
+                      <tr>
+                        <td>params.photo_url</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Photo url recieved after authorization on telegram</td>
+                      </tr>
+                      <tr>
+                        <td>params.auth_date</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Auth date recieved after authorization on telegram</td>
+                      </tr>
+                      <tr>
+                        <td>params.hash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Hash recieved after authorization on telegram</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result.access_token</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Bearer token of the created session.</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "login.telegram",
@@ -426,122 +411,118 @@
   }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
     "access_token": "123456890"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="user_profile">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#user_profile-content"
-            >
-              <h4>
-                <span>user.profile</span>
+        </div>
+        <div class="card method" id="user_profile">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#user_profile-content">
+            <h4>
+              <span>user.profile</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">User</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">User</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="user_profile-content">
-              <p>Getting user profile</p>
-              
+          <div class="card-block collapse show" id="user_profile-content">
+            <p>Getting user profile</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td>User data</td>
-                        </tr>
-                        <tr>
-                          <td>result?.email</td>
-                          <td>string</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result?.name</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Fullname</td>
-                        </tr>
-                        <tr>
-                          <td>result?.username</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Username</td>
-                        </tr>
-                        <tr>
-                          <td>result?.photoUrl</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Photo url</td>
-                        </tr>
-                        <tr>
-                          <td>result?.publicKey</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Public key</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td>User data</td>
+                      </tr>
+                      <tr>
+                        <td>result?.email</td>
+                        <td>string</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result?.name</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Fullname</td>
+                      </tr>
+                      <tr>
+                        <td>result?.username</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Username</td>
+                      </tr>
+                      <tr>
+                        <td>result?.photoUrl</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Photo url</td>
+                      </tr>
+                      <tr>
+                        <td>result?.publicKey</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Public key</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "user.profile"
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
@@ -552,349 +533,378 @@
     "publicKey": "5GHJ54GHgh4"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="user_generateKeypair">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#user_generateKeypair-content"
-            >
-              <h4>
-                <span>user.generateKeypair</span>
+        </div>
+        <div class="card method" id="user_addPublicKey">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#user_addPublicKey-content">
+            <h4>
+              <span>user.addPublicKey</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">User</span>
-                  <span class="badge badge-light">Http</span>
+              <div class="float-right">
+                <span class="badge badge-light">User</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
+
+          <div class="card-block collapse show" id="user_addPublicKey-content">
+            <p>Add user public key</p>
+
+
+            <hr />
+
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
+
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params?.publicKey</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Public Key</td>
+                      </tr>
+                      <tr>
+                        <td>params?.publicKeyRaw</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Raw Public Key</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td>Public Key</td>
+                      </tr>
+                      <tr>
+                        <td>result?.publicKey</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Public Key</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
                 </div>
-              </h4>
-            </div>
 
-            <div class="card-block collapse show" id="user_generateKeypair-content">
-              <p>Generate keypair for signing trasactions</p>
-              
-
-              <hr />
-
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
-
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td>JSON encdoded keypair data</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
-
-                  </div>
-
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "user.generateKeypair"
+  "method": "user.addPublicKey",
+  "params": {
+    "publicKey": "5FHR5Ac45FSwAjpWMtsnPFsnxaWoEPs343kbqcAAnu8fNeQk",
+    "publicKeyRaw": "0x8e66638d3bdcd46d3bdbb115ce1b71a972fd05e3ac431fa482480952e135a55d"
+  }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "result": {}
+  "result": {
+    "publicKey": "5FHR5Ac45FSwAjpWMtsnPFsnxaWoEPs343kbqcAAnu8fNeQk"
+  }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="user_getBalance">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#user_getBalance-content"
-            >
-              <h4>
-                <span>user.getBalance</span>
+        </div>
+        <div class="card method" id="user_getBalance">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#user_getBalance-content">
+            <h4>
+              <span>user.getBalance</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">User</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">User</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="user_getBalance-content">
-              <p>Getting user balance</p>
-              
+          <div class="card-block collapse show" id="user_getBalance-content">
+            <p>Getting user balance</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result.freeBalance</td>
-                          <td>string</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result.freeBalance</td>
+                        <td>string</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "user.getBalance"
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
     "freeBalance": "2"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="program_data">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#program_data-content"
-            >
-              <h4>
-                <span>program.data</span>
+        </div>
+        <div class="card method" id="program_data">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_data-content">
+            <h4>
+              <span>program.data</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Program</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Program</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="program_data-content">
-              <p>Getting uploaded program data</p>
-              
+          <div class="card-block collapse show" id="program_data-content">
+            <p>Getting uploaded program data</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>params.hash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Hash of program</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result.hash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>program hash</td>
-                        </tr>
-                        <tr>
-                          <td>result.blockHash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>hash of block with program</td>
-                        </tr>
-                        <tr>
-                          <td>result.programNumber</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Number of program in order</td>
-                        </tr>
-                        <tr>
-                          <td>result.name</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program name</td>
-                        </tr>
-                        <tr>
-                          <td>result.callCount</td>
-                          <td>integer</td>
-                          <td></td>
-                          <td>Number of program call</td>
-                        </tr>
-                        <tr>
-                          <td>result.uploadedAt</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Date when program was uploaded</td>
-                        </tr>
-                        <tr>
-                          <td>result?.title</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Title of program from metadata</td>
-                        </tr>
-                        <tr>
-                          <td>result?.incomingType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of expected message</td>
-                        </tr>
-                        <tr>
-                          <td>result?.expectedType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of reponse message</td>
-                        </tr>
-                        <tr>
-                          <td>result?.initType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of initializing message</td>
-                        </tr>
-                        <tr>
-                          <td>result?.initOutType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of message responding to the initializing message</td>
-                        </tr>
-                        <tr>
-                          <td>result.initStatus</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program initializtaion status</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.hash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Hash of program</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result.hash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>program hash</td>
+                      </tr>
+                      <tr>
+                        <td>result.blockHash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>hash of block with program</td>
+                      </tr>
+                      <tr>
+                        <td>result.programNumber</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Number of program in order</td>
+                      </tr>
+                      <tr>
+                        <td>result.name</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program name</td>
+                      </tr>
+                      <tr>
+                        <td>result.callCount</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>Number of program call</td>
+                      </tr>
+                      <tr>
+                        <td>result.uploadedAt</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Date when program was uploaded</td>
+                      </tr>
+                      <tr>
+                        <td>result?.title</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Title of program from metadata</td>
+                      </tr>
+                      <tr>
+                        <td>result?.incomingType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of expected message</td>
+                      </tr>
+                      <tr>
+                        <td>result?.expectedType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of reponse message</td>
+                      </tr>
+                      <tr>
+                        <td>result?.initType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of initializing message</td>
+                      </tr>
+                      <tr>
+                        <td>result?.initOutType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of message responding to the initializing message</td>
+                      </tr>
+                      <tr>
+                        <td>result.initStatus</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program initializtaion status</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "program.data",
@@ -903,8 +913,8 @@
   }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
@@ -917,162 +927,158 @@
     "initStatus": "in progress"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="program_allUser">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#program_allUser-content"
-            >
-              <h4>
-                <span>program.allUser</span>
+        </div>
+        <div class="card method" id="program_allUser">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_allUser-content">
+            <h4>
+              <span>program.allUser</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Program</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Program</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="program_allUser-content">
-              <p>Getting all user&#39;s uploaded program</p>
-              
+          <div class="card-block collapse show" id="program_allUser-content">
+            <p>Getting all user&#39;s uploaded program</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>array</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result[0]</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result[0].hash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>program hash</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].blockHash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>hash of block with program</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].programNumber</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Number of program in order</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].name</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program name</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].callCount</td>
-                          <td>integer</td>
-                          <td></td>
-                          <td>Number of program call</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].uploadedAt</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Date when program was uploaded</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.title</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Title of program from metadata</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.incomingType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of expected message</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.expectedType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of reponse message</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.initType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of initializing message</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.initOutType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of message responding to the initializing message</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].initStatus</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program initializtaion status</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>array</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result[0]</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result[0].hash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>program hash</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].blockHash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>hash of block with program</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].programNumber</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Number of program in order</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].name</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program name</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].callCount</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>Number of program call</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].uploadedAt</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Date when program was uploaded</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.title</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Title of program from metadata</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.incomingType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of expected message</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.expectedType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of reponse message</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.initType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of initializing message</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.initOutType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of message responding to the initializing message</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].initStatus</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program initializtaion status</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "program.allUser"
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": [
@@ -1087,162 +1093,158 @@
     }
   ]
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="program_all">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#program_all-content"
-            >
-              <h4>
-                <span>program.all</span>
+        </div>
+        <div class="card method" id="program_all">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_all-content">
+            <h4>
+              <span>program.all</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Program</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Program</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="program_all-content">
-              <p>Getting all uploaded program</p>
-              
+          <div class="card-block collapse show" id="program_all-content">
+            <p>Getting all uploaded program</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>array</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result[0]</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result[0].hash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>program hash</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].blockHash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>hash of block with program</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].programNumber</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Number of program in order</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].name</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program name</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].callCount</td>
-                          <td>integer</td>
-                          <td></td>
-                          <td>Number of program call</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].uploadedAt</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Date when program was uploaded</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.title</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Title of program from metadata</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.incomingType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of expected message</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.expectedType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of reponse message</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.initType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of initializing message</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.initOutType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of message responding to the initializing message</td>
-                        </tr>
-                        <tr>
-                          <td>result[0].initStatus</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program initializtaion status</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>array</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result[0]</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result[0].hash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>program hash</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].blockHash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>hash of block with program</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].programNumber</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Number of program in order</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].name</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program name</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].callCount</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>Number of program call</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].uploadedAt</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Date when program was uploaded</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.title</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Title of program from metadata</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.incomingType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of expected message</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.expectedType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of reponse message</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.initType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of initializing message</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.initOutType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Type of message responding to the initializing message</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].initStatus</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program initializtaion status</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "program.all"
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": [
@@ -1257,161 +1259,157 @@
     }
   ]
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="message_all">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#message_all-content"
-            >
-              <h4>
-                <span>message.all</span>
+        </div>
+        <div class="card method" id="message_all">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_all-content">
+            <h4>
+              <span>message.all</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Messages</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Messages</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="message_all-content">
-              <p>Getting all user&#39;s messages</p>
-              
+          <div class="card-block collapse show" id="message_all-content">
+            <p>Getting all user&#39;s messages</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>array</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result[0]</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.id</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Message id</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.responseId</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Response type</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.date</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Date and time of message</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.program</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program hash</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.destination</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Destination (user publicKey)</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.payload</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Message payload</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.response</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Response payload</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.isRead</td>
-                          <td>boolean</td>
-                          <td></td>
-                          <td>Has the message been read</td>
-                        </tr>
-                        <tr>
-                          <td>result[0]?.required</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>array</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result[0]</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.id</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Message id</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.responseId</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Response type</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.date</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Date and time of message</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.program</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program hash</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.destination</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Destination (user publicKey)</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.payload</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Message payload</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.response</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Response payload</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.isRead</td>
+                        <td>boolean</td>
+                        <td></td>
+                        <td>Has the message been read</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.required</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "message.all"
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": [
@@ -1427,197 +1425,189 @@
     }
   ]
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="message_countUnread">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#message_countUnread-content"
-            >
-              <h4>
-                <span>message.countUnread</span>
+        </div>
+        <div class="card method" id="message_countUnread">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_countUnread-content">
+            <h4>
+              <span>message.countUnread</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Messages</span>
-                  <span class="badge badge-light">Http</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Messages</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="message_countUnread-content">
-              <p>Getting count of unread messages</p>
-              
+          <div class="card-block collapse show" id="message_countUnread-content">
+            <p>Getting count of unread messages</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>number</td>
-                          <td></td>
-                          <td>Count unread events</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>number</td>
+                        <td></td>
+                        <td>Count unread events</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "message.countUnread"
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890"
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="balance_transfer">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#balance_transfer-content"
-            >
-              <h4>
-                <span>balance.transfer</span>
+        </div>
+        <div class="card method" id="balance_transfer">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#balance_transfer-content">
+            <h4>
+              <span>balance.transfer</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Balance</span>
-                  <span class="badge badge-light">WebSocket</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Balance</span>
+                <span class="badge badge-light">WebSocket</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="balance_transfer-content">
-              <p>Transfer balance from Alice.</p>
-              
+          <div class="card-block collapse show" id="balance_transfer-content">
+            <p>Transfer balance from Alice.</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>params.value</td>
-                          <td>integer</td>
-                          <td></td>
-                          <td>The number of units that need to be transfer</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td>Information about success transaction</td>
-                        </tr>
-                        <tr>
-                          <td>result?.message</td>
-                          <td>string</td>
-                          <td>minLength="1"</td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32011</td>
-                          <td>Invalid transaction</td>
-                          <td>Error occured when transaction failed</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.value</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>The number of units that need to be transfer</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td>Information about success transaction</td>
+                      </tr>
+                      <tr>
+                        <td>result?.message</td>
+                        <td>string</td>
+                        <td>minLength="1"</td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32011</td>
+                        <td>Invalid transaction</td>
+                        <td>Error occured when transaction failed</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "balance.transfer",
@@ -1626,104 +1616,100 @@
   }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
     "message": "Transfer balance success"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="blocks_newBlocks">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#blocks_newBlocks-content"
-            >
-              <h4>
-                <span>blocks.newBlocks</span>
+        </div>
+        <div class="card method" id="blocks_newBlocks">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#blocks_newBlocks-content">
+            <h4>
+              <span>blocks.newBlocks</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Blocks</span>
-                  <span class="badge badge-light">WebSocket</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Blocks</span>
+                <span class="badge badge-light">WebSocket</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="blocks_newBlocks-content">
-              <p>Subscribe to new blocks</p>
-              
+          <div class="card-block collapse show" id="blocks_newBlocks-content">
+            <p>Subscribe to new blocks</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result.hash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Block hash</td>
-                        </tr>
-                        <tr>
-                          <td>result.number</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Block number</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result.hash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Block hash</td>
+                      </tr>
+                      <tr>
+                        <td>result.number</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Block number</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "blocks.newBlocks"
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
@@ -1731,181 +1717,195 @@
     "number": "2"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="program_upload">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#program_upload-content"
-            >
-              <h4>
-                <span>program.upload</span>
+        </div>
+        <div class="card method" id="program_upload">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_upload-content">
+            <h4>
+              <span>program.upload</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Program</span>
-                  <span class="badge badge-light">WebSocket</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Program</span>
+                <span class="badge badge-light">WebSocket</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="program_upload-content">
-              <p>Upload new program</p>
-              
+          <div class="card-block collapse show" id="program_upload-content">
+            <p>Upload new program</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>params.file</td>
-                          <td></td>
-                          <td></td>
-                          <td>File buffer</td>
-                        </tr>
-                        <tr>
-                          <td>params.filename</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>File name</td>
-                        </tr>
-                        <tr>
-                          <td>params.gasLimit</td>
-                          <td>integer</td>
-                          <td></td>
-                          <td>Gas limit</td>
-                        </tr>
-                        <tr>
-                          <td>params.value</td>
-                          <td>integer</td>
-                          <td></td>
-                          <td>Init value</td>
-                        </tr>
-                        <tr>
-                          <td>params?.initPayload</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Init payload (hex)</td>
-                        </tr>
-                        <tr>
-                          <td>params?.initType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of initial payload</td>
-                        </tr>
-                        <tr>
-                          <td>params?.incomingType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Type of incoming message</td>
-                        </tr>
-                        <tr>
-                          <td>params?.expectedType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Expected type of reponse message</td>
-                        </tr>
-                        <tr>
-                          <td>params?.keyPairJson</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>JSON Encoded KeyPair data</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result.status</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Transaction status</td>
-                        </tr>
-                        <tr>
-                          <td>result.blockHash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Block hash with program</td>
-                        </tr>
-                        <tr>
-                          <td>result.programHash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program Hash</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32011</td>
-                          <td>Invalid transaction</td>
-                          <td>Error occured when transaction failed</td>
-                        </tr>
-                        <tr>
-                          <td>-32012</td>
-                          <td>Program initialization falied</td>
-                          <td>Error occured when program initialization failed</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.file</td>
+                        <td></td>
+                        <td></td>
+                        <td>File buffer</td>
+                      </tr>
+                      <tr>
+                        <td>params.filename</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>File name</td>
+                      </tr>
+                      <tr>
+                        <td>params.gasLimit</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>Gas limit</td>
+                      </tr>
+                      <tr>
+                        <td>params.value</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>Init value</td>
+                      </tr>
+                      <tr>
+                        <td>params.initPayload</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Init payload (hex)</td>
+                      </tr>
+                      <tr>
+                        <td>params.meta</td>
+                        <td>object</td>
+                        <td></td>
+                        <td>Program types</td>
+                      </tr>
+                      <tr>
+                        <td>params.meta?.init_input</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.meta?.init_output</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.meta?.input</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.meta?.output</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.meta?.types</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.keyPairJson</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>JSON Encoded KeyPair data</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result.status</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Transaction status</td>
+                      </tr>
+                      <tr>
+                        <td>result.blockHash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Block hash with program</td>
+                      </tr>
+                      <tr>
+                        <td>result.programHash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program Hash</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32011</td>
+                        <td>Invalid transaction</td>
+                        <td>Error occured when transaction failed</td>
+                      </tr>
+                      <tr>
+                        <td>-32012</td>
+                        <td>Program initialization falied</td>
+                        <td>Error occured when program initialization failed</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "program.upload",
@@ -1914,14 +1914,23 @@
     "gasLimit": 2000,
     "value": 2000,
     "initPayload": "0x1234",
-    "initType": "utf8",
-    "incomingType": "utf8",
-    "expectedType": "utf8"
+    "meta": {
+      "init_input": "String",
+      "init_output": "Vec<u8>",
+      "input": "Person",
+      "output": "Result<u8, u8>",
+      "types": {
+        "Person": {
+          "name": "String",
+          "surname": "String"
+        }
+      }
+    }
   }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
@@ -1930,248 +1939,240 @@
     "programHash": "0x4467ffec533014607103dcede9c2e828ecbc8ae1469b18cbb1861e1fecfbe9fe"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="system_totalIssuance">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#system_totalIssuance-content"
-            >
-              <h4>
-                <span>system.totalIssuance</span>
+        </div>
+        <div class="card method" id="system_totalIssuance">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#system_totalIssuance-content">
+            <h4>
+              <span>system.totalIssuance</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">System</span>
-                  <span class="badge badge-light">WebSocket</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">System</span>
+                <span class="badge badge-light">WebSocket</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="system_totalIssuance-content">
-              <p>Getting total issuance</p>
-              
+          <div class="card-block collapse show" id="system_totalIssuance-content">
+            <p>Getting total issuance</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result.totalIssuance</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Total issuance value</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result.totalIssuance</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Total issuance value</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "system.totalIssuance"
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
     "totalIssuance": "4.3425 MUnit"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="message_send">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#message_send-content"
-            >
-              <h4>
-                <span>message.send</span>
+        </div>
+        <div class="card method" id="message_send">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_send-content">
+            <h4>
+              <span>message.send</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Message</span>
-                  <span class="badge badge-light">WebSocket</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Message</span>
+                <span class="badge badge-light">WebSocket</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="message_send-content">
-              <p>Sending message</p>
-              
+          <div class="card-block collapse show" id="message_send-content">
+            <p>Sending message</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>params.destination</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program destination address (hex)</td>
-                        </tr>
-                        <tr>
-                          <td>params.gasLimit</td>
-                          <td>integer</td>
-                          <td></td>
-                          <td>Gas limit</td>
-                        </tr>
-                        <tr>
-                          <td>params.value</td>
-                          <td>integer</td>
-                          <td></td>
-                          <td>Init value</td>
-                        </tr>
-                        <tr>
-                          <td>params.payload</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Init payload</td>
-                        </tr>
-                        <tr>
-                          <td>params?.keyPairJson</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>JSON Encoded KeyPair data</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result?.status</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Transaction status</td>
-                        </tr>
-                        <tr>
-                          <td>result?.blockHash</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Block hash with transaction</td>
-                        </tr>
-                        <tr>
-                          <td>result?.data</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program response to the message</td>
-                        </tr>
-                        <tr>
-                          <td>result?.required</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32011</td>
-                          <td>Invalid transaction</td>
-                          <td>Error occured when transaction failed</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.destination</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program destination address (hex)</td>
+                      </tr>
+                      <tr>
+                        <td>params.gasLimit</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>Gas limit</td>
+                      </tr>
+                      <tr>
+                        <td>params.value</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>Init value</td>
+                      </tr>
+                      <tr>
+                        <td>params.payload</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Init payload</td>
+                      </tr>
+                      <tr>
+                        <td>params?.keyPairJson</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>JSON Encoded KeyPair data</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result?.status</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Transaction status</td>
+                      </tr>
+                      <tr>
+                        <td>result?.blockHash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Block hash with transaction</td>
+                      </tr>
+                      <tr>
+                        <td>result?.data</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program response to the message</td>
+                      </tr>
+                      <tr>
+                        <td>result?.required</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32011</td>
+                        <td>Invalid transaction</td>
+                        <td>Error occured when transaction failed</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "message.send",
@@ -2183,8 +2184,8 @@
   }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
@@ -2193,123 +2194,119 @@
     "data": "PONG"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="message_gasSpent">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#message_gasSpent-content"
-            >
-              <h4>
-                <span>message.gasSpent</span>
+        </div>
+        <div class="card method" id="message_gasSpent">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_gasSpent-content">
+            <h4>
+              <span>message.gasSpent</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Message</span>
-                  <span class="badge badge-light">WebSocket</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Message</span>
+                <span class="badge badge-light">WebSocket</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="message_gasSpent-content">
-              <p>Getting minimal gaslLimit for payload for the program</p>
-              
+          <div class="card-block collapse show" id="message_gasSpent-content">
+            <p>Getting minimal gaslLimit for payload for the program</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>params.destination</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program destination address (hex)</td>
-                        </tr>
-                        <tr>
-                          <td>params.payload</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Init payload</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result?.gasSpent</td>
-                          <td>number</td>
-                          <td></td>
-                          <td>GasSpent</td>
-                        </tr>
-                        <tr>
-                          <td>result?.required</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.destination</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program destination address (hex)</td>
+                      </tr>
+                      <tr>
+                        <td>params.payload</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Init payload</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result?.gasSpent</td>
+                        <td>number</td>
+                        <td></td>
+                        <td>GasSpent</td>
+                      </tr>
+                      <tr>
+                        <td>result?.required</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "message.gasSpent",
@@ -2319,125 +2316,121 @@
   }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
     "gasSpent": 123213312
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="message_payloadType">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#message_payloadType-content"
-            >
-              <h4>
-                <span>message.payloadType</span>
+        </div>
+        <div class="card method" id="message_payloadType">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_payloadType-content">
+            <h4>
+              <span>message.payloadType</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Message</span>
-                  <span class="badge badge-light">WebSocket</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Message</span>
+                <span class="badge badge-light">WebSocket</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="message_payloadType-content">
-              <p>Getting payload type</p>
-              
+          <div class="card-block collapse show" id="message_payloadType-content">
+            <p>Getting payload type</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>params.destination</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program destination address (hex)</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result?.payloadType</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Payload type</td>
-                        </tr>
-                        <tr>
-                          <td>result?.required</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.destination</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program destination address (hex)</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result?.payloadType</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Payload type</td>
+                      </tr>
+                      <tr>
+                        <td>result?.required</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "message.payloadType",
@@ -2446,139 +2439,135 @@
   }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
     "payloadType": "{\"value\": \"u64\", \"annotation\": \"String\"}"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="events_subscribe">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#events_subscribe-content"
-            >
-              <h4>
-                <span>events.subscribe</span>
+        </div>
+        <div class="card method" id="events_subscribe">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#events_subscribe-content">
+            <h4>
+              <span>events.subscribe</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Events</span>
-                  <span class="badge badge-light">WebSocket</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Events</span>
+                <span class="badge badge-light">WebSocket</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="events_subscribe-content">
-              <p>Subscribe to events</p>
-              
+          <div class="card-block collapse show" id="events_subscribe-content">
+            <p>Subscribe to events</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    
-                    <h5>Result</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>result</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>result?.event</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Event type</td>
-                        </tr>
-                        <tr>
-                          <td>result?.id</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Message id (Log)</td>
-                        </tr>
-                        <tr>
-                          <td>result?.program</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Program hash (Log, InitSuccess, InitFailed)</td>
-                        </tr>
-                        <tr>
-                          <td>result?.response</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Response payload (Log)</td>
-                        </tr>
-                        <tr>
-                          <td>result?.programName</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Name of uploaded program (InitSuccess, InitFailed)</td>
-                        </tr>
-                        <tr>
-                          <td>result?.date</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Date and time of event</td>
-                        </tr>
-                        <tr>
-                          <td>result?.required</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result?.event</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Event type</td>
+                      </tr>
+                      <tr>
+                        <td>result?.id</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Message id (Log)</td>
+                      </tr>
+                      <tr>
+                        <td>result?.program</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program hash (Log, InitSuccess, InitFailed)</td>
+                      </tr>
+                      <tr>
+                        <td>result?.response</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Response payload (Log)</td>
+                      </tr>
+                      <tr>
+                        <td>result?.programName</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Name of uploaded program (InitSuccess, InitFailed)</td>
+                      </tr>
+                      <tr>
+                        <td>result?.date</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Date and time of event</td>
+                      </tr>
+                      <tr>
+                        <td>result?.required</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "events.subscribe"
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "result": {
@@ -2590,88 +2579,84 @@
     "date": "2021-08-09T12:07:54.064Z"
   }
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card method" id="message_markAsRead">
-            <div
-              class="card-header text-light bg-dark"
-              data-toggle="collapse"
-              href="#message_markAsRead-content"
-            >
-              <h4>
-                <span>message.markAsRead</span>
+        </div>
+        <div class="card method" id="message_markAsRead">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_markAsRead-content">
+            <h4>
+              <span>message.markAsRead</span>
 
-                <div class="float-right">
-                  <span class="badge badge-light">Messages</span>
-                  <span class="badge badge-light">WebSocket</span>
-                </div>
-              </h4>
-            </div>
+              <div class="float-right">
+                <span class="badge badge-light">Messages</span>
+                <span class="badge badge-light">WebSocket</span>
+              </div>
+            </h4>
+          </div>
 
-            <div class="card-block collapse show" id="message_markAsRead-content">
-              <p>Mark message as read</p>
-              
+          <div class="card-block collapse show" id="message_markAsRead-content">
+            <p>Mark message as read</p>
 
-              <hr />
 
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-8 border-right">
+            <hr />
 
-                    <h5>Parameters</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Constraints</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>params</td>
-                          <td>object</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                        <tr>
-                          <td>params?.id</td>
-                          <td>string</td>
-                          <td></td>
-                          <td>Message id</td>
-                        </tr>
-                      </table>
-                    </div>
-                    
-                    
-                    <h5>Errors</h5>
-                    <div class="table-responsive">
-                      <table class="table table-striped table-hover table-sm">
-                        <tr>
-                          <th>Code</th>
-                          <th>Message</th>
-                          <th>Description</th>
-                        </tr>
-                        <tr>
-                          <td>-32003</td>
-                          <td>Unathorized</td>
-                          <td>The provided credentials are invalid</td>
-                        </tr>
-                        <tr>
-                          <td>-32602</td>
-                          <td>Invalid method parameters</td>
-                          <td>The provided method parameters are invalid</td>
-                        </tr>
-                      </table>
-                    </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params?.id</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Message id</td>
+                      </tr>
+                    </table>
                   </div>
 
-                  <div class="col-4">
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
   "method": "message.markAsRead",
@@ -2680,12 +2665,11 @@
   }
 }</pre>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890"
 }</pre>
-                  </div>
                 </div>
               </div>
             </div>
@@ -2693,35 +2677,37 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <script>
-      $.expr[":"].contains = $.expr.createPseudo(function(arg) {
-        return function(elem) {
-          return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-        };
-      });
+  <script>
+    $.expr[":"].contains = $.expr.createPseudo(function (arg) {
+      return function (elem) {
+        return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+      };
+    });
 
-      $(".search-input").on("paste keyup search", (event) => {
-        const inputValue = event.target.value;
-        
-        $(`a`).removeClass("disabled");
+    $(".search-input").on("paste keyup search", (event) => {
+      const inputValue = event.target.value;
 
-        if(inputValue) {
-          $(`.card.method:contains("${inputValue}")`).removeClass("disabled");
-          $(`.card.method:contains("${inputValue}") .collapse`).collapse("show");
-          $(`.card.method:not(:contains("${inputValue}"))`).addClass("disabled");
-          $(`.card.method:not(:contains("${inputValue}")) .collapse`).collapse("hide");
-          $(`.card.method:not(:contains("${inputValue}"))`).each((index, element) => {
-           $(`a[href='#${element.id}']`).addClass("disabled");
-          });
+      $(`a`).removeClass("disabled");
 
-          document.querySelector('.card.method:not(.disabled)').scrollIntoView();
-        }
-        else {
-          $(".card.method").removeClass("disabled");
-          $(".card.method .collapse").collapse("show");
-        }
-      });
-    </script>
-  </body>
+      if (inputValue) {
+        $(`.card.method:contains("${inputValue}")`).removeClass("disabled");
+        $(`.card.method:contains("${inputValue}") .collapse`).collapse("show");
+        $(`.card.method:not(:contains("${inputValue}"))`).addClass("disabled");
+        $(`.card.method:not(:contains("${inputValue}")) .collapse`).collapse("hide");
+        $(`.card.method:not(:contains("${inputValue}"))`).each((index, element) => {
+          $(`a[href='#${element.id}']`).addClass("disabled");
+        });
+
+        document.querySelector('.card.method:not(.disabled)').scrollIntoView();
+      }
+      else {
+        $(".card.method").removeClass("disabled");
+        $(".card.method .collapse").collapse("show");
+      }
+    });
+  </script>
+</body>
+
 </html>
