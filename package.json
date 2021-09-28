@@ -7,7 +7,8 @@
     "build:ide": "cd website/fronted && npm run build",
     "start:backend": "npm run start:dev --workspace=website/backend",
     "start:frontend": "npm run start --workspace=website/frontend",
-    "start:ide": "npm run start:dev --workspace=website/ide-backend"
+    "start:ide": "npm run start:dev --workspace=website/ide-backend",
+    "prepare": "husky install"
   },
   "workspaces": [
     "website/*",
@@ -18,5 +19,13 @@
     "@gear-js/backend": "file:website/backend",
     "@gear-js/frontend": "file:website/frontend",
     "@gear-js/ide-backend": "file:website/ide-backend"
+  },
+  "devDependencies": {
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.4.1"
+  },
+  "lint-staged": {
+    "*.{js,css,md,ts,tsx}": "prettier --write"
   }
 }
