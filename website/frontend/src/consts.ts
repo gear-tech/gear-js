@@ -58,7 +58,7 @@ export const RPC_METHODS = {
   GET_GAS_SPENT: 'message.gasSpent',
   GET_PAYLOAD_TYPE: 'message.payloadType',
   READ_EVENTS: 'events.read',
-  ADD_PUBLIC: 'user.addPublickKey',
+  ADD_PUBLIC: 'user.addPublicKey',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
