@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { RPC_METHODS } from 'consts';
 import { GearKeyring } from '@gear-js/api';
+import { u8aToHex } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
 
 import './Keyring.scss';
-import { ReadNotificationsIcon } from '../../../assets/Icons';
+import ServerRPCRequestService from 'services/ServerRPCRequestService';
+import { CopyClipboard } from '../../../assets/Icons';
 import { StatusPanel } from '../StatusPanel/StatusPanel';
 
 type Props = {
   handleClose: () => void;
 };
+
 
 export const Keyring = ({ handleClose }: Props) => {
   /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -19,6 +23,9 @@ export const Keyring = ({ handleClose }: Props) => {
   const [isMnemonic, setIsMnemonic] = useState('');
   const [saved, setSaved] = useState(false);
   const [keyPairJson, setKeyPairJson] = useState<any>(null);
+  const [isAddressRaw, setIsAddressRaw] = useState('');
+
+  const apiRequest = new ServerRPCRequestService();
 
   if (copySuccess) {
     setTimeout(() => setCopySuccess(false), 3000);
@@ -26,17 +33,13 @@ export const Keyring = ({ handleClose }: Props) => {
 
   useEffect(() => {
     const create = async () => {
-      const {
-        mnemonic,
-        seed,
-        json,
-        json: { address },
-      } = await GearKeyring.create('WebAccount');
+      const { mnemonic, seed, json, json: { address }, keyring : {addressRaw} } = await GearKeyring.create('WebAccount');
       setKey(mnemonic);
       setPublicKey(address);
       setIsSeed(seed);
       setIsMnemonic(mnemonic);
       setKeyPairJson(json);
+      setIsAddressRaw(u8aToHex(addressRaw));
     };
 
     create();
@@ -73,6 +76,11 @@ export const Keyring = ({ handleClose }: Props) => {
     localStorage.setItem('gear_mnemonic', JSON.stringify(keyPairJson));
     localStorage.setItem('public_key', publicKey);
     downloadJson(JSON.stringify(keyPairJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
+    
+    apiRequest.getResource(RPC_METHODS.ADD_PUBLIC, {
+      publickKeyRaw: isAddressRaw,
+      publickKey: publicKey
+    });
     handleClose();
   };
 
@@ -93,7 +101,7 @@ export const Keyring = ({ handleClose }: Props) => {
           <div className="keyring__copy">
             <div className="keyring__copy-wrapper">
               <button className="keyring__copy-button" type="button" onClick={copyToClipboard}>
-                <ReadNotificationsIcon color="#ffffff" />
+                <CopyClipboard color="#ffffff" />
               </button>
             </div>
           </div>

@@ -59,7 +59,7 @@ export const Header: VFC = () => {
   }, [isOpen]);
 
   useEffect(() => {
-    if (localStorage.getItem('gear_mnemonic')) {
+    if (localStorage.getItem('gear_mnemonic') && localStorage.getItem('gear_mnemonic') !== 'undefined') {
       setIsKey(true);
     }
   }, []);
