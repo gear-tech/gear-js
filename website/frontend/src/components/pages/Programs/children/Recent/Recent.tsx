@@ -16,7 +16,7 @@ import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
 import { SocketService } from 'services/SocketService';
 
-import styles from './Recent.module.scss'
+import styles from './Recent.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
 
 type Props = {

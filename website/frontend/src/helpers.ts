@@ -15,7 +15,7 @@ export const formatDate = (rawDate: string) => {
 
 export const generateRandomId = () => Math.floor(Math.random() * 1000000000);
 
-export function readFileAsync(file: File){
+export function readFileAsync(file: File) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -27,12 +27,10 @@ export function readFileAsync(file: File){
 
     reader.readAsArrayBuffer(file);
   });
-};
+}
 
 export const toShortAddress = (_address: string) => {
   const address = (_address || '').toString();
 
-  return (address.length > 13)
-    ? `${address.slice(0, 6)}…${address.slice(-6)}`
-    : address;
-}
+  return address.length > 13 ? `${address.slice(0, 6)}…${address.slice(-6)}` : address;
+};

@@ -112,11 +112,7 @@ export const All: VFC<Props> = ({ socketService }) => {
               <div className={styles.allProgramsItem} key={item.hash}>
                 <p className={styles.allProgramsItemHash}>{item.hash}</p>
                 <div className={styles.programsListBtns}>
-                  <button
-                    type="button"
-                    aria-label="refresh"
-                    onClick={() => handleOpenForm(item.hash, item.name, true)}
-                  >
+                  <button type="button" aria-label="refresh" onClick={() => handleOpenForm(item.hash, item.name, true)}>
                     <img src={MessageIcon} alt="message" />
                   </button>
                   <button

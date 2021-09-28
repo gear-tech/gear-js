@@ -6,7 +6,8 @@ import { RootState } from 'store/reducers';
 import { routes } from 'routes';
 import { CodeIcon, LogoIcon, LogoutIcon, NotificationIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
-import CodeIllustration from 'assets/images/code.svg';import { Modal } from '../Modal';
+import CodeIllustration from 'assets/images/code.svg';
+import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
 import { Wallet } from '../Wallet';
 
@@ -54,14 +55,14 @@ export const Header: VFC = () => {
 
     return () => {
       document.body.style.overflow = 'unset';
-    }
-  }, [isOpen])
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (localStorage.getItem('gear_mnemonic')) {
       setIsKey(true);
     }
-  }, [])
+  }, []);
 
   return (
     <header className="header">

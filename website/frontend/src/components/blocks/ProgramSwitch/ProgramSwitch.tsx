@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, VFC } from 'react';
 import clsx from 'clsx';
-import { Link/* , Redirect */} from 'react-router-dom';
+import { Link /* , Redirect */ } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES } from 'consts';
