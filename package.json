@@ -14,9 +14,9 @@
     "api"
   ],
   "dependencies": {
+    "@gear-js/api": "file:api",
     "@gear-js/backend": "file:website/backend",
     "@gear-js/frontend": "file:website/frontend",
-    "@gear-js/ide-backend": "file:website/ide-backend",
-    "@gear-js/api": "file:api"
+    "@gear-js/ide-backend": "file:website/ide-backend"
   }
 }

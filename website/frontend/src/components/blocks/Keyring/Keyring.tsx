@@ -6,7 +6,7 @@ import Identicon from '@polkadot/react-identicon';
 
 import './Keyring.scss';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { ReadNotificationsIcon } from '../../../assets/Icons';
+import { CopyClipboard } from '../../../assets/Icons';
 import { StatusPanel } from '../StatusPanel/StatusPanel';
 
 type Props = {
@@ -101,7 +101,7 @@ export const Keyring = ({ handleClose }: Props) => {
           <div className="keyring__copy">
             <div className="keyring__copy-wrapper">
               <button className="keyring__copy-button" type="button" onClick={copyToClipboard}>
-                <ReadNotificationsIcon color="#ffffff" />
+                <CopyClipboard color="#ffffff" />
               </button>
             </div>
           </div>
