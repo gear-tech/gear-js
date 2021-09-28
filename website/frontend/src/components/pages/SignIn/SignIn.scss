@@ -80,10 +80,9 @@
   justify-content: center;
 }
 
-
 @media (max-width: 768px) {
   .main {
-    padding-bottom: 0!important;
+    padding-bottom: 0 !important;
   }
   .sign-in {
     margin-top: 0;

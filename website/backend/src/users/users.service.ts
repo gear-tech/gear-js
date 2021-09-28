@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { isU8a, u8aToHex } from '@polkadot/util';
+import { isHex, isU8a, u8aToHex } from '@polkadot/util';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 
@@ -91,13 +91,15 @@ export class UsersService {
     }
   }
 
-  addPublicKey(user: User, pubKey) {
+  addPublicKey(user: User, pubKey, pubKeyRaw) {
     user.publicKey = pubKey;
-    this.userRepository.save(user);
-  }
-
-  addSeed(user: User, seed: Uint8Array | string) {
-    user.seed = isU8a(seed) ? u8aToHex(seed) : seed;
-    this.userRepository.save(user);
+    if (pubKeyRaw) {
+      user.publicKeyRaw = isHex(pubKeyRaw)
+        ? pubKeyRaw
+        : isU8a(pubKeyRaw)
+        ? u8aToHex(pubKeyRaw)
+        : '';
+    }
+    return this.userRepository.save(user);
   }
 }

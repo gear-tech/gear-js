@@ -27,7 +27,15 @@ export class WsRpcMethods extends RpcMethods {
     },
     addMeta: async (cb, user, params) => {
       try {
-        await this.gearService.addMetadata(user, params, cb);
+        await this.gearService.addMetadata(
+          user,
+          {
+            programId: params.programId,
+            file: params.meta_file,
+            types: params.meta,
+          },
+          cb,
+        );
       } catch (error) {
         throw error;
       }
@@ -38,7 +46,7 @@ export class WsRpcMethods extends RpcMethods {
   blocks = {
     newBlocks: async (cb) => {
       const unsub = await this.gearService.subscribeNewHeads(cb);
-      return { name: 'blocks', unsub: unsub };
+      return { name: 'blocks', unsub };
     },
     unsubscribe: () => {
       return { name: 'blocks', unsub: null };
@@ -66,11 +74,13 @@ export class WsRpcMethods extends RpcMethods {
       if (!params || !params.value) {
         throw new InvalidParamsError();
       }
-      await this.gearService.balanceTransfer({
-        to: user.publicKey,
-        value: params.value,
-        cb: cb,
-      });
+      await this.gearService.balanceTransfer(
+        {
+          to: user.publicKey,
+          value: params.value,
+        },
+        cb,
+      );
     },
   };
 
@@ -95,7 +105,7 @@ export class WsRpcMethods extends RpcMethods {
     },
     payloadType: async (cb, user, params) => {
       try {
-        const type = await this.gearService.getPayloadType(params.destination);
+        const type = await this.gearService.getMeta(params.destination);
         cb(undefined, {
           payloadType: type,
         });
@@ -113,7 +123,7 @@ export class WsRpcMethods extends RpcMethods {
   events = {
     subscribe: async (cb, user) => {
       const unsub = await this.gearService.subscribeEvents(user, cb);
-      return { name: 'events', unsub: unsub };
+      return { name: 'events', unsub };
     },
     unsubscribe: () => {
       return { name: 'events', unsub: null };
