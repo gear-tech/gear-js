@@ -1,185 +1,112 @@
+import {
+  CreateType,
+  GearApi,
+  GearKeyring,
+  getWasmMetadata,
+} from '@gear-js/api';
+import { Metadata } from '@gear-js/api/types';
+import { isJsonObject } from '@polkadot/util';
+import { KeyringPair } from '@polkadot/keyring/types';
+import { UnsubscribePromise } from '@polkadot/api/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { ApiPromise, WsProvider } from '@polkadot/api';
-import { randomAsHex } from '@polkadot/util-crypto';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import {
-  createKeyring,
-  keyringFromJson,
-  keyringFromMnemonic,
-  keyringFromSeed,
-  keyringFromSuri,
-} from './keyring';
-import {
   GearNodeError,
   GettingMetadataError,
-  InternalServerError,
   InvalidParamsError,
   ProgramNotFound,
 } from 'src/json-rpc/errors';
-import { isJsonObject, u8aToHex } from '@polkadot/util';
-import { submitProgram } from './program.gear';
+import { sendProgram } from './program.gear';
 import { sendMessage } from './message.gear';
-import definitions from 'src/interfaces/definitions';
 import { GearNodeEvents } from './events';
-import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { getWasmMetadata } from './wasm.meta';
 import { LogMessage } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';
-import { CreateType } from 'src/gear-node/custom-types';
-import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
 import { SendMessageData, UploadProgramData } from './interfaces';
-import { Bytes } from '@polkadot/types';
 import { RpcCallback } from 'src/json-rpc/interfaces';
+import { Program } from 'src/programs/entities/program.entity';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
 export class GearNodeService {
-  private provider: WsProvider;
-  private api: ApiPromise;
-  private keyring: KeyringPair;
+  private api: GearApi;
+  private rootKeyring: KeyringPair;
 
   constructor(
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
     private readonly messageService: MessagesService,
     private readonly subscription: GearNodeEvents,
-    private readonly createType: CreateType,
   ) {
-    this.provider = new WsProvider(process.env.WS_PROVIDER);
-    this.createApiPromise().then((api: ApiPromise) => {
-      this.subscription.subscribeBlocks(api);
-      this.subscription.subscribeEvents(api);
-      this.saveEvents();
-      this.updateWebsiteAccountBalance();
-    });
-  }
-
-  private createApiPromise(): Promise<ApiPromise> {
-    return new Promise(async (resolve, reject) => {
-      const types = Object.values(definitions).reduce(
-        (res, types): object => ({ ...res, ...types }),
-        {},
-      );
-      this.api = await ApiPromise.create({
-        provider: this.provider,
-        types: {
-          ...types,
-        },
-        rpc: {
-          gear: {
-            getGasSpent: {
-              description: 'Get GasSpent',
-              params: [
-                {
-                  name: 'id',
-                  type: 'H256',
-                },
-                {
-                  name: 'payload',
-                  type: 'Bytes',
-                },
-              ],
-              type: 'u64',
-            },
-          },
-        },
-      });
-      resolve(this.api);
-    });
+    GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then(
+      async (api) => {
+        this.api = api;
+        this.subscription.subscribeEvents(api);
+        const accountSeed = process.env.ACCOUNT_SEED;
+        this.rootKeyring = accountSeed
+          ? await GearKeyring.fromSeed(
+              process.env.ACCOUNT_SEED,
+              'websiteAccount',
+            )
+          : (await GearKeyring.create('websiteAccount')).keyring;
+        this.updateWebsiteAccountBalance();
+      },
+    );
   }
 
   async updateWebsiteAccountBalance() {
-    const accountSeed = process.env.ACCOUNT_SEED;
     const sudoSeed = process.env.SUDO_SEED;
     const sudoKeyring = parseInt(process.env.DEBUG)
-      ? keyringFromSuri('//Alice', 'Alice default')
-      : keyringFromSeed('websiteAccount', sudoSeed);
-    if (!accountSeed) {
-      const { keyring } = createKeyring('websiteAccount');
-      this.keyring = keyring;
-    } else {
-      this.keyring = keyringFromSeed('websiteAccount', accountSeed);
-    }
+      ? GearKeyring.fromSuri('//Alice', 'Alice default')
+      : await GearKeyring.fromSeed('websiteAccount', sudoSeed);
 
-    const currentBalance = await this.getBalance(this.keyring.address);
-    this.balanceTransfer({
-      from: sudoKeyring,
-      to: this.keyring.address,
-      value: 999_999_999_999 - currentBalance.freeBalance,
-      cb: (error, data) => {
-        if (error) {
-          logger.error(error);
-        } else {
-          logger.log(data);
-        }
-      },
-    });
-  }
-
-  createKeyPair(user: User): KeyringPair$Json {
-    if (user.seed) {
-      const keyring = keyringFromSeed(user.username, user.seed);
-      if (u8aToHex(keyring.publicKey) !== user.publicKey) {
-        this.userService.addPublicKey(user, u8aToHex(keyring.publicKey));
-      }
-      return keyring.toJson();
+    const currentBalance = await this.api.balance.findOut(
+      this.rootKeyring.address,
+    );
+    if (currentBalance.toNumber() < +process.env.SITE_ACCOUNT_BALANCE) {
+      this.balanceTransfer(
+        {
+          from: sudoKeyring,
+          to: this.rootKeyring.address,
+          value: +process.env.SITE_ACCOUNT_BALANCE - currentBalance.toNumber(),
+        },
+        (error, data) => {
+          if (error) {
+            logger.error(error);
+          } else {
+            logger.log(data);
+          }
+        },
+      );
     }
-    const { publicKey, seed, json } = createKeyring(user.username);
-    this.userService.addPublicKey(user, publicKey);
-    this.userService.addSeed(user, seed);
-    return json;
   }
 
   async uploadProgram(
     user: User,
     data: UploadProgramData,
-    cb: RpcCallback,
+    callback: RpcCallback,
   ): Promise<void> {
     if (
       !data ||
       !data.gasLimit ||
       (!data.value && data.value !== 0) ||
       !data.file ||
-      !data.filename
+      !data.filename ||
+      !data.keyPairJson
     ) {
       throw new InvalidParamsError();
     }
 
     const binary = this.programService.parseWASM(data.file);
-    let code = null;
+    const keyring = GearKeyring.fromJson(data.keyPairJson);
     try {
-      code = this.createType.toBytes('bytes', Array.from(binary));
-    } catch (error) {
-      logger.error(error.message);
-      throw new InvalidParamsError("Can't encode program to bytes");
-    }
-
-    const keyring = data.keyPairJson
-      ? keyringFromJson(data.keyPairJson)
-      : keyringFromSeed(user.username, user.seed);
-    if (keyring.isLocked) {
-      keyring.unlock();
-    }
-    const salt = data.salt || randomAsHex(20);
-    let meta = {
-      title: undefined,
-      init_input: undefined,
-      init_output: undefined,
-      input: undefined,
-      output: undefined,
-    };
-    if (data.meta) {
-      try {
-        meta = await getWasmMetadata(data.meta);
-        Object.keys(meta).forEach((elem) => {
-          meta[elem] = JSON.stringify(meta[elem]);
-        });
-      } catch (error) {
-        throw new GettingMetadataError();
+      if (data.meta instanceof Buffer) {
+        data.meta = await getWasmMetadata(data.meta);
       }
+    } catch (error) {
+      logger.error(error);
     }
     const programData = {
       user: user,
@@ -187,54 +114,100 @@ export class GearNodeService {
       hash: null,
       blockHash: null,
       uploadedAt: null,
-      title: meta.title || null,
-      initType: meta.init_input || data.initType || null,
-      initOutType: meta.init_output || data.initOutType || null,
-      incomingType: meta.input || data.incomingType || null,
-      expectedType: meta.output || data.expectedType || null,
+      title: data.meta.title || null,
+      meta: data.meta,
     };
 
-    let payload: Bytes;
-    try {
-      payload = this.createType.toBytes(programData.initType, data.initPayload);
-    } catch (error) {
-      logger.error(error);
-      if (error.toJson) throw error;
-      else throw new InternalServerError();
-    }
-    let initMessage: LogMessage = {
+    const initMessage: LogMessage = {
       id: null,
       destination: user,
       program: null,
       date: null,
       payload: data.initPayload.toString(),
     };
+    let program: Program;
+
     try {
-      await submitProgram(
+      await sendProgram(
         this.api,
         keyring,
-        code,
-        salt,
-        payload,
+        binary,
+        data.initPayload,
         data.gasLimit,
         data.value,
-        programData,
-        initMessage,
-        async (action: string, data?: any) => {
+        data.meta,
+        async (action: string, callbackData?: any) => {
           switch (action) {
-            case 'save':
-              const program = await this.programService.saveProgram(
-                programData,
-              );
+            case 'saveProgram':
+              programData.hash = callbackData.programId;
+              programData.uploadedAt = new Date();
+              program = await this.programService.saveProgram(programData);
               initMessage.program = program;
+              break;
+            case 'saveMessage':
+              initMessage.id = callbackData.initMessageId;
               initMessage.date = new Date();
               this.messageService.save(initMessage);
+              program.blockHash = callbackData.blockHash;
+              this.programService.updateProgram(program);
               break;
-            case 'gear':
-              cb(undefined, data);
-              break;
-            case 'remove':
-              this.programService.removeProgram(programData.hash);
+            default:
+              callback(undefined, callbackData);
+          }
+        },
+      );
+    } catch (error) {
+      this.programService.removeProgram(programData.hash);
+      throw error;
+    }
+  }
+
+  async sendMessage(
+    user: User,
+    data: SendMessageData,
+    callback: RpcCallback,
+  ): Promise<void> {
+    if (
+      !data ||
+      !data.destination ||
+      !data.payload ||
+      !data.gasLimit ||
+      !data.value ||
+      !data.keyPairJson
+    ) {
+      throw new InvalidParamsError();
+    }
+
+    const keyring = GearKeyring.fromJson(data.keyPairJson);
+    const program = await this.programService.findProgram(data.destination);
+    if (!program) {
+      callback(new ProgramNotFound(data.destination).toJson());
+      return null;
+    }
+
+    let initMessage: LogMessage = {
+      id: null,
+      destination: user,
+      program: program,
+      date: null,
+      payload: data.payload.toString(),
+    };
+    try {
+      await sendMessage(
+        this.api,
+        keyring,
+        program.hash,
+        data.payload,
+        data.gasLimit,
+        data.value,
+        JSON.parse(program.meta),
+        async (action, callbackData) => {
+          switch (action) {
+            case 'save':
+              initMessage.id = callbackData.messageId;
+              initMessage.date = new Date();
+              this.messageService.save(initMessage);
+              callback(undefined, callbackData);
               break;
           }
         },
@@ -244,120 +217,50 @@ export class GearNodeService {
     }
   }
 
-  async sendMessage(
-    user: User,
-    messageData: SendMessageData,
-    cb: RpcCallback,
-  ): Promise<void> {
-    if (
-      !messageData ||
-      !messageData.destination ||
-      !messageData.payload ||
-      !messageData.gasLimit ||
-      !messageData.value
-    ) {
-      throw new InvalidParamsError();
-    }
-
-    const keyring = messageData.keyPairJson
-      ? keyringFromJson(messageData.keyPairJson)
-      : keyringFromSeed(user.username, user.seed);
-    if (keyring.isLocked) {
-      keyring.unlock();
-    }
-
-    const program = await this.programService.findProgram(
-      messageData.destination,
-    );
-    if (!program) {
-      cb(new ProgramNotFound(messageData.destination).toJson());
-      return null;
-    }
-
-    let payload: Bytes;
-    try {
-      payload = await this.createType.toBytes(
-        program.incomingType || 'utf8',
-        messageData.payload,
-      );
-    } catch (error) {
-      if (error.toJson) throw error;
-      else throw new InternalServerError();
-    }
-    let initMessage: LogMessage = {
-      id: null,
-      destination: user,
-      program: program,
-      date: null,
-      payload: messageData.payload.toString(),
-    };
-    try {
-      await sendMessage(
-        this.api,
-        keyring,
-        program.hash,
-        payload,
-        messageData.gasLimit,
-        messageData.value,
-        initMessage,
-        async (action, data) => {
-          switch (action) {
-            case 'save':
-              this.messageService.save(initMessage);
-              break;
-            case 'gear':
-              cb(undefined, data);
-              break;
-          }
-        },
-      );
-    } catch (error) {
-      cb(error.toJson());
-    }
-  }
-
   async totalIssuance(): Promise<string> {
-    const total = (await this.api.query.balances.totalIssuance()).toHuman();
+    const total = await this.api.totalIssuance();
     return total;
   }
 
-  async balanceTransfer(options: {
-    from?: KeyringPair;
-    to: string;
-    value: number;
-    cb?: RpcCallback;
-  }): Promise<void> {
+  async balanceTransfer(
+    options: {
+      from?: KeyringPair;
+      to: string;
+      value: number;
+    },
+    callback?: RpcCallback,
+  ): Promise<void> {
     if (
-      options.to !== this.keyring.address &&
-      (await this.getBalance(this.keyring.address)).freeBalance <= options.value
+      options.to !== this.rootKeyring.address &&
+      (await this.api.balance.findOut(this.rootKeyring.address)).toNumber() <
+        options.value
     ) {
       await this.updateWebsiteAccountBalance();
     }
+    if (!options.from) {
+      options.from = this.rootKeyring;
+    }
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        const unsub = await this.api.tx.balances
-          .transfer(options.to, options.value)
-          .signAndSend(options.from ? options.from : this.keyring, (result) => {
-            if (result.status.isFinalized) {
-              if (options.cb) {
-                options.cb(undefined, {
-                  message: `Transfer balance succeed`,
-                });
-              }
-              unsub();
-              resolve();
-            }
-          });
-      } catch (error) {
-        reject(new GearNodeError(error.message));
-      }
-    });
+    try {
+      this.api.balance
+        .transferBalance(options.from, options.to, options.value, () => {})
+        .then(() => {
+          callback(undefined, 'Transfer balance succeed');
+        });
+    } catch (error) {
+      logger.error(error.message);
+      throw new GearNodeError(error.message);
+    }
   }
 
-  async getBalance(publicKey: string): Promise<{ freeBalance: number }> {
-    const { data: balance } = await this.api.query.system.account(publicKey);
-    return { freeBalance: balance.free.toNumber() };
+  async getBalance(publicKey: string): Promise<{ freeBalance: string }> {
+    try {
+      const balance = await this.api.balance.findOut(publicKey);
+      return { freeBalance: balance.toHuman() };
+    } catch (error) {
+      logger.error(error);
+      throw new GearNodeError(error.message);
+    }
   }
 
   async getGasSpent(hash: string, payload: string | JSON): Promise<number> {
@@ -365,17 +268,22 @@ export class GearNodeService {
     if (!program) {
       return 0;
     }
-    const bytes = this.createType.toBytes(program.incomingType, payload);
-    let gasSpent = await this.api.rpc.gear.getGasSpent(hash, bytes.toHex());
+    const meta = JSON.parse(program.meta);
+    let gasSpent = await this.api.program.getGasSpent(
+      CreateType.encode('H256', hash),
+      payload,
+      meta.input,
+      meta,
+    );
     return gasSpent.toNumber();
   }
 
-  async getPayloadType(hash: string): Promise<string> {
+  async getMeta(hash: string): Promise<Metadata> {
     const program = await this.programService.findProgram(hash);
     if (!program) {
       throw new ProgramNotFound(hash);
     }
-    return program.incomingType;
+    return JSON.parse(program.meta);
   }
 
   async saveEvents(): Promise<void> {
@@ -386,9 +294,12 @@ export class GearNodeService {
             const program = await this.programService.findProgram(
               event.program,
             );
-            const response = this.createType
-              .fromBytes(program.expectedType, event.response)
-              .toJSON();
+            const meta = JSON.parse(program.meta);
+            const response = CreateType.decode(
+              meta.output,
+              event.response,
+              meta,
+            ).toJSON();
             this.messageService.update({
               id: event.id,
               program: program,
@@ -410,13 +321,10 @@ export class GearNodeService {
     });
   }
 
-  async subscribeEvents(
-    user: User,
-    callback: RpcCallback,
-  ): Promise<Subscription> {
+  async subscribeEvents(user: User, callback: RpcCallback): Promise<any> {
     const filtered = this.subscription.events.pipe(
       filter((event) => {
-        return event.destination === user.publicKey;
+        return event.destination === user.publicKeyRaw;
       }),
     );
     const unsub = filtered.subscribe({
@@ -426,9 +334,11 @@ export class GearNodeService {
             const program = await this.programService.findProgram(
               event.program,
             );
-            const response = this.createType
-              .fromBytes(program.expectedType, event.response)
-              .toJSON();
+            const meta = JSON.parse(program.meta);
+            let response = !event.error
+              ? CreateType.decode(meta.output, event.response, meta)
+              : '';
+            response = response.toJSON ? response.toJSON() : response;
             callback(undefined, {
               event: 'Log',
               id: event.id,
@@ -450,18 +360,16 @@ export class GearNodeService {
         }
       },
     });
-    return unsub;
+    return unsub.unsubscribe;
   }
 
-  subscribeNewHeads(callback: RpcCallback): Subscription {
+  subscribeNewHeads(callback: RpcCallback): UnsubscribePromise {
     try {
-      const unsub = this.subscription.blocks.subscribe({
-        next: (head) => {
-          callback(undefined, {
-            hash: head.hash.toHex(),
-            number: head.number.toString(),
-          });
-        },
+      const unsub = this.api.gearEvents.subscribeNewBlocks((head) => {
+        callback(undefined, {
+          hash: head.hash.toHex(),
+          number: head.number.toString(),
+        });
       });
       return unsub;
     } catch (error) {
@@ -469,48 +377,36 @@ export class GearNodeService {
     }
   }
 
-  async addMetadata(user, data, callback) {
-    let meta = {
+  async addMetadata(
+    user: User,
+    data: { programId: string; file?: Buffer; types?: any },
+    callback,
+  ) {
+    const program = await this.programService.findProgram(data.programId, user);
+    if (!program) {
+      callback(new ProgramNotFound(data.programId));
+    }
+    let meta: Metadata = {
       title: undefined,
       init_input: undefined,
       init_output: undefined,
       input: undefined,
       output: undefined,
     };
-    if (data.meta) {
+    if (data.file) {
       try {
-        meta = await getWasmMetadata(data.meta);
-        Object.keys(meta).forEach((elem) => {
-          meta[elem] = JSON.stringify(meta[elem]);
-        });
+        meta = await getWasmMetadata(data.file);
       } catch (error) {
         throw new GettingMetadataError();
       }
+    } else {
+      meta = data.types;
     }
-    const programData = {
-      user: user,
-      name: data.name,
-      hash: data.hash,
-      blockHash: null,
-      uploadedAt: new Date(),
-      title: meta.title || null,
-      initType: meta.init_input || data.initType || null,
-      initOutType: meta.init_output || data.initOutType || null,
-      incomingType: meta.input || data.incomingType || null,
-      expectedType: meta.output || data.expectedType || null,
-    };
-
-    callback(undefined, await this.programService.saveProgram(programData));
+    callback(undefined, await this.programService.addMeta(program, meta));
   }
 
   async getAllNoGUIPrograms() {
-    let programs = (await this.api.rpc.state.getKeys('g::prog::')).map(
-      (prog) => {
-        return `0x${prog
-          .toHex()
-          .slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
-      },
-    );
+    let programs = await this.api.program.allUploadedPrograms();
     const filter = async (array, condition) => {
       const results = await Promise.all(array.map(condition));
       return array.filter((_v, index) => results[index]);

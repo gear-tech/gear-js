@@ -36,15 +36,19 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
 
     if (unsub) {
       if (unsub.unsub) {
+        this.unsubs.forEach((subs) => {
+          if (subs.name === unsub.name) {
+            subs();
+            return null;
+          }
+        });
         this.unsubs.push(unsub);
       } else {
         const unsubIndex = this.unsubs.findIndex(
           (element) => element.name === unsub.name,
         );
-        this.unsubs[unsubIndex].unsub.complete();
-        this.unsubs = this.unsubs.filter(
-          (value, index, arr) => index === unsubIndex,
-        );
+        this.unsubs[unsubIndex].unsub();
+        this.unsubs.splice(unsubIndex, 1);
       }
     }
     return null;
@@ -53,7 +57,7 @@ export class WsRpcMessageHandler extends RpcMessageHandler {
   unsubscribe() {
     this.unsubs.forEach((element) => {
       try {
-        element.unsub.unsubscribe();
+        element.unsub();
       } catch (error) {}
     });
     this.unsubs = [];

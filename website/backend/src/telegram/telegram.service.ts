@@ -40,11 +40,13 @@ export class TelegramService {
   }
 
   async balanceUp(user: User, cb) {
-    this.gearService.balanceTransfer({
-      to: user.publicKey,
-      value: 100000000,
+    this.gearService.balanceTransfer(
+      {
+        to: user.publicKey,
+        value: 100000000,
+      },
       cb,
-    });
+    );
   }
 
   async getBalance(user: User, cb) {
