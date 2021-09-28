@@ -1,4 +1,4 @@
-import React, { useEffect, useState, VFC } from 'react';
+import React, { useContext, useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import {
@@ -14,7 +14,6 @@ import { formatDate } from 'helpers';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { PaginationModel, SearchQueryModel } from 'types/common';
 import { NotificationModel } from 'types/notification';
-import { SocketService } from 'services/SocketService';
 
 import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 import { Pagination } from 'components/Pagination/Pagination';
@@ -23,12 +22,10 @@ import { ReadNotificationsIcon, UnReadNotificationsIcon } from 'assets/Icons';
 import { SearchQueries } from 'components/blocks/SearchQueries/SearchQueries';
 
 import './NotificationsPage.scss';
+import { AppContext } from '../../../contexts/AppContext';
 
-type Props = {
-  socketService: SocketService;
-};
-
-export const NotificationsPage: VFC<Props> = ({ socketService }) => {
+export const NotificationsPage: VFC = () => {
+  const { socketService } = useContext(AppContext);
   const dispatch = useDispatch();
 
   const { notifications, count, countUnread } = useSelector((state: RootState) => state.notifications);
@@ -63,7 +60,7 @@ export const NotificationsPage: VFC<Props> = ({ socketService }) => {
   );
 
   const handleReadAllNotifications = () => {
-    socketService.readNotifications();
+    socketService!.readNotifications();
     dispatch(markAllRecentNotificationsAsReadAction());
     window.location.reload();
   };
@@ -86,7 +83,7 @@ export const NotificationsPage: VFC<Props> = ({ socketService }) => {
 
   const handleReadNotification = (isRead: boolean, id: string) => {
     if (isRead) return;
-    socketService.readNotifications(id);
+    socketService!.readNotifications(id);
     dispatch(markCertainRecentNotificationsAsReadAction([id]));
     setShouldReload(true);
   };

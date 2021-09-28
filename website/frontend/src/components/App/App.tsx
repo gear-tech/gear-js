@@ -1,13 +1,10 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { SocketService } from 'services/SocketService';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { SignIn } from 'components/pages/SignIn/SignIn';
-import { UploadProgramPage } from 'components/pages/UploadProgramPage/UploadProgramPage';
+import { UploadProgramPage } from 'components/pages/UploadProgramPage';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
 import { Callback } from 'components/Callback/Callback';
@@ -25,6 +22,7 @@ import store from '../../store';
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
+import { AppContextProvider } from '../../contexts/AppContext';
 
 const AppComponent: FC = () => {
   const dispatch = useDispatch();
@@ -32,21 +30,6 @@ const AppComponent: FC = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
-  const [isSocketsConnected, setIsSocketsConnected] = useState(false);
-
-  const socketServiceRef = useRef<any>(null);
-
-  useEffect(() => {
-    if (!socketServiceRef.current) {
-      socketServiceRef.current = new SocketService(dispatch);
-    }
-    if (!isSocketsConnected && socketServiceRef.current) {
-      socketServiceRef.current.getTotalIssuance();
-      socketServiceRef.current.subscribeNewBlocks();
-      socketServiceRef.current.subscribeEvents();
-      setIsSocketsConnected(true);
-    }
-  }, [dispatch, isSocketsConnected, setIsSocketsConnected]);
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
@@ -73,8 +56,8 @@ const AppComponent: FC = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AppContextProvider>
         <div className="app">
           {(isProgramUploading || isMessageSending) && (
             <>
@@ -86,13 +69,13 @@ const AppComponent: FC = () => {
           <Main>
             <Switch>
               <PrivateRoute exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
-                <UploadProgramPage socketService={socketServiceRef.current} />
+                <UploadProgramPage />
               </PrivateRoute>
               <PrivateRoute path={routes.editor} exact>
                 <EditorPage />
               </PrivateRoute>
               <PrivateRoute path={routes.notifications} exact>
-                <NotificationsPage socketService={socketServiceRef.current} />
+                <NotificationsPage />
               </PrivateRoute>
               <Route exact path={routes.signIn}>
                 <SignIn />
@@ -110,8 +93,8 @@ const AppComponent: FC = () => {
           </Main>
           {isFooterHidden() || <Footer />}
         </div>
-      </BrowserRouter>
-    </DndProvider>
+      </AppContextProvider>
+    </BrowserRouter>
   );
 };
 
