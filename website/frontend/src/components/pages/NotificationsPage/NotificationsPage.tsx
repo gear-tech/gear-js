@@ -23,12 +23,16 @@ import { ReadNotificationsIcon, UnReadNotificationsIcon } from 'assets/Icons';
 import { SearchQueries } from 'components/blocks/SearchQueries/SearchQueries';
 
 import './NotificationsPage.scss';
+import { useApi } from '../../../hooks/useApi';
 
 type Props = {
   socketService: SocketService;
 };
 
 export const NotificationsPage: VFC<Props> = ({ socketService }) => {
+  const abc = useApi();
+  console.log(abc);
+
   const dispatch = useDispatch();
 
   const { notifications, count, countUnread } = useSelector((state: RootState) => state.notifications);

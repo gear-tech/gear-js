@@ -10,12 +10,16 @@ import { UploadProgram } from '../../blocks/UploadProgram/UploadProgram';
 import { BlocksList } from '../../blocks/BlocksList/BlocksList';
 import { BlocksListUploaded } from '../../blocks/BlocksList/BlocksListUploaded';
 import './UploadProgramPage.scss';
+import { useApi } from '../../../hooks/useApi';
 
 type Props = {
   socketService: SocketService;
 };
 
 export const UploadProgramPage: VFC<Props> = ({ socketService }) => {
+  const abc = useApi();
+  console.log(abc);
+
   const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);
   const isAllProgramsPage = useRouteMatch(routes.allPrograms);
 
