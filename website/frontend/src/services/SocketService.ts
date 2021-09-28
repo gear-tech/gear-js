@@ -9,8 +9,7 @@ import {
   RPC_METHODS,
   SOCKET_RESULT_STATUSES,
   EVENT_TYPES,
-  GEAR_BALANCE_TRANSFER_VALUE,
-} from 'consts';
+  GEAR_BALANCE_TRANSFER_VALUE} from 'consts';
 import { BalanceModel, MessageModel, MetaModel, UploadProgramModel } from 'types/program';
 import {
   fetchBlockAction,
@@ -21,8 +20,7 @@ import {
   fetchRecentNotificationSuccessAction,
   fetchProgramPayloadTypeAction,
   fetchGasAction,
-  getUnreadNotificationsCount,
-} from 'store/actions/actions';
+  getUnreadNotificationsCount} from 'store/actions/actions';
 
 export interface ISocketService {
   uploadProgram(file: File, opts: UploadProgramModel): void;
@@ -31,6 +29,7 @@ export interface ISocketService {
 }
 
 export class SocketService implements ISocketService {
+
   private readonly socket: any;
 
   private readonly key: string | null;
@@ -39,52 +38,50 @@ export class SocketService implements ISocketService {
     this.key = localStorage.getItem(GEAR_STORAGE_KEY);
     this.socket = io(GEAR_LOCAL_WS_URI, {
       transports: ['websocket'],
-      query: { Authorization: `Bearer ${this.key || ''}` },
+      query: { Authorization: `Bearer ${this.key || ""}` },
     });
     this.socket.on('message', (data: any) => {
-      if (Object.prototype.hasOwnProperty.call(data, 'result')) {
-        if (Object.prototype.hasOwnProperty.call(data.result, 'totalIssuance')) {
-          dispatch(fetchTotalIssuanceAction(data.result));
-        } else if (Object.prototype.hasOwnProperty.call(data.result, 'hash')) {
-          dispatch(fetchBlockAction(data.result));
-          if (Object.prototype.hasOwnProperty.call(data.result, 'uploadedAt')) {
-            alert('Meta data uploaded');
+      if (Object.prototype.hasOwnProperty.call(data, "result")) {
+        if (Object.prototype.hasOwnProperty.call(data.result, "totalIssuance")) {
+          dispatch(fetchTotalIssuanceAction(data.result))
+        } else if (Object.prototype.hasOwnProperty.call(data.result, "hash")) {
+          dispatch(fetchBlockAction(data.result))
+          if (Object.prototype.hasOwnProperty.call(data.result, "uploadedAt")) {
+            alert("Meta data uploaded")
           }
-        } else if (Object.prototype.hasOwnProperty.call(data.result, 'status')) {
+        } else if (Object.prototype.hasOwnProperty.call(data.result, "status")) {
           if (data.result.status === SOCKET_RESULT_STATUSES.IN_BLOCK) {
             dispatch(programStatusAction(PROGRAM_UPLOAD_STATUSES.IN_BLOCK));
           } else if (data.result.status === SOCKET_RESULT_STATUSES.FINALIZED) {
             dispatch(programStatusAction(PROGRAM_UPLOAD_STATUSES.FINALIZED));
             dispatch(handleProgramSuccess());
           }
-        } else if (Object.prototype.hasOwnProperty.call(data.result, 'type')) {
-          if (
-            data.result.type === EVENT_TYPES.PROGRAM_INITIALIZED ||
+        } else if (Object.prototype.hasOwnProperty.call(data.result, "type")) {
+          if (data.result.type === EVENT_TYPES.PROGRAM_INITIALIZED ||
             data.result.type === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE ||
-            data.result.type === EVENT_TYPES.LOG
-          ) {
-            dispatch(fetchRecentNotificationSuccessAction(data.result));
+            data.result.type === EVENT_TYPES.LOG) {
+            dispatch(fetchRecentNotificationSuccessAction(data.result))
             dispatch(getUnreadNotificationsCount());
           }
-        } else if (Object.prototype.hasOwnProperty.call(data.result, 'payloadType')) {
-          dispatch(fetchProgramPayloadTypeAction(data.result.payloadType));
-        } else if (Object.prototype.hasOwnProperty.call(data.result, 'gasSpent')) {
+        } else if (Object.prototype.hasOwnProperty.call(data.result, "payloadType")) {
+          dispatch(fetchProgramPayloadTypeAction(data.result.payloadType))
+        } else if (Object.prototype.hasOwnProperty.call(data.result, "gasSpent")) {
           dispatch(fetchGasAction(data.result.gasSpent));
         }
-      } else if (Object.prototype.hasOwnProperty.call(data, 'error')) {
-        if (Object.prototype.hasOwnProperty.call(data.error, 'message')) {
-          const uploadErrors = Object.values(PROGRAM_ERRRORS).map((value) => value.toLowerCase());
+      } else if (Object.prototype.hasOwnProperty.call(data, "error")) {
+        if (Object.prototype.hasOwnProperty.call(data.error, "message")) {
+          const uploadErrors = Object.values(PROGRAM_ERRRORS).map(value => value.toLowerCase());
           if (uploadErrors.includes(data.error.message.toLowerCase())) {
             dispatch(handleProgramError(data.error.message));
             if (data.error.message.toLowerCase() === PROGRAM_ERRRORS.BALANCE_LOW.toLowerCase()) {
               this.transferBalance({
-                value: GEAR_BALANCE_TRANSFER_VALUE,
-              });
+                value: GEAR_BALANCE_TRANSFER_VALUE
+              })
             }
           }
         }
       }
-    });
+    })
   }
 
   private generateRandomId() {
@@ -92,11 +89,20 @@ export class SocketService implements ISocketService {
   }
 
   public uploadProgram(file: File, opts: UploadProgramModel) {
-    const { gasLimit, value, initPayload, initType, incomingType, expectedType, initOutType, meta } = opts;
+    /* eslint-disable @typescript-eslint/naming-convention */
+    const { gasLimit, value, initPayload, init_input, init_output, input, output, types } = opts;
     const filename = file.name;
     const generatedId = this.generateRandomId();
     const keyPairJson = localStorage.getItem(GEAR_MNEMONIC_KEY) || '';
-    console.log('123');
+
+    const meta = {
+      init_input,
+      init_output,
+      input,
+      output,
+      types
+    }
+
     return this.socket.emit('message', {
       jsonrpc: JSONRPC_VERSION,
       id: generatedId,
@@ -105,15 +111,11 @@ export class SocketService implements ISocketService {
         file,
         filename,
         gasLimit,
-        value,
         initPayload,
-        initType,
-        incomingType,
-        expectedType,
-        initOutType,
+        value,
         meta,
-        keyPairJson,
-      },
+        keyPairJson
+      }
     });
   }
 
@@ -154,8 +156,8 @@ export class SocketService implements ISocketService {
       jsonrpc: JSONRPC_VERSION,
       id: generatedId,
       method: RPC_METHODS.BALANCE_TRANSFER,
-      params: balanceValue,
-    });
+      params: balanceValue
+    })
   }
 
   public sendMessageToProgram(messageData: MessageModel) {
@@ -165,23 +167,23 @@ export class SocketService implements ISocketService {
       jsonrpc: JSONRPC_VERSION,
       id: generatedId,
       method: RPC_METHODS.SEND_MESSAGE,
-      params: messageData,
-    });
+      params: messageData
+    })
   }
 
   public sendMetaToProgram(metaData: MetaModel, name: string, hash: string) {
     const generatedId = this.generateRandomId();
 
-    this.socket.emit('message', {
+    this.socket.emit("message", {
       jsonrpc: JSONRPC_VERSION,
       id: generatedId,
       method: RPC_METHODS.SEND_META,
       params: {
         name,
         hash,
-        ...metaData,
-      },
-    });
+        ...metaData
+      }
+    })
   }
 
   public getGasSpent(destination: string, payload: string) {
@@ -193,9 +195,9 @@ export class SocketService implements ISocketService {
       method: RPC_METHODS.GET_GAS_SPENT,
       params: {
         destination,
-        payload,
-      },
-    });
+        payload
+      }
+    })
   }
 
   public getPayloadType(destination: string) {
@@ -206,21 +208,21 @@ export class SocketService implements ISocketService {
       id: generatedId,
       method: RPC_METHODS.GET_PAYLOAD_TYPE,
       params: {
-        destination,
-      },
-    });
+        destination
+      }
+    })
   }
 
   public readNotifications(id?: string) {
     const generatedId = this.generateRandomId();
 
-    const params = id ? { id } : {};
+    const params = id ? {id} : {};
 
     this.socket.emit('message', {
       jsonrpc: JSONRPC_VERSION,
       id: generatedId,
       method: RPC_METHODS.READ_EVENTS,
-      params,
-    });
+      params
+    })
   }
 }
