@@ -76,7 +76,7 @@ export class CreateType {
     } else {
       return this.toBytes(
         registry,
-        namespaces ? (namespaces.has(type) ? namespaces.get(type) : type) : type,
+        namespaces ? this.formType(type, namespaces) : type,
         isJSON(payload) ? toJSON(payload) : payload,
       );
     }
@@ -94,10 +94,19 @@ export class CreateType {
     } else {
       return this.fromBytes(
         registry,
-        namespaces ? namespaces.get(type) : type,
+        namespaces ? this.formType(type, namespaces) : type,
         isJSON(payload) ? toJSON(payload) : payload,
       );
     }
+  }
+
+  private formType(type: string, namespaces: Map<string, string>): string {
+    let reg = /\b\w+\b/g;
+    let result: string;
+    type.match(reg).forEach((match) => {
+      result = namespaces && namespaces.has(match) ? type.replace(match, namespaces.get(match)) : type;
+    });
+    return result;
   }
 
   static encode(type: any, payload: any, meta?: Metadata): Bytes {
