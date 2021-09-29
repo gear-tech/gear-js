@@ -2,22 +2,19 @@ import { useEffect, useState } from 'react';
 import { GearApi } from '@gear-js/api';
 import { initApi } from '../api/initApi';
 
-let api: GearApi | null = null;
-
 export const useApi = (): [GearApi | null, boolean] => {
-  const [gear, setGear] = useState<null | GearApi>(api || null);
-  const [loading, setLoading] = useState(true);
+  const [api, setApi] = useState<null | GearApi>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!gear) {
+    if (!api) {
       initApi().then((result) => {
-        setGear(result);
-        api = result;
-        setLoading(false);
+        setApi(result);
+        setIsLoading(true);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return [gear, loading];
+  return [api, isLoading];
 };
