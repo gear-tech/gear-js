@@ -66,7 +66,7 @@ export const Header: VFC = () => {
 
   return (
     <header className="header">
-      <Link to={routes.main} className={clsx('header__logo')}>
+      <Link to={routes.main} className="header__logo">
         <LogoIcon color={headerIconsColor} />
       </Link>
       {(showUser && (
