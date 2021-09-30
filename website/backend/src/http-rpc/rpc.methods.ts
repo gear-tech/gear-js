@@ -52,13 +52,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     addPublicKey: async (user, params) => {
-      return (
-        await this.userService.addPublicKey(
-          user,
-          params.publicKey,
-          params.publicKeyRaw,
-        )
-      ).publicKey;
+      return (await this.userService.addPublicKey(user, params.publicKey, params.publicKeyRaw)).publicKey;
     },
 
     getBalance: async (user, params?) => {
@@ -83,12 +77,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     addMeta: async (user, params) => {
-      return await this.metaService.addMeta(
-        params.signature,
-        params.meta,
-        params.publicKeyRaw,
-        params.programId,
-      );
+      return await this.metaService.addMeta(params);
     },
 
     getMeta: async (user, params) => {
@@ -96,10 +85,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     all: async (user, params?) => {
-      return await this.programService.getAllPrograms(
-        params ? params.limit : null,
-        params ? params.offset : null,
-      );
+      return await this.programService.getAllPrograms(params ? params.limit : null, params ? params.offset : null);
     },
     allNoGUI: async (user, params) => {
       return await this.gearService.getAllNoGUIPrograms();
