@@ -1,26 +1,20 @@
 import React, { useState, useCallback, useEffect, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
 import { GEAR_MNEMONIC_KEY } from 'consts';
-
 import { generateKeypairAction, programUploadResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
-
 import { SocketService } from 'services/SocketService';
-
-import { StatusPanel } from 'components/blocks/StatusPanel';
-import { ProgramDetails } from '../ProgramDetails';
-
-import './UploadProgram.scss';
+import './Upload.scss';
+import { ProgramDetails } from '../../../../blocks/ProgramDetails/ProgramDetails';
+import { StatusPanel } from '../../../../blocks/StatusPanel/StatusPanel';
 
 type Props = {
   socketService: SocketService;
 };
 
-export const UploadProgram: VFC<Props> = ({ socketService }) => {
-
+export const Upload: VFC<Props> = ({ socketService }) => {
   const dispatch = useDispatch();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);

@@ -4,7 +4,7 @@ import { SocketService } from 'services/SocketService';
 import { RootState } from 'store/reducers';
 import { sendMessageResetAction } from 'store/actions/actions';
 import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
-import { MessageForm } from 'components/blocks/MessageForm/MessageForm';
+import { MessageForm } from 'components/pages/Programs/children/Message/children/MessageForm/MessageForm';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import './Message.scss';
 import { PAGE_TYPES } from 'consts';

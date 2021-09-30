@@ -6,11 +6,13 @@ import { RootState } from 'store/reducers';
 import { routes } from 'routes';
 import { CodeIcon, LogoIcon, LogoutIcon, NotificationIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
-import CodeIllustration from 'assets/images/code.svg';import { Modal } from '../Modal';
+import CodeIllustration from 'assets/images/code.svg';
+import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
 import { Wallet } from '../Wallet';
 
 import './Header.scss';
+import githubIcon from '../../../assets/images/github_gray.svg';
 
 export const Header: VFC = () => {
   const location = useLocation();
@@ -53,20 +55,20 @@ export const Header: VFC = () => {
 
     return () => {
       document.body.style.overflow = 'unset';
-    }
-  }, [isOpen])
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (localStorage.getItem('gear_mnemonic') && localStorage.getItem('gear_mnemonic') !== 'undefined') {
       setIsKey(true);
-    }       
-  }, [])
+    }
+  }, []);
 
   return (
     <header className="header">
-      <div className="header__logo">
+      <Link to={routes.main} className="header__logo">
         <LogoIcon color={headerIconsColor} />
-      </div>
+      </Link>
       {(showUser && (
         <div className={clsx('header__user-block user-block', isMobileMenuOpened && 'show')}>
           <Link to={routes.allPrograms} className={clsx('user-block__programs', isPrograms && 'selected')}>
@@ -87,7 +89,7 @@ export const Header: VFC = () => {
             </Link>
           )}
           <div className="user-block--wrapper">
-            <img src={user?.photoUrl} alt="avatar" />
+            <img src={user?.photoUrl ?? githubIcon} alt="avatar" />
             <span className="user-block__name">{userInfo}</span>
           </div>
           <Link to={routes.logout} className="user-block__logout" aria-label="menuLink" onClick={handleMenuClick}>

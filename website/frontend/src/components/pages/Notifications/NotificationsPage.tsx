@@ -22,7 +22,7 @@ import { ReadNotificationsIcon, UnReadNotificationsIcon } from 'assets/Icons';
 import { SearchQueries } from 'components/blocks/SearchQueries/SearchQueries';
 
 import './NotificationsPage.scss';
-import { AppContext } from '../../../contexts/AppContext';
+import { AppContext } from '../../../contexts/AppContext/AppContext';
 
 export const NotificationsPage: VFC = () => {
   const { socketService } = useContext(AppContext);

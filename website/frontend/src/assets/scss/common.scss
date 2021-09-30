@@ -41,33 +41,33 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-}
 
-.pagination-wrapper div:first-child {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 44px;
-}
+  div:first-child {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 44px;
+  }
 
-.pagination-wrapper button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 24px;
-  color: #ffffff;
-}
+  button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    color: #ffffff;
+  }
 
-.pagination-wrapper span {
-  font-weight: 300;
-  font-size: 21px;
-  line-height: 130%;
-  display: flex;
-  align-items: center;
-  color: #858585;
+  span {
+    font-weight: 300;
+    font-size: 21px;
+    line-height: 130%;
+    display: flex;
+    align-items: center;
+    color: #858585;
+  }
 }
 
 .pagination-bottom {

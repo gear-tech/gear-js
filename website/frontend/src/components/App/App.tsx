@@ -4,15 +4,15 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { SignIn } from 'components/pages/SignIn/SignIn';
-import { UploadProgramPage } from 'components/pages/UploadProgramPage';
+import { Programs } from 'components/pages/Programs/Programs';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
 import { Callback } from 'components/Callback/Callback';
 import { Logout } from 'components/pages/Logout/Logout';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
-import { DocumentPage } from 'components/pages/DocumentPage/DocumentPage';
+import { Document } from 'components/pages/Document/Document';
 import { EditorPage } from 'features/Editor/EditorPage';
-import { NotificationsPage } from 'components/pages/NotificationsPage/NotificationsPage';
+import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
@@ -22,7 +22,7 @@ import store from '../../store';
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
-import { AppContextProvider } from '../../contexts/AppContext';
+import { AppContextProvider } from '../../contexts/AppContext/AppContextProvider';
 
 const AppComponent: FC = () => {
   const dispatch = useDispatch();
@@ -69,7 +69,7 @@ const AppComponent: FC = () => {
           <Main>
             <Switch>
               <PrivateRoute exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
-                <UploadProgramPage />
+                <Programs />
               </PrivateRoute>
               <PrivateRoute path={routes.editor} exact>
                 <EditorPage />
@@ -81,7 +81,7 @@ const AppComponent: FC = () => {
                 <SignIn />
               </Route>
               <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
-                <DocumentPage />
+                <Document />
               </Route>
               <Route path={routes.callback} exact>
                 <Callback />

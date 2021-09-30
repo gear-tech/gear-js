@@ -5,7 +5,7 @@ import { PrivacyPolicy } from '../../blocks/Documents/PrivacyPolicy';
 import { DocumentFooter } from '../../blocks/Documents/DocumentFooter';
 import { TermsOfUse } from '../../blocks/Documents/TermsOfUse';
 
-export const DocumentPage: VFC = () => {
+export const Document: VFC = () => {
   const isPrivacyPolicyPage = useRouteMatch(routes.privacyPolicy);
 
   return (

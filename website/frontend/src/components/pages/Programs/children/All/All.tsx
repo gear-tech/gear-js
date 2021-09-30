@@ -1,7 +1,7 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Pagination } from 'components/Pagination/Pagination';
-import { Message } from 'components/Message/Message';
+import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { SocketService } from 'services/SocketService';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
@@ -14,11 +14,10 @@ import {
 } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
-
 import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
-
-import { UserProgram } from './UserProgram';
+import { UserProgram } from '../UserProgram/UserProgram';
+import styles from './All.module.scss';
 
 type ProgramMessageType = {
   programName: string;
@@ -29,7 +28,7 @@ type Props = {
   socketService: SocketService;
 };
 
-export const BlockListAllUploaded: VFC<Props> = ({ socketService }) => {
+export const All: VFC<Props> = ({ socketService }) => {
   const dispatch = useDispatch();
 
   const { allUploadedPrograms, allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
@@ -98,11 +97,11 @@ export const BlockListAllUploaded: VFC<Props> = ({ socketService }) => {
 
   return (
     <div className="all-programs">
-      <div className="pagination-wrapper">
+      <div className={styles.paginationWrapper}>
         <span>Total results: {allUploadedProgramsCount}</span>
         <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
       </div>
-      <div className="all-programs--list">
+      <div className={styles.allProgramsList}>
         {(allUploadedPrograms &&
           allUploadedPrograms.length &&
           allUploadedPrograms.map((item: ProgramModel) => {
@@ -110,19 +109,14 @@ export const BlockListAllUploaded: VFC<Props> = ({ socketService }) => {
               return <UserProgram program={item} handleOpenForm={handleOpenForm} />;
             }
             return (
-              <div className="all-programs--item" key={item.hash}>
-                <p className="all-programs--item__hash">{item.hash}</p>
-                <div className="programs-list--btns">
-                  <button
-                    className="programs-list__message-btn"
-                    type="button"
-                    aria-label="refresh"
-                    onClick={() => handleOpenForm(item.hash, item.name, true)}
-                  >
+              <div className={styles.allProgramsItem} key={item.hash}>
+                <p className={styles.allProgramsItemHash}>{item.hash}</p>
+                <div className={styles.programsListBtns}>
+                  <button type="button" aria-label="refresh" onClick={() => handleOpenForm(item.hash, item.name, true)}>
                     <img src={MessageIcon} alt="message" />
                   </button>
                   <button
-                    className="all-programs--item__upload"
+                    className={styles.allProgramsItemUpload}
                     type="button"
                     onClick={() => handleOpenForm(item.hash, item.name)}
                   >
@@ -134,12 +128,11 @@ export const BlockListAllUploaded: VFC<Props> = ({ socketService }) => {
           })) ||
           null}
       </div>
-      {(allUploadedPrograms && allUploadedPrograms.length && (
-        <div className="pagination-bottom">
+      {allUploadedPrograms && allUploadedPrograms.length > 0 && (
+        <div className={styles.paginationBottom}>
           <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
         </div>
-      )) ||
-        null}
+      )}
     </div>
   );
 };

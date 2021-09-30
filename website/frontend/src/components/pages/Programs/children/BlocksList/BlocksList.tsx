@@ -4,9 +4,9 @@ import { RootState } from 'store/reducers';
 
 import './BlocksList.scss';
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { fetchBlockAction } from '../../../store/actions/actions';
-import { BlockModel } from '../../../types/block';
-import { useApi } from '../../../hooks/useApi';
+import { fetchBlockAction } from '../../../../../store/actions/actions';
+import { BlockModel } from '../../../../../types/block';
+import { useApi } from '../../../../../hooks/useApi';
 
 const BlocksList: FC<{ blocks: BlockModel[] }> = ({ blocks }) => {
   const showMoreClick = () => {

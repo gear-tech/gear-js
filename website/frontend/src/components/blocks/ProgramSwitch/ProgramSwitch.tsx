@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState, VFC } from 'react';
 import clsx from 'clsx';
-import { Link, Redirect } from 'react-router-dom';
+import { Link /* , Redirect */ } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketService } from 'services/SocketService';
 import { RootState } from 'store/reducers';
-import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
-import Editor from 'assets/images/editor_icon.svg';
+// import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
+// import Editor from 'assets/images/editor_icon.svg';
 
 type Props = {
   socketService: SocketService;
@@ -20,7 +20,7 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
 
   const [timeInstance, setTimeInstance] = useState(0);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
-  const [chosenTemplateId, setChosenTemplateId] = useState<number>(-1);
+  // const [chosenTemplateId, setChosenTemplateId] = useState<number>(-1);
 
   const { totalIssuance, blocks } = useSelector((state: RootState) => state.blocks);
 
@@ -70,11 +70,11 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
     setIsEditorDropdownOpened,
   ]);
 
-  const handleEditorDropdown = () => {
-    if (!isEditorDropdownOpened) {
-      setIsEditorDropdownOpened(true);
-    }
-  };
+  // const handleEditorDropdown = () => {
+  //   if (!isEditorDropdownOpened) {
+  //     setIsEditorDropdownOpened(true);
+  //   }
+  // };
 
   const handleTransferBalance = () => {
     socketService.transferBalance({
@@ -83,19 +83,19 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
     console.log(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
   };
 
-  const handleTemplate = (index: number) => {
-    setChosenTemplateId(index);
-  };
+  // const handleTemplate = (index: number) => {
+  //   setChosenTemplateId(index);
+  // };
 
-  if (chosenTemplateId > -1) {
-    return (
-      <Redirect
-        to={{
-          pathname: routes.editor,
-        }}
-      />
-    );
-  }
+  // if (chosenTemplateId > -1) {
+  //   return (
+  //     <Redirect
+  //       to={{
+  //         pathname: routes.editor,
+  //       }}
+  //     />
+  //   );
+  // }
 
   return (
     <div className="switch-block">
@@ -129,7 +129,7 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
             All programs
           </Link>
         </div>
-        <div className="switch-block--editor">
+        {/* <div className="switch-block--editor">
           <button
             className={clsx('switch-block--editor__btn', isEditorDropdownOpened && 'is-active')}
             type="button"
@@ -141,7 +141,7 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
           {isEditorDropdownOpened && (
             <DropdownMenu dropdownMenuRef={dropdownMenuRef} handleDropdownBtnClick={handleTemplate} />
           )}
-        </div>
+        </div> */}
         <div className="switch-block--transfer">
           <button className="switch-block--transfer__btn" type="button" onClick={handleTransferBalance}>
             Make transfer

@@ -1,1 +1,0 @@
-export { BlocksList } from './BlocksList';

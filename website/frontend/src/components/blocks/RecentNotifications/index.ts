@@ -1,1 +1,0 @@
-export { RecentNotifications } from './RecentNotifications';
