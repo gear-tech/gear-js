@@ -52,6 +52,7 @@ export class GearNodeService {
             )
           : (await GearKeyring.create('websiteAccount')).keyring;
         this.updateWebsiteAccountBalance();
+        this.subscription.subscribeAllEvents(api);
       },
     );
   }
@@ -148,7 +149,6 @@ export class GearNodeService {
               initMessage.id = callbackData.initMessageId;
               initMessage.date = new Date();
               this.messageService.save(initMessage);
-              program.blockHash = callbackData.blockHash;
               this.programService.updateProgram(program);
               break;
             default:

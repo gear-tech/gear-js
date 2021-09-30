@@ -34,7 +34,6 @@ export class ProgramsService {
     }
     program = this.programRepository.create({
       hash: hash,
-      blockHash: blockHash,
       name: name,
       user: user,
       uploadedAt: uploadedAt,

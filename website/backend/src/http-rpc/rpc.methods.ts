@@ -7,6 +7,8 @@ import { InvalidParamsError } from 'src/json-rpc/errors';
 import { RpcMethods } from 'src/json-rpc/methods';
 import { User } from 'src/users/entities/user.entity';
 import { MessagesService } from 'src/messages/messages.service';
+import { async } from 'rxjs';
+import { MetadataService } from 'src/metadata/metadata.service';
 
 @Injectable()
 export class HttpRpcMethods extends RpcMethods {
@@ -16,6 +18,7 @@ export class HttpRpcMethods extends RpcMethods {
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
     private readonly messageService: MessagesService,
+    private readonly metaService: MetadataService,
   ) {
     super();
   }
@@ -78,6 +81,19 @@ export class HttpRpcMethods extends RpcMethods {
         params ? params.limit : null,
         params ? params.offset : null,
       );
+    },
+
+    addMeta: async (user, params) => {
+      return await this.metaService.addMeta(
+        params.signature,
+        params.meta,
+        params.publicKeyRaw,
+        params.programId,
+      );
+    },
+
+    getMeta: async (user, params) => {
+      return await this.metaService.getMeta(params.programId);
     },
 
     all: async (user, params?) => {

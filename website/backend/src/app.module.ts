@@ -11,6 +11,7 @@ import { WsRpcModule } from './ws-rpc/ws-rpc.module';
 import { RpcModule } from './http-rpc/rpc.module';
 import { IdeModule } from './ide/ide.module';
 import { MessagesModule } from './messages/messages.module';
+import { MetadataModule } from './metadata/metadata.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { MessagesModule } from './messages/messages.module';
     WsRpcModule,
     IdeModule,
     MessagesModule,
+    MetadataModule,
   ],
 })
 export class AppModule {}

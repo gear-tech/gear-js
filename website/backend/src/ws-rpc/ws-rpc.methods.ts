@@ -25,22 +25,6 @@ export class WsRpcMethods extends RpcMethods {
       }
       return null;
     },
-    addMeta: async (cb, user, params) => {
-      try {
-        await this.gearService.addMetadata(
-          user,
-          {
-            programId: params.programId,
-            file: params.meta_file,
-            types: params.meta,
-          },
-          cb,
-        );
-      } catch (error) {
-        throw error;
-      }
-      return null;
-    },
   };
 
   blocks = {
