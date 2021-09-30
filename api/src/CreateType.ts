@@ -37,7 +37,7 @@ export class CreateType {
     const result = {};
     const namespaces = new Map<string, string>();
     const genReg = new GenericPortableRegistry(registry, types);
-    const compositeTypes = genReg.types.filter(({ type: { def } }) => def.isComposite);
+    const compositeTypes = genReg.types.filter(({ type: { def } }) => def.isComposite || def.isVariant);
     compositeTypes.forEach(({ id, type: { path } }) => {
       const typeDef = genReg.getTypeDef(id);
       let type = typeDef.type.toString();
@@ -76,8 +76,8 @@ export class CreateType {
     } else {
       return this.toBytes(
         registry,
-        namespaces ? (namespaces.has(type) ? namespaces.get(type) : type) : type,
-        isJSON(payload) ? toJSON(payload) : payload
+        namespaces ? this.formType(type, namespaces) : type,
+        isJSON(payload) ? toJSON(payload) : payload,
       );
     }
   }
@@ -94,10 +94,19 @@ export class CreateType {
     } else {
       return this.fromBytes(
         registry,
-        namespaces ? namespaces.get(type) : type,
-        isJSON(payload) ? toJSON(payload) : payload
+        namespaces ? this.formType(type, namespaces) : type,
+        isJSON(payload) ? toJSON(payload) : payload,
       );
     }
+  }
+
+  private formType(type: string, namespaces: Map<string, string>): string {
+    let reg = /\b\w+\b/g;
+    let result: string;
+    type.match(reg).forEach((match) => {
+      result = namespaces && namespaces.has(match) ? type.replace(match, namespaces.get(match)) : type;
+    });
+    return result;
   }
 
   static encode(type: any, payload: any, meta?: Metadata): Bytes {
@@ -112,7 +121,8 @@ export class CreateType {
 
   private toBytes(registry: Registry, type: any, data: any): Bytes {
     if (typeIsString(type, data)) {
-      return registry.createType('Bytes', Array.from(stringToU8a(data)));
+      return data;
+      // return registry.createType('Bytes', Array.from(stringToU8a(data)));
     } else if (type.toLowerCase() === 'bytes') {
       if (data instanceof Uint8Array) {
         return registry.createType('Bytes', Array.from(data));

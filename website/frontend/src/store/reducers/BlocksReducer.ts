@@ -14,7 +14,10 @@ const BlockReducer = (state = initialState, action: BlockAction): BlocksState =>
 
     case BlockActionTypes.FETCH_BLOCK: {
       const prevBlocks = [...state.blocks];
-      if (prevBlocks.length === 10) prevBlocks.pop();
+      if (prevBlocks.some((i) => i.number === action.payload.number)) {
+        return { ...state, blocks: prevBlocks };
+      }
+      if (prevBlocks.length >= 10) prevBlocks.pop();
       return { ...state, blocks: [action.payload, ...prevBlocks] };
     }
 

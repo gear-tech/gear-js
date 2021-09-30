@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useState, VFC } from 'react';
+import React, { useState, useCallback, useEffect, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NativeTypes } from 'react-dnd-html5-backend';
-import { DropTargetMonitor, useDrop } from 'react-dnd';
-
+import { useDrop, DropTargetMonitor } from 'react-dnd';
 import { GEAR_MNEMONIC_KEY } from 'consts';
 import { generateKeypairAction, programUploadResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { SocketService } from 'services/SocketService';
-import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
-import { ProgramDetails } from '../../../../blocks/ProgramDetails/ProgramDetails';
-
 import './Upload.scss';
+import { ProgramDetails } from '../../../../blocks/ProgramDetails/ProgramDetails';
+import { StatusPanel } from '../../../../blocks/StatusPanel/StatusPanel';
 
 type Props = {
   socketService: SocketService;
