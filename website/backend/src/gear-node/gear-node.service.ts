@@ -2,11 +2,9 @@ import { CreateType, GearApi, GearKeyring } from '@gear-js/api';
 import { Metadata } from '@gear-js/api/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import { GearNodeError, ProgramNotFound } from 'src/json-rpc/errors';
 import { GearNodeEvents } from './events';
-import { MessagesService } from 'src/messages/messages.service';
 import { RpcCallback } from 'src/json-rpc/interfaces';
 
 const logger = new Logger('GearNodeService');
@@ -15,12 +13,7 @@ export class GearNodeService {
   private api: GearApi;
   private rootKeyring: KeyringPair;
 
-  constructor(
-    private readonly userService: UsersService,
-    private readonly programService: ProgramsService,
-    private readonly messageService: MessagesService,
-    private readonly subscription: GearNodeEvents,
-  ) {
+  constructor(private readonly programService: ProgramsService, private readonly subscription: GearNodeEvents) {
     GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then(async (api) => {
       this.api = api;
       const accountSeed = process.env.ACCOUNT_SEED;
@@ -105,14 +98,6 @@ export class GearNodeService {
     const meta = JSON.parse(program.meta.meta);
     let gasSpent = await this.api.program.getGasSpent(CreateType.encode('H256', hash), payload, meta.input, meta);
     return gasSpent.toNumber();
-  }
-
-  async getMeta(hash: string): Promise<Metadata> {
-    const program = await this.programService.findProgram(hash);
-    if (!program) {
-      throw new ProgramNotFound(hash);
-    }
-    return JSON.parse(program.meta.meta);
   }
 
   async getAllNoGUIPrograms() {

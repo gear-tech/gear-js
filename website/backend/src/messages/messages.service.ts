@@ -4,8 +4,6 @@ import { User } from 'src/users/entities/user.entity';
 import { ProgramsService } from 'src/programs/programs.service';
 import { Repository } from 'typeorm';
 import { Message } from './entities/message.entity';
-import { LogMessage } from './interface';
-import { isJsonObject, isString } from '@polkadot/util';
 import { MessageNotFound } from 'src/json-rpc/errors';
 
 @Injectable()

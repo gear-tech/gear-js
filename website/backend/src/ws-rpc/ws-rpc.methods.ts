@@ -4,10 +4,15 @@ import { RpcMethods } from 'src/json-rpc/methods';
 import { InvalidParamsError } from 'src/json-rpc/errors';
 import { MessagesService } from 'src/messages/messages.service';
 import { User } from 'src/users/entities/user.entity';
+import { MetadataService } from 'src/metadata/metadata.service';
 
 @Injectable()
 export class WsRpcMethods extends RpcMethods {
-  constructor(private readonly gearService: GearNodeService, private readonly messageService: MessagesService) {
+  constructor(
+    private readonly gearService: GearNodeService,
+    private readonly messageService: MessagesService,
+    private readonly metaService: MetadataService,
+  ) {
     super();
   }
 
@@ -42,7 +47,7 @@ export class WsRpcMethods extends RpcMethods {
     },
     payloadType: async (cb, user, params) => {
       try {
-        const type = await this.gearService.getMeta(params.destination);
+        const type = await this.metaService.getMeta(params.destination);
         cb(undefined, {
           payloadType: type,
         });

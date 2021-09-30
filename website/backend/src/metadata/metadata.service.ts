@@ -13,12 +13,7 @@ export class MetadataService {
     private readonly programService: ProgramsService,
   ) {}
 
-  async addMeta(
-    signature: string,
-    meta: string,
-    owner: string,
-    programId: string,
-  ) {
+  async addMeta(signature: string, meta: string, owner: string, programId: string, name?: string, title?: string) {
     if (!GearKeyring.checkSign(owner, signature, meta)) {
       return { status: 'Signature not verified' };
     } else {
@@ -27,7 +22,8 @@ export class MetadataService {
         meta,
         programId,
       });
-      await this.metaRepo.save(metadata);
+      const savedMeta = await this.metaRepo.save(metadata);
+      this.programService.addProgramInfo(programId, name, title, savedMeta);
       return { status: 'Metadata added' };
     }
   }
