@@ -13,7 +13,6 @@ type Props = {
   handleClose: () => void;
 };
 
-
 export const Keyring = ({ handleClose }: Props) => {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const [key, setKey] = useState('');
@@ -81,6 +80,7 @@ export const Keyring = ({ handleClose }: Props) => {
       publickKeyRaw: isAddressRaw,
       publickKey: publicKey
     });
+    localStorage.setItem('address_raw', isAddressRaw);
     handleClose();
   };
 
