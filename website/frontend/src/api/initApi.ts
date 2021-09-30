@@ -1,18 +1,6 @@
 import { GearApi } from '@gear-js/api';
 import { API_CONNECTION_ADDRESS } from '../consts';
 
-let gear: Promise<GearApi> | null = null;
-
-// Connecting to RPC node
-export function initApi() {
-  if (!gear) {
-    gear = GearApi.create({
-      providerAddress: API_CONNECTION_ADDRESS,
-    });
-  }
-  return gear;
-}
-
 class NodeApi {
   get api(): GearApi | null {
     // eslint-disable-next-line no-underscore-dangle
@@ -33,4 +21,4 @@ class NodeApi {
   }
 }
 
-export const nodeApi = new NodeApi();
+export const nodeApi = new NodeApi(API_CONNECTION_ADDRESS);
