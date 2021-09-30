@@ -7,6 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { ProgramsModule } from 'src/programs/programs.module';
 import { MessagesModule } from 'src/messages/messages.module';
+import { MetadataModule } from 'src/metadata/metadata.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { MessagesModule } from 'src/messages/messages.module';
     UsersModule,
     AuthModule,
     ProgramsModule,
-    MessagesModule
+    MessagesModule,
+    MetadataModule,
   ],
   providers: [HttpRpcMessageHandler, HttpRpcMethods],
   controllers: [RpcController],

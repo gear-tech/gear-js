@@ -7,7 +7,6 @@ import { InvalidParamsError } from 'src/json-rpc/errors';
 import { RpcMethods } from 'src/json-rpc/methods';
 import { User } from 'src/users/entities/user.entity';
 import { MessagesService } from 'src/messages/messages.service';
-import { async } from 'rxjs';
 import { MetadataService } from 'src/metadata/metadata.service';
 
 @Injectable()
