@@ -80,7 +80,7 @@ export const Keyring = ({ handleClose }: Props) => {
       publickKeyRaw: isAddressRaw,
       publickKey: publicKey
     });
-    localStorage.setItem('address_raw', isAddressRaw);
+    localStorage.setItem('public_key_raw', isAddressRaw);
     handleClose();
   };
 
