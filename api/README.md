@@ -60,11 +60,29 @@ const gearApi = await GearApi.create({ customTypes: { ...yourCustomTypesExample 
 Subscribe to all events
 
 ```javascript
-const unsub = await gearApi.events((event) => {
+const unsub = await gearApi.allEvents((events) => {
   console.log(event.toHuman());
 });
 // Unsubscribe
 unsub();
+```
+
+Check what the event is
+
+```javascript
+gearApi.allEvents((events) => {
+      events
+        .filter(({ event }) => gearApi.events.gear.InitMessageEnqueued.is(event))
+        .forEach(({ event: { data } }) => {
+          console.log(data.toHuman())
+        });
+
+      events
+        .filter(({ event }) => gearApi.events.balances.Transfer.is(event))
+        .forEach(({ event: { data } }) => {
+          console.log(data.toHuman())
+        });
+
 ```
 
 Subscribe to Log events
