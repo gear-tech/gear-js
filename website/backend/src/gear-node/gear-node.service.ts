@@ -61,11 +61,6 @@ export class GearNodeService {
     }
   }
 
-  async totalIssuance(): Promise<string> {
-    const total = await this.api.totalIssuance();
-    return total;
-  }
-
   async balanceTransfer(
     options: {
       from?: KeyringPair;

@@ -13,32 +13,6 @@ export class WsRpcMethods extends RpcMethods {
 
   private logger: Logger = new Logger('WsRpcMethods');
 
-  blocks = {
-    newBlocks: async (cb) => {
-      const unsub = await this.gearService.subscribeNewHeads(cb);
-      return { name: 'blocks', unsub };
-    },
-    unsubscribe: () => {
-      return { name: 'blocks', unsub: null };
-    },
-  };
-
-  system = {
-    totalIssuance: async (cb) => {
-      let total;
-      try {
-        total = await this.gearService.totalIssuance();
-      } catch (error) {
-        cb({ code: -32002, message: error.message });
-        return null;
-      }
-      cb(undefined, {
-        totalIssuance: total,
-      });
-      return null;
-    },
-  };
-
   balance = {
     transfer: async (cb, user, params) => {
       if (!params || !params.value) {
@@ -79,17 +53,7 @@ export class WsRpcMethods extends RpcMethods {
     },
 
     markAsRead: async (cb, user: User, params: any) => {
-      await this.messageService.markAsRead(user, params.id);
-    },
-  };
-
-  events = {
-    subscribe: async (cb, user) => {
-      const unsub = await this.gearService.subscribeEvents(user, cb);
-      return { name: 'events', unsub };
-    },
-    unsubscribe: () => {
-      return { name: 'events', unsub: null };
+      await this.messageService.markAsRead(user.publicKeyRaw, params.id);
     },
   };
 }
