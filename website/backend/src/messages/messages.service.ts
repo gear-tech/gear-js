@@ -16,25 +16,22 @@ export class MessagesService {
     private readonly programService: ProgramsService,
   ) {}
 
-  async save(message: LogMessage): Promise<Message> {
-    const createdMessage = this.messageRepo.create({
-      ...message,
-    });
+  async save(info: {
+    id: string;
+    destination: string;
+    program: string;
+    date: Date;
+    payload?: string;
+  }): Promise<Message> {
+    const createdMessage = this.messageRepo.create(info);
     return this.messageRepo.save(createdMessage);
   }
 
-  async update(message: LogMessage): Promise<Message> {
-    const savedMessage = await this.findOne(message.id);
-    if (!savedMessage) {
-      return await this.save(message);
-    }
-    savedMessage.responseId = message.responseId;
-    savedMessage.response =
-      isJsonObject(message.response) && !isString(message.response)
-        ? JSON.stringify(message.response)
-        : message.response;
+  async update(messageId: string, info: { responseId: string; response: string }): Promise<Message> {
+    const savedMessage = await this.findOne(messageId);
+    savedMessage.responseId = info.responseId;
+    savedMessage.response = info.response;
     const s = await this.messageRepo.save(savedMessage);
-    console.log(s);
     return s;
   }
 
@@ -46,8 +43,8 @@ export class MessagesService {
     return message;
   }
 
-  async markAsRead(user: User, id: string): Promise<Message> {
-    const message = await this.messageRepo.findOne({ id, destination: user });
+  async markAsRead(destination: string, id: string): Promise<Message> {
+    const message = await this.messageRepo.findOne({ id, destination });
     if (message) {
       message.isRead = true;
       return await this.messageRepo.save(message);
@@ -82,9 +79,9 @@ export class MessagesService {
     return messages;
   }
 
-  async getCountUnread(user: User): Promise<number> {
+  async getCountUnread(destination: string): Promise<number> {
     const messages = await this.messageRepo.findAndCount({
-      destination: user,
+      destination,
       isRead: false,
     });
     return messages[1];
