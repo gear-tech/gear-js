@@ -1,4 +1,4 @@
-import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
+import { CreateType, GearApi, GearKeyring } from '@gear-js/api';
 import { Metadata } from '@gear-js/api/types';
 import { isJsonObject } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
@@ -7,16 +7,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
-import { GearNodeError, GettingMetadataError, InvalidParamsError, ProgramNotFound } from 'src/json-rpc/errors';
-import { sendProgram } from './program.gear';
-import { sendMessage } from './message.gear';
+import { GearNodeError, ProgramNotFound } from 'src/json-rpc/errors';
 import { GearNodeEvents } from './events';
 import { filter } from 'rxjs/operators';
-import { LogMessage } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';
-import { SendMessageData, UploadProgramData } from './interfaces';
 import { RpcCallback } from 'src/json-rpc/interfaces';
-import { Program } from 'src/programs/entities/program.entity';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
@@ -127,81 +122,6 @@ export class GearNodeService {
       throw new ProgramNotFound(hash);
     }
     return JSON.parse(program.meta.meta);
-  }
-
-  async saveEvents(): Promise<void> {
-    this.subscription.events.subscribe({
-      next: async (event) => {
-        switch (event.type) {
-          case 'log':
-            const program = await this.programService.findProgram(event.program);
-            const meta = JSON.parse(program.meta.meta);
-            const response = CreateType.decode(meta.output, event.response, meta).toJSON();
-            this.messageService.update({
-              id: event.id,
-              program: program,
-              destination: await this.userService.findOneByPublicKey(event.destination),
-              date: event.date,
-              response: isJsonObject(response) ? JSON.stringify(response) : response,
-              responseId: event.responseId.toHex(),
-            });
-            break;
-          case 'program':
-            this.programService.initStatus(event.hash, event.status);
-            break;
-        }
-      },
-    });
-  }
-
-  async subscribeEvents(user: User, callback: RpcCallback): Promise<any> {
-    const filtered = this.subscription.events.pipe(
-      filter((event) => {
-        return event.destination === user.publicKeyRaw;
-      }),
-    );
-    const unsub = filtered.subscribe({
-      next: async (event) => {
-        switch (event.type) {
-          case 'log':
-            const program = await this.programService.findProgram(event.program);
-            const meta = JSON.parse(program.meta.meta);
-            let response = !event.error ? CreateType.decode(meta.output, event.response, meta) : '';
-            response = response.toJSON ? response.toJSON() : response;
-            callback(undefined, {
-              event: 'Log',
-              id: event.id,
-              program: event.program,
-              date: event.date,
-              response: isJsonObject(response) ? JSON.stringify(response) : response,
-            });
-            break;
-          case 'program':
-            callback(undefined, {
-              event: event.status,
-              programName: event.programName,
-              program: event.hash,
-              date: event.date,
-            });
-            break;
-        }
-      },
-    });
-    return unsub.unsubscribe;
-  }
-
-  subscribeNewHeads(callback: RpcCallback): UnsubscribePromise {
-    try {
-      const unsub = this.api.gearEvents.subscribeNewBlocks((head) => {
-        callback(undefined, {
-          hash: head.hash.toHex(),
-          number: head.number.toString(),
-        });
-      });
-      return unsub;
-    } catch (error) {
-      throw new GearNodeError(error.message);
-    }
   }
 
   async getAllNoGUIPrograms() {
