@@ -22,6 +22,8 @@ export class MessagesService {
     program: string;
     date: Date;
     payload?: string;
+    response?: string;
+    responseId?: string;
   }): Promise<Message> {
     const createdMessage = this.messageRepo.create(info);
     return this.messageRepo.save(createdMessage);
