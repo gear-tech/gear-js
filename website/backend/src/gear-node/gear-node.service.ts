@@ -1,15 +1,11 @@
 import { CreateType, GearApi, GearKeyring } from '@gear-js/api';
 import { Metadata } from '@gear-js/api/types';
-import { isJsonObject } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
 import { GearNodeError, ProgramNotFound } from 'src/json-rpc/errors';
 import { GearNodeEvents } from './events';
-import { filter } from 'rxjs/operators';
 import { MessagesService } from 'src/messages/messages.service';
 import { RpcCallback } from 'src/json-rpc/interfaces';
 
