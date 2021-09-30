@@ -1,9 +1,4 @@
-import {
-  CreateType,
-  GearApi,
-  GearKeyring,
-  getWasmMetadata,
-} from '@gear-js/api';
+import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
 import { Metadata } from '@gear-js/api/types';
 import { isJsonObject } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
@@ -12,12 +7,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ProgramsService } from 'src/programs/programs.service';
-import {
-  GearNodeError,
-  GettingMetadataError,
-  InvalidParamsError,
-  ProgramNotFound,
-} from 'src/json-rpc/errors';
+import { GearNodeError, GettingMetadataError, InvalidParamsError, ProgramNotFound } from 'src/json-rpc/errors';
 import { sendProgram } from './program.gear';
 import { sendMessage } from './message.gear';
 import { GearNodeEvents } from './events';
@@ -40,21 +30,15 @@ export class GearNodeService {
     private readonly messageService: MessagesService,
     private readonly subscription: GearNodeEvents,
   ) {
-    GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then(
-      async (api) => {
-        this.api = api;
-        this.subscription.subscribeEvents(api);
-        const accountSeed = process.env.ACCOUNT_SEED;
-        this.rootKeyring = accountSeed
-          ? await GearKeyring.fromSeed(
-              process.env.ACCOUNT_SEED,
-              'websiteAccount',
-            )
-          : (await GearKeyring.create('websiteAccount')).keyring;
-        this.updateWebsiteAccountBalance();
-        this.subscription.subscribeAllEvents(api);
-      },
-    );
+    GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then(async (api) => {
+      this.api = api;
+      const accountSeed = process.env.ACCOUNT_SEED;
+      this.rootKeyring = accountSeed
+        ? await GearKeyring.fromSeed(process.env.ACCOUNT_SEED, 'websiteAccount')
+        : (await GearKeyring.create('websiteAccount')).keyring;
+      this.updateWebsiteAccountBalance();
+      this.subscription.subscribeAllEvents(api);
+    });
   }
 
   async updateWebsiteAccountBalance() {
@@ -63,9 +47,7 @@ export class GearNodeService {
       ? GearKeyring.fromSuri('//Alice', 'Alice default')
       : await GearKeyring.fromSeed('websiteAccount', sudoSeed);
 
-    const currentBalance = await this.api.balance.findOut(
-      this.rootKeyring.address,
-    );
+    const currentBalance = await this.api.balance.findOut(this.rootKeyring.address);
     if (currentBalance.toNumber() < +process.env.SITE_ACCOUNT_BALANCE) {
       this.balanceTransfer(
         {
@@ -84,139 +66,6 @@ export class GearNodeService {
     }
   }
 
-  async uploadProgram(
-    user: User,
-    data: UploadProgramData,
-    callback: RpcCallback,
-  ): Promise<void> {
-    if (
-      !data ||
-      !data.gasLimit ||
-      (!data.value && data.value !== 0) ||
-      !data.file ||
-      !data.filename ||
-      !data.keyPairJson
-    ) {
-      throw new InvalidParamsError();
-    }
-
-    const binary = this.programService.parseWASM(data.file);
-    const keyring = GearKeyring.fromJson(data.keyPairJson);
-    try {
-      if (data.meta instanceof Buffer) {
-        data.meta = await getWasmMetadata(data.meta);
-      }
-    } catch (error) {
-      logger.error(error);
-    }
-    const programData = {
-      user: user,
-      name: data.filename,
-      hash: null,
-      blockHash: null,
-      uploadedAt: null,
-      title: data.meta.title || null,
-      meta: data.meta,
-    };
-
-    const initMessage: LogMessage = {
-      id: null,
-      destination: user,
-      program: null,
-      date: null,
-      payload: data.initPayload.toString(),
-    };
-    let program: Program;
-
-    try {
-      await sendProgram(
-        this.api,
-        keyring,
-        binary,
-        data.initPayload,
-        data.gasLimit,
-        data.value,
-        data.meta,
-        async (action: string, callbackData?: any) => {
-          switch (action) {
-            case 'saveProgram':
-              programData.hash = callbackData.programId;
-              programData.uploadedAt = new Date();
-              program = await this.programService.saveProgram(programData);
-              initMessage.program = program;
-              break;
-            case 'saveMessage':
-              initMessage.id = callbackData.initMessageId;
-              initMessage.date = new Date();
-              this.messageService.save(initMessage);
-              this.programService.updateProgram(program);
-              break;
-            default:
-              callback(undefined, callbackData);
-          }
-        },
-      );
-    } catch (error) {
-      this.programService.removeProgram(programData.hash);
-      throw error;
-    }
-  }
-
-  async sendMessage(
-    user: User,
-    data: SendMessageData,
-    callback: RpcCallback,
-  ): Promise<void> {
-    if (
-      !data ||
-      !data.destination ||
-      !data.payload ||
-      !data.gasLimit ||
-      !data.value ||
-      !data.keyPairJson
-    ) {
-      throw new InvalidParamsError();
-    }
-
-    const keyring = GearKeyring.fromJson(data.keyPairJson);
-    const program = await this.programService.findProgram(data.destination);
-    if (!program) {
-      callback(new ProgramNotFound(data.destination).toJson());
-      return null;
-    }
-
-    let initMessage: LogMessage = {
-      id: null,
-      destination: user,
-      program: program,
-      date: null,
-      payload: data.payload.toString(),
-    };
-    try {
-      await sendMessage(
-        this.api,
-        keyring,
-        program.hash,
-        data.payload,
-        data.gasLimit,
-        data.value,
-        JSON.parse(program.meta),
-        async (action, callbackData) => {
-          switch (action) {
-            case 'save':
-              initMessage.id = callbackData.messageId;
-              initMessage.date = new Date();
-              this.messageService.save(initMessage);
-              callback(undefined, callbackData);
-              break;
-          }
-        },
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async totalIssuance(): Promise<string> {
     const total = await this.api.totalIssuance();
     return total;
@@ -232,8 +81,7 @@ export class GearNodeService {
   ): Promise<void> {
     if (
       options.to !== this.rootKeyring.address &&
-      (await this.api.balance.findOut(this.rootKeyring.address)).toNumber() <
-        options.value
+      (await this.api.balance.findOut(this.rootKeyring.address)).toNumber() < options.value
     ) {
       await this.updateWebsiteAccountBalance();
     }
@@ -268,13 +116,8 @@ export class GearNodeService {
     if (!program) {
       return 0;
     }
-    const meta = JSON.parse(program.meta);
-    let gasSpent = await this.api.program.getGasSpent(
-      CreateType.encode('H256', hash),
-      payload,
-      meta.input,
-      meta,
-    );
+    const meta = JSON.parse(program.meta.meta);
+    let gasSpent = await this.api.program.getGasSpent(CreateType.encode('H256', hash), payload, meta.input, meta);
     return gasSpent.toNumber();
   }
 
@@ -283,7 +126,7 @@ export class GearNodeService {
     if (!program) {
       throw new ProgramNotFound(hash);
     }
-    return JSON.parse(program.meta);
+    return JSON.parse(program.meta.meta);
   }
 
   async saveEvents(): Promise<void> {
@@ -291,25 +134,15 @@ export class GearNodeService {
       next: async (event) => {
         switch (event.type) {
           case 'log':
-            const program = await this.programService.findProgram(
-              event.program,
-            );
-            const meta = JSON.parse(program.meta);
-            const response = CreateType.decode(
-              meta.output,
-              event.response,
-              meta,
-            ).toJSON();
+            const program = await this.programService.findProgram(event.program);
+            const meta = JSON.parse(program.meta.meta);
+            const response = CreateType.decode(meta.output, event.response, meta).toJSON();
             this.messageService.update({
               id: event.id,
               program: program,
-              destination: await this.userService.findOneByPublicKey(
-                event.destination,
-              ),
+              destination: await this.userService.findOneByPublicKey(event.destination),
               date: event.date,
-              response: isJsonObject(response)
-                ? JSON.stringify(response)
-                : response,
+              response: isJsonObject(response) ? JSON.stringify(response) : response,
               responseId: event.responseId.toHex(),
             });
             break;
@@ -331,22 +164,16 @@ export class GearNodeService {
       next: async (event) => {
         switch (event.type) {
           case 'log':
-            const program = await this.programService.findProgram(
-              event.program,
-            );
-            const meta = JSON.parse(program.meta);
-            let response = !event.error
-              ? CreateType.decode(meta.output, event.response, meta)
-              : '';
+            const program = await this.programService.findProgram(event.program);
+            const meta = JSON.parse(program.meta.meta);
+            let response = !event.error ? CreateType.decode(meta.output, event.response, meta) : '';
             response = response.toJSON ? response.toJSON() : response;
             callback(undefined, {
               event: 'Log',
               id: event.id,
               program: event.program,
               date: event.date,
-              response: isJsonObject(response)
-                ? JSON.stringify(response)
-                : response,
+              response: isJsonObject(response) ? JSON.stringify(response) : response,
             });
             break;
           case 'program':
@@ -377,44 +204,13 @@ export class GearNodeService {
     }
   }
 
-  async addMetadata(
-    user: User,
-    data: { programId: string; file?: Buffer; types?: any },
-    callback,
-  ) {
-    const program = await this.programService.findProgram(data.programId, user);
-    if (!program) {
-      callback(new ProgramNotFound(data.programId));
-    }
-    let meta: Metadata = {
-      title: undefined,
-      init_input: undefined,
-      init_output: undefined,
-      input: undefined,
-      output: undefined,
-    };
-    if (data.file) {
-      try {
-        meta = await getWasmMetadata(data.file);
-      } catch (error) {
-        throw new GettingMetadataError();
-      }
-    } else {
-      meta = data.types;
-    }
-    callback(undefined, await this.programService.addMeta(program, meta));
-  }
-
   async getAllNoGUIPrograms() {
     let programs = await this.api.program.allUploadedPrograms();
     const filter = async (array, condition) => {
       const results = await Promise.all(array.map(condition));
       return array.filter((_v, index) => results[index]);
     };
-    programs = await filter(
-      programs,
-      async (hash) => !(await this.programService.isInDB(hash)),
-    );
+    programs = await filter(programs, async (hash) => !(await this.programService.isInDB(hash)));
     return programs;
   }
 }

@@ -7,25 +7,11 @@ import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class WsRpcMethods extends RpcMethods {
-  constructor(
-    private readonly gearService: GearNodeService,
-    private readonly messageService: MessagesService,
-  ) {
+  constructor(private readonly gearService: GearNodeService, private readonly messageService: MessagesService) {
     super();
   }
 
   private logger: Logger = new Logger('WsRpcMethods');
-
-  program = {
-    upload: async (cb, user, params) => {
-      try {
-        await this.gearService.uploadProgram(user, params, cb);
-      } catch (error) {
-        throw error;
-      }
-      return null;
-    },
-  };
 
   blocks = {
     newBlocks: async (cb) => {
@@ -69,16 +55,9 @@ export class WsRpcMethods extends RpcMethods {
   };
 
   message = {
-    send: async (cb, user, params) => {
-      await this.gearService.sendMessage(user, params, cb);
-      return null;
-    },
     gasSpent: async (cb, user, params) => {
       try {
-        const gasSpent = await this.gearService.getGasSpent(
-          params.destination,
-          params.payload,
-        );
+        const gasSpent = await this.gearService.getGasSpent(params.destination, params.payload);
         cb(undefined, {
           gasSpent: gasSpent,
         });
