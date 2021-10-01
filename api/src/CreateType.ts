@@ -181,7 +181,7 @@ export function parseHexTypes(hexTypes: string) {
   const { types, namespaces } = CreateType.getTypesFromTypeDef(hexToU8a(hexTypes));
   const result = {};
   namespaces.forEach((value, key) => {
-    result[key] = types[value];
+    result[key] = JSON.parse(types[value]);
   });
   return result;
 }
