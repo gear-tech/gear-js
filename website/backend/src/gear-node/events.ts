@@ -31,10 +31,19 @@ export class GearNodeEvents {
     api.allEvents((events) => {
       events
         .filter(({ event }) => api.events.gear.InitMessageEnqueued.is(event))
-        .forEach(({ event: { data } }) => {
+        .forEach(async ({ event: { data } }) => {
           const { messageId, programId, origin } = this.getEventData(data[0]);
-          this.programService.saveProgram({ owner: origin, uploadedAt: new Date(), hash: programId });
-          this.messageService.save({ id: messageId, destination: origin, program: programId, date: new Date() });
+          try {
+            const program = await this.programService.saveProgram({
+              owner: origin,
+              uploadedAt: new Date(),
+              hash: programId,
+            });
+            console.log(program);
+            this.messageService.save({ id: messageId, destination: origin, program: programId, date: new Date() });
+          } catch (error) {
+            console.log('ERROR', error);
+          }
         });
 
       events

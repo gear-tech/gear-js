@@ -1,10 +1,13 @@
-import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Program } from 'src/programs/entities/program.entity';
+import { Column, Entity, Generated, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Meta {
-  @PrimaryColumn({ unique: true })
-  programId: string;
+  @PrimaryGeneratedColumn('rowid')
+  id: string;
+
+  @Column()
+  program: string;
 
   @Column()
   owner: string;

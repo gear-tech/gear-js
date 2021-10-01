@@ -34,11 +34,9 @@ export class ProgramsService {
   async addProgramInfo(programId: string, name?: string, title?: string, meta?: Meta) {
     let program = await this.findProgram(programId);
     if (program) {
-      program = await this.programRepository.preload({
-        name: name ? name : program.name,
-        title,
-        meta,
-      });
+      program.meta = meta;
+      program.title = title;
+      program.name = name;
       return this.programRepository.save(program);
     }
     return this.programRepository.save(program);

@@ -24,15 +24,23 @@ export class MetadataService {
       const metadata = this.metaRepo.create({
         owner: program.owner,
         meta: data.meta,
-        programId: data.programId,
+        program: program.hash,
       });
       const savedMeta = await this.metaRepo.save(metadata);
-      (data.name || data.title) && this.programService.addProgramInfo(data.programId, data.name, data.title, savedMeta);
+      try {
+        const program = await this.programService.addProgramInfo(data.programId, data.name, data.title, savedMeta);
+      } catch (error) {
+        throw error;
+      }
       return { status: 'Metadata added' };
     }
   }
 
   async getMeta(programId: string) {
-    return await this.metaRepo.findOne({ programId });
+    const program = await this.programService.findProgram(programId);
+    if (!program) {
+      return { status: 'Metadata for program not found' };
+    }
+    return await this.metaRepo.findOne({ program: programId });
   }
 }
