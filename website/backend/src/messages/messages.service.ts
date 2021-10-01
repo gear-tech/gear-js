@@ -5,6 +5,7 @@ import { ProgramsService } from 'src/programs/programs.service';
 import { Repository } from 'typeorm';
 import { Message } from './entities/message.entity';
 import { MessageNotFound } from 'src/json-rpc/errors';
+import { GearKeyring } from '@gear-js/api';
 
 @Injectable()
 export class MessagesService {
@@ -34,13 +35,21 @@ export class MessagesService {
     return s;
   }
 
-  async saveSendedPayload(messageId: string, payload: string) {
-    let message = await this.findOne(messageId);
-    if (message) {
-      message.payload = payload;
-      return this.messageRepo.save(message);
+  async saveSendedPayload(params: { messageId: string; payload: string; signature: string }) {
+    const message = await this.findOne(params.messageId);
+    if (!message) {
+      return { status: 'Message not found' };
     }
-    return null;
+    if (!GearKeyring.checkSign(message.destination, params.signature, params.payload)) {
+      return { status: 'Signature not verified' };
+    } else {
+      let message = await this.findOne(params.messageId);
+      if (message) {
+        message.payload = params.payload;
+        return this.messageRepo.save(message);
+      }
+      return null;
+    }
   }
 
   async findOne(id: string): Promise<Message> {

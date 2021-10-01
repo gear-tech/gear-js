@@ -108,7 +108,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     savePayload: async (user, params?) => {
-      return await this.messageService.saveSendedPayload(params.messageId, params.payload);
+      return await this.messageService.saveSendedPayload(params);
     },
   };
 }
