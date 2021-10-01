@@ -19,7 +19,6 @@ export class MessagesService {
     destination: string;
     program: string;
     date: Date;
-    payload?: string;
     response?: string;
     responseId?: string;
   }): Promise<Message> {
@@ -33,6 +32,15 @@ export class MessagesService {
     savedMessage.response = info.response;
     const s = await this.messageRepo.save(savedMessage);
     return s;
+  }
+
+  async saveSendedPayload(messageId: string, payload: string) {
+    let message = await this.findOne(messageId);
+    if (message) {
+      message.payload = payload;
+      return this.messageRepo.save(message);
+    }
+    return null;
   }
 
   async findOne(id: string): Promise<Message> {

@@ -106,5 +106,9 @@ export class HttpRpcMethods extends RpcMethods {
     countUnread: async (user, params?) => {
       return await this.messageService.getCountUnread(user);
     },
+
+    savePayload: async (user, params?) => {
+      return await this.messageService.saveSendedPayload(params.messageId, params.payload);
+    },
   };
 }
