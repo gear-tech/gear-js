@@ -6,7 +6,7 @@ import { GearNodeEvents } from './events';
 import { GearNodeService } from './gear-node.service';
 
 @Module({
-  imports: [UsersModule, ProgramsModule, MessagesModule],
+  imports: [ProgramsModule, MessagesModule],
   providers: [GearNodeService, GearNodeEvents],
   exports: [GearNodeService],
 })

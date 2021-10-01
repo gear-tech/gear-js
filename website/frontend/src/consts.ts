@@ -61,6 +61,8 @@ export const RPC_METHODS = {
   GET_PAYLOAD_TYPE: 'message.payloadType',
   READ_EVENTS: 'events.subscribe',
   ADD_PUBLIC: 'user.addPublicKey',
+  ADD_METADATA: 'program.addMeta',
+  GET_METADATA: 'program.getMeta',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];

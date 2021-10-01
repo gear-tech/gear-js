@@ -37,7 +37,7 @@ export const Programs: VFC = () => {
         {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
           <>
             <DndProvider backend={HTML5Backend}>
-              <Upload socketService={socketService} />
+              <Upload />
             </DndProvider>
             <BlocksList />
           </>
