@@ -44,7 +44,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
         const signature = GearKeyring.sign(keyring, JSON.stringify(meta));
 
         apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-          meta,
+          meta: JSON.stringify(meta),
           signature,
           programId,
           name: filename,
@@ -56,3 +56,4 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
     console.error(error);
   }
 };
+
