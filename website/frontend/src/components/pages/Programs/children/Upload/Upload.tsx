@@ -1,20 +1,15 @@
-import React, { useState, useCallback, useEffect, VFC } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
 import { GEAR_MNEMONIC_KEY } from 'consts';
 import { generateKeypairAction, programUploadResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
-import { SocketService } from 'services/SocketService';
 import './Upload.scss';
 import { ProgramDetails } from '../../../../blocks/ProgramDetails/ProgramDetails';
 import { StatusPanel } from '../../../../blocks/StatusPanel/StatusPanel';
 
-type Props = {
-  socketService: SocketService;
-};
-
-export const Upload: VFC<Props> = ({ socketService }) => {
+export const Upload = () => {
   const dispatch = useDispatch();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
@@ -107,7 +102,7 @@ export const Upload: VFC<Props> = ({ socketService }) => {
   return (
     <>
       {(droppedFile && (
-        <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile} socketService={socketService} />
+        <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile} />
       )) || (
         <div className={dropBlockClassName} ref={drop}>
           <div className="drop-block__no-file-hover">

@@ -3,7 +3,7 @@ import { getWasmMetadata } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch } from 'react-redux';
-import { SocketService } from 'services/SocketService';
+import { UploadProgram } from 'services/ApiService';
 import { programUploadStartAction } from 'store/actions/actions';
 import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
 import './ProgramDetails.scss';
@@ -14,14 +14,14 @@ import selected from 'assets/images/radio-selected.svg';
 
 import { Schema } from './Schema';
 import { readFileAsync } from '../../../helpers';
+import { useApi } from '../../../hooks/useApi';
 
 type Props = {
   setDroppedFile: (file: File | null) => void;
   droppedFile: File;
-  socketService: SocketService;
 };
 
-export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socketService }) => {
+export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const dispatch = useDispatch();
 
   const [isMetaByFile, setIsMetaByFile] = useState(true);
@@ -29,6 +29,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
   const [wrongJSON, setWrongJSON] = useState(false);
+
+  const [api] = useApi();
 
   const program = {
     gasLimit: 20000,
@@ -110,13 +112,13 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
         onSubmit={(values: UploadProgramModel) => {
           if (isMetaByFile) {
             dispatch(programUploadStartAction());
-            socketService.uploadProgram(droppedFile, { ...values, ...metaWasm });
+            UploadProgram(api, droppedFile, { ...values, ...metaWasm });
             setDroppedFile(null);
           } else {
             try {
               const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
               dispatch(programUploadStartAction());
-              socketService.uploadProgram(droppedFile, { ...values, types });
+              UploadProgram(api, droppedFile, { ...values, types });
               setDroppedFile(null);
             } catch (err) {
               setWrongJSON(true);
