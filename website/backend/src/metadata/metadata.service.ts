@@ -13,24 +13,21 @@ export class MetadataService {
     private readonly programService: ProgramsService,
   ) {}
 
-  async addMeta(data: {
-    signature: string;
-    meta: string;
-    owner: string;
-    programId: string;
-    name?: string;
-    title?: string;
-  }) {
-    if (!GearKeyring.checkSign(data.owner, data.signature, data.meta)) {
+  async addMeta(data: { signature: string; meta: string; programId: string; name?: string; title?: string }) {
+    const program = await this.programService.findProgram(data.programId);
+    if (!program) {
+      return { status: 'Program not found' };
+    }
+    if (!GearKeyring.checkSign(program.owner, data.signature, data.meta)) {
       return { status: 'Signature not verified' };
     } else {
       const metadata = this.metaRepo.create({
-        owner: data.owner,
+        owner: program.owner,
         meta: data.meta,
         programId: data.programId,
       });
       const savedMeta = await this.metaRepo.save(metadata);
-      this.programService.addProgramInfo(data.programId, data.name, data.title, savedMeta);
+      (data.name || data.title) && this.programService.addProgramInfo(data.programId, data.name, data.title, savedMeta);
       return { status: 'Metadata added' };
     }
   }
