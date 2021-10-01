@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Field, FieldArray, Form, Formik } from 'formik';
 import clsx from 'clsx';
 import { SocketService } from 'services/SocketService';
+import { sendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
 import { sendMessageStartAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
+import { useApi } from '../../../../../../../hooks/useApi'
 import { Schema } from './Schema';
 import './MessageForm.scss';
 
@@ -21,6 +23,9 @@ type Props = {
 
 // todo improve form logic, refactor
 export const MessageForm: VFC<Props> = ({ programHash, programName, socketService, handleClose, payloadType }) => {
+
+  const [api] = useApi();
+
   const getFieldsFromPayload = () => {
     const transformedPayloadType: any = [];
 
@@ -82,7 +87,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
           socketService.getGasSpent(destination, pack.payload);
         } else {
           pack.gasLimit = pack.gasLimit ?? gas ?? 0;
-          socketService.sendMessageToProgram(pack);
+          sendMessageToProgram(api, pack);
           dispatch(sendMessageStartAction());
         }
       }}
