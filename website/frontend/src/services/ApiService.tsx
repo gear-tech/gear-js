@@ -1,6 +1,7 @@
 import { GearKeyring } from '@gear-js/api';
+import { u8aToHex } from '@polkadot/util';
 import { UploadProgramModel, MessageModel } from 'types/program';
-import { RPC_METHODS } from 'consts';
+import { GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
 import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
@@ -40,16 +41,20 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
     await api.program.signAndSend(keyring, (data: any) => {
       if (data.status === 'Finalized') {
         console.log('Finalized!');
-        // Send sign message
-        const signature = GearKeyring.sign(keyring, JSON.stringify(meta));
+        // Send sing message
+        const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
 
-        apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-          meta: JSON.stringify(meta),
-          signature,
-          programId,
-          name: filename,
-          title,
-        });
+        apiRequest.getResource(
+          RPC_METHODS.ADD_METADATA,
+          {
+            meta: JSON.stringify(meta),
+            signature,
+            programId,
+            name: filename,
+            title,
+          },
+          { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
+        );
       }
     });
   } catch (error) {

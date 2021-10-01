@@ -1,6 +1,5 @@
 import { Meta } from 'src/metadata/entities/meta.entity';
-import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 
 export enum InitStatus {
   SUCCESS = 'success',
@@ -29,6 +28,7 @@ export class Program {
   uploadedAt: Date;
 
   @OneToOne(() => Meta, { nullable: true })
+  @JoinColumn()
   meta: Meta;
 
   @Column({ nullable: true })
