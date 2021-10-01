@@ -12,7 +12,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   const fileBuffer: any = await readFileAsync(file);
 
   const program = {
-    code: fileBuffer,
+    code: new Uint8Array(fileBuffer),
     gasLimit,
     value,
     initPayload,
