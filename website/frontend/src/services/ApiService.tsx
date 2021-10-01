@@ -1,11 +1,15 @@
 import { GearKeyring } from '@gear-js/api';
 import { UploadProgramModel } from 'types/program';
+import { RPC_METHODS } from 'consts';
 import { readFileAsync } from '../helpers';
+import ServerRPCRequestService from './ServerRPCRequestService';
 
 export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel) => {
+  const apiRequest = new ServerRPCRequestService();
+
   /* eslint-disable @typescript-eslint/naming-convention */
-  const { gasLimit, value, initPayload, init_input, init_output, input, output, types } = opts;
-  //   const filename = file.name;
+  const { gasLimit, value, initPayload, init_input, init_output, input, output, types, title } = opts;
+  const filename = file.name;
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
   const keyring = GearKeyring.fromJson(jsonKeyring);
 
@@ -30,15 +34,23 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   console.log(meta);
 
   try {
+    // Submit program, recive program ID
     const programId = await api.program.submit(program, meta);
-    console.log(programId);
-  } catch (error) {
-    console.error(error);
-  }
-
-  try {
+    // Trying to sign tansaction, recive
     await api.program.signAndSend(keyring, (data: any) => {
-      console.log(data);
+      if (data.status === 'Finalized') {
+        console.log('Finalized!');
+        // Send sing message
+        const signature = GearKeyring.sign(keyring, JSON.stringify(meta));
+
+        apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+          meta,
+          signature,
+          programId,
+          name: filename,
+          title,
+        });
+      }
     });
   } catch (error) {
     console.error(error);
