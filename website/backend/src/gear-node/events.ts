@@ -2,6 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Subject } from 'rxjs';
 import { ProgramsService } from 'src/programs/programs.service';
 import { GearApi } from '@gear-js/api';
+import { Codec } from '@polkadot/types/types';
+import { MessagesService } from 'src/messages/messages.service';
+import { InitStatus } from 'src/programs/entities/program.entity';
 
 const logger = new Logger('EventsLogger');
 
@@ -10,47 +13,63 @@ export class GearNodeEvents {
   public blocks: Subject<any>;
   public events: Subject<any>;
 
-  constructor(private readonly programService: ProgramsService) {
+  constructor(private readonly programService: ProgramsService, private readonly messageService: MessagesService) {
     this.blocks = new Subject();
     this.events = new Subject();
   }
 
-  async subscribeEvents(api: GearApi): Promise<void> {
-    try {
-      api.gearEvents.subscribeLogEvents(({ data }) => {
-        data.forEach((part) => {
-          const res = part.toHuman();
-          this.events.next({
-            type: 'log',
-            id: res['reply'][0],
-            program: res['source'],
-            destination: res['dest'],
-            date: new Date(),
-            response: res['payload'],
-            responseId: res['id'],
-            error: +res['reply'][1] !== 0 ? true : false,
+  getEventData(data: Codec): any {
+    const humaned = data.toHuman();
+    let result = new Map<string, any>();
+    Object.keys(humaned).forEach((key) => {
+      result.set(key, humaned[key]);
+    });
+    return Object.fromEntries(result);
+  }
+
+  async subscribeAllEvents(api: GearApi) {
+    api.allEvents((events) => {
+      events
+        .filter(({ event }) => api.events.gear.InitMessageEnqueued.is(event))
+        .forEach(({ event: { data } }) => {
+          const { messageId, programId, origin } = this.getEventData(data[0]);
+          this.programService.saveProgram({ owner: origin, uploadedAt: new Date(), hash: programId });
+          this.messageService.save({ id: messageId, destination: origin, program: programId, date: new Date() });
+        });
+
+      events
+        .filter(({ event }) => api.events.gear.InitSuccess.is(event))
+        .forEach(({ event: { data } }) => {
+          const { programId } = this.getEventData(data[0]);
+          this.programService.initStatus(programId, InitStatus.SUCCESS);
+        });
+
+      events
+        .filter(({ event }) => api.events.gear.InitFailure.is(event))
+        .forEach(({ event: { data } }) => {
+          const { programId } = this.getEventData(data[0]);
+          this.programService.initStatus(programId, InitStatus.FAILED);
+        });
+
+      events
+        .filter(({ event }) => api.events.gear.Log.is(event))
+        .forEach(({ event: { data } }) => {
+          data.forEach((part) => {
+            const { reply, source, dest, payload, id } = this.getEventData(part);
+            if (reply) {
+              reply[1] === 0 && this.messageService.update(reply[0], { responseId: id, response: payload });
+            } else {
+              this.messageService.save({
+                id,
+                destination: dest,
+                program: source,
+                date: new Date(),
+                responseId: id,
+                response: payload,
+              });
+            }
           });
         });
-      });
-      api.gearEvents.subsribeProgramEvents(async ({ method, data }) => {
-        data.forEach(async (part) => {
-          const eventData = part.toHuman();
-          const program = await this.programService.findProgram(
-            eventData['programId'],
-          );
-          this.events.next({
-            type: 'program',
-            status: method,
-            destination: program ? program.user.publicKeyRaw : undefined,
-            hash: eventData['programId'],
-            messageId: eventData['messageId'],
-            programName: program ? program.name : undefined,
-            date: new Date(),
-          });
-        });
-      });
-    } catch (error) {
-      logger.error(error);
-    }
+    });
   }
 }

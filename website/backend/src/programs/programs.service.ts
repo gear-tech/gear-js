@@ -1,7 +1,6 @@
-import { Metadata } from '@gear-js/api/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
+import { Meta } from 'src/metadata/entities/meta.entity';
 import { Repository } from 'typeorm';
 import { InitStatus, Program } from './entities/program.entity';
 
@@ -21,38 +20,33 @@ export class ProgramsService {
     }
   }
 
-  async saveProgram({ user, hash, blockHash, name, uploadedAt, title, meta }) {
-    let program = await this.findProgram(hash);
+  async saveProgram({ owner, uploadedAt, hash }) {
+    const program = this.programRepository.create({
+      hash,
+      owner,
+      name: hash,
+      uploadedAt: uploadedAt,
+      programNumber: (await this.getLastProgramNumber(owner)) + 1,
+    });
+    return await this.programRepository.save(program);
+  }
+
+  async addProgramInfo(programId: string, name?: string, title?: string, meta?: Meta) {
+    let program = await this.findProgram(programId);
     if (program) {
       program = await this.programRepository.preload({
-        hash: program.hash,
-        name: name,
+        name: name ? name : program.name,
         title,
         meta,
       });
       return this.programRepository.save(program);
     }
-    program = this.programRepository.create({
-      hash: hash,
-      blockHash: blockHash,
-      name: name,
-      user: user,
-      uploadedAt: uploadedAt,
-      programNumber: (await this.getLastProgramNumber(user)) + 1,
-      title,
-      meta,
-    });
-
-    return await this.programRepository.save(program);
+    return this.programRepository.save(program);
   }
 
-  updateProgram(program: Program) {
-    this.programRepository.save(program);
-  }
-
-  async getLastProgramNumber(user: User) {
+  async getLastProgramNumber(owner: string) {
     const userPrograms = await this.programRepository.find({
-      where: { user: user },
+      where: { owner },
       select: ['programNumber'],
       order: { programNumber: 'ASC' },
     });
@@ -63,12 +57,12 @@ export class ProgramsService {
   }
 
   async getAllUserPrograms(
-    user: User,
+    owner: string,
     limit?: number,
     offset?: number,
   ): Promise<{ programs: Program[]; count: number }> {
     const [result, total] = await this.programRepository.findAndCount({
-      where: { user: user },
+      where: { owner },
       take: limit || 13,
       skip: offset || 0,
       order: {
@@ -82,10 +76,7 @@ export class ProgramsService {
     };
   }
 
-  async getAllPrograms(
-    limit?: number,
-    offset?: number,
-  ): Promise<{ programs: Program[]; count: number }> {
+  async getAllPrograms(limit?: number, offset?: number): Promise<{ programs: Program[]; count: number }> {
     const [result, total] = await this.programRepository.findAndCount({
       take: limit || 20,
       skip: offset || 0,
@@ -100,16 +91,16 @@ export class ProgramsService {
     };
   }
 
-  async findProgram(hash: string, user?: User): Promise<Program> {
-    const where = user ? { hash, user } : { hash };
+  async findProgram(hash: string, owner?: string): Promise<Program> {
+    const where = owner ? { hash, owner } : { hash };
     try {
       const program = await this.programRepository.findOne(where, {
-        relations: ['user'],
+        relations: ['meta'],
       });
       return program;
     } catch (error) {
       logger.error(error);
-      return undefined;
+      return null;
     }
   }
 
@@ -125,21 +116,16 @@ export class ProgramsService {
   async initStatus(hash: string, status: string): Promise<Program> {
     const program = await this.findProgram(hash);
     if (program) {
-      program.initStatus =
-        status === 'InitSuccess' ? InitStatus.SUCCESS : InitStatus.FAILED;
+      program.initStatus = status === 'InitSuccess' ? InitStatus.SUCCESS : InitStatus.FAILED;
       return this.programRepository.save(program);
     }
   }
+
   async isInDB(hash) {
     if (await this.findProgram(hash)) {
       return true;
     } else {
       return false;
     }
-  }
-
-  addMeta(program: Program, meta: Metadata): Promise<Program> {
-    program.meta = JSON.stringify(meta);
-    return this.programRepository.save(program);
   }
 }

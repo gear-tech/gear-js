@@ -7,6 +7,7 @@ import { InvalidParamsError } from 'src/json-rpc/errors';
 import { RpcMethods } from 'src/json-rpc/methods';
 import { User } from 'src/users/entities/user.entity';
 import { MessagesService } from 'src/messages/messages.service';
+import { MetadataService } from 'src/metadata/metadata.service';
 
 @Injectable()
 export class HttpRpcMethods extends RpcMethods {
@@ -16,6 +17,7 @@ export class HttpRpcMethods extends RpcMethods {
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
     private readonly messageService: MessagesService,
+    private readonly metaService: MetadataService,
   ) {
     super();
   }
@@ -50,13 +52,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     addPublicKey: async (user, params) => {
-      return (
-        await this.userService.addPublicKey(
-          user,
-          params.publicKey,
-          params.publicKeyRaw,
-        )
-      ).publicKey;
+      return (await this.userService.addPublicKey(user, params.publicKey, params.publicKeyRaw)).publicKey;
     },
 
     getBalance: async (user, params?) => {
@@ -80,11 +76,16 @@ export class HttpRpcMethods extends RpcMethods {
       );
     },
 
+    addMeta: async (user, params) => {
+      return await this.metaService.addMeta(params);
+    },
+
+    getMeta: async (user, params) => {
+      return await this.metaService.getMeta(params.programId);
+    },
+
     all: async (user, params?) => {
-      return await this.programService.getAllPrograms(
-        params ? params.limit : null,
-        params ? params.offset : null,
-      );
+      return await this.programService.getAllPrograms(params ? params.limit : null, params ? params.offset : null);
     },
     allNoGUI: async (user, params) => {
       return await this.gearService.getAllNoGUIPrograms();
@@ -104,6 +105,10 @@ export class HttpRpcMethods extends RpcMethods {
 
     countUnread: async (user, params?) => {
       return await this.messageService.getCountUnread(user);
+    },
+
+    savePayload: async (user, params?) => {
+      return await this.messageService.saveSendedPayload(params);
     },
   };
 }
