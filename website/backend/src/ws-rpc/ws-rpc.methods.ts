@@ -32,33 +32,4 @@ export class WsRpcMethods extends RpcMethods {
       );
     },
   };
-
-  message = {
-    gasSpent: async (cb, user, params) => {
-      try {
-        const gasSpent = await this.gearService.getGasSpent(params.destination, params.payload);
-        cb(undefined, {
-          gasSpent: gasSpent,
-        });
-      } catch (error) {
-        cb({ code: -32002, message: error.message });
-      }
-      return null;
-    },
-    payloadType: async (cb, user, params) => {
-      try {
-        const type = await this.metaService.getMeta(params.destination);
-        cb(undefined, {
-          payloadType: type,
-        });
-      } catch (error) {
-        throw error;
-      }
-      return null;
-    },
-
-    markAsRead: async (cb, user: User, params: any) => {
-      await this.messageService.markAsRead(user.publicKeyRaw, params.id);
-    },
-  };
 }

@@ -1,6 +1,5 @@
 import { Program } from 'src/programs/entities/program.entity';
-import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Message {

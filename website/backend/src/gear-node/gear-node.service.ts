@@ -1,9 +1,8 @@
-import { CreateType, GearApi, GearKeyring } from '@gear-js/api';
-import { Metadata } from '@gear-js/api/types';
+import { GearApi, GearKeyring } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { ProgramsService } from 'src/programs/programs.service';
-import { GearNodeError, ProgramNotFound } from 'src/json-rpc/errors';
+import { GearNodeError } from 'src/json-rpc/errors';
 import { GearNodeEvents } from './events';
 import { RpcCallback } from 'src/json-rpc/interfaces';
 
@@ -88,16 +87,6 @@ export class GearNodeService {
       logger.error(error);
       throw new GearNodeError(error.message);
     }
-  }
-
-  async getGasSpent(hash: string, payload: string | JSON): Promise<number> {
-    const program = await this.programService.findProgram(hash);
-    if (!program) {
-      return 0;
-    }
-    const meta = JSON.parse(program.meta.meta);
-    let gasSpent = await this.api.program.getGasSpent(CreateType.encode('H256', hash), payload, meta.input, meta);
-    return gasSpent.toNumber();
   }
 
   async getAllNoGUIPrograms() {
