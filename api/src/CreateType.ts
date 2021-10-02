@@ -1,8 +1,8 @@
 import { GearApi } from '.';
 import { CreateTypeError } from './errors';
-import { stringToU8a, isHex, hexToU8a, isU8a } from '@polkadot/util';
+import { isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry } from '@polkadot/types/types';
-import { Bytes, TypeRegistry, GenericPortableRegistry, getTypeDef } from '@polkadot/types';
+import { Bytes, TypeRegistry, GenericPortableRegistry } from '@polkadot/types';
 import { Metadata } from './interfaces/metadata';
 
 export class CreateType {
@@ -20,17 +20,17 @@ export class CreateType {
 
     let fromTypeDef: any;
     if (isHex(types)) {
-      fromTypeDef = this.getTypesFromTypeDef(hexToU8a(types), registry);
+      fromTypeDef = CreateType.getTypesFromTypeDef(hexToU8a(types), registry);
       types = fromTypeDef.types;
     } else if (isU8a(types)) {
-      fromTypeDef = this.getTypesFromTypeDef(types, registry).types;
+      fromTypeDef = CreateType.getTypesFromTypeDef(types, registry).types;
       types = fromTypeDef.types;
     }
     this.registerTypes(registry, types);
     return { registry, namespaces: fromTypeDef?.namespaces };
   }
 
-  public getTypesFromTypeDef(types: Uint8Array, registry?: Registry): { types: any; namespaces: Map<string, string> } {
+  static getTypesFromTypeDef(types: Uint8Array, registry?: Registry): { types: any; namespaces: Map<string, string> } {
     if (!registry) {
       registry = new TypeRegistry();
     }
@@ -40,10 +40,12 @@ export class CreateType {
     const compositeTypes = genReg.types.filter(({ type: { def } }) => def.isComposite || def.isVariant);
     compositeTypes.forEach(({ id, type: { path } }) => {
       const typeDef = genReg.getTypeDef(id);
-      let type = typeDef.type.toString();
-      const name = path.pop().toHuman();
-      namespaces.set(name, typeDef.lookupName);
-      result[typeDef.lookupName] = type;
+      if (typeDef.lookupName) {
+        let type = typeDef.type.toString();
+        const name = path.pop().toHuman();
+        namespaces.set(name, typeDef.lookupName);
+        result[typeDef.lookupName] = type;
+      }
     });
     return { types: result, namespaces };
   }
@@ -77,7 +79,7 @@ export class CreateType {
       return this.toBytes(
         registry,
         namespaces ? this.formType(type, namespaces) : type,
-        isJSON(payload) ? toJSON(payload) : payload,
+        isJSON(payload) ? toJSON(payload) : payload
       );
     }
   }
@@ -95,7 +97,7 @@ export class CreateType {
       return this.fromBytes(
         registry,
         namespaces ? this.formType(type, namespaces) : type,
-        isJSON(payload) ? toJSON(payload) : payload,
+        isJSON(payload) ? toJSON(payload) : payload
       );
     }
   }
@@ -173,4 +175,13 @@ function typeIsString(type: any, data?: any): boolean {
   } else {
     return ['string', 'utf8', 'utf-8'].includes(type.toLowerCase());
   }
+}
+
+export function parseHexTypes(hexTypes: string) {
+  const { types, namespaces } = CreateType.getTypesFromTypeDef(hexToU8a(hexTypes));
+  const result = {};
+  namespaces.forEach((value, key) => {
+    result[key] = JSON.parse(types[value]);
+  });
+  return result;
 }
