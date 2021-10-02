@@ -1,4 +1,3 @@
-import { Program } from 'src/programs/entities/program.entity';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()

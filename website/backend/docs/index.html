@@ -122,31 +122,16 @@
               <a class="nav-link" href="#message_countUnread">message.countUnread</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#balance_transfer">balance.transfer</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#blocks_newBlocks">blocks.newBlocks</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#program_upload">program.upload</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#system_totalIssuance">system.totalIssuance</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#message_send">message.send</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#message_gasSpent">message.gasSpent</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#message_payloadType">message.payloadType</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#events_subscribe">events.subscribe</a>
+              <a class="nav-link" href="#message_savePayload">message.savePayload</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#message_markAsRead">message.markAsRead</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#balance_transfer">balance.transfer</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#program_payloadType">program.payloadType</a>
             </li>
           </ul>
         </nav>
@@ -1297,9 +1282,39 @@
                       </tr>
                       <tr>
                         <td>params</td>
+                        <td>object</td>
                         <td></td>
                         <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.destination</td>
+                        <td>string</td>
                         <td></td>
+                        <td>The user's public key in hex format</td>
+                      </tr>
+                      <tr>
+                        <td>params?.isRead</td>
+                        <td>boolean</td>
+                        <td></td>
+                        <td>Read or unread messages. Default - all</td>
+                      </tr>
+                      <tr>
+                        <td>params?.programId</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program hash. Returns messages received from a specific program</td>
+                      </tr>
+                      <tr>
+                        <td>params?.limit</td>
+                        <td>number</td>
+                        <td></td>
+                        <td>Count of messages to return</td>
+                      </tr>
+                      <tr>
+                        <td>params?.offset</td>
+                        <td>number</td>
+                        <td></td>
+                        <td>The offset required to select a specific subset of messages</td>
                       </tr>
                     </table>
                   </div>
@@ -1332,28 +1347,16 @@
                         <td>Message id</td>
                       </tr>
                       <tr>
-                        <td>result[0]?.responseId</td>
+                        <td>result[0]?.destination</td>
                         <td>string</td>
                         <td></td>
-                        <td>Response type</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.date</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Date and time of message</td>
+                        <td>Destination (user publicKey)</td>
                       </tr>
                       <tr>
                         <td>result[0]?.program</td>
                         <td>string</td>
                         <td></td>
-                        <td>Program hash</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.destination</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Destination (user publicKey)</td>
+                        <td>Program id</td>
                       </tr>
                       <tr>
                         <td>result[0]?.payload</td>
@@ -1362,10 +1365,22 @@
                         <td>Message payload</td>
                       </tr>
                       <tr>
+                        <td>result[0]?.responseId</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Response id</td>
+                      </tr>
+                      <tr>
                         <td>result[0]?.response</td>
                         <td>string</td>
                         <td></td>
                         <td>Response payload</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.date</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Date and time of message</td>
                       </tr>
                       <tr>
                         <td>result[0]?.isRead</td>
@@ -1405,7 +1420,8 @@
                   <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "message.all"
+  "method": "message.all",
+  "params": {}
 }</pre>
 
                   <h5>Response example</h5>
@@ -1415,12 +1431,12 @@
   "result": [
     {
       "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "responseId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "date": "2021-08-09T12:07:54.064Z",
-      "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
       "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
+      "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
       "payload": "PING",
+      "responseId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
       "response": "PONG",
+      "date": "2021-08-09T12:07:54.064Z",
       "isRead": false
     }
   ]
@@ -1452,6 +1468,29 @@
               <div class="row">
                 <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params?.publicKeyRaw</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>The user's public key in hex format</td>
+                      </tr>
+                    </table>
+                  </div>
 
                   <h5>Result</h5>
                   <div class="table-responsive">
@@ -1494,7 +1533,214 @@
                   <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "message.countUnread"
+  "method": "message.countUnread",
+  "params": {}
+}</pre>
+
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
+  "jsonrpc": "2.0",
+  "id": "1234567890"
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card method" id="message_savePayload">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_savePayload-content">
+            <h4>
+              <span>message.savePayload</span>
+
+              <div class="float-right">
+                <span class="badge badge-light">Messages</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
+
+          <div class="card-block collapse show" id="message_savePayload-content">
+            <p>Saving sent payload</p>
+
+
+            <hr />
+
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
+
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.messageId</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Message ID</td>
+                      </tr>
+                      <tr>
+                        <td>params.payload</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>The payload that was sent</td>
+                      </tr>
+                      <tr>
+                        <td>params.signature</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Payload signed with a keyring in hex format</td>
+                      </tr>
+                    </table>
+                  </div>
+
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "method": "message.savePayload",
+  "params": {}
+}</pre>
+
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
+  "jsonrpc": "2.0",
+  "id": "1234567890"
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card method" id="message_markAsRead">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_markAsRead-content">
+            <h4>
+              <span>message.markAsRead</span>
+
+              <div class="float-right">
+                <span class="badge badge-light">Messages</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
+
+          <div class="card-block collapse show" id="message_markAsRead-content">
+            <p>Mark message as read</p>
+
+
+            <hr />
+
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
+
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.publicKeyRaw</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>The user's public key in hex format</td>
+                      </tr>
+                      <tr>
+                        <td>params.id</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Message id</td>
+                      </tr>
+                    </table>
+                  </div>
+
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "method": "message.markAsRead",
+  "params": {}
 }</pre>
 
                   <h5>Response example</h5>
@@ -1629,411 +1875,10 @@
             </div>
           </div>
         </div>
-        <div class="card method" id="blocks_newBlocks">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#blocks_newBlocks-content">
+        <div class="card method" id="program_payloadType">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_payloadType-content">
             <h4>
-              <span>blocks.newBlocks</span>
-
-              <div class="float-right">
-                <span class="badge badge-light">Blocks</span>
-                <span class="badge badge-light">WebSocket</span>
-              </div>
-            </h4>
-          </div>
-
-          <div class="card-block collapse show" id="blocks_newBlocks-content">
-            <p>Subscribe to new blocks</p>
-
-
-            <hr />
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8 border-right">
-
-
-                  <h5>Result</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>result</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>result.hash</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Block hash</td>
-                      </tr>
-                      <tr>
-                        <td>result.number</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Block number</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Errors</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Code</th>
-                        <th>Message</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>-32003</td>
-                        <td>Unathorized</td>
-                        <td>The provided credentials are invalid</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                </div>
-
-                <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "blocks.newBlocks"
-}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "hash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
-    "number": "2"
-  }
-}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card method" id="program_upload">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_upload-content">
-            <h4>
-              <span>program.upload</span>
-
-              <div class="float-right">
-                <span class="badge badge-light">Program</span>
-                <span class="badge badge-light">WebSocket</span>
-              </div>
-            </h4>
-          </div>
-
-          <div class="card-block collapse show" id="program_upload-content">
-            <p>Upload new program</p>
-
-
-            <hr />
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8 border-right">
-
-                  <h5>Parameters</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>params</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params.file</td>
-                        <td></td>
-                        <td></td>
-                        <td>File buffer</td>
-                      </tr>
-                      <tr>
-                        <td>params.filename</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>File name</td>
-                      </tr>
-                      <tr>
-                        <td>params.gasLimit</td>
-                        <td>integer</td>
-                        <td></td>
-                        <td>Gas limit</td>
-                      </tr>
-                      <tr>
-                        <td>params.value</td>
-                        <td>integer</td>
-                        <td></td>
-                        <td>Init value</td>
-                      </tr>
-                      <tr>
-                        <td>params.initPayload</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Init payload (hex)</td>
-                      </tr>
-                      <tr>
-                        <td>params.meta</td>
-                        <td>object</td>
-                        <td></td>
-                        <td>Program types</td>
-                      </tr>
-                      <tr>
-                        <td>params.meta?.init_input</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params.meta?.init_output</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params.meta?.input</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params.meta?.output</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params.meta?.types</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params.keyPairJson</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>JSON Encoded KeyPair data</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Result</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>result</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>result.status</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Transaction status</td>
-                      </tr>
-                      <tr>
-                        <td>result.blockHash</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Block hash with program</td>
-                      </tr>
-                      <tr>
-                        <td>result.programHash</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Program Hash</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Errors</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Code</th>
-                        <th>Message</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>-32003</td>
-                        <td>Unathorized</td>
-                        <td>The provided credentials are invalid</td>
-                      </tr>
-                      <tr>
-                        <td>-32602</td>
-                        <td>Invalid method parameters</td>
-                        <td>The provided method parameters are invalid</td>
-                      </tr>
-                      <tr>
-                        <td>-32011</td>
-                        <td>Invalid transaction</td>
-                        <td>Error occured when transaction failed</td>
-                      </tr>
-                      <tr>
-                        <td>-32012</td>
-                        <td>Program initialization falied</td>
-                        <td>Error occured when program initialization failed</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                </div>
-
-                <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "program.upload",
-  "params": {
-    "filename": "demo.wasm",
-    "gasLimit": 2000,
-    "value": 2000,
-    "initPayload": "0x1234",
-    "meta": {
-      "init_input": "String",
-      "init_output": "Vec<u8>",
-      "input": "Person",
-      "output": "Result<u8, u8>",
-      "types": {
-        "Person": {
-          "name": "String",
-          "surname": "String"
-        }
-      }
-    }
-  }
-}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "status": "InBlock",
-    "blockHash": "0xf3a23f7de0415463894039910a8976a7e21cba3e7e620ac10fc6b25ec805eae9",
-    "programHash": "0x4467ffec533014607103dcede9c2e828ecbc8ae1469b18cbb1861e1fecfbe9fe"
-  }
-}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card method" id="system_totalIssuance">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#system_totalIssuance-content">
-            <h4>
-              <span>system.totalIssuance</span>
-
-              <div class="float-right">
-                <span class="badge badge-light">System</span>
-                <span class="badge badge-light">WebSocket</span>
-              </div>
-            </h4>
-          </div>
-
-          <div class="card-block collapse show" id="system_totalIssuance-content">
-            <p>Getting total issuance</p>
-
-
-            <hr />
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8 border-right">
-
-
-                  <h5>Result</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>result</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>result.totalIssuance</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Total issuance value</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Errors</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Code</th>
-                        <th>Message</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>-32003</td>
-                        <td>Unathorized</td>
-                        <td>The provided credentials are invalid</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                </div>
-
-                <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "system.totalIssuance"
-}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "totalIssuance": "4.3425 MUnit"
-  }
-}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card method" id="message_send">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_send-content">
-            <h4>
-              <span>message.send</span>
+              <span>program.payloadType</span>
 
               <div class="float-right">
                 <span class="badge badge-light">Message</span>
@@ -2042,306 +1887,7 @@
             </h4>
           </div>
 
-          <div class="card-block collapse show" id="message_send-content">
-            <p>Sending message</p>
-
-
-            <hr />
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8 border-right">
-
-                  <h5>Parameters</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>params</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params.destination</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Program destination address (hex)</td>
-                      </tr>
-                      <tr>
-                        <td>params.gasLimit</td>
-                        <td>integer</td>
-                        <td></td>
-                        <td>Gas limit</td>
-                      </tr>
-                      <tr>
-                        <td>params.value</td>
-                        <td>integer</td>
-                        <td></td>
-                        <td>Init value</td>
-                      </tr>
-                      <tr>
-                        <td>params.payload</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Init payload</td>
-                      </tr>
-                      <tr>
-                        <td>params?.keyPairJson</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>JSON Encoded KeyPair data</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Result</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>result</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>result?.status</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Transaction status</td>
-                      </tr>
-                      <tr>
-                        <td>result?.blockHash</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Block hash with transaction</td>
-                      </tr>
-                      <tr>
-                        <td>result?.data</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Program response to the message</td>
-                      </tr>
-                      <tr>
-                        <td>result?.required</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Errors</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Code</th>
-                        <th>Message</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>-32003</td>
-                        <td>Unathorized</td>
-                        <td>The provided credentials are invalid</td>
-                      </tr>
-                      <tr>
-                        <td>-32602</td>
-                        <td>Invalid method parameters</td>
-                        <td>The provided method parameters are invalid</td>
-                      </tr>
-                      <tr>
-                        <td>-32011</td>
-                        <td>Invalid transaction</td>
-                        <td>Error occured when transaction failed</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                </div>
-
-                <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "message.send",
-  "params": {
-    "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "gasLimit": 2000,
-    "value": 2000,
-    "payload": "PING"
-  }
-}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "status": "Log",
-    "blockHash": "0xf3a23f7de0415463894039910a8976a7e21cba3e7e620ac10fc6b25ec805eae9",
-    "data": "PONG"
-  }
-}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card method" id="message_gasSpent">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_gasSpent-content">
-            <h4>
-              <span>message.gasSpent</span>
-
-              <div class="float-right">
-                <span class="badge badge-light">Message</span>
-                <span class="badge badge-light">WebSocket</span>
-              </div>
-            </h4>
-          </div>
-
-          <div class="card-block collapse show" id="message_gasSpent-content">
-            <p>Getting minimal gaslLimit for payload for the program</p>
-
-
-            <hr />
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8 border-right">
-
-                  <h5>Parameters</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>params</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params.destination</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Program destination address (hex)</td>
-                      </tr>
-                      <tr>
-                        <td>params.payload</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Init payload</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Result</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>result</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>result?.gasSpent</td>
-                        <td>number</td>
-                        <td></td>
-                        <td>GasSpent</td>
-                      </tr>
-                      <tr>
-                        <td>result?.required</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Errors</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Code</th>
-                        <th>Message</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>-32003</td>
-                        <td>Unathorized</td>
-                        <td>The provided credentials are invalid</td>
-                      </tr>
-                      <tr>
-                        <td>-32602</td>
-                        <td>Invalid method parameters</td>
-                        <td>The provided method parameters are invalid</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                </div>
-
-                <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "message.gasSpent",
-  "params": {
-    "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "payload": "PING"
-  }
-}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "gasSpent": 123213312
-  }
-}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card method" id="message_payloadType">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_payloadType-content">
-            <h4>
-              <span>message.payloadType</span>
-
-              <div class="float-right">
-                <span class="badge badge-light">Message</span>
-                <span class="badge badge-light">WebSocket</span>
-              </div>
-            </h4>
-          </div>
-
-          <div class="card-block collapse show" id="message_payloadType-content">
+          <div class="card-block collapse show" id="program_payloadType-content">
             <p>Getting payload type</p>
 
 
@@ -2433,7 +1979,7 @@
                   <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "message.payloadType",
+  "method": "program.payloadType",
   "params": {
     "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
   }
@@ -2446,229 +1992,6 @@
   "result": {
     "payloadType": "{\"value\": \"u64\", \"annotation\": \"String\"}"
   }
-}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card method" id="events_subscribe">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#events_subscribe-content">
-            <h4>
-              <span>events.subscribe</span>
-
-              <div class="float-right">
-                <span class="badge badge-light">Events</span>
-                <span class="badge badge-light">WebSocket</span>
-              </div>
-            </h4>
-          </div>
-
-          <div class="card-block collapse show" id="events_subscribe-content">
-            <p>Subscribe to events</p>
-
-
-            <hr />
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8 border-right">
-
-
-                  <h5>Result</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>result</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>result?.event</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Event type</td>
-                      </tr>
-                      <tr>
-                        <td>result?.id</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Message id (Log)</td>
-                      </tr>
-                      <tr>
-                        <td>result?.program</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Program hash (Log, InitSuccess, InitFailed)</td>
-                      </tr>
-                      <tr>
-                        <td>result?.response</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Response payload (Log)</td>
-                      </tr>
-                      <tr>
-                        <td>result?.programName</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Name of uploaded program (InitSuccess, InitFailed)</td>
-                      </tr>
-                      <tr>
-                        <td>result?.date</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Date and time of event</td>
-                      </tr>
-                      <tr>
-                        <td>result?.required</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Errors</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Code</th>
-                        <th>Message</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>-32003</td>
-                        <td>Unathorized</td>
-                        <td>The provided credentials are invalid</td>
-                      </tr>
-                      <tr>
-                        <td>-32602</td>
-                        <td>Invalid method parameters</td>
-                        <td>The provided method parameters are invalid</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                </div>
-
-                <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "events.subscribe"
-}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "event": "Log",
-    "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "response": "PONG",
-    "programName": "demo_ping",
-    "date": "2021-08-09T12:07:54.064Z"
-  }
-}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card method" id="message_markAsRead">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#message_markAsRead-content">
-            <h4>
-              <span>message.markAsRead</span>
-
-              <div class="float-right">
-                <span class="badge badge-light">Messages</span>
-                <span class="badge badge-light">WebSocket</span>
-              </div>
-            </h4>
-          </div>
-
-          <div class="card-block collapse show" id="message_markAsRead-content">
-            <p>Mark message as read</p>
-
-
-            <hr />
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8 border-right">
-
-                  <h5>Parameters</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>params</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params?.id</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Message id</td>
-                      </tr>
-                    </table>
-                  </div>
-
-
-                  <h5>Errors</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Code</th>
-                        <th>Message</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>-32003</td>
-                        <td>Unathorized</td>
-                        <td>The provided credentials are invalid</td>
-                      </tr>
-                      <tr>
-                        <td>-32602</td>
-                        <td>Invalid method parameters</td>
-                        <td>The provided method parameters are invalid</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                </div>
-
-                <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "message.markAsRead",
-  "params": {
-    "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
-  }
-}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890"
 }</pre>
                 </div>
               </div>

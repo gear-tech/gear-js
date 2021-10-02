@@ -112,7 +112,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     markAsRead: async (user: User, params: any) => {
-      await this.messageService.markAsRead(params?.publicKeyRaw || user.publicKeyRaw, params?.messageId);
+      await this.messageService.markAsRead(params?.publicKeyRaw || user.publicKeyRaw, params?.id);
       return 'ok';
     },
   };

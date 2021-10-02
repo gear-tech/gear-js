@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Message } from './entities/message.entity';
-import { MessageNotFound } from 'src/json-rpc/errors';
+import { MessageNotFound, SignNotVerified } from 'src/json-rpc/errors';
 import { GearKeyring } from '@gear-js/api';
 
 @Injectable()
@@ -35,10 +35,10 @@ export class MessagesService {
   async saveSendedPayload(messageId: string, payload: string, signature: string) {
     const message = await this.findOne(messageId);
     if (!message) {
-      return { status: 'Message not found' };
+      throw new MessageNotFound();
     }
     if (!GearKeyring.checkSign(message.destination, signature, payload)) {
-      return { status: 'Signature not verified' };
+      throw new SignNotVerified();
     } else {
       let message = await this.findOne(messageId);
       if (message) {
