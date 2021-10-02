@@ -54,10 +54,6 @@ export class HttpRpcMethods extends RpcMethods {
     addPublicKey: async (user: User, params: any) => {
       return (await this.userService.addPublicKey(user, params.publicKey, params.publicKeyRaw)).publicKey;
     },
-
-    getBalance: async (user: User, params: any) => {
-      return await this.gearService.getBalance(user.publicKey);
-    },
   };
 
   program = {
@@ -118,6 +114,11 @@ export class HttpRpcMethods extends RpcMethods {
   };
 
   balance = {
-    topUp: async (user: User, params: any) => {},
+    topUp: async (user: User, params: any) => {
+      if (!params?.value) {
+        throw new InvalidParamsError();
+      }
+      return await this.gearService.balanceTopUp(params?.publicKey || user.publicKeyRaw, params.value);
+    },
   };
 }
