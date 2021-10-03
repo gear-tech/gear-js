@@ -31,9 +31,6 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
     types,
   };
 
-  console.log(program);
-  console.log(meta);
-
   try {
     // Submit program, receive program ID
     const programId = await api.program.submit(program, meta);
@@ -64,14 +61,21 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
 
 export const sendMessageToProgram = async (api: any, message: MessageModel) => {
   const apiRequest = new ServerRPCRequestService();
+
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
   const keyring = GearKeyring.fromJson(jsonKeyring);
 
   try {
     // get metadata for specific program
-    const meta = apiRequest.getResource(RPC_METHODS.GET_METADATA, {
-      programId: message.destination,
-    });
+    const {result: { meta }} = await apiRequest.getResource(
+      RPC_METHODS.GET_METADATA,
+      {
+        programId: message.destination,
+      },
+      { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
+    );
+    console.log(meta);
+    console.log(message);
     await api.message.submit(message, meta);
     await api.message.signAndSend(keyring, (data: any) => {
       console.log(data);
