@@ -106,7 +106,7 @@ export const All: VFC<Props> = ({ socketService }) => {
           allUploadedPrograms.length &&
           allUploadedPrograms.map((item: ProgramModel) => {
             if (item.name && item.name !== 'name.wasm') {
-              return <UserProgram program={item} handleOpenForm={handleOpenForm} />;
+              return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.hash}/>;
             }
             return (
               <div className={styles.allProgramsItem} key={item.hash}>
