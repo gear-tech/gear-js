@@ -2,11 +2,19 @@ import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import { UploadProgramModel, MessageModel } from 'types/program';
 import { GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
-import { sendMessageSuccessAction, sendMessageFailedAction, programStatusAction, sendMessageResetAction } from 'store/actions/actions';
+import {
+  sendMessageSuccessAction,
+  sendMessageFailedAction,
+  programStatusAction,
+  sendMessageResetAction,
+  programUploadSuccessAction,
+  programUploadFailedAction,
+  programUploadResetAction,
+} from 'store/actions/actions';
 import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
-export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel) => {
+export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
 
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -39,6 +47,8 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
     await api.program.signAndSend(keyring, (data: any) => {
       if (data.status === 'Finalized') {
         console.log('Finalized!');
+        dispatch(programUploadSuccessAction());
+        dispatch(programUploadResetAction());
         // Send sing message
         const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
 
@@ -56,6 +66,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
       }
     });
   } catch (error) {
+    dispatch(programUploadFailedAction(`${error}`));
     console.error(error);
   }
 };
@@ -80,17 +91,16 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
 
     await api.message.submit(message, meta);
     await api.message.signAndSend(keyring, (data: any) => {
-
       programStatusAction(data.status);
 
-      if(data.status === 'Finalized'){
+      if (data.status === 'Finalized') {
         console.log('Finalized!');
         dispatch(sendMessageSuccessAction());
         dispatch(sendMessageResetAction());
       }
     });
   } catch (error) {
-    dispatch(sendMessageFailedAction(`${error}`))
+    dispatch(sendMessageFailedAction(`${error}`));
     console.error(error);
   }
 };

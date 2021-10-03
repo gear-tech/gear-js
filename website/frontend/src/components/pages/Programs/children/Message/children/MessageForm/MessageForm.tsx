@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
 import { SocketService } from 'services/SocketService';
-import { sendMessageToProgram } from 'services/ApiService';
+import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
-import { sendMessageStartAction } from 'store/actions/actions';
+import { sendMessageStartAction} from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
@@ -87,7 +87,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
           socketService.getGasSpent(destination, pack.payload);
         } else {
           pack.gasLimit = pack.gasLimit ?? gas ?? 0;
-          sendMessageToProgram(api, pack);
+          SendMessageToProgram(api, pack, dispatch)
           dispatch(sendMessageStartAction());
         }
       }}
