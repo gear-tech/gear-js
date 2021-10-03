@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SocketService } from 'services/SocketService';
 import { RootState } from 'store/reducers';
 import { useApi } from '../../../hooks/useApi';
+import { StatusPanel } from '../StatusPanel/StatusPanel';
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
 // import Editor from 'assets/images/editor_icon.svg';
 
@@ -27,10 +28,14 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
 
   const { blocks } = useSelector((state: RootState) => state.blocks);
   const [totalIssuance, setTotalIssuance] = useState('');
-
+  const [transferSuccess, setTransferSuccess] = useState(false);
   const [prevBlockHash, setPrevBlockHash] = useState('');
 
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
+
+  if (transferSuccess) {
+    setTimeout(() => setTransferSuccess(false), 3000);
+  }
 
   useEffect(() => {
     const getTotal = async () => {
@@ -93,8 +98,8 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
       await api.balance.transferFromAlice(user, GEAR_BALANCE_TRANSFER_VALUE, (data) => {
         console.log(data);
       });
+      setTransferSuccess(true);
     }
-    console.log(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
   };
 
   // const handleTemplate = (index: number) => {
@@ -178,6 +183,14 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
           </span>
         </div>
       </div>
+      {transferSuccess && (
+        <StatusPanel
+          onClose={() => {
+            setTransferSuccess(false)
+          }}
+          statusPanelText={`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`}
+        />
+      )}
     </div>
   );
 };
