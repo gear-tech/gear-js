@@ -33,13 +33,13 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const getTotlal = async () => {
+    const getTotal = async () => {
       if (api) {
         const totalBalance = await api.totalIssuance();
         setTotalIssuance(totalBalance);
       }
     };
-    getTotlal();
+    getTotal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalIssuance]);
 
@@ -86,10 +86,14 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
   //   }
   // };
 
-  const handleTransferBalance = () => {
-    socketService.transferBalance({
-      value: GEAR_BALANCE_TRANSFER_VALUE,
-    });
+  const handleTransferBalance = async () => {
+
+    if(api) {
+      const user: any = localStorage.getItem('public_key');
+      await api.balance.transferFromAlice(user, GEAR_BALANCE_TRANSFER_VALUE, (data) => {
+        console.log(data);
+      });
+    }
     console.log(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
   };
 
