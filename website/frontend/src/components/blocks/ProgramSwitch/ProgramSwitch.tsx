@@ -170,7 +170,7 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
         <div className="switch-info__col">
           <span className="switch-info__title">Total issuance</span>
           <span className="switch-info__data">
-            <b className="switch-info__num">{totalIssuance.slice(0, 5)}</b> Munit
+            <b className="switch-info__num">{totalIssuance.slice(0, 6)}</b> Munit
           </span>
         </div>
       </div>
