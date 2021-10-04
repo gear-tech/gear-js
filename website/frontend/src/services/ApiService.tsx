@@ -5,11 +5,8 @@ import { GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
 import {
   sendMessageSuccessAction,
   sendMessageFailedAction,
-  programStatusAction,
-  sendMessageResetAction,
   programUploadSuccessAction,
   programUploadFailedAction,
-  programUploadResetAction,
 } from 'store/actions/actions';
 import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
@@ -48,7 +45,6 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
       if (data.status === 'Finalized') {
         console.log('Finalized!');
         dispatch(programUploadSuccessAction());
-        dispatch(programUploadResetAction());
         // Send sing message
         const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
 
@@ -91,12 +87,10 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
 
     await api.message.submit(message, meta);
     await api.message.signAndSend(keyring, (data: any) => {
-      programStatusAction(data.status);
 
       if (data.status === 'Finalized') {
         console.log('Finalized!');
         dispatch(sendMessageSuccessAction());
-        dispatch(sendMessageResetAction());
       }
     });
   } catch (error) {
