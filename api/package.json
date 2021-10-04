@@ -12,7 +12,7 @@
     "tslint": "tslint -p tslint -p tsconfig.json",
     "codestyle": "npm run prettier && npm run tslint",
     "prepare": "rm -rf lib types && npm run build",
-    "test-meta": "mocha examples/test-meta.js"
+    "test-meta": "npm run build && mocha examples/test-meta.js"
   },
   "license": "GPL-3.0",
   "dependencies": {
