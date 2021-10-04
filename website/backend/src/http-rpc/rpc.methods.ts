@@ -66,9 +66,9 @@ export class HttpRpcMethods extends RpcMethods {
 
     allUser: async (user: User, params: any) => {
       return await this.programService.getAllUserPrograms(
-        user.publicKeyRaw,
-        params ? params.limit : null,
-        params ? params.offset : null,
+        params?.publicKeyRaw || user.publicKeyRaw,
+        params?.limit,
+        params?.offset,
       );
     },
 

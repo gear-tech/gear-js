@@ -70,7 +70,13 @@ export const Recent: VFC<Props> = ({ socketService }) => {
   };
 
   useEffect(() => {
-    dispatch(getUserProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
+    dispatch(
+      getUserProgramsAction({
+        publicKeyRaw: localStorage.getItem('public_key_raw'),
+        limit: INITIAL_LIMIT_BY_PAGE,
+        offset,
+      })
+    );
   }, [dispatch, offset]);
 
   if (programMessage) {
