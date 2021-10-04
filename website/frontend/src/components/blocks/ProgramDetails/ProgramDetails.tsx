@@ -11,7 +11,7 @@ import cancel from 'assets/images/cancel.svg';
 import close from 'assets/images/close.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-
+import { useAlert } from 'react-alert';
 import { Schema } from './Schema';
 import { readFileAsync } from '../../../helpers';
 import { useApi } from '../../../hooks/useApi';
@@ -31,6 +31,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [wrongJSON, setWrongJSON] = useState(false);
 
   const [api] = useApi();
+  const alert = useAlert();
 
   const program = {
     gasLimit: 20000,
@@ -64,12 +65,12 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
         setMetaWasm(meta);
-      } catch (err) {
-        // TODO ERROR STATUS ACTION
-        console.log(err);
+      } catch (error) {
+        alert.error(`${error}`);
       }
       setDroppedMetaFile(file);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setDroppedMetaFile]
   );
 
@@ -89,6 +90,11 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     if (files?.length) {
       const isCorrectFormat = checkFileFormat(files);
       setWrongMetaFormat(isCorrectFormat);
+      alert.error('Wrong file format', {
+        onClose: () => {
+          setWrongMetaFormat(false);
+        },
+      });
       if (!isCorrectFormat) {
         handleFilesUpload(files[0]);
       }
@@ -96,10 +102,10 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   };
 
   const prettyPrint = () => {
-    const ugly = (document.getElementById("types") as HTMLInputElement).value;
+    const ugly = (document.getElementById('types') as HTMLInputElement).value;
     const obj = JSON.parse(ugly);
     const pretty = JSON.stringify(obj, undefined, 4);
-    (document.getElementById("types") as HTMLInputElement).innerText = pretty
+    (document.getElementById('types') as HTMLInputElement).innerText = pretty;
   };
 
   return (
@@ -112,13 +118,13 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         onSubmit={(values: UploadProgramModel) => {
           if (isMetaByFile) {
             dispatch(programUploadStartAction());
-            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, dispatch);
+            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, dispatch, alert);
             setDroppedFile(null);
           } else {
             try {
               const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
               dispatch(programUploadStartAction());
-              UploadProgram(api, droppedFile, { ...values, types }, dispatch);
+              UploadProgram(api, droppedFile, { ...values, types }, dispatch, alert);
               setDroppedFile(null);
             } catch (err) {
               setWrongJSON(true);
@@ -386,15 +392,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           </Form>
         )}
       </Formik>
-      {wrongMetaFormat && (
-        <StatusPanel
-          onClose={() => {
-            setWrongMetaFormat(false);
-          }}
-          statusPanelText={null}
-          isError
-        />
-      )}
       {wrongJSON && (
         <StatusPanel
           onClose={() => {

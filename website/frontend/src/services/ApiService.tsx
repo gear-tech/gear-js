@@ -11,7 +11,7 @@ import {
 import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
-export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any) => {
+export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any, alert: any) => {
   const apiRequest = new ServerRPCRequestService();
 
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -40,10 +40,11 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   try {
     // Submit program, receive program ID
     const programId = await api.program.submit(program, meta);
+    
     // Trying to sign transaction, receive
     await api.program.signAndSend(keyring, (data: any) => {
+      alert.success(`status: ${data.status}`);
       if (data.status === 'Finalized') {
-        console.log('Finalized!');
         dispatch(programUploadSuccessAction());
         // Send sing message
         const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
@@ -64,6 +65,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   } catch (error) {
     dispatch(programUploadFailedAction(`${error}`));
     console.error(error);
+    alert.error(`status: ${error}`);
   }
 };
 
