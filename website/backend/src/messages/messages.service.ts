@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { ProgramsService } from 'src/programs/programs.service';
 import { Repository } from 'typeorm';
 import { Message } from './entities/message.entity';
-import { MessageNotFound } from 'src/json-rpc/errors';
+import { MessageNotFound, SignNotVerified } from 'src/json-rpc/errors';
 import { GearKeyring } from '@gear-js/api';
 
 @Injectable()
@@ -12,7 +10,6 @@ export class MessagesService {
   constructor(
     @InjectRepository(Message)
     private readonly messageRepo: Repository<Message>,
-    private readonly programService: ProgramsService,
   ) {}
 
   async save(info: {
@@ -35,17 +32,17 @@ export class MessagesService {
     return s;
   }
 
-  async saveSendedPayload(params: { messageId: string; payload: string; signature: string }) {
-    const message = await this.findOne(params.messageId);
+  async saveSendedPayload(messageId: string, payload: string, signature: string) {
+    const message = await this.findOne(messageId);
     if (!message) {
-      return { status: 'Message not found' };
+      throw new MessageNotFound();
     }
-    if (!GearKeyring.checkSign(message.destination, params.signature, params.payload)) {
-      return { status: 'Signature not verified' };
+    if (!GearKeyring.checkSign(message.destination, signature, payload)) {
+      throw new SignNotVerified();
     } else {
-      let message = await this.findOne(params.messageId);
+      let message = await this.findOne(messageId);
       if (message) {
-        message.payload = params.payload;
+        message.payload = payload;
         return this.messageRepo.save(message);
       }
       return null;
@@ -71,22 +68,18 @@ export class MessagesService {
   }
 
   async getAll(
-    user: User,
+    destination: string,
     isRead?: boolean,
     programId?: string,
     limit?: number,
     offset?: number,
   ): Promise<[Message[], number]> {
-    const where = { destination: user };
+    const where = { destination };
     if (isRead) {
       where['isRead'] = isRead;
     }
     if (programId) {
-      const program = await this.programService.findProgram(programId);
-      if (!program) {
-        return [[], 0];
-      }
-      where['program'] = program;
+      where['program'] = programId;
     }
     const messages = await this.messageRepo.findAndCount({
       where,
