@@ -40,7 +40,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   try {
     // Submit program, receive program ID
     const programId = await api.program.submit(program, meta);
-    
+
     // Trying to sign transaction, receive
     await api.program.signAndSend(keyring, (data: any) => {
       alert.success(`status: ${data.status}`);
@@ -69,7 +69,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   }
 };
 
-export const SendMessageToProgram = async (api: any, message: MessageModel, dispatch: any) => {
+export const SendMessageToProgram = async (api: any, message: MessageModel, dispatch: any, alert: any) => {
   const apiRequest = new ServerRPCRequestService();
 
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
@@ -89,13 +89,14 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
 
     await api.message.submit(message, meta);
     await api.message.signAndSend(keyring, (data: any) => {
-
+      alert.success(`status: ${data.status}`);
       if (data.status === 'Finalized') {
         console.log('Finalized!');
         dispatch(sendMessageSuccessAction());
       }
     });
   } catch (error) {
+    alert.error(`status: ${error}`);
     dispatch(sendMessageFailedAction(`${error}`));
     console.error(error);
   }

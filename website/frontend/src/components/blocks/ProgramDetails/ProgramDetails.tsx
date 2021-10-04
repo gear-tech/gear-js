@@ -90,13 +90,15 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     if (files?.length) {
       const isCorrectFormat = checkFileFormat(files);
       setWrongMetaFormat(isCorrectFormat);
-      alert.error('Wrong file format', {
-        onClose: () => {
-          setWrongMetaFormat(false);
-        },
-      });
+      
       if (!isCorrectFormat) {
         handleFilesUpload(files[0]);
+      } else {
+        alert.error('Wrong file format', {
+          onClose: () => {
+            setWrongMetaFormat(false);
+          },
+        });
       }
     }
   };
