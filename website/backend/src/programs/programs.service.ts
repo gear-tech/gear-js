@@ -59,6 +59,7 @@ export class ProgramsService {
     limit?: number,
     offset?: number,
   ): Promise<{ programs: Program[]; count: number }> {
+    owner;
     const [result, total] = await this.programRepository.findAndCount({
       where: { owner },
       take: limit || 13,
