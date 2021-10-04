@@ -260,6 +260,6 @@ try {
 }
 ```
 
-## [Examples](https://github.com/gear-tech/gear-js-lib/tree/master/examples)
+## [Examples](https://github.com/gear-tech/gear-js/tree/master/api/examples)
 
-To run examples see https://github.com/gear-tech/gear-js-lib/tree/master/examples
+To run examples see https://github.com/gear-tech/gear-js/tree/master/api/examples
