@@ -31,8 +31,8 @@ const options = {
   position: positions.BOTTOM_CENTER,
   timeout: 5000,
   containerStyle: {
-    zIndex: 999
-  }
+    zIndex: 999,
+  },
 };
 
 const AppComponent: FC = () => {

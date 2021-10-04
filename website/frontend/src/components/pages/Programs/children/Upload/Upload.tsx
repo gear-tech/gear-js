@@ -2,8 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
-import { GEAR_MNEMONIC_KEY } from 'consts';
-import { generateKeypairAction, programUploadResetAction } from 'store/actions/actions';
+import { programUploadResetAction } from 'store/actions/actions';
 import { useAlert } from 'react-alert';
 import { RootState } from 'store/reducers';
 import './Upload.scss';
@@ -14,12 +13,6 @@ export const Upload = () => {
   const alert = useAlert();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
-
-  useEffect(() => {
-    if (!localStorage.getItem(GEAR_MNEMONIC_KEY)) {
-      dispatch(generateKeypairAction());
-    }
-  }, [dispatch]);
 
   // const [droppedFile, setDroppedFile] = useState<File[]>([]);
   const [wrongFormat, setWrongFormat] = useState(false);
