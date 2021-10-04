@@ -54,7 +54,7 @@ export const RPC_METHODS = {
   SUBSCRIBE_BLOCKS: 'blocks.newBlocks',
   UNSUBSCRIBE_BLOCKS: 'blocks.unsubscribe',
   SUBSCRIBE_EVENTS: 'events.subscribe',
-  BALANCE_TRANSFER: 'balance.transfer',
+  BALANCE_TRANSFER: 'balance.topUp',
   SEND_MESSAGE: 'message.send',
   SEND_META: 'program.addMeta',
   GET_GAS_SPENT: 'message.gasSpent',
@@ -63,6 +63,7 @@ export const RPC_METHODS = {
   ADD_PUBLIC: 'user.addPublicKey',
   ADD_METADATA: 'program.addMeta',
   GET_METADATA: 'program.getMeta',
+
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];

@@ -3,11 +3,14 @@ import clsx from 'clsx';
 import { Link /* , Redirect */ } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
-import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES } from 'consts';
+import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS, GEAR_STORAGE_KEY } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketService } from 'services/SocketService';
+import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
+import { useAlert } from 'react-alert';
 import { useApi } from '../../../hooks/useApi';
+
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
 // import Editor from 'assets/images/editor_icon.svg';
 
@@ -18,8 +21,10 @@ type Props = {
 
 export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
   const dispatch = useDispatch();
+  const apiRequest = new ServerRPCRequestService();
 
   const [api] = useApi();
+  const alert = useAlert();
 
   const [timeInstance, setTimeInstance] = useState(0);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
@@ -87,14 +92,19 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
   // };
 
   const handleTransferBalance = async () => {
-
-    if(api) {
-      const user: any = localStorage.getItem('public_key');
-      await api.balance.transferFromAlice(user, GEAR_BALANCE_TRANSFER_VALUE, (data) => {
-        console.log(data);
-      });
+    try {
+      await apiRequest.getResource(
+        RPC_METHODS.BALANCE_TRANSFER,
+        {
+          to: `${localStorage.getItem('public_key')}`,
+          value: GEAR_BALANCE_TRANSFER_VALUE,
+        },
+        { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
+      );
+      alert.success(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
+    } catch (error) {
+      alert.error(`${error}`);
     }
-    console.log(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
   };
 
   // const handleTemplate = (index: number) => {
