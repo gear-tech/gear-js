@@ -21,6 +21,17 @@ export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
       });
     }
   }, [isApiReady]);
+
+  useEffect(() => {
+    nodeApi.subscribeAllEvents((event) => {
+      console.log(event.toHuman());
+      // dispatch(fetchNotificationsSuccessAction(event.toHuman()));
+    });
+
+    return () => {
+      nodeApi.unsubscribeAllEvents();
+    };
+  });
   return isApiReady ? (
     <Route
       {...rest}

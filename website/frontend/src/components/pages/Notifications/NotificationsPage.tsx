@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import {
-  getNotificationsAction,
-  getUnreadNotificationsCount,
   markAllRecentNotificationsAsReadAction,
   markCertainRecentNotificationsAsReadAction,
   resetBlocksAction,
@@ -23,6 +21,7 @@ import { SearchQueries } from 'components/blocks/SearchQueries/SearchQueries';
 
 import './NotificationsPage.scss';
 import { AppContext } from '../../../contexts/AppContext/AppContext';
+import { useApi } from '../../../hooks/useApi';
 
 export const NotificationsPage: VFC = () => {
   const { socketService } = useContext(AppContext);
@@ -40,17 +39,19 @@ export const NotificationsPage: VFC = () => {
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
+  const [api] = useApi();
+
   useEffect(() => {
     const params: PaginationModel = { limit: INITIAL_LIMIT_BY_PAGE, offset };
     if (searchQuery) {
       params.type = searchQuery.query;
     }
     if (shouldReload) {
-      dispatch(getNotificationsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, type: searchQuery?.query }));
-      dispatch(getUnreadNotificationsCount());
+      // dispatch(getNotificationsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, type: searchQuery?.query }));
+      // dispatch(getUnreadNotificationsCount());
       setShouldReload(false);
     }
-  }, [dispatch, offset, shouldReload, searchQuery, setShouldReload]);
+  }, [dispatch, offset, api, shouldReload, searchQuery, setShouldReload]);
 
   useEffect(
     () => () => {

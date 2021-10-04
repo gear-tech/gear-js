@@ -1,13 +1,7 @@
 import UserRequestService from 'services/UserRequestService';
 
 import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, UserProfileRPCModel } from 'types/user';
-import {
-  NotificationActionTypes,
-  NotificationPaginationModel,
-  RecentNotificationModel,
-  NotificationUnreadRPCModel,
-  NotificationRPCModel,
-} from 'types/notification';
+import { NotificationActionTypes, RecentNotificationModel, NotificationUnreadRPCModel } from 'types/notification';
 import {
   ProgramActionTypes,
   ProgramModel,
@@ -91,11 +85,12 @@ const fetchNotificationsCountSuccessAction = (payload: number) => ({
 });
 const fetchNotificationsCountErrorAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS_COUNT_ERROR });
 
-const fetchNotificationsAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS });
-const fetchNotificationsSuccessAction = (payload: NotificationPaginationModel) => ({
+export const fetchNotificationsAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS });
+export const fetchNotificationsSuccessAction = (payload: any) => ({
   type: NotificationActionTypes.FETCH_NOTIFICATIONS_SUCCESS,
   payload,
 });
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fetchNotificationsErrorAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS_ERROR });
 
 export const fetchRecentNotificationSuccessAction = (payload: RecentNotificationModel) => ({
@@ -241,14 +236,15 @@ export const handleProgramSuccess = () => (dispatch: any, getState: any) => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getNotificationsAction = (params: PaginationModel) => (dispatch: any) => {
-  dispatch(fetchNotificationsAction());
-  notificationService
-    .fetchAllNotifications(params)
-    .then((result: NotificationRPCModel) => {
-      dispatch(fetchNotificationsSuccessAction(result.result));
-    })
-    .catch(() => dispatch(fetchNotificationsErrorAction()));
+  // dispatch(fetchNotificationsAction());
+  // notificationService
+  //   .fetchAllNotifications(params)
+  //   .then((result: NotificationRPCModel) => {
+  //     dispatch(fetchNotificationsSuccessAction(result.result));
+  //   })
+  //   .catch(() => dispatch(fetchNotificationsErrorAction()));
 };
 
 export const getUnreadNotificationsCount = () => (dispatch: any) => {

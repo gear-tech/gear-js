@@ -15,11 +15,12 @@ const NotificationReducer = (state = initialState, action: NotificationAction): 
       return { ...state, loading: true, error: null };
 
     case NotificationActionTypes.FETCH_NOTIFICATIONS_SUCCESS:
+      console.log(action.payload);
       return {
         ...state,
         loading: true,
         error: null,
-        notifications: [...action.payload.events],
+        notifications: null,
         count: action.payload.count,
       };
 
