@@ -10,7 +10,6 @@ import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
 import { useAlert } from 'react-alert';
 import { useApi } from '../../../hooks/useApi';
-
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
 // import Editor from 'assets/images/editor_icon.svg';
 
@@ -32,7 +31,6 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
 
   const { blocks } = useSelector((state: RootState) => state.blocks);
   const [totalIssuance, setTotalIssuance] = useState('');
-
   const [prevBlockHash, setPrevBlockHash] = useState('');
 
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
