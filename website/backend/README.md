@@ -9,8 +9,6 @@
   <b>Gear JSONRPC API</b>
 </p>
 
-Gear-tech API based on nodejs [Nest](https://github.com/nestjs/nest) framework uses TypeScript.
-
 Description jsonrpc api of gear backend
 This api follows the json-rpc 2.0 specification. More information available at http://www.jsonrpc.org/specification.
 
@@ -22,16 +20,16 @@ This api follows the json-rpc 2.0 specification. More information available at h
 - [login.telegram](#login.telegram)
 - [user.profile](#user.profile)
 - [user.addPublicKey](#user.addPublicKey)
-- [user.getBalance](#user.getBalance)
 - [program.data](#program.data)
-- [program.allUser](#program.allUser)
+- [program.addMeta](#program.addMeta)
+- [program.getMeta](#program.getMeta)
 - [program.all](#program.all)
+- [program.allUser](#program.allUser)
 - [message.all](#message.all)
 - [message.countUnread](#message.countUnread)
 - [message.savePayload](#message.savePayload)
 - [message.markAsRead](#message.markAsRead)
-- [balance.transfer](#balance.transfer)
-- [program.payloadType](#program.payloadType)
+- [balance.topUp](#balance.topUp)
 
 ---
 
@@ -161,14 +159,15 @@ Getting user profile
 
 ### Result
 
-| Name              | Type   | Constraints | Description |
-| ----------------- | ------ | ----------- | ----------- |
-| result            | object |             | User data   |
-| result?.email     | string |             |             |
-| result?.name      | string |             | Fullname    |
-| result?.username  | string |             | Username    |
-| result?.photoUrl  | string |             | Photo url   |
-| result?.publicKey | string |             | Public key  |
+| Name                 | Type   | Constraints | Description              |
+| -------------------- | ------ | ----------- | ------------------------ |
+| result               | object |             | User data                |
+| result?.email        | string |             |                          |
+| result?.name         | string |             | Fullname                 |
+| result?.username     | string |             | Username                 |
+| result?.photoUrl     | string |             | Photo url                |
+| result?.publicKey    | string |             | Public key               |
+| result?.publicKeyRaw | string |             | Public key in hex format |
 
 ### Errors
 
@@ -199,7 +198,8 @@ Getting user profile
     "name": "Ivan Ivanov",
     "username": "ivan_navi",
     "photoUrl": "http://photo.url",
-    "publicKey": "5GHJ54GHgh4"
+    "publicKey": "5GHJ54GHgh4",
+    "publicKeyRaw": "0x452374655273fafc26453b2bc27328d287de3eff"
   }
 }
 ```
@@ -259,49 +259,6 @@ Add user public key
 }
 ```
 
-<a name="user.getBalance"></a>
-
-## user.getBalance
-
-Getting user balance
-
-### Result
-
-| Name               | Type   | Constraints | Description |
-| ------------------ | ------ | ----------- | ----------- |
-| result             | object |             |             |
-| result.freeBalance | string |             |             |
-
-### Errors
-
-| Code   | Message     | Description                          |
-| ------ | ----------- | ------------------------------------ |
-| -32003 | Unathorized | The provided credentials are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "user.getBalance"
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "freeBalance": "2"
-  }
-}
-```
-
 <a name="program.data"></a>
 
 ## program.data
@@ -317,21 +274,17 @@ Getting uploaded program data
 
 ### Result
 
-| Name                 | Type    | Constraints | Description                                            |
-| -------------------- | ------- | ----------- | ------------------------------------------------------ |
-| result               | object  |             |                                                        |
-| result.hash          | string  |             | program hash                                           |
-| result.blockHash     | string  |             | hash of block with program                             |
-| result.programNumber | string  |             | Number of program in order                             |
-| result.name          | string  |             | Program name                                           |
-| result.callCount     | integer |             | Number of program call                                 |
-| result.uploadedAt    | string  |             | Date when program was uploaded                         |
-| result?.title        | string  |             | Title of program from metadata                         |
-| result?.incomingType | string  |             | Type of expected message                               |
-| result?.expectedType | string  |             | Type of reponse message                                |
-| result?.initType     | string  |             | Type of initializing message                           |
-| result?.initOutType  | string  |             | Type of message responding to the initializing message |
-| result.initStatus    | string  |             | Program initializtaion status                          |
+| Name                 | Type    | Constraints | Description                    |
+| -------------------- | ------- | ----------- | ------------------------------ |
+| result               | object  |             |                                |
+| result.hash          | string  |             | program hash                   |
+| result.programNumber | string  |             | Number of program in order     |
+| result.name          | string  |             | Program name                   |
+| result.callCount     | integer |             | Number of program call         |
+| result.uploadedAt    | string  |             | Date when program was uploaded |
+| result?.title        | string  |             | Title of program from metadata |
+| result?.meta         | obect   |             | Metadata of program            |
+| result.initStatus    | string  |             | Program initializtaion status  |
 
 ### Errors
 
@@ -363,7 +316,6 @@ Getting uploaded program data
   "id": "1234567890",
   "result": {
     "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
-    "blockHash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
     "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
     "name": "demo.wasm",
     "callCount": 3,
@@ -373,36 +325,30 @@ Getting uploaded program data
 }
 ```
 
-<a name="program.allUser"></a>
+<a name="program.addMeta"></a>
 
-## program.allUser
+## program.addMeta
 
-Getting all user's uploaded program
+Saving sent payload
 
-### Result
+### Parameters
 
-| Name                    | Type    | Constraints | Description                                            |
-| ----------------------- | ------- | ----------- | ------------------------------------------------------ |
-| result                  | array   |             |                                                        |
-| result[0]               | object  |             |                                                        |
-| result[0].hash          | string  |             | program hash                                           |
-| result[0].blockHash     | string  |             | hash of block with program                             |
-| result[0].programNumber | string  |             | Number of program in order                             |
-| result[0].name          | string  |             | Program name                                           |
-| result[0].callCount     | integer |             | Number of program call                                 |
-| result[0].uploadedAt    | string  |             | Date when program was uploaded                         |
-| result[0]?.title        | string  |             | Title of program from metadata                         |
-| result[0]?.incomingType | string  |             | Type of expected message                               |
-| result[0]?.expectedType | string  |             | Type of reponse message                                |
-| result[0]?.initType     | string  |             | Type of initializing message                           |
-| result[0]?.initOutType  | string  |             | Type of message responding to the initializing message |
-| result[0].initStatus    | string  |             | Program initializtaion status                          |
+| Name             | Type   | Constraints | Description                                  |
+| ---------------- | ------ | ----------- | -------------------------------------------- |
+| params           | object |             |                                              |
+| params.programId | string |             | Program ID                                   |
+| params.meta      | string |             | Metadata in string format                    |
+| params.signature | string |             | Metadata signed with a keyring in hex format |
+| params?.name     | string |             | Name of the program. (Optional)              |
+| params?.title    | string |             | Title of the program. (Optional)             |
 
 ### Errors
 
 | Code   | Message     | Description                          |
 | ------ | ----------- | ------------------------------------ |
 | -32003 | Unathorized | The provided credentials are invalid |
+|        |             |                                      |
+|        |             |                                      |
 
 ### Examples
 
@@ -412,7 +358,10 @@ Getting all user's uploaded program
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "program.allUser"
+  "method": "program.addMeta",
+  "params": {
+    "programId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+  }
 }
 ```
 
@@ -421,18 +370,57 @@ Getting all user's uploaded program
 ```json
 {
   "jsonrpc": "2.0",
+  "id": "1234567890"
+}
+```
+
+<a name="program.getMeta"></a>
+
+## program.getMeta
+
+Getting metadata of the program
+
+### Parameters
+
+| Name             | Type   | Constraints | Description |
+| ---------------- | ------ | ----------- | ----------- |
+| params           | object |             |             |
+| params.programId | string |             | Program ID  |
+
+### Result
+
+| Name   | Type | Constraints | Description |
+| ------ | ---- | ----------- | ----------- |
+| result |      |             |             |
+
+### Errors
+
+| Code   | Message                   | Description                                |
+| ------ | ------------------------- | ------------------------------------------ |
+| -32003 | Unathorized               | The provided credentials are invalid       |
+| -32602 | Invalid method parameters | The provided method parameters are invalid |
+
+### Examples
+
+#### Request
+
+```json
+{
+  "jsonrpc": "2.0",
   "id": "1234567890",
-  "result": [
-    {
-      "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
-      "blockHash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
-      "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
-      "name": "demo.wasm",
-      "callCount": 3,
-      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
-      "initStatus": "in progress"
-    }
-  ]
+  "method": "program.getMeta",
+  "params": {
+    "programId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+  }
+}
+```
+
+#### Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890"
 }
 ```
 
@@ -444,22 +432,18 @@ Getting all uploaded program
 
 ### Result
 
-| Name                    | Type    | Constraints | Description                                            |
-| ----------------------- | ------- | ----------- | ------------------------------------------------------ |
-| result                  | array   |             |                                                        |
-| result[0]               | object  |             |                                                        |
-| result[0].hash          | string  |             | program hash                                           |
-| result[0].blockHash     | string  |             | hash of block with program                             |
-| result[0].programNumber | string  |             | Number of program in order                             |
-| result[0].name          | string  |             | Program name                                           |
-| result[0].callCount     | integer |             | Number of program call                                 |
-| result[0].uploadedAt    | string  |             | Date when program was uploaded                         |
-| result[0]?.title        | string  |             | Title of program from metadata                         |
-| result[0]?.incomingType | string  |             | Type of expected message                               |
-| result[0]?.expectedType | string  |             | Type of reponse message                                |
-| result[0]?.initType     | string  |             | Type of initializing message                           |
-| result[0]?.initOutType  | string  |             | Type of message responding to the initializing message |
-| result[0].initStatus    | string  |             | Program initializtaion status                          |
+| Name                    | Type    | Constraints | Description                    |
+| ----------------------- | ------- | ----------- | ------------------------------ |
+| result                  | array   |             |                                |
+| result[0]               | object  |             |                                |
+| result[0].hash          | string  |             | program hash                   |
+| result[0].programNumber | string  |             | Number of program in order     |
+| result[0].name          | string  |             | Program name                   |
+| result[0].callCount     | integer |             | Number of program call         |
+| result[0].uploadedAt    | string  |             | Date when program was uploaded |
+| result[0]?.title        | string  |             | Title of program from metadata |
+| result[0]?.meta         | obect   |             | Metadata of program            |
+| result[0].initStatus    | string  |             | Program initializtaion status  |
 
 ### Errors
 
@@ -488,7 +472,64 @@ Getting all uploaded program
   "result": [
     {
       "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
-      "blockHash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
+      "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
+      "name": "demo.wasm",
+      "callCount": 3,
+      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
+      "initStatus": "in progress"
+    }
+  ]
+}
+```
+
+<a name="program.allUser"></a>
+
+## program.allUser
+
+Getting all user's uploaded program
+
+### Result
+
+| Name                    | Type    | Constraints | Description                    |
+| ----------------------- | ------- | ----------- | ------------------------------ |
+| result                  | array   |             |                                |
+| result[0]               | object  |             |                                |
+| result[0].hash          | string  |             | program hash                   |
+| result[0].programNumber | string  |             | Number of program in order     |
+| result[0].name          | string  |             | Program name                   |
+| result[0].callCount     | integer |             | Number of program call         |
+| result[0].uploadedAt    | string  |             | Date when program was uploaded |
+| result[0]?.title        | string  |             | Title of program from metadata |
+| result[0]?.meta         | obect   |             | Metadata of program            |
+| result[0].initStatus    | string  |             | Program initializtaion status  |
+
+### Errors
+
+| Code   | Message     | Description                          |
+| ------ | ----------- | ------------------------------------ |
+| -32003 | Unathorized | The provided credentials are invalid |
+
+### Examples
+
+#### Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "method": "program.allUser"
+}
+```
+
+#### Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "result": [
+    {
+      "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
       "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
       "name": "demo.wasm",
       "callCount": 3,
@@ -708,17 +749,18 @@ Mark message as read
 }
 ```
 
-<a name="balance.transfer"></a>
+<a name="balance.topUp"></a>
 
-## balance.transfer
+## balance.topUp
 
-Transfer balance from Alice.
+Top up user balance
 
 ### Parameters
 
 | Name         | Type    | Constraints | Description                                  |
 | ------------ | ------- | ----------- | -------------------------------------------- |
 | params       | object  |             |                                              |
+| params?.to   | string  |             | User public key                              |
 | params.value | integer |             | The number of units that need to be transfer |
 
 ### Result
@@ -730,11 +772,11 @@ Transfer balance from Alice.
 
 ### Errors
 
-| Code   | Message                   | Description                                |
-| ------ | ------------------------- | ------------------------------------------ |
-| -32003 | Unathorized               | The provided credentials are invalid       |
-| -32602 | Invalid method parameters | The provided method parameters are invalid |
-| -32011 | Invalid transaction       | Error occured when transaction failed      |
+| Code   | Message                   | Description                                  |
+| ------ | ------------------------- | -------------------------------------------- |
+| -32003 | Unathorized               | The provided credentials are invalid         |
+| -32602 | Invalid method parameters | The provided method parameters are invalid   |
+| -32011 | Invalid transaction       | The error occurs when the transaction failed |
 
 ### Examples
 
@@ -744,7 +786,7 @@ Transfer balance from Alice.
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "balance.transfer",
+  "method": "balance.topUp",
   "params": {
     "value": 1234567
   }
@@ -759,61 +801,6 @@ Transfer balance from Alice.
   "id": "1234567890",
   "result": {
     "message": "Transfer balance success"
-  }
-}
-```
-
-<a name="program.payloadType"></a>
-
-## program.payloadType
-
-Getting payload type
-
-### Parameters
-
-| Name               | Type   | Constraints | Description                       |
-| ------------------ | ------ | ----------- | --------------------------------- |
-| params             | object |             |                                   |
-| params.destination | string |             | Program destination address (hex) |
-
-### Result
-
-| Name                | Type   | Constraints | Description  |
-| ------------------- | ------ | ----------- | ------------ |
-| result              | object |             |              |
-| result?.payloadType | string |             | Payload type |
-| result?.required    |        |             |              |
-
-### Errors
-
-| Code   | Message                   | Description                                |
-| ------ | ------------------------- | ------------------------------------------ |
-| -32003 | Unathorized               | The provided credentials are invalid       |
-| -32602 | Invalid method parameters | The provided method parameters are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "program.payloadType",
-  "params": {
-    "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
-  }
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "payloadType": "{\"value\": \"u64\", \"annotation\": \"String\"}"
   }
 }
 ```

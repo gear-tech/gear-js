@@ -49,8 +49,28 @@
           "description": "Public key",
           "examples": ["5GHJ54GHgh4"],
           "type": "string"
+        },
+        "publicKeyRaw": {
+          "description": "Public key in hex format",
+          "examples": ["0x452374655273fafc26453b2bc27328d287de3eff"],
+          "type": "string"
         }
       }
+    },
+    "metadata": {
+      "description": "Metadata of uploaded program",
+      "type": "object",
+      "properties": {
+        "program": {
+          "type": "string",
+          "description": "program ID"
+        },
+        "meta": {
+          "type": "string",
+          "description": "Metadata"
+        }
+      },
+      "required": ["program", "meta"]
     },
     "program": {
       "type": "object",
@@ -58,11 +78,6 @@
         "hash": {
           "description": "program hash",
           "examples": ["0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666"],
-          "type": "string"
-        },
-        "blockHash": {
-          "description": "hash of block with program",
-          "examples": ["0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a"],
           "type": "string"
         },
         "programNumber": {
@@ -89,21 +104,12 @@
           "type": "string",
           "description": "Title of program from metadata"
         },
-        "incomingType": {
-          "type": "string",
-          "description": "Type of expected message"
-        },
-        "expectedType": {
-          "type": "string",
-          "description": "Type of reponse message"
-        },
-        "initType": {
-          "type": "string",
-          "description": "Type of initializing message"
-        },
-        "initOutType": {
-          "type": "string",
-          "description": "Type of message responding to the initializing message"
+        "meta": {
+          "type": "obect",
+          "description": "Metadata of program",
+          "properties": {
+            "$ref": "#definitions/metadata"
+          }
         },
         "initStatus": {
           "type": "string",
@@ -175,66 +181,40 @@
         "code": -32000,
         "message": "Internal server error"
       },
-      "gearNode": {
-        "description": "Error occured in the gear node",
-        "code": -32010,
-        "message": "Gear node error"
-      },
-      "transactionError": {
-        "description": "Error occured when transaction failed",
-        "code": -32011,
-        "message": "Invalid transaction"
-      },
       "unathorized": {
         "description": "The provided credentials are invalid",
         "code": -32003,
         "message": "Unathorized"
       },
-      "initProgramError": {
-        "description": "Error occured when program initialization failed",
-        "code": -32012,
-        "message": "Program initialization falied"
+      "gearNode": {
+        "description": "The error occurs in the gear node",
+        "code": -32010,
+        "message": "Gear node error"
+      },
+      "transactionError": {
+        "description": "The error occurs when the transaction failed",
+        "code": -32011,
+        "message": "Invalid transaction"
+      },
+      "programNotFound": {
+        "description": "The requested program not found",
+        "code": -32013,
+        "message": "Program not found"
+      },
+      "metadataNotFound": {
+        "description": "The error occurs when the metadata for the provided program is not found",
+        "code": -32015,
+        "message": "Metadata not found"
+      },
+      "messageNotFound": {
+        "description": "The requested message not found",
+        "code": -32014,
+        "message": "Message not found"
       },
       "signNotVerified": {
-        "description": "Error occured when sent signature was not verified",
+        "description": "The error occurs when sent signature was not verified",
         "code": -32017,
         "message": "Signature not verified"
-      }
-    },
-    "event": {
-      "type": "object",
-      "properties": {
-        "event": {
-          "type": "string",
-          "description": "Event type",
-          "examples": ["Log", "InitSuccess", "InitFailed"]
-        },
-        "id": {
-          "type": "string",
-          "description": "Message id (Log)",
-          "examples": ["0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"]
-        },
-        "program": {
-          "type": "string",
-          "description": "Program hash (Log, InitSuccess, InitFailed)",
-          "examples": ["0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"]
-        },
-        "response": {
-          "type": "string",
-          "description": "Response payload (Log)",
-          "examples": ["PONG"]
-        },
-        "programName": {
-          "type": "string",
-          "description": "Name of uploaded program (InitSuccess, InitFailed)",
-          "examples": ["demo_ping"]
-        },
-        "date": {
-          "type": "string",
-          "description": "Date and time of event",
-          "examples": ["2021-08-09T12:07:54.064Z"]
-        },
-        "required": ["id", "type", "date", "program", "dest"]
       }
     }
   },
@@ -352,22 +332,6 @@
       "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
     },
 
-    "user.getBalance": {
-      "summary": "Getting user balance",
-      "tags": ["User", "Http"],
-      "result": {
-        "type": "object",
-        "properties": {
-          "freeBalance": {
-            "type": "string",
-            "examples": "262.4660 mUnit"
-          }
-        },
-        "required": ["freeBalance"]
-      },
-      "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
-    },
-
     "program.data": {
       "summary": "Getting uploaded program data",
       "tags": ["Program", "Http"],
@@ -388,8 +352,65 @@
       "errors": [{ "$ref": "#/definitions/errors/unathorized" }, { "$ref": "#/definitions/errors/invalidMethodParams" }]
     },
 
-    "program.allUser": {
-      "summary": "Getting all user's uploaded program",
+    "program.addMeta": {
+      "summary": "Saving sent payload",
+      "tags": ["Messages", "Http"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "programId": {
+            "type": "string",
+            "description": "Program ID",
+            "examples": ["0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"]
+          },
+          "meta": {
+            "type": "string",
+            "description": "Metadata in string format"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Metadata signed with a keyring in hex format"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the program. (Optional)"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the program. (Optional)"
+          }
+        },
+        "required": ["programId", "meta", "signature"]
+      },
+      "errors": [
+        { "$ref": "#/definitions/errors/unathorized" },
+        { "$ref": "#definitions/errors/programNotFound" },
+        { "$ref": "#definitions/errors/signNotVerified" }
+      ]
+    },
+
+    "program.getMeta": {
+      "summary": "Getting metadata of the program",
+      "tags": ["Program", "Http"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "programId": {
+            "type": "string",
+            "description": "Program ID",
+            "examples": ["0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"]
+          }
+        },
+        "required": ["programId"]
+      },
+      "result": {
+        "$ref": "#definitions/metadata"
+      },
+      "errors": [{ "$ref": "#/definitions/errors/unathorized" }, { "$ref": "#/definitions/errors/invalidMethodParams" }]
+    },
+
+    "program.all": {
+      "summary": "Getting all uploaded program",
       "tags": ["Program", "Http"],
       "result": {
         "type": "array",
@@ -398,8 +419,8 @@
       "errors": [{ "$ref": "#/definitions/errors/unathorized" }]
     },
 
-    "program.all": {
-      "summary": "Getting all uploaded program",
+    "program.allUser": {
+      "summary": "Getting all user's uploaded program",
       "tags": ["Program", "Http"],
       "result": {
         "type": "array",
@@ -517,12 +538,16 @@
       ]
     },
 
-    "balance.transfer": {
-      "summary": "Transfer balance from Alice.",
-      "tags": ["Balance", "WebSocket"],
+    "balance.topUp": {
+      "summary": "Top up user balance",
+      "tags": ["Balance", "Http"],
       "params": {
         "type": "object",
         "properties": {
+          "to": {
+            "type": "string",
+            "description": "User public key"
+          },
           "value": {
             "type": "integer",
             "description": "The number of units that need to be transfer",
@@ -547,34 +572,6 @@
         { "$ref": "#/definitions/errors/invalidMethodParams" },
         { "$ref": "#/definitions/errors/transactionError" }
       ]
-    },
-
-    "program.payloadType": {
-      "summary": "Getting payload type",
-      "tags": ["Message", "WebSocket"],
-      "params": {
-        "type": "object",
-        "properties": {
-          "destination": {
-            "type": "string",
-            "description": "Program destination address (hex)",
-            "examples": ["0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"]
-          }
-        },
-        "required": ["destination"]
-      },
-      "result": {
-        "type": "object",
-        "properties": {
-          "payloadType": {
-            "type": "string",
-            "description": "Payload type",
-            "examples": ["{\"value\": \"u64\", \"annotation\": \"String\"}"]
-          },
-          "required": ["payloadType"]
-        }
-      },
-      "errors": [{ "$ref": "#/definitions/errors/unathorized" }, { "$ref": "#/definitions/errors/invalidMethodParams" }]
     }
   }
 }

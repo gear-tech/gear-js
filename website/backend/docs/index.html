@@ -104,16 +104,19 @@
               <a class="nav-link" href="#user_addPublicKey">user.addPublicKey</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#user_getBalance">user.getBalance</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="#program_data">program.data</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#program_allUser">program.allUser</a>
+              <a class="nav-link" href="#program_addMeta">program.addMeta</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#program_getMeta">program.getMeta</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#program_all">program.all</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#program_allUser">program.allUser</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#message_all">message.all</a>
@@ -128,10 +131,7 @@
               <a class="nav-link" href="#message_markAsRead">message.markAsRead</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#balance_transfer">balance.transfer</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#program_payloadType">program.payloadType</a>
+              <a class="nav-link" href="#balance_topUp">balance.topUp</a>
             </li>
           </ul>
         </nav>
@@ -477,6 +477,12 @@
                         <td></td>
                         <td>Public key</td>
                       </tr>
+                      <tr>
+                        <td>result?.publicKeyRaw</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Public key in hex format</td>
+                      </tr>
                     </table>
                   </div>
 
@@ -515,7 +521,8 @@
     "name": "Ivan Ivanov",
     "username": "ivan_navi",
     "photoUrl": "http://photo.url",
-    "publicKey": "5GHJ54GHgh4"
+    "publicKey": "5GHJ54GHgh4",
+    "publicKeyRaw": "0x452374655273fafc26453b2bc27328d287de3eff"
   }
 }</pre>
                 </div>
@@ -642,92 +649,6 @@
             </div>
           </div>
         </div>
-        <div class="card method" id="user_getBalance">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#user_getBalance-content">
-            <h4>
-              <span>user.getBalance</span>
-
-              <div class="float-right">
-                <span class="badge badge-light">User</span>
-                <span class="badge badge-light">Http</span>
-              </div>
-            </h4>
-          </div>
-
-          <div class="card-block collapse show" id="user_getBalance-content">
-            <p>Getting user balance</p>
-
-
-            <hr />
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8 border-right">
-
-
-                  <h5>Result</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>result</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>result.freeBalance</td>
-                        <td>string</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Errors</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Code</th>
-                        <th>Message</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>-32003</td>
-                        <td>Unathorized</td>
-                        <td>The provided credentials are invalid</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                </div>
-
-                <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "user.getBalance"
-}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "freeBalance": "2"
-  }
-}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="card method" id="program_data">
           <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_data-content">
             <h4>
@@ -796,12 +717,6 @@
                         <td>program hash</td>
                       </tr>
                       <tr>
-                        <td>result.blockHash</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>hash of block with program</td>
-                      </tr>
-                      <tr>
                         <td>result.programNumber</td>
                         <td>string</td>
                         <td></td>
@@ -832,28 +747,10 @@
                         <td>Title of program from metadata</td>
                       </tr>
                       <tr>
-                        <td>result?.incomingType</td>
-                        <td>string</td>
+                        <td>result?.meta</td>
+                        <td>obect</td>
                         <td></td>
-                        <td>Type of expected message</td>
-                      </tr>
-                      <tr>
-                        <td>result?.expectedType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of reponse message</td>
-                      </tr>
-                      <tr>
-                        <td>result?.initType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of initializing message</td>
-                      </tr>
-                      <tr>
-                        <td>result?.initOutType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of message responding to the initializing message</td>
+                        <td>Metadata of program</td>
                       </tr>
                       <tr>
                         <td>result.initStatus</td>
@@ -904,7 +801,6 @@
   "id": "1234567890",
   "result": {
     "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
-    "blockHash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
     "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
     "name": "demo.wasm",
     "callCount": 3,
@@ -917,20 +813,20 @@
             </div>
           </div>
         </div>
-        <div class="card method" id="program_allUser">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_allUser-content">
+        <div class="card method" id="program_addMeta">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_addMeta-content">
             <h4>
-              <span>program.allUser</span>
+              <span>program.addMeta</span>
 
               <div class="float-right">
-                <span class="badge badge-light">Program</span>
+                <span class="badge badge-light">Messages</span>
                 <span class="badge badge-light">Http</span>
               </div>
             </h4>
           </div>
 
-          <div class="card-block collapse show" id="program_allUser-content">
-            <p>Getting all user&#39;s uploaded program</p>
+          <div class="card-block collapse show" id="program_addMeta-content">
+            <p>Saving sent payload</p>
 
 
             <hr />
@@ -939,6 +835,149 @@
               <div class="row">
                 <div class="col-8 border-right">
 
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.programId</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program ID</td>
+                      </tr>
+                      <tr>
+                        <td>params.meta</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Metadata in string format</td>
+                      </tr>
+                      <tr>
+                        <td>params.signature</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Metadata signed with a keyring in hex format</td>
+                      </tr>
+                      <tr>
+                        <td>params?.name</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Name of the program. (Optional)</td>
+                      </tr>
+                      <tr>
+                        <td>params?.title</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Title of the program. (Optional)</td>
+                      </tr>
+                    </table>
+                  </div>
+
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "method": "program.addMeta",
+  "params": {
+    "programId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+  }
+}</pre>
+
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
+  "jsonrpc": "2.0",
+  "id": "1234567890"
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card method" id="program_getMeta">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_getMeta-content">
+            <h4>
+              <span>program.getMeta</span>
+
+              <div class="float-right">
+                <span class="badge badge-light">Program</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
+
+          <div class="card-block collapse show" id="program_getMeta-content">
+            <p>Getting metadata of the program</p>
+
+
+            <hr />
+
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
+
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>params.programId</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program ID</td>
+                      </tr>
+                    </table>
+                  </div>
 
                   <h5>Result</h5>
                   <div class="table-responsive">
@@ -951,87 +990,9 @@
                       </tr>
                       <tr>
                         <td>result</td>
-                        <td>array</td>
                         <td></td>
                         <td></td>
-                      </tr>
-                      <tr>
-                        <td>result[0]</td>
-                        <td>object</td>
                         <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>result[0].hash</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>program hash</td>
-                      </tr>
-                      <tr>
-                        <td>result[0].blockHash</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>hash of block with program</td>
-                      </tr>
-                      <tr>
-                        <td>result[0].programNumber</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Number of program in order</td>
-                      </tr>
-                      <tr>
-                        <td>result[0].name</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Program name</td>
-                      </tr>
-                      <tr>
-                        <td>result[0].callCount</td>
-                        <td>integer</td>
-                        <td></td>
-                        <td>Number of program call</td>
-                      </tr>
-                      <tr>
-                        <td>result[0].uploadedAt</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Date when program was uploaded</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.title</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Title of program from metadata</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.incomingType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of expected message</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.expectedType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of reponse message</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.initType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of initializing message</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.initOutType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of message responding to the initializing message</td>
-                      </tr>
-                      <tr>
-                        <td>result[0].initStatus</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Program initializtaion status</td>
                       </tr>
                     </table>
                   </div>
@@ -1049,6 +1010,11 @@
                         <td>Unathorized</td>
                         <td>The provided credentials are invalid</td>
                       </tr>
+                      <tr>
+                        <td>-32602</td>
+                        <td>Invalid method parameters</td>
+                        <td>The provided method parameters are invalid</td>
+                      </tr>
                     </table>
                   </div>
 
@@ -1059,24 +1025,16 @@
                   <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "program.allUser"
+  "method": "program.getMeta",
+  "params": {
+    "programId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+  }
 }</pre>
 
                   <h5>Response example</h5>
                   <pre class="bg-light">{
   "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": [
-    {
-      "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
-      "blockHash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
-      "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
-      "name": "demo.wasm",
-      "callCount": 3,
-      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
-      "initStatus": "in progress"
-    }
-  ]
+  "id": "1234567890"
 }</pre>
                 </div>
               </div>
@@ -1134,12 +1092,6 @@
                         <td>program hash</td>
                       </tr>
                       <tr>
-                        <td>result[0].blockHash</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>hash of block with program</td>
-                      </tr>
-                      <tr>
                         <td>result[0].programNumber</td>
                         <td>string</td>
                         <td></td>
@@ -1170,28 +1122,10 @@
                         <td>Title of program from metadata</td>
                       </tr>
                       <tr>
-                        <td>result[0]?.incomingType</td>
-                        <td>string</td>
+                        <td>result[0]?.meta</td>
+                        <td>obect</td>
                         <td></td>
-                        <td>Type of expected message</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.expectedType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of reponse message</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.initType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of initializing message</td>
-                      </tr>
-                      <tr>
-                        <td>result[0]?.initOutType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Type of message responding to the initializing message</td>
+                        <td>Metadata of program</td>
                       </tr>
                       <tr>
                         <td>result[0].initStatus</td>
@@ -1235,7 +1169,147 @@
   "result": [
     {
       "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
-      "blockHash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
+      "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
+      "name": "demo.wasm",
+      "callCount": 3,
+      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
+      "initStatus": "in progress"
+    }
+  ]
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card method" id="program_allUser">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_allUser-content">
+            <h4>
+              <span>program.allUser</span>
+
+              <div class="float-right">
+                <span class="badge badge-light">Program</span>
+                <span class="badge badge-light">Http</span>
+              </div>
+            </h4>
+          </div>
+
+          <div class="card-block collapse show" id="program_allUser-content">
+            <p>Getting all user&#39;s uploaded program</p>
+
+
+            <hr />
+
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-8 border-right">
+
+
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>result</td>
+                        <td>array</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result[0]</td>
+                        <td>object</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>result[0].hash</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>program hash</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].programNumber</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Number of program in order</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].name</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program name</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].callCount</td>
+                        <td>integer</td>
+                        <td></td>
+                        <td>Number of program call</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].uploadedAt</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Date when program was uploaded</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.title</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Title of program from metadata</td>
+                      </tr>
+                      <tr>
+                        <td>result[0]?.meta</td>
+                        <td>obect</td>
+                        <td></td>
+                        <td>Metadata of program</td>
+                      </tr>
+                      <tr>
+                        <td>result[0].initStatus</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>Program initializtaion status</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr>
+                        <td>-32003</td>
+                        <td>Unathorized</td>
+                        <td>The provided credentials are invalid</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+                  <h5>Request example</h5>
+                  <pre class="bg-light">{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "method": "program.allUser"
+}</pre>
+
+                  <h5>Response example</h5>
+                  <pre class="bg-light">{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "result": [
+    {
+      "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
       "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
       "name": "demo.wasm",
       "callCount": 3,
@@ -1753,20 +1827,20 @@
             </div>
           </div>
         </div>
-        <div class="card method" id="balance_transfer">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#balance_transfer-content">
+        <div class="card method" id="balance_topUp">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#balance_topUp-content">
             <h4>
-              <span>balance.transfer</span>
+              <span>balance.topUp</span>
 
               <div class="float-right">
                 <span class="badge badge-light">Balance</span>
-                <span class="badge badge-light">WebSocket</span>
+                <span class="badge badge-light">Http</span>
               </div>
             </h4>
           </div>
 
-          <div class="card-block collapse show" id="balance_transfer-content">
-            <p>Transfer balance from Alice.</p>
+          <div class="card-block collapse show" id="balance_topUp-content">
+            <p>Top up user balance</p>
 
 
             <hr />
@@ -1789,6 +1863,12 @@
                         <td>object</td>
                         <td></td>
                         <td></td>
+                      </tr>
+                      <tr>
+                        <td>params?.to</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>User public key</td>
                       </tr>
                       <tr>
                         <td>params.value</td>
@@ -1844,7 +1924,7 @@
                       <tr>
                         <td>-32011</td>
                         <td>Invalid transaction</td>
-                        <td>Error occured when transaction failed</td>
+                        <td>The error occurs when the transaction failed</td>
                       </tr>
                     </table>
                   </div>
@@ -1856,7 +1936,7 @@
                   <pre class="bg-light">{
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "balance.transfer",
+  "method": "balance.topUp",
   "params": {
     "value": 1234567
   }
@@ -1868,129 +1948,6 @@
   "id": "1234567890",
   "result": {
     "message": "Transfer balance success"
-  }
-}</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card method" id="program_payloadType">
-          <div class="card-header text-light bg-dark" data-toggle="collapse" href="#program_payloadType-content">
-            <h4>
-              <span>program.payloadType</span>
-
-              <div class="float-right">
-                <span class="badge badge-light">Message</span>
-                <span class="badge badge-light">WebSocket</span>
-              </div>
-            </h4>
-          </div>
-
-          <div class="card-block collapse show" id="program_payloadType-content">
-            <p>Getting payload type</p>
-
-
-            <hr />
-
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-8 border-right">
-
-                  <h5>Parameters</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>params</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>params.destination</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Program destination address (hex)</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Result</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Constraints</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>result</td>
-                        <td>object</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td>result?.payloadType</td>
-                        <td>string</td>
-                        <td></td>
-                        <td>Payload type</td>
-                      </tr>
-                      <tr>
-                        <td>result?.required</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <h5>Errors</h5>
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sm">
-                      <tr>
-                        <th>Code</th>
-                        <th>Message</th>
-                        <th>Description</th>
-                      </tr>
-                      <tr>
-                        <td>-32003</td>
-                        <td>Unathorized</td>
-                        <td>The provided credentials are invalid</td>
-                      </tr>
-                      <tr>
-                        <td>-32602</td>
-                        <td>Invalid method parameters</td>
-                        <td>The provided method parameters are invalid</td>
-                      </tr>
-                    </table>
-                  </div>
-
-                </div>
-
-                <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "program.payloadType",
-  "params": {
-    "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
-  }
-}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "payloadType": "{\"value\": \"u64\", \"annotation\": \"String\"}"
   }
 }</pre>
                 </div>
