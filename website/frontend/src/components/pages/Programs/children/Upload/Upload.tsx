@@ -4,13 +4,14 @@ import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
 import { GEAR_MNEMONIC_KEY } from 'consts';
 import { generateKeypairAction, programUploadResetAction } from 'store/actions/actions';
+import { useAlert } from 'react-alert';
 import { RootState } from 'store/reducers';
 import './Upload.scss';
 import { ProgramDetails } from '../../../../blocks/ProgramDetails/ProgramDetails';
-import { StatusPanel } from '../../../../blocks/StatusPanel/StatusPanel';
 
 export const Upload = () => {
   const dispatch = useDispatch();
+  const alert = useAlert();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
 
@@ -52,9 +53,19 @@ export const Upload = () => {
         setWrongFormat(isCorrectFormat);
         if (!isCorrectFormat) {
           handleFilesUpload(files[0]);
+        } else {
+          alert.error('Wrong file format', {
+            onClose: () => {
+              setWrongFormat(false);
+              if (programUploadingError) {
+                dispatch(programUploadResetAction());
+              }
+            },
+          });
         }
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [checkFileFormat, handleFilesUpload]
   );
 
@@ -95,6 +106,15 @@ export const Upload = () => {
       setWrongFormat(isCorrectFormat);
       if (!isCorrectFormat) {
         handleFilesUpload(files[0]);
+      } else {
+        alert.error('Wrong file format', {
+          onClose: () => {
+            setWrongFormat(false);
+            if (programUploadingError) {
+              dispatch(programUploadResetAction());
+            }
+          },
+        });
       }
     }
   };
@@ -118,18 +138,6 @@ export const Upload = () => {
             <span className="drop-block__hover-info">Drop your .wasm files here to upload</span>
           </div>
         </div>
-      )}
-      {(wrongFormat || programUploadingError) && (
-        <StatusPanel
-          onClose={() => {
-            setWrongFormat(false);
-            if (programUploadingError) {
-              dispatch(programUploadResetAction());
-            }
-          }}
-          statusPanelText={programUploadingError}
-          isError
-        />
       )}
     </>
   );
