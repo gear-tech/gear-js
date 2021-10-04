@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { positions, Provider as AlertProvider } from 'react-alert';
+import { AlertComponentPropsWithStyle, positions, Provider as AlertProvider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
@@ -66,7 +66,8 @@ const AppComponent: FC = () => {
   return (
     <BrowserRouter>
       <AppContextProvider>
-        <AlertProvider template={AlertTemplate} {...options}>
+        {/* TODO: find out how to provide type without as */}
+        <AlertProvider template={AlertTemplate as React.ComponentType<AlertComponentPropsWithStyle>} {...options}>
           <div className="app">
             {(isProgramUploading || isMessageSending) && (
               <>
