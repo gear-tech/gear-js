@@ -87,7 +87,7 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
       { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
     );
 
-    await api.message.submit(message, meta);
+    await api.message.submit(message, JSON.parse(meta));
     await api.message.signAndSend(keyring, (data: any) => {
       alert.success(`status: ${data.status}`);
       if (data.status === 'Finalized') {
