@@ -36,6 +36,8 @@ export class GearMessage {
         await this.message.signAndSend(keyring, ({ events = [], status }) => {
           if (status.isInBlock) {
             blockHash = status.asInBlock.toHex();
+          } else if (status.isFinalized) {
+            blockHash = status.asFinalized.toHex();
             resolve(0);
           } else if (status.isInvalid) {
             reject(new TransactionError(`Transaction error. Status: isInvalid`));

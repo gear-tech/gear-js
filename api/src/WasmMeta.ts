@@ -23,7 +23,22 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
       free: (_pages) => {},
       gr_debug: (msg) => {
         console.log(msg);
-      }
+      },
+      gr_msg_id: () => {},
+      gr_size: () => {},
+      gr_read: () => {},
+      gr_source: () => {},
+      gr_gas_available: () => {},
+      gr_send: () => {},
+      gr_send_commit: () => {},
+      gr_send_init: () => {},
+      gr_send_push: () => {},
+      gr_reply: () => {},
+      gr_reply_push: () => {},
+      gr_reply_to: () => {},
+      gr_value: () => {},
+      gr_wait: () => {},
+      gr_wake: () => {}
     }
   };
   let metadata = {
@@ -36,13 +51,13 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
   };
 
   let module = await WebAssembly.instantiate(wasmBytes, importObj);
-
-  metadata.types = `0x${readMeta(memory, module.instance.exports.meta_registry)}`;
-  metadata.init_input = readMeta(memory, module.instance.exports.meta_init_input);
-  metadata.init_output = readMeta(memory, module.instance.exports.meta_init_output);
-  metadata.input = readMeta(memory, module.instance.exports.meta_input);
-  metadata.output = readMeta(memory, module.instance.exports.meta_output);
-  metadata.title = readMeta(memory, module.instance.exports.meta_title);
+  const instance = module.instance.exports;
+  metadata.types = instance?.meta_registry ? `0x${readMeta(memory, instance.meta_registry)}` : '';
+  metadata.init_input = instance?.meta_init_input ? readMeta(memory, instance.meta_init_input) : '';
+  metadata.init_output = instance?.meta_init_output ? readMeta(memory, instance.meta_init_output) : '';
+  metadata.input = instance?.meta_input ? readMeta(memory, instance.meta_input) : '';
+  metadata.output = instance?.meta_output ? readMeta(memory, instance.meta_output) : '';
+  metadata.title = instance?.meta_title ? readMeta(memory, instance.meta_title) : '';
 
   return metadata;
 }

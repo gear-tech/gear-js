@@ -9,14 +9,13 @@ interface Props {
 }
 
 export const Tree = ({ files, selectFile, currentFile }: Props) => {
-
   const [selected, setSelected] = useState(currentFile);
 
   useEffect(() => {
     if (selected !== currentFile) {
-      setSelected(currentFile)
+      setSelected(currentFile);
     }
-  }, [selected, setSelected, currentFile])
+  }, [selected, setSelected, currentFile]);
 
   const items = files.map((item, index) => (
     <div

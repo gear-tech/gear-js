@@ -1,24 +1,22 @@
-import React from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
-import {useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
-
 import { routes } from 'routes';
-
 import './Main.scss';
+import { useApi } from '../../../hooks/useApi';
 
-const Main: React.StatelessComponent<{}> = ({ children }) => {
-    const location = useLocation();
-    const lightColored = location.pathname !== routes.main && location.pathname !== routes.uploadedPrograms;
-    return (
-        <main className={clsx('main', lightColored && 'main--light-colored')}>
-            {children}
-        </main>
-    );
+export const Main: FC = ({ children }) => {
+  const location = useLocation();
+  const [, apiLoaded] = useApi();
+  const lightColored = location.pathname !== routes.main && location.pathname !== routes.uploadedPrograms;
+  return (
+    <main className={clsx('main', lightColored && 'main--light-colored')}>
+      {apiLoaded ? children : <div className="loading-text">Loading...</div>}
+    </main>
+  );
 };
 
 Main.propTypes = {
-    children: PropTypes.node.isRequired
-}
-
-export default Main;
+  children: PropTypes.node.isRequired,
+};

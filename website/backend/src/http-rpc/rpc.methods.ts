@@ -49,8 +49,14 @@ export class HttpRpcMethods extends RpcMethods {
       return this.userService.profile(user);
     },
 
-    generateKeypair: async (user, params?) => {
-      return await this.gearService.createKeyPair(user);
+    addPublicKey: async (user, params) => {
+      return (
+        await this.userService.addPublicKey(
+          user,
+          params.publicKey,
+          params.publicKeyRaw,
+        )
+      ).publicKey;
     },
 
     getBalance: async (user, params?) => {
@@ -81,8 +87,8 @@ export class HttpRpcMethods extends RpcMethods {
       );
     },
     allNoGUI: async (user, params) => {
-      return await this.gearService.getAllNoGUIPrograms()
-    }
+      return await this.gearService.getAllNoGUIPrograms();
+    },
   };
 
   message = {

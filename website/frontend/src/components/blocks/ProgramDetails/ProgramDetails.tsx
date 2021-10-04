@@ -1,35 +1,27 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, VFC } from 'react';
 import { getWasmMetadata } from '@gear-js/api';
-
 import { Formik, Form, Field } from 'formik';
-
 import { UploadProgramModel } from 'types/program';
-
 import { useDispatch } from 'react-redux';
-
 import { SocketService } from 'services/SocketService';
-
 import { programUploadStartAction } from 'store/actions/actions';
-
-import StatusPanel from 'components/blocks/StatusPanel';
-
+import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
 import './ProgramDetails.scss';
-
-import cancel from 'images/cancel.svg';
-import close from 'images/close.svg';
-import deselected from 'images/radio-deselected.svg';
-import selected from 'images/radio-selected.svg';
+import cancel from 'assets/images/cancel.svg';
+import close from 'assets/images/close.svg';
+import deselected from 'assets/images/radio-deselected.svg';
+import selected from 'assets/images/radio-selected.svg';
 
 import { Schema } from './Schema';
 import { readFileAsync } from '../../../helpers';
 
-type ProgramDetailsTypes = {
+type Props = {
   setDroppedFile: (file: File | null) => void;
   droppedFile: File;
   socketService: SocketService;
 };
 
-const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramDetailsTypes) => {
+export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socketService }) => {
   const dispatch = useDispatch();
 
   const [isMetaByFile, setIsMetaByFile] = useState(true);
@@ -102,10 +94,10 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
   };
 
   const prettyPrint = () => {
-      const ugly = (document.getElementById("types") as HTMLInputElement).value;
-      const obj = JSON.parse(ugly);
-      const pretty = JSON.stringify(obj, undefined, 4);
-      (document.getElementById("types") as HTMLInputElement).innerText = pretty
+    const ugly = (document.getElementById('types') as HTMLInputElement).value;
+    const obj = JSON.parse(ugly);
+    const pretty = JSON.stringify(obj, undefined, 4);
+    (document.getElementById('types') as HTMLInputElement).innerText = pretty;
   };
 
   return (
@@ -243,35 +235,35 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
               <div className="program-details__wrapper-column2">
                 {(isMetaByFile && (
                   <>
-                  <div className="program-details__info">
-                    <label className="program-details__field" htmlFor="meta">
-                      Metadata file:{' '}
-                    </label>
-                    <Field
-                      id="meta"
-                      name="meta"
-                      className="is-hidden"
-                      type="file"
-                      innerRef={metaFieldRef}
-                      onChange={handleMetaInputChange}
-                    />
-                    {(droppedMetaFile && (
-                      <div className="program-details__filename program-details__value">
-                        {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, '')}.
-                        {droppedMetaFile.name.split('.').pop()}
-                        <button type="button" onClick={removeMetaFile}>
-                          <img alt="cancel" src={cancel} />
-                        </button>
-                      </div>
-                    )) || (
-                      <button className="program-details--file-btn" type="button" onClick={uploadMetaFile}>
-                        Select file
-                      </button>
-                    )}
-                  </div>
-                  {metaWasm && (
                     <div className="program-details__info">
+                      <label className="program-details__field" htmlFor="meta">
+                        Metadata file:{' '}
+                      </label>
                       <Field
+                        id="meta"
+                        name="meta"
+                        className="is-hidden"
+                        type="file"
+                        innerRef={metaFieldRef}
+                        onChange={handleMetaInputChange}
+                      />
+                      {(droppedMetaFile && (
+                        <div className="program-details__filename program-details__value">
+                          {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, '')}.
+                          {droppedMetaFile.name.split('.').pop()}
+                          <button type="button" onClick={removeMetaFile}>
+                            <img alt="cancel" src={cancel} />
+                          </button>
+                        </div>
+                      )) || (
+                        <button className="program-details--file-btn" type="button" onClick={uploadMetaFile}>
+                          Select file
+                        </button>
+                      )}
+                    </div>
+                    {metaWasm && (
+                      <div className="program-details__info">
+                        <Field
                           as="textarea"
                           id="types"
                           name="types"
@@ -279,8 +271,8 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
                           className="program-details__meta program-details__value"
                           value={JSON.stringify(metaWasm, undefined, 4)}
                         />
-                    </div>
-                  )}
+                      </div>
+                    )}
                   </>
                 )) || (
                   <>
@@ -413,5 +405,3 @@ const ProgramDetails = ({ setDroppedFile, droppedFile, socketService }: ProgramD
     </div>
   );
 };
-
-export default ProgramDetails;

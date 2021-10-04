@@ -1,10 +1,10 @@
 import { BlocksState, BlockActionTypes, BlockAction } from 'types/block';
 
 const initialState: BlocksState = {
-    totalIssuance: null,
-    blocks: [],
-    loading: false,
-    error: null,
+  totalIssuance: null,
+  blocks: [],
+  loading: false,
+  error: null,
 };
 
 const BlockReducer = (state = initialState, action: BlockAction): BlocksState => {
@@ -14,12 +14,15 @@ const BlockReducer = (state = initialState, action: BlockAction): BlocksState =>
 
     case BlockActionTypes.FETCH_BLOCK: {
       const prevBlocks = [...state.blocks];
-      if (prevBlocks.length === 10) prevBlocks.pop();
+      if (prevBlocks.some((i) => i.number === action.payload.number)) {
+        return { ...state, blocks: prevBlocks };
+      }
+      if (prevBlocks.length >= 10) prevBlocks.pop();
       return { ...state, blocks: [action.payload, ...prevBlocks] };
     }
 
-    case BlockActionTypes.RESET_BLOCKS: 
-      return { ...initialState }
+    case BlockActionTypes.RESET_BLOCKS:
+      return { ...initialState };
 
     default:
       return state;

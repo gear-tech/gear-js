@@ -53,7 +53,11 @@ export class GearProgram {
         await this.program.signAndSend(keyring, ({ events = [], status }) => {
           if (status.isInBlock) {
             blockHash = status.asInBlock.toHex();
+          } else if (status.isFinalized) {
+            blockHash = status.asFinalized.toHex();
             resolve(0);
+          } else if (status.isInvalid) {
+            reject(new TransactionError(`Transaction error. Status: isInvalid`));
           }
 
           // Check transaction errors
@@ -76,8 +80,8 @@ export class GearProgram {
                 method,
                 status: status.type,
                 blockHash: blockHash,
-                programId: data[0].program_id.toHex(),
-                initMessageId: data[0].message_id.toHex()
+                programId: data[0].programId.toHuman(),
+                initMessageId: data[0].messageId.toHuman()
               });
             });
         });
