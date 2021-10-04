@@ -39,10 +39,9 @@ export class GearNodeEvents {
               uploadedAt: new Date(),
               hash: programId,
             });
-            console.log(program);
             this.messageService.save({ id: messageId, destination: origin, program: programId, date: new Date() });
           } catch (error) {
-            console.log('ERROR', error);
+            logger.log(error.message);
           }
         });
 
