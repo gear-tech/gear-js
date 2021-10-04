@@ -91,7 +91,7 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
 
   const handleTransferBalance = async () => {
     try {
-      await apiRequest.getResource(
+      const response = await apiRequest.getResource(
         RPC_METHODS.BALANCE_TRANSFER,
         {
           to: `${localStorage.getItem('public_key')}`,
@@ -99,7 +99,12 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
         },
         { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
       );
-      alert.success(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
+      if(response.result) {
+        alert.success(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
+      }
+      if(response.error){
+        alert.error(`${response.error}`);
+      }
     } catch (error) {
       alert.error(`${error}`);
     }
