@@ -1,11 +1,9 @@
-import { CreateType, GearApi, GearKeyring } from '@gear-js/api';
-import { Metadata } from '@gear-js/api/types';
+import { GearApi, GearKeyring } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { ProgramsService } from 'src/programs/programs.service';
-import { GearNodeError, ProgramNotFound } from 'src/json-rpc/errors';
+import { GearNodeError } from 'src/json-rpc/errors';
 import { GearNodeEvents } from './events';
-import { RpcCallback } from 'src/json-rpc/interfaces';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
@@ -20,84 +18,35 @@ export class GearNodeService {
       this.rootKeyring = accountSeed
         ? await GearKeyring.fromSeed(process.env.ACCOUNT_SEED, 'websiteAccount')
         : (await GearKeyring.create('websiteAccount')).keyring;
-      this.updateWebsiteAccountBalance();
+      this.updateSiteAccountBalance();
       this.subscription.subscribeAllEvents(api);
     });
   }
 
-  async updateWebsiteAccountBalance() {
-    const sudoSeed = process.env.SUDO_SEED;
-    const sudoKeyring = parseInt(process.env.DEBUG)
-      ? GearKeyring.fromSuri('//Alice', 'Alice default')
-      : await GearKeyring.fromSeed('websiteAccount', sudoSeed);
-
-    const currentBalance = await this.api.balance.findOut(this.rootKeyring.address);
-    if (currentBalance.toNumber() < +process.env.SITE_ACCOUNT_BALANCE) {
-      this.balanceTransfer(
-        {
-          from: sudoKeyring,
-          to: this.rootKeyring.address,
-          value: +process.env.SITE_ACCOUNT_BALANCE - currentBalance.toNumber(),
-        },
-        (error, data) => {
-          if (error) {
-            logger.error(error);
-          } else {
-            logger.log(data);
-          }
-        },
+  async updateSiteAccountBalance() {
+    const currentBalance = (await this.api.balance.findOut(this.rootKeyring.address)).toNumber();
+    const siteAccBalance = +process.env.SITE_ACCOUNT_BALANCE;
+    if (currentBalance < siteAccBalance) {
+      const sudoKeyring = parseInt(process.env.DEBUG)
+        ? GearKeyring.fromSuri('//Alice', 'Alice default')
+        : await GearKeyring.fromSeed('websiteAccount', process.env.SUDO_SEED);
+      await this.api.balance.transferBalance(
+        sudoKeyring,
+        this.rootKeyring.address,
+        siteAccBalance - currentBalance,
+        () => {},
       );
     }
   }
 
-  async balanceTransfer(
-    options: {
-      from?: KeyringPair;
-      to: string;
-      value: number;
-    },
-    callback?: RpcCallback,
-  ): Promise<void> {
-    if (
-      options.to !== this.rootKeyring.address &&
-      (await this.api.balance.findOut(this.rootKeyring.address)).toNumber() < options.value
-    ) {
-      await this.updateWebsiteAccountBalance();
-    }
-    if (!options.from) {
-      options.from = this.rootKeyring;
-    }
-
+  async balanceTopUp(to: string, value: number): Promise<string> {
     try {
-      this.api.balance
-        .transferBalance(options.from, options.to, options.value, () => {})
-        .then(() => {
-          callback(undefined, 'Transfer balance succeed');
-        });
+      await this.api.balance.transferBalance(this.rootKeyring, to, value, () => {});
+      return 'Transfer balance succeed';
     } catch (error) {
       logger.error(error.message);
       throw new GearNodeError(error.message);
     }
-  }
-
-  async getBalance(publicKey: string): Promise<{ freeBalance: string }> {
-    try {
-      const balance = await this.api.balance.findOut(publicKey);
-      return { freeBalance: balance.toHuman() };
-    } catch (error) {
-      logger.error(error);
-      throw new GearNodeError(error.message);
-    }
-  }
-
-  async getGasSpent(hash: string, payload: string | JSON): Promise<number> {
-    const program = await this.programService.findProgram(hash);
-    if (!program) {
-      return 0;
-    }
-    const meta = JSON.parse(program.meta.meta);
-    let gasSpent = await this.api.program.getGasSpent(CreateType.encode('H256', hash), payload, meta.input, meta);
-    return gasSpent.toNumber();
   }
 
   async getAllNoGUIPrograms() {

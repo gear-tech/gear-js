@@ -7,6 +7,8 @@ import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketService } from 'services/SocketService';
 import { RootState } from 'store/reducers';
+import { useApi } from '../../../hooks/useApi';
+import { StatusPanel } from '../StatusPanel/StatusPanel';
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
 // import Editor from 'assets/images/editor_icon.svg';
 
@@ -18,15 +20,33 @@ type Props = {
 export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
   const dispatch = useDispatch();
 
+  const [api] = useApi();
+
   const [timeInstance, setTimeInstance] = useState(0);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
   // const [chosenTemplateId, setChosenTemplateId] = useState<number>(-1);
 
-  const { totalIssuance, blocks } = useSelector((state: RootState) => state.blocks);
-
+  const { blocks } = useSelector((state: RootState) => state.blocks);
+  const [totalIssuance, setTotalIssuance] = useState('');
+  const [transferSuccess, setTransferSuccess] = useState(false);
   const [prevBlockHash, setPrevBlockHash] = useState('');
 
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
+
+  if (transferSuccess) {
+    setTimeout(() => setTransferSuccess(false), 3000);
+  }
+
+  useEffect(() => {
+    const getTotal = async () => {
+      if (api) {
+        const totalBalance = await api.totalIssuance();
+        setTotalIssuance(totalBalance);
+      }
+    };
+    getTotal();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalIssuance]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -39,10 +59,6 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
         setTimeInstance(0);
       }
       setPrevBlockHash(blocks[0].hash);
-    }
-
-    if (!totalIssuance && socketService) {
-      socketService.getTotalIssuance();
     }
 
     const handleClickOutsideDropdown = (event: MouseEvent) => {
@@ -65,7 +81,6 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
     prevBlockHash,
     blocks,
     socketService,
-    totalIssuance,
     isEditorDropdownOpened,
     setIsEditorDropdownOpened,
   ]);
@@ -76,11 +91,14 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
   //   }
   // };
 
-  const handleTransferBalance = () => {
-    socketService.transferBalance({
-      value: GEAR_BALANCE_TRANSFER_VALUE,
-    });
-    console.log(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
+  const handleTransferBalance = async () => {
+    if (api) {
+      const user: any = localStorage.getItem('public_key');
+      await api.balance.transferFromAlice(user, GEAR_BALANCE_TRANSFER_VALUE, (data) => {
+        console.log(data);
+      });
+      setTransferSuccess(true);
+    }
   };
 
   // const handleTemplate = (index: number) => {
@@ -160,11 +178,18 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
         <div className="switch-info__col">
           <span className="switch-info__title">Total issuance</span>
           <span className="switch-info__data">
-            <b className="switch-info__num">{totalIssuance?.totalIssuance.split(' ')[0]}</b>{' '}
-            {totalIssuance?.totalIssuance.split(' ')[1]}
+            <b className="switch-info__num">{totalIssuance.slice(0, 5)}</b> Munit
           </span>
         </div>
       </div>
+      {transferSuccess && (
+        <StatusPanel
+          onClose={() => {
+            setTransferSuccess(false);
+          }}
+          statusPanelText={`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`}
+        />
+      )}
     </div>
   );
 };

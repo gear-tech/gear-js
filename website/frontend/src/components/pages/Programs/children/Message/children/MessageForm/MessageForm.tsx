@@ -1,15 +1,16 @@
 import React, { useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Field, FieldArray, Form, Formik } from 'formik';
+// import { Field, FieldArray, Form, Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
 import { SocketService } from 'services/SocketService';
-import { sendMessageToProgram } from 'services/ApiService';
+import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
 import { sendMessageStartAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
-import { useApi } from '../../../../../../../hooks/useApi'
+import { useApi } from '../../../../../../../hooks/useApi';
 import { Schema } from './Schema';
 import './MessageForm.scss';
 
@@ -22,38 +23,37 @@ type Props = {
 };
 
 // todo improve form logic, refactor
-export const MessageForm: VFC<Props> = ({ programHash, programName, socketService, handleClose, payloadType }) => {
-
+export const MessageForm: VFC<Props> = ({ programHash, programName, socketService, handleClose }) => {
   const [api] = useApi();
 
-  const getFieldsFromPayload = () => {
-    const transformedPayloadType: any = [];
+  // const getFieldsFromPayload = () => {
+  //   const transformedPayloadType: any = [];
 
-    const recursion = (object: any) => {
-      for (const key in object) {
-        if (typeof object[key] === 'string') {
-          transformedPayloadType.push({
-            [key]: object[key],
-          });
-        } else if (typeof object[key] === 'object') {
-          recursion(object[key]);
-        }
-      }
-    };
+  //   const recursion = (object: any) => {
+  //     for (const key in object) {
+  //       if (typeof object[key] === 'string') {
+  //         transformedPayloadType.push({
+  //           [key]: object[key],
+  //         });
+  //       } else if (typeof object[key] === 'object') {
+  //         recursion(object[key]);
+  //       }
+  //     }
+  //   };
 
-    if (payloadType && typeof payloadType === 'object') {
-      recursion(payloadType);
-    }
-    return transformedPayloadType;
-  };
+  //   if (payloadType && typeof payloadType === 'object') {
+  //     recursion(payloadType);
+  //   }
+  //   return transformedPayloadType;
+  // };
 
   const dispatch = useDispatch();
   const { gas } = useSelector((state: RootState) => state.programs);
   const [isManualGas, setIsManualGas] = useState(false);
 
   const mapInitialValues = () => ({
-    gasLimit: undefined,
-    value: 20000,
+    gasLimit: 20000,
+    value: 0,
     payload: '',
     destination: programHash,
   });
@@ -87,7 +87,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
           socketService.getGasSpent(destination, pack.payload);
         } else {
           pack.gasLimit = pack.gasLimit ?? gas ?? 0;
-          sendMessageToProgram(api, pack);
+          SendMessageToProgram(api, pack, dispatch);
           dispatch(sendMessageStartAction());
         }
       }}
@@ -117,25 +117,24 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                   ) : null}
                 </div>
               </div>
-              {(typeof payloadType !== 'object' || !payloadType) && (
-                <div className="message-form--info">
-                  <label htmlFor="payload" className="message-form__field">
-                    Payload:
-                  </label>
-                  <div className="message-form__field-wrapper">
-                    <Field
-                      id="payload"
-                      name="payload"
-                      type="text"
-                      className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
-                      placeholder={payloadType ? `${payloadType}` : 'null'}
-                    />
-                    {errors.payload && touched.payload ? (
-                      <div className="message-form__error">{errors.payload}</div>
-                    ) : null}
-                  </div>
+
+              <div className="message-form--info">
+                <label htmlFor="payload" className="message-form__field">
+                  Payload:
+                </label>
+                <div className="message-form__field-wrapper">
+                  <Field
+                    id="payload"
+                    name="payload"
+                    type="text"
+                    className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
+                    placeholder="null"
+                  />
+                  {errors.payload && touched.payload ? (
+                    <div className="message-form__error">{errors.payload}</div>
+                  ) : null}
                 </div>
-              )}
+              </div>
 
               {((typeof gas === 'number' || isManualGas) && (
                 <div className="message-form--info">
@@ -172,14 +171,13 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                   {errors.value && touched.value ? <div className="message-form__error">{errors.value}</div> : null}
                 </div>
               </div>
-              {payloadType && typeof payloadType === 'object' && (
+              {/* {payloadType && typeof payloadType === 'object' && (
                 <div className="message-form--payload">
                   <p>Payload</p>
                   <FieldArray
                     name="additional"
                     render={() => {
                       const additionalFields = getFieldsFromPayload();
-                      console.log(additionalFields);
                       return (
                         <>
                           {(additionalFields &&
@@ -203,7 +201,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                     }}
                   />
                 </div>
-              )}
+              )} */}
               <div className="message-form--btns">
                 <button className="message-form__button" type="submit">
                   {(typeof gas !== 'number' && !isManualGas && <>Calculate Gas</>) || (

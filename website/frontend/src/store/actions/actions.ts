@@ -16,7 +16,7 @@ import NotificationsRequestService from 'services/NotificationsRequestService';
 
 import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
-import { PaginationModel } from 'types/common';
+import { PaginationModel, UserPrograms } from 'types/common';
 
 const fetchTokenAction = () => ({ type: UserActionTypes.FETCH_TOKEN });
 const fetchTokenSuccessAction = (payload: {}) => ({ type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload });
@@ -57,8 +57,11 @@ export const fetchBlockAction = (payload: BlockModel) => ({ type: BlockActionTyp
 
 export const programUploadStartAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_START });
 export const programUploadResetAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_RESET });
-const programUploadSuccessAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS });
-const programUploadFailedAction = (payload: string) => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED, payload });
+export const programUploadSuccessAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS });
+export const programUploadFailedAction = (payload: string) => ({
+  type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED,
+  payload,
+});
 
 export const fetchProgramPayloadTypeAction = (payload: string) => ({
   type: ProgramActionTypes.FETCH_PROGRAM_PAYLOAD_TYPE,
@@ -68,8 +71,8 @@ export const resetProgramPayloadTypeAction = () => ({ type: ProgramActionTypes.R
 
 export const sendMessageStartAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_START });
 export const sendMessageResetAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_RESET });
-const sendMessageSuccessAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_SUCCESS });
-const sendMessageFailedAction = (payload: string) => ({ type: ProgramActionTypes.SEND_MESSAGE_FAILED, payload });
+export const sendMessageSuccessAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_SUCCESS });
+export const sendMessageFailedAction = (payload: string) => ({ type: ProgramActionTypes.SEND_MESSAGE_FAILED, payload });
 
 export const uploadMetaStartAction = () => ({ type: ProgramActionTypes.META_UPLOAD_START });
 export const uploadMetaResetAction = () => ({ type: ProgramActionTypes.META_UPLOAD_RESET });
@@ -183,7 +186,7 @@ export const getUserDataAction = () => (dispatch: any) => {
     .catch(() => dispatch(fetchUserErrorAction()));
 };
 
-export const getUserProgramsAction = (params: PaginationModel) => (dispatch: any) => {
+export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
   dispatch(fetchUserProgramsAction());
   programService
     .fetchUserPrograms(params)

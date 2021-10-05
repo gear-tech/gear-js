@@ -2,10 +2,19 @@ import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import { UploadProgramModel, MessageModel } from 'types/program';
 import { GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
+import {
+  sendMessageSuccessAction,
+  sendMessageFailedAction,
+  programStatusAction,
+  sendMessageResetAction,
+  programUploadSuccessAction,
+  programUploadFailedAction,
+  programUploadResetAction,
+} from 'store/actions/actions';
 import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
-export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel) => {
+export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
 
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -31,9 +40,6 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
     types,
   };
 
-  console.log(program);
-  console.log(meta);
-
   try {
     // Submit program, receive program ID
     const programId = await api.program.submit(program, meta);
@@ -41,6 +47,8 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
     await api.program.signAndSend(keyring, (data: any) => {
       if (data.status === 'Finalized') {
         console.log('Finalized!');
+        dispatch(programUploadSuccessAction());
+        dispatch(programUploadResetAction());
         // Send sing message
         const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
 
@@ -58,25 +66,41 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
       }
     });
   } catch (error) {
+    dispatch(programUploadFailedAction(`${error}`));
     console.error(error);
   }
 };
 
-export const sendMessageToProgram = async (api: any, message: MessageModel) => {
+export const SendMessageToProgram = async (api: any, message: MessageModel, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
+
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
   const keyring = GearKeyring.fromJson(jsonKeyring);
 
   try {
     // get metadata for specific program
-    const meta = apiRequest.getResource(RPC_METHODS.GET_METADATA, {
-      programId: message.destination,
-    });
+    const {
+      result: { meta },
+    } = await apiRequest.getResource(
+      RPC_METHODS.GET_METADATA,
+      {
+        programId: message.destination,
+      },
+      { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
+    );
+
     await api.message.submit(message, meta);
     await api.message.signAndSend(keyring, (data: any) => {
-      console.log(data);
+      programStatusAction(data.status);
+
+      if (data.status === 'Finalized') {
+        console.log('Finalized!');
+        dispatch(sendMessageSuccessAction());
+        dispatch(sendMessageResetAction());
+      }
     });
   } catch (error) {
+    dispatch(sendMessageFailedAction(`${error}`));
     console.error(error);
   }
 };

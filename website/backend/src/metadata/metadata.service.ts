@@ -1,6 +1,7 @@
 import { GearKeyring } from '@gear-js/api';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MetadataNotFound, ProgramNotFound, SignNotVerified } from 'src/json-rpc/errors';
 import { ProgramsService } from 'src/programs/programs.service';
 import { Repository } from 'typeorm';
 import { Meta } from './entities/meta.entity';
@@ -16,10 +17,10 @@ export class MetadataService {
   async addMeta(data: { signature: string; meta: string; programId: string; name?: string; title?: string }) {
     const program = await this.programService.findProgram(data.programId);
     if (!program) {
-      return { status: 'Program not found' };
+      throw new ProgramNotFound();
     }
     if (!GearKeyring.checkSign(program.owner, data.signature, data.meta)) {
-      return { status: 'Signature not verified' };
+      throw new SignNotVerified();
     } else {
       const metadata = this.metaRepo.create({
         owner: program.owner,
@@ -28,7 +29,7 @@ export class MetadataService {
       });
       const savedMeta = await this.metaRepo.save(metadata);
       try {
-        const program = await this.programService.addProgramInfo(data.programId, data.name, data.title, savedMeta);
+        await this.programService.addProgramInfo(data.programId, data.name, data.title, savedMeta);
       } catch (error) {
         throw error;
       }
@@ -39,8 +40,13 @@ export class MetadataService {
   async getMeta(programId: string) {
     const program = await this.programService.findProgram(programId);
     if (!program) {
-      return { status: 'Metadata for program not found' };
+      throw new MetadataNotFound();
     }
-    return await this.metaRepo.findOne({ program: programId });
+    const meta = await this.metaRepo.findOne({ program: programId });
+    if (meta) {
+      return { program: meta.program, meta: meta.meta };
+    } else {
+      throw new MetadataNotFound();
+    }
   }
 }
