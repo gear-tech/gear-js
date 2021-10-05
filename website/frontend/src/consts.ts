@@ -63,7 +63,6 @@ export const RPC_METHODS = {
   ADD_PUBLIC: 'user.addPublicKey',
   ADD_METADATA: 'program.addMeta',
   GET_METADATA: 'program.getMeta',
-
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
@@ -93,3 +92,7 @@ export const SEARCH_TYPES = {
   NOTIFICATIONS: 'NOTIFICATIONS',
   PROGRAMS: 'PROGRAMS',
 };
+
+export enum ZIndexes {
+  'alert' = 999,
+}

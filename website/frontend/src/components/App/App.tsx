@@ -25,13 +25,14 @@ import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
 import { AppContextProvider } from '../../contexts/AppContext/AppContextProvider';
+import { ZIndexes } from '../../consts';
 
 // alert configuration
 const options = {
   position: positions.BOTTOM_CENTER,
   timeout: 5000,
   containerStyle: {
-    zIndex: 999,
+    zIndex: ZIndexes.alert,
   },
 };
 
