@@ -60,11 +60,29 @@ const gearApi = await GearApi.create({ customTypes: { ...yourCustomTypesExample 
 Subscribe to all events
 
 ```javascript
-const unsub = await gearApi.events((event) => {
+const unsub = await gearApi.allEvents((events) => {
   console.log(event.toHuman());
 });
 // Unsubscribe
 unsub();
+```
+
+Check what the event is
+
+```javascript
+gearApi.allEvents((events) => {
+      events
+        .filter(({ event }) => gearApi.events.gear.InitMessageEnqueued.is(event))
+        .forEach(({ event: { data } }) => {
+          console.log(data.toHuman())
+        });
+
+      events
+        .filter(({ event }) => gearApi.events.balances.Transfer.is(event))
+        .forEach(({ event: { data } }) => {
+          console.log(data.toHuman())
+        });
+
 ```
 
 Subscribe to Log events
@@ -168,6 +186,20 @@ const { mnemonic, seed } = GearKeyring.generateMnemonic();
 const { seed } = GearKeyring.generateSeed(mnemonic);
 ```
 
+### Sign messages
+
+Creating signature
+
+```javascript
+import { GearKeyring } from '@gear-js/api';
+const message = 'your message';
+const signature = GearKeyring.sign(keyring, message);
+
+// Check signature
+const publicKey = keyring.address;
+const verified = GearKeyring.checkSign(publicKey, signature, message);
+```
+
 ### Getting metadata
 
 Getting metadata from program.meta.wasm
@@ -228,6 +260,6 @@ try {
 }
 ```
 
-## [Examples](https://github.com/gear-tech/gear-js-lib/tree/master/examples)
+## [Examples](https://github.com/gear-tech/gear-js/tree/master/api/examples)
 
-To run examples see https://github.com/gear-tech/gear-js-lib/tree/master/examples
+To run examples see https://github.com/gear-tech/gear-js/tree/master/api/examples

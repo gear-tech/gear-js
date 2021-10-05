@@ -21,7 +21,7 @@ import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 
 import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
-import { BlockActionTypes } from 'types/block';
+import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel } from 'types/common';
 
 const fetchTokenAction = () => ({ type: UserActionTypes.FETCH_TOKEN });
@@ -59,7 +59,7 @@ const fetchProgramErrorAction = () => ({ type: ProgramActionTypes.FETCH_PROGRAM_
 
 export const transferBalanceSuccessAction = () => ({ type: UserActionTypes.TRANSFER_BALANCE });
 export const fetchTotalIssuanceAction = (payload: {}) => ({ type: BlockActionTypes.FETCH_TOTALISSUANCE, payload });
-export const fetchBlockAction = (payload: {}) => ({ type: BlockActionTypes.FETCH_BLOCK, payload });
+export const fetchBlockAction = (payload: BlockModel) => ({ type: BlockActionTypes.FETCH_BLOCK, payload });
 
 export const programUploadStartAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_START });
 export const programUploadResetAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_RESET });

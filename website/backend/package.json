@@ -25,7 +25,7 @@
     "types:lint": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@gear-js/api": "^0.2.12",
+    "@gear-js/api": "^0.4.5",
     "@nestjs/common": "^8.0.6",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.6",
@@ -48,7 +48,6 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "nats": "^2.2.0",
-    "nestjs-telegraf": "git+https://github.com/bukhalo/nestjs-telegraf.git",
     "node-fetch": "^2.6.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
@@ -60,7 +59,6 @@
     "socket.io": "^4.2.0",
     "socket.io-client": "^4.2.0",
     "swagger-ui-express": "^4.1.6",
-    "telegraf": "^4.4.1",
     "typeorm": "^0.2.37"
   },
   "devDependencies": {

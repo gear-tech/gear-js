@@ -17,7 +17,7 @@
     <section class="chat">
       <h1>Gear WebSockets Test</h1>
       Authorization Token (Bearer)
-      <input type="text" name="jwt" ref="token" v-on:change="jwtTokenChange()" />
+      <input type="text" name="jwt" v-model="token" v-on:change="jwtTokenChange()" />
       <button @click.prevent="connect()">Connect</button>
       <p>
         <button @click.prevent="getTotalIssuance()">Total Issuance</button>
@@ -126,10 +126,14 @@
         socket: null,
         keyPairJson: ''
       },
+      created() {
+        const q = new URLSearchParams(window.location.search);
+        this.token = q.get('token')
+      },
       methods: {
         connect() {
           console.log('connecting');
-          this.socket = io('http://localhost:3000/api/ws', {
+          this.socket = io('/api/ws', {
             query: { Authorization: this.token },
             transports: ['websocket']
           });

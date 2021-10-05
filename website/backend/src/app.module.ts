@@ -9,8 +9,6 @@ import { GearNodeModule } from './gear-node/gear-node.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { WsRpcModule } from './ws-rpc/ws-rpc.module';
 import { RpcModule } from './http-rpc/rpc.module';
-// import { TelegrafModule } from 'nestjs-telegraf';
-// import { TelegramModule } from './telegram/telegram.module';
 import { IdeModule } from './ide/ide.module';
 import { MessagesModule } from './messages/messages.module';
 
@@ -41,11 +39,6 @@ import { MessagesModule } from './messages/messages.module';
     EventEmitterModule.forRoot(),
     RpcModule,
     WsRpcModule,
-    // TelegrafModule.forRoot({
-    //   token: process.env.TELEGRAM_BOT_TOKEN,
-    //   include: [TelegramModule],
-    // }),
-    // TelegramModule,
     IdeModule,
     MessagesModule,
   ],

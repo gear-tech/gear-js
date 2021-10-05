@@ -3,7 +3,7 @@ import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { EventRecord } from '@polkadot/types/interfaces';
-import { PromiseResult } from '@polkadot/api/types';
+import { DecoratedEvents, PromiseResult } from '@polkadot/api/types';
 import { Vec } from '@polkadot/types';
 import { Observable } from 'rxjs';
 import EventEmitter = require('events');
@@ -14,8 +14,9 @@ export class GearApi {
   public program: GearProgram;
   public message: GearMessage;
   public balance: GearBalance;
-  public events: PromiseResult<() => Observable<Vec<EventRecord>>>;
+  public allEvents: PromiseResult<() => Observable<Vec<EventRecord>>>;
   public gearEvents: GearEvents;
+  public events: DecoratedEvents<'promise'>;
   provider: WsProvider;
   defaultTypes: any;
 
@@ -27,7 +28,8 @@ export class GearApi {
       this.program = new GearProgram(this);
       this.message = new GearMessage(this);
       this.balance = new GearBalance(this);
-      this.events = this.api.query.system.events;
+      this.allEvents = this.api.query.system.events;
+      this.events = this.api.events;
       this.gearEvents = new GearEvents(this);
     });
   }

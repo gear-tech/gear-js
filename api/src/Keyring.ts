@@ -26,7 +26,7 @@ export class GearKeyring {
 
   static fromJson(keypairJson: KeyringPair$Json | string): KeyringPair {
     const keyring = new Keyring({ type: 'sr25519' }).createFromJson(
-      isString(keypairJson) ? JSON.parse(keypairJson) : keypairJson
+      isString(keypairJson) ? JSON.parse(keypairJson) : keypairJson,
     );
     return GearKeyring.unlock(keyring);
   }
@@ -55,12 +55,11 @@ export class GearKeyring {
     const mnemonic = mnemonicGenerate();
     const seed = mnemonicToMiniSecret(mnemonic);
     const keyring = await GearKeyring.fromSeed(seed, name);
-
     return {
       keyring,
       mnemonic: mnemonic,
       seed: u8aToHex(seed),
-      json: keyring.toJson()
+      json: keyring.toJson(),
     };
   }
 
@@ -75,12 +74,15 @@ export class GearKeyring {
     return { seed: u8aToHex(mnemonicToMiniSecret(mnemonic)), mnemonic };
   }
 
-  static checkSign(keyPair: KeyringPair, message: string) {
-    const signature = keyPair.sign(stringToU8a(message));
-    if (signatureVerify(message, signature, keyPair.address).isValid) {
+  static checkSign(publicKey: string, signature: string, message: string) {
+    if (signatureVerify(message, signature, publicKey).isValid) {
       return true;
     } else {
       return false;
     }
+  }
+
+  static sign(keyring: KeyringPair, message: string) {
+    return keyring.sign(stringToU8a(message));
   }
 }
