@@ -5,16 +5,13 @@ import { GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
 import {
   sendMessageSuccessAction,
   sendMessageFailedAction,
-  programStatusAction,
-  sendMessageResetAction,
   programUploadSuccessAction,
   programUploadFailedAction,
-  programUploadResetAction,
 } from 'store/actions/actions';
 import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
-export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any) => {
+export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any, alert: any) => {
   const apiRequest = new ServerRPCRequestService();
 
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -43,12 +40,12 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   try {
     // Submit program, receive program ID
     const programId = await api.program.submit(program, meta);
+
     // Trying to sign transaction, receive
     await api.program.signAndSend(keyring, (data: any) => {
+      alert.success(`status: ${data.status}`);
       if (data.status === 'Finalized') {
-        console.log('Finalized!');
         dispatch(programUploadSuccessAction());
-        dispatch(programUploadResetAction());
         // Send sing message
         const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
 
@@ -68,10 +65,11 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   } catch (error) {
     dispatch(programUploadFailedAction(`${error}`));
     console.error(error);
+    alert.error(`status: ${error}`);
   }
 };
 
-export const SendMessageToProgram = async (api: any, message: MessageModel, dispatch: any) => {
+export const SendMessageToProgram = async (api: any, message: MessageModel, dispatch: any, alert: any) => {
   const apiRequest = new ServerRPCRequestService();
 
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
@@ -89,17 +87,16 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
       { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
     );
 
-    await api.message.submit(message, meta);
+    await api.message.submit(message, JSON.parse(meta));
     await api.message.signAndSend(keyring, (data: any) => {
-      programStatusAction(data.status);
-
+      alert.success(`status: ${data.status}`);
       if (data.status === 'Finalized') {
         console.log('Finalized!');
         dispatch(sendMessageSuccessAction());
-        dispatch(sendMessageResetAction());
       }
     });
   } catch (error) {
+    alert.error(`status: ${error}`);
     dispatch(sendMessageFailedAction(`${error}`));
     console.error(error);
   }
