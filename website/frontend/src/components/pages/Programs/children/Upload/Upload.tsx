@@ -114,9 +114,7 @@ export const Upload = () => {
 
   return (
     <>
-      {(droppedFile && (
-        <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile} />
-      )) || (
+      {(droppedFile && <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile} />) || (
         <div className={dropBlockClassName} ref={drop}>
           <div className="drop-block__no-file-hover">
             <input className="drop-block__input-file" ref={hiddenFileInput} type="file" onChange={handleChange} />

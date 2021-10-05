@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { SocketService } from 'services/SocketService';
 import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
-import { sendMessageStartAction} from 'store/actions/actions';
+import { sendMessageStartAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
@@ -89,7 +89,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
           socketService.getGasSpent(destination, pack.payload);
         } else {
           pack.gasLimit = pack.gasLimit ?? gas ?? 0;
-          SendMessageToProgram(api, pack, dispatch, alert)
+          SendMessageToProgram(api, pack, dispatch, alert);
           dispatch(sendMessageStartAction());
         }
       }}
@@ -130,7 +130,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                     name="payload"
                     type="text"
                     className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
-                    placeholder='null'
+                    placeholder="null"
                   />
                   {errors.payload && touched.payload ? (
                     <div className="message-form__error">{errors.payload}</div>

@@ -99,10 +99,10 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
         },
         { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
       );
-      if(response.result) {
+      if (response.result) {
         alert.success(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
       }
-      if(response.error){
+      if (response.error) {
         alert.error(`${response.error}`);
       }
     } catch (error) {
