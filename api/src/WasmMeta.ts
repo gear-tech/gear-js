@@ -23,7 +23,22 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
       free: (_pages) => {},
       gr_debug: (msg) => {
         console.log(msg);
-      }
+      },
+      gr_msg_id: () => {},
+      gr_size: () => {},
+      gr_read: () => {},
+      gr_source: () => {},
+      gr_gas_available: () => {},
+      gr_send: () => {},
+      gr_send_commit: () => {},
+      gr_send_init: () => {},
+      gr_send_push: () => {},
+      gr_reply: () => {},
+      gr_reply_push: () => {},
+      gr_reply_to: () => {},
+      gr_value: () => {},
+      gr_wait: () => {},
+      gr_wake: () => {}
     }
   };
   let metadata = {
