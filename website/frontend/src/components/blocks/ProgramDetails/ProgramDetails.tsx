@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, VFC } from 'react';
-import { getWasmMetadata } from '@gear-js/api';
+import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch } from 'react-redux';
@@ -26,6 +26,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
+  const [displayTypes, setDisplayTypes] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
   const [wrongJSON, setWrongJSON] = useState(false);
@@ -64,6 +65,12 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
         setMetaWasm(meta);
+        let types = '';
+        const parsedTypes = parseHexTypes(meta.types);
+        Object.entries(parsedTypes).forEach((value) => {
+          types += `${value[0]}: ${JSON.stringify(value[1])}\n`;
+        });
+        setDisplayTypes(types.trimEnd());
       } catch (err) {
         // TODO ERROR STATUS ACTION
         console.log(err);
@@ -96,10 +103,10 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   };
 
   const prettyPrint = () => {
-    const ugly = (document.getElementById("types") as HTMLInputElement).value;
+    const ugly = (document.getElementById('types') as HTMLInputElement).value;
     const obj = JSON.parse(ugly);
     const pretty = JSON.stringify(obj, undefined, 4);
-    (document.getElementById("types") as HTMLInputElement).innerText = pretty
+    (document.getElementById('types') as HTMLInputElement).innerText = pretty;
   };
 
   return (
@@ -264,15 +271,105 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       )}
                     </div>
                     {metaWasm && (
-                      <div className="program-details__info">
-                        <Field
-                          as="textarea"
-                          id="types"
-                          name="types"
-                          placeholder=""
-                          className="program-details__meta program-details__value"
-                          value={JSON.stringify(metaWasm, undefined, 4)}
-                        />
+                      <div>
+                        <div className="program-details__info">
+                          <label htmlFor="init_input" className="program-details__field-limit program-details__field">
+                            Initial type:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              id="init_input"
+                              name="init_input"
+                              placeholder={JSON.stringify(metaWasm.init_input)}
+                              className="program-details__limit-value program-details__value"
+                              type="text"
+                              disabled="true"
+                            />
+                            {errors.init_input && touched.init_input ? (
+                              <div className="program-details__error">{errors.init_input}</div>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="program-details__info">
+                          <label htmlFor="input" className="program-details__field-limit program-details__field">
+                            Incoming type:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              id="input"
+                              name="input"
+                              placeholder={JSON.stringify(metaWasm.input)}
+                              className="program-details__limit-value program-details__value"
+                              type="text"
+                              disabled="true"
+                            />
+                            {errors.input && touched.input ? (
+                              <div className="program-details__error">{errors.input}</div>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="program-details__info">
+                          <label htmlFor="output" className="program-details__field-init-value program-details__field">
+                            Expected type:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              id="output"
+                              name="output"
+                              placeholder={JSON.stringify(metaWasm.output)}
+                              className="program-details__init-value program-details__value"
+                              type="text"
+                              disabled="true"
+                            />
+                            {errors.output && touched.output ? (
+                              <div className="program-details__error">{errors.output}</div>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="program-details__info">
+                          <label
+                            htmlFor="init_output"
+                            className="program-details__field-init-value program-details__field"
+                          >
+                            Initial output type:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              id="init_output"
+                              name="init_output"
+                              placeholder={JSON.stringify(metaWasm.init_output)}
+                              className="program-details__init-value program-details__value"
+                              type="text"
+                              disabled="true"
+                            />
+                            {errors.init_output && touched.init_output ? (
+                              <div className="program-details__error">{errors.init_output}</div>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="program-details__info">
+                          <label htmlFor="types" className="program-details__field-init-value program-details__field">
+                            Types:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              as="textarea"
+                              id="types"
+                              name="types"
+                              disabled="true"
+                              placeholder={displayTypes}
+                              className="program-details__types program-details__value"
+                            />
+                            <p>
+                              <a href="#" className="program-details__link" onClick={prettyPrint}>
+                                Prettify
+                              </a>
+                            </p>
+                            {errors.types && touched.types ? (
+                              <div className="program-details__error">{errors.types}</div>
+                            ) : null}
+                          </div>
+                        </div>
                       </div>
                     )}
                   </>
