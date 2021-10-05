@@ -54,7 +54,7 @@ export const RPC_METHODS = {
   SUBSCRIBE_BLOCKS: 'blocks.newBlocks',
   UNSUBSCRIBE_BLOCKS: 'blocks.unsubscribe',
   SUBSCRIBE_EVENTS: 'events.subscribe',
-  BALANCE_TRANSFER: 'balance.transfer',
+  BALANCE_TRANSFER: 'balance.topUp',
   SEND_MESSAGE: 'message.send',
   SEND_META: 'program.addMeta',
   GET_GAS_SPENT: 'message.gasSpent',
@@ -92,3 +92,7 @@ export const SEARCH_TYPES = {
   NOTIFICATIONS: 'NOTIFICATIONS',
   PROGRAMS: 'PROGRAMS',
 };
+
+export enum ZIndexes {
+  'alert' = 999,
+}

@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import { Link /* , Redirect */ } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
-import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES } from 'consts';
+import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS, GEAR_STORAGE_KEY } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketService } from 'services/SocketService';
+import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
+import { useAlert } from 'react-alert';
 import { useApi } from '../../../hooks/useApi';
-import { StatusPanel } from '../StatusPanel/StatusPanel';
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
 // import Editor from 'assets/images/editor_icon.svg';
 
@@ -19,8 +20,10 @@ type Props = {
 
 export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
   const dispatch = useDispatch();
+  const apiRequest = new ServerRPCRequestService();
 
   const [api] = useApi();
+  const alert = useAlert();
 
   const [timeInstance, setTimeInstance] = useState(0);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
@@ -28,14 +31,9 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
 
   const { blocks } = useSelector((state: RootState) => state.blocks);
   const [totalIssuance, setTotalIssuance] = useState('');
-  const [transferSuccess, setTransferSuccess] = useState(false);
   const [prevBlockHash, setPrevBlockHash] = useState('');
 
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
-
-  if (transferSuccess) {
-    setTimeout(() => setTransferSuccess(false), 3000);
-  }
 
   useEffect(() => {
     const getTotal = async () => {
@@ -92,13 +90,23 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
   // };
 
   const handleTransferBalance = async () => {
-
-    if(api) {
-      const user: any = localStorage.getItem('public_key');
-      await api.balance.transferFromAlice(user, GEAR_BALANCE_TRANSFER_VALUE, (data) => {
-        console.log(data);
-      });
-      setTransferSuccess(true);
+    try {
+      const response = await apiRequest.getResource(
+        RPC_METHODS.BALANCE_TRANSFER,
+        {
+          to: `${localStorage.getItem('public_key')}`,
+          value: GEAR_BALANCE_TRANSFER_VALUE,
+        },
+        { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
+      );
+      if(response.result) {
+        alert.success(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
+      }
+      if(response.error){
+        alert.error(`${response.error}`);
+      }
+    } catch (error) {
+      alert.error(`${error}`);
     }
   };
 
@@ -183,14 +191,6 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
           </span>
         </div>
       </div>
-      {transferSuccess && (
-        <StatusPanel
-          onClose={() => {
-            setTransferSuccess(false)
-          }}
-          statusPanelText={`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`}
-        />
-      )}
     </div>
   );
 };
