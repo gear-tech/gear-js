@@ -147,7 +147,7 @@ async function main(pathToTestSettings: string) {
   // });
 
   // Subscribe only to program initialization events
-  api.gearEvents.subsribeProgramEvents((event) => {
+  api.gearEvents.subscribeProgramEvents((event) => {
     console.log(event.toHuman());
   });
 
