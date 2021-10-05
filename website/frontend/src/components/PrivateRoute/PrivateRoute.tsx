@@ -1,8 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import { GEAR_STORAGE_KEY } from 'consts';
 import { routes } from 'routes';
+import { UnsubscribePromise } from '@polkadot/api/types';
 import { nodeApi } from '../../api/initApi';
+import { useApi } from '../../hooks/useApi';
+import { fetchNotificationsSuccessAction } from '../../store/actions/actions';
 
 const defaultProps = {};
 
@@ -22,14 +26,43 @@ export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
     }
   }, [isApiReady]);
 
-  useEffect(() => {
-    nodeApi.subscribeAllEvents((event) => {
-      console.log(event.toHuman());
-      // dispatch(fetchNotificationsSuccessAction(event.toHuman()));
-    });
+  const [api] = useApi();
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let unsub: UnsubscribePromise | null = null;
+    let unsub2: UnsubscribePromise | null = null;
+
+    if (api) {
+      unsub = api.gearEvents.subsribeProgramEvents((event) => {
+        event.data.forEach((i) => {
+          const data = i.toHuman() as { source: string };
+          if (data.source === localStorage.getItem('public_key_raw')) {
+            dispatch(fetchNotificationsSuccessAction(data));
+          }
+        });
+      });
+      unsub2 = api.gearEvents.subscribeLogEvents((event) => {
+        event.data.forEach((i) => {
+          const data = i.toHuman() as { source: string };
+          if (data.source === localStorage.getItem('public_key_raw')) {
+            dispatch(fetchNotificationsSuccessAction(data));
+          }
+        });
+      });
+    }
     return () => {
-      nodeApi.unsubscribeAllEvents();
+      if (unsub) {
+        (async () => {
+          (await unsub)();
+        })();
+      }
+      if (unsub2) {
+        (async () => {
+          (await unsub2)();
+        })();
+      }
     };
   });
   return isApiReady ? (

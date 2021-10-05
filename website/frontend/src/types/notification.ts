@@ -56,7 +56,7 @@ interface FetchNotificationsAction {
 
 interface FetchNotificationsSuccessAction {
   type: NotificationActionTypes.FETCH_NOTIFICATIONS_SUCCESS;
-  payload: NotificationPaginationModel;
+  payload: NotificationModel;
 }
 
 interface FetchNotificationsErrorAction {

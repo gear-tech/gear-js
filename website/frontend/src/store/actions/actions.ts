@@ -1,7 +1,7 @@
 import UserRequestService from 'services/UserRequestService';
 
 import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, UserProfileRPCModel } from 'types/user';
-import { NotificationActionTypes, RecentNotificationModel, NotificationUnreadRPCModel } from 'types/notification';
+import { NotificationActionTypes, NotificationUnreadRPCModel } from 'types/notification';
 import {
   ProgramActionTypes,
   ProgramModel,
@@ -96,7 +96,7 @@ export const fetchNotificationsSuccessAction = (payload: any) => ({
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fetchNotificationsErrorAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS_ERROR });
 
-export const fetchRecentNotificationSuccessAction = (payload: RecentNotificationModel) => ({
+export const fetchRecentNotificationSuccessAction = (payload: any) => ({
   type: NotificationActionTypes.FETCH_RECENT_NOTIFICATION,
   payload,
 });

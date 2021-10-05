@@ -129,10 +129,12 @@ export const NotificationsPage: VFC = () => {
         {(notifications &&
           notifications.length &&
           notifications.map((item) => (
-            <button
-              className={clsx('notification', !item.isRead && 'unread', item.type.toLowerCase() !== 'log' && 'default')}
+            <div
+              // className={clsx('notification', !item.isRead && 'unread', item.type.toLowerCase() !== 'log' && 'default')}
               onClick={() => handleNotificationInfo(item)}
-              type="button"
+              onKeyUp={() => handleNotificationInfo(item)}
+              role="button"
+              tabIndex={0}
             >
               <span className="notification__type">
                 {item.isRead || <div className={clsx('dot unread', item.type === 'InitFailure' && 'warning')} />}
@@ -149,7 +151,7 @@ export const NotificationsPage: VFC = () => {
                   <UnReadNotificationsIcon color="#858585" />
                 )}
               </button>
-            </button>
+            </div>
           ))) ||
           null}
       </div>
