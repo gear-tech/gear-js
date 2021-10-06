@@ -1,8 +1,6 @@
 import { GearApi } from '@gear-js/api';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Vec } from '@polkadot/types';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { EventRecord } from '@polkadot/types/interfaces';
+import { Event } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { API_CONNECTION_ADDRESS } from '../consts';
 
@@ -26,18 +24,36 @@ class NodeApi {
     this._api = await GearApi.create({ providerAddress: this.address });
   }
 
-  public subscribeAllEvents(cb: (event: Vec<EventRecord>) => void) {
-    if (this._api && !this.subscriptions.allEvents) {
-      this.subscriptions.allEvents = this._api.allEvents((event) => {
+  public subscribeProgramEvents(cb: (event: Event) => void) {
+    if (this._api) {
+      this.subscriptions.programEvents = this._api.gearEvents.subsribeProgramEvents((event) => {
+        console.log(event);
         cb(event);
       });
     }
   }
 
-  public unsubscribeAllEvents() {
-    if (this._api && !!this.subscriptions.allEvents) {
+  public unsubscribeProgramEvents() {
+    if ('programEvents' in this.subscriptions) {
       (async () => {
-        (await this.subscriptions.allEvents)();
+        (await this.subscriptions.programEvents)();
+      })();
+    }
+  }
+
+  public subscribeLogEvents(cb: (event: Event) => void) {
+    if (this._api) {
+      this.subscriptions.logEvents = this._api.gearEvents.subscribeLogEvents((event) => {
+        console.log(event);
+        cb(event);
+      });
+    }
+  }
+
+  public unsubscribeLogEvents() {
+    if ('logEvents' in this.subscriptions) {
+      (async () => {
+        (await this.subscriptions.logEvents)();
       })();
     }
   }

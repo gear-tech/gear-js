@@ -3,9 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import { GEAR_STORAGE_KEY } from 'consts';
 import { routes } from 'routes';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { nodeApi } from '../../api/initApi';
-import { useApi } from '../../hooks/useApi';
 import { fetchNotificationsSuccessAction } from '../../store/actions/actions';
 
 const defaultProps = {};
@@ -26,16 +24,11 @@ export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
     }
   }, [isApiReady]);
 
-  const [api] = useApi();
-
   const dispatch = useDispatch();
 
   useEffect(() => {
-    let unsub: UnsubscribePromise | null = null;
-    let unsub2: UnsubscribePromise | null = null;
-
-    if (api) {
-      unsub = api.gearEvents.subsribeProgramEvents((event) => {
+    if (nodeApi) {
+      nodeApi.subscribeProgramEvents((event) => {
         event.data.forEach((i) => {
           const data = i.toHuman() as { source: string };
           if (data.source === localStorage.getItem('public_key_raw')) {
@@ -43,7 +36,9 @@ export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
           }
         });
       });
-      unsub2 = api.gearEvents.subscribeLogEvents((event) => {
+
+      nodeApi.subscribeLogEvents((event) => {
+        console.log(event);
         event.data.forEach((i) => {
           const data = i.toHuman() as { source: string };
           if (data.source === localStorage.getItem('public_key_raw')) {
@@ -53,16 +48,8 @@ export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
       });
     }
     return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-      if (unsub2) {
-        (async () => {
-          (await unsub2)();
-        })();
-      }
+      nodeApi.unsubscribeProgramEvents();
+      nodeApi.unsubscribeLogEvents();
     };
   });
   return isApiReady ? (
