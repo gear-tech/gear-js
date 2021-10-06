@@ -114,6 +114,16 @@ const unsub = await gearApi.gearEvents.subscribeProgramEvents((event) => {
 unsub();
 ```
 
+Subscribe to Transfer events
+
+```javascript
+const unsub = await gearApi.gearEvents.subscribeTransferEvents((event) => {
+  console.log(event.toHuman());
+});
+// Unsubscribe
+unsub();
+```
+
 Subscribe to new blocks
 
 ```javascript

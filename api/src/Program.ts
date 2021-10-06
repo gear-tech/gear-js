@@ -23,7 +23,7 @@ export class GearProgram {
    * @param meta Metadata
    * @returns ProgramId
    */
-  async submit(program: Program, meta: Metadata): Promise<string> {
+  submit(program: Program, meta: Metadata): string {
     if (program.initPayload) {
       program.initPayload = this.createType.encode(meta.init_input, program.initPayload, meta);
     } else {

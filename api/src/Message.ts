@@ -16,7 +16,7 @@ export class GearMessage {
     this.createType = new CreateType(gearApi);
   }
 
-  async submit(message: Message, meta: Metadata) {
+  submit(message: Message, meta: Metadata): any {
     let payload: Bytes | Uint8Array | string;
 
     payload = this.createType.encode(meta.input, message.payload, meta);
