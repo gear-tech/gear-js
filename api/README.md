@@ -33,6 +33,14 @@ You can also connect to a different node
 const gearApi = await GearApi.create({ provider: 'wss://someIP:somePort' });
 ```
 
+Getting node info
+
+```javascript
+const chain = await gearApi.chain();
+const nodeName = await gearApi.nodeName();
+const version = await gearApi.version();
+```
+
 Registering custom types
 
 ```javascript
