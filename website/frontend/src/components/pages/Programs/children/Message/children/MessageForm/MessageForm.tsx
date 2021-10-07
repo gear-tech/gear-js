@@ -1,13 +1,11 @@
 import React, { useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 // import { Field, FieldArray, Form, Formik } from 'formik';
 import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
-import { SocketService } from 'services/SocketService';
 import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
 import { sendMessageStartAction } from 'store/actions/actions';
-import { RootState } from 'store/reducers';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useAlert } from 'react-alert';
@@ -18,13 +16,12 @@ import './MessageForm.scss';
 type Props = {
   programHash: string;
   programName: string;
-  socketService: SocketService;
   payloadType: object | string | null;
   handleClose: () => void;
 };
 
 // todo improve form logic, refactor
-export const MessageForm: VFC<Props> = ({ programHash, programName, socketService, handleClose }) => {
+export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose }) => {
   const [api] = useApi();
   const alert = useAlert();
 
@@ -50,7 +47,6 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
   // };
 
   const dispatch = useDispatch();
-  const { gas } = useSelector((state: RootState) => state.programs);
   const [isManualGas, setIsManualGas] = useState(false);
 
   const mapInitialValues = () => ({
@@ -79,19 +75,14 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
       validationSchema={Schema}
       validateOnBlur
       onSubmit={(values: MessageModel) => {
-        const { additional, destination } = values;
+        const { additional } = values;
         const pack = { ...values };
         if (additional) {
           delete pack.additional;
           pack.payload = JSON.stringify(transformPayloadVals(additional));
         }
-        if (typeof gas !== 'number' && !isManualGas) {
-          socketService.getGasSpent(destination, pack.payload);
-        } else {
-          pack.gasLimit = pack.gasLimit ?? gas ?? 0;
-          SendMessageToProgram(api, pack, dispatch, alert);
-          dispatch(sendMessageStartAction());
-        }
+        SendMessageToProgram(api, pack, dispatch, alert);
+        dispatch(sendMessageStartAction());
       }}
       onReset={handleClose}
     >
@@ -138,7 +129,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                 </div>
               </div>
 
-              {((typeof gas === 'number' || isManualGas) && (
+              {(isManualGas && (
                 <div className="message-form--info">
                   <label htmlFor="gasLimit" className="message-form__field">
                     Gas limit:
@@ -147,7 +138,6 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                     <Field
                       id="gasLimit"
                       name="gasLimit"
-                      placeholder={gas}
                       type="number"
                       className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
                     />
@@ -205,15 +195,16 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                 </div>
               )} */}
               <div className="message-form--btns">
-
-                {(typeof gas !== 'number' && !isManualGas) && (
+                {(!isManualGas && (
                   <>
-                    <button className="message-form__button" type="button">Calculate Gas</button>
+                    <button className="message-form__button" type="button">
+                      Calculate Gas
+                    </button>
                     <button className="message-form__button" type="button" onClick={() => setIsManualGas(true)}>
                       Manual gas input
                     </button>
                   </>
-                ) || (
+                )) || (
                   <button className="message-form__button" type="submit">
                     <>
                       <img src={MessageIllustration} alt="message" />

@@ -56,7 +56,6 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
       <MessageForm
         programHash={programHash}
         programName={programName}
-        socketService={socketService}
         handleClose={handleClose}
         payloadType={getResultPayloadType()}
       />
