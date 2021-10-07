@@ -33,22 +33,6 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
     }
   }, [dispatch, payloadType, programHash, socketService]);
 
-  const isJson = (data: string) => {
-    try {
-      JSON.parse(data);
-    } catch (error) {
-      return false;
-    }
-    return true;
-  };
-
-  const getResultPayloadType = () => {
-    let transformedPayloadType = payloadType;
-    if (payloadType && isJson(payloadType)) {
-      transformedPayloadType = JSON.parse(payloadType);
-    }
-    return transformedPayloadType;
-  };
 
   return (
     <div className="message-form">
@@ -56,8 +40,6 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
       <MessageForm
         programHash={programHash}
         programName={programName}
-        handleClose={handleClose}
-        payloadType={getResultPayloadType()}
       />
       {statusPanelText && (
         <StatusPanel

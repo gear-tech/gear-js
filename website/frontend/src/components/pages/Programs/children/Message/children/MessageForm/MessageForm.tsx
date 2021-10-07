@@ -1,6 +1,5 @@
 import React, { VFC } from 'react';
 import { useDispatch } from 'react-redux';
-// import { Field, FieldArray, Form, Formik } from 'formik';
 import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
 import { SendMessageToProgram } from 'services/ApiService';
@@ -18,44 +17,20 @@ import './MessageForm.scss';
 type Props = {
   programHash: string;
   programName: string;
-  payloadType: object | string | null;
-  handleClose: () => void;
 };
 
-// todo improve form logic, refactor
-export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose }) => {
+export const MessageForm: VFC<Props> = ({ programHash, programName }) => {
   const [api] = useApi();
   const alert = useAlert();
 
-  // const getFieldsFromPayload = () => {
-  //   const transformedPayloadType: any = [];
-
-  //   const recursion = (object: any) => {
-  //     for (const key in object) {
-  //       if (typeof object[key] === 'string') {
-  //         transformedPayloadType.push({
-  //           [key]: object[key],
-  //         });
-  //       } else if (typeof object[key] === 'object') {
-  //         recursion(object[key]);
-  //       }
-  //     }
-  //   };
-
-  //   if (payloadType && typeof payloadType === 'object') {
-  //     recursion(payloadType);
-  //   }
-  //   return transformedPayloadType;
-  // };
-
   const dispatch = useDispatch();
 
-  const mapInitialValues = () => ({
+  const initialValues = {
     gasLimit: 20000,
     value: 0,
     payload: '',
     destination: programHash,
-  });
+  };
 
   const calculateGas = async (values: any, setFieldValue: any) => {
     const apiRequest = new ServerRPCRequestService();
@@ -85,35 +60,16 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
     }
   };
 
-  const transformPayloadVals = (data: any) => {
-    const object = {};
-    if (data && data.length) {
-      data.forEach((element: any) => {
-        const key = Object.keys(element)[0];
-
-        // @ts-ignore
-        object[key] = element[key];
-      });
-    }
-    return object;
-  };
-
   return (
     <Formik
-      initialValues={mapInitialValues()}
+      initialValues={initialValues}
       validationSchema={Schema}
       validateOnBlur
-      onSubmit={(val: MessageModel) => {
-        const { additional } = val;
-        const pack = { ...val };
-        if (additional) {
-          delete pack.additional;
-          pack.payload = JSON.stringify(transformPayloadVals(additional));
-        }
-        SendMessageToProgram(api, pack, dispatch, alert);
+      onSubmit={(values: MessageModel, { resetForm }) => {
+        SendMessageToProgram(api, values, dispatch, alert);
         dispatch(sendMessageStartAction());
+        resetForm();
       }}
-      onReset={handleClose}
     >
       {({ errors, touched, values, setFieldValue }) => (
         <Form id="message-form">
@@ -190,37 +146,6 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
                   {errors.value && touched.value ? <div className="message-form__error">{errors.value}</div> : null}
                 </div>
               </div>
-              {/* {payloadType && typeof payloadType === 'object' && (
-                <div className="message-form--payload">
-                  <p>Payload</p>
-                  <FieldArray
-                    name="additional"
-                    render={() => {
-                      const additionalFields = getFieldsFromPayload();
-                      return (
-                        <>
-                          {(additionalFields &&
-                            additionalFields.length &&
-                            additionalFields.map((item: any, index: number) => (
-                              <div className="message-form--info">
-                                <label htmlFor="payload" className="message-form__field">
-                                  {Object.keys(item)[0]}:
-                                </label>
-                                <Field
-                                  id={`additional.${index}.${Object.keys(item)[0]}`}
-                                  name={`additional.${index}.${Object.keys(item)[0]}`}
-                                  type="text"
-                                  placeholder={item[Object.keys(item)[0]]}
-                                />
-                              </div>
-                            ))) ||
-                            null}
-                        </>
-                      );
-                    }}
-                  />
-                </div>
-              )} */}
               <div className="message-form--btns">
                 <>
                   <button
