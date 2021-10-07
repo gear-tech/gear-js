@@ -205,20 +205,22 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                 </div>
               )} */}
               <div className="message-form--btns">
-                <button className="message-form__button" type="submit">
-                  {(typeof gas !== 'number' && !isManualGas && <>Calculate Gas</>) || (
+
+                {(typeof gas !== 'number' && !isManualGas) && (
+                  <>
+                    <button className="message-form__button" type="button">Calculate Gas</button>
+                    <button className="message-form__button" type="button" onClick={() => setIsManualGas(true)}>
+                      Manual gas input
+                    </button>
+                  </>
+                ) || (
+                  <button className="message-form__button" type="submit">
                     <>
                       <img src={MessageIllustration} alt="message" />
                       Send request
                     </>
-                  )}
-                </button>
-                {(!isManualGas && typeof gas !== 'number' && (
-                  <button className="message-form__button" type="button" onClick={() => setIsManualGas(true)}>
-                    Manual gas input
                   </button>
-                )) ||
-                  null}
+                )}
               </div>
             </div>
           </div>
