@@ -8,6 +8,8 @@ import { MessageModel } from 'types/program';
 import { sendMessageStartAction } from 'store/actions/actions';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
+import { GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
+import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { useAlert } from 'react-alert';
 import { useApi } from '../../../../../../../hooks/useApi';
 import { Schema } from './Schema';
@@ -55,8 +57,32 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
     destination: programHash,
   });
 
-  const calculateGas = async () => {
-    console.log('click');
+  const calculateGas = async (values: any, setFieldValue: any) => {
+    const apiRequest = new ServerRPCRequestService();
+
+    if (values.payload.length === 0) {
+      alert.error(`Error: payload can't be empty`);
+      return;
+    }
+
+    try {
+      const {
+        result: { meta },
+      } = await apiRequest.getResource(
+        RPC_METHODS.GET_METADATA,
+        {
+          programId: programHash,
+        },
+        { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
+      );
+
+      const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.input, meta);
+      alert.info(`Estimated gas ${estimatedGas}`);
+      setFieldValue('gasLimit', Number(`${estimatedGas}`));
+    } catch (error) {
+      alert.error(`${error}`);
+      console.error(error);
+    }
   };
 
   const transformPayloadVals = (data: any) => {
@@ -77,9 +103,9 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
       initialValues={mapInitialValues()}
       validationSchema={Schema}
       validateOnBlur
-      onSubmit={(values: MessageModel) => {
-        const { additional } = values;
-        const pack = { ...values };
+      onSubmit={(val: MessageModel) => {
+        const { additional } = val;
+        const pack = { ...val };
         if (additional) {
           delete pack.additional;
           pack.payload = JSON.stringify(transformPayloadVals(additional));
@@ -89,7 +115,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
       }}
       onReset={handleClose}
     >
-      {({ errors, touched }) => (
+      {({ errors, touched, values, setFieldValue }) => (
         <Form id="message-form">
           <div className="message-form--wrapper">
             <div className="message-form--col">
@@ -197,7 +223,13 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
               )} */}
               <div className="message-form--btns">
                 <>
-                  <button className="message-form__button" type="button" onClick={calculateGas}>
+                  <button
+                    className="message-form__button"
+                    type="button"
+                    onClick={() => {
+                      calculateGas(values, setFieldValue);
+                    }}
+                  >
                     Calculate Gas
                   </button>
                   <button className="message-form__button" type="submit">
