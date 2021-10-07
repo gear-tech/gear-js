@@ -25,7 +25,7 @@ class NodeApi {
   }
 
   public subscribeProgramEvents(cb: (event: Event) => void) {
-    if (this._api) {
+    if (this._api && !('programEvents' in this.subscriptions)) {
       this.subscriptions.programEvents = this._api.gearEvents.subsribeProgramEvents((event) => {
         cb(event);
       });
@@ -41,8 +41,9 @@ class NodeApi {
   }
 
   public subscribeLogEvents(cb: (event: Event) => void) {
-    if (this._api) {
+    if (this._api && !('logEvents' in this.subscriptions)) {
       this.subscriptions.logEvents = this._api.gearEvents.subscribeLogEvents((event) => {
+        console.log(event);
         cb(event);
       });
     }

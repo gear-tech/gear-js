@@ -4,7 +4,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { GEAR_STORAGE_KEY } from 'consts';
 import { routes } from 'routes';
 import { nodeApi } from '../../api/initApi';
-import { fetchNotificationsSuccessAction } from '../../store/actions/actions';
+import { getNotificationsAction } from '../../store/actions/actions';
 
 const defaultProps = {};
 
@@ -15,6 +15,7 @@ type Props = {
 } & typeof defaultProps;
 
 export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
+  const dispatch = useDispatch();
   const [isApiReady, setIsApiReady] = useState(false);
   useEffect(() => {
     if (!isApiReady) {
@@ -24,34 +25,11 @@ export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
     }
   }, [isApiReady]);
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    if (nodeApi) {
-      nodeApi.subscribeProgramEvents((event) => {
-        event.data.forEach((i) => {
-          const data = i.toHuman() as { source: string };
-          if (data.source === localStorage.getItem('public_key_raw')) {
-            dispatch(fetchNotificationsSuccessAction(data));
-          }
-        });
-      });
-
-      nodeApi.subscribeLogEvents((event) => {
-        console.log(event);
-        event.data.forEach((i) => {
-          const data = i.toHuman() as { source: string };
-          if (data.source === localStorage.getItem('public_key_raw')) {
-            dispatch(fetchNotificationsSuccessAction(data));
-          }
-        });
-      });
+    if (isApiReady) {
+      dispatch(getNotificationsAction());
     }
-    return () => {
-      nodeApi.unsubscribeProgramEvents();
-      nodeApi.unsubscribeLogEvents();
-    };
-  });
+  }, [dispatch, isApiReady]);
   return isApiReady ? (
     <Route
       {...rest}

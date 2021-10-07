@@ -17,6 +17,7 @@ import NotificationsRequestService from 'services/NotificationsRequestService';
 import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
+import { nodeApi } from '../../api/initApi';
 
 const fetchTokenAction = () => ({ type: UserActionTypes.FETCH_TOKEN });
 const fetchTokenSuccessAction = (payload: {}) => ({ type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload });
@@ -239,15 +240,24 @@ export const handleProgramSuccess = () => (dispatch: any, getState: any) => {
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getNotificationsAction = (params: PaginationModel) => (dispatch: any) => {
-  // dispatch(fetchNotificationsAction());
-  // notificationService
-  //   .fetchAllNotifications(params)
-  //   .then((result: NotificationRPCModel) => {
-  //     dispatch(fetchNotificationsSuccessAction(result.result));
-  //   })
-  //   .catch(() => dispatch(fetchNotificationsErrorAction()));
+export const getNotificationsAction = () => (dispatch: any) => {
+  nodeApi.subscribeProgramEvents((event) => {
+    event.data.forEach((i) => {
+      const data = i.toHuman() as { source: string };
+      if (data.source === localStorage.getItem('public_key_raw')) {
+        dispatch(fetchNotificationsSuccessAction(data));
+      }
+    });
+  });
+
+  nodeApi.subscribeLogEvents((event) => {
+    event.data.forEach((i) => {
+      const data = i.toHuman() as { source: string };
+      if (data.source === localStorage.getItem('public_key_raw')) {
+        dispatch(fetchNotificationsSuccessAction(data));
+      }
+    });
+  });
 };
 
 export const getUnreadNotificationsCount = () => (dispatch: any) => {
