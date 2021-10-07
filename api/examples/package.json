@@ -1,0 +1,15 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "To run examples run",
+  "main": "meta.js",
+  "scripts": {
+    "build": "tsc",
+    "events": "node dist/event-subscribe.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gear-js/api": "^0.4.11"
+  }
+}
