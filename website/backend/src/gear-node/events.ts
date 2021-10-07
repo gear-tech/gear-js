@@ -1,8 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Subject } from 'rxjs';
 import { ProgramsService } from 'src/programs/programs.service';
-import { GearApi, InitFailureData, InitSuccessData, LogData } from '@gear-js/api';
-import { Codec } from '@polkadot/types/types';
+import {
+  DispatchMessageEnqueuedData,
+  GearApi,
+  InitFailureData,
+  InitMessageEnqueuedData,
+  InitSuccessData,
+  LogData,
+} from '@gear-js/api';
 import { MessagesService } from 'src/messages/messages.service';
 import { InitStatus } from 'src/programs/entities/program.entity';
 
@@ -18,21 +24,12 @@ export class GearNodeEvents {
     this.events = new Subject();
   }
 
-  getEventData(data: Codec): any {
-    const humaned = data.toHuman();
-    let result = new Map<string, any>();
-    Object.keys(humaned).forEach((key) => {
-      result.set(key, humaned[key]);
-    });
-    return Object.fromEntries(result);
-  }
-
   async subscribeAllEvents(api: GearApi) {
     api.allEvents((events) => {
       events
         .filter(({ event }) => api.events.gear.InitMessageEnqueued.is(event))
         .forEach(async ({ event: { data } }) => {
-          data.forEach(async (eventData: InitSuccessData) => {
+          data.forEach(async (eventData: InitMessageEnqueuedData) => {
             try {
               await this.programService.saveProgram({
                 owner: eventData.origin.toHex(),
@@ -54,11 +51,11 @@ export class GearNodeEvents {
       events
         .filter(({ event }) => api.events.gear.DispatchMessageEnqueued.is(event))
         .forEach(async ({ event: { data } }) => {
-          data.forEach(async (eventData) => {
+          data.forEach(async (eventData: DispatchMessageEnqueuedData) => {
             await this.messageService.save({
-              id: eventData.toHex(),
-              destination: '',
-              program: '',
+              id: eventData.messageId.toHex(),
+              destination: eventData.origin.toHex(),
+              program: eventData.programId.toHex(),
               date: new Date(),
             });
           });
@@ -91,12 +88,16 @@ export class GearNodeEvents {
       events
         .filter(({ event }) => api.events.gear.Log.is(event))
         .forEach(({ event: { data } }) => {
-          data.forEach((eventData: LogData) => {
+          data.forEach(async (eventData: LogData) => {
+            await new Promise((resolve) => {
+              setTimeout(() => {
+                resolve(0);
+              }, 100);
+            });
             try {
               if (eventData.reply.isSome) {
-                console.log(eventData.reply.toHuman()[0]);
                 eventData.reply.toHuman()[1] === '0' &&
-                  this.messageService.update(eventData.reply.toHuman()[0], {
+                  this.messageService.update(eventData.reply.unwrap()[0].toHex(), {
                     responseId: eventData.id.toHex(),
                     response: eventData.payload.toHex(),
                   });
