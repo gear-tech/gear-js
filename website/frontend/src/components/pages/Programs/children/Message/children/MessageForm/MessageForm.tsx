@@ -1,4 +1,4 @@
-import React, { useState, VFC } from 'react';
+import React, { VFC } from 'react';
 import { useDispatch } from 'react-redux';
 // import { Field, FieldArray, Form, Formik } from 'formik';
 import { Field, Form, Formik } from 'formik';
@@ -47,7 +47,6 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
   // };
 
   const dispatch = useDispatch();
-  const [isManualGas, setIsManualGas] = useState(false);
 
   const mapInitialValues = () => ({
     gasLimit: 20000,
@@ -55,6 +54,10 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
     payload: '',
     destination: programHash,
   });
+
+  const calculateGas = async () => {
+    console.log('click');
+  };
 
   const transformPayloadVals = (data: any) => {
     const object = {};
@@ -129,25 +132,23 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
                 </div>
               </div>
 
-              {(isManualGas && (
-                <div className="message-form--info">
-                  <label htmlFor="gasLimit" className="message-form__field">
-                    Gas limit:
-                  </label>
-                  <div className="message-form__field-wrapper">
-                    <Field
-                      id="gasLimit"
-                      name="gasLimit"
-                      type="number"
-                      className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
-                    />
-                    {errors.gasLimit && touched.gasLimit ? (
-                      <div className="message-form__error">{errors.gasLimit}</div>
-                    ) : null}
-                  </div>
+              <div className="message-form--info">
+                <label htmlFor="gasLimit" className="message-form__field">
+                  Gas limit:
+                </label>
+                <div className="message-form__field-wrapper">
+                  <Field
+                    id="gasLimit"
+                    name="gasLimit"
+                    type="number"
+                    className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
+                  />
+                  {errors.gasLimit && touched.gasLimit ? (
+                    <div className="message-form__error">{errors.gasLimit}</div>
+                  ) : null}
                 </div>
-              )) ||
-                null}
+              </div>
+
               <div className="message-form--info">
                 <label htmlFor="value" className="message-form__field">
                   Value:
@@ -195,23 +196,17 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, handleClose 
                 </div>
               )} */}
               <div className="message-form--btns">
-                {(!isManualGas && (
-                  <>
-                    <button className="message-form__button" type="button">
-                      Calculate Gas
-                    </button>
-                    <button className="message-form__button" type="button" onClick={() => setIsManualGas(true)}>
-                      Manual gas input
-                    </button>
-                  </>
-                )) || (
+                <>
+                  <button className="message-form__button" type="button" onClick={calculateGas}>
+                    Calculate Gas
+                  </button>
                   <button className="message-form__button" type="submit">
                     <>
                       <img src={MessageIllustration} alt="message" />
                       Send request
                     </>
                   </button>
-                )}
+                </>
               </div>
             </div>
           </div>
