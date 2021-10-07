@@ -1,9 +1,9 @@
 import { GearApi } from '.';
+import { Metadata } from './interfaces';
 import { CreateTypeError } from './errors';
 import { isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry, GenericPortableRegistry } from '@polkadot/types';
-import { Metadata } from './interfaces/metadata';
 
 export class CreateType {
   private defaultTypes: any;

@@ -1,7 +1,7 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 import * as fs from 'fs';
-import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '../src';
-import { Program } from '../src/interfaces';
+import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
+import { Program } from '@gear-js/api';
 
 const types = {};
 const initMessages = [];
@@ -14,7 +14,7 @@ async function getMeta(program) {
         init_input: program.initInputType,
         init_output: program.initOutputType,
         input: program.inputType,
-        output: program.outputType
+        output: program.outputType,
       };
   return meta;
 }
@@ -38,7 +38,7 @@ async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: an
     code,
     gasLimit: program.gasLimit,
     value: program.value,
-    initPayload: program.initPayload
+    initPayload: program.initPayload,
   };
 
   try {
@@ -72,9 +72,9 @@ async function sendMessage(gearApi: GearApi, keyring: KeyringPair, message: any)
         destination: destination,
         payload: message.payload,
         gasLimit: gas,
-        value: message.value
+        value: message.value,
       },
-      types[destination]
+      types[destination],
     );
   } catch (error) {
     console.error(`${error.name}: ${error.message}`);
@@ -129,7 +129,7 @@ async function main(pathToTestSettings: string) {
   // Create an api
   const api = settings.customTypes
     ? await GearApi.create({
-        customTypes: { ...settings.customTypes }
+        customTypes: { ...settings.customTypes },
       })
     : await GearApi.create();
 
@@ -147,7 +147,7 @@ async function main(pathToTestSettings: string) {
   // });
 
   // Subscribe only to program initialization events
-  api.gearEvents.subsribeProgramEvents((event) => {
+  api.gearEvents.subscribeProgramEvents((event) => {
     console.log(event.toHuman());
   });
 
