@@ -33,7 +33,8 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
         handleClose();
       }
     })
-  }, [handleClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!payloadType) {
