@@ -112,10 +112,10 @@ export class ProgramsService {
     }, 10000);
   }
 
-  async initStatus(hash: string, status: string): Promise<Program> {
+  async initStatus(hash: string, status: InitStatus): Promise<Program> {
     const program = await this.findProgram(hash);
     if (program) {
-      program.initStatus = status === 'InitSuccess' ? InitStatus.SUCCESS : InitStatus.FAILED;
+      program.initStatus = status;
       return this.programRepository.save(program);
     }
   }

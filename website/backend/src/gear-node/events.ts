@@ -64,7 +64,8 @@ export class GearNodeEvents {
       events
         .filter(({ event }) => api.events.gear.InitSuccess.is(event))
         .forEach(({ event: { data } }) => {
-          data.forEach((eventData: InitSuccessData) => {
+          data.forEach(async (eventData: InitSuccessData) => {
+            await timeOut();
             try {
               this.programService.initStatus(eventData.programId.toHex(), InitStatus.SUCCESS);
             } catch (error) {
@@ -76,7 +77,8 @@ export class GearNodeEvents {
       events
         .filter(({ event }) => api.events.gear.InitFailure.is(event))
         .forEach(({ event: { data } }) => {
-          data.forEach((eventData: InitFailureData) => {
+          data.forEach(async (eventData: InitFailureData) => {
+            await timeOut();
             try {
               this.programService.initStatus(eventData.programId.toHex(), InitStatus.FAILED);
             } catch (error) {
@@ -89,11 +91,7 @@ export class GearNodeEvents {
         .filter(({ event }) => api.events.gear.Log.is(event))
         .forEach(({ event: { data } }) => {
           data.forEach(async (eventData: LogData) => {
-            await new Promise((resolve) => {
-              setTimeout(() => {
-                resolve(0);
-              }, 100);
-            });
+            await timeOut();
             try {
               if (eventData.reply.isSome) {
                 eventData.reply.toHuman()[1] === '0' &&
@@ -118,4 +116,12 @@ export class GearNodeEvents {
         });
     });
   }
+}
+
+function timeOut() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(0);
+    }, 100);
+  });
 }
