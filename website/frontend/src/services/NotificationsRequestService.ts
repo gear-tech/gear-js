@@ -1,6 +1,6 @@
 import { GEAR_STORAGE_KEY } from 'consts';
-// import { PaginationModel } from 'types/common';
-import { NotificationUnreadRPCModel } from 'types/notification';
+import { PaginationModel } from 'types/common';
+import { NotificationRPCModel, NotificationUnreadRPCModel } from 'types/notification';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 export default class NotificationsRequestService {
@@ -12,13 +12,13 @@ export default class NotificationsRequestService {
 
   protected readonly API_COUNT_UNREAD = 'event.countUnread';
 
-  // public fetchAllNotifications(params: PaginationModel): Promise<NotificationRPCModel> {
-  //   return this.apiRequest.getResource(
-  //     this.API_NOTIFIACTIONS_ALL,
-  //     { ...params },
-  //     { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
-  //   );
-  // }
+  public fetchAllNotifications(params: PaginationModel): Promise<NotificationRPCModel> {
+    return this.apiRequest.getResource(
+      this.API_NOTIFIACTIONS_ALL,
+      { ...params },
+      { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
+    );
+  }
 
   public fetchUnreadNotificationsCount(): Promise<NotificationUnreadRPCModel> {
     return this.apiRequest.getResource(this.API_COUNT_UNREAD, undefined, {

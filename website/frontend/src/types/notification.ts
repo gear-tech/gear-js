@@ -30,6 +30,12 @@ export interface NotificationState {
   error: null | string;
 }
 
+export interface NotificationRPCModel {
+  jsonrpc: string;
+  id: string;
+  result: NotificationPaginationModel;
+}
+
 export interface NotificationUnreadRPCModel {
   jsonrpc: string;
   id: string;
@@ -56,7 +62,7 @@ interface FetchNotificationsAction {
 
 interface FetchNotificationsSuccessAction {
   type: NotificationActionTypes.FETCH_NOTIFICATIONS_SUCCESS;
-  payload: NotificationModel;
+  payload: NotificationPaginationModel;
 }
 
 interface FetchNotificationsErrorAction {

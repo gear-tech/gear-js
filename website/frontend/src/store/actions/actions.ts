@@ -1,7 +1,13 @@
 import UserRequestService from 'services/UserRequestService';
 
 import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, UserProfileRPCModel } from 'types/user';
-import { NotificationActionTypes, NotificationUnreadRPCModel } from 'types/notification';
+import {
+  NotificationActionTypes,
+  NotificationPaginationModel,
+  RecentNotificationModel,
+  NotificationUnreadRPCModel,
+  NotificationRPCModel,
+} from 'types/notification';
 import {
   ProgramActionTypes,
   ProgramModel,
@@ -17,7 +23,6 @@ import NotificationsRequestService from 'services/NotificationsRequestService';
 import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
-import { nodeApi } from '../../api/initApi';
 
 const fetchTokenAction = () => ({ type: UserActionTypes.FETCH_TOKEN });
 const fetchTokenSuccessAction = (payload: {}) => ({ type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload });
@@ -89,15 +94,14 @@ const fetchNotificationsCountSuccessAction = (payload: number) => ({
 });
 const fetchNotificationsCountErrorAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS_COUNT_ERROR });
 
-export const fetchNotificationsAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS });
-export const fetchNotificationsSuccessAction = (payload: any) => ({
+const fetchNotificationsAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS });
+const fetchNotificationsSuccessAction = (payload: NotificationPaginationModel) => ({
   type: NotificationActionTypes.FETCH_NOTIFICATIONS_SUCCESS,
   payload,
 });
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fetchNotificationsErrorAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS_ERROR });
 
-export const fetchRecentNotificationSuccessAction = (payload: any) => ({
+export const fetchRecentNotificationSuccessAction = (payload: RecentNotificationModel) => ({
   type: NotificationActionTypes.FETCH_RECENT_NOTIFICATION,
   payload,
 });
@@ -240,24 +244,14 @@ export const handleProgramSuccess = () => (dispatch: any, getState: any) => {
   }
 };
 
-export const getNotificationsAction = () => (dispatch: any) => {
-  nodeApi.subscribeProgramEvents((event) => {
-    event.data.forEach((i) => {
-      const data = i.toHuman() as { source: string };
-      if (data.source === localStorage.getItem('public_key_raw')) {
-        dispatch(fetchNotificationsSuccessAction(data));
-      }
-    });
-  });
-
-  nodeApi.subscribeLogEvents((event) => {
-    event.data.forEach((i) => {
-      const data = i.toHuman() as { source: string };
-      if (data.source === localStorage.getItem('public_key_raw')) {
-        dispatch(fetchNotificationsSuccessAction(data));
-      }
-    });
-  });
+export const getNotificationsAction = (params: PaginationModel) => (dispatch: any) => {
+  dispatch(fetchNotificationsAction());
+  notificationService
+    .fetchAllNotifications(params)
+    .then((result: NotificationRPCModel) => {
+      dispatch(fetchNotificationsSuccessAction(result.result));
+    })
+    .catch(() => dispatch(fetchNotificationsErrorAction()));
 };
 
 export const getUnreadNotificationsCount = () => (dispatch: any) => {

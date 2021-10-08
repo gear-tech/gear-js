@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import {
+  getNotificationsAction,
+  getUnreadNotificationsCount,
   markAllRecentNotificationsAsReadAction,
   markCertainRecentNotificationsAsReadAction,
   resetBlocksAction,
@@ -21,7 +23,6 @@ import { SearchQueries } from 'components/blocks/SearchQueries/SearchQueries';
 
 import './NotificationsPage.scss';
 import { AppContext } from '../../../contexts/AppContext/AppContext';
-import { useApi } from '../../../hooks/useApi';
 
 export const NotificationsPage: VFC = () => {
   const { socketService } = useContext(AppContext);
@@ -39,19 +40,17 @@ export const NotificationsPage: VFC = () => {
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
-  const [api] = useApi();
-
   useEffect(() => {
     const params: PaginationModel = { limit: INITIAL_LIMIT_BY_PAGE, offset };
     if (searchQuery) {
       params.type = searchQuery.query;
     }
     if (shouldReload) {
-      // dispatch(getNotificationsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, type: searchQuery?.query }));
-      // dispatch(getUnreadNotificationsCount());
+      dispatch(getNotificationsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, type: searchQuery?.query }));
+      dispatch(getUnreadNotificationsCount());
       setShouldReload(false);
     }
-  }, [dispatch, offset, api, shouldReload, searchQuery, setShouldReload]);
+  }, [dispatch, offset, shouldReload, searchQuery, setShouldReload]);
 
   useEffect(
     () => () => {
@@ -129,12 +128,10 @@ export const NotificationsPage: VFC = () => {
         {(notifications &&
           notifications.length &&
           notifications.map((item) => (
-            <div
-              // className={clsx('notification', !item.isRead && 'unread', item.type.toLowerCase() !== 'log' && 'default')}
+            <button
+              className={clsx('notification', !item.isRead && 'unread', item.type.toLowerCase() !== 'log' && 'default')}
               onClick={() => handleNotificationInfo(item)}
-              onKeyUp={() => handleNotificationInfo(item)}
-              role="button"
-              tabIndex={0}
+              type="button"
             >
               <span className="notification__type">
                 {item.isRead || <div className={clsx('dot unread', item.type === 'InitFailure' && 'warning')} />}
@@ -151,7 +148,7 @@ export const NotificationsPage: VFC = () => {
                   <UnReadNotificationsIcon color="#858585" />
                 )}
               </button>
-            </div>
+            </button>
           ))) ||
           null}
       </div>
