@@ -28,6 +28,14 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
   }
 
   useEffect(() => {
+    document.addEventListener("keydown", (event) => {
+      if(event.key === 'Escape'){
+        handleClose();
+      }
+    })
+  }, [handleClose]);
+
+  useEffect(() => {
     if (!payloadType) {
       socketService.getPayloadType(programHash);
     }
