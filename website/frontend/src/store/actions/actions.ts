@@ -273,20 +273,15 @@ export const AddAlert = (payload: AlertModel) => ({
 });
 
 export const subscribeToEvents = () => (dispatch: any) => {
+  const filterKey = localStorage.getItem('public_key_raw');
   nodeApi.subscribeProgramEvents(({ data, method }) => {
     // @ts-ignore
     data.forEach((item: MessageInfo) => {
-      if (item.origin.toHex() === localStorage.getItem('public_key_raw')) {
+      if (item.origin.toHex() === filterKey) {
         dispatch(
           AddAlert({
-            type: EventTypes.INFO,
-            message: JSON.stringify({
-              [method]: {
-                programId: item.programId.toHex(),
-                initMessageId: item.messageId.toHex(),
-                origin: item.origin.toHex(),
-              },
-            }),
+            type: method === 'initFailure' ? EventTypes.ERROR : EventTypes.SUCCESS,
+            message: item.programId.toHex(),
           })
         );
       }
@@ -296,29 +291,28 @@ export const subscribeToEvents = () => (dispatch: any) => {
   nodeApi.subscribeLogEvents(({ data }) => {
     // @ts-ignore
     data.forEach((eventData: LogData) => {
-      dispatch(
-        AddAlert({
-          type: EventTypes.INFO,
-          message: `Log:
-          messageId: ${eventData.id.toHex()}
-          from program: ${eventData.source.toHex()}
-          to account: ${eventData.dest.toHex()}
-          payload: ${eventData.payload.toHuman()}`,
-        })
-      );
+      if (eventData.dest.toHex() === filterKey) {
+        dispatch(
+          AddAlert({
+            type: EventTypes.INFO,
+            message: `Log from program: ${eventData.source.toHex()}`, // TODO: add payload parsing
+          })
+        );
+      }
     });
   });
 
   nodeApi.subscribeTransferEvents(({ data }) => {
-    dispatch(
-      AddAlert({
-        type: EventTypes.INFO,
-        message: `Transfer: 
-        from: ${data[0].toHex()}
-        to: ${data[1].toHex()}
-        value: ${+data[2].toString()}`,
-      })
-    );
+    if (data[1].toHex() === filterKey) {
+      dispatch(
+        AddAlert({
+          type: EventTypes.INFO,
+          message: `Transfer:\n
+          from: ${data[0].toHex()}\n
+          value: ${+data[2].toString()}`,
+        })
+      );
+    }
   });
 };
 
