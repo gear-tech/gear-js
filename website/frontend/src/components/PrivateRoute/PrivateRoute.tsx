@@ -4,7 +4,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { GEAR_STORAGE_KEY } from 'consts';
 import { routes } from 'routes';
 import { nodeApi } from '../../api/initApi';
-import { getNotificationsAction } from '../../store/actions/actions';
+import { subscribeToEvents } from '../../store/actions/actions';
 
 const defaultProps = {};
 
@@ -27,9 +27,10 @@ export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
 
   useEffect(() => {
     if (isApiReady) {
-      dispatch(getNotificationsAction());
+      dispatch(subscribeToEvents());
     }
   }, [dispatch, isApiReady]);
+
   return isApiReady ? (
     <Route
       {...rest}

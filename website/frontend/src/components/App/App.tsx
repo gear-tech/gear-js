@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { AlertComponentPropsWithStyle, positions, Provider as AlertProvider } from 'react-alert';
+import { positions, Provider as AlertProvider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
@@ -26,6 +26,7 @@ import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
 import { AppContextProvider } from '../../contexts/AppContext/AppContextProvider';
 import { ZIndexes } from '../../consts';
+import { Alert } from '../Alerts';
 
 // alert configuration
 const options = {
@@ -33,6 +34,12 @@ const options = {
   timeout: 5000,
   containerStyle: {
     zIndex: ZIndexes.alert,
+    width: '100%',
+    maxWidth: '600px',
+    minWidth: '300px',
+    margin: 'auto',
+    left: 0,
+    right: 0,
   },
 };
 
@@ -71,7 +78,15 @@ const AppComponent: FC = () => {
     <BrowserRouter>
       <AppContextProvider>
         {/* TODO: find out how to provide type without as */}
-        <AlertProvider template={AlertTemplate as React.ComponentType<AlertComponentPropsWithStyle>} {...options}>
+        <AlertProvider
+          template={(props) => {
+            // eslint-disable-next-line no-param-reassign
+            props.style.width = '100%';
+            // @ts-ignore
+            return <AlertTemplate {...props} />;
+          }}
+          {...options}
+        >
           <div className="app">
             {(isProgramUploading || isMessageSending) && (
               <>
@@ -106,6 +121,7 @@ const AppComponent: FC = () => {
               </Switch>
             </Main>
             {isFooterHidden() || <Footer />}
+            <Alert />
           </div>
         </AlertProvider>
       </AppContextProvider>
