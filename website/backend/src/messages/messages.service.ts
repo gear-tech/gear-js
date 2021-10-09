@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Message } from './entities/message.entity';
 import { MessageNotFound, SignNotVerified } from 'src/json-rpc/errors';
 import { GearKeyring } from '@gear-js/api';
-
+const logger = new Logger('MessageService');
 @Injectable()
 export class MessagesService {
   constructor(
@@ -26,6 +26,10 @@ export class MessagesService {
 
   async update(messageId: string, info: { responseId: string; response: string }): Promise<Message> {
     const savedMessage = await this.findOne(messageId);
+    if (!savedMessage) {
+      logger.warn(`Message with id ${messageId} not found`);
+      return;
+    }
     savedMessage.responseId = info.responseId;
     savedMessage.response = info.response;
     const s = await this.messageRepo.save(savedMessage);
