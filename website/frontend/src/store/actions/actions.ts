@@ -294,7 +294,10 @@ export const subscribeToEvents = () => (dispatch: any) => {
       if (eventData.dest.toHex() === filterKey) {
         dispatch(
           AddAlert({
-            type: eventData.reply.unwrap()[1].toNumber() === 0 ? EventTypes.SUCCESS : EventTypes.ERROR,
+            type:
+              eventData.reply.isSome && eventData.reply.unwrap()[1].toNumber() === 0
+                ? EventTypes.SUCCESS
+                : EventTypes.ERROR,
             message: `Log from program: ${eventData.source.toHex()}`, // TODO: add payload parsing
           })
         );
