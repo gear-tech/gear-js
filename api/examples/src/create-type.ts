@@ -6,10 +6,13 @@ dotenv.config();
 
 function writeJSON(data: any, name: string) {
   !fs.existsSync(path.resolve('test-json')) && fs.mkdirSync('test-json');
-  data &&
-    fs.writeFile(path.join('test-json', name), JSON.stringify(data), (err) => {
-      err && console.error(err);
-    });
+  return new Promise((resolve, reject) => {
+    data &&
+      fs.writeFile(path.join('test-json', name), JSON.stringify(data), (err) => {
+        err && console.error(err);
+        resolve(0);
+      });
+  });
 }
 
 async function typeStructure() {
@@ -20,19 +23,18 @@ async function typeStructure() {
   console.log(displayedTypes);
 
   const initInputType = getTypeStructure(meta.init_input, displayedTypes);
-  writeJSON(initInputType, 'init_input.json');
   const initOutputType = getTypeStructure(meta.init_output, displayedTypes);
-  writeJSON(initOutputType, 'init_output.json');
   const inputType = getTypeStructure(meta.input, displayedTypes);
-  writeJSON(inputType, 'input.json');
   const outputType = getTypeStructure(meta.output, displayedTypes);
-  writeJSON(outputType, 'output.json');
+  await Promise.all([
+    writeJSON(initInputType, 'init_input.json'),
+    writeJSON(initOutputType, 'init_output.json'),
+    writeJSON(inputType, 'input.json'),
+    writeJSON(outputType, 'output.json'),
+  ]);
+  return;
 }
 
-typeStructure()
-  .catch((error) => {
-    console.error(error);
-  })
-  .finally(() => {
-    process.exit();
-  });
+typeStructure().finally(() => {
+  process.exit();
+});

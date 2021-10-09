@@ -260,8 +260,9 @@ export function getTypeStructure(typeName: string, types: any) {
         result['_enum'][subKey] =
           result['_enum'][subKey] in types ? getTypeStructure(result['_enum'][subKey], types) : result['_enum'][subKey];
       });
+    } else {
+      result[key] = type[key] in types || type[key].match(reg) ? getTypeStructure(type[key], types) : type[key];
     }
-    result[key] = type[key] in types ? getTypeStructure(type[key], types) : type[key];
   });
   return result;
 }
