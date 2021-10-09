@@ -56,6 +56,22 @@ class NodeApi {
       })();
     }
   }
+
+  public subscribeTransferEvents(cb: (event: Event) => void) {
+    if (this._api && !('subscribeTransferEvents' in this.subscriptions)) {
+      this.subscriptions.subscribeTransferEvents = this._api.gearEvents.subscribeTransferEvents((event) => {
+        cb(event);
+      });
+    }
+  }
+
+  public unsubscribeTransferEvents() {
+    if ('subscribeTransferEvents' in this.subscriptions) {
+      (async () => {
+        (await this.subscriptions.subscribeTransferEvents)();
+      })();
+    }
+  }
 }
 
 export const nodeApi = new NodeApi(API_CONNECTION_ADDRESS);

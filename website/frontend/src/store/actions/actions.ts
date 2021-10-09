@@ -308,6 +308,18 @@ export const subscribeToEvents = () => (dispatch: any) => {
       );
     });
   });
+
+  nodeApi.subscribeTransferEvents(({ data }) => {
+    dispatch(
+      AddAlert({
+        type: EventTypes.INFO,
+        message: `Transfer: 
+        from: ${data[0].toHex()}
+        to: ${data[1].toHex()}
+        value: ${+data[2].toString()}`,
+      })
+    );
+  });
 };
 
 export const logoutFromAccountAction = () => (dispatch: any) => {
