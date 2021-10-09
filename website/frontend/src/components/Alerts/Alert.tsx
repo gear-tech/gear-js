@@ -10,7 +10,6 @@ export const Alert: FC = () => {
     if (notification) {
       alert.show(notification.message, {
         type: notification.type,
-        timeout: 50000,
       });
     }
   }, [alert, notification]);
