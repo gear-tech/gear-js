@@ -5,6 +5,8 @@ import { isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry, GenericPortableRegistry } from '@polkadot/types';
 
+const REGULAR_EXP = /\b\w+\b/g;
+
 export class CreateType {
   private defaultTypes: any;
 
@@ -78,7 +80,7 @@ export class CreateType {
     } else {
       return this.toBytes(
         registry,
-        namespaces ? this.formType(type, namespaces) : type,
+        namespaces ? setNamespaces(type, namespaces) : type,
         isJSON(payload) ? toJSON(payload) : payload
       );
     }
@@ -96,19 +98,10 @@ export class CreateType {
     } else {
       return this.fromBytes(
         registry,
-        namespaces ? this.formType(type, namespaces) : type,
+        namespaces ? setNamespaces(type, namespaces) : type,
         isJSON(payload) ? toJSON(payload) : payload
       );
     }
-  }
-
-  private formType(type: string, namespaces: Map<string, string>): string {
-    let reg = /\b\w+\b/g;
-    let result: string;
-    type.match(reg).forEach((match) => {
-      result = namespaces && namespaces.has(match) ? type.replace(match, namespaces.get(match)) : type;
-    });
-    return result;
   }
 
   static encode(type: any, payload: any, meta?: Metadata): Bytes {
@@ -178,10 +171,97 @@ function typeIsString(type: any, data?: any): boolean {
 }
 
 export function parseHexTypes(hexTypes: string) {
-  const { types, namespaces } = CreateType.getTypesFromTypeDef(hexToU8a(hexTypes));
+  let { types, namespaces } = CreateType.getTypesFromTypeDef(hexToU8a(hexTypes));
   const result = {};
   namespaces.forEach((value, key) => {
-    result[key] = JSON.parse(types[value]);
+    result[key] = JSON.parse(replaceNamespaces(types[value], namespaces));
+  });
+  return result;
+}
+
+function setNamespaces(type: string, namespaces: Map<string, string>): string {
+  type.match(REGULAR_EXP).forEach((match) => {
+    type = namespaces && namespaces.has(match) ? type.replace(match, namespaces.get(match)) : type;
+  });
+  return type;
+}
+
+function replaceNamespaces(type: string, namespaces: Map<string, string>): string {
+  const match = type.match(REGULAR_EXP);
+  namespaces.forEach((value, key) => {
+    type = match.includes(value) ? type.replace(value, key) : type;
+  });
+  return type;
+}
+
+const STD_TYPES = {
+  Result: (ok, err) => {
+    return {
+      _enum_Result: {
+        ok,
+        err
+      }
+    };
+  },
+  Option: (some) => {
+    return {
+      _enum_Option: some
+    };
+  },
+  Vec: (type) => {
+    return [type];
+  },
+  VecDeque: (type) => {
+    return [type];
+  },
+  BTreeMap: (key, value) => {
+    return {
+      [key]: value
+    };
+  }
+};
+
+export function getTypeStructure(typeName: string, types: any) {
+  if (!typeName) {
+    return undefined;
+  }
+  const reg = /(?<=<).+(?=>)/;
+  const match = typeName.match(reg);
+  if (match) {
+    const stdType = typeName.slice(0, match.index - 1);
+    const entryType = match[0];
+    let first: string, second: string;
+    let count = 0;
+    try {
+      Array.from(entryType).forEach((char, index) => {
+        if (char === ',' && count === 0) {
+          first = entryType.slice(0, index).trim();
+          second = entryType.slice(index + 1).trim();
+          throw 0;
+        }
+        char === '<' && count++;
+        char === '>' && count--;
+      });
+      first = entryType;
+    } catch (error) {}
+    return stdType in STD_TYPES
+      ? STD_TYPES[stdType](getTypeStructure(first, types), getTypeStructure(second, types))
+      : typeName;
+  }
+  const type = types[typeName];
+  if (!type) {
+    return typeName;
+  }
+  const result = {};
+  Object.keys(type).forEach((key: string) => {
+    if (key === '_enum') {
+      result['_enum'] = type[key];
+      Object.keys(result['_enum']).forEach((subKey: string) => {
+        result['_enum'][subKey] =
+          result['_enum'][subKey] in types ? getTypeStructure(result['_enum'][subKey], types) : result['_enum'][subKey];
+      });
+    }
+    result[key] = type[key] in types ? getTypeStructure(type[key], types) : type[key];
   });
   return result;
 }
