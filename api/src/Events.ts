@@ -24,7 +24,7 @@ export class GearEvents {
     } catch (error) {}
   }
 
-  subsribeProgramEvents(callback: (event: Event) => void | Promise<void>): UnsubscribePromise {
+  subscribeProgramEvents(callback: (event: Event) => void | Promise<void>): UnsubscribePromise {
     try {
       return this.api.query.system.events((events) => {
         events

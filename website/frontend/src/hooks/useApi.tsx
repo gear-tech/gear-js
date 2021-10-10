@@ -1,4 +1,3 @@
-// import { useEffect, useState } from 'react';
 import { GearApi } from '@gear-js/api';
 import { nodeApi } from '../api/initApi';
 

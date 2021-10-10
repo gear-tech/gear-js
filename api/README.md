@@ -30,7 +30,7 @@ const gearApi = await GearApi.create();
 You can also connect to a different node
 
 ```javascript
-const gearApi = await GearApi.create({ provider: 'wss://someIP:somePort' });
+const gearApi = await GearApi.create({ providerAddress: 'wss://someIP:somePort' });
 ```
 
 Registering custom types
@@ -71,18 +71,18 @@ Check what the event is
 
 ```javascript
 gearApi.allEvents((events) => {
-      events
-        .filter(({ event }) => gearApi.events.gear.InitMessageEnqueued.is(event))
-        .forEach(({ event: { data } }) => {
-          console.log(data.toHuman())
-        });
+  events
+    .filter(({ event }) => gearApi.events.gear.InitMessageEnqueued.is(event))
+    .forEach(({ event: { data } }) => {
+      console.log(data.toHuman());
+    });
 
-      events
-        .filter(({ event }) => gearApi.events.balances.Transfer.is(event))
-        .forEach(({ event: { data } }) => {
-          console.log(data.toHuman())
-        });
-
+  events
+    .filter(({ event }) => gearApi.events.balances.Transfer.is(event))
+    .forEach(({ event: { data } }) => {
+      console.log(data.toHuman());
+    });
+});
 ```
 
 Subscribe to Log events

@@ -1,8 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import { GEAR_STORAGE_KEY } from 'consts';
 import { routes } from 'routes';
 import { nodeApi } from '../../api/initApi';
+import { subscribeToEvents } from '../../store/actions/actions';
 
 const defaultProps = {};
 
@@ -13,6 +15,7 @@ type Props = {
 } & typeof defaultProps;
 
 export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
+  const dispatch = useDispatch();
   const [isApiReady, setIsApiReady] = useState(false);
   useEffect(() => {
     if (!isApiReady) {
@@ -21,6 +24,13 @@ export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
       });
     }
   }, [isApiReady]);
+
+  useEffect(() => {
+    if (isApiReady) {
+      dispatch(subscribeToEvents());
+    }
+  }, [dispatch, isApiReady]);
+
   return isApiReady ? (
     <Route
       {...rest}

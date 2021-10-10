@@ -4,16 +4,16 @@ import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, User
 import {
   NotificationActionTypes,
   NotificationPaginationModel,
-  RecentNotificationModel,
-  NotificationUnreadRPCModel,
   NotificationRPCModel,
+  NotificationUnreadRPCModel,
+  RecentNotificationModel,
 } from 'types/notification';
 import {
   ProgramActionTypes,
   ProgramModel,
+  ProgramPaginationModel,
   ProgramRPCModel,
   ProgramsPagintaionModel,
-  ProgramPaginationModel,
 } from 'types/program';
 import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
@@ -23,6 +23,9 @@ import NotificationsRequestService from 'services/NotificationsRequestService';
 import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
+import { nodeApi } from '../../api/initApi';
+import { AlertModel, EventTypes } from '../../types/events';
+import { AlertActionTypes } from '../reducers/AlertReducer';
 
 const fetchTokenAction = () => ({ type: UserActionTypes.FETCH_TOKEN });
 const fetchTokenSuccessAction = (payload: {}) => ({ type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload });
@@ -262,6 +265,58 @@ export const getUnreadNotificationsCount = () => (dispatch: any) => {
       dispatch(fetchNotificationsCountSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchNotificationsCountErrorAction()));
+};
+
+export const AddAlert = (payload: AlertModel) => ({
+  type: AlertActionTypes.ADD_ALERT,
+  payload,
+});
+
+export const subscribeToEvents = () => (dispatch: any) => {
+  const filterKey = localStorage.getItem('public_key_raw');
+  nodeApi.subscribeProgramEvents(({ data, method }) => {
+    // @ts-ignore
+    data.forEach((item: MessageInfo) => {
+      if (item.origin.toHex() === filterKey) {
+        dispatch(
+          AddAlert({
+            type: method === 'initFailure' ? EventTypes.ERROR : EventTypes.SUCCESS,
+            message: item.programId.toHex(),
+          })
+        );
+      }
+    });
+  });
+
+  nodeApi.subscribeLogEvents(({ data }) => {
+    // @ts-ignore
+    data.forEach((eventData: LogData) => {
+      if (eventData.dest.toHex() === filterKey) {
+        dispatch(
+          AddAlert({
+            type:
+              eventData.reply.isSome && eventData.reply.unwrap()[1].toNumber() === 0
+                ? EventTypes.SUCCESS
+                : EventTypes.ERROR,
+            message: `Log from program: ${eventData.source.toHex()}`, // TODO: add payload parsing
+          })
+        );
+      }
+    });
+  });
+
+  nodeApi.subscribeTransferEvents(({ data }) => {
+    if (data[1].toHex() === filterKey) {
+      dispatch(
+        AddAlert({
+          type: EventTypes.INFO,
+          message: `Transfer:\n
+          from: ${data[0].toHex()}\n
+          value: ${+data[2].toString()}`,
+        })
+      );
+    }
+  });
 };
 
 export const logoutFromAccountAction = () => (dispatch: any) => {
