@@ -85,4 +85,21 @@ export class GearKeyring {
   static sign(keyring: KeyringPair, message: string) {
     return keyring.sign(stringToU8a(message));
   }
+
+  static decodeAddress(publicKey: string) {
+    return new Keyring().decodeAddress(publicKey);
+  }
+
+  static encodeAddress(publicKeyRaw: string | Uint8Array) {
+    return new Keyring().encodeAddress(publicKeyRaw);
+  }
+
+  static checkKey(publicKey: string) {
+    try {
+      GearKeyring.decodeAddress(publicKey);
+    } catch (error) {
+      return false;
+    }
+    return true;
+  }
 }
