@@ -28,27 +28,20 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
   }
 
   useEffect(() => {
+    document.addEventListener("keydown", (event) => {
+      if(event.key === 'Escape'){
+        handleClose();
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (!payloadType) {
       socketService.getPayloadType(programHash);
     }
   }, [dispatch, payloadType, programHash, socketService]);
 
-  const isJson = (data: string) => {
-    try {
-      JSON.parse(data);
-    } catch (error) {
-      return false;
-    }
-    return true;
-  };
-
-  const getResultPayloadType = () => {
-    let transformedPayloadType = payloadType;
-    if (payloadType && isJson(payloadType)) {
-      transformedPayloadType = JSON.parse(payloadType);
-    }
-    return transformedPayloadType;
-  };
 
   return (
     <div className="message-form">
@@ -56,9 +49,6 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
       <MessageForm
         programHash={programHash}
         programName={programName}
-        socketService={socketService}
-        handleClose={handleClose}
-        payloadType={getResultPayloadType()}
       />
       {statusPanelText && (
         <StatusPanel

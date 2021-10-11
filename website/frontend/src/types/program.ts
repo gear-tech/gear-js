@@ -28,6 +28,7 @@ export interface UploadProgramModel {
   output: string;
   hash?: string;
   types: string;
+  title?: string;
 }
 
 export interface MessageModel {

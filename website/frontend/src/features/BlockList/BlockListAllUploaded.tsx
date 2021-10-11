@@ -14,10 +14,11 @@ import {
 } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
+
 import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
-import { UserProgram } from '../UserProgram/UserProgram';
-import styles from './All.module.scss';
+
+import { UserProgram } from 'components/pages/Programs/children/UserProgram/UserProgram';
 
 type ProgramMessageType = {
   programName: string;
@@ -28,7 +29,7 @@ type Props = {
   socketService: SocketService;
 };
 
-export const All: VFC<Props> = ({ socketService }) => {
+export const BlockListAllUploaded: VFC<Props> = ({ socketService }) => {
   const dispatch = useDispatch();
 
   const { allUploadedPrograms, allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
@@ -97,26 +98,31 @@ export const All: VFC<Props> = ({ socketService }) => {
 
   return (
     <div className="all-programs">
-      <div className={styles.paginationWrapper}>
+      <div className="pagination-wrapper">
         <span>Total results: {allUploadedProgramsCount}</span>
         <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
       </div>
-      <div className={styles.allProgramsList}>
+      <div className="all-programs--list">
         {(allUploadedPrograms &&
           allUploadedPrograms.length &&
           allUploadedPrograms.map((item: ProgramModel) => {
             if (item.name && item.name !== 'name.wasm') {
-              return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.hash} />;
+              return <UserProgram program={item} handleOpenForm={handleOpenForm} />;
             }
             return (
-              <div className={styles.allProgramsItem} key={item.hash}>
-                <p className={styles.allProgramsItemHash}>{item.hash}</p>
-                <div className={styles.programsListBtns}>
-                  <button type="button" aria-label="refresh" onClick={() => handleOpenForm(item.hash, item.name, true)}>
+              <div className="all-programs--item" key={item.hash}>
+                <p className="all-programs--item__hash">{item.hash}</p>
+                <div className="programs-list--btns">
+                  <button
+                    className="programs-list__message-btn"
+                    type="button"
+                    aria-label="refresh"
+                    onClick={() => handleOpenForm(item.hash, item.name, true)}
+                  >
                     <img src={MessageIcon} alt="message" />
                   </button>
                   <button
-                    className={styles.allProgramsItemUpload}
+                    className="all-programs--item__upload"
                     type="button"
                     onClick={() => handleOpenForm(item.hash, item.name)}
                   >
@@ -128,11 +134,12 @@ export const All: VFC<Props> = ({ socketService }) => {
           })) ||
           null}
       </div>
-      {allUploadedPrograms && allUploadedPrograms.length > 0 && (
-        <div className={styles.paginationBottom}>
+      {(allUploadedPrograms && allUploadedPrograms.length && (
+        <div className="pagination-bottom">
           <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
         </div>
-      )}
+      )) ||
+        null}
     </div>
   );
 };

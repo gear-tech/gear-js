@@ -4,16 +4,16 @@ import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, User
 import {
   NotificationActionTypes,
   NotificationPaginationModel,
-  RecentNotificationModel,
-  NotificationUnreadRPCModel,
   NotificationRPCModel,
+  NotificationUnreadRPCModel,
+  RecentNotificationModel,
 } from 'types/notification';
 import {
   ProgramActionTypes,
   ProgramModel,
+  ProgramPaginationModel,
   ProgramRPCModel,
   ProgramsPagintaionModel,
-  ProgramPaginationModel,
 } from 'types/program';
 import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
@@ -22,7 +22,10 @@ import NotificationsRequestService from 'services/NotificationsRequestService';
 
 import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
-import { PaginationModel } from 'types/common';
+import { PaginationModel, UserPrograms } from 'types/common';
+import { nodeApi } from '../../api/initApi';
+import { AlertModel, EventTypes } from '../../types/events';
+import { AlertActionTypes } from '../reducers/AlertReducer';
 
 const fetchTokenAction = () => ({ type: UserActionTypes.FETCH_TOKEN });
 const fetchTokenSuccessAction = (payload: {}) => ({ type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload });
@@ -63,8 +66,11 @@ export const fetchBlockAction = (payload: BlockModel) => ({ type: BlockActionTyp
 
 export const programUploadStartAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_START });
 export const programUploadResetAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_RESET });
-const programUploadSuccessAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS });
-const programUploadFailedAction = (payload: string) => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED, payload });
+export const programUploadSuccessAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS });
+export const programUploadFailedAction = (payload: string) => ({
+  type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED,
+  payload,
+});
 
 export const fetchProgramPayloadTypeAction = (payload: string) => ({
   type: ProgramActionTypes.FETCH_PROGRAM_PAYLOAD_TYPE,
@@ -74,8 +80,8 @@ export const resetProgramPayloadTypeAction = () => ({ type: ProgramActionTypes.R
 
 export const sendMessageStartAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_START });
 export const sendMessageResetAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_RESET });
-const sendMessageSuccessAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_SUCCESS });
-const sendMessageFailedAction = (payload: string) => ({ type: ProgramActionTypes.SEND_MESSAGE_FAILED, payload });
+export const sendMessageSuccessAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_SUCCESS });
+export const sendMessageFailedAction = (payload: string) => ({ type: ProgramActionTypes.SEND_MESSAGE_FAILED, payload });
 
 export const uploadMetaStartAction = () => ({ type: ProgramActionTypes.META_UPLOAD_START });
 export const uploadMetaResetAction = () => ({ type: ProgramActionTypes.META_UPLOAD_RESET });
@@ -188,7 +194,7 @@ export const getUserDataAction = () => (dispatch: any) => {
     .catch(() => dispatch(fetchUserErrorAction()));
 };
 
-export const getUserProgramsAction = (params: PaginationModel) => (dispatch: any) => {
+export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
   dispatch(fetchUserProgramsAction());
   programService
     .fetchUserPrograms(params)
@@ -259,6 +265,58 @@ export const getUnreadNotificationsCount = () => (dispatch: any) => {
       dispatch(fetchNotificationsCountSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchNotificationsCountErrorAction()));
+};
+
+export const AddAlert = (payload: AlertModel) => ({
+  type: AlertActionTypes.ADD_ALERT,
+  payload,
+});
+
+export const subscribeToEvents = () => (dispatch: any) => {
+  const filterKey = localStorage.getItem('public_key_raw');
+  nodeApi.subscribeProgramEvents(({ data, method }) => {
+    // @ts-ignore
+    data.forEach((item: MessageInfo) => {
+      if (item.origin.toHex() === filterKey) {
+        dispatch(
+          AddAlert({
+            type: method === 'initFailure' ? EventTypes.ERROR : EventTypes.SUCCESS,
+            message: item.programId.toHex(),
+          })
+        );
+      }
+    });
+  });
+
+  nodeApi.subscribeLogEvents(({ data }) => {
+    // @ts-ignore
+    data.forEach((eventData: LogData) => {
+      if (eventData.dest.toHex() === filterKey) {
+        dispatch(
+          AddAlert({
+            type:
+              eventData.reply.isSome && eventData.reply.unwrap()[1].toNumber() === 0
+                ? EventTypes.SUCCESS
+                : EventTypes.ERROR,
+            message: `Log from program: ${eventData.source.toHex()}`, // TODO: add payload parsing
+          })
+        );
+      }
+    });
+  });
+
+  nodeApi.subscribeTransferEvents(({ data }) => {
+    if (data[1].toHex() === filterKey) {
+      dispatch(
+        AddAlert({
+          type: EventTypes.INFO,
+          message: `Transfer:\n
+          from: ${data[0].toHex()}\n
+          value: ${+data[2].toString()}`,
+        })
+      );
+    }
+  });
 };
 
 export const logoutFromAccountAction = () => (dispatch: any) => {
