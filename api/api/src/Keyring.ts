@@ -42,7 +42,7 @@ export class GearKeyring {
   }
 
   static fromMnemonic(mnemonic: string, name: string): KeyringPair {
-    const suri = `${mnemonic}//gear`;
+    const suri = mnemonic;
     return GearKeyring.fromSuri(suri, `${name}`);
   }
 
