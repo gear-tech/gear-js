@@ -27,6 +27,7 @@
         REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
         ACCOUNT_SEED: "{{ lookup('env','ACCOUNT_SEED') }}"
         SUDO_SEED: "{{ lookup('env','SUDO_SEED') }}"
+        SITE_ACCOUNT_BALANCE: "{{ lookup('env','SITE_ACCOUNT_BALANCE') }}"
 #Do tasks
   tasks:
     - name: Install and enable required packages

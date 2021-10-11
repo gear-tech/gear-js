@@ -1,7 +1,7 @@
-import { isProd, API_PATH } from 'consts';
+import { API_PATH } from 'consts';
 
 export default class ServerRPCRequestService {
-  protected readonly RPC_API_PATH = isProd && API_PATH ? API_PATH : 'http://localhost:3000/api';
+  protected readonly RPC_API_PATH = API_PATH;
 
   private generateRandomId() {
     return Math.floor(Math.random() * 1000000000);

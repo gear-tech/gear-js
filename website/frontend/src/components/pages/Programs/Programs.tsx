@@ -15,7 +15,6 @@ import './Programs.scss';
 import { AppContext } from '../../../contexts/AppContext/AppContext';
 import { RecentNotifications } from '../../blocks/RecentNotifications/RecentNotifications';
 
-
 export const Programs: VFC = () => {
   const { socketService } = useContext(AppContext);
 
@@ -37,7 +36,7 @@ export const Programs: VFC = () => {
         {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
           <>
             <DndProvider backend={HTML5Backend}>
-              <Upload socketService={socketService} />
+              <Upload />
             </DndProvider>
             <BlocksList />
           </>

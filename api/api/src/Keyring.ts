@@ -42,7 +42,7 @@ export class GearKeyring {
   }
 
   static fromMnemonic(mnemonic: string, name: string): KeyringPair {
-    const suri = `${mnemonic}//gear`;
+    const suri = mnemonic;
     return GearKeyring.fromSuri(suri, `${name}`);
   }
 
@@ -84,5 +84,22 @@ export class GearKeyring {
 
   static sign(keyring: KeyringPair, message: string) {
     return keyring.sign(stringToU8a(message));
+  }
+
+  static decodeAddress(publicKey: string): string {
+    return u8aToHex(new Keyring().decodeAddress(publicKey));
+  }
+
+  static encodeAddress(publicKeyRaw: string | Uint8Array): string {
+    return new Keyring().encodeAddress(publicKeyRaw);
+  }
+
+  static checkPublicKey(publicKey: string): boolean {
+    try {
+      GearKeyring.decodeAddress(publicKey);
+    } catch (error) {
+      return false;
+    }
+    return true;
   }
 }

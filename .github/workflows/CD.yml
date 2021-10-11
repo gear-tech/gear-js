@@ -93,6 +93,7 @@ jobs:
           NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
           SUDO_SEED: ${{secrets.SUDO_SEED}}
           ACCOUNT_SEED: ${{secrets.ACCOUNT_SEED}}
+          SITE_ACCOUNT_BALANCE: ${{secrets.SITE_ACCOUNT_BALANCE}}
         with:
           # Required, playbook filepath
           directory: ./ansible
