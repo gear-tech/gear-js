@@ -2,7 +2,7 @@ import { GearApi, GearKeyring } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { ProgramsService } from 'src/programs/programs.service';
-import { GearNodeError } from 'src/json-rpc/errors';
+import { GearNodeError, TransactionError } from 'src/json-rpc/errors';
 import { GearNodeEvents } from './events';
 
 const logger = new Logger('GearNodeService');
@@ -48,6 +48,9 @@ export class GearNodeService {
   }
 
   async balanceTopUp(to: string, value: number): Promise<string> {
+    if (!to) {
+      throw new TransactionError('Destination address is not specified');
+    }
     try {
       await this.api.balance.transferBalance(this.rootKeyring, to, value, () => {});
       return 'Transfer balance succeed';
