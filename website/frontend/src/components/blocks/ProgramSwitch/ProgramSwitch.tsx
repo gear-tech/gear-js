@@ -103,7 +103,7 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
         alert.success(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
       }
       if (response.error) {
-        alert.error(`${response.error}`);
+        alert.error(`${response.error.message}`);
       }
     } catch (error) {
       alert.error(`${error}`);
