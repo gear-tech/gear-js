@@ -28,6 +28,8 @@
         ACCOUNT_SEED: "{{ lookup('env','ACCOUNT_SEED') }}"
         SUDO_SEED: "{{ lookup('env','SUDO_SEED') }}"
         SITE_ACCOUNT_BALANCE: "{{ lookup('env','SITE_ACCOUNT_BALANCE') }}"
+        REACT_APP_RRT: "{{ lookup('env','REACT_APP_RRT') }}"
+
 #Do tasks
   tasks:
     - name: Install and enable required packages

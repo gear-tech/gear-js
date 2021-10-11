@@ -94,6 +94,7 @@ jobs:
           SUDO_SEED: ${{secrets.SUDO_SEED}}
           ACCOUNT_SEED: ${{secrets.ACCOUNT_SEED}}
           SITE_ACCOUNT_BALANCE: ${{secrets.SITE_ACCOUNT_BALANCE}}
+          REACT_APP_RRT: ${{secrets.REACT_APP_RRT}}
         with:
           # Required, playbook filepath
           directory: ./ansible
