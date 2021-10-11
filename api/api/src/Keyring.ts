@@ -26,7 +26,7 @@ export class GearKeyring {
 
   static fromJson(keypairJson: KeyringPair$Json | string): KeyringPair {
     const keyring = new Keyring({ type: 'sr25519' }).createFromJson(
-      isString(keypairJson) ? JSON.parse(keypairJson) : keypairJson,
+      isString(keypairJson) ? JSON.parse(keypairJson) : keypairJson
     );
     return GearKeyring.unlock(keyring);
   }
@@ -59,7 +59,7 @@ export class GearKeyring {
       keyring,
       mnemonic: mnemonic,
       seed: u8aToHex(seed),
-      json: keyring.toJson(),
+      json: keyring.toJson()
     };
   }
 

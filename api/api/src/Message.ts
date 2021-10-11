@@ -1,10 +1,9 @@
 import { GearApi, CreateType } from '.';
-import { Message } from './interfaces';
+import { Message, Metadata } from './interfaces';
 import { SendMessageError, TransactionError } from './errors';
 import { ApiPromise } from '@polkadot/api';
 import { Bytes } from '@polkadot/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { Metadata } from './interfaces/metadata';
 
 export class GearMessage {
   private api: ApiPromise;
@@ -16,7 +15,7 @@ export class GearMessage {
     this.createType = new CreateType(gearApi);
   }
 
-  async submit(message: Message, meta: Metadata) {
+  submit(message: Message, meta: Metadata): any {
     let payload: Bytes | Uint8Array | string;
 
     payload = this.createType.encode(meta.input, message.payload, meta);

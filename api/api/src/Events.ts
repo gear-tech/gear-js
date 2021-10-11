@@ -21,7 +21,9 @@ export class GearEvents {
             }, 100);
           });
       });
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 
   subscribeProgramEvents(callback: (event: Event) => void | Promise<void>): UnsubscribePromise {
@@ -37,10 +39,26 @@ export class GearEvents {
             }, 100);
           });
       });
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 
-  async subscribeNewBlocks(callback: (header: Header) => void | Promise<void>): UnsubscribePromise {
+  subscribeTransferEvents(callback: (event: Event) => void | Promise<void>): UnsubscribePromise {
+    try {
+      return this.api.query.system.events((events) => {
+        events
+          .filter(({ event }) => this.api.events.balances.Transfer.is(event))
+          .forEach(({ event }) => {
+            callback(event);
+          });
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  subscribeNewBlocks(callback: (header: Header) => void | Promise<void>): UnsubscribePromise {
     try {
       return this.api.rpc.chain.subscribeNewHeads((header) => {
         callback(header);

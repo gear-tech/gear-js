@@ -77,4 +77,16 @@ export class GearApi {
   async totalIssuance(): Promise<string> {
     return (await this.api.query.balances.totalIssuance()).toHuman();
   }
+
+  async chain(): Promise<string> {
+    return (await this.api.rpc.system.chain()).toHuman();
+  }
+
+  async nodeName(): Promise<string> {
+    return (await this.api.rpc.system.name()).toHuman();
+  }
+
+  async nodeVersion(): Promise<string> {
+    return (await this.api.rpc.system.version()).toHuman();
+  }
 }
