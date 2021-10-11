@@ -23,7 +23,9 @@ export class GearBalance {
           .transfer(to, value)
           .signAndSend(GearKeyring.fromSuri('//Alice', 'Alice default'), ({ events, status }) => {
             events.forEach(({ event: { data, method } }) => {
-              eventsCallback(method, data);
+              if (eventsCallback) {
+                eventsCallback(method, data);
+              }
               if (method === 'Transfer') {
                 unsub();
                 resolve(0);
@@ -46,7 +48,9 @@ export class GearBalance {
       try {
         const unsub = await this.api.tx.balances.transfer(to, value).signAndSend(keyring, ({ events, status }) => {
           events.forEach(({ event: { data, method } }) => {
-            eventsCallback(method, data);
+            if (eventsCallback) {
+              eventsCallback(method, data);
+            }
             if (method === 'Transfer') {
               unsub();
               resolve(0);
