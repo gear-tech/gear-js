@@ -30,7 +30,15 @@ const gearApi = await GearApi.create();
 You can also connect to a different node
 
 ```javascript
-const gearApi = await GearApi.create({ provider: 'wss://someIP:somePort' });
+const gearApi = await GearApi.create({ providerAddress: 'wss://someIP:somePort' });
+```
+
+Getting node info
+
+```javascript
+const chain = await gearApi.chain();
+const nodeName = await gearApi.nodeName();
+const version = await gearApi.version();
 ```
 
 Registering custom types
@@ -40,17 +48,17 @@ const yourCustomTypesExample = {
   Person: {
     surname: 'String',
     name: 'String',
-    patronymic: 'Option<String>'
+    patronymic: 'Option<String>',
   },
   Id: {
     decimal: 'u64',
-    hex: 'Vec<u8>'
+    hex: 'Vec<u8>',
   },
   Data: {
     id: 'Id',
     person: 'Person',
-    data: 'Vec<String>'
-  }
+    data: 'Vec<String>',
+  },
 };
 const gearApi = await GearApi.create({ customTypes: { ...yourCustomTypesExample } });
 ```
@@ -71,18 +79,18 @@ Check what the event is
 
 ```javascript
 gearApi.allEvents((events) => {
-      events
-        .filter(({ event }) => gearApi.events.gear.InitMessageEnqueued.is(event))
-        .forEach(({ event: { data } }) => {
-          console.log(data.toHuman())
-        });
+  events
+    .filter(({ event }) => gearApi.events.gear.InitMessageEnqueued.is(event))
+    .forEach(({ event: { data } }) => {
+      console.log(data.toHuman());
+    });
 
-      events
-        .filter(({ event }) => gearApi.events.balances.Transfer.is(event))
-        .forEach(({ event: { data } }) => {
-          console.log(data.toHuman())
-        });
-
+  events
+    .filter(({ event }) => gearApi.events.balances.Transfer.is(event))
+    .forEach(({ event: { data } }) => {
+      console.log(data.toHuman());
+    });
+});
 ```
 
 Subscribe to Log events
@@ -100,6 +108,16 @@ Subscribe to Program events
 
 ```javascript
 const unsub = await gearApi.gearEvents.subscribeProgramEvents((event) => {
+  console.log(event.toHuman());
+});
+// Unsubscribe
+unsub();
+```
+
+Subscribe to Transfer events
+
+```javascript
+const unsub = await gearApi.gearEvents.subscribeTransferEvents((event) => {
   console.log(event.toHuman());
 });
 // Unsubscribe
@@ -219,7 +237,7 @@ const uploadProgram = {
   code,
   gasLimit: 1000000,
   value: 1000,
-  initPayload: somePayload
+  initPayload: somePayload,
 };
 
 try {
@@ -245,7 +263,7 @@ try {
     destination: destination, // programId
     payload: somePayload,
     gasLimit: 10000000,
-    value: 1000
+    value: 1000,
   };
   await gearApi.message.submit(message, meta);
 } catch (error) {

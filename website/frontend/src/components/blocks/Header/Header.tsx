@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
-import { CodeIcon, LogoIcon, LogoutIcon, NotificationIcon } from 'assets/Icons';
+import { CodeIcon, LogoIcon, LogoutIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
 import { Modal } from '../Modal';
@@ -33,7 +33,7 @@ export const Header: VFC = () => {
 
   let userInfo = '';
   const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
-  const headerUnreadNotificationsCount = countUnread && countUnread >= 100 ? '99+' : countUnread;
+  // const headerUnreadNotificationsCount = countUnread && countUnread >= 100 ? '99+' : countUnread;
   if (user) {
     if (user.email) {
       userInfo = user.email;
@@ -75,14 +75,14 @@ export const Header: VFC = () => {
             <CodeIcon color={isPrograms ? '#ffffff' : '#858585'} />
             <span>Programs</span>
           </Link>
-          <Link to={routes.notifications} className={clsx('user-block__notifications', isNotifications && 'selected')}>
+          {/* <Link to={routes.notifications} className={clsx('user-block__notifications', isNotifications && 'selected')}>
             <NotificationIcon color={isNotifications ? '#ffffff' : '#858585'} />
             <span>Notifications</span>
             {(headerUnreadNotificationsCount && headerUnreadNotificationsCount > 0 && (
               <div className="notifications-count">{headerUnreadNotificationsCount}</div>
             )) ||
               null}
-          </Link>
+          </Link> */}
           {(isKey && <Wallet />) || (
             <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
               <span>Add account</span>

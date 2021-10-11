@@ -1,94 +1,77 @@
-import React, { useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Field, FieldArray, Form, Formik } from 'formik';
+import React, { VFC } from 'react';
+import { useDispatch } from 'react-redux';
+import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
-import { SocketService } from 'services/SocketService';
+import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
 import { sendMessageStartAction } from 'store/actions/actions';
-import { RootState } from 'store/reducers';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
+import { GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
+import ServerRPCRequestService from 'services/ServerRPCRequestService';
+import { useAlert } from 'react-alert';
+import { useApi } from '../../../../../../../hooks/useApi';
 import { Schema } from './Schema';
 import './MessageForm.scss';
 
 type Props = {
   programHash: string;
   programName: string;
-  socketService: SocketService;
-  payloadType: object | string | null;
-  handleClose: () => void;
 };
 
-// todo improve form logic, refactor
-export const MessageForm: VFC<Props> = ({ programHash, programName, socketService, handleClose, payloadType }) => {
-  const getFieldsFromPayload = () => {
-    const transformedPayloadType: any = [];
-
-    const recursion = (object: any) => {
-      for (const key in object) {
-        if (typeof object[key] === 'string') {
-          transformedPayloadType.push({
-            [key]: object[key],
-          });
-        } else if (typeof object[key] === 'object') {
-          recursion(object[key]);
-        }
-      }
-    };
-
-    if (payloadType && typeof payloadType === 'object') {
-      recursion(payloadType);
-    }
-    return transformedPayloadType;
-  };
+export const MessageForm: VFC<Props> = ({ programHash, programName }) => {
+  const [api] = useApi();
+  const alert = useAlert();
 
   const dispatch = useDispatch();
-  const { gas } = useSelector((state: RootState) => state.programs);
-  const [isManualGas, setIsManualGas] = useState(false);
 
-  const mapInitialValues = () => ({
-    gasLimit: undefined,
-    value: 20000,
+  const initialValues = {
+    gasLimit: 20000,
+    value: 0,
     payload: '',
     destination: programHash,
-  });
+  };
 
-  const transformPayloadVals = (data: any) => {
-    const object = {};
-    if (data && data.length) {
-      data.forEach((element: any) => {
-        const key = Object.keys(element)[0];
+  const calculateGas = async (values: any, setFieldValue: any) => {
+    const apiRequest = new ServerRPCRequestService();
 
-        // @ts-ignore
-        object[key] = element[key];
-      });
+    if (values.payload.length === 0) {
+      alert.error(`Error: payload can't be empty`);
+      return;
     }
-    return object;
+
+    try {
+      const {
+        result: { meta },
+      } = await apiRequest.getResource(
+        RPC_METHODS.GET_METADATA,
+        {
+          programId: programHash,
+        },
+        { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
+      );
+
+      const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.input, meta);
+      alert.info(`Estimated gas ${estimatedGas}`);
+      setFieldValue('gasLimit', Number(`${estimatedGas}`));
+    } catch (error) {
+      alert.error(`${error}`);
+      console.error(error);
+    }
   };
 
   return (
     <Formik
-      initialValues={mapInitialValues()}
+      initialValues={initialValues}
       validationSchema={Schema}
       validateOnBlur
-      onSubmit={(values: MessageModel) => {
-        const { additional, destination } = values;
-        const pack = { ...values };
-        if (additional) {
-          delete pack.additional;
-          pack.payload = JSON.stringify(transformPayloadVals(additional));
-        }
-        if (typeof gas !== 'number' && !isManualGas) {
-          socketService.getGasSpent(destination, pack.payload);
-        } else {
-          pack.gasLimit = pack.gasLimit ?? gas ?? 0;
-          socketService.sendMessageToProgram(pack);
-          dispatch(sendMessageStartAction());
-        }
+      onSubmit={(values: MessageModel, { resetForm }) => {
+        SendMessageToProgram(api, values, dispatch, alert);
+        dispatch(sendMessageStartAction());
+        resetForm();
       }}
-      onReset={handleClose}
     >
-      {({ errors, touched }) => (
+      {({ errors, touched, values, setFieldValue }) => (
         <Form id="message-form">
           <div className="message-form--wrapper">
             <div className="message-form--col">
@@ -112,46 +95,42 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                   ) : null}
                 </div>
               </div>
-              {(typeof payloadType !== 'object' || !payloadType) && (
-                <div className="message-form--info">
-                  <label htmlFor="payload" className="message-form__field">
-                    Payload:
-                  </label>
-                  <div className="message-form__field-wrapper">
-                    <Field
-                      id="payload"
-                      name="payload"
-                      type="text"
-                      className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
-                      placeholder={payloadType ? `${payloadType}` : 'null'}
-                    />
-                    {errors.payload && touched.payload ? (
-                      <div className="message-form__error">{errors.payload}</div>
-                    ) : null}
-                  </div>
-                </div>
-              )}
 
-              {((typeof gas === 'number' || isManualGas) && (
-                <div className="message-form--info">
-                  <label htmlFor="gasLimit" className="message-form__field">
-                    Gas limit:
-                  </label>
-                  <div className="message-form__field-wrapper">
-                    <Field
-                      id="gasLimit"
-                      name="gasLimit"
-                      placeholder={gas}
-                      type="number"
-                      className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
-                    />
-                    {errors.gasLimit && touched.gasLimit ? (
-                      <div className="message-form__error">{errors.gasLimit}</div>
-                    ) : null}
-                  </div>
+              <div className="message-form--info">
+                <label htmlFor="payload" className="message-form__field">
+                  Payload:
+                </label>
+                <div className="message-form__field-wrapper">
+                  <Field
+                    id="payload"
+                    name="payload"
+                    type="text"
+                    className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
+                    placeholder="null"
+                  />
+                  {errors.payload && touched.payload ? (
+                    <div className="message-form__error">{errors.payload}</div>
+                  ) : null}
                 </div>
-              )) ||
-                null}
+              </div>
+
+              <div className="message-form--info">
+                <label htmlFor="gasLimit" className="message-form__field">
+                  Gas limit:
+                </label>
+                <div className="message-form__field-wrapper">
+                  <Field
+                    id="gasLimit"
+                    name="gasLimit"
+                    type="number"
+                    className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
+                  />
+                  {errors.gasLimit && touched.gasLimit ? (
+                    <div className="message-form__error">{errors.gasLimit}</div>
+                  ) : null}
+                </div>
+              </div>
+
               <div className="message-form--info">
                 <label htmlFor="value" className="message-form__field">
                   Value:
@@ -167,53 +146,24 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, socketServic
                   {errors.value && touched.value ? <div className="message-form__error">{errors.value}</div> : null}
                 </div>
               </div>
-              {payloadType && typeof payloadType === 'object' && (
-                <div className="message-form--payload">
-                  <p>Payload</p>
-                  <FieldArray
-                    name="additional"
-                    render={() => {
-                      const additionalFields = getFieldsFromPayload();
-                      console.log(additionalFields);
-                      return (
-                        <>
-                          {(additionalFields &&
-                            additionalFields.length &&
-                            additionalFields.map((item: any, index: number) => (
-                              <div className="message-form--info">
-                                <label htmlFor="payload" className="message-form__field">
-                                  {Object.keys(item)[0]}:
-                                </label>
-                                <Field
-                                  id={`additional.${index}.${Object.keys(item)[0]}`}
-                                  name={`additional.${index}.${Object.keys(item)[0]}`}
-                                  type="text"
-                                  placeholder={item[Object.keys(item)[0]]}
-                                />
-                              </div>
-                            ))) ||
-                            null}
-                        </>
-                      );
-                    }}
-                  />
-                </div>
-              )}
               <div className="message-form--btns">
-                <button className="message-form__button" type="submit">
-                  {(typeof gas !== 'number' && !isManualGas && <>Calculate Gas</>) || (
+                <>
+                  <button
+                    className="message-form__button"
+                    type="button"
+                    onClick={() => {
+                      calculateGas(values, setFieldValue);
+                    }}
+                  >
+                    Calculate Gas
+                  </button>
+                  <button className="message-form__button" type="submit">
                     <>
                       <img src={MessageIllustration} alt="message" />
                       Send request
                     </>
-                  )}
-                </button>
-                {(!isManualGas && typeof gas !== 'number' && (
-                  <button className="message-form__button" type="button" onClick={() => setIsManualGas(true)}>
-                    Manual gas input
                   </button>
-                )) ||
-                  null}
+                </>
               </div>
             </div>
           </div>

@@ -1,41 +1,56 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { ProgramsService } from 'src/programs/programs.service';
 import { Repository } from 'typeorm';
 import { Message } from './entities/message.entity';
-import { LogMessage } from './interface';
-import { isJsonObject, isString } from '@polkadot/util';
-import { MessageNotFound } from 'src/json-rpc/errors';
-
+import { MessageNotFound, SignNotVerified } from 'src/json-rpc/errors';
+import { GearKeyring } from '@gear-js/api';
+const logger = new Logger('MessageService');
 @Injectable()
 export class MessagesService {
   constructor(
     @InjectRepository(Message)
     private readonly messageRepo: Repository<Message>,
-    private readonly programService: ProgramsService,
   ) {}
 
-  async save(message: LogMessage): Promise<Message> {
-    const createdMessage = this.messageRepo.create({
-      ...message,
-    });
+  async save(info: {
+    id: string;
+    destination: string;
+    program: string;
+    date: Date;
+    response?: string;
+    responseId?: string;
+  }): Promise<Message> {
+    const createdMessage = this.messageRepo.create(info);
     return this.messageRepo.save(createdMessage);
   }
 
-  async update(message: LogMessage): Promise<Message> {
-    const savedMessage = await this.findOne(message.id);
+  async update(messageId: string, info: { responseId: string; response: string }): Promise<Message> {
+    const savedMessage = await this.findOne(messageId);
     if (!savedMessage) {
-      return await this.save(message);
+      logger.warn(`Message with id ${messageId} not found`);
+      return;
     }
-    savedMessage.responseId = message.responseId;
-    savedMessage.response =
-      isJsonObject(message.response) && !isString(message.response)
-        ? JSON.stringify(message.response)
-        : message.response;
+    savedMessage.responseId = info.responseId;
+    savedMessage.response = info.response;
     const s = await this.messageRepo.save(savedMessage);
-    console.log(s);
     return s;
+  }
+
+  async saveSendedPayload(messageId: string, payload: string, signature: string) {
+    const message = await this.findOne(messageId);
+    if (!message) {
+      throw new MessageNotFound();
+    }
+    if (!GearKeyring.checkSign(message.destination, signature, payload)) {
+      throw new SignNotVerified();
+    } else {
+      let message = await this.findOne(messageId);
+      if (message) {
+        message.payload = payload;
+        return this.messageRepo.save(message);
+      }
+      return null;
+    }
   }
 
   async findOne(id: string): Promise<Message> {
@@ -46,8 +61,8 @@ export class MessagesService {
     return message;
   }
 
-  async markAsRead(user: User, id: string): Promise<Message> {
-    const message = await this.messageRepo.findOne({ id, destination: user });
+  async markAsRead(destination: string, id: string): Promise<Message> {
+    const message = await this.messageRepo.findOne({ id, destination });
     if (message) {
       message.isRead = true;
       return await this.messageRepo.save(message);
@@ -57,22 +72,18 @@ export class MessagesService {
   }
 
   async getAll(
-    user: User,
+    destination: string,
     isRead?: boolean,
     programId?: string,
     limit?: number,
     offset?: number,
   ): Promise<[Message[], number]> {
-    const where = { destination: user };
+    const where = { destination };
     if (isRead) {
       where['isRead'] = isRead;
     }
     if (programId) {
-      const program = await this.programService.findProgram(programId);
-      if (!program) {
-        return [[], 0];
-      }
-      where['program'] = program;
+      where['program'] = programId;
     }
     const messages = await this.messageRepo.findAndCount({
       where,
@@ -82,9 +93,9 @@ export class MessagesService {
     return messages;
   }
 
-  async getCountUnread(user: User): Promise<number> {
+  async getCountUnread(destination: string): Promise<number> {
     const messages = await this.messageRepo.findAndCount({
-      destination: user,
+      destination,
       isRead: false,
     });
     return messages[1];

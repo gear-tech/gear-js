@@ -34,8 +34,4 @@ export class IdeService {
       this.connectedClients.delete(data.username);
     });
   }
-
-  async uploadProgram(user, data, callback) {
-    this.gearService.uploadProgram(user, data, callback);
-  }
 }
