@@ -9,7 +9,7 @@ export const Wallet = () => {
   useEffect(() => {
     const publicKey: any = localStorage.getItem('public_key');
     setAddress(publicKey);
-  }, []);
+  }, [address]);
 
   return (
     <div className="user-wallet__wrapper">
