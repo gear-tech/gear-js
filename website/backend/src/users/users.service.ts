@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { isHex, isU8a, u8aToHex } from '@polkadot/util';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 
+const logger = new Logger('UserService');
 @Injectable()
 export class UsersService {
   constructor(
@@ -35,15 +36,7 @@ export class UsersService {
     if (!user) {
       return { error: 'user not found' };
     }
-    const {
-      id,
-      telegramId,
-      githubId,
-      authDate,
-      authKey,
-      accessToken,
-      ...result
-    } = user;
+    const { id, telegramId, githubId, authDate, authKey, accessToken, ...result } = user;
     return result;
   }
 
@@ -94,12 +87,13 @@ export class UsersService {
   addPublicKey(user: User, pubKey, pubKeyRaw) {
     user.publicKey = pubKey;
     if (pubKeyRaw) {
-      user.publicKeyRaw = isHex(pubKeyRaw)
-        ? pubKeyRaw
-        : isU8a(pubKeyRaw)
-        ? u8aToHex(pubKeyRaw)
-        : '';
+      user.publicKeyRaw = isHex(pubKeyRaw) ? pubKeyRaw : isU8a(pubKeyRaw) ? u8aToHex(pubKeyRaw) : '';
     }
-    return this.userRepository.save(user);
+    try {
+      return this.userRepository.save(user);
+    } catch (error) {
+      logger.error('addPublicKey', error.message);
+      return null;
+    }
   }
 }

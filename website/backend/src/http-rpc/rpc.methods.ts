@@ -52,7 +52,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     addPublicKey: async (user: User, params: any) => {
-      return (await this.userService.addPublicKey(user, params.publicKey, params.publicKeyRaw)).publicKey;
+      return (await this.userService.addPublicKey(user, params.publicKey, params.publicKeyRaw))?.publicKey;
     },
   };
 

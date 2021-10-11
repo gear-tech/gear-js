@@ -15,10 +15,18 @@ export class GearNodeService {
     GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then(async (api) => {
       this.api = api;
       const accountSeed = process.env.ACCOUNT_SEED;
-      this.rootKeyring = accountSeed
-        ? await GearKeyring.fromSeed(process.env.ACCOUNT_SEED, 'websiteAccount')
-        : (await GearKeyring.create('websiteAccount')).keyring;
-      this.updateSiteAccountBalance();
+      try {
+        this.rootKeyring = accountSeed
+          ? await GearKeyring.fromSeed(process.env.ACCOUNT_SEED, 'websiteAccount')
+          : (await GearKeyring.create('websiteAccount')).keyring;
+      } catch (error) {
+        logger.error('createRootKeyring', error.message);
+      }
+      try {
+        await this.updateSiteAccountBalance();
+      } catch (error) {
+        logger.error('updateSiteAccountBalance', error.message);
+      }
       this.subscription.subscribeAllEvents(api);
     });
   }
@@ -29,7 +37,7 @@ export class GearNodeService {
     if (currentBalance < siteAccBalance) {
       const sudoKeyring = parseInt(process.env.DEBUG)
         ? GearKeyring.fromSuri('//Alice', 'Alice default')
-        : await GearKeyring.fromSeed('websiteAccount', process.env.SUDO_SEED);
+        : await GearKeyring.fromSeed(process.env.SUDO_SEED, 'websiteAccount');
       await this.api.balance.transferBalance(
         sudoKeyring,
         this.rootKeyring.address,

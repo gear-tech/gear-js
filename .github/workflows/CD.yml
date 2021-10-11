@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [master]
+    branches: [master, do-fix-backend]
 
 env:
   CARGO_TERM_COLOR: always
@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "=============== list modified files ==============="
           git diff --name-only HEAD^ HEAD
-          
+
           echo "========== check paths of modified files =========="
           git diff --name-only HEAD^ HEAD > files.txt
           while IFS= read -r file
