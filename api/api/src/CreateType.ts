@@ -5,7 +5,39 @@ import { isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry, GenericPortableRegistry } from '@polkadot/types';
 
-const REGULAR_EXP = /\b\w+\b/g;
+const REGULAR_EXP = {
+  endWord: /\b\w+\b/g,
+  angleBracket: /(?<=<).+(?=>)/,
+  roundBracket: /^\(.+\)$/,
+  squareBracket: /^\[.+\]$/
+};
+
+const STD_TYPES = {
+  Result: (ok, err) => {
+    return {
+      _enum_Result: {
+        ok,
+        err
+      }
+    };
+  },
+  Option: (some) => {
+    return {
+      _enum_Option: some
+    };
+  },
+  Vec: (type) => {
+    return [type];
+  },
+  VecDeque: (type) => {
+    return [type];
+  },
+  BTreeMap: (key, value) => {
+    return {
+      [key]: value
+    };
+  }
+};
 
 export class CreateType {
   private defaultTypes: any;
@@ -39,7 +71,9 @@ export class CreateType {
     const result = {};
     const namespaces = new Map<string, string>();
     const genReg = new GenericPortableRegistry(registry, types);
-    const compositeTypes = genReg.types.filter(({ type: { def } }) => def.isComposite || def.isVariant);
+    const compositeTypes = genReg.types.filter(
+      ({ type: { def } }) => def.isComposite || def.isVariant || def.isPrimitive
+    );
     compositeTypes.forEach(({ id, type: { path } }) => {
       const typeDef = genReg.getTypeDef(id);
       if (typeDef.lookupName) {
@@ -164,9 +198,9 @@ function toJSON(data: any) {
 
 function typeIsString(type: any, data?: any): boolean {
   if (data) {
-    return ['string', 'utf8', 'utf-8'].includes(type.toLowerCase()) && typeof data === 'string';
+    return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase()) && typeof data === 'string';
   } else {
-    return ['string', 'utf8', 'utf-8'].includes(type.toLowerCase());
+    return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase());
   }
 }
 
@@ -180,89 +214,90 @@ export function parseHexTypes(hexTypes: string) {
 }
 
 function setNamespaces(type: string, namespaces: Map<string, string>): string {
-  type.match(REGULAR_EXP).forEach((match) => {
+  type.match(REGULAR_EXP.endWord).forEach((match) => {
     type = namespaces && namespaces.has(match) ? type.replace(match, namespaces.get(match)) : type;
   });
   return type;
 }
 
 function replaceNamespaces(type: string, namespaces: Map<string, string>): string {
-  const match = type.match(REGULAR_EXP);
+  const match = type.match(REGULAR_EXP.endWord);
   namespaces.forEach((value, key) => {
     type = match.includes(value) ? type.replace(value, key) : type;
   });
   return type;
 }
 
-const STD_TYPES = {
-  Result: (ok, err) => {
-    return {
-      _enum_Result: {
-        ok,
-        err
-      }
-    };
-  },
-  Option: (some) => {
-    return {
-      _enum_Option: some
-    };
-  },
-  Vec: (type) => {
-    return [type];
-  },
-  VecDeque: (type) => {
-    return [type];
-  },
-  BTreeMap: (key, value) => {
-    return {
-      [key]: value
-    };
-  }
-};
-
 export function getTypeStructure(typeName: string, types: any) {
   if (!typeName) {
     return undefined;
   }
-  const reg = /(?<=<).+(?=>)/;
-  const match = typeName.match(reg);
+  // check tuples
+  let match = typeName.match(REGULAR_EXP.roundBracket);
+  if (match) {
+    const entryType = match[0].slice(1, match[0].length - 1);
+    const splitted = splitByCommas(entryType);
+    return splitted.map((value) => getTypeStructure(value, types));
+  }
+
+  // check arrays
+  match = typeName.match(REGULAR_EXP.squareBracket);
+  if (match) {
+    const splitted = typeName.slice(1, typeName.length - 1).split(';');
+    return new Array(+splitted[1]).fill(getTypeStructure(splitted[0], types));
+  }
+
+  // check generic
+  match = typeName.match(REGULAR_EXP.angleBracket);
   if (match) {
     const stdType = typeName.slice(0, match.index - 1);
-    const entryType = match[0];
-    let first: string, second: string;
-    let count = 0;
-    try {
-      Array.from(entryType).forEach((char, index) => {
-        if (char === ',' && count === 0) {
-          first = entryType.slice(0, index).trim();
-          second = entryType.slice(index + 1).trim();
-          throw 0;
-        }
-        char === '<' && count++;
-        char === '>' && count--;
-      });
-      first = entryType;
-    } catch (error) {}
-    return stdType in STD_TYPES
-      ? STD_TYPES[stdType](getTypeStructure(first, types), getTypeStructure(second, types))
-      : typeName;
+    if (stdType in STD_TYPES) {
+      const entryType = match[0];
+      const splitted = splitByCommas(entryType);
+      return STD_TYPES[stdType](getTypeStructure(splitted[0], types), getTypeStructure(splitted[1], types));
+    } else {
+      return getTypeStructure(stdType, types);
+    }
   }
-  const type = types[typeName];
+
+  const type = toJSON(JSON.stringify(types[typeName]));
+
+  // check custom types
   if (!type) {
     return typeName;
   }
+
   const result = {};
   Object.keys(type).forEach((key: string) => {
     if (key === '_enum') {
       result['_enum'] = type[key];
       Object.keys(result['_enum']).forEach((subKey: string) => {
-        result['_enum'][subKey] =
-          result['_enum'][subKey] in types ? getTypeStructure(result['_enum'][subKey], types) : result['_enum'][subKey];
+        result['_enum'][subKey] = getTypeStructure(result['_enum'][subKey], types);
       });
     } else {
-      result[key] = type[key] in types || type[key].match(reg) ? getTypeStructure(type[key], types) : type[key];
+      result[key] =
+        type[key] in types || type[key].match(REGULAR_EXP.angleBracket)
+          ? getTypeStructure(type[key], types)
+          : type[key];
     }
   });
+  return result;
+}
+
+function splitByCommas(type: string) {
+  let counter = 0;
+  let result = [];
+  let lastTypeIndex = 0;
+  try {
+    Array.from(type).forEach((char, index) => {
+      if (char === ',' && counter === 0) {
+        result.push(type.slice(lastTypeIndex, index).trim());
+        lastTypeIndex = index + 1;
+      }
+      (char === '<' || char === '(') && counter++;
+      (char === '>' || char === ')') && counter--;
+    });
+    result.push(type.slice(lastTypeIndex).trim());
+  } catch (_) {}
   return result;
 }
