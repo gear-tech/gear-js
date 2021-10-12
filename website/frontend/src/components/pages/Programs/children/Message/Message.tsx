@@ -28,11 +28,11 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
   }
 
   useEffect(() => {
-    document.addEventListener("keydown", (event) => {
-      if(event.key === 'Escape'){
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
         handleClose();
       }
-    })
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -42,14 +42,10 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
     }
   }, [dispatch, payloadType, programHash, socketService]);
 
-
   return (
     <div className="message-form">
       <PageHeader programName={programName} handleClose={handleClose} pageType={PAGE_TYPES.MESSAGE_FORM_PAGE} />
-      <MessageForm
-        programHash={programHash}
-        programName={programName}
-      />
+      <MessageForm programHash={programHash} programName={programName} />
       {statusPanelText && (
         <StatusPanel
           onClose={() => {

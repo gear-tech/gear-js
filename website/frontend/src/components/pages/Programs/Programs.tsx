@@ -15,7 +15,6 @@ import './Programs.scss';
 import { AppContext } from '../../../contexts/AppContext/AppContext';
 import { RecentNotifications } from '../../blocks/RecentNotifications/RecentNotifications';
 
-
 export const Programs: VFC = () => {
   const { socketService } = useContext(AppContext);
 
