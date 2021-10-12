@@ -2,7 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
-import AlertTemplate from 'react-alert-template-basic';
+import { AlertTemplate } from 'components/AlertTemplate';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { SignIn } from 'components/pages/SignIn/SignIn';
@@ -77,16 +77,7 @@ const AppComponent: FC = () => {
   return (
     <BrowserRouter>
       <AppContextProvider>
-        {/* TODO: find out how to provide type without as */}
-        <AlertProvider
-          template={(props) => {
-            // eslint-disable-next-line no-param-reassign
-            props.style.width = '100%';
-            // @ts-ignore
-            return <AlertTemplate {...props} />;
-          }}
-          {...options}
-        >
+        <AlertProvider template={AlertTemplate} {...options}>
           <div className="app">
             {(isProgramUploading || isMessageSending) && (
               <>
