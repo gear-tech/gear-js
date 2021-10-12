@@ -94,7 +94,7 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
       const response = await apiRequest.getResource(
         RPC_METHODS.BALANCE_TRANSFER,
         {
-          to: `${localStorage.getItem('public_key')}`,
+          publicKey: `${localStorage.getItem('public_key')}`,
           value: GEAR_BALANCE_TRANSFER_VALUE,
         },
         { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
