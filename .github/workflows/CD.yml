@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [master, do-fix-backend]
+    branches: [master]
 
 env:
   CARGO_TERM_COLOR: always
