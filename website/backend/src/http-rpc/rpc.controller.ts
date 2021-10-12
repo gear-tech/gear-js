@@ -9,7 +9,7 @@ export class RpcController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async test(@ReqUser() user, @Body() body) {
+  async rpc(@ReqUser() user, @Body() body) {
     return await this.rpcHandler.requestMessage(user, body);
   }
 }
