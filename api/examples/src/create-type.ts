@@ -1,4 +1,4 @@
-import { getWasmMetadata, parseHexTypes, getTypeStructure, CreateType } from '@gear-js/api';
+import { getWasmMetadata, parseHexTypes, getTypeStructure } from '@gear-js/api';
 import dotenv from 'dotenv';
 import * as fs from 'fs';
 import path from 'path';
