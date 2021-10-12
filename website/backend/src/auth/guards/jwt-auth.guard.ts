@@ -7,7 +7,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (
       request.body.method === 'login.telegram' ||
       request.body.method === 'login.github' ||
-      request.body.method === 'login.dev'
+      (+process.env.DEBUG && request.body.method === 'login.dev')
     ) {
       return true;
     }
