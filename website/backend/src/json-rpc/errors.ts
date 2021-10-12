@@ -54,6 +54,10 @@ export class UnathorizedError extends GearError {
 export class GearNodeError extends GearError {
   code = -32010;
   message = 'Gear node error';
+  constructor(message?) {
+    super();
+    this.message = `${this.message}. ${message}`;
+  }
 }
 
 export class TransactionError extends GearError {

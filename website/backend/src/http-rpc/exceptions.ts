@@ -1,15 +1,5 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
-import {
-  InternalServerError,
-  NotFoundPath,
-  UnathorizedError,
-} from 'src/json-rpc/errors';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import { InternalServerError, NotFoundPath, UnathorizedError } from 'src/json-rpc/errors';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -38,10 +28,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     if (status > 0) {
-      exception =
-        status in this.statusCodes
-          ? new this.statusCodes[status]()
-          : new this.statusCodes[500]();
+      exception = status in this.statusCodes ? new this.statusCodes[status]() : new this.statusCodes[500]();
     }
 
     if (!request.body) {

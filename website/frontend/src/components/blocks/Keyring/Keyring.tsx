@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAlert } from 'react-alert';
 import { RPC_METHODS } from 'consts';
 import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
@@ -7,7 +8,6 @@ import Identicon from '@polkadot/react-identicon';
 import './Keyring.scss';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { CopyClipboard } from '../../../assets/Icons';
-import { StatusPanel } from '../StatusPanel/StatusPanel';
 
 type Props = {
   handleClose: () => void;
@@ -17,7 +17,6 @@ export const Keyring = ({ handleClose }: Props) => {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const [key, setKey] = useState('');
   const [publicKey, setPublicKey] = useState('');
-  const [copySuccess, setCopySuccess] = useState(false);
   const [isSeed, setIsSeed] = useState('');
   const [isMnemonic, setIsMnemonic] = useState('');
   const [saved, setSaved] = useState(false);
@@ -25,10 +24,7 @@ export const Keyring = ({ handleClose }: Props) => {
   const [isAddressRaw, setIsAddressRaw] = useState('');
 
   const apiRequest = new ServerRPCRequestService();
-
-  if (copySuccess) {
-    setTimeout(() => setCopySuccess(false), 3000);
-  }
+  const alert = useAlert();
 
   useEffect(() => {
     const create = async () => {
@@ -47,9 +43,9 @@ export const Keyring = ({ handleClose }: Props) => {
   const copyToClipboard = () => {
     try {
       navigator.clipboard.writeText(key);
-      setCopySuccess(true);
+      alert.success(`Copied!`);
     } catch (err) {
-      setCopySuccess(false);
+      alert.error(`Copy error`);
     }
   };
 
@@ -133,14 +129,6 @@ export const Keyring = ({ handleClose }: Props) => {
           Add
         </button>
       </div>
-      {copySuccess && (
-        <StatusPanel
-          onClose={() => {
-            setCopySuccess(false);
-          }}
-          statusPanelText="Copied!"
-        />
-      )}
     </div>
   );
 };

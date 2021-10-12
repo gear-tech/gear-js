@@ -110,12 +110,12 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     }
   };
 
-  const prettyPrint = () => {
-    const ugly = (document.getElementById('types') as HTMLInputElement).value;
-    const obj = JSON.parse(ugly);
-    const pretty = JSON.stringify(obj, undefined, 4);
-    (document.getElementById('types') as HTMLInputElement).innerText = pretty;
-  };
+  // const prettyPrint = () => {
+  //   const ugly = (document.getElementById('types') as HTMLInputElement).value;
+  //   const obj = JSON.parse(ugly);
+  //   const pretty = JSON.stringify(obj, undefined, 4);
+  //   (document.getElementById('types') as HTMLInputElement).innerText = pretty;
+  // };
 
   return (
     <div className="program-details">
@@ -368,11 +368,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                               placeholder={displayTypes}
                               className="program-details__types program-details__value"
                             />
-                            <p>
-                              <a href="#" className="program-details__link" onClick={prettyPrint}>
-                                Prettify
-                              </a>
-                            </p>
                             {errors.types && touched.types ? (
                               <div className="program-details__error">{errors.types}</div>
                             ) : null}
@@ -463,11 +458,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                           placeholder="{&#10;...&#10;}"
                           className="program-details__types program-details__value"
                         />
-                        <p>
-                          <a href="#" className="program-details__link" onClick={prettyPrint}>
-                            Prettify
-                          </a>
-                        </p>
                         {errors.types && touched.types ? (
                           <div className="program-details__error">{errors.types}</div>
                         ) : null}
