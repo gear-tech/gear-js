@@ -3,21 +3,15 @@ import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { markRecentNotificationsAsReadAction } from 'store/actions/actions';
-import { SocketService } from 'services/SocketService';
 import { formatDate } from 'helpers';
 import { CloseIcon } from 'assets/Icons';
 import './RecentNotifications.scss';
 
-type Props = {
-  socketService: SocketService;
-};
-
-export const RecentNotifications: VFC<Props> = ({ socketService }) => {
+export const RecentNotifications: VFC = () => {
   const dispatch = useDispatch();
   const { recent } = useSelector((state: RootState) => state.notifications);
 
   const handleNotificationClose = (id: string) => {
-    socketService.readNotifications(id);
     dispatch(markRecentNotificationsAsReadAction(id));
   };
 

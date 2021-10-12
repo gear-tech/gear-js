@@ -1,6 +1,5 @@
 import React, { useEffect, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { SocketService } from 'services/SocketService';
 import { RootState } from 'store/reducers';
 import { sendMessageResetAction } from 'store/actions/actions';
 import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
@@ -12,14 +11,13 @@ import { PAGE_TYPES } from 'consts';
 type Props = {
   programHash: string;
   programName: string;
-  socketService: SocketService;
   handleClose: () => void;
 };
 
-export const Message: VFC<Props> = ({ programHash, programName, socketService, handleClose }) => {
+export const Message: VFC<Props> = ({ programHash, programName, handleClose }) => {
   const dispatch = useDispatch();
 
-  const { messageSendingError, payloadType } = useSelector((state: RootState) => state.programs);
+  const { messageSendingError } = useSelector((state: RootState) => state.programs);
 
   let statusPanelText: string | null = null;
 
@@ -35,12 +33,6 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (!payloadType) {
-      socketService.getPayloadType(programHash);
-    }
-  }, [dispatch, payloadType, programHash, socketService]);
 
   return (
     <div className="message-form">

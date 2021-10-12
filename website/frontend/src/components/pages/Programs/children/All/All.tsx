@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
-import { SocketService } from 'services/SocketService';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import {
   getAllProgramsAction,
@@ -24,11 +23,7 @@ type ProgramMessageType = {
   programHash: string;
 };
 
-type Props = {
-  socketService: SocketService;
-};
-
-export const All: VFC<Props> = ({ socketService }) => {
+export const All: VFC = () => {
   const dispatch = useDispatch();
 
   const { allUploadedPrograms, allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
@@ -78,7 +73,6 @@ export const All: VFC<Props> = ({ socketService }) => {
       <Message
         programHash={programMessage.programHash}
         programName={programMessage.programName}
-        socketService={socketService}
         handleClose={handleCloseMessageForm}
       />
     );
@@ -89,7 +83,6 @@ export const All: VFC<Props> = ({ socketService }) => {
       <Meta
         programHash={programMeta.programHash}
         programName={programMeta.programName}
-        socketService={socketService}
         handleClose={handleCloseMetaForm}
       />
     );
