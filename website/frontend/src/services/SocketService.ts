@@ -1,27 +1,5 @@
-import io from 'socket.io-client';
-import {
-  GEAR_LOCAL_WS_URI,
-  GEAR_MNEMONIC_KEY,
-  GEAR_STORAGE_KEY,
-  JSONRPC_VERSION,
-  PROGRAM_ERRORS,
-  PROGRAM_UPLOAD_STATUSES,
-  RPC_METHODS,
-  SOCKET_RESULT_STATUSES,
-  EVENT_TYPES,
-  GEAR_BALANCE_TRANSFER_VALUE,
-} from 'consts';
+import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY, JSONRPC_VERSION, RPC_METHODS } from 'consts';
 import { BalanceModel, MessageModel, MetaModel, UploadProgramModel } from 'types/program';
-import {
-  fetchTotalIssuanceAction,
-  programStatusAction,
-  handleProgramError,
-  handleProgramSuccess,
-  fetchRecentNotificationSuccessAction,
-  fetchProgramPayloadTypeAction,
-  fetchGasAction,
-  getUnreadNotificationsCount,
-} from 'store/actions/actions';
 
 export interface ISocketService {
   uploadProgram(file: File, opts: UploadProgramModel): void;
@@ -33,51 +11,8 @@ export class SocketService implements ISocketService {
 
   private readonly key: string | null;
 
-  constructor(dispatch: any) {
+  constructor() {
     this.key = localStorage.getItem(GEAR_STORAGE_KEY);
-    this.socket = io(GEAR_LOCAL_WS_URI, {
-      transports: ['websocket'],
-      query: { Authorization: `Bearer ${this.key || ''}` },
-    });
-    this.socket.on('message', (data: any) => {
-      if (Object.prototype.hasOwnProperty.call(data, 'result')) {
-        if (Object.prototype.hasOwnProperty.call(data.result, 'totalIssuance')) {
-          dispatch(fetchTotalIssuanceAction(data.result));
-        } else if (Object.prototype.hasOwnProperty.call(data.result, 'status')) {
-          if (data.result.status === SOCKET_RESULT_STATUSES.IN_BLOCK) {
-            dispatch(programStatusAction(PROGRAM_UPLOAD_STATUSES.IN_BLOCK));
-          } else if (data.result.status === SOCKET_RESULT_STATUSES.FINALIZED) {
-            dispatch(programStatusAction(PROGRAM_UPLOAD_STATUSES.FINALIZED));
-            dispatch(handleProgramSuccess());
-          }
-        } else if (Object.prototype.hasOwnProperty.call(data.result, 'type')) {
-          if (
-            data.result.type === EVENT_TYPES.PROGRAM_INITIALIZED ||
-            data.result.type === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE ||
-            data.result.type === EVENT_TYPES.LOG
-          ) {
-            dispatch(fetchRecentNotificationSuccessAction(data.result));
-            dispatch(getUnreadNotificationsCount());
-          }
-        } else if (Object.prototype.hasOwnProperty.call(data.result, 'payloadType')) {
-          dispatch(fetchProgramPayloadTypeAction(data.result.payloadType));
-        } else if (Object.prototype.hasOwnProperty.call(data.result, 'gasSpent')) {
-          dispatch(fetchGasAction(data.result.gasSpent));
-        }
-      } else if (Object.prototype.hasOwnProperty.call(data, 'error')) {
-        if (Object.prototype.hasOwnProperty.call(data.error, 'message')) {
-          const uploadErrors = Object.values(PROGRAM_ERRORS).map((value) => value.toLowerCase());
-          if (uploadErrors.includes(data.error.message.toLowerCase())) {
-            dispatch(handleProgramError(data.error.message));
-            if (data.error.message.toLowerCase() === PROGRAM_ERRORS.BALANCE_LOW.toLowerCase()) {
-              this.transferBalance({
-                value: GEAR_BALANCE_TRANSFER_VALUE,
-              });
-            }
-          }
-        }
-      }
-    });
   }
 
   private generateRandomId() {
@@ -96,8 +31,8 @@ export class SocketService implements ISocketService {
       init_output,
       input,
       output,
-      types
-    }
+      types,
+    };
 
     return this.socket.emit('message', {
       jsonrpc: JSONRPC_VERSION,
@@ -110,8 +45,8 @@ export class SocketService implements ISocketService {
         initPayload,
         value,
         meta,
-        keyPairJson
-      }
+        keyPairJson,
+      },
     });
   }
 
@@ -122,16 +57,6 @@ export class SocketService implements ISocketService {
       jsonrpc: JSONRPC_VERSION,
       id: generatedId,
       method: RPC_METHODS.TOTAL_ISSUANCE,
-    });
-  }
-
-  public subscribeEvents() {
-    const generatedId = this.generateRandomId();
-
-    this.socket.emit('message', {
-      jsonrpc: JSONRPC_VERSION,
-      id: generatedId,
-      method: RPC_METHODS.SUBSCRIBE_EVENTS,
     });
   }
 
