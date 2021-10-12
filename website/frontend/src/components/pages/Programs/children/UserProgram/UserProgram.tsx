@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { ProgramModel } from 'types/program';
 import { getProgramAction } from 'store/actions/actions';
 import { fileNameHandler, formatDate } from 'helpers';
-
+import { useAlert } from 'react-alert';
 import RefreshIllustration from 'assets/images/refresh.svg';
 import MessageIllustration from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
@@ -16,6 +16,15 @@ type Props = {
 
 export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
   const dispatch = useDispatch();
+  const alert = useAlert();
+  const copyToClipboard = (key: string) => {
+    try {
+      navigator.clipboard.writeText(key);
+      alert.success(`Copied!`);
+    } catch (err) {
+      alert.error(`Copy error`);
+    }
+  };
 
   const handleRefreshProgram = (programHash: string) => {
     dispatch(getProgramAction(programHash));
@@ -26,7 +35,9 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
       <span className={styles.programsListNumber}>{program.programNumber}</span>
       <div className={styles.programWrapper}>
         <div className={styles.programWrapperName}>
-          <span className={styles.programsListName}>{program.name && fileNameHandler(program.name)}</span>
+          <button type="button" className={styles.programsListName} onClick={() => copyToClipboard(program.hash)}>
+            {program.name && fileNameHandler(program.name)}
+          </button>
         </div>
         <div className={styles.programWrapperData}>
           <div className={styles.programsListInfo}>
