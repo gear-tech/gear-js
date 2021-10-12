@@ -14,21 +14,16 @@ import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
-import { SocketService } from 'services/SocketService';
 
 import styles from './Recent.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
-
-type Props = {
-  socketService: SocketService;
-};
 
 type ProgramMessageType = {
   programName: string;
   programHash: string;
 };
 
-export const Recent: VFC<Props> = ({ socketService }) => {
+export const Recent: VFC = () => {
   const dispatch = useDispatch();
 
   const { programs, programsCount } = useSelector((state: RootState) => state.programs);
@@ -84,7 +79,6 @@ export const Recent: VFC<Props> = ({ socketService }) => {
       <Message
         programHash={programMessage.programHash}
         programName={programMessage.programName}
-        socketService={socketService}
         handleClose={handleCloseMessageForm}
       />
     );
@@ -95,7 +89,6 @@ export const Recent: VFC<Props> = ({ socketService }) => {
       <Meta
         programHash={programMeta.programHash}
         programName={programMeta.programName}
-        socketService={socketService}
         handleClose={handleCloseMetaForm}
       />
     );

@@ -24,7 +24,6 @@ import store from '../../store';
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
-import { AppContextProvider } from '../../contexts/AppContext/AppContextProvider';
 import { ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
 
@@ -76,46 +75,44 @@ const AppComponent: FC = () => {
 
   return (
     <BrowserRouter>
-      <AppContextProvider>
-        <AlertProvider template={AlertTemplate} {...options}>
-          <div className="app">
-            {(isProgramUploading || isMessageSending) && (
-              <>
-                <div className="overlay" />
-                <LoadingPopup />
-              </>
-            )}
-            <Header />
-            <Main>
-              <Switch>
-                <PrivateRoute exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
-                  <Programs />
-                </PrivateRoute>
-                <PrivateRoute path={routes.editor} exact>
-                  <EditorPage />
-                </PrivateRoute>
-                <PrivateRoute path={routes.notifications} exact>
-                  <NotificationsPage />
-                </PrivateRoute>
-                <Route exact path={routes.signIn}>
-                  <SignIn />
-                </Route>
-                <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
-                  <Document />
-                </Route>
-                <Route path={routes.callback} exact>
-                  <Callback />
-                </Route>
-                <Route path={routes.logout} exact>
-                  <Logout />
-                </Route>
-              </Switch>
-            </Main>
-            {isFooterHidden() || <Footer />}
-            <Alert />
-          </div>
-        </AlertProvider>
-      </AppContextProvider>
+      <AlertProvider template={AlertTemplate} {...options}>
+        <div className="app">
+          {(isProgramUploading || isMessageSending) && (
+            <>
+              <div className="overlay" />
+              <LoadingPopup />
+            </>
+          )}
+          <Header />
+          <Main>
+            <Switch>
+              <PrivateRoute exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
+                <Programs />
+              </PrivateRoute>
+              <PrivateRoute path={routes.editor} exact>
+                <EditorPage />
+              </PrivateRoute>
+              <PrivateRoute path={routes.notifications} exact>
+                <NotificationsPage />
+              </PrivateRoute>
+              <Route exact path={routes.signIn}>
+                <SignIn />
+              </Route>
+              <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
+                <Document />
+              </Route>
+              <Route path={routes.callback} exact>
+                <Callback />
+              </Route>
+              <Route path={routes.logout} exact>
+                <Logout />
+              </Route>
+            </Switch>
+          </Main>
+          {isFooterHidden() || <Footer />}
+          <Alert />
+        </div>
+      </AlertProvider>
     </BrowserRouter>
   );
 };
