@@ -5,6 +5,7 @@ import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
 
+import { copyToClipboard } from 'helpers';
 import './Keyring.scss';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { CopyClipboard } from '../../../assets/Icons';
@@ -28,7 +29,13 @@ export const Keyring = ({ handleClose }: Props) => {
 
   useEffect(() => {
     const create = async () => {
-      const { mnemonic, seed, json, json: { address }, keyring : {addressRaw} } = await GearKeyring.create('WebAccount');
+      const {
+        mnemonic,
+        seed,
+        json,
+        json: { address },
+        keyring: { addressRaw },
+      } = await GearKeyring.create('WebAccount');
       setKey(mnemonic);
       setPublicKey(address);
       setIsSeed(seed);
@@ -39,15 +46,6 @@ export const Keyring = ({ handleClose }: Props) => {
 
     create();
   }, []);
-
-  const copyToClipboard = () => {
-    try {
-      navigator.clipboard.writeText(key);
-      alert.success(`Copied!`);
-    } catch (err) {
-      alert.error(`Copy error`);
-    }
-  };
 
   const downloadJson = (content: any, fileName: string, contentType: string) => {
     const link: HTMLAnchorElement = document.createElement('a');
@@ -71,10 +69,10 @@ export const Keyring = ({ handleClose }: Props) => {
     localStorage.setItem('gear_mnemonic', JSON.stringify(keyPairJson));
     localStorage.setItem('public_key', publicKey);
     downloadJson(JSON.stringify(keyPairJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
-    
+
     apiRequest.getResource(RPC_METHODS.ADD_PUBLIC, {
       publickKeyRaw: isAddressRaw,
-      publickKey: publicKey
+      publickKey: publicKey,
     });
     localStorage.setItem('public_key_raw', isAddressRaw);
     handleClose();
@@ -96,7 +94,11 @@ export const Keyring = ({ handleClose }: Props) => {
           <div className="keyring__key">{key}</div>
           <div className="keyring__copy">
             <div className="keyring__copy-wrapper">
-              <button className="keyring__copy-button" type="button" onClick={copyToClipboard}>
+              <button
+                className="keyring__copy-button"
+                type="button"
+                onClick={() => copyToClipboard(key, alert, 'Account ID copied')}
+              >
                 <CopyClipboard color="#ffffff" />
               </button>
             </div>
