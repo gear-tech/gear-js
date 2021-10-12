@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
-import { CodeIcon, LogoIcon, LogoutIcon } from 'assets/Icons';
+import { LogoIcon, LogoutIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
 import { Modal } from '../Modal';
@@ -19,10 +19,6 @@ export const Header: VFC = () => {
   const showUser =
     [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.notifications].indexOf(location.pathname) > -1;
   const isNotifications = location.pathname === routes.notifications;
-  const isPrograms =
-    location.pathname === routes.allPrograms ||
-    location.pathname === routes.main ||
-    location.pathname === routes.uploadedPrograms;
 
   const { user } = useSelector((state: RootState) => state.user);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
@@ -71,10 +67,7 @@ export const Header: VFC = () => {
       </Link>
       {(showUser && (
         <div className={clsx('header__user-block user-block', isMobileMenuOpened && 'show')}>
-          <Link to={routes.allPrograms} className={clsx('user-block__programs', isPrograms && 'selected')}>
-            <CodeIcon color={isPrograms ? '#ffffff' : '#858585'} />
-            <span>Programs</span>
-          </Link>
+    
           {/* <Link to={routes.notifications} className={clsx('user-block__notifications', isNotifications && 'selected')}>
             <NotificationIcon color={isNotifications ? '#ffffff' : '#858585'} />
             <span>Notifications</span>
