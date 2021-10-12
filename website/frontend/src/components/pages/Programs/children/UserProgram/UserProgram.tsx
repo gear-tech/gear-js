@@ -20,7 +20,7 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
   const copyToClipboard = (key: string) => {
     try {
       navigator.clipboard.writeText(key);
-      alert.success(`Copied!`);
+      alert.success(`Program ID copied!`);
     } catch (err) {
       alert.error(`Copy error`);
     }
