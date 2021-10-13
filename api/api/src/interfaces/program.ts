@@ -1,7 +1,7 @@
 import { u64 } from '@polkadot/types';
 import { BalanceOf } from '@polkadot/types/interfaces';
 import { AnyNumber } from '@polkadot/types/types';
-import { GearType } from 'src';
+import { GearType } from '.';
 
 export interface Program {
   code: Buffer;
