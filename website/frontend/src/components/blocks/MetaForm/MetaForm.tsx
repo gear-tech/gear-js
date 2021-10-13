@@ -5,7 +5,7 @@ import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
 import { fileNameHandler } from 'helpers';
 import { MetaModel } from 'types/program';
-import { uploadMetaStartAction } from 'store/actions/actions';
+import { addMetadata } from 'services/ApiService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
@@ -25,7 +25,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash, handleClose }) 
 
   const alert = useAlert();
 
-  const [isMetaByFile, setIsMetaByFile] = useState(false);
+  const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
@@ -109,9 +109,8 @@ export const MetaForm: VFC<Props> = ({ programName, programHash, handleClose }) 
       validationSchema={Schema}
       validateOnBlur
       onSubmit={(values: MetaModel) => {
-        console.log(metaWasm, programHash);
+        addMetadata(metaWasm, programHash, droppedMetaFile, dispatch, alert);
         console.log(values);
-        dispatch(uploadMetaStartAction());
       }}
       onReset={handleClose}
     >
@@ -126,13 +125,13 @@ export const MetaForm: VFC<Props> = ({ programName, programHash, handleClose }) 
               <div className="meta-form--info">
                 <p className="meta-form__field">Metadata: </p>
                 <div className="meta-form--switch-btns">
-                  <button type="button" className="meta-form--switch-btns__btn" onClick={() => handleTypeChange(false)}>
-                    <img src={isMetaByFile ? deselected : selected} alt="radio" />
-                    Manual input
-                  </button>
                   <button type="button" className="meta-form--switch-btns__btn" onClick={() => handleTypeChange(true)}>
                     <img src={isMetaByFile ? selected : deselected} alt="radio" />
                     Upload file
+                  </button>
+                  <button type="button" className="meta-form--switch-btns__btn" onClick={() => handleTypeChange(false)}>
+                    <img src={isMetaByFile ? deselected : selected} alt="radio" />
+                    Manual input
                   </button>
                 </div>
               </div>
