@@ -171,14 +171,20 @@ Creating a new keyring
 
 ```javascript
 import { GearKeyring } from '@gear-js/api';
-const { keyring, json } = await GearKeyring.create('keyringName');
+const { keyring, json } = await GearKeyring.create('keyringName', 'passphrase');
 ```
 
 Getting a keyring from JSON
 
 ```javascript
 const jsonKeyring = fs.readFileSync('path/to/keyring.json').toString();
-const keyring = GearKeyring.fromJson(jsonKeyring);
+const keyring = GearKeyring.fromJson(jsonKeyring, 'passphrase');
+```
+
+Getting JSON for keyring
+
+```javascript
+const json = GearKeyring.toJson(keyring, 'passphrase');
 ```
 
 Getting a keyring from seed
@@ -192,7 +198,7 @@ Getting a keyring from mnemonic
 
 ```javascript
 const mnemonic = 'slim potato consider exchange shiver bitter drop carpet helmet unfair cotton eagle';
-const keyring = await GearKeyring.fromMnemonic(mnemonic, 'name');
+const keyring = GearKeyring.fromMnemonic(mnemonic, 'name');
 ```
 
 Generate mnemonic and seed

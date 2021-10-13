@@ -23,21 +23,11 @@ export class GearProgram {
    * @returns ProgramId
    */
   submit(program: Program, meta: Metadata): string {
-    if (program.initPayload) {
-      program.initPayload = this.createType.encode(meta.init_input, program.initPayload, meta);
-    } else {
-      program.initPayload = '0x00';
-    }
+    const payload = program.initPayload ? this.createType.encode(meta.init_input, program.initPayload, meta) : '0x00';
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.encode('bytes', Array.from(program.code));
     try {
-      this.program = this.api.tx.gear.submitProgram(
-        code,
-        salt,
-        program.initPayload,
-        program.gasLimit,
-        program.value || 0
-      );
+      this.program = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
       const programId = this.generateProgramId(code, salt);
       return programId.toHex();
     } catch (error) {
