@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState, VFC } from 'react';
-import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
+import { getWasmMetadata } from '@gear-js/api';
 import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
 import { fileNameHandler } from 'helpers';
@@ -57,12 +57,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
       try {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
-        let types = '';
-        const parsedTypes = parseHexTypes(meta.types);
-        Object.entries(parsedTypes).forEach((value) => {
-          types += `${value[0]}: ${JSON.stringify(value[1])}\n`;
-        });
-        setMetaWasm({...meta, types});
+        setMetaWasm(meta);
         
       } catch (error) {
         alert.error(`${error}`);
