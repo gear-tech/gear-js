@@ -1,7 +1,7 @@
 import { u64 } from '@polkadot/types';
 import { BalanceOf, H256 } from '@polkadot/types/interfaces';
 import { AnyNumber } from '@polkadot/types/types';
-import { GearType } from 'src';
+import { GearType } from '.';
 
 export interface Message {
   destination: H256 | string;
