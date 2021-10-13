@@ -1,11 +1,9 @@
 import { AlertManager } from 'react-alert';
 
 export const fileNameHandler = (filename: string) => {
-  let transformedFileName = filename;
-  if (transformedFileName.length > 24) {
-    transformedFileName = `${transformedFileName.slice(0, 18)}...${transformedFileName.split('.').pop()}`;
-  }
-  return transformedFileName;
+  const transformedFileName = filename;
+  
+  return transformedFileName.length > 24 ? `${transformedFileName.slice(0, 18)}…${transformedFileName.slice(-18)}` : transformedFileName;
 };
 
 export const formatDate = (rawDate: string) => {
