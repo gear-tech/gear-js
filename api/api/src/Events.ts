@@ -1,6 +1,6 @@
-import { GearApi } from '.';
+import { GearApi, LogEvent, ProgramEvent, TransferEvent } from '.';
 import { ApiPromise } from '@polkadot/api';
-import { Event, Header } from '@polkadot/types/interfaces';
+import { Header } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
 export class GearEvents {
@@ -10,14 +10,14 @@ export class GearEvents {
     this.api = gearApi.api;
   }
 
-  subscribeLogEvents(callback: (event: Event) => void | Promise<void>): UnsubscribePromise {
+  subscribeLogEvents(callback: (event: LogEvent) => void | Promise<void>): UnsubscribePromise {
     try {
       return this.api.query.system.events((events) => {
         events
           .filter(({ event }) => this.api.events.gear.Log.is(event))
           .forEach(({ event }) => {
             setTimeout(() => {
-              callback(event);
+              callback(new LogEvent(event));
             }, 100);
           });
       });
@@ -26,7 +26,7 @@ export class GearEvents {
     }
   }
 
-  subscribeProgramEvents(callback: (event: Event) => void | Promise<void>): UnsubscribePromise {
+  subscribeProgramEvents(callback: (event: ProgramEvent) => void | Promise<void>): UnsubscribePromise {
     try {
       return this.api.query.system.events((events) => {
         events
@@ -35,7 +35,7 @@ export class GearEvents {
           )
           .forEach(({ event }) => {
             setTimeout(() => {
-              callback(event);
+              callback(new ProgramEvent(event));
             }, 100);
           });
       });
@@ -44,13 +44,13 @@ export class GearEvents {
     }
   }
 
-  subscribeTransferEvents(callback: (event: Event) => void | Promise<void>): UnsubscribePromise {
+  subscribeTransferEvents(callback: (event: TransferEvent) => void | Promise<void>): UnsubscribePromise {
     try {
       return this.api.query.system.events((events) => {
         events
           .filter(({ event }) => this.api.events.balances.Transfer.is(event))
           .forEach(({ event }) => {
-            callback(event);
+            callback(new TransferEvent(event));
           });
       });
     } catch (error) {
