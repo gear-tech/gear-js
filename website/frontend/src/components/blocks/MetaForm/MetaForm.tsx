@@ -109,7 +109,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
       validateOnBlur
       onSubmit={(values: MetaModel, { resetForm }) => {
         if(isMetaByFile){
-          addMetadata(metaWasm, programHash, droppedMetaFile?.name, alert);
+          addMetadata(metaWasm, programHash, values.name, alert);
         } else {
           const {name, ...meta} = values
           addMetadata(meta, programHash, name, alert);
@@ -138,7 +138,25 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                   </button>
                 </div>
               </div>
+              
               {(isMetaByFile && (
+                <>
+                <div className="meta-form--info">
+                  <label htmlFor="name" className="meta-form__field">
+                    Program name:
+                  </label>
+                  <div className="meta-form__field-wrapper">
+                    <Field
+                      id="name"
+                      name="name"
+                      type="text"
+                      className={clsx('', errors.name && touched.name && 'meta-form__input-error')}
+                    />
+                    {errors.name && touched.name ? (
+                      <div className="meta-form__error">{errors.input}</div>
+                    ) : null}
+                  </div>
+                </div>
                 <div className="meta-form--info">
                   <label className="meta-form__field" htmlFor="meta">
                     Upload file:{' '}
@@ -165,6 +183,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                     </button>
                   )}
                 </div>
+               </>
               )) || (
                 <>
                 <div className="meta-form--info">
@@ -266,7 +285,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                 </>
               )}
               <button className="meta-form__button" type="submit">
-                Upload program
+                Upload metadata
               </button>
             </div>
           </div>
