@@ -96,9 +96,12 @@ gearApi.allEvents((events) => {
 Subscribe to Log events
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeLogEvents((event) => {
-  const data: any = event.data[0].toHuman();
-  console.log(data);
+const unsub = await gearApi.gearEvents.subscribeLogEvents(({ data: { id, source, dest, payload, reply } }) => {
+  console.log(`
+  logId: ${id.toHex()}
+  source: ${source.toHex()}
+  payload: ${payload.toHuman()}
+  `);
 });
 // Unsubscribe
 unsub();
@@ -107,8 +110,10 @@ unsub();
 Subscribe to Program events
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeProgramEvents((event) => {
-  console.log(event.toHuman());
+const unsub = await gearApi.gearEvents.subscribeProgramEvents(({ method, data: { info, reason } }) => {
+  console.log(method);
+  console.log(`ProgramId: ${info.programId}`);
+  reason && console.log(`Reason: ${reason.toHuman()}`);
 });
 // Unsubscribe
 unsub();
@@ -117,8 +122,13 @@ unsub();
 Subscribe to Transfer events
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeTransferEvents((event) => {
-  console.log(event.toHuman());
+const unsub = await gearApi.gearEvents.subscribeTransferEvents(({ data: { from, to, value } }) => {
+  console.log(`
+    Transfer balance:
+    from: ${from.toHex()}
+    to: ${to.toHex()}
+    value: ${+value.toString()}
+    `);
 });
 // Unsubscribe
 unsub();

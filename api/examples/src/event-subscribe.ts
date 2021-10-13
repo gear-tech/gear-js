@@ -1,45 +1,40 @@
 import { GearApi } from '@gear-js/api';
-import { LogData, MessageInfo } from '@gear-js/api/types';
-
 async function main() {
   const gearApi = await GearApi.create();
 
-  gearApi.gearEvents.subscribeLogEvents(({ data }) => {
-    data.forEach((eventData: LogData) => {
-      console.log(`
+  gearApi.gearEvents.subscribeLogEvents(({ data: { id, source, dest, payload, reply } }) => {
+    console.log(`
       Log:
-      messageId: ${eventData.id.toHex()}
-      from program: ${eventData.source.toHex()}
-      to account: ${eventData.dest.toHex()}
-      payload: ${eventData.payload.toHuman()}
-      ${
-        eventData.reply.isSome
-          ? `reply to: ${eventData.reply.unwrap()[0].toHex()}
-        with error: ${eventData.reply.unwrap()[1].toNumber() === 0 ? false : true}
-        `
-          : ''
-      }
-        `);
-    });
+      messageId: ${id.toHex()}
+      from program: ${source.toHex()}
+    to account: ${dest.toHex()}
+    payload: ${payload.toHuman()}
+    ${
+      reply.isSome
+        ? `reply to: ${reply.unwrap()[0].toHex()}
+      with error: ${reply.unwrap()[1].toNumber() === 0 ? false : true}
+      `
+        : ''
+    }
+    `);
   });
 
-  gearApi.gearEvents.subscribeProgramEvents(({ data, method }) => {
-    data.forEach((eventData: MessageInfo) => {
-      console.log(`
+  gearApi.gearEvents.subscribeProgramEvents(({ method, data: { info, reason } }) => {
+    console.log(`
       ${method}:
-      programId: ${eventData.programId.toHex()}
-      initMessageId: ${eventData.messageId.toHex()}
-      origin: ${eventData.origin.toHex()}
+      programId: ${info.programId.toHex()}
+      initMessageId: ${info.messageId.toHex()}
+      origin: ${info.origin.toHex()}
+      ${reason ? `reason: ${reason.toHuman()}` : ''}
       `);
-    });
   });
 
-  gearApi.gearEvents.subscribeTransferEvents(({ data }) => {
+  gearApi.gearEvents.subscribeTransferEvents(({ data: { from, to, value } }) => {
     console.log(`
     Transfer balance:
-    from: ${data[0].toHex()}
-    to: ${data[1].toHex()}
-    value: ${+data[2].toString()}
+    from: ${from.toHex()}
+    to: ${to.toHex()}
+    value: ${+value.toString()}
     `);
   });
 }
