@@ -1,6 +1,5 @@
 import React, { useCallback, useRef, useState, VFC } from 'react';
 import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
-import { useDispatch } from 'react-redux';
 import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
 import { fileNameHandler } from 'helpers';
@@ -21,7 +20,6 @@ type Props = {
 };
 
 export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
-  const dispatch = useDispatch();
 
   const alert = useAlert();
 
@@ -43,6 +41,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
     output: '',
     title: '',
     types: '',
+    name: 'default.wasm'
   };
 
   const removeMetaFile = () => {
@@ -110,9 +109,10 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
       validateOnBlur
       onSubmit={(values: MetaModel, { resetForm }) => {
         if(isMetaByFile){
-          addMetadata(metaWasm, programHash, droppedMetaFile, dispatch, alert);
+          addMetadata(metaWasm, programHash, droppedMetaFile?.name, alert);
         } else {
-          console.log(values);
+          const {name, ...meta} = values
+          addMetadata(meta, programHash, name, alert);
         }
         resetForm();
       }}
@@ -167,14 +167,62 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                 </div>
               )) || (
                 <>
+                <div className="meta-form--info">
+                    <label htmlFor="name" className="meta-form__field">
+                      Program name:
+                    </label>
+                    <div className="meta-form__field-wrapper">
+                      <Field
+                        id="name"
+                        name="name"
+                        type="text"
+                        className={clsx('', errors.name && touched.name && 'meta-form__input-error')}
+                      />
+                      {errors.name && touched.name ? (
+                        <div className="meta-form__error">{errors.input}</div>
+                      ) : null}
+                    </div>
+                  </div>
                   <div className="meta-form--info">
-                    <label htmlFor="incomingType" className="meta-form__field">
+                    <label htmlFor="init_input" className="meta-form__field">
+                      Initial type:
+                    </label>
+                    <div className="meta-form__field-wrapper">
+                      <Field
+                        id="init_input"
+                        name="init_input"
+                        type="text"
+                        className={clsx('', errors.input && touched.input && 'meta-form__input-error')}
+                      />
+                      {errors.init_input && touched.init_input ? (
+                        <div className="meta-form__error">{errors.init_input}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="meta-form--info">
+                    <label htmlFor="init_output" className="meta-form__field">
+                      Initial output type:
+                    </label>
+                    <div className="meta-form__field-wrapper">
+                      <Field
+                        id="init_output"
+                        name="init_output"
+                        type="text"
+                        className={clsx('', errors.init_output && touched.init_output && 'meta-form__input-error')}
+                      />
+                      {errors.init_output && touched.init_output ? (
+                        <div className="meta-form__error">{errors.init_output}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="meta-form--info">
+                    <label htmlFor="input" className="meta-form__field">
                       Incoming type:
                     </label>
                     <div className="meta-form__field-wrapper">
                       <Field
-                        id="incomingType"
-                        name="incomingType"
+                        id="input"
+                        name="input"
                         type="text"
                         className={clsx('', errors.input && touched.input && 'meta-form__input-error')}
                       />
@@ -184,18 +232,34 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                     </div>
                   </div>
                   <div className="meta-form--info">
-                    <label htmlFor="expectedType" className="meta-form__field">
+                    <label htmlFor="output" className="meta-form__field">
                       Expected type:
                     </label>
                     <div className="meta-form__field-wrapper">
                       <Field
-                        id="expectedType"
-                        name="expectedType"
+                        id="output"
+                        name="output"
                         type="text"
                         className={clsx('', errors.output && touched.output && 'meta-form__input-error')}
                       />
                       {errors.output && touched.output ? (
                         <div className="meta-form__error">{errors.output}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="meta-form--info">
+                    <label htmlFor="types" className="meta-form__field">
+                      Types:
+                    </label>
+                    <div className="meta-form__field-wrapper">
+                      <Field
+                        as="textarea"
+                        id="types"
+                        name="types"
+                        className={clsx('', errors.types && touched.types && 'meta-form__input-error')}
+                      />
+                      {errors.types && touched.types ? (
+                        <div className="meta-form__error">{errors.types}</div>
                       ) : null}
                     </div>
                   </div>

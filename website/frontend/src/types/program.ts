@@ -18,7 +18,8 @@ export interface MetaModel {
   input: string,
   output: string,
   title: string,
-  types: string
+  types: string,
+  name?: string
 }
 
 export interface UploadProgramModel {

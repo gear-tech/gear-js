@@ -94,7 +94,7 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
   }
 };
 
-export const addMetadata = async (meta: MetaModel, programHash: string, file: any, dispatch: any, alert: any) => {
+export const addMetadata = async (meta: MetaModel, programHash: string, name: any, alert: any) => {
   const apiRequest = new ServerRPCRequestService();
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
   const keyring = GearKeyring.fromJson(jsonKeyring);
@@ -108,7 +108,7 @@ export const addMetadata = async (meta: MetaModel, programHash: string, file: an
       meta: JSON.stringify(meta),
       signature,
       programId: programHash,
-      name: file.name,
+      name,
       title: meta.title,
     });
 

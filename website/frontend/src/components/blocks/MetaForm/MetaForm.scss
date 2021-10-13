@@ -125,7 +125,18 @@
   min-height: 38px;
 }
 
-.meta-form--info input::placeholder {
+.meta-form--info textarea {
+  background: #000000;
+  width: 100%;
+  padding: 10px 16px;
+  min-height: 150px;
+  border: none;
+  outline: none;
+  color: #fff;
+  resize: vertical;
+}
+
+.meta-form--info input::placeholder, .meta-form--info textarea::placeholder {
   color: #8b8b8b;
 }
 
