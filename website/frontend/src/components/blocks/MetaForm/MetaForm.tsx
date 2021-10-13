@@ -20,7 +20,7 @@ type Props = {
   handleClose: () => void;
 };
 
-export const MetaForm: VFC<Props> = ({ programName, programHash, handleClose }) => {
+export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
   const dispatch = useDispatch();
 
   const alert = useAlert();
@@ -108,11 +108,14 @@ export const MetaForm: VFC<Props> = ({ programName, programHash, handleClose }) 
       initialValues={metadata}
       validationSchema={Schema}
       validateOnBlur
-      onSubmit={(values: MetaModel) => {
-        addMetadata(metaWasm, programHash, droppedMetaFile, dispatch, alert);
-        console.log(values);
+      onSubmit={(values: MetaModel, { resetForm }) => {
+        if(isMetaByFile){
+          addMetadata(metaWasm, programHash, droppedMetaFile, dispatch, alert);
+        } else {
+          console.log(values);
+        }
+        resetForm();
       }}
-      onReset={handleClose}
     >
       {({ errors, touched }) => (
         <Form id="meta-form">
