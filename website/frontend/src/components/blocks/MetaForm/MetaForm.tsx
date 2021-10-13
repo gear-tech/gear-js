@@ -104,7 +104,11 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
       validateOnBlur
       onSubmit={(values: MetaModel, { resetForm }) => {
         if(isMetaByFile){
-          addMetadata(metaWasm, programHash, values.name, alert);
+          if(metaWasm) {
+            addMetadata(metaWasm, programHash, values.name, alert);
+          } else {
+            alert.error(`error: metadata not loaded`);
+          }
         } else {
           const {name, ...meta} = values
           addMetadata(meta, programHash, name, alert);
