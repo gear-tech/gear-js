@@ -5,11 +5,13 @@
   "main": "meta.js",
   "scripts": {
     "build": "tsc",
-    "events": "node dist/event-subscribe.js"
+    "events": "node dist/event-subscribe.js",
+    "createType": "node dist/create-type.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "^0.4.11"
+    "@gear-js/api": "^0.5.1",
+    "dotenv": "^10.0.0"
   }
 }

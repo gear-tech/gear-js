@@ -10,14 +10,7 @@ import { MessagesModule } from 'src/messages/messages.module';
 import { MetadataModule } from 'src/metadata/metadata.module';
 
 @Module({
-  imports: [
-    GearNodeModule,
-    UsersModule,
-    AuthModule,
-    ProgramsModule,
-    MessagesModule,
-    MetadataModule,
-  ],
+  imports: [GearNodeModule, UsersModule, AuthModule, ProgramsModule, MessagesModule, MetadataModule],
   providers: [HttpRpcMessageHandler, HttpRpcMethods],
   controllers: [RpcController],
 })

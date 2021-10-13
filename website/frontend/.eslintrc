@@ -32,7 +32,8 @@
     "no-console": "off",
     "react/static-property-placement": "off",
     "react/prop-types": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "@typescript-eslint/no-unused-vars": ["warn"]
   },
   "settings": {
     "react": {

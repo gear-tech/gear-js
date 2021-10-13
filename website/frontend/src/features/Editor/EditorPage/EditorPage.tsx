@@ -1,13 +1,12 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
-import io from 'socket.io-client';
 import { Redirect } from 'react-router-dom';
 import clsx from 'clsx';
 
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
-import { EDITOR_BTNS, GEAR_LOCAL_IDE_URI, GEAR_STORAGE_KEY, PAGE_TYPES } from 'consts';
+import { EDITOR_BTNS, PAGE_TYPES } from 'consts';
 import { routes } from 'routes';
 
 import EditorDownload from 'assets/images/editor-download.svg';
@@ -37,29 +36,29 @@ export const EditorPage = () => {
     theme: 'vs-dark',
     language: 'rust',
   };
-  const socket = useRef(
-    io(GEAR_LOCAL_IDE_URI, {
-      transports: ['websocket'],
-      query: { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` },
-    })
-  );
+  // const socket = useRef(
+  //   io(GEAR_LOCAL_IDE_URI, {
+  //     transports: ['websocket'],
+  //     query: { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` },
+  //   })
+  // );
 
   useEffect(() => {
-    socket.current.on('build', (payload: { files?: { file: ArrayBuffer; fileName: string }[]; error?: string }) => {
-      if (payload.error) {
-        // eslint-disable-next-line no-alert
-        alert(payload.error);
-      }
-      if (payload.files) {
-        // eslint-disable-next-line no-alert
-        alert(`Your code build successfully, program name is ${payload.files[0].fileName}`);
-      }
-    });
-
-    socket.current.on('exception', (payload: { status: string; message: string }) => {
-      // eslint-disable-next-line no-alert
-      alert(`An error occurred, with message: ${payload.message}`);
-    });
+    // socket.current.on('build', (payload: { files?: { file: ArrayBuffer; fileName: string }[]; error?: string }) => {
+    //   if (payload.error) {
+    //     // eslint-disable-next-line no-alert
+    //     alert(payload.error);
+    //   }
+    //   if (payload.files) {
+    //     // eslint-disable-next-line no-alert
+    //     alert(`Your code build successfully, program name is ${payload.files[0].fileName}`);
+    //   }
+    // });
+    //
+    // socket.current.on('exception', (payload: { status: string; message: string }) => {
+    //   // eslint-disable-next-line no-alert
+    //   alert(`An error occurred, with message: ${payload.message}`);
+    // });
   });
 
   function handleFileSelect(index: number) {
@@ -95,10 +94,11 @@ export const EditorPage = () => {
   function handleBuild() {
     createArchive()
       .then((val) => {
-        socket.current.emit('build', {
-          file: val,
-          projectName: programName.trim(),
-        });
+        console.log(val);
+        // socket.current.emit('build', {
+        //   file: val,
+        //   projectName: programName.trim(),
+        // });
       })
       .catch((err) => {
         console.error(err);

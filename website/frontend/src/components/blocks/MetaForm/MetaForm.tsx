@@ -6,7 +6,6 @@ import clsx from 'clsx';
 import { fileNameHandler } from 'helpers';
 import { MetaModel } from 'types/program';
 import { uploadMetaStartAction } from 'store/actions/actions';
-import { SocketService } from 'services/SocketService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
@@ -18,11 +17,10 @@ import './MetaForm.scss';
 type Props = {
   programHash: string;
   programName: string;
-  socketService: SocketService;
   handleClose: () => void;
 };
 
-export const MetaForm: VFC<Props> = ({ programHash, programName, socketService, handleClose }) => {
+export const MetaForm: VFC<Props> = ({ programName, programHash, handleClose }) => {
   const dispatch = useDispatch();
 
   const alert = useAlert();
@@ -112,7 +110,7 @@ export const MetaForm: VFC<Props> = ({ programHash, programName, socketService, 
       validateOnBlur
       onSubmit={(values: MetaModel) => {
         console.log(metaWasm, programHash);
-        socketService.sendMetaToProgram({ ...values }, programName, programHash);
+        console.log(values);
         dispatch(uploadMetaStartAction());
       }}
       onReset={handleClose}

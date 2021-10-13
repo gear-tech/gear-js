@@ -5,7 +5,6 @@ import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS, GEAR_STORAGE_KEY } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
-import { SocketService } from 'services/SocketService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
 import { useAlert } from 'react-alert';
@@ -14,11 +13,10 @@ import { useApi } from '../../../hooks/useApi';
 // import Editor from 'assets/images/editor_icon.svg';
 
 type Props = {
-  socketService: SocketService;
   pageType: string;
 };
 
-export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
+export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const dispatch = useDispatch();
   const apiRequest = new ServerRPCRequestService();
 
@@ -78,7 +76,6 @@ export const ProgramSwitch: VFC<Props> = ({ socketService, pageType }) => {
     setPrevBlockHash,
     prevBlockHash,
     blocks,
-    socketService,
     isEditorDropdownOpened,
     setIsEditorDropdownOpened,
   ]);
