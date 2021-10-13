@@ -114,6 +114,8 @@ export const addMetadata = async (meta: MetaModel, programHash: string, file: an
 
     if(response.error) {
       throw new Error(response.error.message);
+    } else {
+      alert.success(`Metadata added successfully`);
     }
 
   } catch (error) {
