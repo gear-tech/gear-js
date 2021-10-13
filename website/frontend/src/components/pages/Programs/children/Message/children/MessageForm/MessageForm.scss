@@ -112,6 +112,11 @@
 }
 
 .message-form--info input {
+  height: 38px;
+}
+
+.message-form--info input,
+.message-form--info textarea {
   padding: 10px 16px;
   background: #000000;
   border: none;
@@ -122,7 +127,6 @@
   font-weight: normal;
   font-size: 14px;
   line-height: 21px;
-  height: 38px;
   min-height: 38px;
 }
 

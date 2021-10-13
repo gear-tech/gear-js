@@ -104,9 +104,11 @@ export const MessageForm: VFC<Props> = ({ programHash, programName }) => {
                   <Field
                     id="payload"
                     name="payload"
+                    as="textarea"
                     type="text"
                     className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
-                    placeholder="null"
+                    placeholder="// your metadata here ..."
+                    rows={5}
                   />
                   {errors.payload && touched.payload ? (
                     <div className="message-form__error">{errors.payload}</div>
