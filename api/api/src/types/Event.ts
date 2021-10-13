@@ -19,6 +19,17 @@ export class ProgramEvent extends GearEvent {
     return new ProgramData(this.get('data') as ProgramData);
   }
 }
+export class InitSuccessEvent extends GearEvent {
+  public get data() {
+    return new InitSuccessData(this.get('data') as InitSuccessData);
+  }
+}
+
+export class InitFailureEvent extends GearEvent {
+  public get data() {
+    return new InitFailureData(this.get('data') as InitFailureData);
+  }
+}
 
 export class LogEvent extends GearEvent {
   public get data(): LogData {
@@ -55,9 +66,6 @@ export class MessageInfoData extends GearEventData {
     return this.at(0)['origin'] as H256;
   }
 }
-
-export class InitMessageEnqueuedData extends MessageInfoData {}
-export class DispatchMessageEnqueuedData extends MessageInfoData {}
 
 export class ProgramData extends GearEventData {
   public get info(): MessageInfo {
@@ -107,3 +115,8 @@ export class TransferData extends GearEventData {
     return this.at(2) as u128;
   }
 }
+
+export class InitMessageEnqueuedData extends MessageInfoData {}
+export class DispatchMessageEnqueuedData extends MessageInfoData {}
+export class InitSuccessData extends MessageInfoData {}
+export class InitFailureData extends ProgramData {}
