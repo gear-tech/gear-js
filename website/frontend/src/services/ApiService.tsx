@@ -1,6 +1,6 @@
 import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
-import { UploadProgramModel, MessageModel } from 'types/program';
+import { UploadProgramModel, MessageModel, MetaModel } from 'types/program';
 import { RPC_METHODS } from 'consts';
 import {
   sendMessageSuccessAction,
@@ -93,3 +93,33 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
     console.error(error);
   }
 };
+
+export const addMetadata = async (meta: MetaModel, programHash: string, name: any, alert: any) => {
+  const apiRequest = new ServerRPCRequestService();
+  const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
+  const keyring = GearKeyring.fromJson(jsonKeyring);
+
+  try {
+
+    // Send sing message
+    const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
+
+    const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+      meta: JSON.stringify(meta),
+      signature,
+      programId: programHash,
+      name,
+      title: meta.title,
+    });
+
+    if(response.error) {
+      throw new Error(response.error.message);
+    } else {
+      alert.success(`Metadata added successfully`);
+    }
+
+  } catch (error) {
+    alert.error(`${error}`);
+    console.error(error);
+  }
+}
