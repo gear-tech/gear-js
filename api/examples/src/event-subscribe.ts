@@ -1,6 +1,4 @@
-import { TransferEvent } from '@gear-js/api';
-import { GearApi, LogEvent } from '@gear-js/api';
-import { ProgramEvent } from '@gear-js/api/types';
+import { GearApi } from '@gear-js/api';
 
 async function main() {
   const gearApi = await GearApi.create();

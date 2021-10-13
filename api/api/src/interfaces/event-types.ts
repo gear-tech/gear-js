@@ -31,20 +31,32 @@ export class TransferEvent extends GearEvent {
   }
 }
 
-export declare interface MessageInfo extends GenericEventData {
-  messageId: H256;
-  programId: H256;
-  origin: H256;
+export class InitMessageEnqueuedEvent extends GearEvent {
+  public get data() {
+    return new InitMessageEnqueuedData(this.get('data') as InitMessageEnqueuedData);
+  }
 }
 
-export declare interface Reason extends GenericEventData {
-  isError: Boolean;
-  asError: Null;
-  isValueTransfer: Boolean;
-  asValueTransfer: Null;
-  isDispatch: Boolean;
-  asDispatch: Vec<u8>;
+export class DispatchMessageEnqueuedEvent extends GearEvent {
+  public get data() {
+    return new DispatchMessageEnqueuedData(this.get('data') as DispatchMessageEnqueuedData);
+  }
 }
+
+export class MessageInfoData extends GearEventData {
+  public get messageId(): H256 {
+    return this.at(0)['messageId'] as H256;
+  }
+  public get programId(): H256 {
+    return this.at(0)['programId'] as H256;
+  }
+  public get origin(): H256 {
+    return this.at(0)['origin'] as H256;
+  }
+}
+
+export class InitMessageEnqueuedData extends MessageInfoData {}
+export class DispatchMessageEnqueuedData extends MessageInfoData {}
 
 export class ProgramData extends GearEventData {
   public get info(): MessageInfo {
@@ -56,21 +68,6 @@ export class ProgramData extends GearEventData {
     }
     return null;
   }
-}
-
-export declare interface Reply extends Tuple {
-  0: H256;
-  1: i32;
-}
-
-export declare interface LogInfo extends GenericEventData {
-  id: H256;
-  source: H256;
-  dest: H256;
-  payload: Vec<u8>;
-  gasLimit: u64;
-  value: u128;
-  reply: Option<Reply>;
 }
 
 export class LogData extends GearEventData {
@@ -97,10 +94,6 @@ export class LogData extends GearEventData {
   }
 }
 
-export declare interface InitMessageEnqueuedData extends MessageInfo {}
-
-export declare interface DispatchMessageEnqueuedData extends MessageInfo {}
-
 export class TransferData extends GearEventData {
   public get from(): H256 {
     return this.at(0) as H256;
@@ -112,4 +105,24 @@ export class TransferData extends GearEventData {
   public get value(): u128 {
     return this.at(2) as u128;
   }
+}
+
+export declare interface MessageInfo extends GenericEventData {
+  messageId: H256;
+  programId: H256;
+  origin: H256;
+}
+
+export declare interface Reason extends GenericEventData {
+  isError: Boolean;
+  asError: Null;
+  isValueTransfer: Boolean;
+  asValueTransfer: Null;
+  isDispatch: Boolean;
+  asDispatch: Vec<u8>;
+}
+
+export declare interface Reply extends Tuple {
+  0: H256;
+  1: i32;
 }
