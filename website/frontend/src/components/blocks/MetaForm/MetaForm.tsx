@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState, VFC } from 'react';
+import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { useDispatch } from 'react-redux';
 import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
@@ -9,6 +10,8 @@ import { SocketService } from 'services/SocketService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
+import { useAlert } from 'react-alert';
+import { readFileAsync } from '../../../helpers';
 import { Schema } from './Schema';
 import './MetaForm.scss';
 
@@ -22,7 +25,10 @@ type Props = {
 export const MetaForm: VFC<Props> = ({ programHash, programName, socketService, handleClose }) => {
   const dispatch = useDispatch();
 
+  const alert = useAlert();
+
   const [isMetaByFile, setIsMetaByFile] = useState(false);
+  const [metaWasm, setMetaWasm] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
 
@@ -32,11 +38,14 @@ export const MetaForm: VFC<Props> = ({ programHash, programName, socketService, 
     setTimeout(() => setWrongMetaFormat(false), 3000);
   }
 
-  const mapInitialValues = () => ({
-    incomingType: '',
-    expectedType: '',
-    meta: null,
-  });
+  const metadata = {
+    init_input: '',
+    init_output: '',
+    input: '',
+    output: '',
+    title: '',
+    types: '',
+  };
 
   const removeMetaFile = () => {
     setDroppedMetaFile(null);
@@ -47,12 +56,26 @@ export const MetaForm: VFC<Props> = ({ programHash, programName, socketService, 
   };
 
   const handleFilesUpload = useCallback(
-    (file) => {
+    async (file) => {
+      try {
+        const fileBuffer: any = await readFileAsync(file);
+        const meta = await getWasmMetadata(fileBuffer);
+        let types = '';
+        const parsedTypes = parseHexTypes(meta.types);
+        Object.entries(parsedTypes).forEach((value) => {
+          types += `${value[0]}: ${JSON.stringify(value[1])}\n`;
+        });
+        setMetaWasm({...meta, types});
+        
+      } catch (error) {
+        alert.error(`${error}`);
+      }
       setDroppedMetaFile(file);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setDroppedMetaFile]
   );
-
+    
   const checkFileFormat = useCallback((files: any) => {
     // eslint-disable-next-line no-console
     if (typeof files[0]?.name === 'string') {
@@ -84,10 +107,11 @@ export const MetaForm: VFC<Props> = ({ programHash, programName, socketService, 
 
   return (
     <Formik
-      initialValues={mapInitialValues()}
+      initialValues={metadata}
       validationSchema={Schema}
       validateOnBlur
       onSubmit={(values: MetaModel) => {
+        console.log(metaWasm, programHash);
         socketService.sendMetaToProgram({ ...values }, programName, programHash);
         dispatch(uploadMetaStartAction());
       }}
@@ -152,10 +176,10 @@ export const MetaForm: VFC<Props> = ({ programHash, programName, socketService, 
                         id="incomingType"
                         name="incomingType"
                         type="text"
-                        className={clsx('', errors.incomingType && touched.incomingType && 'meta-form__input-error')}
+                        className={clsx('', errors.input && touched.input && 'meta-form__input-error')}
                       />
-                      {errors.incomingType && touched.incomingType ? (
-                        <div className="meta-form__error">{errors.incomingType}</div>
+                      {errors.input && touched.input ? (
+                        <div className="meta-form__error">{errors.input}</div>
                       ) : null}
                     </div>
                   </div>
@@ -168,10 +192,10 @@ export const MetaForm: VFC<Props> = ({ programHash, programName, socketService, 
                         id="expectedType"
                         name="expectedType"
                         type="text"
-                        className={clsx('', errors.expectedType && touched.expectedType && 'meta-form__input-error')}
+                        className={clsx('', errors.output && touched.output && 'meta-form__input-error')}
                       />
-                      {errors.expectedType && touched.expectedType ? (
-                        <div className="meta-form__error">{errors.expectedType}</div>
+                      {errors.output && touched.output ? (
+                        <div className="meta-form__error">{errors.output}</div>
                       ) : null}
                     </div>
                   </div>
