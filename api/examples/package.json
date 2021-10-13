@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "^0.5.1",
+    "@gear-js/api": "^0.5.2",
     "dotenv": "^10.0.0"
   }
 }

@@ -1,5 +1,4 @@
 import { GearApi } from '@gear-js/api';
-
 async function main() {
   const gearApi = await GearApi.create();
 
