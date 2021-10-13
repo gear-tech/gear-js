@@ -15,13 +15,13 @@
     "test-meta": "mocha examples/test-meta.js"
   },
   "license": "GPL-3.0",
-  "dependencies": {
+  "peerDependencies": {
     "@polkadot/api": "^6.1.1",
-    "mocha": "^9.1.1",
-    "rxjs": "^7.3.0",
-    "typescript": "^4.4.2"
+    "rxjs": "^7.3.0"
   },
   "devDependencies": {
+    "typescript": "^4.4.2",
+    "mocha": "^9.1.1",
     "prettier": "^2.3.2",
     "tslint": "^6.1.3"
   },
