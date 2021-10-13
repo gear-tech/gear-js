@@ -274,45 +274,38 @@ export const AddAlert = (payload: AlertModel) => ({
 
 export const subscribeToEvents = () => (dispatch: any) => {
   const filterKey = localStorage.getItem('public_key_raw');
-  nodeApi.subscribeProgramEvents(({ data, method }) => {
+  nodeApi.subscribeProgramEvents(({ data: { info, reason } }) => {
     // @ts-ignore
-    data.forEach((item: MessageInfo) => {
-      if (item.origin.toHex() === filterKey) {
-        dispatch(
-          AddAlert({
-            type: method === 'initFailure' ? EventTypes.ERROR : EventTypes.SUCCESS,
-            message: item.programId.toHex(),
-          })
-        );
-      }
-    });
+    if (info.origin.toHex() === filterKey) {
+      dispatch(
+        AddAlert({
+          type: reason ? EventTypes.ERROR : EventTypes.SUCCESS,
+          message: info.programId.toHex(),
+        })
+      );
+    }
   });
 
-  nodeApi.subscribeLogEvents(({ data }) => {
+  nodeApi.subscribeLogEvents(({ data: { source, dest, reply } }) => {
     // @ts-ignore
-    data.forEach((eventData: LogData) => {
-      if (eventData.dest.toHex() === filterKey) {
-        dispatch(
-          AddAlert({
-            type:
-              eventData.reply.isSome && eventData.reply.unwrap()[1].toNumber() === 0
-                ? EventTypes.SUCCESS
-                : EventTypes.ERROR,
-            message: `Log from program: ${eventData.source.toHex()}`, // TODO: add payload parsing
-          })
-        );
-      }
-    });
+    if (dest.toHex() === filterKey) {
+      dispatch(
+        AddAlert({
+          type: reply.isSome && reply.unwrap()[1].toNumber() === 0 ? EventTypes.SUCCESS : EventTypes.ERROR,
+          message: `Log from program: ${source.toHex()}`, // TODO: add payload parsing
+        })
+      );
+    }
   });
 
-  nodeApi.subscribeTransferEvents(({ data }) => {
-    if (data[1].toHex() === filterKey) {
+  nodeApi.subscribeTransferEvents(({ data: { from, to, value } }) => {
+    if (to.toHex() === filterKey) {
       dispatch(
         AddAlert({
           type: EventTypes.INFO,
           message: `Transfer:\n
-          from: ${data[0].toHex()}\n
-          value: ${+data[2].toString()}`,
+          from: ${from.toHex()}\n
+          value: ${+value.toString()}`,
         })
       );
     }

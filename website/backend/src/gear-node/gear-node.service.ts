@@ -2,7 +2,7 @@ import { GearApi, GearKeyring } from '@gear-js/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { ProgramsService } from 'src/programs/programs.service';
-import { GearNodeError } from 'src/json-rpc/errors';
+import { GearNodeError, TransactionError } from 'src/json-rpc/errors';
 import { GearNodeEvents } from './events';
 
 const logger = new Logger('GearNodeService');
@@ -15,10 +15,18 @@ export class GearNodeService {
     GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then(async (api) => {
       this.api = api;
       const accountSeed = process.env.ACCOUNT_SEED;
-      this.rootKeyring = accountSeed
-        ? await GearKeyring.fromSeed(process.env.ACCOUNT_SEED, 'websiteAccount')
-        : (await GearKeyring.create('websiteAccount')).keyring;
-      this.updateSiteAccountBalance();
+      try {
+        this.rootKeyring = accountSeed
+          ? await GearKeyring.fromSeed(process.env.ACCOUNT_SEED, 'websiteAccount')
+          : (await GearKeyring.create('websiteAccount')).keyring;
+      } catch (error) {
+        logger.error('createRootKeyring', error.message);
+      }
+      try {
+        await this.updateSiteAccountBalance();
+      } catch (error) {
+        logger.error('updateSiteAccountBalance', error.message);
+      }
       this.subscription.subscribeAllEvents(api);
     });
   }
@@ -29,7 +37,7 @@ export class GearNodeService {
     if (currentBalance < siteAccBalance) {
       const sudoKeyring = parseInt(process.env.DEBUG)
         ? GearKeyring.fromSuri('//Alice', 'Alice default')
-        : await GearKeyring.fromSeed('websiteAccount', process.env.SUDO_SEED);
+        : await GearKeyring.fromSeed(process.env.SUDO_SEED, 'websiteAccount');
       await this.api.balance.transferBalance(
         sudoKeyring,
         this.rootKeyring.address,
@@ -40,6 +48,9 @@ export class GearNodeService {
   }
 
   async balanceTopUp(to: string, value: number): Promise<string> {
+    if (!to) {
+      throw new TransactionError('Destination address is not specified');
+    }
     try {
       await this.api.balance.transferBalance(this.rootKeyring, to, value, () => {});
       return 'Transfer balance succeed';

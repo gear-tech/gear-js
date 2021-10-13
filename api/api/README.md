@@ -48,17 +48,17 @@ const yourCustomTypesExample = {
   Person: {
     surname: 'String',
     name: 'String',
-    patronymic: 'Option<String>',
+    patronymic: 'Option<String>'
   },
   Id: {
     decimal: 'u64',
-    hex: 'Vec<u8>',
+    hex: 'Vec<u8>'
   },
   Data: {
     id: 'Id',
     person: 'Person',
-    data: 'Vec<String>',
-  },
+    data: 'Vec<String>'
+  }
 };
 const gearApi = await GearApi.create({ customTypes: { ...yourCustomTypesExample } });
 ```
@@ -253,7 +253,7 @@ const uploadProgram = {
   code,
   gasLimit: 1000000,
   value: 1000,
-  initPayload: somePayload,
+  initPayload: somePayload
 };
 
 try {
@@ -279,7 +279,7 @@ try {
     destination: destination, // programId
     payload: somePayload,
     gasLimit: 10000000,
-    value: 1000,
+    value: 1000
   };
   await gearApi.message.submit(message, meta);
 } catch (error) {

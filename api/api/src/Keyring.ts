@@ -2,51 +2,54 @@ import { Keyring } from '@polkadot/api';
 import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
 import { hexToU8a, isU8a, stringToU8a, isString, u8aToHex } from '@polkadot/util';
 import { mnemonicGenerate, mnemonicToMiniSecret, signatureVerify } from '@polkadot/util-crypto';
-import { Keypair } from '@polkadot/util-crypto/types';
+import { Keypair, KeypairType } from '@polkadot/util-crypto/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 
 export class GearKeyring {
-  private static unlock(keyring: KeyringPair) {
+  private static unlock(keyring: KeyringPair, passphrase?: string) {
     if (keyring.isLocked) {
-      keyring.unlock();
+      keyring.unlock(passphrase);
     }
     return keyring;
   }
 
-  static fromSuri(suri: string, name: string): KeyringPair {
+  static fromSuri(suri: string, name?: string): KeyringPair {
     const keyring = new Keyring({ type: 'sr25519' });
     const keyPair = keyring.addFromUri(suri, { name });
-    return GearKeyring.unlock(keyPair);
+    return keyPair;
   }
 
-  static fromKeyPair(pair: Keypair, name: string): KeyringPair {
+  static fromKeyPair(pair: Keypair, name?: string): KeyringPair {
     const keyring = new Keyring({ type: 'sr25519' });
-    return GearKeyring.unlock(keyring.addFromPair(pair, { name: name }));
+    return GearKeyring.unlock(keyring.addFromPair(pair, { name }));
   }
 
-  static fromJson(keypairJson: KeyringPair$Json | string): KeyringPair {
-    const keyring = new Keyring({ type: 'sr25519' }).createFromJson(
-      isString(keypairJson) ? JSON.parse(keypairJson) : keypairJson
-    );
-    return GearKeyring.unlock(keyring);
+  static fromJson(keypairJson: KeyringPair$Json | string, passphrase?: string): KeyringPair {
+    const json: KeyringPair$Json = isString(keypairJson) ? JSON.parse(keypairJson) : keypairJson;
+    const keyring = new Keyring().addFromJson(json);
+    return GearKeyring.unlock(keyring, passphrase);
   }
 
-  static async fromSeed(seed: Uint8Array | string, name: string): Promise<KeyringPair> {
+  static async fromSeed(seed: Uint8Array | string, name?: string): Promise<KeyringPair> {
     const keyring = new Keyring({ type: 'sr25519' });
     await waitReady();
 
-    const keypair = isU8a(seed)
-      ? keyring.addFromSeed(seed, { name: name })
-      : keyring.addFromSeed(hexToU8a(seed), { name: name });
-    return GearKeyring.unlock(keypair);
+    const keypair = isU8a(seed) ? keyring.addFromSeed(seed, { name }) : keyring.addFromSeed(hexToU8a(seed), { name });
+    return keypair;
   }
 
-  static fromMnemonic(mnemonic: string, name: string): KeyringPair {
-    const suri = mnemonic;
-    return GearKeyring.fromSuri(suri, `${name}`);
+  static fromMnemonic(mnemonic: string, name?: string): KeyringPair {
+    return GearKeyring.fromSuri(mnemonic, name);
   }
 
-  static async create(name: string): Promise<{
+  static toJson(keyring: KeyringPair, passphrase?: string): KeyringPair$Json {
+    return keyring.toJson(passphrase);
+  }
+
+  static async create(
+    name: string,
+    passphrase?: string
+  ): Promise<{
     keyring: KeyringPair;
     mnemonic: string;
     seed: string;
@@ -59,7 +62,7 @@ export class GearKeyring {
       keyring,
       mnemonic: mnemonic,
       seed: u8aToHex(seed),
-      json: keyring.toJson()
+      json: keyring.toJson(passphrase)
     };
   }
 

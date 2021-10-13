@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/api",
-  "version": "0.4.15",
+  "version": "0.5.5",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
   "main": "lib/index.js",
   "types": "types/index.d.ts",
@@ -15,13 +15,13 @@
     "test-meta": "mocha examples/test-meta.js"
   },
   "license": "GPL-3.0",
-  "dependencies": {
+  "peerDependencies": {
     "@polkadot/api": "^6.1.1",
-    "mocha": "^9.1.1",
-    "rxjs": "^7.3.0",
-    "typescript": "^4.4.2"
+    "rxjs": "^7.3.0"
   },
   "devDependencies": {
+    "typescript": "^4.4.2",
+    "mocha": "^9.1.1",
     "prettier": "^2.3.2",
     "tslint": "^6.1.3"
   },
