@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAlert } from 'react-alert';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { RPC_METHODS } from 'consts';
 import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
+import { Formik, Field, Form } from 'formik';
+import * as Yup from 'yup';
 
 import { copyToClipboard } from 'helpers';
 import './Keyring.scss';
@@ -22,6 +25,7 @@ export const Keyring = ({ handleClose }: Props) => {
   const [isMnemonic, setIsMnemonic] = useState('');
   const [saved, setSaved] = useState(false);
   const [keyPairJson, setKeyPairJson] = useState<any>(null);
+  const [keyPair, setKeyPair] = useState<any>(null);
   const [isAddressRaw, setIsAddressRaw] = useState('');
 
   const apiRequest = new ServerRPCRequestService();
@@ -35,6 +39,7 @@ export const Keyring = ({ handleClose }: Props) => {
         json,
         json: { address },
         keyring: { addressRaw },
+        keyring
       } = await GearKeyring.create('WebAccount');
       setKey(mnemonic);
       setPublicKey(address);
@@ -42,6 +47,7 @@ export const Keyring = ({ handleClose }: Props) => {
       setIsMnemonic(mnemonic);
       setKeyPairJson(json);
       setIsAddressRaw(u8aToHex(addressRaw));
+      setKeyPair(keyring);
     };
 
     create();
@@ -65,10 +71,11 @@ export const Keyring = ({ handleClose }: Props) => {
     }
   };
 
-  const handleCreate = () => {
+  const handleCreate = (password: string) => {
+    const encodedJson = GearKeyring.toJson(keyPair, `${password}`);
     localStorage.setItem('gear_mnemonic', JSON.stringify(keyPairJson));
     localStorage.setItem('public_key', publicKey);
-    downloadJson(JSON.stringify(keyPairJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
+    downloadJson(JSON.stringify(encodedJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
 
     apiRequest.getResource(RPC_METHODS.ADD_PUBLIC, {
       publickKeyRaw: isAddressRaw,
@@ -77,6 +84,11 @@ export const Keyring = ({ handleClose }: Props) => {
     localStorage.setItem('public_key_raw', isAddressRaw);
     handleClose();
   };
+
+  const Schema = Yup.object({
+    password: Yup.string().required('Password is required'),
+    confirmpassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  });
 
   return (
     <div className="keyring__wrapper">
@@ -116,20 +128,62 @@ export const Keyring = ({ handleClose }: Props) => {
           The secret seed value for this account. Ensure that you keep this in a safe place, with access to the seed you
           can re-create the account.
         </article>
-        <div className="keyring__saveToggle">
-          <input
-            type="checkbox"
-            className="keyring__saveToggle-checkbox"
-            checked={saved}
-            onChange={() => setSaved(!saved)}
-          />
-          <span>I have saved my mnemonic seed safely</span>
-        </div>
-      </div>
-      <div className="keyring__action-bar">
-        <button className="keyring__action-btn" type="button" disabled={!saved} onClick={handleCreate}>
-          Add
-        </button>
+        <Formik
+          initialValues={{
+            password: '',
+            confirmpassword: '',
+          }}
+          validationSchema={Schema}
+          onSubmit={() => {}}
+        >
+          {({ values, errors, isValid = false, touched }) => (
+            <Form id="password-form">
+              <div className="password--wrapper">
+                <div className="password-form--col">
+                  <div className="password-form--info">
+                    <label htmlFor="passowrd" className="password-form__field">Password:</label>
+                    <div className="password-form__field-wrapper">
+                      <Field type="password" name="password" id="password" />
+                      {errors.password && touched.password ? (
+                        <div className="password-form__error">{errors.password}</div>
+                       ) : null}
+                    </div>
+                  </div>
+                  <div className="password-form--info">
+                    <label htmlFor="passowrd" className="password-form__field">Repeat: </label>
+                    <div className="password-form__field-wrapper">
+                      <Field type="password" name="confirmpassword" id="confirmpassword" />
+                      {errors.confirmpassword && touched.confirmpassword ? (
+                        <div className="password-form__error">{errors.confirmpassword}</div>
+                       ) : null}
+                    </div>
+                  </div>
+                  <div className="keyring__saveToggle">
+                    <input
+                      type="checkbox"
+                      className="keyring__saveToggle-checkbox"
+                      checked={saved}
+                      onChange={() => setSaved(!saved)}
+                    />
+                    <span>I have saved my mnemonic seed safely</span>
+                  </div>
+                  <button
+                    className="keyring__action-btn"
+                    type="button"
+                    disabled={!saved}
+                    onClick={() => {
+                      if (isValid) {
+                        handleCreate(values.password);
+                      }
+                    }}
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );
