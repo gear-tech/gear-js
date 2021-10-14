@@ -8,3 +8,4 @@ export { GearBalance } from './Balance';
 export { transformTypes } from './utils';
 export { getWasmMetadata } from './WasmMeta';
 export * from './interfaces';
+export * from './types';

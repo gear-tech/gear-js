@@ -13,9 +13,13 @@ export interface ProgramPaginationModel {
 }
 
 export interface MetaModel {
-  incomingType: string;
-  expectedType: string;
-  meta: File | null;
+  init_input: string,
+  init_output: string,
+  input: string,
+  output: string,
+  title: string,
+  types: string,
+  name?: string
 }
 
 export interface UploadProgramModel {

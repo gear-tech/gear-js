@@ -3,4 +3,4 @@
 **/.env
 examples/test-json/
 **/lib/
-**/types/
+/api/types/

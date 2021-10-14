@@ -1,13 +1,15 @@
 import React, { useCallback, useRef, useState, VFC } from 'react';
-import { useDispatch } from 'react-redux';
+import { getWasmMetadata } from '@gear-js/api';
 import { Field, Form, Formik } from 'formik';
 import clsx from 'clsx';
 import { fileNameHandler } from 'helpers';
 import { MetaModel } from 'types/program';
-import { uploadMetaStartAction } from 'store/actions/actions';
+import { addMetadata } from 'services/ApiService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
+import { useAlert } from 'react-alert';
+import { readFileAsync } from '../../../helpers';
 import { Schema } from './Schema';
 import './MetaForm.scss';
 
@@ -17,10 +19,12 @@ type Props = {
   handleClose: () => void;
 };
 
-export const MetaForm: VFC<Props> = ({ programName, handleClose }) => {
-  const dispatch = useDispatch();
+export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
 
-  const [isMetaByFile, setIsMetaByFile] = useState(false);
+  const alert = useAlert();
+
+  const [isMetaByFile, setIsMetaByFile] = useState(true);
+  const [metaWasm, setMetaWasm] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
 
@@ -30,11 +34,15 @@ export const MetaForm: VFC<Props> = ({ programName, handleClose }) => {
     setTimeout(() => setWrongMetaFormat(false), 3000);
   }
 
-  const mapInitialValues = () => ({
-    incomingType: '',
-    expectedType: '',
-    meta: null,
-  });
+  const metadata = {
+    init_input: '',
+    init_output: '',
+    input: '',
+    output: '',
+    title: '',
+    types: '',
+    name: 'default.wasm'
+  };
 
   const removeMetaFile = () => {
     setDroppedMetaFile(null);
@@ -45,12 +53,21 @@ export const MetaForm: VFC<Props> = ({ programName, handleClose }) => {
   };
 
   const handleFilesUpload = useCallback(
-    (file) => {
+    async (file) => {
+      try {
+        const fileBuffer: any = await readFileAsync(file);
+        const meta = await getWasmMetadata(fileBuffer);
+        setMetaWasm(meta);
+        
+      } catch (error) {
+        alert.error(`${error}`);
+      }
       setDroppedMetaFile(file);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setDroppedMetaFile]
   );
-
+    
   const checkFileFormat = useCallback((files: any) => {
     // eslint-disable-next-line no-console
     if (typeof files[0]?.name === 'string') {
@@ -82,14 +99,22 @@ export const MetaForm: VFC<Props> = ({ programName, handleClose }) => {
 
   return (
     <Formik
-      initialValues={mapInitialValues()}
+      initialValues={metadata}
       validationSchema={Schema}
       validateOnBlur
-      onSubmit={(values: MetaModel) => {
-        console.log(values);
-        dispatch(uploadMetaStartAction());
+      onSubmit={(values: MetaModel, { resetForm }) => {
+        if(isMetaByFile){
+          if(metaWasm) {
+            addMetadata(metaWasm, programHash, values.name, alert);
+          } else {
+            alert.error(`error: metadata not loaded`);
+          }
+        } else {
+          const {name, ...meta} = values
+          addMetadata(meta, programHash, name, alert);
+        }
+        resetForm();
       }}
-      onReset={handleClose}
     >
       {({ errors, touched }) => (
         <Form id="meta-form">
@@ -102,17 +127,35 @@ export const MetaForm: VFC<Props> = ({ programName, handleClose }) => {
               <div className="meta-form--info">
                 <p className="meta-form__field">Metadata: </p>
                 <div className="meta-form--switch-btns">
-                  <button type="button" className="meta-form--switch-btns__btn" onClick={() => handleTypeChange(false)}>
-                    <img src={isMetaByFile ? deselected : selected} alt="radio" />
-                    Manual input
-                  </button>
                   <button type="button" className="meta-form--switch-btns__btn" onClick={() => handleTypeChange(true)}>
                     <img src={isMetaByFile ? selected : deselected} alt="radio" />
                     Upload file
                   </button>
+                  <button type="button" className="meta-form--switch-btns__btn" onClick={() => handleTypeChange(false)}>
+                    <img src={isMetaByFile ? deselected : selected} alt="radio" />
+                    Manual input
+                  </button>
                 </div>
               </div>
+              
               {(isMetaByFile && (
+                <>
+                <div className="meta-form--info">
+                  <label htmlFor="name" className="meta-form__field">
+                    Program name:
+                  </label>
+                  <div className="meta-form__field-wrapper">
+                    <Field
+                      id="name"
+                      name="name"
+                      type="text"
+                      className={clsx('', errors.name && touched.name && 'meta-form__input-error')}
+                    />
+                    {errors.name && touched.name ? (
+                      <div className="meta-form__error">{errors.input}</div>
+                    ) : null}
+                  </div>
+                </div>
                 <div className="meta-form--info">
                   <label className="meta-form__field" htmlFor="meta">
                     Upload file:{' '}
@@ -139,44 +182,109 @@ export const MetaForm: VFC<Props> = ({ programName, handleClose }) => {
                     </button>
                   )}
                 </div>
+               </>
               )) || (
                 <>
-                  <div className="meta-form--info">
-                    <label htmlFor="incomingType" className="meta-form__field">
-                      Incoming type:
+                <div className="meta-form--info">
+                    <label htmlFor="name" className="meta-form__field">
+                      Program name:
                     </label>
                     <div className="meta-form__field-wrapper">
                       <Field
-                        id="incomingType"
-                        name="incomingType"
+                        id="name"
+                        name="name"
                         type="text"
-                        className={clsx('', errors.incomingType && touched.incomingType && 'meta-form__input-error')}
+                        className={clsx('', errors.name && touched.name && 'meta-form__input-error')}
                       />
-                      {errors.incomingType && touched.incomingType ? (
-                        <div className="meta-form__error">{errors.incomingType}</div>
+                      {errors.name && touched.name ? (
+                        <div className="meta-form__error">{errors.input}</div>
                       ) : null}
                     </div>
                   </div>
                   <div className="meta-form--info">
-                    <label htmlFor="expectedType" className="meta-form__field">
+                    <label htmlFor="init_input" className="meta-form__field">
+                      Initial type:
+                    </label>
+                    <div className="meta-form__field-wrapper">
+                      <Field
+                        id="init_input"
+                        name="init_input"
+                        type="text"
+                        className={clsx('', errors.input && touched.input && 'meta-form__input-error')}
+                      />
+                      {errors.init_input && touched.init_input ? (
+                        <div className="meta-form__error">{errors.init_input}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="meta-form--info">
+                    <label htmlFor="init_output" className="meta-form__field">
+                      Initial output type:
+                    </label>
+                    <div className="meta-form__field-wrapper">
+                      <Field
+                        id="init_output"
+                        name="init_output"
+                        type="text"
+                        className={clsx('', errors.init_output && touched.init_output && 'meta-form__input-error')}
+                      />
+                      {errors.init_output && touched.init_output ? (
+                        <div className="meta-form__error">{errors.init_output}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="meta-form--info">
+                    <label htmlFor="input" className="meta-form__field">
+                      Incoming type:
+                    </label>
+                    <div className="meta-form__field-wrapper">
+                      <Field
+                        id="input"
+                        name="input"
+                        type="text"
+                        className={clsx('', errors.input && touched.input && 'meta-form__input-error')}
+                      />
+                      {errors.input && touched.input ? (
+                        <div className="meta-form__error">{errors.input}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="meta-form--info">
+                    <label htmlFor="output" className="meta-form__field">
                       Expected type:
                     </label>
                     <div className="meta-form__field-wrapper">
                       <Field
-                        id="expectedType"
-                        name="expectedType"
+                        id="output"
+                        name="output"
                         type="text"
-                        className={clsx('', errors.expectedType && touched.expectedType && 'meta-form__input-error')}
+                        className={clsx('', errors.output && touched.output && 'meta-form__input-error')}
                       />
-                      {errors.expectedType && touched.expectedType ? (
-                        <div className="meta-form__error">{errors.expectedType}</div>
+                      {errors.output && touched.output ? (
+                        <div className="meta-form__error">{errors.output}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="meta-form--info">
+                    <label htmlFor="types" className="meta-form__field">
+                      Types:
+                    </label>
+                    <div className="meta-form__field-wrapper">
+                      <Field
+                        as="textarea"
+                        id="types"
+                        name="types"
+                        className={clsx('', errors.types && touched.types && 'meta-form__input-error')}
+                      />
+                      {errors.types && touched.types ? (
+                        <div className="meta-form__error">{errors.types}</div>
                       ) : null}
                     </div>
                   </div>
                 </>
               )}
               <button className="meta-form__button" type="submit">
-                Upload program
+                Upload metadata
               </button>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import { GearApi } from '@gear-js/api';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Event } from '@polkadot/types/interfaces';
+import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api/types/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { API_CONNECTION_ADDRESS } from '../consts';
 
@@ -25,9 +25,9 @@ class NodeApi {
     this._api = await GearApi.create({ providerAddress: this.address });
   }
 
-  public subscribeProgramEvents(cb: (event: Event) => void) {
+  public subscribeProgramEvents(cb: (event: ProgramEvent) => void) {
     if (this._api && !('programEvents' in this.subscriptions)) {
-      this.subscriptions.programEvents = this._api.gearEvents.subscribeProgramEvents((event) => {
+      this.subscriptions.programEvents = this._api.gearEvents.subscribeProgramEvents((event: ProgramEvent) => {
         cb(event);
       });
     }
@@ -41,9 +41,9 @@ class NodeApi {
     }
   }
 
-  public subscribeLogEvents(cb: (event: Event) => void) {
+  public subscribeLogEvents(cb: (event: LogEvent) => void) {
     if (this._api && !('logEvents' in this.subscriptions)) {
-      this.subscriptions.logEvents = this._api.gearEvents.subscribeLogEvents((event) => {
+      this.subscriptions.logEvents = this._api.gearEvents.subscribeLogEvents((event: LogEvent) => {
         cb(event);
       });
     }
@@ -57,11 +57,13 @@ class NodeApi {
     }
   }
 
-  public subscribeTransferEvents(cb: (event: Event) => void) {
+  public subscribeTransferEvents(cb: (event: TransferEvent) => void) {
     if (this._api && !('subscribeTransferEvents' in this.subscriptions)) {
-      this.subscriptions.subscribeTransferEvents = this._api.gearEvents.subscribeTransferEvents((event) => {
-        cb(event);
-      });
+      this.subscriptions.subscribeTransferEvents = this._api.gearEvents.subscribeTransferEvents(
+        (event: TransferEvent) => {
+          cb(event);
+        }
+      );
     }
   }
 
