@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAlert } from 'react-alert';
 import { Metadata } from '@gear-js/api';
 import { RootState } from 'store/reducers';
-import { sendMessageResetAction } from 'store/actions/actions';
+import { EventTypes } from 'types/events';
+import { AddAlert, sendMessageResetAction } from 'store/actions/actions';
 import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
 import { MessageForm } from 'components/pages/Programs/children/Message/children/MessageForm/MessageForm';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
@@ -19,7 +19,6 @@ type Props = {
 
 export const Message: VFC<Props> = ({ programHash, programName, handleClose }) => {
   const dispatch = useDispatch();
-  const alert = useAlert();
 
   const [meta, setMeta] = useState<Metadata | null>(null);
 
@@ -58,9 +57,9 @@ export const Message: VFC<Props> = ({ programHash, programName, handleClose }) =
     if (!meta) {
       getMeta()
         .then((res) => setMeta(res))
-        .catch((err) => alert.error(`${err}`));
+        .catch((err) => AddAlert({ type: EventTypes.ERROR, message: err.message }));
     }
-  }, [meta, alert, getMeta]);
+  }, [meta, getMeta]);
 
   return (
     <div className="message-form">

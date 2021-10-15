@@ -1,5 +1,5 @@
 import UserRequestService from 'services/UserRequestService';
-
+import { GearKeyring } from '@gear-js/api';
 import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, UserProfileRPCModel } from 'types/user';
 import {
   NotificationActionTypes,
@@ -274,13 +274,14 @@ export const AddAlert = (payload: AlertModel) => ({
 
 export const subscribeToEvents = () => (dispatch: any) => {
   const filterKey = localStorage.getItem('public_key_raw');
-  nodeApi.subscribeProgramEvents(({ data: { info, reason } }) => {
+  nodeApi.subscribeProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
       dispatch(
         AddAlert({
           type: reason ? EventTypes.ERROR : EventTypes.SUCCESS,
-          message: info.programId.toHex(),
+          message: `${method}\n
+          ${info.programId.toHex()}`,
         })
       );
     }
@@ -291,8 +292,12 @@ export const subscribeToEvents = () => (dispatch: any) => {
     if (dest.toHex() === filterKey) {
       dispatch(
         AddAlert({
-          type: reply.isSome && reply.unwrap()[1].toNumber() === 0 ? EventTypes.SUCCESS : EventTypes.ERROR,
-          message: `Log from program: ${source.toHex()}`, // TODO: add payload parsing
+          type:
+            (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone
+              ? EventTypes.SUCCESS
+              : EventTypes.ERROR,
+          message: `LOG from program\n
+          ${source.toHex()}`, // TODO: add payload parsing
         })
       );
     }
@@ -303,9 +308,9 @@ export const subscribeToEvents = () => (dispatch: any) => {
       dispatch(
         AddAlert({
           type: EventTypes.INFO,
-          message: `Transfer:\n
-          from: ${from.toHex()}\n
-          value: ${+value.toString()}`,
+          message: `TRANSFER BALANCE\n
+            FROM:${GearKeyring.encodeAddress(from.toHex())}\n
+            VALUE:${value.toString()}`,
         })
       );
     }

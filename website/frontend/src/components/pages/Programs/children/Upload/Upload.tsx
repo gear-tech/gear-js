@@ -2,15 +2,14 @@ import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
-import { programUploadResetAction } from 'store/actions/actions';
-import { useAlert } from 'react-alert';
+import { EventTypes } from 'types/events';
+import { AddAlert, programUploadResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import './Upload.scss';
 import { ProgramDetails } from '../../../../blocks/ProgramDetails/ProgramDetails';
 
 export const Upload = () => {
   const dispatch = useDispatch();
-  const alert = useAlert();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
 
@@ -47,14 +46,11 @@ export const Upload = () => {
         if (!isCorrectFormat) {
           handleFilesUpload(files[0]);
         } else {
-          alert.error('Wrong file format', {
-            onClose: () => {
-              setWrongFormat(false);
-              if (programUploadingError) {
-                dispatch(programUploadResetAction());
-              }
-            },
-          });
+          AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' });
+          setWrongFormat(false);
+          if (programUploadingError) {
+            dispatch(programUploadResetAction());
+          }
         }
       }
     },
@@ -100,14 +96,11 @@ export const Upload = () => {
       if (!isCorrectFormat) {
         handleFilesUpload(files[0]);
       } else {
-        alert.error('Wrong file format', {
-          onClose: () => {
-            setWrongFormat(false);
-            if (programUploadingError) {
-              dispatch(programUploadResetAction());
-            }
-          },
-        });
+        AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' });
+        setWrongFormat(false);
+        if (programUploadingError) {
+          dispatch(programUploadResetAction());
+        }
       }
     }
   };
