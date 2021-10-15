@@ -5,10 +5,10 @@ import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import clsx from 'clsx';
 import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
-import { sendMessageStartAction } from 'store/actions/actions';
+import { EventTypes } from 'types/events';
+import { AddAlert, sendMessageStartAction } from 'store/actions/actions';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
-import { useAlert } from 'react-alert';
 import { useApi } from '../../../../../../../hooks/useApi';
 import { Schema } from './Schema';
 import './MessageForm.scss';
@@ -21,7 +21,6 @@ type Props = {
 
 export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   const [api] = useApi();
-  const alert = useAlert();
   const parsedMeta: Metadata = JSON.parse(meta as string);
   const dispatch = useDispatch();
   const [ready, setReady] = useState(false);
@@ -44,16 +43,16 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
 
   const calculateGas = async (values: any, setFieldValue: any) => {
     if (values.payload.length === 0) {
-      alert.error(`Error: payload can't be empty`);
+      AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` });
       return;
     }
 
     try {
       const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.input, meta);
-      alert.info(`Estimated gas ${estimatedGas}`);
+      AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` });
       setFieldValue('gasLimit', Number(`${estimatedGas}`));
     } catch (error) {
-      alert.error(`${error}`);
+      AddAlert({ type: EventTypes.ERROR, message: `${error}` });
       console.error(error);
     }
   };
@@ -65,7 +64,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: MessageModel, { resetForm }) => {
-          SendMessageToProgram(api, values, dispatch, alert);
+          SendMessageToProgram(api, values, dispatch);
           dispatch(sendMessageStartAction());
           resetForm();
         }}

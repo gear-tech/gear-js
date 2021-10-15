@@ -4,14 +4,14 @@ import { Formik, Form, Field } from 'formik';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch } from 'react-redux';
 import { UploadProgram } from 'services/ApiService';
-import { programUploadStartAction } from 'store/actions/actions';
+import { EventTypes } from 'types/events';
+import { AddAlert, programUploadStartAction } from 'store/actions/actions';
 import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
 import './ProgramDetails.scss';
 import cancel from 'assets/images/cancel.svg';
 import close from 'assets/images/close.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import { useAlert } from 'react-alert';
 import { Schema } from './Schema';
 import { readFileAsync } from '../../../helpers';
 import { useApi } from '../../../hooks/useApi';
@@ -32,7 +32,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [wrongJSON, setWrongJSON] = useState(false);
 
   const [api] = useApi();
-  const alert = useAlert();
 
   const program = {
     gasLimit: 20000,
@@ -73,7 +72,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         });
         setDisplayTypes(types.trimEnd());
       } catch (error) {
-        alert.error(`${error}`);
+        AddAlert({ type: EventTypes.ERROR, message: `${error}` });
       }
       setDroppedMetaFile(file);
     },
@@ -101,11 +100,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       if (!isCorrectFormat) {
         handleFilesUpload(files[0]);
       } else {
-        alert.error('Wrong file format', {
-          onClose: () => {
-            setWrongMetaFormat(false);
-          },
-        });
+        AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' });
+        setWrongMetaFormat(false);
       }
     }
   };
@@ -127,13 +123,13 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         onSubmit={(values: UploadProgramModel) => {
           if (isMetaByFile) {
             dispatch(programUploadStartAction());
-            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, dispatch, alert);
+            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, dispatch);
             setDroppedFile(null);
           } else {
             try {
               const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
               dispatch(programUploadStartAction());
-              UploadProgram(api, droppedFile, { ...values, types }, dispatch, alert);
+              UploadProgram(api, droppedFile, { ...values, types }, dispatch);
               setDroppedFile(null);
             } catch (err) {
               setWrongJSON(true);

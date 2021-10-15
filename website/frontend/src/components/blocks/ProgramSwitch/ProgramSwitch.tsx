@@ -3,11 +3,12 @@ import clsx from 'clsx';
 import { Link /* , Redirect */ } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
+import { AddAlert } from 'store/actions/actions';
+import { EventTypes } from 'types/events';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS, GEAR_STORAGE_KEY } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
-import { useAlert } from 'react-alert';
 import { useApi } from '../../../hooks/useApi';
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
 // import Editor from 'assets/images/editor_icon.svg';
@@ -21,7 +22,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const apiRequest = new ServerRPCRequestService();
 
   const [api] = useApi();
-  const alert = useAlert();
 
   const [timeInstance, setTimeInstance] = useState(0);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
@@ -97,13 +97,13 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
       );
       if (response.result) {
-        alert.success(`Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}`);
+        AddAlert({ type: EventTypes.SUCCESS, message: `Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}` });
       }
       if (response.error) {
-        alert.error(`${response.error.message}`);
+        AddAlert({ type: EventTypes.ERROR, message: `${response.error.message}` });
       }
     } catch (error) {
-      alert.error(`${error}`);
+      AddAlert({ type: EventTypes.ERROR, message: `${error}` });
     }
   };
 

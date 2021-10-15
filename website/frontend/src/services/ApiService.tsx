@@ -2,16 +2,18 @@ import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import { UploadProgramModel, MessageModel, MetaModel } from 'types/program';
 import { RPC_METHODS } from 'consts';
+import { EventTypes } from 'types/events';
 import {
   sendMessageSuccessAction,
   sendMessageFailedAction,
   programUploadSuccessAction,
   programUploadFailedAction,
+  AddAlert,
 } from 'store/actions/actions';
 import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
-export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any, alert: any) => {
+export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
 
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -43,7 +45,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
 
     // Trying to sign transaction, receive
     await api.program.signAndSend(keyring, (data: any) => {
-      alert.success(`status: ${data.status}`);
+      AddAlert({ type: EventTypes.SUCCESS, message: `UPLOAD STATUS: ${data.status}` });
       if (data.status === 'Finalized') {
         dispatch(programUploadSuccessAction());
         // Send sing message
@@ -61,16 +63,17 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   } catch (error) {
     dispatch(programUploadFailedAction(`${error}`));
     console.error(error);
-    alert.error(`status: ${error}`);
+    AddAlert({ type: EventTypes.ERROR, message: `UPLOAD STATUS: ${error}` });
+    // alert.error(`status: ${error}`);
   }
 };
 
-export const SendMessageToProgram = async (api: any, message: MessageModel, dispatch: any, alert: any) => {
+export const SendMessageToProgram = async (api: any, message: MessageModel, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
 
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
   const keyring = GearKeyring.fromJson(jsonKeyring);
-
+  console.log(message);
   try {
     // get metadata for specific program
     const {
@@ -78,29 +81,27 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
     } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
       programId: message.destination,
     });
-
     await api.message.submit(message, JSON.parse(meta));
     await api.message.signAndSend(keyring, (data: any) => {
-      alert.success(`status: ${data.status}`);
+      AddAlert({ type: EventTypes.SUCCESS, message: `SEND MESSAGE STATUE: ${data.status}` });
       if (data.status === 'Finalized') {
         console.log('Finalized!');
         dispatch(sendMessageSuccessAction());
       }
     });
   } catch (error) {
-    alert.error(`status: ${error}`);
+    AddAlert({ type: EventTypes.ERROR, message: `SEND MESSAGE STATUE: ${error}` });
     dispatch(sendMessageFailedAction(`${error}`));
     console.error(error);
   }
 };
 
-export const addMetadata = async (meta: MetaModel, programHash: string, name: any, alert: any) => {
+export const addMetadata = async (meta: MetaModel, programHash: string, name: any) => {
   const apiRequest = new ServerRPCRequestService();
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
   const keyring = GearKeyring.fromJson(jsonKeyring);
 
   try {
-
     // Send sing message
     const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
 
@@ -112,14 +113,13 @@ export const addMetadata = async (meta: MetaModel, programHash: string, name: an
       title: meta.title,
     });
 
-    if(response.error) {
+    if (response.error) {
       throw new Error(response.error.message);
     } else {
-      alert.success(`Metadata added successfully`);
+      AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` });
     }
-
   } catch (error) {
-    alert.error(`${error}`);
+    AddAlert({ type: EventTypes.ERROR, message: `${error}` });
     console.error(error);
   }
-}
+};

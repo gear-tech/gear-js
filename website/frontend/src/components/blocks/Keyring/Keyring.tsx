@@ -39,7 +39,7 @@ export const Keyring = ({ handleClose }: Props) => {
         json,
         json: { address },
         keyring: { addressRaw },
-        keyring
+        keyring,
       } = await GearKeyring.create('WebAccount');
       setKey(mnemonic);
       setPublicKey(address);
@@ -109,7 +109,7 @@ export const Keyring = ({ handleClose }: Props) => {
               <button
                 className="keyring__copy-button"
                 type="button"
-                onClick={() => copyToClipboard(key, alert, 'Account ID copied')}
+                onClick={() => copyToClipboard(key, alert, 'Copied')}
               >
                 <CopyClipboard color="#ffffff" />
               </button>
@@ -141,21 +141,25 @@ export const Keyring = ({ handleClose }: Props) => {
               <div className="password--wrapper">
                 <div className="password-form--col">
                   <div className="password-form--info">
-                    <label htmlFor="passowrd" className="password-form__field">Password:</label>
+                    <label htmlFor="passowrd" className="password-form__field">
+                      Password:
+                    </label>
                     <div className="password-form__field-wrapper">
                       <Field type="password" name="password" id="password" />
                       {errors.password && touched.password ? (
                         <div className="password-form__error">{errors.password}</div>
-                       ) : null}
+                      ) : null}
                     </div>
                   </div>
                   <div className="password-form--info">
-                    <label htmlFor="passowrd" className="password-form__field">Repeat: </label>
+                    <label htmlFor="passowrd" className="password-form__field">
+                      Repeat:{' '}
+                    </label>
                     <div className="password-form__field-wrapper">
                       <Field type="password" name="confirmpassword" id="confirmpassword" />
                       {errors.confirmpassword && touched.confirmpassword ? (
                         <div className="password-form__error">{errors.confirmpassword}</div>
-                       ) : null}
+                      ) : null}
                     </div>
                   </div>
                   <div className="keyring__saveToggle">

@@ -8,7 +8,8 @@ import { addMetadata } from 'services/ApiService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import { useAlert } from 'react-alert';
+import { AddAlert } from 'store/actions/actions';
+import { EventTypes } from 'types/events';
 import { readFileAsync } from '../../../helpers';
 import { Schema } from './Schema';
 import './MetaForm.scss';
@@ -20,9 +21,6 @@ type Props = {
 };
 
 export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
-
-  const alert = useAlert();
-
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
@@ -41,7 +39,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
     output: '',
     title: '',
     types: '',
-    name: 'default.wasm'
+    name: 'default.wasm',
   };
 
   const removeMetaFile = () => {
@@ -58,16 +56,15 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
         setMetaWasm(meta);
-        
       } catch (error) {
-        alert.error(`${error}`);
+        AddAlert({ type: EventTypes.ERROR, message: `${error}` });
       }
       setDroppedMetaFile(file);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [setDroppedMetaFile]
   );
-    
+
   const checkFileFormat = useCallback((files: any) => {
     // eslint-disable-next-line no-console
     if (typeof files[0]?.name === 'string') {
@@ -103,15 +100,15 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
       validationSchema={Schema}
       validateOnBlur
       onSubmit={(values: MetaModel, { resetForm }) => {
-        if(isMetaByFile){
-          if(metaWasm) {
-            addMetadata(metaWasm, programHash, values.name, alert);
+        if (isMetaByFile) {
+          if (metaWasm) {
+            addMetadata(metaWasm, programHash, values.name);
           } else {
-            alert.error(`error: metadata not loaded`);
+            AddAlert({ type: EventTypes.ERROR, message: `ERROR: metadata not loaded` });
           }
         } else {
-          const {name, ...meta} = values
-          addMetadata(meta, programHash, name, alert);
+          const { name, ...meta } = values;
+          addMetadata(meta, programHash, name);
         }
         resetForm();
       }}
@@ -137,55 +134,10 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                   </button>
                 </div>
               </div>
-              
+
               {(isMetaByFile && (
                 <>
-                <div className="meta-form--info">
-                  <label htmlFor="name" className="meta-form__field">
-                    Program name:
-                  </label>
-                  <div className="meta-form__field-wrapper">
-                    <Field
-                      id="name"
-                      name="name"
-                      type="text"
-                      className={clsx('', errors.name && touched.name && 'meta-form__input-error')}
-                    />
-                    {errors.name && touched.name ? (
-                      <div className="meta-form__error">{errors.input}</div>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="meta-form--info">
-                  <label className="meta-form__field" htmlFor="meta">
-                    Upload file:{' '}
-                  </label>
-                  <Field
-                    id="meta"
-                    name="meta"
-                    className="is-hidden"
-                    type="file"
-                    onChange={handleMetaInputChange}
-                    innerRef={metaFieldRef}
-                  />
-                  {(droppedMetaFile && (
-                    <div className="meta-form__filename meta-form__value">
-                      {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, '')}.
-                      {droppedMetaFile.name.split('.').pop()}
-                      <button type="button" onClick={removeMetaFile}>
-                        <img alt="cancel" src={cancel} />
-                      </button>
-                    </div>
-                  )) || (
-                    <button className="meta-form--file-btn" type="button" onClick={uploadMetaFile}>
-                      Select file
-                    </button>
-                  )}
-                </div>
-               </>
-              )) || (
-                <>
-                <div className="meta-form--info">
+                  <div className="meta-form--info">
                     <label htmlFor="name" className="meta-form__field">
                       Program name:
                     </label>
@@ -196,9 +148,50 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                         type="text"
                         className={clsx('', errors.name && touched.name && 'meta-form__input-error')}
                       />
-                      {errors.name && touched.name ? (
-                        <div className="meta-form__error">{errors.input}</div>
-                      ) : null}
+                      {errors.name && touched.name ? <div className="meta-form__error">{errors.input}</div> : null}
+                    </div>
+                  </div>
+                  <div className="meta-form--info">
+                    <label className="meta-form__field" htmlFor="meta">
+                      Upload file:{' '}
+                    </label>
+                    <Field
+                      id="meta"
+                      name="meta"
+                      className="is-hidden"
+                      type="file"
+                      onChange={handleMetaInputChange}
+                      innerRef={metaFieldRef}
+                    />
+                    {(droppedMetaFile && (
+                      <div className="meta-form__filename meta-form__value">
+                        {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, '')}.
+                        {droppedMetaFile.name.split('.').pop()}
+                        <button type="button" onClick={removeMetaFile}>
+                          <img alt="cancel" src={cancel} />
+                        </button>
+                      </div>
+                    )) || (
+                      <button className="meta-form--file-btn" type="button" onClick={uploadMetaFile}>
+                        Select file
+                      </button>
+                    )}
+                  </div>
+                </>
+              )) || (
+                <>
+                  <div className="meta-form--info">
+                    <label htmlFor="name" className="meta-form__field">
+                      Program name:
+                    </label>
+                    <div className="meta-form__field-wrapper">
+                      <Field
+                        id="name"
+                        name="name"
+                        type="text"
+                        className={clsx('', errors.name && touched.name && 'meta-form__input-error')}
+                      />
+                      {errors.name && touched.name ? <div className="meta-form__error">{errors.input}</div> : null}
                     </div>
                   </div>
                   <div className="meta-form--info">
@@ -244,9 +237,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                         type="text"
                         className={clsx('', errors.input && touched.input && 'meta-form__input-error')}
                       />
-                      {errors.input && touched.input ? (
-                        <div className="meta-form__error">{errors.input}</div>
-                      ) : null}
+                      {errors.input && touched.input ? <div className="meta-form__error">{errors.input}</div> : null}
                     </div>
                   </div>
                   <div className="meta-form--info">
@@ -260,9 +251,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                         type="text"
                         className={clsx('', errors.output && touched.output && 'meta-form__input-error')}
                       />
-                      {errors.output && touched.output ? (
-                        <div className="meta-form__error">{errors.output}</div>
-                      ) : null}
+                      {errors.output && touched.output ? <div className="meta-form__error">{errors.output}</div> : null}
                     </div>
                   </div>
                   <div className="meta-form--info">
@@ -276,9 +265,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                         name="types"
                         className={clsx('', errors.types && touched.types && 'meta-form__input-error')}
                       />
-                      {errors.types && touched.types ? (
-                        <div className="meta-form__error">{errors.types}</div>
-                      ) : null}
+                      {errors.types && touched.types ? <div className="meta-form__error">{errors.types}</div> : null}
                     </div>
                   </div>
                 </>
