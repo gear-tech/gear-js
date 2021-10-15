@@ -24,7 +24,6 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
 
   return (
     <div className={styles.programsListItem} key={program.hash}>
-      <span className={styles.programsListNumber}>{program.programNumber}</span>
       <div className={styles.programWrapper}>
         <div className={styles.programWrapperName}>
           <button
