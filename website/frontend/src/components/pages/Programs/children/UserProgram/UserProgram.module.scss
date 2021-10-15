@@ -58,12 +58,10 @@
 .programsListName {
   color: $textColor;
   font-size: $fontSizeBase;
-  margin-left: 24px;
   cursor: copy;
   @media (max-width: 768px) {
     font-size: 14px;
     word-break: break-all;
-    margin-left: 16px;
   }
 }
 
