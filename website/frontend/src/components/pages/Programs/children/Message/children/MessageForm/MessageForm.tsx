@@ -35,9 +35,9 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   useEffect(() => {
     const displayedTypes = parseHexTypes(parsedMeta.types);
     const inputType = getTypeStructure(parsedMeta.input!, displayedTypes);
-    console.log(initialValues.payload === JSON.stringify(inputType));
-    if (Object.keys(displayedTypes).length && JSON.stringify(inputType) !== initialValues.payload) {
-      setInitialValues({ ...initialValues, payload: JSON.stringify(inputType) });
+    console.log(initialValues.payload !== JSON.stringify(inputType, null, 4));
+    if (Object.keys(displayedTypes).length && JSON.stringify(inputType, null, 4) !== initialValues.payload) {
+      setInitialValues({ ...initialValues, payload: JSON.stringify(inputType, null, 4) });
     }
     setReady(true);
   }, [initialValues, setInitialValues, parsedMeta]);
@@ -107,7 +107,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
                       type="text"
                       className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
                       placeholder="// your payload here ..."
-                      rows={5}
+                      rows={15}
                     />
                     {errors.payload && touched.payload ? (
                       <div className="message-form__error">{errors.payload}</div>
