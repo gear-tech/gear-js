@@ -26,7 +26,7 @@ jobs:
         if: steps.check.outputs.changed == 'true'
         run: |
           cd api/api
-          npm run ci
+          npm ci
           npm config set //registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN
           npm publish
         env:
