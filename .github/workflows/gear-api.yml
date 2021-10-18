@@ -2,7 +2,7 @@ name: gear-api
 
 on:
   push:
-    branches: [master, do-fix-publish-api]
+    branches: [master]
 
 jobs:
   build:
