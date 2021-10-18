@@ -1,13 +1,13 @@
 import { GearApi } from '.';
 import { Metadata } from './interfaces';
 import { CreateTypeError } from './errors';
-import { isHex, hexToU8a, isU8a } from '@polkadot/util';
-import { Registry } from '@polkadot/types/types';
+import { isHex, hexToU8a, isU8a, u8aToString } from '@polkadot/util';
+import { Registry, Codec } from '@polkadot/types/types';
 import { Bytes, TypeRegistry, GenericPortableRegistry } from '@polkadot/types';
 
 const REGULAR_EXP = {
   endWord: /\b\w+\b/g,
-  angleBracket: /(?<=<).+(?=>)/,
+  angleBracket: /<.+>/,
   roundBracket: /^\(.+\)$/,
   squareBracket: /^\[.+\]$/
 };
@@ -150,8 +150,7 @@ export class CreateType {
 
   private toBytes(registry: Registry, type: any, data: any): Bytes {
     if (typeIsString(type, data)) {
-      return data;
-      // return registry.createType('Bytes', Array.from(stringToU8a(data)));
+      return registry.createType('Bytes', Array.from(registry.createType('String', data).toU8a()));
     } else if (type.toLowerCase() === 'bytes') {
       if (data instanceof Uint8Array) {
         return registry.createType('Bytes', Array.from(data));
@@ -162,9 +161,10 @@ export class CreateType {
     }
   }
 
-  private fromBytes(registry: Registry, type: string, data: any) {
+  private fromBytes(registry: Registry, type: string, data: Bytes): Codec {
     if (typeIsString(type)) {
-      return registry.createType('String', data);
+      const decoded = registry.createType('String', data);
+      return registry.createType('Bytes', Array.from(decoded.toU8a().slice(2)));
     } else if (type.toLowerCase() === 'bytes') {
       return data;
     }
@@ -250,9 +250,9 @@ export function getTypeStructure(typeName: string, types: any) {
   // check generic
   match = typeName.match(REGULAR_EXP.angleBracket);
   if (match) {
-    const stdType = typeName.slice(0, match.index - 1);
+    const stdType = typeName.slice(0, match.index);
     if (stdType in STD_TYPES) {
-      const entryType = match[0];
+      const entryType = match[0].slice(1, match[0].length - 1);
       const splitted = splitByCommas(entryType);
       return STD_TYPES[stdType](getTypeStructure(splitted[0], types), getTypeStructure(splitted[1], types));
     } else {
