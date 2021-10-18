@@ -1,0 +1,27 @@
+name: gear-api
+
+on:
+  push:
+    branches: [do-create-str-type]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.x2
+      - name: Check package version
+        uses: EndBug/version-check@v1
+        id: check
+        with:
+          file-name: api/api/package.json
+          file-url: https://unpkg.com/your-package@latest/package.json
+          static-checking: localIsNew
+      - name: Check
+        if: steps.check.outputs.changed == 'true'
+        run: 'echo "version changed"'
