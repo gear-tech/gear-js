@@ -2,7 +2,7 @@ name: gear-api
 
 on:
   push:
-    branches: [do-create-str-type]
+    branches: [master]
 
 jobs:
   build:
@@ -22,6 +22,16 @@ jobs:
           file-name: api/api/package.json
           file-url: https://unpkg.com/@gear-js/api@latest/package.json
           static-checking: localIsNew
-      - name: Check
+      - name: Install dependencies
         if: steps.check.outputs.changed == 'true'
-        run: 'echo "version changed"'
+        run: npm install
+      - name: build
+        if: steps.check.outputs.changed == 'true'
+        run: npm run build
+      - name: Publish
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          npm config set //registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN
+          npm publish
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
