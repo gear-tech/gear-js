@@ -22,15 +22,11 @@ jobs:
           file-name: api/api/package.json
           file-url: https://unpkg.com/@gear-js/api@latest/package.json
           static-checking: localIsNew
-      - name: Install dependencies
-        if: steps.check.outputs.changed == 'true'
-        run: npm install
-      - name: build
-        if: steps.check.outputs.changed == 'true'
-        run: npm run build
       - name: Publish
         if: steps.check.outputs.changed == 'true'
         run: |
+          cd api/api
+          npm ci
           npm config set //registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN
           npm publish
         env:
