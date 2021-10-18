@@ -11,10 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use node 14.x
+      - name: Use node 16.x
         uses: actions/setup-node@v2.1.5
         with:
-          node-version: 14.x2
+          node-version: 16.x
       - name: Check package version
         uses: EndBug/version-check@v1
         id: check
