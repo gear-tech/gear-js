@@ -20,7 +20,7 @@ jobs:
         id: check
         with:
           file-name: api/api/package.json
-          file-url: https://unpkg.com/your-package@latest/package.json
+          file-url: https://unpkg.com/@gear-js/api@latest/package.json
           static-checking: localIsNew
       - name: Check
         if: steps.check.outputs.changed == 'true'
