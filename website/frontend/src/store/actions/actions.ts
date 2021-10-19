@@ -135,6 +135,7 @@ const userService = new UserRequestService();
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
 
+// TODO: (dispatch) fix it later. Here and below
 export const generateKeypairAction = () => (dispatch: any) => {
   dispatch(fetchUserKeypairAction());
   userService

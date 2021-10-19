@@ -13,6 +13,7 @@ import {
 import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
+// TODO: (dispatch) fix it later
 export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
 
@@ -68,6 +69,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   }
 };
 
+// TODO: (dispatch) fix it later
 export const SendMessageToProgram = async (api: any, message: MessageModel, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
 
@@ -96,6 +98,7 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
   }
 };
 
+// TODO: (dispatch) fix it later
 export const addMetadata = async (meta: MetaModel, programHash: string, name: any, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
