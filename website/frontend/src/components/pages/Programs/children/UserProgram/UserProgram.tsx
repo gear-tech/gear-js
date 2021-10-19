@@ -1,8 +1,9 @@
 import React, { VFC } from 'react';
 import { useDispatch } from 'react-redux';
-import { ProgramModel } from 'types/program';
+import clsx from 'clsx';
+import { ProgramModel, ProgramStatus } from 'types/program';
 import { getProgramAction } from 'store/actions/actions';
-import { fileNameHandler, formatDate, copyToClipboard } from 'helpers';
+import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { useAlert } from 'react-alert';
 import RefreshIllustration from 'assets/images/refresh.svg';
 import MessageIllustration from 'assets/images/message.svg';
@@ -25,6 +26,14 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
   return (
     <div className={styles.programsListItem} key={program.hash}>
       <div className={styles.programWrapper}>
+        <span
+          className={clsx(
+            styles.programsListIndicator,
+            program.initStatus === ProgramStatus.Success && styles['program-item-success'],
+            program.initStatus === ProgramStatus.Failed && styles['program-item-failure'],
+            program.initStatus === ProgramStatus.InProgress && styles['program-item-loading']
+          )}
+        />
         <div className={styles.programWrapperName}>
           <button
             type="button"

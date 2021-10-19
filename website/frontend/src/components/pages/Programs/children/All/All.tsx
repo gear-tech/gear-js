@@ -27,7 +27,7 @@ type ProgramMessageType = {
 
 const selectCompletedTodosCount = createSelector(
   (state: RootState) => state.programs,
-  (_: any, completed: string) => completed,
+  (_ignore: any, completed: string) => completed,
   (programs, completed) =>
     programs.allUploadedPrograms && programs.allUploadedPrograms.filter((item) => item.hash.includes(completed))
 );
