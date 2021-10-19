@@ -57,9 +57,9 @@ export const Message: VFC<Props> = ({ programHash, programName, handleClose }) =
     if (!meta) {
       getMeta()
         .then((res) => setMeta(res))
-        .catch((err) => AddAlert({ type: EventTypes.ERROR, message: err.message }));
+        .catch((err) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })));
     }
-  }, [meta, getMeta]);
+  }, [meta, getMeta, dispatch]);
 
   return (
     <div className="message-form">

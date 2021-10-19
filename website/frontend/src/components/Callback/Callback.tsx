@@ -35,6 +35,7 @@ const mapStateToProps = (state: State) => ({
   user: state.user,
 });
 
+// TODO: (dispatch) fix it later
 const mapDispatchToProps = (dispatch: any) => ({
   getGitUserJwt: (code: string) => dispatch(getGitUserJwtAction(code)),
 });

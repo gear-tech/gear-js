@@ -1,5 +1,5 @@
 import UserRequestService from 'services/UserRequestService';
-import { GearKeyring } from '@gear-js/api';
+import { CreateType, GearKeyring } from '@gear-js/api';
 import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, UserProfileRPCModel } from 'types/user';
 import {
   NotificationActionTypes,
@@ -20,7 +20,8 @@ import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 
-import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
+import ServerRPCRequestService from 'services/ServerRPCRequestService';
+import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { nodeApi } from '../../api/initApi';
@@ -134,6 +135,7 @@ const userService = new UserRequestService();
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
 
+// TODO: (dispatch) fix it later. Here and below
 export const generateKeypairAction = () => (dispatch: any) => {
   dispatch(fetchUserKeypairAction());
   userService
@@ -287,7 +289,21 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 
-  nodeApi.subscribeLogEvents(({ data: { source, dest, reply } }) => {
+  nodeApi.subscribeLogEvents(async ({ data: { source, dest, reply, payload } }) => {
+    const apiRequest = new ServerRPCRequestService();
+    const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
+      programId: source.toHex(),
+    });
+    const meta = JSON.parse(result.meta);
+    let decodedPayload: any;
+    try {
+      decodedPayload =
+        meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
+          ? CreateType.decode(meta.output, payload, meta).toHuman()
+          : payload.toHuman();
+    } catch (error) {
+      console.error('Decode payload failed');
+    }
     // @ts-ignore
     if (dest.toHex() === filterKey) {
       dispatch(
@@ -297,7 +313,9 @@ export const subscribeToEvents = () => (dispatch: any) => {
               ? EventTypes.SUCCESS
               : EventTypes.ERROR,
           message: `LOG from program\n
-          ${source.toHex()}`, // TODO: add payload parsing
+          ${source.toHex()}\n
+          ${decodedPayload ? `Response: ${decodedPayload}` : ''}
+          `, // TODO: add payload parsing
         })
       );
     }
