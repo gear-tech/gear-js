@@ -97,13 +97,15 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
       );
       if (response.result) {
-        AddAlert({ type: EventTypes.SUCCESS, message: `Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}` });
+        dispatch(
+          AddAlert({ type: EventTypes.SUCCESS, message: `Transfer succeeded. Value: ${GEAR_BALANCE_TRANSFER_VALUE}` })
+        );
       }
       if (response.error) {
-        AddAlert({ type: EventTypes.ERROR, message: `${response.error.message}` });
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${response.error.message}` }));
       }
     } catch (error) {
-      AddAlert({ type: EventTypes.ERROR, message: `${error}` });
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
     }
   };
 

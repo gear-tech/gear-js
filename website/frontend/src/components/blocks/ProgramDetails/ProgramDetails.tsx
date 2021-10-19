@@ -72,7 +72,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         });
         setDisplayTypes(types.trimEnd());
       } catch (error) {
-        AddAlert({ type: EventTypes.ERROR, message: `${error}` });
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
       }
       setDroppedMetaFile(file);
     },
@@ -100,7 +100,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       if (!isCorrectFormat) {
         handleFilesUpload(files[0]);
       } else {
-        AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' });
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
         setWrongMetaFormat(false);
       }
     }

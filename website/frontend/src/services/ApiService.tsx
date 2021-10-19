@@ -45,7 +45,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
 
     // Trying to sign transaction, receive
     await api.program.signAndSend(keyring, (data: any) => {
-      AddAlert({ type: EventTypes.SUCCESS, message: `UPLOAD STATUS: ${data.status}` });
+      dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `UPLOAD STATUS: ${data.status}` }));
       if (data.status === 'Finalized') {
         dispatch(programUploadSuccessAction());
         // Send sing message
@@ -63,7 +63,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   } catch (error) {
     dispatch(programUploadFailedAction(`${error}`));
     console.error(error);
-    AddAlert({ type: EventTypes.ERROR, message: `UPLOAD STATUS: ${error}` });
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `UPLOAD STATUS: ${error}` }));
     // alert.error(`status: ${error}`);
   }
 };
@@ -83,24 +83,23 @@ export const SendMessageToProgram = async (api: any, message: MessageModel, disp
     });
     await api.message.submit(message, JSON.parse(meta));
     await api.message.signAndSend(keyring, (data: any) => {
-      AddAlert({ type: EventTypes.SUCCESS, message: `SEND MESSAGE STATUE: ${data.status}` });
+      dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `SEND MESSAGE STATUS: ${data.status}` }));
       if (data.status === 'Finalized') {
         console.log('Finalized!');
         dispatch(sendMessageSuccessAction());
       }
     });
   } catch (error) {
-    AddAlert({ type: EventTypes.ERROR, message: `SEND MESSAGE STATUE: ${error}` });
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `SEND MESSAGE STATUS: ${error}` }));
     dispatch(sendMessageFailedAction(`${error}`));
     console.error(error);
   }
 };
 
-export const addMetadata = async (meta: MetaModel, programHash: string, name: any) => {
+export const addMetadata = async (meta: MetaModel, programHash: string, name: any, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
   const keyring = GearKeyring.fromJson(jsonKeyring);
-
   try {
     // Send sing message
     const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
@@ -116,10 +115,10 @@ export const addMetadata = async (meta: MetaModel, programHash: string, name: an
     if (response.error) {
       throw new Error(response.error.message);
     } else {
-      AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` });
+      dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
     }
   } catch (error) {
-    AddAlert({ type: EventTypes.ERROR, message: `${error}` });
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
     console.error(error);
   }
 };

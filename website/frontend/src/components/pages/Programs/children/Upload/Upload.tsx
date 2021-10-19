@@ -46,7 +46,7 @@ export const Upload = () => {
         if (!isCorrectFormat) {
           handleFilesUpload(files[0]);
         } else {
-          AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' });
+          dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
           setWrongFormat(false);
           if (programUploadingError) {
             dispatch(programUploadResetAction());
@@ -96,7 +96,7 @@ export const Upload = () => {
       if (!isCorrectFormat) {
         handleFilesUpload(files[0]);
       } else {
-        AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' });
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
         setWrongFormat(false);
         if (programUploadingError) {
           dispatch(programUploadResetAction());

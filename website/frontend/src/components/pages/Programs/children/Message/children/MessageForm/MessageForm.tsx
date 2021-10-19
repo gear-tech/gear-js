@@ -43,16 +43,16 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
 
   const calculateGas = async (values: any, setFieldValue: any) => {
     if (values.payload.length === 0) {
-      AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` });
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
       return;
     }
 
     try {
       const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.input, meta);
-      AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` });
+      dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
       setFieldValue('gasLimit', Number(`${estimatedGas}`));
     } catch (error) {
-      AddAlert({ type: EventTypes.ERROR, message: `${error}` });
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
       console.error(error);
     }
   };

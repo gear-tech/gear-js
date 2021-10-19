@@ -8,6 +8,7 @@ import { addMetadata } from 'services/ApiService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
+import { useDispatch } from 'react-redux';
 import { AddAlert } from 'store/actions/actions';
 import { EventTypes } from 'types/events';
 import { readFileAsync } from '../../../helpers';
@@ -25,6 +26,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
   const [metaWasm, setMetaWasm] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
+  const dispatch = useDispatch();
 
   const metaFieldRef = useRef<any>(null);
 
@@ -57,7 +59,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
         const meta = await getWasmMetadata(fileBuffer);
         setMetaWasm(meta);
       } catch (error) {
-        AddAlert({ type: EventTypes.ERROR, message: `${error}` });
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
       }
       setDroppedMetaFile(file);
     },
@@ -102,13 +104,13 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
       onSubmit={(values: MetaModel, { resetForm }) => {
         if (isMetaByFile) {
           if (metaWasm) {
-            addMetadata(metaWasm, programHash, values.name);
+            addMetadata(metaWasm, programHash, values.name, dispatch);
           } else {
-            AddAlert({ type: EventTypes.ERROR, message: `ERROR: metadata not loaded` });
+            dispatch(AddAlert({ type: EventTypes.ERROR, message: `ERROR: metadata not loaded` }));
           }
         } else {
           const { name, ...meta } = values;
-          addMetadata(meta, programHash, name);
+          addMetadata(meta, programHash, name, dispatch);
         }
         resetForm();
       }}
