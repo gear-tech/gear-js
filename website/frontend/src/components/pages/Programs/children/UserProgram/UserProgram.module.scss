@@ -55,6 +55,25 @@
   }
 }
 
+.programsListIndicator {
+  background-color: #fff;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.program-item-success {
+  background-color: green;
+}
+
+.program-item-failure {
+  background-color: red;
+}
+
+.program-item--loading {
+  background-color: blue;
+}
+
 .programsListName {
   color: $textColor;
   font-size: $fontSizeBase;

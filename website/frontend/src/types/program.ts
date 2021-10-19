@@ -1,3 +1,9 @@
+export enum ProgramStatus {
+  Success = 'success',
+  Failed = 'failed',
+  InProgress = 'in progress',
+}
+
 export interface ProgramModel {
   hash: string;
   blockHash?: string;
@@ -5,6 +11,7 @@ export interface ProgramModel {
   name?: string;
   callCount?: number;
   uploadedAt?: string;
+  initStatus: ProgramStatus;
 }
 
 export interface ProgramPaginationModel {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
@@ -17,16 +18,28 @@ import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
 import { UserProgram } from '../UserProgram/UserProgram';
 import styles from './All.module.scss';
+import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
 
 type ProgramMessageType = {
   programName: string;
   programHash: string;
 };
 
+const selectCompletedTodosCount = createSelector(
+  (state: RootState) => state.programs,
+  (_ignore: any, completed: string) => completed,
+  (programs, completed) =>
+    programs.allUploadedPrograms && programs.allUploadedPrograms.filter((item) => item.hash.includes(completed))
+);
+
 export const All: VFC = () => {
   const dispatch = useDispatch();
 
-  const { allUploadedPrograms, allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
+  const [search, setSearch] = useState('');
+
+  const { allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
+
+  const allUploadedPrograms = useSelector((state: RootState) => selectCompletedTodosCount(state, search));
 
   const [currentPage, setCurrentPage] = useState(0);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
@@ -93,6 +106,17 @@ export const All: VFC = () => {
       <div className={styles.paginationWrapper}>
         <span>Total results: {allUploadedProgramsCount}</span>
         <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
+      </div>
+      <div>
+        <SearchForm
+          handleRemoveQuery={() => {
+            setSearch('');
+          }}
+          handleSearch={(val: string) => {
+            setSearch(val);
+          }}
+        />
+        <br />
       </div>
       <div className={styles.allProgramsList}>
         {(allUploadedPrograms &&
