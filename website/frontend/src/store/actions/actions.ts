@@ -300,7 +300,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
         meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
           ? CreateType.decode(meta.output, payload, meta).toHuman()
           : payload.toHuman();
-    } catch (_) {
+    } catch (error) {
       console.error('Decode payload failed');
     }
     // @ts-ignore
