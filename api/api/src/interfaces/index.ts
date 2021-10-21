@@ -1,5 +1,5 @@
 export { Program } from './program';
-export { Message } from './message';
+export { Message, MessageReply } from './message';
 export { GearApiOptions, CreateKeyring } from './gear-api';
 export { GearType } from './gear-type';
 export { Metadata } from './metadata';

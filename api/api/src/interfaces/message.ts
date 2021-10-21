@@ -9,3 +9,10 @@ export interface Message {
   gasLimit: u64 | AnyNumber;
   value?: BalanceOf | AnyNumber;
 }
+
+export interface MessageReply {
+  toId: H256 | string;
+  payload: string | GearType;
+  gasLimit: u64 | AnyNumber;
+  value?: BalanceOf | AnyNumber;
+}
