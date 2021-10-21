@@ -1,4 +1,4 @@
-import type { AugmentedSubmittable, SubmittableExtrinsic } from '@polkadot/api/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { Bytes, u64 } from '@polkadot/types';
 import type { BalanceOf, H256 } from '@polkadot/types/interfaces/runtime';
 import { AnyNumber } from '@polkadot/types/types';

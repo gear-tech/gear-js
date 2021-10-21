@@ -1,14 +1,16 @@
 import { GearType } from '.';
-import { KeyringPair$Json } from '@polkadot/keyring/types';
+import { i32, Bytes } from '@polkadot/types';
+import { H256 } from '@polkadot/types/interfaces';
 
 export interface GearApiOptions {
   providerAddress?: string;
   customTypes?: GearType;
 }
 
-export interface CreateKeyring {
-  keyPairJson?: KeyringPair$Json | string;
-  seed?: Uint8Array | string;
-  mnemonic?: string;
-  suri?: string;
+export interface ExitCode extends i32 {}
+
+export declare interface MessageInfo extends Bytes {
+  messageId: H256;
+  programId: H256;
+  origin: H256;
 }
