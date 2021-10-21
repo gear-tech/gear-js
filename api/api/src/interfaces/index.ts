@@ -1,6 +1,7 @@
-export { Program } from './program';
-export { Message } from './message';
-export { GearApiOptions, CreateKeyring } from './gear-api';
-export { GearType } from './gear-type';
-export { Metadata } from './metadata';
-export * from './event-types';
+export * from './message';
+export * from './gear-api';
+export * from './gear-type';
+export * from './metadata';
+export * from './debug';
+export * from './keyring';
+export * from './program';

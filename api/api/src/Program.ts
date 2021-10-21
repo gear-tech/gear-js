@@ -1,9 +1,11 @@
 import { GearApi, CreateType } from '.';
-import { Program, Metadata } from './interfaces';
+import { GearType } from '.';
+import { Metadata } from './interfaces';
 import { SubmitProgramError, TransactionError } from './errors';
+import { AnyNumber } from '@polkadot/types/types';
 import { ApiPromise } from '@polkadot/api';
-import { Bytes, U64 } from '@polkadot/types';
-import { H256 } from '@polkadot/types/interfaces';
+import { Bytes, U64, u64 } from '@polkadot/types';
+import { H256, BalanceOf } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
 
@@ -22,7 +24,16 @@ export class GearProgram {
    * @param meta Metadata
    * @returns ProgramId
    */
-  submit(program: Program, meta: Metadata): string {
+  submit(
+    program: {
+      code: Buffer;
+      salt?: string;
+      initPayload?: string | GearType;
+      gasLimit: u64 | AnyNumber;
+      value?: BalanceOf | AnyNumber;
+    },
+    meta: Metadata
+  ): string {
     const payload = program.initPayload ? this.createType.encode(meta.init_input, program.initPayload, meta) : '0x00';
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.encode('bytes', Array.from(program.code));
