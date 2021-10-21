@@ -8,5 +8,6 @@ export { CreateType, parseHexTypes, getTypeStructure } from './CreateType';
 export { GearBalance } from './Balance';
 export { transformTypes } from './utils';
 export { getWasmMetadata } from './WasmMeta';
+export { DebugMode } from './DebugMode';
 export * from './interfaces';
 export * from './types';

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "events": "node dist/event-subscribe.js",
-    "createType": "node dist/create-type.js"
+    "createType": "node dist/create-type.js",
+    "debugMode": "node dist/debug-mode.js"
   },
   "author": "",
   "license": "ISC",

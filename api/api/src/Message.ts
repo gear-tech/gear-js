@@ -1,8 +1,10 @@
 import { GearApi, CreateType } from '.';
-import { Message, Metadata } from './interfaces';
+import { GearType, Metadata } from './interfaces';
 import { SendMessageError, TransactionError } from './errors';
 import { ApiPromise } from '@polkadot/api';
 import { Bytes } from '@polkadot/types';
+import { H256 } from '@polkadot/types/interfaces';
+import { AnyNumber } from '@polkadot/types/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 export class GearMessage {
@@ -15,7 +17,10 @@ export class GearMessage {
     this.createType = new CreateType(gearApi);
   }
 
-  submit(message: Message, meta: Metadata): any {
+  submit(
+    message: { destination: string | H256; payload: string | GearType; gasLimit: AnyNumber; value: AnyNumber },
+    meta: Metadata
+  ): any {
     let payload: Bytes | Uint8Array | string;
 
     payload = this.createType.encode(meta.input, message.payload, meta);
