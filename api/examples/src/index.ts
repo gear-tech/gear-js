@@ -1,7 +1,6 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 import * as fs from 'fs';
 import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
-import { Program } from '@gear-js/api';
 
 const types = {};
 const initMessages = [];
@@ -34,7 +33,7 @@ async function uploadProgram(gearApi: GearApi, keyring: KeyringPair, program: an
   const code = fs.readFileSync(program.path);
   const meta = await getMeta(program);
 
-  const uploadProgram: Program = {
+  const uploadProgram = {
     code,
     gasLimit: program.gasLimit,
     value: program.value,

@@ -12,10 +12,10 @@ async function main() {
 
   const unsub = await debugMode.snapshots(({ data }) => {
     data.programs.forEach(({ id, static_pages, persistent_pages, code_hash, nonce }) => {
-      console.log(id.toHuman());
+      console.log(`Program with id: ${id.toHuman()}`);
     });
     data.message_queue.forEach(({ id, source, dest, payload, gas_limit, value, reply }) => {
-      console.log(id.toHuman());
+      console.log(`Message with id: ${id.toHuman()}`);
     });
   });
 }
