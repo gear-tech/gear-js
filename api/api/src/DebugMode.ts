@@ -20,10 +20,10 @@ export class DebugMode {
 
   signAndSend(keyring: KeyringPair): Promise<{ method: string; data: boolean }> {
     return new Promise((resolve) => {
-      this.enabled.signAndSend(keyring, ({ events = [], status }) => {
+      this.enabled.signAndSend(keyring, ({ events, status }) => {
         events.forEach(({ event: { method, data } }) => {
           if (status.isFinalized) {
-            resolve({ method, data: data[0] });
+            resolve({ method, data: data[0].toHuman() });
           }
         });
       });
