@@ -74,8 +74,8 @@ export class InitSuccessData extends MessageInfoData {}
 export class InitFailureData extends ProgramData {}
 
 export class DebugData extends GearEventData {
-  public get message_queue(): Vec<Message> {
-    return this.at(0)['message_queue'];
+  public get messageQueue(): Vec<Message> {
+    return this.at(0)['messageQueue'];
   }
 
   public get programs(): Vec<ProgramDetails> {

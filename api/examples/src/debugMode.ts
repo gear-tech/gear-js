@@ -14,7 +14,7 @@ async function main() {
     data.programs.forEach(({ id, static_pages, persistent_pages, code_hash, nonce }) => {
       console.log(`Program with id: ${id.toHuman()}`);
     });
-    data.message_queue.forEach(({ id, source, dest, payload, gas_limit, value, reply }) => {
+    data.messageQueue.forEach(({ id, source, dest, payload, gas_limit, value, reply }) => {
       console.log(`Message with id: ${id.toHuman()}`);
     });
   });
