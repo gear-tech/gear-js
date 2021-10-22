@@ -18,7 +18,7 @@ export class GearMessage {
   }
 
   submit(
-    message: { destination: string | H256; payload: string | GearType; gasLimit: AnyNumber; value: AnyNumber },
+    message: { destination: string | H256; payload: string | GearType; gasLimit: AnyNumber; value?: AnyNumber },
     meta: Metadata
   ): any {
     let payload: Bytes | Uint8Array | string;
@@ -26,7 +26,7 @@ export class GearMessage {
     payload = this.createType.encode(meta.input, message.payload, meta);
 
     try {
-      this.message = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value);
+      this.message = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);
       return this.message;
     } catch (error) {
       throw new SendMessageError();

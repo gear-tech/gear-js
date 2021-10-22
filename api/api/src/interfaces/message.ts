@@ -21,10 +21,3 @@ export declare interface Message extends Codec {
   value: u128;
   reply: Option<Reply>;
 }
-
-export interface MessageReply {
-  toId: H256 | string;
-  payload: string | GearType;
-  gasLimit: u64 | AnyNumber;
-  value?: BalanceOf | AnyNumber;
-}
