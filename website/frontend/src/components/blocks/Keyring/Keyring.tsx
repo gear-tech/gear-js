@@ -33,25 +33,32 @@ export const Keyring = ({ handleClose }: Props) => {
 
   useEffect(() => {
     const create = async () => {
+      
+      // it returns new generated seed and mnemonic
+      const { seed, mnemonic } = GearKeyring.generateSeed();
+
+      // get Address from seed
+      const { address } = await GearKeyring.fromSeed(seed);
+    
       const {
-        mnemonic,
-        seed,
         json,
-        json: { address },
         keyring: { addressRaw },
         keyring,
       } = await GearKeyring.create('WebAccount');
       setKey(mnemonic);
-      setPublicKey(address);
       setIsSeed(seed);
       setIsMnemonic(mnemonic);
       setKeyPairJson(json);
+      setPublicKey(address);
       setIsAddressRaw(u8aToHex(addressRaw));
       setKeyPair(keyring);
     };
 
     create();
   }, []);
+
+
+  
 
   const downloadJson = (content: any, fileName: string, contentType: string) => {
     const link: HTMLAnchorElement = document.createElement('a');
@@ -103,7 +110,15 @@ export const Keyring = ({ handleClose }: Props) => {
           Mnemonic phrase or seed: <span className="keyring__help">?</span>
         </div>
         <div className="keyring__textArea">
-          <div className="keyring__key">{key}</div>
+          <textarea
+            autoCapitalize="off"
+            autoCorrect="off"
+            className="keyring__key"
+            onChange={(event) => console.log(event.target.value)}
+            rows={2}
+            spellCheck={false}
+            defaultValue={key}
+          />
           <div className="keyring__copy">
             <div className="keyring__copy-wrapper">
               <button
