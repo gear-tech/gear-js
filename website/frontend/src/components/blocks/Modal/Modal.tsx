@@ -17,7 +17,6 @@ export const Modal = ({ content, title, handleClose }: Props) => (
           <CloseIcon color="#ffffff" />
         </span>
       </button>
-      <h2 className="modal__title">{title}</h2>
       {content}
     </div>
   </div>

@@ -23,8 +23,10 @@ export const Keyring = ({ handleClose }: Props) => {
   const [seedType, setSeedType] = useState('mnemonic');
   const [isSeed, setIsSeed] = useState('');
   const [isMnemonic, setIsMnemonic] = useState('');
+  const [accountName, setAccountName] = useState('New Account');
   const [saved, setSaved] = useState(false);
   const [isError, setIsError] = useState(false);
+
   // const [keyPairJson, setKeyPairJson] = useState<any>(null);
   // const [keyPair, setKeyPair] = useState<any>(null);
   // const [isAddressRaw, setIsAddressRaw] = useState('');
@@ -103,6 +105,10 @@ export const Keyring = ({ handleClose }: Props) => {
     }
   };
 
+  const onChangeName = (event: any) => {
+    setAccountName(event.target.value);
+  }
+
   const onChangeSeed = (event: any) => {
 
     if(seedType === 'mnemonic'){
@@ -135,6 +141,7 @@ export const Keyring = ({ handleClose }: Props) => {
 
   return (
     <div className="keyring__wrapper">
+      <input id="accountName" className="keyring__name" type="text" name="accoutName" value={accountName}  onChange={(event) => onChangeName(event)}/>
       <div className="keyring__address">
         <div className="keyring__icon">
           <Identicon value={publicKey} size={32} theme="polkadot" />
@@ -143,7 +150,7 @@ export const Keyring = ({ handleClose }: Props) => {
       </div>
       <div className="keyring__content">
         <div className="keyring__help-container">
-          Mnemonic phrase or seed: <span className="keyring__help">?</span>
+          Mnemonic phrase or seed: 
         </div>
         <div className="keyring__textArea">
           <textarea

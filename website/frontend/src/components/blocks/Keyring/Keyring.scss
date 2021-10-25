@@ -5,6 +5,17 @@
   margin: 10px 0;
 }
 
+.keyring__name {
+  background: transparent;
+  outline: none;
+  color: #fefefe;
+  font-size: 1.6em;
+  font-weight: 400;
+  border: none;
+  border-bottom: 1px solid #858585;
+  text-align: center;
+}
+
 .keyring__icon {
   padding-top: 5px;
   cursor: copy;
@@ -64,7 +75,7 @@
   width: 100%;
   display: block;
   outline: none;
-  padding: 5px 25px;
+  padding: 0.25rem 1.5rem 0.25rem 1.5rem;
   resize: none;
 }
 
