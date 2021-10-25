@@ -111,7 +111,7 @@
   align-items: center;
 }
 
-.keyring__action-btn {
+.keyring__action-btn, .keyring__restore-btn {
   padding: 12px 24px;
   background: #2bd071;
   border-radius: 2px;
@@ -209,4 +209,12 @@
   color: #995757;
   font-weight: normal;
   font-size: 12px;
+}
+
+.keyring__actions {
+  display: flex;
+}
+
+.keyring__restore-btn {
+  margin-right: 20px;
 }
