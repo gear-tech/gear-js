@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAlert } from 'react-alert';
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { RPC_METHODS } from 'consts';
 import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
-
 import { copyToClipboard } from 'helpers';
 import './Keyring.scss';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
@@ -18,7 +16,6 @@ type Props = {
 };
 
 export const Keyring = ({ handleClose }: Props) => {
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [publicKey, setPublicKey] = useState('');
   const [seedType, setSeedType] = useState('mnemonic');
   const [isSeed, setIsSeed] = useState('');
@@ -27,16 +24,12 @@ export const Keyring = ({ handleClose }: Props) => {
   const [saved, setSaved] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  // const [keyPairJson, setKeyPairJson] = useState<any>(null);
-  // const [keyPair, setKeyPair] = useState<any>(null);
-  // const [isAddressRaw, setIsAddressRaw] = useState('');
-
   const apiRequest = new ServerRPCRequestService();
   const alert = useAlert();
 
   const create = async () => {
     // it returns new generated seed and mnemonic
-    const { seed, mnemonic } = GearKeyring.generateSeed();
+    const { seed, mnemonic } = await GearKeyring.generateSeed();
 
     // get Address from seed
     const { address } = await GearKeyring.fromSeed(seed);
@@ -45,16 +38,6 @@ export const Keyring = ({ handleClose }: Props) => {
     setIsMnemonic(mnemonic);
     setPublicKey(address);
     setIsError(false);
-
-    // const {
-    //   json,
-    //   keyring: { addressRaw },
-    //   keyring,
-    // } = await GearKeyring.create('WebAccount');
-
-    // setKeyPairJson(json);
-    // setIsAddressRaw(u8aToHex(addressRaw));
-    // setKeyPair(keyring);
   };
 
   useEffect(() => {
@@ -89,17 +72,17 @@ export const Keyring = ({ handleClose }: Props) => {
         setPublicKey(address);
         setIsError(false);
       } catch (error) {
-        setPublicKey('5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        setPublicKey(`5${Array(42).join('x')}`);
         setIsError(true);
       }
     } else {
       try {
-        const { address } = GearKeyring.fromMnemonic(seed);
+        const { address } = await GearKeyring.fromMnemonic(seed);
         setIsMnemonic(seed);
         setPublicKey(address);
         setIsError(false);
       } catch (error) {
-        setPublicKey('5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        setPublicKey(`5${Array(42).join('x')}`);
         setIsError(true);
       }
     }
@@ -107,32 +90,41 @@ export const Keyring = ({ handleClose }: Props) => {
 
   const onChangeName = (event: any) => {
     setAccountName(event.target.value);
-  }
+  };
 
   const onChangeSeed = (event: any) => {
-
-    if(seedType === 'mnemonic'){
-      setIsMnemonic(event.target.value)
+    if (seedType === 'mnemonic') {
+      setIsMnemonic(event.target.value);
     } else {
-      setIsSeed(event.target.value)
+      setIsSeed(event.target.value);
     }
 
     updateAddress(event.target.value);
   };
 
-  // const handleCreate = (password: string) => {
-  //   const encodedJson = GearKeyring.toJson(keyPair, `${password}`);
-  //   localStorage.setItem('gear_mnemonic', JSON.stringify(keyPairJson));
-  //   localStorage.setItem('public_key', publicKey);
-  //   downloadJson(JSON.stringify(encodedJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
+  const handleCreate = async (password: string) => {
+    let keyring;
 
-  //   apiRequest.getResource(RPC_METHODS.ADD_PUBLIC, {
-  //     publickKeyRaw: isAddressRaw,
-  //     publickKey: publicKey,
-  //   });
-  //   localStorage.setItem('public_key_raw', isAddressRaw);
-  //   handleClose();
-  // };
+    if (seedType === 'mnemonic') {
+      keyring = await GearKeyring.fromMnemonic(isMnemonic, accountName);
+    } else {
+      keyring = await GearKeyring.fromSeed(isSeed, accountName);
+    }
+    const keyPairJson = await GearKeyring.toJson(keyring);
+    const encodedJson = await GearKeyring.toJson(keyring, `${password}`);
+    const isAddressRaw = u8aToHex(keyring.addressRaw);
+
+    localStorage.setItem('gear_mnemonic', JSON.stringify(keyPairJson));
+    localStorage.setItem('public_key', publicKey);
+    downloadJson(JSON.stringify(encodedJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
+
+    apiRequest.getResource(RPC_METHODS.ADD_PUBLIC, {
+      publickKeyRaw: isAddressRaw,
+      publickKey: publicKey,
+    });
+    localStorage.setItem('public_key_raw', isAddressRaw);
+    handleClose();
+  };
 
   const Schema = Yup.object({
     password: Yup.string().required('Password is required'),
@@ -141,7 +133,14 @@ export const Keyring = ({ handleClose }: Props) => {
 
   return (
     <div className="keyring__wrapper">
-      <input id="accountName" className="keyring__name" type="text" name="accoutName" value={accountName}  onChange={(event) => onChangeName(event)}/>
+      <input
+        id="accountName"
+        className="keyring__name"
+        type="text"
+        name="accoutName"
+        value={accountName}
+        onChange={(event) => onChangeName(event)}
+      />
       <div className="keyring__address">
         <div className="keyring__icon">
           <Identicon value={publicKey} size={32} theme="polkadot" />
@@ -149,14 +148,12 @@ export const Keyring = ({ handleClose }: Props) => {
         <div className="keyring__details">{publicKey}</div>
       </div>
       <div className="keyring__content">
-        <div className="keyring__help-container">
-          Mnemonic phrase or seed: 
-        </div>
+        <div className="keyring__help-container">Mnemonic phrase or seed:</div>
         <div className="keyring__textArea">
           <textarea
             autoCapitalize="off"
             autoCorrect="off"
-            className={`keyring__key ${isError ? "error" : " "}`}
+            className={`keyring__key ${isError ? 'error' : ' '}`}
             onChange={(event) => onChangeSeed(event)}
             rows={2}
             spellCheck={false}
@@ -234,9 +231,8 @@ export const Keyring = ({ handleClose }: Props) => {
                     type="button"
                     disabled={!saved}
                     onClick={() => {
-                      if (isValid) {
-                        console.log('ok');
-                        // handleCreate(values.password);
+                      if (isValid && !isError) {
+                        handleCreate(values.password);
                       }
                     }}
                   >
