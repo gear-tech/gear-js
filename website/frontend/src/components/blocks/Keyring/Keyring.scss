@@ -57,7 +57,19 @@
 }
 
 .keyring__key {
+  border: 0;
+  background: transparent;
+  box-sizing: border-box;
+  color: #fefefe;
   width: 100%;
+  display: block;
+  outline: none;
+  padding: 5px 25px;
+  resize: none;
+}
+
+.keyring__key.error {
+  background: rgb(214, 104, 104);
 }
 
 .keyring__key-type {

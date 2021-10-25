@@ -19,46 +19,45 @@ type Props = {
 
 export const Keyring = ({ handleClose }: Props) => {
   /* eslint-disable @typescript-eslint/no-unused-vars */
-  const [key, setKey] = useState('');
   const [publicKey, setPublicKey] = useState('');
+  const [seedType, setSeedType] = useState('mnemonic');
   const [isSeed, setIsSeed] = useState('');
   const [isMnemonic, setIsMnemonic] = useState('');
   const [saved, setSaved] = useState(false);
-  const [keyPairJson, setKeyPairJson] = useState<any>(null);
-  const [keyPair, setKeyPair] = useState<any>(null);
-  const [isAddressRaw, setIsAddressRaw] = useState('');
+  const [isError, setIsError] = useState(false);
+  // const [keyPairJson, setKeyPairJson] = useState<any>(null);
+  // const [keyPair, setKeyPair] = useState<any>(null);
+  // const [isAddressRaw, setIsAddressRaw] = useState('');
 
   const apiRequest = new ServerRPCRequestService();
   const alert = useAlert();
 
+  const create = async () => {
+    // it returns new generated seed and mnemonic
+    const { seed, mnemonic } = GearKeyring.generateSeed();
+
+    // get Address from seed
+    const { address } = await GearKeyring.fromSeed(seed);
+
+    setIsSeed(seed);
+    setIsMnemonic(mnemonic);
+    setPublicKey(address);
+    setIsError(false);
+
+    // const {
+    //   json,
+    //   keyring: { addressRaw },
+    //   keyring,
+    // } = await GearKeyring.create('WebAccount');
+
+    // setKeyPairJson(json);
+    // setIsAddressRaw(u8aToHex(addressRaw));
+    // setKeyPair(keyring);
+  };
+
   useEffect(() => {
-    const create = async () => {
-      
-      // it returns new generated seed and mnemonic
-      const { seed, mnemonic } = GearKeyring.generateSeed();
-
-      // get Address from seed
-      const { address } = await GearKeyring.fromSeed(seed);
-    
-      const {
-        json,
-        keyring: { addressRaw },
-        keyring,
-      } = await GearKeyring.create('WebAccount');
-      setKey(mnemonic);
-      setIsSeed(seed);
-      setIsMnemonic(mnemonic);
-      setKeyPairJson(json);
-      setPublicKey(address);
-      setIsAddressRaw(u8aToHex(addressRaw));
-      setKeyPair(keyring);
-    };
-
     create();
   }, []);
-
-
-  
 
   const downloadJson = (content: any, fileName: string, contentType: string) => {
     const link: HTMLAnchorElement = document.createElement('a');
@@ -69,28 +68,65 @@ export const Keyring = ({ handleClose }: Props) => {
   };
 
   const handleChange = (event: any) => {
+    create();
+
     if (event.target.value === 'seed') {
-      setKey(isSeed);
+      setSeedType('raw');
     }
 
     if (event.target.value === 'mnemonic') {
-      setKey(isMnemonic);
+      setSeedType('mnemonic');
     }
   };
 
-  const handleCreate = (password: string) => {
-    const encodedJson = GearKeyring.toJson(keyPair, `${password}`);
-    localStorage.setItem('gear_mnemonic', JSON.stringify(keyPairJson));
-    localStorage.setItem('public_key', publicKey);
-    downloadJson(JSON.stringify(encodedJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
-
-    apiRequest.getResource(RPC_METHODS.ADD_PUBLIC, {
-      publickKeyRaw: isAddressRaw,
-      publickKey: publicKey,
-    });
-    localStorage.setItem('public_key_raw', isAddressRaw);
-    handleClose();
+  const updateAddress = async (seed: string) => {
+    if (seedType === 'raw') {
+      try {
+        const { address } = await GearKeyring.fromSeed(seed);
+        setIsSeed(seed);
+        setPublicKey(address);
+        setIsError(false);
+      } catch (error) {
+        setPublicKey('5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        setIsError(true);
+      }
+    } else {
+      try {
+        const { address } = GearKeyring.fromMnemonic(seed);
+        setIsMnemonic(seed);
+        setPublicKey(address);
+        setIsError(false);
+      } catch (error) {
+        setPublicKey('5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        setIsError(true);
+      }
+    }
   };
+
+  const onChangeSeed = (event: any) => {
+
+    if(seedType === 'mnemonic'){
+      setIsMnemonic(event.target.value)
+    } else {
+      setIsSeed(event.target.value)
+    }
+
+    updateAddress(event.target.value);
+  };
+
+  // const handleCreate = (password: string) => {
+  //   const encodedJson = GearKeyring.toJson(keyPair, `${password}`);
+  //   localStorage.setItem('gear_mnemonic', JSON.stringify(keyPairJson));
+  //   localStorage.setItem('public_key', publicKey);
+  //   downloadJson(JSON.stringify(encodedJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
+
+  //   apiRequest.getResource(RPC_METHODS.ADD_PUBLIC, {
+  //     publickKeyRaw: isAddressRaw,
+  //     publickKey: publicKey,
+  //   });
+  //   localStorage.setItem('public_key_raw', isAddressRaw);
+  //   handleClose();
+  // };
 
   const Schema = Yup.object({
     password: Yup.string().required('Password is required'),
@@ -113,18 +149,18 @@ export const Keyring = ({ handleClose }: Props) => {
           <textarea
             autoCapitalize="off"
             autoCorrect="off"
-            className="keyring__key"
-            onChange={(event) => console.log(event.target.value)}
+            className={`keyring__key ${isError ? "error" : " "}`}
+            onChange={(event) => onChangeSeed(event)}
             rows={2}
             spellCheck={false}
-            defaultValue={key}
+            value={seedType === 'mnemonic' ? isMnemonic : isSeed}
           />
           <div className="keyring__copy">
             <div className="keyring__copy-wrapper">
               <button
                 className="keyring__copy-button"
                 type="button"
-                onClick={() => copyToClipboard(key, alert, 'Copied')}
+                onClick={() => copyToClipboard(seedType === 'mnemonic' ? isMnemonic : isSeed, alert, 'Copied')}
               >
                 <CopyClipboard color="#ffffff" />
               </button>
@@ -192,7 +228,8 @@ export const Keyring = ({ handleClose }: Props) => {
                     disabled={!saved}
                     onClick={() => {
                       if (isValid) {
-                        handleCreate(values.password);
+                        console.log('ok');
+                        // handleCreate(values.password);
                       }
                     }}
                   >
