@@ -13,6 +13,7 @@ export class GearApi extends ApiPromise {
   public balance: GearBalance;
   public allEvents: PromiseResult<() => Observable<Vec<EventRecord>>>;
   public gearEvents: GearEvents;
+  public defaultTypes: any;
 
   constructor(options?: GearApiOptions) {
     const provider = new WsProvider(options?.providerAddress ?? 'ws://127.0.0.1:9944');
@@ -40,6 +41,7 @@ export class GearApi extends ApiPromise {
       this.balance = new GearBalance(this);
       this.allEvents = this.query.system.events;
       this.gearEvents = new GearEvents(this);
+      this.defaultTypes = defaultTypes;
     });
   }
 
