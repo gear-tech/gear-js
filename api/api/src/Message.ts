@@ -8,12 +8,12 @@ import { AnyNumber } from '@polkadot/types/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 export class GearMessage {
-  private api: ApiPromise;
+  private api: GearApi;
   private createType: CreateType;
   submitted: any;
 
   constructor(gearApi: GearApi) {
-    this.api = gearApi.api;
+    this.api = gearApi;
     this.createType = new CreateType(gearApi);
   }
 

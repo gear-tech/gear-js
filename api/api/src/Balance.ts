@@ -5,10 +5,10 @@ import { Balance } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 export class GearBalance {
-  private api: ApiPromise;
+  private api: GearApi;
 
   constructor(gearApi: GearApi) {
-    this.api = gearApi.api;
+    this.api = gearApi;
   }
 
   async findOut(publicKey: string): Promise<Balance> {

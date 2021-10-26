@@ -10,12 +10,12 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
 
 export class GearProgram {
-  private api: ApiPromise;
+  private api: GearApi;
   private createType: CreateType;
   submitted: any;
 
   constructor(gearApi: GearApi) {
-    this.api = gearApi.api;
+    this.api = gearApi;
     this.createType = new CreateType(gearApi);
   }
 
