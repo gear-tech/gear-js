@@ -5,11 +5,11 @@ import { CloseIcon } from '../../../assets/Icons';
 
 type Props = {
   content: any;
-  title: string;
+  title?: string;
   handleClose: () => void;
 };
 
-export const Modal = ({ content, title, handleClose }: Props) => (
+export const Modal = ({ content, handleClose, ...props }: Props) => (
   <div className="modal__wrapper">
     <div className="modal__box">
       <button className="modal__close" onClick={handleClose} type="button">
@@ -17,7 +17,12 @@ export const Modal = ({ content, title, handleClose }: Props) => (
           <CloseIcon color="#ffffff" />
         </span>
       </button>
+      {props.title && <h2 className="modal__title">{props.title}</h2>}
       {content}
     </div>
   </div>
 );
+
+Modal.defaultProps = {
+  title: false,
+};

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAlert } from 'react-alert';
 import { RPC_METHODS } from 'consts';
 import { GearKeyring } from '@gear-js/api';
@@ -6,7 +6,7 @@ import { u8aToHex } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
-import { copyToClipboard, readFileAsync } from 'helpers';
+import { copyToClipboard } from 'helpers';
 import './Keyring.scss';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { CopyClipboard } from '../../../assets/Icons';
@@ -26,8 +26,6 @@ export const Keyring = ({ handleClose }: Props) => {
 
   const apiRequest = new ServerRPCRequestService();
   const alert = useAlert();
-  const hiddenFileInput = useRef<any>(null);
-
   const create = async () => {
     // it returns new generated seed and mnemonic
     const { seed, mnemonic } = await GearKeyring.generateSeed();
@@ -101,22 +99,6 @@ export const Keyring = ({ handleClose }: Props) => {
     }
 
     updateAddress(event.target.value);
-  };
-
-  const fileUploadAction = (event: any) => {
-    hiddenFileInput.current.click();
-  };
-
-  const handleRestore = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { files },
-    } = event;
-
-    if (files?.length) {
-      const fileBuffer: any = await readFileAsync(files[0]);
-      const json = JSON.parse(new TextDecoder().decode(fileBuffer));
-      console.log(json);
-    }
   };
 
   const handleCreate = async (password: string) => {
@@ -244,9 +226,7 @@ export const Keyring = ({ handleClose }: Props) => {
                     <span>I have saved my mnemonic seed safely</span>
                   </div>
                   <div className="keyring__actions">
-                    <button className="keyring__restore-btn" type="button" onClick={fileUploadAction}>
-                      Restore from JSON
-                    </button>
+                    
                     <button
                       className="keyring__action-btn"
                       type="button"
@@ -265,16 +245,6 @@ export const Keyring = ({ handleClose }: Props) => {
             </Form>
           )}
         </Formik>
-        <div>
-          <input
-            className="keyring__restore"
-            id="restore"
-            type="file"
-            ref={hiddenFileInput}
-            onChange={handleRestore}
-            hidden
-          />
-        </div>
       </div>
     </div>
   );
