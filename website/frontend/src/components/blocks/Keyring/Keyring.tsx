@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAlert } from 'react-alert';
-import { RPC_METHODS } from 'consts';
+import { RPC_METHODS, KEY_TYPES } from 'consts';
 import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
@@ -55,11 +55,11 @@ export const Keyring = ({ handleClose }: Props) => {
     create();
 
     if (event.target.value === 'seed') {
-      setSeedType('raw');
+      setSeedType(KEY_TYPES.RAW);
     }
 
     if (event.target.value === 'mnemonic') {
-      setSeedType('mnemonic');
+      setSeedType(KEY_TYPES.MNEMOINIC);
     }
   };
 
@@ -87,11 +87,11 @@ export const Keyring = ({ handleClose }: Props) => {
     }
   };
 
-  const onChangeName = (event: any) => {
+  const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAccountName(event.target.value);
   };
 
-  const onChangeSeed = (event: any) => {
+  const onChangeSeed = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (seedType === 'mnemonic') {
       setIsMnemonic(event.target.value);
     } else {

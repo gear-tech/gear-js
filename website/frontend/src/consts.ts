@@ -93,6 +93,12 @@ export const SEARCH_TYPES = {
   PROGRAMS: 'PROGRAMS',
 };
 
+
+export const KEY_TYPES = {
+  MNEMOINIC: 'mnemonic',
+  RAW: 'raw',
+};
+
 export enum ZIndexes {
   'alert' = 999,
 }

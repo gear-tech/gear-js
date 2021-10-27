@@ -5,10 +5,10 @@ import { readFileAsync, toShortAddress } from 'helpers';
 import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import { Formik, Field, Form } from 'formik';
-import * as Yup from 'yup';
 import cancel from 'assets/images/cancel.svg';
 import Refresh from 'assets/images/refresh.svg';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
+import { Schema } from './Schema';
 import './RestoreJson.scss';
 
 type Props = {
@@ -34,7 +34,7 @@ export const RestoreJson = ({ handleClose }: Props) => {
     setJson(null);
   };
 
-  const handleUpload = async (event: any) => {
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { files },
     } = event;
@@ -71,10 +71,6 @@ export const RestoreJson = ({ handleClose }: Props) => {
       alert.error(`${error}`);
     }
   };
-
-  const Schema = Yup.object({
-    password: Yup.string().required('Password is required'),
-  });
 
   return (
     <div className="restore__wrapper">

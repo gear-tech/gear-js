@@ -1,3 +1,1 @@
-import { RestoreJson } from './RestoreJson';
-
-export { RestoreJson };
+export { RestoreJson } from "./RestoreJson"
