@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAlert } from 'react-alert';
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { RPC_METHODS } from 'consts';
+import { RPC_METHODS, KEY_TYPES } from 'consts';
 import { GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import Identicon from '@polkadot/react-identicon';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
-
 import { copyToClipboard } from 'helpers';
 import './Keyring.scss';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
@@ -18,38 +16,30 @@ type Props = {
 };
 
 export const Keyring = ({ handleClose }: Props) => {
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  const [key, setKey] = useState('');
   const [publicKey, setPublicKey] = useState('');
+  const [seedType, setSeedType] = useState('mnemonic');
   const [isSeed, setIsSeed] = useState('');
   const [isMnemonic, setIsMnemonic] = useState('');
+  const [accountName, setAccountName] = useState('New Account');
   const [saved, setSaved] = useState(false);
-  const [keyPairJson, setKeyPairJson] = useState<any>(null);
-  const [keyPair, setKeyPair] = useState<any>(null);
-  const [isAddressRaw, setIsAddressRaw] = useState('');
+  const [isError, setIsError] = useState(false);
 
   const apiRequest = new ServerRPCRequestService();
   const alert = useAlert();
+  const create = async () => {
+    // it returns new generated seed and mnemonic
+    const { seed, mnemonic } = await GearKeyring.generateSeed();
+
+    // get Address from seed
+    const { address } = await GearKeyring.fromSeed(seed);
+
+    setIsSeed(seed);
+    setIsMnemonic(mnemonic);
+    setPublicKey(address);
+    setIsError(false);
+  };
 
   useEffect(() => {
-    const create = async () => {
-      const {
-        mnemonic,
-        seed,
-        json,
-        json: { address },
-        keyring: { addressRaw },
-        keyring,
-      } = await GearKeyring.create('WebAccount');
-      setKey(mnemonic);
-      setPublicKey(address);
-      setIsSeed(seed);
-      setIsMnemonic(mnemonic);
-      setKeyPairJson(json);
-      setIsAddressRaw(u8aToHex(addressRaw));
-      setKeyPair(keyring);
-    };
-
     create();
   }, []);
 
@@ -62,17 +52,67 @@ export const Keyring = ({ handleClose }: Props) => {
   };
 
   const handleChange = (event: any) => {
+    create();
+
     if (event.target.value === 'seed') {
-      setKey(isSeed);
+      setSeedType(KEY_TYPES.RAW);
     }
 
     if (event.target.value === 'mnemonic') {
-      setKey(isMnemonic);
+      setSeedType(KEY_TYPES.MNEMOINIC);
     }
   };
 
-  const handleCreate = (password: string) => {
-    const encodedJson = GearKeyring.toJson(keyPair, `${password}`);
+  const updateAddress = async (seed: string) => {
+    if (seedType === 'raw') {
+      try {
+        const { address } = await GearKeyring.fromSeed(seed);
+        setIsSeed(seed);
+        setPublicKey(address);
+        setIsError(false);
+      } catch (error) {
+        setPublicKey(`5${Array(42).join('x')}`);
+        setIsError(true);
+      }
+    } else {
+      try {
+        const { address } = await GearKeyring.fromMnemonic(seed);
+        setIsMnemonic(seed);
+        setPublicKey(address);
+        setIsError(false);
+      } catch (error) {
+        setPublicKey(`5${Array(42).join('x')}`);
+        setIsError(true);
+      }
+    }
+  };
+
+  const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAccountName(event.target.value);
+  };
+
+  const onChangeSeed = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (seedType === 'mnemonic') {
+      setIsMnemonic(event.target.value);
+    } else {
+      setIsSeed(event.target.value);
+    }
+
+    updateAddress(event.target.value);
+  };
+
+  const handleCreate = async (password: string) => {
+    let keyring;
+
+    if (seedType === 'mnemonic') {
+      keyring = await GearKeyring.fromMnemonic(isMnemonic, accountName);
+    } else {
+      keyring = await GearKeyring.fromSeed(isSeed, accountName);
+    }
+    const keyPairJson = await GearKeyring.toJson(keyring);
+    const encodedJson = await GearKeyring.toJson(keyring, `${password}`);
+    const isAddressRaw = u8aToHex(keyring.addressRaw);
+
     localStorage.setItem('gear_mnemonic', JSON.stringify(keyPairJson));
     localStorage.setItem('public_key', publicKey);
     downloadJson(JSON.stringify(encodedJson), `keystore_${keyPairJson.meta.name}.json`, 'text/plain');
@@ -92,6 +132,14 @@ export const Keyring = ({ handleClose }: Props) => {
 
   return (
     <div className="keyring__wrapper">
+      <input
+        id="accountName"
+        className="keyring__name"
+        type="text"
+        name="accoutName"
+        value={accountName}
+        onChange={(event) => onChangeName(event)}
+      />
       <div className="keyring__address">
         <div className="keyring__icon">
           <Identicon value={publicKey} size={32} theme="polkadot" />
@@ -99,17 +147,23 @@ export const Keyring = ({ handleClose }: Props) => {
         <div className="keyring__details">{publicKey}</div>
       </div>
       <div className="keyring__content">
-        <div className="keyring__help-container">
-          Mnemonic phrase or seed: <span className="keyring__help">?</span>
-        </div>
+        <div className="keyring__help-container">Mnemonic phrase or seed:</div>
         <div className="keyring__textArea">
-          <div className="keyring__key">{key}</div>
+          <textarea
+            autoCapitalize="off"
+            autoCorrect="off"
+            className={`keyring__key ${isError ? 'error' : ' '}`}
+            onChange={(event) => onChangeSeed(event)}
+            rows={2}
+            spellCheck={false}
+            value={seedType === 'mnemonic' ? isMnemonic : isSeed}
+          />
           <div className="keyring__copy">
             <div className="keyring__copy-wrapper">
               <button
                 className="keyring__copy-button"
                 type="button"
-                onClick={() => copyToClipboard(key, alert, 'Copied')}
+                onClick={() => copyToClipboard(seedType === 'mnemonic' ? isMnemonic : isSeed, alert, 'Copied')}
               >
                 <CopyClipboard color="#ffffff" />
               </button>
@@ -171,18 +225,21 @@ export const Keyring = ({ handleClose }: Props) => {
                     />
                     <span>I have saved my mnemonic seed safely</span>
                   </div>
-                  <button
-                    className="keyring__action-btn"
-                    type="button"
-                    disabled={!saved}
-                    onClick={() => {
-                      if (isValid) {
-                        handleCreate(values.password);
-                      }
-                    }}
-                  >
-                    Add
-                  </button>
+                  <div className="keyring__actions">
+                    
+                    <button
+                      className="keyring__action-btn"
+                      type="button"
+                      disabled={!saved}
+                      onClick={() => {
+                        if (isValid && !isError) {
+                          handleCreate(values.password);
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
                 </div>
               </div>
             </Form>
