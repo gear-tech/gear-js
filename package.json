@@ -2,12 +2,6 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "build:backend": "cd website/backend && npm run build",
-    "build:frontend": "cd website/frontend && npm run build",
-    "build:ide": "cd website/fronted && npm run build",
-    "start:backend": "npm run start:dev --workspace=website/backend",
-    "start:frontend": "npm run start --workspace=website/frontend",
-    "start:ide": "npm run start:dev --workspace=website/ide-backend",
     "prepare": "husky install"
   },
   "workspaces": [
@@ -18,7 +12,8 @@
     "@gear-js/api": "file:api",
     "@gear-js/backend": "file:website/backend",
     "@gear-js/frontend": "file:website/frontend",
-    "@gear-js/ide-backend": "file:website/ide-backend"
+    "@gear-js/ide-backend": "file:website/ide-backend",
+    "@gear-js/events-listener": "file:website/events-listener"
   },
   "devDependencies": {
     "husky": "^7.0.2",

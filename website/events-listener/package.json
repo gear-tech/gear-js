@@ -1,0 +1,20 @@
+{
+  "name": "@gear-js/event-listener",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/indes.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gear-js/api": "^0.6.2",
+    "@polkadot/api": "^6.5.2",
+    "avsc": "^5.7.3",
+    "chalk": "^4.1.2",
+    "kafkajs": "^1.15.0",
+    "winston": "^3.3.3"
+  }
+}
