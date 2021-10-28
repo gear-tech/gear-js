@@ -4,10 +4,10 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { DebugDataSnapshotEvent, GearApi } from '.';
 
 export class DebugMode {
-  api: ApiPromise;
+  api: GearApi;
   enabled: any;
-  constructor(api: GearApi) {
-    this.api = api.api;
+  constructor(gearApi: GearApi) {
+    this.api = gearApi;
   }
 
   enable() {

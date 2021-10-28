@@ -1,8 +1,9 @@
 import { GearType } from '.';
 import { i32, Bytes } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
+import { ApiOptions } from '@polkadot/api/types';
 
-export interface GearApiOptions {
+export interface GearApiOptions extends ApiOptions {
   providerAddress?: string;
   customTypes?: GearType;
 }

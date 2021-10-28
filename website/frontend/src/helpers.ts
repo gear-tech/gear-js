@@ -1,7 +1,3 @@
-import { AlertManager } from 'react-alert';
-import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/events';
-
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
 
@@ -39,11 +35,11 @@ export const toShortAddress = (_address: string) => {
   return address.length > 13 ? `${address.slice(0, 6)}…${address.slice(-6)}` : address;
 };
 
-export const copyToClipboard = (key: string, alert: AlertManager, successfulText?: string) => {
+export const copyToClipboard = (key: string, alert: any, successfulText?: string) => {
   try {
     navigator.clipboard.writeText(key);
-    AddAlert({ type: EventTypes.SUCCESS, message: successfulText || 'Copied' });
+    alert.success(successfulText || 'Copied');
   } catch (err) {
-    AddAlert({ type: EventTypes.ERROR, message: 'Copy error' });
+    alert.error('Copy error');
   }
 };

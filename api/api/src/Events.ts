@@ -5,10 +5,10 @@ import { Header } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
 export class GearEvents {
-  private api: ApiPromise;
+  private api: GearApi;
 
   constructor(gearApi: GearApi) {
-    this.api = gearApi.api;
+    this.api = gearApi;
   }
 
   subscribeLogEvents(callback: (event: LogEvent) => void | Promise<void>): UnsubscribePromise {

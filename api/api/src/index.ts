@@ -9,5 +9,6 @@ export { GearBalance } from './Balance';
 export { transformTypes } from './utils';
 export { getWasmMetadata } from './WasmMeta';
 export { DebugMode } from './DebugMode';
+export { GearMailbox } from './Mailbox';
 export * from './interfaces';
 export * from './types';

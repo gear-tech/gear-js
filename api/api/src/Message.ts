@@ -8,12 +8,12 @@ import { AnyNumber } from '@polkadot/types/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 export class GearMessage {
-  private api: ApiPromise;
+  private api: GearApi;
   private createType: CreateType;
-  message: any;
+  submitted: any;
 
   constructor(gearApi: GearApi) {
-    this.api = gearApi.api;
+    this.api = gearApi;
     this.createType = new CreateType(gearApi);
   }
 
@@ -26,8 +26,8 @@ export class GearMessage {
     payload = this.createType.encode(meta.input, message.payload, meta);
 
     try {
-      this.message = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);
-      return this.message;
+      this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value);
+      return this.submitted;
     } catch (error) {
       throw new SendMessageError();
     }
@@ -37,7 +37,7 @@ export class GearMessage {
     return new Promise(async (resolve, reject) => {
       try {
         let blockHash: string;
-        await this.message.signAndSend(keyring, ({ events = [], status }) => {
+        await this.submitted.signAndSend(keyring, ({ events = [], status }) => {
           if (status.isInBlock) {
             blockHash = status.asInBlock.toHex();
           } else if (status.isFinalized) {

@@ -10,12 +10,12 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
 
 export class GearProgram {
-  private api: ApiPromise;
+  private api: GearApi;
   private createType: CreateType;
-  program: any;
+  submitted: any;
 
   constructor(gearApi: GearApi) {
-    this.api = gearApi.api;
+    this.api = gearApi;
     this.createType = new CreateType(gearApi);
   }
 
@@ -38,7 +38,7 @@ export class GearProgram {
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.encode('bytes', Array.from(program.code));
     try {
-      this.program = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
+      this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
       const programId = this.generateProgramId(code, salt);
       return programId.toHex();
     } catch (error) {
@@ -50,7 +50,7 @@ export class GearProgram {
     return new Promise(async (resolve, reject) => {
       let blockHash: string;
       try {
-        await this.program.signAndSend(keyring, ({ events = [], status }) => {
+        await this.submitted.signAndSend(keyring, ({ events = [], status }) => {
           if (status.isInBlock) {
             blockHash = status.asInBlock.toHex();
           } else if (status.isFinalized) {
