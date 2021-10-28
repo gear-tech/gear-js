@@ -46,34 +46,42 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
     init_output: '',
     input: '',
     output: '',
+    async_input: '',
+    async_output: '',
     title: '',
     types: ''
   };
 
   let module = await WebAssembly.instantiate(wasmBytes, importObj);
   const instance = module.instance.exports;
-  metadata.types = instance?.meta_registry ? `0x${readMeta(memory, instance.meta_registry)}` : '';
-  metadata.init_input = instance?.meta_init_input ? readMeta(memory, instance.meta_init_input) : '';
-  metadata.init_output = instance?.meta_init_output ? readMeta(memory, instance.meta_init_output) : '';
-  metadata.input = instance?.meta_input ? readMeta(memory, instance.meta_input) : '';
-  metadata.output = instance?.meta_output ? readMeta(memory, instance.meta_output) : '';
-  metadata.title = instance?.meta_title ? readMeta(memory, instance.meta_title) : '';
+  if (!instance) {
+    return metadata;
+  }
+  metadata.types = `0x${readMeta(memory, instance.meta_registry)}`;
+  metadata.init_input = readMeta(memory, instance.meta_init_input);
+  metadata.init_output = readMeta(memory, instance.meta_init_output);
+  metadata.input = readMeta(memory, instance.meta_input);
+  metadata.output = readMeta(memory, instance.meta_output);
+  metadata.async_input = readMeta(memory, instance.meta_async_input);
+  metadata.async_output = readMeta(memory, instance.meta_async_output);
+  metadata.title = readMeta(memory, instance.meta_title);
 
   return metadata;
 }
 
-function readMeta(memory, ptr) {
+function readMeta(memory: WebAssembly.Memory, ptr: any): string {
+  if (!ptr) {
+    return '';
+  }
   ptr = ptr();
-  let length = memory.buffer.slice(ptr + 4, ptr + 8);
-  length = new Uint32Array(length)[0];
+  let pointer = new Uint32Array(memory.buffer.slice(ptr, ptr + 4))[0];
 
-  let pointer = memory.buffer.slice(ptr, ptr + 4);
-  pointer = new Uint32Array(pointer)[0];
+  let length = new Uint32Array(memory.buffer.slice(ptr + 4, ptr + 8))[0];
 
   let buf = memory.buffer.slice(pointer, pointer + length);
   return ab2str(buf);
 }
 
-function ab2str(buf) {
+function ab2str(buf: ArrayBuffer): string {
   return String.fromCharCode.apply(null, new Uint8Array(buf));
 }
