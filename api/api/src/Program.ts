@@ -3,7 +3,6 @@ import { GearType } from '.';
 import { Metadata } from './interfaces';
 import { SubmitProgramError, TransactionError } from './errors';
 import { AnyNumber } from '@polkadot/types/types';
-import { ApiPromise } from '@polkadot/api';
 import { Bytes, U64, u64 } from '@polkadot/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
@@ -32,9 +31,12 @@ export class GearProgram {
       gasLimit: u64 | AnyNumber;
       value?: BalanceOf | AnyNumber;
     },
-    meta: Metadata
+    meta: Metadata,
+    messageType?: string
   ): string {
-    const payload = program.initPayload ? this.createType.encode(meta.init_input, program.initPayload, meta) : '0x00';
+    const payload = program.initPayload
+      ? this.createType.encode(messageType || meta.init_input, program.initPayload, meta)
+      : '0x00';
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.encode('bytes', Array.from(program.code));
     try {

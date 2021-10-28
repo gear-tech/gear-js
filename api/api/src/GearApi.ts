@@ -18,7 +18,7 @@ export class GearApi extends ApiPromise {
 
   constructor(options?: GearApiOptions) {
     const provider = new WsProvider(options?.providerAddress ?? 'ws://127.0.0.1:9944');
-    const defaultTypes = options.customTypes
+    const defaultTypes = options?.customTypes
       ? {
           ...gearTypes,
           ...transformTypes(

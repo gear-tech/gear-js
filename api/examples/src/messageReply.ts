@@ -15,13 +15,12 @@ async function main() {
 
   const code = fs.readFileSync('test-wasm/demo_user_reply.opt.wasm');
   const meta = await getWasmMetadata(fs.readFileSync('test-wasm/demo_user_reply.meta.wasm'));
-
   const bobReply = (messageId: string) => {
-    api.reply.submitReply({ toId: messageId, payload: 'Hello Alice', gasLimit: 100_000_000 }, meta);
+    api.reply.submitReply({ toId: messageId, payload: 'Hello Alice', gasLimit: 200_000_000 }, meta);
     api.reply.signAndSend(bob, (data) => {});
   };
 
-  const programId = api.program.submit({ code, initPayload: u8aToHex(bob.addressRaw), gasLimit: 50_000_000 }, meta);
+  const programId = api.program.submit({ code, initPayload: u8aToHex(bob.addressRaw), gasLimit: 100_000_000 }, meta);
 
   api.gearEvents.subscribeLogEvents(({ data }) => {
     console.log(data.toHuman());
@@ -34,7 +33,8 @@ async function main() {
   });
 
   await api.program.signAndSend(alice, (data) => {});
-  api.message.submit({ destination: programId, payload: 'Hello Bob', gasLimit: 100_000_000 }, meta);
+  console.log(meta);
+  api.message.submit({ destination: programId, payload: 'Hello Bob', gasLimit: 200_000_000 }, meta);
   await api.message.signAndSend(alice, (data) => {
     messageId = data.messageId.messageId;
   });

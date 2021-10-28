@@ -1,7 +1,6 @@
 import { GearApi, CreateType } from '.';
 import { GearType, Metadata } from './interfaces';
 import { SendMessageError, TransactionError } from './errors';
-import { ApiPromise } from '@polkadot/api';
 import { Bytes } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { AnyNumber } from '@polkadot/types/types';
@@ -19,14 +18,15 @@ export class GearMessage {
 
   submit(
     message: { destination: string | H256; payload: string | GearType; gasLimit: AnyNumber; value?: AnyNumber },
-    meta: Metadata
+    meta: Metadata,
+    messageType?: string
   ): any {
     let payload: Bytes | Uint8Array | string;
 
-    payload = this.createType.encode(meta.input, message.payload, meta);
+    payload = this.createType.encode(messageType || meta.input, message.payload, meta);
 
     try {
-      this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value);
+      this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);
       return this.submitted;
     } catch (error) {
       throw new SendMessageError();

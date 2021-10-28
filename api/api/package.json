@@ -16,7 +16,7 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "^6.4.1",
+    "@polkadot/api": "^6.4.2",
     "rxjs": "^7.3.0"
   },
   "devDependencies": {
