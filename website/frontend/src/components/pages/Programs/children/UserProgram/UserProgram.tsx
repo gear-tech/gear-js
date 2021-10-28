@@ -1,11 +1,8 @@
 import React, { VFC } from 'react';
-import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import { ProgramModel, ProgramStatus } from 'types/program';
-import { getProgramAction } from 'store/actions/actions';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { useAlert } from 'react-alert';
-import RefreshIllustration from 'assets/images/refresh.svg';
 import MessageIllustration from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
 import styles from './UserProgram.module.scss';
@@ -16,7 +13,6 @@ type Props = {
 };
 
 export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
-  const dispatch = useDispatch();
   const alert = useAlert();
 
   return (
