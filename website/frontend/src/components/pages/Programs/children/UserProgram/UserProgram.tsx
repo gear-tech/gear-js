@@ -45,9 +45,6 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
         </div>
         <div className={styles.programWrapperData}>
           <div className={styles.programsListInfo}>
-            Number of calls:<span className={styles.programsListInfoData}>{program.callCount}</span>
-          </div>
-          <div className={styles.programsListInfo}>
             Uploaded at:
             <span className={styles.programsListInfoData}>{program.uploadedAt && formatDate(program.uploadedAt)}</span>
           </div>
