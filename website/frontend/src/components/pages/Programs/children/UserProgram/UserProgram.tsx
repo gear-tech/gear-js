@@ -19,10 +19,6 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
-  const handleRefreshProgram = (programHash: string) => {
-    dispatch(getProgramAction(programHash));
-  };
-
   return (
     <div className={styles.programsListItem} key={program.hash}>
       <div className={styles.programWrapper}>
@@ -56,14 +52,6 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
       <div className={styles.programsListBtns}>
         <button type="button" aria-label="refresh" onClick={() => handleOpenForm(program.hash, program.name, true)}>
           <img src={MessageIllustration} alt="message" />
-        </button>
-        <button
-          className={styles.programsListRefreshBtn}
-          type="button"
-          aria-label="refresh"
-          onClick={() => handleRefreshProgram(program.hash)}
-        >
-          <img src={RefreshIllustration} alt="refresh" />
         </button>
         <button
           className={styles.allProgramsItemUpload}
