@@ -1,6 +1,5 @@
 import { GearApi } from '.';
 import { LogEvent, ProgramEvent, TransferEvent } from './types';
-import { ApiPromise } from '@polkadot/api';
 import { Header } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
 

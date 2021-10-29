@@ -37,8 +37,8 @@ export class GearApi extends ApiPromise {
       ...options
     });
     this.isReady.then(() => {
-      this.program = new GearProgram(this);
-      this.message = new GearMessage(this);
+      this.program = new GearProgram(this, 'InitMessageEnqueued');
+      this.message = new GearMessage(this, 'DispatchMessageEnqueued');
       this.balance = new GearBalance(this);
       this.reply = new GearMessageReply(this);
       this.allEvents = this.query.system.events;
