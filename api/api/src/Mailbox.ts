@@ -1,4 +1,3 @@
-import { ApiPromise } from '@polkadot/api';
 import { GearApi, Message } from '.';
 import { Option, BTreeMap } from '@polkadot/types';
 import { AccountId32, H256 } from '@polkadot/types/interfaces';

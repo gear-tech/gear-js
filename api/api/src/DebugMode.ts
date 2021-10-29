@@ -1,4 +1,3 @@
-import { ApiPromise } from '@polkadot/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { DebugDataSnapshotEvent, GearApi } from '.';
