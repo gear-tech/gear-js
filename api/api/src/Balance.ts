@@ -1,6 +1,5 @@
 import { GearApi, GearKeyring } from '.';
 import { TransactionError } from './errors';
-import { ApiPromise } from '@polkadot/api';
 import { Balance } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
 
