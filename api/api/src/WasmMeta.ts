@@ -44,10 +44,12 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
   let metadata = {
     init_input: '',
     init_output: '',
-    input: '',
-    output: '',
-    async_input: '',
-    async_output: '',
+    async_init_input: '',
+    async_init_output: '',
+    handle_input: '',
+    handle_output: '',
+    async_handle_input: '',
+    async_handle_output: '',
     title: '',
     types: ''
   };
@@ -60,10 +62,12 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
   metadata.types = `0x${readMeta(memory, instance.meta_registry)}`;
   metadata.init_input = readMeta(memory, instance.meta_init_input);
   metadata.init_output = readMeta(memory, instance.meta_init_output);
-  metadata.input = readMeta(memory, instance.meta_input);
-  metadata.output = readMeta(memory, instance.meta_output);
-  metadata.async_input = readMeta(memory, instance.meta_async_input);
-  metadata.async_output = readMeta(memory, instance.meta_async_output);
+  metadata.async_init_input = readMeta(memory, instance.meta_async_init_input);
+  metadata.async_init_output = readMeta(memory, instance.meta_async_init_output);
+  metadata.handle_input = readMeta(memory, instance.meta_handle_input);
+  metadata.handle_output = readMeta(memory, instance.meta_handle_output);
+  metadata.async_handle_input = readMeta(memory, instance.meta_async_handle_input);
+  metadata.async_handle_output = readMeta(memory, instance.meta_async_handle_output);
   metadata.title = readMeta(memory, instance.meta_title);
 
   return metadata;

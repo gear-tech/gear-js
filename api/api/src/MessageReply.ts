@@ -28,7 +28,7 @@ export class GearMessageReply {
   ) {
     let payload: Bytes | Uint8Array | string;
 
-    payload = this.createType.encode(messageType || meta.async_input, message.payload, meta);
+    payload = this.createType.encode(messageType || meta.async_handle_input, message.payload, meta);
 
     try {
       this.reply = this.api.tx.gear.sendReply(message.toId, payload, message.gasLimit, message.value);
