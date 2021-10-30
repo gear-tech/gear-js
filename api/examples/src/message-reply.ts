@@ -1,8 +1,8 @@
-import { GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
+import { CreateType, GearApi, GearKeyring } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
-import * as fs from 'fs';
+import { uploadDemoReply, messageToBob } from './read-mailbox';
 
-async function main() {
+export const messageReply = async () => {
   let endPromiseResolve;
   const endPromise = new Promise((resolve) => {
     endPromiseResolve = resolve;
@@ -13,18 +13,16 @@ async function main() {
   const alice = GearKeyring.fromSuri('//Alice', 'Alice');
   const bob = GearKeyring.fromSuri('//Bob', 'Bob');
 
-  const code = fs.readFileSync('test-wasm/demo_user_reply.opt.wasm');
-  const meta = await getWasmMetadata(fs.readFileSync('test-wasm/demo_user_reply.meta.wasm'));
   const bobReply = (messageId: string) => {
     api.reply.submitReply({ toId: messageId, payload: 'Hello Alice', gasLimit: 200_000_000 }, meta);
     api.reply.signAndSend(bob, (data) => {});
   };
-
-  const programId = api.program.submit({ code, initPayload: u8aToHex(bob.addressRaw), gasLimit: 100_000_000 }, meta);
+  const { programId, meta } = await uploadDemoReply(api, alice, u8aToHex(bob.addressRaw));
 
   api.gearEvents.subscribeLogEvents(({ data }) => {
     console.log(data.toHuman());
     if (data.source.toHex() === programId && data.dest.toHex() === u8aToHex(bob.addressRaw)) {
+      console.log(CreateType.decode(meta.async_handle_output, data.payload, meta).toHuman());
       bobReply(data.id.toHex());
     }
     if (data.reply.isSome && data.reply.unwrap()[0].toHex() === messageId) {
@@ -32,17 +30,13 @@ async function main() {
     }
   });
 
-  await api.program.signAndSend(alice, (data) => {});
-  console.log(meta);
-  api.message.submit({ destination: programId, payload: 'Hello Bob', gasLimit: 200_000_000 }, meta);
-  await api.message.signAndSend(alice, (data) => {
-    messageId = data.messageId.messageId;
-  });
-  return endPromise;
-}
+  messageId = await messageToBob(api, alice, programId, meta);
 
-main()
-  .catch((error) => {
-    console.log(error);
-  })
-  .finally(() => process.exit());
+  return endPromise;
+};
+
+// main()
+//   .catch((error) => {
+//     console.log(error);
+//   })
+//   .finally(() => process.exit());
