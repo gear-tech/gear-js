@@ -1,5 +1,6 @@
 import { GearApi } from '@gear-js/api';
-async function main() {
+
+export const events = async () => {
   const gearApi = await GearApi.create();
 
   gearApi.gearEvents.subscribeLogEvents(({ data: { id, source, dest, payload, reply } }) => {
@@ -37,6 +38,4 @@ async function main() {
     value: ${+value.toString()}
     `);
   });
-}
-
-main();
+};

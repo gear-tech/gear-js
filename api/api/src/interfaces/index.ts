@@ -5,3 +5,4 @@ export * from './metadata';
 export * from './debug';
 export * from './keyring';
 export * from './program';
+export * from './transaction';

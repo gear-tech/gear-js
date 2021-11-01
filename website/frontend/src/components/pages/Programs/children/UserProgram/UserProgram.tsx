@@ -1,11 +1,8 @@
 import React, { VFC } from 'react';
-import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import { ProgramModel, ProgramStatus } from 'types/program';
-import { getProgramAction } from 'store/actions/actions';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { useAlert } from 'react-alert';
-import RefreshIllustration from 'assets/images/refresh.svg';
 import MessageIllustration from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
 import styles from './UserProgram.module.scss';
@@ -16,12 +13,7 @@ type Props = {
 };
 
 export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
-  const dispatch = useDispatch();
   const alert = useAlert();
-
-  const handleRefreshProgram = (programHash: string) => {
-    dispatch(getProgramAction(programHash));
-  };
 
   return (
     <div className={styles.programsListItem} key={program.hash}>
@@ -45,9 +37,6 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
         </div>
         <div className={styles.programWrapperData}>
           <div className={styles.programsListInfo}>
-            Number of calls:<span className={styles.programsListInfoData}>{program.callCount}</span>
-          </div>
-          <div className={styles.programsListInfo}>
             Uploaded at:
             <span className={styles.programsListInfoData}>{program.uploadedAt && formatDate(program.uploadedAt)}</span>
           </div>
@@ -56,14 +45,6 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
       <div className={styles.programsListBtns}>
         <button type="button" aria-label="refresh" onClick={() => handleOpenForm(program.hash, program.name, true)}>
           <img src={MessageIllustration} alt="message" />
-        </button>
-        <button
-          className={styles.programsListRefreshBtn}
-          type="button"
-          aria-label="refresh"
-          onClick={() => handleRefreshProgram(program.hash)}
-        >
-          <img src={RefreshIllustration} alt="refresh" />
         </button>
         <button
           className={styles.allProgramsItemUpload}

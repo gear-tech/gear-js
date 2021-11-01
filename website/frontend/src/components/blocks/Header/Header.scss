@@ -67,7 +67,8 @@
 
 .user-block__programs,
 .user-block__notifications,
-.user-block__account {
+.user-block__account,
+.user-block__restore {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -83,7 +84,8 @@
 
 .user-block__programs span,
 .user-block__notifications span,
-.user-block__account span {
+.user-block__account span,
+.user-block__restore span {
   font-weight: bold;
   font-size: 16px;
   line-height: 24px;

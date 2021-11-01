@@ -1,24 +1,13 @@
-import { GearApi, CreateType } from '.';
 import { GearType } from '.';
 import { Metadata } from './interfaces';
-import { SubmitProgramError, TransactionError } from './errors';
+import { SubmitProgramError } from './errors';
 import { AnyNumber } from '@polkadot/types/types';
-import { ApiPromise } from '@polkadot/api';
 import { Bytes, U64, u64 } from '@polkadot/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
-import { KeyringPair } from '@polkadot/keyring/types';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
+import { GearTransaction } from './types/Transaction';
 
-export class GearProgram {
-  private api: GearApi;
-  private createType: CreateType;
-  submitted: any;
-
-  constructor(gearApi: GearApi) {
-    this.api = gearApi;
-    this.createType = new CreateType(gearApi);
-  }
-
+export class GearProgram extends GearTransaction {
   /**
    * @param program Uploading program data
    * @param meta Metadata
@@ -32,9 +21,12 @@ export class GearProgram {
       gasLimit: u64 | AnyNumber;
       value?: BalanceOf | AnyNumber;
     },
-    meta: Metadata
+    meta: Metadata,
+    messageType?: string
   ): string {
-    const payload = program.initPayload ? this.createType.encode(meta.init_input, program.initPayload, meta) : '0x00';
+    const payload = program.initPayload
+      ? this.createType.encode(messageType || meta.init_input, program.initPayload, meta)
+      : '0x00';
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.encode('bytes', Array.from(program.code));
     try {
@@ -44,56 +36,6 @@ export class GearProgram {
     } catch (error) {
       throw new SubmitProgramError();
     }
-  }
-
-  signAndSend(keyring: KeyringPair, callback: (data: any) => void) {
-    return new Promise(async (resolve, reject) => {
-      let blockHash: string;
-      try {
-        await this.submitted.signAndSend(keyring, ({ events = [], status }) => {
-          if (status.isInBlock) {
-            blockHash = status.asInBlock.toHex();
-          } else if (status.isFinalized) {
-            blockHash = status.asFinalized.toHex();
-            resolve(0);
-          } else if (status.isInvalid) {
-            reject(new TransactionError(`Transaction error. Status: isInvalid`));
-          }
-
-          // Check transaction errors
-          events
-            .filter(({ event }) => this.api.events.system.ExtrinsicFailed.is(event))
-            .forEach(
-              ({
-                event: {
-                  data: [error]
-                }
-              }) => {
-                reject(new TransactionError(`${error.toString()}`));
-              }
-            );
-
-          events
-            .filter(({ event }) => this.api.events.gear.InitMessageEnqueued.is(event))
-            .forEach(async ({ event: { data, method } }) => {
-              callback({
-                method,
-                status: status.type,
-                blockHash: blockHash,
-                programId: data[0].programId.toHuman(),
-                initMessageId: data[0].messageId.toHuman()
-              });
-            });
-        });
-      } catch (error) {
-        const errorCode = +error.message.split(':')[0];
-        if (errorCode === 1010) {
-          reject(new TransactionError('Account balance too low'));
-        } else {
-          reject(new TransactionError(error.message));
-        }
-      }
-    });
   }
 
   async allUploadedPrograms(): Promise<string[]> {
