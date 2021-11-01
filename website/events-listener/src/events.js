@@ -1,6 +1,5 @@
 import {
   DispatchMessageEnqueuedData,
-  GearApi,
   InitFailureData,
   InitMessageEnqueuedData,
   InitSuccessData,
@@ -11,6 +10,30 @@ export const listen = async (api, callback) => {
   api.allEvents((events) => {
     events.forEach(async ({ event: { data, method } }) => {
       switch (method) {
+        case 'InitMessageEnqueued':
+          data = new InitMessageEnqueuedData(data);
+          callback({
+            key: 'InitMessageEnqueued',
+            value: {
+              programId: data.programId.toHex(),
+              messageId: data.messageId.toHex(),
+              origin: data.origin.toHex(),
+              date: Date.now(),
+            },
+          });
+          break;
+        case 'DispatchMessageEnqueued':
+          data = new DispatchMessageEnqueuedData(data);
+          callback({
+            key: 'DispatchMessageEnqueued',
+            value: {
+              programId: data.programId.toHex(),
+              messageId: data.messageId.toHex(),
+              origin: data.origin.toHex(),
+              date: Date.now(),
+            },
+          });
+          break;
         case 'Log':
           data = new LogData(data);
           callback({
@@ -48,30 +71,6 @@ export const listen = async (api, callback) => {
               programId: data.programId.toHex(),
               messageId: data.messageId.toHex(),
               origin: data.origin.toHex(),
-            },
-          });
-          break;
-        case 'InitMessageEnqueued':
-          data = new InitMessageEnqueuedData(data);
-          callback({
-            key: 'InitMessageEnqueued',
-            value: {
-              programId: data.programId.toHex(),
-              messageId: data.messageId.toHex(),
-              origin: data.origin.toHex(),
-              date: Date.now(),
-            },
-          });
-          break;
-        case 'DispatchMessageEnqueued':
-          data = new DispatchMessageEnqueuedData(data);
-          callback({
-            key: 'DispatchMessageEnqueued',
-            value: {
-              programId: data.programId.toHex(),
-              messageId: data.messageId.toHex(),
-              origin: data.origin.toHex(),
-              date: Date.now(),
             },
           });
           break;
