@@ -1,4 +1,3 @@
-
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
 
@@ -37,7 +36,6 @@ export const toShortAddress = (_address: string) => {
 };
 
 export const copyToClipboard = (key: string, alert: any, successfulText?: string) => {
-
   try {
     navigator.clipboard.writeText(key);
     alert.success(successfulText || 'Copied');

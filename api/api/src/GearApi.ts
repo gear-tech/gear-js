@@ -1,4 +1,4 @@
-import { GearProgram, GearMessage, transformTypes, GearBalance, GearEvents } from '.';
+import { GearProgram, GearMessage, transformTypes, GearBalance, GearEvents, GearMessageReply } from '.';
 import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';
@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 export class GearApi extends ApiPromise {
   public program: GearProgram;
   public message: GearMessage;
+  public reply: GearMessageReply;
   public balance: GearBalance;
   public allEvents: PromiseResult<() => Observable<Vec<EventRecord>>>;
   public gearEvents: GearEvents;
@@ -39,6 +40,7 @@ export class GearApi extends ApiPromise {
       this.program = new GearProgram(this, 'InitMessageEnqueued');
       this.message = new GearMessage(this, 'DispatchMessageEnqueued');
       this.balance = new GearBalance(this);
+      this.reply = new GearMessageReply(this);
       this.allEvents = this.query.system.events;
       this.gearEvents = new GearEvents(this);
       this.defaultTypes = defaultTypes;

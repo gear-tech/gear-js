@@ -1,6 +1,6 @@
 import { DebugMode, GearApi, GearKeyring } from '@gear-js/api';
 
-async function main() {
+export const debugMode = async () => {
   const api = await GearApi.create();
   console.log(`Connected to ${await api.chain()}`);
   const rootKeys = GearKeyring.fromSuri('//Alice', 'Alice default');
@@ -18,6 +18,4 @@ async function main() {
       console.log(`Message with id: ${id.toHuman()}`);
     });
   });
-}
-
-main();
+};

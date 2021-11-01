@@ -5,14 +5,18 @@
   "main": "meta.js",
   "scripts": {
     "build": "tsc",
-    "events": "node dist/event-subscribe.js",
-    "createType": "node dist/create-type.js",
-    "debugMode": "node dist/debug-mode.js"
+    "events": "node dist/run.js events",
+    "createType": "node dist/run.js typeStruct",
+    "debugMode": "node dist/run.js debug",
+    "messageReply": "node dist/run.js reply",
+    "mailbox": "node dist/run.js mailbox",
+    "example": "node dist/run.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "^0.6.1",
+    "@gear-js/api": "^0.6.2",
+    "@polkadot/api": "^6.4.2",
     "dotenv": "^10.0.0"
   }
 }

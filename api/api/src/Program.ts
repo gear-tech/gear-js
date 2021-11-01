@@ -21,9 +21,12 @@ export class GearProgram extends GearTransaction {
       gasLimit: u64 | AnyNumber;
       value?: BalanceOf | AnyNumber;
     },
-    meta: Metadata
+    meta: Metadata,
+    messageType?: string
   ): string {
-    const payload = program.initPayload ? this.createType.encode(meta.init_input, program.initPayload, meta) : '0x00';
+    const payload = program.initPayload
+      ? this.createType.encode(messageType || meta.init_input, program.initPayload, meta)
+      : '0x00';
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.encode('bytes', Array.from(program.code));
     try {

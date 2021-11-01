@@ -1,1 +1,1 @@
-export { RestoreJson } from "./RestoreJson"
+export { RestoreJson } from './RestoreJson';

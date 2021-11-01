@@ -226,7 +226,6 @@ export const Keyring = ({ handleClose }: Props) => {
                     <span>I have saved my mnemonic seed safely</span>
                   </div>
                   <div className="keyring__actions">
-                    
                     <button
                       className="keyring__action-btn"
                       type="button"

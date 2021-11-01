@@ -15,14 +15,14 @@ function writeJSON(data: any, name: string) {
   });
 }
 
-async function typeStructure() {
+export const typeStructure = async () => {
   const metaBytes = fs.readFileSync(process.env.CREATE_TYPE_CONTRACT_META_PATH);
   const meta = await getWasmMetadata(metaBytes);
   const displayedTypes = parseHexTypes(meta.types);
   const initInputType = getTypeStructure(meta.init_input, displayedTypes);
   const initOutputType = getTypeStructure(meta.init_output, displayedTypes);
-  const inputType = getTypeStructure(meta.input, displayedTypes);
-  const outputType = getTypeStructure(meta.output, displayedTypes);
+  const inputType = getTypeStructure(meta.handle_input, displayedTypes);
+  const outputType = getTypeStructure(meta.handle_output, displayedTypes);
   await Promise.all([
     writeJSON(meta, 'meta.json'),
     writeJSON(initInputType, 'init_input.json'),
@@ -31,12 +31,4 @@ async function typeStructure() {
     writeJSON(outputType, 'output.json'),
   ]);
   return;
-}
-
-typeStructure()
-  .catch((error) => {
-    console.error(error);
-  })
-  .finally(() => {
-    process.exit();
-  });
+};
