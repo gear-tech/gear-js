@@ -10,18 +10,18 @@ export class ConsumerController {
 
   @MessagePattern('events')
   async addEvent(@Payload() payload) {
-    console.log(new Date(payload.value.date));
     const chain = payload.headers.chain;
     const key = payload.key;
     const value = payload.value;
-    console.log(`Timestamp: ${payload.timestamp}`);
-    console.log(`Chain: ${chain}`);
-    console.log(`Key: ${key}`);
-    console.log(value);
     try {
       await this.consumerService.events[key](chain, value);
     } catch (error) {
       logger.error(error.message, error.stack);
     }
+  }
+
+  @MessagePattern('program.data')
+  async programData(@Payload() payload) {
+    console.log(payload);
   }
 }

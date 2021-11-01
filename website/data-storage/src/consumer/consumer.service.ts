@@ -28,7 +28,7 @@ export class ConsumerService {
     },
     InitMessageEnqueued: async (chain: string, value: any) => {
       await this.programService.save({
-        id: value.id,
+        id: value.programId,
         chain,
         owner: value.origin,
         uploadedAt: value.date,
