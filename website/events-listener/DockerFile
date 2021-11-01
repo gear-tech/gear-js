@@ -1,0 +1,6 @@
+FROM node:16-alpine
+WORKDIR /event-listener
+COPY ./website/event-listener/ .
+RUN rm package-lock.json 
+RUN npm install 
+CMD ["node", "src/index.js"]

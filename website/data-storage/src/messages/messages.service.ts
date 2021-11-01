@@ -5,6 +5,7 @@ import { Message } from './entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
+
 const logger = new Logger('MessageService');
 @Injectable()
 export class MessagesService {
@@ -13,17 +14,7 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save({
-    id,
-    chain,
-    destination,
-    source,
-    payload,
-    date,
-    replyTo,
-    replyError,
-    isRead,
-  }): Promise<Message> {
+  async save({ id, chain, destination, source, payload, date, replyTo, replyError, isRead }): Promise<Message> {
     let message = await this.messageRepo.findOne({ id });
     if (message) {
       if (payload) {
@@ -48,12 +39,7 @@ export class MessagesService {
     return this.messageRepo.save(message);
   }
 
-  async addPayload(
-    id: string,
-    chain: string,
-    payload: string,
-    signature: string,
-  ) {
+  async addPayload(id: string, chain: string, payload: string, signature: string) {
     const message = await this.messageRepo.findOne({ id, chain });
     if (!message) {
       throw new MessageNotFound();
@@ -80,12 +66,7 @@ export class MessagesService {
     return messages;
   }
 
-  async getOutgoing(
-    chain: string,
-    source?: string,
-    limit?: number,
-    offset?: number,
-  ) {
+  async getOutgoing(chain: string, source?: string, limit?: number, offset?: number) {
     const messages = await this.messageRepo.findAndCount({
       where: { chain, source },
       take: limit | 20,
