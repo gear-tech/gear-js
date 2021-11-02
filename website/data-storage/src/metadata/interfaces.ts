@@ -3,8 +3,8 @@ export interface AddMetaParams {
   programId: string;
   signature: string;
   meta: string | any;
-  name: string;
-  title: string;
+  name?: string;
+  title?: string;
 }
 
 export interface AddMetaResult {

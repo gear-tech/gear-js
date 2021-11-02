@@ -9,7 +9,6 @@ export class ApiGatewayController {
 
   @Post()
   async rpc(@Body() body: IRpcRequest | IRpcRequest[]) {
-    console.log(body);
     return await this.service.requestMessage(body);
   }
 }

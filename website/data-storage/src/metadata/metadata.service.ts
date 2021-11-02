@@ -16,7 +16,7 @@ export class MetadataService {
   ) {}
 
   async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
-    const program = await this.programService.findProgram(params.programId, params.chain);
+    const program = await this.programService.findProgram({ id: params.programId, chain: params.chain });
     if (!program) {
       throw new ProgramNotFound();
     }
@@ -39,7 +39,7 @@ export class MetadataService {
   }
 
   async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
-    const program = await this.programService.findProgram(params.programId, params.chain);
+    const program = await this.programService.findProgram({ id: params.programId, chain: params.chain });
     if (!program) {
       throw new ProgramNotFound();
     }

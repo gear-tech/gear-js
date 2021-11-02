@@ -10,7 +10,6 @@ export class ConsumerController {
 
   @MessagePattern('events')
   async addEvent(@Payload() payload) {
-    console.log(payload);
     const chain = payload.headers.chain;
     const key = payload.key;
     const value = payload.value;

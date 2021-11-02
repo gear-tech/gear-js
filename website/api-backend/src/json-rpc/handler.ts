@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Observable } from 'rxjs';
 import { MethodNotFoundError } from './errors';
 import { IRpcRequest, IRpcResponse } from './interface';
 
@@ -11,7 +12,7 @@ export class RpcMessageHandler {
 
   methods: {};
 
-  checkMethod(procedure: IRpcRequest): Function {
+  checkMethod(procedure: IRpcRequest): (params: any) => Observable<any> {
     const method = procedure.method;
     if (!method) {
       throw new MethodNotFoundError();
@@ -33,7 +34,7 @@ export class RpcMessageHandler {
     return response;
   }
 
-  getMethod(methodName: string): Function {
+  getMethod(methodName: string): (params: any) => Observable<any> {
     const method = methodName.split('.');
     let result = Object.getOwnPropertyDescriptor(this.methods, method[0]);
     if (result && method.length > 1) {
@@ -74,8 +75,15 @@ export class RpcMessageHandler {
     return response;
   }
 
-  async executeMethod(method: Function, procedure: IRpcRequest) {
-    const result = await method(procedure.params);
-    return this.getResponse(procedure, null, result);
+  executeMethod(
+    method: (params: any) => Observable<any>,
+    procedure: IRpcRequest,
+  ) {
+    const result = method(procedure.params);
+    return new Promise((resolve, reject) => {
+      result.forEach((value) => {
+        resolve(this.getResponse(procedure, null, value));
+      });
+    });
   }
 }
