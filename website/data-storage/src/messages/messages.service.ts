@@ -5,6 +5,7 @@ import { Message } from './entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
+import { AddPayloadParams, AllMessagesResult, GetMessagesParams } from './interface';
 
 const logger = new Logger('MessageService');
 @Injectable()
@@ -39,7 +40,8 @@ export class MessagesService {
     return this.messageRepo.save(message);
   }
 
-  async addPayload(id: string, chain: string, payload: string, signature: string) {
+  async addPayload(params: AddPayloadParams): Promise<Message> {
+    const { id, chain, signature, payload } = params;
     const message = await this.messageRepo.findOne({ id, chain });
     if (!message) {
       throw new MessageNotFound();
@@ -51,28 +53,40 @@ export class MessagesService {
     return this.messageRepo.save(message);
   }
 
-  async getIncoming(
-    chain: string,
-    destination?: string,
-    isRead?: boolean,
-    limit?: number,
-    offset?: number,
-  ): Promise<[Message[], number]> {
-    const messages = await this.messageRepo.findAndCount({
-      where: { chain, destination, isRead },
-      take: limit | 20,
-      skip: offset | 0,
+  async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
+    const [result, total] = await this.messageRepo.findAndCount({
+      where: { chain: params.chain, destination: params.destination, isRead: params.isRead },
+      take: params.limit | 20,
+      skip: params.offset | 0,
     });
-    return messages;
+    return {
+      messages: result,
+      count: total,
+    };
   }
 
-  async getOutgoing(chain: string, source?: string, limit?: number, offset?: number) {
-    const messages = await this.messageRepo.findAndCount({
-      where: { chain, source },
-      take: limit | 20,
-      skip: offset | 0,
+  async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
+    const [result, total] = await this.messageRepo.findAndCount({
+      where: { chain: params.chain, source: params.source },
+      take: params.limit | 20,
+      skip: params.offset | 0,
     });
-    return messages;
+    return {
+      messages: result,
+      count: total,
+    };
+  }
+
+  async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
+    const [result, total] = await this.messageRepo.findAndCount({
+      where: { chain: params.chain, destination: params.destination, source: params.source, isRead: params.isRead },
+      take: params.limit | 20,
+      skip: params.offset | 0,
+    });
+    return {
+      messages: result,
+      count: total,
+    };
   }
 
   async getCountUnread(destination: string): Promise<number> {

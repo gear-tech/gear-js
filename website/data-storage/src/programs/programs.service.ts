@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Meta } from 'src/metadata/entities/meta.entity';
 import { Repository } from 'typeorm';
 import { InitStatus, Program } from './entities/program.entity';
+import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from './interfaces';
 
 const logger = new Logger('ProgramDb');
 @Injectable()
@@ -23,13 +24,7 @@ export class ProgramsService {
     return await this.programRepo.save(program);
   }
 
-  async addProgramInfo(
-    id: string,
-    chain: string,
-    name?: string,
-    title?: string,
-    meta?: Meta,
-  ): Promise<Program> {
+  async addProgramInfo(id: string, chain: string, name?: string, title?: string, meta?: Meta): Promise<Program> {
     const program = await this.programRepo.preload({
       id,
       chain,
@@ -40,17 +35,11 @@ export class ProgramsService {
     return this.programRepo.save(program);
   }
 
-  async getAllUserPrograms(
-    owner: string,
-    chain: string,
-    limit?: number,
-    offset?: number,
-  ): Promise<{ programs: Program[]; count: number }> {
-    owner;
+  async getAllUserPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const [result, total] = await this.programRepo.findAndCount({
-      where: { owner, chain },
-      take: limit || 20,
-      skip: offset || 0,
+      where: { owner: params.owner, chain: params.chain },
+      take: params.limit || 20,
+      skip: params.offset || 0,
       order: {
         uploadedAt: 'DESC',
       },
@@ -62,15 +51,11 @@ export class ProgramsService {
     };
   }
 
-  async getAllPrograms(
-    chain: string,
-    limit?: number,
-    offset?: number,
-  ): Promise<{ programs: Program[]; count: number }> {
+  async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const [result, total] = await this.programRepo.findAndCount({
-      where: { chain },
-      take: limit || 20,
-      skip: offset || 0,
+      where: { chain: params.chain },
+      take: params.limit || 20,
+      skip: params.offset || 0,
       order: {
         uploadedAt: 'DESC',
       },
@@ -82,11 +67,8 @@ export class ProgramsService {
     };
   }
 
-  async findProgram(
-    id: string,
-    chain: string,
-    owner?: string,
-  ): Promise<Program> {
+  async findProgram(params: FindProgramParams): Promise<Program> {
+    const { id, chain, owner } = params;
     const where = owner ? { id, chain, owner } : { id, chain };
     try {
       const program = await this.programRepo.findOne(where, {
@@ -100,18 +82,14 @@ export class ProgramsService {
   }
 
   async removeProgram(id: string, chain: string) {
-    const program = await this.findProgram(id, chain);
+    const program = await this.findProgram({ id, chain });
     if (program) {
       this.programRepo.remove(program);
     }
   }
 
-  async setStatus(
-    id: string,
-    chain: string,
-    status: InitStatus,
-  ): Promise<Program> {
-    const program = await this.findProgram(id, chain);
+  async setStatus(id: string, chain: string, status: InitStatus): Promise<Program> {
+    const program = await this.findProgram({ id, chain });
     if (program) {
       program.initStatus = status;
       return this.programRepo.save(program);
@@ -119,7 +97,7 @@ export class ProgramsService {
   }
 
   async isInDB(id: string, chain: string): Promise<boolean> {
-    if (await this.findProgram(id, chain)) {
+    if (await this.findProgram({ id, chain })) {
       return true;
     } else {
       return false;

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProgramNotFound, SignNotVerified, MetadataNotFound } from '../errors';
 import { ProgramsService } from '../programs/programs.service';
 import { Meta } from './entities/meta.entity';
+import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from './interfaces';
 
 @Injectable()
 export class MetadataService {
@@ -14,28 +15,22 @@ export class MetadataService {
     private readonly programService: ProgramsService,
   ) {}
 
-  async addMeta({ chain, programId, signature, meta, name, title }) {
-    const program = await this.programService.findProgram(programId, chain);
+  async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
+    const program = await this.programService.findProgram(params.programId, params.chain);
     if (!program) {
       throw new ProgramNotFound();
     }
-    if (!GearKeyring.checkSign(program.owner, signature, meta)) {
+    if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
       throw new SignNotVerified();
     } else {
       const metadata = this.metaRepo.create({
         owner: program.owner,
-        meta: meta,
+        meta: typeof params.meta === 'string' ? params.meta : JSON.stringify(params.meta),
         program: program.id,
       });
       const savedMeta = await this.metaRepo.save(metadata);
       try {
-        await this.programService.addProgramInfo(
-          programId,
-          chain,
-          name,
-          title,
-          savedMeta,
-        );
+        await this.programService.addProgramInfo(params.programId, params.chain, params.name, params.title, savedMeta);
       } catch (error) {
         throw error;
       }
@@ -43,12 +38,12 @@ export class MetadataService {
     }
   }
 
-  async getMeta(programId: string, chain: string) {
-    const program = await this.programService.findProgram(programId, chain);
+  async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
+    const program = await this.programService.findProgram(params.programId, params.chain);
     if (!program) {
       throw new ProgramNotFound();
     }
-    const meta = await this.metaRepo.findOne({ program: programId });
+    const meta = await this.metaRepo.findOne({ program: params.programId });
     if (meta) {
       return { program: meta.program, meta: meta.meta };
     } else {

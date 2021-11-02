@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { Message } from 'src/messages/entities/message.entity';
+import { AddPayloadParams, AllMessagesResult, GetMessagesParams } from 'src/messages/interface';
 import { MessagesService } from 'src/messages/messages.service';
+import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from 'src/metadata/interfaces';
 import { MetadataService } from 'src/metadata/metadata.service';
-import { InitStatus } from 'src/programs/entities/program.entity';
+import { InitStatus, Program } from 'src/programs/entities/program.entity';
+import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from 'src/programs/interfaces';
 import { ProgramsService } from 'src/programs/programs.service';
 
 @Injectable()
@@ -65,4 +69,37 @@ export class ConsumerService {
       await this.programService.setStatus(value.id, chain, InitStatus.FAILED);
     },
   };
+
+  async programData(params: FindProgramParams): Promise<Program> {
+    return await this.programService.findProgram(params);
+  }
+
+  async allPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
+    if (params.owner) {
+      return await this.programService.getAllUserPrograms(params);
+    }
+    return await this.programService.getAllPrograms(params);
+  }
+
+  async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
+    return await this.metaService.addMeta(params);
+  }
+
+  async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
+    return await this.metaService.getMeta(params);
+  }
+
+  async addPayload(params: AddPayloadParams): Promise<Message> {
+    return await this.messageService.addPayload(params);
+  }
+
+  async allMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
+    if (params.destination && params.source) {
+      return await this.messageService.getAllMessages(params);
+    }
+    if (params.destination) {
+      return await this.messageService.getIncoming(params);
+    }
+    return await this.messageService.getOutgoing(params);
+  }
 }
