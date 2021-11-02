@@ -2,8 +2,15 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
+    "build": "yarn build ",
     "prepare": "husky install"
   },
+  "workspaces": [
+    "website/api-interfaces",
+    "website/api-backend",
+    "website/data-storage",
+    "website/events-listener"
+  ],
   "devDependencies": {
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",

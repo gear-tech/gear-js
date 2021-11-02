@@ -1,0 +1,14 @@
+{
+  "name": "@gear-js/backend-interfaces",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  },
+  "author": "",
+  "license": "ISC"
+}

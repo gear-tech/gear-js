@@ -5,7 +5,8 @@
   "main": "src/indes.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "build": "cp -r src dist"
   },
   "author": "",
   "license": "ISC",
