@@ -5,6 +5,7 @@ import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { useAlert } from 'react-alert';
 import MessageIllustration from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
+import Copy from 'assets/images/copy.svg';
 import styles from './UserProgram.module.scss';
 
 type Props = {
@@ -27,12 +28,14 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
           )}
         />
         <div className={styles.programWrapperName}>
+          <div className={styles.programsListName}>{program.name && fileNameHandler(program.name)}</div>
+        </div>
+        <div className={styles.programsCopyId}>
           <button
             type="button"
-            className={styles.programsListName}
             onClick={() => copyToClipboard(program.hash, alert, 'Program ID copied')}
           >
-            {program.name && fileNameHandler(program.name)}
+            <img src={Copy} alt="copy program ID" />
           </button>
         </div>
         <div className={styles.programWrapperData}>
@@ -44,14 +47,14 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
       </div>
       <div className={styles.programsListBtns}>
         <button type="button" aria-label="refresh" onClick={() => handleOpenForm(program.hash, program.name, true)}>
-          <img src={MessageIllustration} alt="message" />
+          <img src={MessageIllustration} alt="Send message to program" />
         </button>
         <button
           className={styles.allProgramsItemUpload}
           type="button"
           onClick={() => handleOpenForm(program.hash, program.name)}
         >
-          <img src={UploadIcon} alt="upload-program" />
+          <img src={UploadIcon} alt="Upload metadata" />
         </button>
       </div>
     </div>
