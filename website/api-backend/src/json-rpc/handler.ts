@@ -48,9 +48,7 @@ export class RpcMessageHandler {
     return result ? result.value : result;
   }
 
-  async requestMessage(
-    message: IRpcRequest | IRpcRequest[],
-  ): Promise<IRpcResponse | IRpcResponse[]> {
+  async requestMessage(message: IRpcRequest | IRpcRequest[]): Promise<IRpcResponse | IRpcResponse[]> {
     if (message instanceof Array) {
       const results = [];
       const promises = message.map(async (procedure) => {
@@ -75,14 +73,15 @@ export class RpcMessageHandler {
     return response;
   }
 
-  executeMethod(
-    method: (params: any) => Observable<any>,
-    procedure: IRpcRequest,
-  ) {
+  executeMethod(method: (params: any) => Observable<any>, procedure: IRpcRequest) {
     const result = method(procedure.params);
     return new Promise((resolve, reject) => {
       result.forEach((value) => {
-        resolve(this.getResponse(procedure, null, value));
+        if (value.error) {
+          resolve(this.getResponse(procedure, value));
+        } else {
+          resolve(this.getResponse(procedure, null, value));
+        }
       });
     });
   }

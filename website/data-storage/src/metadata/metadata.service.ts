@@ -39,11 +39,11 @@ export class MetadataService {
   }
 
   async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
-    const program = await this.programService.findProgram({ id: params.programId, chain: params.chain });
+    const program = await this.programService.findProgram({ id: params.id, chain: params.chain });
     if (!program) {
       throw new ProgramNotFound();
     }
-    const meta = await this.metaRepo.findOne({ program: params.programId });
+    const meta = await this.metaRepo.findOne({ program: params.id });
     if (meta) {
       return { program: meta.program, meta: meta.meta };
     } else {

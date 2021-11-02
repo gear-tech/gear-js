@@ -69,11 +69,13 @@ export class ProgramsService {
 
   async findProgram(params: FindProgramParams): Promise<Program> {
     const { id, chain, owner } = params;
+    console.log(id, chain, owner);
     const where = owner ? { id, chain, owner } : { id, chain };
     try {
       const program = await this.programRepo.findOne(where, {
         relations: ['meta'],
       });
+      console.log(program);
       return program;
     } catch (error) {
       logger.error(error);

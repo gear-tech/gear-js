@@ -46,11 +46,13 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
       data: (params: FindProgramParams) => {
         return this.client.send('program.data', params);
       },
-      addMeta: (params: AddMetaParams) => {
-        return this.client.send('meta.add', params);
-      },
-      getMeta: (params: GetMetaParams) => {
-        return this.client.send('meta.get', params);
+      meta: {
+        add: (params: AddMetaParams) => {
+          return this.client.send('meta.add', params);
+        },
+        get: (params: GetMetaParams) => {
+          return this.client.send('meta.get', params);
+        },
       },
       all: (params: GetAllProgramsParams) => {
         return this.client.send('program.all', params);

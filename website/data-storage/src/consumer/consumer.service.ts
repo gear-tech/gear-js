@@ -7,6 +7,7 @@ import { MetadataService } from 'src/metadata/metadata.service';
 import { InitStatus, Program } from 'src/programs/entities/program.entity';
 import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from 'src/programs/interfaces';
 import { ProgramsService } from 'src/programs/programs.service';
+import { Result } from './types';
 
 @Injectable()
 export class ConsumerService {
@@ -70,36 +71,60 @@ export class ConsumerService {
     },
   };
 
-  async programData(params: FindProgramParams): Promise<Program> {
-    return await this.programService.findProgram(params);
-  }
-
-  async allPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
-    if (params.owner) {
-      return await this.programService.getAllUserPrograms(params);
+  async programData(params: FindProgramParams): Result<Program> {
+    try {
+      return await this.programService.findProgram(params);
+    } catch (error) {
+      return { error: error.message };
     }
-    return await this.programService.getAllPrograms(params);
   }
 
-  async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
-    return await this.metaService.addMeta(params);
-  }
-
-  async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
-    return await this.metaService.getMeta(params);
-  }
-
-  async addPayload(params: AddPayloadParams): Promise<Message> {
-    return await this.messageService.addPayload(params);
-  }
-
-  async allMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
-    if (params.destination && params.source) {
-      return await this.messageService.getAllMessages(params);
+  async allPrograms(params: GetAllProgramsParams): Result<GetAllProgramsResult> {
+    try {
+      if (params.owner) {
+        return await this.programService.getAllUserPrograms(params);
+      }
+      return await this.programService.getAllPrograms(params);
+    } catch (error) {
+      return { error: error.message };
     }
-    if (params.destination) {
-      return await this.messageService.getIncoming(params);
+  }
+
+  async addMeta(params: AddMetaParams): Result<AddMetaResult> {
+    try {
+      return await this.metaService.addMeta(params);
+    } catch (error) {
+      return { error: error.message };
     }
-    return await this.messageService.getOutgoing(params);
+  }
+
+  async getMeta(params: GetMetaParams): Result<GetMetaResult> {
+    try {
+      return await this.metaService.getMeta(params);
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  async addPayload(params: AddPayloadParams): Result<Message> {
+    try {
+      return await this.messageService.addPayload(params);
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  async allMessages(params: GetMessagesParams): Result<AllMessagesResult> {
+    try {
+      if (params.destination && params.source) {
+        return await this.messageService.getAllMessages(params);
+      }
+      if (params.destination) {
+        return await this.messageService.getIncoming(params);
+      }
+      return await this.messageService.getOutgoing(params);
+    } catch (error) {
+      return { error: error.message };
+    }
   }
 }
