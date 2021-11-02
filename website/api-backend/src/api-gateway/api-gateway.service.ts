@@ -7,10 +7,7 @@ import { Observable } from 'rxjs';
 const logger = new Logger('ApiGatewayService');
 
 @Injectable()
-export class ApiGatewayService
-  extends RpcMessageHandler
-  implements OnModuleInit
-{
+export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit {
   @Client({
     transport: Transport.KAFKA,
     options: {
@@ -25,7 +22,7 @@ export class ApiGatewayService
   })
   client: ClientKafka;
 
-  patterns = ['add.meta', 'program.data'];
+  patterns = ['meta.add', 'program.data', 'meta.get', 'program.all', 'message.all', 'message.add.payload'];
 
   async onModuleInit() {
     this.patterns.forEach((key) => {
@@ -56,12 +53,7 @@ export class ApiGatewayService
       all: (params: { chain: string; limit?: number; offset?: number }) => {
         return this.client.send('program.all', params);
       },
-      allUser: (params: {
-        chain: string;
-        owner: string;
-        limit?: number;
-        offset?: number;
-      }) => {
+      allUser: (params: { chain: string; owner: string; limit?: number; offset?: number }) => {
         return this.client.send('program.all', params);
       },
     },
@@ -85,21 +77,10 @@ export class ApiGatewayService
       }) => {
         return this.client.send('message.all', params);
       },
-      outgoing: (params: {
-        chain: string;
-        source?: string;
-        isRead?: boolean;
-        limit?: number;
-        offset?: number;
-      }) => {
+      outgoing: (params: { chain: string; source?: string; isRead?: boolean; limit?: number; offset?: number }) => {
         return this.client.send('message.all', params);
       },
-      savePayload: (params: {
-        id: string;
-        chain: string;
-        payload: string;
-        signature: string;
-      }) => {
+      savePayload: (params: { id: string; chain: string; payload: string; signature: string }) => {
         return this.client.send('message.add.payload', params);
       },
       countUnread: () => {},

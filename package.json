@@ -4,17 +4,6 @@
   "scripts": {
     "prepare": "husky install"
   },
-  "workspaces": [
-    "website/*",
-    "api"
-  ],
-  "dependencies": {
-    "@gear-js/api": "file:api",
-    "@gear-js/backend": "file:website/backend",
-    "@gear-js/frontend": "file:website/frontend",
-    "@gear-js/ide-backend": "file:website/ide-backend",
-    "@gear-js/events-listener": "file:website/events-listener"
-  },
   "devDependencies": {
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
