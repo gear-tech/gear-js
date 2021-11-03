@@ -1,23 +1,25 @@
-import React, { VFC } from 'react';
+import React, { VFC, useEffect } from 'react';
 import { useRouteMatch } from 'react-router-dom';
-
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-
-import { SWITCH_PAGE_TYPES } from 'consts';
 import { routes } from 'routes';
+import { UnsubscribePromise } from '@polkadot/api/types';
+import { SWITCH_PAGE_TYPES } from 'consts';
 import { All } from 'components/pages/Programs/children/All/All';
+import { useDispatch } from 'react-redux';
+import { fetchBlockAction } from '../../../store/actions/actions';
+import { useApi } from '../../../hooks/useApi';
 import { ProgramSwitch } from '../../blocks/ProgramSwitch/ProgramSwitch';
 import { Upload } from './children/Upload/Upload';
-import { BlocksList } from './children/BlocksList/BlocksList';
+import { BlockList } from './children/BlocksList/BlocksList';
 import { Recent } from './children/Recent/Recent';
+
 import './Programs.scss';
 import { RecentNotifications } from '../../blocks/RecentNotifications/RecentNotifications';
 
 export const Programs: VFC = () => {
   const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);
   const isAllProgramsPage = useRouteMatch(routes.allPrograms);
-
   let currentPage = SWITCH_PAGE_TYPES.UPLOAD_PROGRAM;
 
   if (isUploadedProgramsPage) {
@@ -25,6 +27,31 @@ export const Programs: VFC = () => {
   } else if (isAllProgramsPage) {
     currentPage = SWITCH_PAGE_TYPES.ALL_PROGRAMS;
   }
+
+  const [api] = useApi();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let unsub: UnsubscribePromise | null = null;
+
+    if (api) {
+      unsub = api.gearEvents.subscribeNewBlocks((event) => {
+        dispatch(
+          fetchBlockAction({
+            hash: event.hash.toHex(),
+            number: event.number.toNumber(),
+          })
+        );
+      });
+    }
+    return () => {
+      if (unsub) {
+        (async () => {
+          (await unsub)();
+        })();
+      }
+    };
+  }, [api, dispatch]);
 
   return (
     <div className="main-content-wrapper">
@@ -34,7 +61,7 @@ export const Programs: VFC = () => {
           <DndProvider backend={HTML5Backend}>
             <Upload />
           </DndProvider>
-          <BlocksList />
+          <BlockList />
         </>
       )}
       {currentPage === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && <Recent />}
