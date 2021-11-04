@@ -69,13 +69,11 @@ export class ProgramsService {
 
   async findProgram(params: FindProgramParams): Promise<Program> {
     const { id, chain, owner } = params;
-    console.log(id, chain, owner);
     const where = owner ? { id, chain, owner } : { id, chain };
     try {
       const program = await this.programRepo.findOne(where, {
         relations: ['meta'],
       });
-      console.log(program);
       return program;
     } catch (error) {
       logger.error(error);
@@ -91,11 +89,16 @@ export class ProgramsService {
   }
 
   async setStatus(id: string, chain: string, status: InitStatus): Promise<Program> {
-    const program = await this.findProgram({ id, chain });
-    if (program) {
-      program.initStatus = status;
-      return this.programRepo.save(program);
-    }
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        console.log(id, chain, status);
+        let program = await this.findProgram({ id, chain });
+        if (program) {
+          program.initStatus = status;
+          resolve(await this.programRepo.save(program));
+        }
+      }, 1000);
+    });
   }
 
   async isInDB(id: string, chain: string): Promise<boolean> {

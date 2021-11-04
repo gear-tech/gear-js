@@ -28,6 +28,7 @@ export class ConsumerController {
 
   @MessagePattern('program.all')
   async allPrograms(@Payload() payload) {
+    console.log(payload.value);
     const result = await this.consumerService.allPrograms(payload.value);
     return JSON.stringify(result);
   }

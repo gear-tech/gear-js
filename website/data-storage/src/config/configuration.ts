@@ -6,4 +6,9 @@ export default () => ({
     password: process.env.DB_PASSWORD,
     name: process.env.DB_NAME,
   },
+  kafka: {
+    clientId: process.env.CLIENT_ID,
+    groupId: process.env.GROUP_ID,
+    brokers: process.env.KAFKA_BROKERS.split(','),
+  },
 });

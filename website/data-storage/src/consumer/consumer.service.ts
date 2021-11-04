@@ -18,8 +18,8 @@ export class ConsumerService {
   ) {}
 
   events = {
-    Log: async (chain: string, value: any) => {
-      await this.messageService.save({
+    Log: (chain: string, value: any) => {
+      this.messageService.save({
         chain,
         id: value.id,
         destination: value.dest,
@@ -38,7 +38,7 @@ export class ConsumerService {
         owner: value.origin,
         uploadedAt: value.date,
       });
-      await this.messageService.save({
+      this.messageService.save({
         chain,
         id: value.messageId,
         destination: value.programId,
@@ -50,8 +50,8 @@ export class ConsumerService {
         replyError: null,
       });
     },
-    DispatchMessageEnqueued: async (chain: string, value: any) => {
-      await this.messageService.save({
+    DispatchMessageEnqueued: (chain: string, value: any) => {
+      this.messageService.save({
         chain,
         id: value.messageId,
         destination: value.programId,
@@ -63,11 +63,11 @@ export class ConsumerService {
         replyError: null,
       });
     },
-    InitSuccess: async (chain: string, value: any) => {
-      await this.programService.setStatus(value.id, chain, InitStatus.SUCCESS);
+    InitSuccess: (chain: string, value: any) => {
+      this.programService.setStatus(value.programId, chain, InitStatus.SUCCESS);
     },
-    InitFailure: async (chain: string, value: any) => {
-      await this.programService.setStatus(value.id, chain, InitStatus.FAILED);
+    InitFailure: (chain: string, value: any) => {
+      this.programService.setStatus(value.programId, chain, InitStatus.FAILED);
     },
   };
 

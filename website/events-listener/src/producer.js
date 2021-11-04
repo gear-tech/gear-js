@@ -4,10 +4,10 @@ import { logger } from './logger.js';
 const log = logger('KafkaProducer');
 
 export class KafkaProducer {
-  constructor(clientId) {
+  constructor(clientId, brokers) {
     this.kafka = new Kafka({
       clientId,
-      brokers: ['localhost:9092'],
+      brokers,
     });
     this.producer = this.kafka.producer();
   }
@@ -25,7 +25,7 @@ export class KafkaProducer {
       });
       log.info(`Topic <${topic}> created`);
     }
-    log.info(`Topic <${topic}> already existed`);
+    log.warn(`Topic <${topic}> already existed`);
   }
 
   async connect() {
