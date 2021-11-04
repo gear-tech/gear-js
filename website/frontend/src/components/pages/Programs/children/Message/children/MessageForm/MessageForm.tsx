@@ -32,8 +32,8 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   });
 
   useEffect(() => {
-    const displayedTypes = parseHexTypes(parsedMeta.types);
-    const inputType = getTypeStructure(parsedMeta.input!, displayedTypes);
+    const displayedTypes = parseHexTypes(parsedMeta.types || '');
+    const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
     console.log(initialValues.payload !== JSON.stringify(inputType, null, 4));
     if (Object.keys(displayedTypes).length && JSON.stringify(inputType, null, 4) !== initialValues.payload) {
       setInitialValues({ ...initialValues, payload: JSON.stringify(inputType, null, 4) });
@@ -48,7 +48,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
     }
 
     try {
-      const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.input, meta);
+      const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.handle_input, meta);
       dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
       setFieldValue('gasLimit', Number(`${estimatedGas}`));
     } catch (error) {

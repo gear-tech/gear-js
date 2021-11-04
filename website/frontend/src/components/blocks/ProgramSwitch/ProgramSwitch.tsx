@@ -5,13 +5,11 @@ import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { AddAlert } from 'store/actions/actions';
 import { EventTypes } from 'types/events';
-import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS, GEAR_STORAGE_KEY } from 'consts';
+import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
 import { useApi } from '../../../hooks/useApi';
-// import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
-// import Editor from 'assets/images/editor_icon.svg';
 
 type Props = {
   pageType: string;
@@ -88,15 +86,11 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
 
   const handleTransferBalance = async () => {
     try {
-      const response = await apiRequest.getResource(
-        RPC_METHODS.BALANCE_TRANSFER,
-        {
-          publicKey: `${localStorage.getItem('public_key')}`,
-          value: GEAR_BALANCE_TRANSFER_VALUE,
-        },
-        { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
-      );
-      
+      const response = await apiRequest.getResource(RPC_METHODS.BALANCE_TRANSFER, {
+        publicKey: `${localStorage.getItem('public_key')}`,
+        value: GEAR_BALANCE_TRANSFER_VALUE,
+      });
+
       if (response.error) {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: `${response.error.message}` }));
       }

@@ -66,7 +66,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         const meta = await getWasmMetadata(fileBuffer);
         setMetaWasm(meta);
         let types = '';
-        const parsedTypes = parseHexTypes(meta.types);
+        const parsedTypes = parseHexTypes(meta.types || '');
         Object.entries(parsedTypes).forEach((value) => {
           types += `${value[0]}: ${JSON.stringify(value[1])}\n`;
         });
@@ -302,7 +302,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                             <Field
                               id="input"
                               name="input"
-                              placeholder={JSON.stringify(metaWasm.input)}
+                              placeholder={JSON.stringify(metaWasm.handle_input)}
                               className="program-details__limit-value program-details__value"
                               type="text"
                               disabled="true"
@@ -320,7 +320,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                             <Field
                               id="output"
                               name="output"
-                              placeholder={JSON.stringify(metaWasm.output)}
+                              placeholder={JSON.stringify(metaWasm.handle_output)}
                               className="program-details__init-value program-details__value"
                               type="text"
                               disabled="true"

@@ -1,16 +1,13 @@
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
-import { SignIn } from 'components/pages/SignIn/SignIn';
 import { Programs } from 'components/pages/Programs/Programs';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
-import { Callback } from 'components/Callback/Callback';
-import { Logout } from 'components/pages/Logout/Logout';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
 import { EditorPage } from 'features/Editor/EditorPage';
@@ -18,7 +15,6 @@ import { NotificationsPage } from 'components/pages/Notifications/NotificationsP
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { getUnreadNotificationsCount, getUserDataAction } from 'store/actions/actions';
 import store from '../../store';
 
 import './App.scss';
@@ -43,10 +39,6 @@ const options = {
 };
 
 const AppComponent: FC = () => {
-  const dispatch = useDispatch();
-
-  const { user } = useSelector((state: RootState) => state.user);
-  const { countUnread } = useSelector((state: RootState) => state.notifications);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
 
   useEffect(() => {
@@ -56,15 +48,6 @@ const AppComponent: FC = () => {
       document.body.style.overflowY = 'unset';
     }
   }, [isProgramUploading, isMessageSending]);
-
-  useEffect(() => {
-    if (!user) {
-      dispatch(getUserDataAction());
-    }
-    if (typeof countUnread !== 'number') {
-      dispatch(getUnreadNotificationsCount());
-    }
-  }, [dispatch, user, countUnread]);
 
   const isFooterHidden = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');
@@ -95,17 +78,8 @@ const AppComponent: FC = () => {
               <PrivateRoute path={routes.notifications} exact>
                 <NotificationsPage />
               </PrivateRoute>
-              <Route exact path={routes.signIn}>
-                <SignIn />
-              </Route>
               <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
                 <Document />
-              </Route>
-              <Route path={routes.callback} exact>
-                <Callback />
-              </Route>
-              <Route path={routes.logout} exact>
-                <Logout />
               </Route>
             </Switch>
           </Main>
