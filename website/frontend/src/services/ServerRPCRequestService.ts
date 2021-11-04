@@ -20,6 +20,7 @@ export default class ServerRPCRequestService {
       jsonrpc: '2.0',
       id: requestId,
       method,
+      chain: localStorage.getItem('chain'),
       params: postParams,
     });
     params.headers['Content-Type'] = 'application/json;charset=utf-8';

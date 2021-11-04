@@ -12,6 +12,8 @@ class NodeApi {
 
   private readonly address;
 
+  private chain: any;
+
   private _api: GearApi | null = null;
 
   readonly subscriptions: Record<string, UnsubscribePromise> = {};
@@ -23,6 +25,8 @@ class NodeApi {
 
   async init() {
     this._api = await GearApi.create({ providerAddress: this.address });
+
+    this.chain = this._api.chain().then((res) => localStorage.setItem('chain', res));
   }
 
   public subscribeProgramEvents(cb: (event: ProgramEvent) => void) {
