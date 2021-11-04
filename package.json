@@ -2,14 +2,19 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "build": "yarn build ",
+    "build": "yarn build",
+    "run:front": "PORT=3001 yarn workspace @gear-js/frontend run start",
+    "run:eventsListener": "yarn workspace @gear-js/event-listener run start:dev",
+    "run:backend": "yarn workspace @gear-js/api-backend run start:dev",
+    "run:dataStorage": "yarn workspace @gear-js/data-storage run start:dev",
     "prepare": "husky install"
   },
   "workspaces": [
     "website/api-interfaces",
     "website/api-backend",
     "website/data-storage",
-    "website/events-listener"
+    "website/events-listener",
+    "website/frontend"
   ],
   "devDependencies": {
     "husky": "^7.0.2",

@@ -1,11 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { Message } from 'src/messages/entities/message.entity';
-import { AddPayloadParams, AllMessagesResult, GetMessagesParams } from 'src/messages/interface';
+import {
+  FindProgramParams,
+  GetAllProgramsParams,
+  GetAllProgramsResult,
+  AddMetaParams,
+  AddMetaResult,
+  GetMetaParams,
+  GetMetaResult,
+  AddPayloadParams,
+  AllMessagesResult,
+  GetMessagesParams,
+} from '@gear-js/backend-interfaces';
 import { MessagesService } from 'src/messages/messages.service';
-import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from 'src/metadata/interfaces';
 import { MetadataService } from 'src/metadata/metadata.service';
 import { InitStatus, Program } from 'src/programs/entities/program.entity';
-import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from 'src/programs/interfaces';
 import { ProgramsService } from 'src/programs/programs.service';
 import { Result } from './types';
 
@@ -100,6 +109,7 @@ export class ConsumerService {
 
   async getMeta(params: GetMetaParams): Result<GetMetaResult> {
     try {
+      console.log(params);
       return await this.metaService.getMeta(params);
     } catch (error) {
       return { error: error.message };

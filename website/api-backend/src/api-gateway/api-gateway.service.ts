@@ -66,6 +66,9 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
         return this.client.send('program.all', params);
       },
       allUser: (params: GetAllProgramsParams) => {
+        if (params.publicKeyRaw) {
+          params.owner = params.publicKeyRaw;
+        }
         return this.client.send('program.all', params);
       },
     },

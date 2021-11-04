@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProgramNotFound, SignNotVerified, MetadataNotFound } from '../errors';
 import { ProgramsService } from '../programs/programs.service';
 import { Meta } from './entities/meta.entity';
-import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from './interfaces';
+import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/backend-interfaces';
 
 @Injectable()
 export class MetadataService {
@@ -39,11 +39,11 @@ export class MetadataService {
   }
 
   async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
-    const program = await this.programService.findProgram({ id: params.id, chain: params.chain });
+    const program = await this.programService.findProgram({ id: params.programId, chain: params.chain });
     if (!program) {
       throw new ProgramNotFound();
     }
-    const meta = await this.metaRepo.findOne({ program: params.id });
+    const meta = await this.metaRepo.findOne({ program: params.programId });
     if (meta) {
       return { program: meta.program, meta: meta.meta };
     } else {
