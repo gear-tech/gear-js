@@ -6,7 +6,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   pull_request:
-    branches: [master]
+    branches: [master, do-event-listener]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -31,6 +31,7 @@ jobs:
           cd website/backend
           npm install --package-lock-only && npm install
           npm run build
+
   build_new_backend:
     runs-on: ubuntu-latest
     steps:
@@ -41,7 +42,7 @@ jobs:
           node-version: 16.x
       - run: |
           yarn install
-          yarn workspaces -p run build
+          yarn build:backend
 
   build_frontend:
     # The type of runner that the job will run on
@@ -52,14 +53,14 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Use node 14.x
+      - name: Use node 16.x
         uses: actions/setup-node@v2.1.5
         with:
-          node-version: 14.x
+          node-version: 16.x
       - run: |
-          cd website/frontend
-          npm install --package-lock-only && npm install
-          npm run build
+          yarn install
+          yarn build:frontend
+
   build_api:
     runs-on: ubuntu-latest
     steps:

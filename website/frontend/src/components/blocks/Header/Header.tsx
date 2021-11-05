@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
-import { LogoIcon, LogoutIcon } from 'assets/Icons';
+import { LogoIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
 import { Modal } from '../Modal';
@@ -95,10 +95,6 @@ export const Header: VFC = () => {
             <img src={user?.photoUrl ?? githubIcon} alt="avatar" />
             <span className="user-block__name">{userInfo}</span>
           </div>
-          <Link to={routes.logout} className="user-block__logout" aria-label="menuLink" onClick={handleMenuClick}>
-            <LogoutIcon color={headerIconsColor} />
-            <span>Sign out</span>
-          </Link>
         </div>
       )) || (
         <nav className={clsx('header__nav', isMobileMenuOpened && 'show')}>

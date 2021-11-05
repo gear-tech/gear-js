@@ -19,7 +19,7 @@ export interface AddMetaResult {
 
 export interface GetMetaParams {
   chain: string;
-  id: string;
+  programId: string;
 }
 
 export interface GetMetaResult {

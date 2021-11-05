@@ -2,7 +2,6 @@ import React, { FC, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, useLocation } from 'react-router-dom';
 import { routes } from 'routes';
-import { getGitUserJwtAction } from '../../store/actions/actions';
 
 import './Callback.scss';
 import { State } from '../../types/state';
@@ -36,8 +35,6 @@ const mapStateToProps = (state: State) => ({
 });
 
 // TODO: (dispatch) fix it later
-const mapDispatchToProps = (dispatch: any) => ({
-  getGitUserJwt: (code: string) => dispatch(getGitUserJwtAction(code)),
-});
+const mapDispatchToProps = (dispatch: any) => ({});
 
 export const Callback = connect(mapStateToProps, mapDispatchToProps)(CallbackComponent);

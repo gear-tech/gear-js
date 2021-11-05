@@ -73,7 +73,7 @@ const ProgramReducer = (state = initialState, action: ProgramAction): ProgramSta
         programs:
           state.programs &&
           state.programs.map((program) => {
-            if (program.hash === action.payload.hash) {
+            if (program.id === action.payload.id) {
               return action.payload;
             }
             return program;

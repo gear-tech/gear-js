@@ -1,8 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
-import { GEAR_STORAGE_KEY } from 'consts';
-import { routes } from 'routes';
+import { Route } from 'react-router-dom';
 import { nodeApi } from '../../api/initApi';
 import { subscribeToEvents } from '../../store/actions/actions';
 
@@ -32,22 +30,7 @@ export const PrivateRoute: FC<Props> = ({ children, path, exact, ...rest }) => {
   }, [dispatch, isApiReady]);
 
   return isApiReady ? (
-    <Route
-      {...rest}
-      exact={exact}
-      render={({ location }) =>
-        localStorage.getItem(GEAR_STORAGE_KEY) ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: routes.signIn,
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
+    <Route {...rest} exact={exact} render={() => children} />
   ) : (
     <div className="loading-text">Loading...</div>
   );

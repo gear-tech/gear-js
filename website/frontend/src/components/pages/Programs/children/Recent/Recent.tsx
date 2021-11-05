@@ -103,7 +103,7 @@ export const Recent: VFC = () => {
       {(programs && programs.length > 0 && (
         <div>
           {programs.map((program) => (
-            <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.hash} />
+            <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.id} />
           ))}
         </div>
       )) || <div className={styles.noMessage}>There are no uploaded programs</div>}

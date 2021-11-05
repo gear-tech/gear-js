@@ -1,4 +1,4 @@
-import { API_PATH, GEAR_STORAGE_KEY } from 'consts';
+import { API_PATH } from 'consts';
 
 export default class ServerRPCRequestService {
   protected readonly RPC_API_PATH = API_PATH;
@@ -23,7 +23,6 @@ export default class ServerRPCRequestService {
       params: postParams,
     });
     params.headers['Content-Type'] = 'application/json;charset=utf-8';
-    params.headers.Authorization = `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`;
 
     const response = await fetch(url, params);
 

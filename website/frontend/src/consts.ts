@@ -6,7 +6,7 @@ export const TELEGRAM_BOT_NAME = process.env.REACT_APP_TELEGRAM_BOT_NAME;
 export const API_CONNECTION_ADDRESS = process.env.REACT_APP_API_CONNECT_ADDRESS;
 export const API_PATH = process.env.REACT_APP_API_PATH!;
 export const isProd = process.env.NODE_ENV === 'production';
-export const GEAR_STORAGE_KEY = 'gear_user_token';
+// export const GEAR_STORAGE_KEY = 'gear_user_token';
 export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;

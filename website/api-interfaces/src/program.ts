@@ -19,6 +19,7 @@ export interface Program {
 
 export interface GetAllProgramsParams {
   chain: string;
+  publicKeyRaw?: string;
   owner?: string;
   limit?: number;
   offset?: number;
