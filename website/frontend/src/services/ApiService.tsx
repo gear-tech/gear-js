@@ -18,7 +18,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   const apiRequest = new ServerRPCRequestService();
 
   /* eslint-disable @typescript-eslint/naming-convention */
-  const { gasLimit, value, initPayload, init_input, init_output, input, output, types, title } = opts;
+  const { gasLimit, value, initPayload, init_input, init_output, handle_input, handle_output, types, title } = opts;
   const filename = file.name;
   const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
   const keyring = GearKeyring.fromJson(jsonKeyring);
@@ -35,8 +35,8 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   const meta = {
     init_input,
     init_output,
-    input,
-    output,
+    handle_input,
+    handle_output,
     types,
   };
 

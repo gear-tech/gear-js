@@ -39,8 +39,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     initPayload: '',
     init_input: '',
     init_output: '',
-    input: '',
-    output: '',
+    handle_input: '',
+    handle_output: '',
     types: '',
   };
 
@@ -64,9 +64,10 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       try {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
+        console.log(meta);
         setMetaWasm(meta);
         let types = '';
-        const parsedTypes = parseHexTypes(meta.types);
+        const parsedTypes = parseHexTypes(meta.types!);
         Object.entries(parsedTypes).forEach((value) => {
           types += `${value[0]}: ${JSON.stringify(value[1])}\n`;
         });
@@ -302,13 +303,13 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                             <Field
                               id="input"
                               name="input"
-                              placeholder={JSON.stringify(metaWasm.input)}
+                              placeholder={JSON.stringify(metaWasm.handle_input)}
                               className="program-details__limit-value program-details__value"
                               type="text"
                               disabled="true"
                             />
-                            {errors.input && touched.input ? (
-                              <div className="program-details__error">{errors.input}</div>
+                            {errors.handle_input && touched.handle_input ? (
+                              <div className="program-details__error">{errors.handle_input}</div>
                             ) : null}
                           </div>
                         </div>
@@ -320,13 +321,13 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                             <Field
                               id="output"
                               name="output"
-                              placeholder={JSON.stringify(metaWasm.output)}
+                              placeholder={JSON.stringify(metaWasm.handle_output)}
                               className="program-details__init-value program-details__value"
                               type="text"
                               disabled="true"
                             />
-                            {errors.output && touched.output ? (
-                              <div className="program-details__error">{errors.output}</div>
+                            {errors.handle_output && touched.handle_output ? (
+                              <div className="program-details__error">{errors.handle_output}</div>
                             ) : null}
                           </div>
                         </div>
@@ -403,8 +404,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                           className="program-details__limit-value program-details__value"
                           type="text"
                         />
-                        {errors.input && touched.input ? (
-                          <div className="program-details__error">{errors.input}</div>
+                        {errors.handle_input && touched.handle_input ? (
+                          <div className="program-details__error">{errors.handle_input}</div>
                         ) : null}
                       </div>
                     </div>
@@ -420,8 +421,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                           className="program-details__init-value program-details__value"
                           type="text"
                         />
-                        {errors.output && touched.output ? (
-                          <div className="program-details__error">{errors.output}</div>
+                        {errors.handle_output && touched.handle_output ? (
+                          <div className="program-details__error">{errors.handle_output}</div>
                         ) : null}
                       </div>
                     </div>
