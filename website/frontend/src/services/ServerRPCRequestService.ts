@@ -16,12 +16,13 @@ export default class ServerRPCRequestService {
       headers,
     };
 
+    const methodParams = { ...postParams, chain: localStorage.getItem('chain') };
+
     params.body = JSON.stringify({
       jsonrpc: '2.0',
       id: requestId,
       method,
-      chain: localStorage.getItem('chain'),
-      params: postParams,
+      params: methodParams,
     });
     params.headers['Content-Type'] = 'application/json;charset=utf-8';
     params.headers.Authorization = `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`;
