@@ -10,7 +10,7 @@ export const GEAR_STORAGE_KEY = 'gear_user_token';
 export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
-export const GEAR_BALANCE_TRANSFER_VALUE = 100_000_000;
+export const GEAR_BALANCE_TRANSFER_VALUE = 300_000_000;
 
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
@@ -50,6 +50,8 @@ export const SOCKET_RESULT_STATUSES = {
 
 export const RPC_METHODS = {
   PROGRAM_UPLOAD: 'program.upload',
+  PROGRAM_DATA: 'program.data',
+  PROGRAM_ALL: 'program.all',
   TOTAL_ISSUANCE: 'system.totalIssuance',
   SUBSCRIBE_BLOCKS: 'blocks.newBlocks',
   UNSUBSCRIBE_BLOCKS: 'blocks.unsubscribe',
