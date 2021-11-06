@@ -96,7 +96,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         },
         { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
       );
-      
+
       if (response.error) {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: `${response.error.message}` }));
       }
@@ -166,7 +166,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         </div> */}
         <div className="switch-block--transfer">
           <button className="switch-block--transfer__btn" type="button" onClick={handleTransferBalance}>
-            Make transfer
+            Get test balance
           </button>
         </div>
       </div>
