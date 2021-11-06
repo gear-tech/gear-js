@@ -37,8 +37,8 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
   const metadata = {
     init_input: '',
     init_output: '',
-    input: '',
-    output: '',
+    handle_input: '',
+    handle_output: '',
     title: '',
     types: '',
     name: 'default.wasm',
@@ -150,7 +150,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                         type="text"
                         className={clsx('', errors.name && touched.name && 'meta-form__input-error')}
                       />
-                      {errors.name && touched.name ? <div className="meta-form__error">{errors.input}</div> : null}
+                      {errors.name && touched.name ? <div className="meta-form__error">{errors.name}</div> : null}
                     </div>
                   </div>
                   <div className="meta-form--info">
@@ -193,7 +193,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                         type="text"
                         className={clsx('', errors.name && touched.name && 'meta-form__input-error')}
                       />
-                      {errors.name && touched.name ? <div className="meta-form__error">{errors.input}</div> : null}
+                      {errors.name && touched.name ? <div className="meta-form__error">{errors.name}</div> : null}
                     </div>
                   </div>
                   <div className="meta-form--info">
@@ -205,7 +205,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                         id="init_input"
                         name="init_input"
                         type="text"
-                        className={clsx('', errors.input && touched.input && 'meta-form__input-error')}
+                        className={clsx('', errors.init_input && touched.init_input && 'meta-form__input-error')}
                       />
                       {errors.init_input && touched.init_input ? (
                         <div className="meta-form__error">{errors.init_input}</div>
@@ -237,9 +237,11 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                         id="input"
                         name="input"
                         type="text"
-                        className={clsx('', errors.input && touched.input && 'meta-form__input-error')}
+                        className={clsx('', errors.handle_input && touched.handle_input && 'meta-form__input-error')}
                       />
-                      {errors.input && touched.input ? <div className="meta-form__error">{errors.input}</div> : null}
+                      {errors.handle_input && touched.handle_input ? (
+                        <div className="meta-form__error">{errors.handle_input}</div>
+                      ) : null}
                     </div>
                   </div>
                   <div className="meta-form--info">
@@ -251,9 +253,11 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
                         id="output"
                         name="output"
                         type="text"
-                        className={clsx('', errors.output && touched.output && 'meta-form__input-error')}
+                        className={clsx('', errors.handle_output && touched.handle_output && 'meta-form__input-error')}
                       />
-                      {errors.output && touched.output ? <div className="meta-form__error">{errors.output}</div> : null}
+                      {errors.handle_output && touched.handle_output ? (
+                        <div className="meta-form__error">{errors.handle_output}</div>
+                      ) : null}
                     </div>
                   </div>
                   <div className="meta-form--info">
