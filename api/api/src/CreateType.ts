@@ -1,7 +1,7 @@
 import { GearApi } from '.';
 import { Metadata } from './interfaces';
 import { CreateTypeError } from './errors';
-import { isHex, hexToU8a, isU8a, u8aToString } from '@polkadot/util';
+import { isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry, Codec } from '@polkadot/types/types';
 import { Bytes, TypeRegistry, GenericPortableRegistry } from '@polkadot/types';
 
@@ -9,7 +9,7 @@ const REGULAR_EXP = {
   endWord: /\b\w+\b/g,
   angleBracket: /<.+>/,
   roundBracket: /^\(.+\)$/,
-  squareBracket: /^\[.+\]$/
+  squareBracket: /^\[.+\]$/,
 };
 
 const STD_TYPES = {
@@ -17,13 +17,13 @@ const STD_TYPES = {
     return {
       _enum_Result: {
         ok,
-        err
-      }
+        err,
+      },
     };
   },
   Option: (some) => {
     return {
-      _enum_Option: some
+      _enum_Option: some,
     };
   },
   Vec: (type) => {
@@ -34,34 +34,33 @@ const STD_TYPES = {
   },
   BTreeMap: (key, value) => {
     return {
-      [key]: value
+      [key]: value,
     };
-  }
+  },
 };
 
 export class CreateType {
-  private defaultTypes: any;
+  registry: Registry;
 
   constructor(gearApi?: GearApi) {
-    this.defaultTypes = gearApi ? gearApi.defaultTypes : undefined;
+    this.registry = gearApi?.registry || new TypeRegistry();
   }
 
-  private getRegistry(types?: any): { registry: TypeRegistry; namespaces?: Map<string, string> } {
-    const registry = new TypeRegistry();
+  private getRegistry(types?: any): { registry: Registry; namespaces?: Map<string, string> } {
     if (!types) {
-      return { registry };
+      return { registry: this.registry };
     }
 
     let fromTypeDef: any;
     if (isHex(types)) {
-      fromTypeDef = CreateType.getTypesFromTypeDef(hexToU8a(types), registry);
+      fromTypeDef = CreateType.getTypesFromTypeDef(hexToU8a(types), this.registry);
       types = fromTypeDef.types;
     } else if (isU8a(types)) {
-      fromTypeDef = CreateType.getTypesFromTypeDef(types, registry).types;
+      fromTypeDef = CreateType.getTypesFromTypeDef(types, this.registry).types;
       types = fromTypeDef.types;
     }
-    this.registerTypes(registry, types);
-    return { registry, namespaces: fromTypeDef?.namespaces };
+    this.registerTypes(types);
+    return { registry: this.registry, namespaces: fromTypeDef?.namespaces };
   }
 
   static getTypesFromTypeDef(types: Uint8Array, registry?: Registry): { types: any; namespaces: Map<string, string> } {
@@ -72,7 +71,7 @@ export class CreateType {
     const namespaces = new Map<string, string>();
     const genReg = new GenericPortableRegistry(registry, types);
     const compositeTypes = genReg.types.filter(
-      ({ type: { def } }) => def.isComposite || def.isVariant || def.isPrimitive
+      ({ type: { def } }) => def.isComposite || def.isVariant || def.isPrimitive,
     );
     compositeTypes.forEach(({ id, type: { path } }) => {
       const typeDef = genReg.getTypeDef(id);
@@ -86,9 +85,9 @@ export class CreateType {
     return { types: result, namespaces };
   }
 
-  private registerTypes(registry: Registry, types?: any) {
-    registry.setKnownTypes({ types: { ...types, ...this.defaultTypes } });
-    registry.register({ ...types, ...this.defaultTypes });
+  private registerTypes(types?: any) {
+    this.registry.setKnownTypes({ types: { ...types } });
+    this.registry.register({ ...types });
   }
 
   private checkTypePayload(type: any, payload: any) {
@@ -109,13 +108,12 @@ export class CreateType {
     const { registry, namespaces } = meta?.types ? this.getRegistry(meta.types) : this.getRegistry();
     if (isJSON(type)) {
       const types = toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`);
-      this.registerTypes(registry, types);
-      return this.toBytes(registry, 'Custom', toJSON(payload));
+      this.registerTypes(types);
+      return this.toBytes('Custom', toJSON(payload));
     } else {
       return this.toBytes(
-        registry,
         namespaces ? setNamespaces(type, namespaces) : type,
-        isJSON(payload) ? toJSON(payload) : payload
+        isJSON(payload) ? toJSON(payload) : payload,
       );
     }
   }
@@ -127,13 +125,12 @@ export class CreateType {
 
     if (isJSON(type)) {
       const types = toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`);
-      this.registerTypes(registry, types);
-      return this.fromBytes(registry, 'Custom', toJSON(payload));
+      this.registerTypes(types);
+      return this.fromBytes('Custom', toJSON(payload));
     } else {
       return this.fromBytes(
-        registry,
         namespaces ? setNamespaces(type, namespaces) : type,
-        isJSON(payload) ? toJSON(payload) : payload
+        isJSON(payload) ? toJSON(payload) : payload,
       );
     }
   }
@@ -148,27 +145,27 @@ export class CreateType {
     return createType.decode(type, payload, meta);
   }
 
-  private toBytes(registry: Registry, type: any, data: any): Bytes {
+  private toBytes(type: any, data: any): Bytes {
     if (typeIsString(type, data)) {
-      return registry.createType('Bytes', Array.from(registry.createType('String', data).toU8a()));
+      return this.registry.createType('Bytes', Array.from(this.registry.createType('String', data).toU8a()));
     } else if (type.toLowerCase() === 'bytes') {
       if (data instanceof Uint8Array) {
-        return registry.createType('Bytes', Array.from(data));
+        return this.registry.createType('Bytes', Array.from(data));
       }
-      return registry.createType('Bytes', data);
+      return this.registry.createType('Bytes', data);
     } else {
-      return registry.createType('Bytes', Array.from(registry.createType(type, data).toU8a()));
+      return this.registry.createType('Bytes', Array.from(this.registry.createType(type, data).toU8a()));
     }
   }
 
-  private fromBytes(registry: Registry, type: string, data: Bytes): Codec {
+  private fromBytes(type: string, data: Bytes): Codec {
     if (typeIsString(type)) {
-      const decoded = registry.createType('String', data);
-      return registry.createType('Bytes', Array.from(decoded.toU8a().slice(2)));
+      const decoded = this.registry.createType('String', data);
+      return this.registry.createType('Bytes', Array.from(decoded.toU8a().slice(2)));
     } else if (type.toLowerCase() === 'bytes') {
       return data;
     }
-    return registry.createType(type, data);
+    return this.registry.createType(type, data);
   }
 }
 

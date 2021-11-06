@@ -22,8 +22,8 @@ export interface ProgramPaginationModel {
 export interface MetaModel {
   init_input: string;
   init_output: string;
-  input: string;
-  output: string;
+  handle_input: string;
+  handle_output: string;
   title: string;
   types: string;
   name?: string;
@@ -35,8 +35,8 @@ export interface UploadProgramModel {
   value: number;
   init_input: string;
   init_output: string;
-  input: string;
-  output: string;
+  handle_input: string;
+  handle_output: string;
   hash?: string;
   types: string;
   title?: string;

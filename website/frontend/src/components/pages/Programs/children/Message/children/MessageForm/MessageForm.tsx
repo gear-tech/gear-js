@@ -32,7 +32,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   });
 
   useEffect(() => {
-    const displayedTypes = parseHexTypes(parsedMeta.types || '');
+    const displayedTypes = parseHexTypes(parsedMeta.types!);
     const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
     console.log(initialValues.payload !== JSON.stringify(inputType, null, 4));
     if (Object.keys(displayedTypes).length && JSON.stringify(inputType, null, 4) !== initialValues.payload) {
