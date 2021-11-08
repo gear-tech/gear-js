@@ -9,12 +9,7 @@ export enum InitStatus {
 
 @Entity()
 export class Program {
-  @PrimaryColumn({ type: 'uuid' })
-  @Generated('uuid')
-  _id: string;
-
-  @Index()
-  @Column()
+  @PrimaryColumn()
   id: string;
 
   @Index()
