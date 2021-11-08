@@ -87,8 +87,5 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
       },
       countUnread: () => {},
     },
-    balance: {
-      topUp: () => {},
-    },
   };
 }

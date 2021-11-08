@@ -1059,7 +1059,7 @@
     core-js-compat "^3.6.2"
     semver "^5.5.0"
 
-"@babel/preset-env@^7.12.1", "@babel/preset-env@^7.8.4":
+"@babel/preset-env@^7.12.1", "@babel/preset-env@^7.16.0", "@babel/preset-env@^7.8.4":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.16.0.tgz#97228393d217560d6a1c6c56f0adb9d12bca67f5"
   integrity sha512-cdTu/W0IrviamtnZiTfixPfIncr2M1VqRrkjzZWlr1B4TVYimCFK5jkyOdP4qw2MrlKHi+b3ORj6x8GoCew8Dg==

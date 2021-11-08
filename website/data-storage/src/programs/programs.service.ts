@@ -25,13 +25,11 @@ export class ProgramsService {
   }
 
   async addProgramInfo(id: string, chain: string, name?: string, title?: string, meta?: Meta): Promise<Program> {
-    const program = await this.programRepo.preload({
-      id,
-      chain,
-      name,
-      title,
-      meta,
-    });
+    const program = await this.findProgram({ id, chain });
+    program.name = name;
+    program.title = title;
+    program.meta = meta;
+    console.log(program);
     return this.programRepo.save(program);
   }
 

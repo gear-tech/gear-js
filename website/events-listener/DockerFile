@@ -3,4 +3,4 @@ WORKDIR /event-listener
 COPY ./website/event-listener/ .
 RUN rm package-lock.json 
 RUN npm install 
-CMD ["node", "src/index.js"]
+CMD ["node", "dist/index.js"]

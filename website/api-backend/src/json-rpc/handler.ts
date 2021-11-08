@@ -66,6 +66,9 @@ export class RpcMessageHandler {
     let response = null;
     try {
       const method = this.checkMethod(procedure);
+      if (!method) {
+        throw new MethodNotFoundError();
+      }
       response = this.executeMethod(method, procedure);
     } catch (error) {
       response = this.getResponse(procedure, error.toJson());
