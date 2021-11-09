@@ -1,34 +1,37 @@
 import React, { useState, useCallback, useRef, VFC } from 'react';
-import { getWasmMetadata } from '@gear-js/api';
+import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch } from 'react-redux';
-import { SocketService } from 'services/SocketService';
-import { programUploadStartAction } from 'store/actions/actions';
+import { UploadProgram } from 'services/ApiService';
+import { EventTypes } from 'types/events';
+import { AddAlert, programUploadStartAction } from 'store/actions/actions';
 import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
 import './ProgramDetails.scss';
 import cancel from 'assets/images/cancel.svg';
 import close from 'assets/images/close.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-
 import { Schema } from './Schema';
 import { readFileAsync } from '../../../helpers';
+import { useApi } from '../../../hooks/useApi';
 
 type Props = {
   setDroppedFile: (file: File | null) => void;
   droppedFile: File;
-  socketService: SocketService;
 };
 
-export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socketService }) => {
+export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const dispatch = useDispatch();
 
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
+  const [displayTypes, setDisplayTypes] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
   const [wrongJSON, setWrongJSON] = useState(false);
+
+  const [api] = useApi();
 
   const program = {
     gasLimit: 20000,
@@ -36,8 +39,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
     initPayload: '',
     init_input: '',
     init_output: '',
-    input: '',
-    output: '',
+    handle_input: '',
+    handle_output: '',
     types: '',
   };
 
@@ -61,13 +64,20 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
       try {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
+        console.log(meta);
         setMetaWasm(meta);
-      } catch (err) {
-        // TODO ERROR STATUS ACTION
-        console.log(err);
+        let types = '';
+        const parsedTypes = parseHexTypes(meta.types!);
+        Object.entries(parsedTypes).forEach((value) => {
+          types += `${value[0]}: ${JSON.stringify(value[1])}\n`;
+        });
+        setDisplayTypes(types.trimEnd());
+      } catch (error) {
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
       }
       setDroppedMetaFile(file);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setDroppedMetaFile]
   );
 
@@ -87,18 +97,22 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
     if (files?.length) {
       const isCorrectFormat = checkFileFormat(files);
       setWrongMetaFormat(isCorrectFormat);
+
       if (!isCorrectFormat) {
         handleFilesUpload(files[0]);
+      } else {
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
+        setWrongMetaFormat(false);
       }
     }
   };
 
-  const prettyPrint = () => {
-    const ugly = (document.getElementById('types') as HTMLInputElement).value;
-    const obj = JSON.parse(ugly);
-    const pretty = JSON.stringify(obj, undefined, 4);
-    (document.getElementById('types') as HTMLInputElement).innerText = pretty;
-  };
+  // const prettyPrint = () => {
+  //   const ugly = (document.getElementById('types') as HTMLInputElement).value;
+  //   const obj = JSON.parse(ugly);
+  //   const pretty = JSON.stringify(obj, undefined, 4);
+  //   (document.getElementById('types') as HTMLInputElement).innerText = pretty;
+  // };
 
   return (
     <div className="program-details">
@@ -110,13 +124,13 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
         onSubmit={(values: UploadProgramModel) => {
           if (isMetaByFile) {
             dispatch(programUploadStartAction());
-            socketService.uploadProgram(droppedFile, { ...values, ...metaWasm });
+            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, dispatch);
             setDroppedFile(null);
           } else {
             try {
               const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
               dispatch(programUploadStartAction());
-              socketService.uploadProgram(droppedFile, { ...values, types });
+              UploadProgram(api, droppedFile, { ...values, types }, dispatch);
               setDroppedFile(null);
             } catch (err) {
               setWrongJSON(true);
@@ -262,15 +276,100 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
                       )}
                     </div>
                     {metaWasm && (
-                      <div className="program-details__info">
-                        <Field
-                          as="textarea"
-                          id="types"
-                          name="types"
-                          placeholder=""
-                          className="program-details__meta program-details__value"
-                          value={JSON.stringify(metaWasm, undefined, 4)}
-                        />
+                      <div>
+                        <div className="program-details__info">
+                          <label htmlFor="init_input" className="program-details__field-limit program-details__field">
+                            Initial type:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              id="init_input"
+                              name="init_input"
+                              placeholder={JSON.stringify(metaWasm.init_input)}
+                              className="program-details__limit-value program-details__value"
+                              type="text"
+                              disabled="true"
+                            />
+                            {errors.init_input && touched.init_input ? (
+                              <div className="program-details__error">{errors.init_input}</div>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="program-details__info">
+                          <label htmlFor="input" className="program-details__field-limit program-details__field">
+                            Incoming type:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              id="input"
+                              name="input"
+                              placeholder={JSON.stringify(metaWasm.handle_input)}
+                              className="program-details__limit-value program-details__value"
+                              type="text"
+                              disabled="true"
+                            />
+                            {errors.handle_input && touched.handle_input ? (
+                              <div className="program-details__error">{errors.handle_input}</div>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="program-details__info">
+                          <label htmlFor="output" className="program-details__field-init-value program-details__field">
+                            Expected type:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              id="output"
+                              name="output"
+                              placeholder={JSON.stringify(metaWasm.handle_output)}
+                              className="program-details__init-value program-details__value"
+                              type="text"
+                              disabled="true"
+                            />
+                            {errors.handle_output && touched.handle_output ? (
+                              <div className="program-details__error">{errors.handle_output}</div>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="program-details__info">
+                          <label
+                            htmlFor="init_output"
+                            className="program-details__field-init-value program-details__field"
+                          >
+                            Initial output type:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              id="init_output"
+                              name="init_output"
+                              placeholder={JSON.stringify(metaWasm.init_output)}
+                              className="program-details__init-value program-details__value"
+                              type="text"
+                              disabled="true"
+                            />
+                            {errors.init_output && touched.init_output ? (
+                              <div className="program-details__error">{errors.init_output}</div>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="program-details__info">
+                          <label htmlFor="types" className="program-details__field-init-value program-details__field">
+                            Types:
+                          </label>
+                          <div className="program-details__field-wrapper">
+                            <Field
+                              as="textarea"
+                              id="types"
+                              name="types"
+                              disabled="true"
+                              placeholder={displayTypes}
+                              className="program-details__types program-details__value"
+                            />
+                            {errors.types && touched.types ? (
+                              <div className="program-details__error">{errors.types}</div>
+                            ) : null}
+                          </div>
+                        </div>
                       </div>
                     )}
                   </>
@@ -305,8 +404,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
                           className="program-details__limit-value program-details__value"
                           type="text"
                         />
-                        {errors.input && touched.input ? (
-                          <div className="program-details__error">{errors.input}</div>
+                        {errors.handle_input && touched.handle_input ? (
+                          <div className="program-details__error">{errors.handle_input}</div>
                         ) : null}
                       </div>
                     </div>
@@ -322,8 +421,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
                           className="program-details__init-value program-details__value"
                           type="text"
                         />
-                        {errors.output && touched.output ? (
-                          <div className="program-details__error">{errors.output}</div>
+                        {errors.handle_output && touched.handle_output ? (
+                          <div className="program-details__error">{errors.handle_output}</div>
                         ) : null}
                       </div>
                     </div>
@@ -356,11 +455,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
                           placeholder="{&#10;...&#10;}"
                           className="program-details__types program-details__value"
                         />
-                        <p>
-                          <a href="#" className="program-details__link" onClick={prettyPrint}>
-                            Prettify
-                          </a>
-                        </p>
                         {errors.types && touched.types ? (
                           <div className="program-details__error">{errors.types}</div>
                         ) : null}
@@ -384,15 +478,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile, socket
           </Form>
         )}
       </Formik>
-      {wrongMetaFormat && (
-        <StatusPanel
-          onClose={() => {
-            setWrongMetaFormat(false);
-          }}
-          statusPanelText={null}
-          isError
-        />
-      )}
       {wrongJSON && (
         <StatusPanel
           onClose={() => {

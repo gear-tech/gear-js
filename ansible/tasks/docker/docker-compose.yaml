@@ -31,6 +31,7 @@ services:
       - IDE_SOCKET=${IDE_SOCKET}
       - ACCOUNT_SEED=${ACCOUNT_SEED}
       - SUDO_SEED=${SUDO_SEED}
+      - SITE_ACCOUNT_BALANCE=${SITE_ACCOUNT_BALANCE}
 
 volumes:
   pg_data:

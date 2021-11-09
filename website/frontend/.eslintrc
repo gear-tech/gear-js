@@ -31,7 +31,9 @@
     "react/jsx-props-no-spreading": ["off"],
     "no-console": "off",
     "react/static-property-placement": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "no-underscore-dangle": "off",
+    "@typescript-eslint/no-unused-vars": ["warn"]
   },
   "settings": {
     "react": {

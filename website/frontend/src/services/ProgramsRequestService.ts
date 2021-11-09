@@ -1,5 +1,5 @@
 import { GEAR_STORAGE_KEY } from 'consts';
-import { PaginationModel } from 'types/common';
+import { PaginationModel, UserPrograms } from 'types/common';
 import { ProgramRPCModel, ProgramsPagintaionModel } from 'types/program';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
@@ -20,7 +20,7 @@ export default class ProgramRequestService {
     );
   }
 
-  public fetchUserPrograms(params: PaginationModel): Promise<ProgramsPagintaionModel> {
+  public fetchUserPrograms(params: UserPrograms): Promise<ProgramsPagintaionModel> {
     return this.apiRequest.getResource(
       this.API_PROGRAMS_USER,
       { ...params },

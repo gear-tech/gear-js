@@ -1,6 +1,8 @@
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
+import { positions, Provider as AlertProvider } from 'react-alert';
+import { AlertTemplate } from 'components/AlertTemplate';
 import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { SignIn } from 'components/pages/SignIn/SignIn';
@@ -22,7 +24,23 @@ import store from '../../store';
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
-import { AppContextProvider } from '../../contexts/AppContext/AppContextProvider';
+import { ZIndexes } from '../../consts';
+import { Alert } from '../Alerts';
+
+// alert configuration
+const options = {
+  position: positions.BOTTOM_CENTER,
+  timeout: 5000,
+  containerStyle: {
+    zIndex: ZIndexes.alert,
+    width: '100%',
+    maxWidth: '600px',
+    minWidth: '300px',
+    margin: 'auto',
+    left: 0,
+    right: 0,
+  },
+};
 
 const AppComponent: FC = () => {
   const dispatch = useDispatch();
@@ -57,7 +75,7 @@ const AppComponent: FC = () => {
 
   return (
     <BrowserRouter>
-      <AppContextProvider>
+      <AlertProvider template={AlertTemplate} {...options}>
         <div className="app">
           {(isProgramUploading || isMessageSending) && (
             <>
@@ -92,8 +110,9 @@ const AppComponent: FC = () => {
             </Switch>
           </Main>
           {isFooterHidden() || <Footer />}
+          <Alert />
         </div>
-      </AppContextProvider>
+      </AlertProvider>
     </BrowserRouter>
   );
 };

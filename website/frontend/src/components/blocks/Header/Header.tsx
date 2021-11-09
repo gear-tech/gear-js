@@ -4,11 +4,12 @@ import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
-import { CodeIcon, LogoIcon, LogoutIcon, NotificationIcon } from 'assets/Icons';
+import { LogoIcon, LogoutIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
 import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
+import { RestoreJson } from '../RestoreJson';
 import { Wallet } from '../Wallet';
 
 import './Header.scss';
@@ -19,21 +20,18 @@ export const Header: VFC = () => {
   const showUser =
     [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.notifications].indexOf(location.pathname) > -1;
   const isNotifications = location.pathname === routes.notifications;
-  const isPrograms =
-    location.pathname === routes.allPrograms ||
-    location.pathname === routes.main ||
-    location.pathname === routes.uploadedPrograms;
 
   const { user } = useSelector((state: RootState) => state.user);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
 
   const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isRestore, setIsRestore] = useState(false);
   const [isKey, setIsKey] = useState(false);
 
   let userInfo = '';
   const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
-  const headerUnreadNotificationsCount = countUnread && countUnread >= 100 ? '99+' : countUnread;
+  // const headerUnreadNotificationsCount = countUnread && countUnread >= 100 ? '99+' : countUnread;
   if (user) {
     if (user.email) {
       userInfo = user.email;
@@ -50,19 +48,23 @@ export const Header: VFC = () => {
     setIsOpen(!isOpen);
   };
 
+  const toggleRestoreModal = () => {
+    setIsRestore(!isRestore);
+  };
+
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
+    if (isOpen || isRestore) document.body.style.overflow = 'hidden';
 
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen]);
+  }, [isOpen, isRestore]);
 
   useEffect(() => {
     if (localStorage.getItem('gear_mnemonic') && localStorage.getItem('gear_mnemonic') !== 'undefined') {
       setIsKey(true);
     }
-  }, []);
+  }, [isOpen, isRestore]);
 
   return (
     <header className="header">
@@ -71,22 +73,23 @@ export const Header: VFC = () => {
       </Link>
       {(showUser && (
         <div className={clsx('header__user-block user-block', isMobileMenuOpened && 'show')}>
-          <Link to={routes.allPrograms} className={clsx('user-block__programs', isPrograms && 'selected')}>
-            <CodeIcon color={isPrograms ? '#ffffff' : '#858585'} />
-            <span>Programs</span>
-          </Link>
-          <Link to={routes.notifications} className={clsx('user-block__notifications', isNotifications && 'selected')}>
+          {/* <Link to={routes.notifications} className={clsx('user-block__notifications', isNotifications && 'selected')}>
             <NotificationIcon color={isNotifications ? '#ffffff' : '#858585'} />
             <span>Notifications</span>
             {(headerUnreadNotificationsCount && headerUnreadNotificationsCount > 0 && (
               <div className="notifications-count">{headerUnreadNotificationsCount}</div>
             )) ||
               null}
-          </Link>
+          </Link> */}
           {(isKey && <Wallet />) || (
-            <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
-              <span>Add account</span>
-            </Link>
+            <>
+              <Link to={routes.main} className="user-block__restore" onClick={toggleRestoreModal}>
+                <span>Restore JSON</span>
+              </Link>
+              <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
+                <span>Add account</span>
+              </Link>
+            </>
           )}
           <div className="user-block--wrapper">
             <img src={user?.photoUrl ?? githubIcon} alt="avatar" />
@@ -148,8 +151,14 @@ export const Header: VFC = () => {
           <span />
         </button>
       </div>
-      {isOpen && (
-        <Modal title="Create new account" content={<Keyring handleClose={toggleModal} />} handleClose={toggleModal} />
+      {isOpen && <Modal content={<Keyring handleClose={toggleModal} />} handleClose={toggleModal} />}
+
+      {isRestore && (
+        <Modal
+          title="Restore from JSON"
+          content={<RestoreJson handleClose={toggleRestoreModal} />}
+          handleClose={toggleRestoreModal}
+        />
       )}
     </header>
   );

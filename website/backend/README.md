@@ -9,8 +9,6 @@
   <b>Gear JSONRPC API</b>
 </p>
 
-Gear-tech API based on nodejs [Nest](https://github.com/nestjs/nest) framework uses TypeScript.
-
 Description jsonrpc api of gear backend
 This api follows the json-rpc 2.0 specification. More information available at http://www.jsonrpc.org/specification.
 
@@ -22,21 +20,16 @@ This api follows the json-rpc 2.0 specification. More information available at h
 - [login.telegram](#login.telegram)
 - [user.profile](#user.profile)
 - [user.addPublicKey](#user.addPublicKey)
-- [user.getBalance](#user.getBalance)
 - [program.data](#program.data)
-- [program.allUser](#program.allUser)
+- [program.addMeta](#program.addMeta)
+- [program.getMeta](#program.getMeta)
 - [program.all](#program.all)
+- [program.allUser](#program.allUser)
 - [message.all](#message.all)
 - [message.countUnread](#message.countUnread)
-- [balance.transfer](#balance.transfer)
-- [blocks.newBlocks](#blocks.newBlocks)
-- [program.upload](#program.upload)
-- [system.totalIssuance](#system.totalIssuance)
-- [message.send](#message.send)
-- [message.gasSpent](#message.gasSpent)
-- [message.payloadType](#message.payloadType)
-- [events.subscribe](#events.subscribe)
+- [message.savePayload](#message.savePayload)
 - [message.markAsRead](#message.markAsRead)
+- [balance.topUp](#balance.topUp)
 
 ---
 
@@ -166,14 +159,15 @@ Getting user profile
 
 ### Result
 
-| Name              | Type   | Constraints | Description |
-| ----------------- | ------ | ----------- | ----------- |
-| result            | object |             | User data   |
-| result?.email     | string |             |             |
-| result?.name      | string |             | Fullname    |
-| result?.username  | string |             | Username    |
-| result?.photoUrl  | string |             | Photo url   |
-| result?.publicKey | string |             | Public key  |
+| Name                 | Type   | Constraints | Description              |
+| -------------------- | ------ | ----------- | ------------------------ |
+| result               | object |             | User data                |
+| result?.email        | string |             |                          |
+| result?.name         | string |             | Fullname                 |
+| result?.username     | string |             | Username                 |
+| result?.photoUrl     | string |             | Photo url                |
+| result?.publicKey    | string |             | Public key               |
+| result?.publicKeyRaw | string |             | Public key in hex format |
 
 ### Errors
 
@@ -204,7 +198,8 @@ Getting user profile
     "name": "Ivan Ivanov",
     "username": "ivan_navi",
     "photoUrl": "http://photo.url",
-    "publicKey": "5GHJ54GHgh4"
+    "publicKey": "5GHJ54GHgh4",
+    "publicKeyRaw": "0x452374655273fafc26453b2bc27328d287de3eff"
   }
 }
 ```
@@ -264,49 +259,6 @@ Add user public key
 }
 ```
 
-<a name="user.getBalance"></a>
-
-## user.getBalance
-
-Getting user balance
-
-### Result
-
-| Name               | Type   | Constraints | Description |
-| ------------------ | ------ | ----------- | ----------- |
-| result             | object |             |             |
-| result.freeBalance | string |             |             |
-
-### Errors
-
-| Code   | Message     | Description                          |
-| ------ | ----------- | ------------------------------------ |
-| -32003 | Unathorized | The provided credentials are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "user.getBalance"
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "freeBalance": "2"
-  }
-}
-```
-
 <a name="program.data"></a>
 
 ## program.data
@@ -322,21 +274,17 @@ Getting uploaded program data
 
 ### Result
 
-| Name                 | Type    | Constraints | Description                                            |
-| -------------------- | ------- | ----------- | ------------------------------------------------------ |
-| result               | object  |             |                                                        |
-| result.hash          | string  |             | program hash                                           |
-| result.blockHash     | string  |             | hash of block with program                             |
-| result.programNumber | string  |             | Number of program in order                             |
-| result.name          | string  |             | Program name                                           |
-| result.callCount     | integer |             | Number of program call                                 |
-| result.uploadedAt    | string  |             | Date when program was uploaded                         |
-| result?.title        | string  |             | Title of program from metadata                         |
-| result?.incomingType | string  |             | Type of expected message                               |
-| result?.expectedType | string  |             | Type of reponse message                                |
-| result?.initType     | string  |             | Type of initializing message                           |
-| result?.initOutType  | string  |             | Type of message responding to the initializing message |
-| result.initStatus    | string  |             | Program initializtaion status                          |
+| Name                 | Type    | Constraints | Description                    |
+| -------------------- | ------- | ----------- | ------------------------------ |
+| result               | object  |             |                                |
+| result.hash          | string  |             | program hash                   |
+| result.programNumber | string  |             | Number of program in order     |
+| result.name          | string  |             | Program name                   |
+| result.callCount     | integer |             | Number of program call         |
+| result.uploadedAt    | string  |             | Date when program was uploaded |
+| result?.title        | string  |             | Title of program from metadata |
+| result?.meta         | obect   |             | Metadata of program            |
+| result.initStatus    | string  |             | Program initializtaion status  |
 
 ### Errors
 
@@ -368,7 +316,6 @@ Getting uploaded program data
   "id": "1234567890",
   "result": {
     "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
-    "blockHash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
     "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
     "name": "demo.wasm",
     "callCount": 3,
@@ -378,36 +325,30 @@ Getting uploaded program data
 }
 ```
 
-<a name="program.allUser"></a>
+<a name="program.addMeta"></a>
 
-## program.allUser
+## program.addMeta
 
-Getting all user's uploaded program
+Saving sent payload
 
-### Result
+### Parameters
 
-| Name                    | Type    | Constraints | Description                                            |
-| ----------------------- | ------- | ----------- | ------------------------------------------------------ |
-| result                  | array   |             |                                                        |
-| result[0]               | object  |             |                                                        |
-| result[0].hash          | string  |             | program hash                                           |
-| result[0].blockHash     | string  |             | hash of block with program                             |
-| result[0].programNumber | string  |             | Number of program in order                             |
-| result[0].name          | string  |             | Program name                                           |
-| result[0].callCount     | integer |             | Number of program call                                 |
-| result[0].uploadedAt    | string  |             | Date when program was uploaded                         |
-| result[0]?.title        | string  |             | Title of program from metadata                         |
-| result[0]?.incomingType | string  |             | Type of expected message                               |
-| result[0]?.expectedType | string  |             | Type of reponse message                                |
-| result[0]?.initType     | string  |             | Type of initializing message                           |
-| result[0]?.initOutType  | string  |             | Type of message responding to the initializing message |
-| result[0].initStatus    | string  |             | Program initializtaion status                          |
+| Name             | Type   | Constraints | Description                                  |
+| ---------------- | ------ | ----------- | -------------------------------------------- |
+| params           | object |             |                                              |
+| params.programId | string |             | Program ID                                   |
+| params.meta      | string |             | Metadata in string format                    |
+| params.signature | string |             | Metadata signed with a keyring in hex format |
+| params?.name     | string |             | Name of the program. (Optional)              |
+| params?.title    | string |             | Title of the program. (Optional)             |
 
 ### Errors
 
 | Code   | Message     | Description                          |
 | ------ | ----------- | ------------------------------------ |
 | -32003 | Unathorized | The provided credentials are invalid |
+|        |             |                                      |
+|        |             |                                      |
 
 ### Examples
 
@@ -417,7 +358,10 @@ Getting all user's uploaded program
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "program.allUser"
+  "method": "program.addMeta",
+  "params": {
+    "programId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+  }
 }
 ```
 
@@ -426,18 +370,57 @@ Getting all user's uploaded program
 ```json
 {
   "jsonrpc": "2.0",
+  "id": "1234567890"
+}
+```
+
+<a name="program.getMeta"></a>
+
+## program.getMeta
+
+Getting metadata of the program
+
+### Parameters
+
+| Name             | Type   | Constraints | Description |
+| ---------------- | ------ | ----------- | ----------- |
+| params           | object |             |             |
+| params.programId | string |             | Program ID  |
+
+### Result
+
+| Name   | Type | Constraints | Description |
+| ------ | ---- | ----------- | ----------- |
+| result |      |             |             |
+
+### Errors
+
+| Code   | Message                   | Description                                |
+| ------ | ------------------------- | ------------------------------------------ |
+| -32003 | Unathorized               | The provided credentials are invalid       |
+| -32602 | Invalid method parameters | The provided method parameters are invalid |
+
+### Examples
+
+#### Request
+
+```json
+{
+  "jsonrpc": "2.0",
   "id": "1234567890",
-  "result": [
-    {
-      "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
-      "blockHash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
-      "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
-      "name": "demo.wasm",
-      "callCount": 3,
-      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
-      "initStatus": "in progress"
-    }
-  ]
+  "method": "program.getMeta",
+  "params": {
+    "programId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
+  }
+}
+```
+
+#### Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890"
 }
 ```
 
@@ -449,22 +432,18 @@ Getting all uploaded program
 
 ### Result
 
-| Name                    | Type    | Constraints | Description                                            |
-| ----------------------- | ------- | ----------- | ------------------------------------------------------ |
-| result                  | array   |             |                                                        |
-| result[0]               | object  |             |                                                        |
-| result[0].hash          | string  |             | program hash                                           |
-| result[0].blockHash     | string  |             | hash of block with program                             |
-| result[0].programNumber | string  |             | Number of program in order                             |
-| result[0].name          | string  |             | Program name                                           |
-| result[0].callCount     | integer |             | Number of program call                                 |
-| result[0].uploadedAt    | string  |             | Date when program was uploaded                         |
-| result[0]?.title        | string  |             | Title of program from metadata                         |
-| result[0]?.incomingType | string  |             | Type of expected message                               |
-| result[0]?.expectedType | string  |             | Type of reponse message                                |
-| result[0]?.initType     | string  |             | Type of initializing message                           |
-| result[0]?.initOutType  | string  |             | Type of message responding to the initializing message |
-| result[0].initStatus    | string  |             | Program initializtaion status                          |
+| Name                    | Type    | Constraints | Description                    |
+| ----------------------- | ------- | ----------- | ------------------------------ |
+| result                  | array   |             |                                |
+| result[0]               | object  |             |                                |
+| result[0].hash          | string  |             | program hash                   |
+| result[0].programNumber | string  |             | Number of program in order     |
+| result[0].name          | string  |             | Program name                   |
+| result[0].callCount     | integer |             | Number of program call         |
+| result[0].uploadedAt    | string  |             | Date when program was uploaded |
+| result[0]?.title        | string  |             | Title of program from metadata |
+| result[0]?.meta         | obect   |             | Metadata of program            |
+| result[0].initStatus    | string  |             | Program initializtaion status  |
 
 ### Errors
 
@@ -493,7 +472,64 @@ Getting all uploaded program
   "result": [
     {
       "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
-      "blockHash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
+      "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
+      "name": "demo.wasm",
+      "callCount": 3,
+      "uploadedAt": "Fri Jun 18 2021 16:17:01 GMT+0300 (Moscow Standard Time)",
+      "initStatus": "in progress"
+    }
+  ]
+}
+```
+
+<a name="program.allUser"></a>
+
+## program.allUser
+
+Getting all user's uploaded program
+
+### Result
+
+| Name                    | Type    | Constraints | Description                    |
+| ----------------------- | ------- | ----------- | ------------------------------ |
+| result                  | array   |             |                                |
+| result[0]               | object  |             |                                |
+| result[0].hash          | string  |             | program hash                   |
+| result[0].programNumber | string  |             | Number of program in order     |
+| result[0].name          | string  |             | Program name                   |
+| result[0].callCount     | integer |             | Number of program call         |
+| result[0].uploadedAt    | string  |             | Date when program was uploaded |
+| result[0]?.title        | string  |             | Title of program from metadata |
+| result[0]?.meta         | obect   |             | Metadata of program            |
+| result[0].initStatus    | string  |             | Program initializtaion status  |
+
+### Errors
+
+| Code   | Message     | Description                          |
+| ------ | ----------- | ------------------------------------ |
+| -32003 | Unathorized | The provided credentials are invalid |
+
+### Examples
+
+#### Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "method": "program.allUser"
+}
+```
+
+#### Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "result": [
+    {
+      "hash": "0x90b4a76995cdfb347425f3800e60fe4e44b110ad4944dcdc1c95d9689f65b666",
       "programNumber": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
       "name": "demo.wasm",
       "callCount": 3,
@@ -512,9 +548,14 @@ Getting all user's messages
 
 ### Parameters
 
-| Name   | Type | Constraints | Description |
-| ------ | ---- | ----------- | ----------- |
-| params |      |             |             |
+| Name               | Type    | Constraints | Description                                                     |
+| ------------------ | ------- | ----------- | --------------------------------------------------------------- |
+| params             | object  |             |                                                                 |
+| params.destination | string  |             | The user's public key in hex format                             |
+| params?.isRead     | boolean |             | Read or unread messages. Default - all                          |
+| params?.programId  | string  |             | Program hash. Returns messages received from a specific program |
+| params?.limit      | number  |             | Count of messages to return                                     |
+| params?.offset     | number  |             | The offset required to select a specific subset of messages     |
 
 ### Result
 
@@ -523,12 +564,12 @@ Getting all user's messages
 | result                 | array   |             |                              |
 | result[0]              | object  |             |                              |
 | result[0]?.id          | string  |             | Message id                   |
-| result[0]?.responseId  | string  |             | Response type                |
-| result[0]?.date        | string  |             | Date and time of message     |
-| result[0]?.program     | string  |             | Program hash                 |
 | result[0]?.destination | string  |             | Destination (user publicKey) |
+| result[0]?.program     | string  |             | Program id                   |
 | result[0]?.payload     | string  |             | Message payload              |
+| result[0]?.responseId  | string  |             | Response id                  |
 | result[0]?.response    | string  |             | Response payload             |
+| result[0]?.date        | string  |             | Date and time of message     |
 | result[0]?.isRead      | boolean |             | Has the message been read    |
 | result[0]?.required    |         |             |                              |
 
@@ -546,7 +587,8 @@ Getting all user's messages
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "message.all"
+  "method": "message.all",
+  "params": {}
 }
 ```
 
@@ -559,12 +601,12 @@ Getting all user's messages
   "result": [
     {
       "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "responseId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-      "date": "2021-08-09T12:07:54.064Z",
-      "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
       "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
+      "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
       "payload": "PING",
+      "responseId": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
       "response": "PONG",
+      "date": "2021-08-09T12:07:54.064Z",
       "isRead": false
     }
   ]
@@ -576,6 +618,13 @@ Getting all user's messages
 ## message.countUnread
 
 Getting count of unread messages
+
+### Parameters
+
+| Name                 | Type   | Constraints | Description                         |
+| -------------------- | ------ | ----------- | ----------------------------------- |
+| params               | object |             |                                     |
+| params?.publicKeyRaw | string |             | The user's public key in hex format |
 
 ### Result
 
@@ -597,7 +646,8 @@ Getting count of unread messages
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "message.countUnread"
+  "method": "message.countUnread",
+  "params": {}
 }
 ```
 
@@ -610,17 +660,107 @@ Getting count of unread messages
 }
 ```
 
-<a name="balance.transfer"></a>
+<a name="message.savePayload"></a>
 
-## balance.transfer
+## message.savePayload
 
-Transfer balance from Alice.
+Saving sent payload
+
+### Parameters
+
+| Name             | Type   | Constraints | Description                                 |
+| ---------------- | ------ | ----------- | ------------------------------------------- |
+| params           | object |             |                                             |
+| params.messageId | string |             | Message ID                                  |
+| params.payload   | string |             | The payload that was sent                   |
+| params.signature | string |             | Payload signed with a keyring in hex format |
+
+### Errors
+
+| Code   | Message     | Description                          |
+| ------ | ----------- | ------------------------------------ |
+| -32003 | Unathorized | The provided credentials are invalid |
+|        |             |                                      |
+|        |             |                                      |
+
+### Examples
+
+#### Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "method": "message.savePayload",
+  "params": {}
+}
+```
+
+#### Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890"
+}
+```
+
+<a name="message.markAsRead"></a>
+
+## message.markAsRead
+
+Mark message as read
+
+### Parameters
+
+| Name                | Type   | Constraints | Description                         |
+| ------------------- | ------ | ----------- | ----------------------------------- |
+| params              | object |             |                                     |
+| params.publicKeyRaw | string |             | The user's public key in hex format |
+| params.id           | string |             | Message id                          |
+
+### Errors
+
+| Code   | Message                   | Description                                |
+| ------ | ------------------------- | ------------------------------------------ |
+| -32003 | Unathorized               | The provided credentials are invalid       |
+|        |                           |                                            |
+| -32602 | Invalid method parameters | The provided method parameters are invalid |
+
+### Examples
+
+#### Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890",
+  "method": "message.markAsRead",
+  "params": {}
+}
+```
+
+#### Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1234567890"
+}
+```
+
+<a name="balance.topUp"></a>
+
+## balance.topUp
+
+Top up user balance
 
 ### Parameters
 
 | Name         | Type    | Constraints | Description                                  |
 | ------------ | ------- | ----------- | -------------------------------------------- |
 | params       | object  |             |                                              |
+| params?.to   | string  |             | User public key                              |
 | params.value | integer |             | The number of units that need to be transfer |
 
 ### Result
@@ -632,11 +772,11 @@ Transfer balance from Alice.
 
 ### Errors
 
-| Code   | Message                   | Description                                |
-| ------ | ------------------------- | ------------------------------------------ |
-| -32003 | Unathorized               | The provided credentials are invalid       |
-| -32602 | Invalid method parameters | The provided method parameters are invalid |
-| -32011 | Invalid transaction       | Error occured when transaction failed      |
+| Code   | Message                   | Description                                  |
+| ------ | ------------------------- | -------------------------------------------- |
+| -32003 | Unathorized               | The provided credentials are invalid         |
+| -32602 | Invalid method parameters | The provided method parameters are invalid   |
+| -32011 | Invalid transaction       | The error occurs when the transaction failed |
 
 ### Examples
 
@@ -646,7 +786,7 @@ Transfer balance from Alice.
 {
   "jsonrpc": "2.0",
   "id": "1234567890",
-  "method": "balance.transfer",
+  "method": "balance.topUp",
   "params": {
     "value": 1234567
   }
@@ -662,457 +802,5 @@ Transfer balance from Alice.
   "result": {
     "message": "Transfer balance success"
   }
-}
-```
-
-<a name="blocks.newBlocks"></a>
-
-## blocks.newBlocks
-
-Subscribe to new blocks
-
-### Result
-
-| Name          | Type   | Constraints | Description  |
-| ------------- | ------ | ----------- | ------------ |
-| result        | object |             |              |
-| result.hash   | string |             | Block hash   |
-| result.number | string |             | Block number |
-
-### Errors
-
-| Code   | Message     | Description                          |
-| ------ | ----------- | ------------------------------------ |
-| -32003 | Unathorized | The provided credentials are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "blocks.newBlocks"
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "hash": "0xceb60548a4f7778aa05daffa89b301363bb375442526d4ec9e7715a4f573f91a",
-    "number": "2"
-  }
-}
-```
-
-<a name="program.upload"></a>
-
-## program.upload
-
-Upload new program
-
-### Parameters
-
-| Name                     | Type    | Constraints | Description               |
-| ------------------------ | ------- | ----------- | ------------------------- |
-| params                   | object  |             |                           |
-| params.file              |         |             | File buffer               |
-| params.filename          | string  |             | File name                 |
-| params.gasLimit          | integer |             | Gas limit                 |
-| params.value             | integer |             | Init value                |
-| params.initPayload       | string  |             | Init payload (hex)        |
-| params.meta              | object  |             | Program types             |
-| params.meta?.init_input  |         |             |                           |
-| params.meta?.init_output |         |             |                           |
-| params.meta?.input       |         |             |                           |
-| params.meta?.output      |         |             |                           |
-| params.meta?.types       |         |             |                           |
-| params.keyPairJson       | string  |             | JSON Encoded KeyPair data |
-
-### Result
-
-| Name               | Type   | Constraints | Description             |
-| ------------------ | ------ | ----------- | ----------------------- |
-| result             | object |             |                         |
-| result.status      | string |             | Transaction status      |
-| result.blockHash   | string |             | Block hash with program |
-| result.programHash | string |             | Program Hash            |
-
-### Errors
-
-| Code   | Message                       | Description                                      |
-| ------ | ----------------------------- | ------------------------------------------------ |
-| -32003 | Unathorized                   | The provided credentials are invalid             |
-| -32602 | Invalid method parameters     | The provided method parameters are invalid       |
-| -32011 | Invalid transaction           | Error occured when transaction failed            |
-| -32012 | Program initialization falied | Error occured when program initialization failed |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "program.upload",
-  "params": {
-    "filename": "demo.wasm",
-    "gasLimit": 2000,
-    "value": 2000,
-    "initPayload": "0x1234",
-    "meta": {
-      "init_input": "String",
-      "init_output": "Vec<u8>",
-      "input": "Person",
-      "output": "Result<u8, u8>",
-      "types": {
-        "Person": {
-          "name": "String",
-          "surname": "String"
-        }
-      }
-    }
-  }
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "status": "InBlock",
-    "blockHash": "0xf3a23f7de0415463894039910a8976a7e21cba3e7e620ac10fc6b25ec805eae9",
-    "programHash": "0x4467ffec533014607103dcede9c2e828ecbc8ae1469b18cbb1861e1fecfbe9fe"
-  }
-}
-```
-
-<a name="system.totalIssuance"></a>
-
-## system.totalIssuance
-
-Getting total issuance
-
-### Result
-
-| Name                 | Type   | Constraints | Description          |
-| -------------------- | ------ | ----------- | -------------------- |
-| result               | object |             |                      |
-| result.totalIssuance | string |             | Total issuance value |
-
-### Errors
-
-| Code   | Message     | Description                          |
-| ------ | ----------- | ------------------------------------ |
-| -32003 | Unathorized | The provided credentials are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "system.totalIssuance"
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "totalIssuance": "4.3425 MUnit"
-  }
-}
-```
-
-<a name="message.send"></a>
-
-## message.send
-
-Sending message
-
-### Parameters
-
-| Name                | Type    | Constraints | Description                       |
-| ------------------- | ------- | ----------- | --------------------------------- |
-| params              | object  |             |                                   |
-| params.destination  | string  |             | Program destination address (hex) |
-| params.gasLimit     | integer |             | Gas limit                         |
-| params.value        | integer |             | Init value                        |
-| params.payload      | string  |             | Init payload                      |
-| params?.keyPairJson | string  |             | JSON Encoded KeyPair data         |
-
-### Result
-
-| Name              | Type   | Constraints | Description                     |
-| ----------------- | ------ | ----------- | ------------------------------- |
-| result            | object |             |                                 |
-| result?.status    | string |             | Transaction status              |
-| result?.blockHash | string |             | Block hash with transaction     |
-| result?.data      | string |             | Program response to the message |
-| result?.required  |        |             |                                 |
-
-### Errors
-
-| Code   | Message                   | Description                                |
-| ------ | ------------------------- | ------------------------------------------ |
-| -32003 | Unathorized               | The provided credentials are invalid       |
-| -32602 | Invalid method parameters | The provided method parameters are invalid |
-| -32011 | Invalid transaction       | Error occured when transaction failed      |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "message.send",
-  "params": {
-    "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "gasLimit": 2000,
-    "value": 2000,
-    "payload": "PING"
-  }
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "status": "Log",
-    "blockHash": "0xf3a23f7de0415463894039910a8976a7e21cba3e7e620ac10fc6b25ec805eae9",
-    "data": "PONG"
-  }
-}
-```
-
-<a name="message.gasSpent"></a>
-
-## message.gasSpent
-
-Getting minimal gaslLimit for payload for the program
-
-### Parameters
-
-| Name               | Type   | Constraints | Description                       |
-| ------------------ | ------ | ----------- | --------------------------------- |
-| params             | object |             |                                   |
-| params.destination | string |             | Program destination address (hex) |
-| params.payload     | string |             | Init payload                      |
-
-### Result
-
-| Name             | Type   | Constraints | Description |
-| ---------------- | ------ | ----------- | ----------- |
-| result           | object |             |             |
-| result?.gasSpent | number |             | GasSpent    |
-| result?.required |        |             |             |
-
-### Errors
-
-| Code   | Message                   | Description                                |
-| ------ | ------------------------- | ------------------------------------------ |
-| -32003 | Unathorized               | The provided credentials are invalid       |
-| -32602 | Invalid method parameters | The provided method parameters are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "message.gasSpent",
-  "params": {
-    "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "payload": "PING"
-  }
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "gasSpent": 123213312
-  }
-}
-```
-
-<a name="message.payloadType"></a>
-
-## message.payloadType
-
-Getting payload type
-
-### Parameters
-
-| Name               | Type   | Constraints | Description                       |
-| ------------------ | ------ | ----------- | --------------------------------- |
-| params             | object |             |                                   |
-| params.destination | string |             | Program destination address (hex) |
-
-### Result
-
-| Name                | Type   | Constraints | Description  |
-| ------------------- | ------ | ----------- | ------------ |
-| result              | object |             |              |
-| result?.payloadType | string |             | Payload type |
-| result?.required    |        |             |              |
-
-### Errors
-
-| Code   | Message                   | Description                                |
-| ------ | ------------------------- | ------------------------------------------ |
-| -32003 | Unathorized               | The provided credentials are invalid       |
-| -32602 | Invalid method parameters | The provided method parameters are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "message.payloadType",
-  "params": {
-    "destination": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
-  }
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "payloadType": "{\"value\": \"u64\", \"annotation\": \"String\"}"
-  }
-}
-```
-
-<a name="events.subscribe"></a>
-
-## events.subscribe
-
-Subscribe to events
-
-### Result
-
-| Name                | Type   | Constraints | Description                                        |
-| ------------------- | ------ | ----------- | -------------------------------------------------- |
-| result              | object |             |                                                    |
-| result?.event       | string |             | Event type                                         |
-| result?.id          | string |             | Message id (Log)                                   |
-| result?.program     | string |             | Program hash (Log, InitSuccess, InitFailed)        |
-| result?.response    | string |             | Response payload (Log)                             |
-| result?.programName | string |             | Name of uploaded program (InitSuccess, InitFailed) |
-| result?.date        | string |             | Date and time of event                             |
-| result?.required    |        |             |                                                    |
-
-### Errors
-
-| Code   | Message                   | Description                                |
-| ------ | ------------------------- | ------------------------------------------ |
-| -32003 | Unathorized               | The provided credentials are invalid       |
-| -32602 | Invalid method parameters | The provided method parameters are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "events.subscribe"
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "result": {
-    "event": "Log",
-    "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "program": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18",
-    "response": "PONG",
-    "programName": "demo_ping",
-    "date": "2021-08-09T12:07:54.064Z"
-  }
-}
-```
-
-<a name="message.markAsRead"></a>
-
-## message.markAsRead
-
-Mark message as read
-
-### Parameters
-
-| Name       | Type   | Constraints | Description |
-| ---------- | ------ | ----------- | ----------- |
-| params     | object |             |             |
-| params?.id | string |             | Message id  |
-
-### Errors
-
-| Code   | Message                   | Description                                |
-| ------ | ------------------------- | ------------------------------------------ |
-| -32003 | Unathorized               | The provided credentials are invalid       |
-| -32602 | Invalid method parameters | The provided method parameters are invalid |
-
-### Examples
-
-#### Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890",
-  "method": "message.markAsRead",
-  "params": {
-    "id": "0xfc93a49b14b4e7e2e3990d7ca0853111c8abb04895663bf84d68b9cf12604c18"
-  }
-}
-```
-
-#### Response
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": "1234567890"
 }
 ```

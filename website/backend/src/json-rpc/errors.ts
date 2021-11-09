@@ -28,9 +28,7 @@ export class InvalidParamsError extends GearError {
     if (message) {
       if (message.includes('failed on gas_limit')) {
         const index = message.indexOf('failed on gas_limit');
-        this.message = `${this.message}. F${message.slice(
-          message.indexOf('failed on gas_limit') + 1,
-        )}`;
+        this.message = `${this.message}. F${message.slice(message.indexOf('failed on gas_limit') + 1)}`;
       } else {
         this.message = `${this.message}. ${message}`;
       }
@@ -56,6 +54,10 @@ export class UnathorizedError extends GearError {
 export class GearNodeError extends GearError {
   code = -32010;
   message = 'Gear node error';
+  constructor(message?) {
+    super();
+    this.message = `${this.message}. ${message}`;
+  }
 }
 
 export class TransactionError extends GearError {
@@ -73,11 +75,6 @@ export class NotFoundPath extends GearError {
   message = 'Not found. Use /api endpoint (Method POST) for requests';
 }
 
-export class ProgramInitializedFailed extends GearError {
-  code = -32012;
-  message = 'Program initialization falied';
-}
-
 export class ProgramNotFound extends GearError {
   code = -32013;
   message = 'Program not found';
@@ -90,17 +87,16 @@ export class ProgramNotFound extends GearError {
   }
 }
 
+export class MetadataNotFound extends GearError {
+  code = -32015;
+  message = 'Metadata not found';
+}
 export class MessageNotFound extends GearError {
   code = -32014;
   message = 'Message not found';
 }
 
-export class EncodePayloadError extends GearError {
-  code = -32015;
-  message = 'Payload encoding failed';
-}
-
-export class GettingMetadataError extends GearError {
-  code = -32016;
-  message = 'Getting metadata failed';
+export class SignNotVerified extends GearError {
+  code = -32017;
+  message = 'Signature not verified';
 }

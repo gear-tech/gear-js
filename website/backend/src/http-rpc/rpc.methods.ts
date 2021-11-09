@@ -7,6 +7,7 @@ import { InvalidParamsError } from 'src/json-rpc/errors';
 import { RpcMethods } from 'src/json-rpc/methods';
 import { User } from 'src/users/entities/user.entity';
 import { MessagesService } from 'src/messages/messages.service';
+import { MetadataService } from 'src/metadata/metadata.service';
 
 @Injectable()
 export class HttpRpcMethods extends RpcMethods {
@@ -16,6 +17,7 @@ export class HttpRpcMethods extends RpcMethods {
     private readonly userService: UsersService,
     private readonly programService: ProgramsService,
     private readonly messageService: MessagesService,
+    private readonly metaService: MetadataService,
   ) {
     super();
   }
@@ -23,14 +25,14 @@ export class HttpRpcMethods extends RpcMethods {
   private logger: Logger = new Logger('HttpRpcMethods');
 
   login = {
-    github: async (user, params) => {
+    github: async (user: User, params: any) => {
       if (!params || !params.code) {
         throw new InvalidParamsError();
       }
       return await this.authService.loginGithub(params.code);
     },
 
-    telegram: async (user, params) => {
+    telegram: async (user: User, params: any) => {
       if (!params) {
         throw new InvalidParamsError();
       }
@@ -38,55 +40,50 @@ export class HttpRpcMethods extends RpcMethods {
       return result;
     },
 
-    dev: async (user, params) => {
+    dev: async (user: User, params: any) => {
       const result = await this.authService.testLogin(+params.id);
       return result;
     },
   };
 
   user = {
-    profile: async (user, params?) => {
+    profile: async (user: User, params: any) => {
       return this.userService.profile(user);
     },
 
-    addPublicKey: async (user, params) => {
-      return (
-        await this.userService.addPublicKey(
-          user,
-          params.publicKey,
-          params.publicKeyRaw,
-        )
-      ).publicKey;
-    },
-
-    getBalance: async (user, params?) => {
-      return await this.gearService.getBalance(user.publicKey);
+    addPublicKey: async (user: User, params: any) => {
+      return (await this.userService.addPublicKey(user, params.publicKey, params.publicKeyRaw))?.publicKey;
     },
   };
 
   program = {
-    data: async (user, params) => {
+    data: async (user: User, params: any) => {
       if (!params || !params.hash) {
         throw new InvalidParamsError();
       }
       return await this.programService.findProgram(params.hash);
     },
 
-    allUser: async (user, params?) => {
+    allUser: async (user: User, params: any) => {
       return await this.programService.getAllUserPrograms(
-        user,
-        params ? params.limit : null,
-        params ? params.offset : null,
+        params?.publicKeyRaw || user.publicKeyRaw,
+        params?.limit,
+        params?.offset,
       );
     },
 
-    all: async (user, params?) => {
-      return await this.programService.getAllPrograms(
-        params ? params.limit : null,
-        params ? params.offset : null,
-      );
+    addMeta: async (user: User, params: any) => {
+      return await this.metaService.addMeta(params);
     },
-    allNoGUI: async (user, params) => {
+
+    getMeta: async (user: User, params: any) => {
+      return await this.metaService.getMeta(params.programId);
+    },
+
+    all: async (user: User, params: any) => {
+      return await this.programService.getAllPrograms(params ? params.limit : null, params ? params.offset : null);
+    },
+    allNoGUI: async (user: User, params: any) => {
       return await this.gearService.getAllNoGUIPrograms();
     },
   };
@@ -94,16 +91,34 @@ export class HttpRpcMethods extends RpcMethods {
   message = {
     all: async (user: User, params?: any) => {
       return await this.messageService.getAll(
-        user,
-        params ? params.isRead : undefined,
-        params ? params.programId : undefined,
-        params ? params.limit : undefined,
-        params ? params.offset : undefined,
+        params?.destination || user.publicKeyRaw,
+        params?.isRead,
+        params?.programId,
+        params?.limit,
+        params?.offset,
       );
     },
 
-    countUnread: async (user, params?) => {
-      return await this.messageService.getCountUnread(user);
+    countUnread: async (user: User, params: any) => {
+      return await this.messageService.getCountUnread(params?.publicKeyRaw || user.publicKeyRaw);
+    },
+
+    savePayload: async (user: User, params: any) => {
+      return await this.messageService.saveSendedPayload(params?.messageId, params?.payload, params?.signature);
+    },
+
+    markAsRead: async (user: User, params: any) => {
+      await this.messageService.markAsRead(params?.publicKeyRaw || user.publicKeyRaw, params?.id);
+      return 'ok';
+    },
+  };
+
+  balance = {
+    topUp: async (user: User, params: any) => {
+      if (!params?.value) {
+        throw new InvalidParamsError();
+      }
+      return await this.gearService.balanceTopUp(params?.publicKey || user.publicKeyRaw, params.value);
     },
   };
 }

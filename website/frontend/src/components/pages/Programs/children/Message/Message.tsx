@@ -1,25 +1,28 @@
-import React, { useEffect, VFC } from 'react';
+import React, { useCallback, useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { SocketService } from 'services/SocketService';
+import { Metadata } from '@gear-js/api';
 import { RootState } from 'store/reducers';
-import { sendMessageResetAction } from 'store/actions/actions';
+import { EventTypes } from 'types/events';
+import { AddAlert, sendMessageResetAction } from 'store/actions/actions';
 import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
 import { MessageForm } from 'components/pages/Programs/children/Message/children/MessageForm/MessageForm';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import './Message.scss';
-import { PAGE_TYPES } from 'consts';
+import { GEAR_STORAGE_KEY, PAGE_TYPES, RPC_METHODS } from 'consts';
+import ServerRPCRequestService from '../../../../../services/ServerRPCRequestService';
 
 type Props = {
   programHash: string;
   programName: string;
-  socketService: SocketService;
   handleClose: () => void;
 };
 
-export const Message: VFC<Props> = ({ programHash, programName, socketService, handleClose }) => {
+export const Message: VFC<Props> = ({ programHash, programName, handleClose }) => {
   const dispatch = useDispatch();
 
-  const { messageSendingError, payloadType } = useSelector((state: RootState) => state.programs);
+  const [meta, setMeta] = useState<Metadata | null>(null);
+
+  const { messageSendingError } = useSelector((state: RootState) => state.programs);
 
   let statusPanelText: string | null = null;
 
@@ -28,38 +31,40 @@ export const Message: VFC<Props> = ({ programHash, programName, socketService, h
   }
 
   useEffect(() => {
-    if (!payloadType) {
-      socketService.getPayloadType(programHash);
-    }
-  }, [dispatch, payloadType, programHash, socketService]);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        handleClose();
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const isJson = (data: string) => {
-    try {
-      JSON.parse(data);
-    } catch (error) {
-      return false;
-    }
-    return true;
-  };
+  const getMeta = useCallback(async () => {
+    const apiRequest = new ServerRPCRequestService();
 
-  const getResultPayloadType = () => {
-    let transformedPayloadType = payloadType;
-    if (payloadType && isJson(payloadType)) {
-      transformedPayloadType = JSON.parse(payloadType);
+    const { result } = await apiRequest.getResource(
+      RPC_METHODS.GET_METADATA,
+      {
+        programId: programHash,
+      },
+      { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
+    );
+
+    return result.meta as Metadata;
+  }, [programHash]);
+
+  useEffect(() => {
+    if (!meta) {
+      getMeta()
+        .then((res) => setMeta(res))
+        .catch((err) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })));
     }
-    return transformedPayloadType;
-  };
+  }, [meta, getMeta, dispatch]);
 
   return (
     <div className="message-form">
       <PageHeader programName={programName} handleClose={handleClose} pageType={PAGE_TYPES.MESSAGE_FORM_PAGE} />
-      <MessageForm
-        programHash={programHash}
-        programName={programName}
-        socketService={socketService}
-        handleClose={handleClose}
-        payloadType={getResultPayloadType()}
-      />
+      {meta && <MessageForm programHash={programHash} programName={programName} meta={meta} />}
       {statusPanelText && (
         <StatusPanel
           onClose={() => {

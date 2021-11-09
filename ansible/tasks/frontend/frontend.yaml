@@ -15,6 +15,9 @@
     REACT_APP_API_PATH: "https://{{ lookup('env','NODE_ADDRESS') }}/api"
     REACT_APP_WS_URI: "wss://{{ lookup('env','NODE_ADDRESS') }}/api/ws"
     REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
+    REACT_APP_API_CONNECT_ADDRESS: "{{ lookup('env','WS_PROVIDER') }}"
+    REACT_APP_RRT: "{{ lookup('env','REACT_APP_RRT') }}"
+
 
 - name: Build frontend
   shell: >

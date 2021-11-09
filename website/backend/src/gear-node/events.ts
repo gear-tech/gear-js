@@ -2,6 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Subject } from 'rxjs';
 import { ProgramsService } from 'src/programs/programs.service';
 import { GearApi } from '@gear-js/api';
+import { MessagesService } from 'src/messages/messages.service';
+import { InitStatus } from 'src/programs/entities/program.entity';
+import {
+  DispatchMessageEnqueuedData,
+  InitFailureData,
+  InitMessageEnqueuedData,
+  InitSuccessData,
+  LogData,
+} from '@gear-js/api';
 
 const logger = new Logger('EventsLogger');
 
@@ -10,47 +19,104 @@ export class GearNodeEvents {
   public blocks: Subject<any>;
   public events: Subject<any>;
 
-  constructor(private readonly programService: ProgramsService) {
+  constructor(private readonly programService: ProgramsService, private readonly messageService: MessagesService) {
     this.blocks = new Subject();
     this.events = new Subject();
   }
 
-  async subscribeEvents(api: GearApi): Promise<void> {
-    try {
-      api.gearEvents.subscribeLogEvents(({ data }) => {
-        data.forEach((part) => {
-          const res = part.toHuman();
-          this.events.next({
-            type: 'log',
-            id: res['reply'][0],
-            program: res['source'],
-            destination: res['dest'],
+  async subscribeAllEvents(api: GearApi) {
+    api.allEvents((events) => {
+      events
+        .filter(({ event }) => api.events.gear.InitMessageEnqueued.is(event))
+        .forEach(async ({ event }) => {
+          const eventData: InitMessageEnqueuedData = new InitMessageEnqueuedData(event.data);
+          try {
+            await this.programService.saveProgram({
+              owner: eventData.origin.toHex(),
+              uploadedAt: new Date(),
+              hash: eventData.programId.toHex(),
+            });
+            await this.messageService.save({
+              id: eventData.messageId.toHex(),
+              destination: eventData.origin.toHex(),
+              program: eventData.programId.toHex(),
+              date: new Date(),
+            });
+          } catch (error) {
+            logger.error(error.message);
+          }
+        });
+
+      events
+        .filter(({ event }) => api.events.gear.DispatchMessageEnqueued.is(event))
+        .forEach(async ({ event }) => {
+          const eventData: DispatchMessageEnqueuedData = new DispatchMessageEnqueuedData(event.data);
+          await this.messageService.save({
+            id: eventData.messageId.toHex(),
+            destination: eventData.origin.toHex(),
+            program: eventData.programId.toHex(),
             date: new Date(),
-            response: res['payload'],
-            responseId: res['id'],
-            error: +res['reply'][1] !== 0 ? true : false,
           });
         });
-      });
-      api.gearEvents.subsribeProgramEvents(async ({ method, data }) => {
-        data.forEach(async (part) => {
-          const eventData = part.toHuman();
-          const program = await this.programService.findProgram(
-            eventData['programId'],
-          );
-          this.events.next({
-            type: 'program',
-            status: method,
-            destination: program ? program.user.publicKeyRaw : undefined,
-            hash: eventData['programId'],
-            messageId: eventData['messageId'],
-            programName: program ? program.name : undefined,
-            date: new Date(),
-          });
+
+      events
+        .filter(({ event }) => api.events.gear.InitSuccess.is(event))
+        .forEach(async ({ event }) => {
+          const eventData: InitSuccessData = new InitSuccessData(event.data);
+          await timeOut();
+          try {
+            this.programService.initStatus(eventData.programId.toHex(), InitStatus.SUCCESS);
+          } catch (error) {
+            logger.error(error.message);
+          }
         });
-      });
-    } catch (error) {
-      logger.error(error);
-    }
+
+      events
+        .filter(({ event }) => api.events.gear.InitFailure.is(event))
+        .forEach(async ({ event }) => {
+          const eventData: InitFailureData = new InitFailureData(event.data);
+          await timeOut();
+          try {
+            this.programService.initStatus(eventData.info.programId.toHex(), InitStatus.FAILED);
+          } catch (error) {
+            logger.error(error.message);
+          }
+        });
+
+      events
+        .filter(({ event }) => api.events.gear.Log.is(event))
+        .forEach(async ({ event }) => {
+          const eventData: LogData = new LogData(event.data);
+          await timeOut();
+          try {
+            if (eventData.reply.isSome) {
+              eventData.reply.toHuman()[1] === '0' &&
+                this.messageService.update(eventData.reply.unwrap()[0].toHex(), {
+                  responseId: eventData.id.toHex(),
+                  response: eventData.payload.toHex(),
+                });
+            } else {
+              this.messageService.save({
+                id: eventData.id.toHex(),
+                destination: eventData.dest.toHex(),
+                program: eventData.source.toHex(),
+                date: new Date(),
+                responseId: eventData.id.toHex(),
+                response: eventData.payload.toHex(),
+              });
+            }
+          } catch (error) {
+            logger.error(error);
+          }
+        });
+    });
   }
+}
+
+function timeOut() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(0);
+    }, 100);
+  });
 }

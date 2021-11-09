@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.2.0",
-    "@gear-js/api": "^0.4.5",
+    "@gear-js/api": "^0.6.6",
     "@monaco-editor/react": "^4.2.1",
     "@polkadot/api": "^6.1.1",
     "@polkadot/react-identicon": "^0.85.4",
@@ -34,6 +34,7 @@
     "nanoid": "^3.1.23",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
+    "react-alert": "^7.0.3",
     "react-dnd": "^14.0.2",
     "react-dnd-html5-backend": "^14.0.0",
     "react-dom": "^17.0.2",
@@ -45,7 +46,7 @@
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
-    "socket.io-client": "^4.2.0",
+    "reselect": "^4.0.0",
     "typescript": "^4.3.2",
     "vercel": "^23.0.1",
     "web-vitals": "^1.1.2",
@@ -91,8 +92,8 @@
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.3",
+    "@types/react-alert": "^5.2.1",
     "@types/react-router-dom": "^5.1.7",
-    "@types/socket.io-client": "^3.0.0",
     "prettier": "^2.3.1",
     "sass": "^1.34.0",
     "scss": "^0.2.4"

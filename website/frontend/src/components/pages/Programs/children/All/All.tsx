@@ -1,9 +1,9 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
-import { SocketService } from 'services/SocketService';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import {
   getAllProgramsAction,
@@ -18,20 +18,28 @@ import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
 import { UserProgram } from '../UserProgram/UserProgram';
 import styles from './All.module.scss';
+import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
 
 type ProgramMessageType = {
   programName: string;
   programHash: string;
 };
 
-type Props = {
-  socketService: SocketService;
-};
+const selectCompletedTodosCount = createSelector(
+  (state: RootState) => state.programs,
+  (_ignore: any, completed: string) => completed,
+  (programs, completed) =>
+    programs.allUploadedPrograms && programs.allUploadedPrograms.filter((item) => item.hash.includes(completed))
+);
 
-export const All: VFC<Props> = ({ socketService }) => {
+export const All: VFC = () => {
   const dispatch = useDispatch();
 
-  const { allUploadedPrograms, allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
+  const [search, setSearch] = useState('');
+
+  const { allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
+
+  const allUploadedPrograms = useSelector((state: RootState) => selectCompletedTodosCount(state, search));
 
   const [currentPage, setCurrentPage] = useState(0);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
@@ -78,7 +86,6 @@ export const All: VFC<Props> = ({ socketService }) => {
       <Message
         programHash={programMessage.programHash}
         programName={programMessage.programName}
-        socketService={socketService}
         handleClose={handleCloseMessageForm}
       />
     );
@@ -89,7 +96,6 @@ export const All: VFC<Props> = ({ socketService }) => {
       <Meta
         programHash={programMeta.programHash}
         programName={programMeta.programName}
-        socketService={socketService}
         handleClose={handleCloseMetaForm}
       />
     );
@@ -101,12 +107,23 @@ export const All: VFC<Props> = ({ socketService }) => {
         <span>Total results: {allUploadedProgramsCount}</span>
         <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
       </div>
+      <div>
+        <SearchForm
+          handleRemoveQuery={() => {
+            setSearch('');
+          }}
+          handleSearch={(val: string) => {
+            setSearch(val);
+          }}
+        />
+        <br />
+      </div>
       <div className={styles.allProgramsList}>
         {(allUploadedPrograms &&
           allUploadedPrograms.length &&
           allUploadedPrograms.map((item: ProgramModel) => {
             if (item.name && item.name !== 'name.wasm') {
-              return <UserProgram program={item} handleOpenForm={handleOpenForm} />;
+              return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.hash} />;
             }
             return (
               <div className={styles.allProgramsItem} key={item.hash}>

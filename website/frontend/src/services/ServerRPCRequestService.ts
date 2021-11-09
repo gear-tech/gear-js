@@ -1,7 +1,7 @@
-import { isProd, API_PATH } from 'consts';
+import { API_PATH, GEAR_STORAGE_KEY } from 'consts';
 
 export default class ServerRPCRequestService {
-  protected readonly RPC_API_PATH = isProd && API_PATH ? API_PATH : 'http://localhost:3000/api';
+  protected readonly RPC_API_PATH = API_PATH;
 
   private generateRandomId() {
     return Math.floor(Math.random() * 1000000000);
@@ -16,13 +16,16 @@ export default class ServerRPCRequestService {
       headers,
     };
 
+    const methodParams = { ...postParams, chain: localStorage.getItem('chain') };
+
     params.body = JSON.stringify({
       jsonrpc: '2.0',
       id: requestId,
       method,
-      params: postParams,
+      params: methodParams,
     });
     params.headers['Content-Type'] = 'application/json;charset=utf-8';
+    params.headers.Authorization = `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`;
 
     const response = await fetch(url, params);
 

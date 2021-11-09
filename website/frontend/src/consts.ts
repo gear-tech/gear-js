@@ -10,7 +10,7 @@ export const GEAR_STORAGE_KEY = 'gear_user_token';
 export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
-export const GEAR_BALANCE_TRANSFER_VALUE = 100_000_000;
+export const GEAR_BALANCE_TRANSFER_VALUE = 1_000_000_000;
 
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
@@ -50,17 +50,21 @@ export const SOCKET_RESULT_STATUSES = {
 
 export const RPC_METHODS = {
   PROGRAM_UPLOAD: 'program.upload',
+  PROGRAM_DATA: 'program.data',
+  PROGRAM_ALL: 'program.all',
   TOTAL_ISSUANCE: 'system.totalIssuance',
   SUBSCRIBE_BLOCKS: 'blocks.newBlocks',
   UNSUBSCRIBE_BLOCKS: 'blocks.unsubscribe',
   SUBSCRIBE_EVENTS: 'events.subscribe',
-  BALANCE_TRANSFER: 'balance.transfer',
+  BALANCE_TRANSFER: 'balance.topUp',
   SEND_MESSAGE: 'message.send',
   SEND_META: 'program.addMeta',
   GET_GAS_SPENT: 'message.gasSpent',
   GET_PAYLOAD_TYPE: 'message.payloadType',
   READ_EVENTS: 'events.subscribe',
   ADD_PUBLIC: 'user.addPublicKey',
+  ADD_METADATA: 'program.addMeta',
+  GET_METADATA: 'program.getMeta',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
@@ -90,3 +94,12 @@ export const SEARCH_TYPES = {
   NOTIFICATIONS: 'NOTIFICATIONS',
   PROGRAMS: 'PROGRAMS',
 };
+
+export const KEY_TYPES = {
+  MNEMOINIC: 'mnemonic',
+  RAW: 'raw',
+};
+
+export enum ZIndexes {
+  'alert' = 999,
+}

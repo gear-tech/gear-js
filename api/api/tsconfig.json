@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "declaration": true,
+    "declarationDir": "types",
+    "outDir": "lib",
+    "baseUrl": "./",
+    "alwaysStrict": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@polkadot/api/augment": ["src/interfaces/augment-api.ts"],
+      "@polkadot/types/augment": ["src/interfaces/augment-types.ts"],
+      "@polkadot/api/types/storage": ["src/interfaces/augment-api-query.ts"]
+    }
+  },
+  "exclude": ["test", "examples"],
+  "include": ["src"]
+}

@@ -1,5 +1,5 @@
-import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Meta } from 'src/metadata/entities/meta.entity';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 
 export enum InitStatus {
   SUCCESS = 'success',
@@ -12,11 +12,8 @@ export class Program {
   @PrimaryColumn()
   hash: string;
 
-  @ManyToOne((type) => User, (user) => user.id)
-  user: User;
-
-  @Column({ nullable: true })
-  blockHash: string;
+  @Column()
+  owner: string;
 
   @Column()
   programNumber: number;
@@ -30,8 +27,9 @@ export class Program {
   @Column()
   uploadedAt: Date;
 
-  @Column({ nullable: true })
-  meta: string;
+  @OneToOne(() => Meta, { nullable: true })
+  @JoinColumn()
+  meta: Meta;
 
   @Column({ nullable: true })
   title: string;

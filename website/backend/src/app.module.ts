@@ -7,10 +7,10 @@ import { configuration } from './config/configuration';
 import { ProgramsModule } from './programs/programs.module';
 import { GearNodeModule } from './gear-node/gear-node.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { WsRpcModule } from './ws-rpc/ws-rpc.module';
 import { RpcModule } from './http-rpc/rpc.module';
 import { IdeModule } from './ide/ide.module';
 import { MessagesModule } from './messages/messages.module';
+import { MetadataModule } from './metadata/metadata.module';
 
 @Module({
   imports: [
@@ -38,9 +38,9 @@ import { MessagesModule } from './messages/messages.module';
     GearNodeModule,
     EventEmitterModule.forRoot(),
     RpcModule,
-    WsRpcModule,
     IdeModule,
     MessagesModule,
+    MetadataModule,
   ],
 })
 export class AppModule {}

@@ -1,28 +1,32 @@
 import UserRequestService from 'services/UserRequestService';
-
+import { CreateType, GearKeyring } from '@gear-js/api';
 import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, UserProfileRPCModel } from 'types/user';
 import {
   NotificationActionTypes,
   NotificationPaginationModel,
-  RecentNotificationModel,
-  NotificationUnreadRPCModel,
   NotificationRPCModel,
+  NotificationUnreadRPCModel,
+  RecentNotificationModel,
 } from 'types/notification';
 import {
   ProgramActionTypes,
   ProgramModel,
+  ProgramPaginationModel,
   ProgramRPCModel,
   ProgramsPagintaionModel,
-  ProgramPaginationModel,
 } from 'types/program';
 import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 
-import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY } from 'consts';
+import ServerRPCRequestService from 'services/ServerRPCRequestService';
+import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
-import { PaginationModel } from 'types/common';
+import { PaginationModel, UserPrograms } from 'types/common';
+import { nodeApi } from '../../api/initApi';
+import { AlertModel, EventTypes } from '../../types/events';
+import { AlertActionTypes } from '../reducers/AlertReducer';
 
 const fetchTokenAction = () => ({ type: UserActionTypes.FETCH_TOKEN });
 const fetchTokenSuccessAction = (payload: {}) => ({ type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload });
@@ -63,8 +67,11 @@ export const fetchBlockAction = (payload: BlockModel) => ({ type: BlockActionTyp
 
 export const programUploadStartAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_START });
 export const programUploadResetAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_RESET });
-const programUploadSuccessAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS });
-const programUploadFailedAction = (payload: string) => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED, payload });
+export const programUploadSuccessAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_SUCCESS });
+export const programUploadFailedAction = (payload: string) => ({
+  type: ProgramActionTypes.PROGRAM_UPLOAD_FAILED,
+  payload,
+});
 
 export const fetchProgramPayloadTypeAction = (payload: string) => ({
   type: ProgramActionTypes.FETCH_PROGRAM_PAYLOAD_TYPE,
@@ -74,8 +81,8 @@ export const resetProgramPayloadTypeAction = () => ({ type: ProgramActionTypes.R
 
 export const sendMessageStartAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_START });
 export const sendMessageResetAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_RESET });
-const sendMessageSuccessAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_SUCCESS });
-const sendMessageFailedAction = (payload: string) => ({ type: ProgramActionTypes.SEND_MESSAGE_FAILED, payload });
+export const sendMessageSuccessAction = () => ({ type: ProgramActionTypes.SEND_MESSAGE_SUCCESS });
+export const sendMessageFailedAction = (payload: string) => ({ type: ProgramActionTypes.SEND_MESSAGE_FAILED, payload });
 
 export const uploadMetaStartAction = () => ({ type: ProgramActionTypes.META_UPLOAD_START });
 export const uploadMetaResetAction = () => ({ type: ProgramActionTypes.META_UPLOAD_RESET });
@@ -128,6 +135,7 @@ const userService = new UserRequestService();
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
 
+// TODO: (dispatch) fix it later. Here and below
 export const generateKeypairAction = () => (dispatch: any) => {
   dispatch(fetchUserKeypairAction());
   userService
@@ -188,7 +196,7 @@ export const getUserDataAction = () => (dispatch: any) => {
     .catch(() => dispatch(fetchUserErrorAction()));
 };
 
-export const getUserProgramsAction = (params: PaginationModel) => (dispatch: any) => {
+export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
   dispatch(fetchUserProgramsAction());
   programService
     .fetchUserPrograms(params)
@@ -259,6 +267,72 @@ export const getUnreadNotificationsCount = () => (dispatch: any) => {
       dispatch(fetchNotificationsCountSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchNotificationsCountErrorAction()));
+};
+
+export const AddAlert = (payload: AlertModel) => ({
+  type: AlertActionTypes.ADD_ALERT,
+  payload,
+});
+
+export const subscribeToEvents = () => (dispatch: any) => {
+  const filterKey = localStorage.getItem('public_key_raw');
+  nodeApi.subscribeProgramEvents(({ method, data: { info, reason } }) => {
+    // @ts-ignore
+    if (info.origin.toHex() === filterKey) {
+      dispatch(
+        AddAlert({
+          type: reason ? EventTypes.ERROR : EventTypes.SUCCESS,
+          message: `${method}\n
+          ${info.programId.toHex()}`,
+        })
+      );
+    }
+  });
+
+  nodeApi.subscribeLogEvents(async ({ data: { source, dest, reply, payload } }) => {
+    const apiRequest = new ServerRPCRequestService();
+    const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
+      programId: source.toHex(),
+    });
+    const meta = JSON.parse(result.meta);
+    let decodedPayload: any;
+    try {
+      decodedPayload =
+        meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
+          ? CreateType.decode(meta.output, payload, meta).toHuman()
+          : payload.toHuman();
+    } catch (error) {
+      console.error('Decode payload failed');
+    }
+    // @ts-ignore
+    if (dest.toHex() === filterKey) {
+      dispatch(
+        AddAlert({
+          type:
+            (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone
+              ? EventTypes.SUCCESS
+              : EventTypes.ERROR,
+          message: `LOG from program\n
+          ${source.toHex()}\n
+          ${decodedPayload ? `Response: ${decodedPayload}` : ''}
+          `, // TODO: add payload parsing
+        })
+      );
+    }
+  });
+
+  nodeApi.subscribeTransferEvents(({ data: { from, to, value } }) => {
+    if (to.toHex() === filterKey) {
+      dispatch(
+        AddAlert({
+          type: EventTypes.INFO,
+          message: `TRANSFER BALANCE\n
+            FROM:${GearKeyring.encodeAddress(from.toHex())}\n
+            VALUE:${value.toString()}`,
+        })
+      );
+    }
+  });
 };
 
 export const logoutFromAccountAction = () => (dispatch: any) => {

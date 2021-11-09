@@ -1,9 +1,9 @@
 export const fileNameHandler = (filename: string) => {
-  let transformedFileName = filename;
-  if (transformedFileName.length > 24) {
-    transformedFileName = `${transformedFileName.slice(0, 18)}...${transformedFileName.split('.').pop()}`;
-  }
-  return transformedFileName;
+  const transformedFileName = filename;
+
+  return transformedFileName.length > 24
+    ? `${transformedFileName.slice(0, 18)}…${transformedFileName.slice(-18)}`
+    : transformedFileName;
 };
 
 export const formatDate = (rawDate: string) => {
@@ -33,4 +33,13 @@ export const toShortAddress = (_address: string) => {
   const address = (_address || '').toString();
 
   return address.length > 13 ? `${address.slice(0, 6)}…${address.slice(-6)}` : address;
+};
+
+export const copyToClipboard = (key: string, alert: any, successfulText?: string) => {
+  try {
+    navigator.clipboard.writeText(key);
+    alert.success(successfulText || 'Copied');
+  } catch (err) {
+    alert.error('Copy error');
+  }
 };

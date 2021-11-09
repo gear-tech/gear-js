@@ -1,14 +1,11 @@
-import React, { FC, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { RootState } from 'store/reducers';
-
+import { useSelector } from 'react-redux';
 import './BlocksList.scss';
-import { UnsubscribePromise } from '@polkadot/api/types';
-import { fetchBlockAction } from '../../../../../store/actions/actions';
-import { BlockModel } from '../../../../../types/block';
-import { useApi } from '../../../../../hooks/useApi';
 
-const BlocksList: FC<{ blocks: BlockModel[] }> = ({ blocks }) => {
+export const BlockList = () => {
+  const { blocks } = useSelector((state: RootState) => state.blocks);
+
   const showMoreClick = () => {
     const list = document.querySelector('.programs-list--short-list');
     list?.classList.remove('programs-list--short-list');
@@ -41,38 +38,3 @@ const BlocksList: FC<{ blocks: BlockModel[] }> = ({ blocks }) => {
     </div>
   );
 };
-
-const BlockListContainer: FC = () => {
-  const dispatch = useDispatch();
-  // const { rpcBroker } = useContext(AppContext);
-
-  const { blocks } = useSelector((state: RootState) => state.blocks);
-
-  const [api] = useApi();
-
-  useEffect(() => {
-    let unsub: UnsubscribePromise | null = null;
-
-    if (api) {
-      unsub = api.gearEvents.subscribeNewBlocks((event) => {
-        dispatch(
-          fetchBlockAction({
-            hash: event.hash.toHex(),
-            number: event.number.toNumber(),
-          })
-        );
-      });
-    }
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-    };
-  }, [api, dispatch]);
-
-  return <BlocksList blocks={blocks} />;
-};
-
-export { BlockListContainer as BlocksList };

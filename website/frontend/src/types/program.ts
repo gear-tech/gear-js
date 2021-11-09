@@ -1,3 +1,9 @@
+export enum ProgramStatus {
+  Success = 'success',
+  Failed = 'failed',
+  InProgress = 'in progress',
+}
+
 export interface ProgramModel {
   hash: string;
   blockHash?: string;
@@ -5,6 +11,7 @@ export interface ProgramModel {
   name?: string;
   callCount?: number;
   uploadedAt?: string;
+  initStatus: ProgramStatus;
 }
 
 export interface ProgramPaginationModel {
@@ -13,9 +20,13 @@ export interface ProgramPaginationModel {
 }
 
 export interface MetaModel {
-  incomingType: string;
-  expectedType: string;
-  meta: File | null;
+  init_input: string;
+  init_output: string;
+  handle_input: string;
+  handle_output: string;
+  title: string;
+  types: string;
+  name?: string;
 }
 
 export interface UploadProgramModel {
@@ -24,10 +35,11 @@ export interface UploadProgramModel {
   value: number;
   init_input: string;
   init_output: string;
-  input: string;
-  output: string;
+  handle_input: string;
+  handle_output: string;
   hash?: string;
   types: string;
+  title?: string;
 }
 
 export interface MessageModel {
