@@ -1,6 +1,7 @@
 import { ProgramState, ProgramAction, ProgramActionTypes } from '../../types/program';
 
 const initialState: ProgramState = {
+  program: null,
   programs: null,
   programsCount: null,
   allUploadedPrograms: null,
@@ -70,15 +71,11 @@ const ProgramReducer = (state = initialState, action: ProgramAction): ProgramSta
         ...state,
         loading: false,
         error: null,
-        programs:
-          state.programs &&
-          state.programs.map((program) => {
-            if (program.hash === action.payload.hash) {
-              return action.payload;
-            }
-            return program;
-          }),
+        program: action.payload,
       };
+
+    case ProgramActionTypes.RESET_PROGRAM:
+      return { ...state, program: null };
 
     case ProgramActionTypes.FETCH_PROGRAM_ERROR:
       return { ...state, loading: false, error: action.payload, programs: null };

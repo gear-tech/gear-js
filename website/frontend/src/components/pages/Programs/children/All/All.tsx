@@ -11,6 +11,8 @@ import {
   resetProgramPayloadTypeAction,
   sendMessageResetAction,
   uploadMetaResetAction,
+  getProgramAction,
+  resetProgramAction,
 } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
@@ -38,8 +40,13 @@ export const All: VFC = () => {
   const [search, setSearch] = useState('');
 
   const { allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
+  const program = useSelector((state: RootState) => state.programs.program);
 
-  const allUploadedPrograms = useSelector((state: RootState) => selectCompletedTodosCount(state, search));
+  let allUploadedPrograms = useSelector((state: RootState) => selectCompletedTodosCount(state, search));
+
+  if (program) {
+    allUploadedPrograms = [program];
+  }
 
   const [currentPage, setCurrentPage] = useState(0);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
@@ -50,7 +57,7 @@ export const All: VFC = () => {
   const offset = currentPage * INITIAL_LIMIT_BY_PAGE;
 
   useEffect(() => {
-    dispatch(getAllProgramsAction({ offset }));
+    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
   }, [dispatch, offset]);
 
   const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {
@@ -111,9 +118,11 @@ export const All: VFC = () => {
         <SearchForm
           handleRemoveQuery={() => {
             setSearch('');
+            dispatch(resetProgramAction());
           }}
           handleSearch={(val: string) => {
             setSearch(val);
+            dispatch(getProgramAction(val));
           }}
         />
         <br />

@@ -71,6 +71,7 @@ export interface SearchModel {
 }
 
 export interface ProgramState {
+  program: ProgramModel | null;
   programs: ProgramModel[] | null;
   programsCount: number | null;
 
@@ -101,6 +102,7 @@ export enum ProgramActionTypes {
   FETCH_PROGRAM = 'FETCH_PROGRAM',
   FETCH_PROGRAM_SUCCESS = 'FETCH_PROGRAM_SUCCESS',
   FETCH_PROGRAM_ERROR = 'FETCH_PROGRAM_ERROR',
+  RESET_PROGRAM = 'RESET_PROGRAM',
   PROGRAM_UPLOAD_START = 'PROGRAM_UPLOAD_START',
   PROGRAM_UPLOAD_SUCCESS = 'PROGRAM_UPLOAD_SUCCESS',
   PROGRAM_UPLOAD_FAILED = 'PROGRAM_UPLOAD_FAILED',
@@ -179,6 +181,10 @@ interface FetchProgramPayloadType {
   payload: string;
 }
 
+interface ResetProgram {
+  type: ProgramActionTypes.RESET_PROGRAM;
+}
+
 interface FetchProgramsAction {
   type: ProgramActionTypes.FETCH_USER_PROGRAMS;
 }
@@ -254,4 +260,5 @@ export type ProgramAction =
   | SendMessageFailedAction
   | SendMessageResetAction
   | ResetProgramPayloadTypeAction
-  | ResetProgramsAction;
+  | ResetProgramsAction
+  | ResetProgram;
