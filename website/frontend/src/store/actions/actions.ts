@@ -59,6 +59,8 @@ const fetchProgramSuccessAction = (payload: ProgramModel) => ({
   type: ProgramActionTypes.FETCH_PROGRAM_SUCCESS,
   payload,
 });
+export const resetProgramAction = () => ({ type: ProgramActionTypes.RESET_PROGRAM });
+
 const fetchProgramErrorAction = () => ({ type: ProgramActionTypes.FETCH_PROGRAM_ERROR });
 
 export const transferBalanceSuccessAction = () => ({ type: UserActionTypes.TRANSFER_BALANCE });
