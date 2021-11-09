@@ -50,7 +50,7 @@ export const All: VFC = () => {
   const offset = currentPage * INITIAL_LIMIT_BY_PAGE;
 
   useEffect(() => {
-    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
+    dispatch(getAllProgramsAction({ offset }));
   }, [dispatch, offset]);
 
   const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {
