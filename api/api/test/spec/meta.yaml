@@ -1,0 +1,46 @@
+title: meta-test
+
+files:
+  - name: demo_gui_test.meta.wasm
+    types:
+      init_input: Action<AStruct, Option<CustomStruct<u8>>, BTreeMap<String, u8>>
+      init_output: Result<u8, Option<String>>
+      handle_input: (BTreeMap<String, u8>, Option<(Option<u8>, u128, [u8; 3])>)
+      handle_output: CustomStruct<Option<(Option<u8>, u128, [u8; 3])>>
+    displayed_types:
+      Action:
+        _enum:
+          AVariant: AStruct
+          BVar: Option<DemoGuiTestCustomStructU8>
+          CVariant: BTreeMap<Text, u8>
+      AStruct:
+        id: Bytes
+        online: bool
+      CustomStruct:
+        field: Option<(Option<u8>,u128,[u8;3])>
+
+  - name: guestbook.meta.wasm
+    types:
+      handle_input: Action
+      handle_output: Vec<MessageIn>
+    displayed_types:
+      Action:
+        _enum:
+          AddMessage: MessageIn
+          ViewMessages: 'Null'
+      MessageIn:
+        author: Text
+        msg: Text
+    payloads:
+      encode:
+        handle:
+          - name: AddMessage
+            type: Action
+            payload:
+              AddMessage:
+                author: Dmitriy
+                msg: Hello World!
+          - name: ViewMessages
+            type: Action
+            payload:
+              ViewMessages: 'Null'
