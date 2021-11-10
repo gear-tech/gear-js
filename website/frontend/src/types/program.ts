@@ -40,6 +40,7 @@ export interface UploadProgramModel {
   hash?: string;
   types: string;
   title?: string;
+  programName?: string;
 }
 
 export interface MessageModel {
