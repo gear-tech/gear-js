@@ -21,7 +21,6 @@
   overflow: hidden;
 }
 
-
 .program-details__progress {
   position: absolute;
   width: 0;
@@ -84,7 +83,7 @@
 
 .program-details__info {
   display: flex;
-  margin-bottom: 16px;
+  margin-bottom: 25px;
 }
 
 .program-details__link {
@@ -175,7 +174,7 @@
   font-weight: 600;
   font-size: 12px;
   line-height: 14px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .program-details--switch-btns__btn img {
@@ -183,12 +182,12 @@
 }
 
 .program-details--file-btn {
-  background: #3D3D3D;
+  background: #3d3d3d;
   border-radius: 2px;
   font-weight: 500;
   font-size: 14px;
   line-height: 21px;
-  color: #FFFFFF;
+  color: #ffffff;
   padding: 9px 18px;
 }
 
@@ -216,7 +215,8 @@
   .program-details__cancel {
     display: none;
   }
-  .program-details__wrapper, .program-details__info {
+  .program-details__wrapper,
+  .program-details__info {
     display: flex;
     flex-direction: column;
     position: relative;
