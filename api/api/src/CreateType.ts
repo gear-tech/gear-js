@@ -5,7 +5,7 @@ import { isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry, Codec } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
 import { PortableRegistry } from '@polkadot/types/metadata';
-
+import { toCamelCase, splitByCommas, toJSON, isJSON } from './utils';
 const REGULAR_EXP = {
   endWord: /\b\w+\b/g,
   angleBracket: /<.+>/,
@@ -72,22 +72,19 @@ export class CreateType {
     if (!registry) {
       registry = new TypeRegistry();
     }
-    const result = {};
+    const typesFromTypeDef = {};
     const namespaces = new Map<string, string>();
     const portableReg = new PortableRegistry(registry, types);
-    const compositeTypes = portableReg.types.filter(
-      ({ type: { def } }) => def.isComposite || def.isVariant || def.isPrimitive,
-    );
-    compositeTypes.forEach(({ id, type: { path } }) => {
+    portableReg.types.forEach(({ id, type: { path } }) => {
       const typeDef = portableReg.getTypeDef(id);
-      if (typeDef.lookupName) {
-        let type = typeDef.type.toString();
-        const name = path.pop().toHuman();
-        namespaces.set(name, typeDef.lookupName);
-        result[typeDef.lookupName] = type;
+      if (path.length === 0 || !typeDef.lookupName) {
+        return;
       }
+      const name = portableReg.getName(id);
+      namespaces.set(name.replace(toCamelCase(path.slice(0, path.length - 1)), ''), name);
+      typesFromTypeDef[typeDef.lookupName] = typeDef.type.toString();
     });
-    return { typesFromTypeDef: result, namespaces };
+    return { typesFromTypeDef, namespaces };
   }
 
   private registerTypes(types?: any) {
@@ -171,30 +168,6 @@ export class CreateType {
       return data;
     }
     return this.registry.createType(type, data);
-  }
-}
-
-function isJSON(data: any) {
-  try {
-    JSON.parse(data);
-  } catch (error) {
-    try {
-      if (JSON.stringify(data)[0] !== '{') {
-        return false;
-      }
-    } catch (error) {
-      return false;
-    }
-    return true;
-  }
-  return true;
-}
-
-function toJSON(data: any) {
-  try {
-    return JSON.parse(data);
-  } catch (error) {
-    return data;
   }
 }
 
@@ -283,23 +256,5 @@ export function getTypeStructure(typeName: string, types: any) {
           : type[key];
     }
   });
-  return result;
-}
-
-function splitByCommas(type: string) {
-  let counter = 0;
-  let result = [];
-  let lastTypeIndex = 0;
-  try {
-    Array.from(type).forEach((char, index) => {
-      if (char === ',' && counter === 0) {
-        result.push(type.slice(lastTypeIndex, index).trim());
-        lastTypeIndex = index + 1;
-      }
-      (char === '<' || char === '(') && counter++;
-      (char === '>' || char === ')') && counter--;
-    });
-    result.push(type.slice(lastTypeIndex).trim());
-  } catch (_) {}
   return result;
 }
