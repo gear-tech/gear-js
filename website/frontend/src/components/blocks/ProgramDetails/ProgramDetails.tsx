@@ -42,6 +42,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     handle_input: '',
     handle_output: '',
     types: '',
+    programName: '',
   };
 
   const metaFieldRef = useRef<any>(null);
@@ -166,6 +167,23 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     <button type="reset">
                       <img alt="cancel" src={cancel} />
                     </button>
+                  </div>
+                </div>
+                <div className="program-details__info">
+                  <label htmlFor="programName" className="program-details__field-limit program-details__field">
+                    Name:
+                  </label>
+                  <div className="program-details__field-wrapper">
+                    <Field
+                      id="programName"
+                      name="programName"
+                      placeholder="Name"
+                      className="program-details__limit-value program-details__value"
+                      type="text"
+                    />
+                    {errors.programName && touched.programName ? (
+                      <div className="program-details__error">{errors.programName}</div>
+                    ) : null}
                   </div>
                 </div>
                 <div className="program-details__info">
