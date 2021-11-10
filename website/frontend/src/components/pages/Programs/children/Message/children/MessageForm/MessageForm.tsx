@@ -1,6 +1,7 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch } from 'react-redux';
 import { Field, Form, Formik } from 'formik';
+import NumberFormat from 'react-number-format';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import clsx from 'clsx';
 import { SendMessageToProgram } from 'services/ApiService';
@@ -24,12 +25,26 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   const parsedMeta: Metadata = JSON.parse(meta as string);
   const dispatch = useDispatch();
   const [ready, setReady] = useState(false);
+
   const [initialValues, setInitialValues] = useState({
     gasLimit: 20000,
     value: 0,
     payload: '',
     destination: programHash,
   });
+
+  const NumberField = ({ field }: any) => (
+    <NumberFormat
+      {...field}
+      thousandsGroupStyle="thousand"
+      decimalSeparator="."
+      displayType="input"
+      thousandSeparator
+      allowNegative={false}
+      isNumericString
+      onValueChange={(vals: any) => vals.floatValue}
+    />
+  );
 
   useEffect(() => {
     const displayedTypes = parseHexTypes(parsedMeta.types!);
@@ -64,7 +79,11 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: MessageModel, { resetForm }) => {
-          SendMessageToProgram(api, values, dispatch);
+          let { gasLimit }: any = values;
+          if (typeof gasLimit !== 'number') {
+            gasLimit = Number(gasLimit.replace(/[\s.,%]/g, ''));
+          }
+          SendMessageToProgram(api, { ...values, gasLimit }, dispatch);
           dispatch(sendMessageStartAction());
           resetForm();
         }}
@@ -121,10 +140,13 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
                   <div className="message-form__field-wrapper">
                     <Field
                       id="gasLimit"
-                      name="gasLimit"
                       type="number"
+                      name="gasLimit"
+                      placeholder="20000"
                       className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
+                      component={NumberField}
                     />
+
                     {errors.gasLimit && touched.gasLimit ? (
                       <div className="message-form__error">{errors.gasLimit}</div>
                     ) : null}

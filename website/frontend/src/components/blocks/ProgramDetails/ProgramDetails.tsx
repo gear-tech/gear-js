@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, VFC } from 'react';
 import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
+import NumberFormat from 'react-number-format';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch } from 'react-redux';
 import { UploadProgram } from 'services/ApiService';
@@ -45,6 +46,19 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     programName: '',
   };
 
+  const NumberField = ({ field }: any) => (
+    <NumberFormat
+      {...field}
+      thousandsGroupStyle="thousand"
+      decimalSeparator="."
+      displayType="input"
+      thousandSeparator
+      allowNegative={false}
+      isNumericString
+      onValueChange={(vals: any) => vals.floatValue}
+    />
+  );
+
   const metaFieldRef = useRef<any>(null);
 
   if (wrongMetaFormat) {
@@ -65,8 +79,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       try {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
-        console.log(meta);
-        setMetaWasm(meta);
         let types = '';
         const parsedTypes = parseHexTypes(meta.types!);
         Object.entries(parsedTypes).forEach((value) => {
@@ -107,13 +119,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       }
     }
   };
-
-  // const prettyPrint = () => {
-  //   const ugly = (document.getElementById('types') as HTMLInputElement).value;
-  //   const obj = JSON.parse(ugly);
-  //   const pretty = JSON.stringify(obj, undefined, 4);
-  //   (document.getElementById('types') as HTMLInputElement).innerText = pretty;
-  // };
 
   return (
     <div className="program-details">
@@ -193,10 +198,23 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                   <div className="program-details__field-wrapper">
                     <Field
                       id="gasLimit"
+                      type="number"
                       name="gasLimit"
                       placeholder="20000"
                       className="program-details__limit-value program-details__value"
-                      type="number"
+                      component={NumberField}
+                    />
+                    <NumberFormat
+                      id="gasLimit"
+                      name="gasLimit"
+                      placeholder="20000"
+                      className="program-details__limit-value program-details__value"
+                      thousandsGroupStyle="thousand"
+                      decimalSeparator="."
+                      displayType="input"
+                      type="text"
+                      thousandSeparator
+                      allowNegative
                     />
                     {errors.gasLimit && touched.gasLimit ? (
                       <div className="program-details__error">{errors.gasLimit}</div>
