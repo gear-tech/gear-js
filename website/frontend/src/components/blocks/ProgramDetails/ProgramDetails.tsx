@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, VFC } from 'react';
 import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
+import NumberFormat from 'react-number-format';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch } from 'react-redux';
 import { UploadProgram } from 'services/ApiService';
@@ -65,7 +66,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       try {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
-        console.log(meta);
         setMetaWasm(meta);
         let types = '';
         const parsedTypes = parseHexTypes(meta.types!);
@@ -108,13 +108,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     }
   };
 
-  // const prettyPrint = () => {
-  //   const ugly = (document.getElementById('types') as HTMLInputElement).value;
-  //   const obj = JSON.parse(ugly);
-  //   const pretty = JSON.stringify(obj, undefined, 4);
-  //   (document.getElementById('types') as HTMLInputElement).innerText = pretty;
-  // };
-
   return (
     <div className="program-details">
       <h3 className="program-details__header">UPLOAD NEW PROGRAM</h3>
@@ -143,7 +136,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           setDroppedFile(null);
         }}
       >
-        {({ errors, touched }) => (
+        {({ errors, touched, setFieldValue, values }) => (
           <Form>
             {/* eslint-disable react/button-has-type */}
             <button type="reset" aria-label="closeButton">
@@ -191,12 +184,17 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     Gas limit:
                   </label>
                   <div className="program-details__field-wrapper">
-                    <Field
-                      id="gasLimit"
+                    <NumberFormat
                       name="gasLimit"
                       placeholder="20000"
+                      value={values.gasLimit}
+                      thousandSeparator
+                      allowNegative={false}
                       className="program-details__limit-value program-details__value"
-                      type="number"
+                      onValueChange={(val) => {
+                        const { floatValue } = val;
+                        setFieldValue('gasLimit', floatValue);
+                      }}
                     />
                     {errors.gasLimit && touched.gasLimit ? (
                       <div className="program-details__error">{errors.gasLimit}</div>

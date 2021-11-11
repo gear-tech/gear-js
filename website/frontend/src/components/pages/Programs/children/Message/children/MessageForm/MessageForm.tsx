@@ -1,6 +1,7 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch } from 'react-redux';
 import { Field, Form, Formik } from 'formik';
+import NumberFormat from 'react-number-format';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import clsx from 'clsx';
 import { SendMessageToProgram } from 'services/ApiService';
@@ -24,6 +25,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   const parsedMeta: Metadata = JSON.parse(meta as string);
   const dispatch = useDispatch();
   const [ready, setReady] = useState(false);
+
   const [initialValues, setInitialValues] = useState({
     gasLimit: 20000,
     value: 0,
@@ -119,11 +121,17 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
                     Gas limit:
                   </label>
                   <div className="message-form__field-wrapper">
-                    <Field
-                      id="gasLimit"
+                    <NumberFormat
                       name="gasLimit"
-                      type="number"
+                      placeholder="20000"
+                      value={values.gasLimit}
+                      thousandSeparator
+                      allowNegative={false}
                       className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
+                      onValueChange={(val) => {
+                        const { floatValue } = val;
+                        setFieldValue('gasLimit', floatValue);
+                      }}
                     />
                     {errors.gasLimit && touched.gasLimit ? (
                       <div className="message-form__error">{errors.gasLimit}</div>
