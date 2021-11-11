@@ -11,12 +11,14 @@ files:
       Action:
         _enum:
           AVariant: AStruct
-          BVar: Option<DemoGuiTestCustomStructU8>
+          BVar: Option<CustomStructU8>
           CVariant: BTreeMap<Text, u8>
       AStruct:
         id: Bytes
         online: bool
-      CustomStruct:
+      CustomStructU8:
+        field: u8
+      CustomStructOption:
         field: Option<(Option<u8>,u128,[u8;3])>
 
   - name: guestbook.meta.wasm
@@ -42,5 +44,4 @@ files:
                 msg: Hello World!
           - name: ViewMessages
             type: Action
-            payload:
-              ViewMessages: 'Null'
+            payload: ViewMessages

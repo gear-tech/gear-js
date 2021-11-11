@@ -25,12 +25,10 @@ function payloadsTest(name, payloads, meta) {
       Object.keys(encode).forEach((key) => {
         describe(key, () => {
           encode[key].forEach(({ name, type, payload }) => {
-            console.log(type);
-            console.log(payload);
             const encoded = CreateType.encode(type, payload, meta);
             const decoded = CreateType.decode(type, encoded, meta);
             it(name, () => {
-              assert.deepEqual(decoded, payload);
+              assert.deepEqual(decoded.toHuman(), payload);
             });
           });
         });
