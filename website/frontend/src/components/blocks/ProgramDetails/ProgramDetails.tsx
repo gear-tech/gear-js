@@ -46,19 +46,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     programName: '',
   };
 
-  const NumberField = ({ field }: any) => (
-    <NumberFormat
-      {...field}
-      thousandsGroupStyle="thousand"
-      decimalSeparator="."
-      displayType="input"
-      thousandSeparator
-      allowNegative={false}
-      isNumericString
-      onValueChange={(vals: any) => vals.floatValue}
-    />
-  );
-
   const metaFieldRef = useRef<any>(null);
 
   if (wrongMetaFormat) {
@@ -148,7 +135,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           setDroppedFile(null);
         }}
       >
-        {({ errors, touched }) => (
+        {({ errors, touched, setFieldValue, values }) => (
           <Form>
             {/* eslint-disable react/button-has-type */}
             <button type="reset" aria-label="closeButton">
@@ -196,25 +183,17 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     Gas limit:
                   </label>
                   <div className="program-details__field-wrapper">
-                    <Field
-                      id="gasLimit"
-                      type="number"
-                      name="gasLimit"
-                      placeholder="20000"
-                      className="program-details__limit-value program-details__value"
-                      component={NumberField}
-                    />
                     <NumberFormat
-                      id="gasLimit"
                       name="gasLimit"
                       placeholder="20000"
-                      className="program-details__limit-value program-details__value"
-                      thousandsGroupStyle="thousand"
-                      decimalSeparator="."
-                      displayType="input"
-                      type="text"
+                      value={values.gasLimit}
                       thousandSeparator
-                      allowNegative
+                      allowNegative={false}
+                      className="program-details__limit-value program-details__value"
+                      onValueChange={(val) => {
+                        const { floatValue } = val;
+                        setFieldValue('gasLimit', floatValue);
+                      }}
                     />
                     {errors.gasLimit && touched.gasLimit ? (
                       <div className="program-details__error">{errors.gasLimit}</div>

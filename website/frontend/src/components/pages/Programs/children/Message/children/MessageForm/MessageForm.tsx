@@ -33,19 +33,6 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
     destination: programHash,
   });
 
-  const NumberField = ({ field }: any) => (
-    <NumberFormat
-      {...field}
-      thousandsGroupStyle="thousand"
-      decimalSeparator="."
-      displayType="input"
-      thousandSeparator
-      allowNegative={false}
-      isNumericString
-      onValueChange={(vals: any) => vals.floatValue}
-    />
-  );
-
   useEffect(() => {
     const displayedTypes = parseHexTypes(parsedMeta.types!);
     const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
@@ -79,11 +66,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: MessageModel, { resetForm }) => {
-          let { gasLimit }: any = values;
-          if (typeof gasLimit !== 'number') {
-            gasLimit = Number(gasLimit.replace(/[\s.,%]/g, ''));
-          }
-          SendMessageToProgram(api, { ...values, gasLimit }, dispatch);
+          SendMessageToProgram(api, values, dispatch);
           dispatch(sendMessageStartAction());
           resetForm();
         }}
@@ -138,15 +121,18 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
                     Gas limit:
                   </label>
                   <div className="message-form__field-wrapper">
-                    <Field
-                      id="gasLimit"
-                      type="number"
+                    <NumberFormat
                       name="gasLimit"
                       placeholder="20000"
+                      value={values.gasLimit}
+                      thousandSeparator
+                      allowNegative={false}
                       className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
-                      component={NumberField}
+                      onValueChange={(val) => {
+                        const { floatValue } = val;
+                        setFieldValue('gasLimit', floatValue);
+                      }}
                     />
-
                     {errors.gasLimit && touched.gasLimit ? (
                       <div className="message-form__error">{errors.gasLimit}</div>
                     ) : null}
