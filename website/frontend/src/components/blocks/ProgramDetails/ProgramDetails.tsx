@@ -66,6 +66,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       try {
         const fileBuffer: any = await readFileAsync(file);
         const meta = await getWasmMetadata(fileBuffer);
+        setMetaWasm(meta);
         let types = '';
         const parsedTypes = parseHexTypes(meta.types!);
         Object.entries(parsedTypes).forEach((value) => {
