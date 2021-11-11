@@ -31,7 +31,7 @@ export class GearEvents {
       return this.api.query.system.events((events) => {
         events
           .filter(
-            ({ event }) => this.api.events.gear.InitSuccess.is(event) || this.api.events.gear.InitFailure.is(event)
+            ({ event }) => this.api.events.gear.InitSuccess.is(event) || this.api.events.gear.InitFailure.is(event),
           )
           .forEach(({ event }) => {
             setTimeout(() => {

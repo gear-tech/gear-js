@@ -10,7 +10,7 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
       table: new WebAssembly.Table({
         initial: 0,
         maximum: 0,
-        element: 'anyfunc'
+        element: 'anyfunc',
       }),
       tableBase: 0,
       memory: memory,
@@ -38,8 +38,9 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
       gr_reply_to: () => {},
       gr_value: () => {},
       gr_wait: () => {},
-      gr_wake: () => {}
-    }
+      gr_wake: () => {},
+      gr_exit_code: () => {},
+    },
   };
   let metadata = {
     init_input: '',
@@ -51,7 +52,7 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
     async_handle_input: '',
     async_handle_output: '',
     title: '',
-    types: ''
+    types: '',
   };
 
   let module = await WebAssembly.instantiate(wasmBytes, importObj);
