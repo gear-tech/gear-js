@@ -2,7 +2,7 @@ export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
 
   return transformedFileName.length > 24
-    ? `${transformedFileName.slice(0, 18)}…${transformedFileName.slice(-18)}`
+    ? `${transformedFileName.slice(0, 12)}…${transformedFileName.slice(-12)}`
     : transformedFileName;
 };
 
