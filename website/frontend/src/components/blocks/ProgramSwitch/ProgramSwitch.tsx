@@ -88,7 +88,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   // };
 
   const handleTransferBalance = async () => {
-    console.log(gasCallCounter);
     try {
       const response = await apiRequest.getResource(
         RPC_METHODS.BALANCE_TRANSFER,
