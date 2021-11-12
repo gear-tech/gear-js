@@ -30,6 +30,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const { blocks } = useSelector((state: RootState) => state.blocks);
   const [totalIssuance, setTotalIssuance] = useState('');
   const [prevBlockHash, setPrevBlockHash] = useState('');
+  const [gasCallCounter, setGasCallCounter] = useState(0);
 
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -87,6 +88,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   // };
 
   const handleTransferBalance = async () => {
+    console.log(gasCallCounter);
     try {
       const response = await apiRequest.getResource(
         RPC_METHODS.BALANCE_TRANSFER,
@@ -100,6 +102,9 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
       if (response.error) {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: `${response.error.message}` }));
       }
+
+      // count the number of crane calls
+      setGasCallCounter(gasCallCounter + 1);
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
     }
@@ -165,9 +170,15 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
           )}
         </div> */}
         <div className="switch-block--transfer">
-          <button className="switch-block--transfer__btn" type="button" onClick={handleTransferBalance}>
-            Get test balance
-          </button>
+          {gasCallCounter <= 3 ? (
+            <button className="switch-block--transfer__btn" type="button" onClick={handleTransferBalance}>
+              Get test balance
+            </button>
+          ) : (
+            <button className="switch-block--transfer__btn" type="button" disabled>
+              Don&apos;t be greedy :)
+            </button>
+          )}
         </div>
       </div>
       <div className="switch-block__info switch-info">

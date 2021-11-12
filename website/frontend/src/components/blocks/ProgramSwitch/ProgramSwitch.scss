@@ -41,6 +41,10 @@
   margin: 0 32px;
 }
 
+.switch-block--transfer__btn[disabled] {
+  background: #3d3d3d;
+}
+
 .switch-block--editor__btn.is-active {
   background: #161616;
 }
