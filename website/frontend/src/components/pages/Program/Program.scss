@@ -7,13 +7,22 @@
   }
   .go-back-button {
     margin: 40px 0 30px 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
     .go-back-button__icon {
       margin: 0 10px 0 28px;
+      @media (max-width: 768px) {
+        margin: 0 10px 0 15px;
+      }
     }
     .go-back-button__text {
       font-size: 21px;
       color: $textColor;
       text-transform: uppercase;
+      @media (max-width: 768px) {
+        font-size: 16px;
+      }
     }
   }
   .block {
@@ -57,7 +66,7 @@
       }
       .block__field {
         width: 85%;
-        background-color: #000000;
+        background-color: $mainBackground;
         border: none;
         outline: none;
         padding: 10px 15px;
@@ -65,13 +74,15 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
         @media (max-width: 768px) {
           width: 100%;
         }
       }
       .block__textarea {
         width: 85%;
-        background-color: #000000;
+        background-color: $mainBackground;
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
         border: none;
         outline: none;
         padding: 10px 15px;
