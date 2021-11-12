@@ -1,11 +1,14 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import {
   getUserProgramsAction,
   resetGasAction,
   resetProgramPayloadTypeAction,
   sendMessageResetAction,
   uploadMetaResetAction,
+  getProgramAction,
+  resetProgramAction,
 } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 
@@ -18,15 +21,34 @@ import { Pagination } from 'components/Pagination/Pagination';
 import styles from './Recent.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
 
+import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
+
 type ProgramMessageType = {
   programName: string;
   programHash: string;
 };
 
+const selectPrograms = createSelector(
+  (state: RootState) => state.programs,
+  (_ignore: any, completed: string) => completed,
+  (programs, completed) => programs.programs && programs.programs.filter((item) => item.hash.includes(completed))
+);
+
 export const Recent: VFC = () => {
   const dispatch = useDispatch();
 
-  const { programs, programsCount } = useSelector((state: RootState) => state.programs);
+  const [search, setSearch] = useState('');
+
+  const { programsCount } = useSelector((state: RootState) => state.programs);
+  let programs = useSelector((state: RootState) => selectPrograms(state, search));
+
+  const singleProgram = useSelector((state: RootState) => state.programs.program);
+
+  if (singleProgram) {
+    programs = [singleProgram];
+  }
+
+  console.log(singleProgram);
 
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -36,17 +58,15 @@ export const Recent: VFC = () => {
 
   const offset = currentPage * INITIAL_LIMIT_BY_PAGE;
 
-  const handleCloseMessageForm = () => {
-    dispatch(sendMessageResetAction());
-    dispatch(resetGasAction());
-    dispatch(resetProgramPayloadTypeAction());
-    setProgramMessage(null);
-  };
-
-  const handleCloseMetaForm = () => {
-    dispatch(uploadMetaResetAction());
-    setProgramMeta(null);
-  };
+  useEffect(() => {
+    dispatch(
+      getUserProgramsAction({
+        publicKeyRaw: localStorage.getItem('public_key_raw'),
+        limit: INITIAL_LIMIT_BY_PAGE,
+        offset,
+      })
+    );
+  }, [dispatch, offset]);
 
   const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
@@ -64,15 +84,17 @@ export const Recent: VFC = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(
-      getUserProgramsAction({
-        publicKeyRaw: localStorage.getItem('public_key_raw'),
-        limit: INITIAL_LIMIT_BY_PAGE,
-        offset,
-      })
-    );
-  }, [dispatch, offset]);
+  const handleCloseMessageForm = () => {
+    dispatch(sendMessageResetAction());
+    dispatch(resetGasAction());
+    dispatch(resetProgramPayloadTypeAction());
+    setProgramMessage(null);
+  };
+
+  const handleCloseMetaForm = () => {
+    dispatch(uploadMetaResetAction());
+    setProgramMeta(null);
+  };
 
   if (programMessage) {
     return (
@@ -93,20 +115,36 @@ export const Recent: VFC = () => {
       />
     );
   }
+
+  console.log(programs);
+
   return (
     <div className={styles.blockList}>
       <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
         <Pagination page={currentPage} count={programsCount || 0} onPageChange={onPageChange} />
       </div>
-
-      {(programs && programs.length > 0 && (
+      <div>
+        <SearchForm
+          handleRemoveQuery={() => {
+            setSearch('');
+            dispatch(resetProgramAction());
+          }}
+          handleSearch={(val: string) => {
+            setSearch(val);
+            dispatch(getProgramAction(val));
+          }}
+        />
+        <br />
+      </div>
+      {(programs && programs.length && (
         <div>
           {programs.map((program) => (
             <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.id} />
           ))}
         </div>
-      )) || <div className={styles.noMessage}>There are no uploaded programs</div>}
+      )) ||
+        null}
 
       {programs && programs.length > 0 && (
         <div className={styles.paginationBottom}>

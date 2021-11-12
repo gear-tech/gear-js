@@ -3,8 +3,9 @@ import { Metadata } from './interfaces';
 import { CreateTypeError } from './errors';
 import { isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry, Codec } from '@polkadot/types/types';
-import { Bytes, TypeRegistry, GenericPortableRegistry } from '@polkadot/types';
-
+import { Bytes, TypeRegistry } from '@polkadot/types';
+import { PortableRegistry } from '@polkadot/types/metadata';
+import { toCamelCase, splitByCommas, toJSON, isJSON } from './utils';
 const REGULAR_EXP = {
   endWord: /\b\w+\b/g,
   angleBracket: /<.+>/,
@@ -41,48 +42,49 @@ const STD_TYPES = {
 
 export class CreateType {
   registry: Registry;
+  namespaces: Map<string, string>;
 
   constructor(gearApi?: GearApi) {
     this.registry = gearApi?.registry || new TypeRegistry();
+    this.namespaces = undefined;
   }
 
-  private getRegistry(types?: any): { registry: Registry; namespaces?: Map<string, string> } {
+  private createRegistry(types?: any): Map<string, string> {
     if (!types) {
-      return { registry: this.registry };
+      return null;
     }
-
-    let fromTypeDef: any;
-    if (isHex(types)) {
-      fromTypeDef = CreateType.getTypesFromTypeDef(hexToU8a(types), this.registry);
-      types = fromTypeDef.types;
-    } else if (isU8a(types)) {
-      fromTypeDef = CreateType.getTypesFromTypeDef(types, this.registry).types;
-      types = fromTypeDef.types;
+    if (isHex(types) || isU8a(types)) {
+      const { typesFromTypeDef, namespaces } = CreateType.getTypesFromTypeDef(
+        isHex(types) ? hexToU8a(types) : types,
+        this.registry,
+      );
+      types = typesFromTypeDef;
+      this.namespaces = namespaces;
     }
     this.registerTypes(types);
-    return { registry: this.registry, namespaces: fromTypeDef?.namespaces };
+    return this.namespaces;
   }
 
-  static getTypesFromTypeDef(types: Uint8Array, registry?: Registry): { types: any; namespaces: Map<string, string> } {
+  static getTypesFromTypeDef(
+    types: Uint8Array,
+    registry?: Registry,
+  ): { typesFromTypeDef: any; namespaces: Map<string, string> } {
     if (!registry) {
       registry = new TypeRegistry();
     }
-    const result = {};
+    const typesFromTypeDef = {};
     const namespaces = new Map<string, string>();
-    const genReg = new GenericPortableRegistry(registry, types);
-    const compositeTypes = genReg.types.filter(
-      ({ type: { def } }) => def.isComposite || def.isVariant || def.isPrimitive,
-    );
-    compositeTypes.forEach(({ id, type: { path } }) => {
-      const typeDef = genReg.getTypeDef(id);
-      if (typeDef.lookupName) {
-        let type = typeDef.type.toString();
-        const name = path.pop().toHuman();
-        namespaces.set(name, typeDef.lookupName);
-        result[typeDef.lookupName] = type;
+    const portableReg = new PortableRegistry(registry, types);
+    portableReg.types.forEach(({ id, type: { path } }) => {
+      const typeDef = portableReg.getTypeDef(id);
+      if (path.length === 0 || !typeDef.lookupName) {
+        return;
       }
+      const name = portableReg.getName(id);
+      namespaces.set(name.replace(toCamelCase(path.slice(0, path.length - 1)), ''), name);
+      typesFromTypeDef[typeDef.lookupName] = typeDef.type.toString();
     });
-    return { types: result, namespaces };
+    return { typesFromTypeDef, namespaces };
   }
 
   private registerTypes(types?: any) {
@@ -105,7 +107,7 @@ export class CreateType {
 
     if (payload instanceof Bytes) return payload;
 
-    const { registry, namespaces } = meta?.types ? this.getRegistry(meta.types) : this.getRegistry();
+    const namespaces = meta?.types ? this.createRegistry(meta.types) : this.createRegistry();
     if (isJSON(type)) {
       const types = toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`);
       this.registerTypes(types);
@@ -121,7 +123,7 @@ export class CreateType {
   decode(type: string, payload: any, meta?: Metadata): any {
     type = this.checkTypePayload(type, payload);
 
-    const { registry, namespaces } = meta?.types ? this.getRegistry(meta.types) : this.getRegistry();
+    const namespaces = meta?.types ? this.createRegistry(meta.types) : this.createRegistry();
 
     if (isJSON(type)) {
       const types = toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`);
@@ -169,30 +171,6 @@ export class CreateType {
   }
 }
 
-function isJSON(data: any) {
-  try {
-    JSON.parse(data);
-  } catch (error) {
-    try {
-      if (JSON.stringify(data)[0] !== '{') {
-        return false;
-      }
-    } catch (error) {
-      return false;
-    }
-    return true;
-  }
-  return true;
-}
-
-function toJSON(data: any) {
-  try {
-    return JSON.parse(data);
-  } catch (error) {
-    return data;
-  }
-}
-
 function typeIsString(type: any, data?: any): boolean {
   if (data) {
     return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase()) && typeof data === 'string';
@@ -202,10 +180,10 @@ function typeIsString(type: any, data?: any): boolean {
 }
 
 export function parseHexTypes(hexTypes: string) {
-  let { types, namespaces } = CreateType.getTypesFromTypeDef(hexToU8a(hexTypes));
+  let { typesFromTypeDef, namespaces } = CreateType.getTypesFromTypeDef(hexToU8a(hexTypes));
   const result = {};
   namespaces.forEach((value, key) => {
-    result[key] = JSON.parse(replaceNamespaces(types[value], namespaces));
+    result[key] = JSON.parse(replaceNamespaces(typesFromTypeDef[value], namespaces));
   });
   return result;
 }
@@ -278,23 +256,5 @@ export function getTypeStructure(typeName: string, types: any) {
           : type[key];
     }
   });
-  return result;
-}
-
-function splitByCommas(type: string) {
-  let counter = 0;
-  let result = [];
-  let lastTypeIndex = 0;
-  try {
-    Array.from(type).forEach((char, index) => {
-      if (char === ',' && counter === 0) {
-        result.push(type.slice(lastTypeIndex, index).trim());
-        lastTypeIndex = index + 1;
-      }
-      (char === '<' || char === '(') && counter++;
-      (char === '>' || char === ')') && counter--;
-    });
-    result.push(type.slice(lastTypeIndex).trim());
-  } catch (_) {}
   return result;
 }
