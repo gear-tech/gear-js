@@ -1,7 +1,7 @@
 import React, { VFC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { RootState } from 'store/reducers';
 import {
   getProgramAction,
@@ -15,6 +15,8 @@ import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { formatDate } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
+import ArrowBack from 'assets/images/arrow_back.svg';
+import ProgramIllustration from 'assets/images/program_icon.svg';
 import './Program.scss';
 
 type ProgramMessageType = {
@@ -26,6 +28,7 @@ export const Program: VFC = () => {
   const dispatch = useDispatch();
   const params: any = useParams();
   const hash: string = params?.hash;
+  const history = useHistory();
   const { program } = useSelector((state: RootState) => state.programs);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
@@ -39,6 +42,7 @@ export const Program: VFC = () => {
 
   useEffect(() => {
     dispatch(getProgramAction(hash));
+    window.scrollTo(0, 0);
   }, [dispatch, hash]);
 
   useEffect(() => {
@@ -102,8 +106,17 @@ export const Program: VFC = () => {
     );
   }
 
+  const handleGoBack = () => {
+    history.goBack();
+  };
+
   return (
     <div className="wrapper">
+      <button type="button" aria-label="arrowBack" className="go-back-button" onClick={handleGoBack}>
+        <img src={ArrowBack} alt="back" />
+        <img src={ProgramIllustration} alt="program" className="go-back-button__icon" />
+        <span className="go-back-button__text">{data.name}</span>
+      </button>
       <div className="block">
         <div className="block__wrapper">
           <div className="block__item">

@@ -5,11 +5,22 @@
   @media (max-width: 768px) {
     margin: 0 20px;
   }
+  .go-back-button {
+    margin: 40px 0 30px 0;
+    .go-back-button__icon {
+      margin: 0 10px 0 28px;
+    }
+    .go-back-button__text {
+      font-size: 21px;
+      color: $textColor;
+      text-transform: uppercase;
+    }
+  }
   .block {
-    background-color: #212121;
+    background-color: $bkgActiveButtonColor;
     border-radius: 2px;
     border: 1px dashed #0e0e0e;
-    margin: 40px 0;
+    margin: 0 0 40px 0;
     padding: 30px 25px;
     @media (max-width: 768px) {
       padding: 15px;
@@ -32,7 +43,7 @@
         margin-bottom: 0;
       }
       .block__caption {
-        color: #858585;
+        color: $textColorSecondary;
         font-size: 21px;
         padding-top: 5px;
         min-width: 164px;
@@ -50,8 +61,10 @@
         border: none;
         outline: none;
         padding: 10px 15px;
-        color: #ffffff;
-        overflow-x: scroll;
+        color: $textColor;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         @media (max-width: 768px) {
           width: 100%;
         }
@@ -63,8 +76,9 @@
         outline: none;
         padding: 10px 15px;
         height: 100px;
-        color: #ffffff;
-        overflow-x: scroll;
+        color: $textColor;
+        overflow: hidden;
+        text-overflow: ellipsis;
         &.block__textarea_h100 {
           height: 100px;
         }
@@ -87,7 +101,7 @@
           flex-direction: column;
         }
         .block__button-elem {
-          background: #2bd071;
+          background: $successColor;
           box-shadow: 0 0 24px rgb(43 208 113 / 12%);
           border-radius: 2px;
           display: flex;
@@ -106,7 +120,7 @@
             font-weight: bold;
             font-size: 16px;
             line-height: 24px;
-            color: #ffffff;
+            color: $textColor;
             margin-left: 16px;
           }
         }
@@ -117,11 +131,11 @@
             margin-top: 8px;
           }
           .block__button-caption {
-            color: #858585;
+            color: $textColorSecondary;
             margin-right: 8px;
           }
           .block__button-date {
-            color: #ffffff;
+            color: $textColor;
           }
         }
       }
