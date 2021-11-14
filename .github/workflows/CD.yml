@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [master]
+    branches: [master, 'do-fix-tg-login']
 
 env:
   CARGO_TERM_COLOR: always
