@@ -51,7 +51,7 @@ export async function getWasmMetadata(wasmBytes: Buffer, pages?: any): Promise<M
       let count = 0;
       const page = pages[pageNumber];
       for (let i = start; i < end; i++) {
-        new Uint8Array(memory.buffer)[i] = page[count];
+        new Uint8Array(memory.buffer)[i] = page[i % 65536];
         count++;
       }
     });
