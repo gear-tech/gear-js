@@ -1,0 +1,29 @@
+---
+#Install/update backend docker-compose
+- name: Copy docker-compose
+  copy:
+    src: docker-compose.yaml
+    dest: /home/ec2-user/event-listener/docker-compose.yaml
+
+- name: Stop docker-compose
+  shell: >
+    /usr/local/bin/docker-compose -f "/home/ec2-user/event-listener/docker-compose.yaml" down
+  become: yes
+
+- name: Pull docker images
+  shell: >
+    /usr/local/bin/docker-compose -f "/home/ec2-user/event-listener/docker-compose.yaml" pull
+  become: yes
+
+- name: Remove old docker images
+  shell: docker image prune -f
+  become: yes
+
+- name: Run docker-compose
+  shell: >
+    /usr/local/bin/docker-compose -f "/home/ec2-user/event-listener/docker-compose.yaml" up -d
+  become: yes
+  environment:
+    EVENT_LISTENER_WS_PROVIDER: "{{ lookup('env','EVENT_LISTENER_WS_PROVIDER') }}"
+    KAFKA_EVENT_LISTENER_CLIENT_ID: "{{ lookup('env','KAFKA_DATA_STORAGE_CLIENT_ID') }}"
+    KAFKA_BROKERS: "{{ lookup('env','KAFKA_BROKERS') }}"

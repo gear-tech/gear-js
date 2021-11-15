@@ -22,11 +22,7 @@
     "types:lint": "tsc --noEmit --pretty"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@gear-js/api": "^0.6.1",
-=======
     "@gear-js/api": "^0.7.2",
->>>>>>> master
     "@nestjs/common": "^8.0.6",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.6",

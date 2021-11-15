@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@gear-js/api": "^0.6.6",
+    "@gear-js/api": "^0.7.2",
     "@nestjs/common": "^8.1.2",
     "@nestjs/config": "^1.0.3",
     "@nestjs/core": "^8.1.2",
@@ -36,7 +36,7 @@
     "typeorm": "^0.2.38"
   },
   "devDependencies": {
-    "@gear-js/backend-interfaces": "1.0.0",
+    "@gear-js/backend-interfaces": "file:../api-interfaces",
     "@nestjs/cli": "^8.1.4",
     "@nestjs/schematics": "^8.0.4",
     "@nestjs/testing": "^8.1.2",

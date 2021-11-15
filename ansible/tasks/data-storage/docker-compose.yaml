@@ -1,6 +1,5 @@
 version: '3'
 services:
-
   pg_db:
     image: postgres
     restart: always
@@ -14,24 +13,16 @@ services:
       - ${DB_PORT:-5432}:5432
 
   backend:
-    ports:
-      - "3001:3000"
-    image: schernovgear/gear-backend:nightly
+    image: mithriy/gear-data-storage:nightly
     environment:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_PORT=${DB_PORT}
       - DB_HOST=${DB_HOST}
-      - WS_PROVIDER=${WS_PROVIDER}
-      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
-      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
-      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-      - TELEGRAM_BOT_USERNAME=${TELEGRAM_BOT_USERNAME}
-      - IDE_SOCKET=${IDE_SOCKET}
-      - ACCOUNT_SEED=${ACCOUNT_SEED}
-      - SUDO_SEED=${SUDO_SEED}
-      - SITE_ACCOUNT_BALANCE=${SITE_ACCOUNT_BALANCE}
+      - CLIENT_ID=${KAFKA_DATA_STORAGE_CLIENT_ID}
+      - GROUP_ID=${KAFKA_DATA_STORAGE_GROUP_ID}
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
 
 volumes:
   pg_data:
