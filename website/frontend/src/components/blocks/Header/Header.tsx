@@ -17,8 +17,11 @@ import githubIcon from '../../../assets/images/github_gray.svg';
 
 export const Header: VFC = () => {
   const location = useLocation();
-  const showUser =
+  let showUser =
     [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.notifications].indexOf(location.pathname) > -1;
+  if (routes.program.split('/')[1] === location.pathname.split('/')[1]) {
+    showUser = true;
+  }
   const isNotifications = location.pathname === routes.notifications;
 
   const { user } = useSelector((state: RootState) => state.user);

@@ -7,6 +7,7 @@ import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { SignIn } from 'components/pages/SignIn/SignIn';
 import { Programs } from 'components/pages/Programs/Programs';
+import { Program } from 'components/pages/Program/Program';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
 import { Callback } from 'components/Callback/Callback';
@@ -88,6 +89,9 @@ const AppComponent: FC = () => {
             <Switch>
               <PrivateRoute exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
                 <Programs />
+              </PrivateRoute>
+              <PrivateRoute exact path={routes.program}>
+                <Program />
               </PrivateRoute>
               <PrivateRoute path={routes.editor} exact>
                 <EditorPage />
