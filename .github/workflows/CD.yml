@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.TEST_DOCKERHUB_TOKEN }}
 
       - name: Build and push data-storage
-        id: docker_build
+        id: data_storage_docker_build
         uses: docker/build-push-action@v2
         with:
           file: website/data-storage/Dockerfile
@@ -35,7 +35,7 @@ jobs:
           tags: mithriy/gear-data-storage:nightly
 
       - name: Build and push event-listener
-        id: docker_build
+        id: event_listener_docker_build
         uses: docker/build-push-action@v2
         with:
           file: website/event-listener/Dockerfile
@@ -43,7 +43,7 @@ jobs:
           tags: mithriy/gear-event-listener:nightly
 
       - name: Build and push api-backend
-        id: docker_build
+        id: api_backend_docker_build
         uses: docker/build-push-action@v2
         with:
           file: website/api-backend/Dockerfile
