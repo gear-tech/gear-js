@@ -88,9 +88,9 @@ function readMetaValue(memory: WebAssembly.Memory, func: any): ArrayBuffer {
   if (!func) {
     return undefined;
   }
-  let ptr = func();
-  let pointer = new Uint32Array(memory.buffer.slice(ptr, ptr + 4))[0];
-  let length = new Uint32Array(memory.buffer.slice(ptr + 4, ptr + 8))[0];
+  let result_ptr = func();
+  let pointer = new Uint32Array(memory.buffer.slice(result_ptr, result_ptr + 4))[0];
+  let length = new Uint32Array(memory.buffer.slice(result_ptr + 4, result_ptr + 8))[0];
   let buf = memory.buffer.slice(pointer, pointer + length);
   return buf;
 }
