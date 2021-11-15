@@ -48,11 +48,9 @@ export async function getWasmMetadata(wasmBytes: Buffer, pages?: any): Promise<M
     Object.keys(pages).forEach((pageNumber: string) => {
       const start = +pageNumber * 65536;
       const end = start + 65536;
-      let count = 0;
       const page = pages[pageNumber];
       for (let i = start; i < end; i++) {
         new Uint8Array(memory.buffer)[i] = page[i % 65536];
-        count++;
       }
     });
 
