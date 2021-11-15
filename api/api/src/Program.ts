@@ -22,7 +22,7 @@ export class GearProgram extends GearTransaction {
       value?: BalanceOf | AnyNumber;
     },
     meta: Metadata,
-    messageType?: string
+    messageType?: string,
   ): string {
     const payload = program.initPayload
       ? this.createType.encode(messageType || meta.init_input, program.initPayload, meta)
