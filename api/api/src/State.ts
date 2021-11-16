@@ -56,8 +56,8 @@ export class GearProgramState {
    * @param pages
    * @returns
    */
-  async decodeState(metaWasm: Buffer, pages: IGearPages): Promise<Codec> {
-    const meta = await getWasmMetadata(metaWasm, pages);
+  async decodeState(metaWasm: Buffer, pages: IGearPages, inputValue?: any): Promise<Codec> {
+    const meta = await getWasmMetadata(metaWasm, pages, inputValue);
     if (!meta.meta_state_output) {
       throw new ReadStateError(`Can't read state. meta_state_output type is not specified in metadata`);
     } else if (!meta.meta_state) {
@@ -74,9 +74,9 @@ export class GearProgramState {
    * @param metaWasm
    * @returns
    */
-  async read(programId: ProgramId, metaWasm: Buffer) {
+  async read(programId: ProgramId, metaWasm: Buffer, inputValue?: any) {
     const program = await this.gProg(programId);
     const pages = await this.gPages(programId, program.persistent_pages);
-    return await this.decodeState(metaWasm, pages);
+    return await this.decodeState(metaWasm, pages, inputValue);
   }
 }

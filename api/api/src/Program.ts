@@ -1,5 +1,5 @@
 import { GearType } from '.';
-import { Metadata } from './interfaces';
+import { Metadata, ProgramId } from './interfaces';
 import { SubmitProgramError } from './errors';
 import { AnyNumber } from '@polkadot/types/types';
 import { Bytes, U64, u64 } from '@polkadot/types';
@@ -23,7 +23,7 @@ export class GearProgram extends GearTransaction {
     },
     meta: Metadata,
     messageType?: string,
-  ): string {
+  ): ProgramId {
     const payload = program.initPayload
       ? this.createType.encode(messageType || meta.init_input, program.initPayload, meta)
       : '0x00';

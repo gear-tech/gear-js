@@ -1,6 +1,6 @@
 import { Metadata } from './interfaces';
 
-export async function getWasmMetadata(wasmBytes: Buffer, pages?: any): Promise<Metadata> {
+export async function getWasmMetadata(wasmBytes: Buffer, pages?: any, inputValue?: any): Promise<Metadata> {
   const memory = new WebAssembly.Memory({ initial: pages ? Object.keys(pages).length : 256 });
   const importObj = {
     env: {
@@ -71,7 +71,7 @@ export async function getWasmMetadata(wasmBytes: Buffer, pages?: any): Promise<M
     title: readMeta(memory, exports.meta_title),
     meta_state_input: readMeta(memory, exports.meta_state_input),
     meta_state_output: readMeta(memory, exports.meta_state_output),
-    meta_state: pages ? readState(memory, exports.meta_state) : undefined,
+    meta_state: pages ? readState(memory, exports.meta_state, inputValue) : undefined,
   };
   return metadata;
 }
@@ -80,15 +80,15 @@ function readMeta(memory: WebAssembly.Memory, func: any): string {
   return ab2str(readMetaValue(memory, func));
 }
 
-function readState(memory: WebAssembly.Memory, func: any): Uint8Array {
-  return new Uint8Array(readMetaValue(memory, func));
+function readState(memory: WebAssembly.Memory, func: any, input): Uint8Array {
+  return new Uint8Array(readMetaValue(memory, func, input));
 }
 
-function readMetaValue(memory: WebAssembly.Memory, func: any): ArrayBuffer {
+function readMetaValue(memory: WebAssembly.Memory, func: any, input?): ArrayBuffer {
   if (!func) {
     return undefined;
   }
-  let result_ptr = func();
+  let result_ptr = func(input);
   let pointer = new Uint32Array(memory.buffer.slice(result_ptr, result_ptr + 4))[0];
   let length = new Uint32Array(memory.buffer.slice(result_ptr + 4, result_ptr + 8))[0];
   let buf = memory.buffer.slice(pointer, pointer + length);
