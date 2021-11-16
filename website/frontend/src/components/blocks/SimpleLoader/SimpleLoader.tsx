@@ -13,9 +13,11 @@ export const SimpleLoader: VFC = () => (
       <img src={UpGear} alt="gear" />
       <img src={DownGear} alt="gear" />
     </div>
-    <ProgressBar status="START" />
-    <div className="loading__text">
-      <span>Loading ...</span>
+    <div className="loading__botton-block">
+      <ProgressBar status="START" />
+      <div className="loading__text">
+        <span>Loading ...</span>
+      </div>
     </div>
   </div>
 );

@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
@@ -15,11 +15,12 @@ import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
 import { EditorPage } from 'features/Editor/EditorPage';
 import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
+import { SimpleLoader } from 'components/blocks/SimpleLoader';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
 import { getUnreadNotificationsCount, getUserDataAction } from 'store/actions/actions';
-import { subscribeToEvents } from '../../store/actions/actions';
+import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
 import store from '../../store';
 
@@ -47,7 +48,7 @@ const options = {
 const AppComponent: FC = () => {
   const dispatch = useDispatch();
 
-  const [isApiReady, setIsApiReady] = useState(false);
+  const { isApiReady } = useSelector((state: RootState) => state.api);
   const { user } = useSelector((state: RootState) => state.user);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
@@ -72,10 +73,10 @@ const AppComponent: FC = () => {
   useEffect(() => {
     if (!isApiReady) {
       nodeApi.init().then(() => {
-        setIsApiReady(true);
+        dispatch(setApiReady());
       });
     }
-  }, [isApiReady]);
+  }, [dispatch, isApiReady]);
 
   useEffect(() => {
     if (isApiReady) {
@@ -130,7 +131,7 @@ const AppComponent: FC = () => {
                 </Route>
               </Switch>
             ) : (
-              <div className="loading-text">Loading...</div>
+              <SimpleLoader />
             )}
           </Main>
           {isFooterHidden() || <Footer />}

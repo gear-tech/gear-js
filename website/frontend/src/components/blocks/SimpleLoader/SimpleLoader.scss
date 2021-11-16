@@ -5,7 +5,7 @@
   position: relative;
   .loading__overlay-top {
     position: absolute;
-    top: 4px;
+    top: 3px;
     left: 0px;
     width: 100%;
     background: #232323;
@@ -14,7 +14,7 @@
   }
   .loading__overlay-bottom {
     position: absolute;
-    bottom: 55px;
+    bottom: 54px;
     left: 0px;
     width: 100%;
     background: #232323;
@@ -39,11 +39,16 @@
       }
     }
   }
-  .loading__text {
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 10px;
-    text-align: center;
+  .loading__botton-block {
+    margin-top: -25px;
+    position: relative;
+    z-index: 1000;
+    .loading__text {
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 10px;
+      text-align: center;
+    }
   }
 }
