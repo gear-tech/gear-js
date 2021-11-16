@@ -46,10 +46,7 @@ export const Header: VFC = () => {
       {
         id: 2,
         caption: 'development',
-        nodes: [
-          { id: 2, isChoose: false, address: 'ws://localhost:9944' },
-          { id: 3, isChoose: false, address: 'ws://13.56.230.75:9944' },
-        ],
+        nodes: [{ id: 2, isChoose: false, address: 'ws://localhost:9944' }],
       },
     ];
   }
