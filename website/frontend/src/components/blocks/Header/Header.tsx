@@ -29,8 +29,6 @@ export const Header: VFC = () => {
 
   const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isRestore, setIsRestore] = useState(false);
-  const [isKey, setIsKey] = useState(false);
 
   let userInfo = '';
   const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
@@ -51,23 +49,13 @@ export const Header: VFC = () => {
     setIsOpen(!isOpen);
   };
 
-  const toggleRestoreModal = () => {
-    setIsRestore(!isRestore);
-  };
-
   useEffect(() => {
-    if (isOpen || isRestore) document.body.style.overflow = 'hidden';
+    if (isOpen) document.body.style.overflow = 'hidden';
 
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, isRestore]);
-
-  useEffect(() => {
-    if (localStorage.getItem('gear_mnemonic') && localStorage.getItem('gear_mnemonic') !== 'undefined') {
-      setIsKey(true);
-    }
-  }, [isOpen, isRestore]);
+  }, [isOpen]);
 
   return (
     <header className="header">
@@ -84,16 +72,7 @@ export const Header: VFC = () => {
             )) ||
               null}
           </Link> */}
-          {(isKey && <Wallet />) || (
-            <>
-              <Link to={routes.main} className="user-block__restore" onClick={toggleRestoreModal}>
-                <span>Restore JSON</span>
-              </Link>
-              <Link to={routes.main} className="user-block__account" onClick={toggleModal}>
-                <span>Add account</span>
-              </Link>
-            </>
-          )}
+          <Wallet />
           <div className="user-block--wrapper">
             <img src={user?.photoUrl ?? githubIcon} alt="avatar" />
             <span className="user-block__name">{userInfo}</span>
@@ -155,14 +134,6 @@ export const Header: VFC = () => {
         </button>
       </div>
       {isOpen && <Modal content={<Keyring handleClose={toggleModal} />} handleClose={toggleModal} />}
-
-      {isRestore && (
-        <Modal
-          title="Restore from JSON"
-          content={<RestoreJson handleClose={toggleRestoreModal} />}
-          handleClose={toggleRestoreModal}
-        />
-      )}
     </header>
   );
 };
