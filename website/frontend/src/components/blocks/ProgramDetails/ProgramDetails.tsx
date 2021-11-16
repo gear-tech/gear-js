@@ -119,7 +119,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           if (isMetaByFile) {
             dispatch(programUploadStartAction());
             UploadProgram(api, droppedFile, { ...values, ...metaWasm }, dispatch);
-            setDroppedFile(null);
           } else {
             try {
               const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
