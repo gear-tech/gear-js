@@ -6,10 +6,7 @@ import fetch from 'node-fetch';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userService: UsersService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly userService: UsersService, private readonly jwtService: JwtService) {}
 
   private verifyTelegramLogin(hash: string, userData: object) {
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -19,15 +16,13 @@ export class AuthService {
       .join('\n');
 
     const keyHash = createHash('sha256').update(botToken).digest();
-    const checkHash = createHmac('sha256', keyHash)
-      .update(checkStr)
-      .digest('hex');
+    const checkHash = createHmac('sha256', keyHash).update(checkStr).digest('hex');
 
     return hash === checkHash;
   }
 
   async loginTelegram(data: any) {
-    const { hash, ...userData } = data;
+    const { hash, chain, ...userData } = data;
     if (!this.verifyTelegramLogin(hash, userData)) {
       throw new Error('Incorrect telegram data');
     }
