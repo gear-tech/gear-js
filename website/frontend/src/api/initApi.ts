@@ -25,12 +25,7 @@ class NodeApi {
   }
 
   async init() {
-    const addressFromLocalStorage = window.localStorage.getItem('node_address');
-
-    if (addressFromLocalStorage) {
-      this.address = addressFromLocalStorage;
-    }
-
+    this.address = window.localStorage.getItem('node_address') || this.address;
     this._api = await GearApi.create({ providerAddress: this.address });
 
     this.chain = await this._api.chain();
