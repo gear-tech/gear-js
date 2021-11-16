@@ -32,6 +32,18 @@
   }
 }
 
+.headder__chain-block {
+  margin-left: 10px;
+  @media (max-width: 768px) {
+    margin-left: 0;
+    margin-top: 15px;
+  }
+  .headder__chain-text {
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+}
+
 .header__nav-button {
   outline: none;
   border: none;

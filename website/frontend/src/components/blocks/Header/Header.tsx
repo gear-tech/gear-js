@@ -30,6 +30,8 @@ export const Header: VFC = () => {
   }
   const isNotifications = location.pathname === routes.notifications;
 
+  const chainName = localStorage.chain ? localStorage.chain : 'Loading ...';
+
   let arrayOfNodes = [];
 
   if (localStorage.nodes) {
@@ -188,9 +190,16 @@ export const Header: VFC = () => {
         <Link to={routes.main} className="header__logo">
           <LogoIcon color={headerIconsColor} />
         </Link>
-        <button type="button" onClick={handleShowListOfNodes} className="add_node">
-          Change node
-        </button>
+        {showUser && (
+          <>
+            <button type="button" onClick={handleShowListOfNodes} className="add_node">
+              Change node
+            </button>
+            <div className="headder__chain-block">
+              <p className="headder__chain-text">{!isApiReady ? 'Loading ...' : chainName}</p>
+            </div>
+          </>
+        )}
       </div>
       {(showUser && (
         <div className={clsx('header__user-block user-block', isMobileMenuOpened && 'show')}>
