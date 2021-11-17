@@ -29,11 +29,7 @@ export async function getWasmMetadata(wasmBytes: Buffer, pages?: any, inputValue
         return inputValue.byteLength;
       },
       gr_read: (at: number, len: number, dest: number) => {
-        let count = 0;
-        for (let i = dest; i < dest + len; i++) {
-          new Uint8Array(memory.buffer)[i] = inputValue[at + count];
-          count++;
-        }
+        new Uint8Array(memory.buffer).set(inputValue.slice(at, len), dest);
       },
       gr_source: () => {},
       gr_gas_available: () => {},
