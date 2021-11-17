@@ -1,23 +1,17 @@
-import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
+import { GearApi } from '@gear-js/api';
 import { uploadProgram } from './upload-program';
 import { readFileSync } from 'fs';
-import dotenv from 'dotenv';
-dotenv.config();
+import { join } from 'path';
+import { config } from './config';
 
-const main = async () => {
+export const readState = async () => {
   const api = await GearApi.create();
-  const alice = GearKeyring.fromSuri('//Alice');
-  const meta = await getWasmMetadata(readFileSync(process.env.READ_STATE_META_PATH));
-  console.log(meta);
-  const programId = await uploadProgram(api, process.env.READ_STATE_PROGRAM_PATH, process.env.READ_STATE_META_PATH);
-  const result = await api.programState.read(
-    programId,
-    readFileSync(process.env.READ_STATE_META_PATH),
-    CreateType.encode(meta.meta_state_input, 1, meta).toU8a().buffer,
+  const metaWasm = readFileSync(join(config.examplesDir, 'demo_meta.meta.wasm'));
+  const programId = await uploadProgram(
+    api,
+    join(config.examplesDir, 'demo_meta.opt.wasm'),
+    join(config.examplesDir, 'demo_meta.meta.wasm'),
   );
-  console.log(result);
+  const state = await api.programState.read(programId, metaWasm, { decimal: 1, hex: [1] });
+  console.log(state.toHuman());
 };
-
-main().then(() => {
-  process.exit(0);
-});
