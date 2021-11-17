@@ -14,7 +14,13 @@ import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 // TODO: (dispatch) fix it later
-export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any) => {
+export const UploadProgram = async (
+  api: any,
+  file: File,
+  opts: UploadProgramModel,
+  dispatch: any,
+  clearFunc: CallableFunction
+) => {
   const apiRequest = new ServerRPCRequestService();
 
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -61,6 +67,7 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
   try {
     // Submit program, receive program ID
     const programId = await api.program.submit(program, meta);
+    clearFunc();
 
     // Trying to sign transaction, receive
     await api.program.signAndSend(keyring, (data: any) => {
