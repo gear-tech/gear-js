@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import ApiReducer from './ApiReduces';
 import BlockReducer from './BlocksReducer';
 import ProgramReducer from './ProgramReducer';
 import userReducer from './userReducer';
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   blocks: BlockReducer,
   notifications: NotificationReducer,
   alert: AlertReducer,
+  api: ApiReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

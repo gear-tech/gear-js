@@ -10,7 +10,7 @@ class NodeApi {
     return this._api;
   }
 
-  private readonly address;
+  private address: string;
 
   private chain: string | null;
 
@@ -25,6 +25,7 @@ class NodeApi {
   }
 
   async init() {
+    this.address = window.localStorage.getItem('node_address') || this.address;
     this._api = await GearApi.create({ providerAddress: this.address });
 
     this.chain = await this._api.chain();
