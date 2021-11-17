@@ -1,6 +1,6 @@
 import { Metadata } from './interfaces';
 
-export async function getWasmMetadata(wasmBytes: Buffer, pages?: any): Promise<Metadata> {
+export async function getWasmMetadata(wasmBytes: Buffer, pages?: any, inputValue?: Uint8Array): Promise<Metadata> {
   const memory = new WebAssembly.Memory({ initial: pages ? Object.keys(pages).length : 256 });
   const importObj = {
     env: {
@@ -22,11 +22,15 @@ export async function getWasmMetadata(wasmBytes: Buffer, pages?: any): Promise<M
       },
       free: (_pages) => {},
       gr_debug: (msg) => {
-        console.log(msg);
+        console.log('GR_DEBUG: ', msg);
       },
       gr_msg_id: () => {},
-      gr_size: () => {},
-      gr_read: () => {},
+      gr_size: () => {
+        return inputValue.byteLength;
+      },
+      gr_read: (at: number, len: number, dest: number) => {
+        new Uint8Array(memory.buffer).set(inputValue.slice(at, len), dest);
+      },
       gr_source: () => {},
       gr_gas_available: () => {},
       gr_send: () => {},
@@ -53,7 +57,6 @@ export async function getWasmMetadata(wasmBytes: Buffer, pages?: any): Promise<M
         new Uint8Array(memory.buffer)[i] = page[i % 65536];
       }
     });
-
   const exports = module.instance.exports;
   if (!exports) {
     return {};

@@ -31,7 +31,7 @@ export class GearProgramState {
   /**
    * Get list of pages for program
    * @param programId
-   * @param pagesList
+   * @param pagesList - list with pages numbers
    * @returns
    */
   async gPages(programId: ProgramId, pagesList: u32[]): Promise<IGearPages> {
@@ -52,12 +52,12 @@ export class GearProgramState {
 
   /**
    * Decode state to meta_state_output type
-   * @param metaWasm
-   * @param pages
-   * @returns
+   * @param metaWasm - file with metadata
+   * @param pages - pages with program state
+   * @returns decoded state
    */
-  async decodeState(metaWasm: Buffer, pages: IGearPages): Promise<Codec> {
-    const meta = await getWasmMetadata(metaWasm, pages);
+  async decodeState(metaWasm: Buffer, pages: IGearPages, encodedInput?: Uint8Array): Promise<Codec> {
+    const meta = await getWasmMetadata(metaWasm, pages, encodedInput);
     if (!meta.meta_state_output) {
       throw new ReadStateError(`Can't read state. meta_state_output type is not specified in metadata`);
     } else if (!meta.meta_state) {
@@ -69,14 +69,29 @@ export class GearProgramState {
   }
 
   /**
+   * Encode input parameters to read meta state
+   * @param metaWasm - file with metadata
+   * @param inputValue - input parameters
+   * @returns ArrayBuffer with encoded data
+   */
+  async encodeInput(metaWasm: Buffer, inputValue: any): Promise<Uint8Array> {
+    const meta = await getWasmMetadata(metaWasm);
+    const encoded = CreateType.encode(meta.meta_state_input, inputValue, meta);
+    return encoded.toU8a();
+  }
+
+  /**
    * Read state of program
    * @param programId
-   * @param metaWasm
-   * @returns
+   * @param metaWasm - file with metadata
+   * @returns decoded state
    */
-  async read(programId: ProgramId, metaWasm: Buffer) {
+  async read(programId: ProgramId, metaWasm: Buffer, inputValue?: any): Promise<Codec> {
     const program = await this.gProg(programId);
     const pages = await this.gPages(programId, program.persistent_pages);
-    return await this.decodeState(metaWasm, pages);
+
+    const encodedInput = inputValue ? await this.encodeInput(metaWasm, inputValue) : undefined;
+
+    return await this.decodeState(metaWasm, pages, encodedInput);
   }
 }
