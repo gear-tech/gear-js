@@ -7,9 +7,6 @@ import { routes } from 'routes';
 import { LogoIcon, LogoutIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
-import { Modal } from '../Modal';
-import { Keyring } from '../Keyring';
-import { RestoreJson } from '../RestoreJson';
 import { Wallet } from '../Wallet';
 
 import './Header.scss';
@@ -28,7 +25,6 @@ export const Header: VFC = () => {
   const { countUnread } = useSelector((state: RootState) => state.notifications);
 
   const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   let userInfo = '';
   const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
@@ -45,18 +41,6 @@ export const Header: VFC = () => {
     setIsMobileMenuOpened(!isMobileMenuOpened);
   };
 
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
-
-  useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
   return (
     <header className="header">
       <Link to={routes.main} className="header__logo">
@@ -72,11 +56,12 @@ export const Header: VFC = () => {
             )) ||
               null}
           </Link> */}
-          <Wallet />
-          <div className="user-block--wrapper">
+          {/* <div className="user-block--wrapper">
             <img src={user?.photoUrl ?? githubIcon} alt="avatar" />
             <span className="user-block__name">{userInfo}</span>
-          </div>
+          </div> */}
+
+          <Wallet />
           <Link to={routes.logout} className="user-block__logout" aria-label="menuLink" onClick={handleMenuClick}>
             <LogoutIcon color={headerIconsColor} />
             <span>Sign out</span>
@@ -133,7 +118,6 @@ export const Header: VFC = () => {
           <span />
         </button>
       </div>
-      {isOpen && <Modal content={<Keyring handleClose={toggleModal} />} handleClose={toggleModal} />}
     </header>
   );
 };
