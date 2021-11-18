@@ -156,7 +156,8 @@ export function parseHexTypes(hexTypes: string) {
   let { typesFromTypeDef, namespaces } = CreateType.getTypesFromTypeDef(hexToU8a(hexTypes));
   const result = {};
   namespaces.forEach((value, key) => {
-    result[key] = JSON.parse(replaceNamespaces(typesFromTypeDef[value], namespaces));
+    const replaced = replaceNamespaces(typesFromTypeDef[value], namespaces);
+    result[key] = isJSON(replaced) ? JSON.parse(replaced) : replaced;
   });
   return result;
 }
@@ -207,27 +208,30 @@ export function getTypeStructure(typeName: string, types: any) {
       return getTypeStructure(stdType, types);
     }
   }
-
-  const type = toJSON(JSON.stringify(types[typeName]));
+  const type = isJSON(typeName) ? toJSON(JSON.stringify(types[typeName])) : types[typeName];
 
   // check custom types
   if (!type) {
     return typeName;
   }
 
-  const result = {};
-  Object.keys(type).forEach((key: string) => {
-    if (key === '_enum') {
-      result['_enum'] = type[key];
-      Object.keys(result['_enum']).forEach((subKey: string) => {
-        result['_enum'][subKey] = getTypeStructure(result['_enum'][subKey], types);
-      });
-    } else {
-      result[key] =
-        type[key] in types || type[key].match(REGULAR_EXP.angleBracket)
-          ? getTypeStructure(type[key], types)
-          : type[key];
-    }
-  });
-  return result;
+  if (typeof type === 'object') {
+    const result = {};
+    Object.keys(type).forEach((key: string) => {
+      if (key === '_enum') {
+        result['_enum'] = type[key];
+        Object.keys(result['_enum']).forEach((subKey: string) => {
+          result['_enum'][subKey] = getTypeStructure(result['_enum'][subKey], types);
+        });
+      } else {
+        result[key] =
+          type[key] in types || type[key].match(REGULAR_EXP.angleBracket)
+            ? getTypeStructure(type[key], types)
+            : type[key];
+      }
+    });
+    return result;
+  } else {
+    return type;
+  }
 }
