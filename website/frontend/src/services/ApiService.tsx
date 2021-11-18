@@ -14,7 +14,7 @@ import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 // TODO: (dispatch) fix it later
-export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, dispatch: any) => {
+export const UploadProgram = async (api: any, file: File, opts: UploadProgramModel, metaFile: any, dispatch: any) => {
   const apiRequest = new ServerRPCRequestService();
 
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -69,13 +69,14 @@ export const UploadProgram = async (api: any, file: File, opts: UploadProgramMod
         dispatch(programUploadSuccessAction());
         // Send sing message
         const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
-
+        console.log(metaFile);
         apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
           meta: JSON.stringify(meta),
           signature,
           programId,
           name,
           title,
+          metaFile,
         });
       }
     });

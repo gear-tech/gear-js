@@ -27,6 +27,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
+  const [metaWasmFile, setMetaWasmFile] = useState<any>(null);
   const [displayTypes, setDisplayTypes] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
@@ -64,8 +65,11 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleFilesUpload = useCallback(
     async (file) => {
       try {
-        const fileBuffer: any = await readFileAsync(file);
+        const fileBuffer: Buffer = (await readFileAsync(file)) as Buffer;
         const meta = await getWasmMetadata(fileBuffer);
+
+        const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
+        setMetaWasmFile(bufstr);
         setMetaWasm(meta);
         let types = '';
         const parsedTypes = parseHexTypes(meta.types!);
@@ -118,13 +122,13 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         onSubmit={(values: UploadProgramModel) => {
           if (isMetaByFile) {
             dispatch(programUploadStartAction());
-            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, dispatch);
+            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, metaWasmFile, dispatch);
             setDroppedFile(null);
           } else {
             try {
               const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
               dispatch(programUploadStartAction());
-              UploadProgram(api, droppedFile, { ...values, types }, dispatch);
+              UploadProgram(api, droppedFile, { ...values, types }, null, dispatch);
               setDroppedFile(null);
             } catch (err) {
               setWrongJSON(true);
