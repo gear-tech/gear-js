@@ -14,7 +14,14 @@ export class MetadataService {
     private readonly programService: ProgramsService,
   ) {}
 
-  async addMeta(data: { signature: string; meta: string; programId: string; name?: string; title?: string }) {
+  async addMeta(data: {
+    signature: string;
+    meta: string;
+    programId: string;
+    name?: string;
+    title?: string;
+    metaFile?: string;
+  }) {
     const program = await this.programService.findProgram(data.programId);
     if (!program) {
       throw new ProgramNotFound();
@@ -26,6 +33,7 @@ export class MetadataService {
         owner: program.owner,
         meta: data.meta,
         program: program.hash,
+        metaFile: data.metaFile,
       });
       const savedMeta = await this.metaRepo.save(metadata);
       try {
@@ -44,7 +52,7 @@ export class MetadataService {
     }
     const meta = await this.metaRepo.findOne({ program: programId });
     if (meta) {
-      return { program: meta.program, meta: meta.meta };
+      return { program: meta.program, meta: meta.meta, metaFile: meta.metaFile };
     } else {
       throw new MetadataNotFound();
     }
