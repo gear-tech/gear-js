@@ -47,7 +47,7 @@ export const Header: VFC = () => {
       {
         id: 1,
         caption: 'test network',
-        nodes: [{ id: 1, custon: false, isChoose: false, address: 'wss://rpc-node.gear-tech.io:443' }],
+        nodes: [{ id: 1, custom: false, isChoose: false, address: 'wss://rpc-node.gear-tech.io:443' }],
       },
       {
         id: 2,
