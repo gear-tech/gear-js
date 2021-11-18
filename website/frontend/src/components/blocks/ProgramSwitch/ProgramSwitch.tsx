@@ -111,7 +111,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
     const publicKey: any = localStorage.getItem('public_key');
 
     if (api) {
-      api.balance.transferFromAlice(publicKey, 1000000);
+      api.balance.transferFromAlice(publicKey, 5000000000);
     }
   };
 
