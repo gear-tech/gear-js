@@ -48,8 +48,6 @@ export const Recent: VFC = () => {
     programs = [singleProgram];
   }
 
-  console.log(singleProgram);
-
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
@@ -115,8 +113,6 @@ export const Recent: VFC = () => {
       />
     );
   }
-
-  console.log(programs);
 
   return (
     <div className={styles.blockList}>
