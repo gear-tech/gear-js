@@ -3,6 +3,7 @@ import { debugMode } from './debug-mode';
 import { events } from './event-subscribe';
 import { messageReply } from './message-reply';
 import { readMailbox } from './read-mailbox';
+import { uploadProgram } from './upload-program';
 
 const examples = {
   mailbox: readMailbox,
@@ -10,6 +11,7 @@ const examples = {
   events: events,
   debug: debugMode,
   typeStruct: typeStructure,
+  uploadProgram: uploadProgram,
 };
 
 const run = () => {

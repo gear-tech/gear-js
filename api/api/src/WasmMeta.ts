@@ -1,7 +1,7 @@
 import { Metadata } from './interfaces';
 
-export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
-  const memory = new WebAssembly.Memory({ initial: 256, maximum: 512 });
+export async function getWasmMetadata(wasmBytes: Buffer, pages?: any, inputValue?: Uint8Array): Promise<Metadata> {
+  const memory = new WebAssembly.Memory({ initial: pages ? Object.keys(pages).length : 256 });
   const importObj = {
     env: {
       abortStackOverflow: () => {
@@ -22,11 +22,15 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
       },
       free: (_pages) => {},
       gr_debug: (msg) => {
-        console.log(msg);
+        console.log('GR_DEBUG: ', msg);
       },
       gr_msg_id: () => {},
-      gr_size: () => {},
-      gr_read: () => {},
+      gr_size: () => {
+        return inputValue.byteLength;
+      },
+      gr_read: (at: number, len: number, dest: number) => {
+        new Uint8Array(memory.buffer).set(inputValue.slice(at, len), dest);
+      },
       gr_source: () => {},
       gr_gas_available: () => {},
       gr_send: () => {},
@@ -42,49 +46,56 @@ export async function getWasmMetadata(wasmBytes: Buffer): Promise<Metadata> {
       gr_exit_code: () => {},
     },
   };
-  let metadata = {
-    init_input: '',
-    init_output: '',
-    async_init_input: '',
-    async_init_output: '',
-    handle_input: '',
-    handle_output: '',
-    async_handle_input: '',
-    async_handle_output: '',
-    title: '',
-    types: '',
-  };
 
   let module = await WebAssembly.instantiate(wasmBytes, importObj);
-  const instance = module.instance.exports;
-  if (!instance) {
-    return metadata;
+  pages &&
+    Object.keys(pages).forEach((pageNumber: string) => {
+      const start = +pageNumber * 65536;
+      const end = start + 65536;
+      const page = pages[pageNumber];
+      for (let i = start; i < end; i++) {
+        new Uint8Array(memory.buffer)[i] = page[i % 65536];
+      }
+    });
+  const exports = module.instance.exports;
+  if (!exports) {
+    return {};
   }
-  metadata.types = `0x${readMeta(memory, instance.meta_registry)}`;
-  metadata.init_input = readMeta(memory, instance.meta_init_input);
-  metadata.init_output = readMeta(memory, instance.meta_init_output);
-  metadata.async_init_input = readMeta(memory, instance.meta_async_init_input);
-  metadata.async_init_output = readMeta(memory, instance.meta_async_init_output);
-  metadata.handle_input = readMeta(memory, instance.meta_handle_input);
-  metadata.handle_output = readMeta(memory, instance.meta_handle_output);
-  metadata.async_handle_input = readMeta(memory, instance.meta_async_handle_input);
-  metadata.async_handle_output = readMeta(memory, instance.meta_async_handle_output);
-  metadata.title = readMeta(memory, instance.meta_title);
-
+  let metadata: Metadata = {
+    types: `0x${readMeta(memory, exports.meta_registry)}`,
+    init_input: readMeta(memory, exports.meta_init_input),
+    init_output: readMeta(memory, exports.meta_init_output),
+    async_init_input: readMeta(memory, exports.meta_async_init_input),
+    async_init_output: readMeta(memory, exports.meta_async_init_output),
+    handle_input: readMeta(memory, exports.meta_handle_input),
+    handle_output: readMeta(memory, exports.meta_handle_output),
+    async_handle_input: readMeta(memory, exports.meta_async_handle_input),
+    async_handle_output: readMeta(memory, exports.meta_async_handle_output),
+    title: readMeta(memory, exports.meta_title),
+    meta_state_input: readMeta(memory, exports.meta_state_input),
+    meta_state_output: readMeta(memory, exports.meta_state_output),
+    meta_state: pages ? readState(memory, exports.meta_state) : undefined,
+  };
   return metadata;
 }
 
-function readMeta(memory: WebAssembly.Memory, ptr: any): string {
-  if (!ptr) {
-    return '';
+function readMeta(memory: WebAssembly.Memory, func: any): string {
+  return ab2str(readMetaValue(memory, func));
+}
+
+function readState(memory: WebAssembly.Memory, func: any): Uint8Array {
+  return new Uint8Array(readMetaValue(memory, func));
+}
+
+function readMetaValue(memory: WebAssembly.Memory, func: any): ArrayBuffer {
+  if (!func) {
+    return undefined;
   }
-  ptr = ptr();
-  let pointer = new Uint32Array(memory.buffer.slice(ptr, ptr + 4))[0];
-
-  let length = new Uint32Array(memory.buffer.slice(ptr + 4, ptr + 8))[0];
-
+  let result_ptr = func();
+  let pointer = new Uint32Array(memory.buffer.slice(result_ptr, result_ptr + 4))[0];
+  let length = new Uint32Array(memory.buffer.slice(result_ptr + 4, result_ptr + 8))[0];
   let buf = memory.buffer.slice(pointer, pointer + length);
-  return ab2str(buf);
+  return buf;
 }
 
 function ab2str(buf: ArrayBuffer): string {

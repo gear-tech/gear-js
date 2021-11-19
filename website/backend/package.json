@@ -22,7 +22,7 @@
     "types:lint": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@gear-js/api": "^0.7.2",
+    "@gear-js/api": "^0.8.4",
     "@nestjs/common": "^8.0.6",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.6",
@@ -38,7 +38,7 @@
     "@nestjs/websockets": "^8.0.6",
     "@open-rpc/schema-utils-js": "^1.15.0",
     "@open-rpc/server-js": "^1.9.0",
-    "@polkadot/api": "^6.1.1",
+    "@polkadot/api": "^6.7.2",
     "@polkadot/keyring": "^7.3.1",
     "@polkadot/util": "^7.4.1",
     "@polkadot/util-crypto": "^7.4.1",

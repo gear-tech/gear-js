@@ -24,11 +24,11 @@ export class GearMessageReply {
       value?: BalanceOf | AnyNumber;
     },
     meta: Metadata,
-    messageType?: string
+    messageType?: string,
   ) {
     let payload: Bytes | Uint8Array | string;
 
-    payload = this.createType.encode(messageType || meta.async_handle_input, message.payload, meta);
+    payload = this.createType.create(messageType || meta.async_handle_input, message.payload, meta).toHex();
 
     try {
       this.reply = this.api.tx.gear.sendReply(message.toId, payload, message.gasLimit, message.value);
@@ -58,11 +58,11 @@ export class GearMessageReply {
             .forEach(
               ({
                 event: {
-                  data: [error]
-                }
+                  data: [error],
+                },
               }) => {
                 reject(new TransactionError(`${error.toString()}`));
-              }
+              },
             );
 
           events
@@ -72,7 +72,7 @@ export class GearMessageReply {
                 method,
                 status: status.type,
                 blockHash,
-                messageId: data.toHuman()[0]
+                messageId: data.toHuman()[0],
               });
             });
         });

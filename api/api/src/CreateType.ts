@@ -77,12 +77,12 @@ export class CreateType {
     const portableReg = new PortableRegistry(registry, types);
     portableReg.types.forEach(({ id, type: { path } }) => {
       const typeDef = portableReg.getTypeDef(id);
-      if (path.length === 0 || !typeDef.lookupName) {
+      if (path.length === 0 || (!typeDef.lookupName && !typeDef.lookupNameRoot)) {
         return;
       }
       const name = portableReg.getName(id);
       namespaces.set(name.replace(toCamelCase(path.slice(0, path.length - 1)), ''), name);
-      typesFromTypeDef[typeDef.lookupName] = typeDef.type.toString();
+      typesFromTypeDef[typeDef.lookupName || typeDef.lookupNameRoot] = typeDef.type.toString();
     });
     return { typesFromTypeDef, namespaces };
   }
@@ -102,72 +102,45 @@ export class CreateType {
     return type;
   }
 
-  encode(type: any, payload: any, meta?: Metadata): Bytes {
+  create(type: any, payload: any, meta?: Metadata): Codec {
     type = this.checkTypePayload(type, payload);
-
-    if (payload instanceof Bytes) return payload;
-
     const namespaces = meta?.types ? this.createRegistry(meta.types) : this.createRegistry();
+
     if (isJSON(type)) {
       const types = toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`);
       this.registerTypes(types);
-      return this.toBytes('Custom', toJSON(payload));
+      return this.createType('Custom', toJSON(payload));
     } else {
-      return this.toBytes(
+      return this.createType(
         namespaces ? setNamespaces(type, namespaces) : type,
         isJSON(payload) ? toJSON(payload) : payload,
       );
     }
   }
 
-  decode(type: string, payload: any, meta?: Metadata): any {
-    type = this.checkTypePayload(type, payload);
-
-    const namespaces = meta?.types ? this.createRegistry(meta.types) : this.createRegistry();
-
-    if (isJSON(type)) {
-      const types = toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`);
-      this.registerTypes(types);
-      return this.fromBytes('Custom', toJSON(payload));
-    } else {
-      return this.fromBytes(
-        namespaces ? setNamespaces(type, namespaces) : type,
-        isJSON(payload) ? toJSON(payload) : payload,
-      );
-    }
-  }
-
-  static encode(type: any, payload: any, meta?: Metadata): Bytes {
+  static encode(type: any, payload: any, meta?: Metadata): Codec {
     const createType = new CreateType();
-    return createType.encode(type, payload, meta);
+    return createType.create(type, payload, meta);
   }
 
-  static decode(type: string, payload: any, meta?: Metadata): any {
+  static decode(type: string, payload: any, meta?: Metadata): Codec {
     const createType = new CreateType();
-    return createType.decode(type, payload, meta);
+    return createType.create(type, payload, meta);
   }
 
-  private toBytes(type: any, data: any): Bytes {
+  private createType(type: any, data: any): Codec {
     if (typeIsString(type, data)) {
-      return this.registry.createType('Bytes', Array.from(this.registry.createType('String', data).toU8a()));
+      return this.registry.createType('String', data);
     } else if (type.toLowerCase() === 'bytes') {
       if (data instanceof Uint8Array) {
         return this.registry.createType('Bytes', Array.from(data));
+      } else if (data instanceof Bytes) {
+        return data;
       }
       return this.registry.createType('Bytes', data);
     } else {
-      return this.registry.createType('Bytes', Array.from(this.registry.createType(type, data).toU8a()));
+      return this.registry.createType(type, data);
     }
-  }
-
-  private fromBytes(type: string, data: Bytes): Codec {
-    if (typeIsString(type)) {
-      const decoded = this.registry.createType('String', data);
-      return this.registry.createType('Bytes', Array.from(decoded.toU8a().slice(2)));
-    } else if (type.toLowerCase() === 'bytes') {
-      return data;
-    }
-    return this.registry.createType(type, data);
   }
 }
 
@@ -183,7 +156,8 @@ export function parseHexTypes(hexTypes: string) {
   let { typesFromTypeDef, namespaces } = CreateType.getTypesFromTypeDef(hexToU8a(hexTypes));
   const result = {};
   namespaces.forEach((value, key) => {
-    result[key] = JSON.parse(replaceNamespaces(typesFromTypeDef[value], namespaces));
+    const replaced = replaceNamespaces(typesFromTypeDef[value], namespaces);
+    result[key] = isJSON(replaced) ? JSON.parse(replaced) : replaced;
   });
   return result;
 }
@@ -234,27 +208,30 @@ export function getTypeStructure(typeName: string, types: any) {
       return getTypeStructure(stdType, types);
     }
   }
-
-  const type = toJSON(JSON.stringify(types[typeName]));
+  const type = isJSON(typeName) ? toJSON(JSON.stringify(types[typeName])) : types[typeName];
 
   // check custom types
   if (!type) {
     return typeName;
   }
 
-  const result = {};
-  Object.keys(type).forEach((key: string) => {
-    if (key === '_enum') {
-      result['_enum'] = type[key];
-      Object.keys(result['_enum']).forEach((subKey: string) => {
-        result['_enum'][subKey] = getTypeStructure(result['_enum'][subKey], types);
-      });
-    } else {
-      result[key] =
-        type[key] in types || type[key].match(REGULAR_EXP.angleBracket)
-          ? getTypeStructure(type[key], types)
-          : type[key];
-    }
-  });
-  return result;
+  if (typeof type === 'object') {
+    const result = {};
+    Object.keys(type).forEach((key: string) => {
+      if (key === '_enum') {
+        result['_enum'] = type[key];
+        Object.keys(result['_enum']).forEach((subKey: string) => {
+          result['_enum'][subKey] = getTypeStructure(result['_enum'][subKey], types);
+        });
+      } else {
+        result[key] =
+          type[key] in types || type[key].match(REGULAR_EXP.angleBracket)
+            ? getTypeStructure(type[key], types)
+            : type[key];
+      }
+    });
+    return result;
+  } else {
+    return type;
+  }
 }

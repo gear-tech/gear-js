@@ -57,6 +57,14 @@
       margin-left: 0;
     }
   }
+
+  .programLink {
+    text-decoration: none;
+    color: #ffffff;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .programsCopyId {

@@ -14,10 +14,12 @@ import { readFileAsync } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 // TODO: (dispatch) fix it later
+
 export const UploadProgram = async (
   api: any,
   file: File,
   opts: UploadProgramModel,
+  metaFile: any,
   dispatch: any,
   clearFunc: CallableFunction
 ) => {
@@ -76,13 +78,14 @@ export const UploadProgram = async (
         dispatch(programUploadSuccessAction());
         // Send sing message
         const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
-
+        console.log(metaFile);
         apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
           meta: JSON.stringify(meta),
           signature,
           programId,
           name,
           title,
+          metaFile,
         });
       }
     });
