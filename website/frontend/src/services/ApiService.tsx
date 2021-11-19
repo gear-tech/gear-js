@@ -21,7 +21,7 @@ export const UploadProgram = async (
   opts: UploadProgramModel,
   metaFile: any,
   dispatch: any,
-  clearFunc: CallableFunction
+  clearFunc: () => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
 
