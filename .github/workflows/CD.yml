@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [master, 'do-fix-build-back']
+    branches: [master]
 
 env:
   CARGO_TERM_COLOR: always
