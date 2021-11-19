@@ -69,12 +69,12 @@ export const UploadProgram = async (
   try {
     // Submit program, receive program ID
     const programId = await api.program.submit(program, meta);
-    clearFunc();
 
     // Trying to sign transaction, receive
     await api.program.signAndSend(keyring, (data: any) => {
       dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `UPLOAD STATUS: ${data.status}` }));
       if (data.status === 'Finalized') {
+        clearFunc();
         dispatch(programUploadSuccessAction());
         // Send sing message
         const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
