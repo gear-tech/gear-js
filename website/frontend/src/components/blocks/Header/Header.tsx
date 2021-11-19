@@ -1,9 +1,11 @@
 import React, { useState, useEffect, VFC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
+import { copyToClipboard } from 'helpers';
 import { LogoIcon, LogoutIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
@@ -11,6 +13,8 @@ import close from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import selected from 'assets/images/radio-selected.svg';
 import deselected from 'assets/images/radio-deselected.svg';
+import cancel from 'assets/images/remove-query.svg';
+import copy from 'assets/images/copy.svg';
 import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
 import { RestoreJson } from '../RestoreJson';
@@ -23,6 +27,8 @@ import githubIcon from '../../../assets/images/github_gray.svg';
 export const Header: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const alert = useAlert();
+
   let showUser =
     [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.notifications].indexOf(location.pathname) > -1;
   if (routes.program.split('/')[1] === location.pathname.split('/')[1]) {
@@ -41,12 +47,12 @@ export const Header: VFC = () => {
       {
         id: 1,
         caption: 'test network',
-        nodes: [{ id: 1, isChoose: false, address: 'wss://rpc-node.gear-tech.io:443' }],
+        nodes: [{ id: 1, custom: false, isChoose: false, address: 'wss://rpc-node.gear-tech.io:443' }],
       },
       {
         id: 2,
         caption: 'development',
-        nodes: [{ id: 2, isChoose: false, address: 'ws://localhost:9944' }],
+        nodes: [{ id: 2, custom: false, isChoose: false, address: 'ws://localhost:9944' }],
       },
     ];
   }
@@ -120,6 +126,7 @@ export const Header: VFC = () => {
   const handleAddNode = () => {
     const nodeToAdd = {
       id: nodes[1].nodes.length + 2,
+      custom: true,
       isChoose: false,
       address: newNode,
     };
@@ -129,6 +136,23 @@ export const Header: VFC = () => {
         const el = elem;
         if (el.caption === 'development') {
           el.nodes.push(nodeToAdd);
+          localStorage.setItem('nodes', JSON.stringify(nodes));
+        }
+        return el;
+      })
+    );
+  };
+
+  const handleRemoveNode = (id: number) => {
+    let allDevNodes = [...nodes[1].nodes];
+
+    allDevNodes = allDevNodes.filter((el) => el.id !== id);
+
+    setNodes((elems: any) =>
+      elems.map((elem: any) => {
+        const el = elem;
+        if (el.caption === 'development') {
+          el.nodes = allDevNodes;
           localStorage.setItem('nodes', JSON.stringify(nodes));
         }
         return el;
@@ -319,10 +343,34 @@ export const Header: VFC = () => {
                       nodeItem.nodes.length &&
                       nodeItem.nodes.map((node: any) => (
                         <li key={node.id} className="nodes__item-elem">
-                          <button className="nodes__item-choose" type="button" onClick={() => handleCheckNode(node.id)}>
-                            <img src={node.isChoose ? selected : deselected} alt="radio" />
-                            <span className="nodes__item-text">{node.address}</span>
-                          </button>
+                          <div className="nodes__item-choose">
+                            <button className="nodes__item-btn" type="button" onClick={() => handleCheckNode(node.id)}>
+                              <img
+                                className="nodes__item-icon"
+                                src={node.isChoose ? selected : deselected}
+                                alt="radio"
+                              />
+                              <span className="nodes__item-text">{node.address}</span>
+                            </button>
+                          </div>
+                          <div className="nodes__item-btns">
+                            <button
+                              className="nodes__item-btn"
+                              type="button"
+                              onClick={() => copyToClipboard(node.address, alert, 'Node address copied')}
+                            >
+                              <img className="nodes__item-icon" src={copy} alt="copy node address" />
+                            </button>
+                            {node.custom && (
+                              <button
+                                className="nodes__item-btn"
+                                type="button"
+                                onClick={() => handleRemoveNode(node.id)}
+                              >
+                                <img className="nodes__item-icon" alt="cancel" src={cancel} />
+                              </button>
+                            )}
+                          </div>
                         </li>
                       ))}
                   </ul>
