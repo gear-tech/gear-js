@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import ApiReducer from './ApiReduces';
+import AccountReducer from './AlertReducer';
 import BlockReducer from './BlocksReducer';
 import ProgramReducer from './ProgramReducer';
 import userReducer from './userReducer';
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   notifications: NotificationReducer,
   alert: AlertReducer,
   api: ApiReducer,
+  account: AccountReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
