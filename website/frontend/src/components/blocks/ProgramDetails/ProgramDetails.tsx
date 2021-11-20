@@ -122,22 +122,23 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         onSubmit={(values: UploadProgramModel) => {
           if (isMetaByFile) {
             dispatch(programUploadStartAction());
-            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, metaWasmFile, dispatch);
+            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, metaWasmFile, dispatch, () => {
+              setDroppedFile(null);
+            });
             setDroppedFile(null);
           } else {
             try {
               const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
               dispatch(programUploadStartAction());
-              UploadProgram(api, droppedFile, { ...values, types }, null, dispatch);
+              UploadProgram(api, droppedFile, { ...values, types }, null, dispatch, () => {
+                setDroppedFile(null);
+              });
               setDroppedFile(null);
             } catch (err) {
               setWrongJSON(true);
               console.log(err);
             }
           }
-        }}
-        onReset={() => {
-          setDroppedFile(null);
         }}
       >
         {({ errors, touched, setFieldValue, values }) => (
