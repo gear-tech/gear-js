@@ -5,7 +5,7 @@ import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { AddAlert } from 'store/actions/actions';
 import { EventTypes } from 'types/events';
-import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS, GEAR_STORAGE_KEY } from 'consts';
+import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
@@ -22,6 +22,8 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const apiRequest = new ServerRPCRequestService();
 
   const [api] = useApi();
+
+  const chain = localStorage.getItem('chain');
 
   const [timeInstance, setTimeInstance] = useState(0);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
@@ -89,14 +91,10 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
 
   const handleTransferBalance = async () => {
     try {
-      const response = await apiRequest.getResource(
-        RPC_METHODS.BALANCE_TRANSFER,
-        {
-          publicKey: `${localStorage.getItem('public_key')}`,
-          value: GEAR_BALANCE_TRANSFER_VALUE,
-        },
-        { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
-      );
+      const response = await apiRequest.getResource(RPC_METHODS.BALANCE_TRANSFER, {
+        publicKey: `${localStorage.getItem('public_key')}`,
+        value: GEAR_BALANCE_TRANSFER_VALUE,
+      });
 
       if (response.error) {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: `${response.error.message}` }));
@@ -106,6 +104,14 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
       setGasCallCounter(gasCallCounter + 1);
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+    }
+  };
+
+  const handleTransferBalanceFromAlice = () => {
+    const publicKey: any = localStorage.getItem('public_key');
+
+    if (api) {
+      api.balance.transferFromAlice(publicKey, 5000000000);
     }
   };
 
@@ -170,7 +176,11 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         </div> */}
         <div className="switch-block--transfer">
           {gasCallCounter <= 3 ? (
-            <button className="switch-block--transfer__btn" type="button" onClick={handleTransferBalance}>
+            <button
+              className="switch-block--transfer__btn"
+              type="button"
+              onClick={chain === 'Development' ? handleTransferBalanceFromAlice : handleTransferBalance}
+            >
               Get test balance
             </button>
           ) : (
