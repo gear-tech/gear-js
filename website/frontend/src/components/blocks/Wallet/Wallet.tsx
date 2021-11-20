@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { useDispatch, useSelector } from 'react-redux';
 import Identicon from '@polkadot/react-identicon';
+import { LogoutIcon } from 'assets/Icons';
 import { RootState } from 'store/reducers';
 import { setCurrentAccount, resetCurrentAccount } from 'store/actions/actions';
 import { UserAccount } from '../../../types/account';
@@ -78,7 +79,6 @@ export const Wallet = () => {
         acc.isActive = false;
         if (i === index) {
           acc.isActive = true;
-          console.log(1);
           localStorage.setItem('savedAccount', acc.address);
         }
       });
@@ -86,10 +86,10 @@ export const Wallet = () => {
     }
   };
 
-  // const handleLogout = () => {
-  //   setAccount(null);
-  //   localStorage.removeItem('savedAccount');
-  // };
+  const handleLogout = () => {
+    dispatch(resetCurrentAccount());
+    localStorage.removeItem('savedAccount');
+  };
 
   return (
     <>
@@ -100,6 +100,9 @@ export const Wallet = () => {
             <button type="button" className="user-wallet__user-info" onClick={toggleModal}>
               <Identicon value={currentAccount.address} size={25} theme="polkadot" />
               <span className="user-wallet__name">{currentAccount.meta.name}</span>
+            </button>
+            <button type="button" className="user-wallet__logout" aria-label="menuLink" onClick={handleLogout}>
+              <LogoutIcon color="#ffffff" />
             </button>
           </>
         )) || (
