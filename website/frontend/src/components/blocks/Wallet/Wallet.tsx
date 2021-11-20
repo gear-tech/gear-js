@@ -1,44 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { useDispatch, useSelector } from 'react-redux';
 import Identicon from '@polkadot/react-identicon';
-import { useAlert } from 'react-alert';
+import { RootState } from 'store/reducers';
+import { setCurrentAccount, resetCurrentAccount } from 'store/actions/actions';
+import { UserAccount } from '../../../types/account';
 import { useApi } from '../../../hooks/useApi';
 import { Modal } from '../Modal';
 import { AccountList } from '../AccountList';
 
 import './Wallet.scss';
 
-interface UserAccounts extends InjectedAccountWithMeta {
-  isActive?: boolean;
-}
-
 export const Wallet = () => {
-  const [ingectedAccounts, setIngectedAccounts] = useState<Array<UserAccounts> | null>(null);
-  const [currentAccount, setCurrentAccount] = useState<UserAccounts | null>(null);
+  const [ingectedAccounts, setIngectedAccounts] = useState<Array<UserAccount> | null>(null);
   const [freeBalance, setFreeBalance] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const alert = useAlert();
   const [api] = useApi();
+  const dispatch = useDispatch();
+  const currentAccount = useSelector((state: RootState) => state.account.account);
 
   useEffect(() => {
     const getAllAccounts = async () => {
       const extensions = await web3Enable('Gear Tech');
-      console.log(extensions);
 
       // if extansion does not exist
       if (extensions.length === 0) {
-        console.log('extansion does not exist');
         return;
       }
-
       const allAccounts = await web3Accounts();
 
-      allAccounts.forEach((acc: UserAccounts) => {
+      allAccounts.forEach((acc: UserAccount) => {
         if (acc.address === localStorage.getItem('savedAccount')) {
           acc.isActive = true;
-          setCurrentAccount(acc);
+          dispatch(setCurrentAccount(acc));
         }
       });
       setIngectedAccounts(allAccounts);
@@ -48,7 +43,7 @@ export const Wallet = () => {
     setTimeout(() => {
       getAllAccounts();
     }, 100);
-  }, []);
+  }, [dispatch]);
 
   // Get free balance for the chosen account
 
@@ -61,7 +56,7 @@ export const Wallet = () => {
     if (currentAccount && api) {
       getBalance(currentAccount.address);
     }
-  }, [currentAccount, api]);
+  }, [currentAccount, api, dispatch]);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -76,18 +71,18 @@ export const Wallet = () => {
   }, [isOpen]);
 
   // Setting current account and save it into the LocalStage
-  const selectAccount = (event: any, index: number) => {
+  const selectAccount = (event: MouseEvent, index: number) => {
     event.stopPropagation();
     if (ingectedAccounts) {
-      ingectedAccounts.forEach((acc: any, i: any) => {
+      ingectedAccounts.forEach((acc: UserAccount, i: number) => {
         acc.isActive = false;
         if (i === index) {
           acc.isActive = true;
+          console.log(1);
           localStorage.setItem('savedAccount', acc.address);
-          console.log(acc);
         }
       });
-      setCurrentAccount(ingectedAccounts[index]);
+      dispatch(setCurrentAccount(ingectedAccounts[index]));
     }
   };
 

@@ -3,7 +3,7 @@ import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import NumberFormat from 'react-number-format';
 import { UploadProgramModel } from 'types/program';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { UploadProgram } from 'services/ApiService';
 import { EventTypes } from 'types/events';
 import { AddAlert, programUploadStartAction } from 'store/actions/actions';
@@ -13,6 +13,7 @@ import cancel from 'assets/images/cancel.svg';
 import close from 'assets/images/close.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
+import { RootState } from 'store/reducers';
 import { Schema } from './Schema';
 import { readFileAsync } from '../../../helpers';
 import { useApi } from '../../../hooks/useApi';
@@ -60,6 +61,9 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const uploadMetaFile = () => {
     metaFieldRef.current?.click();
   };
+
+  const currentAccount = useSelector((state: RootState) => state.account.account);
+  console.log(currentAccount);
 
   const handleFilesUpload = useCallback(
     async (file) => {

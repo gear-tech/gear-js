@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import ApiReducer from './ApiReduces';
-import AccountReducer from './AlertReducer';
+import AccountReducer from './AccountReducer';
 import BlockReducer from './BlocksReducer';
 import ProgramReducer from './ProgramReducer';
 import userReducer from './userReducer';

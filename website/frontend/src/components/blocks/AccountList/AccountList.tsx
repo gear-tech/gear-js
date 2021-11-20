@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Identicon from '@polkadot/react-identicon';
 import clsx from 'clsx';
-import { toShortAddress, copyToClipboard } from '../../../helpers';
+import { UserAccount } from '../../../types/account';
+import { toShortAddress } from '../../../helpers';
 
 import './AccountList.scss';
 
 type Props = {
-  list: any;
+  list: Array<UserAccount>;
   toggleAccount: (event: any, index: number) => void;
 };
 
 export const AccountList = ({ list, toggleAccount }: Props) => {
-  const accountItem = list.map((account: any, index: number) => (
+  const accountItem = list.map((account: UserAccount, index: number) => (
     <button
       type="button"
       className={clsx('account-list__item', account.isActive && 'active')}
