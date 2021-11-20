@@ -55,9 +55,13 @@
 }
 
 .modal__title {
+  font-family: 'Syncopate', sans-serif;
+  font-weight: bold;
   font-size: 1.6em;
-  font-weight: 400;
-  text-align: center;
+  color: #fff;
+  line-height: 150%;
+  padding: 0 0 30px;
+  margin: 0;
 }
 
 @media (max-width: 768px) {
