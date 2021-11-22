@@ -47,16 +47,21 @@ export const Program: VFC = () => {
 
   useEffect(() => {
     if (program) {
-      const parsedMeta: Metadata = JSON.parse(program.meta.meta as string);
-      const displayedTypes = parseHexTypes(parsedMeta.types!);
-      const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
+      let meta = '';
+
+      if (program.meta) {
+        const parsedMeta: Metadata = JSON.parse(program.meta.meta as string);
+        const displayedTypes = parseHexTypes(parsedMeta.types!);
+        const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
+        meta = JSON.stringify(inputType, null, 4);
+      }
 
       setData({
         id: program.hash,
         name: program.name ? program.name : '...',
         title: program.title ? program.title : '...',
         uploadedAt: program.uploadedAt ? formatDate(String(program.uploadedAt)) : '...',
-        meta: JSON.stringify(inputType, null, 4),
+        meta,
       });
     }
     return () => {
