@@ -1,5 +1,8 @@
 ---
 #Install/update backend docker-compose
+- name: Create kafka dir
+  file: path=/home/ec2-user/kafka state=kafka mode=0755
+  
 - name: Copy docker-compose
   copy:
     src: docker-compose.yaml
