@@ -1,0 +1,26 @@
+title: guestbook
+
+file: guestbook.meta.wasm
+
+types:
+  handle_input: Action
+  handle_output: Vec<MessageIn>
+displayed_types:
+  Action:
+    _enum:
+      AddMessage: MessageIn
+      ViewMessages: 'Null'
+  MessageIn:
+    author: Text
+    msg: Text
+payloads:
+  handle_input:
+    - name: AddMessage
+      type: Action
+      payload:
+        AddMessage:
+          author: Dmitriy
+          msg: Hello World!
+    - name: ViewMessages
+      type: Action
+      payload: ViewMessages

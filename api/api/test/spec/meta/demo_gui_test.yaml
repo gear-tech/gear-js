@@ -1,0 +1,43 @@
+title: demo_gui_test
+
+file: demo_gui_test.meta.wasm
+
+types:
+  init_input: Action<AStruct, Option<CustomStruct<u8>>, BTreeMap<String, u8>>
+  init_output: Result<u8, Option<String>>
+  handle_input: (BTreeMap<String, u8>, Option<(Option<u8>, u128, [u8; 3])>)
+  handle_output: CustomStruct<Option<(Option<u8>, u128, [u8; 3])>>
+displayed_types:
+  Action:
+    _enum:
+      AVariant: AStruct
+      BVar: Option<CustomStructU8>
+      CVariant: BTreeMap<Text, u8>
+  AStruct:
+    id: Bytes
+    online: bool
+  CustomStructU8:
+    field: u8
+  CustomStructOption:
+    field: Option<(Option<u8>,u128,[u8;3])>
+payloads:
+  init_input:
+    - name: AVariant
+      type: Action<AStruct, Option<CustomStruct<u8>>, BTreeMap<String, u8>>
+      payload:
+        AVariant:
+          id: '0xb4f60831c285b33f98587ef4818fe5db691bbb415c59c5859164ced6287a38c3'
+          online: false
+    # - name: BVar
+    #   type: Action<AStruct, Option<CustomStruct<u8>>, BTreeMap<String, u8>>
+    #   payload:
+    #     BVar:
+    #       CustomStructU8:
+    #         field: 8
+    # - name: CVariant
+    #   type: Action<AStruct, Option<CustomStruct<u8>>, BTreeMap<String, u8>>
+    #   payload:
+    #     CVariant:
+    #       a: 1
+    #       b: 2
+    #       c: 3

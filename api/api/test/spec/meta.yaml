@@ -20,6 +20,15 @@ files:
         field: u8
       CustomStructOption:
         field: Option<(Option<u8>,u128,[u8;3])>
+    payloads:
+      encode:
+        init:
+          - name: init_input
+            type: Action<AStruct, Option<CustomStruct<u8>>, BTreeMap<String, u8>>
+            payload:
+              AStruct:
+                id: 0x00000021
+                online: false
 
   - name: guestbook.meta.wasm
     types:
