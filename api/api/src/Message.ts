@@ -13,7 +13,7 @@ export class GearMessage extends GearTransaction {
   ): any {
     let payload: Bytes | Uint8Array | string;
 
-    payload = this.createType.encode(messageType || meta.handle_input, message.payload, meta);
+    payload = this.createType.create(messageType || meta.handle_input, message.payload, meta).toHex();
 
     try {
       this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);

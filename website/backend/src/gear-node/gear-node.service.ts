@@ -14,6 +14,7 @@ export class GearNodeService {
   constructor(private readonly programService: ProgramsService, private readonly subscription: GearNodeEvents) {
     GearApi.create({ providerAddress: process.env.WS_PROVIDER }).then(async (api) => {
       this.api = api;
+      logger.log(`Connected to ${await api.chain()}. Address: ${process.env.WS_PROVIDER}`);
       const accountSeed = process.env.ACCOUNT_SEED;
       try {
         this.rootKeyring = accountSeed
@@ -32,16 +33,16 @@ export class GearNodeService {
   }
 
   async updateSiteAccountBalance() {
-    const currentBalance = (await this.api.balance.findOut(this.rootKeyring.address)).toNumber();
+    const currentBalance = await this.api.balance.findOut(this.rootKeyring.address);
     const siteAccBalance = +process.env.SITE_ACCOUNT_BALANCE;
-    if (currentBalance < siteAccBalance) {
+    if (currentBalance.lten(siteAccBalance)) {
       const sudoKeyring = parseInt(process.env.DEBUG)
         ? GearKeyring.fromSuri('//Alice', 'Alice default')
         : await GearKeyring.fromSeed(process.env.SUDO_SEED, 'websiteAccount');
       await this.api.balance.transferBalance(
         sudoKeyring,
         this.rootKeyring.address,
-        siteAccBalance - currentBalance,
+        siteAccBalance - currentBalance.toNumber(),
         () => {},
       );
     }

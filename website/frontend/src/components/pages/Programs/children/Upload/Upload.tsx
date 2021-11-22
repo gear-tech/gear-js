@@ -13,7 +13,6 @@ export const Upload = () => {
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
 
-  // const [droppedFile, setDroppedFile] = useState<File[]>([]);
   const [wrongFormat, setWrongFormat] = useState(false);
   const [droppedFile, setDroppedFile] = useState<File | null>(null);
 

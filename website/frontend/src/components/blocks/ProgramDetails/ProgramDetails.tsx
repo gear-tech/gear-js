@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, VFC } from 'react';
 import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
+import NumberFormat from 'react-number-format';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch } from 'react-redux';
 import { UploadProgram } from 'services/ApiService';
@@ -26,6 +27,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
+  const [metaWasmFile, setMetaWasmFile] = useState<any>(null);
   const [displayTypes, setDisplayTypes] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
@@ -63,9 +65,11 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleFilesUpload = useCallback(
     async (file) => {
       try {
-        const fileBuffer: any = await readFileAsync(file);
+        const fileBuffer: Buffer = (await readFileAsync(file)) as Buffer;
         const meta = await getWasmMetadata(fileBuffer);
-        console.log(meta);
+
+        const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
+        setMetaWasmFile(bufstr);
         setMetaWasm(meta);
         let types = '';
         const parsedTypes = parseHexTypes(meta.types!);
@@ -108,13 +112,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     }
   };
 
-  // const prettyPrint = () => {
-  //   const ugly = (document.getElementById('types') as HTMLInputElement).value;
-  //   const obj = JSON.parse(ugly);
-  //   const pretty = JSON.stringify(obj, undefined, 4);
-  //   (document.getElementById('types') as HTMLInputElement).innerText = pretty;
-  // };
-
   return (
     <div className="program-details">
       <h3 className="program-details__header">UPLOAD NEW PROGRAM</h3>
@@ -125,13 +122,17 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         onSubmit={(values: UploadProgramModel) => {
           if (isMetaByFile) {
             dispatch(programUploadStartAction());
-            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, dispatch);
+            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, metaWasmFile, dispatch, () => {
+              setDroppedFile(null);
+            });
             setDroppedFile(null);
           } else {
             try {
               const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
               dispatch(programUploadStartAction());
-              UploadProgram(api, droppedFile, { ...values, types }, dispatch);
+              UploadProgram(api, droppedFile, { ...values, types }, null, dispatch, () => {
+                setDroppedFile(null);
+              });
               setDroppedFile(null);
             } catch (err) {
               setWrongJSON(true);
@@ -139,11 +140,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
             }
           }
         }}
-        onReset={() => {
-          setDroppedFile(null);
-        }}
       >
-        {({ errors, touched }) => (
+        {({ errors, touched, setFieldValue, values }) => (
           <Form>
             {/* eslint-disable react/button-has-type */}
             <button type="reset" aria-label="closeButton">
@@ -191,12 +189,17 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     Gas limit:
                   </label>
                   <div className="program-details__field-wrapper">
-                    <Field
-                      id="gasLimit"
+                    <NumberFormat
                       name="gasLimit"
                       placeholder="20000"
+                      value={values.gasLimit}
+                      thousandSeparator
+                      allowNegative={false}
                       className="program-details__limit-value program-details__value"
-                      type="number"
+                      onValueChange={(val) => {
+                        const { floatValue } = val;
+                        setFieldValue('gasLimit', floatValue);
+                      }}
                     />
                     {errors.gasLimit && touched.gasLimit ? (
                       <div className="program-details__error">{errors.gasLimit}</div>

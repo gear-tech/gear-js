@@ -12,7 +12,7 @@ export class GearBalance {
 
   async findOut(publicKey: string): Promise<Balance> {
     const { data: balance } = await this.api.query.system.account(publicKey);
-    return balance.free;
+    return this.api.createType('Balance', balance.free);
   }
 
   transferFromAlice(to: string, value: number, eventsCallback?: (event: any, data: any) => void): Promise<any> {

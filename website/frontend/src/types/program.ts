@@ -12,6 +12,8 @@ export interface ProgramModel {
   callCount?: number;
   uploadedAt?: string;
   initStatus: ProgramStatus;
+  title?: string;
+  meta?: any;
 }
 
 export interface ProgramPaginationModel {
