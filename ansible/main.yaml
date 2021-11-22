@@ -51,7 +51,7 @@
       include: tasks/event-listener/event-listener.yaml
 
     - name: Install/Update data-storage
-      include: tasks/data-storage/docker.yaml
+      include: tasks/data-storage/data-storage.yaml
 
     - name: Install/Update api-backend
       include: tasks/backend/backend.yaml
