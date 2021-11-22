@@ -13,7 +13,7 @@ import close from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import selected from 'assets/images/radio-selected.svg';
 import deselected from 'assets/images/radio-deselected.svg';
-import cancel from 'assets/images/remove-query.svg';
+import trash from 'assets/images/trash.svg';
 import copy from 'assets/images/copy.svg';
 import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
@@ -367,7 +367,7 @@ export const Header: VFC = () => {
                                 type="button"
                                 onClick={() => handleRemoveNode(node.id)}
                               >
-                                <img className="nodes__item-icon" alt="cancel" src={cancel} />
+                                <img className="nodes__item-icon" alt="cancel" src={trash} />
                               </button>
                             )}
                           </div>
