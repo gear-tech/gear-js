@@ -163,8 +163,15 @@ export function parseHexTypes(hexTypes: string) {
 }
 
 function setNamespaces(type: string, namespaces: Map<string, string>): string {
-  type.match(REGULAR_EXP.endWord).forEach((match) => {
-    type = namespaces && namespaces.has(match) ? type.replace(match, namespaces.get(match)) : type;
+  const matches = type.match(REGULAR_EXP.endWord);
+  matches.forEach((match, index) => {
+    if (namespaces) {
+      if (namespaces.has(match)) {
+        type = type.replace(match, namespaces.get(match));
+      } else if (index < matches.length - 1 && namespaces.has(`${match}${matches[index + 1]}`)) {
+        type = type.replace(match, namespaces.get(`${match}${matches[index + 1]}`));
+      }
+    }
   });
   return type;
 }
