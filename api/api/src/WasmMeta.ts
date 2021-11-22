@@ -24,26 +24,29 @@ export async function getWasmMetadata(wasmBytes: Buffer, pages?: any, inputValue
       gr_debug: (msg) => {
         console.log('GR_DEBUG: ', msg);
       },
+      gr_exit_code: () => {},
       gr_msg_id: () => {},
-      gr_size: () => {
-        return inputValue.byteLength;
-      },
       gr_read: (at: number, len: number, dest: number) => {
         new Uint8Array(memory.buffer).set(inputValue.slice(at, len), dest);
       },
-      gr_source: () => {},
-      gr_gas_available: () => {},
+      gr_reply: () => {},
+      gr_reply_commit: () => {},
+      gr_reply_push: () => {},
+      gr_reply_to: () => {},
       gr_send: () => {},
       gr_send_commit: () => {},
       gr_send_init: () => {},
       gr_send_push: () => {},
-      gr_reply: () => {},
-      gr_reply_push: () => {},
-      gr_reply_to: () => {},
+      gr_size: () => {
+        return inputValue.byteLength;
+      },
+      gr_source: () => {},
       gr_value: () => {},
+      gr_block_height: () => {},
+      gr_block_timestamp: () => {},
+      gr_gas_available: () => {},
       gr_wait: () => {},
       gr_wake: () => {},
-      gr_exit_code: () => {},
     },
   };
 
