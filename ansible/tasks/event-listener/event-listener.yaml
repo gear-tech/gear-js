@@ -1,5 +1,8 @@
 ---
 #Install/update backend docker-compose
+- name: Create events-listener dir
+  file: path=/home/ec2-user/events-listener state=directory mode=0755
+  
 - name: Copy docker-compose
   copy:
     src: docker-compose.yaml
