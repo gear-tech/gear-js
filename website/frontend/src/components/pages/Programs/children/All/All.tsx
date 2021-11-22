@@ -63,9 +63,10 @@ export const All: VFC = () => {
 
     const getProgramsByPage = async () => {
       try {
-        await apiRequest.getResource(RPC_METHODS.PROGRAM_ALL, {
+        const response = await apiRequest.getResource(RPC_METHODS.PROGRAM_ALL, {
           Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`,
         });
+        console.log(response);
       } catch (error) {
         console.error(error);
       }

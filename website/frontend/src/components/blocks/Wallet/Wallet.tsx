@@ -21,7 +21,6 @@ export const Wallet = () => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 
-  console.log(currentAccount);
   useEffect(() => {
     const getAllAccounts = async () => {
       const extensions = await web3Enable('Gear Tech');

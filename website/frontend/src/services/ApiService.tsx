@@ -13,7 +13,7 @@ import {
   programUploadFailedAction,
   AddAlert,
 } from 'store/actions/actions';
-import { readFileAsync } from '../helpers';
+import { readFileAsync, signPayload } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 // TODO: (dispatch) fix it later
@@ -50,8 +50,6 @@ export const UploadProgram = async (
     name = file.name;
   }
 
-  // const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
-  // const keyring = GearKeyring.fromJson(jsonKeyring);
   const injector = await web3FromSource(account.meta.source);
 
   const fileBuffer: any = await readFileAsync(file);
@@ -82,17 +80,18 @@ export const UploadProgram = async (
       if (data.status === 'Finalized') {
         clearFunc();
         dispatch(programUploadSuccessAction());
-        // Send sing message
-        // const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
 
-        // apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-        //   meta: JSON.stringify(meta),
-        //   signature,
-        //   programId,
-        //   name,
-        //   title,
-        //   metaFile,
-        // });
+        // Sign metadata and save it
+        signPayload(injector, account.address, JSON.stringify(meta), (signature: string) => {
+          apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+            meta: JSON.stringify(meta),
+            signature,
+            programId,
+            name,
+            title,
+            metaFile,
+          });
+        });
       }
     });
   } catch (error) {
@@ -108,8 +107,6 @@ export const SendMessageToProgram = async (api: any, account: UserAccount, messa
   const apiRequest = new ServerRPCRequestService();
 
   const injector = await web3FromSource(account.meta.source);
-  const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
-  const keyring = GearKeyring.fromJson(jsonKeyring);
 
   try {
     // get metadata for specific program
@@ -143,27 +140,26 @@ export const addMetadata = async (
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);
-  const jsonKeyring: any = localStorage.getItem('gear_mnemonic');
-  const keyring = GearKeyring.fromJson(jsonKeyring);
-  try {
-    // Send sing message
-    const signature = u8aToHex(GearKeyring.sign(keyring, JSON.stringify(meta)));
 
-    const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-      meta: JSON.stringify(meta),
-      signature,
-      programId: programHash,
-      name,
-      title: meta.title,
-    });
+  // Sign metadata and save it
+  signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
+    try {
+      const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+        meta: JSON.stringify(meta),
+        signature,
+        programId: programHash,
+        name,
+        title: meta.title,
+      });
 
-    if (response.error) {
-      throw new Error(response.error.message);
-    } else {
-      dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+      if (response.error) {
+        throw new Error(response.error.message);
+      } else {
+        dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+      }
+    } catch (error) {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+      console.error(error);
     }
-  } catch (error) {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-    console.error(error);
-  }
+  });
 };
