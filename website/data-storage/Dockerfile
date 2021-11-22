@@ -1,8 +1,10 @@
 FROM node:16-alpine
 COPY ./website/api-interfaces /usr/src/api-interfaces
 COPY ./website/data-storage /usr/src/data-storage
-RUN ls /usr/src
+WORKDIR /usr/src/api-interfaces
+RUN yarn install
+RUN yarn build
 WORKDIR /usr/src/data-storage
-RUN npm install
-RUN npm run build
+RUN yarn install
+RUN yarn build
 CMD ["node", "dist/main"]

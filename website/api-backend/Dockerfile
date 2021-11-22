@@ -1,6 +1,10 @@
 FROM node:16-alpine
-WORKDIR /backend
-COPY ./website/backend/ .
-RUN npm install 
-RUN npm run build
+COPY ./website/api-interfaces /usr/src/api-interfaces
+COPY ./website/backend /usr/src/backend
+WORKDIR /usr/src/api-interfaces
+RUN yarn install
+RUN yarn build
+WORKDIR /usr/src/backend
+RUN yarn install
+RUN yarn build
 CMD ["node", "dist/main"]
