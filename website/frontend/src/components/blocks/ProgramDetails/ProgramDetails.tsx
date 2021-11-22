@@ -25,6 +25,7 @@ type Props = {
 
 export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const dispatch = useDispatch();
+  const currentAccount = useSelector((state: RootState) => state.account.account);
 
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
@@ -62,9 +63,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const uploadMetaFile = () => {
     metaFieldRef.current?.click();
   };
-
-  const currentAccount = useSelector((state: RootState) => state.account.account);
-  console.log(currentAccount);
 
   const handleFilesUpload = useCallback(
     async (file) => {
@@ -124,24 +122,33 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: UploadProgramModel) => {
-          if (isMetaByFile) {
-            dispatch(programUploadStartAction());
-            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, metaWasmFile, dispatch, () => {
-              setDroppedFile(null);
-            });
-            setDroppedFile(null);
-          } else {
-            try {
-              const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
-              dispatch(programUploadStartAction());
-              UploadProgram(api, droppedFile, { ...values, types }, null, dispatch, () => {
-                setDroppedFile(null);
-              });
-              setDroppedFile(null);
-            } catch (err) {
-              setWrongJSON(true);
-              console.log(err);
+          if (currentAccount) {
+            if (isMetaByFile) {
+              UploadProgram(
+                api,
+                currentAccount,
+                droppedFile,
+                { ...values, ...metaWasm },
+                metaWasmFile,
+                dispatch,
+                () => {
+                  setDroppedFile(null);
+                }
+              );
+            } else {
+              try {
+                const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
+                dispatch(programUploadStartAction());
+                UploadProgram(api, currentAccount, droppedFile, { ...values, types }, null, dispatch, () => {
+                  setDroppedFile(null);
+                });
+              } catch (err) {
+                setWrongJSON(true);
+                console.log(err);
+              }
             }
+          } else {
+            dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
           }
         }}
       >

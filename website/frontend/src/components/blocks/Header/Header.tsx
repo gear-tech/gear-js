@@ -64,16 +64,8 @@ export const Header: VFC = () => {
   const [newNode, setNewNode] = useState('');
   const [isAvailableAddNode, setIsAvailableAddNode] = useState(false);
 
-  let userInfo = '';
   const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
   // const headerUnreadNotificationsCount = countUnread && countUnread >= 100 ? '99+' : countUnread;
-  if (user) {
-    if (user.email) {
-      userInfo = user.email;
-    } else if (user.username) {
-      userInfo = user.username;
-    }
-  }
 
   useEffect(() => {
     if (!isApiReady) {

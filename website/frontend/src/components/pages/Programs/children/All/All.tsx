@@ -40,7 +40,6 @@ export const All: VFC = () => {
   const apiRequest = new ServerRPCRequestService();
 
   const [search, setSearch] = useState('');
-  const [programs, setPrograms] = useState('');
 
   const { allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
   const program = useSelector((state: RootState) => state.programs.program);
@@ -64,7 +63,7 @@ export const All: VFC = () => {
 
     const getProgramsByPage = async () => {
       try {
-        const response = await apiRequest.getResource(RPC_METHODS.PROGRAM_ALL, {
+        await apiRequest.getResource(RPC_METHODS.PROGRAM_ALL, {
           Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`,
         });
       } catch (error) {

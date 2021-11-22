@@ -14,13 +14,14 @@ import './Wallet.scss';
 
 export const Wallet = () => {
   const [ingectedAccounts, setIngectedAccounts] = useState<Array<UserAccount> | null>(null);
-  const [freeBalance, setFreeBalance] = useState<string | null>(null);
+  const [accountBalance, setAccountBalance] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 
+  console.log(currentAccount);
   useEffect(() => {
     const getAllAccounts = async () => {
       const extensions = await web3Enable('Gear Tech');
@@ -50,8 +51,8 @@ export const Wallet = () => {
 
   useEffect(() => {
     const getBalance = async (ADDR: string) => {
-      const { data: balance } = await api!.query.system.account(ADDR);
-      setFreeBalance(balance.free.toHuman());
+      const freeBalance = await api!.balance.findOut(ADDR);
+      setAccountBalance(freeBalance.toHuman());
     };
 
     if (currentAccount && api) {
@@ -96,7 +97,7 @@ export const Wallet = () => {
       <div className="user-wallet__wrapper">
         {(currentAccount && (
           <>
-            <div className="user-wallet__balance">{freeBalance}</div>
+            <div className="user-wallet__balance">{accountBalance}</div>
             <button type="button" className="user-wallet__user-info" onClick={toggleModal}>
               <Identicon value={currentAccount.address} size={25} theme="polkadot" />
               <span className="user-wallet__name">{currentAccount.meta.name}</span>
