@@ -15,6 +15,7 @@ import {
   ProgramRPCModel,
   ProgramsPagintaionModel,
 } from 'types/program';
+import { ApiActionTypes } from 'types/api';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 
@@ -109,6 +110,9 @@ export const fetchGasAction = (payload: number) => ({ type: ProgramActionTypes.F
 export const resetGasAction = () => ({ type: ProgramActionTypes.RESET_GAS });
 
 export const resetBlocksAction = () => ({ type: BlockActionTypes.RESET_BLOCKS });
+
+export const setApiReady = () => ({ type: ApiActionTypes.SET_API });
+export const resetApiReady = () => ({ type: ApiActionTypes.RESET_API });
 
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();

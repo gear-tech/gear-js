@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { ProgramModel, ProgramStatus } from 'types/program';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { useAlert } from 'react-alert';
+import { Link } from 'react-router-dom';
 import MessageIllustration from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
 import Copy from 'assets/images/copy.svg';
@@ -28,14 +29,14 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
           )}
         />
         <div className={styles.programWrapperName}>
-          <div className={styles.programsListName}>{program.name && fileNameHandler(program.name)}</div>
+          <div className={styles.programsListName}>
+            <Link className={styles.programLink} to={`/program/${program.id}`}>
+              {program.name && fileNameHandler(program.name)}
+            </Link>
+          </div>
         </div>
         <div className={styles.programsCopyId}>
-          <button
-            type="button"
-            className={styles.programsListName}
-            onClick={() => copyToClipboard(program.id, alert, 'Program ID copied')}
-          >
+          <button type="button" onClick={() => copyToClipboard(program.id, alert, 'Program ID copied')}>
             <img src={Copy} alt="copy program ID" />
           </button>
         </div>

@@ -31,7 +31,7 @@ type ProgramMessageType = {
 const selectPrograms = createSelector(
   (state: RootState) => state.programs,
   (_ignore: any, completed: string) => completed,
-  (programs, completed) => programs.programs && programs.programs.filter((item) => item.hash.includes(completed))
+  (programs, completed) => programs.programs && programs.programs.filter((item) => item.id.includes(completed))
 );
 
 export const Recent: VFC = () => {
@@ -47,8 +47,6 @@ export const Recent: VFC = () => {
   if (singleProgram) {
     programs = [singleProgram];
   }
-
-  console.log(singleProgram);
 
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -115,8 +113,6 @@ export const Recent: VFC = () => {
       />
     );
   }
-
-  console.log(programs);
 
   return (
     <div className={styles.blockList}>

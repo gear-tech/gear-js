@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.2.0",
-    "@gear-js/api": "^0.7.2",
+    "@gear-js/api": "^0.8.4",
     "@monaco-editor/react": "^4.2.1",
     "@polkadot/api": "^6.7.2",
     "@polkadot/react-identicon": "^0.85.4",

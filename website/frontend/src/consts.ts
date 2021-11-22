@@ -10,7 +10,7 @@ export const isProd = process.env.NODE_ENV === 'production';
 export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
-export const GEAR_BALANCE_TRANSFER_VALUE = 1_000_000_000;
+export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',

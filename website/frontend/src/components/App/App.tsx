@@ -1,20 +1,22 @@
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
 import { AlertTemplate } from 'components/AlertTemplate';
-import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { Programs } from 'components/pages/Programs/Programs';
+import { Program } from 'components/pages/Program/Program';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
 import { EditorPage } from 'features/Editor/EditorPage';
 import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
-
+import { SimpleLoader } from 'components/blocks/SimpleLoader';
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
+import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
+import { nodeApi } from '../../api/initApi';
 import store from '../../store';
 
 import './App.scss';
@@ -39,6 +41,11 @@ const options = {
 };
 
 const AppComponent: FC = () => {
+  const dispatch = useDispatch();
+
+  const { isApiReady } = useSelector((state: RootState) => state.api);
+  const { user } = useSelector((state: RootState) => state.user);
+  const { countUnread } = useSelector((state: RootState) => state.notifications);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
 
   useEffect(() => {
@@ -48,6 +55,20 @@ const AppComponent: FC = () => {
       document.body.style.overflowY = 'unset';
     }
   }, [isProgramUploading, isMessageSending]);
+
+  useEffect(() => {
+    if (!isApiReady) {
+      nodeApi.init().then(() => {
+        dispatch(setApiReady());
+      });
+    }
+  }, [dispatch, isApiReady]);
+
+  useEffect(() => {
+    if (isApiReady) {
+      dispatch(subscribeToEvents());
+    }
+  }, [dispatch, isApiReady]);
 
   const isFooterHidden = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');
@@ -68,20 +89,27 @@ const AppComponent: FC = () => {
           )}
           <Header />
           <Main>
-            <Switch>
-              <PrivateRoute exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
-                <Programs />
-              </PrivateRoute>
-              <PrivateRoute path={routes.editor} exact>
-                <EditorPage />
-              </PrivateRoute>
-              <PrivateRoute path={routes.notifications} exact>
-                <NotificationsPage />
-              </PrivateRoute>
-              <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
-                <Document />
-              </Route>
-            </Switch>
+            {isApiReady ? (
+              <Switch>
+                <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
+                  <Programs />
+                </Route>
+                <Route exact path={routes.program}>
+                  <Program />
+                </Route>
+                <Route exact path={routes.editor}>
+                  <EditorPage />
+                </Route>
+                <Route exact path={routes.notifications}>
+                  <NotificationsPage />
+                </Route>
+                <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
+                  <Document />
+                </Route>
+              </Switch>
+            ) : (
+              <SimpleLoader />
+            )}
           </Main>
           {isFooterHidden() || <Footer />}
           <Alert />
