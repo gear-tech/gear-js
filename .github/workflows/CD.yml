@@ -34,11 +34,11 @@ jobs:
           push: true
           tags: mithriy/gear-data-storage:nightly
 
-      - name: Build and push event-listener
-        id: event_listener_docker_build
+      - name: Build and push events-listener
+        id: events_listener_docker_build
         uses: docker/build-push-action@v2
         with:
-          file: website/event-listener/Dockerfile
+          file: website/events-listener/Dockerfile
           push: true
           tags: mithriy/gear-event-listener:nightly
 
