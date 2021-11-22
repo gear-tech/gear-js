@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
+import { Trash2 } from 'react-feather';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
 import { copyToClipboard } from 'helpers';
@@ -13,7 +14,6 @@ import close from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import selected from 'assets/images/radio-selected.svg';
 import deselected from 'assets/images/radio-deselected.svg';
-import trash from 'assets/images/trash.svg';
 import copy from 'assets/images/copy.svg';
 import { Modal } from '../Modal';
 import { Keyring } from '../Keyring';
@@ -367,7 +367,7 @@ export const Header: VFC = () => {
                                 type="button"
                                 onClick={() => handleRemoveNode(node.id)}
                               >
-                                <img className="nodes__item-icon" alt="cancel" src={trash} />
+                                <Trash2 color="#ffffff" size="22" strokeWidth="1.5" />
                               </button>
                             )}
                           </div>
