@@ -82,15 +82,26 @@ export const UploadProgram = async (
         dispatch(programUploadSuccessAction());
 
         // Sign metadata and save it
-        signPayload(injector, account.address, JSON.stringify(meta), (signature: string) => {
-          apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-            meta: JSON.stringify(meta),
-            signature,
-            programId,
-            name,
-            title,
-            metaFile,
-          });
+        signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
+          try {
+            const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+              meta: JSON.stringify(meta),
+              signature,
+              programId,
+              name,
+              title,
+              metaFile,
+            });
+
+            if (response.error) {
+              throw new Error(response.error.message);
+            } else {
+              dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+            }
+          } catch (error) {
+            dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+            console.error(error);
+          }
         });
       }
     });
