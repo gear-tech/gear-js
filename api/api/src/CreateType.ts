@@ -93,7 +93,7 @@ export class CreateType {
   }
 
   private checkTypePayload(type: any, payload: any) {
-    if (!payload) {
+    if (payload === undefined) {
       throw new CreateTypeError('Data is not specified');
     }
     if (!type) {
