@@ -13,6 +13,8 @@ import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from '../../../../../../../hooks/useApi';
 import { Schema } from './Schema';
 import './MessageForm.scss';
+import { FormItem } from '../../../../../../FormItem';
+import { parseMeta } from '../../../../../../../utils/meta-parser';
 
 type Props = {
   programHash: string;
@@ -60,6 +62,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   };
 
   if (ready) {
+    const formMeta = parseMeta(JSON.parse(initialValues.payload));
     return (
       <Formik
         initialValues={initialValues}
@@ -113,6 +116,12 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
                     {errors.payload && touched.payload ? (
                       <div className="message-form__error">{errors.payload}</div>
                     ) : null}
+
+                    {formMeta && (
+                      <div>
+                        <FormItem data={formMeta} />
+                      </div>
+                    )}
                   </div>
                 </div>
 
