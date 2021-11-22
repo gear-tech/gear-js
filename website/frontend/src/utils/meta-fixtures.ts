@@ -34,6 +34,7 @@ export const simpleDeepStruct = {
 export const simpleEnum = {
   _enum: {
     AddMessage: { author: 'Text', msg: 'Text' },
+    Post: 'Text',
     ViewMessages: 'Null',
   },
 };

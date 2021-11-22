@@ -81,11 +81,19 @@ function parseField(data: MetaParam) {
       };
 
       Object.entries(item[1]).forEach((field) => {
-        stack.push({
-          kind: 'enum',
-          path: [Object.keys(item[1]).join('.'), 'fields', field[0]],
-          value: field[1] === metaNull ? (metaNull as MetaNull) : field[1],
-        });
+        if (isObject(field[1])) {
+          stack.push({
+            kind: 'enum',
+            path: [Object.keys(item[1]).join('.'), 'fields', field[0]],
+            value: field[1],
+          });
+        } else {
+          stack.push({
+            kind: 'enum',
+            path: [Object.keys(item[1]).join('.'), 'fields', field[0]],
+            value: field[1] === metaNull ? (metaNull as MetaNull) : field[1],
+          });
+        }
       });
     } else {
       stack.push({
@@ -113,6 +121,18 @@ function parseField(data: MetaParam) {
 
           set(result.fields, current.path, {
             [current.path.toString()]: null,
+          });
+        }
+      }
+      if (isString(current.value) && current.value !== metaNull) {
+        if (current.kind === 'enum' && result.select) {
+          const path = [...current.path];
+          path.shift();
+          const key = path[path.length - 1];
+          set(result.select, [...current.path], {
+            label: key,
+            name: key,
+            type: current.value,
           });
         }
       } else {
@@ -177,7 +197,7 @@ function parseField(data: MetaParam) {
               });
             }
           } else if (isString(value) || value === null) {
-            if (current.kind === 'enum') {
+            if (current.kind === 'enum' && current.value !== metaNull) {
               if (!result.select) {
                 result.select = {};
               }

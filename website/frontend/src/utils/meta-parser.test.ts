@@ -1,4 +1,4 @@
-import { parse } from './meta-parser';
+import { parseMeta } from './meta-parser';
 
 import {
   simpleDeepStruct,
@@ -21,15 +21,15 @@ import {
 
 describe('test parser', () => {
   // it("empty array", () => {
-  //     expect(parse([])).toEqual(null);
+  //     expect(parseMeta([])).toEqual(null);
   // });
   //
   // it("empty object", () => {
-  //     expect(parse({})).toEqual(null);
+  //     expect(parseMeta({})).toEqual(null);
   // });
 
   // it("array of simple structs", () => {
-  //     expect(parse(data5)).toEqual({
+  //     expect(parseMeta(data5)).toEqual({
   //         select: null,
   //         fields: [
   //             {
@@ -49,7 +49,7 @@ describe('test parser', () => {
   // });
 
   it('simple struct', () => {
-    expect(parse(simpleStruct)).toEqual({
+    expect(parseMeta(simpleStruct)).toEqual({
       select: null,
       fields: {
         AddMessage: {
@@ -69,7 +69,7 @@ describe('test parser', () => {
   });
 
   it('simple deep struct', () => {
-    expect(parse(simpleDeepStruct)).toEqual({
+    expect(parseMeta(simpleDeepStruct)).toEqual({
       select: null,
       fields: {
         AddMessage: {
@@ -101,14 +101,19 @@ describe('test parser', () => {
   });
 
   it('simple enum', () => {
-    expect(parse(simpleEnum)).toEqual({
+    expect(parseMeta(simpleEnum)).toEqual({
       select: {
-        'AddMessage.ViewMessages': {
+        'AddMessage.Post.ViewMessages': {
           type: '_enum',
           fields: {
             AddMessage: {
               author: { type: 'Text', name: 'AddMessage.author', label: 'author' },
               msg: { type: 'Text', name: 'AddMessage.msg', label: 'msg' },
+            },
+            Post: {
+              type: 'Text',
+              name: 'Post',
+              label: 'Post',
             },
             ViewMessages: {
               ViewMessages: null, // means no input
@@ -121,7 +126,7 @@ describe('test parser', () => {
   });
 
   it('with simple option enum', () => {
-    expect(parse(simpleEnumOption)).toEqual({
+    expect(parseMeta(simpleEnumOption)).toEqual({
       select: {
         field: {
           type: '_enum_Option',
@@ -138,7 +143,7 @@ describe('test parser', () => {
   });
 
   it('with complex option enum', () => {
-    expect(parse(complexEnumOption)).toEqual({
+    expect(parseMeta(complexEnumOption)).toEqual({
       select: {
         res: {
           type: '_enum_Option',
@@ -178,19 +183,21 @@ describe('test parser', () => {
   });
 
   it('with simple result enum', () => {
-    expect(parse(simpleEnumResult)).toEqual({
+    expect(parseMeta(simpleEnumResult)).toEqual({
       select: {
         exchangeRate: {
           type: '_enum_Result',
-          ok: {
-            type: 'u8',
-            name: 'exchangeRate.ok',
-            label: 'ok',
-          },
-          err: {
-            type: 'u8',
-            name: 'exchangeRate.err',
-            label: 'err',
+          fields: {
+            ok: {
+              type: 'u8',
+              name: 'exchangeRate.ok',
+              label: 'ok',
+            },
+            err: {
+              type: 'u8',
+              name: 'exchangeRate.err',
+              label: 'err',
+            },
           },
         },
       },
@@ -199,7 +206,7 @@ describe('test parser', () => {
   });
 
   it('with complex result enum', () => {
-    expect(parse(simpleEnumResult)).toEqual({
+    expect(parseMeta(simpleEnumResult)).toEqual({
       select: {
         exchangeRate: {
           type: '_enum_Result',
