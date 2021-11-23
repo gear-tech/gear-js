@@ -6,6 +6,7 @@ import { EventTypes } from 'types/events';
 import {
   programUploadStartAction,
   sendMessageSuccessAction,
+  sendMessageStartAction,
   sendMessageFailedAction,
   programUploadSuccessAction,
   programUploadFailedAction,
@@ -23,7 +24,7 @@ export const UploadProgram = async (
   opts: UploadProgramModel,
   metaFile: any,
   dispatch: any,
-  clearFunc: () => void
+  callback: () => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
 
@@ -76,8 +77,8 @@ export const UploadProgram = async (
       dispatch(programUploadStartAction());
       dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `UPLOAD STATUS: ${data.status}` }));
       if (data.status === 'Finalized') {
-        clearFunc();
         dispatch(programUploadSuccessAction());
+        callback();
 
         // Sign metadata and save it
         signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
@@ -112,7 +113,13 @@ export const UploadProgram = async (
 };
 
 // TODO: (dispatch) fix it later
-export const SendMessageToProgram = async (api: any, account: UserAccount, message: MessageModel, dispatch: any) => {
+export const SendMessageToProgram = async (
+  api: any,
+  account: UserAccount,
+  message: MessageModel,
+  dispatch: any,
+  callback: () => void
+) => {
   const apiRequest = new ServerRPCRequestService();
 
   const injector = await web3FromSource(account.meta.source);
@@ -126,10 +133,12 @@ export const SendMessageToProgram = async (api: any, account: UserAccount, messa
     });
     await api.message.submit(message, JSON.parse(meta));
     await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
+      dispatch(sendMessageStartAction());
       dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `SEND MESSAGE STATUS: ${data.status}` }));
       if (data.status === 'Finalized') {
         console.log('Finalized!');
         dispatch(sendMessageSuccessAction());
+        callback();
       }
     });
   } catch (error) {

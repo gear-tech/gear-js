@@ -8,7 +8,7 @@ import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/events';
-import { AddAlert, sendMessageStartAction } from 'store/actions/actions';
+import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from '../../../../../../../hooks/useApi';
@@ -69,9 +69,9 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
         validateOnBlur
         onSubmit={(values: MessageModel, { resetForm }) => {
           if (currentAccount) {
-            SendMessageToProgram(api, currentAccount, values, dispatch);
-            dispatch(sendMessageStartAction());
-            resetForm();
+            SendMessageToProgram(api, currentAccount, values, dispatch, () => {
+              resetForm();
+            });
           } else {
             dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
           }
