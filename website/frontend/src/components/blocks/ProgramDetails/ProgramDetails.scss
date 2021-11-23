@@ -243,7 +243,8 @@
   .program-details__cancel {
     display: none;
   }
-  .program-details__wrapper {
+  .program-details__wrapper,
+  .program-details__info {
     display: flex;
     flex-direction: column;
     position: relative;
