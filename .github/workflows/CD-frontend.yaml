@@ -17,19 +17,16 @@ jobs:
       - name: get commit message
         run: echo ${{ github.event.head_commit.message }}
 
-      - name: Check package version
-        uses: EndBug/version-check@v1
+      - name: Check commit message
         id: check
-        with:
-          file-name: ./website/frontend/package.json
 
       - name: test
-        if: steps.check.outputs.changed == 'true'
+        if: contains( github.event.head_commit.message, '[frontend]' )
         run: |
-          'echo "Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
+          'echo github.event.head_commit.message'
 
       - name: Log when unchanged
-        if: steps.check.outputs.changed == 'false'
+        if: "!contains( github.event.head_commit.message, '[frontend]' )"
         run: 'echo "No version change :/"'
     # - name: Run playbook
     #   uses: dawidd6/action-ansible-playbook@v2
