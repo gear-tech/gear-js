@@ -222,7 +222,7 @@ export const Header: VFC = () => {
           </>
         )}
       </div>
-      {(showUser && (
+      {showUser && (
         <div className={clsx('header__user-block user-block', isMobileMenuOpened && 'show')}>
           {/* <Link to={routes.notifications} className={clsx('user-block__notifications', isNotifications && 'selected')}>
             <NotificationIcon color={isNotifications ? '#ffffff' : '#858585'} />
@@ -246,41 +246,42 @@ export const Header: VFC = () => {
             <img src={user?.photoUrl ?? githubIcon} alt="avatar" />
             <span className="user-block__name">{userInfo}</span>
           </div>
-          <Link to={routes.logout} className="user-block__logout" aria-label="menuLink" onClick={handleMenuClick}>
+          <Link to={routes.logout} className="user-block__logout" aria-label="menuLink">
             <LogoutIcon color={headerIconsColor} />
             <span>Sign out</span>
           </Link>
         </div>
-      )) || (
-        <nav className={clsx('header__nav', isMobileMenuOpened && 'show')}>
-          <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-            What is GEAR?
-          </button>
-          <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-            How it works
-          </button>
-          <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-            Use cases
-          </button>
-          <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-            Competitive analyze
-          </button>
-          <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-            Team
-          </button>
-          <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-            Tokenomics
-          </button>
-          <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-            Timeline
-          </button>
-          <Link to={routes.main}>
-            <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-              Upload
-            </button>
-          </Link>
-        </nav>
       )}
+      {/*
+       *<nav className={clsx('header__nav', isMobileMenuOpened && 'show')}>
+       *  <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
+       *    What is GEAR?
+       * </button>
+       *  <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
+       *    How it works
+       *  </button>
+       *  <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
+       *    Use cases
+       *  </button>
+       * <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
+       *   Competitive analyze
+       * </button>
+       * <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
+       *   Team
+       * </button>
+       * <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
+       *   Tokenomics
+       * </button>
+       * <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
+       *    Timeline
+       * </button>
+       *  <Link to={routes.main}>
+       *    <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
+       *      Upload
+       *   </button>
+       * </Link>
+       * </nav>
+       * */}
       <div className="header--actions-wrapper">
         <Link to={isNotifications ? routes.main : routes.notifications} className="header__notifications">
           <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />
@@ -291,16 +292,19 @@ export const Header: VFC = () => {
           )) ||
             null}
         </Link>
-        <button
-          className={clsx('header__burger', isMobileMenuOpened && 'active')}
-          type="button"
-          aria-label="burger"
-          onClick={handleMenuClick}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+
+        {/*
+         *<button
+         *  className={clsx('header__burger', isMobileMenuOpened && 'active')}
+         *  type="button"
+         *  aria-label="burger"
+         *  onClick={handleMenuClick}
+         *>
+         *  <span />
+         *  <span />
+         *  <span />
+         *</button>
+         * */}
       </div>
       {isOpen && <Modal content={<Keyring handleClose={toggleModal} />} handleClose={toggleModal} />}
       {isRestore && (
