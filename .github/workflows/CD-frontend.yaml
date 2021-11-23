@@ -8,16 +8,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  Build-backend-docker:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-  Deploy:
+  Deploy-frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,6 +19,7 @@ jobs:
         id: check
         with:
           file-name: website/frontend/package.json
+          file-url: https://github.com/gear-tech/gear-js/blob/master/website/frontend/package.json
           static-checking: localIsNew
 
       - name: test

@@ -22,6 +22,8 @@ jobs:
           playbook: clean-db.yaml
           # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}
+          inventory: |
+            [all]
         env:
           DB_CONTAINER_NAME: ${{ secrets.DB_CONTAINER_NAME }}
           DB_NAME: ${{ secrets.DB_NAME }}
