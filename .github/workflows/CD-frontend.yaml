@@ -19,7 +19,6 @@ jobs:
         id: check
         with:
           file-name: ./website/frontend/package.json
-          static-checking: localIsNew
 
       - name: test
         if: steps.check.outputs.changed == 'true'
