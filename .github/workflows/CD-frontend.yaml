@@ -18,7 +18,6 @@ jobs:
         uses: docker/setup-qemu-action@v1
 
   Deploy:
-    needs: Deploy-frontend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
