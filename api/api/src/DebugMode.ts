@@ -32,7 +32,7 @@ export class DebugMode {
   snapshots(callback: (event: DebugDataSnapshotEvent) => void | Promise<void>): UnsubscribePromise {
     return this.api.query.system.events((events) => {
       events
-        .filter(({ event }) => this.api.events.gear.DebugDataSnapshot.is(event))
+        .filter(({ event }) => this.api.events.gearDebug.DebugDataSnapshot.is(event))
         .forEach(({ event }) => callback(new DebugDataSnapshotEvent(event)));
     });
   }
