@@ -2,7 +2,7 @@ import React, { useState, useEffect, VFC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
@@ -61,7 +61,7 @@ export const Header: VFC = () => {
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
 
-  const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
+  // const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isRestore, setIsRestore] = useState(false);
   const [isKey, setIsKey] = useState(false);
@@ -72,7 +72,8 @@ export const Header: VFC = () => {
   const [isAvailableAddNode, setIsAvailableAddNode] = useState(false);
 
   let userInfo = '';
-  const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
+  // const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
+  const headerIconsColor = '#fff';
   // const headerUnreadNotificationsCount = countUnread && countUnread >= 100 ? '99+' : countUnread;
   if (user) {
     if (user.email) {
@@ -185,9 +186,11 @@ export const Header: VFC = () => {
     }
   };
 
-  const handleMenuClick = () => {
-    setIsMobileMenuOpened(!isMobileMenuOpened);
-  };
+  /*
+   *const handleMenuClick = () => {
+   *  setIsMobileMenuOpened(!isMobileMenuOpened);
+   *};
+   * */
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -223,7 +226,10 @@ export const Header: VFC = () => {
         )}
       </div>
       {showUser && (
-        <div className={clsx('header__user-block user-block', isMobileMenuOpened && 'show')}>
+        <div className="header__user-block user-block">
+          {/*
+           * <div className={clsx('header__user-block user-block', isMobileMenuOpened && 'show')}></div>
+           * */}
           {/* <Link to={routes.notifications} className={clsx('user-block__notifications', isNotifications && 'selected')}>
             <NotificationIcon color={isNotifications ? '#ffffff' : '#858585'} />
             <span>Notifications</span>
