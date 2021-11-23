@@ -1,6 +1,6 @@
 version: '3'
 services:
-  pg_db:
+  pg_db1:
     image: postgres
     restart: always
     environment:
