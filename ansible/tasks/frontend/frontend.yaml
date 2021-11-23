@@ -1,10 +1,10 @@
 ---
-#Install frontend 
+#Install frontend
 - name: Copy frontend
   copy:
     src: ../../../website/frontend/
     dest: /home/ec2-user/frontend
-    
+
 - name: Install frontend
   community.general.npm:
     path: /home/ec2-user/frontend
@@ -17,7 +17,6 @@
     REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
     REACT_APP_API_CONNECT_ADDRESS: "{{ lookup('env','WS_PROVIDER') }}"
     REACT_APP_RRT: "{{ lookup('env','REACT_APP_RRT') }}"
-
 
 - name: Build frontend
   shell: >
@@ -33,13 +32,13 @@
   copy:
     src: /home/ec2-user/frontend/build/
     dest: /var/www/html/
-    remote_src: true 
+    remote_src: true
     owner: nginx
     group: nginx
     mode: '0744'
   become: yes
 
-- name: Delete frontend sources 
+- name: Delete frontend sources
   file:
     state: absent
     path: /home/ec2-user/frontend

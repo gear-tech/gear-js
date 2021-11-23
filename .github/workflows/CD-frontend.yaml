@@ -1,0 +1,53 @@
+name: CD
+
+on:
+  push:
+    branches: [master, do-clear-db-cd]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Build-backend-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+  Deploy:
+    needs: Deploy-frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check package version
+        uses: EndBug/version-check@v1
+        id: check
+        with:
+          file-name: website/frontend/package.json
+          static-checking: localIsNew
+
+      - name: test
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          echo true
+
+      # - name: Run playbook
+      #   uses: dawidd6/action-ansible-playbook@v2
+      #   env:
+      #     GITHUB_CLIENT_ID: ${{ secrets.GTHUB_CLIENT_ID }}
+      #     NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
+      #     TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
+      #     REACT_APP_RRT: ${{secrets.REACT_APP_RRT}}
+      #   with:
+      #     # Required, playbook filepath
+      #     directory: ./ansible/tasks
+      #     playbook: frontend/frontend.yaml
+      #     # Optional, SSH private key
+      #     key: ${{secrets.SSH_PRIVATE_KEY}}
+      #     # Optional, literal inventory file contents
+      #     requirements: galaxy-requirements.yml
