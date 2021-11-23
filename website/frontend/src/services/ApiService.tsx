@@ -1,5 +1,3 @@
-import { GearKeyring } from '@gear-js/api';
-import { u8aToHex } from '@polkadot/util';
 import { UploadProgramModel, MessageModel, MetaModel } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { UserAccount } from 'types/account';

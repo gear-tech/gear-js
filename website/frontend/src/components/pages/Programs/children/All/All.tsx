@@ -4,7 +4,7 @@ import { createSelector } from 'reselect';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
-import { INITIAL_LIMIT_BY_PAGE, RPC_METHODS, GEAR_STORAGE_KEY } from 'consts';
+import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import {
   getAllProgramsAction,
   resetGasAction,
@@ -18,7 +18,6 @@ import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
-import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { UserProgram } from '../UserProgram/UserProgram';
 import styles from './All.module.scss';
 import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
@@ -37,7 +36,6 @@ const selectCompletedTodosCount = createSelector(
 
 export const All: VFC = () => {
   const dispatch = useDispatch();
-  const apiRequest = new ServerRPCRequestService();
 
   const [search, setSearch] = useState('');
 
@@ -60,20 +58,6 @@ export const All: VFC = () => {
 
   useEffect(() => {
     dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
-
-    const getProgramsByPage = async () => {
-      try {
-        const response = await apiRequest.getResource(RPC_METHODS.PROGRAM_ALL, {
-          Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}`,
-        });
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    getProgramsByPage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, offset]);
 
   const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {

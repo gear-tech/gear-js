@@ -53,7 +53,6 @@ export const Header: VFC = () => {
     ];
   }
 
-  const { user } = useSelector((state: RootState) => state.user);
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
 
