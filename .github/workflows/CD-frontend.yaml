@@ -23,20 +23,22 @@ jobs:
       - name: test
         if: steps.check.outputs.changed == 'true'
         run: |
-          echo true
-
-      # - name: Run playbook
-      #   uses: dawidd6/action-ansible-playbook@v2
-      #   env:
-      #     GITHUB_CLIENT_ID: ${{ secrets.GTHUB_CLIENT_ID }}
-      #     NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
-      #     TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
-      #     REACT_APP_RRT: ${{secrets.REACT_APP_RRT}}
-      #   with:
-      #     # Required, playbook filepath
-      #     directory: ./ansible/tasks
-      #     playbook: frontend/frontend.yaml
-      #     # Optional, SSH private key
-      #     key: ${{secrets.SSH_PRIVATE_KEY}}
-      #     # Optional, literal inventory file contents
-      #     requirements: galaxy-requirements.yml
+          'echo "Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
+      - name: Log when unchanged
+        if: steps.check.outputs.changed == 'false'
+        run: 'echo "No version change :/"'
+    # - name: Run playbook
+    #   uses: dawidd6/action-ansible-playbook@v2
+    #   env:
+    #     GITHUB_CLIENT_ID: ${{ secrets.GTHUB_CLIENT_ID }}
+    #     NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
+    #     TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
+    #     REACT_APP_RRT: ${{secrets.REACT_APP_RRT}}
+    #   with:
+    #     # Required, playbook filepath
+    #     directory: ./ansible/tasks
+    #     playbook: frontend/frontend.yaml
+    #     # Optional, SSH private key
+    #     key: ${{secrets.SSH_PRIVATE_KEY}}
+    #     # Optional, literal inventory file contents
+    #     requirements: galaxy-requirements.yml
