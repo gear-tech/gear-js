@@ -17,13 +17,13 @@ jobs:
       - name: get commit message
         run: echo ${{ github.event.head_commit.message }}
 
-      - name: test
-        if: contains( github.event.head_commit.message, '[frontend]' )
+      - name: Check commit message
+        if: contains( github.event.head_commit.message, 'frontend' )
         run: |
           'echo github.event.head_commit.message'
 
       - name: Log when unchanged
-        if: "!contains( github.event.head_commit.message, '[frontend]' )"
+        if: "!contains( github.event.head_commit.message, 'frontend' )"
         run: 'echo "No version change :/"'
     # - name: Run playbook
     #   uses: dawidd6/action-ansible-playbook@v2
