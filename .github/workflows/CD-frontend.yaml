@@ -18,8 +18,7 @@ jobs:
         uses: EndBug/version-check@v1
         id: check
         with:
-          file-name: website/frontend/package.json
-          file-url: https://github.com/gear-tech/gear-js/blob/master/website/frontend/package.json
+          file-name: ./website/frontend/package.json
           static-checking: localIsNew
 
       - name: test
