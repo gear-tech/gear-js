@@ -15,12 +15,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: get commit message
-        run: echo ${{ github.event.head_commit.message }}
+        run: echo "${{ toJSON(github.event) }}""
 
       - name: Check commit message
-        if: contains( ${{ github.event.head_commit.message }}, 'frontend' )
+        if: contains( "${{ github.event.head_commit.message }}", "frontend" )
         run: |
-          'echo github.event.head_commit.message'
+          echo "${{ github.event.head_commit.message }}"
 
       - name: Log when unchanged
         if: "!contains( ${{ github.event.head_commit.message }}, 'frontend' )"
