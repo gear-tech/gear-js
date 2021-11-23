@@ -14,6 +14,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Log when unchanged
+        run: 'echo "No version change :/"'
+
       - name: Check package version
         uses: EndBug/version-check@v1
         id: check
@@ -24,9 +27,7 @@ jobs:
         if: steps.check.outputs.changed == 'true'
         run: |
           'echo "Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
-      - name: Log when unchanged
-        if: steps.check.outputs.changed == 'false'
-        run: 'echo "No version change :/"'
+
     # - name: Run playbook
     #   uses: dawidd6/action-ansible-playbook@v2
     #   env:
