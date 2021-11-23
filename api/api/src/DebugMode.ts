@@ -10,11 +10,11 @@ export class DebugMode {
   }
 
   enable() {
-    this.enabled = this.api.tx.sudo.sudo(this.api.tx.gear.enableDebugMode(true));
+    this.enabled = this.api.tx.sudo.sudo(this.api.tx.gearDebug.enableDebugMode(true));
   }
 
   disable() {
-    this.enabled = this.api.tx.sudo.sudo(this.api.tx.gear.enableDebugMode(false));
+    this.enabled = this.api.tx.sudo.sudo(this.api.tx.gearDebug.enableDebugMode(false));
   }
 
   signAndSend(keyring: KeyringPair): Promise<{ method: string; data: boolean }> {
