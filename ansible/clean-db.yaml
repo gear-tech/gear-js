@@ -14,4 +14,4 @@
       include: tasks/packages/packages.yaml
 
     - name: Clear db
-      include: tasks/backend/clear-db.yaml
+      include: tasks/backend/clean-db.yaml

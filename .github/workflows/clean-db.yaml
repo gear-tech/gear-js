@@ -1,4 +1,4 @@
-name: Purge-chain
+name: Clean-db
 
 on: [workflow_dispatch]
 
@@ -16,7 +16,7 @@ jobs:
         with:
           # Required, playbook filepath
           directory: ./ansible/
-          playbook: clear-db.yaml
+          playbook: clean-db.yaml
           # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}
         env:
