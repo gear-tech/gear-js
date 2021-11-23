@@ -17,16 +17,21 @@ export class GearProgram extends GearTransaction {
     program: {
       code: Buffer;
       salt?: string;
-      initPayload?: string | GearType;
+      initPayload?: string | any;
       gasLimit: u64 | AnyNumber;
       value?: BalanceOf | AnyNumber;
     },
-    meta: Metadata,
+    meta?: Metadata,
     messageType?: string,
   ): ProgramId {
-    const payload = program.initPayload
-      ? this.createType.create(messageType || meta.init_input, program.initPayload, meta).toHex()
-      : '0x00';
+    let payload: string;
+    if (meta) {
+      payload = program.initPayload
+        ? this.createType.create(messageType || meta.init_input, program.initPayload, meta).toHex()
+        : '0x00';
+    } else {
+      payload = program.initPayload;
+    }
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
     try {
@@ -45,8 +50,8 @@ export class GearProgram extends GearTransaction {
     return programs;
   }
 
-  async getGasSpent(programId: string, payload: any, type: any, meta: Metadata): Promise<U64> {
-    const payloadBytes = this.createType.create(type, payload, meta).toHex();
+  async getGasSpent(programId: string, payload: any, type: any, meta?: Metadata): Promise<U64> {
+    const payloadBytes = meta ? this.createType.create(type, payload, meta).toHex() : payload;
     const gasSpent = await this.api.rpc.gear.getGasSpent(programId, payloadBytes);
     return gasSpent;
   }
