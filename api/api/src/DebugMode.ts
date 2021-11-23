@@ -10,11 +10,11 @@ export class DebugMode {
   }
 
   enable() {
-    this.enabled = this.api.tx.sudo.sudo(this.api.tx.gear.enableDebugMode(true));
+    this.enabled = this.api.tx.sudo.sudo(this.api.tx.gearDebug.enableDebugMode(true));
   }
 
   disable() {
-    this.enabled = this.api.tx.sudo.sudo(this.api.tx.gear.enableDebugMode(false));
+    this.enabled = this.api.tx.sudo.sudo(this.api.tx.gearDebug.enableDebugMode(false));
   }
 
   signAndSend(keyring: KeyringPair): Promise<{ method: string; data: boolean }> {
@@ -32,7 +32,7 @@ export class DebugMode {
   snapshots(callback: (event: DebugDataSnapshotEvent) => void | Promise<void>): UnsubscribePromise {
     return this.api.query.system.events((events) => {
       events
-        .filter(({ event }) => this.api.events.gear.DebugDataSnapshot.is(event))
+        .filter(({ event }) => this.api.events.gearDebug.DebugDataSnapshot.is(event))
         .forEach(({ event }) => callback(new DebugDataSnapshotEvent(event)));
     });
   }

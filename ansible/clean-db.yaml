@@ -1,0 +1,17 @@
+- name: 'clean-db'
+  hosts: all
+  become: yes
+  remote_user: ec2-user
+
+  #Set env vars on remote from envs on runner
+  environment:
+    DB_NAME: "{{ lookup('env','DB_NAME') }}"
+    DB_USER: "{{ lookup('env','DB_USER') }}"
+
+  #Do tasks
+  tasks:
+    - name: Install and enable required packages
+      include: tasks/packages/packages.yaml
+
+    - name: Clear db
+      include: tasks/backend/clear-db.yaml
