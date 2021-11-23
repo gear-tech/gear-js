@@ -19,16 +19,17 @@ export class GearMessageReply {
   submitReply(
     message: {
       toId: H256 | string;
-      payload: string | GearType;
+      payload: string | any;
       gasLimit: u64 | AnyNumber;
       value?: BalanceOf | AnyNumber;
     },
-    meta: Metadata,
+    meta?: Metadata,
     messageType?: string,
   ) {
-    let payload: Bytes | Uint8Array | string;
-
-    payload = this.createType.create(messageType || meta.async_handle_input, message.payload, meta).toHex();
+    let payload: string = message.payload;
+    if (meta) {
+      payload = this.createType.create(messageType || meta.async_handle_input, message.payload, meta).toHex();
+    }
 
     try {
       this.reply = this.api.tx.gear.sendReply(message.toId, payload, message.gasLimit, message.value);
