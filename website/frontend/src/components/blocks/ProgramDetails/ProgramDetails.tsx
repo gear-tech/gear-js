@@ -279,7 +279,6 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                 </div>
               </div>
               <div className="program-details__wrapper-column2">
-                <p>To save metadata sing it is requered</p>
                 {(isMetaByFile && (
                   <>
                     <div className="program-details__info">
