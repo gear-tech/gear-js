@@ -7,6 +7,7 @@
   environment:
     DB_NAME: "{{ lookup('env','DB_NAME') }}"
     DB_USER: "{{ lookup('env','DB_USER') }}"
+    DB_CONTAINER_NAME: "{{ lookup('env','DB_CONTAINER_NAME') }}"
 
   #Do tasks
   tasks:
