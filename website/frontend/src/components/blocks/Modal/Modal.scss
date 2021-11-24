@@ -1,3 +1,5 @@
+@import '../../../assets/scss/variables.scss';
+
 .modal__wrapper {
   display: flex;
   align-items: center;
@@ -21,7 +23,7 @@
   padding: 40px 30px 60px;
   margin: 0 15px;
   position: relative;
-  background: #282828;
+  background: $mainBackground;
   border-radius: 2px;
 }
 
@@ -58,10 +60,14 @@
   font-family: 'Syncopate', sans-serif;
   font-weight: bold;
   font-size: 1.6em;
-  color: #fff;
+  color: $textColor;
   line-height: 150%;
   padding: 0 0 30px;
   margin: 0;
+}
+
+.modal__text {
+  color: $textColor;
 }
 
 @media (max-width: 768px) {

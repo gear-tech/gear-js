@@ -120,7 +120,12 @@ export const Wallet = () => {
             ) : (
               <div className="user-wallet__msg">
                 Polkadot extension was not found or disabled. Please{' '}
-                <a href="https://polkadot.js.org/extension/" target="_blank" rel="noreferrer">
+                <a
+                  className="user-wallet__msg-link"
+                  href="https://polkadot.js.org/extension/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   install it
                 </a>
               </div>
