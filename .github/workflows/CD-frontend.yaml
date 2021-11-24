@@ -2,7 +2,7 @@ name: CD-frontend
 
 on:
   push:
-    branches: [master, 'do-clear-db-cd']
+    branches: [master]
     paths:
       - website/frontend/**
 

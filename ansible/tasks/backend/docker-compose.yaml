@@ -22,7 +22,6 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      # - DB_PORT=${DB_PORT}
       - DB_HOST=postgres
       - WS_PROVIDER=${WS_PROVIDER}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
