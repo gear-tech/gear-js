@@ -1,8 +1,6 @@
 name: CD
 
-on:
-  push:
-    branches: ['do-event-listener']
+on: [workflow_dispatch]
 
 env:
   CARGO_TERM_COLOR: always
@@ -97,5 +95,5 @@ jobs:
           # Optional, literal inventory file contents
           inventory: |
             [all]
-            ${{secrets.GEAR_BACKEND_NODE}}
+            ${{secrets.TEST_GEAR_BACKEND}}
           requirements: galaxy-requirements.yml
