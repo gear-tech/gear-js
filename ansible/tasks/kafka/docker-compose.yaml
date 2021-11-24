@@ -28,12 +28,15 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_DB=${DB_NAME}
     volumes:
-      - /Users/dmitriiosipov/gear/data_storage_data:/var/lib/postgresql/data
+      - /home/ec2-user/data_storage_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
 
   data-storage:
     image: mithriy/gear-data-storage:nightly
     depends_on:
       - postgres
+      - kafka
     environment:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
@@ -47,11 +50,10 @@ services:
     ports:
       - '3001:3001'
     image: mithriy/gear-api-backend:nightly
+    depends_on:
+      - kafka
     environment:
       - CLIENT_ID=${KAFKA_API_BACKEND_CLIENT_ID}
       - GROUP_ID=${KAFKA_API_BACKEND_GROUP_ID}
       - BROKERS=${KAFKA_BROKERS}
       - PORT=${API_BACKEND_PORT}
-
-volumes:
-  data_storage_data:
