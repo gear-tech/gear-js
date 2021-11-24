@@ -5,7 +5,7 @@
     src: ../../../website/frontend/
     dest: /home/ec2-user/frontend
 
-- name: Install frontend
+- name: run install
   community.general.npm:
     path: /home/ec2-user/frontend
   environment:
@@ -18,7 +18,7 @@
     REACT_APP_API_CONNECT_ADDRESS: "{{ lookup('env','REACT_APP_API_CONNECT_ADDRESS') }}"
     REACT_APP_RRT: "{{ lookup('env','REACT_APP_RRT') }}"
 
-- name: Build frontend
+- name: run build
   shell: >
     cd /home/ec2-user/frontend; npm run build; cd ..
 

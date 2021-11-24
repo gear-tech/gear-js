@@ -1,6 +1,5 @@
 version: '3'
 services:
-
   pg_db:
     image: postgres
     restart: always
@@ -11,18 +10,20 @@ services:
     volumes:
       - /home/ec2-user/pg_data:/var/lib/postgresql/data
     ports:
-      - ${DB_PORT:-5432}:5432
+      - '5432:5432'
 
   backend:
     ports:
-      - "3001:3000"
+      - '3001:3000'
     image: schernovgear/gear-backend:nightly
+    depends_on:
+      - postgres
     environment:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_PORT=${DB_PORT}
-      - DB_HOST=${DB_HOST}
+      # - DB_PORT=${DB_PORT}
+      - DB_HOST=postgres
       - WS_PROVIDER=${WS_PROVIDER}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
