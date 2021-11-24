@@ -1,9 +1,6 @@
 name: Clean-db
 
-# on: [workflow_dispatch]
-on:
-  push:
-    branches: [do-clear-db-cd]
+on: [workflow_dispatch]
 
 env:
   CARGO_TERM_COLOR: always
