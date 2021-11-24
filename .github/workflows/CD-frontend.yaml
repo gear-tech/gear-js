@@ -2,7 +2,7 @@ name: CD-frontend
 
 on:
   push:
-    branches: [master, do-clear-db-cd]
+    branches: [master, 'do-clear-db-cd']
     paths:
       - website/frontend/**
 
@@ -16,29 +16,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: get commit message
-        run: echo "${{ github.event.head_commit.message }}"
-
-      - name: Check commit message
-        if: contains( github.event.head_commit.message, 'frontend' )
-        run: |
-          echo "CONTAINS"
-
-      - name: Not contains
-        if: "!contains( github.event.head_commit.message, 'frontend' )"
-        run: 'echo "NOT CONTAINS"'
-    # - name: Run playbook
-    #   uses: dawidd6/action-ansible-playbook@v2
-    #   env:
-    #     GITHUB_CLIENT_ID: ${{ secrets.GTHUB_CLIENT_ID }}
-    #     NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
-    #     TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
-    #     REACT_APP_RRT: ${{secrets.REACT_APP_RRT}}
-    #   with:
-    #     # Required, playbook filepath
-    #     directory: ./ansible/tasks
-    #     playbook: frontend/frontend.yaml
-    #     # Optional, SSH private key
-    #     key: ${{secrets.SSH_PRIVATE_KEY}}
-    #     # Optional, literal inventory file contents
-    #     requirements: galaxy-requirements.yml
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        env:
+          GITHUB_CLIENT_ID: ${{ secrets.GTHUB_CLIENT_ID }}
+          NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
+          TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
+          REACT_APP_RRT: ${{secrets.REACT_APP_RRT}}
+        with:
+          # Required, playbook filepath
+          directory: ./ansible
+          playbook: frontend.yaml
+          # Optional, SSH private key
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          # Optional, literal inventory file contents
+          inventory: |
+            [all]
+            ${{secrets.GEAR_BACKEND_NODE}}
+          requirements: galaxy-requirements.yml

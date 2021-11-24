@@ -25,8 +25,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.TEST_DOCKERHUB_USERNAME }}
+          password: ${{ secrets.TEST_DOCKERHUB_TOKEN }}
 
       - name: Build and push
         id: docker_build
@@ -34,7 +34,7 @@ jobs:
         with:
           file: website/backend/Dockerfile
           push: true
-          tags: schernovgear/gear-backend:nightly
+          tags: mithriy/gear-backend:nightly
 
   Deploy:
     needs: Build-backend-docker
