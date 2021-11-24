@@ -119,7 +119,7 @@ export const NotificationsPage: VFC = () => {
         </div>
         <Pagination
           page={currentPage}
-          count={count || 0}
+          count={count || 1}
           onPageChange={onPageChange}
           setShouldReload={setShouldReload}
         />
@@ -156,7 +156,7 @@ export const NotificationsPage: VFC = () => {
         <div className="pagination-bottom">
           <Pagination
             page={currentPage}
-            count={count || 0}
+            count={count || 1}
             onPageChange={onPageChange}
             setShouldReload={setShouldReload}
           />

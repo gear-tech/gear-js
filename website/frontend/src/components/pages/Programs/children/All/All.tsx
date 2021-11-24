@@ -116,7 +116,7 @@ export const All: VFC = () => {
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
         <span>Total results: {allUploadedProgramsCount || 0}</span>
-        <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
+        <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
         <SearchForm
@@ -160,7 +160,7 @@ export const All: VFC = () => {
       </div>
       {allUploadedPrograms && allUploadedPrograms.length > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
+          <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
         </div>
       )}
     </div>

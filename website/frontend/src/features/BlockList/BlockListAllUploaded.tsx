@@ -97,7 +97,7 @@ export const BlockListAllUploaded: VFC = () => {
     <div className="all-programs">
       <div className="pagination-wrapper">
         <span>Total results: {allUploadedProgramsCount || 0}</span>
-        <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
+        <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
       </div>
       <div className="all-programs--list">
         {(allUploadedPrograms &&
@@ -133,7 +133,7 @@ export const BlockListAllUploaded: VFC = () => {
       </div>
       {(allUploadedPrograms && allUploadedPrograms.length && (
         <div className="pagination-bottom">
-          <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
+          <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
         </div>
       )) ||
         null}

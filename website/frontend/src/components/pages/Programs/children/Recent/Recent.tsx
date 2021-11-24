@@ -122,7 +122,7 @@ export const Recent: VFC = () => {
     <div className={styles.blockList}>
       <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
-        <Pagination page={currentPage} count={programsCount || 0} onPageChange={onPageChange} />
+        <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
         <SearchForm
@@ -148,7 +148,7 @@ export const Recent: VFC = () => {
 
       {programs && programs.length > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={programsCount || 0} onPageChange={onPageChange} />
+          <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
         </div>
       )}
     </div>
