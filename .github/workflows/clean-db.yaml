@@ -1,4 +1,4 @@
-name: Purge-chain
+name: Clean-db
 
 on: [workflow_dispatch]
 
@@ -12,13 +12,17 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run playbook
+        if: ${{ github.actor == 'osipov-mit' }}
         uses: dawidd6/action-ansible-playbook@v2
         with:
           # Required, playbook filepath
           directory: ./ansible/
-          playbook: clear-db.yaml
+          playbook: clean-db.yaml
           # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}
+          inventory: |
+            [all]
+            ${{secrets.GEAR_BACKEND_NODE}}
         env:
           DB_CONTAINER_NAME: ${{ secrets.DB_CONTAINER_NAME }}
           DB_NAME: ${{ secrets.DB_NAME }}
