@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Metadata } from '@gear-js/api';
-import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/events';
 import { AddAlert } from 'store/actions/actions';
 import { MessageForm } from 'components/pages/Programs/children/Message/children/MessageForm/MessageForm';
