@@ -10,7 +10,7 @@ services:
     volumes:
       - /home/ec2-user/pg_data:/var/lib/postgresql/data
     ports:
-      - ${DB_PORT:-5432}:5432
+      - ${DB_PORT:-54322}:5432
 
   backend:
     image: mithriy/gear-data-storage:nightly
