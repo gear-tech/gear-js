@@ -16,8 +16,7 @@ jobs:
 
       - name: test
         run: |
-          echo "${{ github.event }}"
-          echo "${{ github.actor }}"
+          echo "${{ toJSON(github.event) }}"
 
       # - name: Run playbook
       #   uses: dawidd6/action-ansible-playbook@v2
