@@ -24,6 +24,7 @@ jobs:
           key: ${{secrets.SSH_PRIVATE_KEY}}
           inventory: |
             [all]
+            ${{secrets.GEAR_BACKEND_NODE}}
         env:
           DB_CONTAINER_NAME: ${{ secrets.DB_CONTAINER_NAME }}
           DB_NAME: ${{ secrets.DB_NAME }}
