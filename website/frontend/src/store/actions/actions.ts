@@ -15,6 +15,8 @@ import {
   ProgramRPCModel,
   ProgramsPagintaionModel,
 } from 'types/program';
+
+import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
 import GitRequestService from 'services/GitRequestService';
 import TelegramRequestService from 'services/TelegramRequestService';
@@ -134,6 +136,9 @@ export const resetBlocksAction = () => ({ type: BlockActionTypes.RESET_BLOCKS })
 
 export const setApiReady = () => ({ type: ApiActionTypes.SET_API });
 export const resetApiReady = () => ({ type: ApiActionTypes.RESET_API });
+
+export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActionTypes.SET_ACCOUNT, payload });
+export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
 const gitService = new GitRequestService();
 const telegramService = new TelegramRequestService();

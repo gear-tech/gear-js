@@ -19,6 +19,7 @@ type Props = {
 
 export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const dispatch = useDispatch();
+  const currentAccount = useSelector((state: RootState) => state.account.account);
   const apiRequest = new ServerRPCRequestService();
 
   const [api] = useApi();
@@ -108,10 +109,17 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   };
 
   const handleTransferBalanceFromAlice = () => {
-    const publicKey: any = localStorage.getItem('public_key');
+    try {
+      if (!currentAccount) {
+        throw new Error(`WALLET NOT CONNECTED`);
+      }
 
-    if (api) {
-      api.balance.transferFromAlice(publicKey, 5000000000);
+      if (api) {
+        api.balance.transferFromAlice(currentAccount.address, GEAR_BALANCE_TRANSFER_VALUE);
+        dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `TRANSFERED ${GEAR_BALANCE_TRANSFER_VALUE}` }));
+      }
+    } catch (error) {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
     }
   };
 
