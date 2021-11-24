@@ -15,7 +15,7 @@ services:
   backend:
     ports:
       - '3001:3000'
-    image: schernovgear/gear-backend:nightly
+    image: mithriy/gear-backend:nightly
     depends_on:
       - postgres
     environment:
