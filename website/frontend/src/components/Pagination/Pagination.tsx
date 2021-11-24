@@ -1,7 +1,9 @@
 import React, { VFC } from 'react';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { PaginationArrow } from 'assets/Icons';
+import { routes } from 'routes';
 import './Pagination.scss';
 
 type Props = {
@@ -13,9 +15,8 @@ type Props = {
 
 export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldReload }) => {
   const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
-
-  const isDisabledPrev = page === 0;
-  const isDisabledNext = page === totalPages - 1 || totalPages === 0;
+  const isDisabledPrev = page === 1;
+  const isDisabledNext = page === totalPages || totalPages === 0;
 
   const onPreviousClickHandler = () => {
     if (setShouldReload) {
@@ -33,26 +34,28 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
 
   return (
     <div className="pagination">
-      <button
-        type="button"
-        className={clsx('pagination--box', isDisabledPrev && 'disabled')}
-        onClick={onPreviousClickHandler}
-        disabled={isDisabledPrev}
-      >
-        <PaginationArrow color="#C4CDD5" />
-      </button>
+      {!isDisabledPrev ? (
+        <Link className="pagination--box" to={`${routes.allPrograms}/?p=${page - 1}`} onClick={onPreviousClickHandler}>
+          <PaginationArrow color="#C4CDD5" />
+        </Link>
+      ) : (
+        <div className={clsx('pagination--box', 'disabled')}>
+          <PaginationArrow color="#C4CDD5" />
+        </div>
+      )}
       <button type="button" className="pagination--box selected">
-        {page + 1}
+        {page}
       </button>
       <p className="pagination__total">of {totalPages}</p>
-      <button
-        type="button"
-        className={clsx('pagination--box', isDisabledNext && 'disabled')}
-        onClick={onNextClickHandler}
-        disabled={isDisabledNext}
-      >
-        <PaginationArrow color="#C4CDD5" />
-      </button>
+      {!isDisabledNext ? (
+        <Link className="pagination--box" to={`${routes.allPrograms}/?p=${page + 1}`} onClick={onNextClickHandler}>
+          <PaginationArrow color="#C4CDD5" />
+        </Link>
+      ) : (
+        <div className={clsx('pagination--box', 'disabled')}>
+          <PaginationArrow color="#C4CDD5" />
+        </div>
+      )}
     </div>
   );
 };
