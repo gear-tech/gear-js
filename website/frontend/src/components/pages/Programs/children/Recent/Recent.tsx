@@ -1,5 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import {
   getUserProgramsAction,
@@ -36,6 +37,9 @@ const selectPrograms = createSelector(
 
 export const Recent: VFC = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const urlSearch = location.search;
+  const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
 
   const [search, setSearch] = useState('');
 
@@ -49,12 +53,12 @@ export const Recent: VFC = () => {
   }
 
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
-  const offset = currentPage * INITIAL_LIMIT_BY_PAGE;
+  const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
 
   useEffect(() => {
     dispatch(

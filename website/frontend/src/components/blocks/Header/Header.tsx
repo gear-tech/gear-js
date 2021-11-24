@@ -28,12 +28,15 @@ export const Header: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const alert = useAlert();
+  const showUser =
+    [
+      '',
+      routes.program.split('/')[1],
+      routes.allPrograms.split('/')[1],
+      routes.uploadedPrograms.split('/')[1],
+      routes.notifications.split('/')[1],
+    ].indexOf(location.pathname.split('/')[1]) > -1;
 
-  let showUser =
-    [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.notifications].indexOf(location.pathname) > -1;
-  if (routes.program.split('/')[1] === location.pathname.split('/')[1]) {
-    showUser = true;
-  }
   const isNotifications = location.pathname === routes.notifications;
 
   const chainName = localStorage.chain ? localStorage.chain : 'Loading ...';
