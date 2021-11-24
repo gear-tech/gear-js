@@ -43,7 +43,6 @@
     "@polkadot/util-crypto": "^7.4.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
-    "nats": "^2.2.0",
     "node-fetch": "^2.6.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
