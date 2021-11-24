@@ -52,7 +52,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     addPublicKey: async (user: User, params: any) => {
-      return (await this.userService.addPublicKey(user, params.publicKey, params.publicKeyRaw))?.publicKey;
+      return null; // (await this.userService.addPublicKey(user, params.publicKey, params.publicKeyRaw))?.publicKey;
     },
   };
 
@@ -65,11 +65,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     allUser: async (user: User, params: any) => {
-      return await this.programService.getAllUserPrograms(
-        params?.publicKeyRaw || user.publicKeyRaw,
-        params?.limit,
-        params?.offset,
-      );
+      return await this.programService.getAllUserPrograms(params?.publicKeyRaw, params?.limit, params?.offset);
     },
 
     addMeta: async (user: User, params: any) => {
@@ -91,7 +87,7 @@ export class HttpRpcMethods extends RpcMethods {
   message = {
     all: async (user: User, params?: any) => {
       return await this.messageService.getAll(
-        params?.destination || user.publicKeyRaw,
+        params?.destination,
         params?.isRead,
         params?.programId,
         params?.limit,
@@ -100,7 +96,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     countUnread: async (user: User, params: any) => {
-      return await this.messageService.getCountUnread(params?.publicKeyRaw || user.publicKeyRaw);
+      return await this.messageService.getCountUnread(params?.publicKeyRaw);
     },
 
     savePayload: async (user: User, params: any) => {
@@ -108,7 +104,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     markAsRead: async (user: User, params: any) => {
-      await this.messageService.markAsRead(params?.publicKeyRaw || user.publicKeyRaw, params?.id);
+      await this.messageService.markAsRead(params?.publicKeyRaw, params?.id);
       return 'ok';
     },
   };
@@ -118,7 +114,7 @@ export class HttpRpcMethods extends RpcMethods {
       if (!params?.value) {
         throw new InvalidParamsError();
       }
-      return await this.gearService.balanceTopUp(params?.publicKey || user.publicKeyRaw, params.value);
+      return await this.gearService.balanceTopUp(params?.publicKey, params.value);
     },
   };
 }
