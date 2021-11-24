@@ -1,3 +1,1 @@
-import { AccountList } from './AccountList';
-
-export { AccountList };
+export { AccountList } from './AccountList';

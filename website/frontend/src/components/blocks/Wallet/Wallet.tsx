@@ -72,7 +72,7 @@ export const Wallet = () => {
   }, [isOpen]);
 
   // Setting current account and save it into the LocalStage
-  const selectAccount = (event: MouseEvent, index: number) => {
+  const selectAccount = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
     event.stopPropagation();
     if (ingectedAccounts) {
       ingectedAccounts.forEach((acc: UserAccount, i: number) => {

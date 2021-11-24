@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import Identicon from '@polkadot/react-identicon';
 import clsx from 'clsx';
 import { UserAccount } from '../../../types/account';
@@ -11,13 +11,13 @@ type Props = {
   toggleAccount: (event: any, index: number) => void;
 };
 
-export const AccountList = ({ list, toggleAccount }: Props) => {
+export const AccountList: FC<Props> = ({ list, toggleAccount }: Props) => {
   const accountItem = list.map((account: UserAccount, index: number) => (
     <button
       type="button"
       className={clsx('account-list__item', account.isActive && 'active')}
       key={account.address}
-      onClick={(event: any) => {
+      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
         toggleAccount(event, index);
       }}
     >
