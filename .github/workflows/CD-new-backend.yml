@@ -1,6 +1,8 @@
 name: CD
 
-on: [workflow_dispatch]
+on:
+  push:
+    branches: [do-event-listener]
 
 env:
   CARGO_TERM_COLOR: always
