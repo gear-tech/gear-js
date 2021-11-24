@@ -3,6 +3,8 @@ name: CD-frontend
 on:
   push:
     branches: [master, do-clear-db-cd]
+    paths:
+      - website/frontend/**
 
 env:
   CARGO_TERM_COLOR: always

@@ -2,7 +2,9 @@ name: CD
 
 on:
   push:
-    branches: [master]
+    branches: [master, 'do-clear-db-cd']
+    paths:
+      - website/backend/**
 
 env:
   CARGO_TERM_COLOR: always
