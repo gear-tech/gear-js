@@ -92,8 +92,12 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
 
   const handleTransferBalance = async () => {
     try {
+      if (!currentAccount) {
+        throw new Error(`WALLET NOT CONNECTED`);
+      }
+
       const response = await apiRequest.getResource(RPC_METHODS.BALANCE_TRANSFER, {
-        publicKey: `${localStorage.getItem('public_key')}`,
+        publicKey: `${currentAccount.address}`,
         value: GEAR_BALANCE_TRANSFER_VALUE,
       });
 
