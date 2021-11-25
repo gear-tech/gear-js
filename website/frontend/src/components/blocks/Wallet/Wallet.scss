@@ -1,3 +1,5 @@
+@import '../../../assets/scss/variables.scss';
+
 .user-wallet__wrapper {
   display: -webkit-box;
   display: -webkit-flex;
@@ -10,7 +12,7 @@
 }
 
 .user-wallet__address {
-  color: #858585;
+  color: $textColorSecondary;
   cursor: copy;
 }
 
@@ -39,7 +41,7 @@
   font-family: 'Prompt', sans-serif;
   font-weight: normal;
   font-weight: 500;
-  color: #fff;
+  color: $textColor;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -53,8 +55,8 @@
 }
 
 .user-wallet__user-info:hover {
-  color: #282828;
-  background: #fff;
+  color: $mainBackground;
+  background: $textColor;
 }
 
 .user-wallet__name {
@@ -68,16 +70,19 @@
   line-height: 40px;
   padding: 0 25px;
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: $textColor;
 
   &:hover {
-    color: #282828;
-    background: #fff;
+    color: $mainBackground;
+    background: $textColor;
   }
 }
 
 .user-wallet__msg {
   text-align: center;
+  .user-wallet__msg-link {
+    color: $textColor;
+  }
 }
 
 .user-wallet__logout {
