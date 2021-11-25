@@ -3,6 +3,8 @@ name: CD-backend
 on:
   push:
     branches: [master]
+    paths:
+      - website/backend/**
 
 env:
   CARGO_TERM_COLOR: always
