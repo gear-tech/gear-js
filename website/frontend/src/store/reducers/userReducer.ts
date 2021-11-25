@@ -2,7 +2,6 @@ import { UserState, UserAction, UserActionTypes } from '../../types/user';
 
 const initialState: UserState = {
   user: null,
-  accessToken: '',
   generatedKeypair: null,
   isBalanceTransfered: false,
   loading: false,
@@ -11,15 +10,6 @@ const initialState: UserState = {
 
 const userReducer = (state = initialState, action: UserAction): UserState => {
   switch (action.type) {
-    case UserActionTypes.FETCH_TOKEN:
-      return { ...state, loading: true, error: null };
-
-    case UserActionTypes.FETCH_TOKEN_SUCCESS:
-      return { ...state, loading: false, error: null, accessToken: action.payload };
-
-    case UserActionTypes.FETCH_TOKEN_ERROR:
-      return { ...state, loading: false, error: action.payload, accessToken: '' };
-
     case UserActionTypes.FETCH_USER:
       return { ...state, loading: true, error: null };
 

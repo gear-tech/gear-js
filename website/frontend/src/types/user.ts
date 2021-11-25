@@ -14,7 +14,6 @@ export interface UserKeypairModel {
 
 export interface UserState {
   user: UserModel | null;
-  accessToken: string;
   generatedKeypair: UserKeypairModel | null;
   isBalanceTransfered: boolean;
   loading: boolean;
@@ -34,9 +33,6 @@ export interface UserKeypairRPCModel {
 }
 
 export enum UserActionTypes {
-  FETCH_TOKEN = 'FETCH_TOKEN',
-  FETCH_TOKEN_SUCCESS = 'FETCH_TOKEN_SUCCESS',
-  FETCH_TOKEN_ERROR = 'FETCH_TOKEN_ERROR',
   FETCH_USER = 'FETCH_USER',
   FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS',
   FETCH_USER_ERROR = 'FETCH_USER_ERROR',
@@ -44,20 +40,6 @@ export enum UserActionTypes {
   FETCH_USER_KEYPAIR_SUCCESS = 'FETCH_USER_KEYPAIR_SUCCESS',
   FETCH_USER_KEYPAIR_ERROR = 'FETCH_USER_KEYPAIR_ERROR',
   TRANSFER_BALANCE = 'TRANSFER_BALANCE',
-  RESET_USER = 'RESET_USER',
-}
-
-interface FetchTokenAction {
-  type: UserActionTypes.FETCH_TOKEN;
-}
-
-interface FetchTokenSuccessAction {
-  type: UserActionTypes.FETCH_TOKEN_SUCCESS;
-  payload: string;
-}
-interface FetchTokenErrorAction {
-  type: UserActionTypes.FETCH_TOKEN_ERROR;
-  payload: string;
 }
 
 interface FetchUserAction {
@@ -89,9 +71,6 @@ interface TransferBalanceAction {
 }
 
 export type UserAction =
-  | FetchTokenAction
-  | FetchTokenSuccessAction
-  | FetchTokenErrorAction
   | FetchUserAction
   | FetchUserErrorAction
   | FetchUserSuccessAction

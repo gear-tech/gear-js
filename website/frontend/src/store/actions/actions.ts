@@ -29,10 +29,6 @@ import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
 import { AlertActionTypes } from '../reducers/AlertReducer';
 
-const fetchTokenAction = () => ({ type: UserActionTypes.FETCH_TOKEN });
-const fetchTokenSuccessAction = (payload: {}) => ({ type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload });
-const fetchTokenErrorAction = () => ({ type: UserActionTypes.FETCH_TOKEN_ERROR });
-
 const fetchUserAction = () => ({ type: UserActionTypes.FETCH_USER });
 const fetchUserSuccessAction = (payload: UserModel) => ({ type: UserActionTypes.FETCH_USER_SUCCESS, payload });
 const fetchUserErrorAction = () => ({ type: UserActionTypes.FETCH_USER_ERROR });
