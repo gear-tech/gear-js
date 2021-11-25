@@ -7,7 +7,7 @@ import { HttpRpcMessageHandler } from './rpc.handler';
 export class RpcController {
   constructor(private readonly rpcHandler: HttpRpcMessageHandler) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async rpc(@ReqUser() user, @Body() body) {
     return await this.rpcHandler.requestMessage(user, body);
