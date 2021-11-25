@@ -12,22 +12,25 @@ import {
   GetMetaParams,
   GetOutgoingMessagesParams,
 } from '@gear-js/backend-interfaces';
-import { ConfigService } from '@nestjs/config';
+import config from '../config/configuration';
 
 const logger = new Logger('ApiGatewayService');
 
-const config = new ConfigService();
 @Injectable()
 export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit {
+  constructor() {
+    super();
+    console.log(config().kafka.brokers);
+  }
   @Client({
     transport: Transport.KAFKA,
     options: {
       client: {
-        clientId: config.get('kafka.clientId'),
-        brokers: config.get('kafka.brokers'),
+        clientId: config().kafka.clientId,
+        brokers: config().kafka.brokers,
       },
       consumer: {
-        groupId: config.get('kafka.groupId'),
+        groupId: config().kafka.groupId,
       },
     },
   })

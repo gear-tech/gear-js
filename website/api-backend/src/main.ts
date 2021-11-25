@@ -6,11 +6,7 @@ const logger = new Logger('Main');
 
 async function bootstrap() {
   const port = configuration().server.port;
-  console.log({
-    clientId: process.env.CLIENT_ID,
-    groupId: process.env.GROUP_ID,
-    brokers: process.env.BROKERS.split(','),
-  });
+
   console.log(configuration().kafka);
   const app = await NestFactory.create(AppModule, { cors: true });
   app.setGlobalPrefix('api');
