@@ -17,17 +17,17 @@ export class RpcMessageHandler {
     }
   }
 
-  async requestMessage(user, message) {
+  async requestMessage(message) {
     if (this.isArray(message)) {
       const results = [];
       const promises = message.map((procedure) => {
-        const result = this.executeProcedure(user, procedure);
+        return this.executeProcedure(procedure);
       });
       await Promise.all(promises);
       return results;
     }
     if (this.isObject(message)) {
-      return this.executeProcedure(user, message);
+      return this.executeProcedure(message);
     }
   }
 
@@ -44,20 +44,20 @@ export class RpcMessageHandler {
     return response;
   }
 
-  async executeProcedure(user, procedure) {
+  async executeProcedure(procedure) {
     let response = null;
     await this.checkProcedure(procedure, (err, method) => {
       if (err) {
         response = this.getResponse(procedure, err);
       } else {
-        response = this.executeMethod(method, user, procedure);
+        response = this.executeMethod(method, procedure);
       }
     });
     return response;
   }
 
-  async executeMethod(method, user, procedure) {
-    const result = await method(user, procedure.params);
+  async executeMethod(method, procedure) {
+    const result = await method(procedure.params);
     return this.getResponse(procedure, null, result);
   }
 }

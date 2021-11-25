@@ -46,11 +46,6 @@ export class InternalServerError extends GearError {
   message = 'Internal server error';
 }
 
-export class UnathorizedError extends GearError {
-  code = -32401;
-  message = 'Unathorized';
-}
-
 export class GearNodeError extends GearError {
   code = -32010;
   message = 'Gear node error';
