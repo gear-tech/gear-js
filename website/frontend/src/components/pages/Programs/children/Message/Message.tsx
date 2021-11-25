@@ -6,7 +6,7 @@ import { AddAlert } from 'store/actions/actions';
 import { MessageForm } from 'components/pages/Programs/children/Message/children/MessageForm/MessageForm';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import './Message.scss';
-import { GEAR_STORAGE_KEY, PAGE_TYPES, RPC_METHODS } from 'consts';
+import { PAGE_TYPES, RPC_METHODS } from 'consts';
 import ServerRPCRequestService from '../../../../../services/ServerRPCRequestService';
 
 type Props = {
@@ -32,13 +32,9 @@ export const Message: VFC<Props> = ({ programHash, programName, handleClose }) =
   const getMeta = useCallback(async () => {
     const apiRequest = new ServerRPCRequestService();
 
-    const { result } = await apiRequest.getResource(
-      RPC_METHODS.GET_METADATA,
-      {
-        programId: programHash,
-      },
-      { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` }
-    );
+    const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
+      programId: programHash,
+    });
 
     return result.meta as Metadata;
   }, [programHash]);

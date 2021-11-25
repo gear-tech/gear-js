@@ -41,9 +41,6 @@ const userReducer = (state = initialState, action: UserAction): UserState => {
     case UserActionTypes.TRANSFER_BALANCE:
       return { ...state, isBalanceTransfered: true };
 
-    case UserActionTypes.RESET_USER:
-      return { ...initialState };
-
     default:
       return state;
   }

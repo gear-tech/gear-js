@@ -88,10 +88,6 @@ interface TransferBalanceAction {
   type: UserActionTypes.TRANSFER_BALANCE;
 }
 
-interface ResetUserAction {
-  type: UserActionTypes.RESET_USER;
-}
-
 export type UserAction =
   | FetchTokenAction
   | FetchTokenSuccessAction
@@ -102,5 +98,4 @@ export type UserAction =
   | FetchUserKeypairAction
   | FetchUserKeypairSuccessAction
   | FetchUserKeypairErrorAction
-  | TransferBalanceAction
-  | ResetUserAction;
+  | TransferBalanceAction;

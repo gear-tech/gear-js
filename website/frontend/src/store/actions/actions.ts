@@ -18,13 +18,11 @@ import {
 
 import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
-import GitRequestService from 'services/GitRequestService';
-import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
+import { GEAR_MNEMONIC_KEY, RPC_METHODS } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { nodeApi } from '../../api/initApi';
@@ -128,10 +126,6 @@ export const markCertainRecentNotificationsAsReadAction = (payload: string[]) =>
 export const fetchGasAction = (payload: number) => ({ type: ProgramActionTypes.FETCH_GAS, payload });
 export const resetGasAction = () => ({ type: ProgramActionTypes.RESET_GAS });
 
-const resetUserAction = () => ({ type: UserActionTypes.RESET_USER });
-const resetProgramsAction = () => ({ type: ProgramActionTypes.RESET_PROGRAMS });
-const resetNotificationsAction = () => ({ type: NotificationActionTypes.RESET_NOTIFICATIONS });
-
 export const resetBlocksAction = () => ({ type: BlockActionTypes.RESET_BLOCKS });
 
 export const setApiReady = () => ({ type: ApiActionTypes.SET_API });
@@ -140,8 +134,6 @@ export const resetApiReady = () => ({ type: ApiActionTypes.RESET_API });
 export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActionTypes.SET_ACCOUNT, payload });
 export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
-const gitService = new GitRequestService();
-const telegramService = new TelegramRequestService();
 const userService = new UserRequestService();
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
@@ -156,45 +148,6 @@ export const generateKeypairAction = () => (dispatch: any) => {
       dispatch(fetchUserKeypairSuccessAction(result.result));
     })
     .catch(() => dispatch(fetchUserKeypairErrorAction()));
-};
-
-export const getGitUserJwtAction = (code: string) => (dispatch: any) => {
-  dispatch(fetchTokenAction());
-  gitService
-    .authWithGit(code)
-    .then((result: any) => {
-      window.localStorage.setItem(GEAR_STORAGE_KEY, result.result.access_token);
-      dispatch(fetchTokenSuccessAction(result));
-    })
-    .catch(() => dispatch(fetchTokenErrorAction()));
-};
-
-export const getTelegramUserJwtAction = (user: any) => (dispatch: any) => {
-  dispatch(fetchTokenAction());
-  telegramService
-    .authWithTelegram(user)
-    .then((result: any) => {
-      window.localStorage.setItem(GEAR_STORAGE_KEY, result.result.access_token);
-      dispatch(fetchTokenSuccessAction(result));
-      if (result.result.access_token) {
-        window.location.reload();
-      }
-    })
-    .catch(() => dispatch(fetchTokenErrorAction()));
-};
-
-export const getTestUserJwtAction = (userId: string) => (dispatch: any) => {
-  dispatch(fetchTokenAction());
-  userService
-    .authWithTest(userId)
-    .then((result: any) => {
-      window.localStorage.setItem(GEAR_STORAGE_KEY, result.result.access_token);
-      dispatch(fetchTokenSuccessAction(result));
-      if (result.result.access_token) {
-        window.location.reload();
-      }
-    })
-    .catch(() => dispatch(fetchTokenErrorAction()));
 };
 
 export const getUserDataAction = () => (dispatch: any) => {
@@ -344,13 +297,4 @@ export const subscribeToEvents = () => (dispatch: any) => {
       );
     }
   });
-};
-
-export const logoutFromAccountAction = () => (dispatch: any) => {
-  localStorage.clear();
-  dispatch(resetUserAction());
-  dispatch(resetProgramsAction());
-  dispatch(resetNotificationsAction());
-  dispatch(resetProgramPayloadTypeAction());
-  dispatch(resetGasAction());
 };

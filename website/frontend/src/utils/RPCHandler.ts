@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import { customAlphabet } from 'nanoid';
-import { GEAR_LOCAL_WS_URI, GEAR_STORAGE_KEY } from '../consts';
+import { GEAR_LOCAL_WS_URI } from '../consts';
 
 export interface RPCPayload {
   method: string;
@@ -39,18 +39,15 @@ export class RPCHandler {
 
   private readonly socket: any;
 
-  private readonly key: string | null;
-
   private readonly message: string;
 
   constructor(message: string) {
     this.message = message;
     this.pendingRequests = {};
     this.subscriptions = {};
-    this.key = localStorage.getItem(GEAR_STORAGE_KEY);
     this.socket = io(GEAR_LOCAL_WS_URI, {
       transports: ['websocket'],
-      query: { Authorization: `Bearer ${this.key || ''}` },
+      query: {},
     });
     this.socket.on('message', (data: RPCReq) => {
       this.settleRequest(data);

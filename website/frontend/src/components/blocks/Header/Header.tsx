@@ -197,11 +197,6 @@ export const Header: VFC = () => {
             )) ||
               null}
           </Link> */}
-          {/* <div className="user-block--wrapper">
-            <img src={user?.photoUrl ?? githubIcon} alt="avatar" />
-            <span className="user-block__name">{userInfo}</span>
-          </div> */}
-
           <Wallet />
         </div>
       )) || (
