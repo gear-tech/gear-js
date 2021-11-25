@@ -1,5 +1,5 @@
 .loading-popup {
-  position: absolute;
+  position: fixed;
   top: calc(50% - 40px);
   left: 50%;
   transform: translate(-50%, -50%);
