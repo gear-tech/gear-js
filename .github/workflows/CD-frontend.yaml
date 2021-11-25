@@ -2,7 +2,7 @@ name: CD-frontend
 
 on:
   push:
-    branches: [master, do-remove-auth-backend]
+    branches: [master]
     paths:
       - website/frontend/**
 

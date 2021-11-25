@@ -2,7 +2,7 @@ name: CD-backend
 
 on:
   push:
-    branches: [master, 'do-remove-auth-backend']
+    branches: [master]
 
 env:
   CARGO_TERM_COLOR: always
