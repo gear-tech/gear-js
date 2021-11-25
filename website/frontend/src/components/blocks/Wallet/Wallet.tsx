@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { useDispatch, useSelector } from 'react-redux';
 import Identicon from '@polkadot/react-identicon';
+import { GearKeyring } from '@gear-js/api';
 import { LogoutIcon } from 'assets/Icons';
 import { RootState } from 'store/reducers';
 import { setCurrentAccount, resetCurrentAccount } from 'store/actions/actions';
@@ -80,6 +81,7 @@ export const Wallet = () => {
         if (i === index) {
           acc.isActive = true;
           localStorage.setItem('savedAccount', acc.address);
+          localStorage.setItem('public_key_raw', GearKeyring.decodeAddress(acc.address));
         }
       });
       dispatch(setCurrentAccount(ingectedAccounts[index]));
@@ -89,6 +91,7 @@ export const Wallet = () => {
   const handleLogout = () => {
     dispatch(resetCurrentAccount());
     localStorage.removeItem('savedAccount');
+    localStorage.removeItem('public_key_raw');
   };
 
   return (
