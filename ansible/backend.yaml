@@ -1,28 +1,9 @@
----
-#Install/update backend docker-compose
-- name: Copy docker-compose
-  copy:
-    src: docker-compose.yaml
-    dest: /home/ec2-user/docker-compose.yaml
-
-- name: Stop docker-compose
-  shell: >
-   /usr/local/bin/docker-compose -f "/home/ec2-user/docker-compose.yaml" down
+- name: 'deploy to aws'
+  hosts: all
   become: yes
+  remote_user: ec2-user
 
-- name: Pull docker images
-  shell: >
-   /usr/local/bin/docker-compose -f "/home/ec2-user/docker-compose.yaml" pull
-  become: yes
-
-- name: Remove old docker images
-  shell:  docker image prune -f
-  become: yes 
-
-- name: Run docker-compose
-  shell: >
-   /usr/local/bin/docker-compose -f "/home/ec2-user/docker-compose.yaml" up -d
-  become: yes
+  #Set env vars on remote from envs on runner
   environment:
     DB_NAME: "{{ lookup('env','DB_NAME') }}"
     DB_USER: "{{ lookup('env','DB_USER') }}"
@@ -35,5 +16,23 @@
     TELEGRAM_BOT_TOKEN: "{{ lookup('env','TELEGRAM_BOT_TOKEN') }}"
     TELEGRAM_BOT_USERNAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
     IDE_SOCKET: "{{ lookup('env','IDE_SOCKET') }}"
+    HOST: "{{ lookup('env','HOST') }}"
+    IDE_FOLDER: "{{ lookup('env','IDE_FOLDER') }}"
+    PORT: "{{ lookup('env','PORT') }}"
     ACCOUNT_SEED: "{{ lookup('env','ACCOUNT_SEED') }}"
     SUDO_SEED: "{{ lookup('env','SUDO_SEED') }}"
+    SITE_ACCOUNT_BALANCE: "{{ lookup('env','SITE_ACCOUNT_BALANCE') }}"
+
+  #Do tasks
+  tasks:
+    - name: Install and enable required packages
+      include: tasks/packages/packages.yaml
+
+    - name: Install/Update backend
+      include: tasks/backend/backend.yaml
+
+    - name: Install nginx with self-signed certs
+      include: tasks/nginx/nginx.yaml
+
+    - name: check env vars
+      shell: env > env_cd

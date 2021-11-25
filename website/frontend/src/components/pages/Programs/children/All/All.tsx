@@ -1,5 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Message } from 'components/pages/Programs/children/Message/Message';
@@ -36,6 +37,9 @@ const selectCompletedTodosCount = createSelector(
 
 export const All: VFC = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const urlSearch = location.search;
+  const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
 
   const [search, setSearch] = useState('');
 
@@ -48,13 +52,13 @@ export const All: VFC = () => {
     allUploadedPrograms = [program];
   }
 
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
-  const offset = currentPage * INITIAL_LIMIT_BY_PAGE;
+  const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
 
   useEffect(() => {
     dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
@@ -111,8 +115,8 @@ export const All: VFC = () => {
   return (
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
-        <span>Total results: {allUploadedProgramsCount}</span>
-        <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
+        <span>Total results: {allUploadedProgramsCount || 0}</span>
+        <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
         <SearchForm
@@ -156,7 +160,7 @@ export const All: VFC = () => {
       </div>
       {allUploadedPrograms && allUploadedPrograms.length > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={allUploadedProgramsCount || 0} onPageChange={onPageChange} />
+          <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
         </div>
       )}
     </div>

@@ -1,4 +1,92 @@
+@import '../../../assets/scss/variables.scss';
+
+.user-wallet__wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
 .user-wallet__address {
-  color: #858585;
+  color: $textColorSecondary;
   cursor: copy;
+}
+
+.user-wallet__balance {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+  padding-right: 40px;
+  margin-right: 40px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  color: #bcbcbc;
+}
+
+.user-wallet__user-info {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  font-size: 14px;
+  padding: 0 25px;
+  background: rgba(255, 255, 255, 0.1);
+  display: inline-flex;
+  justify-content: center;
+  font-family: 'Prompt', sans-serif;
+  font-weight: normal;
+  font-weight: 500;
+  color: $textColor;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+.user-wallet__user-info:hover {
+  color: $mainBackground;
+  background: $textColor;
+}
+
+.user-wallet__name {
+  align-items: center;
+  margin-left: 10px;
+}
+
+.user-wallet__connect-button {
+  height: 40px;
+  font-size: 14px;
+  line-height: 40px;
+  padding: 0 25px;
+  background: rgba(255, 255, 255, 0.1);
+  color: $textColor;
+
+  &:hover {
+    color: $mainBackground;
+    background: $textColor;
+  }
+}
+
+.user-wallet__msg {
+  text-align: center;
+  .user-wallet__msg-link {
+    color: $textColor;
+  }
+}
+
+.user-wallet__logout {
+  margin-left: 10px;
+  margin-top: 4px;
+  cursor: pointer;
 }

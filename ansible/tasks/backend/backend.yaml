@@ -1,0 +1,40 @@
+---
+#Install/update backend docker-compose
+- name: Copy docker-compose
+  copy:
+    src: docker-compose.yaml
+    dest: /home/ec2-user/docker-compose.yaml
+
+- name: Stop docker-compose
+  shell: >
+    /usr/local/bin/docker-compose -f "/home/ec2-user/docker-compose.yaml" down
+  become: yes
+
+- name: Pull docker images
+  shell: >
+    /usr/local/bin/docker-compose -f "/home/ec2-user/docker-compose.yaml" pull
+  become: yes
+
+- name: Remove old docker images
+  shell: docker image prune -f
+  become: yes
+
+- name: Run docker-compose
+  shell: >
+    /usr/local/bin/docker-compose -f "/home/ec2-user/docker-compose.yaml" up -d
+  become: yes
+  environment:
+    DB_NAME: "{{ lookup('env','DB_NAME') }}"
+    DB_USER: "{{ lookup('env','DB_USER') }}"
+    DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
+    DB_PORT: "{{ lookup('env','DB_PORT') }}"
+    DB_HOST: "{{ lookup('env','DB_HOST') }}"
+    WS_PROVIDER: "{{ lookup('env','WS_PROVIDER') }}"
+    GITHUB_CLIENT_SECRET: "{{ lookup('env','GITHUB_CLIENT_SECRET') }}"
+    GITHUB_CLIENT_ID: "{{ lookup('env','GITHUB_CLIENT_ID') }}"
+    TELEGRAM_BOT_TOKEN: "{{ lookup('env','TELEGRAM_BOT_TOKEN') }}"
+    TELEGRAM_BOT_USERNAME: "{{ lookup('env','TELEGRAM_BOT_USERNAME') }}"
+    IDE_SOCKET: "{{ lookup('env','IDE_SOCKET') }}"
+    ACCOUNT_SEED: "{{ lookup('env','ACCOUNT_SEED') }}"
+    SUDO_SEED: "{{ lookup('env','SUDO_SEED') }}"
+    SITE_ACCOUNT_BALANCE: "{{ lookup('env','SITE_ACCOUNT_BALANCE') }}"

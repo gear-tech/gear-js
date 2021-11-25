@@ -8,7 +8,8 @@ import { addMetadata } from 'services/ApiService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'store/reducers';
 import { AddAlert } from 'store/actions/actions';
 import { EventTypes } from 'types/events';
 import { readFileAsync } from '../../../helpers';
@@ -27,6 +28,7 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
   const dispatch = useDispatch();
+  const currentAccount = useSelector((state: RootState) => state.account.account);
 
   const metaFieldRef = useRef<any>(null);
 
@@ -102,17 +104,21 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
       validationSchema={Schema}
       validateOnBlur
       onSubmit={(values: MetaModel, { resetForm }) => {
-        if (isMetaByFile) {
-          if (metaWasm) {
-            addMetadata(metaWasm, programHash, values.name, dispatch);
+        if (currentAccount) {
+          if (isMetaByFile) {
+            if (metaWasm) {
+              addMetadata(metaWasm, currentAccount, programHash, values.name, dispatch);
+            } else {
+              dispatch(AddAlert({ type: EventTypes.ERROR, message: `ERROR: metadata not loaded` }));
+            }
           } else {
-            dispatch(AddAlert({ type: EventTypes.ERROR, message: `ERROR: metadata not loaded` }));
+            const { name, ...meta } = values;
+            addMetadata(meta, currentAccount, programHash, name, dispatch);
           }
+          resetForm();
         } else {
-          const { name, ...meta } = values;
-          addMetadata(meta, programHash, name, dispatch);
+          dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
         }
-        resetForm();
       }}
     >
       {({ errors, touched }) => (

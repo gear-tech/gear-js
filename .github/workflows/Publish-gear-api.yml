@@ -3,6 +3,8 @@ name: gear-api
 on:
   push:
     branches: [master]
+    paths:
+      - api/api/**
 
 jobs:
   build:
