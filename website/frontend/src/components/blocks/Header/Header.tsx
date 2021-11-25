@@ -2,7 +2,6 @@ import React, { useState, useEffect, VFC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
-// import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
@@ -60,8 +59,6 @@ export const Header: VFC = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
-
-  // const [isMobileMenuOpened, setIsMobileMenuOpened] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isRestore, setIsRestore] = useState(false);
   const [isKey, setIsKey] = useState(false);
@@ -72,9 +69,7 @@ export const Header: VFC = () => {
   const [isAvailableAddNode, setIsAvailableAddNode] = useState(false);
 
   let userInfo = '';
-  // const headerIconsColor = isMobileMenuOpened ? '#282828' : '#fff';
   const headerIconsColor = '#fff';
-  // const headerUnreadNotificationsCount = countUnread && countUnread >= 100 ? '99+' : countUnread;
   if (user) {
     if (user.email) {
       userInfo = user.email;
@@ -186,12 +181,6 @@ export const Header: VFC = () => {
     }
   };
 
-  /*
-   *const handleMenuClick = () => {
-   *  setIsMobileMenuOpened(!isMobileMenuOpened);
-   *};
-   * */
-
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -227,17 +216,6 @@ export const Header: VFC = () => {
       </div>
       {showUser && (
         <div className="header__user-block user-block">
-          {/*
-           * <div className={clsx('header__user-block user-block', isMobileMenuOpened && 'show')}></div>
-           * */}
-          {/* <Link to={routes.notifications} className={clsx('user-block__notifications', isNotifications && 'selected')}>
-            <NotificationIcon color={isNotifications ? '#ffffff' : '#858585'} />
-            <span>Notifications</span>
-            {(headerUnreadNotificationsCount && headerUnreadNotificationsCount > 0 && (
-              <div className="notifications-count">{headerUnreadNotificationsCount}</div>
-            )) ||
-              null}
-          </Link> */}
           {(isKey && <Wallet />) || (
             <>
               <Link to={routes.main} className="user-block__restore" onClick={toggleRestoreModal}>
@@ -258,36 +236,6 @@ export const Header: VFC = () => {
           </Link>
         </div>
       )}
-      {/*
-       *<nav className={clsx('header__nav', isMobileMenuOpened && 'show')}>
-       *  <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-       *    What is GEAR?
-       * </button>
-       *  <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-       *    How it works
-       *  </button>
-       *  <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-       *    Use cases
-       *  </button>
-       * <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-       *   Competitive analyze
-       * </button>
-       * <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-       *   Team
-       * </button>
-       * <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-       *   Tokenomics
-       * </button>
-       * <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-       *    Timeline
-       * </button>
-       *  <Link to={routes.main}>
-       *    <button className="header__nav-button" type="button" aria-label="menuLink" onClick={handleMenuClick}>
-       *      Upload
-       *   </button>
-       * </Link>
-       * </nav>
-       * */}
       <div className="header--actions-wrapper">
         <Link to={isNotifications ? routes.main : routes.notifications} className="header__notifications">
           <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />
@@ -298,19 +246,6 @@ export const Header: VFC = () => {
           )) ||
             null}
         </Link>
-
-        {/*
-         *<button
-         *  className={clsx('header__burger', isMobileMenuOpened && 'active')}
-         *  type="button"
-         *  aria-label="burger"
-         *  onClick={handleMenuClick}
-         *>
-         *  <span />
-         *  <span />
-         *  <span />
-         *</button>
-         * */}
       </div>
       {isOpen && <Modal content={<Keyring handleClose={toggleModal} />} handleClose={toggleModal} />}
       {isRestore && (
