@@ -1,12 +1,19 @@
 .account-list__wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  margin-top: 0.5em;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 60px;
+  grid-row-gap: 1em;
+  overflow-y: scroll;
+  max-height: 236px;
+}
+
+.account-list__wrapper::-webkit-scrollbar {
+  width: 0;
 }
 
 .account-list__item {
-  margin: 0.5em;
+  // margin: 0.5em;
   background: rgba(255, 255, 255, 0.1);
   justify-content: center;
   font-family: 'Prompt', sans-serif;
