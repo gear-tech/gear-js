@@ -20,9 +20,10 @@ jobs:
         uses: dawidd6/action-ansible-playbook@v2
         env:
           GITHUB_CLIENT_ID: ${{ secrets.GTHUB_CLIENT_ID }}
-          NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
+          NODE_ADDRESS: ${{ secrets.GEAR_BACKEND_NODE }}
           TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
-          REACT_APP_RRT: ${{secrets.REACT_APP_RRT}}
+          REACT_APP_RRT: ${{ secrets.REACT_APP_RRT }}
+          WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
         with:
           # Required, playbook filepath
           directory: ./ansible
