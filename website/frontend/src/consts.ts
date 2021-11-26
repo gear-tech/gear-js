@@ -1,13 +1,7 @@
-export const GEAR_LOCAL_WS_URI = process.env.REACT_APP_WS_URI;
 export const GEAR_LOCAL_IDE_URI = process.env.REACT_APP_IDE_URI;
-export const GITHUB_CALLBACK_URL = process.env.REACT_APP_GITHUB_CALLBACK_URL;
-export const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
-export const TELEGRAM_BOT_NAME = process.env.REACT_APP_TELEGRAM_BOT_NAME;
 export const API_CONNECTION_ADDRESS = process.env.REACT_APP_API_CONNECT_ADDRESS;
 export const API_PATH = process.env.REACT_APP_API_PATH!;
 export const isProd = process.env.NODE_ENV === 'production';
-export const GEAR_STORAGE_KEY = 'gear_user_token';
-export const GEAR_MNEMONIC_KEY = 'gear_mnemonic';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;

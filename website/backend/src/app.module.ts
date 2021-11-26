@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/configuration';
 import { ProgramsModule } from './programs/programs.module';
@@ -32,8 +30,6 @@ import { MetadataModule } from './metadata/metadata.module';
       }),
       inject: [ConfigService],
     }),
-    AuthModule,
-    UsersModule,
     ProgramsModule,
     GearNodeModule,
     EventEmitterModule.forRoot(),

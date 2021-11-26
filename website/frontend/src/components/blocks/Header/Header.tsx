@@ -179,7 +179,6 @@ export const Header: VFC = () => {
           </>
         )}
       </div>
-
       {showUser && (
         <div className="header__user-block user-block">
           <Wallet />
