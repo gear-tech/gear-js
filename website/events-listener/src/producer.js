@@ -5,14 +5,11 @@ const log = logger('KafkaProducer');
 
 export class KafkaProducer {
   constructor(clientId, brokers) {
-    console.log(brokers);
     this.kafka = new Kafka({
       clientId,
       brokers,
     });
-    console.log(this.kafka);
     this.producer = this.kafka.producer();
-    console.log(this.producer);
   }
 
   async createTopic(topic) {

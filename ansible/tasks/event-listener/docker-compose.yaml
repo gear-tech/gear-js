@@ -1,8 +1,9 @@
 version: '3'
 services:
-  backend:
+  events:
+    restart: always
     image: mithriy/gear-event-listener:nightly
     environment:
-      - CLIENT_ID=${KAFKA_EVENT_LISTENER_CLIENT_ID}
+      - CLIENT_ID=${EVENT_LISTENER_KAFKA_CLIENT_ID}
       - BROKERS=${KAFKA_BROKERS}
       - WS_PROVIDER=${EVENT_LISTENER_WS_PROVIDER}

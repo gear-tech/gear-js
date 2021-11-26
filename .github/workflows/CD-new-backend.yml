@@ -1,8 +1,6 @@
-name: CD
+name: CD new backend
 
-on:
-  push:
-    branches: [do-event-listener]
+on: [workflow_dispatch]
 
 env:
   CARGO_TERM_COLOR: always
@@ -26,76 +24,48 @@ jobs:
           username: ${{ secrets.TEST_DOCKERHUB_USERNAME }}
           password: ${{ secrets.TEST_DOCKERHUB_TOKEN }}
 
-      # - name: Build and push data-storage
-      #   id: data_storage_docker_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     file: website/data-storage/Dockerfile
-      #     push: true
-      #     tags: mithriy/gear-data-storage:nightly
-
-      - name: Build and push events-listener
-        id: events_listener_docker_build
+      - name: Build and push data-storage
+        id: data_storage_docker_build
         uses: docker/build-push-action@v2
         with:
-          file: website/events-listener/Dockerfile
+          file: website/data-storage/Dockerfile
           push: true
-          tags: mithriy/gear-event-listener:nightly
+          tags: mithriy/gear-data-storage:nightly
 
-      # - name: Build and push api-backend
-      #   id: api_backend_docker_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     file: website/api-backend/Dockerfile
-      #     push: true
-      #     tags: mithriy/gear-api-backend:nightly
+      - name: Build and push api-backend
+        id: api_backend_docker_build
+        uses: docker/build-push-action@v2
+        with:
+          file: website/api-backend/Dockerfile
+          push: true
+          tags: mithriy/gear-api-backend:nightly
 
-  # Deploy:
-  #   needs: Build-backend-docker
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
+  Deploy:
+    needs: Build-backend-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-  #     - name: Run playbook
-  #       uses: dawidd6/action-ansible-playbook@v2
-  #       env:
-  #         DB_NAME: ${{ secrets.DB_NAME }}
-  #         DB_USER: ${{ secrets.DB_USER }}
-  #         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  #         DB_PORT: ${{ secrets.DB_PORT }}
-  #         DB_HOST: ${{ secrets.DB_HOST }}
-  #         WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
-  #         GITHUB_CLIENT_SECRET: ${{ secrets.GTHUB_CLIENT_SECRET }}
-  #         GITHUB_CLIENT_ID: ${{ secrets.GTHUB_CLIENT_ID }}
-  #         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  #         TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
-  #         IDE_SOCKET: ${{ secrets.IDE_SOCKET }}
-  #         PORT: ${{ secrets.PORT }}
-  #         HOST: ${{ secrets.HOST }}
-  #         IDE_FOLDER: ${{ secrets.IDE_FOLDER }}
-  #         NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
-  #         SUDO_SEED: ${{secrets.SUDO_SEED}}
-  #         ACCOUNT_SEED: ${{secrets.ACCOUNT_SEED}}
-  #         SITE_ACCOUNT_BALANCE: ${{secrets.SITE_ACCOUNT_BALANCE}}
-  #         REACT_APP_RRT: ${{secrets.REACT_APP_RRT}}
-  #         KAFKA_API_BACKEND_CLIENT_ID: ${{secrets.KAFKA_API_BACKEND_CLIENT_ID}}
-  #         KAFKA_API_BACKEND_GROUP_ID: ${{secrets.KAFKA_API_BACKEND_GROUP_ID}}
-  #         KAFKA_BROKERS: ${{secrets.KAFKA_BROKERS}}
-  #         API_BACKEND_PORT: ${{secrets.API_BACKEND_PORT}}
-  #         EVENT_LISTENER_WS_PROVIDER: ${{secrets.EVENT_LISTENER_WS_PROVIDER}}
-  #         KAFKA_EVENT_LISTENER_CLIENT_ID: ${{secrets.KAFKA_EVENT_LISTENER_CLIENT_ID}}
-  #         KAFKA_DATA_STORAGE_CLIENT_ID: ${{secrets.KAFKA_DATA_STORAGE_CLIENT_ID}}
-  #         KAFKA_DATA_STORAGE_GROUP_ID: ${{secrets.KAFKA_DATA_STORAGE_GROUP_ID}}
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        env:
+          KAFKA_PORT: ${{ secrets.KAFKA_PORT}}
+          KAFKA_HOST_NAME: ${{ secrets.HOST }}
+          API_BACKEND_KAFKA_CLIENT_ID: ${{ API_BACKEND_KAFKA_CLIENT_ID }}
+          API_BACKEND_KAFKA_GROUP_ID: ${{ API_BACKEND_KAFKA_GROUP_ID }}
+          API_BACKEND_PORT: ${{ secrets.API_BACKEND_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DATA_STORAGE_KAFKA_CLIENT_ID: ${{secrets.DATA_STORAGE_KAFKA_CLIENT_ID}}
+          DATA_STORAGE_KAFKA_GROUP_ID: ${{secrets.DATA_STORAGE_KAFKA_GROUP_ID}}
 
-  #       with:
-  #         # Required, playbook filepath
-  #         directory: ./ansible
-  #         playbook: main.yaml
-  #         # Optional, SSH private key
-  #         key: ${{secrets.SSH_PRIVATE_KEY}}
-  #         # Optional, literal inventory file contents
-  #         inventory: |
-  #           [all]
-  #           ${{secrets.TEST_GEAR_BACKEND}}
-  #         requirements: galaxy-requirements.yml
+        with:
+          directory: ./ansible
+          playbook: new-backend.yaml
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: |
+            [all]
+            ${{secrets.TEST_GEAR_BACKEND}}
+          requirements: galaxy-requirements.yml

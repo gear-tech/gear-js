@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "^0.8.4",
+    "@gear-js/api": "^0.8.12",
     "@polkadot/api": "^6.9.2",
     "avsc": "^5.7.3",
     "chalk": "^4.1.2",

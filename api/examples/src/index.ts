@@ -108,7 +108,7 @@ const subscribeLogEvents = (api: GearApi) => {
         ? types[data.source].init_output
         : types[data.source].output;
       // Decoding recieved payload
-      data.payload = createType.decode(decodeType, data.payload, types[data.source]).toHuman();
+      data.payload = createType.create(decodeType, data.payload, types[data.source]).toHuman();
     }
     console.log(data);
   });
