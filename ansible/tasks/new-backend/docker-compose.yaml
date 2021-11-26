@@ -29,7 +29,7 @@ services:
       - kafka
     restart: always
     ports:
-      - '3001:3001'
+      - ${API_BACKEND_PORT}:${API_BACKEND_PORT}
     image: mithriy/gear-api-backend:nightly
     environment:
       CLIENT_ID: ${API_BACKEND_KAFKA_CLIENT_ID}
