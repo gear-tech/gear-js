@@ -1,8 +1,7 @@
-import { Logger, UseGuards } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayInit } from '@nestjs/websockets';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { WsAuthGuard } from 'src/auth/guards/ws-auth.guard';
 import { IdeService } from './ide.service';
 
 const logger: Logger = new Logger('IdeGateway');
@@ -22,7 +21,6 @@ export class WsIdeGateway implements OnGatewayInit, OnGatewayConnection {
     logger.log('Ide websocket started');
   }
 
-  @UseGuards(WsAuthGuard)
   @SubscribeMessage('build')
   async buildWasm(client, payload: any) {
     logger.log('New build request');

@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { configuration } from './config/configuration';
+import configuration from './config/configuration';
 import { ProgramsModule } from './programs/programs.module';
 import { GearNodeModule } from './gear-node/gear-node.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -21,19 +19,17 @@ import { MetadataModule } from './metadata/metadata.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get<number>('DB_PORT'),
-        username: configService.get('DB_USER'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
+        host: configService.get('db.host'),
+        port: +configService.get<number>('db.port'),
+        username: configService.get('db.user'),
+        password: configService.get('db.password'),
+        database: configService.get('db.name'),
         autoLoadEntities: true,
         synchronize: true,
         entities: ['dist/**/*.entity.js'],
       }),
       inject: [ConfigService],
     }),
-    AuthModule,
-    UsersModule,
     ProgramsModule,
     GearNodeModule,
     EventEmitterModule.forRoot(),

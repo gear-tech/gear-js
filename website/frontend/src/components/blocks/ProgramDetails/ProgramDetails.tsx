@@ -3,7 +3,7 @@ import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import NumberFormat from 'react-number-format';
 import { UploadProgramModel } from 'types/program';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { UploadProgram } from 'services/ApiService';
 import { EventTypes } from 'types/events';
 import { AddAlert, programUploadStartAction } from 'store/actions/actions';
@@ -13,6 +13,7 @@ import cancel from 'assets/images/cancel.svg';
 import close from 'assets/images/close.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
+import { RootState } from 'store/reducers';
 import { Schema } from './Schema';
 import { readFileAsync } from '../../../helpers';
 import { useApi } from '../../../hooks/useApi';
@@ -24,6 +25,7 @@ type Props = {
 
 export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const dispatch = useDispatch();
+  const currentAccount = useSelector((state: RootState) => state.account.account);
 
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
@@ -120,24 +122,33 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: UploadProgramModel) => {
-          if (isMetaByFile) {
-            dispatch(programUploadStartAction());
-            UploadProgram(api, droppedFile, { ...values, ...metaWasm }, metaWasmFile, dispatch, () => {
-              setDroppedFile(null);
-            });
-            setDroppedFile(null);
-          } else {
-            try {
-              const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
-              dispatch(programUploadStartAction());
-              UploadProgram(api, droppedFile, { ...values, types }, null, dispatch, () => {
-                setDroppedFile(null);
-              });
-              setDroppedFile(null);
-            } catch (err) {
-              setWrongJSON(true);
-              console.log(err);
+          if (currentAccount) {
+            if (isMetaByFile) {
+              UploadProgram(
+                api,
+                currentAccount,
+                droppedFile,
+                { ...values, ...metaWasm },
+                metaWasmFile,
+                dispatch,
+                () => {
+                  setDroppedFile(null);
+                }
+              );
+            } else {
+              try {
+                const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
+                dispatch(programUploadStartAction());
+                UploadProgram(api, currentAccount, droppedFile, { ...values, types }, null, dispatch, () => {
+                  setDroppedFile(null);
+                });
+              } catch (err) {
+                setWrongJSON(true);
+                console.log(err);
+              }
             }
+          } else {
+            dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
           }
         }}
       >
@@ -156,335 +167,342 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
               </div>
             </div>
             <div className="program-details__wrapper">
-              <div className="program-details__wrapper-column1">
-                <div className="program-details__info">
-                  <span className="program-details__field-file program-details__field">File:</span>
-                  <div className="program-details__filename program-details__value">
-                    {droppedFile.name.replace(`.${droppedFile.name.split('.').pop()}`, '')}.
-                    {droppedFile.name.split('.').pop()}
-                    <button type="reset">
-                      <img alt="cancel" src={cancel} />
-                    </button>
+              <div className="program-details__wrapper-columns">
+                <div className="program-details__wrapper-column1">
+                  <div className="program-details__info">
+                    <span className="program-details__field-file program-details__field">File:</span>
+                    <div className="program-details__filename program-details__value">
+                      {droppedFile.name.replace(`.${droppedFile.name.split('.').pop()}`, '')}.
+                      {droppedFile.name.split('.').pop()}
+                      <button type="reset">
+                        <img alt="cancel" src={cancel} />
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className="program-details__info">
-                  <label htmlFor="programName" className="program-details__field-limit program-details__field">
-                    Name:
-                  </label>
-                  <div className="program-details__field-wrapper">
-                    <Field
-                      id="programName"
-                      name="programName"
-                      placeholder="Name"
-                      className="program-details__limit-value program-details__value"
-                      type="text"
-                    />
-                    {errors.programName && touched.programName ? (
-                      <div className="program-details__error">{errors.programName}</div>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="program-details__info">
-                  <label htmlFor="gasLimit" className="program-details__field-limit program-details__field">
-                    Gas limit:
-                  </label>
-                  <div className="program-details__field-wrapper">
-                    <NumberFormat
-                      name="gasLimit"
-                      placeholder="20000"
-                      value={values.gasLimit}
-                      thousandSeparator
-                      allowNegative={false}
-                      className="program-details__limit-value program-details__value"
-                      onValueChange={(val) => {
-                        const { floatValue } = val;
-                        setFieldValue('gasLimit', floatValue);
-                      }}
-                    />
-                    {errors.gasLimit && touched.gasLimit ? (
-                      <div className="program-details__error">{errors.gasLimit}</div>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="program-details__info">
-                  <label
-                    htmlFor="initPayload"
-                    className="program-details__field-init-parameters program-details__field"
-                  >
-                    Initial parameters:
-                  </label>
-                  <div className="program-details__field-wrapper">
-                    <Field
-                      id="initPayload"
-                      name="initPayload"
-                      className="program-details__init-parameters-value program-details__value"
-                    />
-                    {errors.initPayload && touched.initPayload ? (
-                      <div className="program-details__error">{errors.initPayload}</div>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div className="program-details__info">
-                  <label htmlFor="value" className="program-details__field-init-value program-details__field">
-                    Initial value:
-                  </label>
-                  <div className="program-details__field-wrapper">
-                    <Field
-                      id="value"
-                      name="value"
-                      placeholder="0"
-                      className="program-details__init-value program-details__value"
-                      type="number"
-                    />
-                    {errors.value && touched.value ? (
-                      <div className="program-details__error">{errors.value}</div>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="program-details__info">
-                  <p className="program-details__field">Metadata: </p>
-                  <div className="program-details--switch-btns">
-                    <button
-                      type="button"
-                      className="program-details--switch-btns__btn"
-                      onClick={() => setIsMetaByFile(true)}
-                    >
-                      <img src={isMetaByFile ? selected : deselected} alt="radio" />
-                      Upload file
-                    </button>
-                    <button
-                      type="button"
-                      className="program-details--switch-btns__btn"
-                      onClick={() => {
-                        setIsMetaByFile(false);
-                        setDroppedMetaFile(null);
-                      }}
-                    >
-                      <img src={isMetaByFile ? deselected : selected} alt="radio" />
-                      Manual input
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="program-details__wrapper-column2">
-                {(isMetaByFile && (
-                  <>
-                    <div className="program-details__info">
-                      <label className="program-details__field" htmlFor="meta">
-                        Metadata file:{' '}
-                      </label>
+                  <div className="program-details__info">
+                    <label htmlFor="programName" className="program-details__field-limit program-details__field">
+                      Name:
+                    </label>
+                    <div className="program-details__field-wrapper">
                       <Field
-                        id="meta"
-                        name="meta"
-                        className="is-hidden"
-                        type="file"
-                        innerRef={metaFieldRef}
-                        onChange={handleMetaInputChange}
+                        id="programName"
+                        name="programName"
+                        placeholder="Name"
+                        className="program-details__limit-value program-details__value"
+                        type="text"
                       />
-                      {(droppedMetaFile && (
-                        <div className="program-details__filename program-details__value">
-                          {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, '')}.
-                          {droppedMetaFile.name.split('.').pop()}
-                          <button type="button" onClick={removeMetaFile}>
-                            <img alt="cancel" src={cancel} />
-                          </button>
-                        </div>
-                      )) || (
-                        <button className="program-details--file-btn" type="button" onClick={uploadMetaFile}>
-                          Select file
-                        </button>
-                      )}
+                      {errors.programName && touched.programName ? (
+                        <div className="program-details__error">{errors.programName}</div>
+                      ) : null}
                     </div>
-                    {metaWasm && (
-                      <div>
-                        <div className="program-details__info">
-                          <label htmlFor="init_input" className="program-details__field-limit program-details__field">
-                            Initial type:
-                          </label>
-                          <div className="program-details__field-wrapper">
-                            <Field
-                              id="init_input"
-                              name="init_input"
-                              placeholder={JSON.stringify(metaWasm.init_input)}
-                              className="program-details__limit-value program-details__value"
-                              type="text"
-                              disabled="true"
-                            />
-                            {errors.init_input && touched.init_input ? (
-                              <div className="program-details__error">{errors.init_input}</div>
-                            ) : null}
-                          </div>
-                        </div>
-                        <div className="program-details__info">
-                          <label htmlFor="input" className="program-details__field-limit program-details__field">
-                            Incoming type:
-                          </label>
-                          <div className="program-details__field-wrapper">
-                            <Field
-                              id="input"
-                              name="input"
-                              placeholder={JSON.stringify(metaWasm.handle_input)}
-                              className="program-details__limit-value program-details__value"
-                              type="text"
-                              disabled="true"
-                            />
-                            {errors.handle_input && touched.handle_input ? (
-                              <div className="program-details__error">{errors.handle_input}</div>
-                            ) : null}
-                          </div>
-                        </div>
-                        <div className="program-details__info">
-                          <label htmlFor="output" className="program-details__field-init-value program-details__field">
-                            Expected type:
-                          </label>
-                          <div className="program-details__field-wrapper">
-                            <Field
-                              id="output"
-                              name="output"
-                              placeholder={JSON.stringify(metaWasm.handle_output)}
-                              className="program-details__init-value program-details__value"
-                              type="text"
-                              disabled="true"
-                            />
-                            {errors.handle_output && touched.handle_output ? (
-                              <div className="program-details__error">{errors.handle_output}</div>
-                            ) : null}
-                          </div>
-                        </div>
-                        <div className="program-details__info">
-                          <label
-                            htmlFor="init_output"
-                            className="program-details__field-init-value program-details__field"
-                          >
-                            Initial output type:
-                          </label>
-                          <div className="program-details__field-wrapper">
-                            <Field
-                              id="init_output"
-                              name="init_output"
-                              placeholder={JSON.stringify(metaWasm.init_output)}
-                              className="program-details__init-value program-details__value"
-                              type="text"
-                              disabled="true"
-                            />
-                            {errors.init_output && touched.init_output ? (
-                              <div className="program-details__error">{errors.init_output}</div>
-                            ) : null}
-                          </div>
-                        </div>
-                        <div className="program-details__info">
-                          <label htmlFor="types" className="program-details__field-init-value program-details__field">
-                            Types:
-                          </label>
-                          <div className="program-details__field-wrapper">
-                            <Field
-                              as="textarea"
-                              id="types"
-                              name="types"
-                              disabled="true"
-                              placeholder={displayTypes}
-                              className="program-details__types program-details__value"
-                            />
-                            {errors.types && touched.types ? (
-                              <div className="program-details__error">{errors.types}</div>
-                            ) : null}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )) || (
-                  <>
-                    <div className="program-details__info">
-                      <label htmlFor="init_input" className="program-details__field-limit program-details__field">
-                        Initial type:
-                      </label>
-                      <div className="program-details__field-wrapper">
-                        <Field
-                          id="init_input"
-                          name="init_input"
-                          placeholder=""
-                          className="program-details__limit-value program-details__value"
-                          type="text"
-                        />
-                        {errors.init_input && touched.init_input ? (
-                          <div className="program-details__error">{errors.init_input}</div>
-                        ) : null}
-                      </div>
+                  </div>
+                  <div className="program-details__info">
+                    <label htmlFor="gasLimit" className="program-details__field-limit program-details__field">
+                      Gas limit:
+                    </label>
+                    <div className="program-details__field-wrapper">
+                      <NumberFormat
+                        name="gasLimit"
+                        placeholder="20000"
+                        value={values.gasLimit}
+                        thousandSeparator
+                        allowNegative={false}
+                        className="program-details__limit-value program-details__value"
+                        onValueChange={(val) => {
+                          const { floatValue } = val;
+                          setFieldValue('gasLimit', floatValue);
+                        }}
+                      />
+                      {errors.gasLimit && touched.gasLimit ? (
+                        <div className="program-details__error">{errors.gasLimit}</div>
+                      ) : null}
                     </div>
-                    <div className="program-details__info">
-                      <label htmlFor="input" className="program-details__field-limit program-details__field">
-                        Incoming type:
-                      </label>
-                      <div className="program-details__field-wrapper">
-                        <Field
-                          id="input"
-                          name="input"
-                          placeholder=""
-                          className="program-details__limit-value program-details__value"
-                          type="text"
-                        />
-                        {errors.handle_input && touched.handle_input ? (
-                          <div className="program-details__error">{errors.handle_input}</div>
-                        ) : null}
-                      </div>
+                  </div>
+                  <div className="program-details__info">
+                    <label
+                      htmlFor="initPayload"
+                      className="program-details__field-init-parameters program-details__field"
+                    >
+                      Initial parameters:
+                    </label>
+                    <div className="program-details__field-wrapper">
+                      <Field
+                        id="initPayload"
+                        name="initPayload"
+                        className="program-details__init-parameters-value program-details__value"
+                      />
+                      {errors.initPayload && touched.initPayload ? (
+                        <div className="program-details__error">{errors.initPayload}</div>
+                      ) : null}
                     </div>
-                    <div className="program-details__info">
-                      <label htmlFor="output" className="program-details__field-init-value program-details__field">
-                        Expected type:
-                      </label>
-                      <div className="program-details__field-wrapper">
-                        <Field
-                          id="output"
-                          name="output"
-                          placeholder=""
-                          className="program-details__init-value program-details__value"
-                          type="text"
-                        />
-                        {errors.handle_output && touched.handle_output ? (
-                          <div className="program-details__error">{errors.handle_output}</div>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div className="program-details__info">
-                      <label htmlFor="init_output" className="program-details__field-init-value program-details__field">
-                        Initial output type:
-                      </label>
-                      <div className="program-details__field-wrapper">
-                        <Field
-                          id="init_output"
-                          name="init_output"
-                          placeholder=""
-                          className="program-details__init-value program-details__value"
-                          type="text"
-                        />
-                        {errors.init_output && touched.init_output ? (
-                          <div className="program-details__error">{errors.init_output}</div>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div className="program-details__info">
-                      <label htmlFor="types" className="program-details__field-init-value program-details__field">
-                        Types:
-                      </label>
-                      <div className="program-details__field-wrapper">
-                        <Field
-                          as="textarea"
-                          id="types"
-                          name="types"
-                          placeholder="{&#10;...&#10;}"
-                          className="program-details__types program-details__value"
-                        />
-                        {errors.types && touched.types ? (
-                          <div className="program-details__error">{errors.types}</div>
-                        ) : null}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
+                  </div>
 
+                  <div className="program-details__info">
+                    <label htmlFor="value" className="program-details__field-init-value program-details__field">
+                      Initial value:
+                    </label>
+                    <div className="program-details__field-wrapper">
+                      <Field
+                        id="value"
+                        name="value"
+                        placeholder="0"
+                        className="program-details__init-value program-details__value"
+                        type="number"
+                      />
+                      {errors.value && touched.value ? (
+                        <div className="program-details__error">{errors.value}</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="program-details__info">
+                    <p className="program-details__field">Metadata: </p>
+                    <div className="program-details--switch-btns">
+                      <button
+                        type="button"
+                        className="program-details--switch-btns__btn"
+                        onClick={() => setIsMetaByFile(true)}
+                      >
+                        <img src={isMetaByFile ? selected : deselected} alt="radio" />
+                        Upload file
+                      </button>
+                      <button
+                        type="button"
+                        className="program-details--switch-btns__btn"
+                        onClick={() => {
+                          setIsMetaByFile(false);
+                          setDroppedMetaFile(null);
+                        }}
+                      >
+                        <img src={isMetaByFile ? deselected : selected} alt="radio" />
+                        Manual input
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="program-details__wrapper-column2">
+                  {(isMetaByFile && (
+                    <>
+                      <div className="program-details__info">
+                        <label className="program-details__field" htmlFor="meta">
+                          Metadata file:{' '}
+                        </label>
+                        <Field
+                          id="meta"
+                          name="meta"
+                          className="is-hidden"
+                          type="file"
+                          innerRef={metaFieldRef}
+                          onChange={handleMetaInputChange}
+                        />
+                        {(droppedMetaFile && (
+                          <div className="program-details__filename program-details__value">
+                            {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, '')}.
+                            {droppedMetaFile.name.split('.').pop()}
+                            <button type="button" onClick={removeMetaFile}>
+                              <img alt="cancel" src={cancel} />
+                            </button>
+                          </div>
+                        )) || (
+                          <button className="program-details--file-btn" type="button" onClick={uploadMetaFile}>
+                            Select file
+                          </button>
+                        )}
+                      </div>
+                      {metaWasm && (
+                        <div>
+                          <div className="program-details__info">
+                            <label htmlFor="init_input" className="program-details__field-limit program-details__field">
+                              Initial type:
+                            </label>
+                            <div className="program-details__field-wrapper">
+                              <Field
+                                id="init_input"
+                                name="init_input"
+                                placeholder={JSON.stringify(metaWasm.init_input)}
+                                className="program-details__limit-value program-details__value"
+                                type="text"
+                                disabled
+                              />
+                              {errors.init_input && touched.init_input ? (
+                                <div className="program-details__error">{errors.init_input}</div>
+                              ) : null}
+                            </div>
+                          </div>
+                          <div className="program-details__info">
+                            <label htmlFor="input" className="program-details__field-limit program-details__field">
+                              Incoming type:
+                            </label>
+                            <div className="program-details__field-wrapper">
+                              <Field
+                                id="input"
+                                name="input"
+                                placeholder={JSON.stringify(metaWasm.handle_input)}
+                                className="program-details__limit-value program-details__value"
+                                type="text"
+                                disabled
+                              />
+                              {errors.handle_input && touched.handle_input ? (
+                                <div className="program-details__error">{errors.handle_input}</div>
+                              ) : null}
+                            </div>
+                          </div>
+                          <div className="program-details__info">
+                            <label
+                              htmlFor="output"
+                              className="program-details__field-init-value program-details__field"
+                            >
+                              Expected type:
+                            </label>
+                            <div className="program-details__field-wrapper">
+                              <Field
+                                id="output"
+                                name="output"
+                                placeholder={JSON.stringify(metaWasm.handle_output)}
+                                className="program-details__init-value program-details__value"
+                                type="text"
+                                disabled
+                              />
+                              {errors.handle_output && touched.handle_output ? (
+                                <div className="program-details__error">{errors.handle_output}</div>
+                              ) : null}
+                            </div>
+                          </div>
+                          <div className="program-details__info">
+                            <label
+                              htmlFor="init_output"
+                              className="program-details__field-init-value program-details__field"
+                            >
+                              Initial output type:
+                            </label>
+                            <div className="program-details__field-wrapper">
+                              <Field
+                                id="init_output"
+                                name="init_output"
+                                placeholder={JSON.stringify(metaWasm.init_output)}
+                                className="program-details__init-value program-details__value"
+                                type="text"
+                                disabled
+                              />
+                              {errors.init_output && touched.init_output ? (
+                                <div className="program-details__error">{errors.init_output}</div>
+                              ) : null}
+                            </div>
+                          </div>
+                          <div className="program-details__info">
+                            <label htmlFor="types" className="program-details__field-init-value program-details__field">
+                              Types:
+                            </label>
+                            <div className="program-details__field-wrapper">
+                              <Field
+                                as="textarea"
+                                id="types"
+                                name="types"
+                                placeholder={displayTypes}
+                                className="program-details__types program-details__value"
+                                disabled
+                              />
+                              {errors.types && touched.types ? (
+                                <div className="program-details__error">{errors.types}</div>
+                              ) : null}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )) || (
+                    <>
+                      <div className="program-details__info">
+                        <label htmlFor="init_input" className="program-details__field-limit program-details__field">
+                          Initial type:
+                        </label>
+                        <div className="program-details__field-wrapper">
+                          <Field
+                            id="init_input"
+                            name="init_input"
+                            placeholder=""
+                            className="program-details__limit-value program-details__value"
+                            type="text"
+                          />
+                          {errors.init_input && touched.init_input ? (
+                            <div className="program-details__error">{errors.init_input}</div>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="program-details__info">
+                        <label htmlFor="input" className="program-details__field-limit program-details__field">
+                          Incoming type:
+                        </label>
+                        <div className="program-details__field-wrapper">
+                          <Field
+                            id="input"
+                            name="input"
+                            placeholder=""
+                            className="program-details__limit-value program-details__value"
+                            type="text"
+                          />
+                          {errors.handle_input && touched.handle_input ? (
+                            <div className="program-details__error">{errors.handle_input}</div>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="program-details__info">
+                        <label htmlFor="output" className="program-details__field-init-value program-details__field">
+                          Expected type:
+                        </label>
+                        <div className="program-details__field-wrapper">
+                          <Field
+                            id="output"
+                            name="output"
+                            placeholder=""
+                            className="program-details__init-value program-details__value"
+                            type="text"
+                          />
+                          {errors.handle_output && touched.handle_output ? (
+                            <div className="program-details__error">{errors.handle_output}</div>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="program-details__info">
+                        <label
+                          htmlFor="init_output"
+                          className="program-details__field-init-value program-details__field"
+                        >
+                          Initial output type:
+                        </label>
+                        <div className="program-details__field-wrapper">
+                          <Field
+                            id="init_output"
+                            name="init_output"
+                            placeholder=""
+                            className="program-details__init-value program-details__value"
+                            type="text"
+                          />
+                          {errors.init_output && touched.init_output ? (
+                            <div className="program-details__error">{errors.init_output}</div>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="program-details__info">
+                        <label htmlFor="types" className="program-details__field-init-value program-details__field">
+                          Types:
+                        </label>
+                        <div className="program-details__field-wrapper">
+                          <Field
+                            as="textarea"
+                            id="types"
+                            name="types"
+                            placeholder="{&#10;...&#10;}"
+                            className="program-details__types program-details__value"
+                          />
+                          {errors.types && touched.types ? (
+                            <div className="program-details__error">{errors.types}</div>
+                          ) : null}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
               <div className="program-details__buttons">
                 <button type="submit" className="program-details__upload" aria-label="uploadProgramm">
                   Upload program

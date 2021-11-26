@@ -1,25 +1,30 @@
+@import '../../../assets/scss/variables.scss';
+
 .modal__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
-  background: #00000090;
-  width: 100%;
-  height: 100vh;
   top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
+  z-index: 10000;
+  background: rgba(28, 28, 28, 0.7);
 }
 
 .modal__box {
+  width: 100%;
+  max-width: 485px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 30px 60px;
+  margin: 0 15px;
   position: relative;
-  width: 60em;
-  margin: 0 auto;
-  text-align: center;
-  height: auto;
-  max-height: 90vh;
-  margin-top: calc(100vh - 85vh - 20px);
-  padding: 20px;
-  border: 1px solid rgb(51, 51, 51);
-  background: #222222;
-  color: rgb(255, 255, 255);
-  overflow: auto;
+  background: $mainBackground;
+  border-radius: 2px;
 }
 
 .modal__close {
@@ -52,9 +57,17 @@
 }
 
 .modal__title {
+  font-family: 'Syncopate', sans-serif;
+  font-weight: bold;
   font-size: 1.6em;
-  font-weight: 400;
-  text-align: center;
+  color: $textColor;
+  line-height: 150%;
+  padding: 0 0 30px;
+  margin: 0;
+}
+
+.modal__text {
+  color: $textColor;
 }
 
 @media (max-width: 768px) {

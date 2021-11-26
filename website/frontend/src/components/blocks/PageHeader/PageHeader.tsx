@@ -4,6 +4,7 @@ import { fileNameHandler } from 'helpers';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
 import close from 'assets/images/close.svg';
+import { Wallet } from '../Wallet/Wallet';
 import './PageHeader.scss';
 
 type Props = {
@@ -39,6 +40,7 @@ export const PageHeader: VFC<Props> = ({ programName, pageType, handleClose }) =
         <img src={ProgramIllustration} alt="program" className="message-header--info__icon" />
         <h2 className="message-header--info__filename">{fileNameHandler(programName)}</h2>
       </div>
+      <Wallet />
       {/* eslint-disable react/button-has-type */}
       <button type="reset" aria-label="closeButton" form={formId} className="message-header--info__close">
         <img src={close} alt="close" />

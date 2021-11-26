@@ -1,6 +1,4 @@
-// import UserRequestService from 'services/UserRequestService';
 import { CreateType, GearKeyring } from '@gear-js/api';
-import { UserActionTypes } from 'types/user';
 import {
   NotificationActionTypes,
   NotificationPaginationModel,
@@ -15,6 +13,8 @@ import {
   ProgramRPCModel,
   ProgramsPagintaionModel,
 } from 'types/program';
+
+import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
@@ -47,7 +47,6 @@ export const resetProgramAction = () => ({ type: ProgramActionTypes.RESET_PROGRA
 
 const fetchProgramErrorAction = () => ({ type: ProgramActionTypes.FETCH_PROGRAM_ERROR });
 
-export const transferBalanceSuccessAction = () => ({ type: UserActionTypes.TRANSFER_BALANCE });
 export const fetchTotalIssuanceAction = (payload: {}) => ({ type: BlockActionTypes.FETCH_TOTALISSUANCE, payload });
 export const fetchBlockAction = (payload: BlockModel) => ({ type: BlockActionTypes.FETCH_BLOCK, payload });
 
@@ -113,6 +112,9 @@ export const resetBlocksAction = () => ({ type: BlockActionTypes.RESET_BLOCKS })
 
 export const setApiReady = () => ({ type: ApiActionTypes.SET_API });
 export const resetApiReady = () => ({ type: ApiActionTypes.RESET_API });
+
+export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActionTypes.SET_ACCOUNT, payload });
+export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();

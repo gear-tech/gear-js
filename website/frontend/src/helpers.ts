@@ -43,3 +43,17 @@ export const copyToClipboard = (key: string, alert: any, successfulText?: string
     alert.error('Copy error');
   }
 };
+
+export const signPayload = async (injector: any, address: string, payload: any, callback: any) => {
+  try {
+    const { signature } = await injector.signer.signRaw!({
+      address,
+      data: payload,
+      type: 'payload',
+    });
+
+    callback(signature);
+  } catch (err) {
+    console.error(err);
+  }
+};

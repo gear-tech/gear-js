@@ -1,13 +1,14 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import clsx from 'clsx';
 import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
+import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/events';
-import { AddAlert, sendMessageStartAction } from 'store/actions/actions';
+import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from '../../../../../../../hooks/useApi';
@@ -24,6 +25,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   const [api] = useApi();
   const parsedMeta: Metadata = JSON.parse(meta as string);
   const dispatch = useDispatch();
+  const currentAccount = useSelector((state: RootState) => state.account.account);
   const [ready, setReady] = useState(false);
 
   const [initialValues, setInitialValues] = useState({
@@ -66,9 +68,13 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
         validationSchema={Schema}
         validateOnBlur
         onSubmit={(values: MessageModel, { resetForm }) => {
-          SendMessageToProgram(api, values, dispatch);
-          dispatch(sendMessageStartAction());
-          resetForm();
+          if (currentAccount) {
+            SendMessageToProgram(api, currentAccount, values, dispatch, () => {
+              resetForm();
+            });
+          } else {
+            dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
+          }
         }}
       >
         {({ errors, touched, values, setFieldValue }) => (

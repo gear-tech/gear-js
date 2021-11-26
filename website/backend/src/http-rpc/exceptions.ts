@@ -1,10 +1,9 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { InternalServerError, NotFoundPath, UnathorizedError } from 'src/json-rpc/errors';
+import { InternalServerError, NotFoundPath } from 'src/json-rpc/errors';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   private statusCodes = {
-    401: UnathorizedError,
     404: NotFoundPath,
     500: InternalServerError,
   };
@@ -18,9 +17,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       status = exception.getStatus();
     } else {
       switch (exception.message) {
-        case 'Forbidden resource':
-          status = 401;
-          break;
         default:
           status = 500;
           break;
