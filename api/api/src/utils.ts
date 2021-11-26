@@ -6,7 +6,7 @@ export function transformTypes(types: object): any {
 }
 
 export function toCamelCase(array: string[] | Text[]) {
-  let result = stringCamelCase(array.join());
+  let result = stringCamelCase(array.join('_'));
   result = result.slice(0, 1).toUpperCase() + result.slice(1, result.length);
   return result;
 }
