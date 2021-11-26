@@ -1,7 +1,7 @@
-import { GearApi, CreateType } from '.';
-import { Metadata, GearType } from './interfaces';
+import { GearApi, CreateType, createPayload } from '.';
+import { Metadata } from './interfaces';
 import { SendReplyError, TransactionError } from './errors';
-import { Bytes, u64 } from '@polkadot/types';
+import { u64 } from '@polkadot/types';
 import { AnyNumber } from '@polkadot/types/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
@@ -26,10 +26,7 @@ export class GearMessageReply {
     meta?: Metadata,
     messageType?: string,
   ) {
-    let payload: string = message.payload;
-    if (meta) {
-      payload = this.createType.create(messageType || meta.async_handle_input, message.payload, meta).toHex();
-    }
+    let payload: string = createPayload(messageType || meta.async_handle_input, message.payload, meta);
 
     try {
       this.reply = this.api.tx.gear.sendReply(message.toId, payload, message.gasLimit, message.value);
