@@ -28,7 +28,12 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     allUser: async (params: any) => {
-      return await this.programService.getAllUserPrograms(params?.publicKeyRaw, params?.limit, params?.offset);
+      return await this.programService.getAllUserPrograms(
+        params?.publicKeyRaw,
+        params?.chain,
+        params?.limit,
+        params?.offset,
+      );
     },
 
     addMeta: async (params: any) => {
@@ -40,7 +45,7 @@ export class HttpRpcMethods extends RpcMethods {
     },
 
     all: async (params: any) => {
-      return await this.programService.getAllPrograms(params ? params.limit : null, params ? params.offset : null);
+      return await this.programService.getAllPrograms(params?.chain, params?.limit, params?.offset);
     },
     allNoGUI: async (params: any) => {
       return await this.gearService.getAllNoGUIPrograms();
