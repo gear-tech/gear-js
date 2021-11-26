@@ -1,6 +1,4 @@
-import UserRequestService from 'services/UserRequestService';
 import { CreateType, GearKeyring } from '@gear-js/api';
-import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, UserProfileRPCModel } from 'types/user';
 import {
   NotificationActionTypes,
   NotificationPaginationModel,
@@ -22,23 +20,12 @@ import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { GEAR_MNEMONIC_KEY, RPC_METHODS } from 'consts';
+import { RPC_METHODS } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
 import { AlertActionTypes } from '../reducers/AlertReducer';
-
-const fetchUserAction = () => ({ type: UserActionTypes.FETCH_USER });
-const fetchUserSuccessAction = (payload: UserModel) => ({ type: UserActionTypes.FETCH_USER_SUCCESS, payload });
-const fetchUserErrorAction = () => ({ type: UserActionTypes.FETCH_USER_ERROR });
-
-const fetchUserKeypairAction = () => ({ type: UserActionTypes.FETCH_USER_KEYPAIR });
-const fetchUserKeypairSuccessAction = (payload: UserKeypairModel) => ({
-  type: UserActionTypes.FETCH_USER_KEYPAIR_SUCCESS,
-  payload,
-});
-const fetchUserKeypairErrorAction = () => ({ type: UserActionTypes.FETCH_USER_KEYPAIR_ERROR });
 
 const fetchUserProgramsAction = () => ({ type: ProgramActionTypes.FETCH_USER_PROGRAMS });
 const fetchUserProgramsSuccessAction = (payload: ProgramPaginationModel) => ({
@@ -60,7 +47,6 @@ export const resetProgramAction = () => ({ type: ProgramActionTypes.RESET_PROGRA
 
 const fetchProgramErrorAction = () => ({ type: ProgramActionTypes.FETCH_PROGRAM_ERROR });
 
-export const transferBalanceSuccessAction = () => ({ type: UserActionTypes.TRANSFER_BALANCE });
 export const fetchTotalIssuanceAction = (payload: {}) => ({ type: BlockActionTypes.FETCH_TOTALISSUANCE, payload });
 export const fetchBlockAction = (payload: BlockModel) => ({ type: BlockActionTypes.FETCH_BLOCK, payload });
 
@@ -130,31 +116,8 @@ export const resetApiReady = () => ({ type: ApiActionTypes.RESET_API });
 export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActionTypes.SET_ACCOUNT, payload });
 export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
-const userService = new UserRequestService();
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
-
-// TODO: (dispatch) fix it later. Here and below
-export const generateKeypairAction = () => (dispatch: any) => {
-  dispatch(fetchUserKeypairAction());
-  userService
-    .generateKeypair()
-    .then((result: UserKeypairRPCModel) => {
-      window.localStorage.setItem(GEAR_MNEMONIC_KEY, JSON.stringify(result.result));
-      dispatch(fetchUserKeypairSuccessAction(result.result));
-    })
-    .catch(() => dispatch(fetchUserKeypairErrorAction()));
-};
-
-export const getUserDataAction = () => (dispatch: any) => {
-  dispatch(fetchUserAction());
-  userService
-    .fetchUserData()
-    .then((result: UserProfileRPCModel) => {
-      dispatch(fetchUserSuccessAction(result.result));
-    })
-    .catch(() => dispatch(fetchUserErrorAction()));
-};
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
   dispatch(fetchUserProgramsAction());
