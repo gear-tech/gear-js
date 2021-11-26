@@ -26,7 +26,7 @@ export class GearProgram extends GearTransaction {
   ): ProgramId {
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
-    let payload: string = createPayload(messageType || meta.init_input, program.initPayload, meta);
+    let payload: string = createPayload(this.createType, messageType || meta.init_input, program.initPayload, meta);
     try {
       this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
       const programId = this.generateProgramId(code, salt);
@@ -44,7 +44,7 @@ export class GearProgram extends GearTransaction {
   }
 
   async getGasSpent(programId: string, payload: any, type: any, meta?: Metadata): Promise<U64> {
-    const payloadBytes = createPayload(type, payload, meta);
+    const payloadBytes = createPayload(this.createType, type, payload, meta);
     const gasSpent = await this.api.rpc.gear.getGasSpent(programId, payloadBytes);
     return gasSpent;
   }
