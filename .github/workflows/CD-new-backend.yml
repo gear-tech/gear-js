@@ -52,14 +52,14 @@ jobs:
         env:
           KAFKA_PORT: ${{ secrets.KAFKA_PORT}}
           KAFKA_HOST_NAME: ${{ secrets.HOST }}
-          API_BACKEND_KAFKA_CLIENT_ID: ${{ API_BACKEND_KAFKA_CLIENT_ID }}
-          API_BACKEND_KAFKA_GROUP_ID: ${{ API_BACKEND_KAFKA_GROUP_ID }}
+          API_BACKEND_KAFKA_CLIENT_ID: ${{ secrets.API_BACKEND_KAFKA_CLIENT_ID }}
+          API_BACKEND_KAFKA_GROUP_ID: ${{ secrets.API_BACKEND_KAFKA_GROUP_ID }}
           API_BACKEND_PORT: ${{ secrets.API_BACKEND_PORT }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DATA_STORAGE_KAFKA_CLIENT_ID: ${{secrets.DATA_STORAGE_KAFKA_CLIENT_ID}}
-          DATA_STORAGE_KAFKA_GROUP_ID: ${{secrets.DATA_STORAGE_KAFKA_GROUP_ID}}
+          DATA_STORAGE_KAFKA_CLIENT_ID: ${{ secrets.DATA_STORAGE_KAFKA_CLIENT_ID }}
+          DATA_STORAGE_KAFKA_GROUP_ID: ${{ secrets.DATA_STORAGE_KAFKA_GROUP_ID }}
 
         with:
           directory: ./ansible
