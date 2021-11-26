@@ -15,6 +15,9 @@ export class Program {
   @Column()
   owner: string;
 
+  @Column({ nullable: true })
+  chain: string;
+
   @Column()
   programNumber: number;
 
