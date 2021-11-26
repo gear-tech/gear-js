@@ -1,4 +1,4 @@
-import { Kafka, logLevel } from 'kafkajs';
+import { Kafka } from 'kafkajs';
 import { logger } from './logger.js';
 
 const log = logger('KafkaProducer');

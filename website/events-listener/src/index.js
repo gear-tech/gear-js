@@ -8,10 +8,11 @@ const log = logger('Main');
 
 const main = async () => {
   log.info('App is running...');
+  console.log(config);
   const producer = new KafkaProducer(config.kafka.clientId, config.kafka.brokers);
+  const api = await GearApi.create({ providerAddress: config.api.provider });
   await producer.createTopic('events');
   await producer.connect();
-  const api = await GearApi.create({ providerAddress: config.api.provider });
   const chain = await api.chain();
   log.info(`Connected to ${chain}`);
   listen(api, ({ key, value }) => {
