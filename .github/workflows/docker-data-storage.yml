@@ -1,15 +1,16 @@
-name: build-api-backend-docker
+name: build-data-storage-docker
 
 on:
-  push: [do-event-listener]
-  paths:
-    - website/api-backend/*
+  push:
+    branches: [do-event-listener]
+    paths:
+      - website/data-storage/*
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build-api-backend-docker:
+  build-data-storage-docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,10 +28,10 @@ jobs:
           username: ${{ secrets.TEST_DOCKERHUB_USERNAME }}
           password: ${{ secrets.TEST_DOCKERHUB_TOKEN }}
 
-      - name: Build and push api-backend
-        id: api_backend_docker_build
+      - name: Build and push data-storage
+        id: data_storage_docker_build
         uses: docker/build-push-action@v2
         with:
-          file: website/api-backend/Dockerfile
+          file: website/data-storage/Dockerfile
           push: true
-          tags: mithriy/gear-api-backend:nightly
+          tags: mithriy/gear-data-storage:nightly

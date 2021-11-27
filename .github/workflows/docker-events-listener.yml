@@ -1,9 +1,10 @@
 name: build-events-listener-docker
 
 on:
-  push: [do-event-listener]
-  paths:
-    - website/events-listener/*
+  push:
+    branches: [do-event-listener]
+    paths:
+      - website/events-listener/*
 
 env:
   CARGO_TERM_COLOR: always
