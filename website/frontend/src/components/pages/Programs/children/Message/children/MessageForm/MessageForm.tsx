@@ -16,6 +16,7 @@ import { Schema } from './Schema';
 import './MessageForm.scss';
 import { FormItem } from '../../../../../../FormItem';
 import { parseMeta } from '../../../../../../../utils/meta-parser';
+import { Switch } from '../../../../../../../common/components/Switch';
 
 type Props = {
   programHash: string;
@@ -29,6 +30,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const [ready, setReady] = useState(false);
+  const [manualInput, setManualInput] = useState(false);
 
   const [initialValues, setInitialValues] = useState({
     gasLimit: 20000,
@@ -110,23 +112,37 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
                     Payload:
                   </label>
                   <div className="message-form__field-wrapper">
-                    <Field
-                      id="payload"
-                      name="payload"
-                      as="textarea"
-                      type="text"
-                      className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
-                      placeholder="// your payload here ..."
-                      rows={15}
-                    />
-                    {errors.payload && touched.payload ? (
-                      <div className="message-form__error">{errors.payload}</div>
-                    ) : null}
-
-                    {formMeta && (
+                    <div>
+                      <Switch
+                        onChange={() => {
+                          setManualInput(!manualInput);
+                        }}
+                        label="Manual input"
+                      />
+                    </div>
+                    {manualInput ? (
                       <div>
-                        <FormItem data={formMeta} />
+                        <Field
+                          id="payload"
+                          name="payload"
+                          as="textarea"
+                          type="text"
+                          className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
+                          placeholder="// your payload here ..."
+                          rows={15}
+                        />
+                        {errors.payload && touched.payload ? (
+                          <div className="message-form__error">{errors.payload}</div>
+                        ) : null}
                       </div>
+                    ) : (
+                      <>
+                        {formMeta && (
+                          <div>
+                            <FormItem data={formMeta} />
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

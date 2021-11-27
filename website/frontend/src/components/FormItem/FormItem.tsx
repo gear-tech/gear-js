@@ -2,20 +2,21 @@ import React, { useEffect, useState, ReactNode } from 'react';
 import isObject from 'lodash.isobject';
 import { Field } from 'formik';
 import { ParsedShape, ParsedStruct } from '../../utils/meta-parser';
+import { MetaFormItem, MetaInput, Fieldset, EnumSelect } from './styles';
 
 const createFieldset = ({ legend, fields }: { legend: string; fields: ParsedStruct }) => (
-  <fieldset key={legend} name={legend}>
+  <Fieldset key={legend} name={legend}>
     <legend>{legend}</legend>
     {fields &&
       Object.entries(fields).map((field) => {
         if (field && field[1] && 'type' in field[1] && 'name' in field[1]) {
           return (
-            <div key={field[1].name as string}>
+            <MetaInput key={field[1].name as string}>
               <label>
                 {field[1].label} (type: {field[1].type}) <br />
                 <Field name={field[1].name} /> <br />
               </label>
-            </div>
+            </MetaInput>
           );
         }
         if (isObject(field[1])) {
@@ -29,7 +30,7 @@ const createFieldset = ({ legend, fields }: { legend: string; fields: ParsedStru
         }
         return null;
       })}
-  </fieldset>
+  </Fieldset>
 );
 
 export const FormItem = ({ data }: { data: ParsedShape }) => {
@@ -48,87 +49,93 @@ export const FormItem = ({ data }: { data: ParsedShape }) => {
         }
         if (type === '_enum') {
           return (
-            <label key={item[0]}>
-              Select field from enum <br />
-              <select
-                name={item[0]}
-                id={item[0]}
-                key={item[0]}
-                onChange={(event) => {
-                  const { value } = event.target;
-                  if (data.select) {
-                    setActiveEnums({ [`${value}`]: data.select[item[0]].fields[value] });
-                  }
-                }}
-              >
-                {Object.entries(fields)
-                  .reverse()
-                  .map((field) => (
-                    <option key={`${item[0]}-${field[0]}`} value={field[0]}>
-                      {field[0]}
-                    </option>
-                  ))}
-                {item[1].type === '_enum_Option' && <option value="NoFields">NoFields</option>}
-              </select>
-            </label>
+            <EnumSelect key={item[0]}>
+              <label>
+                Select field from enum <br />
+                <select
+                  name={item[0]}
+                  id={item[0]}
+                  key={item[0]}
+                  onChange={(event) => {
+                    const { value } = event.target;
+                    if (data.select) {
+                      setActiveEnums({ [`${value}`]: data.select[item[0]].fields[value] });
+                    }
+                  }}
+                >
+                  {Object.entries(fields)
+                    .reverse()
+                    .map((field) => (
+                      <option key={`${item[0]}-${field[0]}`} value={field[0]}>
+                        {field[0]}
+                      </option>
+                    ))}
+                  {item[1].type === '_enum_Option' && <option value="NoFields">NoFields</option>}
+                </select>
+              </label>
+            </EnumSelect>
           );
         }
         if (type === '_enum_Option') {
           return (
-            <label key={item[0]}>
-              Select field from enum <br />
-              <select
-                name={item[0]}
-                id={item[0]}
-                key={item[0]}
-                onChange={(event) => {
-                  const { value } = event.target;
-                  if (value === 'NoFields') {
-                    setActiveEnums({ [`${value}`]: { NoFields: null } });
-                  } else if (data.select) {
-                    setActiveEnums({ [`${value}`]: data.select[item[0]].fields[value] });
-                  }
-                }}
-              >
-                {Object.entries(fields)
-                  .reverse()
-                  .map((field) => (
-                    <option key={`${item[0]}-${field[0]}`} value={field[0]}>
-                      {field[0]}
-                    </option>
-                  ))}
-                {item[1].type === '_enum_Option' && <option value="NoFields">NoFields</option>}
-              </select>
-            </label>
+            <EnumSelect key={item[0]}>
+              <label>
+                Select field from enum <br />
+                <select
+                  name={item[0]}
+                  id={item[0]}
+                  key={item[0]}
+                  onChange={(event) => {
+                    const { value } = event.target;
+                    if (value === 'NoFields') {
+                      setActiveEnums({ [`${value}`]: { NoFields: null } });
+                    } else if (data.select) {
+                      setActiveEnums({ [`${value}`]: data.select[item[0]].fields[value] });
+                    }
+                  }}
+                >
+                  {Object.entries(fields)
+                    .reverse()
+                    .map((field) => (
+                      <option key={`${item[0]}-${field[0]}`} value={field[0]}>
+                        {field[0]}
+                      </option>
+                    ))}
+                  {item[1].type === '_enum_Option' && <option value="NoFields">NoFields</option>}
+                </select>
+              </label>
+            </EnumSelect>
           );
         }
         if (type === '_enum_Result') {
           return (
-            <label key={item[0]}>
-              Select field from enum <br />
-              <select
-                name={item[0]}
-                id={item[0]}
-                key={item[0]}
-                onChange={(event) => {
-                  const { value } = event.target;
-                  if (value === 'NoFields') {
-                    setActiveEnums({ [`${value}`]: { NoFields: null } });
-                  } else if (data.select) {
-                    setActiveEnums({ [`${value}`]: data.select[item[0]].fields[value] });
-                  }
-                }}
-              >
-                {Object.entries(fields)
-                  .reverse()
-                  .map((field) => (
-                    <option key={`${item[0]}-${field[0]}`} value={field[0]}>
-                      {field[0]}
-                    </option>
-                  ))}
-                {item[1].type === '_enum_Option' && <option value="NoFields">NoFields</option>}
-              </select>
-            </label>
+            <EnumSelect key={item[0]}>
+              <label key={item[0]}>
+                Select field from enum <br />
+                <select
+                  name={item[0]}
+                  id={item[0]}
+                  key={item[0]}
+                  onChange={(event) => {
+                    const { value } = event.target;
+                    if (value === 'NoFields') {
+                      setActiveEnums({ [`${value}`]: { NoFields: null } });
+                    } else if (data.select) {
+                      setActiveEnums({ [`${value}`]: data.select[item[0]].fields[value] });
+                    }
+                  }}
+                >
+                  {Object.entries(fields)
+                    .reverse()
+                    .map((field) => (
+                      <option key={`${item[0]}-${field[0]}`} value={field[0]}>
+                        {field[0]}
+                      </option>
+                    ))}
+                  {item[1].type === '_enum_Option' && <option value="NoFields">NoFields</option>}
+                </select>
+              </label>
+            </EnumSelect>
           );
         }
         return null;
@@ -161,10 +168,5 @@ export const FormItem = ({ data }: { data: ParsedShape }) => {
     }
   }, [activeEnums, data.fields, data.select, result]);
 
-  return (
-    <div style={{ backgroundColor: '#fff' }}>
-      {result}
-      <button type="submit">Отправить</button>
-    </div>
-  );
+  return <MetaFormItem>{result}</MetaFormItem>;
 };

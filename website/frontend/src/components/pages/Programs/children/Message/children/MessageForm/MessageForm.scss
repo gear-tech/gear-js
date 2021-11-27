@@ -90,7 +90,6 @@
 .message-form--info {
   display: flex;
   flex-direction: row;
-  align-items: center;
   margin-bottom: 24px;
   width: 100%;
 }
@@ -103,11 +102,11 @@
   margin-bottom: 0;
 }
 
-.message-form--info label {
+.message-form--info .message-form__field {
   color: #858585;
   font-weight: 300;
   font-size: 21px;
-  line-height: 130%;
+  line-height: 1.85;
   min-width: 164px;
 }
 
