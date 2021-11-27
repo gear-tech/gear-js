@@ -13,4 +13,7 @@ export class Meta {
 
   @Column()
   meta: string;
+
+  @Column()
+  metaFile: string;
 }

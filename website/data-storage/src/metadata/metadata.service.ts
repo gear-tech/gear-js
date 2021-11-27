@@ -26,6 +26,7 @@ export class MetadataService {
       const metadata = this.metaRepo.create({
         owner: program.owner,
         meta: typeof params.meta === 'string' ? params.meta : JSON.stringify(params.meta),
+        metaFile: params.metaFile,
         program: program.id,
       });
       const savedMeta = await this.metaRepo.save(metadata);
@@ -45,7 +46,7 @@ export class MetadataService {
     }
     const meta = await this.metaRepo.findOne({ program: params.programId });
     if (meta) {
-      return { program: meta.program, meta: meta.meta };
+      return { program: meta.program, meta: meta.meta, metaFile: meta.metaFile };
     } else {
       throw new MetadataNotFound();
     }

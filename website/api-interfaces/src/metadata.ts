@@ -9,6 +9,7 @@ export interface AddMetaParams {
   programId: string;
   signature: string;
   meta: string | any;
+  metaFile: string;
   name?: string;
   title?: string;
 }
