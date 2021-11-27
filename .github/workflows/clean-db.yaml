@@ -1,0 +1,29 @@
+name: Clean-db
+
+on: [workflow_dispatch]
+
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run playbook
+        if: ${{ github.actor == 'osipov-mit' }}
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          # Required, playbook filepath
+          directory: ./ansible/
+          playbook: clean-db.yaml
+          # Optional, SSH private key
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          inventory: |
+            [all]
+            ${{secrets.GEAR_BACKEND_NODE}}
+        env:
+          DB_CONTAINER_NAME: ${{ secrets.DB_CONTAINER_NAME }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}

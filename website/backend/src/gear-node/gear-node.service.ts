@@ -4,6 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ProgramsService } from 'src/programs/programs.service';
 import { GearNodeError, TransactionError } from 'src/json-rpc/errors';
 import { GearNodeEvents } from './events';
+import { BN } from '@polkadot/util';
 
 const logger = new Logger('GearNodeService');
 @Injectable()
@@ -35,7 +36,7 @@ export class GearNodeService {
   async updateSiteAccountBalance() {
     const currentBalance = await this.api.balance.findOut(this.rootKeyring.address);
     const siteAccBalance = +process.env.SITE_ACCOUNT_BALANCE;
-    if (currentBalance.lten(siteAccBalance)) {
+    if (currentBalance.lt(new BN(siteAccBalance))) {
       const sudoKeyring = parseInt(process.env.DEBUG)
         ? GearKeyring.fromSuri('//Alice', 'Alice default')
         : await GearKeyring.fromSeed(process.env.SUDO_SEED, 'websiteAccount');

@@ -1,0 +1,6 @@
+---
+#Install/update backend docker-compose
+- name: Run clear-db
+  shell: >
+    docker exec -it "{{ lookup('env','DB_CONTAINER_NAME') }}" psql -U "{{ lookup('env','DB_USER') }}" -d "{{ lookup('env','DB_NAME') }}" -c "DELETE FROM message; DELETE FROM program; DELETE FROM meta;"
+  become: yes

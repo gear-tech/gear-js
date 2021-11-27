@@ -1,0 +1,78 @@
+name: CD-backend
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - website/backend/**
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Build-backend-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.TEST_DOCKERHUB_USERNAME }}
+          password: ${{ secrets.TEST_DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          file: website/backend/Dockerfile
+          push: true
+          tags: mithriy/gear-backend:nightly
+
+  Deploy:
+    needs: Build-backend-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
+          GITHUB_CLIENT_SECRET: ${{ secrets.GTHUB_CLIENT_SECRET }}
+          GITHUB_CLIENT_ID: ${{ secrets.GTHUB_CLIENT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
+          IDE_SOCKET: ${{ secrets.IDE_SOCKET }}
+          PORT: ${{ secrets.PORT }}
+          HOST: ${{ secrets.HOST }}
+          IDE_FOLDER: ${{ secrets.IDE_FOLDER }}
+          NODE_ADDRESS: ${{secrets.GEAR_BACKEND_NODE}}
+          SUDO_SEED: ${{secrets.SUDO_SEED}}
+          ACCOUNT_SEED: ${{secrets.ACCOUNT_SEED}}
+          SITE_ACCOUNT_BALANCE: ${{secrets.SITE_ACCOUNT_BALANCE}}
+          REACT_APP_RRT: ${{secrets.REACT_APP_RRT}}
+        with:
+          # Required, playbook filepath
+          directory: ./ansible
+          playbook: backend.yaml
+          # Optional, SSH private key
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          # Optional, literal inventory file contents
+          inventory: |
+            [all]
+            ${{secrets.GEAR_BACKEND_NODE}}
+          requirements: galaxy-requirements.yml

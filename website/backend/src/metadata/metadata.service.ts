@@ -29,12 +29,18 @@ export class MetadataService {
     if (!GearKeyring.checkSign(program.owner, data.signature, data.meta)) {
       throw new SignNotVerified();
     } else {
-      const metadata = this.metaRepo.create({
-        owner: program.owner,
-        meta: data.meta,
-        program: program.hash,
-        metaFile: data.metaFile,
-      });
+      let metadata = await this.metaRepo.findOne({ program: data.programId });
+      if (!metadata) {
+        metadata = this.metaRepo.create({
+          owner: program.owner,
+          meta: data.meta,
+          program: program.hash,
+          metaFile: data.metaFile,
+        });
+      } else {
+        metadata.meta = data.meta;
+        metadata.metaFile = data.metaFile;
+      }
       const savedMeta = await this.metaRepo.save(metadata);
       try {
         await this.programService.addProgramInfo(data.programId, data.name, data.title, savedMeta);

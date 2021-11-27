@@ -1,6 +1,4 @@
-import UserRequestService from 'services/UserRequestService';
 import { CreateType, GearKeyring } from '@gear-js/api';
-import { UserActionTypes, UserKeypairModel, UserKeypairRPCModel, UserModel, UserProfileRPCModel } from 'types/user';
 import {
   NotificationActionTypes,
   NotificationPaginationModel,
@@ -15,34 +13,19 @@ import {
   ProgramRPCModel,
   ProgramsPagintaionModel,
 } from 'types/program';
+
+import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
-import GitRequestService from 'services/GitRequestService';
-import TelegramRequestService from 'services/TelegramRequestService';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { GEAR_MNEMONIC_KEY, GEAR_STORAGE_KEY, RPC_METHODS } from 'consts';
+import { RPC_METHODS } from 'consts';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
 import { AlertActionTypes } from '../reducers/AlertReducer';
-
-const fetchTokenAction = () => ({ type: UserActionTypes.FETCH_TOKEN });
-const fetchTokenSuccessAction = (payload: {}) => ({ type: UserActionTypes.FETCH_TOKEN_SUCCESS, payload });
-const fetchTokenErrorAction = () => ({ type: UserActionTypes.FETCH_TOKEN_ERROR });
-
-const fetchUserAction = () => ({ type: UserActionTypes.FETCH_USER });
-const fetchUserSuccessAction = (payload: UserModel) => ({ type: UserActionTypes.FETCH_USER_SUCCESS, payload });
-const fetchUserErrorAction = () => ({ type: UserActionTypes.FETCH_USER_ERROR });
-
-const fetchUserKeypairAction = () => ({ type: UserActionTypes.FETCH_USER_KEYPAIR });
-const fetchUserKeypairSuccessAction = (payload: UserKeypairModel) => ({
-  type: UserActionTypes.FETCH_USER_KEYPAIR_SUCCESS,
-  payload,
-});
-const fetchUserKeypairErrorAction = () => ({ type: UserActionTypes.FETCH_USER_KEYPAIR_ERROR });
 
 const fetchUserProgramsAction = () => ({ type: ProgramActionTypes.FETCH_USER_PROGRAMS });
 const fetchUserProgramsSuccessAction = (payload: ProgramPaginationModel) => ({
@@ -64,7 +47,6 @@ export const resetProgramAction = () => ({ type: ProgramActionTypes.RESET_PROGRA
 
 const fetchProgramErrorAction = () => ({ type: ProgramActionTypes.FETCH_PROGRAM_ERROR });
 
-export const transferBalanceSuccessAction = () => ({ type: UserActionTypes.TRANSFER_BALANCE });
 export const fetchTotalIssuanceAction = (payload: {}) => ({ type: BlockActionTypes.FETCH_TOTALISSUANCE, payload });
 export const fetchBlockAction = (payload: BlockModel) => ({ type: BlockActionTypes.FETCH_BLOCK, payload });
 
@@ -126,81 +108,16 @@ export const markCertainRecentNotificationsAsReadAction = (payload: string[]) =>
 export const fetchGasAction = (payload: number) => ({ type: ProgramActionTypes.FETCH_GAS, payload });
 export const resetGasAction = () => ({ type: ProgramActionTypes.RESET_GAS });
 
-const resetUserAction = () => ({ type: UserActionTypes.RESET_USER });
-const resetProgramsAction = () => ({ type: ProgramActionTypes.RESET_PROGRAMS });
-const resetNotificationsAction = () => ({ type: NotificationActionTypes.RESET_NOTIFICATIONS });
-
 export const resetBlocksAction = () => ({ type: BlockActionTypes.RESET_BLOCKS });
 
 export const setApiReady = () => ({ type: ApiActionTypes.SET_API });
 export const resetApiReady = () => ({ type: ApiActionTypes.RESET_API });
 
-const gitService = new GitRequestService();
-const telegramService = new TelegramRequestService();
-const userService = new UserRequestService();
+export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActionTypes.SET_ACCOUNT, payload });
+export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
+
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
-
-// TODO: (dispatch) fix it later. Here and below
-export const generateKeypairAction = () => (dispatch: any) => {
-  dispatch(fetchUserKeypairAction());
-  userService
-    .generateKeypair()
-    .then((result: UserKeypairRPCModel) => {
-      window.localStorage.setItem(GEAR_MNEMONIC_KEY, JSON.stringify(result.result));
-      dispatch(fetchUserKeypairSuccessAction(result.result));
-    })
-    .catch(() => dispatch(fetchUserKeypairErrorAction()));
-};
-
-export const getGitUserJwtAction = (code: string) => (dispatch: any) => {
-  dispatch(fetchTokenAction());
-  gitService
-    .authWithGit(code)
-    .then((result: any) => {
-      window.localStorage.setItem(GEAR_STORAGE_KEY, result.result.access_token);
-      dispatch(fetchTokenSuccessAction(result));
-    })
-    .catch(() => dispatch(fetchTokenErrorAction()));
-};
-
-export const getTelegramUserJwtAction = (user: any) => (dispatch: any) => {
-  dispatch(fetchTokenAction());
-  telegramService
-    .authWithTelegram(user)
-    .then((result: any) => {
-      window.localStorage.setItem(GEAR_STORAGE_KEY, result.result.access_token);
-      dispatch(fetchTokenSuccessAction(result));
-      if (result.result.access_token) {
-        window.location.reload();
-      }
-    })
-    .catch(() => dispatch(fetchTokenErrorAction()));
-};
-
-export const getTestUserJwtAction = (userId: string) => (dispatch: any) => {
-  dispatch(fetchTokenAction());
-  userService
-    .authWithTest(userId)
-    .then((result: any) => {
-      window.localStorage.setItem(GEAR_STORAGE_KEY, result.result.access_token);
-      dispatch(fetchTokenSuccessAction(result));
-      if (result.result.access_token) {
-        window.location.reload();
-      }
-    })
-    .catch(() => dispatch(fetchTokenErrorAction()));
-};
-
-export const getUserDataAction = () => (dispatch: any) => {
-  dispatch(fetchUserAction());
-  userService
-    .fetchUserData()
-    .then((result: UserProfileRPCModel) => {
-      dispatch(fetchUserSuccessAction(result.result));
-    })
-    .catch(() => dispatch(fetchUserErrorAction()));
-};
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
   dispatch(fetchUserProgramsAction());
@@ -339,13 +256,4 @@ export const subscribeToEvents = () => (dispatch: any) => {
       );
     }
   });
-};
-
-export const logoutFromAccountAction = () => (dispatch: any) => {
-  localStorage.clear();
-  dispatch(resetUserAction());
-  dispatch(resetProgramsAction());
-  dispatch(resetNotificationsAction());
-  dispatch(resetProgramPayloadTypeAction());
-  dispatch(resetGasAction());
 };

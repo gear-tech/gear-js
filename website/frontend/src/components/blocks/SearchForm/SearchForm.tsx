@@ -68,7 +68,7 @@ export const SearchForm: VFC<Props> = ({ handleSearch, handleRemoveQuery, handle
                 name="searchQuery"
                 type="text"
                 className="search-form__input"
-                placeholder="Search..."
+                placeholder="Find program by ID"
               />
               {typeof searchType === 'number' && (
                 <div className="search-form--type">
