@@ -26,4 +26,5 @@ export interface GetMetaParams {
 export interface GetMetaResult {
   program: string;
   meta: string;
+  metaFile: string;
 }
