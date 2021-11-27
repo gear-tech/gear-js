@@ -29,13 +29,13 @@ services:
       - kafka
     restart: always
     ports:
-      - ${API_BACKEND_PORT}:${API_BACKEND_PORT}
+      - 3000:3000
     image: mithriy/gear-api-backend:nightly
     environment:
       CLIENT_ID: ${API_BACKEND_KAFKA_CLIENT_ID}
       GROUP_ID: ${API_BACKEND_KAFKA_GROUP_ID}
       BROKERS: kafka:9092
-      PORT: ${API_BACKEND_PORT}
+      PORT: 3000
 
   postgres:
     image: postgres

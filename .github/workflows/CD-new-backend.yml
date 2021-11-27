@@ -51,7 +51,7 @@ jobs:
         uses: dawidd6/action-ansible-playbook@v2
         env:
           KAFKA_PORT: ${{ secrets.KAFKA_PORT}}
-          KAFKA_HOST_NAME: ${{ secrets.HOST }}
+          KAFKA_HOST_NAME: ${{ secrets.KAFKA_HOST_NAME }}
           API_BACKEND_KAFKA_CLIENT_ID: ${{ secrets.API_BACKEND_KAFKA_CLIENT_ID }}
           API_BACKEND_KAFKA_GROUP_ID: ${{ secrets.API_BACKEND_KAFKA_GROUP_ID }}
           API_BACKEND_PORT: ${{ secrets.API_BACKEND_PORT }}
