@@ -17,8 +17,10 @@ export const Modal = ({ content, handleClose, ...props }: Props) => (
           <CloseIcon color="#ffffff" />
         </span>
       </button>
-      {props.title && <h2 className="modal__title">{props.title}</h2>}
-      <div className="modal__text">{content}</div>
+      <div className="modal__content">
+        {props.title && <h2 className="modal__title">{props.title}</h2>}
+        <div className="modal__text">{content}</div>
+      </div>
     </div>
   </div>
 );
