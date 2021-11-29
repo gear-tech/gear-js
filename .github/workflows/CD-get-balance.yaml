@@ -2,9 +2,9 @@ name: CD-get-balance
 
 on:
   push:
-    branches: [master]
-    paths:
-      - website/get-balance/**
+    branches: [do-test-balance-service]
+    # paths:
+    # - website/get-balance/**
 
 env:
   CARGO_TERM_COLOR: always
