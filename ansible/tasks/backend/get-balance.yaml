@@ -7,12 +7,12 @@
 
 - name: Stop docker-compose
   shell: >
-    /usr/local/bin/compose-get-balance -f "/home/ec2-user/compose-get-balance.yaml" down
+    /usr/local/bin/docker-compose -f "/home/ec2-user/compose-get-balance.yaml" down
   become: yes
 
 - name: Pull docker images
   shell: >
-    /usr/local/bin/compose-get-balance -f "/home/ec2-user/compose-get-balance.yaml" pull
+    /usr/local/bin/docker-compose -f "/home/ec2-user/compose-get-balance.yaml" pull
   become: yes
 
 - name: Remove old docker images
@@ -21,7 +21,7 @@
 
 - name: Run docker-compose
   shell: >
-    /usr/local/bin/compose-get-balance -f "/home/ec2-user/compose-get-balance.yaml" up -d
+    /usr/local/bin/docker-compose -f "/home/ec2-user/compose-get-balance.yaml" up -d
   become: yes
   environment:
     DB_NAME: "{{ lookup('env','DB_NAME') }}"
