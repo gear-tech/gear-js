@@ -15,22 +15,22 @@ import { useApi } from '../../../../../../../hooks/useApi';
 import { Schema } from './Schema';
 import './MessageForm.scss';
 import { FormItem } from '../../../../../../FormItem';
-import { parseMeta } from '../../../../../../../utils/meta-parser';
+import { parseMeta, ParsedShape } from '../../../../../../../utils/meta-parser';
 import { Switch } from '../../../../../../../common/components/Switch';
 
 type Props = {
   programHash: string;
   programName: string;
-  meta: Metadata;
+  meta: Metadata | null;
 };
 
-export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
+export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null }) => {
   const [api] = useApi();
-  const parsedMeta: Metadata = JSON.parse(meta as string);
+  const parsedMeta: Metadata = typeof meta === 'string' ? JSON.parse(meta) : null;
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
-  const [ready, setReady] = useState(false);
   const [manualInput, setManualInput] = useState(false);
+  const [formMeta, setFormMeta] = useState<ParsedShape | null>(null);
 
   const [initialValues, setInitialValues] = useState({
     gasLimit: 20000,
@@ -40,14 +40,21 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   });
 
   useEffect(() => {
-    const displayedTypes = parseHexTypes(parsedMeta.types!);
-    const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
-    console.log(initialValues.payload !== JSON.stringify(inputType, null, 4));
-    if (Object.keys(displayedTypes).length && JSON.stringify(inputType, null, 4) !== initialValues.payload) {
-      setInitialValues({ ...initialValues, payload: JSON.stringify(inputType, null, 4) });
+    if (parsedMeta) {
+      const displayedTypes = parseHexTypes(parsedMeta.types!);
+      const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
+
+      if (Object.keys(displayedTypes).length && JSON.stringify(inputType, null, 4) !== initialValues.payload) {
+        setInitialValues({ ...initialValues, payload: JSON.stringify(inputType, null, 4) });
+      }
     }
-    setReady(true);
   }, [initialValues, setInitialValues, parsedMeta]);
+
+  useEffect(() => {
+    if (initialValues.payload) {
+      setFormMeta(parseMeta(JSON.parse(initialValues.payload)));
+    }
+  }, [initialValues.payload]);
 
   const calculateGas = async (values: any, setFieldValue: any) => {
     if (values.payload.length === 0) {
@@ -56,62 +63,63 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
     }
 
     try {
-      const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.handle_input, meta);
-      dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
-      setFieldValue('gasLimit', Number(`${estimatedGas}`));
+      if (meta) {
+        const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.handle_input, meta);
+        dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
+        setFieldValue('gasLimit', Number(`${estimatedGas}`));
+      }
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
       console.error(error);
     }
   };
 
-  if (ready) {
-    const formMeta = parseMeta(JSON.parse(initialValues.payload));
-    return (
-      <Formik
-        initialValues={initialValues}
-        validationSchema={Schema}
-        validateOnBlur
-        onSubmit={(values: MessageModel, { resetForm }) => {
-          if (currentAccount) {
-            SendMessageToProgram(api, currentAccount, values, dispatch, () => {
-              resetForm();
-            });
-          } else {
-            dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
-          }
-        }}
-      >
-        {({ errors, touched, values, setFieldValue }) => (
-          <Form id="message-form">
-            <div className="message-form--wrapper">
-              <div className="message-form--col">
-                <div className="message-form--info">
-                  <span>File:</span>
-                  <span>{fileNameHandler(programName)}</span>
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={Schema}
+      validateOnBlur
+      onSubmit={(values: MessageModel, { resetForm }) => {
+        if (currentAccount) {
+          SendMessageToProgram(api, currentAccount, values, dispatch, () => {
+            resetForm();
+          });
+        } else {
+          dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
+        }
+      }}
+    >
+      {({ errors, touched, values, setFieldValue }) => (
+        <Form id="message-form">
+          <div className="message-form--wrapper">
+            <div className="message-form--col">
+              <div className="message-form--info">
+                <span>File:</span>
+                <span>{fileNameHandler(programName)}</span>
+              </div>
+              <div className="message-form--info">
+                <label htmlFor="destination" className="message-form__field">
+                  Destination:
+                </label>
+                <div className="message-form__field-wrapper">
+                  <Field
+                    id="destination"
+                    name="destination"
+                    type="text"
+                    className={clsx('', errors.destination && touched.destination && 'message-form__input-error')}
+                  />
+                  {errors.destination && touched.destination ? (
+                    <div className="message-form__error">{errors.destination}</div>
+                  ) : null}
                 </div>
-                <div className="message-form--info">
-                  <label htmlFor="destination" className="message-form__field">
-                    Destination:
-                  </label>
-                  <div className="message-form__field-wrapper">
-                    <Field
-                      id="destination"
-                      name="destination"
-                      type="text"
-                      className={clsx('', errors.destination && touched.destination && 'message-form__input-error')}
-                    />
-                    {errors.destination && touched.destination ? (
-                      <div className="message-form__error">{errors.destination}</div>
-                    ) : null}
-                  </div>
-                </div>
+              </div>
 
-                <div className="message-form--info">
-                  <label htmlFor="payload" className="message-form__field">
-                    Payload:
-                  </label>
-                  <div className="message-form__field-wrapper">
+              <div className="message-form--info">
+                <label htmlFor="payload" className="message-form__field">
+                  Payload:
+                </label>
+                <div className="message-form__field-wrapper">
+                  {parsedMeta && (
                     <div>
                       <Switch
                         onChange={() => {
@@ -120,97 +128,95 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
                         label="Manual input"
                       />
                     </div>
-                    {manualInput ? (
-                      <div>
-                        <Field
-                          id="payload"
-                          name="payload"
-                          as="textarea"
-                          type="text"
-                          className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
-                          placeholder="// your payload here ..."
-                          rows={15}
-                        />
-                        {errors.payload && touched.payload ? (
-                          <div className="message-form__error">{errors.payload}</div>
-                        ) : null}
-                      </div>
-                    ) : (
-                      <>
-                        {formMeta && (
-                          <div>
-                            <FormItem data={formMeta} />
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                <div className="message-form--info">
-                  <label htmlFor="gasLimit" className="message-form__field">
-                    Gas limit:
-                  </label>
-                  <div className="message-form__field-wrapper">
-                    <NumberFormat
-                      name="gasLimit"
-                      placeholder="20000"
-                      value={values.gasLimit}
-                      thousandSeparator
-                      allowNegative={false}
-                      className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
-                      onValueChange={(val) => {
-                        const { floatValue } = val;
-                        setFieldValue('gasLimit', floatValue);
-                      }}
-                    />
-                    {errors.gasLimit && touched.gasLimit ? (
-                      <div className="message-form__error">{errors.gasLimit}</div>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div className="message-form--info">
-                  <label htmlFor="value" className="message-form__field">
-                    Value:
-                  </label>
-                  <div className="message-form__field-wrapper">
-                    <Field
-                      id="value"
-                      name="value"
-                      placeholder="20000"
-                      type="number"
-                      className={clsx('', errors.value && touched.value && 'message-form__input-error')}
-                    />
-                    {errors.value && touched.value ? <div className="message-form__error">{errors.value}</div> : null}
-                  </div>
-                </div>
-                <div className="message-form--btns">
-                  <>
-                    <button
-                      className="message-form__button"
-                      type="button"
-                      onClick={() => {
-                        calculateGas(values, setFieldValue);
-                      }}
-                    >
-                      Calculate Gas
-                    </button>
-                    <button className="message-form__button" type="submit">
-                      <>
-                        <img src={MessageIllustration} alt="message" />
-                        Send request
-                      </>
-                    </button>
-                  </>
+                  )}
+                  {manualInput || !parsedMeta ? (
+                    <div>
+                      <Field
+                        id="payload"
+                        name="payload"
+                        as="textarea"
+                        type="text"
+                        className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
+                        placeholder="// your payload here ..."
+                        rows={15}
+                      />
+                      {errors.payload && touched.payload ? (
+                        <div className="message-form__error">{errors.payload}</div>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <>
+                      {formMeta && (
+                        <div>
+                          <FormItem data={formMeta} />
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    );
-  }
 
-  return null;
+              <div className="message-form--info">
+                <label htmlFor="gasLimit" className="message-form__field">
+                  Gas limit:
+                </label>
+                <div className="message-form__field-wrapper">
+                  <NumberFormat
+                    name="gasLimit"
+                    placeholder="20000"
+                    value={values.gasLimit}
+                    thousandSeparator
+                    allowNegative={false}
+                    className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
+                    onValueChange={(val) => {
+                      const { floatValue } = val;
+                      setFieldValue('gasLimit', floatValue);
+                    }}
+                  />
+                  {errors.gasLimit && touched.gasLimit ? (
+                    <div className="message-form__error">{errors.gasLimit}</div>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="message-form--info">
+                <label htmlFor="value" className="message-form__field">
+                  Value:
+                </label>
+                <div className="message-form__field-wrapper">
+                  <Field
+                    id="value"
+                    name="value"
+                    placeholder="20000"
+                    type="number"
+                    className={clsx('', errors.value && touched.value && 'message-form__input-error')}
+                  />
+                  {errors.value && touched.value ? <div className="message-form__error">{errors.value}</div> : null}
+                </div>
+              </div>
+              <div className="message-form--btns">
+                <>
+                  <button
+                    className="message-form__button"
+                    type="button"
+                    onClick={() => {
+                      calculateGas(values, setFieldValue);
+                    }}
+                  >
+                    Calculate Gas
+                  </button>
+                  <button className="message-form__button" type="submit">
+                    <>
+                      <img src={MessageIllustration} alt="message" />
+                      Send request
+                    </>
+                  </button>
+                </>
+              </div>
+            </div>
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
 };

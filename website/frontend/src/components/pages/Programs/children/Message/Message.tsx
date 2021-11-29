@@ -50,7 +50,7 @@ export const Message: VFC<Props> = ({ programHash, programName, handleClose }) =
   return (
     <div className="message-form">
       <PageHeader programName={programName} handleClose={handleClose} pageType={PAGE_TYPES.MESSAGE_FORM_PAGE} />
-      {meta && <MessageForm programHash={programHash} programName={programName} meta={meta} />}
+      <MessageForm programHash={programHash} programName={programName} meta={meta} />
     </div>
   );
 };
