@@ -1,6 +1,6 @@
 version: '3'
 services:
-  postgres:
+  pg_test_balance:
     image: postgres
     restart: always
     environment:
@@ -12,7 +12,7 @@ services:
     ports:
       - '5434:5432'
 
-  backend:
+  backend_test_balance:
     ports:
       - '3002:3000'
     image: mithriy/gear-get-balance:nightly
