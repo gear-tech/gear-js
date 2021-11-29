@@ -10,7 +10,7 @@ export default () => ({
     host: process.env.DB_HOST || 'localhost',
   },
   gear: {
-    providerAddress: process.env.TEST_NET_PROVIDER,
+    providerAddress: process.env.WS_PROVIDER,
     accountSeed: process.env.TEST_ACCOUNT_SEED,
     rootAccountSeed: process.env.ROOT_ACCOUNT_SEED,
     accountBalance: process.env.TEST_ACCOUNT_BALANCE,
