@@ -28,6 +28,3 @@ services:
       - TEST_ACCOUNT_SEED=${TEST_ACCOUNT_SEED}
       - TEST_ACCOUNT_BALANCE=${TEST_ACCOUNT_BALANCE}
       - TEST_BALANCE_VALUE=${TEST_BALANCE_VALUE}
-
-volumes:
-  get_balance_pg_data:

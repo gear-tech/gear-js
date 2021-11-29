@@ -2,7 +2,7 @@
 #Install/update backend docker-compose
 - name: Copy docker-compose
   copy:
-    src: docker-compose.yaml
+    src: compose-get-balance.yaml
     dest: /home/ec2-user/compose-get-balance.yaml
 
 - name: Stop docker-compose
