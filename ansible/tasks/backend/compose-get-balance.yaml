@@ -18,7 +18,7 @@ services:
     image: mithriy/gear-get-balance:nightly
     restart: always
     depends_on:
-      - postgres
+      - pg_test_balance
     environment:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
