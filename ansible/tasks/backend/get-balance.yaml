@@ -15,9 +15,9 @@
     /usr/local/bin/docker-compose -f "/home/ec2-user/compose-get-balance.yaml" pull
   become: yes
 
-- name: Remove old docker images
-  shell: docker image prune -f
-  become: yes
+# - name: Remove old docker images
+# shell: docker image prune -f
+# become: yes
 
 - name: Run docker-compose
   shell: >
