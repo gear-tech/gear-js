@@ -16,15 +16,19 @@ services:
     ports:
       - '3002:3000'
     image: mithriy/gear-get-balance:nightly
+    restart: always
     depends_on:
       - postgres
     environment:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=postgres
+      - DB_HOST=pg_test_balance
       - WS_PROVIDER=${WS_PROVIDER}
       - ROOT_ACCOUNT_SEED=${ROOT_ACCOUNT_SEED}
       - TEST_ACCOUNT_SEED=${TEST_ACCOUNT_SEED}
       - TEST_ACCOUNT_BALANCE=${TEST_ACCOUNT_BALANCE}
       - TEST_BALANCE_VALUE=${TEST_BALANCE_VALUE}
+
+volumes:
+  get_balance_pg_data:
