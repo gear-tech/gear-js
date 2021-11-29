@@ -20,10 +20,11 @@ export class ProgramsService {
     }
   }
 
-  async saveProgram({ owner, uploadedAt, hash }) {
+  async saveProgram({ owner, uploadedAt, hash, chain }) {
     const program = this.programRepository.create({
       hash,
       owner,
+      chain,
       name: hash,
       uploadedAt: uploadedAt,
       programNumber: (await this.getLastProgramNumber(owner)) + 1,

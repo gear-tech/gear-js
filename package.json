@@ -10,10 +10,6 @@
     "start:ide": "npm run start:dev --workspace=website/ide-backend",
     "prepare": "husky install"
   },
-  "workspaces": [
-    "website/*",
-    "api"
-  ],
   "dependencies": {
     "@gear-js/api": "file:api",
     "@gear-js/backend": "file:website/backend",

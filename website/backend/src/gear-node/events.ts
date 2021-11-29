@@ -25,6 +25,7 @@ export class GearNodeEvents {
   }
 
   async subscribeAllEvents(api: GearApi) {
+    const chain = await api.chain();
     api.allEvents((events) => {
       events
         .filter(({ event }) => api.events.gear.InitMessageEnqueued.is(event))
@@ -35,6 +36,7 @@ export class GearNodeEvents {
               owner: eventData.origin.toHex(),
               uploadedAt: new Date(),
               hash: eventData.programId.toHex(),
+              chain,
             });
             await this.messageService.save({
               id: eventData.messageId.toHex(),
