@@ -14,6 +14,6 @@ export class Meta {
   @Column()
   meta: string;
 
-  @Column({ nullable: true })
-  metaFile: String;
+  @Column({ nullable: true, type: 'text' })
+  metaFile: string;
 }
