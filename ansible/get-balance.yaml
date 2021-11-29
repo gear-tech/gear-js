@@ -1,0 +1,28 @@
+- name: 'deploy to aws'
+  hosts: all
+  become: yes
+  remote_user: ec2-user
+
+  #Set env vars on remote from envs on runner
+  environment:
+    DB_NAME: "{{ lookup('env','DB_NAME') }}"
+    DB_USER: "{{ lookup('env','DB_USER') }}"
+    DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
+    DB_PORT: "{{ lookup('env','DB_PORT') }}"
+    DB_HOST: "{{ lookup('env','DB_HOST') }}"
+    WS_PROVIDER: "{{ lookup('env','WS_PROVIDER') }}"
+    ROOT_ACCOUNT_SEED: "{{ lookup('env','ROOT_ACCOUNT_SEED') }}"
+    TEST_ACCOUNT_SEED: "{{ lookup('env','TEST_ACCOUNT_SEED') }}"
+    TEST_ACCOUNT_BALANCE: "{{ lookup('env','TEST_ACCOUNT_BALANCE') }}"
+    TEST_BALANCE_VALUE: "{{ lookup('env','TEST_BALANCE_VALUE') }}"
+
+  #Do tasks
+  tasks:
+    - name: Install and enable required packages
+      include: tasks/packages/packages.yaml
+
+    - name: Install/Update get-balance
+      include: tasks/backend/get-balance.yaml
+
+    - name: Install nginx with self-signed certs
+      include: tasks/nginx/nginx.yaml
