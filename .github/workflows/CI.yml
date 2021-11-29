@@ -34,8 +34,8 @@ jobs:
           node-version: 16.x
       - run: |
           cd website/get-balance
-          yarn install
-          yarn build
+          npm install --package-lock-only && npm install
+          npm run build
 
   build_frontend:
     runs-on: ubuntu-latest
