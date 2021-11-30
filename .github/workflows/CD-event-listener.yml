@@ -1,6 +1,9 @@
 name: CD events-listener
 
-on: [workflow_dispatch]
+# on: [workflow_dispatch]
+on:
+  push:
+    branches: [master]
 
 env:
   CARGO_TERM_COLOR: always

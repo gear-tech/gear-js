@@ -68,9 +68,9 @@ export const listen = async (api, callback) => {
           callback({
             key: 'InitFailure',
             value: {
-              programId: data.programId.toHex(),
-              messageId: data.messageId.toHex(),
-              origin: data.origin.toHex(),
+              programId: data.info.programId.toHex(),
+              messageId: data.info.messageId.toHex(),
+              origin: data.info.origin.toHex(),
             },
           });
           break;
