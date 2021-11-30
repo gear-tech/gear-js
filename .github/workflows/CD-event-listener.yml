@@ -3,7 +3,7 @@ name: CD events-listener
 # on: [workflow_dispatch]
 on:
   push:
-    branches: [master]
+    branches: ['do-event-listener']
 
 env:
   CARGO_TERM_COLOR: always
