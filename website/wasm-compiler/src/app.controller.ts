@@ -10,7 +10,7 @@ import { AppService } from './app.service';
 import { StorageService } from './storage/storage.service';
 import { generateId, unpackZip } from './util';
 
-@Controller()
+@Controller('wasm-compiler')
 export class AppController {
   constructor(
     private readonly appService: AppService,
@@ -20,8 +20,6 @@ export class AppController {
   @Post('build')
   @UseInterceptors(FileInterceptor('file'))
   async build(@UploadedFile() file) {
-    //@Body() body: { file: Buffer }) {
-    console.log(file);
     const id = generateId();
     const path = unpackZip(file.buffer, id);
     this.appService.processBuild(path, id);
