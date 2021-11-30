@@ -1,18 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
-const AdmZip = require('adm-zip');
-const Docker = require('dockerode');
+
+import * as Docker from 'dockerode';
 import { join } from 'path';
 import * as fs from 'fs';
-import { ConfigService } from '@nestjs/config';
 import { exec } from 'child_process';
+import { StorageService } from './storage/storage.service';
+import { isWasm, packZip } from './util';
 
 @Injectable()
 export class AppService {
-  private docker: any;
-  private rootFolder: string;
+  private docker: Docker;
 
-  constructor(private readonly config: ConfigService) {
-    this.rootFolder = this.config.get('IDE_FOLDER');
+  constructor(private readonly storage: StorageService) {
     this.docker = new Docker({ socketPath: '/var/run/docker.sock' });
     exec('./wasm-build/build-image.sh', (error, stdout, stderr) => {
       console.log(stdout);
@@ -20,32 +19,30 @@ export class AppService {
     });
   }
 
-  async runContainer(pathToFolder) {
+  async runContainer(pathToFolder: string, id: string) {
     return new Promise((resolve, reject) => {
       this.docker.run(
         'wasm-build',
-        ['sh', '-c', 'ls && cp ../build.sh ./ && ./build.sh'],
+        ['sh', '-c', './build.sh'],
         process.stdout,
         {
           Tty: false,
-          name: Math.random().toString(36).substring(10),
+          name: id,
           HostConfig: {
-            Binds: [
-              `${pathToFolder}:/wasm-build/build`,
-            ],
+            Binds: [`${pathToFolder}:/wasm-build/build`],
           },
           AttachStderr: true,
-          WorkingDir: '/wasm-build/build',
+          WorkingDir: '/wasm-build',
         },
         {},
-        (err, data, container) => {
+        (err, _, container) => {
           if (err) {
             container.remove();
             reject(err);
           } else {
             container.logs(
               { stderr: true, stdout: true },
-              (err, data: Buffer) => {
+              (_, data: Buffer) => {
                 const error = this.findErr(data.toString());
                 if (error) {
                   container.remove();
@@ -62,9 +59,9 @@ export class AppService {
     });
   }
 
-  async processBuild(pathToFolder) {
+  async processBuild(pathToFolder: string, id: string) {
     try {
-      const result = await this.runContainer(pathToFolder);
+      await this.runContainer(pathToFolder, id);
     } catch (error) {
       return { error: error.message ? error.message : error };
     }
@@ -73,32 +70,25 @@ export class AppService {
     const resultFiles = [];
 
     fs.readdirSync(dirWithWasm)
-      .filter(this.isWasm)
+      .filter(isWasm)
       .map((fileName) => {
         resultFiles.push({
           content: fs.readFileSync(join(dirWithWasm, fileName)),
           fileName: fileName,
         });
       });
-    let result: any;
     if (resultFiles.length === 0) {
-      result = { error: 'Build failed' };
+      await this.storage.save(null, id);
     } else {
-      result = { file: this.packZip(resultFiles) };
+      const file = packZip(resultFiles);
+      await this.storage.save(file, id);
     }
-
     fs.rmdir(
       `/${join(...pathToFolder.split('/').slice(0, -1))}`,
       { recursive: true },
       () => {},
     );
-
-    return result;
-  }
-
-  private isWasm(fileName: string) {
-    let ext = fileName.split('.');
-    return ext[ext.length - 1] === 'wasm';
+    return 0;
   }
 
   private findErr(stdout: string) {
@@ -109,24 +99,5 @@ export class AppService {
       }
       return splited[1].split('\n')[0];
     } else return null;
-  }
-
-  unpackZip(file: Buffer, projectName: string, username: string) {
-    const zip = new AdmZip(file);
-    const path = join(this.rootFolder, username, projectName);
-    fs.mkdirSync(path, { recursive: true });
-    zip.extractAllTo(path);
-    return path;
-  }
-
-  packZip(files) {
-    const zip = new AdmZip();
-    files.forEach((file) => {
-      zip.addFile(
-        file.fileName,
-        Buffer.alloc(file.content.length, file.content),
-      );
-    });
-    return zip.toBuffer();
   }
 }

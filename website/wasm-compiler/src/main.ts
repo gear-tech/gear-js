@@ -8,9 +8,9 @@ const logger = new Logger('IdeMicroservice');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   const configService = app.get(ConfigService);
-  const port = configService.get('PORT')
+  const port = configService.get('PORT');
 
-  console.log(`App succesfully run on the ${port} 🚀`);
+  logger.log(`App succesfully run on the ${port} 🚀`);
   await app.listen(port);
 }
 bootstrap();
