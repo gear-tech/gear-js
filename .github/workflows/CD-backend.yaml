@@ -2,7 +2,7 @@ name: CD-backend
 
 on:
   push:
-    branches: [master]
+    branches: [master, 'do-add-logs']
     paths:
       - website/backend/**
 
