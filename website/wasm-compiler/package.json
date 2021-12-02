@@ -26,7 +26,6 @@
     "@nestjs/core": "^8.0.6",
     "@nestjs/microservices": "^8.0.6",
     "@nestjs/platform-express": "^8.0.6",
-    "@nestjs/platform-socket.io": "^7.6.17",
     "@nestjs/typeorm": "^8.0.2",
     "@nestjs/websockets": "^8.0.6",
     "adm-zip": "^0.5.5",
