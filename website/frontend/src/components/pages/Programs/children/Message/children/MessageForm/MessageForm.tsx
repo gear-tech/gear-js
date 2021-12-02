@@ -4,6 +4,7 @@ import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import clsx from 'clsx';
+import { ErrorBoundary } from 'react-error-boundary';
 import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
@@ -17,6 +18,7 @@ import './MessageForm.scss';
 import { FormItem } from '../../../../../../FormItem';
 import { parseMeta, ParsedShape } from '../../../../../../../utils/meta-parser';
 import { Switch } from '../../../../../../../common/components/Switch';
+import { MetaErrorMessage } from './styles';
 
 type Props = {
   programHash: string;
@@ -30,7 +32,8 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const [manualInput, setManualInput] = useState(false);
-  const [formMeta, setFormMeta] = useState<ParsedShape | null>(null);
+  // @ts-ignore
+  const [formMeta, setFormMeta] = useState<ParsedShape | null>({});
 
   const [initialValues, setInitialValues] = useState({
     gasLimit: 20000,
@@ -126,10 +129,30 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
                           setManualInput(!manualInput);
                         }}
                         label="Manual input"
+                        checked={manualInput}
                       />
                     </div>
                   )}
-                  {manualInput || !parsedMeta ? (
+
+                  <ErrorBoundary
+                    fallback={
+                      <>
+                        <MetaErrorMessage>
+                          Sorry, something went wrong. Unfortunatelly we cannot parse metadata, you could use manual
+                          input.
+                        </MetaErrorMessage>
+                        <br />
+                      </>
+                    }
+                    onError={(err) => {
+                      console.log(err);
+                      setManualInput(true);
+                    }}
+                  >
+                    {!manualInput && <div>{formMeta && <FormItem data={formMeta} />}</div>}
+                  </ErrorBoundary>
+
+                  {manualInput && (
                     <div>
                       <Field
                         id="payload"
@@ -144,14 +167,6 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
                         <div className="message-form__error">{errors.payload}</div>
                       ) : null}
                     </div>
-                  ) : (
-                    <>
-                      {formMeta && (
-                        <div>
-                          <FormItem data={formMeta} />
-                        </div>
-                      )}
-                    </>
                   )}
                 </div>
               </div>
