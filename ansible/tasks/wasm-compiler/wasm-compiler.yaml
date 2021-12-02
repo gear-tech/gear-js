@@ -40,10 +40,10 @@
 - name: Create wasm-compiler file .env
   shell: >
     echo "PORT=$PORT">/home/ec2-user/wasm-compiler/.env; 
-    echo "WASM_BUILD_FOLDER=$WASM_BUILD_FOLDER">>/home/ec2-user/wasm-compiler/.env
-    echo "DB_USER=$DB_USER">>/home/ec2-user/wasm-compiler/.env
-    echo "DB_PASSWORD=$DB_PASSWORD">>/home/ec2-user/wasm-compiler/.env
-    echo "DB_NAME=$DB_NAME">>/home/ec2-user/wasm-compiler/.env
+    echo "WASM_BUILD_FOLDER=$WASM_BUILD_FOLDER">>/home/ec2-user/wasm-compiler/.env;
+    echo "DB_USER=$DB_USER">>/home/ec2-user/wasm-compiler/.env;
+    echo "DB_PASSWORD=$DB_PASSWORD">>/home/ec2-user/wasm-compiler/.env;
+    echo "DB_NAME=$DB_NAME">>/home/ec2-user/wasm-compiler/.env;
   environment:
     PORT: "{{ lookup('env','PORT') }}"
     WASM_BUILD_FOLDER: "{{ lookup('env','WASM_BUILD_FOLDER') }}"
