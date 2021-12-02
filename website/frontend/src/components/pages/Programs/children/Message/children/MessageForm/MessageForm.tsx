@@ -32,8 +32,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const [manualInput, setManualInput] = useState(false);
-  // @ts-ignore
-  const [formMeta, setFormMeta] = useState<ParsedShape | null>({});
+  const [formMeta, setFormMeta] = useState<ParsedShape | null>();
 
   const [initialValues, setInitialValues] = useState({
     gasLimit: 20000,
@@ -149,7 +148,12 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
                       setManualInput(true);
                     }}
                   >
-                    {!manualInput && <div>{formMeta && <FormItem data={formMeta} />}</div>}
+                    {!manualInput &&
+                      (formMeta ? (
+                        <FormItem data={formMeta} />
+                      ) : (
+                        <MetaErrorMessage>Cannot parse metadata, try to use manual input</MetaErrorMessage>
+                      ))}
                   </ErrorBoundary>
 
                   {manualInput && (
