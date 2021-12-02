@@ -23,6 +23,7 @@ jobs:
           DB_USER: ${{ secrets.WASM_COMPILER_DB_USER }}
           DB_PASSWORD: ${{ secrets.WASM_COMPILER_DB_PASSWORD }}
           DB_PORT: ${{ secrets.WASM_COMPILER_DB_PORT }}
+          PORT: ${{ secrets.WASMCOMPILER_PORT }}
           # DB_HOST: ${{ secrets.WASM_COMPILER_DB_HOST }}
           WASM_BUILD_FOLDER: ${{ secrets.WASM_BUILD_FOLDER }}
         with:
