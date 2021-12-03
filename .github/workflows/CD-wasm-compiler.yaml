@@ -2,9 +2,9 @@ name: CD-wasm-compiler
 
 on:
   push:
-    branches: [do-wasm-compiler]
-    # paths:
-    # - website/wasm-compiler/**
+    branches: [master]
+    paths:
+      - website/wasm-compiler/**
 
 env:
   CARGO_TERM_COLOR: always
