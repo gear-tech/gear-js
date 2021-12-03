@@ -14,7 +14,6 @@ export class AppService {
   constructor(private readonly storage: StorageService) {
     this.docker = new Docker({ socketPath: '/var/run/docker.sock' });
     exec('./wasm-build/build-image.sh', (error, stdout, stderr) => {
-      console.log(stdout);
       console.log(stderr);
     });
   }
@@ -24,8 +23,7 @@ export class AppService {
       this.docker.run(
         'wasm-build',
         ['sh', '-c', './build.sh'],
-        null,
-        // process.stdout,
+        process.stdout,
         {
           Tty: false,
           name: id,
