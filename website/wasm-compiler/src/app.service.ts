@@ -79,7 +79,7 @@ export class AppService {
       const file = packZip(resultFiles);
       await this.storage.save(file, id);
     }
-    fs.rmdir(`/${join(...pathToFolder.split('/').slice(0, -1))}`, { recursive: true }, () => {});
+    fs.rmdir(pathToFolder, { recursive: true }, () => {});
     return 0;
   }
 
