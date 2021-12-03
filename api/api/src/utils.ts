@@ -60,7 +60,7 @@ export function createPayload(createType: CreateType, type: any, data: any, meta
     return '0x00';
   }
   let payload: string = data;
-  if (meta) {
+  if (meta && type) {
     const encoded = createType.create(type, data, meta);
     payload = isHex(encoded) ? encoded : encoded.toHex();
   }
