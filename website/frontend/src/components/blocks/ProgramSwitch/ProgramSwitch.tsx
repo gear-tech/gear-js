@@ -120,7 +120,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
 
       if (api) {
         api.balance.transferFromAlice(currentAccount.address, GEAR_BALANCE_TRANSFER_VALUE);
-        dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `TRANSFERED ${GEAR_BALANCE_TRANSFER_VALUE}` }));
       }
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
