@@ -24,7 +24,8 @@ export class AppService {
       this.docker.run(
         'wasm-build',
         ['sh', '-c', './build.sh'],
-        process.stdout,
+        null,
+        // process.stdout,
         {
           Tty: false,
           name: id,
@@ -40,19 +41,16 @@ export class AppService {
             container.remove();
             reject(err);
           } else {
-            container.logs(
-              { stderr: true, stdout: true },
-              (_, data: Buffer) => {
-                const error = this.findErr(data.toString());
-                if (error) {
-                  container.remove();
-                  reject(error);
-                } else {
-                  container.remove();
-                  resolve(0);
-                }
-              },
-            );
+            container.logs({ stderr: true, stdout: true }, (_, data: Buffer) => {
+              const error = this.findErr(data.toString());
+              if (error) {
+                container.remove();
+                reject(error);
+              } else {
+                container.remove();
+                resolve(0);
+              }
+            });
           }
         },
       );
@@ -83,11 +81,7 @@ export class AppService {
       const file = packZip(resultFiles);
       await this.storage.save(file, id);
     }
-    fs.rmdir(
-      `/${join(...pathToFolder.split('/').slice(0, -1))}`,
-      { recursive: true },
-      () => {},
-    );
+    fs.rmdir(`/${join(...pathToFolder.split('/').slice(0, -1))}`, { recursive: true }, () => {});
     return 0;
   }
 
