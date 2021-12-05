@@ -1,5 +1,6 @@
 import { UploadProgramModel, MessageModel, MetaModel } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { Metadata } from '@gear-js/api';
 import { UserAccount } from 'types/account';
 import { RPC_METHODS } from 'consts';
 import { EventTypes } from 'types/events';
@@ -93,6 +94,7 @@ export const UploadProgram = async (
             });
 
             if (response.error) {
+              // FIXME 'throw' of exception caught locally
               throw new Error(response.error.message);
             } else {
               dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
@@ -126,21 +128,21 @@ export const SendMessageToProgram = async (
 
   try {
     // get metadata for specific program
-    const {
-      result: { meta },
-    } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
+    const { result } = await apiRequest.getResource<Metadata>(RPC_METHODS.GET_METADATA, {
       programId: message.destination,
     });
-    await api.message.submit(message, JSON.parse(meta));
-    await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
-      dispatch(sendMessageStartAction());
-      dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `SEND MESSAGE STATUS: ${data.status}` }));
-      if (data.status === 'Finalized') {
-        console.log('Finalized!');
-        dispatch(sendMessageSuccessAction());
-        callback();
-      }
-    });
+    if (result) {
+      await api.message.submit(message, result);
+      await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
+        dispatch(sendMessageStartAction());
+        dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `SEND MESSAGE STATUS: ${data.status}` }));
+        if (data.status === 'Finalized') {
+          console.log('Finalized!');
+          dispatch(sendMessageSuccessAction());
+          callback();
+        }
+      });
+    }
   } catch (error) {
     dispatch(AddAlert({ type: EventTypes.ERROR, message: `SEND MESSAGE STATUS: ${error}` }));
     dispatch(sendMessageFailedAction(`${error}`));
@@ -171,6 +173,7 @@ export const addMetadata = async (
       });
 
       if (response.error) {
+        // FIXME 'throw' of exception caught locally
         throw new Error(response.error.message);
       } else {
         dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));

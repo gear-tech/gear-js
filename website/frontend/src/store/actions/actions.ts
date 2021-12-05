@@ -1,18 +1,6 @@
 import { CreateType, GearKeyring } from '@gear-js/api';
-import {
-  NotificationActionTypes,
-  NotificationPaginationModel,
-  NotificationRPCModel,
-  NotificationUnreadRPCModel,
-  RecentNotificationModel,
-} from 'types/notification';
-import {
-  ProgramActionTypes,
-  ProgramModel,
-  ProgramPaginationModel,
-  ProgramRPCModel,
-  ProgramsPagintaionModel,
-} from 'types/program';
+import { NotificationActionTypes, NotificationPaginationModel, RecentNotificationModel } from 'types/notification';
+import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
 
 import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
@@ -123,8 +111,8 @@ export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) =
   dispatch(fetchUserProgramsAction());
   programService
     .fetchUserPrograms(params)
-    .then((result: ProgramsPagintaionModel) => {
-      dispatch(fetchUserProgramsSuccessAction(result.result));
+    .then((data) => {
+      dispatch(fetchUserProgramsSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchUserProgramsErrorAction()));
 };
@@ -133,8 +121,8 @@ export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any)
   dispatch(fetchUserProgramsAction());
   programService
     .fetchAllPrograms(params)
-    .then((result: ProgramsPagintaionModel) => {
-      dispatch(fetchAllProgramsSuccessAction(result.result));
+    .then((data) => {
+      dispatch(fetchAllProgramsSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchUserProgramsErrorAction()));
 };
@@ -143,8 +131,8 @@ export const getProgramAction = (hash: string) => (dispatch: any) => {
   dispatch(fetchProgramAction());
   programService
     .fetchProgram(hash)
-    .then((result: ProgramRPCModel) => {
-      dispatch(fetchProgramSuccessAction(result.result));
+    .then((data) => {
+      dispatch(fetchProgramSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchProgramErrorAction()));
 };
@@ -176,8 +164,8 @@ export const getNotificationsAction = (params: PaginationModel) => (dispatch: an
   dispatch(fetchNotificationsAction());
   notificationService
     .fetchAllNotifications(params)
-    .then((result: NotificationRPCModel) => {
-      dispatch(fetchNotificationsSuccessAction(result.result));
+    .then((data) => {
+      dispatch(fetchNotificationsSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchNotificationsErrorAction()));
 };
@@ -186,8 +174,8 @@ export const getUnreadNotificationsCount = () => (dispatch: any) => {
   dispatch(fetchNotificationsCountAction());
   notificationService
     .fetchUnreadNotificationsCount()
-    .then((result: NotificationUnreadRPCModel) => {
-      dispatch(fetchNotificationsCountSuccessAction(result.result));
+    .then((data) => {
+      dispatch(fetchNotificationsCountSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchNotificationsCountErrorAction()));
 };
