@@ -14,7 +14,6 @@ export class AppService {
   constructor(private readonly storage: StorageService) {
     this.docker = new Docker({ socketPath: '/var/run/docker.sock' });
     exec('./wasm-build/build-image.sh', (error, stdout, stderr) => {
-      console.log(stdout);
       console.log(stderr);
     });
   }
@@ -40,19 +39,16 @@ export class AppService {
             container.remove();
             reject(err);
           } else {
-            container.logs(
-              { stderr: true, stdout: true },
-              (_, data: Buffer) => {
-                const error = this.findErr(data.toString());
-                if (error) {
-                  container.remove();
-                  reject(error);
-                } else {
-                  container.remove();
-                  resolve(0);
-                }
-              },
-            );
+            container.logs({ stderr: true, stdout: true }, (_, data: Buffer) => {
+              const error = this.findErr(data.toString());
+              if (error) {
+                container.remove();
+                reject(error);
+              } else {
+                container.remove();
+                resolve(0);
+              }
+            });
           }
         },
       );
@@ -83,11 +79,7 @@ export class AppService {
       const file = packZip(resultFiles);
       await this.storage.save(file, id);
     }
-    fs.rmdir(
-      `/${join(...pathToFolder.split('/').slice(0, -1))}`,
-      { recursive: true },
-      () => {},
-    );
+    fs.rmdir(pathToFolder, { recursive: true }, () => {});
     return 0;
   }
 

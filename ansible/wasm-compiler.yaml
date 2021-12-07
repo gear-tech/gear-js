@@ -5,6 +5,7 @@
 
   #Set env vars on remote from envs on runner
   environment:
+    PORT: "{{ lookup('env','PORT') }}"
     DB_NAME: "{{ lookup('env','DB_NAME') }}"
     DB_USER: "{{ lookup('env','DB_USER') }}"
     DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
@@ -17,7 +18,7 @@
     - name: Install and enable required packages
       include: tasks/packages/packages.yaml
 
-    - name: Run databas docker
+    - name: Run database docker
       include: tasks/wasm-compiler/database.yaml
 
     - name: Install/Update wasm-compiler

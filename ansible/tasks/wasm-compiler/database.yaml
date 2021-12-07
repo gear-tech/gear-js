@@ -3,21 +3,21 @@
 - name: Copy docker-compose
   copy:
     src: docker-compose.yaml
-    dest: /home/ec2-user/wasm-compiler/docker-compose.yaml
+    dest: /home/ec2-user/wasm-compiler-compose.yaml
 
 - name: Stop docker-compose
   shell: >
-    /usr/local/bin/docker-compose -f "/home/ec2-user/wasm-compiler/docker-compose.yaml" down
+    /usr/local/bin/docker-compose -f "/home/ec2-user/wasm-compiler-compose.yaml" -p wasm_compiler down
   become: yes
 
 - name: Pull docker images
   shell: >
-    /usr/local/bin/docker-compose -f "/home/ec2-user/wasm-compiler/docker-compose.yaml" pull
+    /usr/local/bin/docker-compose -f "/home/ec2-user/wasm-compiler-compose.yaml" -p wasm_compiler pull
   become: yes
 
 - name: Run docker-compose
   shell: >
-    /usr/local/bin/docker-compose -f "/home/ec2-user/wasm-compiler/docker-compose.yaml" up -d
+    /usr/local/bin/docker-compose -f "/home/ec2-user/wasm-compiler-compose.yaml" -p wasm_compiler up -d
   become: yes
   environment:
     DB_NAME: "{{ lookup('env','DB_NAME') }}"
