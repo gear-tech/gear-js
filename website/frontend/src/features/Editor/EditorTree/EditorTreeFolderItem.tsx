@@ -12,7 +12,7 @@ interface ItemProps {
 }
 
 export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
-  const { dispatch } = useEditorTreeContext();
+  const { dispatch, setCurrentFile } = useEditorTreeContext();
   const [isEditing, setEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [childrenCopy, setChildrenCopy] = useState<React.ReactNode[]>([]);
@@ -24,6 +24,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
   const commitAddFile = (name: string) => {
     if (dispatch) {
       dispatch({ type: FILE.CREATE, payload: { nodeId: item.id, newName: name } });
+      setCurrentFile(null);
     }
   };
   const commitUpdateFolderName = (name: string) => {

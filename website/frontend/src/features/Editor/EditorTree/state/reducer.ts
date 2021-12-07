@@ -25,20 +25,20 @@ export const reducer = (state: State, action: Actions): State => {
     case FILE.CREATE:
       if (state.tree) {
         const clone: EditorFolderRecord = cloneDeep(state.tree);
-        const found = findNode(clone, action.payload.nodeId);
-        if (found && 'children' in found) {
-          if (Object.values(found.children).some((i) => i.name === action.payload.newName)) {
+        const parent = findNode(clone, action.payload.nodeId);
+        if (parent && 'children' in parent) {
+          if (Object.values(parent.children).some((i) => i.name === action.payload.newName)) {
             return { ...state, error: 'File already exist' };
           }
           const id = nanoid();
-          const path = [...found.path, 'children'];
-          found.children[id] = {
+          const path = [...parent.path, 'children'];
+          parent.children[id] = {
             id,
             name: action.payload.newName,
             type: EditorTypes.file,
             value: '',
             lang: getLangFromName(action.payload.newName),
-            parentId: found.parentId,
+            parentId: parent.parentId,
             path: [...path, id],
           };
           return { ...state, tree: clone };
@@ -48,20 +48,19 @@ export const reducer = (state: State, action: Actions): State => {
     case FOLDER.CREATE:
       if (state.tree) {
         const clone: EditorFolderRecord = cloneDeep(state.tree);
-        const found = findNode(clone, action.payload.nodeId);
-        console.log(found);
-        if (found && 'children' in found) {
-          if (Object.values(found.children).some((i) => i.name === action.payload.newName)) {
+        const parent = findNode(clone, action.payload.nodeId);
+        if (parent && 'children' in parent) {
+          if (Object.values(parent.children).some((i) => i.name === action.payload.newName)) {
             return { ...state, error: 'Folder already exist' };
           }
           const id = nanoid();
-          const path = [...found.path, 'children'];
-          found.children[id] = {
+          const path = [...parent.path, 'children'];
+          parent.children[id] = {
             id,
             name: action.payload.newName,
             type: EditorTypes.folder,
             children: {},
-            parentId: found.parentId,
+            parentId: parent.id,
             path: [...path, id],
           };
           return { ...state, tree: clone };
@@ -90,9 +89,9 @@ export const reducer = (state: State, action: Actions): State => {
     case FOLDER.DELETE:
       if (state.tree) {
         const clone: EditorFolderRecord = cloneDeep(state.tree);
-        const found = findNode(clone, action.payload.parentId);
-        if (found && 'children' in found) {
-          delete found.children[action.payload.nodeId];
+        const parent = findNode(clone, action.payload.parentId);
+        if (parent && 'children' in parent) {
+          delete parent.children[action.payload.nodeId];
           return { ...state, tree: clone };
         }
       }

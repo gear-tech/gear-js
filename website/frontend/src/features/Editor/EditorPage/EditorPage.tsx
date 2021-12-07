@@ -214,6 +214,7 @@ export const EditorPage = () => {
         state,
         dispatch,
         onNodeClick,
+        setCurrentFile,
       }}
     >
       <div className="editor-page">
