@@ -1,5 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import {
   getNotificationsAction,
@@ -25,16 +26,19 @@ import './NotificationsPage.scss';
 
 export const NotificationsPage: VFC = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const urlSearch = location.search;
+  const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
 
   const { notifications, count, countUnread } = useSelector((state: RootState) => state.notifications);
 
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [searchQuery, setSearchQuery] = useState<SearchQueryModel | null>(null);
   const [searchType, setSearchType] = useState(0);
   const [shouldReload, setShouldReload] = useState(true);
   const [notificationInfo, setNotificationInfo] = useState<NotificationModel | null>(null);
 
-  const offset = currentPage * INITIAL_LIMIT_BY_PAGE;
+  const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
@@ -115,7 +119,7 @@ export const NotificationsPage: VFC = () => {
         </div>
         <Pagination
           page={currentPage}
-          count={count || 0}
+          count={count || 1}
           onPageChange={onPageChange}
           setShouldReload={setShouldReload}
         />
@@ -152,7 +156,7 @@ export const NotificationsPage: VFC = () => {
         <div className="pagination-bottom">
           <Pagination
             page={currentPage}
-            count={count || 0}
+            count={count || 1}
             onPageChange={onPageChange}
             setShouldReload={setShouldReload}
           />

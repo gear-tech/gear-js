@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/backend",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "author": "",
   "private": true,
@@ -22,7 +22,7 @@
     "types:lint": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@gear-js/api": "^0.8.4",
+    "@gear-js/api": "^0.8.16",
     "@nestjs/common": "^8.0.6",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.6",
@@ -33,7 +33,6 @@
     "@nestjs/platform-express": "^8.0.6",
     "@nestjs/platform-socket.io": "^8.0.6",
     "@nestjs/platform-ws": "^8.0.6",
-    "@nestjs/swagger": "^5.0.9",
     "@nestjs/typeorm": "^8.0.2",
     "@nestjs/websockets": "^8.0.6",
     "@open-rpc/schema-utils-js": "^1.15.0",
@@ -44,7 +43,6 @@
     "@polkadot/util-crypto": "^7.4.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
-    "nats": "^2.2.0",
     "node-fetch": "^2.6.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
@@ -67,7 +65,6 @@
     "@types/jest": "^27.0.1",
     "@types/node": "^16.9.0",
     "@types/passport-jwt": "^3.0.6",
-    "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",

@@ -1,0 +1,32 @@
+---
+#Install/update backend docker-compose
+- name: Copy docker-compose
+  copy:
+    src: compose-get-balance.yaml
+    dest: /home/ec2-user/get-balance/compose-get-balance.yaml
+
+- name: Stop docker-compose
+  shell: >
+    /usr/local/bin/docker-compose -f "/home/ec2-user/get-balance/compose-get-balance.yaml" down
+  become: yes
+
+- name: Pull docker images
+  shell: >
+    /usr/local/bin/docker-compose -f "/home/ec2-user/get-balance/compose-get-balance.yaml" pull
+  become: yes
+
+- name: Run docker-compose
+  shell: >
+    /usr/local/bin/docker-compose -f "/home/ec2-user/get-balance/compose-get-balance.yaml" up -d
+  become: yes
+  environment:
+    DB_NAME: "{{ lookup('env','DB_NAME') }}"
+    DB_USER: "{{ lookup('env','DB_USER') }}"
+    DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
+    DB_PORT: "{{ lookup('env','DB_PORT') }}"
+    DB_HOST: "{{ lookup('env','DB_HOST') }}"
+    WS_PROVIDER: "{{ lookup('env','WS_PROVIDER') }}"
+    ROOT_ACCOUNT_SEED: "{{ lookup('env','ROOT_ACCOUNT_SEED') }}"
+    TEST_ACCOUNT_SEED: "{{ lookup('env','TEST_ACCOUNT_SEED') }}"
+    TEST_ACCOUNT_BALANCE: "{{ lookup('env','TEST_ACCOUNT_BALANCE') }}"
+    TEST_BALANCE_VALUE: "{{ lookup('env','TEST_BALANCE_VALUE') }}"

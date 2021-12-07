@@ -93,17 +93,20 @@ export class CreateType {
   }
 
   private checkTypePayload(type: any, payload: any) {
-    if (!payload) {
+    if (payload === undefined) {
       throw new CreateTypeError('Data is not specified');
     }
     if (!type) {
-      return 'Bytes';
+      return null;
     }
     return type;
   }
 
   create(type: any, payload: any, meta?: Metadata): Codec {
     type = this.checkTypePayload(type, payload);
+    if (!type) {
+      return payload;
+    }
     const namespaces = meta?.types ? this.createRegistry(meta.types) : this.createRegistry();
 
     if (isJSON(type)) {

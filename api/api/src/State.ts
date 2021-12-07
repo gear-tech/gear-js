@@ -57,7 +57,7 @@ export class GearProgramState {
    * @returns decoded state
    */
   async decodeState(metaWasm: Buffer, pages: IGearPages, encodedInput?: Uint8Array): Promise<Codec> {
-    const meta = await getWasmMetadata(metaWasm, pages, encodedInput);
+    const meta = await getWasmMetadata(metaWasm, true, pages, encodedInput);
     if (!meta.meta_state_output) {
       throw new ReadStateError(`Can't read state. meta_state_output type is not specified in metadata`);
     } else if (!meta.meta_state) {

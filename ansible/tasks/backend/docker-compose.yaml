@@ -1,0 +1,37 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - /home/ec2-user/pg_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  backend:
+    ports:
+      - '3001:3000'
+    image: mithriy/gear-backend:nightly
+    depends_on:
+      - postgres
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=postgres
+      - WS_PROVIDER=${WS_PROVIDER}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_BOT_USERNAME=${TELEGRAM_BOT_USERNAME}
+      - IDE_SOCKET=${IDE_SOCKET}
+      - ACCOUNT_SEED=${ACCOUNT_SEED}
+      - SUDO_SEED=${SUDO_SEED}
+      - SITE_ACCOUNT_BALANCE=${SITE_ACCOUNT_BALANCE}
+
+volumes:
+  pg_data:
