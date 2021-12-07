@@ -31,6 +31,7 @@ export const reducer = (state: State, action: Actions): State => {
             return { ...state, error: 'File already exist' };
           }
           const id = nanoid();
+          const path = [...found.path, 'children'];
           found.children[id] = {
             id,
             name: action.payload.newName,
@@ -38,7 +39,7 @@ export const reducer = (state: State, action: Actions): State => {
             value: '',
             lang: getLangFromName(action.payload.newName),
             parentId: found.parentId,
-            path: [...found.path, id],
+            path: [...path, id],
           };
           return { ...state, tree: clone };
         }
@@ -54,13 +55,14 @@ export const reducer = (state: State, action: Actions): State => {
             return { ...state, error: 'Folder already exist' };
           }
           const id = nanoid();
+          const path = [...found.path, 'children'];
           found.children[id] = {
             id,
             name: action.payload.newName,
             type: EditorTypes.folder,
             children: {},
             parentId: found.parentId,
-            path: [...found.path, id],
+            path: [...path, id],
           };
           return { ...state, tree: clone };
         }

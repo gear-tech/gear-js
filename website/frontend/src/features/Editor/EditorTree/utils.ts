@@ -15,9 +15,9 @@ export const getLangFromName = (name: string): Languages => {
   const split = name.split('.');
   const ext = split && split[split.length - 1];
   switch (ext) {
-    case '.rs':
+    case 'rs':
       return Languages.Rust;
-    case '.toml':
+    case 'toml':
       return Languages.Toml;
     default:
       return Languages.Txt;
