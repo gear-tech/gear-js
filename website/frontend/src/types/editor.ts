@@ -9,6 +9,7 @@ export type PathItem = string | 'root';
 export type FileType<Type extends object> = {
   id: string;
   name: string;
+  value?: string | undefined;
   type: EditorTypes;
 } & Type;
 

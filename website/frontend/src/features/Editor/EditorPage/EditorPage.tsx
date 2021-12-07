@@ -158,11 +158,9 @@ export const EditorPage = () => {
   }
 
   function handleEditorChange(value: string | undefined) {
-    console.log(value);
-    if (value) {
-      const copy = { ...files };
-      // copy[currentFile].value = value;
-      setFiles(copy);
+    if (currentFile) {
+      const file = get(state.tree, currentFile);
+      dispatch({ type: 'UPDATE_VALUE', payload: { nodeId: file.id, value } });
     }
   }
 

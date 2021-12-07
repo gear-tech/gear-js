@@ -16,7 +16,7 @@ export type Actions =
   | { type: FILE.CREATE; payload: { nodeId: NodeId; newName: string } }
   | { type: FILE.UPDATE; payload: { parentId: NodeId; nodeId: NodeId; newName: string } }
   | { type: FILE.DELETE; payload: { parentId: NodeId; nodeId: NodeId } }
-  | { type: 'UPDATE_VALUE'; payload: {} };
+  | { type: 'UPDATE_VALUE'; payload: { nodeId: NodeId; value: string | undefined } };
 
 export const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
@@ -93,6 +93,16 @@ export const reducer = (state: State, action: Actions): State => {
         const found = findNode(clone, action.payload.parentId);
         if (found && 'children' in found) {
           delete found.children[action.payload.nodeId];
+          return { ...state, tree: clone };
+        }
+      }
+      return state;
+    case 'UPDATE_VALUE':
+      if (state.tree) {
+        const clone: EditorFolderRecord = cloneDeep(state.tree);
+        const found = findNode(clone, action.payload.nodeId);
+        if (found) {
+          found.value = action.payload.value;
           return { ...state, tree: clone };
         }
       }
