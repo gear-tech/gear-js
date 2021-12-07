@@ -7,7 +7,10 @@ import { MessageForm } from 'components/pages/Programs/children/Message/children
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import './Message.scss';
 import { PAGE_TYPES, RPC_METHODS } from 'consts';
-import ServerRPCRequestService from '../../../../../services/ServerRPCRequestService';
+import ServerRPCRequestService, {
+  RPCResponseError,
+} from '../../../../../services/ServerRPCRequestService';
+import { GetMetaResponse } from '../../../../../api/responses';
 
 type Props = {
   programHash: string;
@@ -32,18 +35,16 @@ export const Message: VFC<Props> = ({ programHash, programName, handleClose }) =
   const getMeta = useCallback(async () => {
     const apiRequest = new ServerRPCRequestService();
 
-    const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
+    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, {
       programId: programHash,
     });
-
-    return result.meta as Metadata;
   }, [programHash]);
 
   useEffect(() => {
     if (!meta) {
       getMeta()
-        .then((res) => setMeta(res))
-        .catch((err) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })));
+        .then((res) => setMeta(res.result.meta ?? null))
+        .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })));
     }
   }, [meta, getMeta, dispatch]);
 

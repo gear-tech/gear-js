@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import ky from 'ky';
 import { API_PATH } from 'consts';
 import { KyHeadersInit } from 'ky/distribution/types/options';
@@ -37,10 +38,23 @@ type _RPCResponse<Result> = {
   error: RPCError;
 };
 
-type RPCSuccessResponse<Result> = PartialBy<_RPCResponse<Result | any>, 'error'>;
+type RPCSuccessResponse<Result> = PartialBy<_RPCResponse<Result>, 'error'>;
 type RPCErrorResponse = PartialBy<_RPCResponse<undefined>, 'result'>;
 
 type RPCResponse<Result> = RPCSuccessResponse<Result> | RPCErrorResponse;
+
+export class RPCResponseError extends Error {
+  code
+
+  constructor(err: RPCErrorResponse) {
+    super();
+    this.message = err.error.message;
+    this.code = err.error.code;
+    this.name = 'RPCResponseError';
+  }
+}
+
+export type RPCResponseErrorType = typeof RPCResponseError
 
 export default class ServerRPCRequestService {
   protected readonly RPC_API_PATH = API_PATH;
@@ -51,27 +65,48 @@ export default class ServerRPCRequestService {
     return Math.floor(Math.random() * 1000000000);
   }
 
-  public async getResource<Result>(
-    method: string = '',
-    postParams: Object = {},
-    headers: KyHeadersInit = {}
-  ): Promise<RPCResponse<Result>> {
-    const requestId = ServerRPCRequestService.generateRandomId();
+  private static getRequestId() {
+    return ServerRPCRequestService.generateRandomId();
+  }
 
-    const chain = localStorage.getItem('chain') as string;
+  private static getChain() {
+    return localStorage.getItem('chain') as string;
+  }
 
-    const methodParams: RPCRequest = {
+  private getRequest(method: string, postParams: object): RPCRequest {
+    return {
       jsonrpc: '2.0',
-      id: requestId,
+      id: ServerRPCRequestService.getRequestId(),
       method,
-      params: { ...postParams, chain },
+      params: { ...postParams, chain: ServerRPCRequestService.getChain() },
     };
+  }
 
+  // FIXME replace this method to callRPC then
+  public async getResource(method: string = '', postParams: object = {}, headers: KyHeadersInit = {}) {
     return ky
       .post(this.url, {
         headers: { ...headers, 'Content-Type': 'application/json;charset=utf-8' },
-        body: JSON.stringify(methodParams),
+        body: JSON.stringify(this.getRequest(method, postParams)),
+      })
+      .json<Promise<any>>();
+  }
+
+  public async callRPC<Result>(method: string = '', postParams: Object = {}, headers: KyHeadersInit = {}) {
+    const response = ky
+      .post(this.url, {
+        headers: { ...headers, 'Content-Type': 'application/json;charset=utf-8' },
+        body: JSON.stringify(this.getRequest(method, postParams)),
       })
       .json<RPCResponse<Result>>();
+
+    const data = await response;
+
+    if ('error' in data && !('result' in data)) {
+      throw new RPCResponseError(data);
+    }
+
+    return Promise.resolve(data as RPCSuccessResponse<Result>);
   }
 }
+

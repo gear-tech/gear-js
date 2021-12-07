@@ -128,7 +128,7 @@ export const SendMessageToProgram = async (
 
   try {
     // get metadata for specific program
-    const { result } = await apiRequest.getResource<Metadata>(RPC_METHODS.GET_METADATA, {
+    const { result } = await apiRequest.callRPC<Metadata>(RPC_METHODS.GET_METADATA, {
       programId: message.destination,
     });
     if (result) {

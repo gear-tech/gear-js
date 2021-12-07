@@ -28,11 +28,10 @@ type Props = {
 
 export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null }) => {
   const [api] = useApi();
-  const parsedMeta: Metadata = typeof meta === 'string' ? JSON.parse(meta) : null;
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
+  const [metaForm, setMetaForm] = useState<ParsedShape | null>();
   const [manualInput, setManualInput] = useState(false);
-  const [formMeta, setFormMeta] = useState<ParsedShape | null>();
 
   const [initialValues, setInitialValues] = useState({
     gasLimit: 20000,
@@ -42,19 +41,21 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
   });
 
   useEffect(() => {
-    if (parsedMeta) {
-      const displayedTypes = parseHexTypes(parsedMeta.types!);
-      const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
+    if (meta && meta.types && meta.handle_input) {
+      const displayedTypes = parseHexTypes(meta.types);
+      const inputType = getTypeStructure(meta.handle_input, displayedTypes);
 
       if (Object.keys(displayedTypes).length && JSON.stringify(inputType, null, 4) !== initialValues.payload) {
         setInitialValues({ ...initialValues, payload: JSON.stringify(inputType, null, 4) });
+      } else {
+        setManualInput(true);
       }
     }
-  }, [initialValues, setInitialValues, parsedMeta]);
+  }, [initialValues, setInitialValues, meta]);
 
   useEffect(() => {
     if (initialValues.payload) {
-      setFormMeta(parseMeta(JSON.parse(initialValues.payload)));
+      setMetaForm(parseMeta(JSON.parse(initialValues.payload)));
     }
   }, [initialValues.payload]);
 
@@ -121,7 +122,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
                   Payload:
                 </label>
                 <div className="message-form__field-wrapper">
-                  {parsedMeta && (
+                  {meta && (
                     <div>
                       <Switch
                         onChange={() => {
@@ -132,7 +133,6 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
                       />
                     </div>
                   )}
-
                   <ErrorBoundary
                     fallback={
                       <>
@@ -143,19 +143,14 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
                         <br />
                       </>
                     }
-                    onError={(err) => {
-                      console.log(err);
+                    onError={(error) => {
                       setManualInput(true);
+                      console.error(error);
                     }}
                   >
-                    {!manualInput &&
-                      (formMeta ? (
-                        <FormItem data={formMeta} />
-                      ) : (
-                        <MetaErrorMessage>Cannot parse metadata, try to use manual input</MetaErrorMessage>
-                      ))}
+                    {!manualInput && metaForm ? <FormItem data={metaForm} /> : <></>}
                   </ErrorBoundary>
-
+                  {!metaForm && <MetaErrorMessage>Cannot parse metadata, try to use manual input</MetaErrorMessage>}
                   {manualInput && (
                     <div>
                       <Field
@@ -218,6 +213,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
                   <button
                     className="message-form__button"
                     type="button"
+                    disabled={Boolean(meta)}
                     onClick={() => {
                       calculateGas(values, setFieldValue);
                     }}

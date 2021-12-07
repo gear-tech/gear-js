@@ -12,11 +12,11 @@ export default class NotificationsRequestService {
   protected readonly API_COUNT_UNREAD = 'event.countUnread';
 
   public fetchAllNotifications(params: PaginationModel) {
-    return this.apiRequest.getResource<NotificationPaginationModel>(this.API_NOTIFIACTIONS_ALL, { ...params });
+    return this.apiRequest.callRPC<NotificationPaginationModel>(this.API_NOTIFIACTIONS_ALL, { ...params });
   }
 
   public fetchUnreadNotificationsCount() {
-    return this.apiRequest.getResource<number>(this.API_COUNT_UNREAD, undefined, {});
+    return this.apiRequest.callRPC<number>(this.API_COUNT_UNREAD, undefined, {});
   }
 
   public markAsReadNotifications(notificationIds: number[]): Promise<any> {

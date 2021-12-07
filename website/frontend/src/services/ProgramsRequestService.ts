@@ -12,14 +12,14 @@ export default class ProgramRequestService {
   protected readonly API_REFRESH_PROGRAM = 'program.data';
 
   public fetchAllPrograms(params: PaginationModel) {
-    return this.apiRequest.getResource<ProgramPaginationModel>(this.API_PROGRAMS_ALL, { ...params });
+    return this.apiRequest.callRPC<ProgramPaginationModel>(this.API_PROGRAMS_ALL, { ...params });
   }
 
   public fetchUserPrograms(params: UserPrograms) {
-    return this.apiRequest.getResource<ProgramPaginationModel>(this.API_PROGRAMS_USER, { ...params });
+    return this.apiRequest.callRPC<ProgramPaginationModel>(this.API_PROGRAMS_USER, { ...params });
   }
 
   public fetchProgram(hash: string) {
-    return this.apiRequest.getResource<ProgramModel>(this.API_REFRESH_PROGRAM, { hash });
+    return this.apiRequest.callRPC<ProgramModel>(this.API_REFRESH_PROGRAM, { hash });
   }
 }
