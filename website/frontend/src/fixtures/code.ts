@@ -8,7 +8,7 @@ export const SimpleExample: EditorFolderRawRecord = {
     type: EditorTypes.folder,
     children: {
       src: {
-        id: nanoid(),
+        id: 'src',
         name: 'src',
         type: EditorTypes.folder,
         children: {

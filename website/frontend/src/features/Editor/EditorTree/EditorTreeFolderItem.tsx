@@ -23,7 +23,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
 
   const commitAddFile = (name: string) => {
     if (dispatch) {
-      dispatch({ type: FILE.CREATE, payload: { nodeId: item.id, newName: name } });
+      dispatch({ type: FILE.CREATE, payload: { parentId: item.id, newName: name } });
       setCurrentFile(null);
     }
   };
@@ -35,7 +35,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
   };
   const commitAddFolder = (name: string) => {
     if (dispatch) {
-      dispatch({ type: FOLDER.CREATE, payload: { nodeId: item.id, newName: name } });
+      dispatch({ type: FOLDER.CREATE, payload: { parentId: item.id, newName: name } });
     }
   };
   const commitRemove = () => {

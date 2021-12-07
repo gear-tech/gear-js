@@ -16,13 +16,13 @@ export const EditorTree = () => {
 
   const handleFolderSubmit = (name: string) => {
     if (state.tree) {
-      dispatch({ type: FOLDER.CREATE, payload: { nodeId: 'root', newName: name } });
+      dispatch({ type: FOLDER.CREATE, payload: { parentId: 'root', newName: name } });
       setShowAddFolder(false);
     }
   };
   const handleFileSubmit = (name: string) => {
     if (state.tree) {
-      dispatch({ type: FILE.CREATE, payload: { nodeId: 'root', newName: name } });
+      dispatch({ type: FILE.CREATE, payload: { parentId: 'root', newName: name } });
       setShowAddFile(false);
     }
   };
