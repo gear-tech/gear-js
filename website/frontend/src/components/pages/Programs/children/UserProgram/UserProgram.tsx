@@ -18,7 +18,7 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
   const alert = useAlert();
 
   return (
-    <div className={styles.programsListItem} key={program.id}>
+    <div className={styles.programsListItem} key={program.hash}>
       <div className={styles.programWrapper}>
         <span
           className={clsx(
@@ -30,13 +30,13 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
         />
         <div className={styles.programWrapperName}>
           <div className={styles.programsListName}>
-            <Link className={styles.programLink} to={`/program/${program.id}`}>
+            <Link className={styles.programLink} to={`/program/${program.hash}`}>
               {program.name && fileNameHandler(program.name)}
             </Link>
           </div>
         </div>
         <div className={styles.programsCopyId}>
-          <button type="button" onClick={() => copyToClipboard(program.id, alert, 'Program ID copied')}>
+          <button type="button" onClick={() => copyToClipboard(program.hash, alert, 'Program ID copied')}>
             <img src={Copy} alt="copy program ID" />
           </button>
         </div>
@@ -48,13 +48,13 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
         </div>
       </div>
       <div className={styles.programsListBtns}>
-        <button type="button" aria-label="refresh" onClick={() => handleOpenForm(program.id, program.name, true)}>
-          <img src={MessageIllustration} alt="message" />
+        <button type="button" aria-label="refresh" onClick={() => handleOpenForm(program.hash, program.name, true)}>
+          <img src={MessageIllustration} alt="Send message to program" />
         </button>
         <button
           className={styles.allProgramsItemUpload}
           type="button"
-          onClick={() => handleOpenForm(program.id, program.name)}
+          onClick={() => handleOpenForm(program.hash, program.name)}
         >
           <img src={UploadIcon} alt="Upload metadata" />
         </button>

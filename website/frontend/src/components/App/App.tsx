@@ -13,6 +13,7 @@ import { Document } from 'components/pages/Document/Document';
 import { EditorPage } from 'features/Editor/EditorPage';
 import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
 import { SimpleLoader } from 'components/blocks/SimpleLoader';
+
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
 import { getUnreadNotificationsCount } from 'store/actions/actions';

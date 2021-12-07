@@ -32,7 +32,7 @@ type ProgramMessageType = {
 const selectPrograms = createSelector(
   (state: RootState) => state.programs,
   (_ignore: any, completed: string) => completed,
-  (programs, completed) => programs.programs && programs.programs.filter((item) => item.id.includes(completed))
+  (programs, completed) => programs.programs && programs.programs.filter((item) => item.hash.includes(completed))
 );
 
 export const Recent: VFC = () => {
@@ -140,7 +140,7 @@ export const Recent: VFC = () => {
       {(programs && programs.length && (
         <div>
           {programs.map((program) => (
-            <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.id} />
+            <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.hash} />
           ))}
         </div>
       )) ||

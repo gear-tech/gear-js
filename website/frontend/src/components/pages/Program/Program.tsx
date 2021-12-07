@@ -18,7 +18,6 @@ import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
 import './Program.scss';
-import { ProgramModel } from 'types/program';
 
 type ProgramMessageType = {
   programName: string;
@@ -58,7 +57,7 @@ export const Program: VFC = () => {
       }
 
       setData({
-        id: program.id,
+        id: program.hash,
         name: program.name ? program.name : '...',
         title: program.title ? program.title : '...',
         uploadedAt: program.uploadedAt ? formatDate(String(program.uploadedAt)) : '...',

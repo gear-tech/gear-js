@@ -107,21 +107,21 @@ export const BlockListAllUploaded: VFC = () => {
               return <UserProgram program={item} handleOpenForm={handleOpenForm} />;
             }
             return (
-              <div className="all-programs--item" key={item.id}>
-                <p className="all-programs--item__hash">{item.id}</p>
+              <div className="all-programs--item" key={item.hash}>
+                <p className="all-programs--item__hash">{item.hash}</p>
                 <div className="programs-list--btns">
                   <button
                     className="programs-list__message-btn"
                     type="button"
                     aria-label="refresh"
-                    onClick={() => handleOpenForm(item.id, item.name, true)}
+                    onClick={() => handleOpenForm(item.hash, item.name, true)}
                   >
                     <img src={MessageIcon} alt="message" />
                   </button>
                   <button
                     className="all-programs--item__upload"
                     type="button"
-                    onClick={() => handleOpenForm(item.id, item.name)}
+                    onClick={() => handleOpenForm(item.hash, item.name)}
                   >
                     <img src={UploadIcon} alt="upload-program" />
                   </button>

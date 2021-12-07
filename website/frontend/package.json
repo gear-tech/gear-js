@@ -93,7 +93,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.16.0",
     "@types/file-saver": "^2.0.3",
     "@types/react-alert": "^5.2.1",
     "@types/react-router-dom": "^5.1.7",

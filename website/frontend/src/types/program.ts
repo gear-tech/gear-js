@@ -5,7 +5,7 @@ export enum ProgramStatus {
 }
 
 export interface ProgramModel {
-  id: string;
+  hash: string;
   blockHash?: string;
   programNumber?: number;
   name?: string;

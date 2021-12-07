@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
 import { useApi } from '../../../hooks/useApi';
+// import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
+// import Editor from 'assets/images/editor_icon.svg';
 
 type Props = {
   pageType: string;
