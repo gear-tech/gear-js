@@ -66,16 +66,40 @@ export const EditorPage = () => {
     setCurrentFile(null);
   }
 
+  function createStructure(zip: any, path: string | null, filesList: any) {
+    for (const key in filesList) {
+      if (Object.prototype.hasOwnProperty.call(filesList, key)) {
+        const file = filesList[key];
+        let newPath = '';
+
+        if (file.type === 'file') {
+          if (path) {
+            zip.folder(path).file(`${file.name}`, file.value);
+          } else {
+            zip.file(`${file.name}`, file.value);
+          }
+        } else {
+          if (path) {
+            newPath = `${path}/${file.name}`;
+            zip.folder(newPath);
+          } else {
+            newPath = file.name;
+            zip.folder(file.name);
+          }
+
+          createStructure(zip, newPath, file.children);
+        }
+      }
+    }
+  }
+
   async function createArchive() {
     const zip = new JSZip();
-    // files.forEach((item) => {
-    //   if (item.folder) {
-    //     // @ts-ignore
-    //     zip.folder(item.folder).file(`${item.name}`, item.value);
-    //   } else {
-    //     zip.file(`${item.name}`, item.value);
-    //   }
-    // });
+
+    if (files) {
+      createStructure(zip, null, files.root.children);
+    }
+
     return zip.generateAsync({ type: 'blob' });
   }
 
