@@ -1,5 +1,0 @@
-[Service]
-Restart=on-failure
-WorkingDirectory=/home/ec2-user/ide-backend
-ExecStart=/usr/bin/npm run start
-EnvironmentFile=/home/ec2-user/ide-backend/.env
