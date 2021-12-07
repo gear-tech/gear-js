@@ -1,9 +1,9 @@
-import { GearType, Metadata } from './interfaces';
+import { Metadata } from './interfaces';
 import { SendMessageError } from './errors';
-import { Bytes } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { AnyNumber } from '@polkadot/types/types';
 import { GearTransaction } from './types/Transaction';
+import { createPayload } from '.';
 
 export class GearMessage extends GearTransaction {
   submit(
@@ -11,10 +11,7 @@ export class GearMessage extends GearTransaction {
     meta?: Metadata,
     messageType?: string,
   ): any {
-    let payload: string = message.payload;
-    if (meta) {
-      payload = this.createType.create(messageType || meta.handle_input, message.payload, meta).toHex();
-    }
+    let payload: string = createPayload(this.createType, messageType || meta.handle_input, message.payload, meta);
 
     try {
       this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);

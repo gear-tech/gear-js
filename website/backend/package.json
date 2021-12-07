@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/backend",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "author": "",
   "private": true,
@@ -22,7 +22,7 @@
     "types:lint": "tsc --noEmit --pretty"
   },
   "dependencies": {
-    "@gear-js/api": "^0.8.4",
+    "@gear-js/api": "^0.8.16",
     "@nestjs/common": "^8.0.6",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.6",

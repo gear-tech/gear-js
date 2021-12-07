@@ -1,0 +1,38 @@
+name: CD-wasm-compiler
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - website/wasm-compiler/**
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        env:
+          DB_NAME: ${{ secrets.WASM_COMPILER_DB_NAME }}
+          DB_USER: ${{ secrets.WASM_COMPILER_DB_USER }}
+          DB_PASSWORD: ${{ secrets.WASM_COMPILER_DB_PASSWORD }}
+          DB_PORT: ${{ secrets.WASM_COMPILER_DB_PORT }}
+          PORT: ${{ secrets.WASM_COMPILER_PORT }}
+          WASM_BUILD_FOLDER: ${{ secrets.WASM_BUILD_FOLDER }}
+        with:
+          # Required, playbook filepath
+          directory: ./ansible
+          playbook: wasm-compiler.yaml
+          # Optional, SSH private key
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          # Optional, literal inventory file contents
+          inventory: |
+            [all]
+            ${{secrets.GEAR_BACKEND_NODE}}
+          requirements: galaxy-requirements.yml

@@ -1,4 +1,3 @@
-import { GearType } from '.';
 import { Metadata, ProgramId } from './interfaces';
 import { SubmitProgramError } from './errors';
 import { AnyNumber } from '@polkadot/types/types';
@@ -6,6 +5,7 @@ import { Bytes, U64, u64 } from '@polkadot/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
 import { GearTransaction } from './types/Transaction';
+import { createPayload } from '.';
 
 export class GearProgram extends GearTransaction {
   /**
@@ -24,16 +24,9 @@ export class GearProgram extends GearTransaction {
     meta?: Metadata,
     messageType?: string,
   ): ProgramId {
-    let payload: string;
-    if (meta) {
-      payload = program.initPayload
-        ? this.createType.create(messageType || meta.init_input, program.initPayload, meta).toHex()
-        : '0x00';
-    } else {
-      payload = program.initPayload;
-    }
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
+    let payload: string = createPayload(this.createType, messageType || meta.init_input, program.initPayload, meta);
     try {
       this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
       const programId = this.generateProgramId(code, salt);
@@ -51,7 +44,7 @@ export class GearProgram extends GearTransaction {
   }
 
   async getGasSpent(programId: string, payload: any, type: any, meta?: Metadata): Promise<U64> {
-    const payloadBytes = meta ? this.createType.create(type, payload, meta).toHex() : payload;
+    const payloadBytes = createPayload(this.createType, type, payload, meta);
     const gasSpent = await this.api.rpc.gear.getGasSpent(programId, payloadBytes);
     return gasSpent;
   }

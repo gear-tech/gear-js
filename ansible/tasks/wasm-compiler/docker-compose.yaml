@@ -1,0 +1,13 @@
+version: '3'
+services:
+  pg_wasm_compiler:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - /home/ec2-user/wasm_compiler_data:/var/lib/postgresql/data
+    ports:
+      - '54320:5432'
