@@ -28,8 +28,8 @@ payloads:
         payload: ViewMessages
         expected: '0x01'
 
-  # decode:
-  #   handle_output:
-  #     - name: Vec<MessageIn>
-  #       payload: '0x041c446d69747269793048656c6c6f20576f726c6421'
-  #       expected: [{ author: 'Dmitriy', msg: 'Hello World!' }]
+  decode:
+    handle_output:
+      - name: Vec<MessageIn>
+        payload: '0x041c446d69747269793048656c6c6f20576f726c6421'
+        expected: [{ author: 'Dmitriy', msg: 'Hello World!' }]

@@ -1,0 +1,8 @@
+title: demo_ping
+
+programs:
+  - name: demo_ping
+    gasLimit: 12000000
+    value: 0
+    meta: false
+    account: alice
