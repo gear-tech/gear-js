@@ -1,0 +1,8 @@
+title: guestbook
+
+programs:
+  - name: guestbook
+    gasLimit: 20000000
+    value: 0
+    meta: false
+    account: alice

@@ -48,3 +48,9 @@ describe('Upload programs test', () => {
     );
   }
 });
+
+test.todo('sending message');
+test.todo('read state');
+test.todo('listen log');
+test.todo('read mailbox');
+test.todo('reply message');
