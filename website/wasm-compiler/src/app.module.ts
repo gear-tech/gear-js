@@ -16,7 +16,7 @@ import configuration from './config/configuration';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('db.host'),
-        port: +configService.get<number>('db.port'),
+        port: configService.get<number>('db.port'),
         username: configService.get('db.user'),
         password: configService.get('db.password'),
         database: configService.get('db.name'),
