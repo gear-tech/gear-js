@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useReducer, useEffect, useState } from 'react';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
@@ -12,7 +12,8 @@ import { routes } from 'routes';
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
 
-import { EditorFolderRecord, EditorItem, EditorTypes, Languages } from 'types/editor';
+import { EditorItem, EditorTypes, Languages } from 'types/editor';
+import { EditorTreeContext, reducer } from '../EditorTree/state';
 
 import { EditorTree } from '../EditorTree';
 import { FilesPanel } from './FilesPanel';
@@ -20,7 +21,8 @@ import { addParentToNode } from '../EditorTree/utils';
 import { SimpleExample } from '../../../fixtures/code';
 
 export const EditorPage = () => {
-  const [files, setFiles] = useState<EditorFolderRecord>(addParentToNode(SimpleExample));
+  const [state, dispatch] = useReducer(reducer, { tree: null });
+  const [files, setFiles] = useState({});
   const [currentFile, setCurrentFile] = useState<string | null>(null);
   const [openedFiles, setOpenedFiles] = useState([0]);
   const [isCodeEdited, setIsCodeEdited] = useState(false);
@@ -40,6 +42,10 @@ export const EditorPage = () => {
   //     query: { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` },
   //   })
   // );
+
+  useEffect(() => {
+    dispatch({ type: 'SET_DATA', payload: addParentToNode(SimpleExample) });
+  }, []);
 
   useEffect(() => {
     // socket.current.on('build', (payload: { files?: { file: ArrayBuffer; fileName: string }[]; error?: string }) => {
@@ -96,8 +102,8 @@ export const EditorPage = () => {
   async function createArchive() {
     const zip = new JSZip();
 
-    if (files) {
-      createStructure(zip, null, files.root.children);
+    if (state.tree) {
+      createStructure(zip, null, state.tree.root.children);
     }
 
     return zip.generateAsync({ type: 'blob' });
@@ -131,7 +137,7 @@ export const EditorPage = () => {
     setIsCodeEdited(true);
   }
 
-  const handleClick = (node: EditorItem) => {
+  const onNodeClick = (node: EditorItem) => {
     console.log(node.path);
     setCurrentFile(node.path.join('/'));
     // console.log(node);
@@ -196,68 +202,76 @@ export const EditorPage = () => {
   // @ts-ignore
   /* eslint-disable react/jsx-no-bind */
   return (
-    <div className="editor-page">
-      <PageHeader programName={programName} pageType={PAGE_TYPES.EDITOR_PAGE} handleClose={handleClose} />
-      <div className="editor-content">
-        <div className="editor-panel">
-          <div className="editor-panel--form">
-            <span className="editor-panel--form__label">Program name:</span>
-            <input
-              type="text"
-              className={clsx('editor-panel--form__input', isProgramNameError && 'error')}
-              value={programName}
-              onChange={handleProgramNameChange}
-            />
+    <EditorTreeContext.Provider
+      value={{
+        state,
+        dispatch,
+        onNodeClick,
+      }}
+    >
+      <div className="editor-page">
+        <PageHeader programName={programName} pageType={PAGE_TYPES.EDITOR_PAGE} handleClose={handleClose} />
+        <div className="editor-content">
+          <div className="editor-panel">
+            <div className="editor-panel--form">
+              <span className="editor-panel--form__label">Program name:</span>
+              <input
+                type="text"
+                className={clsx('editor-panel--form__input', isProgramNameError && 'error')}
+                value={programName}
+                onChange={handleProgramNameChange}
+              />
+            </div>
+            <div className="editor-panel--actions">
+              <button
+                className="editor-panel--actions__btn"
+                type="button"
+                onClick={() => handlePanelBtnClick(EDITOR_BTNS.DOWNLOAD)}
+              >
+                <img src={EditorDownload} alt="editor-download" />
+                Download
+              </button>
+              <button
+                className="editor-panel--actions__btn"
+                type="button"
+                onClick={() => handlePanelBtnClick(EDITOR_BTNS.BUILD)}
+              >
+                <img src={EditorBuild} alt="editor-build" />
+                Compile
+              </button>
+            </div>
           </div>
-          <div className="editor-panel--actions">
-            <button
-              className="editor-panel--actions__btn"
-              type="button"
-              onClick={() => handlePanelBtnClick(EDITOR_BTNS.DOWNLOAD)}
-            >
-              <img src={EditorDownload} alt="editor-download" />
-              Download
-            </button>
-            <button
-              className="editor-panel--actions__btn"
-              type="button"
-              onClick={() => handlePanelBtnClick(EDITOR_BTNS.BUILD)}
-            >
-              <img src={EditorBuild} alt="editor-build" />
-              Compile
-            </button>
+          <div className="editor-container">
+            <EditorTree />
+            <div className="editor-container__editor">
+              {currentFile ? (
+                <>
+                  <FilesPanel
+                    /* @ts-ignore */
+                    files={files.children.filter((i) => i.type === EditorTypes.file)}
+                    openedFiles={openedFiles}
+                    currentFile={0}
+                    handleFileClose={handleFileClose}
+                    handleFileSelect={handleFileSelect}
+                  />
+                  <Editor
+                    theme="vs-dark"
+                    options={options}
+                    // value={files[currentFile].value}
+                    // language={files[currentFile].lang}
+                    value=""
+                    language={Languages.Rust}
+                    onChange={handleEditorChange}
+                  />
+                </>
+              ) : (
+                <div className="editor-empty">Please select at least one file</div>
+              )}
+            </div>
           </div>
         </div>
-        <div className="editor-container">
-          <EditorTree files={files} onNodeClick={handleClick} />
-          <div className="editor-container__editor">
-            {currentFile ? (
-              <>
-                <FilesPanel
-                  /* @ts-ignore */
-                  files={files.children.filter((i) => i.type === EditorTypes.file)}
-                  openedFiles={openedFiles}
-                  currentFile={0}
-                  handleFileClose={handleFileClose}
-                  handleFileSelect={handleFileSelect}
-                />
-                <Editor
-                  theme="vs-dark"
-                  options={options}
-                  // value={files[currentFile].value}
-                  // language={files[currentFile].lang}
-                  value=""
-                  language={Languages.Rust}
-                  onChange={handleEditorChange}
-                />
-              </>
-            ) : (
-              <div className="editor-empty">Please select at least one file</div>
-            )}
-          </div>
-        </div>
+        <span className="editor-page__footer-text">2021. All rights reserved.</span>
       </div>
-      <span className="editor-page__footer-text">2021. All rights reserved.</span>
-    </div>
+    </EditorTreeContext.Provider>
   );
 };
