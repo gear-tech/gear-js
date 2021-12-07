@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import { EditorFolderRawRecord, EditorTypes, Languages } from '../types/editor';
 
 export const SimpleExample: EditorFolderRawRecord = {
