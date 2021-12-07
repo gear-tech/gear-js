@@ -60,10 +60,11 @@ export const findNode = (root: EditorFolderRecord, nodeId: NodeId) => {
 
     if (current && current.type === EditorTypes.folder) {
       Object.entries(current.children).forEach(([key, val]) => {
+        const path = [...current.path, 'children'];
         // eslint-disable-next-line no-param-reassign
         val.parentId = current.id;
         // eslint-disable-next-line no-param-reassign
-        val.path = [...current.path, key];
+        val.path = [...path, key];
         stack.push(val);
       });
     }
@@ -84,10 +85,11 @@ export const addParentToNode = (root: EditorFolderRawRecord) => {
     const current = stack.pop();
     if (current && current.type === EditorTypes.folder) {
       Object.entries(current.children).forEach(([key, val]) => {
+        const path = [...current.path, 'children'];
         // eslint-disable-next-line no-param-reassign
         val.parentId = current.id;
         // eslint-disable-next-line no-param-reassign
-        val.path = [...current.path, key];
+        val.path = [...path, key];
         stack.push(val);
       });
     }

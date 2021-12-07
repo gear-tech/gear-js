@@ -4,6 +4,7 @@ import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
 import { Redirect } from 'react-router-dom';
 import clsx from 'clsx';
+import get from 'lodash.get';
 
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import { EDITOR_BTNS, PAGE_TYPES } from 'consts';
@@ -12,7 +13,7 @@ import { routes } from 'routes';
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
 
-import { EditorItem, EditorTypes, Languages } from 'types/editor';
+import { EditorItem, EditorTypes } from 'types/editor';
 import { EditorTreeContext, reducer } from '../EditorTree/state';
 
 import { EditorTree } from '../EditorTree';
@@ -23,7 +24,7 @@ import { SimpleExample } from '../../../fixtures/code';
 export const EditorPage = () => {
   const [state, dispatch] = useReducer(reducer, { tree: null });
   const [files, setFiles] = useState({});
-  const [currentFile, setCurrentFile] = useState<string | null>(null);
+  const [currentFile, setCurrentFile] = useState<string[] | null>(null);
   const [openedFiles, setOpenedFiles] = useState([0]);
   const [isCodeEdited, setIsCodeEdited] = useState(false);
   const [programName, setProgramName] = useState('');
@@ -138,20 +139,8 @@ export const EditorPage = () => {
   }
 
   const onNodeClick = (node: EditorItem) => {
-    console.log(node.path);
-    setCurrentFile(node.path.join('/'));
-    // console.log(node);
+    setCurrentFile(node.path);
   };
-  // const handleUpdate = (state: any) => {
-  //   console.log(
-  //     JSON.stringify(state, (key, value) => {
-  //       if (key === 'parentNode' || key === 'id') {
-  //         return null;
-  //       }
-  //       return value;
-  //     })
-  //   );
-  // };
 
   function handleProgramNameChange(event: ChangeEvent) {
     const target = event.target as HTMLInputElement;
@@ -197,6 +186,26 @@ export const EditorPage = () => {
         }}
       />
     );
+  }
+
+  function getCurrFileName() {
+    let value = '';
+
+    if (currentFile) {
+      value = get(state.tree, currentFile).value;
+    }
+
+    return value;
+  }
+
+  function getCurrFileLang() {
+    let lang = '';
+
+    if (currentFile) {
+      lang = get(state.tree, currentFile).lang;
+    }
+
+    return lang;
   }
 
   // @ts-ignore
@@ -246,21 +255,11 @@ export const EditorPage = () => {
             <div className="editor-container__editor">
               {currentFile ? (
                 <>
-                  <FilesPanel
-                    /* @ts-ignore */
-                    files={files.children.filter((i) => i.type === EditorTypes.file)}
-                    openedFiles={openedFiles}
-                    currentFile={0}
-                    handleFileClose={handleFileClose}
-                    handleFileSelect={handleFileSelect}
-                  />
                   <Editor
                     theme="vs-dark"
                     options={options}
-                    // value={files[currentFile].value}
-                    // language={files[currentFile].lang}
-                    value=""
-                    language={Languages.Rust}
+                    value={getCurrFileName()}
+                    language={getCurrFileLang()}
                     onChange={handleEditorChange}
                   />
                 </>
