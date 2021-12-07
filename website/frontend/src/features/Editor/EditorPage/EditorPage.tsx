@@ -13,19 +13,16 @@ import { routes } from 'routes';
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
 
-import { EditorItem, EditorTypes } from 'types/editor';
+import { EditorItem } from 'types/editor';
 import { EditorTreeContext, reducer } from '../EditorTree/state';
 
 import { EditorTree } from '../EditorTree';
-import { FilesPanel } from './FilesPanel';
 import { addParentToNode } from '../EditorTree/utils';
 import { SimpleExample } from '../../../fixtures/code';
 
 export const EditorPage = () => {
   const [state, dispatch] = useReducer(reducer, { tree: null });
-  const [files, setFiles] = useState({});
   const [currentFile, setCurrentFile] = useState<string[] | null>(null);
-  const [openedFiles, setOpenedFiles] = useState([0]);
   const [isCodeEdited, setIsCodeEdited] = useState(false);
   const [programName, setProgramName] = useState('');
   const [isProgramNameError, setIsProgramNameError] = useState(false);
@@ -37,41 +34,10 @@ export const EditorPage = () => {
     theme: 'vs-dark',
     language: 'rust',
   };
-  // const socket = useRef(
-  //   io(GEAR_LOCAL_IDE_URI, {
-  //     transports: ['websocket'],
-  //     query: { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` },
-  //   })
-  // );
 
   useEffect(() => {
     dispatch({ type: 'SET_DATA', payload: addParentToNode(SimpleExample) });
   }, []);
-
-  useEffect(() => {
-    // socket.current.on('build', (payload: { files?: { file: ArrayBuffer; fileName: string }[]; error?: string }) => {
-    //   if (payload.error) {
-    //     // eslint-disable-next-line no-alert
-    //     alert(payload.error);
-    //   }
-    //   if (payload.files) {
-    //     // eslint-disable-next-line no-alert
-    //     alert(`Your code build successfully, program name is ${payload.files[0].fileName}`);
-    //   }
-    // });
-    //
-    // socket.current.on('exception', (payload: { status: string; message: string }) => {
-    //   // eslint-disable-next-line no-alert
-    //   alert(`An error occurred, with message: ${payload.message}`);
-    // });
-  });
-
-  function handleFileSelect(index: number) {
-    if (!openedFiles.includes(index)) {
-      setOpenedFiles([index, ...openedFiles.filter((openedFile) => openedFile !== index)]);
-    }
-    setCurrentFile(null);
-  }
 
   function createStructure(zip: any, path: string | null, filesList: any) {
     for (const key in filesList) {
@@ -138,9 +104,9 @@ export const EditorPage = () => {
     setIsCodeEdited(true);
   }
 
-  const onNodeClick = (node: EditorItem) => {
+  function onNodeClick(node: EditorItem) {
     setCurrentFile(node.path);
-  };
+  }
 
   function handleProgramNameChange(event: ChangeEvent) {
     const target = event.target as HTMLInputElement;
@@ -149,12 +115,6 @@ export const EditorPage = () => {
       setIsProgramNameError(!isProgramNameError);
     }
     setProgramName(target.value);
-  }
-
-  function handleFileClose(index: number) {
-    const curOpened = openedFiles.filter((item) => item !== index);
-    setOpenedFiles(curOpened);
-    setCurrentFile(null);
   }
 
   function handleEditorChange(value: string | undefined) {
@@ -176,16 +136,6 @@ export const EditorPage = () => {
     }
   }
 
-  if (isCodeEdited) {
-    return (
-      <Redirect
-        to={{
-          pathname: routes.main,
-        }}
-      />
-    );
-  }
-
   function getCurrFileName() {
     let value = '';
 
@@ -204,6 +154,16 @@ export const EditorPage = () => {
     }
 
     return lang;
+  }
+
+  if (isCodeEdited) {
+    return (
+      <Redirect
+        to={{
+          pathname: routes.main,
+        }}
+      />
+    );
   }
 
   // @ts-ignore
