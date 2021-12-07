@@ -11,8 +11,6 @@ import { routes } from 'routes';
 
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
-import EditorRun from 'assets/images/editor-run.svg';
-import EditorBuildRun from 'assets/images/editor-build-run.svg';
 
 import { EditorFolderRecord, EditorItem, EditorTypes, Languages } from 'types/editor';
 
@@ -202,15 +200,7 @@ export const EditorPage = () => {
               onClick={() => handlePanelBtnClick(EDITOR_BTNS.BUILD)}
             >
               <img src={EditorBuild} alt="editor-build" />
-              Build
-            </button>
-            <button className="editor-panel--actions__btn" type="button">
-              <img src={EditorRun} alt="editor-run" />
-              Run
-            </button>
-            <button className="editor-panel--actions__btn" type="button">
-              <img src={EditorBuildRun} alt="editor-build-run" />
-              Build & Run
+              Compile
             </button>
           </div>
         </div>
