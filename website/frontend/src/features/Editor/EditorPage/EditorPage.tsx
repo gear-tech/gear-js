@@ -27,6 +27,7 @@ export const EditorPage = () => {
   const [programName, setProgramName] = useState('');
   const [isProgramNameError, setIsProgramNameError] = useState(false);
   const [compileProgramId, setCompileProgramId] = useState(null);
+  const [isShowAlert, setIsShowAlert] = useState(false);
 
   const options = {
     selectOnLineNumbers: true,
@@ -69,10 +70,12 @@ export const EditorPage = () => {
       timerId = setInterval(() => {
         wasmCompilerGet(compileProgramId);
       }, 20000);
+      setIsShowAlert(true);
     }
 
     return () => {
       clearInterval(timerId);
+      setIsShowAlert(false);
     };
   }, [compileProgramId]);
 
@@ -236,6 +239,7 @@ export const EditorPage = () => {
                 onChange={handleProgramNameChange}
               />
             </div>
+            {isShowAlert && <div>Compiling ...</div>}
             <div className="editor-panel--actions">
               <button
                 className="editor-panel--actions__btn"
