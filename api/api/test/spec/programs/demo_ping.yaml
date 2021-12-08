@@ -6,3 +6,10 @@ programs:
     value: 0
     meta: false
     account: alice
+
+messages:
+  - program: demo_ping
+    payload: PING
+    gasLimit: 20000000
+    account: alice
+    meta: false

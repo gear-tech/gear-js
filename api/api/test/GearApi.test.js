@@ -49,7 +49,34 @@ describe('Upload programs test', () => {
   }
 });
 
-test.todo('sending message');
+describe('Sending message test', () => {
+  for (let filePath of testFiles) {
+    const testFile = yaml.load(readFileSync(join('./test/spec/programs', filePath), 'utf8'));
+    if (!testFile.messages) {
+      test.skip(testFile.title, () => {});
+    } else {
+      test(
+        testFile.title,
+        async () => {
+          await api.isReady;
+          for (let message of testFile.messages) {
+            const payload = message.payload;
+            const gasLimit = message.gasLimit;
+            const value = message.value;
+            const metaFile = message.meta
+              ? readFileSync(join(process.env.EXAMPLES_DIR, `${program.name}.meta.wasm`))
+              : undefined;
+            const meta = message.meta ? await getWasmMetadata(metaFile) : {};
+            api.message.submit({ destination: programs.get(message.program), payload, gasLimit, value }, meta);
+            expect(0).toBe(await api.message.signAndSend(await accounts[message.account], () => {}));
+          }
+        },
+        10000,
+      );
+    }
+  }
+});
+
 test.todo('read state');
 test.todo('listen log');
 test.todo('read mailbox');
