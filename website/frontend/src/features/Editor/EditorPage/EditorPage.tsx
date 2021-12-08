@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import get from 'lodash.get';
 
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
-import { EDITOR_BTNS, PAGE_TYPES } from 'consts';
+import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, WASM_COMPILER_GET } from 'consts';
 import { routes } from 'routes';
 
 import EditorDownload from 'assets/images/editor-download.svg';
@@ -26,6 +26,7 @@ export const EditorPage = () => {
   const [isCodeEdited, setIsCodeEdited] = useState(false);
   const [programName, setProgramName] = useState('');
   const [isProgramNameError, setIsProgramNameError] = useState(false);
+  const [compileProgramId, setCompileProgramId] = useState(null);
 
   const options = {
     selectOnLineNumbers: true,
@@ -38,6 +39,42 @@ export const EditorPage = () => {
   useEffect(() => {
     dispatch({ type: 'SET_DATA', payload: addParentToNode(SimpleExample) });
   }, []);
+
+  function wasmCompilerGet(id: string) {
+    fetch(WASM_COMPILER_GET, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify({ id }),
+    })
+      .then((data) => data.json())
+      .then((json) => {
+        const zip = new JSZip();
+
+        zip.loadAsync(json.file.data).then((data) => {
+          data.generateAsync({ type: 'blob' }).then((val) => {
+            saveAs(val, `program.zip`);
+            setCompileProgramId(null);
+          });
+        });
+      })
+      .catch((err) => console.error(err));
+  }
+
+  useEffect(() => {
+    let timerId: any;
+
+    if (compileProgramId) {
+      timerId = setInterval(() => {
+        wasmCompilerGet(compileProgramId);
+      }, 20000);
+    }
+
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [compileProgramId]);
 
   function createStructure(zip: any, path: string | null, filesList: any) {
     for (const key in filesList) {
@@ -76,9 +113,22 @@ export const EditorPage = () => {
     return zip.generateAsync({ type: 'blob' });
   }
 
+  function wasmCompilerRequest(val: any) {
+    const formData = new FormData();
+
+    formData.append('file', val);
+
+    fetch(WASM_COMPILER_BUILD, {
+      method: 'POST',
+      body: formData,
+    })
+      .then((data) => data.json())
+      .then((json) => setCompileProgramId(json.id));
+  }
+
   function handleDownload() {
     createArchive()
-      .then((val) => {
+      .then((val: any) => {
         saveAs(val, `${programName.trim()}.zip`);
       })
       .catch((err) => {
@@ -88,12 +138,8 @@ export const EditorPage = () => {
 
   function handleBuild() {
     createArchive()
-      .then((val) => {
-        console.log(val);
-        // socket.current.emit('build', {
-        //   file: val,
-        //   projectName: programName.trim(),
-        // });
+      .then((val: any) => {
+        wasmCompilerRequest(val);
       })
       .catch((err) => {
         console.error(err);

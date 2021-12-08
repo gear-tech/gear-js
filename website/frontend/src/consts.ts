@@ -5,6 +5,8 @@ export const isProd = process.env.NODE_ENV === 'production';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
+export const WASM_COMPILER_BUILD = 'https://idea.gear-tech.io/wasm-compiler/build';
+export const WASM_COMPILER_GET = 'https://idea.gear-tech.io/wasm-compiler/get-wasm';
 
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
