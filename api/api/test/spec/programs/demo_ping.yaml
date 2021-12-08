@@ -2,14 +2,15 @@ title: demo_ping
 
 programs:
   - name: demo_ping
+    id: 1
     gasLimit: 12000000
     value: 0
     meta: false
     account: alice
 
 messages:
-  - program: demo_ping
+  - program: 1
     payload: PING
-    gasLimit: 20000000
+    gasLimit: 30000000
     account: alice
     meta: false
