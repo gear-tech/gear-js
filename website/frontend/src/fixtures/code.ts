@@ -18,53 +18,48 @@ export const SimpleExample: EditorFolderRawRecord = {
             lang: Languages.Rust,
             value:
               '#![no_std]\n' +
-              '#![feature(default_alloc_error_handler)]\n' +
               '\n' +
+              'use codec::{Decode, Encode};\n' +
               'use gstd::{msg, prelude::*};\n' +
+              'use scale_info::TypeInfo;\n' +
+              '\n' +
+              '#[derive(TypeInfo, Decode)]\n' +
+              'pub enum Action {\n' +
+              '    AddMessage(MessageIn),\n' +
+              '    ViewMessages,\n' +
+              '}\n' +
+              '\n' +
+              '#[derive(TypeInfo, Decode, Encode)]\n' +
+              'pub struct MessageIn {\n' +
+              '    author: String,\n' +
+              '    msg: String,\n' +
+              '}\n' +
+              '\n' +
+              'gstd::metadata! {\n' +
+              '    title: "Guestbook",\n' +
+              '    handle:\n' +
+              '        input: Action,\n' +
+              '        output: Vec<MessageIn>,\n' +
+              '}\n' +
+              '\n' +
+              'static mut MESSAGES: Vec<MessageIn> = Vec::new();\n' +
               '\n' +
               '#[no_mangle]\n' +
               'pub unsafe extern "C" fn handle() {\n' +
-              '    msg::reply(b"Hello world!", 0, 0);\n' +
+              '    let action: Action = msg::load().unwrap();\n' +
+              '\n' +
+              '    match action {\n' +
+              '        Action::AddMessage(message) => {\n' +
+              '            MESSAGES.push(message);\n' +
+              '        }\n' +
+              '        Action::ViewMessages => {\n' +
+              '            msg::reply(&MESSAGES, 0, 0);\n' +
+              '        }\n' +
+              '    }\n' +
               '}\n' +
               '\n' +
               '#[no_mangle]\n' +
-              'pub unsafe extern "C" fn init() {}\n' +
-              '\n' +
-              '#[panic_handler]\n' +
-              'fn panic(_info: &panic::PanicInfo) -> ! {\n' +
-              '    loop {}\n' +
-              '}',
-          },
-          src2: {
-            id: 'src2',
-            name: 'src2',
-            type: EditorTypes.folder,
-            children: {
-              'lib2.rs': {
-                id: '',
-                name: 'lib2.rs',
-                type: EditorTypes.file,
-                lang: Languages.Rust,
-                value:
-                  '#![no_std]\n' +
-                  '#![feature(default_alloc_error_handler)]\n' +
-                  '\n' +
-                  'use gstd::{msg, prelude::*};\n' +
-                  '\n' +
-                  '#[no_mangle]\n' +
-                  'pub unsafe extern "C" fn handle() {\n' +
-                  '    msg::reply(b"Hello world!", 0, 0);\n' +
-                  '}\n' +
-                  '\n' +
-                  '#[no_mangle]\n' +
-                  'pub unsafe extern "C" fn init() {}\n' +
-                  '\n' +
-                  '#[panic_handler]\n' +
-                  'fn panic(_info: &panic::PanicInfo) -> ! {\n' +
-                  '    loop {}\n' +
-                  '}',
-              },
-            },
+              'pub unsafe extern "C" fn init() {}',
           },
         },
       },
@@ -75,7 +70,7 @@ export const SimpleExample: EditorFolderRawRecord = {
         lang: Languages.Toml,
         value:
           '[package]\n' +
-          'name = "demo-minimal"\n' +
+          'name = "guestbook"\n' +
           'version = "0.1.0"\n' +
           'authors = ["Gear Technologies"]\n' +
           'edition = "2018"\n' +
@@ -85,7 +80,9 @@ export const SimpleExample: EditorFolderRawRecord = {
           'crate-type = ["cdylib"]\n' +
           '\n' +
           '[dependencies]\n' +
-          'gstd = { path = "../../gstd", features = ["debug"] }',
+          'gstd = { git = "https://github.com/gear-tech/gear", features = ["debug"] }\n' +
+          'scale-info = { version = "1.0.0", default-features = false, features = ["derive"] }\n' +
+          'codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false, features = ["derive"] }',
       },
     },
   },
