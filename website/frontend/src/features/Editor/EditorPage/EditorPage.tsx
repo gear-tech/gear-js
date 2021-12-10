@@ -224,6 +224,7 @@ export const EditorPage = () => {
                 className="editor-panel--actions__btn"
                 type="button"
                 onClick={() => handlePanelBtnClick(EDITOR_BTNS.BUILD)}
+                disabled={isBuildDone}
               >
                 <img src={EditorBuild} alt="editor-build" />
                 Compile

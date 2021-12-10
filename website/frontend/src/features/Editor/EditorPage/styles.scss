@@ -81,6 +81,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 }
 
 .editor-panel--actions__btn img {
