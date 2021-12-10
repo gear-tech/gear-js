@@ -16,9 +16,10 @@ import selected from 'assets/images/radio-selected.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import copy from 'assets/images/copy.svg';
 import { WASM_COMPILER_GET } from 'consts';
+import { EventTypes } from 'types/events';
 import { Wallet } from '../Wallet';
 import { nodeApi } from '../../../api/initApi';
-import { setApiReady, resetApiReady, setIsBuildDone } from '../../../store/actions/actions';
+import { setApiReady, resetApiReady, setIsBuildDone, AddAlert } from '../../../store/actions/actions';
 import './Header.scss';
 
 export const Header: VFC = () => {
@@ -105,6 +106,7 @@ export const Header: VFC = () => {
                 dispatch(setIsBuildDone(false));
                 localStorage.removeItem('programCompileId');
                 clearInterval(timerId);
+                dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Program is ready!` }));
               });
             });
           })

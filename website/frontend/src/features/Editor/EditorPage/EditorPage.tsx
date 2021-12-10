@@ -12,7 +12,8 @@ import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD } from 'consts';
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
 
-import { setIsBuildDone } from 'store/actions/actions';
+import { setIsBuildDone, AddAlert } from 'store/actions/actions';
+import { EventTypes } from 'types/events';
 
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
@@ -97,6 +98,7 @@ export const EditorPage = () => {
       .then((json) => {
         localStorage.setItem('programCompileId', json.id);
         globalDispatch(setIsBuildDone(true));
+        globalDispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Compiling, please wait!` }));
       });
   }
 
