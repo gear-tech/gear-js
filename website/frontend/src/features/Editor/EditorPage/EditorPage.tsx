@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useReducer, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
@@ -7,8 +8,11 @@ import clsx from 'clsx';
 import get from 'lodash.get';
 
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
-import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, WASM_COMPILER_GET } from 'consts';
+import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD } from 'consts';
 import { routes } from 'routes';
+import { RootState } from 'store/reducers';
+
+import { setIsBuildDone } from 'store/actions/actions';
 
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
@@ -21,13 +25,15 @@ import { addParentToNode } from '../EditorTree/utils';
 import { SimpleExample } from '../../../fixtures/code';
 
 export const EditorPage = () => {
+  const globalDispatch = useDispatch();
+
+  const { isBuildDone } = useSelector((state: RootState) => state.compiler);
+
   const [state, dispatch] = useReducer(reducer, { tree: null });
   const [currentFile, setCurrentFile] = useState<string[] | null>(null);
   const [isCodeEdited, setIsCodeEdited] = useState(false);
   const [programName, setProgramName] = useState('');
   const [isProgramNameError, setIsProgramNameError] = useState(false);
-  const [compileProgramId, setCompileProgramId] = useState(null);
-  const [isShowAlert, setIsShowAlert] = useState(false);
 
   const options = {
     selectOnLineNumbers: true,
@@ -40,44 +46,6 @@ export const EditorPage = () => {
   useEffect(() => {
     dispatch({ type: 'SET_DATA', payload: addParentToNode(SimpleExample) });
   }, []);
-
-  function wasmCompilerGet(id: string) {
-    fetch(WASM_COMPILER_GET, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify({ id }),
-    })
-      .then((data) => data.json())
-      .then((json) => {
-        const zip = new JSZip();
-
-        zip.loadAsync(json.file.data).then((data) => {
-          data.generateAsync({ type: 'blob' }).then((val) => {
-            saveAs(val, `program.zip`);
-            setCompileProgramId(null);
-          });
-        });
-      })
-      .catch((err) => console.error(err));
-  }
-
-  useEffect(() => {
-    let timerId: any;
-
-    if (compileProgramId) {
-      timerId = setInterval(() => {
-        wasmCompilerGet(compileProgramId);
-      }, 20000);
-      setIsShowAlert(true);
-    }
-
-    return () => {
-      clearInterval(timerId);
-      setIsShowAlert(false);
-    };
-  }, [compileProgramId]);
 
   function createStructure(zip: any, path: string | null, filesList: any) {
     for (const key in filesList) {
@@ -116,7 +84,7 @@ export const EditorPage = () => {
     return zip.generateAsync({ type: 'blob' });
   }
 
-  function wasmCompilerRequest(val: any) {
+  function buildWasmProgram(val: any) {
     const formData = new FormData();
 
     formData.append('file', val);
@@ -126,7 +94,10 @@ export const EditorPage = () => {
       body: formData,
     })
       .then((data) => data.json())
-      .then((json) => setCompileProgramId(json.id));
+      .then((json) => {
+        localStorage.setItem('programCompileId', json.id);
+        globalDispatch(setIsBuildDone(true));
+      });
   }
 
   function handleDownload() {
@@ -142,7 +113,7 @@ export const EditorPage = () => {
   function handleBuild() {
     createArchive()
       .then((val: any) => {
-        wasmCompilerRequest(val);
+        buildWasmProgram(val);
       })
       .catch((err) => {
         console.error(err);
@@ -239,7 +210,7 @@ export const EditorPage = () => {
                 onChange={handleProgramNameChange}
               />
             </div>
-            {isShowAlert && <div>Compiling ...</div>}
+            {isBuildDone && <div>Compiling ...</div>}
             <div className="editor-panel--actions">
               <button
                 className="editor-panel--actions__btn"

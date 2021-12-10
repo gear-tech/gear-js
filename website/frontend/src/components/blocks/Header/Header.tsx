@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { Trash2 } from 'react-feather';
+import JSZip from 'jszip';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
 import { LogoIcon } from 'assets/Icons';
@@ -14,9 +15,10 @@ import refresh from 'assets/images/refresh2.svg';
 import selected from 'assets/images/radio-selected.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import copy from 'assets/images/copy.svg';
+import { WASM_COMPILER_GET } from 'consts';
 import { Wallet } from '../Wallet';
 import { nodeApi } from '../../../api/initApi';
-import { setApiReady, resetApiReady } from '../../../store/actions/actions';
+import { setApiReady, resetApiReady, setIsBuildDone } from '../../../store/actions/actions';
 import './Header.scss';
 
 export const Header: VFC = () => {
@@ -57,6 +59,11 @@ export const Header: VFC = () => {
 
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
+  let { isBuildDone } = useSelector((state: RootState) => state.compiler);
+
+  if (localStorage.getItem('programCompileId') && !isBuildDone) {
+    isBuildDone = true;
+  }
 
   const [nodes, setNodes] = useState(arrayOfNodes);
   const [showNodes, setShowNodes] = useState(false);
@@ -73,6 +80,42 @@ export const Header: VFC = () => {
       });
     }
   }, [dispatch, isApiReady]);
+
+  useEffect(() => {
+    let timerId: any;
+
+    if (isBuildDone) {
+      const id = localStorage.getItem('programCompileId');
+
+      timerId = setInterval(() => {
+        fetch(WASM_COMPILER_GET, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+          },
+          body: JSON.stringify({ id }),
+        })
+          .then((data) => data.json())
+          .then((json) => {
+            const zip = new JSZip();
+
+            zip.loadAsync(json.file.data).then((data) => {
+              data.generateAsync({ type: 'blob' }).then((val) => {
+                saveAs(val, `program.zip`);
+                dispatch(setIsBuildDone(false));
+                localStorage.removeItem('programCompileId');
+                clearInterval(timerId);
+              });
+            });
+          })
+          .catch((err) => console.error(err));
+      }, 20000);
+    }
+
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [dispatch, isBuildDone]);
 
   const handleCheckNode = (id: number) => {
     setNodes((elems: any) =>
