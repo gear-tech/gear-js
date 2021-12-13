@@ -77,7 +77,6 @@ export class RpcMessageHandler {
   }
 
   executeMethod(method: (params: any) => Observable<any>, procedure: IRpcRequest) {
-    procedure.params.chain = 'Development';
     const result = method(procedure.params);
     return new Promise((resolve, reject) => {
       result.forEach((value) => {
