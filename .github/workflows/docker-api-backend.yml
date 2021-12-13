@@ -4,7 +4,7 @@ on:
   push:
     branches: [do-event-listener]
     paths:
-      - website/api-backend/*
+      - website/api-gateway/*
 
 env:
   CARGO_TERM_COLOR: always
@@ -32,6 +32,6 @@ jobs:
         id: api_backend_docker_build
         uses: docker/build-push-action@v2
         with:
-          file: website/api-backend/Dockerfile
+          file: website/api-gateway/Dockerfile
           push: true
-          tags: mithriy/gear-api-backend:nightly
+          tags: mithriy/gear-api-gateway:nightly

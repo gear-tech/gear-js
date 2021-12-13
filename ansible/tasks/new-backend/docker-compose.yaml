@@ -30,7 +30,7 @@ services:
     restart: always
     ports:
       - 3000:3000
-    image: mithriy/gear-api-backend:nightly
+    image: mithriy/gear-api-gateway:nightly
     environment:
       CLIENT_ID: ${API_BACKEND_KAFKA_CLIENT_ID}
       GROUP_ID: ${API_BACKEND_KAFKA_GROUP_ID}
