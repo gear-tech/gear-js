@@ -10,7 +10,6 @@ import { LogoIcon } from 'assets/Icons';
 import { copyToClipboard } from 'helpers';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
-import EditorIcon from 'assets/images/editor_icon.svg';
 import close from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import selected from 'assets/images/radio-selected.svg';
@@ -227,7 +226,6 @@ export const Header: VFC = () => {
       </div>
       <div className="header__right-block">
         <Link to={routes.editor} className="header__right-block_ide">
-          <img src={EditorIcon} alt="editor" className="header__right-block_ide-icon" />
           IDE
         </Link>
         {showUser && (

@@ -74,9 +74,13 @@
     margin-right: 20px;
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1) url('../../../assets/images/editor_icon.svg') 10px center no-repeat;
+    padding: 10px 15px 10px 45px;
     font-weight: bold;
+    &:hover {
+      color: $mainBackground;
+      background: $textColor url('../../../assets/images/editor_icon_gray.svg') 10px center no-repeat;
+    }
     .header__right-block_ide-icon {
       margin-right: 10px;
     }

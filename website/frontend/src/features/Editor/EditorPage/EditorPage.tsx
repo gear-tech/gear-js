@@ -212,7 +212,7 @@ export const EditorPage = () => {
                 onChange={handleProgramNameChange}
               />
             </div>
-            {isBuildDone && <div>Compiling ...</div>}
+            {isBuildDone && <div className="editor-panel--text">Compiling ...</div>}
             <div className="editor-panel--actions">
               <button
                 className="editor-panel--actions__btn"
