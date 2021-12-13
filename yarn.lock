@@ -1084,7 +1084,7 @@
     core-js-compat "^3.6.2"
     semver "^5.5.0"
 
-"@babel/preset-env@^7.12.1", "@babel/preset-env@^7.16.0", "@babel/preset-env@^7.8.4":
+"@babel/preset-env@^7.12.1", "@babel/preset-env@^7.8.4":
   version "7.16.4"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.16.4.tgz#4f6ec33b2a3fe72d6bfdcdf3859500232563a2e3"
   integrity sha512-v0QtNd81v/xKj4gNKeuAerQ/azeNn/G1B1qMLeXOcV8+4TWlD2j3NV1u8q29SDFBXx/NBq5kyEAO+0mpRgacjA==
@@ -1351,6 +1351,11 @@
   version "0.8.14"
   resolved "https://registry.yarnpkg.com/@gear-js/api/-/api-0.8.14.tgz#0139df7cf938e3aa425bd43c59f3154f6ba85465"
   integrity sha512-2bbUeo69gtGKMlXToHvdqm0bQo18IS0N8DV36/qfeGZ14qs3beu4mizhQ5BnB/rS0OPjTkWGAOPOCuFC+gC6rw==
+
+"@gear-js/api@^0.8.16":
+  version "0.8.16"
+  resolved "https://registry.yarnpkg.com/@gear-js/api/-/api-0.8.16.tgz#210da7d598f1b100bda66006b3443ea07391b518"
+  integrity sha512-7ZGJhmUPGwM59x89kshRyNLDW7U1fGsKcbQEtDWc1UGZa26tRQMXa9nRBnSRIzTYlvqomGedqSUOHF4jXP6oHQ==
 
 "@gear-js/backend-interfaces@file:website/api-interfaces":
   version "1.0.0"
