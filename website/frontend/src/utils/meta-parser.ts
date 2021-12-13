@@ -55,7 +55,7 @@ enum MetaEnums {
 }
 
 type MetaField = { [key: string]: { [key: string]: string | MetaField } };
-type MetaParam = {} | [] | MetaField;
+export type MetaParam = {} | [] | MetaField;
 
 function parseField(data: MetaParam) {
   const result: ParsedShape = {
@@ -131,7 +131,7 @@ function parseField(data: MetaParam) {
           const key = path[path.length - 1];
           set(result.select, [...current.path], {
             label: key,
-            name: key,
+            name: ['fields', key].join('.'),
             type: current.value,
           });
         }
@@ -208,7 +208,7 @@ function parseField(data: MetaParam) {
                 ...get(result.select, current.path),
                 [key]: {
                   label: key,
-                  name: [...path.filter((i) => i !== 'fields'), key].join('.'),
+                  name: ['fields', ...path.filter((i) => i !== 'fields'), key].join('.'),
                   type: value,
                 },
               });
@@ -220,7 +220,7 @@ function parseField(data: MetaParam) {
                   ...get(result.select, current.path),
                   [key]: {
                     label: key,
-                    name: [...path.filter((i) => i !== 'fields'), key].join('.'),
+                    name: ['fields', ...path.filter((i) => i !== 'fields'), key].join('.'),
                     type: value,
                   },
                 });
@@ -229,7 +229,7 @@ function parseField(data: MetaParam) {
               if (result.select) {
                 set(result.select, current.path, {
                   label: current.path[current.path.length - 1],
-                  name: current.path.filter((i) => i !== 'fields').join('.'),
+                  name: ['fields', ...current.path.filter((i) => i !== 'fields')].join('.'),
                   type: value,
                 });
               }
@@ -242,7 +242,7 @@ function parseField(data: MetaParam) {
                 ...get(result.fields, current.path),
                 [key]: {
                   label: key,
-                  name: [...current.path, key].join('.'),
+                  name: ['fields', ...current.path, key].join('.'),
                   type: value,
                 },
               });

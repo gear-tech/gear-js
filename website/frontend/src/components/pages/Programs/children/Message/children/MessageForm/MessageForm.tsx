@@ -1,9 +1,9 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
-import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
-import clsx from 'clsx';
+import { Metadata } from '@gear-js/api';
 import { ErrorBoundary } from 'react-error-boundary';
 import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
@@ -12,62 +12,58 @@ import { EventTypes } from 'types/events';
 import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
-import { useApi } from '../../../../../../../hooks/useApi';
+import { useApi } from 'hooks/useApi';
+import { parseMeta, ParsedShape, MetaParam } from 'utils/meta-parser';
+import { FormItem } from 'components/FormItem';
+import { Switch } from 'common/components/Switch';
 import { Schema } from './Schema';
+
 import './MessageForm.scss';
-import { FormItem } from '../../../../../../FormItem';
-import { parseMeta, ParsedShape } from '../../../../../../../utils/meta-parser';
-import { Switch } from '../../../../../../../common/components/Switch';
 import { MetaErrorMessage } from './styles';
 
 type Props = {
   programHash: string;
   programName: string;
   meta: Metadata | null;
+  types: MetaParam | null;
 };
 
-export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null }) => {
+export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null, types }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
-  const [manualInput, setManualInput] = useState(false);
+  const [manualInput, setManualInput] = useState(Boolean(!types));
 
   const [initialValues, setInitialValues] = useState({
     gasLimit: 20000,
     value: 0,
-    payload: '',
+    payload: types ? JSON.stringify(types, null, 4) : 'Enter your JSON',
     destination: programHash,
+    fields: {},
   });
 
   useEffect(() => {
-    if (meta && meta.types && meta.handle_input) {
-      const displayedTypes = parseHexTypes(meta.types);
-      const inputType = getTypeStructure(meta.handle_input, displayedTypes);
-
-      if (Object.keys(displayedTypes).length && JSON.stringify(inputType, null, 4) !== initialValues.payload) {
-        setInitialValues({ ...initialValues, payload: JSON.stringify(inputType, null, 4) });
-      } else {
-        setManualInput(true);
-      }
+    if (types) {
+      const parsedMeta = parseMeta(types);
+      setMetaForm(parsedMeta);
+      setManualInput(false);
     }
-  }, [initialValues, setInitialValues, meta]);
-
-  useEffect(() => {
-    if (initialValues.payload) {
-      setMetaForm(parseMeta(JSON.parse(initialValues.payload)));
-    }
-  }, [initialValues.payload]);
+  }, [types]);
 
   const calculateGas = async (values: any, setFieldValue: any) => {
-    if (values.payload.length === 0) {
+    if (manualInput && values.payload.length === 0) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
       return;
     }
 
     try {
       if (meta) {
-        const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.handle_input, meta);
+        let pl = values.fields;
+        if (manualInput) {
+          pl = values.payload;
+        }
+        const estimatedGas = await api?.program.getGasSpent(programHash, pl, meta.handle_input, meta);
         dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
         setFieldValue('gasLimit', Number(`${estimatedGas}`));
       }
@@ -82,9 +78,19 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
       initialValues={initialValues}
       validationSchema={Schema}
       validateOnBlur
-      onSubmit={(values: MessageModel, { resetForm }) => {
+      onSubmit={(values, { resetForm }) => {
         if (currentAccount) {
-          SendMessageToProgram(api, currentAccount, values, dispatch, () => {
+          let pl = values.fields;
+          if (manualInput) {
+            pl = values.payload;
+          }
+          const message: MessageModel = {
+            gasLimit: values.gasLimit,
+            destination: values.destination,
+            value: values.value,
+            payload: JSON.stringify(pl),
+          };
+          SendMessageToProgram(api, currentAccount, message, dispatch, () => {
             resetForm();
           });
         } else {
@@ -150,7 +156,11 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
                   >
                     {!manualInput && metaForm ? <FormItem data={metaForm} /> : <></>}
                   </ErrorBoundary>
-                  {!metaForm && <MetaErrorMessage>Cannot parse metadata, try to use manual input</MetaErrorMessage>}
+                  {!metaForm && (
+                    <MetaErrorMessage className="hello">
+                      Cannot parse metadata, try to use manual input
+                    </MetaErrorMessage>
+                  )}
                   {manualInput && (
                     <div>
                       <Field
@@ -213,7 +223,6 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null 
                   <button
                     className="message-form__button"
                     type="button"
-                    disabled={Boolean(meta)}
                     onClick={() => {
                       calculateGas(values, setFieldValue);
                     }}

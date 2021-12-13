@@ -56,12 +56,12 @@ describe('test parser', () => {
           author: {
             label: 'author',
             type: 'Text',
-            name: 'AddMessage.author',
+            name: 'fields.AddMessage.author',
           },
           msg: {
             label: 'msg',
             type: 'Text',
-            name: 'AddMessage.msg',
+            name: 'fields.AddMessage.msg',
           },
         },
       },
@@ -76,23 +76,23 @@ describe('test parser', () => {
           To: {
             name: {
               type: 'Text',
-              name: 'AddMessage.To.name',
+              name: 'fields.AddMessage.To.name',
               label: 'name',
             },
             from: {
               type: 'Text',
-              name: 'AddMessage.To.from',
+              name: 'fields.AddMessage.To.from',
               label: 'from',
             },
           },
           author: {
             type: 'Text',
-            name: 'AddMessage.author',
+            name: 'fields.AddMessage.author',
             label: 'author',
           },
           msg: {
             type: 'Text',
-            name: 'AddMessage.msg',
+            name: 'fields.AddMessage.msg',
             label: 'msg',
           },
         },
@@ -107,12 +107,20 @@ describe('test parser', () => {
           type: '_enum',
           fields: {
             AddMessage: {
-              author: { type: 'Text', name: 'AddMessage.author', label: 'author' },
-              msg: { type: 'Text', name: 'AddMessage.msg', label: 'msg' },
+              author: {
+                type: 'Text',
+                name: 'fields.AddMessage.author',
+                label: 'author',
+              },
+              msg: {
+                type: 'Text',
+                name: 'fields.AddMessage.msg',
+                label: 'msg',
+              },
             },
             Post: {
               type: 'Text',
-              name: 'Post',
+              name: 'fields.Post',
               label: 'Post',
             },
             ViewMessages: {
@@ -131,7 +139,7 @@ describe('test parser', () => {
         field: {
           type: '_enum_Option',
           fields: {
-            field: { type: 'String', name: 'field', label: 'field' },
+            field: { type: 'String', name: 'fields.field', label: 'field' },
           },
           NoFields: {
             NoFields: null,
@@ -151,24 +159,24 @@ describe('test parser', () => {
             id: {
               decimal: {
                 type: 'u64',
-                name: 'id.decimal',
+                name: 'fields.id.decimal',
                 label: 'decimal',
               },
               hex: {
                 type: 'Bytes',
-                name: 'id.hex',
+                name: 'fields.id.hex',
                 label: 'hex',
               },
             },
             person: {
               surname: {
                 type: 'Text',
-                name: 'person.surname',
+                name: 'fields.person.surname',
                 label: 'surname',
               },
               name: {
                 type: 'Text',
-                name: 'person.name',
+                name: 'fields.person.name',
                 label: 'name',
               },
             },
@@ -190,12 +198,12 @@ describe('test parser', () => {
           fields: {
             ok: {
               type: 'u8',
-              name: 'exchangeRate.ok',
+              name: 'fields.exchangeRate.ok',
               label: 'ok',
             },
             err: {
               type: 'u8',
-              name: 'exchangeRate.err',
+              name: 'fields.exchangeRate.err',
               label: 'err',
             },
           },
@@ -213,12 +221,12 @@ describe('test parser', () => {
           fields: {
             ok: {
               type: 'u8',
-              name: 'exchangeRate.ok',
+              name: 'fields.exchangeRate.ok',
               label: 'ok',
             },
             err: {
               type: 'u8',
-              name: 'exchangeRate.err',
+              name: 'fields.exchangeRate.err',
               label: 'err',
             },
           },

@@ -14,11 +14,12 @@
   line-height: 24px;
   width: 194px;
   margin-top: 32px;
-}
 
-.message-form__button.disabled {
-  opacity: 0.2;
-  cursor: default;
+  &.disabled,
+  &[disabled] {
+    background: #5bffa5;
+    cursor: not-allowed;
+  }
 }
 
 .message-form__input-error {
