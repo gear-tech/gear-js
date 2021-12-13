@@ -4,7 +4,7 @@ on:
   push:
     branches: [do-event-listener]
     paths:
-      - website/data-storage/*
+      - website/data-storage/**
 
 env:
   CARGO_TERM_COLOR: always

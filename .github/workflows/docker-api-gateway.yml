@@ -4,7 +4,7 @@ on:
   push:
     branches: [do-event-listener]
     paths:
-      - website/api-gateway/*
+      - website/api-gateway/**
 
 env:
   CARGO_TERM_COLOR: always

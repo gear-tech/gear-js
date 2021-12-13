@@ -4,7 +4,7 @@ on:
   push:
     branches: [do-event-listener]
     paths:
-      - website/events-listener/*
+      - website/events-listener/**
 
 env:
   CARGO_TERM_COLOR: always
