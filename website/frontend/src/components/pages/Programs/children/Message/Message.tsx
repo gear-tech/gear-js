@@ -10,12 +10,12 @@ import { PAGE_TYPES, RPC_METHODS } from 'consts';
 import ServerRPCRequestService from '../../../../../services/ServerRPCRequestService';
 
 type Props = {
-  programHash: string;
+  programId: string;
   programName: string;
   handleClose: () => void;
 };
 
-export const Message: VFC<Props> = ({ programHash, programName, handleClose }) => {
+export const Message: VFC<Props> = ({ programId, programName, handleClose }) => {
   const dispatch = useDispatch();
 
   const [meta, setMeta] = useState<Metadata | null>(null);
@@ -33,11 +33,11 @@ export const Message: VFC<Props> = ({ programHash, programName, handleClose }) =
     const apiRequest = new ServerRPCRequestService();
 
     const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
-      programId: programHash,
+      programId,
     });
 
     return result.meta as Metadata;
-  }, [programHash]);
+  }, [programId]);
 
   useEffect(() => {
     if (!meta) {
@@ -50,7 +50,7 @@ export const Message: VFC<Props> = ({ programHash, programName, handleClose }) =
   return (
     <div className="message-form">
       <PageHeader programName={programName} handleClose={handleClose} pageType={PAGE_TYPES.MESSAGE_FORM_PAGE} />
-      {meta && <MessageForm programHash={programHash} programName={programName} meta={meta} />}
+      {meta && <MessageForm programId={programId} programName={programName} meta={meta} />}
     </div>
   );
 };

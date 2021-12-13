@@ -139,10 +139,10 @@ export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any)
     .catch(() => dispatch(fetchUserProgramsErrorAction()));
 };
 
-export const getProgramAction = (hash: string) => (dispatch: any) => {
+export const getProgramAction = (id: string) => (dispatch: any) => {
   dispatch(fetchProgramAction());
   programService
-    .fetchProgram(hash)
+    .fetchProgram(id)
     .then((result: ProgramRPCModel) => {
       dispatch(fetchProgramSuccessAction(result.result));
     })

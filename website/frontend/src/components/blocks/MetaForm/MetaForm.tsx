@@ -17,12 +17,12 @@ import { Schema } from './Schema';
 import './MetaForm.scss';
 
 type Props = {
-  programHash: string;
+  programId: string;
   programName: string;
   handleClose: () => void;
 };
 
-export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
+export const MetaForm: VFC<Props> = ({ programName, programId }) => {
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
@@ -107,13 +107,13 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
         if (currentAccount) {
           if (isMetaByFile) {
             if (metaWasm) {
-              addMetadata(metaWasm, currentAccount, programHash, values.name, dispatch);
+              addMetadata(metaWasm, currentAccount, programId, values.name, dispatch);
             } else {
               dispatch(AddAlert({ type: EventTypes.ERROR, message: `ERROR: metadata not loaded` }));
             }
           } else {
             const { name, ...meta } = values;
-            addMetadata(meta, currentAccount, programHash, name, dispatch);
+            addMetadata(meta, currentAccount, programId, name, dispatch);
           }
           resetForm();
         } else {

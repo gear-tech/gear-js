@@ -16,12 +16,12 @@ import { Schema } from './Schema';
 import './MessageForm.scss';
 
 type Props = {
-  programHash: string;
+  programId: string;
   programName: string;
   meta: Metadata;
 };
 
-export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
+export const MessageForm: VFC<Props> = ({ programId, programName, meta }) => {
   const [api] = useApi();
   const parsedMeta: Metadata = JSON.parse(meta as string);
   const dispatch = useDispatch();
@@ -32,7 +32,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
     gasLimit: 20000,
     value: 0,
     payload: '',
-    destination: programHash,
+    destination: programId,
   });
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
     }
 
     try {
-      const estimatedGas = await api?.program.getGasSpent(programHash, values.payload, meta.handle_input, meta);
+      const estimatedGas = await api?.program.getGasSpent(programId, values.payload, meta.handle_input, meta);
       dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
       setFieldValue('gasLimit', Number(`${estimatedGas}`));
     } catch (error) {

@@ -19,7 +19,7 @@ export default class ProgramRequestService {
     return this.apiRequest.getResource(this.API_PROGRAMS_USER, { ...params });
   }
 
-  public fetchProgram(hash: string): Promise<ProgramRPCModel> {
-    return this.apiRequest.getResource(this.API_REFRESH_PROGRAM, { hash });
+  public fetchProgram(id: string): Promise<ProgramRPCModel> {
+    return this.apiRequest.getResource(this.API_REFRESH_PROGRAM, { id });
   }
 }
