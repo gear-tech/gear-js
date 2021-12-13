@@ -10,6 +10,7 @@ import { LogoIcon } from 'assets/Icons';
 import { copyToClipboard } from 'helpers';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
+import EditorIcon from 'assets/images/editor_icon.svg';
 import close from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import selected from 'assets/images/radio-selected.svg';
@@ -224,21 +225,27 @@ export const Header: VFC = () => {
           </>
         )}
       </div>
-      {showUser && (
-        <div className="header__user-block user-block">
-          <Wallet />
-        </div>
-      )}
-      <div className="header--actions-wrapper">
-        <Link to={isNotifications ? routes.main : routes.notifications} className="header__notifications">
-          <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />
-          {(countUnread && !isNotifications && (
-            <div className="indicator">
-              <div className="notifications-count mobile" />
-            </div>
-          )) ||
-            null}
+      <div className="header__right-block">
+        <Link to={routes.editor} className="header__right-block_ide">
+          <img src={EditorIcon} alt="editor" className="header__right-block_ide-icon" />
+          IDE
         </Link>
+        {showUser && (
+          <div className="header__user-block user-block">
+            <Wallet />
+          </div>
+        )}
+        <div className="header--actions-wrapper">
+          <Link to={isNotifications ? routes.main : routes.notifications} className="header__notifications">
+            <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />
+            {(countUnread && !isNotifications && (
+              <div className="indicator">
+                <div className="notifications-count mobile" />
+              </div>
+            )) ||
+              null}
+          </Link>
+        </div>
       </div>
 
       {showNodes && (
