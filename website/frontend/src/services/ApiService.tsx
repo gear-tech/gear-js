@@ -151,6 +151,7 @@ export const SendMessageToProgram = async (
 // TODO: (dispatch) fix it later
 export const addMetadata = async (
   meta: MetaModel,
+  metaFile: any,
   account: UserAccount,
   programId: string,
   name: any,
@@ -168,6 +169,7 @@ export const addMetadata = async (
         programId,
         name,
         title: meta.title,
+        metaFile,
       });
 
       if (response.error) {
