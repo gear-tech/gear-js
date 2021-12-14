@@ -5,9 +5,8 @@ import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { AddAlert } from 'store/actions/actions';
 import { EventTypes } from 'types/events';
-import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'consts';
+import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, GET_TEST_BALANCE } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
-import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
 import { useApi } from '../../../hooks/useApi';
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
@@ -20,7 +19,6 @@ type Props = {
 export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
-  const apiRequest = new ServerRPCRequestService();
 
   const [api] = useApi();
 
@@ -96,14 +94,22 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         throw new Error(`WALLET NOT CONNECTED`);
       }
 
-      const response = await apiRequest.getResource(RPC_METHODS.BALANCE_TRANSFER, {
-        publicKey: `${currentAccount.address}`,
-        value: GEAR_BALANCE_TRANSFER_VALUE,
-      });
-
-      if (response.error) {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${response.error.message}` }));
-      }
+      fetch(GET_TEST_BALANCE, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: JSON.stringify({ address: currentAccount.address }),
+      })
+        .then((data) => data.json())
+        .then((json) => {
+          if (json.error) {
+            dispatch(AddAlert({ type: EventTypes.ERROR, message: `${json.error}` }));
+          }
+        })
+        .catch((error) => {
+          dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+        });
 
       // count the number of crane calls
       setGasCallCounter(gasCallCounter + 1);
