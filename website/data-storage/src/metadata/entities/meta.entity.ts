@@ -11,9 +11,9 @@ export class Meta {
   @Column()
   owner: string;
 
-  @Column()
+  @Column({ nullable: true })
   meta: string;
 
-  @Column()
+  @Column({ nullable: true })
   metaFile: string;
 }
