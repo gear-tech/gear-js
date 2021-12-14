@@ -13,7 +13,7 @@ import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
-import { parseMeta, ParsedShape, MetaParam } from 'utils/meta-parser';
+import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { FormItem } from 'components/FormItem';
 import { Switch } from 'common/components/Switch';
 import { Schema } from './Schema';
@@ -35,7 +35,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
   const [manualInput, setManualInput] = useState(Boolean(!types));
 
-  const [initialValues, setInitialValues] = useState({
+  const [initialValues] = useState({
     gasLimit: 20000,
     value: 0,
     payload: types ? JSON.stringify(types, null, 4) : 'Enter your JSON',
@@ -62,6 +62,11 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
         let pl = values.fields;
         if (manualInput) {
           pl = values.payload;
+        }
+        if (Object.keys(pl).length === 0) {
+          dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Form is empty' }));
+
+          return;
         }
         const estimatedGas = await api?.program.getGasSpent(programHash, pl, meta.handle_input, meta);
         dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
