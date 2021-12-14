@@ -17,6 +17,7 @@ import { MetadataService } from 'src/metadata/metadata.service';
 import { InitStatus, Program } from 'src/programs/entities/program.entity';
 import { ProgramsService } from 'src/programs/programs.service';
 import { Result } from './types';
+import { ProgramNotFound } from 'src/errors';
 
 @Injectable()
 export class ConsumerService {
@@ -82,7 +83,7 @@ export class ConsumerService {
 
   async programData(params: FindProgramParams): Result<Program> {
     try {
-      return await this.programService.findProgram(params);
+      return (await this.programService.findProgram(params)) || { error: new ProgramNotFound().message };
     } catch (error) {
       return { error: error.message };
     }
