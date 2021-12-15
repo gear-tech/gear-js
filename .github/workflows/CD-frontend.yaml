@@ -2,9 +2,10 @@ name: CD-frontend
 
 on:
   push:
-    branches: [master]
+    branches: [master, do-fix-deploy]
     paths:
       - website/frontend/**
+      - ansible/tasks/frontend
 
 env:
   CARGO_TERM_COLOR: always
