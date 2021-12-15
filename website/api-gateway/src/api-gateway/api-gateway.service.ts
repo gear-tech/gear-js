@@ -11,6 +11,7 @@ import {
   GetMessagesParams,
   GetMetaParams,
   GetOutgoingMessagesParams,
+  GetTestBalanceParams,
 } from '@gear-js/backend-interfaces';
 import config from '../config/configuration';
 
@@ -36,7 +37,15 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
   })
   client: ClientKafka;
 
-  patterns = ['meta.add', 'program.data', 'meta.get', 'program.all', 'message.all', 'message.add.payload'];
+  patterns = [
+    'meta.add',
+    'program.data',
+    'meta.get',
+    'program.all',
+    'message.all',
+    'message.add.payload',
+    'testBalance.get',
+  ];
 
   async onModuleInit() {
     this.patterns.forEach((key) => {
@@ -89,6 +98,11 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
         return this.client.send('message.add.payload', params);
       },
       countUnread: () => {},
+    },
+    testBalance: {
+      get: (params: GetTestBalanceParams) => {
+        return this.client.send('testBalance.get', params);
+      },
     },
   };
 }

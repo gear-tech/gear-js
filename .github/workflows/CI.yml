@@ -34,7 +34,7 @@ jobs:
           yarn install
           yarn build:backend
 
-  build-get-balance:
+  build-test-balance:
     runs-on: ubuntu-latest
 
     steps:
@@ -45,9 +45,9 @@ jobs:
         with:
           node-version: 16.x
       - run: |
-          cd website/get-balance
-          npm install --package-lock-only && npm install
-          npm run build
+          cd website/test-balance
+          yarn install
+          yarn build
 
   build_frontend:
     runs-on: ubuntu-latest

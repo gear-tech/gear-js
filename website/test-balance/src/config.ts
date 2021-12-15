@@ -1,6 +1,12 @@
-export default () => ({
-  server: {
-    port: parseInt(process.env.PORT, 10) || 3000,
+import { config } from 'dotenv';
+
+config();
+
+export default {
+  kafka: {
+    clientId: process.env.CLIENT_ID,
+    groupId: process.env.GROUP_ID,
+    brokers: process.env.KAFKA_BROKERS.split(','),
   },
   db: {
     port: parseInt(process.env.DB_PORT, 10) || 5432,
@@ -16,4 +22,4 @@ export default () => ({
     accountBalance: process.env.TEST_ACCOUNT_BALANCE,
     balanceToTransfer: process.env.TEST_BALANCE_VALUE,
   },
-});
+};

@@ -20,46 +20,46 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:${KAFKA_PORT}
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://${KAFKA_HOST_NAME}:${KAFKA_PORT}
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094 #${KAFKA_PORT}
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://localhost:9094 #${KAFKA_HOST_NAME}:${KAFKA_PORT}
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
 
-  backend:
-    depends_on:
-      - kafka
-    restart: always
-    ports:
-      - 3000:3000
-    image: mithriy/gear-api-gateway:nightly
-    environment:
-      CLIENT_ID: ${API_BACKEND_KAFKA_CLIENT_ID}
-      GROUP_ID: ${API_BACKEND_KAFKA_GROUP_ID}
-      BROKERS: kafka:9092
-      PORT: 3000
+  # backend:
+  #   depends_on:
+  #     - kafka
+  #   restart: always
+  #   ports:
+  #     - 3000:3000
+  #   image: mithriy/gear-api-gateway:nightly
+  #   environment:
+  #     CLIENT_ID: ${API_BACKEND_KAFKA_CLIENT_ID}
+  #     GROUP_ID: ${API_BACKEND_KAFKA_GROUP_ID}
+  #     BROKERS: kafka:9092
+  #     PORT: 3000
 
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_DB=${DB_NAME}
-    volumes:
-      - /home/ec2/db_data:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
+  # postgres:
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
+  #     - POSTGRES_USER=${DB_USER}
+  #     - POSTGRES_DB=${DB_NAME}
+  #   volumes:
+  #     - /home/ec2/db_data:/var/lib/postgresql/data
+  #   ports:
+  #     - '5432:5432'
 
-  data-storage:
-    image: mithriy/gear-data-storage:nightly
-    restart: always
-    depends_on:
-      - postgres
-      - kafka
-    environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=postgres
-      - CLIENT_ID=${DATA_STORAGE_KAFKA_CLIENT_ID}
-      - GROUP_ID=${DATA_STORAGE_KAFKA_GROUP_ID}
-      - KAFKA_BROKERS=kafka:9092
+  # data-storage:
+  #   image: mithriy/gear-data-storage:nightly
+  #   restart: always
+  #   depends_on:
+  #     - postgres
+  #     - kafka
+  #   environment:
+  #     - DB_NAME=${DB_NAME}
+  #     - DB_USER=${DB_USER}
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - DB_HOST=postgres
+  #     - CLIENT_ID=${DATA_STORAGE_KAFKA_CLIENT_ID}
+  #     - GROUP_ID=${DATA_STORAGE_KAFKA_GROUP_ID}
+  #     - KAFKA_BROKERS=kafka:9092

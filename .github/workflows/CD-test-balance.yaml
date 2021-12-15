@@ -1,10 +1,10 @@
-name: CD-get-balance
+name: CD-test-balance
 
 on:
   push:
-    branches: [master]
+    branches: [master, do-event-listener]
     paths:
-      - website/get-balance/**
+      - website/test-balance/**
 
 env:
   CARGO_TERM_COLOR: always
@@ -32,9 +32,9 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          file: website/get-balance/Dockerfile
+          file: website/test-balance/Dockerfile
           push: true
-          tags: mithriy/gear-get-balance:nightly
+          tags: mithriy/test-get-balance:nightly
 
   Deploy:
     needs: Build-backend-docker
@@ -56,14 +56,17 @@ jobs:
           TEST_ACCOUNT_SEED: ${{secrets.TEST_ACCOUNT_SEED}}
           TEST_ACCOUNT_BALANCE: ${{secrets.SITE_ACCOUNT_BALANCE}}
           TEST_BALANCE_VALUE: ${{secrets.TEST_BALANCE_VALUE}}
+          CLIENT_ID: ${{secrets.TEST_BALANCE_KAFKA_CLIENT_ID}}
+          GROUP_ID: ${{secrets.TEST_BALANCE_KAFKA_GROUP_ID}}
+          KAFKA_BROKERS: ${{secrets.KAFKA_BROKERS}}
         with:
           # Required, playbook filepath
           directory: ./ansible
-          playbook: get-balance.yaml
+          playbook: test-balance.yaml
           # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}
           # Optional, literal inventory file contents
           inventory: |
             [all]
-            ${{secrets.GEAR_BACKEND_NODE}}
+            ${{secrets.TEST_GEAR_BACKEND}}
           requirements: galaxy-requirements.yml
