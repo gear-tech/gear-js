@@ -38,7 +38,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
   const [initialValues] = useState({
     gasLimit: 20000,
     value: 0,
-    payload: types ? JSON.stringify(types, null, 4) : 'Enter your JSON',
+    payload: types ? JSON.stringify(types, null, 4) : '',
     destination: programHash,
     fields: {},
   });
@@ -93,11 +93,13 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
             gasLimit: values.gasLimit,
             destination: values.destination,
             value: values.value,
-            payload: JSON.stringify(pl),
+            payload: pl,
           };
-          SendMessageToProgram(api, currentAccount, message, dispatch, () => {
-            resetForm();
-          });
+          if (meta && api) {
+            SendMessageToProgram(api, currentAccount, message, meta, dispatch, () => {
+              resetForm();
+            });
+          }
         } else {
           dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
         }
@@ -148,7 +150,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
                     fallback={
                       <>
                         <MetaErrorMessage>
-                          Sorry, something went wrong. Unfortunatelly we cannot parse metadata, you could use manual
+                          Sorry, something went wrong. Unfortunately we cannot parse metadata, you could use manual
                           input.
                         </MetaErrorMessage>
                         <br />
@@ -174,7 +176,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
                         as="textarea"
                         type="text"
                         className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
-                        placeholder="// your payload here ..."
+                        placeholder="// Enter your payload here"
                         rows={15}
                       />
                       {errors.payload && touched.payload ? (
