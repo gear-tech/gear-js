@@ -1,30 +1,37 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useReducer, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
 import { Redirect } from 'react-router-dom';
 import clsx from 'clsx';
+import get from 'lodash.get';
 
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
-import { EDITOR_BTNS, PAGE_TYPES } from 'consts';
+import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD } from 'consts';
 import { routes } from 'routes';
+import { RootState } from 'store/reducers';
+
+import { setIsBuildDone, AddAlert } from 'store/actions/actions';
+import { EventTypes } from 'types/events';
 
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
-import EditorRun from 'assets/images/editor-run.svg';
-import EditorBuildRun from 'assets/images/editor-build-run.svg';
 
-import { EditorFolderRecord, EditorItem, EditorTypes, Languages } from 'types/editor';
+import { EditorItem } from 'types/editor';
+import { EditorTreeContext, reducer } from '../EditorTree/state';
 
 import { EditorTree } from '../EditorTree';
-import { FilesPanel } from './FilesPanel';
 import { addParentToNode } from '../EditorTree/utils';
 import { SimpleExample } from '../../../fixtures/code';
 
 export const EditorPage = () => {
-  const [files, setFiles] = useState<EditorFolderRecord>(addParentToNode(SimpleExample));
-  const [currentFile, setCurrentFile] = useState<string | null>(null);
-  const [openedFiles, setOpenedFiles] = useState([0]);
+  const globalDispatch = useDispatch();
+
+  const { isBuildDone } = useSelector((state: RootState) => state.compiler);
+
+  const [state, dispatch] = useReducer(reducer, { tree: null });
+  const [currentFile, setCurrentFile] = useState<string[] | null>(null);
   const [isCodeEdited, setIsCodeEdited] = useState(false);
   const [programName, setProgramName] = useState('');
   const [isProgramNameError, setIsProgramNameError] = useState(false);
@@ -36,54 +43,68 @@ export const EditorPage = () => {
     theme: 'vs-dark',
     language: 'rust',
   };
-  // const socket = useRef(
-  //   io(GEAR_LOCAL_IDE_URI, {
-  //     transports: ['websocket'],
-  //     query: { Authorization: `Bearer ${localStorage.getItem(GEAR_STORAGE_KEY)}` },
-  //   })
-  // );
 
   useEffect(() => {
-    // socket.current.on('build', (payload: { files?: { file: ArrayBuffer; fileName: string }[]; error?: string }) => {
-    //   if (payload.error) {
-    //     // eslint-disable-next-line no-alert
-    //     alert(payload.error);
-    //   }
-    //   if (payload.files) {
-    //     // eslint-disable-next-line no-alert
-    //     alert(`Your code build successfully, program name is ${payload.files[0].fileName}`);
-    //   }
-    // });
-    //
-    // socket.current.on('exception', (payload: { status: string; message: string }) => {
-    //   // eslint-disable-next-line no-alert
-    //   alert(`An error occurred, with message: ${payload.message}`);
-    // });
-  });
+    dispatch({ type: 'SET_DATA', payload: addParentToNode(SimpleExample) });
+  }, []);
 
-  function handleFileSelect(index: number) {
-    if (!openedFiles.includes(index)) {
-      setOpenedFiles([index, ...openedFiles.filter((openedFile) => openedFile !== index)]);
+  function createStructure(zip: any, path: string | null, filesList: any) {
+    for (const key in filesList) {
+      if (Object.prototype.hasOwnProperty.call(filesList, key)) {
+        const file = filesList[key];
+        let newPath = '';
+
+        if (file.type === 'file') {
+          if (path) {
+            zip.folder(path).file(`${file.name}`, file.value);
+          } else {
+            zip.file(`${file.name}`, file.value);
+          }
+        } else {
+          if (path) {
+            newPath = `${path}/${file.name}`;
+            zip.folder(newPath);
+          } else {
+            newPath = file.name;
+            zip.folder(file.name);
+          }
+
+          createStructure(zip, newPath, file.children);
+        }
+      }
     }
-    setCurrentFile(null);
   }
 
   async function createArchive() {
     const zip = new JSZip();
-    // files.forEach((item) => {
-    //   if (item.folder) {
-    //     // @ts-ignore
-    //     zip.folder(item.folder).file(`${item.name}`, item.value);
-    //   } else {
-    //     zip.file(`${item.name}`, item.value);
-    //   }
-    // });
+
+    if (state.tree) {
+      createStructure(zip, null, state.tree.root.children);
+    }
+
     return zip.generateAsync({ type: 'blob' });
+  }
+
+  function buildWasmProgram(val: any) {
+    const formData = new FormData();
+
+    formData.append('file', val);
+
+    fetch(WASM_COMPILER_BUILD, {
+      method: 'POST',
+      body: formData,
+    })
+      .then((data) => data.json())
+      .then((json) => {
+        localStorage.setItem('programCompileId', json.id);
+        globalDispatch(setIsBuildDone(true));
+        globalDispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Compiling, please wait!` }));
+      });
   }
 
   function handleDownload() {
     createArchive()
-      .then((val) => {
+      .then((val: any) => {
         saveAs(val, `${programName.trim()}.zip`);
       })
       .catch((err) => {
@@ -93,12 +114,8 @@ export const EditorPage = () => {
 
   function handleBuild() {
     createArchive()
-      .then((val) => {
-        console.log(val);
-        // socket.current.emit('build', {
-        //   file: val,
-        //   projectName: programName.trim(),
-        // });
+      .then((val: any) => {
+        buildWasmProgram(val);
       })
       .catch((err) => {
         console.error(err);
@@ -109,21 +126,9 @@ export const EditorPage = () => {
     setIsCodeEdited(true);
   }
 
-  const handleClick = (node: EditorItem) => {
-    console.log(node.path);
-    setCurrentFile(node.path.join('/'));
-    // console.log(node);
-  };
-  // const handleUpdate = (state: any) => {
-  //   console.log(
-  //     JSON.stringify(state, (key, value) => {
-  //       if (key === 'parentNode' || key === 'id') {
-  //         return null;
-  //       }
-  //       return value;
-  //     })
-  //   );
-  // };
+  function onNodeClick(node: EditorItem) {
+    setCurrentFile(node.path);
+  }
 
   function handleProgramNameChange(event: ChangeEvent) {
     const target = event.target as HTMLInputElement;
@@ -134,18 +139,10 @@ export const EditorPage = () => {
     setProgramName(target.value);
   }
 
-  function handleFileClose(index: number) {
-    const curOpened = openedFiles.filter((item) => item !== index);
-    setOpenedFiles(curOpened);
-    setCurrentFile(null);
-  }
-
   function handleEditorChange(value: string | undefined) {
-    console.log(value);
-    if (value) {
-      const copy = { ...files };
-      // copy[currentFile].value = value;
-      setFiles(copy);
+    if (currentFile) {
+      const file = get(state.tree, currentFile);
+      dispatch({ type: 'UPDATE_VALUE', payload: { nodeId: file.id, value } });
     }
   }
 
@@ -161,6 +158,26 @@ export const EditorPage = () => {
     }
   }
 
+  function getCurrFileName() {
+    let value = '';
+
+    if (currentFile) {
+      value = get(state.tree, currentFile).value;
+    }
+
+    return value;
+  }
+
+  function getCurrFileLang() {
+    let lang = '';
+
+    if (currentFile) {
+      lang = get(state.tree, currentFile).lang;
+    }
+
+    return lang;
+  }
+
   if (isCodeEdited) {
     return (
       <Redirect
@@ -174,76 +191,69 @@ export const EditorPage = () => {
   // @ts-ignore
   /* eslint-disable react/jsx-no-bind */
   return (
-    <div className="editor-page">
-      <PageHeader programName={programName} pageType={PAGE_TYPES.EDITOR_PAGE} handleClose={handleClose} />
-      <div className="editor-content">
-        <div className="editor-panel">
-          <div className="editor-panel--form">
-            <span className="editor-panel--form__label">Program name:</span>
-            <input
-              type="text"
-              className={clsx('editor-panel--form__input', isProgramNameError && 'error')}
-              value={programName}
-              onChange={handleProgramNameChange}
-            />
+    <EditorTreeContext.Provider
+      value={{
+        state,
+        dispatch,
+        onNodeClick,
+        setCurrentFile,
+      }}
+    >
+      <div className="editor-page">
+        <PageHeader programName={programName} pageType={PAGE_TYPES.EDITOR_PAGE} handleClose={handleClose} />
+        <div className="editor-content">
+          <div className="editor-panel">
+            <div className="editor-panel--form">
+              <span className="editor-panel--form__label">Program name:</span>
+              <input
+                type="text"
+                className={clsx('editor-panel--form__input', isProgramNameError && 'error')}
+                value={programName}
+                onChange={handleProgramNameChange}
+              />
+            </div>
+            {isBuildDone && <div className="editor-panel--text">Compiling ...</div>}
+            <div className="editor-panel--actions">
+              <button
+                className="editor-panel--actions__btn"
+                type="button"
+                onClick={() => handlePanelBtnClick(EDITOR_BTNS.DOWNLOAD)}
+              >
+                <img src={EditorDownload} alt="editor-download" />
+                Download
+              </button>
+              <button
+                className="editor-panel--actions__btn"
+                type="button"
+                onClick={() => handlePanelBtnClick(EDITOR_BTNS.BUILD)}
+                disabled={isBuildDone}
+              >
+                <img src={EditorBuild} alt="editor-build" />
+                Compile
+              </button>
+            </div>
           </div>
-          <div className="editor-panel--actions">
-            <button
-              className="editor-panel--actions__btn"
-              type="button"
-              onClick={() => handlePanelBtnClick(EDITOR_BTNS.DOWNLOAD)}
-            >
-              <img src={EditorDownload} alt="editor-download" />
-              Download
-            </button>
-            <button
-              className="editor-panel--actions__btn"
-              type="button"
-              onClick={() => handlePanelBtnClick(EDITOR_BTNS.BUILD)}
-            >
-              <img src={EditorBuild} alt="editor-build" />
-              Build
-            </button>
-            <button className="editor-panel--actions__btn" type="button">
-              <img src={EditorRun} alt="editor-run" />
-              Run
-            </button>
-            <button className="editor-panel--actions__btn" type="button">
-              <img src={EditorBuildRun} alt="editor-build-run" />
-              Build & Run
-            </button>
-          </div>
-        </div>
-        <div className="editor-container">
-          <EditorTree files={files} onNodeClick={handleClick} />
-          <div className="editor-container__editor">
-            {currentFile ? (
-              <>
-                <FilesPanel
-                  /* @ts-ignore */
-                  files={files.children.filter((i) => i.type === EditorTypes.file)}
-                  openedFiles={openedFiles}
-                  currentFile={0}
-                  handleFileClose={handleFileClose}
-                  handleFileSelect={handleFileSelect}
-                />
-                <Editor
-                  theme="vs-dark"
-                  options={options}
-                  // value={files[currentFile].value}
-                  // language={files[currentFile].lang}
-                  value=""
-                  language={Languages.Rust}
-                  onChange={handleEditorChange}
-                />
-              </>
-            ) : (
-              <div className="editor-empty">Please select at least one file</div>
-            )}
+          <div className="editor-container">
+            <EditorTree />
+            <div className="editor-container__editor">
+              {currentFile ? (
+                <>
+                  <Editor
+                    theme="vs-dark"
+                    options={options}
+                    value={getCurrFileName()}
+                    language={getCurrFileLang()}
+                    onChange={handleEditorChange}
+                  />
+                </>
+              ) : (
+                <div className="editor-empty">Please select at least one file</div>
+              )}
+            </div>
           </div>
         </div>
+        <span className="editor-page__footer-text">2021. All rights reserved.</span>
       </div>
-      <span className="editor-page__footer-text">2021. All rights reserved.</span>
-    </div>
+    </EditorTreeContext.Provider>
   );
 };

@@ -1,7 +1,7 @@
 ---
 #Install frontend
 - name: Copy frontend
-  copy:
+  synchronize:
     src: ../../../website/frontend/
     dest: /home/ec2-user/frontend
 
@@ -17,6 +17,7 @@
     REACT_APP_IDE_URI: "{{ lookup('env','REACT_APP_IDE_URI') }}"
     REACT_APP_API_CONNECT_ADDRESS: "{{ lookup('env','REACT_APP_API_CONNECT_ADDRESS') }}"
     REACT_APP_RRT: "{{ lookup('env','REACT_APP_RRT') }}"
+    REACT_APP_WASM_COMPILER: "{{ lookup('env','REACT_APP_WASM_COMPILER') }}"
 
 - name: run build
   shell: >
@@ -37,8 +38,3 @@
     group: nginx
     mode: '0744'
   become: yes
-
-- name: Delete frontend sources
-  file:
-    state: absent
-    path: /home/ec2-user/frontend

@@ -24,6 +24,7 @@ jobs:
           TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
           REACT_APP_RRT: ${{ secrets.REACT_APP_RRT }}
           WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
+          REACT_APP_WASM_COMPILER: ${{ secrets.WASM_COMPILER_ADDRESS }}
         with:
           # Required, playbook filepath
           directory: ./ansible

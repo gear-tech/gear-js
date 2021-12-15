@@ -13,7 +13,7 @@ interface ItemProps {
 }
 
 export const EditorTreeFileItem = ({ item, isActive }: ItemProps) => {
-  const { dispatch, onNodeClick } = useEditorTreeContext();
+  const { dispatch, onNodeClick, setCurrentFile } = useEditorTreeContext();
   const [isEditing, setEditing] = useState(false);
 
   function handleEdit() {
@@ -25,6 +25,7 @@ export const EditorTreeFileItem = ({ item, isActive }: ItemProps) => {
     // eslint-disable-next-line no-alert
     if (window.confirm('Are you sure?') && dispatch) {
       dispatch({ type: FILE.DELETE, payload: { parentId: item.parentId, nodeId: item.id } });
+      setCurrentFile(null);
     }
   }
 
@@ -39,23 +40,13 @@ export const EditorTreeFileItem = ({ item, isActive }: ItemProps) => {
     }
   };
 
-  const handleNodeClick = React.useCallback(
-    (event: React.SyntheticEvent) => {
-      event.stopPropagation();
-      onNodeClick(item);
-    },
-    [item, onNodeClick]
-  );
+  const handleNodeClick = React.useCallback(() => {
+    onNodeClick(item);
+  }, [item, onNodeClick]);
 
   return (
-    <div
-      className={clsx('editor-tree__item', isActive && 'is-active')}
-      onClick={handleNodeClick}
-      role="button"
-      tabIndex={0}
-      aria-hidden="true"
-    >
-      <div className="editor-tree__line">
+    <div className={clsx('editor-tree__item', isActive && 'is-active')}>
+      <div className="editor-tree__line" onClick={handleNodeClick} role="button" tabIndex={0} aria-hidden="true">
         <File size={12} />
         &nbsp;
         {isEditing ? (
