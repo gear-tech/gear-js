@@ -7,9 +7,6 @@
     - name: Install and enable required packages
       include: ../packages/packages.yaml
 
-    - name: Check env
-      run: echo {{ lookup('env','DB_NAME') }}
-
     - name: Copy docker-compose
       copy:
         src: compose-get-balance.yaml
