@@ -1,0 +1,39 @@
+- name: 'deploy to aws'
+  hosts: all
+  become: yes
+  remote_user: ec2-user
+
+  tasks:
+    - name: Install and enable required packages
+      include: ../packages/packages.yaml
+
+    - name: Create api-gateway dir
+      file: path=/home/ec2-user/api-gateway state=directory mode=0755
+
+    - name: Copy docker-compose
+      copy:
+        src: docker-compose.yaml
+        dest: /home/ec2-user/api-gateway/docker-compose.yaml
+
+    - name: Stop docker-compose
+      shell: >
+        /usr/local/bin/docker-compose -f "/home/ec2-user/api-gateway/docker-compose.yaml" down
+      become: yes
+
+    - name: Pull docker images
+      shell: >
+        /usr/local/bin/docker-compose -f "/home/ec2-user/api-gateway/docker-compose.yaml" pull
+      become: yes
+
+    - name: Remove old docker images
+      shell: docker image prune -f
+      become: yes
+
+    - name: Run docker-compose
+      shell: >
+        /usr/local/bin/docker-compose -f "/home/ec2-user/api-gateway/docker-compose.yaml" up -d
+      become: yes
+      environment:
+        KAFKA_CLIENT_ID: "{{ lookup('env', 'KAFKA_CLIENT_ID') }}"
+        KAFKA_GROUP_ID: "{{ lookup('env', 'KAFKA_GROUP_ID') }}"
+        KAFKA_BROKERS: "{{ lookup('env', 'KAFKA_BROKERS') }}"

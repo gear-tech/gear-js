@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  api-gateway:
+    restart: always
+    ports:
+      - 3000:3000
+    image: mithriy/gear-api-gateway:nightly
+    environment:
+      KAFKA_GROUP_ID: ${KAFKA_GROUP_ID}
+      KAFKA_CLIENT_ID: ${KAFKA_CLIENT_ID}
+      KAFKA_BROKERS: ${KAFKA_BROKERS}
+      PORT: 3000
