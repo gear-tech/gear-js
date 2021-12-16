@@ -12,7 +12,7 @@ interface ItemProps {
 }
 
 export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
-  const { dispatch } = useEditorTreeContext();
+  const { dispatch, setCurrentFile } = useEditorTreeContext();
   const [isEditing, setEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [childrenCopy, setChildrenCopy] = useState<React.ReactNode[]>([]);
@@ -23,7 +23,8 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
 
   const commitAddFile = (name: string) => {
     if (dispatch) {
-      dispatch({ type: FILE.CREATE, payload: { nodeId: item.id, newName: name } });
+      dispatch({ type: FILE.CREATE, payload: { parentId: item.id, newName: name } });
+      setCurrentFile(null);
     }
   };
   const commitUpdateFolderName = (name: string) => {
@@ -34,14 +35,15 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
   };
   const commitAddFolder = (name: string) => {
     if (dispatch) {
-      dispatch({ type: FOLDER.CREATE, payload: { nodeId: item.id, newName: name } });
+      dispatch({ type: FOLDER.CREATE, payload: { parentId: item.id, newName: name } });
     }
   };
-  const commitRemove = () => {
+  const handleDelete = () => {
     // TODO: change to modal lib
     // eslint-disable-next-line no-alert
     if (window.confirm('Are you sure?') && dispatch) {
       dispatch({ type: FOLDER.DELETE, payload: { parentId: item.parentId, nodeId: item.id } });
+      setCurrentFile(null);
     }
   };
 
@@ -52,13 +54,6 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
   function handleEdit(event: React.SyntheticEvent) {
     event.stopPropagation();
     setEditing(true);
-  }
-
-  function handleRemove() {
-    // eslint-disable-next-line no-alert
-    if (window.confirm('Are you sure?')) {
-      commitRemove();
-    }
   }
 
   function handleCancel() {
@@ -130,7 +125,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
             <Edit size={12} color="#fff" />
           </button>
           &nbsp;
-          <button className="tree-actions__btn" onClick={handleRemove} type="button">
+          <button className="tree-actions__btn" onClick={handleDelete} type="button">
             <Trash size={12} color="#fff" />
           </button>
         </div>

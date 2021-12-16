@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { Trash2 } from 'react-feather';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
 import { LogoIcon } from 'assets/Icons';
@@ -14,9 +16,11 @@ import refresh from 'assets/images/refresh2.svg';
 import selected from 'assets/images/radio-selected.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import copy from 'assets/images/copy.svg';
+import { WASM_COMPILER_GET } from 'consts';
+import { EventTypes } from 'types/events';
 import { Wallet } from '../Wallet';
 import { nodeApi } from '../../../api/initApi';
-import { setApiReady, resetApiReady } from '../../../store/actions/actions';
+import { setApiReady, resetApiReady, setIsBuildDone, AddAlert } from '../../../store/actions/actions';
 import './Header.scss';
 
 export const Header: VFC = () => {
@@ -57,6 +61,11 @@ export const Header: VFC = () => {
 
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
+  let { isBuildDone } = useSelector((state: RootState) => state.compiler);
+
+  if (localStorage.getItem('programCompileId') && !isBuildDone) {
+    isBuildDone = true;
+  }
 
   const [nodes, setNodes] = useState(arrayOfNodes);
   const [showNodes, setShowNodes] = useState(false);
@@ -73,6 +82,43 @@ export const Header: VFC = () => {
       });
     }
   }, [dispatch, isApiReady]);
+
+  useEffect(() => {
+    let timerId: any;
+
+    if (isBuildDone) {
+      const id = localStorage.getItem('programCompileId');
+
+      timerId = setInterval(() => {
+        fetch(WASM_COMPILER_GET, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+          },
+          body: JSON.stringify({ id }),
+        })
+          .then((data) => data.json())
+          .then((json) => {
+            const zip = new JSZip();
+
+            zip.loadAsync(json.file.data).then((data) => {
+              data.generateAsync({ type: 'blob' }).then((val) => {
+                saveAs(val, `program.zip`);
+                dispatch(setIsBuildDone(false));
+                localStorage.removeItem('programCompileId');
+                clearInterval(timerId);
+                dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Program is ready!` }));
+              });
+            });
+          })
+          .catch((err) => console.error(err));
+      }, 20000);
+    }
+
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [dispatch, isBuildDone]);
 
   const handleCheckNode = (id: number) => {
     setNodes((elems: any) =>
@@ -179,21 +225,26 @@ export const Header: VFC = () => {
           </>
         )}
       </div>
-      {showUser && (
-        <div className="header__user-block user-block">
-          <Wallet />
-        </div>
-      )}
-      <div className="header--actions-wrapper">
-        <Link to={isNotifications ? routes.main : routes.notifications} className="header__notifications">
-          <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />
-          {(countUnread && !isNotifications && (
-            <div className="indicator">
-              <div className="notifications-count mobile" />
-            </div>
-          )) ||
-            null}
+      <div className="header__right-block">
+        <Link to={routes.editor} className="header__right-block_ide">
+          IDE
         </Link>
+        {showUser && (
+          <div className="header__user-block user-block">
+            <Wallet />
+          </div>
+        )}
+        <div className="header--actions-wrapper">
+          <Link to={isNotifications ? routes.main : routes.notifications} className="header__notifications">
+            <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />
+            {(countUnread && !isNotifications && (
+              <div className="indicator">
+                <div className="notifications-count mobile" />
+              </div>
+            )) ||
+              null}
+          </Link>
+        </div>
       </div>
 
       {showNodes && (

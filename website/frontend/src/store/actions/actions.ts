@@ -9,6 +9,7 @@ import NotificationsRequestService from 'services/NotificationsRequestService';
 
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS } from 'consts';
+import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { nodeApi } from '../../api/initApi';
@@ -245,3 +246,8 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 };
+
+export const setIsBuildDone = (payload: boolean) => ({
+  type: CompilerActionTypes.SET_IS_BUILD_DONE,
+  payload,
+});

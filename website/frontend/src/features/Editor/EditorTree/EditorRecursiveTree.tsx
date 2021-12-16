@@ -9,19 +9,16 @@ type Props = {
 
 export const EditorRecursiveTree = ({ files }: Props) => (
   <>
-    {Object.entries(files).map(([, value]) => {
-      if (value.type === EditorTypes.file) {
-        return <EditorTreeFileItem isActive={false} item={value} key={`editor-tree-item-${value.id}`} />;
-      }
-      return (
-        <>
-          {value.type === EditorTypes.folder && (
-            <EditorTreeFolderItem item={value} key={`editor-tree-item-${value.id}`}>
-              {value.children && <EditorRecursiveTree files={value.children} key={`editor-rtree-${value.id}`} />}
-            </EditorTreeFolderItem>
-          )}
-        </>
-      );
-    })}
+    {Object.entries(files).map(([, value]) => (
+      <div key={`editor-tree-item-${value.id}`}>
+        {value.type === EditorTypes.file ? (
+          <EditorTreeFileItem isActive={false} item={value} />
+        ) : (
+          <EditorTreeFolderItem item={value}>
+            {value.children && <EditorRecursiveTree files={value.children} />}
+          </EditorTreeFolderItem>
+        )}
+      </div>
+    ))}
   </>
 );

@@ -1,0 +1,61 @@
+---
+- name: Copy wasm-compiler service if not exist
+  copy:
+    src: wasm_compiler.service
+    dest: /lib/systemd/system/wasm_compiler.service
+    force: no
+  become: yes
+
+- name: Stop wasm-compiler service
+  systemd:
+    name: wasm_compiler
+    state: stopped
+    enabled: yes
+    daemon-reload: yes
+
+- name: Delete wasm-compiler files
+  file:
+    state: absent
+    path: /home/ec2-user/wasm-compiler
+
+- name: Copy wasm-compiler
+  copy:
+    src: ../../../website/wasm-compiler/
+    dest: /home/ec2-user/wasm-compiler
+
+- name: Install wasm-compiler
+  community.general.npm:
+    path: /home/ec2-user/wasm-compiler
+
+- name: Give permissions to build-image script
+  ansible.builtin.file:
+    path: /home/ec2-user/wasm-compiler/wasm-build/build-image.sh
+    mode: '0777'
+
+# - name: Give permissions to build script
+# ansible.builtin.file:
+# path: /home/ec2-user/ide-backend/wasm-build/build.sh
+# mode: '0777'
+
+- name: Create wasm-compiler file .env
+  shell: >
+    echo "PORT=$PORT">/home/ec2-user/wasm-compiler/.env; 
+    echo "WASM_BUILD_FOLDER=$WASM_BUILD_FOLDER">>/home/ec2-user/wasm-compiler/.env;
+    echo "DB_USER=$DB_USER">>/home/ec2-user/wasm-compiler/.env;
+    echo "DB_PASSWORD=$DB_PASSWORD">>/home/ec2-user/wasm-compiler/.env;
+    echo "DB_NAME=$DB_NAME">>/home/ec2-user/wasm-compiler/.env;
+    echo "DB_PORT=$DB_PORT">>/home/ec2-user/wasm-compiler/.env;
+  environment:
+    PORT: "{{ lookup('env','PORT') }}"
+    WASM_BUILD_FOLDER: "{{ lookup('env','WASM_BUILD_FOLDER') }}"
+    DB_USER: "{{ lookup('env','DB_USER') }}"
+    DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
+    DB_NAME: "{{ lookup('env','DB_NAME') }}"
+    DB_PORT: "{{ lookup('env','DB_PORT') }}"
+
+- name: Start wasm-compiler service
+  systemd:
+    name: wasm_compiler
+    state: started
+    enabled: yes
+    daemon-reload: yes

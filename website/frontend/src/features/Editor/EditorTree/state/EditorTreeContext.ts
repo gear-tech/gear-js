@@ -3,17 +3,19 @@ import { Actions, State } from './reducer';
 import { EditorItem } from '../../../../types/editor';
 
 export type TreeState = {
-  dispatch: Dispatch<Actions> | null;
-  state: State;
+  dispatch: Dispatch<Actions>;
   onNodeClick: (node: EditorItem) => void;
+  setCurrentFile: (data: string[] | null) => void;
+  state: State;
 };
 
 export const defaultState: TreeState = {
-  dispatch: null,
+  dispatch: () => {},
+  onNodeClick: () => {},
+  setCurrentFile: () => {},
   state: {
     tree: null,
   },
-  onNodeClick: () => {},
 };
 
 export const EditorTreeContext = createContext(defaultState);
