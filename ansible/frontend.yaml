@@ -13,6 +13,7 @@
     REACT_APP_IDE_URI: "https://{{ lookup('env','NODE_ADDRESS') }}/ide"
     REACT_APP_RRT: "{{ lookup('env','REACT_APP_RRT') }}"
     REACT_APP_API_CONNECT_ADDRESS: "{{ lookup('env','WS_PROVIDER') }}"
+    REACT_APP_WASM_COMPILER: "{{ lookup('env','REACT_APP_WASM_COMPILER') }}"
 
   #Do tasks
   tasks:

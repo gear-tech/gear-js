@@ -151,6 +151,9 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
             dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
           }
         }}
+        onReset={() => {
+          setDroppedFile(null);
+        }}
       >
         {({ errors, touched, setFieldValue, values }) => (
           <Form>
