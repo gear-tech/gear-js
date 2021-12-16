@@ -15,7 +15,7 @@ services:
   backend_test_balance:
     ports:
       - '3002:3000'
-    image: mithriy/gear-get-balance:nightly
+    image: mithriy/gear-test-balance:nightly
     restart: always
     depends_on:
       - pg_test_balance
