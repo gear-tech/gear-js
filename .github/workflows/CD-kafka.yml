@@ -13,6 +13,7 @@ env:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
+    environment: staging_kafka
     steps:
       - name: Checkout
         uses: actions/checkout@v2
