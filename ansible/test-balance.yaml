@@ -15,8 +15,8 @@
     TEST_ACCOUNT_SEED: "{{ lookup('env','TEST_ACCOUNT_SEED') }}"
     TEST_ACCOUNT_BALANCE: "{{ lookup('env','TEST_ACCOUNT_BALANCE') }}"
     TEST_BALANCE_VALUE: "{{ lookup('env','TEST_BALANCE_VALUE') }}"
-    CLIENT_ID: "{{ lookup('env','CLIENT_ID') }}"
-    GROUP_ID: "{{ lookup('env','GROUP_ID') }}"
+    KAFKA_CLIENT_ID: "{{ lookup('env','KAFKA_CLIENT_ID') }}"
+    KAFKA_GROUP_ID: "{{ lookup('env','KAFKA_GROUP_ID') }}"
     KAFKA_BROKERS: "{{ lookup('env','KAFKA_BROKERS') }}"
 
   #Do tasks
