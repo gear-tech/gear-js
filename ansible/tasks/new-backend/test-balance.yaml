@@ -1,35 +1,45 @@
----
-#Install/update backend docker-compose
-- name: Copy docker-compose
-  copy:
-    src: compose-get-balance.yaml
-    dest: /home/ec2-user/test-balance/compose-test-balance.yaml
-
-- name: Stop docker-compose
-  shell: >
-    /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/compose-test-balance.yaml" down
+- name: 'deploy to aws'
+  hosts: all
   become: yes
+  remote_user: ec2-user
 
-- name: Pull docker images
-  shell: >
-    /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/compose-test-balance.yaml" pull
-  become: yes
+  tasks:
+    - name: Install and enable required packages
+      include: ../tasks/packages/packages.yaml
 
-- name: Run docker-compose
-  shell: >
-    /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/compose-test-balance.yaml" up -d
-  become: yes
-  environment:
-    DB_NAME: "{{ lookup('env','DB_NAME') }}"
-    DB_USER: "{{ lookup('env','DB_USER') }}"
-    DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
-    DB_PORT: "{{ lookup('env','DB_PORT') }}"
-    DB_HOST: "{{ lookup('env','DB_HOST') }}"
-    WS_PROVIDER: "{{ lookup('env','WS_PROVIDER') }}"
-    ROOT_ACCOUNT_SEED: "{{ lookup('env','ROOT_ACCOUNT_SEED') }}"
-    TEST_ACCOUNT_SEED: "{{ lookup('env','TEST_ACCOUNT_SEED') }}"
-    TEST_ACCOUNT_BALANCE: "{{ lookup('env','TEST_ACCOUNT_BALANCE') }}"
-    TEST_BALANCE_VALUE: "{{ lookup('env','TEST_BALANCE_VALUE') }}"
-    CLIENT_ID: "{{ lookup('env','CLIENT_ID') }}"
-    GROUP_ID: "{{ lookup('env','GROUP_ID') }}"
-    KAFKA_BROKERS: "{{ lookup('env','KAFKA_BROKERS') }}"
+    - name: Copy docker-compose
+      copy:
+        src: compose-get-balance.yaml
+        dest: /home/ec2-user/test-balance/compose-test-balance.yaml
+
+    - name: Stop docker-compose
+      shell: >
+        /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/compose-test-balance.yaml" down
+      become: yes
+
+    - name: Pull docker images
+      shell: >
+        /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/compose-test-balance.yaml" pull
+      become: yes
+
+    - name: Run docker-compose
+      shell: >
+        /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/compose-test-balance.yaml" up -d
+      become: yes
+      environment:
+        DB_NAME: "{{ lookup('env','DB_NAME') }}"
+        DB_USER: "{{ lookup('env','DB_USER') }}"
+        DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
+        DB_PORT: "{{ lookup('env','DB_PORT') }}"
+        DB_HOST: "{{ lookup('env','DB_HOST') }}"
+        WS_PROVIDER: "{{ lookup('env','WS_PROVIDER') }}"
+        ROOT_ACCOUNT_SEED: "{{ lookup('env','ROOT_ACCOUNT_SEED') }}"
+        TEST_ACCOUNT_SEED: "{{ lookup('env','TEST_ACCOUNT_SEED') }}"
+        TEST_ACCOUNT_BALANCE: "{{ lookup('env','TEST_ACCOUNT_BALANCE') }}"
+        TEST_BALANCE_VALUE: "{{ lookup('env','TEST_BALANCE_VALUE') }}"
+        CLIENT_ID: "{{ lookup('env','CLIENT_ID') }}"
+        GROUP_ID: "{{ lookup('env','GROUP_ID') }}"
+        KAFKA_BROKERS: "{{ lookup('env','KAFKA_BROKERS') }}"
+
+    - name: Install nginx with self-signed certs
+      include: ../tasks/nginx/nginx.yaml

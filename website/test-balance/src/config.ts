@@ -4,8 +4,8 @@ config();
 
 export default {
   kafka: {
-    clientId: process.env.CLIENT_ID,
-    groupId: process.env.GROUP_ID,
+    clientId: process.env.KAFKA_CLIENT_ID,
+    groupId: process.env.KAFKA_GROUP_ID,
     brokers: process.env.KAFKA_BROKERS.split(','),
   },
   db: {
