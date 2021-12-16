@@ -1,8 +1,8 @@
 ---
 #Install frontend
 - name: Copy frontend
-  synchronize:
-    src: ../../../website/frontend/
+  copy:
+    src: ../../../website/frontend
     dest: /home/ec2-user/frontend
 
 - name: run install
