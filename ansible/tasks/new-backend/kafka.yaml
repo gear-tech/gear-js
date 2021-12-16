@@ -1,3 +1,4 @@
+---
 - name: Create kafka dir
   file: path=/home/ec2-user/kafka state=directory mode=0755
 
