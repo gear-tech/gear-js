@@ -13,7 +13,7 @@ services:
     image: wurstmeister/kafka
     restart: always
     ports:
-      - ${KAFKA_PORT}:${KAFKA_PORT}
+      - 9094:9094
     depends_on:
       - zookeeper
     environment:
