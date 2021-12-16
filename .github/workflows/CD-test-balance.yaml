@@ -62,7 +62,7 @@ jobs:
           KAFKA_BROKERS: ${{secrets.KAFKA_BROKERS}}
         with:
           # Required, playbook filepath
-          directory: ./ansible/tasks/new-backend
+          directory: ./ansible/tasks/test-balance
           playbook: test-balance.yaml
           # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}

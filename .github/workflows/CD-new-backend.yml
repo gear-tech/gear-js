@@ -32,5 +32,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |
             [all]
-            ${{secrets.TEST_GEAR_BACKEND}}
+            ${{secrets.HOST}}
           requirements: galaxy-requirements.yml

@@ -1,0 +1,33 @@
+name: CD data-storage
+
+on: [workflow_dispatch]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    environment: staging_data_storage
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          KAFKA_CLIENT_ID: ${{ secrets.KAFKA_CLIENT_ID }}
+          KAFKA_GROUP_ID: ${{ secrets.KAFKA_GROUP_ID }}
+          KAFKA_BROKERS: ${{ secrets.KAFKA_BROKERS }}
+
+        with:
+          directory: ./ansible/tasks/data-storage
+          playbook: data-storage.yaml
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: |
+            [all]
+            ${{secrets.HOST}}
+          requirements: ../../galaxy-requirements.yml
