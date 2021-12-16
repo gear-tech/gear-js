@@ -1,11 +1,12 @@
 name: CD kafka
 
-on:
-  push:
-    branches: [master, do-event-listener]
-    paths:
-      - ansible/tasks/new-backend/kafka-compose.yaml
-      - ansible/tasks/new-backend/kafka.yaml
+on: [workflow_dispatch]
+# on:
+#   push:
+#     branches: [master, do-event-listener]
+#     paths:
+#       - ansible/tasks/kafka/docker-compose.yaml
+#       - ansible/tasks/kafka/kafka.yaml
 
 env:
   CARGO_TERM_COLOR: always
@@ -25,7 +26,7 @@ jobs:
           KAFKA_HOST_NAME: ${{ secrets.KAFKA_HOST_NAME }}
 
         with:
-          directory: ./ansible/tasks/new-backend
+          directory: ./ansible/tasks/kafka
           playbook: kafka.yaml
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |

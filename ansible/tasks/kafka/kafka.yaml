@@ -9,7 +9,7 @@
 
     - name: Copy docker-compose
       copy:
-        src: kafka-compose.yaml
+        src: docker-compose.yaml
         dest: /home/ec2-user/kafka/docker-compose.yaml
 
     - name: Stop docker-compose
