@@ -17,12 +17,12 @@ services:
     image: mithriy/gear-data-storage:nightly
     restart: always
     depends_on:
-      - postgres
+      - pg_data_storage
     environment:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=postgres
-      - CLIENT_ID=${DATA_STORAGE_KAFKA_CLIENT_ID}
-      - GROUP_ID=${DATA_STORAGE_KAFKA_GROUP_ID}
-      - KAFKA_BROKERS=kafka:9092
+      - CLIENT_ID=${KAFKA_CLIENT_ID}
+      - GROUP_ID=${KAFKA_GROUP_ID}
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
