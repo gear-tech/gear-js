@@ -62,6 +62,7 @@ export const RPC_METHODS = {
   ADD_PUBLIC: 'user.addPublicKey',
   ADD_METADATA: 'program.addMeta',
   GET_METADATA: 'program.getMeta',
+  GET_TEST_BALANCE: 'testBalance.get',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];

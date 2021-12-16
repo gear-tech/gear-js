@@ -16,7 +16,11 @@ export default class ServerRPCRequestService {
       headers,
     };
 
-    const methodParams = { ...postParams, chain: localStorage.getItem('chain') };
+    const methodParams = {
+      ...postParams,
+      chain: localStorage.getItem('chain'),
+      genesis: localStorage.getItem('genesis'),
+    };
 
     params.body = JSON.stringify({
       jsonrpc: '2.0',
