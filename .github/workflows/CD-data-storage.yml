@@ -1,6 +1,9 @@
 name: CD data-storage
 
-on: [workflow_dispatch]
+on:
+  push:
+    branches: ['do-event-listener']
+# on: [workflow_dispatch]
 
 env:
   CARGO_TERM_COLOR: always
