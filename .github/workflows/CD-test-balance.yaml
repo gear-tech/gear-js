@@ -37,7 +37,7 @@ jobs:
           tags: mithriy/gear-test-balance:nightly
 
   Deploy:
-    # needs: Build-backend-docker
+    needs: Build-backend-docker
     runs-on: ubuntu-latest
     environment: staging_test_balance_service
     steps:

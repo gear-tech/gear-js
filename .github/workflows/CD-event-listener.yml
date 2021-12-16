@@ -16,18 +16,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: check
+        run: echo ${{ secrets.WS_PROVIDER }}
+
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
           WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
           KAFKA_BROKERS: ${{ secrets.KAFKA_BROKERS }}
-          KAFKA_CLIENT_ID: ${{secrets.KAFKA_CLIENT_ID}}
+          KAFKA_CLIENT_ID: ${{ secrets.KAFKA_CLIENT_ID }}
 
         with:
           directory: ./ansible/tasks/events-listener
           playbook: events-listener.yaml
-          key: ${{secrets.SSH_PRIVATE_KEY}}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |
             [all]
-            ${{secrets.HOST}}
+            ${{ secrets.HOST }}
           requirements: ../../galaxy-requirements.yml
