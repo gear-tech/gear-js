@@ -2,9 +2,9 @@ name: CD-frontend
 
 on:
   push:
-    branches: [master, do-fix-deploy]
-    # paths:
-    # - website/frontend/**
+    branches: [master]
+    paths:
+      - website/frontend/**
 
 env:
   CARGO_TERM_COLOR: always
