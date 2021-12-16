@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { Trash2 } from 'react-feather';
 import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
 import { LogoIcon } from 'assets/Icons';
