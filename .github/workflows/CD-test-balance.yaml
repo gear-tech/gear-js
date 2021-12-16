@@ -70,4 +70,4 @@ jobs:
           inventory: |
             [all]
             ${{secrets.HOST}}
-          requirements: galaxy-requirements.yml
+          requirements: ../../galaxy-requirements.yml
