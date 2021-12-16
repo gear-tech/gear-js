@@ -239,7 +239,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
                   <button className="message-form__button" type="submit">
                     <>
                       <img src={MessageIllustration} alt="message" />
-                      Send request
+                      Send message
                     </>
                   </button>
                 </>
