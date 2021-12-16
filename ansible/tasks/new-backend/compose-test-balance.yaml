@@ -8,13 +8,11 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_DB=${DB_NAME}
     volumes:
-      - /home/ec2-user/get_balance_pg_data:/var/lib/postgresql/data
+      - /home/ec2-user/test-balance/pg_data:/var/lib/postgresql/data
     ports:
       - '5434:5432'
 
   backend_test_balance:
-    ports:
-      - '3002:3000'
     image: mithriy/gear-test-balance:nightly
     restart: always
     depends_on:
@@ -29,8 +27,8 @@ services:
       - TEST_ACCOUNT_SEED=${TEST_ACCOUNT_SEED}
       - TEST_ACCOUNT_BALANCE=${TEST_ACCOUNT_BALANCE}
       - TEST_BALANCE_VALUE=${TEST_BALANCE_VALUE}
-      - CLIENT_ID=${CLIENT_ID}
-      - GROUP_ID=${GROUP_ID}
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
+      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
       - KAFKA_BROKERS=${KAFKA_BROKERS}
 
 volumes:

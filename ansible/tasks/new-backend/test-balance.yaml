@@ -9,22 +9,22 @@
 
     - name: Copy docker-compose
       copy:
-        src: compose-get-balance.yaml
-        dest: /home/ec2-user/test-balance/compose-test-balance.yaml
+        src: compose-test-balance.yaml
+        dest: /home/ec2-user/test-balance/docker-compose.yaml
 
     - name: Stop docker-compose
       shell: >
-        /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/compose-test-balance.yaml" down
+        /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/docker-compose.yaml" down
       become: yes
 
     - name: Pull docker images
       shell: >
-        /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/compose-test-balance.yaml" pull
+        /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/docker-compose.yaml" pull
       become: yes
 
     - name: Run docker-compose
       shell: >
-        /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/compose-test-balance.yaml" up -d
+        /usr/local/bin/docker-compose -f "/home/ec2-user/test-balance/docker-compose.yaml" up -d
       become: yes
       environment:
         DB_NAME: "{{ lookup('env','DB_NAME') }}"
