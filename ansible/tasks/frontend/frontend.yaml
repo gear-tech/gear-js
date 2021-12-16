@@ -1,11 +1,11 @@
 ---
 #Install frontend
 - name: Copy frontend
-  synchronize:
+  ansible.posix.synchronize:
     src: ../../../website/frontend/
     dest: /home/ec2-user/frontend
-    recursive: true
-    delete: true
+    recursive: yes
+    delete: yes
 
 - name: run install
   community.general.npm:
