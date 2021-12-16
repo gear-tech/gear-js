@@ -1,4 +1,4 @@
-name: CD-wasm-compiler
+name: CD wasm-compiler
 
 on:
   push:

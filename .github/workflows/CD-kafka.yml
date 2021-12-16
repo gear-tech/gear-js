@@ -1,4 +1,4 @@
-name: CD-kafka
+name: CD kafka
 
 on:
   push:

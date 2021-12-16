@@ -1,4 +1,4 @@
-name: CD-test-balance
+name: CD test-balance
 
 on:
   push:
