@@ -31,5 +31,5 @@
         /usr/local/bin/docker-compose -f "/home/ec2-user/kafka/docker-compose.yaml" up -d
       become: yes
       environment:
-        - KAFKA_HOST_NAME=${KAFKA_HOST_NAME}
-        - KAFKA_PORT=${KAFKA_PORT}
+        - KAFKA_HOST_NAME: "{{ lookup('env','KAFKA_HOST_NAME') }}"
+        - KAFKA_PORT: "{{ lookup('env','KAFKA_PORT') }}"
