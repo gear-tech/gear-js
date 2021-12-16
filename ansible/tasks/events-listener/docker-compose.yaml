@@ -4,6 +4,6 @@ services:
     restart: always
     image: mithriy/gear-event-listener:nightly
     environment:
-      - CLIENT_ID=${EVENT_LISTENER_KAFKA_CLIENT_ID}
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
       - BROKERS=${KAFKA_BROKERS}
-      - WS_PROVIDER=${EVENT_LISTENER_WS_PROVIDER}
+      - WS_PROVIDER=${WS_PROVIDER}

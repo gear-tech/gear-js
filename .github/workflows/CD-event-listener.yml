@@ -11,6 +11,7 @@ env:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
+    environment: staging-events-listener
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -18,15 +19,15 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
-          EVENT_LISTENER_WS_PROVIDER: ${{ secrets.EVENT_LISTENER_WS_PROVIDER }}
+          WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
           KAFKA_BROKERS: ${{ secrets.KAFKA_BROKERS }}
-          EVENT_LISTENER_KAFKA_CLIENT_ID: ${{secrets.EVENT_LISTENER_KAFKA_CLIENT_ID}}
+          KAFKA_CLIENT_ID: ${{secrets.KAFKA_CLIENT_ID}}
 
         with:
-          directory: ./ansible
+          directory: ./ansible/tasks/events-listener
           playbook: events-listener.yaml
           key: ${{secrets.SSH_PRIVATE_KEY}}
           inventory: |
             [all]
-            ${{secrets.TEST_GEAR_BACKEND}}
-          requirements: galaxy-requirements.yml
+            ${{secrets.HOST}}
+          requirements: ../../galaxy-requirements.yml
