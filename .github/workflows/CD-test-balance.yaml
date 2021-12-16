@@ -3,8 +3,8 @@ name: CD-test-balance
 on:
   push:
     branches: [master, do-event-listener]
-    paths:
-      - website/test-balance/**
+    # paths:
+    # - website/test-balance/**
 
 env:
   CARGO_TERM_COLOR: always
