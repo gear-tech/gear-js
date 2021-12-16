@@ -12,10 +12,11 @@ export class ConsumerController {
   async addEvent(@Payload() payload) {
     logger.log(payload.value, 'AddEvent');
     const chain = payload.headers.chain;
+    const genesis = payload.headers.genesis;
     const key = payload.key;
     const value = payload.value;
     try {
-      await this.consumerService.events[key](chain, value);
+      await this.consumerService.events[key](genesis, chain, value);
     } catch (error) {
       logger.error(error.message, error.stack);
     }

@@ -1,11 +1,12 @@
+import { RequestParams } from './general';
+
 export interface Meta {
   id: string;
   program: string;
   owner: string;
 }
 
-export interface AddMetaParams {
-  chain: string;
+export interface AddMetaParams extends RequestParams {
   programId: string;
   signature: string;
   meta: string | any;
@@ -18,8 +19,7 @@ export interface AddMetaResult {
   status: 'Metadata added';
 }
 
-export interface GetMetaParams {
-  chain: string;
+export interface GetMetaParams extends RequestParams {
   programId: string;
 }
 

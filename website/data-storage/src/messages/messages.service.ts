@@ -15,7 +15,18 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save({ id, chain, destination, source, payload, date, replyTo, replyError, isRead }): Promise<Message> {
+  async save({
+    id,
+    chain,
+    genesis,
+    destination,
+    source,
+    payload,
+    date,
+    replyTo,
+    replyError,
+    isRead,
+  }): Promise<Message> {
     let message = await this.messageRepo.findOne({ id });
     if (message) {
       if (payload) {
@@ -29,6 +40,7 @@ export class MessagesService {
       message = this.messageRepo.create({
         id,
         chain,
+        genesis,
         destination,
         source,
         payload,
@@ -41,8 +53,8 @@ export class MessagesService {
   }
 
   async addPayload(params: AddPayloadParams): Promise<Message> {
-    const { id, chain, signature, payload } = params;
-    const message = await this.messageRepo.findOne({ id, chain });
+    const { id, chain, genesis, signature, payload } = params;
+    const message = await this.messageRepo.findOne({ id, genesis, chain });
     if (!message) {
       throw new MessageNotFound();
     }
@@ -55,7 +67,7 @@ export class MessagesService {
 
   async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
     const [result, total] = await this.messageRepo.findAndCount({
-      where: { chain: params.chain, destination: params.destination, isRead: params.isRead },
+      where: { chain: params.chain, destination: params.destination, genesis: params.genesis, isRead: params.isRead },
       take: params.limit | 20,
       skip: params.offset | 0,
     });
@@ -67,7 +79,7 @@ export class MessagesService {
 
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
     const [result, total] = await this.messageRepo.findAndCount({
-      where: { chain: params.chain, source: params.source },
+      where: { genesis: params.genesis, chain: params.chain, source: params.source },
       take: params.limit | 20,
       skip: params.offset | 0,
     });
@@ -79,7 +91,13 @@ export class MessagesService {
 
   async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
     const [result, total] = await this.messageRepo.findAndCount({
-      where: { chain: params.chain, destination: params.destination, source: params.source, isRead: params.isRead },
+      where: {
+        genesis: params.genesis,
+        chain: params.chain,
+        destination: params.destination,
+        source: params.source,
+        isRead: params.isRead,
+      },
       take: params.limit | 20,
       skip: params.offset | 0,
     });

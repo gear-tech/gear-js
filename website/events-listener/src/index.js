@@ -14,9 +14,10 @@ const main = async () => {
   await producer.createTopic('events');
   await producer.connect();
   const chain = await api.chain();
-  log.info(`Connected to ${chain}`);
+  const genesis = api.genesisHash.toHex();
+  log.info(`Connected to ${chain} with genesis ${genesis}`);
   listen(api, ({ key, value }) => {
-    producer.send(key, value, chain);
+    producer.send(key, value, chain, genesis);
   });
 };
 

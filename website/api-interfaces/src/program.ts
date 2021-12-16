@@ -1,4 +1,5 @@
 import { Meta } from '.';
+import { RequestParams } from './general';
 
 export enum InitStatus {
   SUCCESS = 'success',
@@ -9,6 +10,7 @@ export enum InitStatus {
 export interface Program {
   id: string;
   chain: string;
+  genesis: string;
   owner: string;
   uploadedAt: Date;
   name?: string;
@@ -17,8 +19,7 @@ export interface Program {
   initStatus: InitStatus;
 }
 
-export interface GetAllProgramsParams {
-  chain: string;
+export interface GetAllProgramsParams extends RequestParams {
   publicKeyRaw?: string;
   owner?: string;
   limit?: number;
@@ -30,8 +31,7 @@ export interface GetAllProgramsResult {
   count: number;
 }
 
-export interface FindProgramParams {
+export interface FindProgramParams extends RequestParams {
   id: string;
-  chain: string;
   owner?: string;
 }

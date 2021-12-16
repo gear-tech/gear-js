@@ -1,6 +1,9 @@
+import { RequestParams } from './general';
+
 export interface Message {
   id: string;
   chain: string;
+  genesis: string;
   destination: string;
   source: string;
   payload?: string;
@@ -10,9 +13,8 @@ export interface Message {
   date: Date;
 }
 
-export interface AddPayloadParams {
+export interface AddPayloadParams extends RequestParams {
   id: string;
-  chain: string;
   payload: string;
   signature: string;
 }
@@ -22,8 +24,7 @@ export interface AllMessagesResult {
   count: number;
 }
 
-export interface GetMessagesParams {
-  chain: string;
+export interface GetMessagesParams extends RequestParams {
   destination?: string;
   source?: string;
   isRead?: boolean;
@@ -31,15 +32,13 @@ export interface GetMessagesParams {
   offset?: number;
 }
 
-export interface GetIncomingMessagesParams {
-  chain: string;
+export interface GetIncomingMessagesParams extends RequestParams {
   destination?: string;
   isRead?: boolean;
   limit?: number;
   offset?: number;
 }
-export interface GetOutgoingMessagesParams {
-  chain: string;
+export interface GetOutgoingMessagesParams extends RequestParams {
   source?: string;
   isRead?: boolean;
   limit?: number;

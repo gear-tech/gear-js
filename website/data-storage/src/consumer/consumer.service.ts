@@ -28,8 +28,9 @@ export class ConsumerService {
   ) {}
 
   events = {
-    Log: (chain: string, value: any) => {
+    Log: (genesis: string, chain: string, value: any) => {
       this.messageService.save({
+        genesis,
         chain,
         id: value.id,
         destination: value.dest,
@@ -41,14 +42,16 @@ export class ConsumerService {
         replyError: value.reply?.isExist ? value.reply.error : null,
       });
     },
-    InitMessageEnqueued: async (chain: string, value: any) => {
+    InitMessageEnqueued: async (genesis: string, chain: string, value: any) => {
       await this.programService.save({
         id: value.programId,
+        genesis,
         chain,
         owner: value.origin,
         uploadedAt: value.date,
       });
       this.messageService.save({
+        genesis,
         chain,
         id: value.messageId,
         destination: value.programId,
@@ -60,8 +63,9 @@ export class ConsumerService {
         replyError: null,
       });
     },
-    DispatchMessageEnqueued: (chain: string, value: any) => {
+    DispatchMessageEnqueued: (genesis: string, chain: string, value: any) => {
       this.messageService.save({
+        genesis,
         chain,
         id: value.messageId,
         destination: value.programId,
@@ -73,11 +77,11 @@ export class ConsumerService {
         replyError: null,
       });
     },
-    InitSuccess: (chain: string, value: any) => {
-      this.programService.setStatus(value.programId, chain, InitStatus.SUCCESS);
+    InitSuccess: (genesis: string, chain: string, value: any) => {
+      this.programService.setStatus(value.programId, chain, genesis, InitStatus.SUCCESS);
     },
-    InitFailure: (chain: string, value: any) => {
-      this.programService.setStatus(value.programId, chain, InitStatus.FAILED);
+    InitFailure: (genesis: string, chain: string, value: any) => {
+      this.programService.setStatus(value.programId, chain, genesis, InitStatus.FAILED);
     },
   };
 
