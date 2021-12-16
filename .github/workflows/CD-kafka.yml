@@ -1,0 +1,33 @@
+name: CD-kafka
+
+on:
+  push:
+    branches: [master, do-event-listener]
+    paths:
+      - ansible/tasks/new-backend/kafka-compose.yaml
+      - ansible/tasks/new-backend/kafka.yaml
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        env:
+          KAFKA_PORT: ${{ secrets.KAFKA_PORT}}
+          KAFKA_HOST_NAME: ${{ secrets.KAFKA_HOST_NAME }}
+
+        with:
+          directory: ./ansible/tasks/new-backend
+          playbook: kafka.yaml
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: |
+            [all]
+            ${{secrets.HOST}}
+          requirements: ../../galaxy-requirements.yml

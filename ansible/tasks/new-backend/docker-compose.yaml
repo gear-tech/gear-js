@@ -1,29 +1,6 @@
 version: '3'
 
 services:
-  zookeeper:
-    image: wurstmeister/zookeeper
-    ports:
-      - '2181:2181'
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-      - ZOO_MAX_SESSION_TIMEOUT=50000
-
-  kafka:
-    image: wurstmeister/kafka
-    restart: always
-    ports:
-      - '9094:9094'
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:${KAFKA_PORT}
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://${KAFKA_HOST_NAME}:${KAFKA_PORT}
-      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-
   backend:
     depends_on:
       - kafka
