@@ -15,6 +15,16 @@
         src: docker-compose.yaml
         dest: /home/ec2-user/events-listener/docker-compose.yaml
 
+    - name: Create events-listener file .env
+      shell: >
+        echo "WS_PROVIDER=$WS_PROVIDER">/home/ec2-user/events-listener/.env; 
+        echo "KAFKA_CLIENT_ID=$KAFKA_CLIENT_ID">>/home/ec2-user/events-listener/.env;
+        echo "KAFKA_BROKERS=$KAFKA_BROKERS">>/home/ec2-user/events-listener/.env;
+      environment:
+        WS_PROVIDER: "{{ lookup('env','WS_PROVIDER') }}"
+        KAFKA_CLIENT_ID: "{{ lookup('env','KAFKA_CLIENT_ID') }}"
+        KAFKA_BROKERS: "{{ lookup('env','KAFKA_BROKERS') }}"
+
     - name: Stop docker-compose
       shell: >
         /usr/local/bin/docker-compose -f "/home/ec2-user/events-listener/docker-compose.yaml" down

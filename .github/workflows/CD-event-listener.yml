@@ -16,9 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: check
-        run: echo ${{ secrets.WS_PROVIDER }}
-
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
