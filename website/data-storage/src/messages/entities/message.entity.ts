@@ -11,6 +11,10 @@ export class Message {
 
   @Index()
   @Column()
+  genesis: string;
+
+  @Index()
+  @Column()
   destination: string;
 
   @Index()

@@ -34,7 +34,7 @@ jobs:
         with:
           file: website/test-balance/Dockerfile
           push: true
-          tags: mithriy/test-get-balance:nightly
+          tags: mithriy/gear-test-balance:nightly
 
   Deploy:
     needs: Build-backend-docker

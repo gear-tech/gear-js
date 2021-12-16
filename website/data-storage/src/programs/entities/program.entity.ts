@@ -18,6 +18,10 @@ export class Program {
 
   @Index()
   @Column()
+  genesis: string;
+
+  @Index()
+  @Column()
   owner: string;
 
   @Column()
