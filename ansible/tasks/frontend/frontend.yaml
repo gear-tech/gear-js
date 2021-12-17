@@ -8,8 +8,8 @@
       include: ../packages/packages.yaml
 
     - name: Copy frontend
-      copy:
-        src: ../../../website/frontend
+      synchronize:
+        src: ../../../website/frontend/
         dest: /home/ec2-user/frontend
 
     - name: run install
