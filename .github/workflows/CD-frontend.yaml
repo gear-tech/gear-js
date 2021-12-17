@@ -2,7 +2,7 @@ name: CD frontend
 
 on:
   push:
-    branches: [master]
+    branches: [master, do-event-listener]
     paths:
       - website/frontend/**
 
@@ -12,6 +12,7 @@ env:
 jobs:
   Deploy-frontend:
     runs-on: ubuntu-latest
+    environment: staging_frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -19,20 +20,17 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
-          GITHUB_CLIENT_ID: ${{ secrets.GTHUB_CLIENT_ID }}
-          NODE_ADDRESS: ${{ secrets.GEAR_BACKEND_NODE }}
-          TELEGRAM_BOT_USERNAME: ${{ secrets.TELEGRAM_BOT_USERNAME }}
-          REACT_APP_RRT: ${{ secrets.REACT_APP_RRT }}
+          API_GATEWAY_ADDRESS: ${{ secrets.API_GATEWAY_ADDRESS }}
           WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
-          REACT_APP_WASM_COMPILER: ${{ secrets.WASM_COMPILER_ADDRESS }}
+          WASM_COMPILER_ADDRESS: ${{ secrets.WASM_COMPILER_ADDRESS }}
         with:
           # Required, playbook filepath
-          directory: ./ansible
+          directory: ./ansible/tasks/frontend
           playbook: frontend.yaml
           # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}
           # Optional, literal inventory file contents
           inventory: |
             [all]
-            ${{secrets.GEAR_BACKEND_NODE}}
+            ${{secrets.STAGING_HOST}}
           requirements: galaxy-requirements.yml
