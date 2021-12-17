@@ -1,4 +1,3 @@
-export const GEAR_LOCAL_IDE_URI = process.env.REACT_APP_IDE_URI;
 export const API_CONNECTION_ADDRESS = process.env.REACT_APP_API_CONNECT_ADDRESS;
 export const API_PATH = process.env.REACT_APP_API_PATH!;
 export const isProd = process.env.NODE_ENV === 'production';

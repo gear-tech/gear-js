@@ -15,14 +15,15 @@
     - name: run install
       community.general.npm:
         path: /home/ec2-user/frontend
-      environment:
-        REACT_APP_API_CONNECT_ADDRESS: "{{ lookup('env','WS_PROVIDER') }}"
-        REACT_APP_API_PATH: "{{ lookup('env','API_GATEWAY_ADDRESS') }}"
-        REACT_APP_WASM_COMPILER: "{{ lookup('env','WASM_COMPILER_ADDRESS') }}"
 
     - name: run build
       shell: >
         cd /home/ec2-user/frontend; npm run build; cd ..
+      environment:
+        REACT_APP_API_CONNECT_ADDRESS: "{{ lookup('env','WS_PROVIDER') }}"
+        REACT_APP_API_PATH: "{{ lookup('env','API_GATEWAY_ADDRESS') }}"
+        REACT_APP_WASM_COMPILER: "{{ lookup('env','WASM_COMPILER_ADDRESS') }}"
+        REACT_APP_RRT:
 
     - name: Delete old frontend files
       file:
