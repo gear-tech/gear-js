@@ -33,4 +33,4 @@ jobs:
           inventory: |
             [all]
             ${{secrets.STAGING_HOST}}
-          requirements: galaxy-requirements.yml
+          requirements: ../../galaxy-requirements.yml
