@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { useDispatch, useSelector } from 'react-redux';
 import Identicon from '@polkadot/react-identicon';
@@ -24,30 +24,33 @@ export const Wallet = () => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 
+  const getAllAccounts = useCallback(async () => {
+    const extensions = await web3Enable('Gear Tech');
+
+    // if extansion does not exist
+    if (extensions.length === 0) {
+      return null;
+    }
+    const accounts = await web3Accounts();
+
+    return accounts;
+  }, []);
+
   useEffect(() => {
-    const getAllAccounts = async () => {
-      const extensions = await web3Enable('Gear Tech');
-
-      // if extansion does not exist
-      if (extensions.length === 0) {
-        return;
-      }
-      const allAccounts = await web3Accounts();
-
-      allAccounts.forEach((acc: UserAccount) => {
-        if (acc.address === localStorage.getItem('savedAccount')) {
-          acc.isActive = true;
-          dispatch(setCurrentAccount(acc));
+    getAllAccounts()
+      .then((allAccounts) => {
+        if (allAccounts) {
+          allAccounts.forEach((acc: UserAccount) => {
+            if (acc.address === localStorage.getItem('savedAccount')) {
+              acc.isActive = true;
+              dispatch(setCurrentAccount(acc));
+            }
+          });
+          setInjectedAccounts(allAccounts);
         }
-      });
-      setInjectedAccounts(allAccounts);
-    };
-
-    // TODO: FIND ANOTHER WAY BE SHORE THAT EXTENSION IS READY
-    setTimeout(() => {
-      getAllAccounts();
-    }, 100);
-  }, [dispatch]);
+      })
+      .catch((err) => console.error(err));
+  }, [dispatch, getAllAccounts]);
 
   // Get free balance for the chosen account
 
