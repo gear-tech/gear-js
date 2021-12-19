@@ -36,7 +36,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
   const [manualInput, setManualInput] = useState(Boolean(!types));
 
   const [initialValues] = useState({
-    gasLimit: 20000,
+    gasLimit: 20000000,
     value: 0,
     payload: types ? JSON.stringify(types, null, 4) : '',
     destination: programHash,
@@ -186,7 +186,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
                   )}
                 </div>
               </div>
-
+              
               <div className="message-form--info">
                 <label htmlFor="gasLimit" className="message-form__field">
                   Gas limit:
@@ -194,7 +194,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
                 <div className="message-form__field-wrapper">
                   <NumberFormat
                     name="gasLimit"
-                    placeholder="20000"
+                    placeholder="20,000,000"
                     value={values.gasLimit}
                     thousandSeparator
                     allowNegative={false}
