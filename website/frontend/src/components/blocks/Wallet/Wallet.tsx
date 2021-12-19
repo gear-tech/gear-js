@@ -3,6 +3,7 @@ import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { useDispatch, useSelector } from 'react-redux';
 import Identicon from '@polkadot/react-identicon';
 import { GearKeyring } from '@gear-js/api';
+import { useAlert } from 'react-alert';
 import { LogoutIcon } from 'assets/Icons';
 import { RootState } from 'store/reducers';
 import { setCurrentAccount, resetCurrentAccount } from 'store/actions/actions';
@@ -14,10 +15,11 @@ import { AccountList } from '../AccountList';
 import './Wallet.scss';
 
 export const Wallet = () => {
-  const [ingectedAccounts, setIngectedAccounts] = useState<Array<UserAccount> | null>(null);
+  const [injectedAccounts, setInjectedAccounts] = useState<Array<UserAccount> | null>(null);
   const [accountBalance, setAccountBalance] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
+  const alert = useAlert();
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
@@ -38,7 +40,7 @@ export const Wallet = () => {
           dispatch(setCurrentAccount(acc));
         }
       });
-      setIngectedAccounts(allAccounts);
+      setInjectedAccounts(allAccounts);
     };
 
     // TODO: FIND ANOTHER WAY BE SHORE THAT EXTENSION IS READY
@@ -50,8 +52,8 @@ export const Wallet = () => {
   // Get free balance for the chosen account
 
   useEffect(() => {
-    const getBalance = async (ADDR: string) => {
-      const freeBalance = await api!.balance.findOut(ADDR);
+    const getBalance = async (address: string) => {
+      const freeBalance = await api!.balance.findOut(address);
       setAccountBalance(freeBalance.toHuman());
     };
 
@@ -73,10 +75,9 @@ export const Wallet = () => {
   }, [isOpen]);
 
   // Setting current account and save it into the LocalStage
-  const selectAccount = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
-    event.stopPropagation();
-    if (ingectedAccounts) {
-      ingectedAccounts.forEach((acc: UserAccount, i: number) => {
+  const selectAccount = (index: number) => {
+    if (injectedAccounts) {
+      injectedAccounts.forEach((acc: UserAccount, i: number) => {
         acc.isActive = false;
         if (i === index) {
           acc.isActive = true;
@@ -84,7 +85,9 @@ export const Wallet = () => {
           localStorage.setItem('public_key_raw', GearKeyring.decodeAddress(acc.address));
         }
       });
-      dispatch(setCurrentAccount(ingectedAccounts[index]));
+      dispatch(setCurrentAccount(injectedAccounts[index]));
+      toggleModal();
+      alert.success('Account successfully changed');
     }
   };
 
@@ -118,8 +121,8 @@ export const Wallet = () => {
         <Modal
           title="Connect"
           content={
-            ingectedAccounts ? (
-              <AccountList list={ingectedAccounts} toggleAccount={selectAccount} />
+            injectedAccounts ? (
+              <AccountList list={injectedAccounts} toggleAccount={selectAccount} />
             ) : (
               <div className="user-wallet__msg">
                 Polkadot extension was not found or disabled. Please{' '}
