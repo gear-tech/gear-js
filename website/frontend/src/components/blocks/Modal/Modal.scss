@@ -25,6 +25,15 @@
   position: relative;
   background: $mainBackground;
   border-radius: 2px;
+  overflow-y: auto;
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+  max-height: 90vh;
+}
+
+.modal__content {
+  height: 100%;
+  overflow-y: auto;
 }
 
 .modal__close {
@@ -64,6 +73,7 @@
   line-height: 150%;
   padding: 0 0 30px;
   margin: 0;
+  text-align: center;
 }
 
 .modal__text {
