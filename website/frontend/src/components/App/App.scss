@@ -1,5 +1,9 @@
 @import '../../assets/scss/variables';
 
+body {
+  scrollbar-gutter: stable both-edges;
+}
+
 .app {
   display: flex;
   flex-direction: column;

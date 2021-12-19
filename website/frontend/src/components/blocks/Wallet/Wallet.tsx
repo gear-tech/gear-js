@@ -69,14 +69,6 @@ export const Wallet = () => {
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
   // Setting current account and save it into the LocalStage
   const selectAccount = (index: number) => {
     if (injectedAccounts) {
@@ -120,29 +112,28 @@ export const Wallet = () => {
           </button>
         )}
       </div>
-      {isOpen && (
-        <Modal
-          title="Connect"
-          content={
-            injectedAccounts ? (
-              <AccountList list={injectedAccounts} toggleAccount={selectAccount} />
-            ) : (
-              <div className="user-wallet__msg">
-                Polkadot extension was not found or disabled. Please{' '}
-                <a
-                  className="user-wallet__msg-link"
-                  href="https://polkadot.js.org/extension/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  install it
-                </a>
-              </div>
-            )
-          }
-          handleClose={toggleModal}
-        />
-      )}
+      <Modal
+        open={isOpen}
+        title="Connect"
+        content={
+          injectedAccounts ? (
+            <AccountList list={injectedAccounts} toggleAccount={selectAccount} />
+          ) : (
+            <div className="user-wallet__msg">
+              Polkadot extension was not found or disabled. Please{' '}
+              <a
+                className="user-wallet__msg-link"
+                href="https://polkadot.js.org/extension/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                install it
+              </a>
+            </div>
+          )
+        }
+        handleClose={toggleModal}
+      />
     </>
   );
 };
