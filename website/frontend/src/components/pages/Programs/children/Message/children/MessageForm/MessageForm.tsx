@@ -29,7 +29,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
   const [ready, setReady] = useState(false);
 
   const [initialValues, setInitialValues] = useState({
-    gasLimit: 20000,
+    gasLimit: 20000000,
     value: 0,
     payload: '',
     destination: programHash,
@@ -129,7 +129,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta }) => {
                   <div className="message-form__field-wrapper">
                     <NumberFormat
                       name="gasLimit"
-                      placeholder="20000"
+                      placeholder="20,000,000"
                       value={values.gasLimit}
                       thousandSeparator
                       allowNegative={false}
