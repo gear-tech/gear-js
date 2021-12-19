@@ -21,7 +21,6 @@ import { Pagination } from 'components/Pagination/Pagination';
 import { NotificationInfo } from 'components/NotificationInfo/NotificationInfo';
 import { ReadNotificationsIcon, UnReadNotificationsIcon } from 'assets/Icons';
 import { SearchQueries } from 'components/blocks/SearchQueries/SearchQueries';
-
 import './NotificationsPage.scss';
 
 export const NotificationsPage: VFC = () => {
