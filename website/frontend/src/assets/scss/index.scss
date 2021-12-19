@@ -13,7 +13,7 @@ html {
 body {
   background: #282828;
   font-size: 14px;
-  max-width: calc(100vw - 20px);
+  scrollbar-gutter: stable both-edges;
 }
 
 ul {
