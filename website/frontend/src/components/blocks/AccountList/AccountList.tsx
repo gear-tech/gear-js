@@ -8,7 +8,7 @@ import './AccountList.scss';
 
 type Props = {
   list: Array<UserAccount>;
-  toggleAccount: (event: any, index: number) => void;
+  toggleAccount: (index: number) => void;
 };
 
 export const AccountList: FC<Props> = ({ list, toggleAccount }: Props) => {
@@ -17,8 +17,8 @@ export const AccountList: FC<Props> = ({ list, toggleAccount }: Props) => {
       type="button"
       className={clsx('account-list__item', account.isActive && 'active')}
       key={account.address}
-      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-        toggleAccount(event, index);
+      onClick={() => {
+        toggleAccount(index);
       }}
     >
       <span className="account-list__icon">
