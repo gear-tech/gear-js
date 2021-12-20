@@ -17,6 +17,7 @@ import { formatDate } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
+import { MessageList } from '../../blocks/MessageList/MessageList';
 import './Program.scss';
 
 type ProgramMessageType = {
@@ -159,6 +160,7 @@ export const Program: VFC = () => {
           </div>
         </div>
       </div>
+      <MessageList programId={data.id} programName={data.name} />
     </div>
   );
 };
