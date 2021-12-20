@@ -4,7 +4,9 @@
   synchronize:
     src: ../../../website/frontend/
     dest: /home/ec2-user/frontend
-  become: yes
+    rsync_opts:
+      - '--verbose'
+      - '--verbose'
 
 - name: run install
   community.general.npm:
