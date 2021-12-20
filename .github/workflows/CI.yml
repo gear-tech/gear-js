@@ -22,7 +22,7 @@ jobs:
           npm install --package-lock-only && npm install
           npm run build
 
-  build_new_backend:
+  build_backend_microservices:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

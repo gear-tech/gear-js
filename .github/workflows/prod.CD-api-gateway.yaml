@@ -1,0 +1,31 @@
+name: CD api-gateway
+
+on: [workflow_dispatch]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    needs: build-api-backend-docker
+    environment: staging_api_gateway
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        env:
+          KAFKA_CLIENT_ID: ${{ secrets.KAFKA_CLIENT_ID }}
+          KAFKA_GROUP_ID: ${{ secrets.KAFKA_GROUP_ID }}
+          KAFKA_BROKERS: ${{ secrets.KAFKA_BROKERS }}
+
+        with:
+          directory: ./ansible/tasks/api-gateway
+          playbook: api-gateway.yaml
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: |
+            [all]
+            ${{secrets.STAGING_HOST}}
+          requirements: ../../galaxy-requirements.yml

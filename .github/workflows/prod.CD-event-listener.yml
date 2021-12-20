@@ -1,9 +1,10 @@
 name: CD events-listener
 
-on: [workflow_dispatch]
-# on:
-# push:
-# branches: ['do-event-listener']
+on:
+  push:
+    branches: [do-event-listener]
+    paths:
+      - website/events-listener/**
 
 env:
   CARGO_TERM_COLOR: always
@@ -24,8 +25,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.TEST_DOCKERHUB_USERNAME }}
-          password: ${{ secrets.TEST_DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push events-listener docker
         id: events_listener_docker_build
@@ -56,5 +57,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |
             [all]
-            ${{ secrets.HOST }}
+            ${{ secrets.STAGING_HOST }}
           requirements: ../../galaxy-requirements.yml

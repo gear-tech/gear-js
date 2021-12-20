@@ -1,12 +1,11 @@
 name: CD kafka
 
-on: [workflow_dispatch]
-# on:
-#   push:
-#     branches: [master, do-event-listener]
-#     paths:
-#       - ansible/tasks/kafka/docker-compose.yaml
-#       - ansible/tasks/kafka/kafka.yaml
+on:
+  push:
+    branches: [master, do-event-listener]
+    paths:
+      - ansible/tasks/kafka/docker-compose.yaml
+      - ansible/tasks/kafka/kafka.yaml
 
 env:
   CARGO_TERM_COLOR: always
@@ -31,5 +30,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |
             [all]
-            ${{secrets.HOST}}
+            ${{secrets.STAGING_HOST}}
           requirements: ../../galaxy-requirements.yml
