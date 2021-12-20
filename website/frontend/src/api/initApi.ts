@@ -2,7 +2,7 @@ import { GearApi } from '@gear-js/api';
 
 import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api/types/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { API_CONNECTION_ADDRESS } from '../consts';
+import { NODE_ADDRESS } from '../consts';
 
 class NodeApi {
   get api(): GearApi | null {
@@ -82,4 +82,4 @@ class NodeApi {
   }
 }
 
-export const nodeApi = new NodeApi(API_CONNECTION_ADDRESS);
+export const nodeApi = new NodeApi(NODE_ADDRESS);
