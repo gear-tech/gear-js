@@ -3,8 +3,10 @@ import { GearApi, GearKeyring } from '@gear-js/api';
 export const balance = async () => {
   const api = await GearApi.create();
   const alice = GearKeyring.fromSuri('//Alice');
-  const freeBalance = await api.balance.findOut(alice.address);
-  console.log(freeBalance.toHuman());
+  api.gearEvents.subsribeBalanceChange(alice.address, (newBalance) => {
+    console.log(newBalance.toHuman());
+    console.log(newBalance);
+  });
 };
 
-balance().finally(() => process.exit(0));
+balance();

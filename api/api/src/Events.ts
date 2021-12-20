@@ -2,6 +2,7 @@ import { GearApi } from '.';
 import { LogEvent, ProgramEvent, TransferEvent } from './types';
 import { Header } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { Balance } from '@polkadot/types/interfaces';
 
 export class GearEvents {
   private api: GearApi;
@@ -64,5 +65,20 @@ export class GearEvents {
         callback(header);
       });
     } catch (error) {}
+  }
+
+  async subsribeBalanceChange(accountAddress: string, callback: (currentBalance: Balance) => void): Promise<void> {
+    let {
+      data: { free: previousFree },
+      nonce: previousNonce,
+    } = await this.api.query.system.account(accountAddress);
+
+    this.api.query.system.account(accountAddress, ({ data: { free: currentFree }, nonce: currentNonce }) => {
+      if (!currentFree.sub(previousFree).isZero()) {
+        callback(this.api.createType('Balance', currentFree));
+        previousFree = currentFree;
+        previousNonce = currentNonce;
+      }
+    });
   }
 }
