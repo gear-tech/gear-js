@@ -1,11 +1,11 @@
----
-#Install frontend
+- name: Create frontend dir
+  file: path=/home/ec2-user/frontend state=directory mode=0755
+
 - name: Copy frontend
   synchronize:
     src: ../../../website/frontend/
     dest: /home/ec2-user/frontend
     rsync_opts:
-      - '--verbose'
       - '--verbose'
 
 - name: run install
