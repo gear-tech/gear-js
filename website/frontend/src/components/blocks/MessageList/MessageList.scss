@@ -25,7 +25,6 @@
         background-color: $mainBackground;
       }
       &_success {
-        background-color: $mainBackground;
         .messages__list-item {
           .messages__list-status {
             background-color: $successColor;
@@ -34,7 +33,6 @@
         }
       }
       &_error {
-        background-color: transparent;
         .messages__list-item {
           .messages__list-status {
             background-color: $errorColor;
@@ -50,7 +48,7 @@
         &:last-child {
           flex: 0 1 200px;
         }
-        &__gray {
+        &_gray {
           p {
             color: $textColorSecondary;
           }

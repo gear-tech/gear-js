@@ -54,7 +54,7 @@ export const MessageList: VFC<Props> = ({ programId, programName }) => {
             <span className="messages__list-status" />
             <p>Program name</p>
           </div>
-          <div className={clsx('messages__list-item', 'messages__list-item__gray')}>
+          <div className={clsx('messages__list-item', 'messages__list-item_gray')}>
             <p>0x1848858f8fdc9cd3f84d47906effef0a0f211df1325f6352eb52ed777a9c030e</p>
           </div>
           <div className="messages__list-item">
@@ -66,7 +66,7 @@ export const MessageList: VFC<Props> = ({ programId, programName }) => {
             <span className="messages__list-status" />
             <p>Program name</p>
           </div>
-          <div className={clsx('messages__list-item', 'messages__list-item__gray')}>
+          <div className={clsx('messages__list-item', 'messages__list-item_gray')}>
             <p>0x1848858f8fdc9cd3f84d47906effef0a0f211df1325f6352eb52ed777a9c030e</p>
           </div>
           <div className="messages__list-item">
@@ -78,7 +78,7 @@ export const MessageList: VFC<Props> = ({ programId, programName }) => {
             <span className="messages__list-status" />
             <p>Program name</p>
           </div>
-          <div className={clsx('messages__list-item', 'messages__list-item__gray')}>
+          <div className={clsx('messages__list-item', 'messages__list-item_gray')}>
             <p>0x1848858f8fdc9cd3f84d47906effef0a0f211df1325f6352eb52ed777a9c030e</p>
           </div>
           <div className="messages__list-item">
@@ -90,7 +90,7 @@ export const MessageList: VFC<Props> = ({ programId, programName }) => {
             <span className="messages__list-status" />
             <p>Program name</p>
           </div>
-          <div className={clsx('messages__list-item', 'messages__list-item__gray')}>
+          <div className={clsx('messages__list-item', 'messages__list-item_gray')}>
             <p>0x1848858f8fdc9cd3f84d47906effef0a0f211df1325f6352eb52ed777a9c030e</p>
           </div>
           <div className="messages__list-item">
