@@ -14,13 +14,6 @@
     "run:dataStorage": "yarn workspace @gear-js/data-storage run start:dev",
     "prepare": "husky install"
   },
-  "workspaces": [
-    "website/api-interfaces",
-    "website/api-gateway",
-    "website/data-storage",
-    "website/events-listener",
-    "website/frontend"
-  ],
   "devDependencies": {
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",

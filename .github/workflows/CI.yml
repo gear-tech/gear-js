@@ -7,22 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_backend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-      - run: |
-          cd website/backend
-          npm install --package-lock-only && npm install
-          npm run build
-
-  build_backend_microservices:
+  build-api-gateway:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -31,8 +16,35 @@ jobs:
         with:
           node-version: 16.x
       - run: |
+          cd website/api-gateway
           yarn install
-          yarn build:backend
+          yarn build
+
+  build-data-storage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+      - run: |
+          cd website/data-storage
+          yarn install
+          yarn build
+
+  build-events-listener:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+      - run: |
+          cd website/events-listener
+          yarn install
+          yarn build
 
   build-test-balance:
     runs-on: ubuntu-latest
@@ -49,7 +61,7 @@ jobs:
           yarn install
           yarn build
 
-  build_frontend:
+  build-wasm-compiler:
     runs-on: ubuntu-latest
 
     steps:
@@ -60,10 +72,26 @@ jobs:
         with:
           node-version: 16.x
       - run: |
+          cd website/wasm-compiler
           yarn install
-          yarn build:frontend
+          yarn build
 
-  build_api:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+      - run: |
+          cd website/frontend
+          yarn install
+          yarn build
+
+  build-api:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
