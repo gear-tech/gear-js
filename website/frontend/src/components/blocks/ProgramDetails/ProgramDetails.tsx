@@ -38,7 +38,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [api] = useApi();
 
   const program = {
-    gasLimit: 20000,
+    gasLimit: 20000000,
     value: 0,
     initPayload: '',
     init_input: '',
@@ -206,7 +206,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     <div className="program-details__field-wrapper">
                       <NumberFormat
                         name="gasLimit"
-                        placeholder="20000"
+                        placeholder="20,000,000"
                         value={values.gasLimit}
                         thousandSeparator
                         allowNegative={false}

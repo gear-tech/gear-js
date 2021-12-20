@@ -2,8 +2,8 @@
 #Install frontend
 - name: Copy frontend
   copy:
-    src: ../../../website/frontend/
-    dest: /home/ec2-user/frontend/
+    src: ../../../website/frontend
+    dest: /home/ec2-user/frontend
 
 - name: run install
   community.general.npm:
