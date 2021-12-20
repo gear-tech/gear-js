@@ -1,8 +1,6 @@
----
-#Install frontend
 - name: Copy frontend
-  copy:
-    src: ../../../website/frontend
+  synchronize:
+    src: ../website/frontend/
     dest: /home/ec2-user/frontend
 
 - name: run install
@@ -19,7 +17,7 @@
     REACT_APP_RRT: "{{ lookup('env','REACT_APP_RRT') }}"
     REACT_APP_WASM_COMPILER: "{{ lookup('env','REACT_APP_WASM_COMPILER') }}"
 
-- name: run build
+- name: Build
   shell: >
     cd /home/ec2-user/frontend; npm run build; cd ..
 

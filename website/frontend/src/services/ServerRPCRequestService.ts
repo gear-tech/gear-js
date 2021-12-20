@@ -44,7 +44,7 @@ type RPCErrorResponse = PartialBy<_RPCResponse<undefined>, 'result'>;
 type RPCResponse<Result> = RPCSuccessResponse<Result> | RPCErrorResponse;
 
 export class RPCResponseError extends Error {
-  code
+  code;
 
   constructor(err: RPCErrorResponse) {
     super();
@@ -54,7 +54,7 @@ export class RPCResponseError extends Error {
   }
 }
 
-export type RPCResponseErrorType = typeof RPCResponseError
+export type RPCResponseErrorType = typeof RPCResponseError;
 
 export default class ServerRPCRequestService {
   protected readonly RPC_API_PATH = API_PATH;
@@ -109,4 +109,3 @@ export default class ServerRPCRequestService {
     return Promise.resolve(data as RPCSuccessResponse<Result>);
   }
 }
-

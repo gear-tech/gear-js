@@ -186,7 +186,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
                   )}
                 </div>
               </div>
-              
+
               <div className="message-form--info">
                 <label htmlFor="gasLimit" className="message-form__field">
                   Gas limit:
