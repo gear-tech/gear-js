@@ -60,9 +60,8 @@ jobs:
         with:
           node-version: 16.x
       - run: |
-          cd website/frontend
           yarn install
-          yarn build
+          yarn build:frontend
 
   build_api:
     runs-on: ubuntu-latest

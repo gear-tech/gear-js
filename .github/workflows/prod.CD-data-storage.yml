@@ -1,45 +1,15 @@
 name: CD data-storage
 
-on:
-  push:
-    branches: [master, do-event-listener]
-    paths:
-      - website/data-storage/**
+on: [workflow_dispatch]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build-data-storage-docker:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push data-storage
-        id: data_storage_docker_build
-        uses: docker/build-push-action@v2
-        with:
-          file: website/data-storage/Dockerfile
-          push: true
-          tags: mithriy/gear-data-storage:nightly
-
   Deploy:
     runs-on: ubuntu-latest
     needs: build-data-storage-docker
-    environment: staging_data_storage
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -47,11 +17,11 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          KAFKA_CLIENT_ID: ${{ secrets.KAFKA_CLIENT_ID }}
-          KAFKA_GROUP_ID: ${{ secrets.KAFKA_GROUP_ID }}
+          DB_NAME: ${{ secrets.DATA_STORAGE_DB_NAME }}
+          DB_USER: ${{ secrets.DATA_STORAGE_DB_USER }}
+          DB_PASSWORD: ${{ secrets.DATA_STORAGE_DB_PASSWORD }}
+          KAFKA_CLIENT_ID: ${{ secrets.DATA_STORAGE_KAFKA_CLIENT_ID }}
+          KAFKA_GROUP_ID: ${{ secrets.DATA_STORAGE_KAFKA_GROUP_ID }}
           KAFKA_BROKERS: ${{ secrets.KAFKA_BROKERS }}
 
         with:
@@ -60,5 +30,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |
             [all]
-            ${{secrets.STAGING_HOST}}
+            ${{secrets.PROD_HOST}}
           requirements: ../../galaxy-requirements.yml

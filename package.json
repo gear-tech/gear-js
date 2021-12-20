@@ -18,7 +18,8 @@
     "website/api-interfaces",
     "website/api-gateway",
     "website/data-storage",
-    "website/events-listener"
+    "website/events-listener",
+    "website/frontend"
   ],
   "devDependencies": {
     "husky": "^7.0.2",

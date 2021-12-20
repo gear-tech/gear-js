@@ -1,10 +1,6 @@
 name: CD frontend
 
-on:
-  push:
-    branches: [master, do-event-listener]
-    paths:
-      - website/frontend/**
+on: [workflow_dispatch]
 
 env:
   CARGO_TERM_COLOR: always
@@ -24,13 +20,10 @@ jobs:
           WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
           WASM_COMPILER_ADDRESS: ${{ secrets.WASM_COMPILER_ADDRESS }}
         with:
-          # Required, playbook filepath
           directory: ./ansible/tasks/frontend
           playbook: frontend.yaml
-          # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}
-          # Optional, literal inventory file contents
           inventory: |
             [all]
-            ${{secrets.STAGING_HOST}}
+            ${{secrets.PROD_HOST}}
           requirements: ../../galaxy-requirements.yml
