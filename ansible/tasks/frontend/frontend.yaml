@@ -1,7 +1,7 @@
 ---
 #Install frontend
 - name: Copy frontend
-  synchronize:
+  copy:
     src: ../../../website/frontend/
     dest: /home/ec2-user/frontend/
 
@@ -38,3 +38,8 @@
     group: nginx
     mode: '0744'
   become: yes
+
+- name: Delete frontend sources
+  file:
+    state: absent
+    path: /home/ec2-user/frontend
