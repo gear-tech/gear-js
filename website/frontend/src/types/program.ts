@@ -1,3 +1,5 @@
+import { AnyNumber } from '@polkadot/types/types';
+
 export enum ProgramStatus {
   Success = 'success',
   Failed = 'failed',
@@ -47,9 +49,9 @@ export interface UploadProgramModel {
 
 export interface MessageModel {
   destination: string;
-  gasLimit?: number;
+  gasLimit: AnyNumber;
   value: number;
-  payload: string;
+  payload: object;
   additional?: any;
 }
 

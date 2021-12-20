@@ -30,18 +30,6 @@ export interface NotificationState {
   error: null | string;
 }
 
-export interface NotificationRPCModel {
-  jsonrpc: string;
-  id: string;
-  result: NotificationPaginationModel;
-}
-
-export interface NotificationUnreadRPCModel {
-  jsonrpc: string;
-  id: string;
-  result: number;
-}
-
 export enum NotificationActionTypes {
   FETCH_NOTIFICATIONS = 'FETCH_NOTIFICATIONS',
   FETCH_NOTIFICATIONS_SUCCESS = 'FETCH_NOTIFICATIONS_SUCCESS',

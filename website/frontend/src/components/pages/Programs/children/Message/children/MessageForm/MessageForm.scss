@@ -14,11 +14,12 @@
   line-height: 24px;
   width: 194px;
   margin-top: 32px;
-}
 
-.message-form__button.disabled {
-  opacity: 0.2;
-  cursor: default;
+  &.disabled,
+  &[disabled] {
+    background: #5bffa5;
+    cursor: not-allowed;
+  }
 }
 
 .message-form__input-error {
@@ -90,7 +91,6 @@
 .message-form--info {
   display: flex;
   flex-direction: row;
-  align-items: center;
   margin-bottom: 24px;
   width: 100%;
 }
@@ -103,11 +103,11 @@
   margin-bottom: 0;
 }
 
-.message-form--info label {
+.message-form--info .message-form__field {
   color: #858585;
   font-weight: 300;
   font-size: 21px;
-  line-height: 130%;
+  line-height: 1.85;
   min-width: 164px;
 }
 

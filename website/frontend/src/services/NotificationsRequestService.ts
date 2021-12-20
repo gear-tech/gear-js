@@ -1,5 +1,5 @@
 import { PaginationModel } from 'types/common';
-import { NotificationRPCModel, NotificationUnreadRPCModel } from 'types/notification';
+import { NotificationPaginationModel } from 'types/notification';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 export default class NotificationsRequestService {
@@ -11,12 +11,12 @@ export default class NotificationsRequestService {
 
   protected readonly API_COUNT_UNREAD = 'event.countUnread';
 
-  public fetchAllNotifications(params: PaginationModel): Promise<NotificationRPCModel> {
-    return this.apiRequest.getResource(this.API_NOTIFIACTIONS_ALL, { ...params });
+  public fetchAllNotifications(params: PaginationModel) {
+    return this.apiRequest.callRPC<NotificationPaginationModel>(this.API_NOTIFIACTIONS_ALL, { ...params });
   }
 
-  public fetchUnreadNotificationsCount(): Promise<NotificationUnreadRPCModel> {
-    return this.apiRequest.getResource(this.API_COUNT_UNREAD, undefined, {});
+  public fetchUnreadNotificationsCount() {
+    return this.apiRequest.callRPC<number>(this.API_COUNT_UNREAD, undefined, {});
   }
 
   public markAsReadNotifications(notificationIds: number[]): Promise<any> {
