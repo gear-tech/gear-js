@@ -52,6 +52,7 @@ export async function getWasmMetadata(
       gr_gas_available: () => {},
       gr_wait: () => {},
       gr_wake: () => {},
+      gr_program_id: () => {},
     },
   };
 
