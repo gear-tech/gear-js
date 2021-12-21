@@ -1763,14 +1763,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api-interfaces@workspace:website/api-interfaces":
-  version: 0.0.0-use.local
-  resolution: "@gear-js/api-interfaces@workspace:website/api-interfaces"
-  dependencies:
-    typescript: ^4.2.3
-  languageName: unknown
-  linkType: soft
-
 "@gear-js/api@npm:^0.8.12, @gear-js/api@npm:^0.8.16":
   version: 0.8.18
   resolution: "@gear-js/api@npm:0.8.18"
