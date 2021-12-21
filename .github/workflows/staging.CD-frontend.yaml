@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build-api-backend-docker:
+  build-frontend-docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,7 +38,8 @@ jobs:
 
   Deploy-frontend:
     runs-on: ubuntu-latest
-    environment: staging_frontend
+    needs: build-frontend-docker
+    environment: staging
     steps:
       - name: Checkout
         uses: actions/checkout@v2
