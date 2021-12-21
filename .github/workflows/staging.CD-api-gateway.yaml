@@ -1,4 +1,4 @@
-name: CD api-gateway
+name: staging.api-gateway-CD
 
 on:
   push:

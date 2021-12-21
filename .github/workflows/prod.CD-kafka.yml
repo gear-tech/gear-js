@@ -1,4 +1,4 @@
-name: CD kafka
+name: production.kafka-CD
 
 on: [workflow_dispatch]
 

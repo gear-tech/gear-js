@@ -1,4 +1,4 @@
-name: CD events-listener
+name: production.events-listener-CD
 
 on: [workflow_dispatch]
 

@@ -1,4 +1,4 @@
-name: CD data-storage
+name: staging.data-storage-CD
 
 on:
   push:

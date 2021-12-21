@@ -1,4 +1,4 @@
-name: CD api-gateway
+name: production.api-gateway-CD
 
 on: [workflow_dispatch]
 

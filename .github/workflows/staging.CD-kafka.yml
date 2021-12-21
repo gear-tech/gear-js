@@ -1,4 +1,4 @@
-name: CD kafka
+name: staging.kafka-CD
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: CD test-balance
+name: production.test-balance-CD
 
 on: [workflow_dispatch]
 
@@ -17,18 +17,18 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
-          ROOT_ACCOUNT_SEED: ${{secrets.ROOT_ACCOUNT_SEED}}
-          TEST_ACCOUNT_SEED: ${{secrets.TEST_ACCOUNT_SEED}}
-          TEST_ACCOUNT_BALANCE: ${{secrets.TEST_ACCOUNT_BALANCE}}
+          DB_NAME: ${{ secrets.TEST_BALANCE_DB_NAME }}
+          DB_USER: ${{ secrets.TEST_BALANCE_DB_USER }}
+          DB_PASSWORD: ${{ secrets.TEST_BALANCE_DB_PASSWORD }}
+          DB_PORT: ${{ secrets.TEST_BALANCE_DB_PORT }}
+          DB_HOST: ${{ secrets.TEST_BALANCE_DB_HOST }}
+          WS_PROVIDER: ${{ secrets.TEST_BALANCE_WS_PROVIDER }}
+          ROOT_ACCOUNT_SEED: ${{secrets.TEST_BALANCE_TESTNET_ROOT_ACCOUNT_SEED}}
+          TEST_ACCOUNT_SEED: ${{secrets.TEST_BALANCE_ACCOUNT_SEED}}
+          TEST_ACCOUNT_BALANCE: ${{secrets.TEST_BALANCE_ACCOUNT_BALANCE}}
           TEST_BALANCE_VALUE: ${{secrets.TEST_BALANCE_VALUE}}
-          KAFKA_CLIENT_ID: ${{secrets.KAFKA_CLIENT_ID}}
-          KAFKA_GROUP_ID: ${{secrets.KAFKA_GROUP_ID}}
+          KAFKA_CLIENT_ID: ${{secrets.TEST_BALANCE_TESTNET_KAFKA_CLIENT_ID}}
+          KAFKA_GROUP_ID: ${{secrets.TEST_BALANCE_TESTNET_KAFKA_GROUP_ID}}
           KAFKA_BROKERS: ${{secrets.KAFKA_BROKERS}}
         with:
           # Required, playbook filepath

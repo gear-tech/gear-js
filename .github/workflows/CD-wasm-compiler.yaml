@@ -1,4 +1,4 @@
-name: CD wasm-compiler
+name: production.wasm-compiler-CD
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: CD test-balance
+name: staging.test-balance-CD
 
 on:
   push:

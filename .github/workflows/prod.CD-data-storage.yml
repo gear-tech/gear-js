@@ -1,4 +1,4 @@
-name: CD data-storage
+name: production.data-storage-CD
 
 on: [workflow_dispatch]
 
