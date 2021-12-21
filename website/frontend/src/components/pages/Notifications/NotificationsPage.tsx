@@ -99,6 +99,7 @@ export const NotificationsPage: VFC = () => {
   return (
     <div className="notifications">
       <SearchForm
+        placeholder="Find program by ID"
         handleSearch={handleAddQuery}
         handleRemoveQuery={handleRemoveQuery}
         handleDropdownItemSelect={handleSearchType}

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, VFC } from 'react';
 import clsx from 'clsx';
 import { Link /* , Redirect */ } from 'react-router-dom';
-import './ProgramSwitch.scss';
+import './TabSwitch.scss';
 import { routes } from 'routes';
 import { AddAlert } from 'store/actions/actions';
 import { EventTypes } from 'types/events';
@@ -10,14 +10,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
 import { useApi } from '../../../hooks/useApi';
-// import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
-// import Editor from 'assets/images/editor_icon.svg';
 
 type Props = {
   pageType: string;
 };
 
-export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
+export const TabSwitch: VFC<Props> = ({ pageType }) => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const apiRequest = new ServerRPCRequestService();
@@ -28,7 +26,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
 
   const [timeInstance, setTimeInstance] = useState(0);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
-  // const [chosenTemplateId, setChosenTemplateId] = useState<number>(-1);
 
   const { blocks } = useSelector((state: RootState) => state.blocks);
   const [totalIssuance, setTotalIssuance] = useState('');
@@ -84,12 +81,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
     setIsEditorDropdownOpened,
   ]);
 
-  // const handleEditorDropdown = () => {
-  //   if (!isEditorDropdownOpened) {
-  //     setIsEditorDropdownOpened(true);
-  //   }
-  // };
-
   const handleTransferBalance = async () => {
     try {
       if (!currentAccount) {
@@ -126,20 +117,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
     }
   };
 
-  // const handleTemplate = (index: number) => {
-  //   setChosenTemplateId(index);
-  // };
-
-  // if (chosenTemplateId > -1) {
-  //   return (
-  //     <Redirect
-  //       to={{
-  //         pathname: routes.editor,
-  //       }}
-  //     />
-  //   );
-  // }
-
   return (
     <div className="switch-block">
       <div className="switch-block--wrapper">
@@ -171,20 +148,16 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
           >
             All programs
           </Link>
-        </div>
-        {/* <div className="switch-block--editor">
-          <button
-            className={clsx('switch-block--editor__btn', isEditorDropdownOpened && 'is-active')}
-            type="button"
-            onClick={handleEditorDropdown}
+          <Link
+            to={routes.messages}
+            className={clsx(
+              'switch-buttons__item',
+              pageType === SWITCH_PAGE_TYPES.MESSAGES && 'switch-buttons__item--active'
+            )}
           >
-            <img src={Editor} alt="editor-icon" />
-            Write code
-          </button>
-          {isEditorDropdownOpened && (
-            <DropdownMenu dropdownMenuRef={dropdownMenuRef} handleDropdownBtnClick={handleTemplate} />
-          )}
-        </div> */}
+            Messages
+          </Link>
+        </div>
         <div className="switch-block--transfer">
           {gasCallCounter <= 3 ? (
             <button

@@ -2,7 +2,7 @@ import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
-import { Message } from 'components/pages/Programs/children/Message/Message';
+import { Message } from 'components/pages/Tabs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import {
@@ -18,7 +18,7 @@ import { ProgramModel } from 'types/program';
 import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload.svg';
 
-import { UserProgram } from 'components/pages/Programs/children/UserProgram/UserProgram';
+import { UserProgram } from 'components/pages/Tabs/children/UserProgram/UserProgram';
 
 type ProgramMessageType = {
   programName: string;

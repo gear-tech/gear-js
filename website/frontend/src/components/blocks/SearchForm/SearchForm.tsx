@@ -8,13 +8,20 @@ import { Schema } from './Schema';
 import './SearchForm.scss';
 
 type Props = {
+  placeholder: string;
   handleSearch: (searchQuery: string) => void;
   handleRemoveQuery: () => void;
   handleDropdownItemSelect?: (index: number) => void;
   searchType?: number;
 };
 
-export const SearchForm: VFC<Props> = ({ handleSearch, handleRemoveQuery, handleDropdownItemSelect, searchType }) => {
+export const SearchForm: VFC<Props> = ({
+  placeholder,
+  handleSearch,
+  handleRemoveQuery,
+  handleDropdownItemSelect,
+  searchType,
+}) => {
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
   const [isSearchDropdownOpened, setIsSearchDropdownOpened] = useState(false);
 
@@ -68,7 +75,7 @@ export const SearchForm: VFC<Props> = ({ handleSearch, handleRemoveQuery, handle
                 name="searchQuery"
                 type="text"
                 className="search-form__input"
-                placeholder="Find program by ID"
+                placeholder={placeholder}
               />
               {typeof searchType === 'number' && (
                 <div className="search-form--type">

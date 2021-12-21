@@ -4,7 +4,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
-import { Programs } from 'components/pages/Programs/Programs';
+import { Tabs } from 'components/pages/Tabs/Tabs';
 import { Program } from 'components/pages/Program/Program';
 import { Message } from 'components/pages/Message/Message';
 import { Header } from 'components/blocks/Header/Header';
@@ -101,8 +101,8 @@ const AppComponent: FC = () => {
           <Main>
             {isApiReady ? (
               <Switch>
-                <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
-                  <Programs />
+                <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
+                  <Tabs />
                 </Route>
                 <Route exact path={routes.program}>
                   <Program />

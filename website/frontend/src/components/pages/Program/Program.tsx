@@ -11,7 +11,7 @@ import {
   uploadMetaResetAction,
   resetProgramAction,
 } from 'store/actions/actions';
-import { Message } from 'components/pages/Programs/children/Message/Message';
+import { Message } from 'components/pages/Tabs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { formatDate } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
@@ -160,7 +160,10 @@ export const Program: VFC = () => {
           </div>
         </div>
       </div>
-      <MessageList programId={data.id} programName={data.name} />
+      <div className="messages-block">
+        <p className="messages-block__caption">NOTIFICATIONS</p>
+        <MessageList programId={data.id} programName={data.name} />
+      </div>
     </div>
   );
 };

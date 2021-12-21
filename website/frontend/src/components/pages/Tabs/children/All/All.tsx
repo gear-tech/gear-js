@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { Pagination } from 'components/Pagination/Pagination';
-import { Message } from 'components/pages/Programs/children/Message/Message';
+import { Message } from 'components/pages/Tabs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import {
@@ -120,6 +120,7 @@ export const All: VFC = () => {
       </div>
       <div>
         <SearchForm
+          placeholder="Find program by ID"
           handleRemoveQuery={() => {
             setSearch('');
             dispatch(resetProgramAction());

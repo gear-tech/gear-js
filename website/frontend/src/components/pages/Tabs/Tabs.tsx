@@ -5,29 +5,33 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { routes } from 'routes';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { SWITCH_PAGE_TYPES } from 'consts';
-import { All } from 'components/pages/Programs/children/All/All';
 import { useDispatch } from 'react-redux';
+import { Messages } from 'components/pages/Messages/Messages';
 import { fetchBlockAction } from '../../../store/actions/actions';
 import { useApi } from '../../../hooks/useApi';
-import { ProgramSwitch } from '../../blocks/ProgramSwitch/ProgramSwitch';
-import { Upload } from './children/Upload/Upload';
+import { TabSwitch } from '../../blocks/TabSwitch/TabSwitch';
 import { BlockList } from './children/BlocksList/BlocksList';
+import { All } from './children/All/All';
+import { Upload } from './children/Upload/Upload';
 import { Recent } from './children/Recent/Recent';
 
-import './Programs.scss';
+import './Tabs.scss';
 import { RecentNotifications } from '../../blocks/RecentNotifications/RecentNotifications';
 
-export const Programs: VFC = () => {
+export const Tabs: VFC = () => {
   const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);
   const isAllProgramsPage = useRouteMatch(routes.allPrograms);
+  const isMessagesPage = useRouteMatch(routes.messages);
   let currentPage = SWITCH_PAGE_TYPES.UPLOAD_PROGRAM;
-
+  console.log(currentPage);
   if (isUploadedProgramsPage) {
     currentPage = SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS;
   } else if (isAllProgramsPage) {
     currentPage = SWITCH_PAGE_TYPES.ALL_PROGRAMS;
+  } else if (isMessagesPage) {
+    currentPage = SWITCH_PAGE_TYPES.MESSAGES;
   }
-
+  console.log(currentPage);
   const [api] = useApi();
   const dispatch = useDispatch();
 
@@ -55,7 +59,7 @@ export const Programs: VFC = () => {
 
   return (
     <div className="main-content-wrapper">
-      <ProgramSwitch pageType={currentPage} />
+      <TabSwitch pageType={currentPage} />
       {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
         <>
           <DndProvider backend={HTML5Backend}>
@@ -66,6 +70,7 @@ export const Programs: VFC = () => {
       )}
       {currentPage === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && <Recent />}
       {currentPage === SWITCH_PAGE_TYPES.ALL_PROGRAMS && <All />}
+      {currentPage === SWITCH_PAGE_TYPES.MESSAGES && <Messages />}
       <RecentNotifications />
     </div>
   );

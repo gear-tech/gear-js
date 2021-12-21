@@ -1,7 +1,7 @@
 @import '../../../assets/scss/variables';
 
 .wrapper {
-  margin: 0 40px;
+  margin: 0 40px 80px 40px;
   @media (max-width: 768px) {
     margin: 0 20px;
   }
@@ -150,6 +150,14 @@
           }
         }
       }
+    }
+  }
+  .messages-block {
+    .messages-block__caption {
+      font-size: 21px;
+      color: $textColor;
+      text-transform: uppercase;
+      margin-bottom: 25px;
     }
   }
 }

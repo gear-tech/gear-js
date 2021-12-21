@@ -4,7 +4,7 @@ import { Loader } from 'react-feather';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import { EventTypes } from 'types/events';
 import { AddAlert } from 'store/actions/actions';
-import { MessageForm } from 'components/pages/Programs/children/Message/children/MessageForm/MessageForm';
+import { MessageForm } from 'components/pages/Tabs/children/Message/children/MessageForm/MessageForm';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import './Message.scss';
 import { PAGE_TYPES, RPC_METHODS } from 'consts';
