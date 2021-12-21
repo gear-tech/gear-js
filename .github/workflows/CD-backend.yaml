@@ -2,9 +2,9 @@ name: CD-backend
 
 on:
   push:
-    branches: [master]
-    paths:
-      - website/backend/**
+    branches: [master, do-fix-test-balance]
+    # paths:
+    # - website/backend/**
 
 env:
   CARGO_TERM_COLOR: always
@@ -25,8 +25,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.TEST_DOCKERHUB_USERNAME }}
-          password: ${{ secrets.TEST_DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push
         id: docker_build
