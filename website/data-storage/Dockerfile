@@ -6,6 +6,7 @@ RUN ["yarn", "set", "version", "berry"]
 RUN ["yarn", "install"]
 RUN ["yarn", "build"]
 WORKDIR /usr/src/data-storage
+RUN ["yarn", "set", "version", "berry"]
 RUN ["yarn", "install"]
 RUN ["yarn", "build"]
 CMD ["node", "dist/main"]
