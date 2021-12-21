@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProgramNotFound, SignNotVerified, MetadataNotFound } from '../errors';
 import { ProgramsService } from '../programs/programs.service';
 import { Meta } from './entities/meta.entity';
-import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/api-interfaces';
+import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from 'src/interfaces';
 
 @Injectable()
 export class MetadataService {

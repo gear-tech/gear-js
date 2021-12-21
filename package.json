@@ -3,10 +3,9 @@
   "private": true,
   "scripts": {
     "build:backend": "yarn build:eventListener && yarn build:apiBackend && yarn build:dataStorage",
-    "build:interfaces": "yarn workspace @gear-js/api-interfaces build",
     "build:eventListener": "yarn workspace @gear-js/event-listener build",
-    "build:apiBackend": "yarn build:interfaces && yarn workspace @gear-js/api-gateway build",
-    "build:dataStorage": "yarn build:interfaces && yarn workspace @gear-js/data-storage build",
+    "build:apiBackend": "yarn workspace @gear-js/api-gateway build",
+    "build:dataStorage": "yarn workspace @gear-js/data-storage build",
     "build:frontend": "yarn workspace @gear-js/frontend build",
     "build:testBalance": "yarn workspace @gear-js/test-balance build",
     "build:wasmCompiler": "yarn workspace @gear-js/wasm-compiler build",
@@ -23,7 +22,6 @@
   },
   "workspaces": [
     "website/api-gateway",
-    "website/api-interfaces",
     "website/data-storage",
     "website/events-listener",
     "website/frontend",

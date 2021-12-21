@@ -10,6 +10,7 @@
     "sourceMap": true,
     "outDir": "./build",
     "baseUrl": "./",
-    "incremental": true
+    "incremental": true,
+    "skipLibCheck": true
   }
 }

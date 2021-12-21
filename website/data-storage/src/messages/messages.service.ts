@@ -5,7 +5,7 @@ import { Message } from './entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
-import { AddPayloadParams, AllMessagesResult, GetMessagesParams } from '@gear-js/api-interfaces';
+import { AddPayloadParams, AllMessagesResult, GetMessagesParams } from 'src/interfaces';
 
 const logger = new Logger('MessageService');
 @Injectable()
