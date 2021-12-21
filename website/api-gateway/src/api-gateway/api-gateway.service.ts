@@ -12,7 +12,7 @@ import {
   GetMetaParams,
   GetOutgoingMessagesParams,
   GetTestBalanceParams,
-} from '@gear-js/backend-interfaces';
+} from '@gear-js/api-interfaces';
 import config from '../config/configuration';
 
 const logger = new Logger('ApiGatewayService');

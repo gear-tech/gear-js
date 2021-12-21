@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Meta } from 'src/metadata/entities/meta.entity';
 import { Repository } from 'typeorm';
 import { InitStatus, Program } from './entities/program.entity';
-import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from '@gear-js/backend-interfaces';
+import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from '@gear-js/api-interfaces';
 
 const logger = new Logger('ProgramDb');
 @Injectable()

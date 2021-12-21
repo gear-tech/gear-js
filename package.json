@@ -2,16 +2,18 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "build:backend": "yarn build:backendInterfaces && yarn build:eventListener && yarn build:apiBackend && yarn build:dataStorage",
-    "build:backendInterfaces": "yarn workspace @gear-js/backend-interfaces run build",
-    "build:eventListener": "yarn workspace @gear-js/event-listener run build",
-    "build:apiBackend": "yarn workspace @gear-js/api-gateway run build",
-    "build:dataStorage": "yarn workspace @gear-js/data-storage run build",
-    "build:frontend": "yarn workspace @gear-js/frontend run build",
-    "run:front": "PORT=3001 yarn workspace @gear-js/frontend run start",
-    "run:eventListener": "yarn workspace @gear-js/event-listener run start:dev",
-    "run:backend": "yarn workspace @gear-js/api-gateway run start:dev",
-    "run:dataStorage": "yarn workspace @gear-js/data-storage run start:dev",
+    "build:backend": "yarn build:eventListener && yarn build:apiBackend && yarn build:dataStorage",
+    "build:interfaces": "yarn workspace @gear-js/api-interfaces build",
+    "build:eventListener": "yarn workspace @gear-js/event-listener build",
+    "build:apiBackend": "yarn build:interfaces && yarn workspace @gear-js/api-gateway build",
+    "build:dataStorage": "yarn build:interfaces && yarn workspace @gear-js/data-storage build",
+    "build:frontend": "yarn workspace @gear-js/frontend build",
+    "build:testBalance": "yarn workspace @gear-js/test-balance build",
+    "build:wasmCompiler": "yarn workspace @gear-js/wasm-compiler build",
+    "run:front": "PORT=3001 yarn workspace @gear-js/frontend start",
+    "run:eventListener": "yarn workspace @gear-js/event-listener start:dev",
+    "run:backend": "yarn workspace @gear-js/api-gateway start:dev",
+    "run:dataStorage": "yarn workspace @gear-js/data-storage start:dev",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -19,7 +21,11 @@
     "lint-staged": "^11.1.2",
     "prettier": "^2.4.1"
   },
+  "workspaces": [
+    "website/*"
+  ],
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
-  }
+  },
+  "packageManager": "yarn@3.1.1"
 }

@@ -37,7 +37,7 @@
     "typeorm": "^0.2.38"
   },
   "devDependencies": {
-    "@gear-js/backend-interfaces": "file:../api-interfaces",
+    "@gear-js/api-interfaces": "file:../api-interfaces",
     "@nestjs/cli": "^8.1.6",
     "@nestjs/schematics": "^8.0.4",
     "@nestjs/testing": "^8.1.2",

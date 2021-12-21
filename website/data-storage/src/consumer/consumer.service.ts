@@ -11,7 +11,7 @@ import {
   AddPayloadParams,
   AllMessagesResult,
   GetMessagesParams,
-} from '@gear-js/backend-interfaces';
+} from '@gear-js/api-interfaces';
 import { MessagesService } from 'src/messages/messages.service';
 import { MetadataService } from 'src/metadata/metadata.service';
 import { InitStatus, Program } from 'src/programs/entities/program.entity';
