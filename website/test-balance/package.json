@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@gear-js/api": "^0.8.16",
-    "@polkadot/api": "^6.12.1",
+    "@polkadot/api": "^7.0.2",
     "chalk": "^4.1.2",
     "kafkajs": "^1.15.0",
     "pg": "^8.7.1",
