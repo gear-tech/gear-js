@@ -12,6 +12,27 @@ services:
     ports:
       - '5434:5432'
 
+  test_balance_testnet:
+    image: mithriy/gear-test-balance:nightly
+    restart: always
+    depends_on:
+      - pg_test_balance
+    environment:
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
+      - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
+      - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=pg_test_balance
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID_TESTNET}
+      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID_TESTNET}
+      - WS_PROVIDER=${WS_PROVIDER_TESTNET}
+      - ROOT_ACCOUNT_SEED=${ROOT_ACCOUNT_SEED_TESTNET}
+      - TEST_ACCOUNT_SEED=${TEST_ACCOUNT_SEED}
+      - TEST_ACCOUNT_BALANCE=${TEST_ACCOUNT_BALANCE_TESTNET}
+      - TEST_BALANCE_VALUE=${TEST_BALANCE_VALUE_TESTNET}
+
   test_balance_wrsh:
     image: mithriy/gear-test-balance:nightly
     restart: always

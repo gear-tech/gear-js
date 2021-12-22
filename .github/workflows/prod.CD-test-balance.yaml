@@ -9,7 +9,7 @@ jobs:
   Deploy:
     needs: Build-backend-docker
     runs-on: ubuntu-latest
-    environment: staging_test_balance_service
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -17,19 +17,26 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
+          KAFKA_BROKERS: ${{secrets.KAFKA_BROKERS}}
+          KAFKA_SASL_USERNAME: ${{ secrets.KAFKA_SASL_USERNAME }}
+          KAFKA_SASL_PASSWORD: ${{ secrets.KAFKA_SASL_PASSWORD }}
           DB_NAME: ${{ secrets.TEST_BALANCE_DB_NAME }}
           DB_USER: ${{ secrets.TEST_BALANCE_DB_USER }}
           DB_PASSWORD: ${{ secrets.TEST_BALANCE_DB_PASSWORD }}
-          DB_PORT: ${{ secrets.TEST_BALANCE_DB_PORT }}
-          DB_HOST: ${{ secrets.TEST_BALANCE_DB_HOST }}
-          WS_PROVIDER: ${{ secrets.TEST_BALANCE_WS_PROVIDER }}
-          ROOT_ACCOUNT_SEED: ${{secrets.TEST_BALANCE_TESTNET_ROOT_ACCOUNT_SEED}}
-          TEST_ACCOUNT_SEED: ${{secrets.TEST_BALANCE_ACCOUNT_SEED}}
-          TEST_ACCOUNT_BALANCE: ${{secrets.TEST_BALANCE_ACCOUNT_BALANCE}}
-          TEST_BALANCE_VALUE: ${{secrets.TEST_BALANCE_VALUE}}
-          KAFKA_CLIENT_ID: ${{secrets.TEST_BALANCE_TESTNET_KAFKA_CLIENT_ID}}
-          KAFKA_GROUP_ID: ${{secrets.TEST_BALANCE_TESTNET_KAFKA_GROUP_ID}}
-          KAFKA_BROKERS: ${{secrets.KAFKA_BROKERS}}
+          TEST_ACCOUNT_SEED: ${{ secrets.TEST_BALANCE_ACCOUNT_SEED }}
+          KAFKA_CLIENT_ID_TESTNET: ${{ secrets.TEST_BALANCE_KAFKA_CLIENT_ID_TESTNET }}
+          KAFKA_GROUP_ID_TESTNET: ${{ secrets.TEST_BALANCE_KAFKA_GROUP_ID_TESTNET }}
+          WS_PROVIDER_TESTNET: ${{ secrets.TEST_BALANCE_WS_PROVIDER_TESTNET }}
+          ROOT_ACCOUNT_SEED_TESTNET: ${{ secrets.TEST_BALANCE_ROOT_ACCOUNT_SEED_TESTNET }}
+          TEST_ACCOUNT_BALANCE_TESTNET: ${{ secrets.TEST_BALANCE_ACCOUNT_BALANCE_TESTNET }}
+          TEST_BALANCE_VALUE_TESTNET: ${{ secrets.TEST_BALANCE_VALUE_TESTNET }}
+          KAFKA_CLIENT_ID_WRSH: ${{ secrets.TEST_BALANCE_KAFKA_CLIENT_ID_WRSH }}
+          KAFKA_GROUP_ID_WRSH: ${{ secrets.TEST_BALANCE_KAFKA_GROUP_ID_WRSH }}
+          WS_PROVIDER_WRSH: ${{ secrets.TEST_BALANCE_WS_PROVIDER_WRSH }}
+          ROOT_ACCOUNT_SEED_WRSH: ${{ secrets.TEST_BALANCE_ROOT_ACCOUNT_SEED_WRSH }}
+          TEST_ACCOUNT_BALANCE_WRSH: ${{ secrets.TEST_BALANCE_ACCOUNT_BALANCE_WRSH }}
+          TEST_BALANCE_VALUE_WRSH: ${{ secrets.TEST_BALANCE_VALUE_WRSH }}
+
         with:
           # Required, playbook filepath
           directory: ./ansible/tasks/test-balance

@@ -19,6 +19,8 @@ jobs:
           KAFKA_CLIENT_ID: ${{ secrets.API_GATEWAY_KAFKA_CLIENT_ID }}
           KAFKA_GROUP_ID: ${{ secrets.API_GATEWAY_KAFKA_GROUP_ID }}
           KAFKA_BROKERS: ${{ secrets.KAFKA_BROKERS }}
+          KAFKA_SASL_USERNAME: ${{ secrets.KAFKA_SASL_USERNAME }}
+          KAFKA_SASL_PASSWORD: ${{ secrets.KAFKA_SASL_PASSWORD }}
 
         with:
           directory: ./ansible/tasks/api-gateway

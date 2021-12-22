@@ -9,7 +9,7 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
     needs: build-events-listener-docker
-    environment: staging-events-listener
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -17,9 +17,13 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
-          WS_PROVIDER: ${{ secrets.EVENTS_LISTENER_TESTNET_WS_PROVIDER }}
           KAFKA_BROKERS: ${{ secrets.KAFKA_BROKERS }}
-          KAFKA_CLIENT_ID: ${{ secrets.EVENTS_LISTENER_TESTNET_KAFKA_CLIENT_ID }}
+          KAFKA_SASL_USERNAME: ${{ secrets.KAFKA_SASL_USERNAME }}
+          KAFKA_SASL_PASSWORD: ${{ secrets.KAFKA_SASL_PASSWORD }}
+          WS_PROVIDER_TESTNET: ${{ secrets.EVENTS_LISTENER_TESTNET_WS_PROVIDER }}
+          KAFKA_CLIENT_ID_TESTNET: ${{ secrets.EVENTS_LISTENER_TESTNET_KAFKA_CLIENT_ID }}
+          WS_PROVIDER_WRSH: ${{ secrets.EVENTS_LISTENER_TESTNET_WS_PROVIDER }}
+          KAFKA_CLIENT_ID_WRSH: ${{ secrets.EVENTS_LISTENER_TESTNET_KAFKA_CLIENT_ID }}
 
         with:
           directory: ./ansible/tasks/events-listener

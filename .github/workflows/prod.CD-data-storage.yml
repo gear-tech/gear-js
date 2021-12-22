@@ -23,6 +23,8 @@ jobs:
           KAFKA_CLIENT_ID: ${{ secrets.DATA_STORAGE_KAFKA_CLIENT_ID }}
           KAFKA_GROUP_ID: ${{ secrets.DATA_STORAGE_KAFKA_GROUP_ID }}
           KAFKA_BROKERS: ${{ secrets.KAFKA_BROKERS }}
+          KAFKA_SASL_USERNAME: ${{ secrets.KAFKA_SASL_USERNAME }}
+          KAFKA_SASL_PASSWORD: ${{ secrets.KAFKA_SASL_PASSWORD }}
 
         with:
           directory: ./ansible/tasks/data-storage
