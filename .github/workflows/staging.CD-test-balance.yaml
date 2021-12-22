@@ -39,7 +39,7 @@ jobs:
   Deploy:
     needs: Build-backend-docker
     runs-on: ubuntu-latest
-    environment: staging_test_balance_service
+    environment: staging
     steps:
       - name: Checkout
         uses: actions/checkout@v2
