@@ -48,6 +48,7 @@ export class ConsumerController {
 
   @MessagePattern('message.all')
   async allMessages(@Payload() payload) {
+    console.log(payload.value);
     const result = await this.consumerService.allMessages(payload.value);
     return JSON.stringify(result);
   }
