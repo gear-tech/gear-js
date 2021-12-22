@@ -4,8 +4,7 @@ on:
   push:
     branches: [master, do-event-listener]
     paths:
-      - ansible/tasks/kafka/docker-compose.yaml
-      - ansible/tasks/kafka/kafka.yaml
+      - ansible/tasks/kafka/**
 
 env:
   CARGO_TERM_COLOR: always
@@ -13,7 +12,7 @@ env:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
-    environment: staging_kafka
+    environment: staging
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,7 +20,6 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
-          KAFKA_PORT: ${{ secrets.KAFKA_PORT}}
           KAFKA_HOST_NAME: ${{ secrets.KAFKA_HOST_NAME }}
 
         with:

@@ -40,3 +40,5 @@
         KAFKA_CLIENT_ID: "{{ lookup('env', 'KAFKA_CLIENT_ID') }}"
         KAFKA_GROUP_ID: "{{ lookup('env', 'KAFKA_GROUP_ID') }}"
         KAFKA_BROKERS: "{{ lookup('env', 'KAFKA_BROKERS') }}"
+        KAFKA_SASL_USERNAME: "{{ lookup('env', 'KAFKA_SASL_USERNAME') }}"
+        KAFKA_SASL_PASSWORD: "{{ lookup('env', 'KAFKA_SASL_PASSWORD') }}"

@@ -32,4 +32,3 @@
       become: yes
       environment:
         - KAFKA_HOST_NAME: "{{ lookup('env','KAFKA_HOST_NAME') }}"
-        - KAFKA_PORT: "{{ lookup('env','KAFKA_PORT') }}"

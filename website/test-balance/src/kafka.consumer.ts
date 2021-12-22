@@ -20,6 +20,11 @@ export class KafkaConsumer {
       clientId: config.kafka.clientId,
       brokers: config.kafka.brokers,
       logCreator: KafkaLogger,
+      sasl: {
+        mechanism: 'plain',
+        username: config.kafka.sasl.username,
+        password: config.kafka.sasl.password,
+      },
     });
     this.consumer = this.kafka.consumer({ groupId: config.kafka.groupId });
     this.producer = this.kafka.producer();

@@ -5,7 +5,9 @@ import { ConsumerService } from './consumer.service';
 import { MetadataModule } from 'src/metadata/metadata.module';
 import { ProgramsModule } from 'src/programs/programs.module';
 import { MessagesModule } from 'src/messages/messages.module';
+import configuration from 'src/config/configuration';
 
+const configKafka = configuration().kafka;
 @Module({
   imports: [
     ClientsModule.register([
@@ -14,11 +16,16 @@ import { MessagesModule } from 'src/messages/messages.module';
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'data_storage',
-            brokers: ['localhost:9092'],
+            clientId: configKafka.clientId,
+            brokers: configKafka.brokers,
+            sasl: {
+              mechanism: 'plain',
+              username: configKafka.sasl.username,
+              password: configKafka.sasl.password,
+            },
           },
           consumer: {
-            groupId: 'data_storage',
+            groupId: configKafka.groupId,
           },
         },
       },

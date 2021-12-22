@@ -1,9 +1,20 @@
 version: '3'
 services:
-  events:
+  events_testnet:
     image: mithriy/gear-event-listener:nightly
     restart: always
     environment:
-      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
+      - WS_PROVIDER=${WS_PROVIDER_TESTNET}
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID_TESTNET}
       - KAFKA_BROKERS=${KAFKA_BROKERS}
-      - WS_PROVIDER=${WS_PROVIDER}
+      - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
+      - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
+  events_wrsh:
+    image: mithriy/gear-event-listener:nightly
+    restart: always
+    environment:
+      - WS_PROVIDER=${WS_PROVIDER_WRSH}
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID_WRSH}
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
+      - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
+      - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}

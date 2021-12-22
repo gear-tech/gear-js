@@ -34,6 +34,10 @@
         /usr/local/bin/docker-compose -f "/home/ec2-user/events-listener/docker-compose.yaml" up -d
       become: yes
       environment:
-        WS_PROVIDER: "{{ lookup('env','WS_PROVIDER') }}"
-        KAFKA_CLIENT_ID: "{{ lookup('env','KAFKA_CLIENT_ID') }}"
+        KAFKA_SASL_USERNAME: "{{ lookup('env','KAFKA_SASL_USERNAME') }}"
+        KAFKA_SASL_PASSWORD: "{{ lookup('env','KAFKA_SASL_PASSWORD') }}"
         KAFKA_BROKERS: "{{ lookup('env','KAFKA_BROKERS') }}"
+        WS_PROVIDER_TESTNET: "{{ lookup('env','WS_PROVIDER_TESTNET') }}"
+        KAFKA_CLIENT_ID_TESTNET: "{{ lookup('env','KAFKA_CLIENT_ID_TESTNET') }}"
+        WS_PROVIDER_WRSH: "{{ lookup('env','WS_PROVIDER_WRSH') }}"
+        KAFKA_CLIENT_ID_WRSH: "{{ lookup('env','KAFKA_CLIENT_ID_WRSH') }}"

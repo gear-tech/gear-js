@@ -7,6 +7,10 @@ export default {
     clientId: process.env.KAFKA_CLIENT_ID,
     groupId: process.env.KAFKA_GROUP_ID,
     brokers: process.env.KAFKA_BROKERS.split(','),
+    sasl: {
+      username: process.env.KAFKA_SASL_USERNAME,
+      password: process.env.KAFKA_SASL_PASSWORD,
+    },
   },
   db: {
     port: parseInt(process.env.DB_PORT, 10) || 5432,

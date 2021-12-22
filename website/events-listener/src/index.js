@@ -9,13 +9,13 @@ const log = logger('Main');
 const main = async () => {
   log.info('App is running...');
   console.log(config);
-  const producer = new KafkaProducer(config.kafka.clientId, config.kafka.brokers);
   const api = await GearApi.create({ providerAddress: config.api.provider });
-  await producer.createTopic('events');
-  await producer.connect();
   const chain = await api.chain();
   const genesis = api.genesisHash.toHex();
   log.info(`Connected to ${chain} with genesis ${genesis}`);
+  const producer = new KafkaProducer();
+  await producer.createTopic('events');
+  await producer.connect();
   listen(api, ({ key, value }) => {
     producer.send(key, value, chain, genesis);
   });

@@ -6,7 +6,6 @@ services:
     ports:
       - '2181:2181'
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOO_MAX_SESSION_TIMEOUT=50000
 
   kafka:
@@ -17,9 +16,13 @@ services:
     depends_on:
       - zookeeper
     environment:
-      KAFKA_BROKER_ID: 1
+      KAFKA_BROKER_ID: 0
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:${KAFKA_PORT}
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://${KAFKA_HOST_NAME}:${KAFKA_PORT}
-      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_LISTENERS: SASL_PLAINTEXT://:9094
+      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://${KAFKA_HOST_NAME}:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: SASL_PLAINTEXT
+      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf'
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+    volumes:
+      - ./jaas.conf:/etc/kafka/kafka_server_jaas.conf

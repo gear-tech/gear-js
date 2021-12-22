@@ -11,6 +11,11 @@ async function bootstrap() {
       client: {
         clientId: configKafka.clientId,
         brokers: configKafka.brokers,
+        sasl: {
+          mechanism: 'plain',
+          username: configKafka.sasl.username,
+          password: configKafka.sasl.password,
+        },
       },
       consumer: {
         groupId: configKafka.groupId,

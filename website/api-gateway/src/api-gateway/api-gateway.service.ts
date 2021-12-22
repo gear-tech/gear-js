@@ -13,25 +13,31 @@ import {
   GetOutgoingMessagesParams,
   GetTestBalanceParams,
 } from 'src/interfaces';
-import config from '../config/configuration';
+import config from 'src/config/configuration';
 
 const logger = new Logger('ApiGatewayService');
-
+const configKafka = config().kafka;
 @Injectable()
 export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit {
   constructor() {
     super();
     console.log(config().kafka.brokers);
   }
+
   @Client({
     transport: Transport.KAFKA,
     options: {
       client: {
-        clientId: config().kafka.clientId,
-        brokers: config().kafka.brokers,
+        clientId: configKafka.clientId,
+        brokers: configKafka.brokers,
+        sasl: {
+          mechanism: 'plain',
+          username: configKafka.sasl.username,
+          password: configKafka.sasl.password,
+        },
       },
       consumer: {
-        groupId: config().kafka.groupId,
+        groupId: configKafka.groupId,
       },
     },
   })

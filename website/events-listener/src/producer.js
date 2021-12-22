@@ -1,31 +1,56 @@
 import { Kafka } from 'kafkajs';
 import { logger } from './logger.js';
+import config from './config.js';
 
 const log = logger('KafkaProducer');
 
 export class KafkaProducer {
-  constructor(clientId, brokers) {
+  constructor() {
     this.kafka = new Kafka({
-      clientId,
-      brokers,
+      clientId: config.kafka.clientId,
+      brokers: config.kafka.brokers,
+      sasl: {
+        mechanism: 'plain',
+        username: config.kafka.sasl.username,
+        password: config.kafka.sasl.password,
+      },
     });
     this.producer = this.kafka.producer();
   }
 
   async createTopic(topic) {
     const admin = this.kafka.admin();
-    const topics = await admin.listTopics();
-    if (!topics.includes(topic)) {
-      await admin.createTopics({
-        topics: [
-          {
-            topic,
-          },
-        ],
-      });
-      log.info(`Topic <${topic}> created`);
+    try {
+      await admin.connect();
+      log.info('Admin is connected');
+    } catch (error) {
+      log.error(error);
+      log.error('Admin is not connected');
+      throw error;
     }
-    log.warn(`Topic <${topic}> already existed`);
+    try {
+      const topics = await admin.listTopics();
+      if (!topics.includes(topic)) {
+        await admin.createTopics({
+          waitForLeaders: true,
+          topics: [
+            {
+              topic,
+            },
+          ],
+        });
+        log.info(`Topic <${topic}> created`);
+      } else {
+        log.warn(`Topic <${topic}> already existed`);
+      }
+    } catch (error) {
+      log.error(error);
+      await admin.disconnect();
+      log.info('Admin is disconnected');
+      throw error;
+    }
+    await admin.disconnect();
+    log.info('Admin is disconnected');
   }
 
   async connect() {
