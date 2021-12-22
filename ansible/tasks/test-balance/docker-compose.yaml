@@ -12,26 +12,26 @@ services:
     ports:
       - '5434:5432'
 
-  backend_test_balance:
+  test_balance_wrsh:
     image: mithriy/gear-test-balance:nightly
     restart: always
     depends_on:
       - pg_test_balance
     environment:
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
+      - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
+      - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=pg_test_balance
-      - WS_PROVIDER=${WS_PROVIDER}
-      - ROOT_ACCOUNT_SEED=${ROOT_ACCOUNT_SEED}
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID_WRSH}
+      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID_WRSH}
+      - WS_PROVIDER=${WS_PROVIDER_WRSH}
+      - ROOT_ACCOUNT_SEED=${ROOT_ACCOUNT_SEED_WRSH}
       - TEST_ACCOUNT_SEED=${TEST_ACCOUNT_SEED}
-      - TEST_ACCOUNT_BALANCE=${TEST_ACCOUNT_BALANCE}
-      - TEST_BALANCE_VALUE=${TEST_BALANCE_VALUE}
-      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
-      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
-      - KAFKA_BROKERS=${KAFKA_BROKERS}
-      - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
-      - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
+      - TEST_ACCOUNT_BALANCE=${TEST_ACCOUNT_BALANCE_WRSH}
+      - TEST_BALANCE_VALUE=${TEST_BALANCE_VALUE_WRSH}
 
 volumes:
   get_balance_pg_data:

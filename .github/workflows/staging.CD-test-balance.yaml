@@ -47,21 +47,19 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         env:
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          WS_PROVIDER: ${{ secrets.WS_PROVIDER }}
-          ROOT_ACCOUNT_SEED: ${{secrets.ROOT_ACCOUNT_SEED}}
-          TEST_ACCOUNT_SEED: ${{secrets.TEST_ACCOUNT_SEED}}
-          TEST_ACCOUNT_BALANCE: ${{secrets.TEST_ACCOUNT_BALANCE}}
-          TEST_BALANCE_VALUE: ${{secrets.TEST_BALANCE_VALUE}}
-          KAFKA_CLIENT_ID: ${{secrets.KAFKA_CLIENT_ID}}
-          KAFKA_GROUP_ID: ${{secrets.KAFKA_GROUP_ID}}
           KAFKA_BROKERS: ${{secrets.KAFKA_BROKERS}}
           KAFKA_SASL_USERNAME: ${{ secrets.KAFKA_SASL_USERNAME }}
           KAFKA_SASL_PASSWORD: ${{ secrets.KAFKA_SASL_PASSWORD }}
+          DB_NAME: ${{ secrets.TEST_BALANCE_DB_NAME }}
+          DB_USER: ${{ secrets.TEST_BALANCE_DB_USER }}
+          DB_PASSWORD: ${{ secrets.TEST_BALANCE_DB_PASSWORD }}
+          KAFKA_CLIENT_ID_WRSH: ${{ secrets.TEST_BALANCE_KAFKA_CLIENT_ID_WRSH }}
+          KAFKA_GROUP_ID_WRSH: ${{ secrets.TEST_BALANCE_KAFKA_GROUP_ID_WRSH }}
+          WS_PROVIDER_WRSH: ${{ secrets.TEST_BALANCE_WS_PROVIDER_WRSH }}
+          ROOT_ACCOUNT_SEED_WRSH: ${{ secrets.TEST_BALANCE_ROOT_ACCOUNT_SEED_WRSH }}
+          TEST_ACCOUNT_SEED: ${{ secrets.TEST_BALANCE_ACCOUNT_SEED }}
+          TEST_ACCOUNT_BALANCE_WRSH: ${{ secrets.TEST_BALANCE_ACCOUNT_BALANCE_WRSH }}
+          TEST_BALANCE_VALUE_WRSH: ${{ secrets.TEST_BALANCE_VALUE_WRSH }}
 
         with:
           # Required, playbook filepath

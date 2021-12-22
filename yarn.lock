@@ -1763,7 +1763,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:^0.8.12, @gear-js/api@npm:^0.8.16":
+"@gear-js/api@npm:^0.8.18":
   version: 0.8.18
   resolution: "@gear-js/api@npm:0.8.18"
   peerDependencies:
@@ -1777,7 +1777,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
   dependencies:
-    "@gear-js/api": ^0.8.12
+    "@gear-js/api": ^0.8.18
     "@nestjs/cli": ^8.1.6
     "@nestjs/common": ^8.1.2
     "@nestjs/config": ^1.0.3
@@ -1817,7 +1817,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/event-listener@workspace:website/events-listener"
   dependencies:
-    "@gear-js/api": ^0.8.12
+    "@gear-js/api": ^0.8.18
     "@polkadot/api": ^7.0.2
     avsc: ^5.7.3
     chalk: ^4.1.2
@@ -1833,7 +1833,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": ^6.2.0
-    "@gear-js/api": ^0.8.16
+    "@gear-js/api": ^0.8.18
     "@monaco-editor/react": ^4.2.1
     "@polkadot/api": ^7.0.2
     "@polkadot/extension-dapp": ^0.42.2
@@ -1908,7 +1908,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:website/test-balance"
   dependencies:
-    "@gear-js/api": ^0.8.16
+    "@gear-js/api": ^0.8.18
     "@polkadot/api": ^7.0.2
     chalk: ^4.1.2
     dotenv: ^10.0.0
