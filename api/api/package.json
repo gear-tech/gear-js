@@ -16,11 +16,11 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "^6.9.2",
+    "@polkadot/api": "^7.0.2",
     "rxjs": "^7.3.0"
   },
   "devDependencies": {
-    "typescript": "^4.4.2",
+    "typescript": "^4.5.4",
     "mocha": "^9.1.1",
     "prettier": "^2.3.2",
     "tslint": "^6.1.3"
