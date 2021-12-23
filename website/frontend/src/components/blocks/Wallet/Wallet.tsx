@@ -13,6 +13,7 @@ import { Modal } from '../Modal';
 import { AccountList } from '../AccountList';
 
 import './Wallet.scss';
+import { nodeApi } from '../../../api/initApi';
 
 export const Wallet = () => {
   const [injectedAccounts, setInjectedAccounts] = useState<Array<UserAccount> | null>(null);
@@ -52,53 +53,33 @@ export const Wallet = () => {
       .catch((err) => console.error(err));
   }, [dispatch, getAllAccounts]);
 
-  // Get free balance for the chosen account
-  // useEffect(() => {
-  //   const getBalance = async (address: string) => {
-  //     const freeBalance = await api.balance.findOut(address);
-  //     setAccountBalance(freeBalance.toHuman());
-  //   };
-  //
-  //   if (currentAccount && api) {
-  //     getBalance(currentAccount.address);
-  //   }
-  // }, [currentAccount, api, dispatch]);
-
-  const readAccount = useCallback(async () => {
-    // Retrieve the initial balance. Since the call has no callback, it is simply a promise
-    // that resolves to the current on-chain value
-    // @ts-ignore
-    let {
-      // @ts-ignore
-      data: { free: previousFree },
-      // @ts-ignore
-      nonce: previousNonce,
-    } = await api.query.system.account(currentAccount?.address);
-
-    console.log(`${currentAccount?.address} has a balance of ${previousFree}, nonce ${previousNonce}`);
-    console.log(
-      `You may leave this example running and start example 06 or transfer any value to ${currentAccount?.address}`
-    );
-
-    // @ts-ignore
-    api.query.system.account(currentAccount?.address, ({ data: { free: currentFree }, nonce: currentNonce }) => {
-      // Calculate the delta
-      const change = currentFree.sub(previousFree);
-
-      // Only display positive value changes (Since we are pulling `previous` above already,
-      // the initial balance change will also be zero)
-      if (!change.isZero()) {
-        console.log(`New balance change of ${change}, nonce ${currentNonce}`);
-
-        previousFree = currentFree;
-        previousNonce = currentNonce;
-      }
-    });
-  }, [currentAccount?.address, api]);
+  const getBalance = useCallback(
+    async (address: string) => {
+      const freeBalance = await api.balance.findOut(address);
+      return freeBalance;
+    },
+    [api]
+  );
 
   useEffect(() => {
-    readAccount().catch((err) => console.error(err));
-  });
+    if (currentAccount && api) {
+      getBalance(currentAccount.address).then((result) => {
+        setAccountBalance(result.toHuman());
+      });
+    }
+  }, [currentAccount, api, dispatch, getBalance]);
+
+  useEffect(() => {
+    if (currentAccount) {
+      nodeApi.subscribeBalanceChange(currentAccount.address, (balance) => {
+        setAccountBalance(balance.toHuman());
+      });
+    }
+
+    return () => {
+      nodeApi.unsubscribeBalanceChange();
+    };
+  }, [currentAccount]);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);

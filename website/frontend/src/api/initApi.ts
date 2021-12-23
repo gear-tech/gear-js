@@ -1,8 +1,7 @@
 import { GearApi } from '@gear-js/api';
-
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api/types/types';
+import { Balance } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api/types/types';
 import { API_CONNECTION_ADDRESS } from '../consts';
 
 class NodeApi {
@@ -78,6 +77,22 @@ class NodeApi {
     if ('subscribeTransferEvents' in this.subscriptions) {
       (async () => {
         (await this.subscriptions.subscribeTransferEvents)();
+      })();
+    }
+  }
+
+  public subscribeBalanceChange(address: string, cb: (event: Balance) => void) {
+    if (this._api && !('balanceEvents' in this.subscriptions)) {
+      this.subscriptions.balanceEvents = this._api.gearEvents.subsribeBalanceChange(address, (val) => {
+        cb(val);
+      });
+    }
+  }
+
+  public unsubscribeBalanceChange() {
+    if ('balanceEvents' in this.subscriptions) {
+      (async () => {
+        (await this.subscriptions.balanceEvents)();
       })();
     }
   }
