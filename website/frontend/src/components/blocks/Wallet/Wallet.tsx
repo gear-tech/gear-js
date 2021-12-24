@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { useDispatch, useSelector } from 'react-redux';
 import Identicon from '@polkadot/react-identicon';
 import { GearKeyring } from '@gear-js/api';
@@ -26,15 +25,20 @@ export const Wallet = () => {
   const currentAccount = useSelector((state: RootState) => state.account.account);
 
   const getAllAccounts = useCallback(async () => {
-    const extensions = await web3Enable('Gear Tech');
+    if (typeof window !== `undefined`) {
+      const { web3Accounts, web3Enable, isWeb3Injected } = await import('@polkadot/extension-dapp');
 
-    // if extansion does not exist
-    if (extensions.length === 0) {
+      await web3Enable('Gear App');
+
+      if (isWeb3Injected) {
+        const accounts: UserAccount[] = await web3Accounts();
+        return accounts;
+      }
+
       return null;
     }
-    const accounts = await web3Accounts();
 
-    return accounts;
+    return null;
   }, []);
 
   useEffect(() => {
