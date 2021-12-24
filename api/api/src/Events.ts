@@ -1,8 +1,7 @@
-import { GearApi } from '.';
+import { GearApi, IBalanceCallback, IBlocksCallback, IEventCallback } from '.';
 import { LogEvent, ProgramEvent, TransferEvent } from './types';
-import { Header } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { Balance } from '@polkadot/types/interfaces';
+import { ISystemAccountInfo } from './interfaces/system';
 
 export class GearEvents {
   private api: GearApi;
@@ -11,73 +10,55 @@ export class GearEvents {
     this.api = gearApi;
   }
 
-  subscribeLogEvents(callback: (event: LogEvent) => void | Promise<void>): UnsubscribePromise {
-    try {
-      return this.api.query.system.events((events) => {
-        events
-          .filter(({ event }) => this.api.events.gear.Log.is(event))
-          .forEach(({ event }) => {
-            setTimeout(() => {
-              callback(new LogEvent(event));
-            }, 100);
-          });
-      });
-    } catch (error) {
-      throw error;
-    }
+  subscribeLogEvents(callback: IEventCallback<LogEvent>): UnsubscribePromise {
+    return this.api.query.system.events((events) => {
+      events
+        .filter(({ event }) => this.api.events.gear.Log.is(event))
+        .forEach(({ event }) => {
+          setTimeout(() => {
+            callback(new LogEvent(event));
+          }, 100);
+        });
+    });
   }
 
-  subscribeProgramEvents(callback: (event: ProgramEvent) => void | Promise<void>): UnsubscribePromise {
-    try {
-      return this.api.query.system.events((events) => {
-        events
-          .filter(
-            ({ event }) => this.api.events.gear.InitSuccess.is(event) || this.api.events.gear.InitFailure.is(event),
-          )
-          .forEach(({ event }) => {
-            setTimeout(() => {
-              callback(new ProgramEvent(event));
-            }, 100);
-          });
-      });
-    } catch (error) {
-      throw error;
-    }
+  subscribeProgramEvents(callback: IEventCallback<ProgramEvent>): UnsubscribePromise {
+    return this.api.query.system.events((events) => {
+      events
+        .filter(({ event }) => this.api.events.gear.InitSuccess.is(event) || this.api.events.gear.InitFailure.is(event))
+        .forEach(({ event }) => {
+          setTimeout(() => {
+            callback(new ProgramEvent(event));
+          }, 100);
+        });
+    });
   }
 
-  subscribeTransferEvents(callback: (event: TransferEvent) => void | Promise<void>): UnsubscribePromise {
-    try {
-      return this.api.query.system.events((events) => {
-        events
-          .filter(({ event }) => this.api.events.balances.Transfer.is(event))
-          .forEach(({ event }) => {
-            callback(new TransferEvent(event));
-          });
-      });
-    } catch (error) {
-      throw error;
-    }
+  subscribeTransferEvents(callback: IEventCallback<TransferEvent>): UnsubscribePromise {
+    return this.api.query.system.events((events) => {
+      events
+        .filter(({ event }) => this.api.events.balances.Transfer.is(event))
+        .forEach(({ event }) => {
+          callback(new TransferEvent(event));
+        });
+    });
   }
 
-  subscribeNewBlocks(callback: (header: Header) => void | Promise<void>): UnsubscribePromise {
-    try {
-      return this.api.rpc.chain.subscribeNewHeads((header) => {
-        callback(header);
-      });
-    } catch (error) {}
+  subscribeNewBlocks(callback: IBlocksCallback): UnsubscribePromise {
+    return this.api.rpc.chain.subscribeNewHeads((header) => {
+      callback(header);
+    });
   }
 
-  async subsribeBalanceChange(accountAddress: string, callback: (currentBalance: Balance) => void): Promise<void> {
+  async subsribeBalanceChange(accountAddress: string, callback: IBalanceCallback): UnsubscribePromise {
     let {
       data: { free: previousFree },
-      nonce: previousNonce,
-    } = await this.api.query.system.account(accountAddress);
+    } = (await this.api.query.system.account(accountAddress)) as ISystemAccountInfo;
 
-    this.api.query.system.account(accountAddress, ({ data: { free: currentFree }, nonce: currentNonce }) => {
+    return this.api.query.system.account(accountAddress, ({ data: { free: currentFree } }) => {
       if (!currentFree.sub(previousFree).isZero()) {
         callback(this.api.createType('Balance', currentFree));
         previousFree = currentFree;
-        previousNonce = currentNonce;
       }
     });
   }

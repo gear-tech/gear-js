@@ -27,14 +27,6 @@ export const Header: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const alert = useAlert();
-  const showUser =
-    [
-      '',
-      routes.program.split('/')[1],
-      routes.allPrograms.split('/')[1],
-      routes.uploadedPrograms.split('/')[1],
-      routes.notifications.split('/')[1],
-    ].indexOf(location.pathname.split('/')[1]) > -1;
 
   const isNotifications = location.pathname === routes.notifications;
 
@@ -214,26 +206,20 @@ export const Header: VFC = () => {
         <Link to={routes.main} className="header__logo">
           <LogoIcon color={headerIconsColor} />
         </Link>
-        {showUser && (
-          <>
-            <button type="button" onClick={handleShowListOfNodes} className="add_node">
-              Change node
-            </button>
-            <div className="headder__chain-block">
-              <p className="headder__chain-text">{!isApiReady ? 'Loading ...' : chainName}</p>
-            </div>
-          </>
-        )}
+        <button type="button" onClick={handleShowListOfNodes} className="add_node">
+          Change node
+        </button>
+        <div className="headder__chain-block">
+          <p className="headder__chain-text">{!isApiReady ? 'Loading ...' : chainName}</p>
+        </div>
       </div>
       <div className="header__right-block">
         <Link to={routes.editor} className="header__right-block_ide">
           IDE
         </Link>
-        {showUser && (
-          <div className="header__user-block user-block">
-            <Wallet />
-          </div>
-        )}
+        <div className="header__user-block user-block">
+          <Wallet />
+        </div>
         <div className="header--actions-wrapper">
           <Link to={isNotifications ? routes.main : routes.notifications} className="header__notifications">
             <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />

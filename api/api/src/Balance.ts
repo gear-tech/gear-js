@@ -3,6 +3,7 @@ import { TransactionError } from './errors';
 import { Balance } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
+import { ISystemAccountInfo } from './interfaces';
 
 export class GearBalance {
   private api: GearApi;
@@ -12,8 +13,8 @@ export class GearBalance {
   }
 
   async findOut(publicKey: string): Promise<Balance> {
-    const { data: balance } = await this.api.query.system.account(publicKey);
-    return this.api.createType('Balance', balance.free);
+    const { data: balance } = (await this.api.query.system.account(publicKey)) as ISystemAccountInfo;
+    return this.api.createType('Balance', balance.free) as Balance;
   }
 
   transferFromAlice(to: string, value: number | BN, eventsCallback?: (event: any, data: any) => void): Promise<any> {

@@ -6,3 +6,5 @@ export * from './debug';
 export * from './keyring';
 export * from './program';
 export * from './transaction';
+export * from './events';
+export * from './system';
