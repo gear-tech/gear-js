@@ -2,7 +2,7 @@ name: staging.api-gateway-CD
 
 on:
   push:
-    branches: [master, do-event-listener]
+    branches: [master]
     paths:
       - website/api-gateway/**
 

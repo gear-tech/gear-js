@@ -2,7 +2,7 @@ name: staging.test-balance-CD
 
 on:
   push:
-    branches: [master, do-event-listener]
+    branches: [master]
     paths:
       - website/test-balance/**
 

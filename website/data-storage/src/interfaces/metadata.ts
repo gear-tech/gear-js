@@ -9,7 +9,7 @@ export interface Meta {
 export interface AddMetaParams extends RequestParams {
   programId: string;
   signature: string;
-  meta: string | any;
+  meta: string;
   metaFile: string;
   name?: string;
   title?: string;

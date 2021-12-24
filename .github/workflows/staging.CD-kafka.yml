@@ -2,7 +2,7 @@ name: staging.kafka-CD
 
 on:
   push:
-    branches: [master, do-event-listener]
+    branches: [master]
     paths:
       - ansible/tasks/kafka/**
 
