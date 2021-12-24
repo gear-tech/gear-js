@@ -8,7 +8,6 @@ const log = logger('Main');
 
 const main = async () => {
   log.info('App is running...');
-  console.log(config);
   const api = await GearApi.create({ providerAddress: config.api.provider });
   const chain = await api.chain();
   const genesis = api.genesisHash.toHex();
