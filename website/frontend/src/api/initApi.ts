@@ -32,7 +32,7 @@ class NodeApi {
     this._api = await GearApi.create({ providerAddress: this.address });
 
     this.chain = await this._api.chain();
-    this.genesis = await this._api.genesisHash;
+    this.genesis = await this._api.genesisHash.toHex();
 
     localStorage.setItem('chain', this.chain);
     localStorage.setItem('genesis', this.genesis);
