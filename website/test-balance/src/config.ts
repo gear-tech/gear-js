@@ -1,29 +1,34 @@
 import { config } from 'dotenv';
-
+import { strict as assert } from 'assert';
 config();
+
+const checkEnv = (env: string) => {
+  assert.notStrictEqual(env, undefined);
+  return env;
+};
 
 export default {
   kafka: {
-    clientId: process.env.KAFKA_CLIENT_ID,
-    groupId: process.env.KAFKA_GROUP_ID,
-    brokers: process.env.KAFKA_BROKERS.split(','),
+    clientId: checkEnv(process.env.KAFKA_CLIENT_ID),
+    groupId: checkEnv(process.env.KAFKA_GROUP_ID),
+    brokers: checkEnv(process.env.KAFKA_BROKERS).split(','),
     sasl: {
-      username: process.env.KAFKA_SASL_USERNAME,
-      password: process.env.KAFKA_SASL_PASSWORD,
+      username: checkEnv(process.env.KAFKA_SASL_USERNAME),
+      password: checkEnv(process.env.KAFKA_SASL_PASSWORD),
     },
   },
   db: {
     port: parseInt(process.env.DB_PORT, 10) || 5432,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    name: process.env.DB_NAME,
+    user: checkEnv(process.env.DB_USER),
+    password: checkEnv(process.env.DB_PASSWORD),
+    name: checkEnv(process.env.DB_NAME),
     host: process.env.DB_HOST || 'localhost',
   },
   gear: {
-    providerAddress: process.env.WS_PROVIDER,
-    accountSeed: process.env.TEST_ACCOUNT_SEED,
-    rootAccountSeed: process.env.ROOT_ACCOUNT_SEED,
-    accountBalance: process.env.TEST_ACCOUNT_BALANCE,
-    balanceToTransfer: process.env.TEST_BALANCE_VALUE,
+    providerAddress: checkEnv(process.env.WS_PROVIDER),
+    accountSeed: checkEnv(process.env.TEST_ACCOUNT_SEED),
+    rootAccountSeed: checkEnv(process.env.ROOT_ACCOUNT_SEED),
+    accountBalance: checkEnv(process.env.TEST_ACCOUNT_BALANCE),
+    balanceToTransfer: checkEnv(process.env.TEST_BALANCE_VALUE),
   },
 };
