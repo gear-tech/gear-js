@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
+    "module": "ESNext",
     "declaration": true,
     "declarationDir": "types",
     "outDir": "lib",
@@ -11,6 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "incremental": true,
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "paths": {
