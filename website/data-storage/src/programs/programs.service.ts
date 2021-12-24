@@ -4,6 +4,7 @@ import { Meta } from 'src/metadata/entities/meta.entity';
 import { Repository } from 'typeorm';
 import { InitStatus, Program } from './entities/program.entity';
 import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from 'src/interfaces';
+import { PAGINATION_LIMIT } from 'src/config/configuration';
 
 const logger = new Logger('ProgramDb');
 @Injectable()
@@ -44,7 +45,7 @@ export class ProgramsService {
   async getAllUserPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const [result, total] = await this.programRepo.findAndCount({
       where: { owner: params.owner, chain: params.chain, genesis: params.genesis },
-      take: params.limit || 20,
+      take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
       order: {
         uploadedAt: 'DESC',
@@ -60,7 +61,7 @@ export class ProgramsService {
   async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const [result, total] = await this.programRepo.findAndCount({
       where: { chain: params.chain, genesis: params.genesis },
-      take: params.limit || 20,
+      take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
       order: {
         uploadedAt: 'DESC',

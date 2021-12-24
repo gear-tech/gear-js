@@ -6,6 +6,7 @@ import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
 import { AddPayloadParams, AllMessagesResult, GetMessagesParams } from 'src/interfaces';
+import { PAGINATION_LIMIT } from 'src/config/configuration';
 
 const logger = new Logger('MessageService');
 @Injectable()
@@ -75,8 +76,8 @@ export class MessagesService {
     console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
       where,
-      take: params.limit | 20,
-      skip: params.offset | 0,
+      take: params.limit || PAGINATION_LIMIT,
+      skip: params.offset || 0,
     });
     console.log(result);
     return {
@@ -88,8 +89,8 @@ export class MessagesService {
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
     const [result, total] = await this.messageRepo.findAndCount({
       where: { genesis: params.genesis, chain: params.chain, source: params.source },
-      take: params.limit | 20,
-      skip: params.offset | 0,
+      take: params.limit || PAGINATION_LIMIT,
+      skip: params.offset || 0,
     });
     return {
       messages: result,
@@ -108,7 +109,7 @@ export class MessagesService {
     console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
       where,
-      take: params.limit | 20,
+      take: params.limit | PAGINATION_LIMIT,
       skip: params.offset | 0,
     });
     return {
