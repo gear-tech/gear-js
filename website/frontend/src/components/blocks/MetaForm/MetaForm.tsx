@@ -58,7 +58,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
   const handleFilesUpload = useCallback(
     async (file) => {
       try {
-        const fileBuffer: Buffer = (await readFileAsync(file)) as Buffer;
+        const fileBuffer = (await readFileAsync(file)) as Buffer;
         const meta = await getWasmMetadata(fileBuffer);
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
 
