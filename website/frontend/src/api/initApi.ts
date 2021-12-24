@@ -14,7 +14,7 @@ class NodeApi {
 
   private chain: string | null;
 
-  private genesis: any;
+  private genesis: string | null;
 
   private _api: GearApi | null = null;
 
