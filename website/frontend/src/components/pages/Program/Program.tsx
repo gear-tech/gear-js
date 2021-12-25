@@ -10,13 +10,16 @@ import {
   resetGasAction,
   uploadMetaResetAction,
   resetProgramAction,
+  getMessagesAction,
 } from 'store/actions/actions';
 import { Message } from 'components/pages/Programs/children/Message/Message';
+import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { Meta } from 'components/Meta/Meta';
 import { formatDate } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
+import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import './Program.scss';
 
 type ProgramMessageType = {
@@ -30,6 +33,8 @@ export const Program: VFC = () => {
   const id: string = params?.id;
   const history = useHistory();
   const { program } = useSelector((state: RootState) => state.programs);
+  const { messages } = useSelector((state: RootState) => state.messages);
+
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
   const [data, setData] = useState({
@@ -68,6 +73,15 @@ export const Program: VFC = () => {
       dispatch(resetProgramAction());
     };
   }, [dispatch, program, setData, id]);
+
+  useEffect(() => {
+    dispatch(
+      getMessagesAction({
+        source: localStorage.getItem('public_key_raw'),
+        limit: INITIAL_LIMIT_BY_PAGE,
+      })
+    );
+  }, [dispatch]);
 
   const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
@@ -154,6 +168,10 @@ export const Program: VFC = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="messages-block">
+        <p className="messages-block__caption">NOTIFICATIONS</p>
+        <MessagesList messages={messages} />
       </div>
     </div>
   );
