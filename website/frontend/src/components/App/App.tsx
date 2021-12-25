@@ -100,7 +100,7 @@ const AppComponent: FC = () => {
           <Main>
             {isApiReady ? (
               <Switch>
-                <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
+                <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
                   <Programs />
                 </Route>
                 <Route exact path={routes.program}>
