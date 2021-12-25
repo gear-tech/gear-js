@@ -2,26 +2,34 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "build:backend": "cd website/backend && npm run build",
-    "build:frontend": "cd website/frontend && npm run build",
-    "build:ide": "cd website/fronted && npm run build",
-    "start:backend": "npm run start:dev --workspace=website/backend",
-    "start:frontend": "npm run start --workspace=website/frontend",
-    "start:ide": "npm run start:dev --workspace=website/ide-backend",
+    "build:backend": "yarn build:eventListener && yarn build:apiBackend && yarn build:dataStorage",
+    "build:eventListener": "yarn workspace @gear-js/event-listener build",
+    "build:apiBackend": "yarn workspace @gear-js/api-gateway build",
+    "build:dataStorage": "yarn workspace @gear-js/data-storage build",
+    "build:frontend": "yarn workspace @gear-js/frontend build",
+    "build:testBalance": "yarn workspace @gear-js/test-balance build",
+    "build:wasmCompiler": "yarn workspace @gear-js/wasm-compiler build",
+    "run:front": "PORT=3001 yarn workspace @gear-js/frontend start",
+    "run:eventListener": "yarn workspace @gear-js/event-listener start:dev",
+    "run:backend": "yarn workspace @gear-js/api-gateway start:dev",
+    "run:dataStorage": "yarn workspace @gear-js/data-storage start:dev",
     "prepare": "husky install"
-  },
-  "dependencies": {
-    "@gear-js/api": "file:api",
-    "@gear-js/backend": "file:website/backend",
-    "@gear-js/frontend": "file:website/frontend",
-    "@gear-js/ide-backend": "file:website/ide-backend"
   },
   "devDependencies": {
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
     "prettier": "^2.4.1"
   },
+  "workspaces": [
+    "website/api-gateway",
+    "website/data-storage",
+    "website/events-listener",
+    "website/frontend",
+    "website/test-balance",
+    "website/wasm-compiler"
+  ],
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
-  }
+  },
+  "packageManager": "yarn@3.1.1"
 }

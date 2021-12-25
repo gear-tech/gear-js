@@ -1,9 +1,9 @@
-export const GEAR_LOCAL_IDE_URI = process.env.REACT_APP_IDE_URI;
 export const API_CONNECTION_ADDRESS = process.env.REACT_APP_API_CONNECT_ADDRESS;
 export const API_PATH = process.env.REACT_APP_API_PATH!;
 export const isProd = process.env.NODE_ENV === 'production';
 export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
+export const GET_TEST_BALANCE = `${process.env.REACT_APP_GET_TEST_BALANCE}/test-balance`;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 export const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER}/wasm-compiler/build`;
 export const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER}/wasm-compiler/get-wasm`;
@@ -61,6 +61,7 @@ export const RPC_METHODS = {
   ADD_PUBLIC: 'user.addPublicKey',
   ADD_METADATA: 'program.addMeta',
   GET_METADATA: 'program.getMeta',
+  GET_TEST_BALANCE: 'testBalance.get',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];

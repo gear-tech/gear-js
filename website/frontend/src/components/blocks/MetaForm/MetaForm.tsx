@@ -17,14 +17,15 @@ import { Schema } from './Schema';
 import './MetaForm.scss';
 
 type Props = {
-  programHash: string;
+  programId: string;
   programName: string;
   handleClose: () => void;
 };
 
-export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
+export const MetaForm: VFC<Props> = ({ programName, programId }) => {
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
+  const [metaWasmFile, setMetaWasmFile] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
   const dispatch = useDispatch();
@@ -57,8 +58,11 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
   const handleFilesUpload = useCallback(
     async (file) => {
       try {
-        const fileBuffer: any = await readFileAsync(file);
+        const fileBuffer = (await readFileAsync(file)) as Buffer;
         const meta = await getWasmMetadata(fileBuffer);
+        const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
+
+        setMetaWasmFile(bufstr);
         setMetaWasm(meta);
       } catch (error) {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
@@ -107,13 +111,13 @@ export const MetaForm: VFC<Props> = ({ programName, programHash }) => {
         if (currentAccount) {
           if (isMetaByFile) {
             if (metaWasm) {
-              addMetadata(metaWasm, currentAccount, programHash, values.name, dispatch);
+              addMetadata(metaWasm, metaWasmFile, currentAccount, programId, values.name, dispatch);
             } else {
               dispatch(AddAlert({ type: EventTypes.ERROR, message: `ERROR: metadata not loaded` }));
             }
           } else {
             const { name, ...meta } = values;
-            addMetadata(meta, currentAccount, programHash, name, dispatch);
+            addMetadata(meta, null, currentAccount, programId, name, dispatch);
           }
           resetForm();
         } else {
