@@ -6,6 +6,7 @@ import { Pagination } from 'components/Pagination/Pagination';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import IndexedDBService from 'services/IndexedDB';
 import {
   getAllProgramsAction,
   resetGasAction,
@@ -28,7 +29,7 @@ type ProgramMessageType = {
   programId: string;
 };
 
-const selectCompletedTodosCount = createSelector(
+const selectPrograms = createSelector(
   (state: RootState) => state.programs,
   (_ignore: any, completed: string) => completed,
   (programs, completed) =>
@@ -40,18 +41,16 @@ export const All: VFC = () => {
   const location = useLocation();
   const urlSearch = location.search;
   const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
+  const chain = localStorage.getItem('chain');
 
   const [search, setSearch] = useState('');
 
-  const { allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
-  const program = useSelector((state: RootState) => state.programs.program);
+  let allPrograms = useSelector((state: RootState) => selectPrograms(state, search));
+  let allProgramsCount = useSelector((state: RootState) => state.programs.allUploadedProgramsCount);
 
-  let allUploadedPrograms = useSelector((state: RootState) => selectCompletedTodosCount(state, search));
-
-  if (program) {
-    allUploadedPrograms = [program];
-  }
-
+  const [localPrograms, setLocalPrograms] = useState<ProgramModel[] | null>(null);
+  const [localProgramsCount, setLocalProgramsCount] = useState(0);
+  const [isLocalProgramsGet, setIsLocalProgramsGet] = useState(false);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
@@ -59,6 +58,27 @@ export const All: VFC = () => {
   const onPageChange = (page: number) => setCurrentPage(page);
 
   const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
+
+  useEffect(() => {
+    if (chain === 'Development' && !isLocalProgramsGet) {
+      const indexedDB = new IndexedDBService();
+
+      indexedDB.connectDB((db: IDBDatabase) => {
+        const request = indexedDB.get(db);
+
+        request.onsuccess = () => {
+          setLocalPrograms(request.result);
+          setLocalProgramsCount(request.result.length);
+          setIsLocalProgramsGet(true);
+        };
+      });
+    }
+  }, [chain, isLocalProgramsGet]);
+
+  if (chain === 'Development') {
+    allPrograms = localPrograms;
+    allProgramsCount = localProgramsCount;
+  }
 
   useEffect(() => {
     dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
@@ -111,8 +131,8 @@ export const All: VFC = () => {
   return (
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
-        <span>Total results: {allUploadedProgramsCount || 0}</span>
-        <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
+        <span>Total results: {allProgramsCount || 0}</span>
+        <Pagination page={currentPage} count={allProgramsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
         <SearchForm
@@ -128,9 +148,9 @@ export const All: VFC = () => {
         <br />
       </div>
       <div className={styles.allProgramsList}>
-        {(allUploadedPrograms &&
-          allUploadedPrograms.length &&
-          allUploadedPrograms.map((item: ProgramModel) => {
+        {(allPrograms &&
+          allProgramsCount &&
+          allPrograms.map((item: ProgramModel) => {
             if (item.name && item.name !== 'name.wasm') {
               return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.id} />;
             }
@@ -154,9 +174,9 @@ export const All: VFC = () => {
           })) ||
           null}
       </div>
-      {allUploadedPrograms && allUploadedPrograms.length > 0 && (
+      {allPrograms && allPrograms.length > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
+          <Pagination page={currentPage} count={allProgramsCount || 1} onPageChange={onPageChange} />
         </div>
       )}
     </div>

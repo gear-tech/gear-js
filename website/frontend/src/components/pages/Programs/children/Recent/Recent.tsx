@@ -2,6 +2,7 @@ import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { createSelector } from 'reselect';
+import IndexedDBService from 'services/IndexedDB';
 import {
   getUserProgramsAction,
   resetGasAction,
@@ -12,6 +13,7 @@ import {
   resetProgramAction,
 } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
+import { ProgramModel } from 'types/program';
 
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 
@@ -40,18 +42,16 @@ export const Recent: VFC = () => {
   const location = useLocation();
   const urlSearch = location.search;
   const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
+  const chain = localStorage.getItem('chain');
 
   const [search, setSearch] = useState('');
 
-  const { programsCount } = useSelector((state: RootState) => state.programs);
-  let programs = useSelector((state: RootState) => selectPrograms(state, search));
+  let recentPrograms = useSelector((state: RootState) => selectPrograms(state, search));
+  let recentProgramsCount = useSelector((state: RootState) => state.programs.programsCount);
 
-  const singleProgram = useSelector((state: RootState) => state.programs.program);
-
-  if (singleProgram) {
-    programs = [singleProgram];
-  }
-
+  const [localPrograms, setLocalPrograms] = useState<ProgramModel[] | null>(null);
+  const [localProgramsCount, setLocalProgramsCount] = useState(0);
+  const [isLocalProgramsGet, setIsLocalProgramsGet] = useState(false);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
@@ -59,6 +59,27 @@ export const Recent: VFC = () => {
   const onPageChange = (page: number) => setCurrentPage(page);
 
   const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
+
+  useEffect(() => {
+    if (chain === 'Development' && !isLocalProgramsGet) {
+      const indexedDB = new IndexedDBService();
+
+      indexedDB.connectDB((db: IDBDatabase) => {
+        const request = indexedDB.get(db);
+
+        request.onsuccess = () => {
+          setLocalPrograms(request.result);
+          setLocalProgramsCount(request.result.length);
+          setIsLocalProgramsGet(true);
+        };
+      });
+    }
+  }, [chain, isLocalProgramsGet]);
+
+  if (chain === 'Development') {
+    recentPrograms = localPrograms;
+    recentProgramsCount = localProgramsCount;
+  }
 
   useEffect(() => {
     dispatch(
@@ -117,8 +138,8 @@ export const Recent: VFC = () => {
   return (
     <div className={styles.blockList}>
       <div className={styles.paginationWrapper}>
-        <span>Total results: {programsCount || 0}</span>
-        <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
+        <span>Total results: {recentProgramsCount || 0}</span>
+        <Pagination page={currentPage} count={recentProgramsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
         <SearchForm
@@ -133,18 +154,18 @@ export const Recent: VFC = () => {
         />
         <br />
       </div>
-      {(programs && programs.length && (
+      {(recentPrograms && recentProgramsCount && (
         <div>
-          {programs.map((program) => (
+          {recentPrograms.map((program: ProgramModel) => (
             <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.id} />
           ))}
         </div>
       )) ||
         null}
 
-      {programs && programs.length > 0 && (
+      {recentPrograms && recentPrograms.length > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
+          <Pagination page={currentPage} count={recentProgramsCount || 1} onPageChange={onPageChange} />
         </div>
       )}
     </div>
