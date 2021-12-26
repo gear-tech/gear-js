@@ -1,18 +1,6 @@
 import { CreateType, GearKeyring } from '@gear-js/api';
-import {
-  NotificationActionTypes,
-  NotificationPaginationModel,
-  NotificationRPCModel,
-  NotificationUnreadRPCModel,
-  RecentNotificationModel,
-} from 'types/notification';
-import {
-  ProgramActionTypes,
-  ProgramModel,
-  ProgramPaginationModel,
-  ProgramRPCModel,
-  ProgramsPagintaionModel,
-} from 'types/program';
+import { NotificationActionTypes, NotificationPaginationModel, RecentNotificationModel } from 'types/notification';
+import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
 
 import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
@@ -21,6 +9,7 @@ import NotificationsRequestService from 'services/NotificationsRequestService';
 
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS } from 'consts';
+import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { nodeApi } from '../../api/initApi';
@@ -123,8 +112,8 @@ export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) =
   dispatch(fetchUserProgramsAction());
   programService
     .fetchUserPrograms(params)
-    .then((result: ProgramsPagintaionModel) => {
-      dispatch(fetchUserProgramsSuccessAction(result.result));
+    .then((data) => {
+      dispatch(fetchUserProgramsSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchUserProgramsErrorAction()));
 };
@@ -133,18 +122,18 @@ export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any)
   dispatch(fetchUserProgramsAction());
   programService
     .fetchAllPrograms(params)
-    .then((result: ProgramsPagintaionModel) => {
-      dispatch(fetchAllProgramsSuccessAction(result.result));
+    .then((data) => {
+      dispatch(fetchAllProgramsSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchUserProgramsErrorAction()));
 };
 
-export const getProgramAction = (hash: string) => (dispatch: any) => {
+export const getProgramAction = (id: string) => (dispatch: any) => {
   dispatch(fetchProgramAction());
   programService
-    .fetchProgram(hash)
-    .then((result: ProgramRPCModel) => {
-      dispatch(fetchProgramSuccessAction(result.result));
+    .fetchProgram(id)
+    .then((data) => {
+      dispatch(fetchProgramSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchProgramErrorAction()));
 };
@@ -176,8 +165,8 @@ export const getNotificationsAction = (params: PaginationModel) => (dispatch: an
   dispatch(fetchNotificationsAction());
   notificationService
     .fetchAllNotifications(params)
-    .then((result: NotificationRPCModel) => {
-      dispatch(fetchNotificationsSuccessAction(result.result));
+    .then((data) => {
+      dispatch(fetchNotificationsSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchNotificationsErrorAction()));
 };
@@ -186,8 +175,8 @@ export const getUnreadNotificationsCount = () => (dispatch: any) => {
   dispatch(fetchNotificationsCountAction());
   notificationService
     .fetchUnreadNotificationsCount()
-    .then((result: NotificationUnreadRPCModel) => {
-      dispatch(fetchNotificationsCountSuccessAction(result.result));
+    .then((data) => {
+      dispatch(fetchNotificationsCountSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchNotificationsCountErrorAction()));
 };
@@ -257,3 +246,8 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 };
+
+export const setIsBuildDone = (payload: boolean) => ({
+  type: CompilerActionTypes.SET_IS_BUILD_DONE,
+  payload,
+});

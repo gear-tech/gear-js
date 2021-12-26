@@ -68,7 +68,7 @@ export class GearApi extends ApiPromise {
   }
 
   async totalIssuance(): Promise<string> {
-    return (await this.query.balances.totalIssuance()).toHuman();
+    return (await this.query.balances.totalIssuance()).toHuman() as string;
   }
 
   async chain(): Promise<string> {

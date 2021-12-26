@@ -39,16 +39,19 @@ export class AppService {
             container.remove();
             reject(err);
           } else {
-            container.logs({ stderr: true, stdout: true }, (_, data: Buffer) => {
-              const error = this.findErr(data.toString());
-              if (error) {
-                container.remove();
-                reject(error);
-              } else {
-                container.remove();
-                resolve(0);
-              }
-            });
+            container.logs(
+              { stderr: true, stdout: true },
+              (_, data: Buffer) => {
+                const error = this.findErr(data.toString());
+                if (error) {
+                  container.remove();
+                  reject(error);
+                } else {
+                  container.remove();
+                  resolve(0);
+                }
+              },
+            );
           }
         },
       );

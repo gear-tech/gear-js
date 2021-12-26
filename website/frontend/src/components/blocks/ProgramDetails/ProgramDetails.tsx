@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, VFC } from 'react';
 import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
+import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,7 +39,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [api] = useApi();
 
   const program = {
-    gasLimit: 20000,
+    gasLimit: 20000000,
     value: 0,
     initPayload: '',
     init_input: '',
@@ -151,6 +152,9 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
             dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
           }
         }}
+        onReset={() => {
+          setDroppedFile(null);
+        }}
       >
         {({ errors, touched, setFieldValue, values }) => (
           <Form>
@@ -175,7 +179,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       {droppedFile.name.replace(`.${droppedFile.name.split('.').pop()}`, '')}.
                       {droppedFile.name.split('.').pop()}
                       <button type="reset">
-                        <img alt="cancel" src={cancel} />
+                        <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                       </button>
                     </div>
                   </div>
@@ -203,7 +207,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     <div className="program-details__field-wrapper">
                       <NumberFormat
                         name="gasLimit"
-                        placeholder="20000"
+                        placeholder="20,000,000"
                         value={values.gasLimit}
                         thousandSeparator
                         allowNegative={false}

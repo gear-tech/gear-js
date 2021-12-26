@@ -26,6 +26,7 @@ import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
 import { ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
+import { globalStyles } from './styles';
 
 // alert configuration
 const options = {
@@ -43,6 +44,7 @@ const options = {
 };
 
 const AppComponent: FC = () => {
+  globalStyles();
   const dispatch = useDispatch();
 
   const { isApiReady } = useSelector((state: RootState) => state.api);

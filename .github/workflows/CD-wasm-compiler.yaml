@@ -1,4 +1,4 @@
-name: CD-wasm-compiler
+name: production.wasm-compiler-CD
 
 on:
   push:
@@ -12,6 +12,7 @@ env:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v2

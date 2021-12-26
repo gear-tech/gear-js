@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  api-gateway:
+    restart: always
+    ports:
+      - 8080:80
+    image: mithriy/gear-frontend:nightly
+    environment:
+      REACT_APP_API_URL: https://node-workshop.gear.rs/api
+      REACT_APP_NODE_ADDRESS: wss://rpc-node.gear-tech.io
+      REACT_APP_WASM_COMPILER_URL: https://idea.gear-tech.io/wasm-compiler
+      REACT_APP_RRT: ''

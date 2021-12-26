@@ -1,5 +1,5 @@
 import { PaginationModel, UserPrograms } from 'types/common';
-import { ProgramRPCModel, ProgramsPagintaionModel } from 'types/program';
+import { ProgramModel, ProgramPaginationModel } from 'types/program';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 export default class ProgramRequestService {
@@ -11,15 +11,15 @@ export default class ProgramRequestService {
 
   protected readonly API_REFRESH_PROGRAM = 'program.data';
 
-  public fetchAllPrograms(params: PaginationModel): Promise<ProgramsPagintaionModel> {
-    return this.apiRequest.getResource(this.API_PROGRAMS_ALL, { ...params });
+  public fetchAllPrograms(params: PaginationModel) {
+    return this.apiRequest.callRPC<ProgramPaginationModel>(this.API_PROGRAMS_ALL, { ...params });
   }
 
-  public fetchUserPrograms(params: UserPrograms): Promise<ProgramsPagintaionModel> {
-    return this.apiRequest.getResource(this.API_PROGRAMS_USER, { ...params });
+  public fetchUserPrograms(params: UserPrograms) {
+    return this.apiRequest.callRPC<ProgramPaginationModel>(this.API_PROGRAMS_USER, { ...params });
   }
 
-  public fetchProgram(hash: string): Promise<ProgramRPCModel> {
-    return this.apiRequest.getResource(this.API_REFRESH_PROGRAM, { hash });
+  public fetchProgram(id: string) {
+    return this.apiRequest.callRPC<ProgramModel>(this.API_REFRESH_PROGRAM, { id });
   }
 }

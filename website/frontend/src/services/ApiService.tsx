@@ -1,5 +1,6 @@
 import { UploadProgramModel, MessageModel, MetaModel } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { GearApi, Metadata } from '@gear-js/api';
 import { UserAccount } from 'types/account';
 import { RPC_METHODS } from 'consts';
 import { EventTypes } from 'types/events';
@@ -93,6 +94,7 @@ export const UploadProgram = async (
             });
 
             if (response.error) {
+              // FIXME 'throw' of exception caught locally
               throw new Error(response.error.message);
             } else {
               dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
@@ -114,24 +116,17 @@ export const UploadProgram = async (
 
 // TODO: (dispatch) fix it later
 export const SendMessageToProgram = async (
-  api: any,
+  api: GearApi,
   account: UserAccount,
   message: MessageModel,
+  meta: Metadata,
   dispatch: any,
   callback: () => void
 ) => {
-  const apiRequest = new ServerRPCRequestService();
-
   const injector = await web3FromSource(account.meta.source);
 
   try {
-    // get metadata for specific program
-    const {
-      result: { meta },
-    } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
-      programId: message.destination,
-    });
-    await api.message.submit(message, JSON.parse(meta));
+    await api.message.submit(message, meta);
     await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
       dispatch(sendMessageStartAction());
       dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `SEND MESSAGE STATUS: ${data.status}` }));
@@ -151,8 +146,9 @@ export const SendMessageToProgram = async (
 // TODO: (dispatch) fix it later
 export const addMetadata = async (
   meta: MetaModel,
+  metaFile: any,
   account: UserAccount,
-  programHash: string,
+  programId: string,
   name: any,
   dispatch: any
 ) => {
@@ -165,12 +161,14 @@ export const addMetadata = async (
       const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
         meta: JSON.stringify(meta),
         signature,
-        programId: programHash,
+        programId,
         name,
         title: meta.title,
+        metaFile,
       });
 
       if (response.error) {
+        // FIXME 'throw' of exception caught locally
         throw new Error(response.error.message);
       } else {
         dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));

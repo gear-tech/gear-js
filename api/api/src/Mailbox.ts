@@ -9,7 +9,6 @@ export class GearMailbox {
   }
 
   async readMailbox(accountId: string | AccountId32): Promise<Option<BTreeMap<H256, Message>>> {
-    this.api.query.gear.mailbox(accountId);
-    return this.api.query.gear.mailbox(accountId);
+    return (await this.api.query.gear.mailbox(accountId)) as Option<BTreeMap<H256, Message>>;
   }
 }

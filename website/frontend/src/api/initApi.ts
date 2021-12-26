@@ -14,6 +14,8 @@ class NodeApi {
 
   private chain: string | null;
 
+  private genesis: string | null;
+
   private _api: GearApi | null = null;
 
   readonly subscriptions: Record<string, UnsubscribePromise> = {};
@@ -22,6 +24,7 @@ class NodeApi {
     this.address = address;
     this.subscriptions = {};
     this.chain = null;
+    this.genesis = null;
   }
 
   async init() {
@@ -29,7 +32,10 @@ class NodeApi {
     this._api = await GearApi.create({ providerAddress: this.address });
 
     this.chain = await this._api.chain();
+    this.genesis = await this._api.genesisHash.toHex();
+
     localStorage.setItem('chain', this.chain);
+    localStorage.setItem('genesis', this.genesis);
   }
 
   public subscribeProgramEvents(cb: (event: ProgramEvent) => void) {

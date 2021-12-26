@@ -1,4 +1,5 @@
 import { Option, BTreeMap } from '@polkadot/types';
+import { Codec } from '@polkadot/types-codec/types';
 import { AccountId32, H256 } from '@polkadot/types/interfaces';
 import { Message } from '.';
 

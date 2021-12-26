@@ -5,7 +5,7 @@ export interface NotificationModel {
   isRead: boolean;
   payload?: string;
   destinationId: number;
-  programHash: number;
+  programId: number;
 }
 
 export interface RecentNotificationModel {
@@ -28,18 +28,6 @@ export interface NotificationState {
   count: number | null;
   loading: boolean;
   error: null | string;
-}
-
-export interface NotificationRPCModel {
-  jsonrpc: string;
-  id: string;
-  result: NotificationPaginationModel;
-}
-
-export interface NotificationUnreadRPCModel {
-  jsonrpc: string;
-  id: string;
-  result: number;
 }
 
 export enum NotificationActionTypes {

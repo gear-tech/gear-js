@@ -22,7 +22,7 @@ import { UserProgram } from 'components/pages/Programs/children/UserProgram/User
 
 type ProgramMessageType = {
   programName: string;
-  programHash: string;
+  programId: string;
 };
 
 export const BlockListAllUploaded: VFC = () => {
@@ -45,16 +45,16 @@ export const BlockListAllUploaded: VFC = () => {
     dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
   }, [dispatch, offset]);
 
-  const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {
+  const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
       if (isMessage) {
         setProgramMessage({
-          programHash,
+          programId,
           programName,
         });
       } else {
         setProgramMeta({
-          programHash,
+          programId,
           programName,
         });
       }
@@ -76,7 +76,7 @@ export const BlockListAllUploaded: VFC = () => {
   if (programMessage) {
     return (
       <Message
-        programHash={programMessage.programHash}
+        programId={programMessage.programId}
         programName={programMessage.programName}
         handleClose={handleCloseMessageForm}
       />
@@ -85,11 +85,7 @@ export const BlockListAllUploaded: VFC = () => {
 
   if (programMeta) {
     return (
-      <Meta
-        programHash={programMeta.programHash}
-        programName={programMeta.programName}
-        handleClose={handleCloseMetaForm}
-      />
+      <Meta programId={programMeta.programId} programName={programMeta.programName} handleClose={handleCloseMetaForm} />
     );
   }
 
@@ -107,21 +103,21 @@ export const BlockListAllUploaded: VFC = () => {
               return <UserProgram program={item} handleOpenForm={handleOpenForm} />;
             }
             return (
-              <div className="all-programs--item" key={item.hash}>
-                <p className="all-programs--item__hash">{item.hash}</p>
+              <div className="all-programs--item" key={item.id}>
+                <p className="all-programs--item__hash">{item.id}</p>
                 <div className="programs-list--btns">
                   <button
                     className="programs-list__message-btn"
                     type="button"
                     aria-label="refresh"
-                    onClick={() => handleOpenForm(item.hash, item.name, true)}
+                    onClick={() => handleOpenForm(item.id, item.name, true)}
                   >
                     <img src={MessageIcon} alt="message" />
                   </button>
                   <button
                     className="all-programs--item__upload"
                     type="button"
-                    onClick={() => handleOpenForm(item.hash, item.name)}
+                    onClick={() => handleOpenForm(item.id, item.name)}
                   >
                     <img src={UploadIcon} alt="upload-program" />
                   </button>
