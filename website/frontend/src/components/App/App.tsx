@@ -16,7 +16,6 @@ import { SimpleLoader } from 'components/blocks/SimpleLoader';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { getUnreadNotificationsCount } from 'store/actions/actions';
 import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
 import store from '../../store';
