@@ -25,14 +25,14 @@ import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
 
 type ProgramMessageType = {
   programName: string;
-  programHash: string;
+  programId: string;
 };
 
 const selectCompletedTodosCount = createSelector(
   (state: RootState) => state.programs,
   (_ignore: any, completed: string) => completed,
   (programs, completed) =>
-    programs.allUploadedPrograms && programs.allUploadedPrograms.filter((item) => item.hash.includes(completed))
+    programs.allUploadedPrograms && programs.allUploadedPrograms.filter((item) => item.id.includes(completed))
 );
 
 export const All: VFC = () => {
@@ -64,16 +64,16 @@ export const All: VFC = () => {
     dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
   }, [dispatch, offset]);
 
-  const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {
+  const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
       if (isMessage) {
         setProgramMessage({
-          programHash,
+          programId,
           programName,
         });
       } else {
         setProgramMeta({
-          programHash,
+          programId,
           programName,
         });
       }
@@ -95,7 +95,7 @@ export const All: VFC = () => {
   if (programMessage) {
     return (
       <Message
-        programHash={programMessage.programHash}
+        programId={programMessage.programId}
         programName={programMessage.programName}
         handleClose={handleCloseMessageForm}
       />
@@ -104,11 +104,7 @@ export const All: VFC = () => {
 
   if (programMeta) {
     return (
-      <Meta
-        programHash={programMeta.programHash}
-        programName={programMeta.programName}
-        handleClose={handleCloseMetaForm}
-      />
+      <Meta programId={programMeta.programId} programName={programMeta.programName} handleClose={handleCloseMetaForm} />
     );
   }
 
@@ -136,19 +132,19 @@ export const All: VFC = () => {
           allUploadedPrograms.length &&
           allUploadedPrograms.map((item: ProgramModel) => {
             if (item.name && item.name !== 'name.wasm') {
-              return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.hash} />;
+              return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.id} />;
             }
             return (
-              <div className={styles.allProgramsItem} key={item.hash}>
-                <p className={styles.allProgramsItemHash}>{item.hash}</p>
+              <div className={styles.allProgramsItem} key={item.id}>
+                <p className={styles.allProgramsItemHash}>{item.id}</p>
                 <div className={styles.programsListBtns}>
-                  <button type="button" aria-label="refresh" onClick={() => handleOpenForm(item.hash, item.name, true)}>
+                  <button type="button" aria-label="refresh" onClick={() => handleOpenForm(item.id, item.name, true)}>
                     <img src={MessageIcon} alt="message" />
                   </button>
                   <button
                     className={styles.allProgramsItemUpload}
                     type="button"
-                    onClick={() => handleOpenForm(item.hash, item.name)}
+                    onClick={() => handleOpenForm(item.id, item.name)}
                   >
                     <img src={UploadIcon} alt="upload-program" />
                   </button>

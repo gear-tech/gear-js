@@ -6,6 +6,7 @@ import { Registry, Codec } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
 import { PortableRegistry } from '@polkadot/types/metadata';
 import { toCamelCase, splitByCommas, toJSON, isJSON } from './utils';
+
 const REGULAR_EXP = {
   endWord: /\b\w+\b/g,
   angleBracket: /<.+>/,
@@ -81,7 +82,11 @@ export class CreateType {
         return;
       }
       const name = portableReg.getName(id);
-      namespaces.set(name.replace(toCamelCase(path.slice(0, path.length - 1)), ''), name);
+      let camelCasedNamespace = toCamelCase(path.slice(0, path.length - 1));
+      if (camelCasedNamespace === name) {
+        camelCasedNamespace = toCamelCase(path.slice(0, path.length - 2));
+      }
+      namespaces.set(name.replace(camelCasedNamespace, ''), name);
       typesFromTypeDef[typeDef.lookupName || typeDef.lookupNameRoot] = typeDef.type.toString();
     });
     return { typesFromTypeDef, namespaces };

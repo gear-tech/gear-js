@@ -10,11 +10,11 @@ import './Meta.scss';
 
 type Props = {
   programName: string;
-  programHash: string;
+  programId: string;
   handleClose: () => void;
 };
 
-export const Meta: VFC<Props> = ({ programName, programHash, handleClose }) => {
+export const Meta: VFC<Props> = ({ programName, programId, handleClose }) => {
   const dispatch = useDispatch();
 
   const { metaUploadingError } = useSelector((state: RootState) => state.programs);
@@ -28,7 +28,7 @@ export const Meta: VFC<Props> = ({ programName, programHash, handleClose }) => {
   return (
     <div className="meta-form">
       <PageHeader programName={programName} handleClose={handleClose} pageType={PAGE_TYPES.META_FORM_PAGE} />
-      <MetaForm programHash={programHash} programName={programName} handleClose={handleClose} />
+      <MetaForm programId={programId} programName={programName} handleClose={handleClose} />
       {statusPanelText && (
         <StatusPanel
           onClose={() => {

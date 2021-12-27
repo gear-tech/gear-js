@@ -26,13 +26,13 @@ import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
 
 type ProgramMessageType = {
   programName: string;
-  programHash: string;
+  programId: string;
 };
 
 const selectPrograms = createSelector(
   (state: RootState) => state.programs,
   (_ignore: any, completed: string) => completed,
-  (programs, completed) => programs.programs && programs.programs.filter((item) => item.hash.includes(completed))
+  (programs, completed) => programs.programs && programs.programs.filter((item) => item.id.includes(completed))
 );
 
 export const Recent: VFC = () => {
@@ -70,16 +70,16 @@ export const Recent: VFC = () => {
     );
   }, [dispatch, offset]);
 
-  const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {
+  const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
       if (isMessage) {
         setProgramMessage({
-          programHash,
+          programId,
           programName,
         });
       } else {
         setProgramMeta({
-          programHash,
+          programId,
           programName,
         });
       }
@@ -101,7 +101,7 @@ export const Recent: VFC = () => {
   if (programMessage) {
     return (
       <Message
-        programHash={programMessage.programHash}
+        programId={programMessage.programId}
         programName={programMessage.programName}
         handleClose={handleCloseMessageForm}
       />
@@ -110,11 +110,7 @@ export const Recent: VFC = () => {
 
   if (programMeta) {
     return (
-      <Meta
-        programHash={programMeta.programHash}
-        programName={programMeta.programName}
-        handleClose={handleCloseMetaForm}
-      />
+      <Meta programId={programMeta.programId} programName={programMeta.programName} handleClose={handleCloseMetaForm} />
     );
   }
 
@@ -140,7 +136,7 @@ export const Recent: VFC = () => {
       {(programs && programs.length && (
         <div>
           {programs.map((program) => (
-            <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.hash} />
+            <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.id} />
           ))}
         </div>
       )) ||

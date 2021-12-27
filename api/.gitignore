@@ -4,3 +4,4 @@
 examples/test-json/
 **/lib/
 /api/types/
+**/temp

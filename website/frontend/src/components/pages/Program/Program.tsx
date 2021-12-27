@@ -21,13 +21,13 @@ import './Program.scss';
 
 type ProgramMessageType = {
   programName: string;
-  programHash: string;
+  programId: string;
 };
 
 export const Program: VFC = () => {
   const dispatch = useDispatch();
   const params: any = useParams();
-  const hash: string = params?.hash;
+  const id: string = params?.id;
   const history = useHistory();
   const { program } = useSelector((state: RootState) => state.programs);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
@@ -41,9 +41,9 @@ export const Program: VFC = () => {
   });
 
   useEffect(() => {
-    dispatch(getProgramAction(hash));
+    dispatch(getProgramAction(id));
     window.scrollTo(0, 0);
-  }, [dispatch, hash]);
+  }, [dispatch, id]);
 
   useEffect(() => {
     if (program) {
@@ -57,7 +57,7 @@ export const Program: VFC = () => {
       }
 
       setData({
-        id: program.hash,
+        id: program.id,
         name: program.name ? program.name : '...',
         title: program.title ? program.title : '...',
         uploadedAt: program.uploadedAt ? formatDate(String(program.uploadedAt)) : '...',
@@ -67,14 +67,14 @@ export const Program: VFC = () => {
     return () => {
       dispatch(resetProgramAction());
     };
-  }, [dispatch, program, setData, hash]);
+  }, [dispatch, program, setData, id]);
 
-  const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {
+  const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
       if (isMessage) {
-        setProgramMessage({ programHash, programName });
+        setProgramMessage({ programId, programName });
       } else {
-        setProgramMeta({ programHash, programName });
+        setProgramMeta({ programId, programName });
       }
     }
   };
@@ -94,7 +94,7 @@ export const Program: VFC = () => {
   if (programMessage) {
     return (
       <Message
-        programHash={programMessage.programHash}
+        programId={programMessage.programId}
         programName={programMessage.programName}
         handleClose={handleCloseMessageForm}
       />
@@ -103,11 +103,7 @@ export const Program: VFC = () => {
 
   if (programMeta) {
     return (
-      <Meta
-        programHash={programMeta.programHash}
-        programName={programMeta.programName}
-        handleClose={handleCloseMetaForm}
-      />
+      <Meta programId={programMeta.programId} programName={programMeta.programName} handleClose={handleCloseMetaForm} />
     );
   }
 

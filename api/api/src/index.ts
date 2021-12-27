@@ -13,3 +13,5 @@ export { GearProgramState } from './State';
 export * from './interfaces';
 export * from './types';
 export * from './utils';
+
+import '@polkadot/api-augment';
