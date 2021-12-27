@@ -11,7 +11,7 @@ services:
     volumes:
       - /home/ec2/data-storage/pg_data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - '5433:5432'
 
   data_storage:
     image: mithriy/gear-data-storage:nightly
