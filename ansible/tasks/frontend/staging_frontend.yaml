@@ -1,4 +1,4 @@
-- name: 'deploy to aws'
+- name: 'deploy frontend'
   hosts: all
   become: yes
   remote_user: ec2-user
@@ -7,33 +7,43 @@
     - name: Install and enable required packages
       include: ../packages/packages.yaml
 
-    - name: Create frontend dir
-      file: path=/home/ec2-user/frontend state=directory mode=0755
+    - name: Copy frontend
+      synchronize:
+        src: ../../../website/frontend/
+        dest: /home/ec2-user/frontend
 
-    - name: Copy docker-compose
-      copy:
-        src: docker-compose.yaml
-        dest: /home/ec2-user/frontend/docker-compose.yaml
-
-    - name: Stop docker-compose
+    - name: Remove old packages
       shell: >
-        /usr/local/bin/docker-compose -f "/home/ec2-user/frontend/docker-compose.yaml" down
-      become: yes
+        rm -rf package-lock.json node_modules
 
-    - name: Pull docker images
+    - name: run install
+      community.general.npm:
+        path: /home/ec2-user/frontend
+
+    - name: run build
       shell: >
-        /usr/local/bin/docker-compose -f "/home/ec2-user/frontend/docker-compose.yaml" pull
-      become: yes
-
-    - name: Remove old docker images
-      shell: docker image prune -f
-      become: yes
-
-    - name: Run docker-compose
-      shell: >
-        /usr/local/bin/docker-compose -f "/home/ec2-user/frontend/docker-compose.yaml" up -d
-      become: yes
+        cd /home/ec2-user/frontend; npm run build; cd ..
       environment:
-        REACT_APP_API_URL: "{{ lookup('env', 'REACT_APP_API_URL') }}"
-        REACT_APP_NODE_ADDRESS: "{{ lookup('env', 'REACT_APP_NODE_ADDRESS') }}"
-        REACT_APP_WASM_COMPILER_URL: "{{ lookup('env', 'REACT_APP_WASM_COMPILER_URL') }}"
+        REACT_APP_NODE_ADDRESS: "{{ lookup('env','REACT_APP_NODE_ADDRESS') }}"
+        REACT_APP_API_URL: "{{ lookup('env','REACT_APP_API_URL') }}"
+        REACT_APP_WASM_COMPILER_URL: "{{ lookup('env','REACT_APP_WASM_COMPILER_URL') }}"
+        REACT_APP_RRT:
+
+    - name: Delete old frontend files
+      file:
+        state: absent
+        path: /var/www/html/
+      become: yes
+
+    - name: Copy frontend build files
+      copy:
+        src: /home/ec2-user/frontend/build/
+        dest: /var/www/html/
+        remote_src: true
+        owner: nginx
+        group: nginx
+        mode: '0744'
+      become: yes
+
+    - name: Install nginx with self-signed certs
+      include: ../nginx/nginx.yaml

@@ -12,6 +12,10 @@
         src: ../../../website/frontend/
         dest: /home/ec2-user/frontend
 
+    - name: Remove old packages
+      shell: >
+        rm -rf package-lock.json node_modules
+
     - name: run install
       community.general.npm:
         path: /home/ec2-user/frontend
