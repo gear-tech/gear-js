@@ -48,7 +48,6 @@ const AppComponent: FC = () => {
   const dispatch = useDispatch();
 
   const { isApiReady } = useSelector((state: RootState) => state.api);
-  const { countUnread } = useSelector((state: RootState) => state.notifications);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
 
   useEffect(() => {
@@ -58,12 +57,6 @@ const AppComponent: FC = () => {
       document.body.style.overflowY = 'unset';
     }
   }, [isProgramUploading, isMessageSending]);
-
-  useEffect(() => {
-    if (typeof countUnread !== 'number') {
-      dispatch(getUnreadNotificationsCount());
-    }
-  }, [dispatch, countUnread]);
 
   useEffect(() => {
     if (!isApiReady) {
