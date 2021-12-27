@@ -89,4 +89,4 @@ class NodeApi {
   }
 }
 
-export const nodeApi = new NodeApi(API_CONNECTION_ADDRESS);
+export const nodeApi = new NodeApi(NODE_ADDRESS);
