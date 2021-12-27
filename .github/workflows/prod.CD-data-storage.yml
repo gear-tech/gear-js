@@ -8,7 +8,6 @@ env:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
-    needs: build-data-storage-docker
     environment: production
     steps:
       - name: Checkout
