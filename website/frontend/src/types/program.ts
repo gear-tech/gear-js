@@ -7,7 +7,7 @@ export enum ProgramStatus {
 }
 
 export interface ProgramModel {
-  hash: string;
+  id: string;
   blockHash?: string;
   programNumber?: number;
   name?: string;
@@ -41,7 +41,7 @@ export interface UploadProgramModel {
   init_output: string;
   handle_input: string;
   handle_output: string;
-  hash?: string;
+  id?: string;
   types: string;
   title?: string;
   programName?: string;

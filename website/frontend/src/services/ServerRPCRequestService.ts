@@ -73,12 +73,20 @@ export default class ServerRPCRequestService {
     return localStorage.getItem('chain') as string;
   }
 
+  private static getGenesis() {
+    return localStorage.getItem('genesis') as string;
+  }
+
   private getRequest(method: string, postParams: object): RPCRequest {
     return {
       jsonrpc: '2.0',
       id: ServerRPCRequestService.getRequestId(),
       method,
-      params: { ...postParams, chain: ServerRPCRequestService.getChain() },
+      params: {
+        ...postParams,
+        chain: ServerRPCRequestService.getChain(),
+        genesis: ServerRPCRequestService.getGenesis(),
+      },
     };
   }
 

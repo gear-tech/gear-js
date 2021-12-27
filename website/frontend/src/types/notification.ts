@@ -5,7 +5,7 @@ export interface NotificationModel {
   isRead: boolean;
   payload?: string;
   destinationId: number;
-  programHash: number;
+  programId: number;
 }
 
 export interface RecentNotificationModel {

@@ -1,5 +1,6 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { KeyringPair } from '@polkadot/keyring/types';
+import { Codec } from '@polkadot/types-codec/types';
 import { DebugDataSnapshotEvent, GearApi } from '.';
 
 export class DebugMode {

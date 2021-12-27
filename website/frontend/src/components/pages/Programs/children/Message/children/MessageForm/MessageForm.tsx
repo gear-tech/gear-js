@@ -22,13 +22,13 @@ import './MessageForm.scss';
 import { MetaErrorMessage } from './styles';
 
 type Props = {
-  programHash: string;
+  programId: string;
   programName: string;
   meta: Metadata | null;
   types: MetaParam | null;
 };
 
-export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null, types }) => {
+export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, types }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
@@ -39,7 +39,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
     gasLimit: 20000000,
     value: 0,
     payload: types ? JSON.stringify(types, null, 4) : '',
-    destination: programHash,
+    destination: programId,
     fields: {},
   });
 
@@ -68,7 +68,7 @@ export const MessageForm: VFC<Props> = ({ programHash, programName, meta = null,
 
           return;
         }
-        const estimatedGas = await api?.program.getGasSpent(programHash, pl, meta.handle_input, meta);
+        const estimatedGas = await api?.program.getGasSpent(programId, pl, meta.handle_input, meta);
         dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
         setFieldValue('gasLimit', Number(`${estimatedGas}`));
       }
