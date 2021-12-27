@@ -13,7 +13,7 @@ export default class IndexedDBService {
     this.storeName = storeName;
   }
 
-  public connectDB(callback: (db: any) => void) {
+  public connectDB(callback: (db: IDBDatabase) => void) {
     const request = indexedDB.open(this.dbName, this.dbVersion);
 
     request.onupgradeneeded = () => {
