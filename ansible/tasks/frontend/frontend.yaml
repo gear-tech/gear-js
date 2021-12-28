@@ -4,46 +4,29 @@
   remote_user: ec2-user
 
   tasks:
-    # - name: Install and enable required packages
-    #   include: ../packages/packages.yaml
+    - name: Create data-storage dir
+      file: path=/home/ec2-user/build-frontend state=directory mode=0755
 
     - name: Copy frontend
       synchronize:
         src: ../../../website/frontend/build/
         dest: /home/ec2-user/frontend-build
 
-    # - name: Remove old packages
-    #   shell: >
-    #     rm -rf package-lock.json node_modules
+    - name: Delete old frontend files
+      file:
+        state: absent
+        path: /var/www/html/
+      become: yes
 
-    # - name: run install
-    #   community.general.npm:
-    #     path: /home/ec2-user/frontend
+    - name: Copy frontend build files
+      copy:
+        src: /home/ec2-user/frontend-build/
+        dest: /var/www/html/
+        remote_src: true
+        owner: nginx
+        group: nginx
+        mode: '0744'
+      become: yes
 
-    # - name: run build
-    #   shell: >
-    #     cd /home/ec2-user/frontend; npm run build; cd ..
-    #   environment:
-    #     REACT_APP_NODE_ADDRESS: "{{ lookup('env','REACT_APP_NODE_ADDRESS') }}"
-    #     REACT_APP_API_URL: "{{ lookup('env','REACT_APP_API_URL') }}"
-    #     REACT_APP_WASM_COMPILER_URL: "{{ lookup('env','REACT_APP_WASM_COMPILER_URL') }}"
-    #     REACT_APP_RRT:
-
-    # - name: Delete old frontend files
-    #   file:
-    #     state: absent
-    #     path: /var/www/html/
-    #   become: yes
-
-    # - name: Copy frontend build files
-    #   copy:
-    #     src: /home/ec2-user/frontend/build/
-    #     dest: /var/www/html/
-    #     remote_src: true
-    #     owner: nginx
-    #     group: nginx
-    #     mode: '0744'
-    #   become: yes
-
-    # - name: Install nginx with self-signed certs
-    #   include: ../nginx/nginx.yaml
+    - name: Restart nginx
+      include: ../nginx/nginx.yaml
