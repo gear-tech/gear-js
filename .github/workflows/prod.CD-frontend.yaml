@@ -21,7 +21,7 @@ jobs:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
           REACT_APP_NODE_ADDRESS: ${{ secrets.REACT_APP_NODE_ADDRESS }}
           REACT_APP_WASM_COMPILER_URL: ${{ secrets.REACT_APP_WASM_COMPILER_URL }}
-          REACT_APP_PTR: ''
+          REACT_APP_RRT: ''
 
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
