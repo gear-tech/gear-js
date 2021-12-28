@@ -1,6 +1,6 @@
 import React, { VFC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
+import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
 import { useParams, useHistory } from 'react-router-dom';
 import { RootState } from 'store/reducers';
 import {
@@ -39,6 +39,7 @@ export const Program: VFC = () => {
     uploadedAt: 'Loading ...',
     meta: 'Loading ...',
   });
+  const [metadata, setMetadata] = useState<Metadata | null>(null);
 
   useEffect(() => {
     dispatch(getProgramAction(id));
@@ -68,6 +69,15 @@ export const Program: VFC = () => {
       dispatch(resetProgramAction());
     };
   }, [dispatch, program, setData, id]);
+
+  useEffect(() => {
+    const metaFile = program?.meta.metaFile;
+
+    if (metaFile) {
+      const metaBuffer = Buffer.from(metaFile, 'base64');
+      getWasmMetadata(metaBuffer).then(setMetadata);
+    }
+  }, [program]);
 
   const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
@@ -144,9 +154,14 @@ export const Program: VFC = () => {
                 aria-label="refresh"
                 onClick={() => handleOpenForm(String(data.id), data.name, true)}
               >
-                <img src={MessageIcon} alt="message" />
+                <img src={MessageIcon} alt="message" className="block__button-icon" />
                 <span className="block__button-text">Send Message</span>
               </button>
+              {metadata?.meta_state_output && (
+                <button className="block__button-elem" type="button">
+                  <span className="block__button-text">Read State</span>
+                </button>
+              )}
               <div className="block__button-upload">
                 <span className="block__button-caption">Uploaded at:</span>
                 <span className="block__button-date">{data.uploadedAt}</span>

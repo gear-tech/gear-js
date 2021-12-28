@@ -127,12 +127,14 @@
             width: 100%;
             margin-right: 0;
           }
+          .block__button-icon {
+            margin-right: 16px;
+          }
           .block__button-text {
             font-weight: bold;
             font-size: 16px;
             line-height: 24px;
             color: $textColor;
-            margin-left: 16px;
           }
         }
         .block__button-upload {
