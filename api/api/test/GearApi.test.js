@@ -21,21 +21,38 @@ for (let filePath of testFiles) {
   const testFile = yaml.load(readFileSync(join('./test/spec/programs', filePath), 'utf8'));
 
   describe(testFile.title, () => {
-    test('Upload programs', async () => {
+    testif(!testFile.skip)('Upload programs', async () => {
       await api.isReady;
       for (let program of testFile.programs) {
         const code = readFileSync(join(process.env.EXAMPLES_DIR, `${program.name}.opt.wasm`));
-        const meta = program.meta
-          ? await getWasmMetadata(readFileSync(join(process.env.EXAMPLES_DIR, `${program.name}.meta.wasm`)))
-          : {};
-        programs.set(program.id, {
-          id: api.program.submit(
-            { code, initPayload: program.initPayload, gasLimit: program.gasLimit, value: program.value },
-            meta,
-          ),
+        const metaFile = readFileSync(join(process.env.EXAMPLES_DIR, `${program.name}.meta.wasm`));
+        const meta = program.meta ? await getWasmMetadata(metaFile) : {};
+        const programId = api.program.submit(
+          { code, initPayload: program.initPayload, gasLimit: program.gasLimit, value: program.value },
           meta,
+        );
+        programs.set(program.id, {
+          id: programId,
+          meta,
+          metaFile,
         });
-        let unsub;
+        let unsub, log, messageId;
+
+        if (program.log) {
+          log = new Promise(async (resolve) => {
+            unsub = await api.gearEvents.subscribeLogEvents((event) => {
+              if (event.data.source.toHex() === programId) {
+                if (
+                  event.data.reply.unwrap()[1].toNumber() === 0 &&
+                  event.data.reply.unwrap()[0].toHex() === messageId
+                ) {
+                  resolve(event.data.payload.toHex());
+                }
+              }
+            });
+          });
+        }
+
         const status = new Promise(async (resolve) => {
           unsub = await api.gearEvents.subscribeProgramEvents((event) => {
             if (event.data.info.programId.toHex() === programs.get(program.id).id) {
@@ -47,15 +64,24 @@ for (let filePath of testFiles) {
             }
           });
         });
-        expect(0).toBe(await api.program.signAndSend(await accounts[program.account], () => {}));
+        expect(0).toBe(
+          await api.program.signAndSend(await accounts[program.account], (data) => {
+            messageId = data.messageId;
+          }),
+        );
         const res = await status;
         unsub();
         expect('success').toBe(res);
+        if (program.log) {
+          const logPayload = await log;
+          unsub();
+          expect(logPayload).toBe(program.log);
+        }
       }
       return;
     });
 
-    testif(testFile.messages)('Sending messages', async () => {
+    testif(!testFile.skip && testFile.messages)('Sending messages', async () => {
       await api.isReady;
       for (let message of testFile.messages) {
         api.message.submit(
@@ -94,10 +120,18 @@ for (let filePath of testFiles) {
         }
       }
     });
+
+    testif(!testFile.skip && testFile.state)('Read state', async () => {
+      await api.isReady;
+      for (let state of testFile.state) {
+        const program = programs.get(state.program);
+        const result = await api.programState.read(program.id, program.metaFile, state.payload);
+        expect(state.result).toBe(result.toHex());
+      }
+    });
   });
   programs.clear();
 }
 
-test.todo('read state');
 test.todo('read mailbox');
 test.todo('reply message');
