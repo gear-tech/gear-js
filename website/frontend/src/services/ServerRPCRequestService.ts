@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import ky from 'ky';
-import { API_PATH } from 'consts';
+import { API_URL } from 'consts';
 import { KyHeadersInit } from 'ky/distribution/types/options';
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
@@ -57,7 +57,7 @@ export class RPCResponseError extends Error {
 export type RPCResponseErrorType = typeof RPCResponseError;
 
 export default class ServerRPCRequestService {
-  protected readonly RPC_API_PATH = API_PATH;
+  protected readonly RPC_API_PATH = API_URL;
 
   protected readonly url = this.RPC_API_PATH;
 
@@ -73,12 +73,20 @@ export default class ServerRPCRequestService {
     return localStorage.getItem('chain') as string;
   }
 
+  private static getGenesis() {
+    return localStorage.getItem('genesis') as string;
+  }
+
   private getRequest(method: string, postParams: object): RPCRequest {
     return {
       jsonrpc: '2.0',
       id: ServerRPCRequestService.getRequestId(),
       method,
-      params: { ...postParams, chain: ServerRPCRequestService.getChain() },
+      params: {
+        ...postParams,
+        chain: ServerRPCRequestService.getChain(),
+        genesis: ServerRPCRequestService.getGenesis(),
+      },
     };
   }
 

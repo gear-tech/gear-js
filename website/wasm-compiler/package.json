@@ -1,5 +1,5 @@
 {
-  "name": "@gear-js/ide-backend",
+  "name": "@gear-js/wasm-compiler",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -38,7 +38,7 @@
     "typeorm": "^0.2.41"
   },
   "devDependencies": {
-    "@nestjs/cli": "^7.6.0",
+    "@nestjs/cli": "^8.1.6",
     "@nestjs/schematics": "^7.3.0",
     "@nestjs/testing": "^8.0.6",
     "@types/express": "^4.17.11",

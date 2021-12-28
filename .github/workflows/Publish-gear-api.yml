@@ -1,4 +1,4 @@
-name: gear-api
+name: gear-api-publish
 
 on:
   push:
