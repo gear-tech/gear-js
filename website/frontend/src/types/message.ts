@@ -2,7 +2,7 @@ export interface MessageModel {
   destination: string;
   id: string;
   date: string;
-  isRead: boolean;
+  replyError: any;
 }
 
 export interface MessagePaginationModel {
