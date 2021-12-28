@@ -7,7 +7,6 @@ env:
 
 jobs:
   Deploy:
-    needs: Build-backend-docker
     runs-on: ubuntu-latest
     environment: production
     steps:
