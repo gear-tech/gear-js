@@ -1,4 +1,4 @@
-import React, { VFC, useEffect, useState } from 'react';
+import React, { VFC, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
 import { useParams, useHistory } from 'react-router-dom';
@@ -18,6 +18,7 @@ import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
 import './Program.scss';
+import { useApi } from 'hooks/useApi';
 
 type ProgramMessageType = {
   programName: string;
@@ -26,6 +27,7 @@ type ProgramMessageType = {
 
 export const Program: VFC = () => {
   const dispatch = useDispatch();
+  const [api] = useApi();
   const params: any = useParams();
   const id: string = params?.id;
   const history = useHistory();
@@ -40,6 +42,7 @@ export const Program: VFC = () => {
     meta: 'Loading ...',
   });
   const [metadata, setMetadata] = useState<Metadata | null>(null);
+  const metaBuffer = useRef<Buffer | null>(null);
 
   useEffect(() => {
     dispatch(getProgramAction(id));
@@ -71,11 +74,11 @@ export const Program: VFC = () => {
   }, [dispatch, program, setData, id]);
 
   useEffect(() => {
-    const metaFile = program?.meta.metaFile;
+    const metaFile = program?.meta?.metaFile;
 
     if (metaFile) {
-      const metaBuffer = Buffer.from(metaFile, 'base64');
-      getWasmMetadata(metaBuffer).then(setMetadata);
+      metaBuffer.current = Buffer.from(metaFile, 'base64');
+      getWasmMetadata(metaBuffer.current).then(setMetadata);
     }
   }, [program]);
 
@@ -120,6 +123,19 @@ export const Program: VFC = () => {
   const handleGoBack = () => {
     history.goBack();
   };
+  
+  console.log(id);
+
+  const handleReadStateClick = () => {
+    if (metaBuffer.current) {
+      const options = { decimal: 1, hex: [1] };
+      api?.programState.read(`0x${id}`, metaBuffer.current, options).then((result) => {
+        console.log(result);
+      });
+    }
+  };
+
+  console.log(metadata);
 
   return (
     <div className="wrapper">
@@ -158,7 +174,7 @@ export const Program: VFC = () => {
                 <span className="block__button-text">Send Message</span>
               </button>
               {metadata?.meta_state_output && (
-                <button className="block__button-elem" type="button">
+                <button className="block__button-elem" type="button" onClick={handleReadStateClick}>
                   <span className="block__button-text">Read State</span>
                 </button>
               )}
