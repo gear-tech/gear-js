@@ -38,7 +38,7 @@ jobs:
 
   Deploy-frontend:
     runs-on: ubuntu-latest
-    needs: build-frontend-docker
+    # needs: build-frontend-docker
     environment: staging
     steps:
       - name: Checkout
