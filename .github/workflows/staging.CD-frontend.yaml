@@ -62,7 +62,7 @@ jobs:
           REACT_APP_WASM_COMPILER_URL: ${{ secrets.REACT_APP_WASM_COMPILER_URL }}
         with:
           directory: ./ansible/tasks/frontend
-          playbook: staging_frontend.yaml
+          playbook: frontend.yaml
           key: ${{secrets.SSH_PRIVATE_KEY}}
           inventory: |
             [all]
