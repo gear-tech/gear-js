@@ -49,6 +49,7 @@ jobs:
 
   build-frontend:
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
       - uses: actions/checkout@v2
@@ -57,9 +58,15 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 16.x
+
       - run: |
           yarn install
           yarn build:frontend
+        env:
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_NODE_ADDRESS: ${{ secrets.REACT_APP_NODE_ADDRESS }}
+          REACT_APP_WASM_COMPILER_URL: ${{ secrets.REACT_APP_WASM_COMPILER_URL }}
+          REACT_APP_RRT: ''
 
   build-api:
     runs-on: ubuntu-latest
