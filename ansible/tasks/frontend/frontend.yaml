@@ -4,8 +4,8 @@
   remote_user: ec2-user
 
   tasks:
-    - name: Create data-storage dir
-      file: path=/home/ec2-user/build-frontend state=directory mode=0755
+    - name: Create frontend-build dir
+      file: path=/home/ec2-user/frontend-build state=directory mode=0755
 
     - name: Copy frontend
       synchronize:
