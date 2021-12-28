@@ -38,7 +38,7 @@ export const Messages: VFC = () => {
   useEffect(() => {
     dispatch(
       getMessagesAction({
-        source: localStorage.getItem('public_key_raw'),
+        destination: localStorage.getItem('public_key_raw'),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
       })
