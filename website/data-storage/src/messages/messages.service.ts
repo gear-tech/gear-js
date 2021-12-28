@@ -5,7 +5,7 @@ import { Message } from './entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
-import { AddPayloadParams, AllMessagesResult, GetMessagesParams } from 'src/interfaces';
+import { AddPayloadParams, AllMessagesResult, FindMessageParams, GetMessagesParams } from 'src/interfaces';
 import { PAGINATION_LIMIT } from 'src/config/configuration';
 
 const logger = new Logger('MessageService');
@@ -116,6 +116,14 @@ export class MessagesService {
       messages: result,
       count: total,
     };
+  }
+
+  async getMessage(params: FindMessageParams): Promise<Message> {
+    const where = {
+      id: params.id,
+    };
+    const result = await this.messageRepo.findOne({ where });
+    return result;
   }
 
   async getCountUnread(destination: string): Promise<number> {

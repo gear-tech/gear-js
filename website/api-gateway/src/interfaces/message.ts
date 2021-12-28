@@ -32,6 +32,8 @@ export interface GetMessagesParams extends RequestParams {
   offset?: number;
 }
 
+export interface FindMessageParams extends RequestParams, Pick<Message, 'id'> {}
+
 export interface GetIncomingMessagesParams extends RequestParams {
   destination?: string;
   isRead?: boolean;
