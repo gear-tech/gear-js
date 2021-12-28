@@ -5,6 +5,7 @@ import { Logger } from '@nestjs/common';
 import {
   AddMetaParams,
   AddPayloadParams,
+  FindMessageParams,
   FindProgramParams,
   GetAllProgramsParams,
   GetIncomingMessagesParams,
@@ -17,6 +18,7 @@ import config from 'src/config/configuration';
 
 const logger = new Logger('ApiGatewayService');
 const configKafka = config().kafka;
+
 @Injectable()
 export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit {
   constructor() {
@@ -49,6 +51,7 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
     'meta.get',
     'program.all',
     'message.all',
+    'message.data',
     'message.add.payload',
     'testBalance.get',
   ];
@@ -93,6 +96,9 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
     message: {
       all: (params: GetMessagesParams) => {
         return this.client.send('message.all', params);
+      },
+      data: (params: FindMessageParams) => {
+        return this.client.send('message.data', params);
       },
       incoming: (params: GetIncomingMessagesParams) => {
         return this.client.send('message.all', params);

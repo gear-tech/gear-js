@@ -53,6 +53,12 @@ export class ConsumerController {
     return JSON.stringify(result);
   }
 
+  @MessagePattern('message.data')
+  async messageData(@Payload() payload) {
+    const result = await this.consumerService.message(payload.value);
+    return JSON.stringify(result);
+  }
+
   @MessagePattern('message.add.payload')
   async savePayload(@Payload() payload) {
     const result = await this.consumerService.addPayload(payload.value);

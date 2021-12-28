@@ -11,6 +11,7 @@ import {
   AddPayloadParams,
   AllMessagesResult,
   GetMessagesParams,
+  FindMessageParams,
 } from 'src/interfaces';
 import { MessagesService } from 'src/messages/messages.service';
 import { MetadataService } from 'src/metadata/metadata.service';
@@ -138,6 +139,14 @@ export class ConsumerService {
         return await this.messageService.getIncoming(params);
       }
       return await this.messageService.getOutgoing(params);
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  async message(params: FindMessageParams): Result<Message> {
+    try {
+      return await this.messageService.getMessage(params);
     } catch (error) {
       return { error: error.message };
     }
