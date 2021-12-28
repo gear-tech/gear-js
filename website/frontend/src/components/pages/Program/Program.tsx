@@ -82,7 +82,7 @@ export const Program: VFC = () => {
         limit: INITIAL_LIMIT_BY_PAGE,
       })
     );
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
