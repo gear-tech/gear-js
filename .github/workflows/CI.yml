@@ -49,7 +49,7 @@ jobs:
 
   build-frontend:
     runs-on: ubuntu-latest
-    environment: production
+    environment: staging
 
     steps:
       - uses: actions/checkout@v2
