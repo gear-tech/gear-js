@@ -3,8 +3,8 @@ name: staging.frontend-CD
 on:
   push:
     branches: [master, do-build-on-gh]
-    paths:
-      - website/frontend/**
+    # paths:
+    # - website/frontend/**
 
 env:
   CARGO_TERM_COLOR: always
