@@ -2,7 +2,7 @@ name: gear-api-publish
 
 on:
   push:
-    branches: [master]
+    branches: [master, do-restore-gear-api]
     paths:
       - api/api/**
 
