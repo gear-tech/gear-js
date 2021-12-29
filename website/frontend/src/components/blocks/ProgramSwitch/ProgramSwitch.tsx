@@ -159,7 +159,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
               pageType === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && 'switch-buttons__item--active'
             )}
           >
-            Recent uploaded programs
+            User programs
           </Link>
           <Link
             to={routes.allPrograms}
