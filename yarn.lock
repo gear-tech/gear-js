@@ -1819,6 +1819,7 @@ __metadata:
     dotenv: ^10.0.0
     kafkajs: ^1.15.0
     nodemon: ^2.0.14
+    ts-node: ^10.4.0
     winston: ^3.3.3
   languageName: unknown
   linkType: soft
