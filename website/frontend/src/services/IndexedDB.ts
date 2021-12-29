@@ -1,5 +1,3 @@
-import { ProgramModel } from 'types/program';
-
 export default class IndexedDBService {
   private dbName: string;
 
@@ -29,19 +27,55 @@ export default class IndexedDBService {
     };
   }
 
-  public add(db: IDBDatabase, data: ProgramModel) {
+  public getStore(db: IDBDatabase) {
     const tx = db.transaction(this.storeName, 'readwrite');
     const store = tx.objectStore(this.storeName);
-    const addRequest = store.put(data);
 
-    return addRequest;
+    return store;
   }
 
-  public get(db: IDBDatabase) {
-    const tx = db.transaction(this.storeName, 'readwrite');
-    const store = tx.objectStore(this.storeName);
-    const getRequest = store.getAll();
+  public add(db: IDBDatabase, data: any) {
+    return new Promise((resolve, reject) => {
+      const store = this.getStore(db);
+      const request = store.put(data);
 
-    return getRequest;
+      request.onsuccess = () => {
+        resolve(`Program added ${data.id}`);
+      };
+
+      request.onerror = () => {
+        reject(request.result);
+      };
+    });
+  }
+
+  public get(db: IDBDatabase, id?: string) {
+    return new Promise((resolve, reject) => {
+      const store = this.getStore(db);
+      const request = id ? store.get(id) : store.getAll();
+
+      request.onsuccess = () => {
+        resolve(request.result);
+      };
+
+      request.onerror = () => {
+        reject(request.result);
+      };
+    });
+  }
+
+  public update(db: IDBDatabase) {
+    return new Promise((resolve, reject) => {
+      const store = this.getStore(db);
+      const request = store.openCursor();
+
+      request.onsuccess = () => {
+        resolve(request.result);
+      };
+
+      request.onerror = () => {
+        reject(request.result);
+      };
+    });
   }
 }

@@ -8,6 +8,7 @@ import { MessageForm } from 'components/pages/Programs/children/Message/children
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import './Message.scss';
 import { PAGE_TYPES, RPC_METHODS } from 'consts';
+import IndexedDB from 'services/IndexedDB';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
 import { MetaParam } from 'utils/meta-parser';
@@ -19,6 +20,8 @@ type Props = {
 };
 
 export const Message: VFC<Props> = ({ programId, programName, handleClose }) => {
+  const chain = localStorage.getItem('chain');
+
   const dispatch = useDispatch();
 
   const [meta, setMeta] = useState<Metadata | null>(null);
@@ -53,16 +56,33 @@ export const Message: VFC<Props> = ({ programId, programName, handleClose }) => 
 
   useEffect(() => {
     if (!meta) {
-      getMeta()
-        .then((res) => {
-          setMeta(JSON.parse(res.result.meta) ?? null);
-        })
-        .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
-        .finally(() => {
-          setReady(true);
+      if (chain === 'Development') {
+        const indexedDB = new IndexedDB();
+
+        indexedDB.connectDB((db: IDBDatabase) => {
+          indexedDB
+            .get(db, programId)
+            .then((response: any) => {
+              setMeta(JSON.parse(response.result.meta.meta) ?? null);
+              setReady(true);
+            })
+            .catch((error: any) => {
+              dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+              setReady(true);
+            });
         });
+      } else {
+        getMeta()
+          .then((res) => {
+            setMeta(JSON.parse(res.result.meta) ?? null);
+          })
+          .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
+          .finally(() => {
+            setReady(true);
+          });
+      }
     }
-  }, [meta, getMeta, dispatch]);
+  }, [meta, chain, programId, getMeta, dispatch]);
 
   if (ready) {
     return (

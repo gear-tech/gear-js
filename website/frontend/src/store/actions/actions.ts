@@ -6,6 +6,7 @@ import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
+import IndexedDB from 'services/IndexedDB';
 
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS } from 'consts';
@@ -107,35 +108,91 @@ export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOU
 
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
+const indexedDB = new IndexedDB();
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
-  dispatch(fetchUserProgramsAction());
-  programService
-    .fetchUserPrograms(params)
-    .then((data) => {
-      dispatch(fetchUserProgramsSuccessAction(data.result));
-    })
-    .catch(() => dispatch(fetchUserProgramsErrorAction()));
+  const chain = localStorage.getItem('chain');
+
+  if (chain === 'Development') {
+    indexedDB.connectDB((db: IDBDatabase) => {
+      indexedDB
+        .get(db)
+        .then((response: any) => {
+          dispatch(
+            fetchUserProgramsSuccessAction({
+              count: response.length,
+              programs: response,
+            })
+          );
+        })
+        .catch(() => {
+          dispatch(fetchUserProgramsErrorAction());
+        });
+    });
+  } else {
+    dispatch(fetchUserProgramsAction());
+    programService
+      .fetchUserPrograms(params)
+      .then((data) => {
+        dispatch(fetchUserProgramsSuccessAction(data.result));
+      })
+      .catch(() => dispatch(fetchUserProgramsErrorAction()));
+  }
 };
 
 export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any) => {
-  dispatch(fetchUserProgramsAction());
-  programService
-    .fetchAllPrograms(params)
-    .then((data) => {
-      dispatch(fetchAllProgramsSuccessAction(data.result));
-    })
-    .catch(() => dispatch(fetchUserProgramsErrorAction()));
+  const chain = localStorage.getItem('chain');
+
+  if (chain === 'Development') {
+    indexedDB.connectDB((db: IDBDatabase) => {
+      indexedDB
+        .get(db)
+        .then((response: any) => {
+          dispatch(
+            fetchAllProgramsSuccessAction({
+              count: response.length,
+              programs: response,
+            })
+          );
+        })
+        .catch(() => {
+          dispatch(fetchUserProgramsErrorAction());
+        });
+    });
+  } else {
+    dispatch(fetchUserProgramsAction());
+    programService
+      .fetchAllPrograms(params)
+      .then((data) => {
+        dispatch(fetchAllProgramsSuccessAction(data.result));
+      })
+      .catch(() => dispatch(fetchUserProgramsErrorAction()));
+  }
 };
 
 export const getProgramAction = (id: string) => (dispatch: any) => {
-  dispatch(fetchProgramAction());
-  programService
-    .fetchProgram(id)
-    .then((data) => {
-      dispatch(fetchProgramSuccessAction(data.result));
-    })
-    .catch(() => dispatch(fetchProgramErrorAction()));
+  const chain = localStorage.getItem('chain');
+
+  if (chain === 'Development') {
+    indexedDB.connectDB((db: IDBDatabase) => {
+      indexedDB
+        .get(db, id)
+        .then((response: any) => {
+          dispatch(fetchProgramSuccessAction(response));
+        })
+        .catch(() => {
+          dispatch(fetchProgramErrorAction());
+        });
+    });
+  } else {
+    dispatch(fetchProgramAction());
+    programService
+      .fetchProgram(id)
+      .then((data) => {
+        dispatch(fetchProgramSuccessAction(data.result));
+      })
+      .catch(() => dispatch(fetchProgramErrorAction()));
+  }
 };
 
 export const handleProgramError = (error: string) => (dispatch: any, getState: any) => {
@@ -143,7 +200,6 @@ export const handleProgramError = (error: string) => (dispatch: any, getState: a
   if (programs.isProgramUploading) {
     dispatch(programUploadFailedAction(error));
   } else if (programs.isMessageSending) {
-    console.log('hehsash');
     dispatch(sendMessageFailedAction(error));
   } else if (programs.isMetaUploading) {
     dispatch(uploadMetaFailedAction(error));

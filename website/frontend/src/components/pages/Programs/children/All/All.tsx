@@ -6,7 +6,6 @@ import { Pagination } from 'components/Pagination/Pagination';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
-import IndexedDBService from 'services/IndexedDB';
 import {
   getAllProgramsAction,
   resetGasAction,
@@ -41,16 +40,12 @@ export const All: VFC = () => {
   const location = useLocation();
   const urlSearch = location.search;
   const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
-  const chain = localStorage.getItem('chain');
 
   const [search, setSearch] = useState('');
 
-  let allPrograms = useSelector((state: RootState) => selectPrograms(state, search));
-  let allProgramsCount = useSelector((state: RootState) => state.programs.allUploadedProgramsCount);
+  const allPrograms = useSelector((state: RootState) => selectPrograms(state, search));
+  const allProgramsCount = useSelector((state: RootState) => state.programs.allUploadedProgramsCount);
 
-  const [localPrograms, setLocalPrograms] = useState<ProgramModel[] | null>(null);
-  const [localProgramsCount, setLocalProgramsCount] = useState(0);
-  const [isLocalProgramsGet, setIsLocalProgramsGet] = useState(false);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
@@ -58,27 +53,6 @@ export const All: VFC = () => {
   const onPageChange = (page: number) => setCurrentPage(page);
 
   const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
-
-  useEffect(() => {
-    if (chain === 'Development' && !isLocalProgramsGet) {
-      const indexedDB = new IndexedDBService();
-
-      indexedDB.connectDB((db: IDBDatabase) => {
-        const request = indexedDB.get(db);
-
-        request.onsuccess = () => {
-          setLocalPrograms(request.result);
-          setLocalProgramsCount(request.result.length);
-          setIsLocalProgramsGet(true);
-        };
-      });
-    }
-  }, [chain, isLocalProgramsGet]);
-
-  if (chain === 'Development') {
-    allPrograms = localPrograms;
-    allProgramsCount = localProgramsCount;
-  }
 
   useEffect(() => {
     dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));

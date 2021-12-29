@@ -88,22 +88,24 @@ export const UploadProgram = async (
 
         if (chain === 'Development') {
           indexedDB.connectDB((db: IDBDatabase) => {
-            const request = indexedDB.add(db, {
-              id: programId,
-              name,
-              title,
-              initStatus: ProgramStatus.Success,
-              meta: JSON.stringify(meta),
-              uploadedAt: Date(),
-            });
-
-            request.onsuccess = () => {
-              dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Program added ${programId}` }));
-            };
-
-            request.onerror = () => {
-              dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${request.error}` }));
-            };
+            indexedDB
+              .add(db, {
+                id: programId,
+                name,
+                title,
+                initStatus: ProgramStatus.Success,
+                meta: {
+                  meta: JSON.stringify(meta),
+                },
+                metaFile,
+                uploadedAt: Date(),
+              })
+              .then((response: any) => {
+                dispatch(AddAlert({ type: EventTypes.SUCCESS, message: response }));
+              })
+              .catch((error: any) => {
+                dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+              });
           });
         } else {
           // Sign metadata and save it
@@ -179,29 +181,55 @@ export const addMetadata = async (
   dispatch: any
 ) => {
   const apiRequest = new ServerRPCRequestService();
+  const indexedDB = new IndexedDBService();
   const injector = await web3FromSource(account.meta.source);
+  const chain = localStorage.getItem('chain');
 
   // Sign metadata and save it
   signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
-    try {
-      const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-        meta: JSON.stringify(meta),
-        signature,
-        programId,
-        name,
-        title: meta.title,
-        metaFile,
+    if (chain === 'Development') {
+      indexedDB.connectDB((db: IDBDatabase) => {
+        indexedDB
+          .update(db)
+          .then((cursor: any) => {
+            if (cursor) {
+              const { key, value } = cursor;
+              if (key === programId) {
+                value.meta.meta = JSON.stringify(meta);
+                value.metaFile = metaFile;
+                value.title = meta.title;
+                indexedDB.add(db, value);
+                dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+                cursor.delete();
+              }
+              cursor.continue();
+            }
+          })
+          .catch((error) => {
+            dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+          });
       });
+    } else {
+      try {
+        const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+          meta: JSON.stringify(meta),
+          signature,
+          programId,
+          name,
+          title: meta.title,
+          metaFile,
+        });
 
-      if (response.error) {
-        // FIXME 'throw' of exception caught locally
-        throw new Error(response.error.message);
-      } else {
-        dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+        if (response.error) {
+          // FIXME 'throw' of exception caught locally
+          throw new Error(response.error.message);
+        } else {
+          dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+        }
+      } catch (error) {
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+        console.error(error);
       }
-    } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-      console.error(error);
     }
   });
 };
