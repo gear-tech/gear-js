@@ -1,10 +1,14 @@
-import { Kafka } from 'kafkajs';
-import { logger } from './logger.js';
-import config from './config.js';
+import { Kafka, Producer } from 'kafkajs';
+
+import { logger } from './logger';
+import config from './config';
 
 const log = logger('KafkaProducer');
 
 export class KafkaProducer {
+  readonly kafka: Kafka
+  readonly producer: Producer
+
   constructor() {
     this.kafka = new Kafka({
       clientId: config.kafka.clientId,
@@ -18,7 +22,7 @@ export class KafkaProducer {
     this.producer = this.kafka.producer();
   }
 
-  async createTopic(topic) {
+  async createTopic(topic: string) {
     const admin = this.kafka.admin();
     try {
       await admin.connect();
@@ -58,7 +62,7 @@ export class KafkaProducer {
     log.info('Producer is connected');
   }
 
-  async send(key, value, genesis) {
+  async send(key: string, value: string, genesis: string) {
     this.producer.send({
       topic: 'events',
       messages: [{ key, value: JSON.stringify(value), headers: { genesis } }],

@@ -12,7 +12,7 @@ const logFormat = printf(({ level, message, label, timestamp }) => {
   return `${chalk.cyan(timestamp)} ${level} ${chalk.magenta(`[${label}]`)} ${message}`;
 });
 
-export const logger = (labelName) =>
+export const logger = (labelName: string) =>
   createLogger({
     level: 'debug',
     format: combine(

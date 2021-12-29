@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 import { strict as assert } from 'assert';
 dotenv.config();
 
-const checkEnv = (env) => {
+const checkEnv = (env: unknown): string => {
   assert.notStrictEqual(env, undefined);
-  return env;
+  return env as never;
 };
 
 export default {
