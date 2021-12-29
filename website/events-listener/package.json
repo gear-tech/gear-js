@@ -14,6 +14,8 @@
   "dependencies": {
     "@gear-js/api": "^0.9.7",
     "@polkadot/api": "^7.0.2",
+    "@swc/core": "^1.2.124",
+    "@swc/helpers": "^0.3.2",
     "avsc": "^5.7.3",
     "chalk": "^4.1.2",
     "dotenv": "^10.0.0",
