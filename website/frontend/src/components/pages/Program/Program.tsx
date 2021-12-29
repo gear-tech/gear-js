@@ -13,6 +13,7 @@ import {
 } from 'store/actions/actions';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
+import State from 'components/pages/Programs/children/State/State';
 import { formatDate } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
@@ -41,8 +42,12 @@ export const Program: VFC = () => {
     uploadedAt: 'Loading ...',
     meta: 'Loading ...',
   });
+
+  // TEMP
   const [metadata, setMetadata] = useState<Metadata | null>(null);
+  const [isStateFormOpen, setIsStateFormOpen] = useState<Boolean>(false);
   const metaBuffer = useRef<Buffer | null>(null);
+  const isState = !!metadata?.async_init_output;
 
   useEffect(() => {
     dispatch(getProgramAction(id));
@@ -120,22 +125,36 @@ export const Program: VFC = () => {
     );
   }
 
+  // TEMP
+  if (isStateFormOpen && metadata) {
+    return <State programId={id} metadata={metadata} />;
+  }
+
   const handleGoBack = () => {
     history.goBack();
   };
-  
-  console.log(id);
+
+  // console.log(metadata);
+  // console.log(id);
 
   const handleReadStateClick = () => {
-    if (metaBuffer.current) {
-      const options = { decimal: 1, hex: [1] };
-      api?.programState.read(`0x${id}`, metaBuffer.current, options).then((result) => {
-        console.log(result);
-      });
-    }
-  };
+    // if (metadata) {
+    //   const displayedTypes = parseHexTypes(metadata.types!);
+    //   const inputType = getTypeStructure(metadata.meta_state_input!, displayedTypes);
+    //   console.log(inputType);
+    // }
+    setIsStateFormOpen(true);
 
-  console.log(metadata);
+    // if (metaBuffer.current) {
+    //   const temp = id.slice(2);
+    //   const options = { decimal: 2, hex: [2] };
+
+    //   api?.programState.read(`0x${temp}`, metaBuffer.current, options).then((result) => {
+    //     // const state = result[0];
+    //     console.log(result.toHuman());
+    //   });
+    // }
+  };
 
   return (
     <div className="wrapper">
@@ -162,10 +181,10 @@ export const Program: VFC = () => {
             <p className="block__caption">Metadata:</p>
             <pre className="block__textarea block__textarea_h420">{data.meta}</pre>
           </div>
-          <div className="block__item block__item_last">
+          <div className="block__item">
             <div className="block__button">
               <button
-                className="block__button-elem"
+                className="block__button-elem block__button-elem--submit"
                 type="button"
                 aria-label="refresh"
                 onClick={() => handleOpenForm(String(data.id), data.name, true)}
@@ -173,8 +192,12 @@ export const Program: VFC = () => {
                 <img src={MessageIcon} alt="message" className="block__button-icon" />
                 <span className="block__button-text">Send Message</span>
               </button>
-              {metadata?.meta_state_output && (
-                <button className="block__button-elem" type="button" onClick={handleReadStateClick}>
+              {isState && (
+                <button
+                  className="block__button-elem block__button-elem--submit"
+                  type="button"
+                  onClick={handleReadStateClick}
+                >
                   <span className="block__button-text">Read State</span>
                 </button>
               )}
