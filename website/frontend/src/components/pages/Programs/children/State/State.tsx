@@ -1,6 +1,6 @@
-import React, { useEffect, useState, VFC } from 'react';
+import React, { useEffect, useRef, useState, VFC } from 'react';
 import { FormItem } from 'components/FormItem';
-import { ParsedShape, parseMeta } from 'utils/meta-parser';
+import { ParsedShape, ParsedStruct, parseMeta } from 'utils/meta-parser';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
@@ -8,12 +8,14 @@ import { useHistory, useParams } from 'react-router-dom';
 import { getProgramAction, resetProgramAction } from 'store/actions/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
+import { useApi } from 'hooks/useApi';
 import styles from './State.module.scss';
 
 type Params = { id: string };
 const selectProgram = (state: RootState) => state.programs.program;
 
 const State: VFC = () => {
+  const [api] = useApi();
   const dispatch = useDispatch();
   const routeParams = useParams<Params>();
   const routeHistory = useHistory();
@@ -21,11 +23,12 @@ const State: VFC = () => {
   const programId = routeParams.id;
   const program = useSelector(selectProgram);
   const [metadata, setMetadata] = useState<Metadata | null>(null);
-
+  const metaBuffer = useRef<Buffer | null>(null);
   const types = metadata?.types;
-  const metaStateInput = metadata?.meta_state_input;
+  const stateInput = metadata?.meta_state_input;
 
   const [form, setForm] = useState<ParsedShape | null>(null);
+  const [state, setState] = useState('');
 
   useEffect(() => {
     dispatch(getProgramAction(programId));
@@ -39,22 +42,42 @@ const State: VFC = () => {
     const metaFile = program?.meta?.metaFile;
 
     if (metaFile) {
-      const metaBuffer = Buffer.from(metaFile, 'base64');
-      getWasmMetadata(metaBuffer).then(setMetadata);
+      metaBuffer.current = Buffer.from(metaFile, 'base64');
+      getWasmMetadata(metaBuffer.current).then(setMetadata);
     }
   }, [program]);
 
   useEffect(() => {
-    if (metaStateInput) {
-      const parsedTypes = parseHexTypes(types!);
-      const typeStructure = getTypeStructure(metaStateInput, parsedTypes);
+    if (stateInput && types) {
+      const parsedTypes = parseHexTypes(types);
+      const typeStructure = getTypeStructure(stateInput, parsedTypes);
       const parsedStructure = parseMeta(typeStructure);
       setForm(parsedStructure);
     }
-  }, [metaStateInput, types]);
+  }, [stateInput, types]);
+
+  const readState = (options?: any) => {
+    if (metaBuffer.current) {
+      api?.programState.read(programId as `0x${string}`, metaBuffer.current, options).then((result) => {
+        const decodedState = result.toHuman();
+        const stringifiedState = JSON.stringify(decodedState, null, 2);
+        setState(stringifiedState);
+      });
+    }
+  };
 
   const handleBackButtonClick = () => {
     routeHistory.goBack();
+  };
+
+  const handleSubmit = (value: { fields: ParsedStruct }) => {
+    if (stateInput) {
+      const { fields } = value;
+      const [options] = Object.values(fields);
+      readState(options);
+    } else {
+      readState();
+    }
   };
 
   return (
@@ -63,37 +86,38 @@ const State: VFC = () => {
         <button className={styles.arrowButton} type="button" aria-label="back" onClick={handleBackButtonClick} />
         <h2 className={styles.heading}>Read state</h2>
       </header>
-      <Formik
-        initialValues={{ fields: {} }}
-        onSubmit={(event) => {
-          console.log(event);
-        }}
-      >
-        {form && (
-          <Form className={`block ${styles.form}`}>
-            <div className="block__wrapper">
-              <div className="block__item">
-                <p className="block__caption block__caption--small">Program Id:</p>
-                <p className="block__field">{programId}</p>
-              </div>
+      <Formik initialValues={{ fields: {} }} onSubmit={handleSubmit}>
+        <Form className={`block ${styles.form}`}>
+          <div className="block__wrapper">
+            <div className="block__item">
+              <p className="block__caption block__caption--small">Program Id:</p>
+              <p className="block__field">{programId}</p>
+            </div>
+
+            {form && (
               <div className="block__item">
                 <p className="block__caption block__caption--small">Input Parameters:</p>
                 <FormItem data={form} />
               </div>
-              <div className="block__item">
-                <div className="block__button">
-                  <button className="block__button-elem" type="button" onClick={handleBackButtonClick}>
-                    <img className="block__button-icon" src={BackArrow} alt="Back arrow" />
-                    <span className="block__button-text">Back</span>
-                  </button>
-                  <button className="block__button-elem block__button-elem--submit" type="submit">
-                    <span className="block__button-text">Read state</span>
-                  </button>
-                </div>
+            )}
+
+            <div className="block__item">
+              <p className="block__caption block__caption--small">Statedata:</p>
+              <pre className="block__textarea block__textarea_h420">{state}</pre>
+            </div>
+            <div className="block__item">
+              <div className="block__button">
+                <button className="block__button-elem" type="button" onClick={handleBackButtonClick}>
+                  <img className="block__button-icon" src={BackArrow} alt="Back arrow" />
+                  <span className="block__button-text">Back</span>
+                </button>
+                <button className="block__button-elem block__button-elem--submit" type="submit">
+                  <span className="block__button-text">Read state</span>
+                </button>
               </div>
             </div>
-          </Form>
-        )}
+          </div>
+        </Form>
       </Formik>
     </div>
   );
