@@ -22,6 +22,7 @@ const State: VFC = () => {
 
   const programId = routeParams.id;
   const program = useSelector(selectProgram);
+
   const [metadata, setMetadata] = useState<Metadata | null>(null);
   const metaBuffer = useRef<Buffer | null>(null);
   const types = metadata?.types;
@@ -38,6 +39,7 @@ const State: VFC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // TODO: same useEffect in Program
   useEffect(() => {
     const metaFile = program?.meta?.metaFile;
 
@@ -56,6 +58,7 @@ const State: VFC = () => {
     }
   }, [stateInput, types]);
 
+  // TODO: type
   const readState = (options?: any) => {
     if (metaBuffer.current) {
       api?.programState.read(programId as `0x${string}`, metaBuffer.current, options).then((result) => {
@@ -86,6 +89,7 @@ const State: VFC = () => {
         <button className={styles.arrowButton} type="button" aria-label="back" onClick={handleBackButtonClick} />
         <h2 className={styles.heading}>Read state</h2>
       </header>
+      {/* TODO: init values */}
       <Formik initialValues={{ fields: {} }} onSubmit={handleSubmit}>
         <Form className={`block ${styles.form}`}>
           <div className="block__wrapper">
@@ -101,10 +105,12 @@ const State: VFC = () => {
               </div>
             )}
 
-            <div className="block__item">
-              <p className="block__caption block__caption--small">Statedata:</p>
-              <pre className="block__textarea block__textarea_h420">{state}</pre>
-            </div>
+            {state && (
+              <div className="block__item">
+                <p className="block__caption block__caption--small">Statedata:</p>
+                <pre className="block__textarea block__textarea_h420">{state}</pre>
+              </div>
+            )}
             <div className="block__item">
               <div className="block__button">
                 <button className="block__button-elem" type="button" onClick={handleBackButtonClick}>

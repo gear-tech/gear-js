@@ -13,7 +13,7 @@ import { Document } from 'components/pages/Document/Document';
 import { EditorPage } from 'features/Editor/EditorPage';
 import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
 import { SimpleLoader } from 'components/blocks/SimpleLoader';
-import State from 'components/pages/Programs/children/State/State';
+import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
