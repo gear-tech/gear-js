@@ -1,7 +1,8 @@
-import React, { VFC, useEffect, useState, useRef } from 'react';
+import React, { VFC, useEffect, useState } from 'react';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
-import { useParams, useHistory } from 'react-router-dom';
+
 import { RootState } from 'store/reducers';
 import {
   getProgramAction,
@@ -13,13 +14,11 @@ import {
 } from 'store/actions/actions';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
-import State from 'components/pages/Programs/children/State/State';
 import { formatDate } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
 import './Program.scss';
-import { useApi } from 'hooks/useApi';
 
 type ProgramMessageType = {
   programName: string;
@@ -28,7 +27,6 @@ type ProgramMessageType = {
 
 export const Program: VFC = () => {
   const dispatch = useDispatch();
-  const [api] = useApi();
   const params: any = useParams();
   const id: string = params?.id;
   const history = useHistory();
@@ -43,10 +41,7 @@ export const Program: VFC = () => {
     meta: 'Loading ...',
   });
 
-  // TEMP
   const [metadata, setMetadata] = useState<Metadata | null>(null);
-  const [isStateFormOpen, setIsStateFormOpen] = useState<Boolean>(false);
-  const metaBuffer = useRef<Buffer | null>(null);
   const isState = !!metadata?.async_init_output;
 
   useEffect(() => {
@@ -82,8 +77,8 @@ export const Program: VFC = () => {
     const metaFile = program?.meta?.metaFile;
 
     if (metaFile) {
-      metaBuffer.current = Buffer.from(metaFile, 'base64');
-      getWasmMetadata(metaBuffer.current).then(setMetadata);
+      const metaBuffer = Buffer.from(metaFile, 'base64');
+      getWasmMetadata(metaBuffer).then(setMetadata);
     }
   }, [program]);
 
@@ -125,35 +120,8 @@ export const Program: VFC = () => {
     );
   }
 
-  // TEMP
-  if (isStateFormOpen && metadata) {
-    return <State programId={id} metadata={metadata} />;
-  }
-
   const handleGoBack = () => {
     history.goBack();
-  };
-
-  // console.log(metadata);
-  // console.log(id);
-
-  const handleReadStateClick = () => {
-    // if (metadata) {
-    //   const displayedTypes = parseHexTypes(metadata.types!);
-    //   const inputType = getTypeStructure(metadata.meta_state_input!, displayedTypes);
-    //   console.log(inputType);
-    // }
-    setIsStateFormOpen(true);
-
-    // if (metaBuffer.current) {
-    //   const temp = id.slice(2);
-    //   const options = { decimal: 2, hex: [2] };
-
-    //   api?.programState.read(`0x${temp}`, metaBuffer.current, options).then((result) => {
-    //     // const state = result[0];
-    //     console.log(result.toHuman());
-    //   });
-    // }
   };
 
   return (
@@ -193,13 +161,9 @@ export const Program: VFC = () => {
                 <span className="block__button-text">Send Message</span>
               </button>
               {isState && (
-                <button
-                  className="block__button-elem block__button-elem--submit"
-                  type="button"
-                  onClick={handleReadStateClick}
-                >
+                <Link to={`/state/${id}`} className="block__button-elem block__button-elem--submit">
                   <span className="block__button-text">Read State</span>
-                </button>
+                </Link>
               )}
               <div className="block__button-upload">
                 <span className="block__button-caption">Uploaded at:</span>
