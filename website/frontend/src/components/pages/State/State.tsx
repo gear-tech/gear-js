@@ -9,6 +9,7 @@ import { getProgramAction, resetProgramAction } from 'store/actions/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
+import { Loader } from 'react-feather';
 import styles from './State.module.scss';
 
 type Params = { id: string };
@@ -19,6 +20,7 @@ const State: VFC = () => {
   const dispatch = useDispatch();
   const routeParams = useParams<Params>();
   const routeHistory = useHistory();
+  const [isLoading, setIsLoading] = useState(true);
 
   const programId = routeParams.id;
   const program = useSelector(selectProgram);
@@ -80,11 +82,16 @@ const State: VFC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
+  useEffect(() => {
+    if (metadata || state) setIsLoading(false);
+  }, [metadata, state]);
+
   const handleBackButtonClick = () => {
     routeHistory.goBack();
   };
 
   const handleSubmit = (value: { fields: ParsedStruct }) => {
+    setIsLoading(true);
     const { fields } = value;
     const [options] = Object.values(fields);
     readState(options);
@@ -104,20 +111,19 @@ const State: VFC = () => {
               <p className="block__caption block__caption--small">Program Id:</p>
               <p className="block__field">{programId}</p>
             </div>
-
             {form && (
               <div className="block__item">
                 <p className="block__caption block__caption--small">Input Parameters:</p>
                 <FormItem data={form} />
               </div>
             )}
-
             {state && (
               <div className="block__item">
                 <p className="block__caption block__caption--small">Statedata:</p>
                 <pre className="block__textarea block__textarea_h420">{state}</pre>
               </div>
             )}
+            {isLoading && <Loader color="white" className="animation-rotate" />}
             <div className="block__item">
               <div className="block__button">
                 <button className="block__button-elem" type="button" onClick={handleBackButtonClick}>
