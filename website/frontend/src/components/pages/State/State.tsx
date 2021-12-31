@@ -49,14 +49,14 @@ const State: VFC = () => {
     }
   }, [program]);
 
-  useEffect(() => {
+  const getPayloadForm = () => {
     if (stateInput && types) {
       const parsedTypes = parseHexTypes(types);
       const typeStructure = getTypeStructure(stateInput, parsedTypes);
       const parsedStructure = parseMeta(typeStructure);
       setForm(parsedStructure);
     }
-  }, [stateInput, types]);
+  };
 
   // TODO: type
   const readState = (options?: any) => {
@@ -69,18 +69,25 @@ const State: VFC = () => {
     }
   };
 
+  useEffect(() => {
+    if (metadata) {
+      if (stateInput) {
+        getPayloadForm();
+      } else {
+        readState();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metadata]);
+
   const handleBackButtonClick = () => {
     routeHistory.goBack();
   };
 
   const handleSubmit = (value: { fields: ParsedStruct }) => {
-    if (stateInput) {
-      const { fields } = value;
-      const [options] = Object.values(fields);
-      readState(options);
-    } else {
-      readState();
-    }
+    const { fields } = value;
+    const [options] = Object.values(fields);
+    readState(options);
   };
 
   return (
