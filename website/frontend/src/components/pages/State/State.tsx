@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, VFC } from 'react';
+import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { FormItem } from 'components/FormItem';
 import { ParsedShape, ParsedStruct, parseMeta } from 'utils/meta-parser';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
@@ -41,7 +41,6 @@ const State: VFC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // TODO: same useEffect in Program
   useEffect(() => {
     const metaFile = program?.meta?.metaFile;
 
@@ -51,25 +50,28 @@ const State: VFC = () => {
     }
   }, [program]);
 
-  const getPayloadForm = () => {
+  const getPayloadForm = useCallback(() => {
     if (stateInput && types) {
       const parsedTypes = parseHexTypes(types);
       const typeStructure = getTypeStructure(stateInput, parsedTypes);
       const parsedStructure = parseMeta(typeStructure);
       setForm(parsedStructure);
     }
-  };
+  }, [stateInput, types]);
 
   // TODO: type
-  const readState = (options?: any) => {
-    if (metaBuffer.current) {
-      api?.programState.read(programId as `0x${string}`, metaBuffer.current, options).then((result) => {
-        const decodedState = result.toHuman();
-        const stringifiedState = JSON.stringify(decodedState, null, 2);
-        setState(stringifiedState);
-      });
-    }
-  };
+  const readState = useCallback(
+    (options?: any) => {
+      if (metaBuffer.current) {
+        api?.programState.read(programId as `0x${string}`, metaBuffer.current, options).then((result) => {
+          const decodedState = result.toHuman();
+          const stringifiedState = JSON.stringify(decodedState, null, 2);
+          setState(stringifiedState);
+        });
+      }
+    },
+    [api, programId]
+  );
 
   useEffect(() => {
     if (metadata) {
@@ -79,8 +81,7 @@ const State: VFC = () => {
         readState();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metadata]);
+  }, [metadata, stateInput, getPayloadForm, readState]);
 
   useEffect(() => {
     if (metadata || state) setIsLoading(false);
