@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { FormItem } from 'components/FormItem';
-import { ParsedShape, ParsedStruct, parseMeta } from 'utils/meta-parser';
+import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 import { useHistory, useParams } from 'react-router-dom';
-import { getProgramAction, resetProgramAction } from 'store/actions/actions';
+import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
 import { Loader } from 'react-feather';
+import { EventTypes } from 'types/events';
 import styles from './State.module.scss';
 
 type Params = { id: string };
@@ -63,9 +64,8 @@ const State: VFC = () => {
     }
   }, [stateInput, types]);
 
-  // TODO: type
   const readState = useCallback(
-    (options?: any) => {
+    (options?: object) => {
       if (metaBuffer.current) {
         setIsLoading(true);
 
@@ -93,10 +93,16 @@ const State: VFC = () => {
     routeHistory.goBack();
   };
 
-  const handleSubmit = (value: { fields: ParsedStruct }) => {
+  const handleSubmit = (value: { fields: object }) => {
     const { fields } = value;
     const [options] = Object.values(fields);
-    readState(options);
+
+    if (options) {
+      readState(options);
+    } else {
+      const alert = { type: EventTypes.ERROR, message: 'Form is empty' };
+      dispatch(AddAlert(alert));
+    }
   };
 
   return (
@@ -105,7 +111,6 @@ const State: VFC = () => {
         <button className={styles.arrowButton} type="button" aria-label="back" onClick={handleBackButtonClick} />
         <h2 className={styles.heading}>Read state</h2>
       </header>
-      {/* TODO: init values */}
       <Formik initialValues={{ fields: {} }} onSubmit={handleSubmit}>
         <Form className={`block ${styles.form}`}>
           <div className="block__wrapper">
