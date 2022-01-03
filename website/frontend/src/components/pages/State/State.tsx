@@ -42,6 +42,10 @@ const State: VFC = () => {
   }, []);
 
   useEffect(() => {
+    if (metadata || state) setIsLoading(false);
+  }, [metadata, state]);
+
+  useEffect(() => {
     const metaFile = program?.meta?.metaFile;
 
     if (metaFile) {
@@ -63,6 +67,8 @@ const State: VFC = () => {
   const readState = useCallback(
     (options?: any) => {
       if (metaBuffer.current) {
+        setIsLoading(true);
+
         api?.programState.read(programId as `0x${string}`, metaBuffer.current, options).then((result) => {
           const decodedState = result.toHuman();
           const stringifiedState = JSON.stringify(decodedState, null, 2);
@@ -83,16 +89,11 @@ const State: VFC = () => {
     }
   }, [metadata, stateInput, getPayloadForm, readState]);
 
-  useEffect(() => {
-    if (metadata || state) setIsLoading(false);
-  }, [metadata, state]);
-
   const handleBackButtonClick = () => {
     routeHistory.goBack();
   };
 
   const handleSubmit = (value: { fields: ParsedStruct }) => {
-    setIsLoading(true);
     const { fields } = value;
     const [options] = Object.values(fields);
     readState(options);
@@ -131,9 +132,11 @@ const State: VFC = () => {
                   <img className="block__button-icon" src={BackArrow} alt="Back arrow" />
                   <span className="block__button-text">Back</span>
                 </button>
-                <button className="block__button-elem block__button-elem--submit" type="submit">
-                  <span className="block__button-text">Read state</span>
-                </button>
+                {stateInput && (
+                  <button className="block__button-elem block__button-elem--submit" type="submit">
+                    <span className="block__button-text">Read state</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
