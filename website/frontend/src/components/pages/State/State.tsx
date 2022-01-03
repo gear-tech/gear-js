@@ -116,7 +116,9 @@ const State: VFC = () => {
             {form && (
               <div className="block__item">
                 <p className="block__caption block__caption--small">Input Parameters:</p>
-                <FormItem data={form} />
+                <div className="block__wrapper">
+                  <FormItem data={form} />
+                </div>
               </div>
             )}
             {state && (
