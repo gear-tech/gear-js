@@ -21,6 +21,7 @@
     "dotenv": "^10.0.0",
     "kafkajs": "^1.15.0",
     "ts-node": "^10.4.0",
+    "typescript": "^4.5.4",
     "winston": "^3.3.3"
   },
   "devDependencies": {
