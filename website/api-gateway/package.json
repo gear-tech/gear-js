@@ -30,7 +30,8 @@
     "kafkajs": "^1.15.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.1.0"
+    "rxjs": "^7.1.0",
+    "zod": "^3.11.6"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.1.6",
