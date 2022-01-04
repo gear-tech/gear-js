@@ -171,7 +171,7 @@ export const Program: VFC = () => {
         </div>
       </div>
       <div className="messages-block">
-        <p className="messages-block__caption">NOTIFICATIONS</p>
+        <p className="messages-block__caption">MESSAGES</p>
         <MessagesList messages={messages} />
       </div>
     </div>
