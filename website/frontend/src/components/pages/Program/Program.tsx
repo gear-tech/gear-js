@@ -42,7 +42,7 @@ export const Program: VFC = () => {
   });
 
   const [metadata, setMetadata] = useState<Metadata | null>(null);
-  const isState = !!metadata?.async_init_output;
+  const isState = !!metadata?.meta_state_output;
 
   useEffect(() => {
     dispatch(getProgramAction(id));
