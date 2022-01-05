@@ -22,6 +22,7 @@ import { Wallet } from '../Wallet';
 import { nodeApi } from '../../../api/initApi';
 import { setApiReady, resetApiReady, setIsBuildDone, AddAlert } from '../../../store/actions/actions';
 import './Header.scss';
+import * as init from './init';
 
 export const Header: VFC = () => {
   const dispatch = useDispatch();
@@ -32,25 +33,6 @@ export const Header: VFC = () => {
 
   const chainName = localStorage.chain ? localStorage.chain : 'Loading ...';
 
-  let arrayOfNodes = [];
-
-  if (localStorage.nodes) {
-    arrayOfNodes = JSON.parse(localStorage.nodes);
-  } else {
-    arrayOfNodes = [
-      {
-        id: 1,
-        caption: 'test network',
-        nodes: [{ id: 1, custom: false, isChoose: false, address: 'wss://rpc-node.gear-tech.io:443' }],
-      },
-      {
-        id: 2,
-        caption: 'development',
-        nodes: [{ id: 2, custom: false, isChoose: false, address: 'ws://localhost:9944' }],
-      },
-    ];
-  }
-
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
   let { isBuildDone } = useSelector((state: RootState) => state.compiler);
@@ -59,7 +41,7 @@ export const Header: VFC = () => {
     isBuildDone = true;
   }
 
-  const [nodes, setNodes] = useState(arrayOfNodes);
+  const [nodes, setNodes] = useState(localStorage.nodes ? JSON.parse(localStorage.nodes) : init.nodes);
   const [showNodes, setShowNodes] = useState(false);
   const [newNode, setNewNode] = useState('');
   const [isAvailableAddNode, setIsAvailableAddNode] = useState(false);
