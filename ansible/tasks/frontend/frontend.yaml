@@ -1,40 +1,32 @@
----
-#Install frontend
-- name: Copy frontend
-  copy:
-    src: ../../../website/frontend
-    dest: /home/ec2-user/frontend
-
-- name: run install
-  community.general.npm:
-    path: /home/ec2-user/frontend
-  environment:
-    REACT_APP_GITHUB_CLIENT_ID: "{{ lookup('env','REACT_APP_GITHUB_CLIENT_ID') }}"
-    REACT_APP_GITHUB_CALLBACK_URL: "{{ lookup('env','REACT_APP_GITHUB_CALLBACK_URL') }}"
-    REACT_APP_TELEGRAM_BOT_NAME: "{{ lookup('env','REACT_APP_TELEGRAM_BOT_NAME') }}"
-    REACT_APP_API_PATH: "{{ lookup('env','REACT_APP_API_PATH') }}"
-    REACT_APP_WS_URI: "{{ lookup('env','REACT_APP_WS_URI') }}"
-    REACT_APP_IDE_URI: "{{ lookup('env','REACT_APP_IDE_URI') }}"
-    REACT_APP_API_CONNECT_ADDRESS: "{{ lookup('env','REACT_APP_API_CONNECT_ADDRESS') }}"
-    REACT_APP_RRT: "{{ lookup('env','REACT_APP_RRT') }}"
-    REACT_APP_WASM_COMPILER: "{{ lookup('env','REACT_APP_WASM_COMPILER') }}"
-
-- name: run build
-  shell: >
-    cd /home/ec2-user/frontend; npm run build; cd ..
-
-- name: Delete old frontend files
-  file:
-    state: absent
-    path: /var/www/html/
+- name: 'deploy frontend'
+  hosts: all
   become: yes
+  remote_user: ec2-user
 
-- name: Copy frontend build files
-  copy:
-    src: /home/ec2-user/frontend/build/
-    dest: /var/www/html/
-    remote_src: true
-    owner: nginx
-    group: nginx
-    mode: '0744'
-  become: yes
+  tasks:
+    - name: Create frontend-build dir
+      file: path=/home/ec2-user/frontend-build state=directory mode=0755
+
+    - name: Copy frontend
+      synchronize:
+        src: ../../../website/frontend/build/
+        dest: /home/ec2-user/frontend-build
+
+    - name: Delete old frontend files
+      file:
+        state: absent
+        path: /var/www/html/
+      become: yes
+
+    - name: Copy frontend build files
+      copy:
+        src: /home/ec2-user/frontend-build/
+        dest: /var/www/html/
+        remote_src: true
+        owner: nginx
+        group: nginx
+        mode: '0744'
+      become: yes
+
+    - name: Restart nginx
+      include: ../nginx/nginx.yaml

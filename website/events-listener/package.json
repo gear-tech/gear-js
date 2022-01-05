@@ -1,0 +1,26 @@
+{
+  "name": "@gear-js/event-listener",
+  "version": "0.1.2",
+  "description": "",
+  "main": "src/indes.js",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "start:dev": "nodemon src/index.js",
+    "build": "cp -r src dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gear-js/api": "^0.9.0",
+    "@polkadot/api": "^7.0.2",
+    "avsc": "^5.7.3",
+    "chalk": "^4.1.2",
+    "dotenv": "^10.0.0",
+    "kafkajs": "^1.15.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}

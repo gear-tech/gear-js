@@ -4,10 +4,20 @@ on:
   pull_request:
     branches: [master]
 
-  workflow_dispatch:
-
 jobs:
-  build_backend:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+      - run: |
+          yarn install
+          yarn build:backend
+
+  build-test-balance:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,11 +28,10 @@ jobs:
         with:
           node-version: 16.x
       - run: |
-          cd website/backend
-          npm install --package-lock-only && npm install
-          npm run build
+          yarn install
+          yarn build:testBalance
 
-  build-get-balance:
+  build-wasm-compiler:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,11 +42,10 @@ jobs:
         with:
           node-version: 16.x
       - run: |
-          cd website/get-balance
-          npm install --package-lock-only && npm install
-          npm run build
+          yarn install
+          yarn build:wasmCompiler
 
-  build_frontend:
+  build-frontend:
     runs-on: ubuntu-latest
 
     steps:
@@ -47,11 +55,17 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 16.x
+
       - run: |
-          cd website/frontend
-          npm install --package-lock-only && npm install
-          npm run build
-  build_api:
+          yarn install
+          yarn build:frontend
+        env:
+          REACT_APP_API_URL: 'https://ci.test'
+          REACT_APP_NODE_ADDRESS: 'wss://ci.test'
+          REACT_APP_WASM_COMPILER_URL: 'https://ci.test'
+          REACT_APP_RRT: ''
+
+  build-api:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

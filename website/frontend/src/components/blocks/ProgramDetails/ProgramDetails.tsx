@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, VFC } from 'react';
 import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
+import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch, useSelector } from 'react-redux';
@@ -178,7 +179,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       {droppedFile.name.replace(`.${droppedFile.name.split('.').pop()}`, '')}.
                       {droppedFile.name.split('.').pop()}
                       <button type="reset">
-                        <img alt="cancel" src={cancel} />
+                        <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                       </button>
                     </div>
                   </div>

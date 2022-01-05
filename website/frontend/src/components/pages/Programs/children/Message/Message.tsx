@@ -13,12 +13,12 @@ import { GetMetaResponse } from 'api/responses';
 import { MetaParam } from 'utils/meta-parser';
 
 type Props = {
-  programHash: string;
+  programId: string;
   programName: string;
   handleClose: () => void;
 };
 
-export const Message: VFC<Props> = ({ programHash, programName, handleClose }) => {
+export const Message: VFC<Props> = ({ programId, programName, handleClose }) => {
   const dispatch = useDispatch();
 
   const [meta, setMeta] = useState<Metadata | null>(null);
@@ -47,9 +47,9 @@ export const Message: VFC<Props> = ({ programHash, programName, handleClose }) =
     const apiRequest = new ServerRPCRequestService();
 
     return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, {
-      programId: programHash,
+      programId,
     });
-  }, [programHash]);
+  }, [programId]);
 
   useEffect(() => {
     if (!meta) {
@@ -68,7 +68,7 @@ export const Message: VFC<Props> = ({ programHash, programName, handleClose }) =
     return (
       <div className="message-form">
         <PageHeader programName={programName} handleClose={handleClose} pageType={PAGE_TYPES.MESSAGE_FORM_PAGE} />
-        <MessageForm programHash={programHash} programName={programName} meta={meta} types={types} />
+        <MessageForm programId={programId} programName={programName} meta={meta} types={types} />
       </div>
     );
   }

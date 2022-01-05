@@ -5,8 +5,9 @@
   "main": "meta.js",
   "scripts": {
     "build": "tsc",
+    "dev": "ts-node",
     "events": "node dist/run.js events",
-    "createType": "node dist/run.js typeStruct",
+    "createType": "ts-node src/run.ts typeStruct",
     "debugMode": "node dist/run.js debug",
     "messageReply": "node dist/run.js reply",
     "mailbox": "node dist/run.js mailbox",
@@ -16,7 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "@gear-js/api": "file:../api",
-    "@polkadot/api": "^6.7.2",
-    "dotenv": "^10.0.0"
+    "@polkadot/api": "^7.0.2",
+    "dotenv": "^10.0.0",
+    "ts-node": "^10.4.0"
   }
 }

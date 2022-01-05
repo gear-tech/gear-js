@@ -1,11 +1,12 @@
 {
   "name": "@gear-js/api",
-  "version": "0.8.16",
+  "version": "0.9.1",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
-  "main": "lib/index.js",
+  "main": "lib/cjs/index.js",
+  "module": "lib/mjs/index.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "build": "rm -rf lib types && tsc",
+    "build": "rm -rf lib types && tsc -p tsconfig.json && tsc -p tsconfig.esnext.json && ./fixup",
     "examples": "node lib/examples/index.js",
     "test:meta": "node lib/examples/test-meta.js",
     "prettier": "npx prettier --write src/* examples/*",
@@ -16,11 +17,11 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "^6.9.2",
+    "@polkadot/api": "^7.0.2",
     "rxjs": "^7.3.0"
   },
   "devDependencies": {
-    "typescript": "^4.4.2",
+    "typescript": "^4.5.4",
     "mocha": "^9.1.1",
     "prettier": "^2.3.2",
     "tslint": "^6.1.3"
@@ -40,5 +41,11 @@
   "bugs": {
     "url": "https://github.com/gear-tech/gear-js/issues"
   },
-  "homepage": "https://github.com/gear-tech/gear-js/tree/master/api#readme"
+  "homepage": "https://github.com/gear-tech/gear-js/tree/master/api#readme",
+  "exports": {
+    ".": {
+      "import": "./lib/mjs/index.js",
+      "require": "./lib/cjs/index.js"
+    }
+  }
 }

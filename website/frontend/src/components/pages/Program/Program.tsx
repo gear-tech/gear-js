@@ -10,26 +10,31 @@ import {
   resetGasAction,
   uploadMetaResetAction,
   resetProgramAction,
+  getMessagesAction,
 } from 'store/actions/actions';
 import { Message } from 'components/pages/Programs/children/Message/Message';
+import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { Meta } from 'components/Meta/Meta';
 import { formatDate } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
+import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import './Program.scss';
 
 type ProgramMessageType = {
   programName: string;
-  programHash: string;
+  programId: string;
 };
 
 export const Program: VFC = () => {
   const dispatch = useDispatch();
   const params: any = useParams();
-  const hash: string = params?.hash;
+  const id: string = params?.id;
   const history = useHistory();
   const { program } = useSelector((state: RootState) => state.programs);
+  const { messages } = useSelector((state: RootState) => state.messages);
+
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
   const [data, setData] = useState({
@@ -41,9 +46,9 @@ export const Program: VFC = () => {
   });
 
   useEffect(() => {
-    dispatch(getProgramAction(hash));
+    dispatch(getProgramAction(id));
     window.scrollTo(0, 0);
-  }, [dispatch, hash]);
+  }, [dispatch, id]);
 
   useEffect(() => {
     if (program) {
@@ -57,7 +62,7 @@ export const Program: VFC = () => {
       }
 
       setData({
-        id: program.hash,
+        id: program.id,
         name: program.name ? program.name : '...',
         title: program.title ? program.title : '...',
         uploadedAt: program.uploadedAt ? formatDate(String(program.uploadedAt)) : '...',
@@ -67,14 +72,24 @@ export const Program: VFC = () => {
     return () => {
       dispatch(resetProgramAction());
     };
-  }, [dispatch, program, setData, hash]);
+  }, [dispatch, program, setData, id]);
 
-  const handleOpenForm = (programHash: string, programName?: string, isMessage?: boolean) => {
+  useEffect(() => {
+    dispatch(
+      getMessagesAction({
+        source: id,
+        destination: localStorage.getItem('public_key_raw'),
+        limit: INITIAL_LIMIT_BY_PAGE,
+      })
+    );
+  }, [dispatch, id]);
+
+  const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
       if (isMessage) {
-        setProgramMessage({ programHash, programName });
+        setProgramMessage({ programId, programName });
       } else {
-        setProgramMeta({ programHash, programName });
+        setProgramMeta({ programId, programName });
       }
     }
   };
@@ -94,7 +109,7 @@ export const Program: VFC = () => {
   if (programMessage) {
     return (
       <Message
-        programHash={programMessage.programHash}
+        programId={programMessage.programId}
         programName={programMessage.programName}
         handleClose={handleCloseMessageForm}
       />
@@ -103,11 +118,7 @@ export const Program: VFC = () => {
 
   if (programMeta) {
     return (
-      <Meta
-        programHash={programMeta.programHash}
-        programName={programMeta.programName}
-        handleClose={handleCloseMetaForm}
-      />
+      <Meta programId={programMeta.programId} programName={programMeta.programName} handleClose={handleCloseMetaForm} />
     );
   }
 
@@ -158,6 +169,10 @@ export const Program: VFC = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="messages-block">
+        <p className="messages-block__caption">MESSAGES</p>
+        <MessagesList messages={messages} />
       </div>
     </div>
   );

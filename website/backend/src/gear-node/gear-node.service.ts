@@ -35,6 +35,7 @@ export class GearNodeService {
 
   async updateSiteAccountBalance() {
     const currentBalance = await this.api.balance.findOut(this.rootKeyring.address);
+    console.log(`Current balance: ${currentBalance.toHuman()}`);
     const siteAccBalance = +process.env.SITE_ACCOUNT_BALANCE;
     if (currentBalance.lt(new BN(siteAccBalance))) {
       const sudoKeyring = parseInt(process.env.DEBUG)
@@ -54,10 +55,11 @@ export class GearNodeService {
       throw new TransactionError('Destination address is not specified');
     }
     try {
+      console.log(this.rootKeyring.address);
       await this.api.balance.transferBalance(this.rootKeyring, to, value, () => {});
       return 'Transfer balance succeed';
     } catch (error) {
-      logger.error(error.message);
+      console.error(error);
       throw new GearNodeError(error.message);
     }
   }

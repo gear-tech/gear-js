@@ -146,8 +146,9 @@ export const SendMessageToProgram = async (
 // TODO: (dispatch) fix it later
 export const addMetadata = async (
   meta: MetaModel,
+  metaFile: any,
   account: UserAccount,
-  programHash: string,
+  programId: string,
   name: any,
   dispatch: any
 ) => {
@@ -160,9 +161,10 @@ export const addMetadata = async (
       const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
         meta: JSON.stringify(meta),
         signature,
-        programId: programHash,
+        programId,
         name,
         title: meta.title,
+        metaFile,
       });
 
       if (response.error) {
