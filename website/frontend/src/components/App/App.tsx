@@ -51,6 +51,7 @@ const AppComponent: FC = () => {
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
+  const encodedNodeAddress = encodeURIComponent(nodeApi.address);
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
@@ -88,7 +89,7 @@ const AppComponent: FC = () => {
   };
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={`/?node=${encodedNodeAddress}`}>
       <AlertProvider template={AlertTemplate} {...options}>
         <div className="app">
           {(isProgramUploading || isMessageSending) && (

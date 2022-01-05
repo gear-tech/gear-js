@@ -9,7 +9,11 @@ class NodeApi {
     return this._api;
   }
 
-  private address: string;
+  get address(): string {
+    return this._address;
+  }
+
+  private _address: string;
 
   private chain: string | null;
 
@@ -20,15 +24,15 @@ class NodeApi {
   readonly subscriptions: Record<string, UnsubscribePromise> = {};
 
   constructor(address = 'ws://localhost:9944') {
-    this.address = address;
+    this._address = address;
     this.subscriptions = {};
     this.chain = null;
     this.genesis = null;
   }
 
   async init() {
-    this.address = window.localStorage.getItem('node_address') || this.address;
-    this._api = await GearApi.create({ providerAddress: this.address });
+    this._address = localStorage.getItem('node_address') || this._address;
+    this._api = await GearApi.create({ providerAddress: this._address });
 
     this.chain = await this._api.chain();
     this.genesis = await this._api.genesisHash.toHex();
