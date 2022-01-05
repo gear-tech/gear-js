@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Identicon from '@polkadot/react-identicon';
 import { GearKeyring } from '@gear-js/api';
@@ -73,15 +73,25 @@ export const Wallet = () => {
     }
   }, [currentAccount, api, dispatch, getBalance]);
 
+  const subscriptionRef = useRef<VoidFunction | null>(null);
+
   useEffect(() => {
+    // TODO: think how to wrap it hook
     if (currentAccount) {
-      nodeApi.subscribeBalanceChange(currentAccount.address, (balance) => {
-        setAccountBalance(balance.toHuman());
-      });
+      nodeApi.api?.gearEvents
+        .subsribeBalanceChange(currentAccount.address, (balance) => {
+          setAccountBalance(balance.toHuman());
+        })
+        .then((sub) => {
+          subscriptionRef.current = sub;
+        })
+        .catch((err) => console.error(err));
     }
 
     return () => {
-      nodeApi.unsubscribeBalanceChange();
+      if (subscriptionRef.current) {
+        subscriptionRef.current();
+      }
     };
   }, [currentAccount]);
 

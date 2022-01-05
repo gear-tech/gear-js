@@ -86,22 +86,6 @@ class NodeApi {
       })();
     }
   }
-
-  public subscribeBalanceChange(address: string, cb: (event: Balance) => void) {
-    if (this._api && !('balanceEvents' in this.subscriptions)) {
-      this.subscriptions.balanceEvents = this._api.gearEvents.subsribeBalanceChange(address, (val) => {
-        cb(val);
-      });
-    }
-  }
-
-  public unsubscribeBalanceChange() {
-    if ('balanceEvents' in this.subscriptions) {
-      (async () => {
-        (await this.subscriptions.balanceEvents)();
-      })();
-    }
-  }
 }
 
 export const nodeApi = new NodeApi(NODE_ADDRESS);
