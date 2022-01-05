@@ -61,6 +61,7 @@ export const RPC_METHODS = {
   ADD_METADATA: 'program.addMeta',
   GET_METADATA: 'program.getMeta',
   GET_TEST_BALANCE: 'testBalance.get',
+  GET_ALL_MESSAGES: 'message.all',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
@@ -70,6 +71,7 @@ export const SWITCH_PAGE_TYPES = {
   UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
   NOTIFICATIONS: 'NOTIFICATIONS',
   ALL_PROGRAMS: 'ALL_PROGRAMS',
+  ALL_MESSAGES: 'ALL_MESSAGES',
 };
 
 export const PAGE_TYPES = {
