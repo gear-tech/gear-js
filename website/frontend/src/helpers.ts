@@ -57,3 +57,8 @@ export const signPayload = async (injector: any, address: string, payload: any, 
     console.error(err);
   }
 };
+
+export const isNodeAddressValid = (address: string) => {
+  const addressRegex = /(ws|wss):\/\/[\w-.]+/gm;
+  return addressRegex.test(address);
+};

@@ -89,7 +89,7 @@ const AppComponent: FC = () => {
   };
 
   return (
-    <BrowserRouter basename={`/?node=${encodedNodeAddress}`}>
+    <BrowserRouter basename={`/?node=${encodedNodeAddress}#`}>
       <AlertProvider template={AlertTemplate} {...options}>
         <div className="app">
           {(isProgramUploading || isMessageSending) && (

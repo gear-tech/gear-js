@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
 import { LogoIcon } from 'assets/Icons';
-import { copyToClipboard } from 'helpers';
+import { copyToClipboard, isNodeAddressValid } from 'helpers';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
 import close from 'assets/images/close.svg';
@@ -150,11 +150,9 @@ export const Header: VFC = () => {
   };
 
   const handleChangeNodeName = (value: string) => {
-    const pattern = /(ws|wss):\/\/[\w-.]+/gm;
-
     setNewNode(value);
 
-    if (value.match(pattern)) {
+    if (isNodeAddressValid(value)) {
       setIsAvailableAddNode(true);
     } else {
       setIsAvailableAddNode(false);

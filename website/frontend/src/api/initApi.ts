@@ -2,7 +2,15 @@ import { GearApi } from '@gear-js/api';
 
 import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api/types/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { isNodeAddressValid } from 'helpers';
 import { NODE_ADDRESS } from '../consts';
+
+const getNodeAddressFromUrl = () => {
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const nodeAddress = urlSearchParams.get('node') || '';
+
+  return isNodeAddressValid(nodeAddress) && nodeAddress;
+};
 
 class NodeApi {
   get api(): GearApi | null {
