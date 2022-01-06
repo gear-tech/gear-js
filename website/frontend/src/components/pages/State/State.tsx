@@ -43,7 +43,9 @@ const State: VFC = () => {
   }, []);
 
   useEffect(() => {
-    if (metadata || state) setIsLoading(false);
+    if (metadata || state) {
+      setIsLoading(false);
+    }
   }, [metadata, state]);
 
   useEffect(() => {
