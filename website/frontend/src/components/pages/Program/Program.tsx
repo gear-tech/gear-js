@@ -89,7 +89,7 @@ export const Program: VFC = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    const metaFile = program?.meta.metaFile;
+    const metaFile = program?.meta?.metaFile;
 
     if (metaFile) {
       const metaBuffer = Buffer.from(metaFile, 'base64');
