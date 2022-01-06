@@ -26,7 +26,7 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
   } else if (isAllMessagesPage) {
     url = routes.messages;
   }
-  console.log(url);
+
   const onPreviousClickHandler = () => {
     if (setShouldReload) {
       setShouldReload(true);
