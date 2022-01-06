@@ -26,7 +26,7 @@ export class GearNodeEvents {
 
   async subscribeAllEvents(api: GearApi) {
     const chain = await api.chain();
-    api.allEvents((events) => {
+    api.allEvents((events: any) => {
       events
         .filter(({ event }) => api.events.gear.InitMessageEnqueued.is(event))
         .forEach(async ({ event }) => {

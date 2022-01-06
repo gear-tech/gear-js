@@ -159,7 +159,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
               pageType === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && 'switch-buttons__item--active'
             )}
           >
-            Recent uploaded programs
+            User programs
           </Link>
           <Link
             to={routes.allPrograms}
@@ -169,6 +169,15 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
             )}
           >
             All programs
+          </Link>
+          <Link
+            to={routes.messages}
+            className={clsx(
+              'switch-buttons__item',
+              pageType === SWITCH_PAGE_TYPES.ALL_MESSAGES && 'switch-buttons__item--active'
+            )}
+          >
+            Messages
           </Link>
         </div>
         {/* <div className="switch-block--editor">

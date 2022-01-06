@@ -49,7 +49,7 @@ jobs:
           yarn build:frontend
         env:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          REACT_APP_NODE_ADDRESS: ${{ secrets.REACT_APP_NODE_ADDRESS }}
+          REACT_APP_NODE_ADDRESS: ${{ secrets.WS_PROVIDER_WRSH }}
           REACT_APP_WASM_COMPILER_URL: ${{ secrets.REACT_APP_WASM_COMPILER_URL }}
           REACT_APP_RRT: ''
 
