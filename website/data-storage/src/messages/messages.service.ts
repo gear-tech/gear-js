@@ -71,14 +71,15 @@ export class MessagesService {
       chain: params.chain,
       destination: params.destination,
       genesis: params.genesis,
-      isRead: params.isRead,
     };
+    console.log('getIncoming ***', 'where: ');
     console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
       where,
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
     });
+    console.log('getIncoming ***', 'result: ');
     console.log(result);
     return {
       messages: result,

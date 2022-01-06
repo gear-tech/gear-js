@@ -2,7 +2,7 @@ name: staging.data-storage-CD
 
 on:
   push:
-    branches: [master]
+    branches: [master, do-get-messages]
     paths:
       - website/data-storage/**
 
