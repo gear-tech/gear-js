@@ -1,0 +1,38 @@
+@use 'assets/scss/variables' as *;
+
+.header {
+  padding: 25px 0;
+  display: flex;
+}
+
+.heading {
+  font-size: 21px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: $textColorSecondary;
+}
+
+.arrowButton {
+  margin-right: 28px;
+  padding: 0;
+
+  &::before {
+    content: url('/assets/images/arrow_back.svg');
+  }
+}
+
+.form {
+  input,
+  textarea {
+    width: 100%;
+    background-color: $mainBackground;
+    border: none;
+    outline: none;
+    padding: 10px 15px;
+    color: $textColor;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+  }
+}
