@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
 import { AlertTemplate } from 'components/AlertTemplate';
@@ -47,11 +47,21 @@ const options = {
 const AppComponent: FC = () => {
   globalStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { location } = history;
 
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
-  const encodedNodeAddress = encodeURIComponent(nodeApi.address);
+
+  useEffect(() => {
+    const encodedNodeAddress = encodeURIComponent(nodeApi.address);
+    const search = `?node=${encodedNodeAddress}`;
+
+    if (location.search !== search) {
+      history.replace({ search });
+    }
+  }, [history, location]);
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
@@ -89,52 +99,52 @@ const AppComponent: FC = () => {
   };
 
   return (
-    <BrowserRouter basename={`/?node=${encodedNodeAddress}#`}>
-      <AlertProvider template={AlertTemplate} {...options}>
-        <div className="app">
-          {(isProgramUploading || isMessageSending) && (
-            <>
-              <div className="overlay" />
-              <LoadingPopup />
-            </>
+    <AlertProvider template={AlertTemplate} {...options}>
+      <div className="app">
+        {(isProgramUploading || isMessageSending) && (
+          <>
+            <div className="overlay" />
+            <LoadingPopup />
+          </>
+        )}
+        <Header />
+        <Main>
+          {isApiReady ? (
+            <Switch>
+              <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
+                <Programs />
+              </Route>
+              <Route exact path={routes.program}>
+                <Program />
+              </Route>
+              <Route exact path={routes.state}>
+                <State />
+              </Route>
+              <Route exact path={routes.editor}>
+                <EditorPage />
+              </Route>
+              <Route exact path={routes.notifications}>
+                <NotificationsPage />
+              </Route>
+              <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
+                <Document />
+              </Route>
+            </Switch>
+          ) : (
+            <SimpleLoader />
           )}
-          <Header />
-          <Main>
-            {isApiReady ? (
-              <Switch>
-                <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
-                  <Programs />
-                </Route>
-                <Route exact path={routes.program}>
-                  <Program />
-                </Route>
-                <Route exact path={routes.state}>
-                  <State />
-                </Route>
-                <Route exact path={routes.editor}>
-                  <EditorPage />
-                </Route>
-                <Route exact path={routes.notifications}>
-                  <NotificationsPage />
-                </Route>
-                <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
-                  <Document />
-                </Route>
-              </Switch>
-            ) : (
-              <SimpleLoader />
-            )}
-          </Main>
-          {isFooterHidden() || <Footer />}
-          <Alert />
-        </div>
-      </AlertProvider>
-    </BrowserRouter>
+        </Main>
+        {isFooterHidden() || <Footer />}
+        <Alert />
+      </div>
+    </AlertProvider>
   );
 };
 
 export const App = () => (
   <Provider store={store}>
-    <AppComponent />
+    <BrowserRouter>
+      <AppComponent />
+    </BrowserRouter>
   </Provider>
 );
