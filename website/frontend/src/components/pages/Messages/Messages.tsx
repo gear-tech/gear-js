@@ -59,6 +59,7 @@ export const Messages: VFC = () => {
           handleSearch={(val: string) => {
             setSearch(val);
           }}
+          placeholder="Find message by ID"
         />
         <br />
       </div>
