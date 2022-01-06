@@ -164,4 +164,13 @@
       }
     }
   }
+  .messages-block {
+    margin-bottom: 40px;
+    .messages-block__caption {
+      text-transform: uppercase;
+      color: $textColor;
+      font-size: 21px;
+      margin-bottom: 30px;
+    }
+  }
 }

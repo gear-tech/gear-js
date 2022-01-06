@@ -9,4 +9,5 @@ export const routes = {
   notifications: '/notifications',
   program: '/program/:id',
   state: '/state/:id',
+  messages: '/messages',
 };

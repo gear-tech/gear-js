@@ -83,13 +83,17 @@ export const NotificationsPage: VFC = () => {
   };
 
   const handleReadNotification = (isRead: boolean, id: string) => {
-    if (isRead) return;
+    if (isRead) {
+      return;
+    }
     dispatch(markCertainRecentNotificationsAsReadAction([id]));
     setShouldReload(true);
   };
 
   const handleNotificationInfo = (notification: NotificationModel | null) => {
-    if (notification && notification.type.toLowerCase() !== 'log') return;
+    if (notification && notification.type.toLowerCase() !== 'log') {
+      return;
+    }
     setNotificationInfo(notification);
   };
 
