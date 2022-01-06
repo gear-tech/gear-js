@@ -16,18 +16,7 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save({
-    id,
-    chain,
-    genesis,
-    destination,
-    source,
-    payload,
-    date,
-    replyTo,
-    replyError,
-    isRead,
-  }): Promise<Message> {
+  async save({ id, chain, genesis, destination, source, payload, date, replyTo, replyError }): Promise<Message> {
     let message = await this.messageRepo.findOne({ id });
     if (message) {
       if (payload) {
@@ -46,7 +35,6 @@ export class MessagesService {
         source,
         payload,
         date: new Date(date),
-        isRead,
         replyTo,
       });
     }
@@ -71,15 +59,12 @@ export class MessagesService {
       chain: params.chain,
       destination: params.destination,
       genesis: params.genesis,
-      isRead: params.isRead,
     };
-    console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
       where,
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
     });
-    console.log(result);
     return {
       messages: result,
       count: total,
@@ -104,7 +89,6 @@ export class MessagesService {
       chain: params.chain,
       destination: params.destination,
       source: params.source,
-      isRead: params.isRead,
     };
     console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
@@ -124,13 +108,5 @@ export class MessagesService {
     };
     const result = await this.messageRepo.findOne({ where });
     return result;
-  }
-
-  async getCountUnread(destination: string): Promise<number> {
-    const messages = await this.messageRepo.findAndCount({
-      destination,
-      isRead: false,
-    });
-    return messages[1];
   }
 }
