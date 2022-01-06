@@ -1,4 +1,4 @@
-import { RequestParams } from './general';
+import { PaginationParams, RequestParams } from './general';
 
 export interface Message {
   id: string;
@@ -9,7 +9,6 @@ export interface Message {
   payload?: string;
   replyTo?: string;
   replyError?: string;
-  isRead: boolean;
   date: Date;
 }
 
@@ -24,26 +23,16 @@ export interface AllMessagesResult {
   count: number;
 }
 
-export interface GetMessagesParams extends RequestParams {
+export interface GetMessagesParams extends RequestParams, PaginationParams {
   destination?: string;
   source?: string;
-  isRead?: boolean;
-  limit?: number;
-  offset?: number;
 }
 
-export interface FindMessageParams extends RequestParams, Pick<Message, 'id'> {
-}
+export interface FindMessageParams extends RequestParams, Pick<Message, 'id'> {}
 
-export interface GetIncomingMessagesParams extends RequestParams {
-  destination?: string;
-  isRead?: boolean;
-  limit?: number;
-  offset?: number;
-}
-export interface GetOutgoingMessagesParams extends RequestParams {
-  source?: string;
-  isRead?: boolean;
-  limit?: number;
-  offset?: number;
-}
+export interface GetIncomingMessagesParams
+  extends RequestParams,
+    PaginationParams,
+    Pick<GetMessagesParams, 'destination'> {}
+
+export interface GetOutgoingMessagesParams extends RequestParams, PaginationParams, Pick<GetMessagesParams, 'source'> {}
