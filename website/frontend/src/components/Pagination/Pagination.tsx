@@ -1,9 +1,8 @@
 import React, { VFC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { PaginationArrow } from 'assets/Icons';
-import { routes } from 'routes';
 import './Pagination.scss';
 
 type Props = {
@@ -17,6 +16,7 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
   const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
   const isDisabledPrev = page === 1;
   const isDisabledNext = page === totalPages || totalPages === 0;
+  const { pathname: url } = useLocation();
 
   const onPreviousClickHandler = () => {
     if (setShouldReload) {
@@ -35,7 +35,7 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
   return (
     <div className="pagination">
       {!isDisabledPrev ? (
-        <Link className="pagination--box" to={`${routes.allPrograms}/?p=${page - 1}`} onClick={onPreviousClickHandler}>
+        <Link className="pagination--box" to={`${url}?p=${page - 1}`} onClick={onPreviousClickHandler}>
           <PaginationArrow color="#C4CDD5" />
         </Link>
       ) : (
@@ -48,7 +48,7 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
       </button>
       <p className="pagination__total">of {totalPages}</p>
       {!isDisabledNext ? (
-        <Link className="pagination--box" to={`${routes.allPrograms}/?p=${page + 1}`} onClick={onNextClickHandler}>
+        <Link className="pagination--box" to={`${url}?p=${page + 1}`} onClick={onNextClickHandler}>
           <PaginationArrow color="#C4CDD5" />
         </Link>
       ) : (
