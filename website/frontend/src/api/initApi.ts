@@ -39,7 +39,7 @@ class NodeApi {
   }
 
   async init() {
-    this._address = localStorage.getItem('node_address') || this._address;
+    this._address = getNodeAddressFromUrl() || localStorage.getItem('node_address') || this._address;
     this._api = await GearApi.create({ providerAddress: this._address });
 
     this.chain = await this._api.chain();

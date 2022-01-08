@@ -1,5 +1,5 @@
 import React, { useState, useEffect, VFC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { Trash2 } from 'react-feather';
@@ -27,6 +27,7 @@ import * as init from './init';
 export const Header: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const history = useHistory();
   const alert = useAlert();
 
   const isNotifications = location.pathname === routes.notifications;
@@ -48,14 +49,14 @@ export const Header: VFC = () => {
 
   const headerIconsColor = '#fff';
 
-  useEffect(() => {
-    if (!isApiReady) {
-      setShowNodes(false);
-      nodeApi.init().then(() => {
-        dispatch(setApiReady());
-      });
-    }
-  }, [dispatch, isApiReady]);
+  // useEffect(() => {
+  //   if (!isApiReady) {
+  //     setShowNodes(false);
+  //     nodeApi.init().then(() => {
+  //       dispatch(setApiReady());
+  //     });
+  //   }
+  // }, [dispatch, isApiReady]);
 
   useEffect(() => {
     let timerId: any;
@@ -165,6 +166,13 @@ export const Header: VFC = () => {
     const activeNode = allNodes.filter((elem: any) => elem.isChoose);
 
     if (activeNode && activeNode.length) {
+      // remove node param from url to update it during nodeApi init
+      const { search } = location;
+      const searchParams = new URLSearchParams(search);
+      searchParams.delete('node');
+      // push instead of replace to preserve previous node param history
+      history.push({ search: searchParams.toString() });
+
       localStorage.setItem('node_address', activeNode[0].address);
       localStorage.setItem('nodes', JSON.stringify(nodes));
       dispatch(resetApiReady());
