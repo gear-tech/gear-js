@@ -101,3 +101,5 @@ export const KEY_TYPES = {
 export enum ZIndexes {
   'alert' = 999,
 }
+
+export const NODE_ADRESS_URL_PARAM = 'node';

@@ -11,6 +11,7 @@ import { useAlert } from 'react-alert';
 import { useDispatch } from 'react-redux';
 import { resetApiReady } from 'store/actions/actions';
 import { useHistory, useLocation } from 'react-router-dom';
+import { NODE_ADRESS_URL_PARAM } from 'consts';
 import * as init from './init';
 import './Sidebar.scss';
 
@@ -69,17 +70,20 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
     );
   };
 
+  const removeNodeFromUrl = () => {
+    const { search } = location;
+    const searchParams = new URLSearchParams(search);
+    searchParams.delete(NODE_ADRESS_URL_PARAM);
+    // push instead of replace to preserve previous node param history
+    history.push({ search: searchParams.toString() });
+  };
+
   const handleSwitchNode = () => {
     const isDifferentNodeSelected = selectedNode !== nodeApi.address;
 
     if (selectedNode && isDifferentNodeSelected) {
-      // remove node param from url to update it during nodeApi init
-      const { search } = location;
-      const searchParams = new URLSearchParams(search);
-      searchParams.delete('node');
-      // push instead of replace to preserve previous node param history
-      history.push({ search: searchParams.toString() });
-
+      // remove param to update it during nodeApi init
+      removeNodeFromUrl();
       localStorage.setItem('node_address', selectedNode);
       localStorage.setItem('nodes', JSON.stringify(nodes));
       dispatch(resetApiReady());

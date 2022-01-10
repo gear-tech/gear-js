@@ -25,7 +25,7 @@ import store from '../../store';
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
-import { ZIndexes } from '../../consts';
+import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
 
@@ -49,7 +49,6 @@ const AppComponent: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  // const { location } = history;
 
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
@@ -86,10 +85,10 @@ const AppComponent: FC = () => {
   useEffect(() => {
     const { search } = location;
     const searchParams = new URLSearchParams(search);
-    const urlNodeAddress = searchParams.get('node');
+    const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
 
-    if (urlNodeAddress !== nodeApi.address) {
-      searchParams.set('node', nodeApi.address);
+    if (!urlNodeAddress) {
+      searchParams.set(NODE_ADRESS_URL_PARAM, nodeApi.address);
       history.replace({ search: searchParams.toString() });
     }
   }, [history, location]);
