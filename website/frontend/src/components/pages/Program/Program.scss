@@ -58,6 +58,11 @@
         min-width: 164px;
         font-style: normal;
         font-weight: normal;
+
+        &--small {
+          font-size: 16px;
+        }
+
         @media (max-width: 768px) {
           width: 100%;
           min-width: 100%;
@@ -112,27 +117,34 @@
           flex-direction: column;
         }
         .block__button-elem {
-          background: $successColor;
-          box-shadow: 0 0 24px rgb(43 208 113 / 12%);
+          background-color: $bkgButtonColor;
           border-radius: 2px;
           display: flex;
           flex-direction: row;
           align-items: center;
           justify-content: center;
-          padding: 12px;
-          width: 194px;
+          padding: 12px 25px;
           margin-right: 40px;
           margin-top: 10px;
+
           @media (max-width: 768px) {
             width: 100%;
             margin-right: 0;
+          }
+
+          &--submit {
+            background-color: $successColor;
+            box-shadow: 0 0 24px rgb(43 208 113 / 12%);
+          }
+
+          .block__button-icon {
+            margin-right: 16px;
           }
           .block__button-text {
             font-weight: bold;
             font-size: 16px;
             line-height: 24px;
             color: $textColor;
-            margin-left: 16px;
           }
         }
         .block__button-upload {

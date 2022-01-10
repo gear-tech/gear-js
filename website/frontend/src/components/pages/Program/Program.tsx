@@ -1,7 +1,8 @@
 import React, { VFC, useEffect, useState } from 'react';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
-import { useParams, useHistory } from 'react-router-dom';
+import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
+
 import { RootState } from 'store/reducers';
 import {
   getProgramAction,
@@ -45,6 +46,9 @@ export const Program: VFC = () => {
     meta: 'Loading ...',
   });
 
+  const [metadata, setMetadata] = useState<Metadata | null>(null);
+  const isState = !!metadata?.meta_state_output;
+
   useEffect(() => {
     dispatch(getProgramAction(id));
     window.scrollTo(0, 0);
@@ -83,6 +87,15 @@ export const Program: VFC = () => {
       })
     );
   }, [dispatch, id]);
+
+  useEffect(() => {
+    const metaFile = program?.meta?.metaFile;
+
+    if (metaFile) {
+      const metaBuffer = Buffer.from(metaFile, 'base64');
+      getWasmMetadata(metaBuffer).then(setMetadata);
+    }
+  }, [program]);
 
   const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
@@ -151,17 +164,22 @@ export const Program: VFC = () => {
             <p className="block__caption">Metadata:</p>
             <pre className="block__textarea block__textarea_h420">{data.meta}</pre>
           </div>
-          <div className="block__item block__item_last">
+          <div className="block__item">
             <div className="block__button">
               <button
-                className="block__button-elem"
+                className="block__button-elem block__button-elem--submit"
                 type="button"
                 aria-label="refresh"
                 onClick={() => handleOpenForm(String(data.id), data.name, true)}
               >
-                <img src={MessageIcon} alt="message" />
+                <img src={MessageIcon} alt="message" className="block__button-icon" />
                 <span className="block__button-text">Send Message</span>
               </button>
+              {isState && (
+                <Link to={`/state/${id}`} className="block__button-elem block__button-elem--submit">
+                  <span className="block__button-text">Read State</span>
+                </Link>
+              )}
               <div className="block__button-upload">
                 <span className="block__button-caption">Uploaded at:</span>
                 <span className="block__button-date">{data.uploadedAt}</span>

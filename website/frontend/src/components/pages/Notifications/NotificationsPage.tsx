@@ -108,6 +108,7 @@ export const NotificationsPage: VFC = () => {
         handleRemoveQuery={handleRemoveQuery}
         handleDropdownItemSelect={handleSearchType}
         searchType={searchType}
+        placeholder="Find program by ID"
       />
       {(searchQuery && <SearchQueries searchQuery={searchQuery} handleRemoveQuery={handleRemoveQuery} />) || null}
       <div className="pagination-wrapper">
