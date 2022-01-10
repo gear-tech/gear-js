@@ -51,6 +51,12 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
         return el;
       })
     );
+
+    if (!selectedNode) {
+      setSelectedNode(newNode);
+    }
+
+    setNewNode('');
   };
 
   const handleRemoveNode = (id: number) => {
@@ -133,7 +139,12 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
                           <img className="nodes__item-icon" src={copy} alt="copy node address" />
                         </button>
                         {node.custom && (
-                          <button className="nodes__item-btn" type="button" onClick={() => handleRemoveNode(node.id)}>
+                          <button
+                            className="nodes__item-btn"
+                            type="button"
+                            onClick={() => handleRemoveNode(node.id)}
+                            disabled={node.address === selectedNode}
+                          >
                             <Trash2 color="#ffffff" size="22" strokeWidth="1.5" />
                           </button>
                         )}
