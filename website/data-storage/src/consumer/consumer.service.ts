@@ -85,7 +85,7 @@ export class ConsumerService {
 
   async programData(params: FindProgramParams): Result<IProgram> {
     try {
-      return (await this.programService.findProgram(params)) || { error: { message: new ProgramNotFound().message } };
+      return (await this.programService.findProgram(params));
     } catch ({ message }) {
       return { error: { message } };
     }

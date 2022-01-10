@@ -82,17 +82,15 @@ export class RpcMessageHandler {
       return;
     }
     return new Promise((resolve) => {
-      result
-        .forEach((value) => {
-          if (!value) {
-            resolve(this.getResponse(procedure, { error: 'Service is not available' }));
-          } else if ('error' in value) {
-            resolve(this.getResponse(procedure, value.error));
-          } else {
-            resolve(this.getResponse(procedure, null, value));
-          }
-        })
-        .finally(() => console.log('end'));
+      result.forEach((value) => {
+        if (!value) {
+          resolve(this.getResponse(procedure, { error: 'Service is not available' }));
+        } else if ('error' in value) {
+          resolve(this.getResponse(procedure, value.error));
+        } else {
+          resolve(this.getResponse(procedure, null, value));
+        }
+      });
     });
   }
 }

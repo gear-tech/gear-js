@@ -10,8 +10,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Meta } from '../entities/meta.entity';
-import { Program } from '../entities/program.entity';
 import { ErrorLogger, getPaginationParams, getWhere } from '../utils';
+import { ProgramNotFound } from 'src/errors';
+import { Program } from 'src/entities/program.entity';
 
 const logger = new Logger('ProgramDb');
 const errorLog = new ErrorLogger('ProgramsService');
@@ -91,14 +92,14 @@ export class ProgramsService {
       return program;
     } catch (error) {
       logger.error(error, error.stack, '');
-      return null;
+      throw new ProgramNotFound(error.message);
     }
   }
 
   async setStatus(id: string, genesis: string, status: InitStatus): Promise<IProgram> {
     return new Promise((resolve) => {
       setTimeout(async () => {
-        let program = await this.findProgram({ id, genesis });
+        const program = await this.findProgram({ id, genesis });
         if (program) {
           program.initStatus = status;
           resolve(await this.programRepo.save(program));
