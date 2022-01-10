@@ -25,11 +25,11 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
   const history = useHistory();
 
   const [nodes, setNodes] = useState(localStorage.nodes ? JSON.parse(localStorage.nodes) : init.nodes);
-  const [selectedNode, setSelectedNode] = useState<string>(nodeApi.address);
 
   const allNodes = [...nodes[0].nodes, ...nodes[1].nodes];
   const isNodeExist = allNodes.findIndex((node) => node.address === nodeApi.address) > -1;
 
+  const [selectedNode, setSelectedNode] = useState(isNodeExist ? nodeApi.address : '');
   const [newNode, setNewNode] = useState(isNodeExist ? '' : nodeApi.address);
 
   const handleAddNode = () => {
@@ -70,17 +70,21 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
   };
 
   const handleSwitchNode = () => {
-    // remove node param from url to update it during nodeApi init
-    const { search } = location;
-    const searchParams = new URLSearchParams(search);
-    searchParams.delete('node');
-    // push instead of replace to preserve previous node param history
-    history.push({ search: searchParams.toString() });
+    const isDifferentNodeSelected = selectedNode !== nodeApi.address;
 
-    localStorage.setItem('node_address', selectedNode);
-    localStorage.setItem('nodes', JSON.stringify(nodes));
-    dispatch(resetApiReady());
-    window.location.reload();
+    if (selectedNode && isDifferentNodeSelected) {
+      // remove node param from url to update it during nodeApi init
+      const { search } = location;
+      const searchParams = new URLSearchParams(search);
+      searchParams.delete('node');
+      // push instead of replace to preserve previous node param history
+      history.push({ search: searchParams.toString() });
+
+      localStorage.setItem('node_address', selectedNode);
+      localStorage.setItem('nodes', JSON.stringify(nodes));
+      dispatch(resetApiReady());
+      window.location.reload();
+    }
   };
 
   return (
