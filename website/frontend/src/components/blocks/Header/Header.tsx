@@ -44,19 +44,22 @@ export const Header: VFC = () => {
 
   const [nodes, setNodes] = useState(localStorage.nodes ? JSON.parse(localStorage.nodes) : init.nodes);
   const [showNodes, setShowNodes] = useState(false);
-  const [newNode, setNewNode] = useState('');
-  const [isAvailableAddNode, setIsAvailableAddNode] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<string>(nodeApi.address);
+
+  const allNodes = [...nodes[0].nodes, ...nodes[1].nodes];
+  const isNodeExist = allNodes.findIndex((node) => node.address === nodeApi.address) > -1;
+  const [newNode, setNewNode] = useState(isNodeExist ? '' : nodeApi.address);
 
   const headerIconsColor = '#fff';
 
-  // useEffect(() => {
-  //   if (!isApiReady) {
-  //     setShowNodes(false);
-  //     nodeApi.init().then(() => {
-  //       dispatch(setApiReady());
-  //     });
-  //   }
-  // }, [dispatch, isApiReady]);
+  useEffect(() => {
+    if (!isApiReady) {
+      setShowNodes(false);
+      nodeApi.init().then(() => {
+        dispatch(setApiReady());
+      });
+    }
+  }, [dispatch, isApiReady]);
 
   useEffect(() => {
     let timerId: any;
@@ -95,24 +98,6 @@ export const Header: VFC = () => {
     };
   }, [dispatch, isBuildDone]);
 
-  const handleCheckNode = (id: number) => {
-    setNodes((elems: any) =>
-      elems.map((elem: any) => {
-        const el = elem;
-        el.nodes.map((elInner: any) => {
-          const elInn = elInner;
-          if (elInn.id === id) {
-            elInn.isChoose = true;
-          } else {
-            elInn.isChoose = false;
-          }
-          return elInn;
-        });
-        return el;
-      })
-    );
-  };
-
   const handleAddNode = () => {
     const nodeToAdd = {
       id: nodes[1].nodes.length + 2,
@@ -150,19 +135,7 @@ export const Header: VFC = () => {
     );
   };
 
-  const handleChangeNodeName = (value: string) => {
-    setNewNode(value);
-
-    if (isNodeAddressValid(value)) {
-      setIsAvailableAddNode(true);
-    } else {
-      setIsAvailableAddNode(false);
-    }
-  };
-
   const handleSwitchNode = () => {
-    const allNodes = [...nodes[0].nodes, ...nodes[1].nodes];
-
     const activeNode = allNodes.filter((elem: any) => elem.isChoose);
 
     if (activeNode && activeNode.length) {
@@ -255,10 +228,14 @@ export const Header: VFC = () => {
                       nodeItem.nodes.map((node: any) => (
                         <li key={node.id} className="nodes__item-elem">
                           <div className="nodes__item-choose">
-                            <button className="nodes__item-btn" type="button" onClick={() => handleCheckNode(node.id)}>
+                            <button
+                              className="nodes__item-btn"
+                              type="button"
+                              onClick={() => setSelectedNode(node.address)}
+                            >
                               <img
                                 className="nodes__item-icon"
-                                src={node.isChoose ? selected : deselected}
+                                src={node.address === selectedNode ? selected : deselected}
                                 alt="radio"
                               />
                               <span className="nodes__item-text">{node.address}</span>
@@ -294,10 +271,15 @@ export const Header: VFC = () => {
               id="addNode"
               type="text"
               value={newNode}
-              onChange={(event) => handleChangeNodeName(event.target.value)}
+              onChange={(event) => setNewNode(event.target.value)}
               className="nodes__add-input"
             />
-            <button type="button" onClick={handleAddNode} disabled={!isAvailableAddNode} className="nodes__add-button">
+            <button
+              type="button"
+              onClick={handleAddNode}
+              disabled={!isNodeAddressValid(newNode)}
+              className="nodes__add-button"
+            >
               Add
             </button>
           </div>
