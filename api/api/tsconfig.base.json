@@ -17,5 +17,5 @@
     }
   },
   "exclude": ["test", "examples", "node_modules", "dist"],
-  "include": ["src", "package.json"]
+  "include": ["src"]
 }

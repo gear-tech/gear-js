@@ -1,20 +1,17 @@
 {
   "name": "@gear-js/api",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
   "type": "module",
-  "main": "dist/cjs/src/index.cjs",
-  "module": "dist/esm/src/index.js",
-  "types": "dist/esm/src/index.d.ts",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
-    "examples": "node lib/examples/index.js",
-    "test:meta": "node lib/examples/test-meta.js",
     "prettier": "npx prettier --write src/* examples/*",
     "tslint": "tslint -p tslint -p tsconfig.json",
     "codestyle": "npm run prettier && npm run tslint",
-    "prepare": "npm run build",
-    "test-meta": "mocha examples/test-meta.js"
+    "prepare": "npm run build"
   },
   "exports": {
     ".": {
