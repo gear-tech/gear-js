@@ -8,7 +8,7 @@ export default class MessagesRequestService {
 
   protected readonly API_MESSAGES_ALL = RPC_METHODS.GET_ALL_MESSAGES;
 
-  protected readonly API_MESSAGE = RPC_METHODS.API_MESSAGE;
+  protected readonly API_MESSAGE = RPC_METHODS.GET_MESSAGE;
 
   public fetchMessages(params: PaginationModel) {
     return this.apiRequest.callRPC<MessagePaginationModel>(this.API_MESSAGES_ALL, { ...params });

@@ -62,7 +62,7 @@ export const RPC_METHODS = {
   GET_METADATA: 'program.getMeta',
   GET_TEST_BALANCE: 'testBalance.get',
   GET_ALL_MESSAGES: 'message.all',
-  API_MESSAGE: 'message.data',
+  GET_MESSAGE: 'message.data',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];

@@ -8,7 +8,7 @@ import { Loader } from 'react-feather';
 import { formatDate } from 'helpers';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAction } from 'store/actions/actions';
-import backIcon from 'assets/images/arrow_back_bold.svg';
+import backIcon from 'assets/images/arrow_back_thick.svg';
 import './Message.scss';
 
 type Params = { id: string };
@@ -65,49 +65,45 @@ export const Message: VFC = () => {
     history.goBack();
   };
 
-  if (message) {
-    return (
-      <div className="message">
-        <div className={clsx('message__block', 'message__id')}>
-          <span className="message__block-caption">MESSAGE ID:</span>
-          <div className="message__status-block">
-            <span
-              className={clsx(
-                'message__block-status',
-                !message.replyError ? 'message__block-status_success' : 'message__block-status_error'
-              )}
-            />
-            <p className="message__block-paragraph">{message.id}</p>
-          </div>
-        </div>
-        <div className="message__block">
-          <span className="message__block-caption">Source:</span>
-          <p className="message__block-paragraph">{message.source}</p>
-        </div>
-        <div className="message__block">
-          <span className="message__block-caption">Destination:</span>
-          <p className="message__block-paragraph">{message.destination}</p>
-        </div>
-        <div className="message__block">
-          <span className="message__block-caption">Timestamp:</span>
-          <p className="message__block-paragraph">{formatDate(message.date)}</p>
-        </div>
-        {messagePayload ? (
-          <pre className="message__meta">{messagePayload}</pre>
-        ) : (
-          <Loader color="#fff" className="animation-rotate" />
-        )}
-        <div className="message__buttons">
-          <button type="button" className="message__button" onClick={handleGoBack}>
-            <img src={backIcon} className="message__button-icon" alt="reply" />
-            <span className="nodes-hide-text">Back</span>
-          </button>
+  return message ? (
+    <div className="message">
+      <div className={clsx('message__block', 'message__id')}>
+        <span className="message__block-caption">MESSAGE ID:</span>
+        <div className="message__status-block">
+          <span
+            className={clsx(
+              'message__block-status',
+              !message.replyError ? 'message__block-status_success' : 'message__block-status_error'
+            )}
+          />
+          <p className="message__block-paragraph">{message.id}</p>
         </div>
       </div>
-    );
-  }
-
-  return (
+      <div className="message__block">
+        <span className="message__block-caption">Source:</span>
+        <p className="message__block-paragraph">{message.source}</p>
+      </div>
+      <div className="message__block">
+        <span className="message__block-caption">Destination:</span>
+        <p className="message__block-paragraph">{message.destination}</p>
+      </div>
+      <div className="message__block">
+        <span className="message__block-caption">Timestamp:</span>
+        <p className="message__block-paragraph">{formatDate(message.date)}</p>
+      </div>
+      {messagePayload ? (
+        <pre className="message__meta">{messagePayload}</pre>
+      ) : (
+        <Loader color="#fff" className="animation-rotate" />
+      )}
+      <div className="message__buttons">
+        <button type="button" className="message__button" onClick={handleGoBack}>
+          <img src={backIcon} className="message__button-icon" alt="reply" />
+          <span className="nodes-hide-text">Back</span>
+        </button>
+      </div>
+    </div>
+  ) : (
     <div className="message">
       <Loader color="#fff" className="animation-rotate" />
     </div>
