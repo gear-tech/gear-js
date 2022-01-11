@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
+    "lib": ["es5", "es6", "es7", "esnext", "dom"],
+    "target": "es6",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
     "esModuleInterop": true,
-    "declaration": true,
-    "incremental": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
     "pretty": true,
     "skipLibCheck": true,

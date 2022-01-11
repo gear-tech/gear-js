@@ -5,3 +5,4 @@ examples/test-json/
 **/lib/
 /api/types/
 **/temp
+api/.rollup.cache
