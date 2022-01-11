@@ -41,7 +41,7 @@ export const Message: VFC = () => {
   }, [dispatch, message]);
 
   useEffect(() => {
-    if (program && message) {
+    if (program && program.meta && message) {
       const createType = new CreateType();
       const parsedMeta: Metadata = JSON.parse(program.meta.meta as string);
 
