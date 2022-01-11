@@ -75,11 +75,11 @@ export class ConsumerService {
         replyError: null,
       });
     },
-    InitSuccess: (genesis: string, chain: string, value: any) => {
-      this.programService.setStatus(value.programId, chain, genesis, InitStatus.SUCCESS);
+    InitSuccess: (genesis: string, value: any) => {
+      this.programService.setStatus(value.programId, genesis, InitStatus.SUCCESS);
     },
-    InitFailure: (genesis: string, chain: string, value: any) => {
-      this.programService.setStatus(value.programId, chain, genesis, InitStatus.FAILED);
+    InitFailure: (genesis: string, value: any) => {
+      this.programService.setStatus(value.programId, genesis, InitStatus.FAILED);
     },
   };
 

@@ -20,11 +20,11 @@ export class ProgramsService {
     }
   }
 
-  async saveProgram({ owner, uploadedAt, hash, chain }) {
+  async saveProgram({ genesis, hash, owner, uploadedAt }) {
     const program = this.programRepository.create({
+      genesis,
       hash,
       owner,
-      chain,
       name: hash,
       uploadedAt: uploadedAt,
       programNumber: (await this.getLastProgramNumber(owner)) + 1,
@@ -56,14 +56,14 @@ export class ProgramsService {
   }
 
   async getAllUserPrograms(
+    genesis: string,
     owner: string,
-    chain: string,
     limit?: number,
     offset?: number,
   ): Promise<{ programs: Program[]; count: number }> {
     owner;
     const [result, total] = await this.programRepository.findAndCount({
-      where: { owner, chain },
+      where: { genesis, owner },
       take: limit || 13,
       skip: offset || 0,
       order: {

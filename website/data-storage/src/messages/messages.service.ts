@@ -42,8 +42,8 @@ export class MessagesService {
   }
 
   async addPayload(params: AddPayloadParams): Promise<Message> {
-    const { id, chain, genesis, signature, payload } = params;
-    const message = await this.messageRepo.findOne({ id, genesis, chain });
+    const { id, genesis, signature, payload } = params;
+    const message = await this.messageRepo.findOne({ id, genesis });
     if (!message) {
       throw new MessageNotFound();
     }
@@ -55,13 +55,11 @@ export class MessagesService {
   }
 
   async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
-    const where = {
-      chain: params.chain,
-      destination: params.destination,
-      genesis: params.genesis,
-    };
     const [result, total] = await this.messageRepo.findAndCount({
-      where,
+      where: {
+        destination: params.destination,
+        genesis: params.genesis,
+      },
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
     });
@@ -73,7 +71,7 @@ export class MessagesService {
 
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
     const [result, total] = await this.messageRepo.findAndCount({
-      where: { genesis: params.genesis, chain: params.chain, source: params.source },
+      where: { genesis: params.genesis, source: params.source },
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
     });
@@ -86,7 +84,6 @@ export class MessagesService {
   async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
     const where = {
       genesis: params.genesis,
-      chain: params.chain,
       destination: params.destination,
       source: params.source,
     };
