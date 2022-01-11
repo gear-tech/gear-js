@@ -7,10 +7,6 @@ export class Message {
 
   @Index()
   @Column()
-  chain: string;
-
-  @Index()
-  @Column()
   genesis: string;
 
   @Index()

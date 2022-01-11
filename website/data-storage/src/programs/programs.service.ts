@@ -14,10 +14,9 @@ export class ProgramsService {
     private readonly programRepo: Repository<Program>,
   ) {}
 
-  async save({ id, chain, genesis, owner, uploadedAt }): Promise<Program> {
+  async save({ id, genesis, owner, uploadedAt }): Promise<Program> {
     const program = this.programRepo.create({
       id,
-      chain,
       genesis,
       owner,
       name: id,
@@ -90,7 +89,6 @@ export class ProgramsService {
   async setStatus(id: string, genesis: string, status: InitStatus): Promise<Program> {
     return new Promise((resolve) => {
       setTimeout(async () => {
-        console.log(id, genesis, status);
         let program = await this.findProgram({ id, genesis });
         if (program) {
           program.initStatus = status;

@@ -29,10 +29,9 @@ export class ConsumerService {
   ) {}
 
   events = {
-    Log: (genesis: string, chain: string, value: any) => {
+    Log: (genesis: string, value: any) => {
       this.messageService.save({
         genesis,
-        chain,
         id: value.id,
         destination: value.dest,
         source: value.source,
@@ -42,17 +41,15 @@ export class ConsumerService {
         replyError: value.reply?.isExist ? value.reply.error : null,
       });
     },
-    InitMessageEnqueued: async (genesis: string, chain: string, value: any) => {
+    InitMessageEnqueued: async (genesis: string, value: any) => {
       await this.programService.save({
         id: value.programId,
         genesis,
-        chain,
         owner: value.origin,
         uploadedAt: value.date,
       });
       this.messageService.save({
         genesis,
-        chain,
         id: value.messageId,
         destination: value.programId,
         source: value.origin,
@@ -62,10 +59,9 @@ export class ConsumerService {
         replyError: null,
       });
     },
-    DispatchMessageEnqueued: (genesis: string, chain: string, value: any) => {
+    DispatchMessageEnqueued: (genesis: string, value: any) => {
       this.messageService.save({
         genesis,
-        chain,
         id: value.messageId,
         destination: value.programId,
         source: value.origin,

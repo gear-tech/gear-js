@@ -16,7 +16,7 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save({ id, chain, genesis, destination, source, payload, date, replyTo, replyError }): Promise<Message> {
+  async save({ id, genesis, destination, source, payload, date, replyTo, replyError }): Promise<Message> {
     let message = await this.messageRepo.findOne({ id });
     if (message) {
       if (payload) {
@@ -29,7 +29,6 @@ export class MessagesService {
     } else {
       message = this.messageRepo.create({
         id,
-        chain,
         genesis,
         destination,
         source,
