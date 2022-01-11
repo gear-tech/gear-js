@@ -1,5 +1,5 @@
 import React, { VFC, useState } from 'react';
-import close from 'assets/images/close.svg';
+import cross from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import selected from 'assets/images/radio-selected.svg';
 import deselected from 'assets/images/radio-deselected.svg';
@@ -37,7 +37,6 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
     const nodeToAdd = {
       id: nodes[1].nodes.length + 2,
       custom: true,
-      isChoose: false,
       address: newNode,
     };
 
@@ -105,7 +104,7 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
           <span className="nodes-hide-text">Switch</span>
         </button>
         <button type="button" aria-label="arrowBack" onClick={closeSidebar} className="nodes__hide-button">
-          <img src={close} alt="back" />
+          <img src={cross} alt="back" />
         </button>
       </div>
 

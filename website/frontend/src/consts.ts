@@ -1,4 +1,6 @@
 export const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS;
+export const NODE_ADRESS_URL_PARAM = 'node';
+
 export const API_URL = process.env.REACT_APP_API_URL as string;
 export const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER_URL}/build`;
 export const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER_URL}/get-wasm`;
@@ -101,5 +103,3 @@ export const KEY_TYPES = {
 export enum ZIndexes {
   'alert' = 999,
 }
-
-export const NODE_ADRESS_URL_PARAM = 'node';
