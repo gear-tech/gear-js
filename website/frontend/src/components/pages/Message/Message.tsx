@@ -1,55 +1,115 @@
-import React, { VFC } from 'react';
+import React, { VFC, useEffect, useState } from 'react';
+import { CreateType } from '@gear-js/api';
 import { useParams, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
-import messageIcon from 'assets/images/message.svg';
+import { Loader } from 'react-feather';
+import { formatDate } from 'helpers';
+import { RootState } from 'store/reducers';
+import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAction } from 'store/actions/actions';
 import backIcon from 'assets/images/arrow_back_bold.svg';
 import './Message.scss';
 
+type Params = { id: string };
+
 export const Message: VFC = () => {
-  const params: any = useParams();
-  const id: string = params?.id;
+  const routeParams = useParams<Params>();
+  const messageId = routeParams.id;
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { message } = useSelector((state: RootState) => state.messages);
+  const { program } = useSelector((state: RootState) => state.programs);
+
+  const [messagePayload, setMessagePayload] = useState<any>();
+
+  useEffect(() => {
+    dispatch(getMessageAction(messageId));
+    return () => {
+      dispatch(resetMessageAction());
+    };
+  }, [dispatch, messageId]);
+
+  useEffect(() => {
+    if (message) {
+      dispatch(getProgramAction(message.source));
+    }
+    return () => {
+      dispatch(resetProgramAction());
+    };
+  }, [dispatch, message]);
+
+  useEffect(() => {
+    if (program && message) {
+      const createType = new CreateType();
+      const parsedMeta: Metadata = JSON.parse(program.meta.meta as string);
+
+      let type = 'Bytes';
+
+      if (parsedMeta.handle_output) {
+        type = parsedMeta.handle_output;
+      }
+
+      if (!parsedMeta.handle_output && parsedMeta.init_output) {
+        type = parsedMeta.init_output;
+      }
+
+      const decodedPayload = createType.create(type, message.payload, parsedMeta).toHuman();
+
+      setMessagePayload(JSON.stringify(decodedPayload));
+    }
+  }, [program, message]);
 
   const handleGoBack = () => {
     history.goBack();
   };
 
-  return (
-    <div className="message">
-      <div className={clsx('message__block', 'message__id')}>
-        <span className="message__block-caption">MESSAGE ID:</span>
-        <div className="message__status-block">
-          <span className={clsx('message__block-status', 'message__block-status_success')} />
-          <p className="message__block-paragraph">0x1848858f8fdc9cd3f84d47906effef0a0f211df1325f6352eb52ed777a9c030e</p>
+  if (message) {
+    return (
+      <div className="message">
+        <div className={clsx('message__block', 'message__id')}>
+          <span className="message__block-caption">MESSAGE ID:</span>
+          <div className="message__status-block">
+            <span
+              className={clsx(
+                'message__block-status',
+                !message.replyError ? 'message__block-status_success' : 'message__block-status_error'
+              )}
+            />
+            <p className="message__block-paragraph">{message.id}</p>
+          </div>
+        </div>
+        <div className="message__block">
+          <span className="message__block-caption">Source:</span>
+          <p className="message__block-paragraph">{message.source}</p>
+        </div>
+        <div className="message__block">
+          <span className="message__block-caption">Destination:</span>
+          <p className="message__block-paragraph">{message.destination}</p>
+        </div>
+        <div className="message__block">
+          <span className="message__block-caption">Timestamp:</span>
+          <p className="message__block-paragraph">{formatDate(message.date)}</p>
+        </div>
+        {messagePayload ? (
+          <pre className="message__meta">{messagePayload}</pre>
+        ) : (
+          <Loader color="#fff" className="animation-rotate" />
+        )}
+        <div className="message__buttons">
+          <button type="button" className="message__button" onClick={handleGoBack}>
+            <img src={backIcon} className="message__button-icon" alt="reply" />
+            <span className="nodes-hide-text">Back</span>
+          </button>
         </div>
       </div>
-      <div className="message__block">
-        <span className="message__block-caption">Source:</span>
-        <p className="message__block-paragraph">
-          5f6352eb52ed777a9c030e <span className="message__block-value">(default.wasm)</span>
-        </p>
-      </div>
-      <div className="message__block">
-        <span className="message__block-caption">Destination:</span>
-        <p className="message__block-paragraph">
-          Alice <span className="message__block-value">(312c441241151cx231251er2312r31)</span>
-        </p>
-      </div>
-      <div className="message__block">
-        <span className="message__block-caption">Timestamp:</span>
-        <p className="message__block-paragraph">2021-08-04T09:24:06.088Z</p>
-      </div>
-      <pre className="message__meta">.... text</pre>
-      <div className="message__buttons">
-        <button type="button" className="message__button" onClick={handleGoBack}>
-          <img src={backIcon} className="message__button-icon" alt="reply" />
-          <span className="nodes-hide-text">Back</span>
-        </button>
-        <button type="button" className="message__button">
-          <img src={messageIcon} className="message__button-icon" alt="reply" />
-          <span className="nodes-hide-text">Reply</span>
-        </button>
-      </div>
+    );
+  }
+
+  return (
+    <div className="message">
+      <Loader color="#fff" className="animation-rotate" />
     </div>
   );
 };
