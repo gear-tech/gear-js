@@ -1,12 +1,11 @@
-export const API_CONNECTION_ADDRESS = process.env.REACT_APP_API_CONNECT_ADDRESS;
-export const API_PATH = process.env.REACT_APP_API_PATH!;
+export const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS;
+export const API_URL = process.env.REACT_APP_API_URL as string;
+export const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER_URL}/build`;
+export const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER_URL}/get-wasm`;
+
 export const isProd = process.env.NODE_ENV === 'production';
-export const JSONRPC_VERSION = '2.0';
 export const INITIAL_LIMIT_BY_PAGE = 13;
-export const GET_TEST_BALANCE = `${process.env.REACT_APP_GET_TEST_BALANCE}/test-balance`;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
-export const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER}/wasm-compiler/build`;
-export const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER}/wasm-compiler/get-wasm`;
 
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
@@ -62,6 +61,7 @@ export const RPC_METHODS = {
   ADD_METADATA: 'program.addMeta',
   GET_METADATA: 'program.getMeta',
   GET_TEST_BALANCE: 'testBalance.get',
+  GET_ALL_MESSAGES: 'message.all',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
@@ -71,6 +71,7 @@ export const SWITCH_PAGE_TYPES = {
   UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
   NOTIFICATIONS: 'NOTIFICATIONS',
   ALL_PROGRAMS: 'ALL_PROGRAMS',
+  ALL_MESSAGES: 'ALL_MESSAGES',
 };
 
 export const PAGE_TYPES = {

@@ -11,7 +11,7 @@ services:
     volumes:
       - /home/ec2/data-storage/pg_data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - '5433:5432'
 
   data_storage:
     image: mithriy/gear-data-storage:nightly
@@ -23,8 +23,8 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=pg_data_storage
-      - CLIENT_ID=${KAFKA_CLIENT_ID}
-      - GROUP_ID=${KAFKA_GROUP_ID}
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
+      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
       - KAFKA_BROKERS=${KAFKA_BROKERS}
       - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
       - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}

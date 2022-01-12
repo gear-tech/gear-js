@@ -5,7 +5,7 @@ import { Message } from './entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
-import { AddPayloadParams, AllMessagesResult, GetMessagesParams } from 'src/interfaces';
+import { AddPayloadParams, AllMessagesResult, FindMessageParams, GetMessagesParams } from 'src/interfaces';
 import { PAGINATION_LIMIT } from 'src/config/configuration';
 
 const logger = new Logger('MessageService');
@@ -16,18 +16,7 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save({
-    id,
-    chain,
-    genesis,
-    destination,
-    source,
-    payload,
-    date,
-    replyTo,
-    replyError,
-    isRead,
-  }): Promise<Message> {
+  async save({ id, chain, genesis, destination, source, payload, date, replyTo, replyError }): Promise<Message> {
     let message = await this.messageRepo.findOne({ id });
     if (message) {
       if (payload) {
@@ -46,7 +35,6 @@ export class MessagesService {
         source,
         payload,
         date: new Date(date),
-        isRead,
         replyTo,
       });
     }
@@ -71,15 +59,12 @@ export class MessagesService {
       chain: params.chain,
       destination: params.destination,
       genesis: params.genesis,
-      isRead: params.isRead,
     };
-    console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
       where,
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
     });
-    console.log(result);
     return {
       messages: result,
       count: total,
@@ -104,7 +89,6 @@ export class MessagesService {
       chain: params.chain,
       destination: params.destination,
       source: params.source,
-      isRead: params.isRead,
     };
     console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
@@ -118,11 +102,11 @@ export class MessagesService {
     };
   }
 
-  async getCountUnread(destination: string): Promise<number> {
-    const messages = await this.messageRepo.findAndCount({
-      destination,
-      isRead: false,
-    });
-    return messages[1];
+  async getMessage(params: FindMessageParams): Promise<Message> {
+    const where = {
+      id: params.id,
+    };
+    const result = await this.messageRepo.findOne({ where });
+    return result;
   }
 }

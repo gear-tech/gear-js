@@ -2,9 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [master, do-event-listener]
-
-  workflow_dispatch:
+    branches: [master]
 
 jobs:
   build-backend:
@@ -57,9 +55,15 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 16.x
+
       - run: |
           yarn install
           yarn build:frontend
+        env:
+          REACT_APP_API_URL: 'https://ci.test'
+          REACT_APP_NODE_ADDRESS: 'wss://ci.test'
+          REACT_APP_WASM_COMPILER_URL: 'https://ci.test'
+          REACT_APP_RRT: ''
 
   build-api:
     runs-on: ubuntu-latest

@@ -59,8 +59,6 @@ export class KafkaProducer {
   }
 
   async send(key, value, chainName, genesis) {
-    log.info(`Send ${key}`);
-    console.log(value);
     this.producer.send({
       topic: 'events',
       messages: [{ key, value: JSON.stringify(value), headers: { chain: chainName, genesis } }],

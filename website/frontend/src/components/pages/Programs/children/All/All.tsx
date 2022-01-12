@@ -118,6 +118,7 @@ export const All: VFC = () => {
             setSearch(val);
             dispatch(getProgramAction(val));
           }}
+          placeholder="Find program by ID"
         />
         <br />
       </div>

@@ -13,6 +13,7 @@ import { Document } from 'components/pages/Document/Document';
 import { EditorPage } from 'features/Editor/EditorPage';
 import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
 import { SimpleLoader } from 'components/blocks/SimpleLoader';
+import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
@@ -92,11 +93,14 @@ const AppComponent: FC = () => {
           <Main>
             {isApiReady ? (
               <Switch>
-                <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms]}>
+                <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
                   <Programs />
                 </Route>
                 <Route exact path={routes.program}>
                   <Program />
+                </Route>
+                <Route exact path={routes.state}>
+                  <State />
                 </Route>
                 <Route exact path={routes.editor}>
                   <EditorPage />

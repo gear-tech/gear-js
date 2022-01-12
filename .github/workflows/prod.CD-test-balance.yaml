@@ -7,7 +7,6 @@ env:
 
 jobs:
   Deploy:
-    needs: Build-backend-docker
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -26,13 +25,13 @@ jobs:
           TEST_ACCOUNT_SEED: ${{ secrets.TEST_BALANCE_ACCOUNT_SEED }}
           KAFKA_CLIENT_ID_TESTNET: ${{ secrets.TEST_BALANCE_KAFKA_CLIENT_ID_TESTNET }}
           KAFKA_GROUP_ID_TESTNET: ${{ secrets.TEST_BALANCE_KAFKA_GROUP_ID_TESTNET }}
-          WS_PROVIDER_TESTNET: ${{ secrets.TEST_BALANCE_WS_PROVIDER_TESTNET }}
+          WS_PROVIDER_TESTNET: ${{ secrets.WS_PROVIDER_TESTNET }}
           ROOT_ACCOUNT_SEED_TESTNET: ${{ secrets.TEST_BALANCE_ROOT_ACCOUNT_SEED_TESTNET }}
           TEST_ACCOUNT_BALANCE_TESTNET: ${{ secrets.TEST_BALANCE_ACCOUNT_BALANCE_TESTNET }}
           TEST_BALANCE_VALUE_TESTNET: ${{ secrets.TEST_BALANCE_VALUE_TESTNET }}
           KAFKA_CLIENT_ID_WRSH: ${{ secrets.TEST_BALANCE_KAFKA_CLIENT_ID_WRSH }}
           KAFKA_GROUP_ID_WRSH: ${{ secrets.TEST_BALANCE_KAFKA_GROUP_ID_WRSH }}
-          WS_PROVIDER_WRSH: ${{ secrets.TEST_BALANCE_WS_PROVIDER_WRSH }}
+          WS_PROVIDER_WRSH: ${{ secrets.WS_PROVIDER_WRSH }}
           ROOT_ACCOUNT_SEED_WRSH: ${{ secrets.TEST_BALANCE_ROOT_ACCOUNT_SEED_WRSH }}
           TEST_ACCOUNT_BALANCE_WRSH: ${{ secrets.TEST_BALANCE_ACCOUNT_BALANCE_WRSH }}
           TEST_BALANCE_VALUE_WRSH: ${{ secrets.TEST_BALANCE_VALUE_WRSH }}

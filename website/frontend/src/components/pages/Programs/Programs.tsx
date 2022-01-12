@@ -5,6 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { routes } from 'routes';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { SWITCH_PAGE_TYPES } from 'consts';
+import { Messages } from 'components/pages/Messages/Messages';
 import { All } from 'components/pages/Programs/children/All/All';
 import { useDispatch } from 'react-redux';
 import { fetchBlockAction } from '../../../store/actions/actions';
@@ -20,12 +21,15 @@ import { RecentNotifications } from '../../blocks/RecentNotifications/RecentNoti
 export const Programs: VFC = () => {
   const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);
   const isAllProgramsPage = useRouteMatch(routes.allPrograms);
+  const isAllMessagesPage = useRouteMatch(routes.messages);
   let currentPage = SWITCH_PAGE_TYPES.UPLOAD_PROGRAM;
 
   if (isUploadedProgramsPage) {
     currentPage = SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS;
   } else if (isAllProgramsPage) {
     currentPage = SWITCH_PAGE_TYPES.ALL_PROGRAMS;
+  } else if (isAllMessagesPage) {
+    currentPage = SWITCH_PAGE_TYPES.ALL_MESSAGES;
   }
 
   const [api] = useApi();
@@ -66,6 +70,7 @@ export const Programs: VFC = () => {
       )}
       {currentPage === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && <Recent />}
       {currentPage === SWITCH_PAGE_TYPES.ALL_PROGRAMS && <All />}
+      {currentPage === SWITCH_PAGE_TYPES.ALL_MESSAGES && <Messages />}
       <RecentNotifications />
     </div>
   );

@@ -10,49 +10,54 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build-frontend-docker:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  # build-frontend-docker:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v1
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v1
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v1
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push api-backend
-        id: frontend_docker_build
-        uses: docker/build-push-action@v2
-        with:
-          file: website/frontend/Dockerfile
-          push: true
-          tags: mithriy/gear-frontend:nightly
+  #     - name: Build and push frontend
+  #       id: frontend_docker_build
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         file: website/frontend/Dockerfile
+  #         push: true
+  #         tags: mithriy/gear-frontend:nightly
 
   Deploy-frontend:
     runs-on: ubuntu-latest
-    needs: build-frontend-docker
     environment: staging
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Run playbook
-        uses: dawidd6/action-ansible-playbook@v2
+      - name: build frontend
+        run: |
+          yarn install
+          yarn build:frontend
         env:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          REACT_APP_NODE_ADDRESS: ${{ secrets.REACT_APP_NODE_ADDRESS }}
+          REACT_APP_NODE_ADDRESS: ${{ secrets.WS_PROVIDER_WRSH }}
           REACT_APP_WASM_COMPILER_URL: ${{ secrets.REACT_APP_WASM_COMPILER_URL }}
+          REACT_APP_RRT: ''
+
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
         with:
           directory: ./ansible/tasks/frontend
-          playbook: staging_frontend.yaml
+          playbook: frontend.yaml
           key: ${{secrets.SSH_PRIVATE_KEY}}
           inventory: |
             [all]
