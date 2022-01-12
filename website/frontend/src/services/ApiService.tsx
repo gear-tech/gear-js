@@ -13,9 +13,9 @@ import {
   programUploadFailedAction,
   AddAlert,
 } from 'store/actions/actions';
+import { localPrograms } from './LocalDBService';
 import { readFileAsync, signPayload } from '../helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
-import IndexedDBService from './IndexedDB';
 
 // TODO: (dispatch) fix it later
 
@@ -57,8 +57,6 @@ export const UploadProgram = async (
 
   const chain = localStorage.getItem('chain');
 
-  const indexedDB = new IndexedDBService();
-
   const program = {
     code: new Uint8Array(fileBuffer),
     gasLimit,
@@ -87,26 +85,24 @@ export const UploadProgram = async (
         callback();
 
         if (chain === 'Development') {
-          indexedDB.connectDB((db: IDBDatabase) => {
-            indexedDB
-              .add(db, {
-                id: programId,
-                name,
-                title,
-                initStatus: ProgramStatus.Success,
-                meta: {
-                  meta: JSON.stringify(meta),
-                },
-                metaFile,
-                uploadedAt: Date(),
-              })
-              .then((response: any) => {
-                dispatch(AddAlert({ type: EventTypes.SUCCESS, message: response }));
-              })
-              .catch((error: any) => {
-                dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
-              });
-          });
+          localPrograms
+            .setItem(programId, {
+              id: programId,
+              name,
+              title,
+              initStatus: ProgramStatus.Success,
+              meta: {
+                meta: JSON.stringify(meta),
+              },
+              metaFile,
+              uploadedAt: Date(),
+            })
+            .then(() => {
+              dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Program added successfully` }));
+            })
+            .catch((error: any) => {
+              dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+            });
         } else {
           // Sign metadata and save it
           signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
@@ -181,34 +177,29 @@ export const addMetadata = async (
   dispatch: any
 ) => {
   const apiRequest = new ServerRPCRequestService();
-  const indexedDB = new IndexedDBService();
   const injector = await web3FromSource(account.meta.source);
   const chain = localStorage.getItem('chain');
 
   // Sign metadata and save it
   signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
     if (chain === 'Development') {
-      indexedDB.connectDB((db: IDBDatabase) => {
-        indexedDB
-          .update(db)
-          .then((cursor: any) => {
-            if (cursor) {
-              const { key, value } = cursor;
-              if (key === programId) {
-                value.meta.meta = JSON.stringify(meta);
-                value.metaFile = metaFile;
-                value.title = meta.title;
-                indexedDB.add(db, value);
-                dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
-                cursor.delete();
-              }
-              cursor.continue();
-            }
-          })
-          .catch((error) => {
-            dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+      localPrograms
+        .getItem(programId)
+        .then((res: any) => {
+          const newData = {
+            ...res,
+            [res.meta.meta]: JSON.stringify(meta),
+            [res.metaFile]: metaFile,
+            [res.title]: meta.title,
+          };
+
+          localPrograms.setItem(res.id, newData).then(() => {
+            dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
           });
-      });
+        })
+        .catch((error) => {
+          dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+        });
     } else {
       try {
         const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {

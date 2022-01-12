@@ -18,6 +18,16 @@ export interface ProgramModel {
   meta?: any;
 }
 
+export interface LocalProgramModel {
+  id: string;
+  initStatus: ProgramStatus;
+  meta?: any;
+  metaFile?: any;
+  name?: string;
+  title?: string;
+  uploadedAt?: string;
+}
+
 export interface ProgramPaginationModel {
   count: number;
   programs: ProgramModel[];

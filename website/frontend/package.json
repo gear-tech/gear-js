@@ -36,6 +36,7 @@
     "jszip": "^3.7.0",
     "ky": "^0.28.7",
     "lint-staged": "^11.0.0",
+    "localforage": "^1.10.0",
     "lodash.get": "^4.4.2",
     "lodash.isobject": "^3.0.2",
     "lodash.isstring": "^4.0.1",

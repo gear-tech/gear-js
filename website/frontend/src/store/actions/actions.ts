@@ -6,13 +6,13 @@ import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
-import IndexedDB from 'services/IndexedDB';
-
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
+import { getAllLocalPrograms } from 'helpers';
+import { localPrograms } from 'services/LocalDBService';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
 import { AlertActionTypes } from '../reducers/AlertReducer';
@@ -108,27 +108,25 @@ export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOU
 
 const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
-const indexedDB = new IndexedDB();
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
   const chain = localStorage.getItem('chain');
 
   if (chain === 'Development') {
-    indexedDB.connectDB((db: IDBDatabase) => {
-      indexedDB
-        .get(db)
-        .then((response: any) => {
-          dispatch(
-            fetchUserProgramsSuccessAction({
-              count: response.length,
-              programs: response,
-            })
-          );
-        })
-        .catch(() => {
-          dispatch(fetchUserProgramsErrorAction());
-        });
-    });
+    const programs = getAllLocalPrograms();
+
+    programs
+      .then((response) => {
+        dispatch(
+          fetchUserProgramsSuccessAction({
+            count: response.length,
+            programs: response,
+          })
+        );
+      })
+      .catch(() => {
+        dispatch(fetchUserProgramsErrorAction());
+      });
   } else {
     dispatch(fetchUserProgramsAction());
     programService
@@ -144,21 +142,20 @@ export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any)
   const chain = localStorage.getItem('chain');
 
   if (chain === 'Development') {
-    indexedDB.connectDB((db: IDBDatabase) => {
-      indexedDB
-        .get(db)
-        .then((response: any) => {
-          dispatch(
-            fetchAllProgramsSuccessAction({
-              count: response.length,
-              programs: response,
-            })
-          );
-        })
-        .catch(() => {
-          dispatch(fetchUserProgramsErrorAction());
-        });
-    });
+    const programs = getAllLocalPrograms();
+
+    programs
+      .then((response) => {
+        dispatch(
+          fetchAllProgramsSuccessAction({
+            count: response.length,
+            programs: response,
+          })
+        );
+      })
+      .catch(() => {
+        dispatch(fetchUserProgramsErrorAction());
+      });
   } else {
     dispatch(fetchUserProgramsAction());
     programService
@@ -174,16 +171,14 @@ export const getProgramAction = (id: string) => (dispatch: any) => {
   const chain = localStorage.getItem('chain');
 
   if (chain === 'Development') {
-    indexedDB.connectDB((db: IDBDatabase) => {
-      indexedDB
-        .get(db, id)
-        .then((response: any) => {
-          dispatch(fetchProgramSuccessAction(response));
-        })
-        .catch(() => {
-          dispatch(fetchProgramErrorAction());
-        });
-    });
+    localPrograms
+      .getItem(id)
+      .then((response: any) => {
+        dispatch(fetchProgramSuccessAction(response));
+      })
+      .catch(() => {
+        dispatch(fetchProgramErrorAction());
+      });
   } else {
     dispatch(fetchProgramAction());
     programService

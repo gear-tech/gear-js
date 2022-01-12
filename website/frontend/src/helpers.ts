@@ -1,3 +1,6 @@
+import { localPrograms } from 'services/LocalDBService';
+import { LocalProgramModel } from 'types/program';
+
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
 
@@ -56,4 +59,14 @@ export const signPayload = async (injector: any, address: string, payload: any, 
   } catch (err) {
     console.error(err);
   }
+};
+
+export const getAllLocalPrograms = () => {
+  const programs: LocalProgramModel[] = [];
+
+  return localPrograms
+    .iterate((elem: LocalProgramModel) => {
+      programs.push(elem);
+    })
+    .then(() => programs);
 };
