@@ -49,7 +49,7 @@ export const MessagesList: VFC<Props> = ({ messages }) => {
             </div>
             <div className="messages__list-item">
               <Link className="messages__list-link" to={`/message/${message.id}`}>
-                <p className="messages__list-text">{message.id}</p>
+                {message.id}
               </Link>
               <div className="programsCopyId">
                 <button type="button" onClick={() => copyToClipboard(message.id, alert, 'Message ID copied')}>

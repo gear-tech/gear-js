@@ -1,4 +1,4 @@
-import React, { VFC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { CreateType } from '@gear-js/api';
 import { useParams, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,7 +13,7 @@ import './Message.scss';
 
 type Params = { id: string };
 
-export const Message: VFC = () => {
+export const Message: FC = () => {
   const routeParams = useParams<Params>();
   const messageId = routeParams.id;
   const history = useHistory();
@@ -22,7 +22,7 @@ export const Message: VFC = () => {
   const { message } = useSelector((state: RootState) => state.messages);
   const { program } = useSelector((state: RootState) => state.programs);
 
-  const [messagePayload, setMessagePayload] = useState<any>();
+  const [messagePayload, setMessagePayload] = useState('');
 
   useEffect(() => {
     dispatch(getMessageAction(messageId));
@@ -73,7 +73,7 @@ export const Message: VFC = () => {
           <span
             className={clsx(
               'message__block-status',
-              !message.replyError ? 'message__block-status_success' : 'message__block-status_error'
+              message.replyError ? 'message__block-status_error' : 'message__block-status_success'
             )}
           />
           <p className="message__block-paragraph">{message.id}</p>
