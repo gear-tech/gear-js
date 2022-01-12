@@ -25,13 +25,7 @@ export class ProgramsService {
     return await this.programRepo.save(program);
   }
 
-  async addProgramInfo(
-    id: string,
-    genesis: string,
-    name?: string,
-    title?: string,
-    meta?: Meta,
-  ): Promise<Program> {
+  async addProgramInfo(id: string, genesis: string, name?: string, title?: string, meta?: Meta): Promise<Program> {
     const program = await this.findProgram({ id, genesis });
     program.name = name;
     program.title = title;
@@ -74,11 +68,17 @@ export class ProgramsService {
 
   async findProgram(params: FindProgramParams): Promise<Program> {
     const { id, genesis, owner } = params;
-    const where = owner != null ? { id, genesis, owner } : { id, genesis };
     try {
-      const program = await this.programRepo.findOne(where, {
-        relations: ['meta'],
-      });
+      const program = await this.programRepo.findOne(
+        {
+          id,
+          genesis,
+          owner: owner || void owner,
+        },
+        {
+          relations: ['meta'],
+        },
+      );
       return program;
     } catch (error) {
       logger.error(error);
