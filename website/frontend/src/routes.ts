@@ -10,4 +10,5 @@ export const routes = {
   program: '/program/:id',
   state: '/state/:id',
   messages: '/messages',
+  sendMessage: '/send-message/:id',
 };

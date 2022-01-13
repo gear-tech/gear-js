@@ -11,7 +11,7 @@ import styles from './UserProgram.module.scss';
 
 type Props = {
   program: ProgramModel;
-  handleOpenForm: (programId: string, programName?: string, isMessage?: boolean) => void;
+  handleOpenForm: (programId: string, programName?: string) => void;
 };
 
 export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
@@ -48,9 +48,9 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
         </div>
       </div>
       <div className={styles.programsListBtns}>
-        <button type="button" aria-label="refresh" onClick={() => handleOpenForm(program.id, program.name, true)}>
+        <Link to={`/send-message/${program.id}`}>
           <img src={MessageIllustration} alt="Send message to program" />
-        </button>
+        </Link>
         <button
           className={styles.allProgramsItemUpload}
           type="button"
