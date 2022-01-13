@@ -5,8 +5,11 @@ import { Repository } from 'typeorm';
 import { InitStatus, Program } from './entities/program.entity';
 import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from 'src/interfaces';
 import { PAGINATION_LIMIT } from 'src/config/configuration';
+import { ErrorLogger } from 'src/utils';
 
 const logger = new Logger('ProgramDb');
+const errorLog = new ErrorLogger('ProgramsService');
+
 @Injectable()
 export class ProgramsService {
   constructor(
@@ -22,7 +25,12 @@ export class ProgramsService {
       name: id,
       uploadedAt: new Date(uploadedAt),
     });
-    return await this.programRepo.save(program);
+    try {
+      return await this.programRepo.save(program);
+    } catch (error) {
+      errorLog.error(error, 29);
+      return;
+    }
   }
 
   async addProgramInfo(id: string, genesis: string, name?: string, title?: string, meta?: Meta): Promise<Program> {
