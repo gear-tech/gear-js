@@ -2,7 +2,7 @@ name: staging.events-listener-CD
 
 on:
   push:
-    branches: [master]
+    branches: [master, do-saving-to-db]
     paths:
       - website/events-listener/**
 
