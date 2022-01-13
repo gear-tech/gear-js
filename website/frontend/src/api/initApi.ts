@@ -1,6 +1,5 @@
 import { GearApi } from '@gear-js/api';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api/types/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { NODE_ADDRESS } from '../consts';

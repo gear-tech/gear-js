@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Identicon from '@polkadot/react-identicon';
 import { GearKeyring } from '@gear-js/api';
@@ -13,6 +12,7 @@ import { Modal } from '../Modal';
 import { AccountList } from '../AccountList';
 
 import './Wallet.scss';
+import { nodeApi } from '../../../api/initApi';
 
 export const Wallet = () => {
   const [injectedAccounts, setInjectedAccounts] = useState<Array<UserAccount> | null>(null);
@@ -24,55 +24,80 @@ export const Wallet = () => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 
-  useEffect(() => {
-    const getAllAccounts = async () => {
-      const extensions = await web3Enable('Gear Tech');
+  const getAllAccounts = useCallback(async () => {
+    if (typeof window !== `undefined`) {
+      const { web3Accounts, web3Enable, isWeb3Injected } = await import('@polkadot/extension-dapp');
 
-      // if extansion does not exist
-      if (extensions.length === 0) {
-        return;
+      await web3Enable('Gear App');
+
+      if (isWeb3Injected) {
+        const accounts: UserAccount[] = await web3Accounts();
+        return accounts;
       }
-      const allAccounts = await web3Accounts();
 
-      allAccounts.forEach((acc: UserAccount) => {
-        if (acc.address === localStorage.getItem('savedAccount')) {
-          acc.isActive = true;
-          dispatch(setCurrentAccount(acc));
-        }
-      });
-      setInjectedAccounts(allAccounts);
-    };
+      return null;
+    }
 
-    // TODO: FIND ANOTHER WAY BE SHORE THAT EXTENSION IS READY
-    setTimeout(() => {
-      getAllAccounts();
-    }, 100);
-  }, [dispatch]);
-
-  // Get free balance for the chosen account
+    return null;
+  }, []);
 
   useEffect(() => {
-    const getBalance = async (address: string) => {
-      const freeBalance = await api!.balance.findOut(address);
-      setAccountBalance(freeBalance.toHuman());
-    };
+    getAllAccounts()
+      .then((allAccounts) => {
+        if (allAccounts) {
+          allAccounts.forEach((acc: UserAccount) => {
+            if (acc.address === localStorage.getItem('savedAccount')) {
+              acc.isActive = true;
+              dispatch(setCurrentAccount(acc));
+            }
+          });
+          setInjectedAccounts(allAccounts);
+        }
+      })
+      .catch((err) => console.error(err));
+  }, [dispatch, getAllAccounts]);
 
+  const getBalance = useCallback(
+    async (address: string) => {
+      const freeBalance = await api.balance.findOut(address);
+      return freeBalance;
+    },
+    [api]
+  );
+
+  useEffect(() => {
     if (currentAccount && api) {
-      getBalance(currentAccount.address);
+      getBalance(currentAccount.address).then((result) => {
+        setAccountBalance(result.toHuman());
+      });
     }
-  }, [currentAccount, api, dispatch]);
+  }, [currentAccount, api, dispatch, getBalance]);
+
+  const subscriptionRef = useRef<VoidFunction | null>(null);
+
+  useEffect(() => {
+    // TODO: think how to wrap it hook
+    if (currentAccount) {
+      nodeApi.api?.gearEvents
+        .subsribeBalanceChange(currentAccount.address, (balance) => {
+          setAccountBalance(balance.toHuman());
+        })
+        .then((sub) => {
+          subscriptionRef.current = sub;
+        })
+        .catch((err) => console.error(err));
+    }
+
+    return () => {
+      if (subscriptionRef.current) {
+        subscriptionRef.current();
+      }
+    };
+  }, [currentAccount]);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
-
-  useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
 
   // Setting current account and save it into the LocalStage
   const selectAccount = (index: number) => {
@@ -117,29 +142,28 @@ export const Wallet = () => {
           </button>
         )}
       </div>
-      {isOpen && (
-        <Modal
-          title="Connect"
-          content={
-            injectedAccounts ? (
-              <AccountList list={injectedAccounts} toggleAccount={selectAccount} />
-            ) : (
-              <div className="user-wallet__msg">
-                Polkadot extension was not found or disabled. Please{' '}
-                <a
-                  className="user-wallet__msg-link"
-                  href="https://polkadot.js.org/extension/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  install it
-                </a>
-              </div>
-            )
-          }
-          handleClose={toggleModal}
-        />
-      )}
+      <Modal
+        open={isOpen}
+        title="Connect"
+        content={
+          injectedAccounts ? (
+            <AccountList list={injectedAccounts} toggleAccount={selectAccount} />
+          ) : (
+            <div className="user-wallet__msg">
+              Polkadot extension was not found or disabled. Please{' '}
+              <a
+                className="user-wallet__msg-link"
+                href="https://polkadot.js.org/extension/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                install it
+              </a>
+            </div>
+          )
+        }
+        handleClose={toggleModal}
+      />
     </>
   );
 };

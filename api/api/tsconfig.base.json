@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "lib": ["es5", "es6", "es7", "esnext", "dom"],
     "target": "es6",

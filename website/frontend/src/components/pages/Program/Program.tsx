@@ -1,7 +1,8 @@
 import React, { VFC, useEffect, useState } from 'react';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
-import { useParams, useHistory } from 'react-router-dom';
+import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
+
 import { RootState } from 'store/reducers';
 import {
   getProgramAction,
@@ -10,13 +11,16 @@ import {
   resetGasAction,
   uploadMetaResetAction,
   resetProgramAction,
+  getMessagesAction,
 } from 'store/actions/actions';
 import { Message } from 'components/pages/Programs/children/Message/Message';
+import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { Meta } from 'components/Meta/Meta';
 import { formatDate } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
+import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import './Program.scss';
 
 type ProgramMessageType = {
@@ -30,6 +34,8 @@ export const Program: VFC = () => {
   const id: string = params?.id;
   const history = useHistory();
   const { program } = useSelector((state: RootState) => state.programs);
+  const { messages } = useSelector((state: RootState) => state.messages);
+
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
   const [data, setData] = useState({
@@ -39,6 +45,9 @@ export const Program: VFC = () => {
     uploadedAt: 'Loading ...',
     meta: 'Loading ...',
   });
+
+  const [metadata, setMetadata] = useState<Metadata | null>(null);
+  const isState = !!metadata?.meta_state_output;
 
   useEffect(() => {
     dispatch(getProgramAction(id));
@@ -68,6 +77,25 @@ export const Program: VFC = () => {
       dispatch(resetProgramAction());
     };
   }, [dispatch, program, setData, id]);
+
+  useEffect(() => {
+    dispatch(
+      getMessagesAction({
+        source: id,
+        destination: localStorage.getItem('public_key_raw'),
+        limit: INITIAL_LIMIT_BY_PAGE,
+      })
+    );
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    const metaFile = program?.meta?.metaFile;
+
+    if (metaFile) {
+      const metaBuffer = Buffer.from(metaFile, 'base64');
+      getWasmMetadata(metaBuffer).then(setMetadata);
+    }
+  }, [program]);
 
   const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
@@ -136,17 +164,22 @@ export const Program: VFC = () => {
             <p className="block__caption">Metadata:</p>
             <pre className="block__textarea block__textarea_h420">{data.meta}</pre>
           </div>
-          <div className="block__item block__item_last">
+          <div className="block__item">
             <div className="block__button">
               <button
-                className="block__button-elem"
+                className="block__button-elem block__button-elem--submit"
                 type="button"
                 aria-label="refresh"
                 onClick={() => handleOpenForm(String(data.id), data.name, true)}
               >
-                <img src={MessageIcon} alt="message" />
+                <img src={MessageIcon} alt="message" className="block__button-icon" />
                 <span className="block__button-text">Send Message</span>
               </button>
+              {isState && (
+                <Link to={`/state/${id}`} className="block__button-elem block__button-elem--submit">
+                  <span className="block__button-text">Read State</span>
+                </Link>
+              )}
               <div className="block__button-upload">
                 <span className="block__button-caption">Uploaded at:</span>
                 <span className="block__button-date">{data.uploadedAt}</span>
@@ -154,6 +187,10 @@ export const Program: VFC = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="messages-block">
+        <p className="messages-block__caption">MESSAGES</p>
+        <MessagesList messages={messages} />
       </div>
     </div>
   );
