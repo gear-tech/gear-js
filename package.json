@@ -26,7 +26,8 @@
     "website/events-listener",
     "website/frontend",
     "website/test-balance",
-    "website/wasm-compiler"
+    "website/wasm-compiler",
+    "api/api"
   ],
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
