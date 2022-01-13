@@ -30,7 +30,7 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
   const allNodes = [...nodes[0].nodes, ...nodes[1].nodes];
   const isNodeExist = allNodes.findIndex((node) => node.address === nodeApi.address) > -1;
 
-  const [selectedNode, setSelectedNode] = useState(isNodeExist ? nodeApi.address : '');
+  const [selectedNode, setSelectedNode] = useState(nodeApi.address);
   const [newNode, setNewNode] = useState(isNodeExist ? '' : nodeApi.address);
 
   const handleAddNode = () => {
@@ -51,9 +51,7 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
       })
     );
 
-    const isNodeFromUrl = !selectedNode;
-    if (isNodeFromUrl) {
-      setSelectedNode(newNode);
+    if (!isNodeExist) {
       localStorage.setItem('node_address', newNode);
     }
 
@@ -86,9 +84,7 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
   };
 
   const handleSwitchNode = () => {
-    const isDifferentNodeSelected = selectedNode !== nodeApi.address;
-
-    if (selectedNode && isDifferentNodeSelected) {
+    if (selectedNode !== nodeApi.address) {
       // remove param to update it during nodeApi init
       removeNodeFromUrl();
       localStorage.setItem('node_address', selectedNode);
@@ -143,7 +139,7 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
                             className="nodes__item-btn"
                             type="button"
                             onClick={() => handleRemoveNode(node.id)}
-                            disabled={node.address === selectedNode}
+                            disabled={node.address === nodeApi.address}
                           >
                             <Trash2 color="#ffffff" size="22" strokeWidth="1.5" />
                           </button>
@@ -155,7 +151,6 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
             </li>
           ))}
       </ul>
-
       <div className="nodes__add">
         <input
           id="addNode"
