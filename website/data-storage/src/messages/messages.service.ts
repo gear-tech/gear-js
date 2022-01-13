@@ -7,8 +7,11 @@ import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
 import { AddPayloadParams, AllMessagesResult, FindMessageParams, GetMessagesParams } from 'src/interfaces';
 import { PAGINATION_LIMIT } from 'src/config/configuration';
+import { ErrorLogger } from 'src/utils';
 
 const logger = new Logger('MessageService');
+const errorLog = new ErrorLogger('MessagesService');
+
 @Injectable()
 export class MessagesService {
   constructor(
@@ -27,17 +30,27 @@ export class MessagesService {
         message.replyError = replyError;
       }
     } else {
-      message = this.messageRepo.create({
-        id,
-        genesis,
-        destination,
-        source,
-        payload,
-        date: new Date(date),
-        replyTo,
-      });
+      try {
+        message = this.messageRepo.create({
+          id,
+          genesis,
+          destination,
+          source,
+          payload,
+          date: new Date(date),
+          replyTo,
+        });
+      } catch (error) {
+        errorLog.error(error, 33);
+        return;
+      }
     }
-    return this.messageRepo.save(message);
+    try {
+      return this.messageRepo.save(message);
+    } catch (error) {
+      errorLog.error(error, 48);
+      return;
+    }
   }
 
   async addPayload(params: AddPayloadParams): Promise<Message> {

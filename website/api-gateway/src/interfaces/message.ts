@@ -2,7 +2,6 @@ import { PaginationParams, RequestParams } from './general';
 
 export interface Message {
   id: string;
-  chain: string;
   genesis: string;
   destination: string;
   source: string;
