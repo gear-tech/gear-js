@@ -1763,13 +1763,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:^0.9.0":
-  version: 0.9.0
-  resolution: "@gear-js/api@npm:0.9.0"
+"@gear-js/api@npm:^0.9.7":
+  version: 0.9.7
+  resolution: "@gear-js/api@npm:0.9.7"
   peerDependencies:
     "@polkadot/api": ^7.0.2
     rxjs: ^7.3.0
-  checksum: 4236658f4980a6317edc74db602443fb04c21f34563e21be0bd7ea908cf5e4a076725495c00708e5de23c59fbeaa07b64ecbcf6d7b3c9ddaa27d21ff541c62d8
+  checksum: 8bfd750bd3f084e7c03bdfb89df9974b909ec18e070cd2c7ef3e8e5c620cf61b744672e4681f952d8bb959e1871e370898b51ac2a185ca15e017d530d52d179f
   languageName: node
   linkType: hard
 
@@ -1777,7 +1777,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
   dependencies:
-    "@gear-js/api": ^0.9.0
+    "@gear-js/api": ^0.9.7
     "@nestjs/cli": ^8.1.6
     "@nestjs/common": ^8.1.2
     "@nestjs/config": ^1.0.3
@@ -1817,7 +1817,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/event-listener@workspace:website/events-listener"
   dependencies:
-    "@gear-js/api": ^0.9.0
+    "@gear-js/api": ^0.9.7
     "@polkadot/api": ^7.0.2
     avsc: ^5.7.3
     chalk: ^4.1.2
@@ -1833,7 +1833,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": ^6.4.3
-    "@gear-js/api": ^0.9.0
+    "@gear-js/api": ^0.9.7
     "@monaco-editor/react": ^4.2.1
     "@polkadot/api": ^7.0.2
     "@polkadot/extension-dapp": ^0.42.2
@@ -1909,7 +1909,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:website/test-balance"
   dependencies:
-    "@gear-js/api": ^0.9.0
+    "@gear-js/api": ^0.9.7
     "@polkadot/api": ^7.0.2
     chalk: ^4.1.2
     dotenv: ^10.0.0
