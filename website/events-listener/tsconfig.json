@@ -3,7 +3,8 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "strict": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "outDir": "dist"
   },
   "ts-node": {
     "transpileOnly": true,
