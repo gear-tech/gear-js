@@ -6,3 +6,4 @@ examples/test-json/
 /api/types/
 **/temp
 api/.rollup.cache
+**/package-lock.json
