@@ -13,7 +13,7 @@ import { RPC_METHODS } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
-import { getAllLocalPrograms, isDevChain } from 'helpers';
+import { getLocalPrograms, isDevChain } from 'helpers';
 import { localPrograms } from 'services/LocalDBService';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
@@ -135,7 +135,7 @@ export const getMessagesAction = (params: PaginationModel) => (dispatch: any) =>
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
   if (isDevChain()) {
-    const programs = getAllLocalPrograms();
+    const programs = getLocalPrograms();
 
     programs
       .then((response) => {
@@ -162,7 +162,7 @@ export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) =
 
 export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any) => {
   if (isDevChain()) {
-    const programs = getAllLocalPrograms();
+    const programs = getLocalPrograms();
 
     programs
       .then((response) => {

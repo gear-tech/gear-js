@@ -62,7 +62,7 @@ export const signPayload = async (injector: any, address: string, payload: any, 
   }
 };
 
-export const getAllLocalPrograms = () => {
+export const getLocalPrograms = () => {
   const programs: LocalProgramModel[] = [];
 
   return localPrograms

@@ -43,8 +43,8 @@ export const All: VFC = () => {
 
   const [search, setSearch] = useState('');
 
-  const allPrograms = useSelector((state: RootState) => selectPrograms(state, search));
-  const allProgramsCount = useSelector((state: RootState) => state.programs.allUploadedProgramsCount);
+  const programs = useSelector((state: RootState) => selectPrograms(state, search));
+  const programsCount = useSelector((state: RootState) => state.programs.allUploadedProgramsCount || 0);
 
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
@@ -105,8 +105,8 @@ export const All: VFC = () => {
   return (
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
-        <span>Total results: {allProgramsCount || 0}</span>
-        <Pagination page={currentPage} count={allProgramsCount || 1} onPageChange={onPageChange} />
+        <span>Total results: {programsCount || 0}</span>
+        <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
         <SearchForm
@@ -123,9 +123,9 @@ export const All: VFC = () => {
         <br />
       </div>
       <div className={styles.allProgramsList}>
-        {(allPrograms &&
-          allProgramsCount &&
-          allPrograms.map((item: ProgramModel) => {
+        {(programs &&
+          programsCount &&
+          programs.map((item: ProgramModel) => {
             if (item.name && item.name !== 'name.wasm') {
               return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.id} />;
             }
@@ -149,9 +149,9 @@ export const All: VFC = () => {
           })) ||
           null}
       </div>
-      {allPrograms && allPrograms.length > 0 && (
+      {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={allProgramsCount || 1} onPageChange={onPageChange} />
+          <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
         </div>
       )}
     </div>

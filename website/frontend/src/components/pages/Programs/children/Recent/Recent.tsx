@@ -44,8 +44,8 @@ export const Recent: VFC = () => {
 
   const [search, setSearch] = useState('');
 
-  const recentPrograms = useSelector((state: RootState) => selectPrograms(state, search));
-  const recentProgramsCount = useSelector((state: RootState) => state.programs.programsCount);
+  const programs = useSelector((state: RootState) => selectPrograms(state, search));
+  const programsCount = useSelector((state: RootState) => state.programs.programsCount || 0);
 
   const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
@@ -112,8 +112,8 @@ export const Recent: VFC = () => {
   return (
     <div className={styles.blockList}>
       <div className={styles.paginationWrapper}>
-        <span>Total results: {recentProgramsCount || 0}</span>
-        <Pagination page={currentPage} count={recentProgramsCount || 1} onPageChange={onPageChange} />
+        <span>Total results: {programsCount || 0}</span>
+        <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
         <SearchForm
@@ -129,18 +129,18 @@ export const Recent: VFC = () => {
         />
         <br />
       </div>
-      {(recentPrograms && recentProgramsCount && (
+      {(programs && programsCount && (
         <div>
-          {recentPrograms.map((program: ProgramModel) => (
+          {programs.map((program: ProgramModel) => (
             <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.id} />
           ))}
         </div>
       )) ||
         null}
 
-      {recentPrograms && recentPrograms.length > 0 && (
+      {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={recentProgramsCount || 1} onPageChange={onPageChange} />
+          <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
         </div>
       )}
     </div>
