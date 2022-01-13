@@ -1,5 +1,6 @@
 import { localPrograms } from 'services/LocalDBService';
 import { LocalProgramModel } from 'types/program';
+import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
@@ -70,3 +71,5 @@ export const getAllLocalPrograms = () => {
     })
     .then(() => programs);
 };
+
+export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DEVELOPMENT_CHAIN;

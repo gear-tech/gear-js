@@ -11,6 +11,7 @@ import { PAGE_TYPES, RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
 import { MetaParam } from 'utils/meta-parser';
+import { isDevChain } from 'helpers';
 import { localPrograms } from 'services/LocalDBService';
 
 type Props = {
@@ -20,8 +21,6 @@ type Props = {
 };
 
 export const Message: VFC<Props> = ({ programId, programName, handleClose }) => {
-  const chain = localStorage.getItem('chain');
-
   const dispatch = useDispatch();
 
   const [meta, setMeta] = useState<Metadata | null>(null);
@@ -56,7 +55,7 @@ export const Message: VFC<Props> = ({ programId, programName, handleClose }) => 
 
   useEffect(() => {
     if (!meta) {
-      if (chain === 'Development') {
+      if (isDevChain()) {
         localPrograms
           .getItem(programId)
           .then((response: any) => {
@@ -79,7 +78,7 @@ export const Message: VFC<Props> = ({ programId, programName, handleClose }) => 
           });
       }
     }
-  }, [meta, chain, programId, getMeta, dispatch]);
+  }, [meta, programId, getMeta, dispatch]);
 
   if (ready) {
     return (

@@ -7,6 +7,10 @@ export const isProd = process.env.NODE_ENV === 'production';
 export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 
+export const LOCAL_STORAGE = {
+  CHAIN: 'chain',
+};
+
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
   INVALID_PARAMS: 'Invalid method parameters',
@@ -97,6 +101,8 @@ export const KEY_TYPES = {
   MNEMOINIC: 'mnemonic',
   RAW: 'raw',
 };
+
+export const DEVELOPMENT_CHAIN = 'Development';
 
 export enum ZIndexes {
   'alert' = 999,

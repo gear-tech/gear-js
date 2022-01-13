@@ -13,7 +13,7 @@ import { RPC_METHODS } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
-import { getAllLocalPrograms } from 'helpers';
+import { getAllLocalPrograms, isDevChain } from 'helpers';
 import { localPrograms } from 'services/LocalDBService';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
@@ -134,9 +134,7 @@ export const getMessagesAction = (params: PaginationModel) => (dispatch: any) =>
 };
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
-  const chain = localStorage.getItem('chain');
-
-  if (chain === 'Development') {
+  if (isDevChain()) {
     const programs = getAllLocalPrograms();
 
     programs
@@ -163,9 +161,7 @@ export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) =
 };
 
 export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any) => {
-  const chain = localStorage.getItem('chain');
-
-  if (chain === 'Development') {
+  if (isDevChain()) {
     const programs = getAllLocalPrograms();
 
     programs
@@ -192,9 +188,7 @@ export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any)
 };
 
 export const getProgramAction = (id: string) => (dispatch: any) => {
-  const chain = localStorage.getItem('chain');
-
-  if (chain === 'Development') {
+  if (isDevChain()) {
     localPrograms
       .getItem(id)
       .then((response: any) => {

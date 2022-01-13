@@ -14,7 +14,7 @@ import {
   AddAlert,
 } from 'store/actions/actions';
 import { localPrograms } from './LocalDBService';
-import { readFileAsync, signPayload } from '../helpers';
+import { readFileAsync, signPayload, isDevChain } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 // TODO: (dispatch) fix it later
@@ -55,8 +55,6 @@ export const UploadProgram = async (
 
   const fileBuffer: any = await readFileAsync(file);
 
-  const chain = localStorage.getItem('chain');
-
   const program = {
     code: new Uint8Array(fileBuffer),
     gasLimit,
@@ -84,7 +82,7 @@ export const UploadProgram = async (
         dispatch(programUploadSuccessAction());
         callback();
 
-        if (chain === 'Development') {
+        if (isDevChain()) {
           localPrograms
             .setItem(programId, {
               id: programId,
@@ -178,11 +176,10 @@ export const addMetadata = async (
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);
-  const chain = localStorage.getItem('chain');
 
   // Sign metadata and save it
   signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
-    if (chain === 'Development') {
+    if (isDevChain()) {
       localPrograms
         .getItem(programId)
         .then((res: any) => {
