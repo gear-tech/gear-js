@@ -51,8 +51,10 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
       })
     );
 
-    if (!selectedNode) {
+    const isNodeFromUrl = !selectedNode;
+    if (isNodeFromUrl) {
       setSelectedNode(newNode);
+      localStorage.setItem('node_address', newNode);
     }
 
     setNewNode('');
@@ -107,7 +109,6 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
           <img src={cross} alt="back" />
         </button>
       </div>
-
       <ul className="nodes__wrap">
         {nodes &&
           nodes.length &&
