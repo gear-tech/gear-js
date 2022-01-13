@@ -11,8 +11,7 @@ import CodeIllustration from 'assets/images/code.svg';
 import { WASM_COMPILER_GET } from 'consts';
 import { EventTypes } from 'types/events';
 import { Wallet } from '../Wallet';
-import { nodeApi } from '../../../api/initApi';
-import { setApiReady, setIsBuildDone, AddAlert } from '../../../store/actions/actions';
+import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
 import './Header.scss';
 import Sidebar from './Sidebar/Sidebar';
 
@@ -35,15 +34,6 @@ export const Header: VFC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const headerIconsColor = '#fff';
-
-  useEffect(() => {
-    if (!isApiReady) {
-      setIsSidebarOpen(false);
-      nodeApi.init().then(() => {
-        dispatch(setApiReady());
-      });
-    }
-  }, [dispatch, isApiReady]);
 
   useEffect(() => {
     let timerId: any;
@@ -122,7 +112,6 @@ export const Header: VFC = () => {
           </Link>
         </div>
       </div>
-
       {isSidebarOpen && <Sidebar closeSidebar={closeSidebar} />}
     </header>
   );
