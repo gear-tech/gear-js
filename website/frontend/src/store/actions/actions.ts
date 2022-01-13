@@ -13,7 +13,7 @@ import { RPC_METHODS } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
-import { getLocalPrograms, isDevChain } from 'helpers';
+import { getLocalPrograms, getMetaFromLocalProgram, isDevChain } from 'helpers';
 import { localPrograms } from 'services/LocalDBService';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
@@ -271,12 +271,19 @@ export const subscribeToEvents = () => (dispatch: any) => {
   });
 
   nodeApi.subscribeLogEvents(async ({ data: { source, dest, reply, payload } }) => {
-    const apiRequest = new ServerRPCRequestService();
-    const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
-      programId: source.toHex(),
-    });
-    const meta = JSON.parse(result.meta);
+    let meta = null;
     let decodedPayload: any;
+
+    if (isDevChain()) {
+      meta = await getMetaFromLocalProgram(source.toHex());
+    } else {
+      const apiRequest = new ServerRPCRequestService();
+      const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
+        programId: source.toHex(),
+      });
+      meta = JSON.parse(result.meta);
+    }
+
     try {
       decodedPayload =
         meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)

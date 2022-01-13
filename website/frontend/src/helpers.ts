@@ -72,4 +72,8 @@ export const getLocalPrograms = () => {
     .then(() => programs);
 };
 
+export const getMetaFromLocalProgram = (id: string) => {
+  return localPrograms.getItem(id).then((response: any) => JSON.parse(response.meta.meta));
+};
+
 export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DEVELOPMENT_CHAIN;
