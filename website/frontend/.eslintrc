@@ -1,6 +1,6 @@
 {
   "extends": ["airbnb-typescript", "airbnb/hooks", "prettier"],
-  "plugins": ["react", "import"],
+  "plugins": ["import"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json"
@@ -34,6 +34,7 @@
     "react/static-property-placement": "off",
     "react/prop-types": "off",
     "react/destructuring-assignment": ["off"],
+    "react/jsx-filename-extension": [1, { "allow": "as-needed" }],
     "no-underscore-dangle": "off",
     "@typescript-eslint/no-unused-vars": ["warn"]
   },
