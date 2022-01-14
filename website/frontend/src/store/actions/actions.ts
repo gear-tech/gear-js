@@ -167,7 +167,6 @@ export const handleProgramError = (error: string) => (dispatch: any, getState: a
   if (programs.isProgramUploading) {
     dispatch(programUploadFailedAction(error));
   } else if (programs.isMessageSending) {
-    console.log('hehsash');
     dispatch(sendMessageFailedAction(error));
   } else if (programs.isMetaUploading) {
     dispatch(uploadMetaFailedAction(error));
