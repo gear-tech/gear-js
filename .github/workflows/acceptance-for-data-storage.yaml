@@ -1,0 +1,35 @@
+name: acceptance.data-storage
+
+on:
+  push:
+    paths:
+      - 'website/data-storage/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'website/data-storage/**'
+
+jobs:
+  run-unit-tests:
+    name: Unit Tests for `data-storage`
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load current commit
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install
+
+      - name: Run tests
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: test
