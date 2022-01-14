@@ -252,7 +252,7 @@ export const EditorPage = () => {
             </div>
           </div>
         </div>
-        <span className="editor-page__footer-text">2021. All rights reserved.</span>
+        <span className="editor-page__footer-text">2022. All rights reserved.</span>
       </div>
     </EditorTreeContext.Provider>
   );
