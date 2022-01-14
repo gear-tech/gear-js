@@ -9,11 +9,12 @@ import { Trash2 } from 'react-feather';
 import { nodeApi } from 'api/initApi';
 import { useAlert } from 'react-alert';
 import { useDispatch } from 'react-redux';
-import { resetApiReady } from 'store/actions/actions';
+import { AddAlert, resetApiReady } from 'store/actions/actions';
 import { useHistory, useLocation } from 'react-router-dom';
 import { NODE_ADRESS_URL_PARAM } from 'consts';
 import * as init from './init';
 import './Sidebar.scss';
+import { EventTypes } from 'types/events';
 
 type Props = {
   closeSidebar: () => void;
@@ -26,36 +27,44 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
   const history = useHistory();
 
   const [nodes, setNodes] = useState(localStorage.nodes ? JSON.parse(localStorage.nodes) : init.nodes);
-
-  const allNodes = [...nodes[0].nodes, ...nodes[1].nodes];
-  const isNodeExist = allNodes.findIndex((node) => node.address === nodeApi.address) > -1;
-
   const [selectedNode, setSelectedNode] = useState(nodeApi.address);
-  const [newNode, setNewNode] = useState(isNodeExist ? '' : nodeApi.address);
+
+  const isNodeExist = (address: string) => {
+    const allNodes = [...nodes[0].nodes, ...nodes[1].nodes];
+    const nodeIndex = allNodes.findIndex((node) => node.address === address);
+    return nodeIndex > -1;
+  };
+
+  const isApiNodeExist = isNodeExist(nodeApi.address);
+  const [newNode, setNewNode] = useState(isApiNodeExist ? '' : nodeApi.address);
 
   const handleAddNode = () => {
-    const nodeToAdd = {
-      id: nodes[1].nodes.length + 2,
-      custom: true,
-      address: newNode,
-    };
+    if (!isNodeExist(newNode)) {
+      const nodeToAdd = {
+        id: nodes[1].nodes.length + 2,
+        custom: true,
+        address: newNode,
+      };
 
-    setNodes((elems: any) =>
-      elems.map((elem: any) => {
-        const el = elem;
-        if (el.caption === 'development') {
-          el.nodes.push(nodeToAdd);
-          localStorage.setItem('nodes', JSON.stringify(nodes));
-        }
-        return el;
-      })
-    );
+      setNodes((elems: any) =>
+        elems.map((elem: any) => {
+          const el = elem;
+          if (el.caption === 'development') {
+            el.nodes.push(nodeToAdd);
+            localStorage.setItem('nodes', JSON.stringify(nodes));
+          }
+          return el;
+        })
+      );
 
-    if (!isNodeExist) {
-      localStorage.setItem('node_address', newNode);
+      if (!isApiNodeExist) {
+        localStorage.setItem('node_address', newNode);
+      }
+
+      setNewNode('');
+    } else {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Node address already exists' }));
     }
-
-    setNewNode('');
   };
 
   const handleRemoveNode = (id: number) => {
