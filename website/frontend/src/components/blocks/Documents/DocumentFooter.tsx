@@ -16,7 +16,7 @@ export const DocumentFooter: VFC = () => (
       <a href="#" className="logo">
         <img src={Logo} alt="logo" />
       </a>
-      <div className="copyrights">2021. All rights reserved.</div>
+      <div className="copyrights">2022. All rights reserved.</div>
     </div>
   </section>
 );
