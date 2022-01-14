@@ -12,11 +12,13 @@ import ProgramIllustration from 'assets/images/program_icon.svg';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import './Program.scss';
 
+type Params = { id: string };
 export const Program: VFC = () => {
   const dispatch = useDispatch();
-  const params: any = useParams();
-  const id: string = params?.id;
   const history = useHistory();
+  const params = useParams<Params>();
+
+  const id = params.id;
 
   const { program } = useSelector((state: RootState) => state.programs);
   const { messages } = useSelector((state: RootState) => state.messages);
@@ -109,12 +111,12 @@ export const Program: VFC = () => {
           </div>
           <div className="block__item">
             <div className="block__button">
-              <Link to={`/send-message/${data.id}`} className="block__button-elem block__button-elem--link">
+              <Link to={`/send-message/${id}`} className="block__button-elem block__button-elem--link">
                 <img src={MessageIcon} alt="message" className="block__button-icon" />
                 <span className="block__button-text">Send Message</span>
               </Link>
               {isState && (
-                <Link to={`/state/${id}`} className="block__button-elem block__button-elem--submit">
+                <Link to={`/state/${id}`} className="block__button-elem block__button-elem--link">
                   <span className="block__button-text">Read State</span>
                 </Link>
               )}
