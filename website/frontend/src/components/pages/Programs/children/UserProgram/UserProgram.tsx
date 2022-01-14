@@ -48,7 +48,7 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
         </div>
       </div>
       <div className={styles.programsListBtns}>
-        <Link to={`/send-message/${program.id}`}>
+        <Link to={`/send-message/${program.id}`} className={styles.allProgramsItemSendMessage}>
           <img src={MessageIllustration} alt="Send message to program" />
         </Link>
         <button

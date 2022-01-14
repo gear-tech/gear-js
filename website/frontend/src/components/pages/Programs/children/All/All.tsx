@@ -110,7 +110,7 @@ export const All: VFC = () => {
               <div className={styles.allProgramsItem} key={item.id}>
                 <p className={styles.allProgramsItemHash}>{item.id}</p>
                 <div className={styles.programsListBtns}>
-                  <Link to={`/send-message/${item.id}`}>
+                  <Link className={styles.allProgramsItemSendMessage} to={`/send-message/${item.id}`}>
                     <img src={MessageIcon} alt="Send message to program" />
                   </Link>
                   <button
