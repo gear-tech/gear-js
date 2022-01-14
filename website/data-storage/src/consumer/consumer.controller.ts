@@ -11,12 +11,11 @@ export class ConsumerController {
   @MessagePattern('events')
   async addEvent(@Payload() payload) {
     logger.log(payload.value, 'AddEvent');
-    const chain = payload.headers.chain;
     const genesis = payload.headers.genesis;
     const key = payload.key;
     const value = payload.value;
     try {
-      await this.consumerService.events[key](genesis, chain, value);
+      await this.consumerService.events[key](genesis, value);
     } catch (error) {
       logger.error(error.message, error.stack);
     }
@@ -50,6 +49,12 @@ export class ConsumerController {
   async allMessages(@Payload() payload) {
     console.log(payload.value);
     const result = await this.consumerService.allMessages(payload.value);
+    return JSON.stringify(result);
+  }
+
+  @MessagePattern('message.data')
+  async messageData(@Payload() payload) {
+    const result = await this.consumerService.message(payload.value);
     return JSON.stringify(result);
   }
 

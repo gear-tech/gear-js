@@ -14,6 +14,7 @@ const createFieldset = ({ legend, fields }: { legend: string; fields: ParsedStru
             <MetaInput key={field[1].name as string}>
               <label>
                 {field[1].label} (type: {field[1].type}) <br />
+                {/* TOFIX: uncontrolled input is changing to be controlled */}
                 <Field name={field[1].name} /> <br />
               </label>
             </MetaInput>

@@ -1,4 +1,5 @@
 import { GearApi } from '@gear-js/api';
 import { nodeApi } from '../api/initApi';
 
-export const useApi = (): [GearApi | null, boolean] => [nodeApi.api, !!nodeApi.api];
+// TODO: find out how to use nodeApi.api! without !
+export const useApi = (): [GearApi, boolean] => [nodeApi.api!, !!nodeApi.api];

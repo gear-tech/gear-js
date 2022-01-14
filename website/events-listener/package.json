@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/event-listener",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "src/indes.js",
   "type": "module",

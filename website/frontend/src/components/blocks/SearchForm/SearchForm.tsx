@@ -12,9 +12,16 @@ type Props = {
   handleRemoveQuery: () => void;
   handleDropdownItemSelect?: (index: number) => void;
   searchType?: number;
+  placeholder: string;
 };
 
-export const SearchForm: VFC<Props> = ({ handleSearch, handleRemoveQuery, handleDropdownItemSelect, searchType }) => {
+export const SearchForm: VFC<Props> = ({
+  handleSearch,
+  handleRemoveQuery,
+  handleDropdownItemSelect,
+  searchType,
+  placeholder,
+}) => {
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
   const [isSearchDropdownOpened, setIsSearchDropdownOpened] = useState(false);
 
@@ -68,7 +75,7 @@ export const SearchForm: VFC<Props> = ({ handleSearch, handleRemoveQuery, handle
                 name="searchQuery"
                 type="text"
                 className="search-form__input"
-                placeholder="Find program by ID"
+                placeholder={placeholder}
               />
               {typeof searchType === 'number' && (
                 <div className="search-form--type">

@@ -83,13 +83,17 @@ export const NotificationsPage: VFC = () => {
   };
 
   const handleReadNotification = (isRead: boolean, id: string) => {
-    if (isRead) return;
+    if (isRead) {
+      return;
+    }
     dispatch(markCertainRecentNotificationsAsReadAction([id]));
     setShouldReload(true);
   };
 
   const handleNotificationInfo = (notification: NotificationModel | null) => {
-    if (notification && notification.type.toLowerCase() !== 'log') return;
+    if (notification && notification.type.toLowerCase() !== 'log') {
+      return;
+    }
     setNotificationInfo(notification);
   };
 
@@ -104,6 +108,7 @@ export const NotificationsPage: VFC = () => {
         handleRemoveQuery={handleRemoveQuery}
         handleDropdownItemSelect={handleSearchType}
         searchType={searchType}
+        placeholder="Find program by ID"
       />
       {(searchQuery && <SearchQueries searchQuery={searchQuery} handleRemoveQuery={handleRemoveQuery} />) || null}
       <div className="pagination-wrapper">

@@ -2,9 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [master, do-event-listener]
-
-  workflow_dispatch:
+    branches: [master]
 
 jobs:
   build-backend:
@@ -49,7 +47,6 @@ jobs:
 
   build-frontend:
     runs-on: ubuntu-latest
-    environment: staging
 
     steps:
       - uses: actions/checkout@v2
@@ -63,9 +60,9 @@ jobs:
           yarn install
           yarn build:frontend
         env:
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          REACT_APP_NODE_ADDRESS: ${{ secrets.REACT_APP_NODE_ADDRESS }}
-          REACT_APP_WASM_COMPILER_URL: ${{ secrets.REACT_APP_WASM_COMPILER_URL }}
+          REACT_APP_API_URL: 'https://ci.test'
+          REACT_APP_NODE_ADDRESS: 'wss://ci.test'
+          REACT_APP_WASM_COMPILER_URL: 'https://ci.test'
           REACT_APP_RRT: ''
 
   build-api:

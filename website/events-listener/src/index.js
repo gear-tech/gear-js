@@ -8,7 +8,7 @@ const log = logger('Main');
 
 const main = async () => {
   log.info('App is running...');
-  const api = await GearApi.create({ providerAddress: config.api.provider });
+  const api = await GearApi.create({ providerAddress: config.api.provider, throwOnConnect: true });
   const chain = await api.chain();
   const genesis = api.genesisHash.toHex();
   log.info(`Connected to ${chain} with genesis ${genesis}`);
@@ -16,7 +16,7 @@ const main = async () => {
   await producer.createTopic('events');
   await producer.connect();
   listen(api, ({ key, value }) => {
-    producer.send(key, value, chain, genesis);
+    producer.send(key, value, genesis);
   });
 };
 

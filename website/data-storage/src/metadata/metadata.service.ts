@@ -18,7 +18,6 @@ export class MetadataService {
   async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
     const program = await this.programService.findProgram({
       id: params.programId,
-      chain: params.chain,
       genesis: params.genesis,
     });
     if (!program) {
@@ -37,7 +36,6 @@ export class MetadataService {
       try {
         await this.programService.addProgramInfo(
           params.programId,
-          params.chain,
           params.genesis,
           params.name,
           params.title,
@@ -53,7 +51,6 @@ export class MetadataService {
   async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
     const program = await this.programService.findProgram({
       id: params.programId,
-      chain: params.chain,
       genesis: params.genesis,
     });
     if (!program) {
