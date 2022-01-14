@@ -57,12 +57,19 @@ export function splitByCommas(str: string) {
 
 export function createPayload(createType: CreateType, type: any, data: any, meta?: Metadata) {
   if (!data) {
-    return '0x00';
+    return '';
   }
-  let payload: string = data;
+  let payload = data;
   if (meta && type) {
     const encoded = createType.create(type, data, meta);
     payload = isHex(encoded) ? encoded : encoded.toHex();
+  } else if (type) {
+    try {
+      const encoded = createType.create(type, data);
+      payload = isHex(encoded) ? encoded : encoded.toHex();
+    } catch (error) {
+      console.error(error.message);
+    }
   }
   return payload;
 }

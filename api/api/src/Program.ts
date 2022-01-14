@@ -1,4 +1,4 @@
-import { Metadata, ProgramId } from './interfaces';
+import { AccountId, Metadata, ProgramId } from './interfaces';
 import { SubmitProgramError } from './errors';
 import { AnyNumber } from '@polkadot/types/types';
 import { Bytes, U64, u64 } from '@polkadot/types';
@@ -43,9 +43,15 @@ export class GearProgram extends GearTransaction {
     return programs;
   }
 
-  async getGasSpent(programId: string, payload: any, type: any, meta?: Metadata): Promise<U64> {
+  async getGasSpent(
+    accountId: AccountId,
+    programId: ProgramId,
+    payload: any,
+    type?: any,
+    meta?: Metadata,
+  ): Promise<U64> {
     const payloadBytes = createPayload(this.createType, type, payload, meta);
-    const gasSpent = await this.api.rpc.gear.getGasSpent(programId, payloadBytes);
+    const gasSpent = await this.api.rpc.gear.getGasSpent(accountId, programId, payloadBytes);
     return gasSpent;
   }
 
