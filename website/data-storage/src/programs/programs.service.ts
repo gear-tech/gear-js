@@ -5,8 +5,11 @@ import { Repository } from 'typeorm';
 import { InitStatus, Program } from './entities/program.entity';
 import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from 'src/interfaces';
 import { PAGINATION_LIMIT } from 'src/config/configuration';
+import { ErrorLogger } from 'src/utils';
 
 const logger = new Logger('ProgramDb');
+const errorLog = new ErrorLogger('ProgramsService');
+
 @Injectable()
 export class ProgramsService {
   constructor(
@@ -14,27 +17,24 @@ export class ProgramsService {
     private readonly programRepo: Repository<Program>,
   ) {}
 
-  async save({ id, chain, genesis, owner, uploadedAt }): Promise<Program> {
+  async save({ id, genesis, owner, uploadedAt }): Promise<Program> {
     const program = this.programRepo.create({
       id,
-      chain,
       genesis,
       owner,
       name: id,
       uploadedAt: new Date(uploadedAt),
     });
-    return await this.programRepo.save(program);
+    try {
+      return await this.programRepo.save(program);
+    } catch (error) {
+      errorLog.error(error, 29);
+      return;
+    }
   }
 
-  async addProgramInfo(
-    id: string,
-    chain: string,
-    genesis: string,
-    name?: string,
-    title?: string,
-    meta?: Meta,
-  ): Promise<Program> {
-    const program = await this.findProgram({ id, chain, genesis });
+  async addProgramInfo(id: string, genesis: string, name?: string, title?: string, meta?: Meta): Promise<Program> {
+    const program = await this.findProgram({ id, genesis });
     program.name = name;
     program.title = title;
     program.meta = meta;
@@ -44,7 +44,7 @@ export class ProgramsService {
 
   async getAllUserPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const [result, total] = await this.programRepo.findAndCount({
-      where: { owner: params.owner, chain: params.chain, genesis: params.genesis },
+      where: { owner: params.owner, genesis: params.genesis },
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
       order: {
@@ -60,7 +60,7 @@ export class ProgramsService {
 
   async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const [result, total] = await this.programRepo.findAndCount({
-      where: { chain: params.chain, genesis: params.genesis },
+      where: { genesis: params.genesis },
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
       order: {
@@ -75,24 +75,23 @@ export class ProgramsService {
   }
 
   async findProgram(params: FindProgramParams): Promise<Program> {
-    const { id, chain, genesis, owner } = params;
-    const where = owner ? { id, chain, genesis, owner } : { id, chain, genesis };
+    const { id, genesis, owner } = params;
+    const where = owner ? { id, genesis, owner } : { id, genesis };
     try {
       const program = await this.programRepo.findOne(where, {
         relations: ['meta'],
       });
       return program;
     } catch (error) {
-      logger.error(error);
+      logger.error(error, error.stack, '');
       return null;
     }
   }
 
-  async setStatus(id: string, chain: string, genesis: string, status: InitStatus): Promise<Program> {
+  async setStatus(id: string, genesis: string, status: InitStatus): Promise<Program> {
     return new Promise((resolve) => {
       setTimeout(async () => {
-        console.log(id, chain, genesis, status);
-        let program = await this.findProgram({ id, chain, genesis });
+        let program = await this.findProgram({ id, genesis });
         if (program) {
           program.initStatus = status;
           resolve(await this.programRepo.save(program));
@@ -101,8 +100,8 @@ export class ProgramsService {
     });
   }
 
-  async isInDB(id: string, chain: string, genesis: string): Promise<boolean> {
-    if (await this.findProgram({ id, chain, genesis })) {
+  async isInDB(id: string, genesis: string): Promise<boolean> {
+    if (await this.findProgram({ id, genesis })) {
       return true;
     } else {
       return false;

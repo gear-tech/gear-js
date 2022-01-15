@@ -58,10 +58,10 @@ export class KafkaProducer {
     log.info('Producer is connected');
   }
 
-  async send(key, value, chainName, genesis) {
+  async send(key, value, genesis) {
     this.producer.send({
       topic: 'events',
-      messages: [{ key, value: JSON.stringify(value), headers: { chain: chainName, genesis } }],
+      messages: [{ key, value: JSON.stringify(value), headers: { genesis } }],
     });
   }
 }
