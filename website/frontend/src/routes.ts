@@ -11,4 +11,5 @@ export const routes = {
   messages: '/messages',
   message: '/message/:id',
   state: '/state/:id',
+  sendMessage: '/send-message/:id',
 };
