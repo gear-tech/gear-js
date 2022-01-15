@@ -6,6 +6,7 @@ import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { Programs } from 'components/pages/Programs/Programs';
 import { Program } from 'components/pages/Program/Program';
+import { Message } from 'components/pages/Message/Message';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
@@ -106,6 +107,9 @@ const AppComponent: FC = () => {
                 </Route>
                 <Route exact path={routes.program}>
                   <Program />
+                </Route>
+                <Route exact path={routes.message}>
+                  <Message />
                 </Route>
                 <Route exact path={routes.state}>
                   <State />

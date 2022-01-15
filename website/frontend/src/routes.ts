@@ -8,6 +8,7 @@ export const routes = {
   allPrograms: '/all-programs',
   notifications: '/notifications',
   program: '/program/:id',
-  state: '/state/:id',
   messages: '/messages',
+  message: '/message/:id',
+  state: '/state/:id',
 };
