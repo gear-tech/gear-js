@@ -27,7 +27,7 @@ export const SendMessage: VFC = () => {
   const [types, setTypes] = useState<MetaParam | null>(null);
   const [ready, setReady] = useState(false);
 
-  const getMeta = useCallback(async () => {
+  const getMeta = useCallback(() => {
     const apiRequest = new ServerRPCRequestService();
 
     return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, {
