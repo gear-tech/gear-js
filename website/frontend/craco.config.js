@@ -1,7 +1,15 @@
 const assert = require('assert');
+const { ProvidePlugin } = require('webpack');
 
 module.exports = {
   webpack: {
+    plugins: {
+      add: [
+        new ProvidePlugin({
+          Buffer: ['buffer', 'Buffer'],
+        }),
+      ],
+    },
     configure: (config) => {
       assert.notStrictEqual(process.env.REACT_APP_NODE_ADDRESS, undefined, 'REACT_APP_NODE_ADDRESS not provided');
       assert.notStrictEqual(process.env.REACT_APP_API_URL, undefined, 'REACT_APP_API_URL not provided');
@@ -14,6 +22,7 @@ module.exports = {
 
       config.resolve.fallback = {
         ...config.resolve.fallback,
+        buffer: require.resolve('buffer/'),
         crypto: require.resolve('crypto-browserify'),
         stream: require.resolve('stream-browserify'),
       };
