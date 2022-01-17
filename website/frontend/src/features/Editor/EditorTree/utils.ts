@@ -7,8 +7,6 @@ import {
   NodeId,
 } from '../../../types/editor';
 
-export const fileNameRegEx = /([a-zA-Z0-9\s_\\.\-():])/i;
-
 export const cloneDeep = (data: object) => JSON.parse(JSON.stringify(data));
 
 export const getLangFromName = (name: string): Languages => {
