@@ -21,7 +21,6 @@ jobs:
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
           mkdir api/test/wasm
           wget -O api/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
-          tar -xvf api/test/wasm/examples.tar.gz
           chmod +x gear-node
           ./gear-node --dev --tmp &
 
@@ -33,5 +32,6 @@ jobs:
       - name: Run tests
         run: |
           cd api
+          tar -xvf api/test/wasm/examples.tar.gz
           ls test/wasm
           npm test
