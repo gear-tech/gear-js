@@ -12,6 +12,7 @@ export type UserPrograms = {
   publicKeyRaw: string | null;
   limit?: number;
   offset?: number;
+  term?: string;
 };
 
 export type SearchQueryModel = {

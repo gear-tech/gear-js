@@ -8,8 +8,6 @@ import {
   resetProgramPayloadTypeAction,
   sendMessageResetAction,
   uploadMetaResetAction,
-  getProgramAction,
-  resetProgramAction,
 } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 
@@ -41,10 +39,10 @@ export const Recent: VFC = () => {
   const urlSearch = location.search;
   const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
 
-  const [search, setSearch] = useState('');
+  const [term, setTerm] = useState('');
 
   const { programsCount } = useSelector((state: RootState) => state.programs);
-  let programs = useSelector((state: RootState) => selectPrograms(state, search));
+  let programs = useSelector((state: RootState) => selectPrograms(state, term));
 
   const singleProgram = useSelector((state: RootState) => state.programs.program);
 
@@ -66,9 +64,10 @@ export const Recent: VFC = () => {
         publicKeyRaw: localStorage.getItem('public_key_raw'),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
+        term,
       })
     );
-  }, [dispatch, offset]);
+  }, [dispatch, offset, term]);
 
   const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
@@ -123,12 +122,10 @@ export const Recent: VFC = () => {
       <div>
         <SearchForm
           handleRemoveQuery={() => {
-            setSearch('');
-            dispatch(resetProgramAction());
+            setTerm('');
           }}
           handleSearch={(val: string) => {
-            setSearch(val);
-            dispatch(getProgramAction(val));
+            setTerm(val);
           }}
           placeholder="Find program by ID"
         />
