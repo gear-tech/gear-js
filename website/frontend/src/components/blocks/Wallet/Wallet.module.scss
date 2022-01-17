@@ -22,7 +22,7 @@
   }
 
   &:not(:last-child) {
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid $bkgButtonColor;
   }
 }
 
@@ -36,6 +36,7 @@
   color: $textColor;
   background-color: $bkgButtonColor;
   transition: all 0.25s;
+  border-radius: 2px;
 
   &:hover {
     background-color: $textColor;

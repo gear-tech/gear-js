@@ -9,41 +9,42 @@
   color: $textColor;
 }
 
-.nav {
-  flex: 1;
-  max-width: 470px;
+.section {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
+.imgWrapper {
+  display: flex;
+}
+
 .logo {
-  margin-right: 16px;
-  display: flex;
+  margin-right: 100px;
 }
 
-.links {
+.menu {
   display: flex;
-}
 
-.link {
-  &:not(:last-child) {
-    margin-right: 40px;
+  &Item {
+    cursor: pointer;
+    transition: all 0.25s;
+
+    &:not(:last-child) {
+      margin-right: 40px;
+    }
+
+    &:hover {
+      color: $textColorSecondary;
+    }
+
+    a {
+      color: inherit;
+    }
   }
-
-  &:hover {
-    color: $textColorSecondary;
-  }
-}
-
-.account {
-  display: flex;
 }
 
 .notifications {
   margin-right: 35px;
-  display: flex;
-  align-items: center;
   color: inherit;
   position: relative;
 }
@@ -57,4 +58,85 @@
   background-color: #f24a4a;
   border-radius: 100px;
   box-shadow: 0px 0px 0px 1px $mainBackground;
+}
+
+.bell {
+  &.active {
+    animation: wiggle 5s 0.7s ease-in-out;
+
+    @keyframes wiggle {
+      0% {
+        transform: rotate(0);
+      }
+      1% {
+        transform: rotate(30deg);
+      }
+      3% {
+        transform: rotate(-28deg);
+      }
+      5% {
+        transform: rotate(34deg);
+      }
+      7% {
+        transform: rotate(-32deg);
+      }
+      9% {
+        transform: rotate(30deg);
+      }
+      11% {
+        transform: rotate(-28deg);
+      }
+      13% {
+        transform: rotate(26deg);
+      }
+      15% {
+        transform: rotate(-24deg);
+      }
+      17% {
+        transform: rotate(22deg);
+      }
+      19% {
+        transform: rotate(-20deg);
+      }
+      21% {
+        transform: rotate(18deg);
+      }
+      23% {
+        transform: rotate(-16deg);
+      }
+      25% {
+        transform: rotate(14deg);
+      }
+      27% {
+        transform: rotate(-12deg);
+      }
+      29% {
+        transform: rotate(10deg);
+      }
+      31% {
+        transform: rotate(-8deg);
+      }
+      33% {
+        transform: rotate(6deg);
+      }
+      35% {
+        transform: rotate(-4deg);
+      }
+      37% {
+        transform: rotate(2deg);
+      }
+      39% {
+        transform: rotate(-1deg);
+      }
+      41% {
+        transform: rotate(1deg);
+      }
+      43% {
+        transform: rotate(0);
+      }
+      100% {
+        transform: rotate(0);
+      }
+    }
+  }
 }

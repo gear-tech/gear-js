@@ -1,5 +1,5 @@
 import React, { useState, useEffect, VFC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
@@ -11,20 +11,17 @@ import { WASM_COMPILER_GET } from 'consts';
 import { EventTypes } from 'types/events';
 import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
-// import './Header.scss';
-import styles from './Header.module.scss';
 import Sidebar from './Sidebar/Sidebar';
+import styles from './Header.module.scss';
 
 export const Header: VFC = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
-
-  const isNotifications = location.pathname === routes.notifications;
-
-  const chainName = localStorage.chain ? localStorage.chain : 'Loading ...';
+  const chainName = localStorage.chain || 'Loading...';
 
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
+  const isAnyNotification = Number(countUnread) > 0;
+
   let { isBuildDone } = useSelector((state: RootState) => state.compiler);
 
   if (localStorage.getItem('programCompileId') && !isBuildDone) {
@@ -32,8 +29,6 @@ export const Header: VFC = () => {
   }
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  // const headerIconsColor = '#fff';
 
   useEffect(() => {
     let timerId: any;
@@ -82,50 +77,27 @@ export const Header: VFC = () => {
 
   return (
     <header className={styles.header}>
-      {/* <div className="header__logo-and-button"> */}
-      <div className={styles.nav}>
-        <Link to={routes.main} className={styles.logo}>
+      <nav className={styles.section}>
+        <Link to={routes.main} className={`${styles.logo} ${styles.imgWrapper}`}>
           <LogoIcon color="#fff" />
         </Link>
-        {/* <button type="button" onClick={openSidebar} className="add_node">
-          Change node
-        </button> */}
-        <div className={styles.links}>
-          <div className={styles.link}>{!isApiReady ? 'Loading ...' : chainName}</div>
-          <div className={styles.link}>Explorer</div>
-          <div className={styles.link}>&lt;/&gt; IDE</div>
-        </div>
-      </div>
-
-      {/* </div> */}
-      <div className={styles.account}>
-        {/* <Link to={routes.editor} className="header__right-block_ide">
-          IDE
-        </Link> */}
-        {/* <div className="header__user-block user-block"> */}
-        <Link to={isNotifications ? routes.main : routes.notifications} className={styles.notifications}>
-          <div className={styles.counter}>24</div>
-          <img src={Bell} alt="notifications" />
-          {(countUnread && !isNotifications && (
-            <div className="indicator">
-              <div className="notifications-count mobile" />
-            </div>
-          )) ||
-            null}
+        <ul className={styles.menu}>
+          <li className={styles.menuItem} onClick={openSidebar}>
+            {!isApiReady ? 'Loading...' : chainName}
+          </li>
+          <li className={styles.menuItem}>
+            <Link to={routes.editor} className={styles.link}>
+              &lt;/&gt; IDE
+            </Link>
+          </li>
+        </ul>
+      </nav>
+      <div className={styles.section}>
+        <Link to={routes.notifications} className={`${styles.notifications} ${styles.imgWrapper}`}>
+          {isAnyNotification && <div className={styles.counter}>{countUnread}</div>}
+          <img src={Bell} alt="notifications" className={styles.bell} />
         </Link>
         <Wallet />
-        {/* </div> */}
-        {/* <div className="header--actions-wrapper">
-          <Link to={isNotifications ? routes.main : routes.notifications} className="header__notifications">
-          <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />
-          {(countUnread && !isNotifications && (
-            <div className="indicator">
-              <div className="notifications-count mobile" />
-            </div>
-          )) ||
-            null}
-        </Link>
-        </div> */}
       </div>
       {isSidebarOpen && <Sidebar closeSidebar={closeSidebar} />}
     </header>
