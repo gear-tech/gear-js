@@ -12,6 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install NodeJS 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
       - name: Prepare
         run: |
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
@@ -23,9 +28,6 @@ jobs:
           ./gear-node --dev --tmp &
 
       - name: Run tests
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
       - run: |
           cd api
           npm install
