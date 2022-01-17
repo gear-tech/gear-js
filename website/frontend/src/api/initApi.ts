@@ -1,6 +1,6 @@
 import { GearApi } from '@gear-js/api';
 
-import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api/types/types';
+import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { isNodeAddressValid } from 'helpers';
 import { NODE_ADDRESS, NODE_ADRESS_URL_PARAM } from '../consts';
