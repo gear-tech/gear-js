@@ -28,7 +28,7 @@ jobs:
           ./gear-node --dev --tmp &
 
       - name: Run tests
-      - run: |
+        run: |
           cd api
           npm install
           npm test
