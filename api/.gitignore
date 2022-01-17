@@ -6,3 +6,4 @@ examples/test-json/
 **/temp
 api/.rollup.cache
 **/package-lock.json
+test/wasm

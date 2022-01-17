@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [do-api-test]
+
+jobs:
+  test-gear-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Prepare
+        run: |
+          mkdir 
+          wget -O ~/gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
+          mkdir api/test/wasm
+          wget -O api/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
+          tar -xvf api/test/wasm/examples.tar.gz
+          ls api/test/wasm
+          sh ~/gear-node
+
+      - name: Run tests
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+      - run: |
+          cd api/api
+          npm install
+          npm test

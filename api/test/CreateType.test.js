@@ -4,12 +4,13 @@ const fs = require('fs');
 const { join } = require('path');
 
 const testFiles = fs.readdirSync('test/spec/meta');
+const TEST_WASM_DIR = 'test/wasm';
 
 describe('Create type test', () => {
   for (let filePath of testFiles) {
     const testFile = yaml.load(fs.readFileSync(join('./test/spec/meta', filePath), 'utf8'));
     test(testFile.title, async () => {
-      const metaFile = fs.readFileSync(join(process.env.EXAMPLES_DIR, testFile.file));
+      const metaFile = fs.readFileSync(join(TEST_WASM_DIR, testFile.file));
       const meta = await getWasmMetadata(metaFile);
       for (let type in testFile.types) {
         expect(meta[type]).toBe(testFile.types[type]);

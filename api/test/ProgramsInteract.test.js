@@ -3,7 +3,7 @@ const { join } = require('path');
 const yaml = require('js-yaml');
 const { GearApi, GearKeyring, getWasmMetadata } = require('../lib');
 
-const EXAMPLES_DIR = process.env.EXAMPLES_DIR;
+const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();
 const testFiles = readdirSync('test/spec/programs');
 const api = new GearApi();
