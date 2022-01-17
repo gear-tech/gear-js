@@ -11,15 +11,15 @@ export default class ProgramRequestService {
 
   protected readonly API_REFRESH_PROGRAM = 'program.data';
 
-  public fetchAllPrograms(params: PaginationModel) {
+  public fetchAllPrograms = (params: PaginationModel) => {
     return this.apiRequest.callRPC<ProgramPaginationModel>(this.API_PROGRAMS_ALL, { ...params });
-  }
+  };
 
-  public fetchUserPrograms(params: UserPrograms) {
+  public fetchUserPrograms = (params: UserPrograms) => {
     return this.apiRequest.callRPC<ProgramPaginationModel>(this.API_PROGRAMS_USER, { ...params });
-  }
+  };
 
-  public fetchProgram(id: string) {
+  public fetchProgram = (id: string) => {
     return this.apiRequest.callRPC<ProgramModel>(this.API_REFRESH_PROGRAM, { id });
-  }
+  };
 }

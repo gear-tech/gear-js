@@ -1,5 +1,6 @@
 import { localPrograms } from 'services/LocalDBService';
-import { LocalProgramModel, LocalMetaModel } from 'types/program';
+import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
+import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 
 export const fileNameHandler = (filename: string) => {
@@ -62,31 +63,61 @@ export const signPayload = async (injector: any, address: string, payload: any, 
   }
 };
 
-export const getLocalPrograms = () => {
-  const programs: LocalProgramModel[] = [];
-
-  return localPrograms
-    .iterate((elem: LocalProgramModel) => {
-      programs.push(elem);
-    })
-    .then(() => programs);
-};
-
-export const getMetaFromLocalProgram = (id: string) => {
-  const result: LocalMetaModel = {
-    meta: null,
-    metaFile: null,
-    programId: null,
+export const getLocalPrograms = (params: any) => {
+  const result: ProgramPaginationModel = {
+    count: 0,
+    programs: [],
   };
   const data = { result };
 
-  return localPrograms.getItem(id).then((response: any) => {
-    data.result.meta = response.meta;
-    data.result.metaFile = response.metaFile;
-    data.result.programId = id;
+  return localPrograms
+    .iterate((elem: ProgramModel, key, iterationNumber) => {
+      const newLimit = params.offset + params.limit;
 
-    return data;
-  });
+      data.result.count = iterationNumber;
+
+      if (iterationNumber <= newLimit && iterationNumber > params.offset) {
+        data.result.programs.push(elem);
+      }
+    })
+    .then(() => data);
+};
+
+export const getLocalProgram = (id: string) => {
+  const result: ProgramModel = {
+    id: '',
+    initStatus: ProgramStatus.Success,
+  };
+  const data = { result };
+
+  return localPrograms
+    .getItem<ProgramModel>(id)
+    .then((response) => {
+      if (response) {
+        data.result = response;
+      }
+    })
+    .then(() => data);
+};
+
+export const getMetaFromLocalProgram = (id: string) => {
+  const result: GetMetaResponse = {
+    meta: '',
+    metaFile: '',
+    program: '',
+  };
+  const data = { result };
+
+  return localPrograms
+    .getItem<ProgramModel>(id)
+    .then((response) => {
+      if (response) {
+        data.result.meta = response.meta.meta;
+        data.result.metaFile = response.meta.metaFile;
+        data.result.program = id;
+      }
+    })
+    .then(() => data);
 };
 
 export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DEVELOPMENT_CHAIN;

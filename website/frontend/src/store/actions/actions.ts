@@ -13,8 +13,7 @@ import { RPC_METHODS } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
-import { getLocalPrograms, getMetaFromLocalProgram, isDevChain } from 'helpers';
-import { localPrograms } from 'services/LocalDBService';
+import { getLocalPrograms, getLocalProgram, getMetaFromLocalProgram, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
 import { AlertActionTypes } from '../reducers/AlertReducer';
@@ -134,78 +133,36 @@ export const getMessagesAction = (params: PaginationModel) => (dispatch: any) =>
 };
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
-  if (isDevChain()) {
-    const programs = getLocalPrograms();
+  const fetchPrograms = isDevChain() ? getLocalPrograms : programService.fetchUserPrograms;
 
-    programs
-      .then((response) => {
-        dispatch(
-          fetchUserProgramsSuccessAction({
-            count: response.length,
-            programs: response,
-          })
-        );
-      })
-      .catch(() => {
-        dispatch(fetchUserProgramsErrorAction());
-      });
-  } else {
-    dispatch(fetchUserProgramsAction());
-    programService
-      .fetchUserPrograms(params)
-      .then((data) => {
-        dispatch(fetchUserProgramsSuccessAction(data.result));
-      })
-      .catch(() => dispatch(fetchUserProgramsErrorAction()));
-  }
+  dispatch(fetchUserProgramsAction());
+  fetchPrograms(params)
+    .then((data) => {
+      dispatch(fetchUserProgramsSuccessAction(data.result));
+    })
+    .catch(() => dispatch(fetchUserProgramsErrorAction()));
 };
 
 export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any) => {
-  if (isDevChain()) {
-    const programs = getLocalPrograms();
+  const fetchPrograms = isDevChain() ? getLocalPrograms : programService.fetchAllPrograms;
 
-    programs
-      .then((response) => {
-        dispatch(
-          fetchAllProgramsSuccessAction({
-            count: response.length,
-            programs: response,
-          })
-        );
-      })
-      .catch(() => {
-        dispatch(fetchUserProgramsErrorAction());
-      });
-  } else {
-    dispatch(fetchUserProgramsAction());
-    programService
-      .fetchAllPrograms(params)
-      .then((data) => {
-        dispatch(fetchAllProgramsSuccessAction(data.result));
-      })
-      .catch(() => dispatch(fetchUserProgramsErrorAction()));
-  }
+  dispatch(fetchUserProgramsAction());
+  fetchPrograms(params)
+    .then((data) => {
+      dispatch(fetchAllProgramsSuccessAction(data.result));
+    })
+    .catch(() => dispatch(fetchUserProgramsErrorAction()));
 };
 
 export const getProgramAction = (id: string) => (dispatch: any) => {
-  if (isDevChain()) {
-    localPrograms
-      .getItem(id)
-      .then((response: any) => {
-        dispatch(fetchProgramSuccessAction(response));
-      })
-      .catch(() => {
-        dispatch(fetchProgramErrorAction());
-      });
-  } else {
-    dispatch(fetchProgramAction());
-    programService
-      .fetchProgram(id)
-      .then((data) => {
-        dispatch(fetchProgramSuccessAction(data.result));
-      })
-      .catch(() => dispatch(fetchProgramErrorAction()));
-  }
+  const fetchProgram = isDevChain() ? getLocalProgram : programService.fetchProgram;
+
+  dispatch(fetchProgramAction());
+  fetchProgram(id)
+    .then((data) => {
+      dispatch(fetchProgramSuccessAction(data.result));
+    })
+    .catch(() => dispatch(fetchProgramErrorAction()));
 };
 
 export const handleProgramError = (error: string) => (dispatch: any, getState: any) => {
@@ -273,16 +230,14 @@ export const subscribeToEvents = () => (dispatch: any) => {
   nodeApi.subscribeLogEvents(async ({ data: { source, dest, reply, payload } }) => {
     let meta = null;
     let decodedPayload: any;
+    const id = source.toHex();
+    const apiRequest = new ServerRPCRequestService();
 
-    if (isDevChain()) {
-      meta = await getMetaFromLocalProgram(source.toHex());
-    } else {
-      const apiRequest = new ServerRPCRequestService();
-      const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
-        programId: source.toHex(),
-      });
-      meta = JSON.parse(result.meta);
-    }
+    const { result } = isDevChain()
+      ? await getMetaFromLocalProgram(id)
+      : await apiRequest.getResource(RPC_METHODS.GET_METADATA, { id });
+
+    meta = JSON.parse(result.meta);
 
     try {
       decodedPayload =
