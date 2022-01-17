@@ -1,6 +1,7 @@
 import { styled } from 'stitches.config';
 
 export const MetaFormItem = styled('div', {
+  flex: '1',
   color: '$white',
 });
 

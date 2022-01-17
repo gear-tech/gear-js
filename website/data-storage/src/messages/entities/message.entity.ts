@@ -7,10 +7,6 @@ export class Message {
 
   @Index()
   @Column()
-  chain: string;
-
-  @Index()
-  @Column()
   genesis: string;
 
   @Index()
@@ -29,9 +25,6 @@ export class Message {
 
   @Column({ nullable: true })
   replyError: string;
-
-  @Column({ default: false })
-  isRead: boolean;
 
   @Column()
   date: Date;

@@ -1,5 +1,5 @@
 import { Meta } from '.';
-import { RequestParams } from './general';
+import { PaginationParams, RequestParams } from './general';
 
 export enum InitStatus {
   SUCCESS = 'success',
@@ -9,7 +9,6 @@ export enum InitStatus {
 
 export interface Program {
   id: string;
-  chain: string;
   genesis: string;
   owner: string;
   uploadedAt: Date;
@@ -19,11 +18,9 @@ export interface Program {
   initStatus: InitStatus;
 }
 
-export interface GetAllProgramsParams extends RequestParams {
+export interface GetAllProgramsParams extends RequestParams, PaginationParams {
   publicKeyRaw?: string;
   owner?: string;
-  limit?: number;
-  offset?: number;
 }
 
 export interface GetAllProgramsResult {

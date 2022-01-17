@@ -5,10 +5,13 @@ import { Message } from './entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
-import { AddPayloadParams, AllMessagesResult, GetMessagesParams } from 'src/interfaces';
+import { AddPayloadParams, AllMessagesResult, FindMessageParams, GetMessagesParams } from 'src/interfaces';
 import { PAGINATION_LIMIT } from 'src/config/configuration';
+import { ErrorLogger } from 'src/utils';
 
 const logger = new Logger('MessageService');
+const errorLog = new ErrorLogger('MessagesService');
+
 @Injectable()
 export class MessagesService {
   constructor(
@@ -16,18 +19,7 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save({
-    id,
-    chain,
-    genesis,
-    destination,
-    source,
-    payload,
-    date,
-    replyTo,
-    replyError,
-    isRead,
-  }): Promise<Message> {
+  async save({ id, genesis, destination, source, payload, date, replyTo, replyError }): Promise<Message> {
     let message = await this.messageRepo.findOne({ id });
     if (message) {
       if (payload) {
@@ -38,24 +30,32 @@ export class MessagesService {
         message.replyError = replyError;
       }
     } else {
-      message = this.messageRepo.create({
-        id,
-        chain,
-        genesis,
-        destination,
-        source,
-        payload,
-        date: new Date(date),
-        isRead,
-        replyTo,
-      });
+      try {
+        message = this.messageRepo.create({
+          id,
+          genesis,
+          destination,
+          source,
+          payload,
+          date: new Date(date),
+          replyTo,
+        });
+      } catch (error) {
+        errorLog.error(error, 33);
+        return;
+      }
     }
-    return this.messageRepo.save(message);
+    try {
+      return this.messageRepo.save(message);
+    } catch (error) {
+      errorLog.error(error, 48);
+      return;
+    }
   }
 
   async addPayload(params: AddPayloadParams): Promise<Message> {
-    const { id, chain, genesis, signature, payload } = params;
-    const message = await this.messageRepo.findOne({ id, genesis, chain });
+    const { id, genesis, signature, payload } = params;
+    const message = await this.messageRepo.findOne({ id, genesis });
     if (!message) {
       throw new MessageNotFound();
     }
@@ -67,19 +67,14 @@ export class MessagesService {
   }
 
   async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
-    const where = {
-      chain: params.chain,
-      destination: params.destination,
-      genesis: params.genesis,
-      isRead: params.isRead,
-    };
-    console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
-      where,
+      where: {
+        destination: params.destination,
+        genesis: params.genesis,
+      },
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
     });
-    console.log(result);
     return {
       messages: result,
       count: total,
@@ -88,7 +83,7 @@ export class MessagesService {
 
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
     const [result, total] = await this.messageRepo.findAndCount({
-      where: { genesis: params.genesis, chain: params.chain, source: params.source },
+      where: { genesis: params.genesis, source: params.source },
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
     });
@@ -101,10 +96,8 @@ export class MessagesService {
   async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
     const where = {
       genesis: params.genesis,
-      chain: params.chain,
       destination: params.destination,
       source: params.source,
-      isRead: params.isRead,
     };
     console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
@@ -118,11 +111,11 @@ export class MessagesService {
     };
   }
 
-  async getCountUnread(destination: string): Promise<number> {
-    const messages = await this.messageRepo.findAndCount({
-      destination,
-      isRead: false,
-    });
-    return messages[1];
+  async getMessage(params: FindMessageParams): Promise<Message> {
+    const where = {
+      id: params.id,
+    };
+    const result = await this.messageRepo.findOne({ where });
+    return result;
   }
 }

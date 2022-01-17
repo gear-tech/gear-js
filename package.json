@@ -2,9 +2,9 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "build:backend": "yarn build:eventListener && yarn build:apiBackend && yarn build:dataStorage",
+    "build:backend": "yarn workspaces foreach -ptR --from '{@gear-js/event-listener,@gear-js/api-gateway,@gear-js/data-storage,@gear-js/test-balance,@gear-js/wasm-compiler}' run build",
     "build:eventListener": "yarn workspace @gear-js/event-listener build",
-    "build:apiBackend": "yarn workspace @gear-js/api-gateway build",
+    "build:apiGateway": "yarn workspace @gear-js/api-gateway build",
     "build:dataStorage": "yarn workspace @gear-js/data-storage build",
     "build:frontend": "yarn workspace @gear-js/frontend build",
     "build:testBalance": "yarn workspace @gear-js/test-balance build",
@@ -31,5 +31,6 @@
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
   },
-  "packageManager": "yarn@3.1.1"
+  "packageManager": "yarn@3.1.1",
+  "version": "0.0.2"
 }

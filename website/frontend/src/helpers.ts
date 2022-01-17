@@ -1,3 +1,5 @@
+import { NODE_ADDRESS_REGEX } from 'regexes';
+
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
 
@@ -57,3 +59,5 @@ export const signPayload = async (injector: any, address: string, payload: any, 
     console.error(err);
   }
 };
+
+export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);

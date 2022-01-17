@@ -1,4 +1,6 @@
 export const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS;
+export const NODE_ADRESS_URL_PARAM = 'node';
+
 export const API_URL = process.env.REACT_APP_API_URL as string;
 export const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER_URL}/build`;
 export const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER_URL}/get-wasm`;
@@ -61,6 +63,8 @@ export const RPC_METHODS = {
   ADD_METADATA: 'program.addMeta',
   GET_METADATA: 'program.getMeta',
   GET_TEST_BALANCE: 'testBalance.get',
+  GET_ALL_MESSAGES: 'message.all',
+  GET_MESSAGE: 'message.data',
 };
 
 export const EDITOR_DROPDOWN = ['Empty Rust template'];
@@ -70,6 +74,7 @@ export const SWITCH_PAGE_TYPES = {
   UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
   NOTIFICATIONS: 'NOTIFICATIONS',
   ALL_PROGRAMS: 'ALL_PROGRAMS',
+  ALL_MESSAGES: 'ALL_MESSAGES',
 };
 
 export const PAGE_TYPES = {
