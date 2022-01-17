@@ -1,8 +1,10 @@
 export interface MessageModel {
   destination: string;
+  source: string;
   id: string;
   date: string;
   replyError: any;
+  payload: string;
 }
 
 export interface MessagePaginationModel {
@@ -24,6 +26,10 @@ export enum MessageActionTypes {
   FETCH_MESSAGES = 'FETCH_MESSAGES',
   FETCH_MESSAGES_SUCCESS = 'FETCH_MESSAGES_SUCCESS',
   FETCH_MESSAGES_ERROR = 'FETCH_MESSAGES_ERROR',
+  FETCH_MESSAGE = 'FETCH_MESSAGE',
+  FETCH_MESSAGE_SUCCESS = 'FETCH_MESSAGE_SUCCESS',
+  FETCH_MESSAGE_ERROR = 'FETCH_MESSAGE_ERROR',
+  RESET_MESSAGE = 'RESET_MESSAGE',
 }
 
 interface FetchMessagesAction {
@@ -40,4 +46,29 @@ interface FetchMessagesErrorAction {
   payload: string;
 }
 
-export type MessageAction = FetchMessagesAction | FetchMessagesSuccessAction | FetchMessagesErrorAction;
+interface FetchMessageAction {
+  type: MessageActionTypes.FETCH_MESSAGE;
+}
+
+interface FetchMessageSuccessAction {
+  type: MessageActionTypes.FETCH_MESSAGE_SUCCESS;
+  payload: MessageModel;
+}
+
+interface FetchMessageErrorAction {
+  type: MessageActionTypes.FETCH_MESSAGE_ERROR;
+  payload: string;
+}
+
+interface ResetMessageAction {
+  type: MessageActionTypes.RESET_MESSAGE;
+}
+
+export type MessageAction =
+  | FetchMessagesAction
+  | FetchMessagesSuccessAction
+  | FetchMessagesErrorAction
+  | FetchMessageAction
+  | FetchMessageSuccessAction
+  | FetchMessageErrorAction
+  | ResetMessageAction;

@@ -27,6 +27,7 @@
       .messages__list-item {
         .messages__list-status {
           background-color: $errorColor;
+          box-shadow: 0px 0px 10px $errorColor;
         }
       }
     }
@@ -52,8 +53,12 @@
         width: 225px;
       }
       .messages__list-link {
+        display: flex;
         text-decoration: none;
         color: $textColorSecondary;
+        &:hover {
+          text-decoration: underline;
+        }
       }
       .messages__list-icon {
         display: block;
