@@ -9,13 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Install NodeJS 16.x
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 16.x
-
-      - name: Checkout
-        uses: actions/checkout@v2
 
       - name: Prepare
         run: |
@@ -23,12 +22,16 @@ jobs:
           mkdir api/test/wasm
           wget -O api/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           tar -xvf api/test/wasm/examples.tar.gz
-          ls api/test/wasm
           chmod +x gear-node
           ./gear-node --dev --tmp &
+
+      - name: Install dependencies and build @gear-js/api
+        run: |
+          cd api
+          npm install
 
       - name: Run tests
         run: |
           cd api
-          npm install
+          ls test/wasm
           npm test
