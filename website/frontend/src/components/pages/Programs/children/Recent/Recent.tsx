@@ -1,7 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { createSelector } from 'reselect';
 import {
   getUserProgramsAction,
   resetGasAction,
@@ -27,12 +26,6 @@ type ProgramMessageType = {
   programId: string;
 };
 
-const selectPrograms = createSelector(
-  (state: RootState) => state.programs,
-  (_ignore: any, completed: string) => completed,
-  (programs, completed) => programs.programs && programs.programs.filter((item) => item.id.includes(completed))
-);
-
 export const Recent: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -42,7 +35,7 @@ export const Recent: VFC = () => {
   const [term, setTerm] = useState('');
 
   const { programsCount } = useSelector((state: RootState) => state.programs);
-  let programs = useSelector((state: RootState) => selectPrograms(state, term));
+  let { programs } = useSelector((state: RootState) => state.programs);
 
   const singleProgram = useSelector((state: RootState) => state.programs.program);
 

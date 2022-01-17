@@ -1,7 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { createSelector } from 'reselect';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
@@ -26,13 +25,6 @@ type ProgramMessageType = {
   programId: string;
 };
 
-const selectCompletedTodosCount = createSelector(
-  (state: RootState) => state.programs,
-  (_ignore: any, completed: string) => completed,
-  (programs, completed) =>
-    programs.allUploadedPrograms && programs.allUploadedPrograms.filter((item) => item.id.includes(completed))
-);
-
 export const All: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -44,7 +36,7 @@ export const All: VFC = () => {
   const { allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
   const program = useSelector((state: RootState) => state.programs.program);
 
-  let allUploadedPrograms = useSelector((state: RootState) => selectCompletedTodosCount(state, term));
+  let { allUploadedPrograms } = useSelector((state: RootState) => state.programs);
 
   if (program) {
     allUploadedPrograms = [program];
