@@ -127,7 +127,7 @@ export const Recent: VFC = () => {
           handleSearch={(val: string) => {
             setTerm(val);
           }}
-          placeholder="Find program by ID"
+          placeholder="Find program"
         />
         <br />
       </div>
