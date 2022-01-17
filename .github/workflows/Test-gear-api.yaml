@@ -27,6 +27,6 @@ jobs:
         with:
           node-version: 16.x
       - run: |
-          cd api/api
+          cd api
           npm install
           npm test
