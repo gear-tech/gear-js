@@ -1,0 +1,59 @@
+@use 'assets/scss/variables' as *;
+
+.header {
+  padding: 16px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $textColor;
+}
+
+.nav {
+  flex: 1;
+  max-width: 470px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  margin-right: 16px;
+  display: flex;
+}
+
+.links {
+  display: flex;
+}
+
+.link {
+  &:not(:last-child) {
+    margin-right: 40px;
+  }
+
+  &:hover {
+    color: $textColorSecondary;
+  }
+}
+
+.account {
+  display: flex;
+}
+
+.notifications {
+  margin-right: 35px;
+  display: flex;
+  align-items: center;
+  color: inherit;
+  position: relative;
+}
+
+.counter {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  padding: 0 5px;
+  font-size: 12px;
+  background-color: #f24a4a;
+  border-radius: 100px;
+  box-shadow: 0px 0px 0px 1px $mainBackground;
+}

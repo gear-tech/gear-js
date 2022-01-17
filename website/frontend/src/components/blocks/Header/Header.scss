@@ -1,12 +1,23 @@
-@import 'assets/scss/variables';
+@use 'assets/scss/variables' as *;
 
 .header {
+  padding: 16px 40px;
   display: flex;
-  align-items: center;
-  margin: 22px 0;
-  padding: 0 40px;
-  color: white;
   justify-content: space-between;
+  align-items: center;
+  color: $textColor;
+
+  &__nav {
+    display: flex;
+    align-items: center;
+  }
+
+  &__links {
+    display: flex;
+  }
+
+  &__logo {
+  }
 }
 
 .header__logo-and-button {

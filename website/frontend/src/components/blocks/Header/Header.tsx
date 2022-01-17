@@ -6,13 +6,13 @@ import { saveAs } from 'file-saver';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
 import { LogoIcon } from 'assets/Icons';
-import NotificationsIcon from 'assets/images/notifications.svg';
-import CodeIllustration from 'assets/images/code.svg';
+import Bell from 'assets/images/bell.svg';
 import { WASM_COMPILER_GET } from 'consts';
 import { EventTypes } from 'types/events';
 import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
-import './Header.scss';
+// import './Header.scss';
+import styles from './Header.module.scss';
 import Sidebar from './Sidebar/Sidebar';
 
 export const Header: VFC = () => {
@@ -33,7 +33,7 @@ export const Header: VFC = () => {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const headerIconsColor = '#fff';
+  // const headerIconsColor = '#fff';
 
   useEffect(() => {
     let timerId: any;
@@ -81,36 +81,51 @@ export const Header: VFC = () => {
   };
 
   return (
-    <header className="header">
-      <div className="header__logo-and-button">
-        <Link to={routes.main} className="header__logo">
-          <LogoIcon color={headerIconsColor} />
+    <header className={styles.header}>
+      {/* <div className="header__logo-and-button"> */}
+      <div className={styles.nav}>
+        <Link to={routes.main} className={styles.logo}>
+          <LogoIcon color="#fff" />
         </Link>
-        <button type="button" onClick={openSidebar} className="add_node">
+        {/* <button type="button" onClick={openSidebar} className="add_node">
           Change node
-        </button>
-        <div className="headder__chain-block">
-          <p className="headder__chain-text">{!isApiReady ? 'Loading ...' : chainName}</p>
+        </button> */}
+        <div className={styles.links}>
+          <div className={styles.link}>{!isApiReady ? 'Loading ...' : chainName}</div>
+          <div className={styles.link}>Explorer</div>
+          <div className={styles.link}>&lt;/&gt; IDE</div>
         </div>
       </div>
-      <div className="header__right-block">
-        <Link to={routes.editor} className="header__right-block_ide">
+
+      {/* </div> */}
+      <div className={styles.account}>
+        {/* <Link to={routes.editor} className="header__right-block_ide">
           IDE
+        </Link> */}
+        {/* <div className="header__user-block user-block"> */}
+        <Link to={isNotifications ? routes.main : routes.notifications} className={styles.notifications}>
+          <div className={styles.counter}>24</div>
+          <img src={Bell} alt="notifications" />
+          {(countUnread && !isNotifications && (
+            <div className="indicator">
+              <div className="notifications-count mobile" />
+            </div>
+          )) ||
+            null}
         </Link>
-        <div className="header__user-block user-block">
-          <Wallet />
-        </div>
-        <div className="header--actions-wrapper">
+        <Wallet />
+        {/* </div> */}
+        {/* <div className="header--actions-wrapper">
           <Link to={isNotifications ? routes.main : routes.notifications} className="header__notifications">
-            <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />
-            {(countUnread && !isNotifications && (
-              <div className="indicator">
-                <div className="notifications-count mobile" />
-              </div>
-            )) ||
-              null}
-          </Link>
-        </div>
+          <img src={isNotifications ? CodeIllustration : NotificationsIcon} alt="notifications" />
+          {(countUnread && !isNotifications && (
+            <div className="indicator">
+              <div className="notifications-count mobile" />
+            </div>
+          )) ||
+            null}
+        </Link>
+        </div> */}
       </div>
       {isSidebarOpen && <Sidebar closeSidebar={closeSidebar} />}
     </header>
