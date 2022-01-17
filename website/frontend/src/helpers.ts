@@ -1,5 +1,5 @@
 import { localPrograms } from 'services/LocalDBService';
-import { LocalProgramModel } from 'types/program';
+import { LocalProgramModel, LocalMetaModel } from 'types/program';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 
 export const fileNameHandler = (filename: string) => {
@@ -73,7 +73,20 @@ export const getLocalPrograms = () => {
 };
 
 export const getMetaFromLocalProgram = (id: string) => {
-  return localPrograms.getItem(id).then((response: any) => JSON.parse(response.meta.meta));
+  const result: LocalMetaModel = {
+    meta: null,
+    metaFile: null,
+    programId: null,
+  };
+  const data = { result };
+
+  return localPrograms.getItem(id).then((response: any) => {
+    data.result.meta = response.meta;
+    data.result.metaFile = response.metaFile;
+    data.result.programId = id;
+
+    return data;
+  });
 };
 
 export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DEVELOPMENT_CHAIN;

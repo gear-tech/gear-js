@@ -28,6 +28,12 @@ export interface LocalProgramModel {
   uploadedAt?: string;
 }
 
+export interface LocalMetaModel {
+  meta?: any;
+  metaFile?: any;
+  programId?: string | null;
+}
+
 export interface ProgramPaginationModel {
   count: number;
   programs: ProgramModel[];

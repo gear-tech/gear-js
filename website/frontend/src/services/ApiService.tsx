@@ -89,9 +89,7 @@ export const UploadProgram = async (
               name,
               title,
               initStatus: ProgramStatus.Success,
-              meta: {
-                meta: JSON.stringify(meta),
-              },
+              meta: JSON.stringify(meta),
               metaFile,
               uploadedAt: Date(),
             })
@@ -185,9 +183,9 @@ export const addMetadata = async (
         .then((res: any) => {
           const newData = {
             ...res,
-            [res.meta.meta]: JSON.stringify(meta),
-            [res.metaFile]: metaFile,
-            [res.title]: meta.title,
+            meta: JSON.stringify(meta),
+            metaFile: metaFile,
+            title: meta.title,
           };
 
           localPrograms.setItem(res.id, newData).then(() => {

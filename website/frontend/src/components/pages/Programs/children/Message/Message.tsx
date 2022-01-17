@@ -11,8 +11,7 @@ import { PAGE_TYPES, RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
 import { MetaParam } from 'utils/meta-parser';
-import { isDevChain } from 'helpers';
-import { localPrograms } from 'services/LocalDBService';
+import { isDevChain, getMetaFromLocalProgram } from 'helpers';
 
 type Props = {
   programId: string;
@@ -53,32 +52,20 @@ export const Message: VFC<Props> = ({ programId, programName, handleClose }) => 
     });
   }, [programId]);
 
+  const fetchMeta = isDevChain() ? getMetaFromLocalProgram : getMeta;
+
   useEffect(() => {
     if (!meta) {
-      if (isDevChain()) {
-        localPrograms
-          .getItem(programId)
-          .then((response: any) => {
-            setMeta(JSON.parse(response.meta.meta) ?? null);
-          })
-          .catch((error) => {
-            dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
-          })
-          .finally(() => {
-            setReady(true);
-          });
-      } else {
-        getMeta()
-          .then((res) => {
-            setMeta(JSON.parse(res.result.meta) ?? null);
-          })
-          .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
-          .finally(() => {
-            setReady(true);
-          });
-      }
+      fetchMeta(programId)
+        .then((response) => {
+          setMeta(JSON.parse(response.result.meta) ?? null);
+        })
+        .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
+        .finally(() => {
+          setReady(true);
+        });
     }
-  }, [meta, programId, getMeta, dispatch]);
+  }, [meta, programId, fetchMeta, dispatch]);
 
   if (ready) {
     return (
