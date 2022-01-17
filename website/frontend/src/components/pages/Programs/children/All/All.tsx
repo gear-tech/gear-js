@@ -60,7 +60,7 @@ export const All: VFC = () => {
 
   useEffect(() => {
     dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term }));
-  }, [dispatch, offset]);
+  }, [dispatch, offset, term]);
 
   const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
     if (programName) {
@@ -116,11 +116,9 @@ export const All: VFC = () => {
         <SearchForm
           handleRemoveQuery={() => {
             setTerm('');
-            dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term: '' }));
           }}
-          handleSearch={(term: string) => {
-            setTerm(term);
-            dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term }));
+          handleSearch={(val: string) => {
+            setTerm(val);
           }}
           placeholder="Find program"
         />
