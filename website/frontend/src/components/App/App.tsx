@@ -1,15 +1,17 @@
 import React, { FC, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { Programs } from 'components/pages/Programs/Programs';
 import { Program } from 'components/pages/Program/Program';
+import { Message } from 'components/pages/Message/Message';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
+import { SendMessage } from 'components/pages/SendMessage/SendMessage';
 import { EditorPage } from 'features/Editor/EditorPage';
 import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
 import { SimpleLoader } from 'components/blocks/SimpleLoader';
@@ -25,7 +27,7 @@ import store from '../../store';
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
-import { ZIndexes } from '../../consts';
+import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
 
@@ -47,6 +49,8 @@ const options = {
 const AppComponent: FC = () => {
   globalStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
 
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
@@ -80,6 +84,17 @@ const AppComponent: FC = () => {
     }
   }, [dispatch, isApiReady]);
 
+  useEffect(() => {
+    const { search } = location;
+    const searchParams = new URLSearchParams(search);
+    const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
+
+    if (!urlNodeAddress) {
+      searchParams.set(NODE_ADRESS_URL_PARAM, nodeApi.address);
+      history.replace({ search: searchParams.toString() });
+    }
+  }, [history, location]);
+
   const isFooterHidden = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');
     const privacyPath = routes.privacyPolicy.replaceAll('/', '');
@@ -88,52 +103,58 @@ const AppComponent: FC = () => {
   };
 
   return (
-    <BrowserRouter>
-      <AlertProvider template={AlertTemplate} {...options}>
-        <div className="app">
-          {(isProgramUploading || isMessageSending) && (
-            <>
-              <div className="overlay" />
-              <LoadingPopup />
-            </>
+    <AlertProvider template={AlertTemplate} {...options}>
+      <div className="app">
+        {(isProgramUploading || isMessageSending) && (
+          <>
+            <div className="overlay" />
+            <LoadingPopup />
+          </>
+        )}
+        <Header />
+        <Main>
+          {isApiReady ? (
+            <Switch>
+              <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
+                <Programs />
+              </Route>
+              <Route exact path={routes.program}>
+                <Program />
+              </Route>
+              <Route exact path={routes.message}>
+                <Message />
+              </Route>
+              <Route exact path={routes.state}>
+                <State />
+              </Route>
+              <Route exact path={routes.sendMessage}>
+                <SendMessage />
+              </Route>
+              <Route exact path={routes.editor}>
+                <EditorPage />
+              </Route>
+              <Route exact path={routes.notifications}>
+                <NotificationsPage />
+              </Route>
+              <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
+                <Document />
+              </Route>
+            </Switch>
+          ) : (
+            <SimpleLoader />
           )}
-          <Header />
-          <Main>
-            {isApiReady ? (
-              <Switch>
-                <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
-                  <Programs />
-                </Route>
-                <Route exact path={routes.program}>
-                  <Program />
-                </Route>
-                <Route exact path={routes.state}>
-                  <State />
-                </Route>
-                <Route exact path={routes.editor}>
-                  <EditorPage />
-                </Route>
-                <Route exact path={routes.notifications}>
-                  <NotificationsPage />
-                </Route>
-                <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
-                  <Document />
-                </Route>
-              </Switch>
-            ) : (
-              <SimpleLoader />
-            )}
-          </Main>
-          {isFooterHidden() || <Footer />}
-          <Alert />
-        </div>
-      </AlertProvider>
-    </BrowserRouter>
+        </Main>
+        {isFooterHidden() || <Footer />}
+        <Alert />
+      </div>
+    </AlertProvider>
   );
 };
 
 export const App = () => (
   <Provider store={store}>
-    <AppComponent />
+    <BrowserRouter>
+      <AppComponent />
+    </BrowserRouter>
   </Provider>
 );

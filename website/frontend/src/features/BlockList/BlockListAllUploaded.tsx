@@ -1,17 +1,10 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
-import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
-import {
-  getAllProgramsAction,
-  resetGasAction,
-  resetProgramPayloadTypeAction,
-  sendMessageResetAction,
-  uploadMetaResetAction,
-} from 'store/actions/actions';
+import { getAllProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 
@@ -34,7 +27,6 @@ export const BlockListAllUploaded: VFC = () => {
   const { allUploadedPrograms, allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
 
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
-  const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
   const onPageChange = (page: number) => setCurrentPage(page);
@@ -45,43 +37,19 @@ export const BlockListAllUploaded: VFC = () => {
     dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term: '' }));
   }, [dispatch, offset]);
 
-  const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
+  const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
-      if (isMessage) {
-        setProgramMessage({
-          programId,
-          programName,
-        });
-      } else {
-        setProgramMeta({
-          programId,
-          programName,
-        });
-      }
+      setProgramMeta({
+        programId,
+        programName,
+      });
     }
-  };
-
-  const handleCloseMessageForm = () => {
-    dispatch(sendMessageResetAction());
-    dispatch(resetGasAction());
-    dispatch(resetProgramPayloadTypeAction());
-    setProgramMessage(null);
   };
 
   const handleCloseMetaForm = () => {
     dispatch(uploadMetaResetAction());
     setProgramMeta(null);
   };
-
-  if (programMessage) {
-    return (
-      <Message
-        programId={programMessage.programId}
-        programName={programMessage.programName}
-        handleClose={handleCloseMessageForm}
-      />
-    );
-  }
 
   if (programMeta) {
     return (
@@ -106,14 +74,9 @@ export const BlockListAllUploaded: VFC = () => {
               <div className="all-programs--item" key={item.id}>
                 <p className="all-programs--item__hash">{item.id}</p>
                 <div className="programs-list--btns">
-                  <button
-                    className="programs-list__message-btn"
-                    type="button"
-                    aria-label="refresh"
-                    onClick={() => handleOpenForm(item.id, item.name, true)}
-                  >
-                    <img src={MessageIcon} alt="message" />
-                  </button>
+                  <Link className="programs-list__message-btn" to={`/send-message/${item.id}`}>
+                    <img src={MessageIcon} alt="Send message to program" />
+                  </Link>
                   <button
                     className="all-programs--item__upload"
                     type="button"

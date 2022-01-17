@@ -3,16 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
   getUserProgramsAction,
-  resetGasAction,
-  resetProgramPayloadTypeAction,
-  sendMessageResetAction,
   uploadMetaResetAction,
 } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 
-import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
 
@@ -43,7 +39,6 @@ export const Recent: VFC = () => {
     programs = [singleProgram];
   }
 
-  const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
@@ -62,43 +57,19 @@ export const Recent: VFC = () => {
     );
   }, [dispatch, offset, term]);
 
-  const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
+  const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
-      if (isMessage) {
-        setProgramMessage({
-          programId,
-          programName,
-        });
-      } else {
-        setProgramMeta({
-          programId,
-          programName,
-        });
-      }
+      setProgramMeta({
+        programId,
+        programName,
+      });
     }
-  };
-
-  const handleCloseMessageForm = () => {
-    dispatch(sendMessageResetAction());
-    dispatch(resetGasAction());
-    dispatch(resetProgramPayloadTypeAction());
-    setProgramMessage(null);
   };
 
   const handleCloseMetaForm = () => {
     dispatch(uploadMetaResetAction());
     setProgramMeta(null);
   };
-
-  if (programMessage) {
-    return (
-      <Message
-        programId={programMessage.programId}
-        programName={programMessage.programName}
-        handleClose={handleCloseMessageForm}
-      />
-    );
-  }
 
   if (programMeta) {
     return (
