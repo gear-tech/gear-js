@@ -9,7 +9,8 @@ programs:
     account: alice
 
 messages:
-  - program: 1
+  - id: 1
+    program: 1
     payload:
       AddMessage:
         author: Dmitriy
@@ -17,7 +18,8 @@ messages:
     gasLimit: 50000000
     account: alice
 
-  - program: 1
+  - id: 2
+    program: 1
     payload:
       AddMessage:
         author: Dmitriy
@@ -25,8 +27,11 @@ messages:
     gasLimit: 50000000
     account: alice
 
-  - program: 1
+  - id: 3
+    program: 1
     payload: ViewMessages
     gasLimit: 50000000
     account: alice
     log: '0x081c446d69747269793048656c6c6f20576f726c64211c446d697472697938476f6f6462796520576f726c6421'
+
+gasSpent: [1, 2, 3]

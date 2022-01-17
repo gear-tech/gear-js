@@ -9,8 +9,11 @@ programs:
     account: alice
 
 messages:
-  - program: 1
+  - id: 1
+    program: 1
     payload: PING
     gasLimit: 30000000
     account: alice
     meta: false
+
+gasSpent: [1]

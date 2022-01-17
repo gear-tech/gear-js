@@ -9,7 +9,7 @@ programs:
     account: alice
     initPayload:
       amount: 8
-      currency: GRB
+      currency: GRT
     log: '0x010100'
 
 state:
