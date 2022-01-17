@@ -32,6 +32,6 @@ jobs:
       - name: Run tests
         run: |
           cd api
-          tar -xvf api/test/wasm/examples.tar.gz
+          tar -xvf test/wasm/examples.tar.gz
           ls test/wasm
           npm test
