@@ -10,8 +10,8 @@ export const messageReply = async () => {
   let messageId;
 
   const api = await GearApi.create();
-  const alice = GearKeyring.fromSuri('//Alice', 'Alice');
-  const bob = GearKeyring.fromSuri('//Bob', 'Bob');
+  const alice = await GearKeyring.fromSuri('//Alice', 'Alice');
+  const bob = await GearKeyring.fromSuri('//Bob', 'Bob');
 
   const bobReply = (messageId: string) => {
     api.reply.submitReply({ toId: messageId, payload: 'Hello Alice', gasLimit: 200_000_000 }, meta);

@@ -3,7 +3,6 @@
 **/.env
 examples/test-json/
 **/lib/
-/api/types/
 **/temp
 api/.rollup.cache
-api/package-lock.json
+**/package-lock.json

@@ -35,8 +35,8 @@ export const messageToBob = async (
 export const readMailbox = async () => {
   const api = await GearApi.create();
   const mailbox = new GearMailbox(api);
-  const alice = GearKeyring.fromSuri('//Alice');
-  const bob = GearKeyring.fromSuri('//Bob');
+  const alice = await GearKeyring.fromSuri('//Alice');
+  const bob = await GearKeyring.fromSuri('//Bob');
   const { programId, meta } = await uploadDemoReply(api, alice, u8aToHex(bob.addressRaw));
 
   await messageToBob(api, alice, programId, meta);
