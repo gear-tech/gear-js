@@ -5,6 +5,7 @@ export type PaginationModel = {
   limit?: number;
   offset?: number;
   type?: string;
+  term?: string;
 };
 
 export type UserPrograms = {

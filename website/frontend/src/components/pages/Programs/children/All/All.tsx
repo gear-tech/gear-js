@@ -12,8 +12,6 @@ import {
   resetProgramPayloadTypeAction,
   sendMessageResetAction,
   uploadMetaResetAction,
-  getProgramAction,
-  resetProgramAction,
 } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
@@ -41,12 +39,12 @@ export const All: VFC = () => {
   const urlSearch = location.search;
   const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
 
-  const [search, setSearch] = useState('');
+  const [term, setTerm] = useState('');
 
   const { allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
   const program = useSelector((state: RootState) => state.programs.program);
 
-  let allUploadedPrograms = useSelector((state: RootState) => selectCompletedTodosCount(state, search));
+  let allUploadedPrograms = useSelector((state: RootState) => selectCompletedTodosCount(state, term));
 
   if (program) {
     allUploadedPrograms = [program];
@@ -61,7 +59,7 @@ export const All: VFC = () => {
   const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
 
   useEffect(() => {
-    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
+    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term }));
   }, [dispatch, offset]);
 
   const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
@@ -117,12 +115,12 @@ export const All: VFC = () => {
       <div>
         <SearchForm
           handleRemoveQuery={() => {
-            setSearch('');
-            dispatch(resetProgramAction());
+            setTerm('');
+            dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term: '' }));
           }}
-          handleSearch={(val: string) => {
-            setSearch(val);
-            dispatch(getProgramAction(val));
+          handleSearch={(term: string) => {
+            setTerm(term);
+            dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term }));
           }}
           placeholder="Find program"
         />
