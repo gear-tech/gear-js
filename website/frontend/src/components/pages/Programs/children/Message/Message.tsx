@@ -44,13 +44,11 @@ export const Message: VFC<Props> = ({ programId, programName, handleClose }) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getMeta = useCallback(async () => {
+  const getMeta = useCallback(async (id: string) => {
     const apiRequest = new ServerRPCRequestService();
 
-    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, {
-      programId,
-    });
-  }, [programId]);
+    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { id });
+  }, []);
 
   const fetchMeta = isDevChain() ? getMetaFromLocalProgram : getMeta;
 
