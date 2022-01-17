@@ -1,4 +1,4 @@
-const { GearApi } = require('@gear-js/api');
+const { GearApi } = require('../lib');
 
 const api = new GearApi();
 
