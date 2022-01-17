@@ -14,12 +14,12 @@ jobs:
 
       - name: Prepare
         run: |
-          wget -O ~/gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
+          wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
           mkdir api/test/wasm
           wget -O api/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           tar -xvf api/test/wasm/examples.tar.gz
           ls api/test/wasm
-          ./gear-node
+          ./gear-node --dev --tmp
 
       - name: Run tests
         uses: actions/setup-node@v2.1.5
