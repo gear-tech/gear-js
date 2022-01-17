@@ -1,0 +1,76 @@
+@use 'assets/scss/variables.scss' as *;
+
+.wallet {
+  display: flex;
+}
+
+.section {
+  $padding: 25px;
+  display: flex;
+  align-items: center;
+
+  &:first-child {
+    padding-right: $padding;
+  }
+
+  &:last-child {
+    padding-left: $padding;
+  }
+
+  &:not(:first-child):not(:last-child) {
+    padding: 0 $padding;
+  }
+
+  &:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.button {
+  padding: 10px 25px;
+  display: flex;
+  align-items: center;
+  font-family: 'Prompt', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: $textColor;
+  background-color: $bkgButtonColor;
+  transition: all 0.25s;
+
+  &:hover {
+    background-color: $textColor;
+    color: $mainBackground;
+  }
+}
+
+.balance {
+  font-weight: 400;
+  font-size: 17px;
+
+  &Amount {
+    color: $textColorSecondary;
+  }
+}
+
+.accountButton {
+  text-transform: uppercase;
+}
+
+.avatar {
+  margin-right: 10px;
+  cursor: inherit;
+}
+
+.message {
+  text-align: center;
+
+  a {
+    text-decoration: underline;
+    color: inherit;
+  }
+}
+
+.logoutButton {
+  display: block;
+  margin: 16px auto 0;
+}
