@@ -11,7 +11,7 @@ import { PAGE_TYPES, RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
 import { MetaParam } from 'utils/meta-parser';
-import { isDevChain, getMetaFromLocalProgram } from 'helpers';
+import { isDevChain, getLocalProgramMeta } from 'helpers';
 
 type Props = {
   programId: string;
@@ -44,17 +44,17 @@ export const Message: VFC<Props> = ({ programId, programName, handleClose }) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getMeta = useCallback(async (id: string) => {
+  const fetchMeta = useCallback(async (programId: string) => {
     const apiRequest = new ServerRPCRequestService();
 
-    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { id });
+    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId });
   }, []);
 
-  const fetchMeta = isDevChain() ? getMetaFromLocalProgram : getMeta;
+  const getMeta = isDevChain() ? getLocalProgramMeta : fetchMeta;
 
   useEffect(() => {
     if (!meta) {
-      fetchMeta(programId)
+      getMeta(programId)
         .then((response) => {
           setMeta(JSON.parse(response.result.meta) ?? null);
         })

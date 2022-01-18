@@ -188,7 +188,7 @@ export const addMetadata = async (
             ...res,
             meta: {
               meta: JSON.stringify(meta),
-              metaFile: metaFile,
+              metaFile,
               programId,
             },
             title: meta.title,

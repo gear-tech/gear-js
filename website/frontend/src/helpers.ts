@@ -100,7 +100,7 @@ export const getLocalProgram = (id: string) => {
     .then(() => data);
 };
 
-export const getMetaFromLocalProgram = (id: string) => {
+export const getLocalProgramMeta = (id: string) => {
   const result: GetMetaResponse = {
     meta: '',
     metaFile: '',

@@ -13,7 +13,7 @@ import { RPC_METHODS } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
-import { getLocalPrograms, getLocalProgram, getMetaFromLocalProgram, isDevChain } from 'helpers';
+import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
 import { AlertActionTypes } from '../reducers/AlertReducer';
@@ -133,10 +133,10 @@ export const getMessagesAction = (params: PaginationModel) => (dispatch: any) =>
 };
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
-  const fetchPrograms = isDevChain() ? getLocalPrograms : programService.fetchUserPrograms;
+  const getPrograms = isDevChain() ? getLocalPrograms : programService.fetchUserPrograms;
 
   dispatch(fetchUserProgramsAction());
-  fetchPrograms(params)
+  getPrograms(params)
     .then((data) => {
       dispatch(fetchUserProgramsSuccessAction(data.result));
     })
@@ -144,10 +144,10 @@ export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) =
 };
 
 export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any) => {
-  const fetchPrograms = isDevChain() ? getLocalPrograms : programService.fetchAllPrograms;
+  const getPrograms = isDevChain() ? getLocalPrograms : programService.fetchAllPrograms;
 
   dispatch(fetchUserProgramsAction());
-  fetchPrograms(params)
+  getPrograms(params)
     .then((data) => {
       dispatch(fetchAllProgramsSuccessAction(data.result));
     })
@@ -155,10 +155,10 @@ export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any)
 };
 
 export const getProgramAction = (id: string) => (dispatch: any) => {
-  const fetchProgram = isDevChain() ? getLocalProgram : programService.fetchProgram;
+  const getProgram = isDevChain() ? getLocalProgram : programService.fetchProgram;
 
   dispatch(fetchProgramAction());
-  fetchProgram(id)
+  getProgram(id)
     .then((data) => {
       dispatch(fetchProgramSuccessAction(data.result));
     })
@@ -230,12 +230,12 @@ export const subscribeToEvents = () => (dispatch: any) => {
   nodeApi.subscribeLogEvents(async ({ data: { source, dest, reply, payload } }) => {
     let meta = null;
     let decodedPayload: any;
-    const id = source.toHex();
+    const programId = source.toHex();
     const apiRequest = new ServerRPCRequestService();
 
     const { result } = isDevChain()
-      ? await getMetaFromLocalProgram(id)
-      : await apiRequest.getResource(RPC_METHODS.GET_METADATA, { id });
+      ? await getLocalProgramMeta(programId)
+      : await apiRequest.getResource(RPC_METHODS.GET_METADATA, { programId });
 
     meta = JSON.parse(result.meta);
 
