@@ -44,10 +44,10 @@ export const Message: VFC<Props> = ({ programId, programName, handleClose }) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchMeta = useCallback(async (programId: string) => {
+  const fetchMeta = useCallback(async (id: string) => {
     const apiRequest = new ServerRPCRequestService();
 
-    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId });
+    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId: id });
   }, []);
 
   const getMeta = isDevChain() ? getLocalProgramMeta : fetchMeta;
@@ -63,7 +63,7 @@ export const Message: VFC<Props> = ({ programId, programName, handleClose }) => 
           setReady(true);
         });
     }
-  }, [meta, programId, fetchMeta, dispatch]);
+  }, [meta, programId, getMeta, dispatch]);
 
   if (ready) {
     return (
