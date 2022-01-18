@@ -173,10 +173,10 @@ export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any)
     .catch(() => dispatch(fetchUserProgramsErrorAction()));
 };
 
-export const getProgramAction = (term: string) => (dispatch: any) => {
+export const getProgramAction = (id: string) => (dispatch: any) => {
   dispatch(fetchProgramAction());
   programService
-    .fetchProgram(term)
+    .fetchProgram(id)
     .then((data) => {
       dispatch(fetchProgramSuccessAction(data.result));
     })
