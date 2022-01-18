@@ -1,4 +1,4 @@
-name: CI
+name: Test @gear-js/api
 
 on:
   pull_request:
