@@ -5,7 +5,6 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { RootState } from 'store/reducers';
 import { routes } from 'routes';
-import { LogoIcon } from 'assets/Icons';
 import Bell from 'assets/images/bell.svg';
 import { WASM_COMPILER_GET } from 'consts';
 import { EventTypes } from 'types/events';
@@ -14,6 +13,7 @@ import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
 import Menu from './children/Menu/Menu';
 import Sidebar from './children/Sidebar/Sidebar';
 import styles from './Header.module.scss';
+import Logo from './children/Logo/Logo';
 
 export const Header: VFC = () => {
   const dispatch = useDispatch();
@@ -75,13 +75,11 @@ export const Header: VFC = () => {
   return (
     <header className={styles.header}>
       <nav className={styles.section}>
-        <Link to={routes.main} className={`${styles.logo} ${styles.imgWrapper}`}>
-          <LogoIcon color="#fff" />
-        </Link>
+        <Logo />
         <Menu openSidebar={openSidebar} />
       </nav>
       <div className={styles.section}>
-        <Link to={routes.notifications} className={`${styles.notifications} ${styles.imgWrapper}`}>
+        <Link to={routes.notifications} className={`img-wrapper ${styles.notifications}`}>
           {isAnyNotification && <div className={styles.counter}>{countUnread}</div>}
           <img src={Bell} alt="notifications" className={styles.bell} />
         </Link>
