@@ -11,9 +11,22 @@ const accounts = {
   alice: GearKeyring.fromSuri('//Alice'),
   bob: GearKeyring.fromSuri('//Bob'),
 };
+const testif = (condition) => (condition ? test : test.skip);
 
 jest.setTimeout(20000);
-const testif = (condition) => (condition ? test : test.skip);
+
+beforeAll(async () => {
+  await api.isReady;
+});
+
+afterAll(async () => {
+  await api.disconnect();
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 2000);
+  });
+});
 
 for (let filePath of testFiles) {
   /**
@@ -23,7 +36,6 @@ for (let filePath of testFiles) {
 
   describe(testFile.title, () => {
     testif(!testFile.skip)('Upload programs', async () => {
-      await api.isReady;
       for (let program of testFile.programs) {
         const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
         const metaFile = readFileSync(join(EXAMPLES_DIR, `${program.name}.meta.wasm`));
@@ -83,7 +95,6 @@ for (let filePath of testFiles) {
     });
 
     testif(!testFile.skip && testFile.messages)('Sending messages', async () => {
-      await api.isReady;
       for (let message of testFile.messages) {
         api.message.submit(
           {
@@ -123,7 +134,6 @@ for (let filePath of testFiles) {
     });
 
     testif(!testFile.skip && testFile.state)('Read state', async () => {
-      await api.isReady;
       for (let state of testFile.state) {
         const program = programs.get(state.program);
         const result = await api.programState.read(program.id, program.metaFile, state.payload);
@@ -132,7 +142,6 @@ for (let filePath of testFiles) {
     });
 
     testif(!testFile.skip && testFile.gasSpent)('Get gas spent', async () => {
-      await api.isReady;
       const messages = testFile.gasSpent.map((id) => {
         return testFile.messages.find((message) => message.id === id);
       });

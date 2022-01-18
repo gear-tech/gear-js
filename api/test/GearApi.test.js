@@ -2,24 +2,33 @@ const { GearApi } = require('../lib');
 
 const api = new GearApi();
 
+beforeAll(async () => {
+  await api.isReady;
+});
+
+afterAll(async () => {
+  await api.disconnect();
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 2000);
+  });
+});
+
 describe('GearApi', () => {
   test('chain', async () => {
-    await api.isReady;
     expect(await api.chain()).toBeDefined();
   });
 
   test('nodeName', async () => {
-    await api.isReady;
     expect(await api.nodeName()).toBeDefined();
   });
 
   test('nodeVersion', async () => {
-    await api.isReady;
     expect(await api.nodeVersion()).toBeDefined();
   });
 
   test('totalIssuance', async () => {
-    await api.isReady;
     expect(await api.totalIssuance()).toBeDefined();
   });
 });
