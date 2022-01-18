@@ -237,7 +237,11 @@ export const subscribeToEvents = () => (dispatch: any) => {
       ? await getLocalProgramMeta(programId)
       : await apiRequest.getResource(RPC_METHODS.GET_METADATA, { programId });
 
-    meta = JSON.parse(result.meta);
+    if (result && result.m) {
+      meta = JSON.parse(result.meta);
+    } else {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Metadata is not added' }));
+    }
 
     try {
       decodedPayload =
