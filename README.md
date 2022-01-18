@@ -1,31 +1,32 @@
 <p align="center">
   <a href="https://gear-tech.io">
-    <img src="https://gear-tech.io/images/logo-black.svg" width="240" alt="GEAR">
+    <img src="https://www.gear-tech.io/img/logo.svg" width="240" alt="GEAR">
   </a>
 </p>
 <p align=center>
     <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
 </p>
 
-## Directory Structure
+## [@gear-js/api](https://github.com/gear-tech/gear-js/tree/master/api)
 
-## [api](https://github.com/gear-tech/gear-js/tree/master/api)
+JavaScript library that provides functionality to connect Gear node and interact with it.
 
-This directory contatins the javascript library that provides functionality to connect GEAR Component APIs.
+### [npm](https://www.npmjs.com/package/@gear-js/api)
+
+Refer to the [api](https://github.com/gear-tech/gear-js/blob/master/api/README.md) docs for detail
 
 ## [website](https://github.com/gear-tech/gear-js/tree/master/website)
 
-This directory contains the resources needed to run the Gear-Tech site.
-
-#### [backend](https://github.com/gear-tech/gear-js/tree/master/website/backend)
-
-The Gear-Tech website api <br/>
-Refer to the [API](https://github.com/gear-tech/gear-js/tree/master/website/backend/README.md) docs for details.
+Source code of [idea.gear-tech.io](https://idea.gear-tech.io/) and backend microservices
 
 #### [frontend](https://github.com/gear-tech/gear-js/tree/master/website/frontend)
 
-The Gear-Tech website frontend
+React application that serves as a get-familiar with Gear to help developers write, test and upload smart contracts to a test network as well as manage accounts, balances, events and more
 
-#### [ide-backend](https://github.com/gear-tech/gear-js/tree/master/website/ide-backend)
+#### [data-storage](https://github.com/gear-tech/gear-js/tree/master/website/data-storage)
 
-Service for compiling rust project to wasm
+Microservice on NodeJS is in charge of storing metadata of uploaded programs and information about events
+
+#### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/website/api-gateway)
+
+Microservice on NodeJS enables any interaction between the events / meta data storage and the outside user
