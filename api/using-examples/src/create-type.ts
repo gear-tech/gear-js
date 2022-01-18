@@ -32,3 +32,5 @@ export const typeStructure = async () => {
   ]);
   return;
 };
+
+typeStructure().then(() => process.exit(0));

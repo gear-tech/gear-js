@@ -90,7 +90,7 @@ export class GearProgramState {
     const program = await this.gProg(programId);
     const pages = await this.gPages(programId, program.persistent_pages);
 
-    const encodedInput = inputValue ? await this.encodeInput(metaWasm, inputValue) : undefined;
+    const encodedInput = inputValue !== undefined ? await this.encodeInput(metaWasm, inputValue) : undefined;
 
     return await this.decodeState(metaWasm, pages, encodedInput);
   }

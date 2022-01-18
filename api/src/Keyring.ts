@@ -13,8 +13,9 @@ export class GearKeyring {
     return keyring;
   }
 
-  static fromSuri(suri: string, name?: string): KeyringPair {
+  static async fromSuri(suri: string, name?: string): Promise<KeyringPair> {
     const keyring = new Keyring({ type: 'sr25519' });
+    await waitReady();
     const keyPair = keyring.addFromUri(suri, { name });
     return keyPair;
   }
@@ -38,8 +39,8 @@ export class GearKeyring {
     return keypair;
   }
 
-  static fromMnemonic(mnemonic: string, name?: string): KeyringPair {
-    return GearKeyring.fromSuri(mnemonic, name);
+  static async fromMnemonic(mnemonic: string, name?: string): Promise<KeyringPair> {
+    return await GearKeyring.fromSuri(mnemonic, name);
   }
 
   static toJson(keyring: KeyringPair, passphrase?: string): KeyringPair$Json {
@@ -48,7 +49,7 @@ export class GearKeyring {
 
   static async create(
     name: string,
-    passphrase?: string
+    passphrase?: string,
   ): Promise<{
     keyring: KeyringPair;
     mnemonic: string;
@@ -62,7 +63,7 @@ export class GearKeyring {
       keyring,
       mnemonic: mnemonic,
       seed: u8aToHex(seed),
-      json: keyring.toJson(passphrase)
+      json: keyring.toJson(passphrase),
     };
   }
 

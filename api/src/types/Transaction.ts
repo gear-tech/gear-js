@@ -25,7 +25,7 @@ export class GearTransaction {
   public signAndSend(
     account: AddressOrPair,
     optionsOrCallback?: Partial<SignerOptions> | TransactionStatusCb,
-    optionalCallback?: (data: any) => void
+    optionalCallback?: (data: any) => void,
   ): Promise<0> {
     const [options, callback] = isFunction(optionsOrCallback)
       ? [undefined, optionsOrCallback]
@@ -50,11 +50,11 @@ export class GearTransaction {
             .forEach(
               ({
                 event: {
-                  data: [error]
-                }
+                  data: [error],
+                },
               }) => {
                 reject(new TransactionError(`${error.toString()}`));
-              }
+              },
             );
 
           events.forEach(({ event: { data, method } }) => {
@@ -65,7 +65,7 @@ export class GearTransaction {
                 status: status.type,
                 blockHash,
                 programId: eventData.programId.toHex(),
-                messageId: eventData.messageId.toHex()
+                messageId: eventData.messageId.toHex(),
               });
             }
           });
