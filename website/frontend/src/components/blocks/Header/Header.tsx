@@ -1,26 +1,21 @@
 import React, { useState, useEffect, VFC } from 'react';
-import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { RootState } from 'store/reducers';
-import { routes } from 'routes';
-import Bell from 'assets/images/bell.svg';
 import { WASM_COMPILER_GET } from 'consts';
 import { EventTypes } from 'types/events';
 import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
+import Logo from './children/Logo/Logo';
 import Menu from './children/Menu/Menu';
+import Notifications from './children/Notifications/Notifications';
 import Sidebar from './children/Sidebar/Sidebar';
 import styles from './Header.module.scss';
-import Logo from './children/Logo/Logo';
 
 export const Header: VFC = () => {
   const dispatch = useDispatch();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const { countUnread } = useSelector((state: RootState) => state.notifications);
-  const isAnyNotification = Number(countUnread) > 0;
 
   let { isBuildDone } = useSelector((state: RootState) => state.compiler);
   if (localStorage.getItem('programCompileId') && !isBuildDone) {
@@ -79,10 +74,7 @@ export const Header: VFC = () => {
         <Menu openSidebar={openSidebar} />
       </nav>
       <div className={styles.section}>
-        <Link to={routes.notifications} className={`img-wrapper ${styles.notifications}`}>
-          {isAnyNotification && <div className={styles.counter}>{countUnread}</div>}
-          <img src={Bell} alt="notifications" className={styles.bell} />
-        </Link>
+        <Notifications />
         <Wallet />
       </div>
       {isSidebarOpen && <Sidebar closeSidebar={closeSidebar} />}
