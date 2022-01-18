@@ -17,45 +17,14 @@ jobs:
           yarn install
           yarn build:backend
 
-  build-test-balance:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-      - run: |
-          yarn install
-          yarn build:testBalance
-
-  build-wasm-compiler:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-      - run: |
-          yarn install
-          yarn build:wasmCompiler
-
   build-frontend:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Use node 16.x
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 16.x
-
       - run: |
           yarn install
           yarn build:frontend
