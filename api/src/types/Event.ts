@@ -8,7 +8,7 @@ import {
   InitSuccessData,
   LogData,
   ProgramData,
-  TransferData
+  TransferData,
 } from '.';
 
 export class GearEvent extends GenericEvent {

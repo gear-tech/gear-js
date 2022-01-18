@@ -42,19 +42,21 @@ export const Wallet = () => {
   }, []);
 
   useEffect(() => {
-    getAllAccounts()
-      .then((allAccounts) => {
-        if (allAccounts) {
-          allAccounts.forEach((acc: UserAccount) => {
-            if (acc.address === localStorage.getItem('savedAccount')) {
-              acc.isActive = true;
-              dispatch(setCurrentAccount(acc));
-            }
-          });
-          setInjectedAccounts(allAccounts);
-        }
-      })
-      .catch((err) => console.error(err));
+    setTimeout(() => {
+      getAllAccounts()
+        .then((allAccounts) => {
+          if (allAccounts) {
+            allAccounts.forEach((acc: UserAccount) => {
+              if (acc.address === localStorage.getItem('savedAccount')) {
+                acc.isActive = true;
+                dispatch(setCurrentAccount(acc));
+              }
+            });
+            setInjectedAccounts(allAccounts);
+          }
+        })
+        .catch((err) => console.error(err));
+    }, 200);
   }, [dispatch, getAllAccounts]);
 
   const getBalance = useCallback(

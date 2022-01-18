@@ -3,6 +3,8 @@ name: CI
 on:
   pull_request:
     branches: [master]
+    paths:
+      - website/**
 
 jobs:
   build-backend:
@@ -33,16 +35,3 @@ jobs:
           REACT_APP_NODE_ADDRESS: 'wss://ci.test'
           REACT_APP_WASM_COMPILER_URL: 'https://ci.test'
           REACT_APP_RRT: ''
-
-  build-api:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-      - run: |
-          cd api/api
-          npm install
-          npm run build
