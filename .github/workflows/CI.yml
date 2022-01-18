@@ -51,7 +51,7 @@ jobs:
           mkdir api/test/wasm
           wget -O api/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           chmod +x gear-node
-          ./gear-node --dev --tmp &
+          ./gear-node --dev --tmp & sleep 10
 
       - name: Install dependencies and build @gear-js/api
         run: |
