@@ -11,24 +11,21 @@ import { WASM_COMPILER_GET } from 'consts';
 import { EventTypes } from 'types/events';
 import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
-import Sidebar from './Sidebar/Sidebar';
+import Menu from './children/Menu/Menu';
+import Sidebar from './children/Sidebar/Sidebar';
 import styles from './Header.module.scss';
 
 export const Header: VFC = () => {
   const dispatch = useDispatch();
-  const chainName = localStorage.chain || 'Loading...';
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const { isApiReady } = useSelector((state: RootState) => state.api);
   const { countUnread } = useSelector((state: RootState) => state.notifications);
   const isAnyNotification = Number(countUnread) > 0;
 
   let { isBuildDone } = useSelector((state: RootState) => state.compiler);
-
   if (localStorage.getItem('programCompileId') && !isBuildDone) {
     isBuildDone = true;
   }
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     let timerId: any;
@@ -81,16 +78,7 @@ export const Header: VFC = () => {
         <Link to={routes.main} className={`${styles.logo} ${styles.imgWrapper}`}>
           <LogoIcon color="#fff" />
         </Link>
-        <ul className={styles.menu}>
-          <li className={styles.menuItem} onClick={openSidebar}>
-            {!isApiReady ? 'Loading...' : chainName}
-          </li>
-          <li className={styles.menuItem}>
-            <Link to={routes.editor} className={styles.link}>
-              &lt;/&gt; IDE
-            </Link>
-          </li>
-        </ul>
+        <Menu openSidebar={openSidebar} />
       </nav>
       <div className={styles.section}>
         <Link to={routes.notifications} className={`${styles.notifications} ${styles.imgWrapper}`}>

@@ -1,0 +1,22 @@
+@use 'assets/scss/variables' as *;
+
+.menu {
+  display: flex;
+}
+
+.item {
+  cursor: pointer;
+  transition: all 0.25s;
+
+  &:not(:last-child) {
+    margin-right: 40px;
+  }
+
+  &:hover {
+    color: $textColorSecondary;
+  }
+
+  a {
+    color: inherit;
+  }
+}

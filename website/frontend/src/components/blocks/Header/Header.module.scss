@@ -22,27 +22,6 @@
   margin-right: 100px;
 }
 
-.menu {
-  display: flex;
-
-  &Item {
-    cursor: pointer;
-    transition: all 0.25s;
-
-    &:not(:last-child) {
-      margin-right: 40px;
-    }
-
-    &:hover {
-      color: $textColorSecondary;
-    }
-
-    a {
-      color: inherit;
-    }
-  }
-}
-
 .notifications {
   margin-right: 35px;
   color: inherit;
