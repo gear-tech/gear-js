@@ -13,6 +13,15 @@ const accounts = {
 };
 const testif = (condition) => (condition ? test : test.skip);
 
+const checkLog = (event, programId, messageId) => {
+  if (event.data.source.toHex() === programId) {
+    if (event.data.reply.unwrap()[1].toNumber() === 0 && event.data.reply.unwrap()[0].toHex() === messageId) {
+      return true;
+    }
+  }
+  return false;
+};
+
 jest.setTimeout(20000);
 
 beforeAll(async () => {
@@ -49,47 +58,46 @@ for (let filePath of testFiles) {
           meta,
           metaFile,
         });
-        let unsub, log, messageId;
+        let log, messageId;
+        const unsubs = [];
 
         if (program.log) {
-          log = new Promise(async (resolve) => {
-            unsub = await api.gearEvents.subscribeLogEvents((event) => {
-              if (event.data.source.toHex() === programId) {
-                if (
-                  event.data.reply.unwrap()[1].toNumber() === 0 &&
-                  event.data.reply.unwrap()[0].toHex() === messageId
-                ) {
+          log = new Promise((resolve) => {
+            unsubs.push(
+              api.gearEvents.subscribeLogEvents((event) => {
+                if (checkLog(event, programId, messageId)) {
                   resolve(event.data.payload.toHex());
                 }
-              }
-            });
+              }),
+            );
           });
         }
 
-        const status = new Promise(async (resolve) => {
-          unsub = await api.gearEvents.subscribeProgramEvents((event) => {
-            if (event.data.info.programId.toHex() === programs.get(program.id).id) {
-              if (api.events.gear.InitSuccess.is(event)) {
-                resolve('success');
-              } else {
-                resolve('failed');
+        const status = new Promise((resolve) => {
+          unsubs.push(
+            api.gearEvents.subscribeProgramEvents((event) => {
+              if (event.data.info.programId.toHex() === programs.get(program.id).id) {
+                if (api.events.gear.InitSuccess.is(event)) {
+                  resolve('success');
+                } else {
+                  resolve('failed');
+                }
               }
-            }
-          });
+            }),
+          );
         });
         expect(
           await api.program.signAndSend(await accounts[program.account], (data) => {
             messageId = data.messageId;
           }),
         ).toBe(0);
-        const res = await status;
-        unsub();
-        expect(res).toBe('success');
+        expect(await status).toBe('success');
         if (program.log) {
-          const logPayload = await log;
-          unsub();
-          expect(logPayload).toBe(program.log);
+          expect(await log).toBe(program.log);
         }
+        unsubs.forEach(async (unsub) => {
+          (await unsub)();
+        });
       }
       return;
     });
@@ -107,15 +115,10 @@ for (let filePath of testFiles) {
         );
         let messageId, log, unsub;
         if (message.log) {
-          log = new Promise(async (resolve) => {
-            unsub = await api.gearEvents.subscribeLogEvents((event) => {
-              if (event.data.source.toHex() === programs.get(message.program).id) {
-                if (
-                  event.data.reply.unwrap()[1].toNumber() === 0 &&
-                  event.data.reply.unwrap()[0].toHex() === messageId
-                ) {
-                  resolve(event.data.payload.toHex());
-                }
+          log = new Promise((resolve) => {
+            unsub = api.gearEvents.subscribeLogEvents((event) => {
+              if (checkLog(event, programs.get(message.program).id, messageId)) {
+                resolve(event.data.payload.toHex());
               }
             });
           });
@@ -126,9 +129,8 @@ for (let filePath of testFiles) {
           }),
         ).toBe(0);
         if (message.log) {
-          const logPayload = await log;
-          unsub();
-          expect(logPayload).toBe(message.log);
+          expect(await log).toBe(message.log);
+          (await unsub)();
         }
       }
     });
