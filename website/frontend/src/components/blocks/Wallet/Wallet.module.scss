@@ -1,25 +1,19 @@
 @use 'assets/scss/variables.scss' as *;
+@use 'assets/scss/mixins.scss' as *;
+@use 'assets/scss/breakpoints.scss' as *;
 
 .wallet {
+  @include flexGap(0, 50px);
   display: flex;
+
+  @include md {
+    flex-direction: column;
+  }
 }
 
 .section {
-  $padding: 25px;
   display: flex;
   align-items: center;
-
-  &:first-child {
-    padding-right: $padding;
-  }
-
-  &:last-child {
-    padding-left: $padding;
-  }
-
-  &:not(:first-child):not(:last-child) {
-    padding: 0 $padding;
-  }
 
   &:not(:last-child) {
     border-right: 1px solid $bkgButtonColor;
@@ -30,7 +24,6 @@
   padding: 10px 25px;
   display: flex;
   align-items: center;
-  font-family: 'Prompt', sans-serif;
   font-size: 14px;
   font-weight: 500;
   color: $textColor;
@@ -45,8 +38,12 @@
 }
 
 .balance {
-  font-weight: 400;
   font-size: 17px;
+  font-weight: 400;
+
+  @include md {
+    display: none;
+  }
 
   &Amount {
     color: $textColorSecondary;

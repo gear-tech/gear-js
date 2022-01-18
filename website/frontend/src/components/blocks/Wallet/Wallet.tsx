@@ -127,7 +127,7 @@ export const Wallet = () => {
   return (
     <>
       <div className={styles.wallet}>
-        {(currentAccount && (
+        {currentAccount ? (
           <>
             <div className={`${styles.section} ${styles.balance}`}>
               <p>
@@ -141,10 +141,12 @@ export const Wallet = () => {
               </button>
             </div>
           </>
-        )) || (
-          <button className={styles.button} type="button" onClick={toggleModal}>
-            Connect
-          </button>
+        ) : (
+          <div>
+            <button className={styles.button} type="button" onClick={toggleModal}>
+              Connect
+            </button>
+          </div>
         )}
       </div>
       <Modal

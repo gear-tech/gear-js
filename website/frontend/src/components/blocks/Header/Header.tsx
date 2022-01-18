@@ -69,11 +69,11 @@ export const Header: VFC = () => {
 
   return (
     <header className={styles.header}>
-      <nav className={styles.section}>
+      <nav className={`${styles.section} ${styles.nav}`}>
         <Logo />
         <Menu openSidebar={openSidebar} />
       </nav>
-      <div className={styles.section}>
+      <div className={`${styles.section} ${styles.interaction}`}>
         <Notifications />
         <Wallet />
       </div>
