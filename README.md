@@ -11,9 +11,9 @@
 
 JavaScript library that provides functionality to connect Gear node and interact with it.
 
-### [npm](https://www.npmjs.com/package/@gear-js/api)
-
 Refer to the [api](https://github.com/gear-tech/gear-js/blob/master/api/README.md) docs for detail
+
+#### [npm package](https://www.npmjs.com/package/@gear-js/api)
 
 ## [website](https://github.com/gear-tech/gear-js/tree/master/website)
 
@@ -23,10 +23,22 @@ Source code of [idea.gear-tech.io](https://idea.gear-tech.io/) and backend micro
 
 React application that serves as a get-familiar with Gear to help developers write, test and upload smart contracts to a test network as well as manage accounts, balances, events and more
 
+#### [events-listener](https://github.com/gear-tech/gear-js/tree/master/website/events-listener)
+
+Microservice listens to all the events occuring in the Gear node and sends to the data-storage to store the information about them
+
 #### [data-storage](https://github.com/gear-tech/gear-js/tree/master/website/data-storage)
 
-Microservice on NodeJS is in charge of storing metadata of uploaded programs and information about events
+Microservice is responsible for storing metadata of uploaded programs and information about events
 
 #### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/website/api-gateway)
 
-Microservice on NodeJS enables any interaction between the events / meta data storage and the outside user
+Microservice provides any interaction between the events / meta data store and an external user
+
+#### [test-balance](https://github.com/gear-tech/gear-js/tree/master/website/test-balance)
+
+Microservice provides the opportunity to obtain test tokens
+
+#### [wasm-compiler](https://github.com/gear-tech/gear-js/tree/master/website/wasm-compiler)
+
+Microservice provides the opportunity to compile rust projects to wasm
