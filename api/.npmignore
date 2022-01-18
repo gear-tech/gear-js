@@ -1,7 +1,12 @@
 node_modules/
-/src
+src/
+test/
+using-examples/
 **/tsconfig*
-rollup.config.json
 .prettierrc
 .tslint.json
-rollup.config.js
+.env
+babel.*
+jest.*
+rollup.*
+package-lock.json
