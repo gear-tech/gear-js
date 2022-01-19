@@ -1,4 +1,4 @@
-import { MessageInfo, Reason, Reply, Message, ProgramDetails } from '../';
+import { MessageInfo, Reason, Reply, Message, ProgramDetails } from '../interfaces';
 import { Vec, u64, u128, Option, u8, GenericEventData, Null, Bytes, Type } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 

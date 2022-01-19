@@ -9,8 +9,8 @@ import {
   LogData,
   ProgramData,
   TransferData,
-} from '.';
-import { MessageDispatchedData } from '..';
+  MessageDispatchedData,
+} from './EventData';
 
 export class GearEvent extends GenericEvent {
   constructor(event: Event) {

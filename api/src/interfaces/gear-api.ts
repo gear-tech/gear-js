@@ -1,4 +1,4 @@
-import { GearType } from '.';
+import { GearType } from './gear-type';
 import { i32, Bytes } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { ApiOptions } from '@polkadot/api/types';
