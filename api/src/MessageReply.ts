@@ -1,4 +1,6 @@
-import { GearApi, CreateType, createPayload } from '.';
+import { GearApi } from './GearApi';
+import { CreateType } from './CreateType';
+import { createPayload } from './utils';
 import { Metadata } from './interfaces';
 import { SendReplyError, TransactionError } from './errors';
 import { u64 } from '@polkadot/types';

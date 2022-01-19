@@ -1,4 +1,4 @@
-import { GearError } from '.';
+import { GearError } from './gear.errors';
 
 export class SubmitProgramError extends GearError {
   name = 'SubmitProgramError';

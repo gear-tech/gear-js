@@ -1,7 +1,7 @@
 import { stringCamelCase, isHex } from '@polkadot/util';
 import { Text } from '@polkadot/types';
 import { Metadata } from './interfaces';
-import { CreateType } from '.';
+import { CreateType } from './CreateType';
 
 export function transformTypes(types: object): any {
   return Object.values(types).reduce((res, types): object => ({ ...res, ...types }), {});
