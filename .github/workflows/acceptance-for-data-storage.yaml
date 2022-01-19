@@ -1,4 +1,4 @@
-name: acceptance.data-storage
+name: 'Acceptance: data-storage'
 
 on:
   push:
