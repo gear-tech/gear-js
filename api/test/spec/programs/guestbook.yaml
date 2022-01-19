@@ -26,6 +26,7 @@ messages:
         msg: Goodbye World!
     gasLimit: 50000000
     account: alice
+    asHex: true
 
   - id: 3
     program: 1

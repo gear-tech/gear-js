@@ -1,7 +1,7 @@
 const { readFileSync, readdirSync } = require('fs');
 const { join } = require('path');
 const yaml = require('js-yaml');
-const { GearApi, GearKeyring, getWasmMetadata } = require('../lib');
+const { CreateType, GearApi, GearKeyring, getWasmMetadata } = require('../lib');
 
 const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();
@@ -104,14 +104,19 @@ for (let filePath of testFiles) {
 
     testif(!testFile.skip && testFile.messages)('Sending messages', async () => {
       for (let message of testFile.messages) {
+        let payload = message.payload;
+        const meta = programs.get(message.program).meta;
+        if (message.asHex) {
+          payload = CreateType.create(meta.handle_input, payload, meta).toHex();
+        }
         api.message.submit(
           {
             destination: programs.get(message.program).id,
-            payload: message.payload,
+            payload,
             gasLimit: message.gasLimit,
             value: message.value,
           },
-          programs.get(message.program).meta,
+          !message.asHex ? programs.get(message.program).meta : undefined,
         );
         let messageId, log, unsub;
         if (message.log) {
