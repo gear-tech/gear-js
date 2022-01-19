@@ -1,4 +1,4 @@
-name: gear-api-publish
+name: 'Publish @gear-js/api'
 
 on:
   push:

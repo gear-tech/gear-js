@@ -1,4 +1,4 @@
-name: Test @gear-js/api
+name: 'Test: @gear-js/api'
 
 on:
   pull_request:
