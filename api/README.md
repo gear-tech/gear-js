@@ -103,7 +103,7 @@ const publicKey = keyring.address;
 const verified = GearKeyring.checkSign(publicKey, signature, message);
 ```
 
-### Uploading program
+### Upload program
 
 ```javascript
 const code = fs.readFileSync('path/to/program.wasm');
@@ -130,7 +130,7 @@ try {
 }
 ```
 
-### Sending message
+### Send message
 
 ```javascript
 try {
@@ -156,7 +156,16 @@ try {
 }
 ```
 
-### Subscribing to events
+### Read state of program
+
+```javascript
+const metaWasm = fs.readFileSync('path/to/meta.wasm');
+const state = gearApi.programState.read(programId, metaWasm);
+// If program expects inputValue in meta_state function it's possible to specify it
+const state = gearApi.programState.read(programId, metaWasm, inputValue);
+```
+
+### Subscribe to events
 
 Subscribe to all events
 
