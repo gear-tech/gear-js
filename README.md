@@ -1,8 +1,9 @@
 <p align="center">
   <a href="https://gear-tech.io">
-    <img src="https://github.com/gear-tech/gear/tree/master/images/logo-grey.svg" width="240" alt="GEAR">
+    <img src="https://github.com/gear-tech/gear/tree/master/images/logo-grey.svg" width="500" alt="GEAR">
   </a>
 </p>
+<hr>
 <p align=center>
     <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
 </p>
