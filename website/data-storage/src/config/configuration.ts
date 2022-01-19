@@ -1,4 +1,6 @@
 import { strict as assert } from 'assert';
+import { config } from 'dotenv';
+config();
 
 const checkEnv = (env: string) => {
   assert.notStrictEqual(env, undefined);
