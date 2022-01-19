@@ -10,24 +10,28 @@ const EventsList = () => {
 
   const getEvents = () =>
     events.map((event, index) => {
-      const { section, method, data, meta } = event;
+      const { section, method, meta, data } = event;
       const { docs } = meta;
 
       const caption = `${section}.${method}`;
+      const params = JSON.stringify(data, null, 2);
 
       const eventClassName = clsx('programs-list__item', styles.event);
       const arrowClassName = clsx(styles.arrow, styles.arrowDown);
+      const paramsClassName = clsx(styles.text, styles.params);
 
       return (
         <li className={eventClassName} key={index}>
           <header className={styles.header}>
-            <span className={styles.caption}>{caption}</span>
-            <span className={arrowClassName} />
-            <span className={styles.blockNumber}>0x01</span>
+            <div className={styles.headerMain}>
+              <span className={styles.caption}>{caption}</span>
+              <span className={arrowClassName} />
+              <span className={styles.blockNumber}>0x01</span>
+            </div>
+            <div className={styles.text}>{docs}</div>
           </header>
           <div className={styles.body}>
-            <div className={styles.text}>{docs}</div>
-            <div className={styles.payload}></div>
+            <pre className={paramsClassName}>{params}</pre>
           </div>
         </li>
       );
@@ -37,13 +41,12 @@ const EventsList = () => {
     if (api) {
       api.allEvents((allEvents) => {
         // TODO: .map().filter() to single .reduce()
-        const newEvents = allEvents.map(({ event }) => event).filter((event) => event.section !== 'system');
+        // const newEvents = allEvents.map(({ event }) => event).filter((event) => event.section !== 'system');
+        const newEvents = allEvents.map(({ event }) => event);
         setEvents((prevEvents) => [...newEvents, ...prevEvents]);
       });
     }
   }, [api]);
-
-  console.log(events.map((event) => event.toHuman()));
 
   return (
     <div className="block-list">

@@ -2,7 +2,11 @@
   padding: 40px;
   display: flex;
 
-  & > *:not(:last-child) {
+  & > * {
+    width: 50%;
+  }
+
+  & > *:first-child {
     margin-right: 30px;
   }
 }
