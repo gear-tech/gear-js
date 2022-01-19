@@ -43,7 +43,8 @@ export const Wallet = () => {
   }, []);
 
   useEffect(() => {
-    getAllAccounts()
+    setTimeout(() => {
+      getAllAccounts()
       .then((allAccounts) => {
         if (allAccounts) {
           allAccounts.forEach((acc: UserAccount) => {
@@ -56,6 +57,7 @@ export const Wallet = () => {
         }
       })
       .catch((err) => console.error(err));
+    }, 300)
   }, [dispatch, getAllAccounts]);
 
   const getBalance = useCallback(
