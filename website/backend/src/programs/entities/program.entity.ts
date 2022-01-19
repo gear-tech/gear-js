@@ -1,5 +1,5 @@
 import { Meta } from 'src/metadata/entities/meta.entity';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
 export enum InitStatus {
   SUCCESS = 'success',
@@ -12,11 +12,12 @@ export class Program {
   @PrimaryColumn()
   hash: string;
 
+  @Index()
+  @Column()
+  genesis: string;
+
   @Column()
   owner: string;
-
-  @Column({ nullable: true })
-  chain: string;
 
   @Column()
   programNumber: number;

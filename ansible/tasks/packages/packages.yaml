@@ -16,6 +16,7 @@
     name: '{{ packages }}'
     state: latest
     update_cache: yes
+    lock_timeout: 180
   vars:
     packages:
       - python-pip
@@ -43,6 +44,7 @@
     name: '{{ packages }}'
     state: latest
     update_cache: yes
+    lock_timeout: 180
   vars:
     packages:
       - python3.8

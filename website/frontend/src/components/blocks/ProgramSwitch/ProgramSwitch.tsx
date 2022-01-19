@@ -158,7 +158,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
               pageType === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && 'switch-buttons__item--active'
             )}
           >
-            User programs
+            My programs
           </Link>
           <Link
             to={routes.allPrograms}

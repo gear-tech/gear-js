@@ -5,12 +5,14 @@ export type PaginationModel = {
   limit?: number;
   offset?: number;
   type?: string;
+  term?: string;
 };
 
 export type UserPrograms = {
   publicKeyRaw: string | null;
   limit?: number;
   offset?: number;
+  term?: string;
 };
 
 export type SearchQueryModel = {

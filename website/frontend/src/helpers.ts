@@ -2,6 +2,7 @@ import { localPrograms } from 'services/LocalDBService';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
+import { NODE_ADDRESS_REGEX } from 'regexes';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
@@ -126,3 +127,5 @@ export const getLocalProgramMeta = (id: string) => {
 };
 
 export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DEVELOPMENT_CHAIN;
+
+export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);

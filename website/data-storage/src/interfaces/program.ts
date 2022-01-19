@@ -9,7 +9,6 @@ export enum InitStatus {
 
 export interface Program {
   id: string;
-  chain: string;
   genesis: string;
   owner: string;
   uploadedAt: Date;
@@ -22,6 +21,9 @@ export interface Program {
 export interface GetAllProgramsParams extends RequestParams, PaginationParams {
   publicKeyRaw?: string;
   owner?: string;
+
+  /** Search term supplied by the client. Might be either a program ID, or a part of any of its fields. */
+  term?: string;
 }
 
 export interface GetAllProgramsResult {

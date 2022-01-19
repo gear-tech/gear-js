@@ -9,7 +9,6 @@ export enum InitStatus {
 
 export interface Program {
   id: string;
-  chain: string;
   genesis: string;
   owner: string;
   uploadedAt: Date;

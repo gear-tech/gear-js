@@ -3,5 +3,7 @@
 **/.env
 examples/test-json/
 **/lib/
-/api/types/
 **/temp
+api/.rollup.cache
+test/wasm
+using-examples/package-lock.json

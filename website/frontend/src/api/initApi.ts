@@ -1,15 +1,27 @@
 import { GearApi } from '@gear-js/api';
 
-import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api/types/types';
+import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { NODE_ADDRESS } from '../consts';
+import { isNodeAddressValid } from 'helpers';
+import { NODE_ADDRESS, NODE_ADRESS_URL_PARAM } from '../consts';
+
+const getNodeAddressFromUrl = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const nodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM) || '';
+
+  return isNodeAddressValid(nodeAddress) && nodeAddress;
+};
 
 class NodeApi {
   get api(): GearApi | null {
     return this._api;
   }
 
-  private address: string;
+  get address(): string {
+    return this._address;
+  }
+
+  private _address: string;
 
   private chain: string | null;
 
@@ -20,15 +32,15 @@ class NodeApi {
   readonly subscriptions: Record<string, UnsubscribePromise> = {};
 
   constructor(address = 'ws://localhost:9944') {
-    this.address = address;
+    this._address = address;
     this.subscriptions = {};
     this.chain = null;
     this.genesis = null;
   }
 
   async init() {
-    this.address = window.localStorage.getItem('node_address') || this.address;
-    this._api = await GearApi.create({ providerAddress: this.address });
+    this._address = getNodeAddressFromUrl() || localStorage.getItem('node_address') || this._address;
+    this._api = await GearApi.create({ providerAddress: this._address });
 
     this.chain = await this._api.chain();
     this.genesis = await this._api.genesisHash.toHex();

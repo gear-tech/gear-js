@@ -61,6 +61,11 @@
   flex-direction: row;
   align-items: center;
 
+  .allProgramsItemSendMessage {
+    display: flex;
+    padding: 8px;
+  }
+
   button {
     padding: 8px;
     border-radius: 50%;

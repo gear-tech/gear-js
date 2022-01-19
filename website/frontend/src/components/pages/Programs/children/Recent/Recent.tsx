@@ -1,22 +1,12 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { createSelector } from 'reselect';
-import {
-  getUserProgramsAction,
-  resetGasAction,
-  resetProgramPayloadTypeAction,
-  sendMessageResetAction,
-  uploadMetaResetAction,
-  getProgramAction,
-  resetProgramAction,
-} from 'store/actions/actions';
+import { getUserProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 
-import { Message } from 'components/pages/Programs/children/Message/Message';
 import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
 
@@ -30,24 +20,15 @@ type ProgramMessageType = {
   programId: string;
 };
 
-const selectPrograms = createSelector(
-  (state: RootState) => state.programs,
-  (_ignore: any, completed: string) => completed,
-  (programs, completed) => programs.programs && programs.programs.filter((item) => item.id.includes(completed))
-);
-
 export const Recent: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const urlSearch = location.search;
   const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
 
-  const [search, setSearch] = useState('');
-
-  const programs = useSelector((state: RootState) => selectPrograms(state, search));
+  const [term, setTerm] = useState('');
+  const programs = useSelector((state: RootState) => state.programs.programs);
   const programsCount = useSelector((state: RootState) => state.programs.programsCount || 0);
-
-  const [programMessage, setProgramMessage] = useState<ProgramMessageType | null>(null);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
@@ -61,47 +42,24 @@ export const Recent: VFC = () => {
         publicKeyRaw: localStorage.getItem('public_key_raw'),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
+        term,
       })
     );
-  }, [dispatch, offset]);
+  }, [dispatch, offset, term]);
 
-  const handleOpenForm = (programId: string, programName?: string, isMessage?: boolean) => {
+  const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
-      if (isMessage) {
-        setProgramMessage({
-          programId,
-          programName,
-        });
-      } else {
-        setProgramMeta({
-          programId,
-          programName,
-        });
-      }
+      setProgramMeta({
+        programId,
+        programName,
+      });
     }
-  };
-
-  const handleCloseMessageForm = () => {
-    dispatch(sendMessageResetAction());
-    dispatch(resetGasAction());
-    dispatch(resetProgramPayloadTypeAction());
-    setProgramMessage(null);
   };
 
   const handleCloseMetaForm = () => {
     dispatch(uploadMetaResetAction());
     setProgramMeta(null);
   };
-
-  if (programMessage) {
-    return (
-      <Message
-        programId={programMessage.programId}
-        programName={programMessage.programName}
-        handleClose={handleCloseMessageForm}
-      />
-    );
-  }
 
   if (programMeta) {
     return (
@@ -118,14 +76,12 @@ export const Recent: VFC = () => {
       <div>
         <SearchForm
           handleRemoveQuery={() => {
-            setSearch('');
-            dispatch(resetProgramAction());
+            setTerm('');
           }}
           handleSearch={(val: string) => {
-            setSearch(val);
-            dispatch(getProgramAction(val));
+            setTerm(val);
           }}
-          placeholder="Find program by ID"
+          placeholder="Find program"
         />
         <br />
       </div>

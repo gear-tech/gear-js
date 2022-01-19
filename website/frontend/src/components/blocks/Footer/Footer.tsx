@@ -9,7 +9,7 @@ export const Footer: VFC = () => {
   const lightColored = location.pathname !== routes.main || location.pathname !== routes.uploadedPrograms;
   return (
     <footer className={clsx('footer', lightColored && 'footer--light-colored')}>
-      <span className="footer__content">2021. All rights reserved.</span>
+      <span className="footer__content">2022. All rights reserved.</span>
     </footer>
   );
 };

@@ -1,5 +1,5 @@
 import { CreateType, GearKeyring } from '@gear-js/api';
-import { MessageActionTypes, MessagePaginationModel } from 'types/message';
+import { MessageActionTypes, MessagePaginationModel, MessageModel } from 'types/message';
 import { NotificationActionTypes, NotificationPaginationModel, RecentNotificationModel } from 'types/notification';
 import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
 
@@ -28,6 +28,17 @@ const fetchMessagesSuccessAction = (payload: MessagePaginationModel) => ({
 const fetchMessagesErrorAction = () => ({
   type: MessageActionTypes.FETCH_MESSAGES_ERROR,
 });
+
+const fetchMessageAction = () => ({ type: MessageActionTypes.FETCH_MESSAGE });
+
+const fetchMessageSuccessAction = (payload: MessageModel) => ({
+  type: MessageActionTypes.FETCH_MESSAGE_SUCCESS,
+  payload,
+});
+
+const fetchMessageErrorAction = () => ({ type: MessageActionTypes.FETCH_MESSAGE_ERROR });
+
+export const resetMessageAction = () => ({ type: MessageActionTypes.RESET_MESSAGE });
 
 const fetchUserProgramsAction = () => ({ type: ProgramActionTypes.FETCH_USER_PROGRAMS });
 const fetchUserProgramsSuccessAction = (payload: ProgramPaginationModel) => ({
@@ -130,6 +141,16 @@ export const getMessagesAction = (params: PaginationModel) => (dispatch: any) =>
       dispatch(fetchMessagesSuccessAction(data.result));
     })
     .catch(() => dispatch(fetchMessagesErrorAction()));
+};
+
+export const getMessageAction = (id: string) => (dispatch: any) => {
+  dispatch(fetchMessageAction());
+  messageService
+    .fetchMessage(id)
+    .then((data) => {
+      dispatch(fetchMessageSuccessAction(data.result));
+    })
+    .catch(() => dispatch(fetchMessageErrorAction()));
 };
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {

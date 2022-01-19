@@ -16,7 +16,7 @@ const main = async () => {
   await producer.createTopic('events');
   await producer.connect();
   listen(api, ({ key, value }) => {
-    producer.send(key, value, chain, genesis);
+    producer.send(key, value, genesis);
   });
 };
 
