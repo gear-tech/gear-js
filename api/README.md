@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://gear-tech.io">
-    <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/logo.svg" width="500" alt="GEAR">
+    <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/logo.svg" width="250" alt="GEAR">
   </a>
 </p>
 <p align=center>
