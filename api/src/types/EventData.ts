@@ -1,7 +1,6 @@
 import { MessageInfo, Reason, Reply, Message, ProgramDetails } from '../';
 import { Vec, u64, u128, Option, u8, GenericEventData, Null, Bytes, Type } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
-import { Codec } from '@polkadot/types/types';
 
 export class GearEventData extends GenericEventData {
   constructor(data: GenericEventData) {
