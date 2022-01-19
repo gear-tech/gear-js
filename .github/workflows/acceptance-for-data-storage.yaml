@@ -1,4 +1,4 @@
-name: 'Acceptance: data-storage'
+name: 'Test: data-storage'
 
 on:
   pull_request:
