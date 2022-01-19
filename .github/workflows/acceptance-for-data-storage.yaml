@@ -35,6 +35,5 @@ jobs:
           cmd: install
 
       - name: Run tests
-        uses: borales/actions-yarn@v2.3.0
-        with:
-          cmd: test
+        working-directory: ./website/data-storage
+        run: yarn test
