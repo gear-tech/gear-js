@@ -80,12 +80,17 @@ export const getLocalPrograms = (params: any) => {
         data.result.programs.push(elem);
       }
     })
-    .then(() => data);
+    .then(() => {
+      data.result.programs.sort((prev, next) => (prev.uploadedAt > next.uploadedAt ? -1 : 1));
+
+      return data;
+    });
 };
 
 export const getLocalProgram = (id: string) => {
   const result: ProgramModel = {
     id: '',
+    uploadedAt: '',
     initStatus: ProgramStatus.Success,
   };
   const data = { result };
