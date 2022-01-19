@@ -1,4 +1,5 @@
-import { GearApi, IBalanceCallback, IBlocksCallback, IEventCallback } from '.';
+import { GearApi } from './GearApi';
+import { IBalanceCallback, IBlocksCallback, IEventCallback } from './interfaces';
 import { LogEvent, ProgramEvent, TransferEvent } from './types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { ISystemAccountInfo } from './interfaces/system';

@@ -4,8 +4,8 @@ import { AnyNumber } from '@polkadot/types/types';
 import { Bytes, U64, u64 } from '@polkadot/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
-import { GearTransaction } from './types/Transaction';
-import { createPayload } from '.';
+import { GearTransaction } from './types';
+import { createPayload } from './utils';
 
 export class GearProgram extends GearTransaction {
   /**

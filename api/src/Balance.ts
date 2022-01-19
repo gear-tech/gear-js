@@ -1,9 +1,10 @@
-import { GearApi, GearKeyring } from '.';
+import { GearApi } from './GearApi';
+import { GearKeyring } from './Keyring';
 import { TransactionError } from './errors';
+import { ISystemAccountInfo } from './interfaces';
 import { Balance } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';
-import { ISystemAccountInfo } from './interfaces';
 
 export class GearBalance {
   private api: GearApi;

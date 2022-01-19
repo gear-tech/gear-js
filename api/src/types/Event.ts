@@ -9,7 +9,8 @@ import {
   LogData,
   ProgramData,
   TransferData,
-} from '.';
+  MessageDispatchedData,
+} from './EventData';
 
 export class GearEvent extends GenericEvent {
   constructor(event: Event) {
@@ -61,5 +62,11 @@ export class DispatchMessageEnqueuedEvent extends GearEvent {
 export class DebugDataSnapshotEvent extends GearEvent {
   public get data() {
     return new DebugData(this.get('data') as DebugData);
+  }
+}
+
+export class MessageDispatchedEvent extends GearEvent {
+  public get data() {
+    return new MessageDispatchedData(this.get('data') as MessageDispatchedData);
   }
 }

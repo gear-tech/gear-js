@@ -1,12 +1,10 @@
-import {
-  GearProgram,
-  GearMessage,
-  transformTypes,
-  GearBalance,
-  GearEvents,
-  GearMessageReply,
-  GearProgramState,
-} from '.';
+import { GearProgram } from './Program';
+import { GearMessage } from './Message';
+import { GearBalance } from './Balance';
+import { GearEvents } from './Events';
+import { GearProgramState } from './State';
+import { GearMessageReply } from './MessageReply';
+import { transformTypes } from './utils';
 import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';

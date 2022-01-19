@@ -1,11 +1,9 @@
 import { Metadata } from './interfaces';
 import { SendMessageError } from './errors';
-import { isHex } from '@polkadot/util';
+import { GearTransaction } from './types';
+import { createPayload } from './utils';
 import { H256 } from '@polkadot/types/interfaces';
 import { AnyNumber } from '@polkadot/types/types';
-import { GearTransaction } from './types/Transaction';
-import { createPayload } from '.';
-
 export class GearMessage extends GearTransaction {
   submit(
     message: { destination: string | H256; payload: string | any; gasLimit: AnyNumber; value?: AnyNumber },
