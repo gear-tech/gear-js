@@ -1,0 +1,8 @@
+.explorer {
+  padding: 40px;
+  display: flex;
+
+  & > *:not(:last-child) {
+    margin-right: 30px;
+  }
+}

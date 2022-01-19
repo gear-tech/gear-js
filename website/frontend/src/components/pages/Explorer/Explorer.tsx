@@ -1,10 +1,13 @@
 import React from 'react';
+import { EventsList } from 'components/blocks/EventsList/EventsList';
 import styles from './Explorer.module.scss';
 
 const Explorer = () => {
-  console.log('temp');
-
-  return <div>exp</div>;
+  return (
+    <div className={styles.explorer}>
+      <EventsList />
+    </div>
+  );
 };
 
 export default Explorer;
