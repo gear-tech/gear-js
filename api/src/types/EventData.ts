@@ -1,6 +1,7 @@
 import { MessageInfo, Reason, Reply, Message, ProgramDetails } from '../';
-import { Vec, u64, u128, Option, u8, GenericEventData } from '@polkadot/types';
+import { Vec, u64, u128, Option, u8, GenericEventData, Null, Bytes, Type } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
+import { Codec } from '@polkadot/types/types';
 
 export class GearEventData extends GenericEventData {
   constructor(data: GenericEventData) {
@@ -80,5 +81,33 @@ export class DebugData extends GearEventData {
 
   public get programs(): Vec<ProgramDetails> {
     return this[0]['programs'];
+  }
+}
+
+export class ExecutionResult extends Type {
+  public get isSuccess(): boolean {
+    return this.isSuccess;
+  }
+
+  public get isFailure(): boolean {
+    return this.isFailure;
+  }
+
+  public get asSuccess(): Null {
+    return this.asSuccess;
+  }
+
+  public get asFailure(): Bytes {
+    return this.asFailure;
+  }
+}
+
+export class MessageDispatchedData extends GearEventData {
+  public get messageId(): H256 {
+    return this[0]['messageId'];
+  }
+
+  public get outcome(): ExecutionResult {
+    return this[0]['outcome'] as ExecutionResult;
   }
 }
