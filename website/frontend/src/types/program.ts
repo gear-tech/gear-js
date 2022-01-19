@@ -12,7 +12,7 @@ export interface ProgramModel {
   programNumber?: number;
   name?: string;
   callCount?: number;
-  uploadedAt?: string;
+  uploadedAt: string;
   initStatus: ProgramStatus;
   title?: string;
   meta?: any;

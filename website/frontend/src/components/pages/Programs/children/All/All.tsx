@@ -4,10 +4,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Meta } from 'components/Meta/Meta';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
-import {
-  getAllProgramsAction,
-  uploadMetaResetAction,
-} from 'store/actions/actions';
+import { getAllProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 import MessageIcon from 'assets/images/message.svg';
@@ -28,16 +25,8 @@ export const All: VFC = () => {
   const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
 
   const [term, setTerm] = useState('');
-
-  const { allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
-  const program = useSelector((state: RootState) => state.programs.program);
-
-  let { allUploadedPrograms } = useSelector((state: RootState) => state.programs);
-
-  if (program) {
-    allUploadedPrograms = [program];
-  }
-
+  const programs = useSelector((state: RootState) => state.programs.allUploadedPrograms);
+  const programsCount = useSelector((state: RootState) => state.programs.allUploadedProgramsCount || 0);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
@@ -72,8 +61,8 @@ export const All: VFC = () => {
   return (
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
-        <span>Total results: {allUploadedProgramsCount || 0}</span>
-        <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
+        <span>Total results: {programsCount || 0}</span>
+        <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
         <SearchForm
@@ -88,9 +77,9 @@ export const All: VFC = () => {
         <br />
       </div>
       <div className={styles.allProgramsList}>
-        {(allUploadedPrograms &&
-          allUploadedPrograms.length &&
-          allUploadedPrograms.map((item: ProgramModel) => {
+        {(programs &&
+          programsCount &&
+          programs.map((item: ProgramModel) => {
             if (item.name && item.name !== 'name.wasm') {
               return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.id} />;
             }
@@ -114,9 +103,9 @@ export const All: VFC = () => {
           })) ||
           null}
       </div>
-      {allUploadedPrograms && allUploadedPrograms.length > 0 && (
+      {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={allUploadedProgramsCount || 1} onPageChange={onPageChange} />
+          <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
         </div>
       )}
     </div>

@@ -1,12 +1,12 @@
 export declare class GearError extends Error {
-    name: string;
+  name: string;
 }
 export declare class CreateTypeError extends GearError {
-    name: string;
-    message: string;
-    constructor(message?: string);
+  name: string;
+  message: string;
+  constructor(message?: string);
 }
 export declare class TransactionError extends GearError {
-    name: string;
-    constructor(message: string);
+  name: string;
+  constructor(message: string);
 }

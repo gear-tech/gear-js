@@ -1,3 +1,3 @@
 export interface TransactionStatusCb {
-    (data: any): void | Promise<void>;
+  (data: any): void | Promise<void>;
 }

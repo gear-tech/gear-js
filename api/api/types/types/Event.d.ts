@@ -1,30 +1,39 @@
 import { GenericEvent } from '@polkadot/types';
 import { Event } from '@polkadot/types/interfaces';
-import { DebugData, DispatchMessageEnqueuedData, InitFailureData, InitMessageEnqueuedData, InitSuccessData, LogData, ProgramData, TransferData } from '.';
+import {
+  DebugData,
+  DispatchMessageEnqueuedData,
+  InitFailureData,
+  InitMessageEnqueuedData,
+  InitSuccessData,
+  LogData,
+  ProgramData,
+  TransferData,
+} from '.';
 export declare class GearEvent extends GenericEvent {
-    constructor(event: Event);
+  constructor(event: Event);
 }
 export declare class ProgramEvent extends GearEvent {
-    get data(): ProgramData;
+  get data(): ProgramData;
 }
 export declare class InitSuccessEvent extends GearEvent {
-    get data(): InitSuccessData;
+  get data(): InitSuccessData;
 }
 export declare class InitFailureEvent extends GearEvent {
-    get data(): InitFailureData;
+  get data(): InitFailureData;
 }
 export declare class LogEvent extends GearEvent {
-    get data(): LogData;
+  get data(): LogData;
 }
 export declare class TransferEvent extends GearEvent {
-    get data(): TransferData;
+  get data(): TransferData;
 }
 export declare class InitMessageEnqueuedEvent extends GearEvent {
-    get data(): InitMessageEnqueuedData;
+  get data(): InitMessageEnqueuedData;
 }
 export declare class DispatchMessageEnqueuedEvent extends GearEvent {
-    get data(): DispatchMessageEnqueuedData;
+  get data(): DispatchMessageEnqueuedData;
 }
 export declare class DebugDataSnapshotEvent extends GearEvent {
-    get data(): DebugData;
+  get data(): DebugData;
 }
