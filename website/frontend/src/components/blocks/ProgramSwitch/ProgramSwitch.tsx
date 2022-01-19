@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
 import { useApi } from '../../../hooks/useApi';
+import { isDevChain } from 'helpers';
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
 // import Editor from 'assets/images/editor_icon.svg';
 
@@ -23,8 +24,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const apiRequest = new ServerRPCRequestService();
 
   const [api] = useApi();
-
-  const chain = localStorage.getItem('chain');
 
   const [timeInstance, setTimeInstance] = useState(0);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
@@ -198,7 +197,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
             <button
               className="switch-block--transfer__btn"
               type="button"
-              onClick={chain === 'Development' ? handleTransferBalanceFromAlice : handleTransferBalance}
+              onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTransferBalance}
             >
               Get test balance
             </button>

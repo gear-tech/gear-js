@@ -8,12 +8,12 @@ import { ApiActionTypes } from 'types/api';
 import MessageRequestService from 'services/MessagesRequestServices';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
-
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
+import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
 import { AlertActionTypes } from '../reducers/AlertReducer';
@@ -154,9 +154,10 @@ export const getMessageAction = (id: string) => (dispatch: any) => {
 };
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
+  const getPrograms = isDevChain() ? getLocalPrograms : programService.fetchUserPrograms;
+
   dispatch(fetchUserProgramsAction());
-  programService
-    .fetchUserPrograms(params)
+  getPrograms(params)
     .then((data) => {
       dispatch(fetchUserProgramsSuccessAction(data.result));
     })
@@ -164,9 +165,10 @@ export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) =
 };
 
 export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any) => {
+  const getPrograms = isDevChain() ? getLocalPrograms : programService.fetchAllPrograms;
+
   dispatch(fetchUserProgramsAction());
-  programService
-    .fetchAllPrograms(params)
+  getPrograms(params)
     .then((data) => {
       dispatch(fetchAllProgramsSuccessAction(data.result));
     })
@@ -174,9 +176,10 @@ export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any)
 };
 
 export const getProgramAction = (id: string) => (dispatch: any) => {
+  const getProgram = isDevChain() ? getLocalProgram : programService.fetchProgram;
+
   dispatch(fetchProgramAction());
-  programService
-    .fetchProgram(id)
+  getProgram(id)
     .then((data) => {
       dispatch(fetchProgramSuccessAction(data.result));
     })
@@ -246,12 +249,21 @@ export const subscribeToEvents = () => (dispatch: any) => {
   });
 
   nodeApi.subscribeLogEvents(async ({ data: { source, dest, reply, payload } }) => {
-    const apiRequest = new ServerRPCRequestService();
-    const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
-      programId: source.toHex(),
-    });
-    const meta = JSON.parse(result.meta);
+    let meta = null;
     let decodedPayload: any;
+    const programId = source.toHex();
+    const apiRequest = new ServerRPCRequestService();
+
+    const { result } = isDevChain()
+      ? await getLocalProgramMeta(programId)
+      : await apiRequest.getResource(RPC_METHODS.GET_METADATA, { programId });
+
+    if (result && result.meta) {
+      meta = JSON.parse(result.meta);
+    } else {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Metadata is not added' }));
+    }
+
     try {
       decodedPayload =
         meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)

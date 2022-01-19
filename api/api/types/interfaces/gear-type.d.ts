@@ -1,3 +1,3 @@
 export interface GearType {
-    [index: string]: any;
+  [index: string]: any;
 }

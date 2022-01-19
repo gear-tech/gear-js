@@ -1,11 +1,9 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import {
-  getUserProgramsAction,
-  uploadMetaResetAction,
-} from 'store/actions/actions';
+import { getUserProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
+import { ProgramModel } from 'types/program';
 
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 
@@ -29,16 +27,8 @@ export const Recent: VFC = () => {
   const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
 
   const [term, setTerm] = useState('');
-
-  const { programsCount } = useSelector((state: RootState) => state.programs);
-  let { programs } = useSelector((state: RootState) => state.programs);
-
-  const singleProgram = useSelector((state: RootState) => state.programs.program);
-
-  if (singleProgram) {
-    programs = [singleProgram];
-  }
-
+  const programs = useSelector((state: RootState) => state.programs.programs);
+  const programsCount = useSelector((state: RootState) => state.programs.programsCount || 0);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
@@ -95,16 +85,16 @@ export const Recent: VFC = () => {
         />
         <br />
       </div>
-      {(programs && programs.length && (
+      {(programs && programsCount && (
         <div>
-          {programs.map((program) => (
+          {programs.map((program: ProgramModel) => (
             <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.id} />
           ))}
         </div>
       )) ||
         null}
 
-      {programs && programs.length > 0 && (
+      {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
           <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
         </div>
