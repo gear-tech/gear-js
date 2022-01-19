@@ -1,11 +1,12 @@
 <p align="center">
   <a href="https://gear-tech.io">
-    <img src="https://www.gear-tech.io/img/logo.svg" width="240" alt="GEAR">
+    <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/logo.svg" width="250" alt="GEAR">
   </a>
 </p>
 <p align=center>
     <a href="https://github.com/gear-tech/gear-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-GPL%203.0-success"></a>
 </p>
+<hr>
 
 ## Description
 
