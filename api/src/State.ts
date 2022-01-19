@@ -81,7 +81,7 @@ export class GearProgramState {
   }
 
   /**
-   * Read state of program
+   * Read state of particular program
    * @param programId
    * @param metaWasm - file with metadata
    * @returns decoded state

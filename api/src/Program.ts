@@ -26,7 +26,7 @@ export class GearProgram extends GearTransaction {
   ): ProgramId {
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
-    let payload: string = createPayload(this.createType, messageType || meta.init_input, program.initPayload, meta);
+    let payload: string = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
     try {
       this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
       const programId = this.generateProgramId(code, salt);

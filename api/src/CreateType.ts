@@ -126,6 +126,11 @@ export class CreateType {
     }
   }
 
+  static create(type: any, payload: any, meta?: Metadata): Codec {
+    const createType = new CreateType();
+    return createType.create(type, payload, meta);
+  }
+
   static encode(type: any, payload: any, meta?: Metadata): Codec {
     const createType = new CreateType();
     return createType.create(type, payload, meta);

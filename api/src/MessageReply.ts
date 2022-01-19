@@ -26,7 +26,12 @@ export class GearMessageReply {
     meta?: Metadata,
     messageType?: string,
   ) {
-    let payload: string = createPayload(this.createType, messageType || meta.async_handle_input, message.payload, meta);
+    let payload: string = createPayload(
+      this.createType,
+      messageType || meta?.async_handle_input,
+      message.payload,
+      meta,
+    );
 
     try {
       this.reply = this.api.tx.gear.sendReply(message.toId, payload, message.gasLimit, message.value);

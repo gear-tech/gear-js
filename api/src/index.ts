@@ -1,3 +1,4 @@
+import '@polkadot/api-augment';
 export { GearApi } from './GearApi';
 export { GearKeyring } from './Keyring';
 export { GearEvents } from './Events';
@@ -13,5 +14,3 @@ export { GearProgramState } from './State';
 export * from './interfaces';
 export * from './types';
 export * from './utils';
-
-import '@polkadot/api-augment';
