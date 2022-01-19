@@ -1,15 +1,12 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
-import { createSelector } from 'reselect';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Meta } from 'components/Meta/Meta';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import {
   getAllProgramsAction,
   uploadMetaResetAction,
-  getProgramAction,
-  resetProgramAction,
 } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
@@ -24,25 +21,18 @@ type ProgramMessageType = {
   programId: string;
 };
 
-const selectCompletedTodosCount = createSelector(
-  (state: RootState) => state.programs,
-  (_ignore: any, completed: string) => completed,
-  (programs, completed) =>
-    programs.allUploadedPrograms && programs.allUploadedPrograms.filter((item) => item.id.includes(completed))
-);
-
 export const All: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const urlSearch = location.search;
   const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
 
-  const [search, setSearch] = useState('');
+  const [term, setTerm] = useState('');
 
   const { allUploadedProgramsCount } = useSelector((state: RootState) => state.programs);
   const program = useSelector((state: RootState) => state.programs.program);
 
-  let allUploadedPrograms = useSelector((state: RootState) => selectCompletedTodosCount(state, search));
+  let { allUploadedPrograms } = useSelector((state: RootState) => state.programs);
 
   if (program) {
     allUploadedPrograms = [program];
@@ -56,8 +46,8 @@ export const All: VFC = () => {
   const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
 
   useEffect(() => {
-    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
-  }, [dispatch, offset]);
+    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term }));
+  }, [dispatch, offset, term]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
@@ -88,14 +78,12 @@ export const All: VFC = () => {
       <div>
         <SearchForm
           handleRemoveQuery={() => {
-            setSearch('');
-            dispatch(resetProgramAction());
+            setTerm('');
           }}
           handleSearch={(val: string) => {
-            setSearch(val);
-            dispatch(getProgramAction(val));
+            setTerm(val);
           }}
-          placeholder="Find program by ID"
+          placeholder="Find program"
         />
         <br />
       </div>

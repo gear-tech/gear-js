@@ -19,7 +19,7 @@ export default class ProgramRequestService {
     return this.apiRequest.callRPC<ProgramPaginationModel>(this.API_PROGRAMS_USER, { ...params });
   }
 
-  public fetchProgram(id: string) {
-    return this.apiRequest.callRPC<ProgramModel>(this.API_REFRESH_PROGRAM, { id });
+  public fetchProgram(term: string) {
+    return this.apiRequest.callRPC<ProgramModel>(this.API_REFRESH_PROGRAM, { term });
   }
 }
