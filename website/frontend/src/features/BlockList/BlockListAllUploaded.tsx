@@ -34,7 +34,7 @@ export const BlockListAllUploaded: VFC = () => {
   const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
 
   useEffect(() => {
-    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset }));
+    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term: '' }));
   }, [dispatch, offset]);
 
   const handleOpenForm = (programId: string, programName?: string) => {

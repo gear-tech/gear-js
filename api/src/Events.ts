@@ -1,4 +1,5 @@
-import { GearApi, IBalanceCallback, IBlocksCallback, IEventCallback } from '.';
+import { GearApi } from './GearApi';
+import { IBalanceCallback, IBlocksCallback, IEventCallback } from './interfaces';
 import { LogEvent, ProgramEvent, TransferEvent } from './types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { ISystemAccountInfo } from './interfaces/system';
@@ -10,7 +11,7 @@ export class GearEvents {
     this.api = gearApi;
   }
 
-  subscribeLogEvents(callback: IEventCallback<LogEvent>): UnsubscribePromise {
+  subscribeToLogEvents(callback: IEventCallback<LogEvent>): UnsubscribePromise {
     return this.api.query.system.events((events) => {
       events
         .filter(({ event }) => this.api.events.gear.Log.is(event))
@@ -22,7 +23,7 @@ export class GearEvents {
     });
   }
 
-  subscribeProgramEvents(callback: IEventCallback<ProgramEvent>): UnsubscribePromise {
+  subscribeToProgramEvents(callback: IEventCallback<ProgramEvent>): UnsubscribePromise {
     return this.api.query.system.events((events) => {
       events
         .filter(({ event }) => this.api.events.gear.InitSuccess.is(event) || this.api.events.gear.InitFailure.is(event))
@@ -34,7 +35,7 @@ export class GearEvents {
     });
   }
 
-  subscribeTransferEvents(callback: IEventCallback<TransferEvent>): UnsubscribePromise {
+  subscribeToTransferEvents(callback: IEventCallback<TransferEvent>): UnsubscribePromise {
     return this.api.query.system.events((events) => {
       events
         .filter(({ event }) => this.api.events.balances.Transfer.is(event))
@@ -44,13 +45,13 @@ export class GearEvents {
     });
   }
 
-  subscribeNewBlocks(callback: IBlocksCallback): UnsubscribePromise {
+  subscribeToNewBlocks(callback: IBlocksCallback): UnsubscribePromise {
     return this.api.rpc.chain.subscribeNewHeads((header) => {
       callback(header);
     });
   }
 
-  async subsribeBalanceChange(accountAddress: string, callback: IBalanceCallback): UnsubscribePromise {
+  async subscribeToBalanceChange(accountAddress: string, callback: IBalanceCallback): UnsubscribePromise {
     let {
       data: { free: previousFree },
     } = (await this.api.query.system.account(accountAddress)) as ISystemAccountInfo;

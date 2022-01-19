@@ -1,7 +1,7 @@
 const { readFileSync, readdirSync } = require('fs');
 const { join } = require('path');
 const yaml = require('js-yaml');
-const { GearApi, GearKeyring, getWasmMetadata } = require('../lib');
+const { CreateType, GearApi, GearKeyring, getWasmMetadata } = require('../lib');
 
 const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();
@@ -64,7 +64,7 @@ for (let filePath of testFiles) {
         if (program.log) {
           log = new Promise((resolve) => {
             unsubs.push(
-              api.gearEvents.subscribeLogEvents((event) => {
+              api.gearEvents.subscribeToLogEvents((event) => {
                 if (checkLog(event, programId, messageId)) {
                   resolve(event.data.payload.toHex());
                 }
@@ -75,7 +75,7 @@ for (let filePath of testFiles) {
 
         const status = new Promise((resolve) => {
           unsubs.push(
-            api.gearEvents.subscribeProgramEvents((event) => {
+            api.gearEvents.subscribeToProgramEvents((event) => {
               if (event.data.info.programId.toHex() === programs.get(program.id).id) {
                 if (api.events.gear.InitSuccess.is(event)) {
                   resolve('success');
@@ -104,19 +104,24 @@ for (let filePath of testFiles) {
 
     testif(!testFile.skip && testFile.messages)('Sending messages', async () => {
       for (let message of testFile.messages) {
+        let payload = message.payload;
+        const meta = programs.get(message.program).meta;
+        if (message.asHex) {
+          payload = CreateType.create(meta.handle_input, payload, meta).toHex();
+        }
         api.message.submit(
           {
             destination: programs.get(message.program).id,
-            payload: message.payload,
+            payload,
             gasLimit: message.gasLimit,
             value: message.value,
           },
-          programs.get(message.program).meta,
+          !message.asHex ? programs.get(message.program).meta : undefined,
         );
         let messageId, log, unsub;
         if (message.log) {
           log = new Promise((resolve) => {
-            unsub = api.gearEvents.subscribeLogEvents((event) => {
+            unsub = api.gearEvents.subscribeToLogEvents((event) => {
               if (checkLog(event, programs.get(message.program).id, messageId)) {
                 resolve(event.data.payload.toHex());
               }

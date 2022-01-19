@@ -1,11 +1,11 @@
-import { GearApi } from '.';
+import { GearApi } from './GearApi';
 import { Metadata } from './interfaces';
 import { CreateTypeError } from './errors';
+import { toCamelCase, splitByCommas, toJSON, isJSON } from './utils';
 import { isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry, Codec } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
 import { PortableRegistry } from '@polkadot/types/metadata';
-import { toCamelCase, splitByCommas, toJSON, isJSON } from './utils';
 
 const REGULAR_EXP = {
   endWord: /\b\w+\b/g,
@@ -124,6 +124,11 @@ export class CreateType {
         isJSON(payload) ? toJSON(payload) : payload,
       );
     }
+  }
+
+  static create(type: any, payload: any, meta?: Metadata): Codec {
+    const createType = new CreateType();
+    return createType.create(type, payload, meta);
   }
 
   static encode(type: any, payload: any, meta?: Metadata): Codec {

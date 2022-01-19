@@ -4,8 +4,8 @@ import { AnyNumber } from '@polkadot/types/types';
 import { Bytes, U64, u64 } from '@polkadot/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
-import { GearTransaction } from './types/Transaction';
-import { createPayload } from '.';
+import { GearTransaction } from './types';
+import { createPayload } from './utils';
 
 export class GearProgram extends GearTransaction {
   /**
@@ -26,7 +26,7 @@ export class GearProgram extends GearTransaction {
   ): ProgramId {
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
-    let payload: string = createPayload(this.createType, messageType || meta.init_input, program.initPayload, meta);
+    let payload: string = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
     try {
       this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
       const programId = this.generateProgramId(code, salt);

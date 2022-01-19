@@ -1,4 +1,6 @@
-import { GearApi, CreateType, createPayload } from '.';
+import { GearApi } from './GearApi';
+import { CreateType } from './CreateType';
+import { createPayload } from './utils';
 import { Metadata } from './interfaces';
 import { SendReplyError, TransactionError } from './errors';
 import { u64 } from '@polkadot/types';
@@ -26,7 +28,12 @@ export class GearMessageReply {
     meta?: Metadata,
     messageType?: string,
   ) {
-    let payload: string = createPayload(this.createType, messageType || meta.async_handle_input, message.payload, meta);
+    let payload: string = createPayload(
+      this.createType,
+      messageType || meta?.async_handle_input,
+      message.payload,
+      meta,
+    );
 
     try {
       this.reply = this.api.tx.gear.sendReply(message.toId, payload, message.gasLimit, message.value);

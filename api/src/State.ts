@@ -1,4 +1,7 @@
-import { CreateType, GearApi, getWasmMetadata, IGearPages, IProgram, ProgramId } from '.';
+import { GearApi } from './GearApi';
+import { CreateType } from './CreateType';
+import { getWasmMetadata } from './WasmMeta';
+import { IGearPages, IProgram, ProgramId } from './interfaces';
 import { u32, Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { ReadStateError } from './errors/state.errors';
@@ -81,7 +84,7 @@ export class GearProgramState {
   }
 
   /**
-   * Read state of program
+   * Read state of particular program
    * @param programId
    * @param metaWasm - file with metadata
    * @returns decoded state

@@ -5,5 +5,5 @@ examples/test-json/
 **/lib/
 **/temp
 api/.rollup.cache
-**/package-lock.json
 test/wasm
+using-examples/package-lock.json

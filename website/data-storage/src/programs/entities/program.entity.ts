@@ -1,5 +1,6 @@
-import { Meta } from 'src/metadata/entities/meta.entity';
 import { Column, Entity, JoinColumn, Index, OneToOne, PrimaryColumn } from 'typeorm';
+
+import { Meta } from '../../metadata/entities/meta.entity';
 
 export enum InitStatus {
   SUCCESS = 'success',
