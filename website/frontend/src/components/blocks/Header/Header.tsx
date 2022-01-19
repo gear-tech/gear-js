@@ -9,7 +9,6 @@ import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
 import Logo from './children/Logo/Logo';
 import Menu from './children/Menu/Menu';
-import Notifications from './children/Notifications/Notifications';
 import Sidebar from './children/Sidebar/Sidebar';
 import styles from './Header.module.scss';
 
@@ -73,10 +72,11 @@ export const Header: VFC = () => {
         <Logo />
         <Menu openSidebar={openSidebar} />
       </nav>
-      <div className={`${styles.section} ${styles.interaction}`}>
-        <Notifications />
-        <Wallet />
-      </div>
+      {/* commented since notifications/alerts feature isn't ready yet */}
+      {/* <div className={`${styles.section} ${styles.interaction}`}>
+        <Notifications /> */}
+      <Wallet />
+      {/* </div> */}
       {isSidebarOpen && <Sidebar closeSidebar={closeSidebar} />}
     </header>
   );

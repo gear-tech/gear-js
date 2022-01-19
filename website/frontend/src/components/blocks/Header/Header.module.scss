@@ -26,11 +26,12 @@
   }
 }
 
-.interaction {
-  @include flexGap(35px);
+// commented since notifications/alerts feature isn't ready yet
+// .interaction {
+//   @include flexGap(35px);
 
-  @include sm {
-    @include flexGap(20px);
-    flex-direction: column;
-  }
-}
+//   @include sm {
+//     @include flexGap(20px);
+//     flex-direction: column;
+//   }
+// }
