@@ -6,11 +6,11 @@ import { Body } from './children/Body/Body';
 import styles from './EventItem.module.scss';
 
 type Props = {
-  value: Event;
+  event: Event;
 };
 
-const EventItem = ({ value }: Props) => {
-  const { section, method, meta, data } = value;
+const EventItem = ({ event }: Props) => {
+  const { section, method, meta, data } = event;
   const { docs } = meta;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +18,6 @@ const EventItem = ({ value }: Props) => {
   const className = clsx('programs-list__item', styles.item);
   const caption = `${section}.${method}`;
   const description = String(docs.toHuman());
-  const formattedData = JSON.stringify(data, null, 2);
 
   const toggle = () => {
     setIsOpen((prevValue) => !prevValue);
@@ -27,7 +26,7 @@ const EventItem = ({ value }: Props) => {
   return (
     <li className={className}>
       <Header caption={caption} description={description} isOpen={isOpen} onClick={toggle} />
-      {isOpen && <Body formattedData={formattedData} />}
+      {isOpen && <Body method={method} data={data} />}
     </li>
   );
 };

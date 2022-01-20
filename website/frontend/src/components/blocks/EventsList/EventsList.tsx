@@ -35,7 +35,7 @@ const EventsList = () => {
   const isEventSelected = ({ method }: Event) => filterValues[method];
   const filteredEvents = isAnyFilterSelected ? events.filter(isEventSelected) : events;
 
-  const getEvents = () => filteredEvents.map((event, index) => <EventItem key={index} value={event} />);
+  const getEvents = () => filteredEvents.map((event, index) => <EventItem key={index} event={event} />);
 
   return (
     <div className="block-list">
