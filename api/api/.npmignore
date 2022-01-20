@@ -1,7 +1,0 @@
-node_modules/
-/src
-**/tsconfig*
-rollup.config.json
-.prettierrc
-.tslint.json
-rollup.config.js

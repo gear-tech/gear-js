@@ -1,11 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Meta } from 'src/metadata/entities/meta.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
+
+import { Meta } from '../metadata/entities/meta.entity';
 import { InitStatus, Program } from './entities/program.entity';
-import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from 'src/interfaces';
-import { PAGINATION_LIMIT } from 'src/config/configuration';
-import { ErrorLogger } from 'src/utils';
+import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from '../interfaces';
+import { PAGINATION_LIMIT } from '../config/configuration';
+import { ErrorLogger } from '../utils';
+
+/** Add backslashes before special characters in SQL `LIKE` clause. */
+const escapeSqlLike = (x: string) => x.replace('%', '\\%').replace('_', '\\_');
 
 const logger = new Logger('ProgramDb');
 const errorLog = new ErrorLogger('ProgramsService');
@@ -59,8 +63,16 @@ export class ProgramsService {
   }
 
   async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
+    const { term, genesis } = params;
+    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
     const [result, total] = await this.programRepo.findAndCount({
-      where: { genesis: params.genesis },
+      where: [
+        { genesis, id: likeTerm },
+        { genesis, title: likeTerm },
+        { genesis, owner: likeTerm },
+        { genesis, name: likeTerm },
+        { genesis, title: likeTerm },
+      ],
       take: params.limit || PAGINATION_LIMIT,
       skip: params.offset || 0,
       order: {

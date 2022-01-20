@@ -26,16 +26,17 @@ export const Wallet = () => {
 
   const getAllAccounts = useCallback(async () => {
     if (typeof window !== `undefined`) {
-      const { web3Accounts, web3Enable, isWeb3Injected } = await import('@polkadot/extension-dapp');
+      const { web3Accounts, web3Enable } = await import('@polkadot/extension-dapp');
 
-      await web3Enable('Gear App');
+      const extensions = await web3Enable('Gear App');
 
-      if (isWeb3Injected) {
-        const accounts: UserAccount[] = await web3Accounts();
-        return accounts;
+      if (extensions.length === 0) {
+        return null;
       }
 
-      return null;
+      const accounts: UserAccount[] = await web3Accounts();
+
+      return accounts;
     }
 
     return null;

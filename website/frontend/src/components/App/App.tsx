@@ -19,7 +19,6 @@ import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { getUnreadNotificationsCount } from 'store/actions/actions';
 import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
 import store from '../../store';
@@ -53,7 +52,6 @@ const AppComponent: FC = () => {
   const location = useLocation();
 
   const { isApiReady } = useSelector((state: RootState) => state.api);
-  const { countUnread } = useSelector((state: RootState) => state.notifications);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
 
   useEffect(() => {
@@ -63,12 +61,6 @@ const AppComponent: FC = () => {
       document.body.style.overflowY = 'unset';
     }
   }, [isProgramUploading, isMessageSending]);
-
-  useEffect(() => {
-    if (typeof countUnread !== 'number') {
-      dispatch(getUnreadNotificationsCount());
-    }
-  }, [dispatch, countUnread]);
 
   useEffect(() => {
     if (!isApiReady) {

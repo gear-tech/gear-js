@@ -1753,6 +1753,7 @@ __metadata:
     ts-node: ^9.1.1
     tsconfig-paths: ^3.9.0
     typescript: ^4.2.3
+    zod: ^3.11.6
   languageName: unknown
   linkType: soft
 
@@ -1782,7 +1783,7 @@ __metadata:
     "@nestjs/typeorm": ^8.0.2
     "@polkadot/api": ^7.0.2
     "@types/express": ^4.17.11
-    "@types/jest": ^26.0.22
+    "@types/jest": ^27.4.0
     "@types/node": ^14.14.36
     "@types/supertest": ^2.0.10
     "@typescript-eslint/eslint-plugin": ^4.19.0
@@ -1790,6 +1791,7 @@ __metadata:
     eslint: ^7.22.0
     eslint-config-prettier: ^8.1.0
     eslint-plugin-prettier: ^3.3.1
+    jest: ^27.4.7
     kafkajs: ^1.15.0
     pg: ^8.7.1
     prettier: ^2.2.1
@@ -1797,7 +1799,7 @@ __metadata:
     rimraf: ^3.0.2
     rxjs: ^7.1.0
     supertest: ^6.1.3
-    ts-jest: ^26.5.4
+    ts-jest: ^27.1.3
     ts-loader: ^8.0.18
     ts-node: ^9.1.1
     tsconfig-paths: ^3.9.0
@@ -1866,6 +1868,7 @@ __metadata:
     jszip: ^3.7.0
     ky: ^0.28.7
     lint-staged: ^12.1.3
+    localforage: ^1.10.0
     lodash.get: ^4.4.2
     lodash.isobject: ^3.0.2
     lodash.isstring: ^4.0.1
@@ -3672,7 +3675,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*, @types/jest@npm:^27.0.3":
+"@types/jest@npm:*, @types/jest@npm:^27.0.3, @types/jest@npm:^27.4.0":
   version: 27.4.0
   resolution: "@types/jest@npm:27.4.0"
   dependencies:
@@ -10731,7 +10734,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-util@npm:^27.4.2":
+"jest-util@npm:^27.0.0, jest-util@npm:^27.4.2":
   version: 27.4.2
   resolution: "jest-util@npm:27.4.2"
   dependencies:
@@ -10802,7 +10805,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-worker@npm:^27.0.2, jest-worker@npm:^27.3.1, jest-worker@npm:^27.4.1, jest-worker@npm:^27.4.6":
+"jest-worker@npm:^27.0.2, jest-worker@npm:^27.4.6":
   version: 27.4.6
   resolution: "jest-worker@npm:27.4.6"
   dependencies:
@@ -10813,7 +10816,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^27.4.3":
+"jest-worker@npm:^27.3.1, jest-worker@npm:^27.4.1":
+  version: 27.4.5
+  resolution: "jest-worker@npm:27.4.5"
+  dependencies:
+    "@types/node": "*"
+    merge-stream: ^2.0.0
+    supports-color: ^8.0.0
+  checksum: eb0b6be412103299c3d8643ad26daf862826ca841bd2a3ff47d2d931804ab7d7f0db2fcdea7dbf47ce8eacb7742b3f2586c2d6ebdaa8d0ac77c65f7b698e7683
+  languageName: node
+  linkType: hard
+
+"jest@npm:^27.4.3, jest@npm:^27.4.7":
   version: 27.4.7
   resolution: "jest@npm:27.4.7"
   dependencies:
@@ -11156,6 +11170,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lie@npm:3.1.1":
+  version: 3.1.1
+  resolution: "lie@npm:3.1.1"
+  dependencies:
+    immediate: ~3.0.5
+  checksum: 6da9f2121d2dbd15f1eca44c0c7e211e66a99c7b326ec8312645f3648935bc3a658cf0e9fa7b5f10144d9e2641500b4f55bd32754607c3de945b5f443e50ddd1
+  languageName: node
+  linkType: hard
+
 "lie@npm:~3.3.0":
   version: 3.3.0
   resolution: "lie@npm:3.3.0"
@@ -11283,6 +11306,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"localforage@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "localforage@npm:1.10.0"
+  dependencies:
+    lie: 3.1.1
+  checksum: f2978b434dafff9bcb0d9498de57d97eba165402419939c944412e179cab1854782830b5ec196212560b22712d1dd03918939f59cf1d4fc1d756fca7950086cf
+  languageName: node
+  linkType: hard
+
 "locate-path@npm:^2.0.0":
   version: 2.0.0
   resolution: "locate-path@npm:2.0.0"
@@ -11356,7 +11388,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.memoize@npm:^4.1.2":
+"lodash.memoize@npm:4.x, lodash.memoize@npm:^4.1.2":
   version: 4.1.2
   resolution: "lodash.memoize@npm:4.1.2"
   checksum: 9ff3942feeccffa4f1fafa88d32f0d24fdc62fd15ded5a74a5f950ff5f0c6f61916157246744c620173dddf38d37095a92327d5fd3861e2063e736a5c207d089
@@ -16540,6 +16572,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-jest@npm:^27.1.3":
+  version: 27.1.3
+  resolution: "ts-jest@npm:27.1.3"
+  dependencies:
+    bs-logger: 0.x
+    fast-json-stable-stringify: 2.x
+    jest-util: ^27.0.0
+    json5: 2.x
+    lodash.memoize: 4.x
+    make-error: 1.x
+    semver: 7.x
+    yargs-parser: 20.x
+  peerDependencies:
+    "@babel/core": ">=7.0.0-beta.0 <8"
+    "@types/jest": ^27.0.0
+    babel-jest: ">=27.0.0 <28"
+    esbuild: ~0.14.0
+    jest: ^27.0.0
+    typescript: ">=3.8 <5.0"
+  peerDependenciesMeta:
+    "@babel/core":
+      optional: true
+    "@types/jest":
+      optional: true
+    babel-jest:
+      optional: true
+    esbuild:
+      optional: true
+  bin:
+    ts-jest: cli.js
+  checksum: eb54e5b8fc5f06e4cc20ecec7891201ddc78a3537d5eb3775e29ffbc7e83fd2a68f91db801b6a8c820c872060b24dc41fb6decac800b76256d3cdda6520b5c4f
+  languageName: node
+  linkType: hard
+
 "ts-loader@npm:^8.0.18":
   version: 8.3.0
   resolution: "ts-loader@npm:8.3.0"
@@ -18083,5 +18149,12 @@ __metadata:
   version: 0.8.15
   resolution: "zen-observable@npm:0.8.15"
   checksum: b7289084bc1fc74a559b7259faa23d3214b14b538a8843d2b001a35e27147833f4107590b1b44bf5bc7f6dfe6f488660d3a3725f268e09b3925b3476153b7821
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.11.6":
+  version: 3.11.6
+  resolution: "zod@npm:3.11.6"
+  checksum: 044ac416450f179a0c88240f27849d2886c777cebade42df10e5f04125b0265cec82d9bd741a7dcb11796b2ea88b32c86be7d36932a4bed6af57002560359db1
   languageName: node
   linkType: hard

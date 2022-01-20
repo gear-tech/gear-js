@@ -1,4 +1,4 @@
-import { UploadProgramModel, MessageModel, MetaModel } from 'types/program';
+import { UploadProgramModel, MessageModel, MetaModel, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { GearApi, Metadata } from '@gear-js/api';
 import { UserAccount } from 'types/account';
@@ -13,7 +13,8 @@ import {
   programUploadFailedAction,
   AddAlert,
 } from 'store/actions/actions';
-import { readFileAsync, signPayload } from '../helpers';
+import { localPrograms } from './LocalDBService';
+import { readFileAsync, signPayload, isDevChain } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 // TODO: (dispatch) fix it later
@@ -81,29 +82,51 @@ export const UploadProgram = async (
         dispatch(programUploadSuccessAction());
         callback();
 
-        // Sign metadata and save it
-        signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
-          try {
-            const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-              meta: JSON.stringify(meta),
-              signature,
-              programId,
+        if (isDevChain()) {
+          localPrograms
+            .setItem(programId, {
+              id: programId,
               name,
               title,
-              metaFile,
+              initStatus: ProgramStatus.Success,
+              meta: {
+                meta: JSON.stringify(meta),
+                metaFile,
+                programId,
+              },
+              uploadedAt: Date(),
+            })
+            .then(() => {
+              dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Program added successfully` }));
+            })
+            .catch((error: any) => {
+              dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
             });
+        } else {
+          // Sign metadata and save it
+          signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
+            try {
+              const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+                meta: JSON.stringify(meta),
+                signature,
+                programId,
+                name,
+                title,
+                metaFile,
+              });
 
-            if (response.error) {
-              // FIXME 'throw' of exception caught locally
-              throw new Error(response.error.message);
-            } else {
-              dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+              if (response.error) {
+                // FIXME 'throw' of exception caught locally
+                throw new Error(response.error.message);
+              } else {
+                dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+              }
+            } catch (error) {
+              dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+              console.error(error);
             }
-          } catch (error) {
-            dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-            console.error(error);
-          }
-        });
+          });
+        }
       }
     });
   } catch (error) {
@@ -157,25 +180,48 @@ export const addMetadata = async (
 
   // Sign metadata and save it
   signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
-    try {
-      const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-        meta: JSON.stringify(meta),
-        signature,
-        programId,
-        name,
-        title: meta.title,
-        metaFile,
-      });
+    if (isDevChain()) {
+      localPrograms
+        .getItem(programId)
+        .then((res: any) => {
+          const newData = {
+            ...res,
+            meta: {
+              meta: JSON.stringify(meta),
+              metaFile,
+              programId,
+            },
+            title: meta.title,
+          };
 
-      if (response.error) {
-        // FIXME 'throw' of exception caught locally
-        throw new Error(response.error.message);
-      } else {
-        dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+          localPrograms.setItem(res.id, newData).then(() => {
+            dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+          });
+        })
+        .catch((error) => {
+          dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+        });
+    } else {
+      try {
+        const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+          meta: JSON.stringify(meta),
+          signature,
+          programId,
+          name,
+          title: meta.title,
+          metaFile,
+        });
+
+        if (response.error) {
+          // FIXME 'throw' of exception caught locally
+          throw new Error(response.error.message);
+        } else {
+          dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+        }
+      } catch (error) {
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+        console.error(error);
       }
-    } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-      console.error(error);
     }
   });
 };
