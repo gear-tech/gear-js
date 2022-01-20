@@ -34,18 +34,18 @@ gear-meta --help
 
 #### Available commands
 
-- decode - _Decode payload from hex_
-- encode - _Encode payload to hex_
-- meta - _Display metadata from .meta.wasm_
-- type - _Display type structure for particular type from .meta.wasm_
+- **decode** - _Decode payload from hex_
+- **encode** - _Encode payload to hex_
+- **meta** - _Display metadata from .meta.wasm_
+- **type** - _Display type structure for particular type from .meta.wasm_
 
 You can simply run these commands and you will be prompted to enter the neccessary data.
 Or you can specify data through options:
 
-- -t, --type <type> Type to encode or decode the payload. If it will not specified you can select it later
-- -m, --meta <path> Path to .meta.wasm file with program's metadata
-- -o --output <path> Output json file. If it doesn't exist it will be created
-- -j --payloadFromJson If need to take the payload from json
+- **-t, --type <type>** - _Type to encode or decode the payload. If it will not specified you can select it later_
+- **-m, --meta <path>** - _Path to .meta.wasm file with program's metadata_
+- **-o --output <path>** - _Output json file. If it doesn't exist it will be created_
+- **-j --payloadFromJson** - _If need to take the payload from json_
 
 For `decode` and `encode` commands available all of these options
 For `meta` command available `-o --output` option
