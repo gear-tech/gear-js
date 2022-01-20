@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/gear-tech/gear-js/issues"
   },
-  "homepage": "https://github.com/gear-tech/gear-js/tree/master/api#readme",
+  "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/meta-cli#readme",
   "license": "GPL-3.0",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"

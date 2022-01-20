@@ -26,7 +26,7 @@ yarn global add @gear-js/gear-meta
 
 ## Usage
 
-#### All commands description
+#### Full list of commmands
 
 ```sh
 gear-meta --help
