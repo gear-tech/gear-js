@@ -68,7 +68,7 @@ export class Action {
     try {
       let { type, meta, output, payloadFromJson } = this.program.opts();
       payload = await checkPayload(payload);
-      meta = await checkMeta(meta, false);
+      meta = !type ? await checkMeta(meta, false) : meta;
       type = await checkType(type, !!meta);
 
       if (payloadFromJson) {
@@ -79,7 +79,6 @@ export class Action {
       if (output) {
         writeFileSync(resolve(output), isJSON(result) ? JSON.stringify(result) : result);
       } else {
-        console.log(chalk.green('Result:'));
         console.log(result);
       }
     } catch (error) {
@@ -97,7 +96,6 @@ export class Action {
       if (output) {
         writeFileSync(resolve(output), JSON.stringify(result));
       } else {
-        console.log(chalk.green('Result:'));
         console.log(result);
       }
       process.exit(0);

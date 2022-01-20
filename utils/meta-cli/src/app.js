@@ -10,5 +10,6 @@ setupCommands(program, action);
 
 program.showHelpAfterError();
 program.showSuggestionAfterError();
+program.version('0.1.0', '-v, --version');
+program.description('GEAR. CLI tool to encode / decode payloads and work with .meta.wasm files');
 program.parse(process.argv);
-program.version('0.1.0', 'CLI tool to encode / decode payloads and work with .meta.wasm files');
