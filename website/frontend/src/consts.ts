@@ -10,7 +10,11 @@ export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 
 export const LOCAL_STORAGE = {
+<<<<<<< HEAD
   CHAIN: 'chain',
+=======
+  EVENT_FILTERS: 'eventFilters',
+>>>>>>> e093b20 (Make filters controlled)
 };
 
 export const PROGRAM_ERRORS = {
