@@ -1,0 +1,112 @@
+#
+# Composition to be run within the integration pipeline.
+# It brings up the crucial services and runs contract-driven tests between them.
+#
+# Best used like so:
+# $ docker compose up --build --exit-code-from=contract_test
+#
+version: '3'
+
+services:
+  # Downstream dependencies the system needs to run:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - '2181:2181'
+    environment:
+      - ZOO_MAX_SESSION_TIMEOUT=50000
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - '9094:9094'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 0
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: SASL_PLAINTEXT://:9094
+      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://${KAFKA_HOST_NAME}:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: SASL_PLAINTEXT
+      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf'
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+    volumes:
+      - ../seed/kafka_testovka.conf:/etc/kafka/kafka_server_jaas.conf
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - volatile:/var/lib/postgresql/data
+      - ../seed/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
+    ports:
+      - '5432:5432'
+
+  # The system under test:
+  data_storage:
+    image: ../../data-storage
+    profiles: ['contract']
+    volumes:
+      - ../../data-storage:/usr/src/data-storage:ro
+    depends_on:
+      - postgres
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=postgres
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
+      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
+      - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
+      - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
+
+  # api-gateway:
+  #   ports:
+  #     - 3000:3000
+  #   image: mithriy/gear-api-gateway:nightly
+  #   environment:
+  #     KAFKA_GROUP_ID: ${KAFKA_GROUP_ID}
+  #     KAFKA_CLIENT_ID: ${KAFKA_CLIENT_ID}
+  #     KAFKA_BROKERS: ${KAFKA_BROKERS}
+  #     KAFKA_SASL_USERNAME: ${KAFKA_SASL_USERNAME}
+  #     KAFKA_SASL_PASSWORD: ${KAFKA_SASL_PASSWORD}
+  #     PORT: 3000
+
+  # events_testnet:
+  #   image: mithriy/gear-event-listener:nightly
+  #   environment:
+  #     - WS_PROVIDER=${WS_PROVIDER_TESTNET}
+  #     - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID_TESTNET}
+  #     - KAFKA_BROKERS=${KAFKA_BROKERS}
+  #     - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
+  #     - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
+
+  # events_wrsh:
+  #   image: mithriy/gear-event-listener:nightly
+  #   environment:
+  #     - WS_PROVIDER=${WS_PROVIDER_WRSH}
+  #     - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID_WRSH}
+  #     - KAFKA_BROKERS=${KAFKA_BROKERS}
+  #     - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
+  #     - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
+
+  # The test suite:
+  contract_test:
+    build:
+      context: ./
+    depends_on:
+      - postgres
+      - data_storage
+    volumes:
+      - ./src:/usr/app:ro
+
+volumes:
+  volatile:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
