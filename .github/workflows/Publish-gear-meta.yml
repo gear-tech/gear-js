@@ -1,0 +1,36 @@
+name: 'Publish @gear-js/gear-meta'
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - utils/meta-cli/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Check package version
+        uses: EndBug/version-check@v1
+        id: check
+        with:
+          file-name: api/package.json
+          file-url: https://unpkg.com/@gear-js/gear-meta@latest/package.json
+          static-checking: localIsNew
+
+      - name: Publish
+        if: steps.check.outputs.changed == 'true'
+        working-directory: api
+        run: |
+          npm config set //registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN
+          npm publish
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

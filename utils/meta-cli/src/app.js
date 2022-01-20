@@ -11,3 +11,4 @@ setupCommands(program, action);
 program.showHelpAfterError();
 program.showSuggestionAfterError();
 program.parse(process.argv);
+program.version('0.1.0', 'CLI tool to encode / decode payloads and work with .meta.wasm files');

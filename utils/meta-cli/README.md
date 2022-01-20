@@ -10,18 +10,18 @@
 
 ## Description
 
-CLI tool to encode and decode payloads, work with .meta.wasm files
+CLI tool to encode / decode payloads and work with .meta.wasm files
 
 ## Installation
 
 ```sh
-npm install -g gear-meta
+npm install -g @gear-js/gear-meta
 ```
 
 or
 
 ```sh
-yarn global add gear-meta
+yarn global add @gear-js/gear-meta
 ```
 
 ## Usage
