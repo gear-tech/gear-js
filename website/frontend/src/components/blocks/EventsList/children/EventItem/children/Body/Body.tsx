@@ -4,15 +4,15 @@ import styles from './Body.module.scss';
 import commonStyles from '../../EventItem.module.scss';
 
 type Props = {
-  params: string;
+  formattedData: string;
 };
 
-const Body = ({ params }: Props) => {
-  const paramsClassName = clsx(commonStyles.text, styles.params);
+const Body = ({ formattedData }: Props) => {
+  const preClassName = clsx(commonStyles.text, styles.pre);
 
   return (
     <div className={styles.body}>
-      <pre className={paramsClassName}>{params}</pre>
+      <pre className={preClassName}>{formattedData}</pre>
     </div>
   );
 };

@@ -18,7 +18,7 @@ const EventItem = ({ value }: Props) => {
   const className = clsx('programs-list__item', styles.item);
   const caption = `${section}.${method}`;
   const description = String(docs.toHuman());
-  const params = JSON.stringify(data, null, 2);
+  const formattedData = JSON.stringify(data, null, 2);
 
   const toggle = () => {
     setIsOpen((prevValue) => !prevValue);
@@ -27,7 +27,7 @@ const EventItem = ({ value }: Props) => {
   return (
     <li className={className}>
       <Header caption={caption} description={description} isOpen={isOpen} onClick={toggle} />
-      {isOpen && <Body params={params} />}
+      {isOpen && <Body formattedData={formattedData} />}
     </li>
   );
 };
