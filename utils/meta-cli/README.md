@@ -39,7 +39,7 @@ gear-meta --help
 - **meta** - _Display metadata from .meta.wasm_
 - **type** - _Display type structure for particular type from .meta.wasm_
 
-You can simply run these commands and you will be prompted to enter the neccessary data.
+You can simply run these commands and you will be prompted to enter the neccessary data. <br>
 Or you can specify data through options:
 
 - **-t, --type <type>** - _Type to encode or decode the payload. If it will not specified you can select it later_
@@ -47,9 +47,9 @@ Or you can specify data through options:
 - **-o --output <path>** - _Output json file. If it doesn't exist it will be created_
 - **-j --payloadFromJson** - _If need to take the payload from json_
 
-For `decode` and `encode` commands available all of these options
-For `meta` command available `-o --output` option
-For `type` command available `-m, --meta` option
+All of these options are available for `decode` and `encode` commands<br>
+`-o --output` option is available for `meta` command<br>
+`-m, --meta` option is available for `type` command<br>
 
 #### Examples
 
