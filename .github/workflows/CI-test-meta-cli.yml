@@ -7,10 +7,15 @@ on:
       - utils/meta-cli/**
 
 jobs:
-  test-gear-api:
+  test:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+
       - uses: actions/checkout@v2
 
       - name: Install NodeJS 16.x
