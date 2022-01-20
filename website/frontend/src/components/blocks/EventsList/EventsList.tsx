@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Event } from '@polkadot/types/interfaces';
 import { useApi } from 'hooks/useApi';
-import { EventItem } from './EventItem/EventItem';
+import { EventItem } from './children/EventItem/EventItem';
+import { Filters } from './children/Filters/Filters';
 import styles from './EventsList.module.scss';
 
 const EventsList = () => {
@@ -26,7 +27,10 @@ const EventsList = () => {
 
   return (
     <div className="block-list">
-      <h3 className="block-list__header">Recent events: {events.length}</h3>
+      <header className={styles.header}>
+        <h3 className="block-list__header">Recent events: {events.length}</h3>
+        <Filters />
+      </header>
       <ul className="programs-list">{getEvents()}</ul>
     </div>
   );
