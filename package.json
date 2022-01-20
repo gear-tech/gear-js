@@ -13,6 +13,8 @@
     "run:eventListener": "yarn workspace @gear-js/event-listener start:dev",
     "run:backend": "yarn workspace @gear-js/api-gateway start:dev",
     "run:dataStorage": "yarn workspace @gear-js/data-storage start:dev",
+    "test:browser": "docker compose --file='./website/integration-tests/browser-tests/docker-compose.yaml' up --build --exit-code-from=browser_test",
+    "test:contracts": "docker compose --file='./website/integration-tests/contract-tests/docker-compose.yaml' up --build --exit-code-from=contract_test",
     "prepare": "husky install"
   },
   "devDependencies": {
