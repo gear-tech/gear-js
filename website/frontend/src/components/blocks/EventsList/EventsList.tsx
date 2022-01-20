@@ -13,9 +13,10 @@ const EventsList = () => {
   const [events, setEvents] = useState<Event[]>([]);
 
   const localFilterValues = localStorage.getItem(LOCAL_STORAGE.EVENT_FILTERS);
-  const initFilters = localFilterValues ? JSON.parse(localFilterValues) : init.filterValues;
+  const initFilterValues = localFilterValues ? JSON.parse(localFilterValues) : init.filterValues;
   // TODO: init.filterValues to have it's own type?
-  const [filterValues, setFilterValues] = useState<FilterValues>(initFilters);
+  const [filterValues, setFilterValues] = useState<FilterValues>(initFilterValues);
+  const isAnyFilterSelected = Object.values(filterValues).includes(true);
 
   useEffect(() => {
     if (api) {
@@ -23,7 +24,7 @@ const EventsList = () => {
         // TODO: .map().filter() to single .reduce()
         const newEvents = allEvents
           .map(({ event }) => event)
-          .filter((event) => event.section !== 'system')
+          .filter(({ section }) => section !== 'system')
           .reverse();
 
         setEvents((prevEvents) => [...newEvents, ...prevEvents]);
@@ -31,12 +32,15 @@ const EventsList = () => {
     }
   }, [api]);
 
-  const getEvents = () => events.map((event, index) => <EventItem key={index} value={event} />);
+  const isEventSelected = ({ method }: Event) => filterValues[method];
+  const filteredEvents = isAnyFilterSelected ? events.filter(isEventSelected) : events;
+
+  const getEvents = () => filteredEvents.map((event, index) => <EventItem key={index} value={event} />);
 
   return (
     <div className="block-list">
       <header className={styles.header}>
-        <h3 className="block-list__header">Recent events: {events.length}</h3>
+        <h3 className="block-list__header">Recent events: {filteredEvents.length}</h3>
         <Filters values={filterValues} setValues={setFilterValues} />
       </header>
       <ul className="programs-list">{getEvents()}</ul>

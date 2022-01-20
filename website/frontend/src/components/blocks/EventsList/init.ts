@@ -1,5 +1,5 @@
 export const filterValues = {
-  TransferBalance: false,
+  Transfer: false,
   Log: false,
   InitSuccess: false,
   InitFailure: false,
