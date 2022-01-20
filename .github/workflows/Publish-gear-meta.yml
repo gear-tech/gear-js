@@ -28,7 +28,7 @@ jobs:
 
       - name: Publish
         if: steps.check.outputs.changed == 'true'
-        working-directory: api
+        working-directory: utils/meta-cli
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN
           npm publish
