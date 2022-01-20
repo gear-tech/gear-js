@@ -2,7 +2,7 @@ name: staging.frontend-CD
 
 on:
   push:
-    branches: [master, ef-fix-injection]
+    branches: [master]
     paths:
       - website/frontend/**
 
