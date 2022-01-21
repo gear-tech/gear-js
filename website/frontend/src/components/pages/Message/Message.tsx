@@ -41,21 +41,26 @@ export const Message: FC = () => {
   }, [dispatch, message]);
 
   useEffect(() => {
-    if (program && program.meta && message) {
+    if (program && message) {
       const createType = new CreateType();
-      const parsedMeta: Metadata = JSON.parse(program.meta.meta as string);
-
       let type = 'Bytes';
+      let decodedPayload = null;
 
-      if (parsedMeta.handle_output) {
-        type = parsedMeta.handle_output;
+      if (program.meta) {
+        const parsedMeta: Metadata = JSON.parse(program.meta.meta as string) ?? null;
+
+        if (parsedMeta?.handle_output) {
+          type = parsedMeta.handle_output;
+        }
+
+        if (!parsedMeta?.handle_output && parsedMeta?.init_output) {
+          type = parsedMeta.init_output;
+        }
+
+        decodedPayload = createType.create(type, message.payload, parsedMeta).toHuman();
+      } else {
+        decodedPayload = createType.create(type, message.payload);
       }
-
-      if (!parsedMeta.handle_output && parsedMeta.init_output) {
-        type = parsedMeta.init_output;
-      }
-
-      const decodedPayload = createType.create(type, message.payload, parsedMeta).toHuman();
 
       setMessagePayload(JSON.stringify(decodedPayload));
     }

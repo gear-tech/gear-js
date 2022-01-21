@@ -35,7 +35,7 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
   return (
     <div className="pagination">
       {!isDisabledPrev ? (
-        <Link className="pagination--box" to={`${url}?p=${page - 1}`} onClick={onPreviousClickHandler}>
+        <Link className="pagination--box" to={`${url}?page=${page - 1}`} onClick={onPreviousClickHandler}>
           <PaginationArrow color="#C4CDD5" />
         </Link>
       ) : (
@@ -48,7 +48,7 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
       </button>
       <p className="pagination__total">of {totalPages}</p>
       {!isDisabledNext ? (
-        <Link className="pagination--box" to={`${url}?p=${page + 1}`} onClick={onNextClickHandler}>
+        <Link className="pagination--box" to={`${url}?page=${page + 1}`} onClick={onNextClickHandler}>
           <PaginationArrow color="#C4CDD5" />
         </Link>
       ) : (
