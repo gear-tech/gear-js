@@ -9,7 +9,7 @@ import MessageRequestService from 'services/MessagesRequestServices';
 import ProgramRequestService from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { RPC_METHODS } from 'consts';
+import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
@@ -234,7 +234,7 @@ export const AddAlert = (payload: AlertModel) => ({
 });
 
 export const subscribeToEvents = () => (dispatch: any) => {
-  const filterKey = localStorage.getItem('public_key_raw');
+  const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
   nodeApi.subscribeProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {

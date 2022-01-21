@@ -11,7 +11,7 @@ import { useAlert } from 'react-alert';
 import { useDispatch } from 'react-redux';
 import { AddAlert, resetApiReady } from 'store/actions/actions';
 import { useHistory, useLocation } from 'react-router-dom';
-import { NODE_ADRESS_URL_PARAM } from 'consts';
+import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
 import * as init from './init';
 import './Sidebar.scss';
 import { EventTypes } from 'types/events';
@@ -51,14 +51,14 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
           const el = elem;
           if (el.caption === 'development') {
             el.nodes.push(nodeToAdd);
-            localStorage.setItem('nodes', JSON.stringify(nodes));
+            localStorage.setItem(LOCAL_STORAGE.NODES, JSON.stringify(nodes));
           }
           return el;
         })
       );
 
       if (!isApiNodeExist) {
-        localStorage.setItem('node_address', newNode);
+        localStorage.setItem(LOCAL_STORAGE.NODE_ADDRESS, newNode);
       }
 
       setNewNode('');
@@ -77,7 +77,7 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
         const el = elem;
         if (el.caption === 'development') {
           el.nodes = allDevNodes;
-          localStorage.setItem('nodes', JSON.stringify(nodes));
+          localStorage.setItem(LOCAL_STORAGE.NODES, JSON.stringify(nodes));
         }
         return el;
       })
@@ -96,8 +96,8 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
     if (selectedNode !== nodeApi.address) {
       // remove param to update it during nodeApi init
       removeNodeFromUrl();
-      localStorage.setItem('node_address', selectedNode);
-      localStorage.setItem('nodes', JSON.stringify(nodes));
+      localStorage.setItem(LOCAL_STORAGE.NODE_ADDRESS, selectedNode);
+      localStorage.setItem(LOCAL_STORAGE.NODES, JSON.stringify(nodes));
       dispatch(resetApiReady());
       window.location.reload();
     }

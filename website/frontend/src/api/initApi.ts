@@ -3,7 +3,7 @@ import { GearApi } from '@gear-js/api';
 import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { isNodeAddressValid } from 'helpers';
-import { NODE_ADDRESS, NODE_ADRESS_URL_PARAM } from '../consts';
+import { NODE_ADDRESS, NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
 
 const getNodeAddressFromUrl = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -39,14 +39,14 @@ class NodeApi {
   }
 
   async init() {
-    this._address = getNodeAddressFromUrl() || localStorage.getItem('node_address') || this._address;
+    this._address = getNodeAddressFromUrl() || localStorage.getItem(LOCAL_STORAGE.NODE_ADDRESS) || this._address;
     this._api = await GearApi.create({ providerAddress: this._address });
 
     this.chain = await this._api.chain();
     this.genesis = await this._api.genesisHash.toHex();
 
-    localStorage.setItem('chain', this.chain);
-    localStorage.setItem('genesis', this.genesis);
+    localStorage.setItem(LOCAL_STORAGE.CHAIN, this.chain);
+    localStorage.setItem(LOCAL_STORAGE.GENESIS, this.genesis);
   }
 
   public subscribeProgramEvents(cb: (event: ProgramEvent) => void) {

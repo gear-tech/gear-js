@@ -13,6 +13,7 @@ import { AccountList } from '../AccountList';
 
 import './Wallet.scss';
 import { nodeApi } from '../../../api/initApi';
+import { LOCAL_STORAGE } from 'consts';
 
 export const Wallet = () => {
   const [injectedAccounts, setInjectedAccounts] = useState<Array<UserAccount> | null>(null);
@@ -45,19 +46,19 @@ export const Wallet = () => {
   useEffect(() => {
     setTimeout(() => {
       getAllAccounts()
-      .then((allAccounts) => {
-        if (allAccounts) {
-          allAccounts.forEach((acc: UserAccount) => {
-            if (acc.address === localStorage.getItem('savedAccount')) {
-              acc.isActive = true;
-              dispatch(setCurrentAccount(acc));
-            }
-          });
-          setInjectedAccounts(allAccounts);
-        }
-      })
-      .catch((err) => console.error(err));
-    }, 300)
+        .then((allAccounts) => {
+          if (allAccounts) {
+            allAccounts.forEach((acc: UserAccount) => {
+              if (acc.address === localStorage.getItem(LOCAL_STORAGE.SAVED_ACCOUNT)) {
+                acc.isActive = true;
+                dispatch(setCurrentAccount(acc));
+              }
+            });
+            setInjectedAccounts(allAccounts);
+          }
+        })
+        .catch((err) => console.error(err));
+    }, 300);
   }, [dispatch, getAllAccounts]);
 
   const getBalance = useCallback(
@@ -109,8 +110,8 @@ export const Wallet = () => {
         acc.isActive = false;
         if (i === index) {
           acc.isActive = true;
-          localStorage.setItem('savedAccount', acc.address);
-          localStorage.setItem('public_key_raw', GearKeyring.decodeAddress(acc.address));
+          localStorage.setItem(LOCAL_STORAGE.SAVED_ACCOUNT, acc.address);
+          localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, GearKeyring.decodeAddress(acc.address));
         }
       });
       dispatch(setCurrentAccount(injectedAccounts[index]));
@@ -121,8 +122,8 @@ export const Wallet = () => {
 
   const handleLogout = () => {
     dispatch(resetCurrentAccount());
-    localStorage.removeItem('savedAccount');
-    localStorage.removeItem('public_key_raw');
+    localStorage.removeItem(LOCAL_STORAGE.SAVED_ACCOUNT);
+    localStorage.removeItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
   };
 
   return (
