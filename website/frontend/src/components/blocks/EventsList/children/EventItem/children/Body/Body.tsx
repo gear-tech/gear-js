@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { CreateType, getWasmMetadata, Metadata } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
@@ -83,9 +84,50 @@ const Body = ({ method, data }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
+  const getLink = (path: string, id: Codec) => {
+    const stringId = id.toString();
+    return (
+      <Link to={`/${path}/${stringId}`} className={styles.link}>
+        {stringId}
+      </Link>
+    );
+  };
+
+  const getLine = (key: string, path: string, id: Codec) => (
+    <span className={styles.line}>
+      {key}
+      {getLink(path, id)},
+    </span>
+  );
+
+  const getParsedData = () => {
+    return formattedData.split('\n').map((line) => {
+      const keyRegex = /^(.*?): /g;
+      const keyMatch = line.match(keyRegex);
+
+      if (keyMatch) {
+        const [keyString] = keyMatch;
+
+        if (logData) {
+          const { source, id } = logData;
+
+          if (line.includes('source')) {
+            return getLine(keyString, 'program', source);
+          }
+
+          if (line.includes('id')) {
+            return getLine(keyString, 'message', id);
+          }
+        }
+      }
+
+      return <span className={styles.line}>{line}</span>;
+    });
+  };
+
   return (
     <div className={styles.body}>
-      <pre className={preClassName}>{formattedData}</pre>
+      <pre className={preClassName}>{isLog ? getParsedData() : formattedData}</pre>
     </div>
   );
 };
