@@ -19,8 +19,8 @@ const selectMessages = createSelector(
 export const Messages: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const urlSearch = location.search;
-  const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
+  const searchParams = new URLSearchParams(location.search);
+  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
 
   const [search, setSearch] = useState('');
 
