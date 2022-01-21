@@ -11,13 +11,10 @@
   color: $textColor;
 }
 
-.section {
-  display: flex;
-  align-items: center;
-}
-
 .nav {
   @include flexGap(100px);
+  display: flex;
+  align-items: center;
 
   @include lg {
     @include flexGap(32px);
@@ -25,13 +22,3 @@
     align-items: flex-start;
   }
 }
-
-// commented since notifications/alerts feature isn't ready yet
-// .interaction {
-//   @include flexGap(35px);
-
-//   @include sm {
-//     @include flexGap(20px);
-//     flex-direction: column;
-//   }
-// }

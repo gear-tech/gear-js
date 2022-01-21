@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
 import { GearKeyring } from '@gear-js/api';
 import { useAlert } from 'react-alert';
@@ -124,18 +125,21 @@ export const Wallet = () => {
     localStorage.removeItem('public_key_raw');
   };
 
+  const accButtonClassName = clsx(styles.button, styles.accountButton);
+  const balanceSectionClassName = clsx(styles.section, styles.balance);
+
   return (
     <>
       <div className={styles.wallet}>
         {currentAccount ? (
           <>
-            <div className={`${styles.section} ${styles.balance}`}>
+            <div className={balanceSectionClassName}>
               <p>
                 Balance: <span className={styles.balanceAmount}>{accountBalance}</span>
               </p>
             </div>
             <div className={styles.section}>
-              <button type="button" className={`${styles.button} ${styles.accountButton}`} onClick={toggleModal}>
+              <button type="button" className={accButtonClassName} onClick={toggleModal}>
                 <Identicon value={currentAccount.address} size={28} theme="polkadot" className={styles.avatar} />
                 {currentAccount.meta.name}
               </button>

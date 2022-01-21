@@ -7,4 +7,4 @@ type Props = {
 
 const Counter = ({ value }: Props) => <div className={styles.counter}>{value}</div>;
 
-export default Counter;
+export { Counter };

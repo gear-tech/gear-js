@@ -9,4 +9,4 @@ const Logo = () => (
   </Link>
 );
 
-export default Logo;
+export { Logo };

@@ -15,7 +15,7 @@ const Menu = ({ openSidebar }: Props) => {
   return (
     <ul className={styles.menu}>
       <li className={styles.item} onClick={openSidebar}>
-        {!isApiReady ? 'Loading...' : localStorage.chain}
+        {isApiReady ? localStorage.chain : 'Loading...'}
       </li>
       <li className={styles.item}>
         <Link to={routes.editor} className={styles.link}>
@@ -26,4 +26,4 @@ const Menu = ({ openSidebar }: Props) => {
   );
 };
 
-export default Menu;
+export { Menu };
