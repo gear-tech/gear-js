@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateType, getWasmMetadata, Metadata } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
@@ -23,19 +23,21 @@ const selectProgram = (state: RootState) => state.programs.program;
 const Body = ({ method, data }: Props) => {
   const dispatch = useDispatch();
   const program = useSelector(selectProgram);
-  const [metadata, setMetadata] = useState<Metadata>();
-  const metaBuffer = useRef<Buffer>();
 
+  const isLog = method === 'Log';
   // TODO: figure out types, since data[0] is just Codec
-  const logData = data[0] as unknown as LogData;
-  const { source, payload } = logData;
+  const initLogData = isLog ? (data[0] as unknown as LogData) : undefined;
+  const [logData, setLogData] = useState(initLogData);
+  const [metadata, setMetadata] = useState<Metadata>();
 
   const preClassName = clsx(commonStyles.text, styles.pre);
-  const formattedData = JSON.stringify(data, null, 2);
+  const formattedData = JSON.stringify(logData || data, null, 2);
 
   useEffect(() => {
-    if (method === 'Log') {
+    if (logData) {
+      const { source } = logData;
       const programId = source.toString();
+
       dispatch(getProgramAction(programId));
     }
 
@@ -50,30 +52,36 @@ const Body = ({ method, data }: Props) => {
     const metaFile = program?.meta?.metaFile;
 
     if (metaFile) {
-      metaBuffer.current = Buffer.from(metaFile, 'base64');
-      getWasmMetadata(metaBuffer.current).then(setMetadata);
+      const metaBuffer = Buffer.from(metaFile, 'base64');
+      getWasmMetadata(metaBuffer).then(setMetadata);
     }
   }, [program]);
 
+  const setDecodedLogPayload = (type: string) => {
+    if (logData) {
+      const { payload } = logData;
+
+      const decodedPayload = CreateType.decode(type, payload, metadata);
+      setLogData((prevData) => ({ ...prevData, payload: decodedPayload }));
+    }
+  };
+
   useEffect(() => {
     if (metadata) {
-      if (metadata.handle_output) {
+      const { handle_output: metaHandleOutput, init_output: metaInitOutput } = metadata;
+
+      if (metaHandleOutput) {
         try {
-          const decodedPayload = CreateType.decode(metadata.handle_output, payload, metadata);
-          console.log('handle output, try');
-          console.log(decodedPayload);
+          setDecodedLogPayload(metaHandleOutput);
         } catch {
-          if (metadata.init_output) {
-            const decodedPayload = CreateType.decode(metadata.init_output, payload, metadata);
-            console.log('init_output, catch');
-            console.log(decodedPayload);
+          if (metaInitOutput) {
+            setDecodedLogPayload(metaInitOutput);
           }
         }
       }
     }
-  }, [metadata, payload]);
-
-  console.log(metadata);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metadata]);
 
   return (
     <div className={styles.body}>
