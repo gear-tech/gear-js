@@ -30,7 +30,7 @@ export const SendMessage: VFC = () => {
   const fetchMeta = useCallback(async (id: string) => {
     const apiRequest = new ServerRPCRequestService();
 
-    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { id });
+    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId: id });
   }, []);
 
   const getMeta = isDevChain() ? getLocalProgramMeta : fetchMeta;
@@ -42,7 +42,7 @@ export const SendMessage: VFC = () => {
         .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
         .finally(() => setReady(true));
     }
-  }, [meta, getMeta, dispatch]);
+  }, [meta, programId, getMeta, dispatch]);
 
   useEffect(() => {
     if (meta && meta.types && meta.handle_input) {
