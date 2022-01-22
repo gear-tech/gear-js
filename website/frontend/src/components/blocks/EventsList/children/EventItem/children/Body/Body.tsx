@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CreateType, getWasmMetadata, Metadata } from '@gear-js/api';
+import { CreateType, getWasmMetadata, Metadata, LogData } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { RootState } from 'store/reducers';
@@ -15,10 +15,6 @@ type Props = {
   data: GenericEventData;
 };
 
-type LogData = {
-  [key: string]: Codec;
-};
-
 const selectProgram = (state: RootState) => state.programs.program;
 
 const Body = ({ method, data }: Props) => {
@@ -26,14 +22,19 @@ const Body = ({ method, data }: Props) => {
   const program = useSelector(selectProgram);
 
   const isLog = method === 'Log';
-  // TODO: figure out types, since data[0] is just Codec
-  const initLogData = isLog ? (data[0] as unknown as LogData) : undefined;
-  const [logData, setLogData] = useState(initLogData);
+  const logData = isLog ? new LogData(data) : undefined;
   const [metadata, setMetadata] = useState<Metadata>();
   const [isDecodedPayload, setIsDecodedPayload] = useState(false);
+  const [decodedPayload, setDecodedPayload] = useState<Codec>();
+
+  const getDecodedPayloadData = () => {
+    // is there a better way to get logData with replaced payload?
+    const [dataObject] = data.toJSON() as [{}];
+    return [{ ...dataObject, payload: decodedPayload }];
+  };
 
   const preClassName = clsx(commonStyles.text, styles.pre);
-  const formattedData = JSON.stringify(isDecodedPayload ? logData : data, null, 2);
+  const formattedData = JSON.stringify(isDecodedPayload ? getDecodedPayloadData() : data, null, 2);
 
   useEffect(() => {
     if (logData) {
@@ -62,9 +63,7 @@ const Body = ({ method, data }: Props) => {
   const setDecodedLogPayload = (type: string) => {
     if (logData) {
       const { payload } = logData;
-
-      const decodedPayload = CreateType.decode(type, payload, metadata);
-      setLogData((prevData) => ({ ...prevData, payload: decodedPayload }));
+      setDecodedPayload(CreateType.decode(type, payload, metadata));
     }
   };
 
