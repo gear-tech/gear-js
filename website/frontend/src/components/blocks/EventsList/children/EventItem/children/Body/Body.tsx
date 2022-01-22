@@ -4,11 +4,12 @@ import { CreateType, getWasmMetadata, Metadata, LogData } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { RootState } from 'store/reducers';
-import { getProgramAction, resetProgramAction } from 'store/actions/actions';
+import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/actions';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
 import clsx from 'clsx';
 import styles from './Body.module.scss';
 import commonStyles from '../../EventItem.module.scss';
+import { EventTypes } from 'types/events';
 
 type Props = {
   method: string;
@@ -60,27 +61,36 @@ const Body = ({ method, data }: Props) => {
     }
   }, [program]);
 
-  const setDecodedLogPayload = (type: string) => {
-    if (logData) {
+  // TODO: 'handle_output' | 'init_output' to enum
+  const handlePayloadDecoding = (typeKey: 'handle_output' | 'init_output', errorCallback: () => void) => {
+    if (logData && metadata) {
       const { payload } = logData;
-      setDecodedPayload(CreateType.decode(type, payload, metadata));
+      const type = metadata[typeKey];
+
+      if (type) {
+        try {
+          setDecodedPayload(CreateType.decode(type, payload, metadata));
+        } catch {
+          errorCallback();
+        }
+      } else {
+        errorCallback();
+      }
     }
   };
 
-  useEffect(() => {
-    if (metadata) {
-      const { handle_output: metaHandleOutput, init_output: metaInitOutput } = metadata;
+  const showDecodingError = () => {
+    const message = "Can't decode payload neither by handle_output, nor init_output type";
+    const alert = { type: EventTypes.ERROR, message };
+    dispatch(AddAlert(alert));
+  };
 
-      if (metaHandleOutput) {
-        try {
-          setDecodedLogPayload(metaHandleOutput);
-        } catch {
-          if (metaInitOutput) {
-            setDecodedLogPayload(metaInitOutput);
-          }
-        }
-      }
-    }
+  const handleInitPayloadDecoding = () => {
+    handlePayloadDecoding('init_output', showDecodingError);
+  };
+
+  useEffect(() => {
+    handlePayloadDecoding('handle_output', handleInitPayloadDecoding);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
