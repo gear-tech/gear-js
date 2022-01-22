@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateType, getWasmMetadata, Metadata } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction } from 'store/actions/actions';
+import { Checkbox } from 'common/components/Checkbox/Checkbox';
 import clsx from 'clsx';
 import styles from './Body.module.scss';
 import commonStyles from '../../EventItem.module.scss';
@@ -29,9 +30,10 @@ const Body = ({ method, data }: Props) => {
   const initLogData = isLog ? (data[0] as unknown as LogData) : undefined;
   const [logData, setLogData] = useState(initLogData);
   const [metadata, setMetadata] = useState<Metadata>();
+  const [isDecodedPayload, setIsDecodedPayload] = useState(false);
 
   const preClassName = clsx(commonStyles.text, styles.pre);
-  const formattedData = JSON.stringify(logData || data, null, 2);
+  const formattedData = JSON.stringify(isDecodedPayload ? logData : data, null, 2);
 
   useEffect(() => {
     if (logData) {
@@ -83,8 +85,20 @@ const Body = ({ method, data }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
+  const handleCheckboxChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+    setIsDecodedPayload(checked);
+  };
+
   return (
     <div className={styles.body}>
+      {isLog && (
+        <Checkbox
+          label="Decoded payload"
+          className={styles.checkbox}
+          checked={isDecodedPayload}
+          onChange={handleCheckboxChange}
+        />
+      )}
       <pre className={preClassName}>{formattedData}</pre>
     </div>
   );
