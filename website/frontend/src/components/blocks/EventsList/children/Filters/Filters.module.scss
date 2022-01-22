@@ -7,17 +7,23 @@
 .button {
   padding: 10px 12px;
   display: flex;
-  color: $textColor;
-  background-color: $successColor;
+  justify-content: center;
+  align-items: center;
   border-radius: 2px;
+  transition: 0.25s all;
 }
 
-.list {
+.toggleButton {
+  color: $textColor;
+  background-color: $successColor;
+}
+
+.body {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   color: $textColor;
   background-color: $mainBackground;
   border-radius: 2px;
@@ -31,5 +37,26 @@
 
   &:hover {
     background-color: $bkgButtonColor;
+  }
+}
+
+.footer {
+  padding: 8px 20px 20px;
+}
+
+.resetButton {
+  $color: #909090;
+  width: 100%;
+  font-weight: inherit;
+  color: $color;
+  border: 1px solid $color;
+
+  &:hover {
+    color: $textColor;
+    border-color: $textColor;
+  }
+
+  .icon {
+    margin-right: 10px;
   }
 }

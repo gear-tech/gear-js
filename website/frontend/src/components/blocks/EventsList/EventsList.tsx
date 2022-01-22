@@ -41,7 +41,7 @@ const EventsList = () => {
     <div className="block-list">
       <header className={styles.header}>
         <h3 className="block-list__header">Recent events: {filteredEvents.length}</h3>
-        <Filters values={filterValues} setValues={setFilterValues} />
+        <Filters values={filterValues} setValues={setFilterValues} isAnySelected={isAnyFilterSelected} />
       </header>
       <ul className="programs-list">{getEvents()}</ul>
     </div>
