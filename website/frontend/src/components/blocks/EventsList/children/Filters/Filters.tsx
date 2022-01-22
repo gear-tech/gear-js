@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Sliders, X } from 'react-feather';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
@@ -15,6 +15,7 @@ type Props = {
 
 const Filters = ({ values, setValues, isAnySelected }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
   const filters = Object.keys(values);
 
   const handleChange = ({ target: { name, checked } }: ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +41,10 @@ const Filters = ({ values, setValues, isAnySelected }: Props) => {
       </li>
     ));
 
+  const close = () => {
+    setIsOpen(false);
+  };
+
   const toggle = () => {
     setIsOpen((prevValue) => !prevValue);
   };
@@ -47,14 +52,28 @@ const Filters = ({ values, setValues, isAnySelected }: Props) => {
   const reset = () => {
     setValues(init.filterValues);
     localStorage.removeItem(LOCAL_STORAGE.EVENT_FILTERS);
-    toggle();
+    close();
   };
+
+  const handleOutsideClick = ({ target }: MouseEvent) => {
+    const isElementClicked = ref.current?.contains(target as Node);
+
+    if (!isElementClicked) {
+      close();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggleButtonClassName = clsx(styles.button, styles.toggleButton);
   const resetButtonClassName = clsx(styles.button, styles.resetButton);
 
   return (
-    <div className={styles.filters}>
+    <div className={styles.filters} ref={ref}>
       <button type="button" className={toggleButtonClassName} onClick={toggle}>
         <Sliders size={16} strokeWidth={3} />
       </button>
