@@ -181,4 +181,4 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
   );
 };
 
-export default Sidebar;
+export { Sidebar };

@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import Identicon from '@polkadot/react-identicon';
 import clsx from 'clsx';
-import { UserAccount } from '../../../types/account';
-import { toShortAddress } from '../../../helpers';
-
+import { UserAccount } from 'types/account';
+import { toShortAddress } from 'helpers';
 import './AccountList.scss';
 
 type Props = {
