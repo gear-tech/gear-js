@@ -2,6 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
+import { UnsubscribePromise } from '@polkadot/api/types';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { Programs } from 'components/pages/Programs/Programs';
@@ -20,8 +21,9 @@ import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
+import { subscribeToEvents, setApiReady, addEventsAction } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
+import { useApi } from 'hooks/useApi';
 import store from '../../store';
 
 import './App.scss';
@@ -48,6 +50,7 @@ const options = {
 
 const AppComponent: FC = () => {
   globalStyles();
+  const [api] = useApi();
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -87,6 +90,30 @@ const AppComponent: FC = () => {
       history.replace({ search: searchParams.toString() });
     }
   }, [history, location]);
+
+  useEffect(() => {
+    let unsub: UnsubscribePromise | null = null;
+
+    if (api) {
+      unsub = api.allEvents((allEvents) => {
+        // TODO: .map().filter() to single .reduce()
+        const newEvents = allEvents
+          .map(({ event }) => event)
+          .filter(({ section }) => section !== 'system')
+          .reverse();
+
+        dispatch(addEventsAction(newEvents));
+      });
+    }
+
+    return () => {
+      if (unsub) {
+        (async () => {
+          (await unsub)();
+        })();
+      }
+    };
+  }, [api, dispatch]);
 
   const isFooterHidden = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');

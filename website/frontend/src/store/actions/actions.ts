@@ -17,6 +17,8 @@ import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } fr
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes } from '../../types/events';
 import { AlertActionTypes } from '../reducers/AlertReducer';
+import { Event } from '@polkadot/types/interfaces';
+import { EventsActionTypes } from 'types/events-list';
 
 const fetchMessagesAction = () => ({ type: MessageActionTypes.FETCH_MESSAGES });
 
@@ -307,3 +309,7 @@ export const setIsBuildDone = (payload: boolean) => ({
   type: CompilerActionTypes.SET_IS_BUILD_DONE,
   payload,
 });
+
+// EVENTS
+
+export const addEventsAction = (payload: Event[]) => ({ type: EventsActionTypes.ADD_EVENTS, payload });
