@@ -18,9 +18,10 @@ const Menu = ({ openSidebar }: Props) => {
         {isApiReady ? localStorage.chain : 'Loading...'}
       </li>
       <li className={styles.item}>
-        <Link to={routes.editor} className={styles.link}>
-          &lt;/&gt; IDE
-        </Link>
+        <Link to={routes.explorer}>Explorer</Link>
+      </li>
+      <li className={styles.item}>
+        <Link to={routes.editor}>&lt;/&gt; IDE</Link>
       </li>
     </ul>
   );
