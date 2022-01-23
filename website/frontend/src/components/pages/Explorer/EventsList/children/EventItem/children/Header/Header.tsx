@@ -18,7 +18,8 @@ const Header = ({ caption, description, isOpen, onClick }: Props) => {
       <div className={styles.main}>
         <span className={styles.caption}>{caption}</span>
         <span className={arrowClassName} />
-        <span className={styles.number}>0x01</span>
+        {/* block number placeholder */}
+        {/* <span className={styles.number}>0x01</span> */}
       </div>
       <div className={commonStyles.text}>{description}</div>
     </header>

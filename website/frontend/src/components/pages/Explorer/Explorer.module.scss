@@ -1,12 +1,3 @@
 .explorer {
   padding: 40px;
-  display: flex;
-
-  & > * {
-    width: 50%;
-  }
-
-  & > *:first-child {
-    margin-right: 30px;
-  }
 }

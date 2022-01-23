@@ -34,16 +34,17 @@ const EventsList = () => {
 
   const isEventSelected = ({ method }: Event) => filterValues[method];
   const filteredEvents = isAnyFilterSelected ? events.filter(isEventSelected) : events;
+  const eventsAmount = filteredEvents.length;
 
   const getEvents = () => filteredEvents.map((event, index) => <EventItem key={index} event={event} />);
 
   return (
-    <div className="block-list">
+    <div className={styles.events}>
       <header className={styles.header}>
-        <h3 className="block-list__header">Recent events: {filteredEvents.length}</h3>
+        <h3 className={styles.heading}>Recent events: {eventsAmount}</h3>
         <Filters values={filterValues} setValues={setFilterValues} isAnySelected={isAnyFilterSelected} />
       </header>
-      <ul className="programs-list">{getEvents()}</ul>
+      {eventsAmount > 0 ? <ul className="programs-list">{getEvents()}</ul> : <p>There are no events.</p>}
     </div>
   );
 };
