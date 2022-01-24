@@ -4,7 +4,7 @@ import { Link /* , Redirect */ } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'consts';
 import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';

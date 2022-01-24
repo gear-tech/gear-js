@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { AddAlert, programUploadResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import './Upload.scss';

@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
 import { Loader } from 'react-feather';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import styles from './State.module.scss';
 
 type Params = { id: string };

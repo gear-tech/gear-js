@@ -3,7 +3,7 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { GearApi, Metadata } from '@gear-js/api';
 import { UserAccount } from 'types/account';
 import { RPC_METHODS } from 'consts';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import {
   programUploadStartAction,
   sendMessageSuccessAction,

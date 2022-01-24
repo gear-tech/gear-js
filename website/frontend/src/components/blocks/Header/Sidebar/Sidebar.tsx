@@ -14,7 +14,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { NODE_ADRESS_URL_PARAM } from 'consts';
 import * as init from './init';
 import './Sidebar.scss';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 
 type Props = {
   closeSidebar: () => void;

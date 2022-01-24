@@ -15,8 +15,7 @@ import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { nodeApi } from '../../api/initApi';
-import { AlertModel, EventTypes } from '../../types/events';
-import { AlertActionTypes } from '../reducers/AlertReducer';
+import { AlertModel, EventTypes, AlertActionTypes } from 'types/alerts';
 
 const fetchMessagesAction = () => ({ type: MessageActionTypes.FETCH_MESSAGES });
 

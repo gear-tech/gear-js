@@ -1,28 +1,17 @@
-import { AlertModel } from '../../types/events';
+import { AlertState, AlertAction, AlertActionTypes } from 'types/alerts';
 
-export enum AlertActionTypes {
-  ADD_ALERT = 'ADD_ALERT',
-}
-
-interface AddAlertAction {
-  type: AlertActionTypes.ADD_ALERT;
-  payload: AlertModel;
-}
-
-export type AlertAction = AddAlertAction;
-
-interface AlertState {
-  alert: null | AlertModel;
-}
-
-const defaultState: AlertState = {
+const initialState: AlertState = {
   alert: null,
 };
 
-const AlertReducer = (state = defaultState, action: AlertAction) => {
+const AlertReducer = (state = initialState, action: AlertAction) => {
   switch (action.type) {
     case AlertActionTypes.ADD_ALERT:
       return { ...state, alert: action.payload };
+
+    case AlertActionTypes.ADD_ALERT:
+      return { ...state, alert: null };
+
     default:
       return state;
   }

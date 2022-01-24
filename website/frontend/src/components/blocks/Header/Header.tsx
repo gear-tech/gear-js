@@ -9,7 +9,7 @@ import { LogoIcon } from 'assets/Icons';
 import NotificationsIcon from 'assets/images/notifications.svg';
 import CodeIllustration from 'assets/images/code.svg';
 import { WASM_COMPILER_GET } from 'consts';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
 import './Header.scss';

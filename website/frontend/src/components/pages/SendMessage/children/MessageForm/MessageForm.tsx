@@ -8,7 +8,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
