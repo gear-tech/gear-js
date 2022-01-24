@@ -29,7 +29,7 @@ const LogContent = ({ data }: Props) => {
   const getDecodedPayloadData = () => {
     // is there a better way to get logData with replaced payload?
     const [dataObject] = data.toJSON() as [{}];
-    return [{ ...dataObject, payload: decodedPayload }];
+    return [{ ...dataObject, payload: decodedPayload?.toHuman() }];
   };
 
   const preClassName = clsx(commonStyles.text, commonStyles.pre);
