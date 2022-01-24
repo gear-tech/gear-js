@@ -25,6 +25,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@types/node": "^17.0.10",
     "nodemon": "^2.0.14"
   }
 }

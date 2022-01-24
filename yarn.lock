@@ -1816,6 +1816,7 @@ __metadata:
     "@polkadot/api": ^7.0.2
     "@swc/core": ^1.2.124
     "@swc/helpers": ^0.3.2
+    "@types/node": ^17.0.10
     avsc: ^5.7.3
     chalk: ^4.1.2
     dotenv: ^10.0.0
@@ -3956,6 +3957,13 @@ __metadata:
   version: 14.18.5
   resolution: "@types/node@npm:14.18.5"
   checksum: 5ad7090e4cd1d7cd9efa4915cc8b4f69503a1d2070b1998a55fce776ae03fef6c0703d6940197af2cd31b3516b41b552d9fced92d2a0837c28b8ed8b5ca0872c
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^17.0.10":
+  version: 17.0.10
+  resolution: "@types/node@npm:17.0.10"
+  checksum: 979e83d642a2b4f18fa1a4233f884822c05abc7acd0836024aa964187f8446432b21f7913e72fe2b3927c4a811c27a0b6cd60ac7c4ac6a6762cfbab70782aa6a
   languageName: node
   linkType: hard
 
