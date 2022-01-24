@@ -222,9 +222,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     <div className="program-details__value program-details__value_payload">
                       {isShowMetaSwitch && (
                         <Switch
-                          onChange={() => {
-                            setIsManualPaylod(!isManualPaylod);
-                          }}
+                          onChange={() => setIsManualPaylod(!isManualPaylod)}
                           label="Manual input"
                           checked={isManualPaylod}
                         />
@@ -258,9 +256,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       <button
                         type="button"
                         className="program-details__switch-btn"
-                        onClick={() => {
-                          setIsMetaFromFile(true);
-                        }}
+                        onClick={() => setIsMetaFromFile(true)}
                       >
                         <img src={isMetaFromFile ? selected : deselected} alt="radio" />
                         Upload file
@@ -268,9 +264,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       <button
                         type="button"
                         className="program-details__switch-btn"
-                        onClick={() => {
-                          setIsMetaFromFile(false);
-                        }}
+                        onClick={() => setIsMetaFromFile(false)}
                       >
                         <img src={isMetaFromFile ? deselected : selected} alt="radio" />
                         Manual input
@@ -290,14 +284,14 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         innerRef={metaFieldRef}
                         onChange={handleChangeMetaFile}
                       />
-                      {(droppedMetaFile && (
+                      {droppedMetaFile ? (
                         <div className="program-details__value program-details__value_filename">
                           {droppedFile.name}
                           <button type="button" onClick={handleRemoveMetaFile}>
                             <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                           </button>
                         </div>
-                      )) || (
+                      ) : (
                         <button className="program-details__file-btn" type="button" onClick={uploadMetaFile}>
                           Select file
                         </button>
