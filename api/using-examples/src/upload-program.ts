@@ -17,9 +17,3 @@ export const uploadProgram = async (api: GearApi, pathToProgram: string, pathToM
   });
   return programId;
 };
-
-const main = async () => {
-  uploadProgram(await GearApi.create(), resolve('test/wasm/demo_ping.opt.wasm'));
-};
-
-main();
