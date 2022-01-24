@@ -47,6 +47,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     handle_output: '',
     types: '',
     fields: {},
+    programName: '',
   });
 
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
@@ -79,6 +80,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           init_output: JSON.stringify(metaWasm.init_output),
           handle_output: JSON.stringify(metaWasm.handle_output),
           types: JSON.stringify(inputType),
+          programName: JSON.stringify(metaWasm.title),
         });
       }
     } catch (error) {
@@ -103,6 +105,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       handle_output: '',
       types: '',
       fields: {},
+      programName: '',
     });
   };
 
@@ -182,6 +185,23 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       <button type="button" onClick={handleResetForm}>
                         <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                       </button>
+                    </div>
+                  </div>
+                  <div className={styles.block}>
+                    <label htmlFor="value" className={styles.caption}>
+                      Name:
+                    </label>
+                    <div className={styles.value}>
+                      <Field
+                        id="programName"
+                        name="programName"
+                        placeholder="Name"
+                        className={styles.field}
+                        type="text"
+                      />
+                      {errors.programName && touched.programName ? (
+                        <div className={styles.error}>{errors.programName}</div>
+                      ) : null}
                     </div>
                   </div>
                   <div className={styles.block}>
