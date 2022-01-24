@@ -21,7 +21,7 @@ import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { subscribeToEvents, setApiReady, addEventsAction } from '../../store/actions/actions';
+import { subscribeToEvents, setApiReady, addEventsAction, fetchBlockAction } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
 import { useApi } from 'hooks/useApi';
 import store from '../../store';
@@ -90,6 +90,28 @@ const AppComponent: FC = () => {
       history.replace({ search: searchParams.toString() });
     }
   }, [history, location]);
+
+  useEffect(() => {
+    let unsub: UnsubscribePromise | null = null;
+
+    if (api) {
+      unsub = api.gearEvents.subscribeNewBlocks((event) => {
+        dispatch(
+          fetchBlockAction({
+            hash: event.hash.toHex(),
+            number: event.number.toNumber(),
+          })
+        );
+      });
+    }
+    return () => {
+      if (unsub) {
+        (async () => {
+          (await unsub)();
+        })();
+      }
+    };
+  }, [api, dispatch]);
 
   useEffect(() => {
     let unsub: UnsubscribePromise | null = null;
