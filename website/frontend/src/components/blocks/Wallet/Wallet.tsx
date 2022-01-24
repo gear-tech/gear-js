@@ -45,19 +45,19 @@ export const Wallet = () => {
   useEffect(() => {
     setTimeout(() => {
       getAllAccounts()
-      .then((allAccounts) => {
-        if (allAccounts) {
-          allAccounts.forEach((acc: UserAccount) => {
-            if (acc.address === localStorage.getItem('savedAccount')) {
-              acc.isActive = true;
-              dispatch(setCurrentAccount(acc));
-            }
-          });
-          setInjectedAccounts(allAccounts);
-        }
-      })
-      .catch((err) => console.error(err));
-    }, 300)
+        .then((allAccounts) => {
+          if (allAccounts) {
+            allAccounts.forEach((acc: UserAccount) => {
+              if (acc.address === localStorage.getItem('savedAccount')) {
+                acc.isActive = true;
+                dispatch(setCurrentAccount(acc));
+              }
+            });
+            setInjectedAccounts(allAccounts);
+          }
+        })
+        .catch((err) => console.error(err));
+    }, 300);
   }, [dispatch, getAllAccounts]);
 
   const getBalance = useCallback(
@@ -82,7 +82,7 @@ export const Wallet = () => {
     // TODO: think how to wrap it hook
     if (currentAccount) {
       nodeApi.api?.gearEvents
-        .subsribeBalanceChange(currentAccount.address, (balance) => {
+        .subscribeToBalanceChange(currentAccount.address, (balance) => {
           setAccountBalance(balance.toHuman());
         })
         .then((sub) => {

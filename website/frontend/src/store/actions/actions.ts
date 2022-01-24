@@ -235,7 +235,7 @@ export const AddAlert = (payload: AlertModel) => ({
 
 export const subscribeToEvents = () => (dispatch: any) => {
   const filterKey = localStorage.getItem('public_key_raw');
-  nodeApi.subscribeProgramEvents(({ method, data: { info, reason } }) => {
+  nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
       dispatch(
@@ -248,7 +248,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 
-  nodeApi.subscribeLogEvents(async ({ data: { source, dest, reply, payload } }) => {
+  nodeApi.subscribeToLogEvents(async ({ data: { source, dest, reply, payload } }) => {
     let meta = null;
     let decodedPayload: any;
     const programId = source.toHex();
@@ -289,7 +289,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 
-  nodeApi.subscribeTransferEvents(({ data: { from, to, value } }) => {
+  nodeApi.subscribeToTransferEvents(({ data: { from, to, value } }) => {
     if (to.toHex() === filterKey) {
       dispatch(
         AddAlert({
