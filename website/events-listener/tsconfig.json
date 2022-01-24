@@ -4,7 +4,8 @@
     "moduleResolution": "node",
     "strict": true,
     "target": "ESNext",
-    "outDir": "dist"
+    "outDir": "dist",
+    "skipLibCheck": true, // TODO
   },
   "ts-node": {
     "transpileOnly": true,
