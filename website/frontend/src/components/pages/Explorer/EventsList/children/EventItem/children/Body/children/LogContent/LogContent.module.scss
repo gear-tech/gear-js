@@ -1,3 +1,11 @@
+@use 'assets/scss/variables' as *;
+
 .checkbox {
   margin-bottom: 16px;
+  display: flex;
+}
+
+.error {
+  margin-left: 16px;
+  color: $errorColor;
 }

@@ -1,12 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { CreateType, getWasmMetadata, Metadata, LogData } from '@gear-js/api';
 import { Codec } from '@polkadot/types/types';
-import { RootState } from 'store/reducers';
-import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/actions';
+import { ProgramModel } from 'types/program';
+import { programService } from 'services/ProgramsRequestService';
+import { getLocalProgram, isDevChain } from 'helpers';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
-import { EventTypes } from 'types/events';
 import eventStyles from '../../../../EventItem.module.scss';
 import bodyStyles from '../../Body.module.scss';
 import styles from './LogContent.module.scss';
@@ -17,14 +16,15 @@ type Props = {
   data: LogData;
 };
 
-const selectProgram = (state: RootState) => state.programs.program;
-
 const LogContent = ({ data }: Props) => {
-  const dispatch = useDispatch();
-  const program = useSelector(selectProgram);
+  const [program, setProgram] = useState<ProgramModel>();
   const [metadata, setMetadata] = useState<Metadata>();
   const [isDecodedPayload, setIsDecodedPayload] = useState(false);
   const [decodedPayload, setDecodedPayload] = useState<Codec>();
+  const [error, setError] = useState('');
+
+  const { payload, source } = data;
+  const isError = !!error;
 
   const getDecodedPayloadData = () => {
     // is there a better way to get logData with replaced payload?
@@ -35,58 +35,69 @@ const LogContent = ({ data }: Props) => {
   const preClassName = clsx(commonStyles.text, commonStyles.pre);
   const formattedData = JSON.stringify(isDecodedPayload ? getDecodedPayloadData() : data, null, 2);
 
+  const fetchProgram = (id: string) => {
+    const getProgram = isDevChain() ? getLocalProgram : programService.fetchProgram;
+    return getProgram(id);
+  };
+
+  // TODO: 'handle_output' | 'init_output' to enum
+  const handlePayloadDecoding = (errorCallback: () => void, typeKey?: 'handle_output' | 'init_output') => {
+    const type = metadata && typeKey ? metadata[typeKey] : 'Bytes';
+
+    if (type) {
+      try {
+        setDecodedPayload(CreateType.decode(type, payload, metadata));
+      } catch {
+        errorCallback();
+      }
+    } else {
+      errorCallback();
+    }
+  };
+
+  const setDecodingError = () => {
+    setError("Can't decode payload");
+  };
+
+  const handleBytesPayloadDecoding = () => {
+    handlePayloadDecoding(setDecodingError);
+  };
+
   useEffect(() => {
-    const { source } = data;
     const programId = source.toString();
 
-    dispatch(getProgramAction(programId));
-
-    return () => {
-      dispatch(resetProgramAction);
-    };
+    fetchProgram(programId)
+      .then(({ result }) => {
+        setProgram(result);
+      })
+      .catch(() => {
+        handleBytesPayloadDecoding();
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    // TODO: getting of metadata is the same as in the State component (prolly somewhere else too)
-    const metaFile = program?.meta?.metaFile;
+    if (program) {
+      const { metaFile } = program.meta || {};
 
-    if (metaFile) {
-      const metaBuffer = Buffer.from(metaFile, 'base64');
-      getWasmMetadata(metaBuffer).then(setMetadata);
-    }
-  }, [program]);
-
-  // TODO: 'handle_output' | 'init_output' to enum
-  const handlePayloadDecoding = (typeKey: 'handle_output' | 'init_output', errorCallback: () => void) => {
-    if (metadata) {
-      const { payload } = data;
-      const type = metadata[typeKey];
-
-      if (type) {
-        try {
-          setDecodedPayload(CreateType.decode(type, payload, metadata));
-        } catch {
-          errorCallback();
-        }
+      if (metaFile) {
+        const metaBuffer = Buffer.from(metaFile, 'base64');
+        getWasmMetadata(metaBuffer).then(setMetadata);
       } else {
-        errorCallback();
+        handleBytesPayloadDecoding();
       }
     }
-  };
-
-  const showDecodingError = () => {
-    const message = "Can't decode payload neither by handle_output, nor init_output type";
-    const alert = { type: EventTypes.ERROR, message };
-    dispatch(AddAlert(alert));
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [program]);
 
   const handleInitPayloadDecoding = () => {
-    handlePayloadDecoding('init_output', showDecodingError);
+    handlePayloadDecoding(handleBytesPayloadDecoding, 'init_output');
   };
 
   useEffect(() => {
-    handlePayloadDecoding('handle_output', handleInitPayloadDecoding);
+    if (metadata) {
+      handlePayloadDecoding(handleInitPayloadDecoding, 'handle_output');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
 
@@ -96,12 +107,15 @@ const LogContent = ({ data }: Props) => {
 
   return (
     <>
-      <Checkbox
-        label="Decoded payload"
-        className={styles.checkbox}
-        checked={isDecodedPayload}
-        onChange={handleCheckboxChange}
-      />
+      <div className={styles.checkbox}>
+        <Checkbox
+          label="Decoded payload"
+          checked={isDecodedPayload}
+          onChange={handleCheckboxChange}
+          disabled={isError}
+        />
+        {isError && <p className={styles.error}>{error}</p>}
+      </div>
       <pre className={preClassName}>{formattedData}</pre>
     </>
   );
