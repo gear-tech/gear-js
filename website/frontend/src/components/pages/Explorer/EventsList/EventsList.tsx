@@ -7,6 +7,7 @@ import { FilterValues } from 'types/events-list';
 import { LOCAL_STORAGE } from 'consts';
 import { RootState } from 'store/reducers';
 import * as init from './init';
+import { getCaption } from './helpers';
 import styles from './EventsList.module.scss';
 
 const selectEvents = (state: RootState) => state.events.list;
@@ -22,8 +23,6 @@ const EventsList = () => {
   const isEventSelected = ({ method }: Event) => filterValues[method];
   const filteredEvents = isAnyFilterSelected ? events.filter(isEventSelected) : events;
   const eventsAmount = filteredEvents.length;
-
-  const getCaption = ({ method, section }: Event) => `${section}.${method}`;
 
   // TODO: combine with above .filter()
   const getGroupedEvents = () =>
@@ -43,7 +42,7 @@ const EventsList = () => {
       return eventsAccumulator;
     }, []);
 
-  const getEvents = () => getGroupedEvents().map((group, index) => <EventItem key={index} events={group} />);
+  const getEvents = () => getGroupedEvents().map((group, index) => <EventItem key={index} group={group} />);
 
   return (
     <div className={styles.events}>

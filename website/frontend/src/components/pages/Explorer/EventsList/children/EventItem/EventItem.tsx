@@ -3,21 +3,22 @@ import { Event } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
 import { Header } from './children/Header/Header';
 import { Body } from './children/Body/Body';
+import { getCaption } from '../../helpers';
 import styles from './EventItem.module.scss';
 
 type Props = {
-  events: Event[];
+  group: Event[];
 };
 
-const EventItem = ({ events }: Props) => {
-  const [event] = events;
-  const { section, method, meta } = event;
+const EventItem = ({ group }: Props) => {
+  const [event] = group;
+  const { method, meta } = event;
   const { docs } = meta;
 
   const [isOpen, setIsOpen] = useState(false);
 
   const className = clsx('programs-list__item', styles.item);
-  const caption = `${section}.${method}`;
+  const caption = getCaption(event);
   const description = String(docs.toHuman());
 
   const toggle = () => {
@@ -31,9 +32,9 @@ const EventItem = ({ events }: Props) => {
         description={description}
         isOpen={isOpen}
         onClick={toggle}
-        eventsAmount={events.length}
+        groupEventsAmount={group.length}
       />
-      {isOpen && <Body method={method} events={events} />}
+      {isOpen && <Body method={method} group={group} />}
     </li>
   );
 };

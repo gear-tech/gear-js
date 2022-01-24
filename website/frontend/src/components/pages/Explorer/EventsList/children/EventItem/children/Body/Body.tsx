@@ -7,14 +7,14 @@ import styles from './Body.module.scss';
 
 type Props = {
   method: string;
-  events: Event[];
+  group: Event[];
 };
 
-const Body = ({ method, events }: Props) => {
+const Body = ({ method, group }: Props) => {
   const isLog = method === 'Log';
 
   const getContent = () =>
-    events.map((event, index) => {
+    group.map((event, index) => {
       const { data } = event;
       return isLog ? <LogContent key={index} data={new LogData(data)} /> : <Content key={index} data={data} />;
     });

@@ -8,10 +8,10 @@ type Props = {
   description: string;
   isOpen: boolean;
   onClick: () => void;
-  eventsAmount: number;
+  groupEventsAmount: number;
 };
 
-const Header = ({ caption, description, isOpen, onClick, eventsAmount }: Props) => {
+const Header = ({ caption, description, isOpen, onClick, groupEventsAmount }: Props) => {
   const arrowClassName = clsx(styles.arrow, isOpen ? styles.up : styles.down);
 
   return (
@@ -19,7 +19,7 @@ const Header = ({ caption, description, isOpen, onClick, eventsAmount }: Props) 
       <div className={styles.main}>
         <span className={styles.caption}>{caption}</span>
         <span className={arrowClassName} />
-        {eventsAmount > 1 && <span className={styles.counter}>{eventsAmount}</span>}
+        {groupEventsAmount > 1 && <span className={styles.counter}>{groupEventsAmount}</span>}
         {/* block number placeholder */}
         {/* <span className={styles.number}>0x01</span> */}
       </div>
