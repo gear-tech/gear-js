@@ -34,7 +34,7 @@ import { globalStyles } from './styles';
 // alert configuration
 const options = {
   position: positions.BOTTOM_CENTER,
-  timeout: 5000,
+  timeout: 10000,
   containerStyle: {
     zIndex: ZIndexes.alert,
     width: '100%',
