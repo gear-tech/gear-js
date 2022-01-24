@@ -6,11 +6,12 @@ import { Body } from './children/Body/Body';
 import styles from './EventItem.module.scss';
 
 type Props = {
-  event: Event;
+  events: Event[];
 };
 
-const EventItem = ({ event }: Props) => {
-  const { section, method, meta, data } = event;
+const EventItem = ({ events }: Props) => {
+  const [event] = events;
+  const { section, method, meta } = event;
   const { docs } = meta;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -25,8 +26,14 @@ const EventItem = ({ event }: Props) => {
 
   return (
     <li className={className}>
-      <Header caption={caption} description={description} isOpen={isOpen} onClick={toggle} />
-      {isOpen && <Body method={method} data={data} />}
+      <Header
+        caption={caption}
+        description={description}
+        isOpen={isOpen}
+        onClick={toggle}
+        eventsAmount={events.length}
+      />
+      {isOpen && <Body method={method} events={events} />}
     </li>
   );
 };

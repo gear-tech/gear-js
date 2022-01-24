@@ -11,4 +11,8 @@
   border: 1px dashed $bkgButtonColor;
   border-radius: 2px;
   overflow-x: auto;
+
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
 }

@@ -29,6 +29,15 @@
   }
 }
 
+.counter {
+  margin-left: 16px;
+  padding: 0 7.5px;
+  font-size: 14px;
+  color: $textColorSecondary;
+  background-color: $bkgButtonColor;
+  border-radius: 100px;
+}
+
 .number {
   margin-left: auto;
   font-weight: 600;

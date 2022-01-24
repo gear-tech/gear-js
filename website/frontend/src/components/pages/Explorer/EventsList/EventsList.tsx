@@ -23,7 +23,27 @@ const EventsList = () => {
   const filteredEvents = isAnyFilterSelected ? events.filter(isEventSelected) : events;
   const eventsAmount = filteredEvents.length;
 
-  const getEvents = () => filteredEvents.map((event, index) => <EventItem key={index} event={event} />);
+  const getCaption = ({ method, section }: Event) => `${section}.${method}`;
+
+  // TODO: combine with above .filter()
+  const getGroupedEvents = () =>
+    filteredEvents.reduce((eventsAccumulator: Event[][], event, index) => {
+      const prevEvent = filteredEvents[index - 1];
+      const prevCaption = prevEvent ? getCaption(prevEvent) : undefined;
+      const caption = getCaption(event);
+
+      if (prevCaption !== caption) {
+        eventsAccumulator.push([]);
+      }
+
+      const lastIndex = eventsAccumulator.length - 1;
+      const lastGroup = eventsAccumulator[lastIndex];
+      lastGroup.unshift(event);
+
+      return eventsAccumulator;
+    }, []);
+
+  const getEvents = () => getGroupedEvents().map((group, index) => <EventItem key={index} events={group} />);
 
   return (
     <div className={styles.events}>
