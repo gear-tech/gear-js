@@ -1,23 +1,23 @@
-import React, { useState, useCallback, useRef, VFC } from 'react';
-import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
-import { Formik, Form, Field } from 'formik';
+import React, { useState, useRef, VFC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
-import { UploadProgramModel } from 'types/program';
-import { useDispatch, useSelector } from 'react-redux';
+import { Metadata, getWasmMetadata, parseHexTypes, getTypeStructure } from '@gear-js/api';
+import { Formik, Form, Field } from 'formik';
+import { ParsedShape, parseMeta } from 'utils/meta-parser';
+import { EventTypes } from 'types/alerts';
+import { FormItem } from 'components/FormItem';
+import { Switch } from 'common/components/Switch';
+import { Schema } from './Schema';
+import { useApi } from 'hooks/useApi';
+import { AddAlert } from 'store/actions/actions';
+import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
-import { EventTypes } from 'types/events';
-import { AddAlert, programUploadStartAction } from 'store/actions/actions';
-import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
-import './ProgramDetails.scss';
-import cancel from 'assets/images/cancel.svg';
-import close from 'assets/images/close.svg';
+import { readFileAsync, checkFileFormat } from 'helpers';
+import { MIN_GAS_LIMIT } from 'consts';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import { RootState } from 'store/reducers';
-import { Schema } from './Schema';
-import { readFileAsync } from '../../../helpers';
-import { useApi } from '../../../hooks/useApi';
+import './ProgramDetails.scss';
 
 type Props = {
   setDroppedFile: (file: File | null) => void;
@@ -25,21 +25,19 @@ type Props = {
 };
 
 export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
+  const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
+  const metaFieldRef = useRef<HTMLDivElement | null>(null);
 
-  const [isMetaByFile, setIsMetaByFile] = useState(true);
-  const [metaWasm, setMetaWasm] = useState<any>(null);
-  const [metaWasmFile, setMetaWasmFile] = useState<any>(null);
-  const [displayTypes, setDisplayTypes] = useState<any>(null);
+  const [meta, setMeta] = useState<Metadata | null>(null);
+  const [metaFile, setMetaFile] = useState<string | null>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
-  const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
-  const [wrongJSON, setWrongJSON] = useState(false);
-
-  const [api] = useApi();
-
-  const program = {
-    gasLimit: 20000000,
+  const [metaForm, setMetaForm] = useState<ParsedShape | null>();
+  const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
+  const [isManualPaylod, setIsManualPaylod] = useState<boolean>(false);
+  const [initialValues, setInitialValues] = useState({
+    gasLimit: MIN_GAS_LIMIT,
     value: 0,
     initPayload: '',
     init_input: '',
@@ -47,122 +45,124 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     handle_input: '',
     handle_output: '',
     types: '',
-    programName: '',
-  };
+    fields: {},
+  });
 
-  const metaFieldRef = useRef<any>(null);
-
-  if (wrongMetaFormat) {
-    setTimeout(() => setWrongMetaFormat(false), 3000);
-  }
-
-  const removeMetaFile = () => {
-    setDroppedMetaFile(null);
-    setMetaWasm(null);
-  };
+  const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
+  const isShowMetaSwitch = isMetaFromFile && meta;
+  const isShowMetaForm = isMetaFromFile && metaForm && !isManualPaylod;
 
   const uploadMetaFile = () => {
     metaFieldRef.current?.click();
   };
 
-  const handleFilesUpload = useCallback(
-    async (file) => {
-      try {
-        const fileBuffer: Buffer = (await readFileAsync(file)) as Buffer;
-        const meta = await getWasmMetadata(fileBuffer);
+  const handleUploadMetaFile = async (file: File) => {
+    try {
+      const fileBuffer = (await readFileAsync(file)) as Buffer;
+      const metaWasm = await getWasmMetadata(fileBuffer);
 
+      if (metaWasm && metaWasm.types && metaWasm.handle_input) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
-        setMetaWasmFile(bufstr);
-        setMetaWasm(meta);
-        let types = '';
-        const parsedTypes = parseHexTypes(meta.types!);
-        Object.entries(parsedTypes).forEach((value) => {
-          types += `${value[0]}: ${JSON.stringify(value[1])}\n`;
+        const displayedTypes = parseHexTypes(metaWasm.types);
+        const inputType = getTypeStructure(metaWasm.handle_input, displayedTypes);
+        const parsedMeta = parseMeta(inputType);
+
+        setMeta(metaWasm);
+        setMetaFile(bufstr);
+        setMetaForm(parsedMeta);
+        setInitialValues({
+          ...initialValues,
+          initPayload: JSON.stringify(inputType, null, 4),
+          init_input: JSON.stringify(metaWasm.init_input),
+          handle_input: JSON.stringify(metaWasm.handle_input),
+          init_output: JSON.stringify(metaWasm.init_output),
+          handle_output: JSON.stringify(metaWasm.handle_output),
+          types: JSON.stringify(inputType),
         });
-        setDisplayTypes(types.trimEnd());
-      } catch (error) {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
       }
-      setDroppedMetaFile(file);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setDroppedMetaFile]
-  );
-
-  const checkFileFormat = useCallback((files: any) => {
-    // eslint-disable-next-line no-console
-    if (typeof files[0]?.name === 'string') {
-      const fileExt: string = files[0].name.split('.').pop().toLowerCase();
-      return fileExt !== 'wasm';
+    } catch (error) {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
     }
-    return true;
-  }, []);
+    setDroppedMetaFile(file);
+  };
 
-  const handleMetaInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { files },
-    } = event;
-    if (files?.length) {
-      const isCorrectFormat = checkFileFormat(files);
-      setWrongMetaFormat(isCorrectFormat);
+  const handleRemoveMetaFile = () => {
+    setMeta(null);
+    setMetaFile(null);
+    setMetaForm(null);
+    setDroppedMetaFile(null);
 
-      if (!isCorrectFormat) {
-        handleFilesUpload(files[0]);
+    setInitialValues({
+      gasLimit: MIN_GAS_LIMIT,
+      value: 0,
+      initPayload: '',
+      init_input: '',
+      init_output: '',
+      handle_input: '',
+      handle_output: '',
+      types: '',
+      fields: {},
+    });
+  };
+
+  const handleChangeMetaFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length) {
+      const isCorrectFormat = checkFileFormat(event.target.files[0]);
+
+      if (isCorrectFormat) {
+        handleUploadMetaFile(event.target.files[0]);
       } else {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
-        setWrongMetaFormat(false);
       }
     }
+  };
+
+  const handleSubmitForm = (values: any) => {
+    if (currentAccount) {
+      if (isMetaFromFile) {
+        let pl = values.fields;
+        if (isManualPaylod) {
+          pl = values.initPayload;
+        }
+
+        const updatedValues = { ...values, initPayload: pl };
+
+        UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
+          setDroppedFile(null);
+        });
+      } else {
+        try {
+          const manualTypes = values.types.length > 0 ? JSON.parse(values.types) : values.types;
+          UploadProgram(api, currentAccount, droppedFile, { ...values, types: manualTypes }, null, dispatch, () => {
+            setDroppedFile(null);
+          });
+        } catch (error) {
+          dispatch(AddAlert({ type: EventTypes.ERROR, message: `Invalid JSON format` }));
+        }
+      }
+    } else {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Wallet not connected` }));
+    }
+  };
+
+  const handleResetForm = () => {
+    setDroppedFile(null);
+    setDroppedMetaFile(null);
   };
 
   return (
     <div className="program-details">
       <h3 className="program-details__header">UPLOAD NEW PROGRAM</h3>
+
       <Formik
-        initialValues={program}
+        initialValues={initialValues}
         validationSchema={Schema}
         validateOnBlur
-        onSubmit={(values: UploadProgramModel) => {
-          if (currentAccount) {
-            if (isMetaByFile) {
-              UploadProgram(
-                api,
-                currentAccount,
-                droppedFile,
-                { ...values, ...metaWasm },
-                metaWasmFile,
-                dispatch,
-                () => {
-                  setDroppedFile(null);
-                }
-              );
-            } else {
-              try {
-                const types = values.types.length > 0 ? JSON.parse(values.types) : values.types;
-                dispatch(programUploadStartAction());
-                UploadProgram(api, currentAccount, droppedFile, { ...values, types }, null, dispatch, () => {
-                  setDroppedFile(null);
-                });
-              } catch (err) {
-                setWrongJSON(true);
-                console.log(err);
-              }
-            }
-          } else {
-            dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
-          }
-        }}
-        onReset={() => {
-          setDroppedFile(null);
-        }}
+        enableReinitialize
+        onSubmit={handleSubmitForm}
       >
-        {({ errors, touched, setFieldValue, values }) => (
+        {({ errors, touched, values, setFieldValue }) => (
           <Form>
-            {/* eslint-disable react/button-has-type */}
-            <button type="reset" aria-label="closeButton">
-              <img src={close} alt="close" className="program-details__close" />
-            </button>
-            {/* eslint-disable react/button-has-type */}
             <div className="program-details__download">
               <progress className="program-details__progress" max="100" value="65" />
               <div className="program-details__progress-value" />
@@ -171,47 +171,29 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
               </div>
             </div>
             <div className="program-details__wrapper">
-              <div className="program-details__wrapper-columns">
-                <div className="program-details__wrapper-column1">
+              <div className="program-details__columns">
+                <div className="program-details__column-left">
                   <div className="program-details__info">
-                    <span className="program-details__field-file program-details__field">File:</span>
-                    <div className="program-details__filename program-details__value">
-                      {droppedFile.name.replace(`.${droppedFile.name.split('.').pop()}`, '')}.
-                      {droppedFile.name.split('.').pop()}
-                      <button type="reset">
+                    <span className="program-details__title">File:</span>
+                    <div className="program-details__value program-details__value_filename">
+                      {droppedFile.name}
+                      <button type="button" onClick={handleResetForm}>
                         <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                       </button>
                     </div>
                   </div>
                   <div className="program-details__info">
-                    <label htmlFor="programName" className="program-details__field-limit program-details__field">
-                      Name:
-                    </label>
-                    <div className="program-details__field-wrapper">
-                      <Field
-                        id="programName"
-                        name="programName"
-                        placeholder="Name"
-                        className="program-details__limit-value program-details__value"
-                        type="text"
-                      />
-                      {errors.programName && touched.programName ? (
-                        <div className="program-details__error">{errors.programName}</div>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="program-details__info">
-                    <label htmlFor="gasLimit" className="program-details__field-limit program-details__field">
+                    <label htmlFor="gasLimit" className="program-details__title">
                       Gas limit:
                     </label>
-                    <div className="program-details__field-wrapper">
+                    <div className="program-details__value">
                       <NumberFormat
                         name="gasLimit"
                         placeholder="20,000,000"
                         value={values.gasLimit}
                         thousandSeparator
                         allowNegative={false}
-                        className="program-details__limit-value program-details__value"
+                        className="program-details__input"
                         onValueChange={(val) => {
                           const { floatValue } = val;
                           setFieldValue('gasLimit', floatValue);
@@ -223,209 +205,118 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     </div>
                   </div>
                   <div className="program-details__info">
-                    <label
-                      htmlFor="initPayload"
-                      className="program-details__field-init-parameters program-details__field"
-                    >
-                      Initial parameters:
-                    </label>
-                    <div className="program-details__field-wrapper">
-                      <Field
-                        id="initPayload"
-                        name="initPayload"
-                        className="program-details__init-parameters-value program-details__value"
-                      />
-                      {errors.initPayload && touched.initPayload ? (
-                        <div className="program-details__error">{errors.initPayload}</div>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div className="program-details__info">
-                    <label htmlFor="value" className="program-details__field-init-value program-details__field">
+                    <label htmlFor="value" className="program-details__title">
                       Initial value:
                     </label>
-                    <div className="program-details__field-wrapper">
-                      <Field
-                        id="value"
-                        name="value"
-                        placeholder="0"
-                        className="program-details__init-value program-details__value"
-                        type="number"
-                      />
+                    <div className="program-details__value">
+                      <Field id="value" name="value" placeholder="0" className="program-details__input" type="number" />
                       {errors.value && touched.value ? (
                         <div className="program-details__error">{errors.value}</div>
                       ) : null}
                     </div>
                   </div>
                   <div className="program-details__info">
-                    <p className="program-details__field">Metadata: </p>
-                    <div className="program-details--switch-btns">
+                    <label htmlFor="initPayload" className="program-details__title program-details__title_top">
+                      Initial payload:
+                    </label>
+                    <div className="program-details__value program-details__value_payload">
+                      {isShowMetaSwitch && (
+                        <Switch
+                          onChange={() => {
+                            setIsManualPaylod(!isManualPaylod);
+                          }}
+                          label="Manual input"
+                          checked={isManualPaylod}
+                        />
+                      )}
+                      {isShowMetaForm ? (
+                        <div className="message-form--info">
+                          <FormItem data={metaForm} />
+                        </div>
+                      ) : (
+                        <>
+                          <Field
+                            as="textarea"
+                            id="initPayload"
+                            name="initPayload"
+                            placeholder="// Enter your payload here"
+                            className="program-details__input program-details__input_textarea"
+                          />
+                          {errors.initPayload && touched.initPayload ? (
+                            <div className="program-details__error">{errors.initPayload}</div>
+                          ) : null}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="program-details__column-right">
+                  <span className="program-details__column-title">Metadata: </span>
+                  <div className="program-details__info">
+                    <span className="program-details__title">Metadata: </span>
+                    <div className="program-details__switch-btns">
                       <button
                         type="button"
-                        className="program-details--switch-btns__btn"
-                        onClick={() => setIsMetaByFile(true)}
+                        className="program-details__switch-btn"
+                        onClick={() => {
+                          setIsMetaFromFile(true);
+                        }}
                       >
-                        <img src={isMetaByFile ? selected : deselected} alt="radio" />
+                        <img src={isMetaFromFile ? selected : deselected} alt="radio" />
                         Upload file
                       </button>
                       <button
                         type="button"
-                        className="program-details--switch-btns__btn"
+                        className="program-details__switch-btn"
                         onClick={() => {
-                          setIsMetaByFile(false);
-                          setDroppedMetaFile(null);
+                          setIsMetaFromFile(false);
                         }}
                       >
-                        <img src={isMetaByFile ? deselected : selected} alt="radio" />
+                        <img src={isMetaFromFile ? deselected : selected} alt="radio" />
                         Manual input
                       </button>
                     </div>
                   </div>
-                </div>
-                <div className="program-details__wrapper-column2">
-                  {(isMetaByFile && (
-                    <>
-                      <div className="program-details__info">
-                        <label className="program-details__field" htmlFor="meta">
-                          Metadata file:{' '}
-                        </label>
-                        <Field
-                          id="meta"
-                          name="meta"
-                          className="is-hidden"
-                          type="file"
-                          innerRef={metaFieldRef}
-                          onChange={handleMetaInputChange}
-                        />
-                        {(droppedMetaFile && (
-                          <div className="program-details__filename program-details__value">
-                            {droppedMetaFile.name.replace(`.${droppedMetaFile.name.split('.').pop()}`, '')}.
-                            {droppedMetaFile.name.split('.').pop()}
-                            <button type="button" onClick={removeMetaFile}>
-                              <img alt="cancel" src={cancel} />
-                            </button>
-                          </div>
-                        )) || (
-                          <button className="program-details--file-btn" type="button" onClick={uploadMetaFile}>
-                            Select file
+                  {isMetaFromFile && (
+                    <div className="program-details__info">
+                      <label htmlFor="meta" className="program-details__title">
+                        Metadata file:
+                      </label>
+                      <Field
+                        id="meta"
+                        name="meta"
+                        className="is-hidden"
+                        type="file"
+                        innerRef={metaFieldRef}
+                        onChange={handleChangeMetaFile}
+                      />
+                      {(droppedMetaFile && (
+                        <div className="program-details__value program-details__value_filename">
+                          {droppedFile.name}
+                          <button type="button" onClick={handleRemoveMetaFile}>
+                            <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                           </button>
-                        )}
-                      </div>
-                      {metaWasm && (
-                        <div>
-                          <div className="program-details__info">
-                            <label htmlFor="init_input" className="program-details__field-limit program-details__field">
-                              Initial type:
-                            </label>
-                            <div className="program-details__field-wrapper">
-                              <Field
-                                id="init_input"
-                                name="init_input"
-                                placeholder={JSON.stringify(metaWasm.init_input)}
-                                className="program-details__limit-value program-details__value"
-                                type="text"
-                                disabled
-                              />
-                              {errors.init_input && touched.init_input ? (
-                                <div className="program-details__error">{errors.init_input}</div>
-                              ) : null}
-                            </div>
-                          </div>
-                          <div className="program-details__info">
-                            <label htmlFor="input" className="program-details__field-limit program-details__field">
-                              Incoming type:
-                            </label>
-                            <div className="program-details__field-wrapper">
-                              <Field
-                                id="input"
-                                name="input"
-                                placeholder={JSON.stringify(metaWasm.handle_input)}
-                                className="program-details__limit-value program-details__value"
-                                type="text"
-                                disabled
-                              />
-                              {errors.handle_input && touched.handle_input ? (
-                                <div className="program-details__error">{errors.handle_input}</div>
-                              ) : null}
-                            </div>
-                          </div>
-                          <div className="program-details__info">
-                            <label
-                              htmlFor="output"
-                              className="program-details__field-init-value program-details__field"
-                            >
-                              Expected type:
-                            </label>
-                            <div className="program-details__field-wrapper">
-                              <Field
-                                id="output"
-                                name="output"
-                                placeholder={JSON.stringify(metaWasm.handle_output)}
-                                className="program-details__init-value program-details__value"
-                                type="text"
-                                disabled
-                              />
-                              {errors.handle_output && touched.handle_output ? (
-                                <div className="program-details__error">{errors.handle_output}</div>
-                              ) : null}
-                            </div>
-                          </div>
-                          <div className="program-details__info">
-                            <label
-                              htmlFor="init_output"
-                              className="program-details__field-init-value program-details__field"
-                            >
-                              Initial output type:
-                            </label>
-                            <div className="program-details__field-wrapper">
-                              <Field
-                                id="init_output"
-                                name="init_output"
-                                placeholder={JSON.stringify(metaWasm.init_output)}
-                                className="program-details__init-value program-details__value"
-                                type="text"
-                                disabled
-                              />
-                              {errors.init_output && touched.init_output ? (
-                                <div className="program-details__error">{errors.init_output}</div>
-                              ) : null}
-                            </div>
-                          </div>
-                          <div className="program-details__info">
-                            <label htmlFor="types" className="program-details__field-init-value program-details__field">
-                              Types:
-                            </label>
-                            <div className="program-details__field-wrapper">
-                              <Field
-                                as="textarea"
-                                id="types"
-                                name="types"
-                                placeholder={displayTypes}
-                                className="program-details__types program-details__value"
-                                disabled
-                              />
-                              {errors.types && touched.types ? (
-                                <div className="program-details__error">{errors.types}</div>
-                              ) : null}
-                            </div>
-                          </div>
                         </div>
+                      )) || (
+                        <button className="program-details__file-btn" type="button" onClick={uploadMetaFile}>
+                          Select file
+                        </button>
                       )}
-                    </>
-                  )) || (
+                    </div>
+                  )}
+                  {isShowFields && (
                     <>
                       <div className="program-details__info">
-                        <label htmlFor="init_input" className="program-details__field-limit program-details__field">
+                        <label htmlFor="init_input" className="program-details__title">
                           Initial type:
                         </label>
-                        <div className="program-details__field-wrapper">
+                        <div className="program-details__value">
                           <Field
                             id="init_input"
                             name="init_input"
-                            placeholder=""
-                            className="program-details__limit-value program-details__value"
+                            className="program-details__input"
                             type="text"
+                            disabled={isMetaFromFile}
                           />
                           {errors.init_input && touched.init_input ? (
                             <div className="program-details__error">{errors.init_input}</div>
@@ -433,16 +324,16 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         </div>
                       </div>
                       <div className="program-details__info">
-                        <label htmlFor="input" className="program-details__field-limit program-details__field">
+                        <label htmlFor="input" className="program-details__title">
                           Incoming type:
                         </label>
-                        <div className="program-details__field-wrapper">
+                        <div className="program-details__value">
                           <Field
-                            id="input"
-                            name="input"
-                            placeholder=""
-                            className="program-details__limit-value program-details__value"
+                            id="handle_input"
+                            name="handle_input"
+                            className="program-details__input"
                             type="text"
+                            disabled={isMetaFromFile}
                           />
                           {errors.handle_input && touched.handle_input ? (
                             <div className="program-details__error">{errors.handle_input}</div>
@@ -450,16 +341,16 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         </div>
                       </div>
                       <div className="program-details__info">
-                        <label htmlFor="output" className="program-details__field-init-value program-details__field">
+                        <label htmlFor="output" className="program-details__title">
                           Expected type:
                         </label>
-                        <div className="program-details__field-wrapper">
+                        <div className="program-details__value">
                           <Field
-                            id="output"
-                            name="output"
-                            placeholder=""
-                            className="program-details__init-value program-details__value"
+                            id="handle_output"
+                            name="handle_output"
+                            className="program-details__input"
                             type="text"
+                            disabled={isMetaFromFile}
                           />
                           {errors.handle_output && touched.handle_output ? (
                             <div className="program-details__error">{errors.handle_output}</div>
@@ -467,19 +358,16 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         </div>
                       </div>
                       <div className="program-details__info">
-                        <label
-                          htmlFor="init_output"
-                          className="program-details__field-init-value program-details__field"
-                        >
+                        <label htmlFor="init_output" className="program-details__title">
                           Initial output type:
                         </label>
-                        <div className="program-details__field-wrapper">
+                        <div className="program-details__value">
                           <Field
                             id="init_output"
                             name="init_output"
-                            placeholder=""
-                            className="program-details__init-value program-details__value"
+                            className="program-details__input"
                             type="text"
+                            disabled={isMetaFromFile}
                           />
                           {errors.init_output && touched.init_output ? (
                             <div className="program-details__error">{errors.init_output}</div>
@@ -487,16 +375,16 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         </div>
                       </div>
                       <div className="program-details__info">
-                        <label htmlFor="types" className="program-details__field-init-value program-details__field">
+                        <label htmlFor="types" className="program-details__title program-details__title_top">
                           Types:
                         </label>
-                        <div className="program-details__field-wrapper">
+                        <div className="program-details__value">
                           <Field
                             as="textarea"
                             id="types"
                             name="types"
-                            placeholder="{&#10;...&#10;}"
-                            className="program-details__types program-details__value"
+                            className="program-details__input program-details__input_textarea"
+                            disabled={isMetaFromFile}
                           />
                           {errors.types && touched.types ? (
                             <div className="program-details__error">{errors.types}</div>
@@ -511,25 +399,19 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                 <button type="submit" className="program-details__upload" aria-label="uploadProgramm">
                   Upload program
                 </button>
-                {/* eslint-disable react/button-has-type */}
-                <button type="reset" className="program-details__cancel" aria-label="closeProgramDetails">
+                <button
+                  type="button"
+                  className="program-details__cancel"
+                  aria-label="closeProgramDetails"
+                  onClick={handleResetForm}
+                >
                   Cancel upload
                 </button>
-                {/* eslint-enable react/button-has-type */}
               </div>
             </div>
           </Form>
         )}
       </Formik>
-      {wrongJSON && (
-        <StatusPanel
-          onClose={() => {
-            setWrongJSON(false);
-          }}
-          statusPanelText="Invalid JSON format"
-          isError
-        />
-      )}
     </div>
   );
 };

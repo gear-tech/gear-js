@@ -61,3 +61,11 @@ export const signPayload = async (injector: any, address: string, payload: any, 
 };
 
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
+
+export const checkFileFormat = (file: File) => {
+  if (file) {
+    const fileExt = file.name.split('.').pop()?.toLowerCase();
+    return fileExt === 'wasm';
+  }
+  return false;
+};
