@@ -37,7 +37,7 @@ const EventsList = () => {
 
       const lastIndex = eventsAccumulator.length - 1;
       const lastGroup = eventsAccumulator[lastIndex];
-      lastGroup.unshift(event);
+      lastGroup.push(event);
 
       return eventsAccumulator;
     }, []);
