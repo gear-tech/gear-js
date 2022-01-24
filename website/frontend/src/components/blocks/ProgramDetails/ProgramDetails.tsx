@@ -1,5 +1,6 @@
 import React, { useState, useRef, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, parseHexTypes, getTypeStructure } from '@gear-js/api';
@@ -17,7 +18,7 @@ import { readFileAsync, checkFileFormat } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import './ProgramDetails.scss';
+import styles from './ProgramDetails.module.scss';
 
 type Props = {
   setDroppedFile: (file: File | null) => void;
@@ -151,8 +152,8 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   };
 
   return (
-    <div className="program-details">
-      <h3 className="program-details__header">UPLOAD NEW PROGRAM</h3>
+    <div className={styles.programDetails}>
+      <h3 className={styles.heading}>UPLOAD NEW PROGRAM</h3>
 
       <Formik
         initialValues={initialValues}
@@ -163,63 +164,62 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       >
         {({ errors, touched, values, setFieldValue }) => (
           <Form>
-            <div className="program-details__download">
-              <progress className="program-details__progress" max="100" value="65" />
-              <div className="program-details__progress-value" />
-              <div className="program-details__progress-bg">
-                <div className="program-details__progress-bar" />
+            <div className={styles.download}>
+              <progress className={styles.progress} max="100" value="65" />
+              <div className={styles.progressValue} />
+              <div className={styles.progressBg}>
+                <div className={styles.progressBar} />
               </div>
             </div>
-            <div className="program-details__wrapper">
-              <div className="program-details__columns">
-                <div className="program-details__column-left">
-                  <div className="program-details__info">
-                    <span className="program-details__title">File:</span>
-                    <div className="program-details__value program-details__value_filename">
+
+            <div className={styles.columnsWrapper}>
+              <div className={styles.columns}>
+                <div className={styles.columnLeft}>
+                  <div className={styles.block}>
+                    <span className={styles.caption}>File:</span>
+                    <div className={clsx(styles.value, styles.filename)}>
                       {droppedFile.name}
                       <button type="button" onClick={handleResetForm}>
                         <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                       </button>
                     </div>
                   </div>
-                  <div className="program-details__info">
-                    <label htmlFor="gasLimit" className="program-details__title">
+                  <div className={styles.block}>
+                    <label htmlFor="gasLimit" className={styles.caption}>
                       Gas limit:
                     </label>
-                    <div className="program-details__value">
+                    <div className={styles.value}>
                       <NumberFormat
                         name="gasLimit"
                         placeholder="20,000,000"
                         value={values.gasLimit}
                         thousandSeparator
                         allowNegative={false}
-                        className="program-details__input"
+                        className={styles.field}
                         onValueChange={(val) => {
                           const { floatValue } = val;
                           setFieldValue('gasLimit', floatValue);
                         }}
                       />
                       {errors.gasLimit && touched.gasLimit ? (
-                        <div className="program-details__error">{errors.gasLimit}</div>
+                        <div className={styles.error}>{errors.gasLimit}</div>
                       ) : null}
                     </div>
                   </div>
-                  <div className="program-details__info">
-                    <label htmlFor="value" className="program-details__title">
+                  <div className={styles.block}>
+                    <label htmlFor="value" className={styles.caption}>
                       Initial value:
                     </label>
-                    <div className="program-details__value">
-                      <Field id="value" name="value" placeholder="0" className="program-details__input" type="number" />
-                      {errors.value && touched.value ? (
-                        <div className="program-details__error">{errors.value}</div>
-                      ) : null}
+                    <div className={styles.value}>
+                      <Field id="value" name="value" placeholder="0" className={styles.field} type="number" />
+                      {errors.value && touched.value ? <div className={styles.error}>{errors.value}</div> : null}
                     </div>
                   </div>
-                  <div className="program-details__info">
-                    <label htmlFor="initPayload" className="program-details__title program-details__title_top">
+                  <div className={styles.block}>
+                    <label htmlFor="initPayload" className={clsx(styles.caption, styles.top)}>
                       Initial payload:
                     </label>
-                    <div className="program-details__value program-details__value_payload">
+                    <div className={clsx(styles.value, styles.payload)}>
                       {isShowMetaSwitch && (
                         <Switch
                           onChange={() => setIsManualPaylod(!isManualPaylod)}
@@ -238,61 +238,53 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                             id="initPayload"
                             name="initPayload"
                             placeholder="// Enter your payload here"
-                            className="program-details__input program-details__input_textarea"
+                            className={clsx(styles.field, styles.textarea)}
                           />
                           {errors.initPayload && touched.initPayload ? (
-                            <div className="program-details__error">{errors.initPayload}</div>
+                            <div className={styles.error}>{errors.initPayload}</div>
                           ) : null}
                         </>
                       )}
                     </div>
                   </div>
                 </div>
-                <div className="program-details__column-right">
-                  <span className="program-details__column-title">Metadata: </span>
-                  <div className="program-details__info">
-                    <span className="program-details__title">Metadata: </span>
-                    <div className="program-details__switch-btns">
-                      <button
-                        type="button"
-                        className="program-details__switch-btn"
-                        onClick={() => setIsMetaFromFile(true)}
-                      >
-                        <img src={isMetaFromFile ? selected : deselected} alt="radio" />
+                <div className={styles.columnRight}>
+                  <span className={styles.columnTitle}>Metadata: </span>
+                  <div className={styles.block}>
+                    <span className={styles.caption}>Metadata: </span>
+                    <div className={styles.switch}>
+                      <button type="button" className={styles.switchButton} onClick={() => setIsMetaFromFile(true)}>
+                        <img className={styles.img} src={isMetaFromFile ? selected : deselected} alt="radio" />
                         Upload file
                       </button>
-                      <button
-                        type="button"
-                        className="program-details__switch-btn"
-                        onClick={() => setIsMetaFromFile(false)}
-                      >
-                        <img src={isMetaFromFile ? deselected : selected} alt="radio" />
+                      <button type="button" className={styles.switchButton} onClick={() => setIsMetaFromFile(false)}>
+                        <img className={styles.img} src={isMetaFromFile ? deselected : selected} alt="radio" />
                         Manual input
                       </button>
                     </div>
                   </div>
                   {isMetaFromFile && (
-                    <div className="program-details__info">
-                      <label htmlFor="meta" className="program-details__title">
+                    <div className={styles.block}>
+                      <label htmlFor="meta" className={styles.caption}>
                         Metadata file:
                       </label>
                       <Field
                         id="meta"
                         name="meta"
-                        className="is-hidden"
+                        className={styles.hidden}
                         type="file"
                         innerRef={metaFieldRef}
                         onChange={handleChangeMetaFile}
                       />
                       {droppedMetaFile ? (
-                        <div className="program-details__value program-details__value_filename">
+                        <div className={clsx(styles.value, styles.filename)}>
                           {droppedFile.name}
                           <button type="button" onClick={handleRemoveMetaFile}>
                             <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                           </button>
                         </div>
                       ) : (
-                        <button className="program-details__file-btn" type="button" onClick={uploadMetaFile}>
+                        <button className={styles.uploadMetaFile} type="button" onClick={uploadMetaFile}>
                           Select file
                         </button>
                       )}
@@ -300,102 +292,100 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                   )}
                   {isShowFields && (
                     <>
-                      <div className="program-details__info">
-                        <label htmlFor="init_input" className="program-details__title">
+                      <div className={styles.block}>
+                        <label htmlFor="init_input" className={styles.caption}>
                           Initial type:
                         </label>
-                        <div className="program-details__value">
+                        <div className={styles.value}>
                           <Field
                             id="init_input"
                             name="init_input"
-                            className="program-details__input"
+                            className={styles.field}
                             type="text"
                             disabled={isMetaFromFile}
                           />
                           {errors.init_input && touched.init_input ? (
-                            <div className="program-details__error">{errors.init_input}</div>
+                            <div className={styles.error}>{errors.init_input}</div>
                           ) : null}
                         </div>
                       </div>
-                      <div className="program-details__info">
-                        <label htmlFor="input" className="program-details__title">
+                      <div className={styles.block}>
+                        <label htmlFor="input" className={styles.caption}>
                           Incoming type:
                         </label>
-                        <div className="program-details__value">
+                        <div className={styles.value}>
                           <Field
                             id="handle_input"
                             name="handle_input"
-                            className="program-details__input"
+                            className={styles.field}
                             type="text"
                             disabled={isMetaFromFile}
                           />
                           {errors.handle_input && touched.handle_input ? (
-                            <div className="program-details__error">{errors.handle_input}</div>
+                            <div className={styles.error}>{errors.handle_input}</div>
                           ) : null}
                         </div>
                       </div>
-                      <div className="program-details__info">
-                        <label htmlFor="output" className="program-details__title">
+                      <div className={styles.block}>
+                        <label htmlFor="output" className={styles.caption}>
                           Expected type:
                         </label>
-                        <div className="program-details__value">
+                        <div className={styles.value}>
                           <Field
                             id="handle_output"
                             name="handle_output"
-                            className="program-details__input"
+                            className={styles.field}
                             type="text"
                             disabled={isMetaFromFile}
                           />
                           {errors.handle_output && touched.handle_output ? (
-                            <div className="program-details__error">{errors.handle_output}</div>
+                            <div className={styles.error}>{errors.handle_output}</div>
                           ) : null}
                         </div>
                       </div>
-                      <div className="program-details__info">
-                        <label htmlFor="init_output" className="program-details__title">
+                      <div className={styles.block}>
+                        <label htmlFor="init_output" className={styles.caption}>
                           Initial output type:
                         </label>
-                        <div className="program-details__value">
+                        <div className={styles.value}>
                           <Field
                             id="init_output"
                             name="init_output"
-                            className="program-details__input"
+                            className={styles.field}
                             type="text"
                             disabled={isMetaFromFile}
                           />
                           {errors.init_output && touched.init_output ? (
-                            <div className="program-details__error">{errors.init_output}</div>
+                            <div className={styles.error}>{errors.init_output}</div>
                           ) : null}
                         </div>
                       </div>
-                      <div className="program-details__info">
-                        <label htmlFor="types" className="program-details__title program-details__title_top">
+                      <div className={styles.block}>
+                        <label htmlFor="types" className={clsx(styles.caption, styles.top)}>
                           Types:
                         </label>
-                        <div className="program-details__value">
+                        <div className={styles.value}>
                           <Field
                             as="textarea"
                             id="types"
                             name="types"
-                            className="program-details__input program-details__input_textarea"
+                            className={clsx(styles.field, styles.textarea)}
                             disabled={isMetaFromFile}
                           />
-                          {errors.types && touched.types ? (
-                            <div className="program-details__error">{errors.types}</div>
-                          ) : null}
+                          {errors.types && touched.types ? <div className={styles.error}>{errors.types}</div> : null}
                         </div>
                       </div>
                     </>
                   )}
                 </div>
               </div>
-              <div className="program-details__buttons">
-                <button type="submit" className="program-details__upload" aria-label="uploadProgramm">
+              <div className={styles.buttons}>
+                <button type="submit" className={styles.upload} aria-label="uploadProgramm">
                   Upload program
                 </button>
                 <button
                   type="button"
-                  className="program-details__cancel"
+                  className={styles.cancel}
                   aria-label="closeProgramDetails"
                   onClick={handleResetForm}
                 >

@@ -1,61 +1,56 @@
 @import '../../../assets/scss/variables.scss';
 
-.program-details {
+.programDetails {
   display: flex;
   flex-direction: column;
   background: rgba(0, 0, 0, 0.05);
   border: 1px dashed #0e0e0e;
   border-radius: 2px;
   margin-bottom: 40px;
-
   @media (max-width: 768px) {
-    .program-details {
-      height: 100%;
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 111;
-      background-color: #181818;
-      overflow: scroll;
-    }
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 111;
+    background-color: #181818;
+    overflow: scroll;
   }
 
-  .program-details__header {
+  .heading {
     color: $textColor;
     font-size: $fontSizeLarge;
     font-weight: 600;
     padding: 32px;
     @media (max-width: 768px) {
-      .program-details__header {
-        padding: 16px;
-      }
+      padding: 16px;
     }
   }
 
-  .program-details__download {
+  .download {
     position: relative;
     overflow: hidden;
-    .program-details__progress {
+    .progress {
       position: absolute;
       width: 0;
       height: 0;
       overflow: hidden;
       left: -777px;
     }
-    .program-details__progress-value {
+    .progressValue {
       color: #333;
       display: block;
       line-height: 21px;
       text-align: center;
     }
-    .program-details__progress-bg {
+    .progressBg {
       background: rgba(235, 239, 242, 0.1);
       position: relative;
       height: 2px;
       border-radius: 5px;
       overflow: hidden;
-      .program-details__progress-bar {
+      .progressBar {
         overflow: hidden;
         background: rgba(43, 208, 113, 1);
         width: 65%;
@@ -67,7 +62,7 @@
     }
   }
 
-  .program-details__wrapper {
+  .columnsWrapper {
     padding: 32px;
     @media (max-width: 768px) {
       .program-details__wrapper {
@@ -77,19 +72,19 @@
         padding: 26px 16px;
       }
     }
-    .program-details__columns {
+    .columns {
       display: flex;
       flex-wrap: wrap;
       align-items: start;
       @media (max-width: 768px) {
         width: 100%;
-        .program-details__wrapper-left,
-        .program-details__wrapper-right {
+        .columnLeft,
+        .columnRight {
           width: 100%;
         }
       }
 
-      .program-details__column-left {
+      .columnLeft {
         @media (min-width: 769px) and (max-width: 1024px) {
           margin-right: 15px;
         }
@@ -101,14 +96,13 @@
         }
       }
 
-      .program-details__column-right {
+      .columnRight {
         border: 1px solid $bkgButtonColor;
         border-radius: 2px;
         padding: 30px;
         position: relative;
         margin-top: 10px;
-
-        .program-details__column-title {
+        .columnTitle {
           position: absolute;
           color: $textColor;
           font-size: 12px;
@@ -119,24 +113,21 @@
         }
       }
 
-      .program-details__info {
+      .block {
         display: flex;
         margin-bottom: 25px;
         &:last-child {
           margin-bottom: 0;
         }
-
         @media (max-width: 768px) {
           flex-direction: column;
           position: relative;
           margin-bottom: 32px;
         }
-
-        .is-hidden {
+        .hidden {
           display: none;
         }
-
-        .program-details__title {
+        .caption {
           display: flex;
           align-items: center;
           flex-wrap: nowrap;
@@ -145,7 +136,7 @@
           min-width: 200px;
           font-size: 16px;
           line-height: 130%;
-          &_top {
+          &.top {
             align-items: flex-start;
           }
           @media (max-width: 768px) {
@@ -156,8 +147,7 @@
             min-width: 160px;
           }
         }
-
-        .program-details__file-btn {
+        .uploadMetaFile {
           background: #3d3d3d;
           border-radius: 2px;
           font-weight: 500;
@@ -166,17 +156,14 @@
           color: $textColor;
           padding: 9px 18px;
           @media (max-width: 768px) {
-            .program-details__file-btn {
-              width: fit-content;
-            }
+            width: fit-content;
           }
         }
-
-        .program-details__value {
+        .value {
           display: flex;
           align-items: center;
           position: relative;
-          &_filename {
+          &.filename {
             color: #e0e0e0;
             padding: 0;
             white-space: nowrap;
@@ -188,7 +175,7 @@
               align-content: center;
             }
           }
-          &_payload {
+          &.payload {
             flex-direction: column;
             align-items: start;
             width: 100%;
@@ -203,7 +190,7 @@
           @media (min-width: 769px) and (max-width: 1270px) {
             width: 250px;
           }
-          .program-details__input {
+          .field {
             width: 315px;
             height: 38px;
             background-color: $bkgInputColor;
@@ -215,28 +202,26 @@
             &:disabled {
               color: #858585;
             }
-            &_textarea {
+            &.textarea {
               resize: vertical;
               min-height: 150px;
               padding: 16px;
             }
           }
-          .program-details__error {
+          .error {
             color: #ff0000;
             font-size: 14px;
             position: absolute;
             bottom: -20px;
           }
         }
-
-        .program-details__switch-btns {
+        .switch {
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
           align-items: center;
           gap: 24px;
-
-          .program-details__switch-btn {
+          .switchButton {
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
@@ -246,21 +231,21 @@
             line-height: 14px;
             color: $textColor;
             padding: 0;
-            img {
+            .img {
               margin-right: 8px;
             }
           }
         }
       }
     }
-    .program-details__buttons {
+    .buttons {
       @media (max-width: 768px) {
         button {
           width: 100%;
           margin: 0;
         }
       }
-      .program-details__upload {
+      .upload {
         background: $successColor;
         box-shadow: 0px 0px 24px rgba(43, 208, 113, 0.12);
         border-radius: 2px;
@@ -272,7 +257,7 @@
         padding: 12px 24px;
         margin: 32px 32px 32px 0;
       }
-      .program-details__cancel {
+      .cancel {
         font-weight: bold;
         font-size: 16px;
         line-height: 24px;
