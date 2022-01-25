@@ -123,8 +123,8 @@ try {
 }
 
 try {
-  await gearApi.program.signAndSend(keyring, (data) => {
-    console.log(data);
+  await gearApi.program.signAndSend(keyring, (event) => {
+    console.log(event.toHuman());
   });
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
@@ -149,8 +149,8 @@ try {
   console.error(`${error.name}: ${error.message}`);
 }
 try {
-  await gearApi.message.signAndSend(keyring, (data) => {
-    console.log(data);
+  await gearApi.message.signAndSend(keyring, (event) => {
+    console.log(event.toHuman());
   });
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);

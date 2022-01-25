@@ -36,6 +36,10 @@ export class GearProgram extends GearTransaction {
     }
   }
 
+  /**
+   * Get ids of all uploaded programs
+   * @returns
+   */
   async allUploadedPrograms(): Promise<string[]> {
     let programs = (await this.api.rpc.state.getKeys('g::prog::')).map((prog) => {
       return `0x${prog.toHex().slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
