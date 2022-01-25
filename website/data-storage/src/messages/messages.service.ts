@@ -124,29 +124,31 @@ export class MessagesService {
     return result;
   }
 
-  async setDispatchedStatus(params: MessageDispatchedParams): Promise<void> {
+  setDispatchedStatus(params: MessageDispatchedParams): Promise<void> {
     const error = params.outcome !== 'success' ? params.outcome : null;
     if (error === null) {
       return;
     }
-    const message = await this.messageRepo.findOne({
-      genesis: params.genesis,
-      id: params.messageId,
-    });
-    if (message) {
-      message.error = error;
-    }
-    this.messageRepo.save(message);
-    const logMessages = await this.messageRepo.find({
-      genesis: params.genesis,
-      replyTo: params.messageId,
-      replyError: '1',
-    });
-    if (logMessages.length > 0) {
-      logMessages.forEach((log) => {
-        log.replyError = error;
-        this.messageRepo.save(log);
+    setTimeout(async () => {
+      const message = await this.messageRepo.findOne({
+        genesis: params.genesis,
+        id: params.messageId,
       });
-    }
+      if (message) {
+        message.error = error;
+      }
+      this.messageRepo.save(message);
+      const logMessages = await this.messageRepo.find({
+        genesis: params.genesis,
+        replyTo: params.messageId,
+        replyError: '1',
+      });
+      if (logMessages.length > 0) {
+        logMessages.forEach((log) => {
+          log.replyError = error;
+          this.messageRepo.save(log);
+        });
+      }
+    }, 1000);
   }
 }
