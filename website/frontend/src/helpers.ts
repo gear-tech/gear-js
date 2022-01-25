@@ -3,7 +3,6 @@ import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/progr
 import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
-import { AnyJson } from '@polkadot/types/types';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
