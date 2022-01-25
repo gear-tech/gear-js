@@ -27,7 +27,6 @@ export class MessagesService {
   ) {}
 
   async save(params: IMessage): Promise<Message> {
-    console.log('### Save');
     const { id, genesis, destination, payload, source, replyError, replyTo, date } = params;
     let message = await this.messageRepo.findOne({ id });
     if (message) {
@@ -56,9 +55,7 @@ export class MessagesService {
       }
     }
     try {
-      const r = this.messageRepo.save(message);
-      console.log(r);
-      return r;
+      return await this.messageRepo.save(message);
     } catch (error) {
       errorLog.error(error, 58);
       return;
@@ -111,7 +108,6 @@ export class MessagesService {
       destination: params.destination,
       source: params.source,
     };
-    console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
       where,
       take: params.limit | PAGINATION_LIMIT,
@@ -133,8 +129,6 @@ export class MessagesService {
   }
 
   async setDispatchedStatus(params: MessageDispatchedParams): Promise<void> {
-    console.log('### Dispatched');
-    console.log(params);
     const error = params.outcome !== 'success' ? params.outcome : null;
     if (error === null) {
       return;

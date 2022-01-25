@@ -1843,6 +1843,7 @@ __metadata:
     kafkajs: ^1.15.0
     nodemon: ^2.0.14
     ts-node: ^10.4.0
+    ts-node-dev: ^1.1.8
     typescript: ^4.5.4
     winston: ^3.3.3
   languageName: unknown
