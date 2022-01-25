@@ -1,12 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
-
 import { Meta } from '../metadata/entities/meta.entity';
 import { InitStatus, Program } from './entities/program.entity';
 import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from '../interfaces';
-import { PAGINATION_LIMIT } from '../config/configuration';
-import { ErrorLogger } from '../utils';
+import { ErrorLogger, getPaginationParams } from '../utils';
 
 /** Add backslashes before special characters in SQL `LIKE` clause. */
 const escapeSqlLike = (x: string) => x.replace('%', '\\%').replace('_', '\\_');
@@ -42,15 +40,13 @@ export class ProgramsService {
     program.name = name;
     program.title = title;
     program.meta = meta;
-    console.log(program);
     return this.programRepo.save(program);
   }
 
   async getAllUserPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const [result, total] = await this.programRepo.findAndCount({
       where: { owner: params.owner, genesis: params.genesis },
-      take: params.limit || PAGINATION_LIMIT,
-      skip: params.offset || 0,
+      ...getPaginationParams(params),
       order: {
         uploadedAt: 'DESC',
       },
@@ -73,8 +69,7 @@ export class ProgramsService {
         { genesis, name: likeTerm },
         { genesis, title: likeTerm },
       ],
-      take: params.limit || PAGINATION_LIMIT,
-      skip: params.offset || 0,
+      ...getPaginationParams(params),
       order: {
         uploadedAt: 'DESC',
       },
