@@ -1,20 +1,15 @@
-import React, { VFC, useEffect } from 'react';
+import React, { VFC } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { routes } from 'routes';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { SWITCH_PAGE_TYPES } from 'consts';
 import { Messages } from 'components/pages/Messages/Messages';
 import { All } from 'components/pages/Programs/children/All/All';
-import { useDispatch } from 'react-redux';
-import { fetchBlockAction } from '../../../store/actions/actions';
-import { useApi } from '../../../hooks/useApi';
 import { ProgramSwitch } from '../../blocks/ProgramSwitch/ProgramSwitch';
 import { Upload } from './children/Upload/Upload';
 import { BlockList } from './children/BlocksList/BlocksList';
 import { Recent } from './children/Recent/Recent';
-
 import './Programs.scss';
 import { RecentNotifications } from '../../blocks/RecentNotifications/RecentNotifications';
 
@@ -31,31 +26,6 @@ export const Programs: VFC = () => {
   } else if (isAllMessagesPage) {
     currentPage = SWITCH_PAGE_TYPES.ALL_MESSAGES;
   }
-
-  const [api] = useApi();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    let unsub: UnsubscribePromise | null = null;
-
-    if (api) {
-      unsub = api.gearEvents.subscribeToNewBlocks((event) => {
-        dispatch(
-          fetchBlockAction({
-            hash: event.hash.toHex(),
-            number: event.number.toNumber(),
-          })
-        );
-      });
-    }
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-    };
-  }, [api, dispatch]);
 
   return (
     <div className="main-content-wrapper">

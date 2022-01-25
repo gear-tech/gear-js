@@ -2,11 +2,10 @@ import { CreateType, GearKeyring } from '@gear-js/api';
 import { MessageActionTypes, MessagePaginationModel, MessageModel } from 'types/message';
 import { NotificationActionTypes, NotificationPaginationModel, RecentNotificationModel } from 'types/notification';
 import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
-
 import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
 import MessageRequestService from 'services/MessagesRequestServices';
-import ProgramRequestService from 'services/ProgramsRequestService';
+import { programService } from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS } from 'consts';
@@ -130,7 +129,6 @@ export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActio
 export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
 const messageService = new MessageRequestService();
-const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
 
 export const getMessagesAction = (params: PaginationModel) => (dispatch: any) => {

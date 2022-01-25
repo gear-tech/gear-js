@@ -11,6 +11,7 @@ export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 
 export const LOCAL_STORAGE = {
   CHAIN: 'chain',
+  EVENT_FILTERS: 'eventFilters',
 };
 
 export const PROGRAM_ERRORS = {
@@ -79,6 +80,7 @@ export const SWITCH_PAGE_TYPES = {
   NOTIFICATIONS: 'NOTIFICATIONS',
   ALL_PROGRAMS: 'ALL_PROGRAMS',
   ALL_MESSAGES: 'ALL_MESSAGES',
+  EXPLORER: 'EXPLORER',
 };
 
 export const PAGE_TYPES = {
