@@ -4,81 +4,98 @@ import {
   InitMessageEnqueuedData,
   InitSuccessData,
   LogData,
+  MessageDispatchedData,
 } from '@gear-js/api';
 
 import { logger } from './logger';
 
 const log = logger('EventListener');
 
-export const listen = async (api: any, callback: (arg: any) => void) => {
+export const listen = async (api: any, callback: (arg: { key: string; value: any }) => void) => {
   api.allEvents((events: any) => {
     events.forEach(async ({ event: { data, method } }: any) => {
+      let eventData:
+        | InitMessageEnqueuedData
+        | DispatchMessageEnqueuedData
+        | LogData
+        | InitSuccessData
+        | InitFailureData
+        | MessageDispatchedData;
       try {
         switch (method) {
           case 'InitMessageEnqueued':
-            data = new InitMessageEnqueuedData(data);
+            eventData = new InitMessageEnqueuedData(data) as InitMessageEnqueuedData;
             callback({
               key: 'InitMessageEnqueued',
               value: {
-                programId: data.programId.toHex(),
-                messageId: data.messageId.toHex(),
-                origin: data.origin.toHex(),
+                programId: eventData.programId.toHex(),
+                messageId: eventData.messageId.toHex(),
+                origin: eventData.origin.toHex(),
                 date: Date.now(),
               },
             });
             break;
           case 'DispatchMessageEnqueued':
-            data = new DispatchMessageEnqueuedData(data);
+            eventData = new DispatchMessageEnqueuedData(data);
             callback({
               key: 'DispatchMessageEnqueued',
               value: {
-                programId: data.programId.toHex(),
-                messageId: data.messageId.toHex(),
-                origin: data.origin.toHex(),
+                programId: eventData.programId.toHex(),
+                messageId: eventData.messageId.toHex(),
+                origin: eventData.origin.toHex(),
                 date: Date.now(),
               },
             });
             break;
           case 'Log':
-            data = new LogData(data);
+            eventData = new LogData(data);
             callback({
               key: 'Log',
               value: {
-                id: data.id.toHex(),
-                source: data.source.toHex(),
-                dest: data.dest.toHex(),
-                payload: data.payload.toHex(),
+                id: eventData.id.toHex(),
+                source: eventData.source.toHex(),
+                dest: eventData.dest.toHex(),
+                payload: eventData.payload.toHex(),
                 reply: {
-                  isExist: data.reply.isSome,
-                  id: data.reply.isSome ? data.reply.unwrap()[0].toHex() : null,
-                  error: data.reply.isSome ? data.reply.unwrap()[1].toNumber() : null,
+                  isExist: eventData.reply.isSome,
+                  id: eventData.reply.isSome ? eventData.reply.unwrap()[0].toHex() : null,
+                  error: eventData.reply.isSome ? eventData.reply.unwrap()[1].toNumber() : null,
                 },
                 date: Date.now(),
               },
             });
             break;
           case 'InitSuccess':
-            data = new InitSuccessData(data);
+            eventData = new InitSuccessData(data);
             callback({
               key: 'InitSuccess',
               value: {
-                programId: data.programId.toHex(),
-                messageId: data.messageId.toHex(),
-                origin: data.origin.toHex(),
+                programId: eventData.programId.toHex(),
+                messageId: eventData.messageId.toHex(),
+                origin: eventData.origin.toHex(),
               },
             });
             break;
           case 'InitFailure':
-            data = new InitFailureData(data);
+            eventData = new InitFailureData(data);
             callback({
               key: 'InitFailure',
               value: {
-                programId: data.info.programId.toHex(),
-                messageId: data.info.messageId.toHex(),
-                origin: data.info.origin.toHex(),
+                programId: eventData.info.programId.toHex(),
+                messageId: eventData.info.messageId.toHex(),
+                origin: eventData.info.origin.toHex(),
               },
             });
             break;
+          case 'MessageDispatched':
+            eventData = new MessageDispatchedData(data);
+            callback({
+              key: 'MessageDispatched',
+              value: {
+                messageId: eventData.messageId.toHex(),
+                outcome: eventData.outcome.isFailure ? eventData.outcome.asFailure.toHuman() : 'success',
+              },
+            });
         }
       } catch (error) {
         log.error({ method, data: data.toHuman() });

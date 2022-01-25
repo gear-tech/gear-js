@@ -3,9 +3,9 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "strict": true,
-    "target": "ESNext",
+    "target": "esNext",
     "outDir": "dist",
-    "skipLibCheck": true, // TODO
+    "skipLibCheck": true // TODO
   },
   "ts-node": {
     "transpileOnly": true,

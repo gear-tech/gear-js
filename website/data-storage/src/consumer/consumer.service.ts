@@ -38,7 +38,7 @@ export class ConsumerService {
         date: value.date,
         payload: value.payload,
         replyTo: value.reply?.isExist ? value.reply.id : null,
-        replyError: value.reply?.isExist ? value.reply.error : null,
+        replyError: value.reply?.isExist ? `${value.reply.error}` : null,
       });
     },
     InitMessageEnqueued: async (genesis: string, value: any) => {
@@ -77,6 +77,7 @@ export class ConsumerService {
     InitFailure: (genesis: string, value: any) => {
       this.programService.setStatus(value.programId, genesis, InitStatus.FAILED);
     },
+    MessageDispatched: (genesis: string, value: any) => {},
   };
 
   async programData(params: FindProgramParams): Result<Program> {

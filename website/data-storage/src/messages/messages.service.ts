@@ -5,7 +5,14 @@ import { Message } from './entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
-import { AddPayloadParams, AllMessagesResult, FindMessageParams, GetMessagesParams } from 'src/interfaces';
+import {
+  AddPayloadParams,
+  AllMessagesResult,
+  FindMessageParams,
+  GetMessagesParams,
+  IMessage,
+  MessageDispatchedParams,
+} from 'src/interfaces';
 import { PAGINATION_LIMIT } from 'src/config/configuration';
 import { ErrorLogger } from 'src/utils';
 
@@ -19,7 +26,9 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save({ id, genesis, destination, source, payload, date, replyTo, replyError }): Promise<Message> {
+  async save(params: IMessage): Promise<Message> {
+    console.log('### Save');
+    const { id, genesis, destination, payload, source, replyError, replyTo, date } = params;
     let message = await this.messageRepo.findOne({ id });
     if (message) {
       if (payload) {
@@ -39,16 +48,19 @@ export class MessagesService {
           payload,
           date: new Date(date),
           replyTo,
+          replyError,
         });
       } catch (error) {
-        errorLog.error(error, 33);
+        errorLog.error(error, 42);
         return;
       }
     }
     try {
-      return this.messageRepo.save(message);
+      const r = this.messageRepo.save(message);
+      console.log(r);
+      return r;
     } catch (error) {
-      errorLog.error(error, 48);
+      errorLog.error(error, 58);
       return;
     }
   }
@@ -113,9 +125,38 @@ export class MessagesService {
 
   async getMessage(params: FindMessageParams): Promise<Message> {
     const where = {
+      genesis: params.genesis,
       id: params.id,
     };
     const result = await this.messageRepo.findOne({ where });
     return result;
+  }
+
+  async setDispatchedStatus(params: MessageDispatchedParams): Promise<void> {
+    console.log('### Dispatched');
+    console.log(params);
+    const error = params.outcome !== 'success' ? params.outcome : null;
+    if (error === null) {
+      return;
+    }
+    const message = await this.messageRepo.findOne({
+      genesis: params.genesis,
+      id: params.messageId,
+    });
+    if (message) {
+      message.error = error;
+    }
+    this.messageRepo.save(message);
+    const logMessages = await this.messageRepo.find({
+      genesis: params.genesis,
+      replyTo: params.messageId,
+      replyError: '1',
+    });
+    if (logMessages.length > 0) {
+      logMessages.forEach((log) => {
+        log.replyError = error;
+        this.messageRepo.save(log);
+      });
+    }
   }
 }
