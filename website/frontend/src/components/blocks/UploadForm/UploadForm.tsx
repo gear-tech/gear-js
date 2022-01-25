@@ -18,14 +18,14 @@ import { readFileAsync, checkFileFormat } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import styles from './ProgramDetails.module.scss';
+import styles from './UploadForm.module.scss';
 
 type Props = {
   setDroppedFile: (file: File | null) => void;
   droppedFile: File;
 };
 
-export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
+export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
@@ -155,7 +155,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   };
 
   return (
-    <div className={styles.programDetails}>
+    <div className={styles.uploadForm}>
       <h3 className={styles.heading}>UPLOAD NEW PROGRAM</h3>
 
       <Formik
@@ -403,12 +403,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                 <button type="submit" className={styles.upload} aria-label="uploadProgramm">
                   Upload program
                 </button>
-                <button
-                  type="button"
-                  className={styles.cancel}
-                  aria-label="closeProgramDetails"
-                  onClick={handleResetForm}
-                >
+                <button type="button" className={styles.cancel} aria-label="closeUploadForm" onClick={handleResetForm}>
                   Cancel upload
                 </button>
               </div>
