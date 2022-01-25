@@ -12,15 +12,12 @@
   }
 }
 
-.item {
-  cursor: pointer;
+.link {
+  color: inherit;
   transition: all 0.25s;
+  cursor: pointer;
 
   &:hover {
     color: $textColorSecondary;
-  }
-
-  a {
-    color: inherit;
   }
 }
