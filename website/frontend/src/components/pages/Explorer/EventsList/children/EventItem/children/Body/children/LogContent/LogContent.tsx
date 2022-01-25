@@ -4,7 +4,7 @@ import { CreateType, getWasmMetadata, Metadata, LogData } from '@gear-js/api';
 import { Codec } from '@polkadot/types/types';
 import { ProgramModel } from 'types/program';
 import { programService } from 'services/ProgramsRequestService';
-import { getLocalProgram, isDevChain } from 'helpers';
+import { getLocalProgram, getPreformattedText, isDevChain } from 'helpers';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
 import eventStyles from '../../../../EventItem.module.scss';
 import bodyStyles from '../../Body.module.scss';
@@ -28,12 +28,12 @@ const LogContent = ({ data }: Props) => {
 
   const getDecodedPayloadData = () => {
     // is there a better way to get logData with replaced payload?
-    const [dataObject] = data.toJSON() as [{}];
+    const [dataObject] = data.toHuman() as [{}];
     return [{ ...dataObject, payload: decodedPayload?.toHuman() }];
   };
 
   const preClassName = clsx(commonStyles.text, commonStyles.pre);
-  const formattedData = JSON.stringify(isDecodedPayload ? getDecodedPayloadData() : data, null, 2);
+  const formattedData = getPreformattedText(isDecodedPayload ? getDecodedPayloadData() : data.toHuman());
 
   const fetchProgram = (id: string) => {
     const getProgram = isDevChain() ? getLocalProgram : programService.fetchProgram;
