@@ -1,8 +1,10 @@
-name: 'Test: @gear-js/api'
+name: 'Test: @gear-js/gear-meta'
 
 on:
   pull_request:
     branches: [master]
+    paths:
+      - utils/meta-cli/**
 
 jobs:
   test:
@@ -13,6 +15,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.4.0
         with:
           access_token: ${{ github.token }}
+
       - uses: actions/checkout@v2
 
       - name: Install NodeJS 16.x
@@ -22,20 +25,17 @@ jobs:
 
       - name: Prepare
         run: |
-          wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
-          mkdir api/test/wasm
-          wget -O api/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
-          chmod +x gear-node
-          ./gear-node --dev --tmp & sleep 10
+          mkdir utils/meta-cli/test/wasm
+          wget -O utils/meta-cli/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
 
-      - name: Install dependencies and build @gear-js/api
-        run: |
-          cd api
-          npm install
+      - name: Install dependencies
+        working-directory: utils/meta-cli
+        run: yarn install
 
       - name: Run tests
+        working-directory: utils/meta-cli
         run: |
-          cd api/test/wasm
+          cd test/wasm
           tar -xvf examples.tar.gz
           cd ../..
-          npm test
+          yarn test

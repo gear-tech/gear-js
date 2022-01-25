@@ -1,8 +1,9 @@
 import { GearApi } from '@gear-js/api';
-import { listen } from './events.js';
-import { KafkaProducer } from './producer.js';
-import { logger } from './logger.js';
-import config from './config.js';
+
+import { listen } from './events';
+import { KafkaProducer } from './producer';
+import { logger } from './logger';
+import config from './config';
 
 const log = logger('Main');
 

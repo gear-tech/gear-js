@@ -5,13 +5,14 @@ import {
   InitSuccessData,
   LogData,
 } from '@gear-js/api';
-import { logger } from './logger.js';
+
+import { logger } from './logger';
 
 const log = logger('EventListener');
 
-export const listen = async (api, callback) => {
-  api.allEvents((events) => {
-    events.forEach(async ({ event: { data, method } }) => {
+export const listen = async (api: any, callback: (arg: any) => void) => {
+  api.allEvents((events: any) => {
+    events.forEach(async ({ event: { data, method } }: any) => {
       try {
         switch (method) {
           case 'InitMessageEnqueued':
