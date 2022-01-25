@@ -97,7 +97,7 @@ const AppComponent: FC = () => {
     let unsub: UnsubscribePromise | null = null;
 
     if (api) {
-      unsub = api.gearEvents.subscribeNewBlocks((event) => {
+      unsub = api.gearEvents.subscribeToNewBlocks((event) => {
         dispatch(
           fetchBlockAction({
             hash: event.hash.toHex(),
