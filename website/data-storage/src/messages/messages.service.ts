@@ -13,8 +13,7 @@ import {
   IMessage,
   MessageDispatchedParams,
 } from 'src/interfaces';
-import { PAGINATION_LIMIT } from 'src/config/configuration';
-import { ErrorLogger } from 'src/utils';
+import { ErrorLogger, getPaginationParams } from 'src/utils';
 
 const logger = new Logger('MessageService');
 const errorLog = new ErrorLogger('MessagesService');
@@ -81,8 +80,7 @@ export class MessagesService {
         destination: params.destination,
         genesis: params.genesis,
       },
-      take: params.limit || PAGINATION_LIMIT,
-      skip: params.offset || 0,
+      ...getPaginationParams(params),
     });
     return {
       messages: result,
@@ -93,8 +91,7 @@ export class MessagesService {
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
     const [result, total] = await this.messageRepo.findAndCount({
       where: { genesis: params.genesis, source: params.source },
-      take: params.limit || PAGINATION_LIMIT,
-      skip: params.offset || 0,
+      ...getPaginationParams(params),
     });
     return {
       messages: result,
@@ -110,8 +107,7 @@ export class MessagesService {
     };
     const [result, total] = await this.messageRepo.findAndCount({
       where,
-      take: params.limit | PAGINATION_LIMIT,
-      skip: params.offset | 0,
+      ...getPaginationParams(params),
     });
     return {
       messages: result,
