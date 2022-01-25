@@ -5,6 +5,7 @@ import { EventItem } from './children/EventItem/EventItem';
 import { Filters } from './children/Filters/Filters';
 import { FilterValues } from 'types/events-list';
 import { LOCAL_STORAGE } from 'consts';
+import { generateRandomId } from 'helpers';
 import { RootState } from 'store/reducers';
 import * as init from './init';
 import { getCaption } from './helpers';
@@ -42,7 +43,8 @@ const EventsList = () => {
       return eventsAccumulator;
     }, []);
 
-  const getEvents = () => getGroupedEvents().map((group, index) => <EventItem key={index} group={group} />);
+  // TOFIX: temporary ID solution
+  const getEvents = () => getGroupedEvents().map((group) => <EventItem key={generateRandomId()} group={group} />);
 
   return (
     <div className={styles.events}>
