@@ -5,7 +5,7 @@ import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gea
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessagesAction } from 'store/actions/actions';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
-import { formatDate } from 'helpers';
+import { formatDate, getPreformattedText } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
@@ -45,7 +45,7 @@ export const Program: VFC = () => {
         const parsedMeta: Metadata = JSON.parse(program.meta.meta as string);
         const displayedTypes = parseHexTypes(parsedMeta.types!);
         const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
-        meta = JSON.stringify(inputType, null, 4);
+        meta = getPreformattedText(inputType);
       }
 
       setData({

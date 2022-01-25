@@ -129,3 +129,5 @@ export const getLocalProgramMeta = (id: string) => {
 export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DEVELOPMENT_CHAIN;
 
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
+
+export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);
