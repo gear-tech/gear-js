@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
@@ -21,7 +21,7 @@ import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { subscribeToEvents, setApiReady, addEventsAction, fetchBlockAction } from '../../store/actions/actions';
+import { subscribeToEvents, setApiReady, fetchBlockAction } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
 import { useApi } from 'hooks/useApi';
 import store from '../../store';
@@ -32,6 +32,8 @@ import 'assets/scss/index.scss';
 import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
+import { getGroupedEvents } from 'components/pages/Explorer/EventsList/helpers';
+import { GroupedEvents } from 'types/events-list';
 
 // alert configuration
 const options = {
@@ -54,9 +56,9 @@ const AppComponent: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
+  const [groupedEvents, setGroupedEvents] = useState<GroupedEvents>([]);
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
@@ -122,9 +124,10 @@ const AppComponent: FC = () => {
         const newEvents = allEvents
           .map(({ event }) => event)
           .filter(({ section }) => section !== 'system')
-          .reverse();
+          .reverse()
+          .reduce(getGroupedEvents, []);
 
-        dispatch(addEventsAction(newEvents));
+        setGroupedEvents((prevEvents) => [...newEvents, ...prevEvents]);
       });
     }
 
@@ -164,7 +167,7 @@ const AppComponent: FC = () => {
                 <Program />
               </Route>
               <Route exact path={routes.explorer}>
-                <Explorer />
+                <Explorer groupedEvents={groupedEvents} />
               </Route>
               <Route exact path={routes.message}>
                 <Message />

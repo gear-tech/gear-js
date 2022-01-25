@@ -2,17 +2,14 @@ import { Event } from '@polkadot/types/interfaces';
 
 export type FilterValues = { [key: string]: boolean };
 
-export interface EventsState {
+export type EventGroup = {
   list: Event[];
-}
+  id: string;
+  method: string;
+};
 
-export enum EventsActionTypes {
-  ADD_EVENTS = 'ADD_EVENTS',
-}
+export type GroupedEvents = EventGroup[];
 
-export interface AddEventsAction {
-  type: EventsActionTypes.ADD_EVENTS;
-  payload: Event[];
-}
-
-export type EventsAction = AddEventsAction;
+export type GroupedEventsProps = {
+  groupedEvents: GroupedEvents;
+};

@@ -7,7 +7,6 @@ import NotificationReducer from './NotificationReducer';
 import AlertReducer from './AlertReducer';
 import CompilerReducer from './CompilerReducer';
 import MessageReducer from './MessageReducer';
-import EventsReducer from './EventsReducer';
 
 const rootReducer = combineReducers({
   programs: ProgramReducer,
@@ -18,7 +17,6 @@ const rootReducer = combineReducers({
   account: AccountReducer,
   compiler: CompilerReducer,
   messages: MessageReducer,
-  events: EventsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

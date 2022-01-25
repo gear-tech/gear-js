@@ -7,17 +7,18 @@ import { getCaption } from '../../helpers';
 import styles from './EventItem.module.scss';
 
 type Props = {
-  group: Event[];
+  list: Event[];
 };
 
-const EventItem = ({ group }: Props) => {
-  const [event] = group;
+const EventItem = ({ list }: Props) => {
+  const [event] = list;
   const { method, meta } = event;
   const { docs } = meta;
 
   const [isOpen, setIsOpen] = useState(false);
 
   const className = clsx('programs-list__item', styles.item);
+  // can be EventGroup properties
   const caption = getCaption(event);
   const description = String(docs.toHuman());
 
@@ -32,9 +33,9 @@ const EventItem = ({ group }: Props) => {
         description={description}
         isOpen={isOpen}
         onClick={toggle}
-        groupEventsAmount={group.length}
+        groupEventsAmount={list.length}
       />
-      {isOpen && <Body method={method} group={group} />}
+      {isOpen && <Body method={method} list={list} />}
     </li>
   );
 };
