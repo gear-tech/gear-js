@@ -35,7 +35,7 @@
       "^.+\\.[tj]s$": "ts-jest"
     },
     "setupFiles": [
-      "reflect-metadata"
+      "<rootDir>/reflect-metadata.ts"
     ],
     "collectCoverageFrom": [
       "**/*.[tj]s"
