@@ -1,12 +1,14 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
+import { UnsubscribePromise } from '@polkadot/api/types';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { Programs } from 'components/pages/Programs/Programs';
 import { Program } from 'components/pages/Program/Program';
 import { Message } from 'components/pages/Message/Message';
+import Explorer from 'components/pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
 import { Main } from 'components/layouts/Main/Main';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
@@ -19,8 +21,9 @@ import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
+import { subscribeToEvents, setApiReady, fetchBlockAction } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
+import { useApi } from 'hooks/useApi';
 import store from '../../store';
 
 import './App.scss';
@@ -29,6 +32,8 @@ import 'assets/scss/index.scss';
 import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
+import { getGroupedEvents } from 'components/pages/Explorer/EventsList/helpers';
+import { GroupedEvents } from 'types/events-list';
 
 // alert configuration
 const options = {
@@ -47,12 +52,13 @@ const options = {
 
 const AppComponent: FC = () => {
   globalStyles();
+  const [api] = useApi();
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
+  const [groupedEvents, setGroupedEvents] = useState<GroupedEvents>([]);
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
@@ -87,6 +93,53 @@ const AppComponent: FC = () => {
     }
   }, [history, location]);
 
+  useEffect(() => {
+    let unsub: UnsubscribePromise | null = null;
+
+    if (api) {
+      unsub = api.gearEvents.subscribeToNewBlocks((event) => {
+        dispatch(
+          fetchBlockAction({
+            hash: event.hash.toHex(),
+            number: event.number.toNumber(),
+          })
+        );
+      });
+    }
+    return () => {
+      if (unsub) {
+        (async () => {
+          (await unsub)();
+        })();
+      }
+    };
+  }, [api, dispatch]);
+
+  useEffect(() => {
+    let unsub: UnsubscribePromise | null = null;
+
+    if (api) {
+      unsub = api.allEvents((allEvents) => {
+        // TODO: .map().filter() to single .reduce()
+        const newEvents = allEvents
+          .map(({ event }) => event)
+          .filter(({ section }) => section !== 'system')
+          .reverse()
+          .reduce(getGroupedEvents, []);
+
+        setGroupedEvents((prevEvents) => [...newEvents, ...prevEvents]);
+      });
+    }
+
+    return () => {
+      if (unsub) {
+        (async () => {
+          (await unsub)();
+        })();
+      }
+    };
+  }, [api, dispatch]);
+
   const isFooterHidden = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');
     const privacyPath = routes.privacyPolicy.replaceAll('/', '');
@@ -112,6 +165,9 @@ const AppComponent: FC = () => {
               </Route>
               <Route exact path={routes.program}>
                 <Program />
+              </Route>
+              <Route exact path={routes.explorer}>
+                <Explorer groupedEvents={groupedEvents} />
               </Route>
               <Route exact path={routes.message}>
                 <Message />

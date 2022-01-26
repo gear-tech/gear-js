@@ -3,4 +3,4 @@ COPY ./website/events-listener /usr/src/events-listener
 WORKDIR /usr/src/events-listener
 RUN yarn install
 RUN yarn build
-CMD ["node", "dist/index.js"]
+CMD ["yarn", "start"]

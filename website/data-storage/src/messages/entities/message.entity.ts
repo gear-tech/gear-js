@@ -21,6 +21,9 @@ export class Message {
   payload: string;
 
   @Column({ nullable: true })
+  error: string;
+
+  @Column({ nullable: true })
   replyTo: string;
 
   @Column({ nullable: true })

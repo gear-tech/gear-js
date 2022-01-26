@@ -1,5 +1,3 @@
-import { AddressOrPair, SignerOptions } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 
-export interface TransactionStatusCb {
-  (data: any): void | Promise<void>;
-}
+export type TransactionStatusCb = (result: ISubmittableResult, extra: undefined) => void | Promise<void>;

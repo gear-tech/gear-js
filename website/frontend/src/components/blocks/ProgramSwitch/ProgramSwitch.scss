@@ -74,6 +74,7 @@
 }
 
 .switch-info {
+  margin-left: auto;
   align-items: center;
   color: $textColorSecondary;
   display: flex;
@@ -131,5 +132,9 @@
   }
   .switch-block--transfer {
     display: none;
+  }
+
+  .switch-info {
+    margin-left: 0;
   }
 }
