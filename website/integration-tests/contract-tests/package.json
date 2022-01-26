@@ -29,7 +29,7 @@
       "ts"
     ],
     "rootDir": "src",
-    "testRegex": "$",
+    "testRegex": "^.+\\.spec.[tj]s$",
     "transform": {
       "^.+\\.[tj]s$": "ts-jest"
     },
