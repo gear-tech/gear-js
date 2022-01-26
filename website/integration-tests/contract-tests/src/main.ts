@@ -1,6 +1,6 @@
 import { createConnection, getRepository } from 'typeorm';
 
-import { Program } from './program-entities/program.entity';
+import { Program } from './program.entity';
 
 describe('database', () => {
   it('should contain some records', async () => {
