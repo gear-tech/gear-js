@@ -19,38 +19,84 @@ services:
   kafka:
     image: wurstmeister/kafka
     ports:
-      - 9094:9094
+      - '9094:9094'
     depends_on:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 0
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: SASL_PLAINTEXT://:9094
-      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://${KAFKA_HOST_NAME}:9094
+      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://kafka:9094
       KAFKA_INTER_BROKER_LISTENER_NAME: SASL_PLAINTEXT
       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf'
       KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
     volumes:
-      - ./ansible/tasks/kafka/jaas.conf:/etc/kafka/kafka_server_jaas.conf
+      - ../seed/kafka_testovka.conf:/etc/kafka/kafka_server_jaas.conf
 
-  pg_data_storage:
+  postgres:
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_DB=${DB_NAME}
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
     volumes:
-      - /home/ec2/data-storage/pg_data:/var/lib/postgresql/data
+      - volatile:/var/lib/postgresql/data
+      - ../seed/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
     ports:
       - '5432:5432'
 
   # The system under test:
-  api:
-    image: ./data-storage
+  data_storage:
+    image: ../../data-storage
+    profiles: ['contract']
     volumes:
-      - ./website/api-gateway:/usr/src/api-gateway:ro
+      - ../../data-storage:/usr/src/data-storage:ro
+    depends_on:
+      - postgres
+    environment: &mock-environment
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: postgres
+      KAFKA_CLIENT_ID: data-storage
+      KAFKA_GROUP_ID: data-storage
+      KAFKA_BROKERS: kafka:9094
+      KAFKA_SASL_USERNAME: kafka_user
+      KAFKA_SASL_PASSWORD: passwd
+
+  # api_gateway:
+  #   ports:
+  #     - '3000:3000'
+  #   image: mithriy/gear-api-gateway:nightly
+  #   environment:
+  #     <<: *mock-environment
+  #     KAFKA_GROUP_ID: api-gateway
+  #     KAFKA_CLIENT_ID: api-gateway
+  #     PORT: 3000
+
+  # events_testnet:
+  #   image: mithriy/gear-event-listener:nightly
+  #   environment:
+  #     <<: *mock-environment
+  #     KAFKA_CLIENT_ID: events-testnet
+  #     KAFKA_GROUP_ID: events-testnet
+  #     WS_PROVIDER: ${WS_PROVIDER_TESTNET}
+
+  # events_wrsh:
+  #   image: mithriy/gear-event-listener:nightly
+  #   environment:
+  #     <<: *mock-environment
+  #     KAFKA_CLIENT_ID: events-wrsh
+  #     KAFKA_GROUP_ID: events-wrsh
+  #     WS_PROVIDER: ${WS_PROVIDER_WRSH}
 
   # The test suite:
-  api_test:
-    build: ./api-test
+  browser_test:
+    build:
+      context: ./
+    depends_on:
+      - postgres
+      - data_storage
+    volumes:
+      - ./src:/usr/app:ro
