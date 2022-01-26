@@ -68,6 +68,9 @@ const LogContent = ({ data }: Props) => {
 
     fetchProgram(programId)
       .then(({ result }) => {
+        // there's a warning if the component is unmounted before program is fetched,
+        // but there's nothing wrong and warn no longer be present in the next React version
+        // source: https://github.com/facebook/react/pull/22114
         setProgram(result);
       })
       .catch(() => {
