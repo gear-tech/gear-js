@@ -80,7 +80,7 @@ export const UploadProgram = async (
         dispatch(
           AddAlert({
             type: EventTypes.SUCCESS,
-            message: `Upload program status: in block ${data.status.asInBlock}`,
+            message: `Upload program: In block`,
           })
         );
       }
@@ -93,7 +93,7 @@ export const UploadProgram = async (
             dispatch(
               AddAlert({
                 type: EventTypes.SUCCESS,
-                message: `Upload program status: finalized in block ${data.status.asFinalized}`,
+                message: `Upload program: Finalized`,
               })
             );
             dispatch(programUploadSuccessAction());
@@ -114,7 +114,9 @@ export const UploadProgram = async (
                   uploadedAt: Date(),
                 })
                 .then(() => {
-                  dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Program added successfully` }));
+                  dispatch(
+                    AddAlert({ type: EventTypes.SUCCESS, message: `Program added to the localDB successfully` })
+                  );
                 })
                 .catch((error: any) => {
                   dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
@@ -136,7 +138,7 @@ export const UploadProgram = async (
                     // FIXME 'throw' of exception caught locally
                     throw new Error(response.error.message);
                   } else {
-                    dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+                    dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata saved successfully` }));
                   }
                 } catch (error) {
                   dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
@@ -150,7 +152,7 @@ export const UploadProgram = async (
             dispatch(
               AddAlert({
                 type: EventTypes.ERROR,
-                message: `Extrinsic Failed`,
+                message: `Upload program: Extrinsic Failed`,
               })
             );
           }
@@ -169,7 +171,7 @@ export const UploadProgram = async (
     });
   } catch (error) {
     dispatch(programUploadFailedAction(`${error}`));
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Upload status: ${error}` }));
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Upload program: ${error}` }));
   }
 };
 
@@ -193,7 +195,7 @@ export const SendMessageToProgram = async (
         dispatch(
           AddAlert({
             type: EventTypes.SUCCESS,
-            message: `Send message status: in block ${data.status.asInBlock}`,
+            message: `Send message: In block`,
           })
         );
       }
@@ -206,7 +208,7 @@ export const SendMessageToProgram = async (
             dispatch(
               AddAlert({
                 type: EventTypes.SUCCESS,
-                message: `Send message status: finalized ${data.status.asFinalized}`,
+                message: `Send message: Finalized`,
               })
             );
             dispatch(sendMessageSuccessAction());
@@ -235,7 +237,7 @@ export const SendMessageToProgram = async (
       }
     });
   } catch (error) {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Send message status: ${error}` }));
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Send message: ${error}` }));
     dispatch(sendMessageFailedAction(`${error}`));
   }
 };
