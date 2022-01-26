@@ -5,9 +5,15 @@ import { Message } from './entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
-import { AddPayloadParams, AllMessagesResult, FindMessageParams, GetMessagesParams } from 'src/interfaces';
-import { PAGINATION_LIMIT } from 'src/config/configuration';
-import { ErrorLogger } from 'src/utils';
+import {
+  AddPayloadParams,
+  AllMessagesResult,
+  FindMessageParams,
+  GetMessagesParams,
+  IMessage,
+  MessageDispatchedParams,
+} from 'src/interfaces';
+import { ErrorLogger, getPaginationParams } from 'src/utils';
 
 const logger = new Logger('MessageService');
 const errorLog = new ErrorLogger('MessagesService');
@@ -19,7 +25,8 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save({ id, genesis, destination, source, payload, date, replyTo, replyError }): Promise<Message> {
+  async save(params: IMessage): Promise<Message> {
+    const { id, genesis, destination, payload, source, replyError, replyTo, date } = params;
     let message = await this.messageRepo.findOne({ id });
     if (message) {
       if (payload) {
@@ -39,16 +46,17 @@ export class MessagesService {
           payload,
           date: new Date(date),
           replyTo,
+          replyError,
         });
       } catch (error) {
-        errorLog.error(error, 33);
+        errorLog.error(error, 42);
         return;
       }
     }
     try {
-      return this.messageRepo.save(message);
+      return await this.messageRepo.save(message);
     } catch (error) {
-      errorLog.error(error, 48);
+      errorLog.error(error, 58);
       return;
     }
   }
@@ -72,8 +80,7 @@ export class MessagesService {
         destination: params.destination,
         genesis: params.genesis,
       },
-      take: params.limit || PAGINATION_LIMIT,
-      skip: params.offset || 0,
+      ...getPaginationParams(params),
     });
     return {
       messages: result,
@@ -84,8 +91,7 @@ export class MessagesService {
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
     const [result, total] = await this.messageRepo.findAndCount({
       where: { genesis: params.genesis, source: params.source },
-      take: params.limit || PAGINATION_LIMIT,
-      skip: params.offset || 0,
+      ...getPaginationParams(params),
     });
     return {
       messages: result,
@@ -99,11 +105,9 @@ export class MessagesService {
       destination: params.destination,
       source: params.source,
     };
-    console.log(where);
     const [result, total] = await this.messageRepo.findAndCount({
       where,
-      take: params.limit | PAGINATION_LIMIT,
-      skip: params.offset | 0,
+      ...getPaginationParams(params),
     });
     return {
       messages: result,
@@ -113,9 +117,38 @@ export class MessagesService {
 
   async getMessage(params: FindMessageParams): Promise<Message> {
     const where = {
+      genesis: params.genesis,
       id: params.id,
     };
     const result = await this.messageRepo.findOne({ where });
     return result;
+  }
+
+  setDispatchedStatus(params: MessageDispatchedParams): Promise<void> {
+    const error = params.outcome !== 'success' ? params.outcome : null;
+    if (error === null) {
+      return;
+    }
+    setTimeout(async () => {
+      const message = await this.messageRepo.findOne({
+        genesis: params.genesis,
+        id: params.messageId,
+      });
+      if (message) {
+        message.error = error;
+      }
+      this.messageRepo.save(message);
+      const logMessages = await this.messageRepo.find({
+        genesis: params.genesis,
+        replyTo: params.messageId,
+        replyError: '1',
+      });
+      if (logMessages.length > 0) {
+        logMessages.forEach((log) => {
+          log.replyError = error;
+          this.messageRepo.save(log);
+        });
+      }
+    }, 1000);
   }
 }

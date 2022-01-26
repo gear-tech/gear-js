@@ -2,7 +2,7 @@ import { PaginationModel, UserPrograms } from 'types/common';
 import { ProgramModel, ProgramPaginationModel } from 'types/program';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
-export default class ProgramRequestService {
+class ProgramRequestService {
   apiRequest = new ServerRPCRequestService();
 
   protected readonly API_PROGRAMS_ALL = 'program.all';
@@ -23,3 +23,5 @@ export default class ProgramRequestService {
     return this.apiRequest.callRPC<ProgramModel>(this.API_REFRESH_PROGRAM, { id });
   };
 }
+
+export const programService = new ProgramRequestService();

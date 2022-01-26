@@ -10,7 +10,7 @@ import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/events';
 import { AddAlert } from 'store/actions/actions';
-import { fileNameHandler } from 'helpers';
+import { fileNameHandler, getPreformattedText } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
@@ -38,7 +38,7 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, t
   const [initialValues] = useState({
     gasLimit: 20000000,
     value: 0,
-    payload: types ? JSON.stringify(types, null, 4) : '',
+    payload: types ? getPreformattedText(types) : '',
     destination: programId,
     fields: {},
   });

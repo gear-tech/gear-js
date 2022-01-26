@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://gear-tech.io">
-    <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/logo.svg" width="250" alt="GEAR">
+    <img src="https://github.com/gear-tech/gear/blob/master/images/logo-grey.png" width="400" alt="GEAR">
   </a>
 </p>
 <p align=center>
@@ -123,8 +123,8 @@ try {
 }
 
 try {
-  await gearApi.program.signAndSend(keyring, (data) => {
-    console.log(data);
+  await gearApi.program.signAndSend(keyring, (event) => {
+    console.log(event.toHuman());
   });
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
@@ -149,8 +149,8 @@ try {
   console.error(`${error.name}: ${error.message}`);
 }
 try {
-  await gearApi.message.signAndSend(keyring, (data) => {
-    console.log(data);
+  await gearApi.message.signAndSend(keyring, (event) => {
+    console.log(event.toHuman());
   });
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);

@@ -14,10 +14,17 @@ const Menu = ({ openSidebar }: Props) => {
 
   return (
     <ul className={styles.menu}>
-      <li className={styles.item} onClick={openSidebar}>
-        {isApiReady ? localStorage.chain : 'Loading...'}
+      <li>
+        <span className={styles.link} onClick={openSidebar}>
+          {isApiReady ? localStorage.chain : 'Loading...'}
+        </span>
       </li>
-      <li className={styles.item}>
+      <li>
+        <Link to={routes.explorer} className={styles.link}>
+          Explorer
+        </Link>
+      </li>
+      <li>
         <Link to={routes.editor} className={styles.link}>
           &lt;/&gt; IDE
         </Link>

@@ -83,7 +83,7 @@ export const Wallet = () => {
     // TODO: think how to wrap it hook
     if (currentAccount) {
       nodeApi.api?.gearEvents
-        .subsribeBalanceChange(currentAccount.address, (balance) => {
+        .subscribeToBalanceChange(currentAccount.address, (balance) => {
           setAccountBalance(balance.toHuman());
         })
         .then((sub) => {

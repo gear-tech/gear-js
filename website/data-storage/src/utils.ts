@@ -1,4 +1,6 @@
 import { Logger } from '@nestjs/common';
+import { PAGINATION_LIMIT } from './config/configuration';
+import { PaginationParams } from './interfaces/general';
 
 export class ErrorLogger {
   logger: Logger;
@@ -12,4 +14,8 @@ export class ErrorLogger {
     this.logger.error(`Error: ${error}`, `Stack: ${error.stack}`, `Line: ${line}`, '');
     console.log('<===');
   }
+}
+
+export function getPaginationParams(params: PaginationParams): { take: number; skip: number } {
+  return { take: params.limit || PAGINATION_LIMIT, skip: params.offset || 0 };
 }

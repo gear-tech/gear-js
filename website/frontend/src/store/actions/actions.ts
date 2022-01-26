@@ -2,11 +2,10 @@ import { CreateType, GearKeyring } from '@gear-js/api';
 import { MessageActionTypes, MessagePaginationModel, MessageModel } from 'types/message';
 import { NotificationActionTypes, NotificationPaginationModel, RecentNotificationModel } from 'types/notification';
 import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
-
 import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
 import MessageRequestService from 'services/MessagesRequestServices';
-import ProgramRequestService from 'services/ProgramsRequestService';
+import { programService } from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
@@ -130,7 +129,6 @@ export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActio
 export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
 const messageService = new MessageRequestService();
-const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
 
 export const getMessagesAction = (params: PaginationModel) => (dispatch: any) => {
@@ -235,7 +233,7 @@ export const AddAlert = (payload: AlertModel) => ({
 
 export const subscribeToEvents = () => (dispatch: any) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
-  nodeApi.subscribeProgramEvents(({ method, data: { info, reason } }) => {
+  nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
       dispatch(
@@ -248,7 +246,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 
-  nodeApi.subscribeLogEvents(async ({ data: { source, dest, reply, payload } }) => {
+  nodeApi.subscribeToLogEvents(async ({ data: { source, dest, reply, payload } }) => {
     let meta = null;
     let decodedPayload: any;
     const programId = source.toHex();
@@ -289,7 +287,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 
-  nodeApi.subscribeTransferEvents(({ data: { from, to, value } }) => {
+  nodeApi.subscribeToTransferEvents(({ data: { from, to, value } }) => {
     if (to.toHex() === filterKey) {
       dispatch(
         AddAlert({

@@ -2,11 +2,10 @@ import { GearApi } from './GearApi';
 import { CreateType } from './CreateType';
 import { createPayload } from './utils';
 import { Metadata } from './interfaces';
-import { SendReplyError, TransactionError } from './errors';
+import { SendReplyError } from './errors';
 import { u64 } from '@polkadot/types';
 import { AnyNumber } from '@polkadot/types/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
-import { KeyringPair } from '@polkadot/keyring/types';
 
 export class GearMessageReply {
   private api: GearApi;
@@ -41,49 +40,5 @@ export class GearMessageReply {
     } catch (error) {
       throw new SendReplyError();
     }
-  }
-
-  signAndSend(keyring: KeyringPair, callback?: (data: any) => void): Promise<any> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let blockHash: string;
-        await this.reply.signAndSend(keyring, ({ events = [], status }) => {
-          if (status.isInBlock) {
-            blockHash = status.asInBlock.toHex();
-          } else if (status.isFinalized) {
-            blockHash = status.asFinalized.toHex();
-            resolve(0);
-          } else if (status.isInvalid) {
-            reject(new TransactionError(`Transaction error. Status: isInvalid`));
-          }
-
-          // Check transaction errors
-          events
-            .filter(({ event }) => this.api.events.system.ExtrinsicFailed.is(event))
-            .forEach(
-              ({
-                event: {
-                  data: [error],
-                },
-              }) => {
-                reject(new TransactionError(`${error.toString()}`));
-              },
-            );
-
-          events
-            .filter(({ event }) => this.api.events.gear.DispatchMessageEnqueued.is(event))
-            .forEach(({ event: { data, method } }) => {
-              callback({
-                method,
-                status: status.type,
-                blockHash,
-                messageId: data.toHuman()[0],
-              });
-            });
-        });
-      } catch (error) {
-        reject(new TransactionError(error.message));
-      }
-    });
   }
 }

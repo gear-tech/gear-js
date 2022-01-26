@@ -1,6 +1,6 @@
 import { PaginationParams, RequestParams } from './general';
 
-export interface Message {
+export interface IMessage {
   id: string;
   genesis: string;
   destination: string;
@@ -18,7 +18,7 @@ export interface AddPayloadParams extends RequestParams {
 }
 
 export interface AllMessagesResult {
-  messages: Message[];
+  messages: IMessage[];
   count: number;
 }
 
@@ -27,7 +27,7 @@ export interface GetMessagesParams extends RequestParams, PaginationParams {
   source?: string;
 }
 
-export interface FindMessageParams extends RequestParams, Pick<Message, 'id'> {}
+export interface FindMessageParams extends RequestParams, Pick<IMessage, 'id'> {}
 
 export interface GetIncomingMessagesParams
   extends RequestParams,
@@ -35,3 +35,8 @@ export interface GetIncomingMessagesParams
     Pick<GetMessagesParams, 'destination'> {}
 
 export interface GetOutgoingMessagesParams extends RequestParams, PaginationParams, Pick<GetMessagesParams, 'source'> {}
+
+export interface MessageDispatchedParams extends RequestParams {
+  messageId: string;
+  outcome: string;
+}
