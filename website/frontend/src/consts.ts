@@ -17,7 +17,7 @@ export const LOCAL_STORAGE = {
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
   INVALID_PARAMS: 'Invalid method parameters',
-  INVALID_TRANSACTION: 'Invalid transaction',
+  INVALID_TRANSACTION: 'Transaction error. Status: isInvalid',
   PROGRAM_INIT_FAILED: 'Program initialization failed',
   GEAR_NODE_ERROR: 'Gear node error',
   BALANCE_LOW: 'Invalid transaction. Account balance too low',
