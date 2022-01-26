@@ -14,7 +14,7 @@ services:
     ports:
       - '2181:2181'
     environment:
-      - ZOO_MAX_SESSION_TIMEOUT=50000
+      ZOO_MAX_SESSION_TIMEOUT: 50000
 
   kafka:
     image: wurstmeister/kafka
@@ -26,7 +26,7 @@ services:
       KAFKA_BROKER_ID: 0
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: SASL_PLAINTEXT://:9094
-      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://${KAFKA_HOST_NAME}:9094
+      KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://kafka:9094
       KAFKA_INTER_BROKER_LISTENER_NAME: SASL_PLAINTEXT
       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf'
       KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
@@ -37,9 +37,9 @@ services:
   postgres:
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_DB=${DB_NAME}
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
     volumes:
       - volatile:/var/lib/postgresql/data
       - ../seed/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
@@ -54,46 +54,42 @@ services:
       - ../../data-storage:/usr/src/data-storage:ro
     depends_on:
       - postgres
-    environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=postgres
-      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
-      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
-      - KAFKA_BROKERS=${KAFKA_BROKERS}
-      - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
-      - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
+    environment: &mock-environment
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: postgres
+      KAFKA_CLIENT_ID: data-storage
+      KAFKA_GROUP_ID: data-storage
+      KAFKA_BROKERS: kafka:9094
+      KAFKA_SASL_USERNAME: kafka_user
+      KAFKA_SASL_PASSWORD: passwd
 
-  # api-gateway:
+  # api_gateway:
   #   ports:
-  #     - 3000:3000
+  #     - '3000:3000'
   #   image: mithriy/gear-api-gateway:nightly
   #   environment:
-  #     KAFKA_GROUP_ID: ${KAFKA_GROUP_ID}
-  #     KAFKA_CLIENT_ID: ${KAFKA_CLIENT_ID}
-  #     KAFKA_BROKERS: ${KAFKA_BROKERS}
-  #     KAFKA_SASL_USERNAME: ${KAFKA_SASL_USERNAME}
-  #     KAFKA_SASL_PASSWORD: ${KAFKA_SASL_PASSWORD}
+  #     <<: *mock-environment
+  #     KAFKA_GROUP_ID: api-gateway
+  #     KAFKA_CLIENT_ID: api-gateway
   #     PORT: 3000
 
   # events_testnet:
   #   image: mithriy/gear-event-listener:nightly
   #   environment:
-  #     - WS_PROVIDER=${WS_PROVIDER_TESTNET}
-  #     - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID_TESTNET}
-  #     - KAFKA_BROKERS=${KAFKA_BROKERS}
-  #     - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
-  #     - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
+  #     <<: *mock-environment
+  #     KAFKA_CLIENT_ID: events-testnet
+  #     KAFKA_GROUP_ID: events-testnet
+  #     WS_PROVIDER: ${WS_PROVIDER_TESTNET}
 
   # events_wrsh:
   #   image: mithriy/gear-event-listener:nightly
   #   environment:
-  #     - WS_PROVIDER=${WS_PROVIDER_WRSH}
-  #     - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID_WRSH}
-  #     - KAFKA_BROKERS=${KAFKA_BROKERS}
-  #     - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
-  #     - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
+  #     <<: *mock-environment
+  #     KAFKA_CLIENT_ID: events-wrsh
+  #     KAFKA_GROUP_ID: events-wrsh
+  #     WS_PROVIDER: ${WS_PROVIDER_WRSH}
 
   # The test suite:
   contract_test:
