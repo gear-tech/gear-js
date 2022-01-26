@@ -1,13 +1,9 @@
-import { createConnection, getRepository } from 'typeorm';
-
-import { Program } from './program.entity';
+import { createConnection } from 'typeorm';
 
 describe('database', () => {
-  it('should contain some records', async () => {
-    await createConnection({ type: 'postgres', host: 'postgres', username: 'postgres', password: 'postgres' });
-    const repo = getRepository(Program);
-    const programsCount = await repo.count();
+  it('should connect', async () => {
+    const connection = await createConnection({ type: 'postgres', host: 'postgres', username: 'postgres', password: 'postgres' });
 
-    expect(programsCount).toBeGreaterThan(0);
+    expect(connection.isConnected).toBeTruthy();
   });
 });
