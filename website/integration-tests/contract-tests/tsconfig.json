@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "experimentalDecorators": true
+  }
+}
