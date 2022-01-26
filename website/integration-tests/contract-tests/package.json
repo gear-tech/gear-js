@@ -4,7 +4,7 @@
   "description": "automated tests for apis",
   "main": "src/index.ts",
   "scripts": {
-    "test": "ts-node src/main.ts"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,24 @@
   "dependencies": {
     "jest": "^27.4.7",
     "ts-jest": "^27.1.3",
-    "ts-node": "^10.4.0"
+    "ts-node": "^10.4.0",
+    "typeorm": "^0.2.41"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": "$",
+    "transform": {
+      "^.+\\.[tj]s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.[tj]s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   }
 }
