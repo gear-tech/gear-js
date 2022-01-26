@@ -33,6 +33,9 @@
     "transform": {
       "^.+\\.[tj]s$": "ts-jest"
     },
+    "setupFiles": [
+      "reflect-metadata"
+    ],
     "collectCoverageFrom": [
       "**/*.[tj]s"
     ],
