@@ -100,3 +100,9 @@ services:
       - data_storage
     volumes:
       - ./src:/usr/app:ro
+
+volumes:
+  volatile:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
