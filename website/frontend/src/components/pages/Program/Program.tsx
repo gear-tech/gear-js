@@ -9,7 +9,7 @@ import { formatDate, getPreformattedText } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
-import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 import './Program.scss';
 
 type Params = { id: string };
@@ -65,7 +65,7 @@ export const Program: VFC = () => {
     dispatch(
       getMessagesAction({
         source: id,
-        destination: localStorage.getItem('public_key_raw'),
+        destination: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
         limit: INITIAL_LIMIT_BY_PAGE,
       })
     );

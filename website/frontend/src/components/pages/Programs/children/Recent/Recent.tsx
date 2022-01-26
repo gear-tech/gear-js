@@ -5,7 +5,7 @@ import { getUserProgramsAction, uploadMetaResetAction } from 'store/actions/acti
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 
-import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 
 import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
@@ -39,7 +39,7 @@ export const Recent: VFC = () => {
   useEffect(() => {
     dispatch(
       getUserProgramsAction({
-        publicKeyRaw: localStorage.getItem('public_key_raw'),
+        publicKeyRaw: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
         term,

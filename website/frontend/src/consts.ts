@@ -11,6 +11,12 @@ export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 
 export const LOCAL_STORAGE = {
   CHAIN: 'chain',
+  GENESIS: 'genesis',
+  NODES: 'nodes',
+  NODE_ADDRESS: 'node_address',
+  PUBLIC_KEY_RAW: 'public_key_raw',
+  PROGRAM_COMPILE_ID: 'program_compile_id',
+  SAVED_ACCOUNT: 'saved_account',
   EVENT_FILTERS: 'eventFilters',
 };
 

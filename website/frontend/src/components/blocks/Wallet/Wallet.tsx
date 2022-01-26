@@ -12,6 +12,7 @@ import { useApi } from '../../../hooks/useApi';
 import { Modal } from '../Modal';
 import { AccountList } from './AccountList';
 import { nodeApi } from '../../../api/initApi';
+import { LOCAL_STORAGE } from 'consts';
 import styles from './Wallet.module.scss';
 
 export const Wallet = () => {
@@ -48,7 +49,7 @@ export const Wallet = () => {
         .then((allAccounts) => {
           if (allAccounts) {
             allAccounts.forEach((acc: UserAccount) => {
-              if (acc.address === localStorage.getItem('savedAccount')) {
+              if (acc.address === localStorage.getItem(LOCAL_STORAGE.SAVED_ACCOUNT)) {
                 acc.isActive = true;
                 dispatch(setCurrentAccount(acc));
               }
@@ -109,8 +110,8 @@ export const Wallet = () => {
         acc.isActive = false;
         if (i === index) {
           acc.isActive = true;
-          localStorage.setItem('savedAccount', acc.address);
-          localStorage.setItem('public_key_raw', GearKeyring.decodeAddress(acc.address));
+          localStorage.setItem(LOCAL_STORAGE.SAVED_ACCOUNT, acc.address);
+          localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, GearKeyring.decodeAddress(acc.address));
         }
       });
       dispatch(setCurrentAccount(injectedAccounts[index]));
@@ -121,8 +122,8 @@ export const Wallet = () => {
 
   const handleLogout = () => {
     dispatch(resetCurrentAccount());
-    localStorage.removeItem('savedAccount');
-    localStorage.removeItem('public_key_raw');
+    localStorage.removeItem(LOCAL_STORAGE.SAVED_ACCOUNT);
+    localStorage.removeItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
   };
 
   const accButtonClassName = clsx(styles.button, styles.accountButton);

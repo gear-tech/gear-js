@@ -6,8 +6,8 @@ import config from './config';
 const log = logger('KafkaProducer');
 
 export class KafkaProducer {
-  readonly kafka: Kafka
-  readonly producer: Producer
+  readonly kafka: Kafka;
+  readonly producer: Producer;
 
   constructor() {
     this.kafka = new Kafka({

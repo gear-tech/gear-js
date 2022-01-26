@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { RootState } from 'store/reducers';
-import { WASM_COMPILER_GET } from 'consts';
+import { WASM_COMPILER_GET, LOCAL_STORAGE } from 'consts';
 import { EventTypes } from 'types/events';
 import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
@@ -17,7 +17,8 @@ export const Header: VFC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   let { isBuildDone } = useSelector((state: RootState) => state.compiler);
-  if (localStorage.getItem('programCompileId') && !isBuildDone) {
+
+  if (localStorage.getItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID) && !isBuildDone) {
     isBuildDone = true;
   }
 
@@ -25,7 +26,7 @@ export const Header: VFC = () => {
     let timerId: any;
 
     if (isBuildDone) {
-      const id = localStorage.getItem('programCompileId');
+      const id = localStorage.getItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID);
 
       timerId = setInterval(() => {
         fetch(WASM_COMPILER_GET, {
@@ -43,7 +44,7 @@ export const Header: VFC = () => {
               data.generateAsync({ type: 'blob' }).then((val) => {
                 saveAs(val, `program.zip`);
                 dispatch(setIsBuildDone(false));
-                localStorage.removeItem('programCompileId');
+                localStorage.removeItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID);
                 clearInterval(timerId);
                 dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Program is ready!` }));
               });
