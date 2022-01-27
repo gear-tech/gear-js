@@ -13,6 +13,7 @@ import { Switch } from 'common/components/Switch';
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
 import { MetaFile } from './children/MetaFile/MetaFile';
 import { MetaFields } from './children/MetaFields/MetaFields';
+import { Buttons } from './children/Buttons/Buttons';
 
 import { Schema } from './Schema';
 import { useApi } from 'hooks/useApi';
@@ -286,19 +287,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     )}
                   </div>
                 </div>
-                <div className={styles.buttons}>
-                  <button type="submit" className={styles.upload} aria-label="uploadProgramm">
-                    Upload program
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.cancel}
-                    aria-label="closeUploadForm"
-                    onClick={handleResetForm}
-                  >
-                    Cancel upload
-                  </button>
-                </div>
+                <Buttons handleResetForm={handleResetForm} />
               </div>
             </Form>
           );
