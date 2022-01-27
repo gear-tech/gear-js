@@ -24,16 +24,16 @@ import { MetaErrorMessage } from './styles';
 type Props = {
   programId: string;
   programName: string;
-  meta: Metadata | null;
+  meta?: Metadata;
   types: MetaParam | null;
 };
 
-export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, types }) => {
+export const MessageForm: VFC<Props> = ({ programId, programName, meta, types }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
-  const [manualInput, setManualInput] = useState(Boolean(!types));
+  const [isManualInput, setIsManualInput] = useState(Boolean(!types));
 
   const [initialValues] = useState({
     gasLimit: 20000000,
@@ -47,31 +47,27 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, t
     if (types) {
       const parsedMeta = parseMeta(types);
       setMetaForm(parsedMeta);
-      setManualInput(false);
+      setIsManualInput(false);
     }
   }, [types]);
 
   const calculateGas = async (values: any, setFieldValue: any) => {
-    if (manualInput && values.payload.length === 0) {
+    if (isManualInput && values.payload.length === 0) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
       return;
     }
 
     try {
-      if (meta) {
-        let pl = values.fields;
-        if (manualInput) {
-          pl = values.payload;
-        }
-        if (Object.keys(pl).length === 0) {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Form is empty' }));
+      const pl = isManualInput ? values.payload : values.fields;
 
-          return;
-        }
-        const estimatedGas = await api?.program.getGasSpent(programId, pl, meta.handle_input, meta);
-        dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
-        setFieldValue('gasLimit', Number(`${estimatedGas}`));
+      if (Object.keys(pl).length === 0) {
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Form is empty' }));
+        return;
       }
+
+      const estimatedGas = await api?.program.getGasSpent(programId, pl, meta?.handle_input, meta);
+      dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
+      setFieldValue('gasLimit', Number(`${estimatedGas}`));
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
       console.error(error);
@@ -85,20 +81,17 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, t
       validateOnBlur
       onSubmit={(values, { resetForm }) => {
         if (currentAccount) {
-          let pl = values.fields;
-          if (manualInput) {
-            pl = values.payload;
-          }
+          const pl = isManualInput ? values.payload : values.fields;
+
           const message: MessageModel = {
             gasLimit: values.gasLimit,
             destination: values.destination,
             value: values.value,
             payload: pl,
           };
-          if (meta && api) {
-            SendMessageToProgram(api, currentAccount, message, meta, dispatch, () => {
-              resetForm();
-            });
+
+          if (api) {
+            SendMessageToProgram(api, currentAccount, message, dispatch, resetForm, meta);
           }
         } else {
           dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
@@ -139,10 +132,10 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, t
                     <div>
                       <Switch
                         onChange={() => {
-                          setManualInput(!manualInput);
+                          setIsManualInput(!isManualInput);
                         }}
                         label="Manual input"
-                        checked={manualInput}
+                        checked={isManualInput}
                       />
                     </div>
                   )}
@@ -157,18 +150,18 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, t
                       </>
                     }
                     onError={(error) => {
-                      setManualInput(true);
+                      setIsManualInput(true);
                       console.error(error);
                     }}
                   >
-                    {!manualInput && metaForm ? <FormItem data={metaForm} /> : <></>}
+                    {!isManualInput && metaForm ? <FormItem data={metaForm} /> : <></>}
                   </ErrorBoundary>
                   {!metaForm && (
                     <MetaErrorMessage className="hello">
                       Cannot parse metadata, try to use manual input
                     </MetaErrorMessage>
                   )}
-                  {manualInput && (
+                  {isManualInput && (
                     <div>
                       <Field
                         id="payload"
