@@ -6,8 +6,8 @@ import styles from './MetaFile.module.scss';
 
 type Props = {
   droppedMetaFile: File | null;
-  handleRemoveMetaFile: any;
-  handleChangeMetaFile: any;
+  handleRemoveMetaFile: () => void;
+  handleChangeMetaFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const MetaFile: FC<Props> = ({ droppedMetaFile, handleRemoveMetaFile, handleChangeMetaFile }) => {
