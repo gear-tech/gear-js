@@ -31,7 +31,7 @@ jobs:
       - name: Build api-gateway
         run: |
           yarn workspace @gear-js/api-gateway install
-          yarn build:apiGateway
+          yarn run build:api-gateway
 
       - name: Build and push docker image
         id: api_backend_docker_build
