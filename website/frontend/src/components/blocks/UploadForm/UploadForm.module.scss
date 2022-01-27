@@ -124,9 +124,6 @@
           position: relative;
           margin-bottom: 32px;
         }
-        .hidden {
-          display: none;
-        }
         .caption {
           display: flex;
           align-items: center;
@@ -145,18 +142,6 @@
           @media (min-width: 769px) and (max-width: 1270px) {
             font-size: 16px;
             min-width: 160px;
-          }
-        }
-        .uploadMetaFile {
-          background: #3d3d3d;
-          border-radius: 2px;
-          font-weight: 500;
-          font-size: 14px;
-          line-height: 21px;
-          color: $textColor;
-          padding: 9px 18px;
-          @media (max-width: 768px) {
-            width: fit-content;
           }
         }
         .value {

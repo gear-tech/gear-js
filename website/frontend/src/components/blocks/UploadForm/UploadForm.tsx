@@ -11,6 +11,7 @@ import { FormItem } from 'components/FormItem';
 import { Switch } from 'common/components/Switch';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
+import { MetaFile } from './children/MetaFile/MetaFile';
 
 import { Schema } from './Schema';
 import { useApi } from 'hooks/useApi';
@@ -19,8 +20,6 @@ import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
 import { readFileAsync, checkFileFormat } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
-import deselected from 'assets/images/radio-deselected.svg';
-import selected from 'assets/images/radio-selected.svg';
 import styles from './UploadForm.module.scss';
 
 type Props = {
@@ -32,7 +31,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
-  const metaFieldRef = useRef<HTMLDivElement | null>(null);
 
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<string | null>(null);
@@ -56,10 +54,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
   const isShowMetaSwitch = isMetaFromFile && meta;
   const isShowMetaForm = isMetaFromFile && metaForm && !isManualPaylod;
-
-  const uploadMetaFile = () => {
-    metaFieldRef.current?.click();
-  };
 
   const handleUploadMetaFile = async (file: File) => {
     try {
@@ -275,31 +269,11 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                   <span className={styles.columnTitle}>Metadata: </span>
                   <MetaSwitch isMetaFromFile={isMetaFromFile} setIsMetaFromFile={setIsMetaFromFile} />
                   {isMetaFromFile && (
-                    <div className={styles.block}>
-                      <label htmlFor="meta" className={styles.caption}>
-                        Metadata file:
-                      </label>
-                      <Field
-                        id="meta"
-                        name="meta"
-                        className={styles.hidden}
-                        type="file"
-                        innerRef={metaFieldRef}
-                        onChange={handleChangeMetaFile}
-                      />
-                      {droppedMetaFile ? (
-                        <div className={clsx(styles.value, styles.filename)}>
-                          {droppedFile.name}
-                          <button type="button" onClick={handleRemoveMetaFile}>
-                            <Trash2 color="#ffffff" size="20" strokeWidth="1" />
-                          </button>
-                        </div>
-                      ) : (
-                        <button className={styles.uploadMetaFile} type="button" onClick={uploadMetaFile}>
-                          Select file
-                        </button>
-                      )}
-                    </div>
+                    <MetaFile
+                      droppedMetaFile={droppedMetaFile}
+                      handleRemoveMetaFile={handleRemoveMetaFile}
+                      handleChangeMetaFile={handleChangeMetaFile}
+                    />
                   )}
                   {isShowFields && (
                     <>
