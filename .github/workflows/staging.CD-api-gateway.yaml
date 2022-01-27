@@ -16,17 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Build api-gateway
-        run: yarn build:api-gateway
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -43,7 +32,7 @@ jobs:
         id: api_backend_docker_build
         uses: docker/build-push-action@v2
         with:
-          file: website/api-gateway/Dockerfile
+          file: Dockerfile
           push: true
           tags: mithriy/gear-api-gateway:nightly
 
