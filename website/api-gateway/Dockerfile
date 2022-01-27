@@ -1,4 +1,4 @@
 FROM node:16-alpine
+COPY ./website/api-gateway/dist /usr/src/api-gateway/dist
 WORKDIR /usr/src/api-gateway
-COPY ./website/api-gateway/dist ./dist
 CMD ["node", "dist/main"]
