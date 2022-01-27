@@ -86,6 +86,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           ...initialValues,
           ...valuesFromFile,
           programName: metaWasm.title,
+          initPayload: JSON.stringify(inputType, null, 4),
+          types: JSON.stringify(inputType),
         });
         setFieldFromFile([...Object.keys(valuesFromFile).reverse()]);
       }
@@ -146,14 +148,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleResetForm = () => {
     setDroppedFile(null);
     setDroppedMetaFile(null);
-  };
-
-  const getFields = () => {
-    if (isMetaFromFile) {
-      return fieldFromFile;
-    }
-
-    return META_FIELDS;
   };
 
   return (
@@ -283,7 +277,12 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       />
                     )}
                     {isShowFields && (
-                      <MetaFields fields={getFields()} isDisabled={isMetaFromFile} errors={errors} touched={touched} />
+                      <MetaFields
+                        fields={isMetaFromFile ? fieldFromFile : META_FIELDS}
+                        isDisabled={isMetaFromFile}
+                        errors={errors}
+                        touched={touched}
+                      />
                     )}
                   </div>
                 </div>
