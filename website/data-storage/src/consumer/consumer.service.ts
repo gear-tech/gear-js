@@ -25,7 +25,7 @@ import {
   DispatchMessageEnqueud,
   InitSuccess,
   InitFailure,
-} from '@gear-js/backend-interfaces';
+} from '@gear-js/interfaces';
 @Injectable()
 export class ConsumerService {
   constructor(

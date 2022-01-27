@@ -11,7 +11,7 @@ import {
   GetMetaResult,
   IMessage,
   IProgram,
-} from '@gear-js/backend-interfaces';
+} from '@gear-js/interfaces';
 export interface IRpcRequest {
   jsonrpc: '2.0';
   id: number;

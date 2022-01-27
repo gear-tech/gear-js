@@ -4,7 +4,7 @@ import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
-} from '@gear-js/backend-interfaces';
+} from '@gear-js/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';

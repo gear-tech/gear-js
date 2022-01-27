@@ -1,5 +1,5 @@
 {
-  "name": "@gear-js/backend-interfaces",
+  "name": "@gear-js/interfaces",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",

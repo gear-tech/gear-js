@@ -1,4 +1,4 @@
-import { IBaseDBRecord } from '@gear-js/backend-interfaces';
+import { IBaseDBRecord } from '@gear-js/interfaces';
 import { Column, Entity, JoinColumn, Index, OneToOne, PrimaryColumn } from 'typeorm';
 
 export abstract class BaseEntity implements IBaseDBRecord<Date> {

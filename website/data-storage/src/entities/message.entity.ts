@@ -1,4 +1,4 @@
-import { IMessage } from '@gear-js/backend-interfaces';
+import { IMessage } from '@gear-js/interfaces';
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 import { BaseEntity } from './base.entity';
 

@@ -15,7 +15,7 @@ import {
   Keys,
   Log,
   MessageDispatched,
-} from '@gear-js/backend-interfaces';
+} from '@gear-js/interfaces';
 
 import { logger } from './logger';
 

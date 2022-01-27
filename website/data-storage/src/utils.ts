@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { PAGINATION_LIMIT } from './config/configuration';
-import { IPaginationParams } from '@gear-js/backend-interfaces';
+import { IPaginationParams } from '@gear-js/interfaces';
 
 export class ErrorLogger {
   logger: Logger;

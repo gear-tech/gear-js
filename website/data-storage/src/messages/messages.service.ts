@@ -12,7 +12,7 @@ import {
   GetMessagesParams,
   IMessage,
   MessageDispatched,
-} from '@gear-js/backend-interfaces';
+} from '@gear-js/interfaces';
 import { ErrorLogger, getPaginationParams } from 'src/utils';
 
 const logger = new Logger('MessageService');

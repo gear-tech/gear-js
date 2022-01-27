@@ -9,7 +9,7 @@ import {
   GetMetaParams,
   KafkaPayload,
   Keys,
-} from '@gear-js/backend-interfaces';
+} from '@gear-js/interfaces';
 import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ConsumerService } from './consumer.service';

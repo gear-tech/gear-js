@@ -1,4 +1,4 @@
-import { IMeta } from '@gear-js/backend-interfaces';
+import { IMeta } from '@gear-js/interfaces';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
