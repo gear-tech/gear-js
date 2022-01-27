@@ -120,11 +120,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleSubmitForm = (values: any) => {
     if (currentAccount) {
       if (isMetaFromFile) {
-        let pl = values.fields;
-        if (isManualPaylod) {
-          pl = values.initPayload;
-        }
-
+        const pl = isManualPaylod ? values.initPayload : values.fields;
         const updatedValues = { ...values, initPayload: pl };
 
         UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
