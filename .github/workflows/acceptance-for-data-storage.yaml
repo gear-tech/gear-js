@@ -31,6 +31,9 @@ jobs:
         with:
           cmd: install
 
+      - name: Build interfaces
+        run: yarn build:interfaces
+
       - name: Run tests
         working-directory: 'website/data-storage'
         run: yarn test
