@@ -1,4 +1,5 @@
-import { IBaseDBRecord, IMessage, IMessageInfo } from '.';
+import { IMessage } from './message';
+import { IMessageInfo, IBaseDBRecord } from './general';
 import { IGenesis } from './general';
 
 export enum Keys {
