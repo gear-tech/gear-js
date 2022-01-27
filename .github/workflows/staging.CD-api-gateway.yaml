@@ -2,9 +2,9 @@ name: staging.api-gateway-CD
 
 on:
   push:
-    branches: [master, do-extrinsic-block]
-    # paths:
-    # - website/api-gateway/**
+    branches: [master]
+    paths:
+      - website/api-gateway/**
 
 env:
   CARGO_TERM_COLOR: always
