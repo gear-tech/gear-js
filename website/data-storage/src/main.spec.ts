@@ -40,8 +40,9 @@ describe('Programs Service', () => {
     programsService.save({
       id: 7357,
       genesis: '0x07357',
+      blockHash: '0x',
       owner: '0x7357',
-      uploadedAt: 0,
+      timestamp: 0,
     });
 
     // then:
