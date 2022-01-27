@@ -22,7 +22,6 @@ export class ConsumerController {
 
   @MessagePattern('events')
   async addEvent(@Payload() payload: AddEventKafkaPayload<Keys, any>) {
-    // const genesis = payload.headers.genesis;
     const key = payload.key;
     const value = payload.value;
     try {
