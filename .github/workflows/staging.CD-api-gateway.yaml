@@ -16,6 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build api-gateway
+        run: yarn build:api-gateway
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -27,17 +38,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-
-      - name: Build api-gateway
-        run: |
-          yarn workspace @gear-js/api-gateway install
-          cd website/api-gateway
-          yarn build
 
       - name: Build and push docker image
         id: api_backend_docker_build
