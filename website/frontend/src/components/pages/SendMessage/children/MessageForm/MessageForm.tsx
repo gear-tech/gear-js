@@ -128,22 +128,20 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
                   Payload:
                 </label>
                 <div className="message-form__field-wrapper">
-                  {meta && (
-                    <div>
-                      <Switch
-                        onChange={() => {
-                          setIsManualInput(!isManualInput);
-                        }}
-                        label="Manual input"
-                        checked={isManualInput}
-                      />
-                    </div>
+                  {metaForm && (
+                    <Switch
+                      onChange={() => {
+                        setIsManualInput(!isManualInput);
+                      }}
+                      label="Manual input"
+                      checked={isManualInput}
+                    />
                   )}
                   <ErrorBoundary
                     fallback={
                       <>
                         <MetaErrorMessage>
-                          Sorry, something went wrong. Unfortunately we cannot parse metadata, you could use manual
+                          Sorry, something went wrong. Unfortunately we can't parse metadata, you could use manual
                           input.
                         </MetaErrorMessage>
                         <br />
@@ -156,13 +154,10 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
                   >
                     {!isManualInput && metaForm ? <FormItem data={metaForm} /> : <></>}
                   </ErrorBoundary>
-                  {!metaForm && (
-                    <MetaErrorMessage className="hello">
-                      Cannot parse metadata, try to use manual input
-                    </MetaErrorMessage>
-                  )}
+                  {!metaForm && <MetaErrorMessage>Can't parse metadata, try to use manual input.</MetaErrorMessage>}
                   {isManualInput && (
                     <div>
+                      <p className="message-form__manual-input-notice">JSON or hex</p>
                       <Field
                         id="payload"
                         name="payload"
