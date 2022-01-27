@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build:backend": "yarn workspaces foreach -ptR --from '{@gear-js/event-listener,@gear-js/api-gateway,@gear-js/data-storage,@gear-js/test-balance,@gear-js/wasm-compiler}' run build",
+    "build:interfaces": "yarn workspace @gear-js/backend-interfaces build",
     "build:eventListener": "yarn workspace @gear-js/event-listener build",
     "build:apiGateway": "yarn workspace @gear-js/api-gateway build",
     "build:dataStorage": "yarn workspace @gear-js/data-storage build",
@@ -26,7 +27,8 @@
     "website/events-listener",
     "website/frontend",
     "website/test-balance",
-    "website/wasm-compiler"
+    "website/wasm-compiler",
+    "website/interfaces"
   ],
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"

@@ -1724,6 +1724,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/api-gateway@workspace:website/api-gateway"
   dependencies:
+    "@gear-js/backend-interfaces": 1.0.0
     "@nestjs/cli": ^8.1.6
     "@nestjs/common": ^8.1.2
     "@nestjs/config": ^1.0.3
@@ -1787,11 +1788,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/backend-interfaces@1.0.0, @gear-js/backend-interfaces@workspace:website/interfaces":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/backend-interfaces@workspace:website/interfaces"
+  languageName: unknown
+  linkType: soft
+
 "@gear-js/data-storage@workspace:website/data-storage":
   version: 0.0.0-use.local
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
   dependencies:
     "@gear-js/api": ^0.9.7
+    "@gear-js/backend-interfaces": 1.0.0
     "@nestjs/cli": ^8.1.6
     "@nestjs/common": ^8.1.2
     "@nestjs/config": ^1.0.3
@@ -1833,6 +1841,7 @@ __metadata:
   resolution: "@gear-js/event-listener@workspace:website/events-listener"
   dependencies:
     "@gear-js/api": ^0.11.0
+    "@gear-js/backend-interfaces": 1.0.0
     "@polkadot/api": ^7.0.2
     "@swc/core": ^1.2.124
     "@swc/helpers": ^0.3.2

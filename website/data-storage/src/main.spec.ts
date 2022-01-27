@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-import { Program } from './programs/entities/program.entity';
+import { Program } from './entities/program.entity';
 import { ProgramsService } from './programs/programs.service';
 
 describe('Programs Service', () => {

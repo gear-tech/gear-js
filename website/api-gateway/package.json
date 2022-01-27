@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@gear-js/backend-interfaces": "1.0.0",
     "@nestjs/common": "^8.1.2",
     "@nestjs/config": "^1.0.3",
     "@nestjs/core": "^8.1.2",
