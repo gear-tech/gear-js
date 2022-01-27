@@ -90,7 +90,8 @@ describe('Programs Service', () => {
       id,
       genesis: '0x07357',
       owner: '0x7357',
-      uploadedAt: 0,
+      timestamp: 0,
+      blockHash: '0x0000000000000000',
     });
 
     // when:
@@ -107,7 +108,8 @@ describe('Programs Service', () => {
       id: 7357,
       genesis: '0x07357',
       owner: '0x7357',
-      uploadedAt: 0,
+      timestamp: 0,
+      blockHash: '0x0000000000000000',
     });
 
     // then:
