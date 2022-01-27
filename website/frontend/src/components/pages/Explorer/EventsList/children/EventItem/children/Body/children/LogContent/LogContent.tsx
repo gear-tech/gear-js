@@ -5,6 +5,7 @@ import { Codec } from '@polkadot/types/types';
 import { ProgramModel } from 'types/program';
 import { programService } from 'services/ProgramsRequestService';
 import { getLocalProgram, getPreformattedText, isDevChain } from 'helpers';
+import { TypeKey } from 'types/events-list';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
 import eventStyles from '../../../../EventItem.module.scss';
 import bodyStyles from '../../Body.module.scss';
@@ -40,8 +41,7 @@ const LogContent = ({ data }: Props) => {
     return getProgram(id);
   };
 
-  // TODO: 'handle_output' | 'init_output' to enum
-  const handlePayloadDecoding = (errorCallback: () => void, typeKey?: 'handle_output' | 'init_output') => {
+  const handlePayloadDecoding = (errorCallback: () => void, typeKey?: TypeKey) => {
     const type = metadata && typeKey ? metadata[typeKey] : 'Bytes';
 
     if (type) {

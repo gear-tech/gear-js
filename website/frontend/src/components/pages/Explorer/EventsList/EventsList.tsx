@@ -8,9 +8,8 @@ import styles from './EventsList.module.scss';
 
 const EventsList = ({ groupedEvents }: GroupedEventsProps) => {
   const localFilterValues = localStorage.getItem(LOCAL_STORAGE.EVENT_FILTERS);
-  const initFilterValues = localFilterValues ? JSON.parse(localFilterValues) : init.filterValues;
-  // TODO: init.filterValues to have it's own type?
-  const [filterValues, setFilterValues] = useState<FilterValues>(initFilterValues);
+  const initFilterValues: FilterValues = localFilterValues ? JSON.parse(localFilterValues) : init.filterValues;
+  const [filterValues, setFilterValues] = useState(initFilterValues);
   const isAnyFilterSelected = Object.values(filterValues).includes(true);
 
   const isEventSelected = ({ method }: EventGroup) => filterValues[method];

@@ -33,7 +33,7 @@ import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
 import { getGroupedEvents } from 'components/pages/Explorer/EventsList/helpers';
-import { GroupedEvents } from 'types/events-list';
+import { GroupedEvents, Sections } from 'types/events-list';
 
 // alert configuration
 const options = {
@@ -123,7 +123,7 @@ const AppComponent: FC = () => {
         // TODO: .map().filter() to single .reduce()
         const newEvents = allEvents
           .map(({ event }) => event)
-          .filter(({ section }) => section !== 'system')
+          .filter(({ section }) => section !== Sections.SYSTEM)
           .reverse()
           .reduce(getGroupedEvents, []);
 
