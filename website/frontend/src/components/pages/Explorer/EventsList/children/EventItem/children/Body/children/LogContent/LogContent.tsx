@@ -41,17 +41,19 @@ const LogContent = ({ data }: Props) => {
     return getProgram(id);
   };
 
-  const handlePayloadDecoding = (errorCallback: () => void, typeKey?: TypeKey) => {
-    const type = metadata && typeKey ? metadata[typeKey] : 'Bytes';
+  const handlePayloadDecoding = (typeKey: TypeKey, errorCallback: () => void) => {
+    if (metadata) {
+      const type = metadata[typeKey];
 
-    if (type) {
-      try {
-        setDecodedPayload(CreateType.decode(type, payload, metadata));
-      } catch {
+      if (type) {
+        try {
+          setDecodedPayload(CreateType.decode(type, payload, metadata));
+        } catch {
+          errorCallback();
+        }
+      } else {
         errorCallback();
       }
-    } else {
-      errorCallback();
     }
   };
 
@@ -59,8 +61,12 @@ const LogContent = ({ data }: Props) => {
     setError("Can't decode payload");
   };
 
-  const handleBytesPayloadDecoding = () => {
-    handlePayloadDecoding(setDecodingError);
+  const handleInitPayloadDecoding = () => {
+    handlePayloadDecoding('init_output', setDecodingError);
+  };
+
+  const handleOutputPayloadDecoding = () => {
+    handlePayloadDecoding('handle_output', handleInitPayloadDecoding);
   };
 
   useEffect(() => {
@@ -74,7 +80,7 @@ const LogContent = ({ data }: Props) => {
         setProgram(result);
       })
       .catch(() => {
-        handleBytesPayloadDecoding();
+        handleInitPayloadDecoding();
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -87,19 +93,15 @@ const LogContent = ({ data }: Props) => {
         const metaBuffer = Buffer.from(metaFile, 'base64');
         getWasmMetadata(metaBuffer).then(setMetadata);
       } else {
-        handleBytesPayloadDecoding();
+        handleInitPayloadDecoding();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [program]);
 
-  const handleInitPayloadDecoding = () => {
-    handlePayloadDecoding(handleBytesPayloadDecoding, 'init_output');
-  };
-
   useEffect(() => {
     if (metadata) {
-      handlePayloadDecoding(handleInitPayloadDecoding, 'handle_output');
+      handleOutputPayloadDecoding();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata]);
