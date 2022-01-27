@@ -3,7 +3,7 @@ import { Event } from '@polkadot/types/interfaces';
 export type FilterValues = { [filter: string]: boolean };
 
 export enum Sections {
-  SYSTEM = 'SYSTEM',
+  SYSTEM = 'system',
 }
 
 export enum Methods {
