@@ -28,10 +28,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
       - name: Build api-gateway
         run: |
-          yarn workspace @gear-js/api-gateway install
-          yarn run build:api-gateway
+          yarn workspace @gear-js/api-gateway install && yarn run build:api-gateway
 
       - name: Build and push docker image
         id: api_backend_docker_build
