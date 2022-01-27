@@ -69,6 +69,10 @@ export const UploadProgram = async (
     types,
   };
 
+  console.log(program);
+  console.log(meta);
+  console.log(name);
+
   try {
     // Submit program, receive program ID
     const programId = await api.program.submit(program, meta);

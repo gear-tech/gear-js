@@ -10,6 +10,20 @@ export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 export const MIN_GAS_LIMIT = 20_000_000;
 
+export const META_FIELDS = [
+  'async_handle_input',
+  'async_handle_output',
+  'async_init_input',
+  'async_init_output',
+  'handle_input',
+  'handle_output',
+  'init_input',
+  'init_output',
+  'meta_state_input',
+  'meta_state_output',
+  'types',
+];
+
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
   INVALID_PARAMS: 'Invalid method parameters',

@@ -79,7 +79,7 @@
       @media (max-width: 768px) {
         width: 100%;
         .columnLeft,
-        .columnRight {
+        .meta {
           width: 100%;
         }
       }
@@ -96,13 +96,13 @@
         }
       }
 
-      .columnRight {
+      .meta {
         border: 1px solid $bkgButtonColor;
         border-radius: 2px;
         padding: 30px;
         position: relative;
         margin-top: 10px;
-        .columnTitle {
+        .title {
           position: absolute;
           color: $textColor;
           font-size: 12px;

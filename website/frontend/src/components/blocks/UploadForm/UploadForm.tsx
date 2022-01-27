@@ -12,6 +12,7 @@ import { Switch } from 'common/components/Switch';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
 import { MetaFile } from './children/MetaFile/MetaFile';
+import { MetaFields } from './children/MetaFields/MetaFields';
 
 import { Schema } from './Schema';
 import { useApi } from 'hooks/useApi';
@@ -19,7 +20,7 @@ import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
 import { readFileAsync, checkFileFormat } from 'helpers';
-import { MIN_GAS_LIMIT } from 'consts';
+import { MIN_GAS_LIMIT, META_FIELDS } from 'consts';
 import styles from './UploadForm.module.scss';
 
 type Props = {
@@ -32,6 +33,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 
+  const [fieldFromFile, setFieldFromFile] = useState<String[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<string | null>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
@@ -58,27 +60,33 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleUploadMetaFile = async (file: File) => {
     try {
       const fileBuffer = (await readFileAsync(file)) as Buffer;
-      const metaWasm = await getWasmMetadata(fileBuffer);
+      const metaWasm: { [key: string]: any } = await getWasmMetadata(fileBuffer);
 
       if (metaWasm && metaWasm.types && metaWasm.handle_input) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
         const displayedTypes = parseHexTypes(metaWasm.types);
         const inputType = getTypeStructure(metaWasm.handle_input, displayedTypes);
         const parsedMeta = parseMeta(inputType);
+        let valuesFromFile = {};
+
+        for (const key in metaWasm) {
+          if (META_FIELDS.includes(key) && metaWasm[key]) {
+            valuesFromFile = {
+              ...valuesFromFile,
+              [key]: JSON.stringify(metaWasm[key]),
+            };
+          }
+        }
 
         setMeta(metaWasm);
         setMetaFile(bufstr);
         setMetaForm(parsedMeta);
         setInitialValues({
           ...initialValues,
-          initPayload: JSON.stringify(inputType, null, 4),
-          init_input: JSON.stringify(metaWasm.init_input),
-          handle_input: JSON.stringify(metaWasm.handle_input),
-          init_output: JSON.stringify(metaWasm.init_output),
-          handle_output: JSON.stringify(metaWasm.handle_output),
-          types: JSON.stringify(inputType),
-          programName: JSON.stringify(metaWasm.title),
+          ...valuesFromFile,
+          programName: metaWasm.title,
         });
+        setFieldFromFile([...Object.keys(valuesFromFile).reverse()]);
       }
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
@@ -91,19 +99,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setMetaFile(null);
     setMetaForm(null);
     setDroppedMetaFile(null);
-
-    setInitialValues({
-      gasLimit: MIN_GAS_LIMIT,
-      value: 0,
-      initPayload: '',
-      init_input: '',
-      init_output: '',
-      handle_input: '',
-      handle_output: '',
-      types: '',
-      fields: {},
-      programName: '',
-    });
+    setFieldFromFile(null);
   };
 
   const handleChangeMetaFile = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,6 +147,14 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setDroppedMetaFile(null);
   };
 
+  const getFields = () => {
+    if (isMetaFromFile) {
+      return fieldFromFile;
+    }
+
+    return META_FIELDS;
+  };
+
   return (
     <div className={styles.uploadForm}>
       <h3 className={styles.heading}>UPLOAD NEW PROGRAM</h3>
@@ -162,219 +166,143 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         enableReinitialize
         onSubmit={handleSubmitForm}
       >
-        {({ errors, touched, values, setFieldValue }) => (
-          <Form>
-            <div className={styles.download}>
-              <progress className={styles.progress} max="100" value="65" />
-              <div className={styles.progressValue} />
-              <div className={styles.progressBg}>
-                <div className={styles.progressBar} />
+        {({ errors, touched, values, setFieldValue }) => {
+          return (
+            <Form>
+              <div className={styles.download}>
+                <progress className={styles.progress} max="100" value="65" />
+                <div className={styles.progressValue} />
+                <div className={styles.progressBg}>
+                  <div className={styles.progressBar} />
+                </div>
               </div>
-            </div>
 
-            <div className={styles.columnsWrapper}>
-              <div className={styles.columns}>
-                <div className={styles.columnLeft}>
-                  <div className={styles.block}>
-                    <span className={styles.caption}>File:</span>
-                    <div className={clsx(styles.value, styles.filename)}>
-                      {droppedFile.name}
-                      <button type="button" onClick={handleResetForm}>
-                        <Trash2 color="#ffffff" size="20" strokeWidth="1" />
-                      </button>
+              <div className={styles.columnsWrapper}>
+                <div className={styles.columns}>
+                  <div className={styles.columnLeft}>
+                    <div className={styles.block}>
+                      <span className={styles.caption}>File:</span>
+                      <div className={clsx(styles.value, styles.filename)}>
+                        {droppedFile.name}
+                        <button type="button" onClick={handleResetForm}>
+                          <Trash2 color="#ffffff" size="20" strokeWidth="1" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <div className={styles.block}>
-                    <label htmlFor="value" className={styles.caption}>
-                      Name:
-                    </label>
-                    <div className={styles.value}>
-                      <Field
-                        id="programName"
-                        name="programName"
-                        placeholder="Name"
-                        className={styles.field}
-                        type="text"
-                      />
-                      {errors.programName && touched.programName ? (
-                        <div className={styles.error}>{errors.programName}</div>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className={styles.block}>
-                    <label htmlFor="gasLimit" className={styles.caption}>
-                      Gas limit:
-                    </label>
-                    <div className={styles.value}>
-                      <NumberFormat
-                        name="gasLimit"
-                        placeholder="20,000,000"
-                        value={values.gasLimit}
-                        thousandSeparator
-                        allowNegative={false}
-                        className={styles.field}
-                        onValueChange={(val) => {
-                          const { floatValue } = val;
-                          setFieldValue('gasLimit', floatValue);
-                        }}
-                      />
-                      {errors.gasLimit && touched.gasLimit ? (
-                        <div className={styles.error}>{errors.gasLimit}</div>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className={styles.block}>
-                    <label htmlFor="value" className={styles.caption}>
-                      Initial value:
-                    </label>
-                    <div className={styles.value}>
-                      <Field id="value" name="value" placeholder="0" className={styles.field} type="number" />
-                      {errors.value && touched.value ? <div className={styles.error}>{errors.value}</div> : null}
-                    </div>
-                  </div>
-                  <div className={styles.block}>
-                    <label htmlFor="initPayload" className={clsx(styles.caption, styles.top)}>
-                      Initial payload:
-                    </label>
-                    <div className={clsx(styles.value, styles.payload)}>
-                      {isShowMetaSwitch && (
-                        <Switch
-                          onChange={() => setIsManualPaylod(!isManualPaylod)}
-                          label="Manual input"
-                          checked={isManualPaylod}
+                    <div className={styles.block}>
+                      <label htmlFor="value" className={styles.caption}>
+                        Name:
+                      </label>
+                      <div className={styles.value}>
+                        <Field
+                          id="programName"
+                          name="programName"
+                          placeholder="Name"
+                          className={styles.field}
+                          type="text"
                         />
-                      )}
-                      {isShowMetaForm ? (
-                        <div className="message-form--info">
-                          <FormItem data={metaForm} />
-                        </div>
-                      ) : (
-                        <>
-                          <Field
-                            as="textarea"
-                            id="initPayload"
-                            name="initPayload"
-                            placeholder="// Enter your payload here"
-                            className={clsx(styles.field, styles.textarea)}
+                        {errors.programName && touched.programName ? (
+                          <div className={styles.error}>{errors.programName}</div>
+                        ) : null}
+                      </div>
+                    </div>
+                    <div className={styles.block}>
+                      <label htmlFor="gasLimit" className={styles.caption}>
+                        Gas limit:
+                      </label>
+                      <div className={styles.value}>
+                        <NumberFormat
+                          name="gasLimit"
+                          placeholder="20,000,000"
+                          value={values.gasLimit}
+                          thousandSeparator
+                          allowNegative={false}
+                          className={styles.field}
+                          onValueChange={(val) => {
+                            const { floatValue } = val;
+                            setFieldValue('gasLimit', floatValue);
+                          }}
+                        />
+                        {errors.gasLimit && touched.gasLimit ? (
+                          <div className={styles.error}>{errors.gasLimit}</div>
+                        ) : null}
+                      </div>
+                    </div>
+                    <div className={styles.block}>
+                      <label htmlFor="value" className={styles.caption}>
+                        Initial value:
+                      </label>
+                      <div className={styles.value}>
+                        <Field id="value" name="value" placeholder="0" className={styles.field} type="number" />
+                        {errors.value && touched.value ? <div className={styles.error}>{errors.value}</div> : null}
+                      </div>
+                    </div>
+                    <div className={styles.block}>
+                      <label htmlFor="initPayload" className={clsx(styles.caption, styles.top)}>
+                        Initial payload:
+                      </label>
+                      <div className={clsx(styles.value, styles.payload)}>
+                        {isShowMetaSwitch && (
+                          <Switch
+                            onChange={() => setIsManualPaylod(!isManualPaylod)}
+                            label="Manual input"
+                            checked={isManualPaylod}
                           />
-                          {errors.initPayload && touched.initPayload ? (
-                            <div className={styles.error}>{errors.initPayload}</div>
-                          ) : null}
-                        </>
-                      )}
+                        )}
+                        {isShowMetaForm ? (
+                          <div className="message-form--info">
+                            <FormItem data={metaForm} />
+                          </div>
+                        ) : (
+                          <>
+                            <Field
+                              as="textarea"
+                              id="initPayload"
+                              name="initPayload"
+                              placeholder="// Enter your payload here"
+                              className={clsx(styles.field, styles.textarea)}
+                            />
+                            {errors.initPayload && touched.initPayload ? (
+                              <div className={styles.error}>{errors.initPayload}</div>
+                            ) : null}
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
+
+                  <div className={styles.meta}>
+                    <span className={styles.title}>Metadata: </span>
+                    <MetaSwitch isMetaFromFile={isMetaFromFile} setIsMetaFromFile={setIsMetaFromFile} />
+                    {isMetaFromFile && (
+                      <MetaFile
+                        droppedMetaFile={droppedMetaFile}
+                        handleRemoveMetaFile={handleRemoveMetaFile}
+                        handleChangeMetaFile={handleChangeMetaFile}
+                      />
+                    )}
+                    {isShowFields && (
+                      <MetaFields fields={getFields()} isDisabled={isMetaFromFile} errors={errors} touched={touched} />
+                    )}
+                  </div>
                 </div>
-                <div className={styles.columnRight}>
-                  <span className={styles.columnTitle}>Metadata: </span>
-                  <MetaSwitch isMetaFromFile={isMetaFromFile} setIsMetaFromFile={setIsMetaFromFile} />
-                  {isMetaFromFile && (
-                    <MetaFile
-                      droppedMetaFile={droppedMetaFile}
-                      handleRemoveMetaFile={handleRemoveMetaFile}
-                      handleChangeMetaFile={handleChangeMetaFile}
-                    />
-                  )}
-                  {isShowFields && (
-                    <>
-                      <div className={styles.block}>
-                        <label htmlFor="init_input" className={styles.caption}>
-                          Initial type:
-                        </label>
-                        <div className={styles.value}>
-                          <Field
-                            id="init_input"
-                            name="init_input"
-                            className={styles.field}
-                            type="text"
-                            disabled={isMetaFromFile}
-                          />
-                          {errors.init_input && touched.init_input ? (
-                            <div className={styles.error}>{errors.init_input}</div>
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className={styles.block}>
-                        <label htmlFor="input" className={styles.caption}>
-                          Incoming type:
-                        </label>
-                        <div className={styles.value}>
-                          <Field
-                            id="handle_input"
-                            name="handle_input"
-                            className={styles.field}
-                            type="text"
-                            disabled={isMetaFromFile}
-                          />
-                          {errors.handle_input && touched.handle_input ? (
-                            <div className={styles.error}>{errors.handle_input}</div>
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className={styles.block}>
-                        <label htmlFor="output" className={styles.caption}>
-                          Expected type:
-                        </label>
-                        <div className={styles.value}>
-                          <Field
-                            id="handle_output"
-                            name="handle_output"
-                            className={styles.field}
-                            type="text"
-                            disabled={isMetaFromFile}
-                          />
-                          {errors.handle_output && touched.handle_output ? (
-                            <div className={styles.error}>{errors.handle_output}</div>
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className={styles.block}>
-                        <label htmlFor="init_output" className={styles.caption}>
-                          Initial output type:
-                        </label>
-                        <div className={styles.value}>
-                          <Field
-                            id="init_output"
-                            name="init_output"
-                            className={styles.field}
-                            type="text"
-                            disabled={isMetaFromFile}
-                          />
-                          {errors.init_output && touched.init_output ? (
-                            <div className={styles.error}>{errors.init_output}</div>
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className={styles.block}>
-                        <label htmlFor="types" className={clsx(styles.caption, styles.top)}>
-                          Types:
-                        </label>
-                        <div className={styles.value}>
-                          <Field
-                            as="textarea"
-                            id="types"
-                            name="types"
-                            className={clsx(styles.field, styles.textarea)}
-                            disabled={isMetaFromFile}
-                          />
-                          {errors.types && touched.types ? <div className={styles.error}>{errors.types}</div> : null}
-                        </div>
-                      </div>
-                    </>
-                  )}
+                <div className={styles.buttons}>
+                  <button type="submit" className={styles.upload} aria-label="uploadProgramm">
+                    Upload program
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.cancel}
+                    aria-label="closeUploadForm"
+                    onClick={handleResetForm}
+                  >
+                    Cancel upload
+                  </button>
                 </div>
               </div>
-              <div className={styles.buttons}>
-                <button type="submit" className={styles.upload} aria-label="uploadProgramm">
-                  Upload program
-                </button>
-                <button type="button" className={styles.cancel} aria-label="closeUploadForm" onClick={handleResetForm}>
-                  Cancel upload
-                </button>
-              </div>
-            </div>
-          </Form>
-        )}
+            </Form>
+          );
+        }}
       </Formik>
     </div>
   );
