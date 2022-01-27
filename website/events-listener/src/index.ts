@@ -16,7 +16,7 @@ const main = async () => {
   const producer = new KafkaProducer();
   await producer.createTopic('events');
   await producer.connect();
-  listen(api, ({ key, value }) => {
+  listen(api, genesis, ({ key, value }) => {
     producer.send(key, value, genesis);
   });
 };

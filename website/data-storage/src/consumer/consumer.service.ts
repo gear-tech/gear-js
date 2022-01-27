@@ -1,25 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from 'src/messages/entities/message.entity';
-import {
-  FindProgramParams,
-  GetAllProgramsParams,
-  GetAllProgramsResult,
-  AddMetaParams,
-  AddMetaResult,
-  GetMetaParams,
-  GetMetaResult,
-  AddPayloadParams,
-  AllMessagesResult,
-  GetMessagesParams,
-  FindMessageParams,
-} from 'src/interfaces';
 import { MessagesService } from 'src/messages/messages.service';
 import { MetadataService } from 'src/metadata/metadata.service';
-import { InitStatus, Program } from 'src/programs/entities/program.entity';
 import { ProgramsService } from 'src/programs/programs.service';
 import { Result } from './types';
 import { ProgramNotFound } from 'src/errors';
-
+import {
+  AddMetaParams,
+  AddMetaResult,
+  AddPayloadParams,
+  AllMessagesResult,
+  FindMessageParams,
+  FindProgramParams,
+  GetAllProgramsParams,
+  GetAllProgramsResult,
+  GetMessagesParams,
+  GetMetaParams,
+  GetMetaResult,
+  IMessage,
+  IProgram,
+  MessageDispatched,
+  InitStatus,
+  Log,
+  InitMessageEnqueued,
+  DispatchMessageEnqueud,
+  InitSuccess,
+  InitFailure,
+} from '@gear-js/interfaces';
 @Injectable()
 export class ConsumerService {
   constructor(
@@ -29,58 +35,54 @@ export class ConsumerService {
   ) {}
 
   events = {
-    Log: (genesis: string, value: any) => {
-      this.messageService.save({
-        genesis,
-        id: value.id,
-        destination: value.dest,
-        source: value.source,
-        date: value.date,
-        payload: value.payload,
-        replyTo: value.reply?.isExist ? value.reply.id : null,
-        replyError: value.reply?.isExist ? `${value.reply.error}` : null,
-      });
+    Log: (value: Log) => {
+      this.messageService.save(value);
     },
-    InitMessageEnqueued: async (genesis: string, value: any) => {
+    InitMessageEnqueued: async (value: InitMessageEnqueued) => {
       await this.programService.save({
         id: value.programId,
-        genesis,
         owner: value.origin,
-        uploadedAt: value.date,
+        genesis: value.genesis,
+        timestamp: value.timestamp,
+        blockHash: value.blockHash,
       });
       this.messageService.save({
-        genesis,
         id: value.messageId,
         destination: value.programId,
         source: value.origin,
-        date: value.date,
+        payload: null,
+        replyTo: null,
+        replyError: null,
+        genesis: value.genesis,
+        blockHash: value.blockHash,
+        timestamp: value.timestamp,
+      });
+    },
+    DispatchMessageEnqueued: (value: DispatchMessageEnqueud) => {
+      this.messageService.save({
+        genesis: value.genesis,
+        id: value.messageId,
+        destination: value.programId,
+        source: value.origin,
+        blockHash: value.blockHash,
+        timestamp: value.timestamp,
         payload: null,
         replyTo: null,
         replyError: null,
       });
     },
-    DispatchMessageEnqueued: (genesis: string, value: any) => {
-      this.messageService.save({
-        genesis,
-        id: value.messageId,
-        destination: value.programId,
-        source: value.origin,
-        date: value.date,
-        payload: null,
-        replyTo: null,
-        replyError: null,
-      });
+    InitSuccess: (value: InitSuccess) => {
+      this.programService.setStatus(value.programId, value.genesis, InitStatus.SUCCESS);
     },
-    InitSuccess: (genesis: string, value: any) => {
-      this.programService.setStatus(value.programId, genesis, InitStatus.SUCCESS);
+    InitFailure: (value: InitFailure) => {
+      this.programService.setStatus(value.programId, value.genesis, InitStatus.FAILED);
     },
-    InitFailure: (genesis: string, value: any) => {
-      this.programService.setStatus(value.programId, genesis, InitStatus.FAILED);
+    MessageDispatched: (value: MessageDispatched) => {
+      this.messageService.setDispatchedStatus(value);
     },
-    MessageDispatched: (genesis: string, value: any) => {},
   };
 
-  async programData(params: FindProgramParams): Result<Program> {
+  async programData(params: FindProgramParams): Result<IProgram> {
     try {
       return (await this.programService.findProgram(params)) || { error: new ProgramNotFound().message };
     } catch (error) {
@@ -116,7 +118,7 @@ export class ConsumerService {
     }
   }
 
-  async addPayload(params: AddPayloadParams): Result<Message> {
+  async addPayload(params: AddPayloadParams): Result<IMessage> {
     try {
       return await this.messageService.addPayload(params);
     } catch (error) {
@@ -138,7 +140,7 @@ export class ConsumerService {
     }
   }
 
-  async message(params: FindMessageParams): Result<Message> {
+  async message(params: FindMessageParams): Result<IMessage> {
     try {
       return await this.messageService.getMessage(params);
     } catch (error) {
