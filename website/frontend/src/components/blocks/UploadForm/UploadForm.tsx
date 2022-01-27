@@ -9,6 +9,9 @@ import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { EventTypes } from 'types/alerts';
 import { FormItem } from 'components/FormItem';
 import { Switch } from 'common/components/Switch';
+
+import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
+
 import { Schema } from './Schema';
 import { useApi } from 'hooks/useApi';
 import { AddAlert } from 'store/actions/actions';
@@ -270,19 +273,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                 </div>
                 <div className={styles.columnRight}>
                   <span className={styles.columnTitle}>Metadata: </span>
-                  <div className={styles.block}>
-                    <span className={styles.caption}>Metadata: </span>
-                    <div className={styles.switch}>
-                      <button type="button" className={styles.switchButton} onClick={() => setIsMetaFromFile(true)}>
-                        <img className={styles.img} src={isMetaFromFile ? selected : deselected} alt="radio" />
-                        Upload file
-                      </button>
-                      <button type="button" className={styles.switchButton} onClick={() => setIsMetaFromFile(false)}>
-                        <img className={styles.img} src={isMetaFromFile ? deselected : selected} alt="radio" />
-                        Manual input
-                      </button>
-                    </div>
-                  </div>
+                  <MetaSwitch isMetaFromFile={isMetaFromFile} setIsMetaFromFile={setIsMetaFromFile} />
                   {isMetaFromFile && (
                     <div className={styles.block}>
                       <label htmlFor="meta" className={styles.caption}>
