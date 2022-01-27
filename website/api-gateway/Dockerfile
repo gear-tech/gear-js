@@ -1,6 +1,4 @@
 FROM node:16-alpine
-COPY ./website/api-gateway /usr/src/api-gateway
 WORKDIR /usr/src/api-gateway
-RUN yarn install
-RUN yarn build
+COPY ./website/api-gateway/dist ./dist
 CMD ["node", "dist/main"]
