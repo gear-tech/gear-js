@@ -63,11 +63,21 @@ export class MessagesService {
   }
 
   async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
-    const [result, total] = await this.messageRepo.findAndCount({
-      where: {
-        destination: params.destination,
-        genesis: params.genesis,
+    const { genesis, destination, term } = params;
+    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
+    const strictParamsIfPresent = { genesis, destination };
+    const where = [
+      {
+        id: likeTerm,
+        ...strictParamsIfPresent,
       },
+      {
+        source: likeTerm,
+        ...strictParamsIfPresent,
+      },
+    ];
+    const [result, total] = await this.messageRepo.findAndCount({
+      where,
       ...getPaginationParams(params),
     });
     return {
@@ -77,8 +87,21 @@ export class MessagesService {
   }
 
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
+    const { genesis, source, term } = params;
+    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
+    const strictParamsIfPresent = { genesis, source };
+    const where = [
+      {
+        id: likeTerm,
+        ...strictParamsIfPresent,
+      },
+      {
+        source: likeTerm,
+        ...strictParamsIfPresent,
+      },
+    ];
     const [result, total] = await this.messageRepo.findAndCount({
-      where: { genesis: params.genesis, source: params.source },
+      where,
       ...getPaginationParams(params),
     });
     return {
