@@ -40,7 +40,9 @@ export const MessagesList: VFC<Props> = ({ messages }) => {
             key={message.id}
             className={clsx(
               'messages__list-block',
-              message.replyError === '0' ? 'messages__list-block_success' : 'messages__list-block_error'
+              message.replyError === '0' || message.replyError === null
+                ? 'messages__list-block_success'
+                : 'messages__list-block_error'
             )}
           >
             <div className="messages__list-item">
