@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
-import { Event } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
+import { EventGroup } from 'types/events-list';
 import { Header } from './children/Header/Header';
 import { Body } from './children/Body/Body';
-import { getCaption } from '../../helpers';
 import styles from './EventItem.module.scss';
 
 type Props = {
-  list: Event[];
+  group: EventGroup;
 };
 
-const EventItem = ({ list }: Props) => {
-  const [event] = list;
-  const { method, meta } = event;
-  const { docs } = meta;
-
+const EventItem = ({ group }: Props) => {
+  const { list, method, caption, description } = group;
   const [isOpen, setIsOpen] = useState(false);
 
   const className = clsx('programs-list__item', styles.item);
-  // can be EventGroup properties
-  const caption = getCaption(event);
-  const description = String(docs.toHuman());
 
   const toggle = () => {
     setIsOpen((prevValue) => !prevValue);

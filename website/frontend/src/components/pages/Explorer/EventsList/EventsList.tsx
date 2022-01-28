@@ -16,7 +16,7 @@ const EventsList = ({ groupedEvents }: GroupedEventsProps) => {
   const filteredEvents = isAnyFilterSelected ? groupedEvents.filter(isEventSelected) : groupedEvents;
   const eventsAmount = filteredEvents.length;
 
-  const getEvents = () => filteredEvents.map((group) => <EventItem key={group.id} list={group.list} />);
+  const getEvents = () => filteredEvents.map((group) => <EventItem key={group.id} group={group} />);
 
   return (
     <div className={styles.events}>
