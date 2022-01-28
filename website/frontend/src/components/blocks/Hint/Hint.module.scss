@@ -8,13 +8,4 @@
     color: $textColor;
     cursor: pointer;
   }
-  .text {
-    position: absolute;
-    background-color: $textColor;
-    border-radius: 2px;
-    padding: 10px;
-    font-size: 14px;
-    top: 20px;
-    min-width: 250px;
-  }
 }
