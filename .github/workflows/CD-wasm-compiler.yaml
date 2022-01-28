@@ -3,8 +3,6 @@ name: production.wasm-compiler-CD
 on:
   push:
     branches: [master, do-wasm-compiler-deploy]
-    paths:
-      - website/wasm-compiler/**
   workflow_dispatch:
 
 env:
