@@ -12,11 +12,11 @@ export const ProgramsLegend: FC = () => (
       <p className={styles.legendCaption}>Program name</p>
     </div>
     <div className={styles.legendItem}>
-      <img className={styles.legendIcon} src={timestampIcon} alt="program timestamp" />
+      <img className={styles.legendIcon} src={timestampIcon} alt="timestamp" />
       <p>Timestamp</p>
     </div>
     <div className={styles.legendItem}>
-      <img className={styles.legendIcon} src={menuIcon} alt="program id" />
+      <img className={styles.legendIcon} src={menuIcon} alt="actions" />
       <p>Send message / Upload metadata</p>
     </div>
   </div>
