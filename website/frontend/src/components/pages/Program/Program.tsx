@@ -26,7 +26,7 @@ export const Program: VFC = () => {
     id: 'Loading ...',
     name: 'Loading ...',
     title: 'Loading ...',
-    uploadedAt: 'Loading ...',
+    timestamp: 'Loading ...',
     meta: 'Loading ...',
   });
   const [metadata, setMetadata] = useState<Metadata | null>(null);
@@ -52,7 +52,7 @@ export const Program: VFC = () => {
         id: program.id,
         name: program.name ? program.name : '...',
         title: program.title ? program.title : '...',
-        uploadedAt: program.uploadedAt ? formatDate(String(program.uploadedAt)) : '...',
+        timestamp: program.timestamp ? formatDate(String(program.timestamp)) : '...',
         meta,
       });
     }
@@ -122,7 +122,7 @@ export const Program: VFC = () => {
               )}
               <div className="block__button-upload">
                 <span className="block__button-caption">Uploaded at:</span>
-                <span className="block__button-date">{data.uploadedAt}</span>
+                <span className="block__button-date">{data.timestamp}</span>
               </div>
             </div>
           </div>

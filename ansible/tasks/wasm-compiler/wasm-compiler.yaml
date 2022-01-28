@@ -23,7 +23,7 @@
     src: ../../../website/wasm-compiler/
     dest: /home/ec2-user/wasm-compiler
 
-- name: Install wasm-compiler
+- name: Install dependencies
   community.general.npm:
     path: /home/ec2-user/wasm-compiler
 
@@ -31,11 +31,6 @@
   ansible.builtin.file:
     path: /home/ec2-user/wasm-compiler/wasm-build/build-image.sh
     mode: '0777'
-
-# - name: Give permissions to build script
-# ansible.builtin.file:
-# path: /home/ec2-user/ide-backend/wasm-build/build.sh
-# mode: '0777'
 
 - name: Create wasm-compiler file .env
   shell: >

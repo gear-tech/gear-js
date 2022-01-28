@@ -25,7 +25,7 @@ export class GearService {
     this.account = await GearKeyring.fromSeed(config.gear.accountSeed);
     this.rootAccount =
       config.gear.rootAccountSeed === '//Alice'
-        ? GearKeyring.fromSuri('//Alice')
+        ? await GearKeyring.fromSuri('//Alice')
         : await GearKeyring.fromSeed(config.gear.rootAccountSeed);
     this.accountBalance = new BN(config.gear.accountBalance);
     this.balanceToTransfer = new BN(config.gear.balanceToTransfer);

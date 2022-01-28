@@ -111,7 +111,7 @@ export const UploadProgram = async (
                     metaFile,
                     programId,
                   },
-                  uploadedAt: Date(),
+                  timestamp: Date(),
                 })
                 .then(() => {
                   dispatch(
@@ -180,9 +180,9 @@ export const SendMessageToProgram = async (
   api: GearApi,
   account: UserAccount,
   message: MessageModel,
-  meta: Metadata,
   dispatch: any,
-  callback: () => void
+  callback: () => void,
+  meta?: Metadata
 ) => {
   const injector = await web3FromSource(account.meta.source);
 

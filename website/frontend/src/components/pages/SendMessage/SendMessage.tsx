@@ -23,7 +23,7 @@ export const SendMessage: VFC = () => {
   const routeParams = useParams<Params>();
   const programId = routeParams.id;
 
-  const [meta, setMeta] = useState<Metadata | null>(null);
+  const [meta, setMeta] = useState<Metadata>();
   const [types, setTypes] = useState<MetaParam | null>(null);
   const [ready, setReady] = useState(false);
 
