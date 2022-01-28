@@ -7,6 +7,7 @@ import { ProgramModel } from 'types/program';
 
 import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 
+import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
 import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
 
@@ -85,6 +86,7 @@ export const Recent: VFC = () => {
         />
         <br />
       </div>
+      <ProgramsLegend />
       {(programs && programsCount && (
         <div>
           {programs.map((program: ProgramModel) => (

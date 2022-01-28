@@ -40,13 +40,14 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
             <img src={Copy} alt="copy program ID" />
           </button>
         </div>
-        <div className={styles.programWrapperData}>
-          <div className={styles.programsListInfo}>
-            Timestamp:
-            <span className={styles.programsListInfoData}>{program.timestamp && formatDate(program.timestamp)}</span>
-          </div>
+      </div>
+      <div className={styles.programWrapperData}>
+        <div className={styles.programsListInfo}>
+          Timestamp:
+          <span className={styles.programsListInfoData}>{program.timestamp && formatDate(program.timestamp)}</span>
         </div>
       </div>
+
       <div className={styles.programsListBtns}>
         <Link to={`/send-message/${program.id}`} className={styles.allProgramsItemSendMessage}>
           <img src={MessageIllustration} alt="Send message to program" />
