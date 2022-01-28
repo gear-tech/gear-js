@@ -111,7 +111,7 @@ export const UploadProgram = async (
                     metaFile,
                     programId,
                   },
-                  uploadedAt: Date(),
+                  timestamp: Date(),
                 })
                 .then(() => {
                   dispatch(

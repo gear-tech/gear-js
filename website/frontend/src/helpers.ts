@@ -82,7 +82,7 @@ export const getLocalPrograms = (params: any) => {
       }
     })
     .then(() => {
-      data.result.programs.sort((prev, next) => (prev.uploadedAt > next.uploadedAt ? -1 : 1));
+      data.result.programs.sort((prev, next) => (prev.timestamp > next.timestamp ? -1 : 1));
 
       return data;
     });
@@ -91,7 +91,7 @@ export const getLocalPrograms = (params: any) => {
 export const getLocalProgram = (id: string) => {
   const result: ProgramModel = {
     id: '',
-    uploadedAt: '',
+    timestamp: '',
     initStatus: ProgramStatus.Success,
   };
   const data = { result };
