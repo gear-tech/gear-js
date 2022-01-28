@@ -1,6 +1,11 @@
 FROM node:16-alpine
-COPY ./website/events-listener /usr/src/events-listener
-WORKDIR /usr/src/events-listener
+
+WORKDIR /src
+COPY package.json .
+COPY yarn.lock .
+COPY ./website/interfaces website/interfaces
+COPY ./website/events-listener website/events-listener
 RUN yarn install
-RUN yarn build
-CMD ["yarn", "start"]
+RUN yarn build:interfaces
+RUN yarn build:events-listener
+CMD ["node", "--experimental-specifier-resolution=node", "website/events-listener/dist/index.js"]
