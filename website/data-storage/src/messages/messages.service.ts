@@ -64,21 +64,20 @@ export class MessagesService {
 
   async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
     const { genesis, destination, term } = params;
-    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
+    const likeTerm = ILike(`%${escapeSqlLike(term || '')}%`);
     const strictParamsIfPresent = { genesis, destination };
     const where = [
       {
         id: likeTerm,
         ...strictParamsIfPresent,
       },
-      {
-        source: likeTerm,
-        ...strictParamsIfPresent,
-      },
     ];
     const [result, total] = await this.messageRepo.findAndCount({
       where,
       ...getPaginationParams(params),
+      order: {
+        timestamp: 'DESC',
+      },
     });
     return {
       messages: result,
@@ -88,21 +87,20 @@ export class MessagesService {
 
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
     const { genesis, source, term } = params;
-    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
+    const likeTerm = ILike(`%${escapeSqlLike(term || '')}%`);
     const strictParamsIfPresent = { genesis, source };
     const where = [
       {
         id: likeTerm,
         ...strictParamsIfPresent,
       },
-      {
-        source: likeTerm,
-        ...strictParamsIfPresent,
-      },
     ];
     const [result, total] = await this.messageRepo.findAndCount({
       where,
       ...getPaginationParams(params),
+      order: {
+        timestamp: 'DESC',
+      },
     });
     return {
       messages: result,
@@ -119,14 +117,13 @@ export class MessagesService {
         id: likeTerm,
         ...strictParamsIfPresent,
       },
-      {
-        source: likeTerm,
-        ...strictParamsIfPresent,
-      },
     ];
     const [result, total] = await this.messageRepo.findAndCount({
       where,
       ...getPaginationParams(params),
+      order: {
+        timestamp: 'DESC',
+      },
     });
     return {
       messages: result,

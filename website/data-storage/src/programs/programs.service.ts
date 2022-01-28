@@ -63,7 +63,7 @@ export class ProgramsService {
       ],
       ...getPaginationParams(params),
       order: {
-        uploadedAt: 'DESC',
+        timestamp: 'DESC',
       },
     });
 
@@ -86,7 +86,7 @@ export class ProgramsService {
       ],
       ...getPaginationParams(params),
       order: {
-        uploadedAt: 'DESC',
+        timestamp: 'DESC',
       },
     });
 
