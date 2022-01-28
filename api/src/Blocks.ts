@@ -51,4 +51,12 @@ export class GearBlock {
     const apiAt = await this.api.at(blockHash);
     return await apiAt.query.system.events();
   }
+
+  /**
+   * Get hash of last finalized block
+   * @returns Hash of finalized head
+   */
+  async getFinalizedHead(): Promise<BlockHash> {
+    return await this.api.rpc.chain.getFinalizedHead();
+  }
 }
