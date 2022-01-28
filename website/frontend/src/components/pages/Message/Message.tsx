@@ -94,7 +94,7 @@ export const Message: FC = () => {
       </div>
       <div className="message__block">
         <span className="message__block-caption">Timestamp:</span>
-        <p className="message__block-paragraph">{formatDate(message.date)}</p>
+        <p className="message__block-paragraph">{formatDate(message.timestamp)}</p>
       </div>
       {messagePayload ? (
         <pre className="message__meta">{messagePayload}</pre>
