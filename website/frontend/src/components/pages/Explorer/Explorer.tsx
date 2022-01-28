@@ -3,11 +3,11 @@ import { useHistory } from 'react-router-dom';
 import { EventsList } from './EventsList/EventsList';
 import { ProgramSwitch } from 'components/blocks/ProgramSwitch/ProgramSwitch';
 import { SWITCH_PAGE_TYPES } from 'consts';
-import { GroupedEventsProps } from 'types/events-list';
+import { EventsProps } from 'types/events-list';
 import Arrow from 'assets/images/arrow_back.svg';
 import styles from './Explorer.module.scss';
 
-const Explorer = ({ groupedEvents }: GroupedEventsProps) => {
+const Explorer = ({ events }: EventsProps) => {
   const history = useHistory();
 
   const handleBackButtonClick = () => {
@@ -22,7 +22,7 @@ const Explorer = ({ groupedEvents }: GroupedEventsProps) => {
         </button>
         <ProgramSwitch pageType={SWITCH_PAGE_TYPES.EXPLORER} />
       </header>
-      <EventsList groupedEvents={groupedEvents} />
+      <EventsList events={events} />
     </div>
   );
 };

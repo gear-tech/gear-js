@@ -1,5 +1,26 @@
-import { Event } from '@polkadot/types/interfaces';
+import { GearEvent } from '@gear-js/api';
+import { Event as DotEvent } from '@polkadot/types/interfaces';
 import { AnyJson } from '@polkadot/types/types';
+import { generateRandomId } from 'helpers';
+
+export class Event extends GearEvent {
+  constructor(event: DotEvent) {
+    super(event);
+    this._id = `${event.hash}-${generateRandomId()}`;
+  }
+
+  private _id: string;
+
+  get id() {
+    return this._id;
+  }
+}
+
+export type Events = Event[];
+
+export type EventsProps = {
+  events: Events;
+};
 
 export type FilterValues = { [filter: string]: boolean };
 
@@ -27,7 +48,3 @@ export type EventGroup = {
 };
 
 export type GroupedEvents = EventGroup[];
-
-export type GroupedEventsProps = {
-  groupedEvents: GroupedEvents;
-};

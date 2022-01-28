@@ -25,6 +25,8 @@ import { subscribeToEvents, setApiReady, fetchBlockAction } from '../../store/ac
 import { nodeApi } from '../../api/initApi';
 import { useApi } from 'hooks/useApi';
 import store from '../../store';
+import { getEvents } from 'utils/events-list';
+import { Events } from 'types/events-list';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -32,8 +34,6 @@ import 'assets/scss/index.scss';
 import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
-import { getGroupedEvents } from 'components/pages/Explorer/EventsList/helpers';
-import { GroupedEvents, Sections } from 'types/events-list';
 
 // alert configuration
 const options = {
@@ -58,7 +58,7 @@ const AppComponent: FC = () => {
   const location = useLocation();
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
-  const [groupedEvents, setGroupedEvents] = useState<GroupedEvents>([]);
+  const [events, setEvents] = useState<Events>([]);
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
@@ -119,15 +119,9 @@ const AppComponent: FC = () => {
     let unsub: UnsubscribePromise | null = null;
 
     if (api) {
-      unsub = api.allEvents((allEvents) => {
-        // TODO: .map().filter() to single .reduce()
-        const newEvents = allEvents
-          .map(({ event }) => event)
-          .filter(({ section }) => section !== Sections.SYSTEM)
-          .reverse()
-          .reduce(getGroupedEvents, []);
-
-        setGroupedEvents((prevEvents) => [...newEvents, ...prevEvents]);
+      unsub = api.allEvents((eventRecords) => {
+        const newEvents = getEvents(eventRecords);
+        setEvents((prevEvents) => [...newEvents, ...prevEvents]);
       });
     }
 
@@ -167,7 +161,7 @@ const AppComponent: FC = () => {
                 <Program />
               </Route>
               <Route exact path={routes.explorer}>
-                <Explorer groupedEvents={groupedEvents} />
+                <Explorer events={events} />
               </Route>
               <Route exact path={routes.message}>
                 <Message />
