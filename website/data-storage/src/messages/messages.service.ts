@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Message } from '../entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
@@ -14,6 +14,9 @@ import {
   MessageDispatched,
 } from '@gear-js/interfaces';
 import { ErrorLogger, getPaginationParams } from 'src/utils';
+
+/** Add backslashes before special characters in SQL `LIKE` clause. */
+const escapeSqlLike = (x: string) => x.replace('%', '\\%').replace('_', '\\_');
 
 const logger = new Logger('MessageService');
 const errorLog = new ErrorLogger('MessagesService');
@@ -85,11 +88,19 @@ export class MessagesService {
   }
 
   async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
-    const where = {
-      genesis: params.genesis,
-      destination: params.destination,
-      source: params.source,
-    };
+    const { genesis, source, destination, term } = params;
+    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
+    const strictParamsIfPresent = { genesis, source, destination };
+    const where = [
+      {
+        id: likeTerm,
+        ...strictParamsIfPresent,
+      },
+      {
+        source: likeTerm,
+        ...strictParamsIfPresent,
+      },
+    ];
     const [result, total] = await this.messageRepo.findAndCount({
       where,
       ...getPaginationParams(params),
@@ -101,10 +112,19 @@ export class MessagesService {
   }
 
   async getMessage(params: FindMessageParams): Promise<IMessage> {
-    const where = {
-      genesis: params.genesis,
-      id: params.id,
-    };
+    const { genesis, id, term } = params;
+    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
+    const strictParamsIfPresent = { genesis, id };
+    const where = [
+      {
+        id: likeTerm,
+        ...strictParamsIfPresent,
+      },
+      {
+        source: likeTerm,
+        ...strictParamsIfPresent,
+      },
+    ];
     const result = await this.messageRepo.findOne({ where });
     return result;
   }
