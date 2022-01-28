@@ -11,9 +11,7 @@ export interface GetMessagesParams extends IGenesis, IPaginationParams {
   term?: string;
 }
 
-export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {
-  term?: string;
-}
+export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}
 
 export interface GetIncomingMessagesParams extends IGenesis, IPaginationParams, Pick<IMessage, 'destination'> {}
 
