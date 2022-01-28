@@ -71,7 +71,7 @@ export const Message: FC = () => {
     history.goBack();
   };
 
-  const renderError = (error: any) => {
+  const renderError = (error: string | null) => {
     if (error !== '0' && error !== '1' && error !== null) {
       return <Hint>{error}</Hint>;
     }
