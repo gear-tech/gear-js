@@ -12,7 +12,7 @@ export class GearBlock {
   }
 
   /**
-   * Get
+   * Get data of particular block
    * @param hash
    * @returns
    */
