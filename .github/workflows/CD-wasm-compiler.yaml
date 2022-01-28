@@ -1,9 +1,6 @@
 name: production.wasm-compiler-CD
 
-on:
-  push:
-    branches: [master, do-wasm-compiler-deploy]
-  workflow_dispatch:
+on: [workflow_dispatch]
 
 env:
   CARGO_TERM_COLOR: always
