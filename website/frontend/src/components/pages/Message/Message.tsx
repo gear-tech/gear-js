@@ -9,6 +9,7 @@ import { formatDate } from 'helpers';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAction } from 'store/actions/actions';
 import backIcon from 'assets/images/arrow_back_thick.svg';
+import { Hint } from 'components/blocks/Hint/Hint';
 import './Message.scss';
 
 type Params = { id: string };
@@ -70,17 +71,28 @@ export const Message: FC = () => {
     history.goBack();
   };
 
+  const renderError = (error: string) => {
+    if (error !== '0' && error !== '1') {
+      return <Hint>{error}</Hint>;
+    }
+
+    return null;
+  };
+
   return message ? (
     <div className="message">
       <div className={clsx('message__block', 'message__id')}>
         <span className="message__block-caption">MESSAGE ID:</span>
         <div className="message__status-block">
-          <span
-            className={clsx(
-              'message__block-status',
-              message.replyError ? 'message__block-status_error' : 'message__block-status_success'
-            )}
-          />
+          <div className="message__status-is-error">
+            <span
+              className={clsx(
+                'message__block-status',
+                message.replyError === '0' ? 'message__block-status_success' : 'message__block-status_error '
+              )}
+            />
+            {renderError(message.replyError)}
+          </div>
           <p className="message__block-paragraph">{message.id}</p>
         </div>
       </div>
