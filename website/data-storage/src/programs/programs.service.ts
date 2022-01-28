@@ -53,8 +53,15 @@ export class ProgramsService {
   }
 
   async getAllUserPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
+    const { genesis, owner, term } = params;
+    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
     const [result, total] = await this.programRepo.findAndCount({
-      where: { owner: params.owner, genesis: params.genesis },
+      where: [
+        { genesis, owner, id: likeTerm },
+        { genesis, owner, title: likeTerm },
+        { genesis, owner, name: likeTerm },
+        { genesis, owner, title: likeTerm },
+      ],
       ...getPaginationParams(params),
       order: {
         uploadedAt: 'DESC',
