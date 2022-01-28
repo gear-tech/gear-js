@@ -71,8 +71,8 @@ export const Message: FC = () => {
     history.goBack();
   };
 
-  const renderError = (error: string) => {
-    if (error !== '0' && error !== '1') {
+  const renderError = (error: string | null) => {
+    if (error !== '0' && error !== '1' && error !== null) {
       return <Hint>{error}</Hint>;
     }
 
@@ -88,7 +88,9 @@ export const Message: FC = () => {
             <span
               className={clsx(
                 'message__block-status',
-                message.replyError === '0' ? 'message__block-status_success' : 'message__block-status_error '
+                message.replyError === '0' || message.replyError === null
+                  ? 'message__block-status_success'
+                  : 'message__block-status_error '
               )}
             />
             {renderError(message.replyError)}
