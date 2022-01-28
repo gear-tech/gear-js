@@ -40,11 +40,11 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
             <img src={Copy} alt="copy program ID" />
           </button>
         </div>
-        <div className={styles.programWrapperData}>
-          <div className={styles.programsListInfo}>
-            Uploaded at:
-            <span className={styles.programsListInfoData}>{program.uploadedAt && formatDate(program.uploadedAt)}</span>
-          </div>
+      </div>
+      <div className={styles.programWrapperData}>
+        <div className={styles.programsListInfo}>
+          Uploaded at:
+          <span className={styles.programsListInfoData}>{program.uploadedAt && formatDate(program.uploadedAt)}</span>
         </div>
       </div>
       <div className={styles.programsListBtns}>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Meta } from 'components/Meta/Meta';
+import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { getAllProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
@@ -76,6 +77,7 @@ export const All: VFC = () => {
         />
         <br />
       </div>
+      <ProgramsLegend />
       <div className={styles.allProgramsList}>
         {(programs &&
           programsCount &&
