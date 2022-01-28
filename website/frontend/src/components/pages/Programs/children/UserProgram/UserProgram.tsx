@@ -42,8 +42,8 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
         </div>
         <div className={styles.programWrapperData}>
           <div className={styles.programsListInfo}>
-            Uploaded at:
-            <span className={styles.programsListInfoData}>{program.uploadedAt && formatDate(program.uploadedAt)}</span>
+            Timestamp:
+            <span className={styles.programsListInfoData}>{program.timestamp && formatDate(program.timestamp)}</span>
           </div>
         </div>
       </div>

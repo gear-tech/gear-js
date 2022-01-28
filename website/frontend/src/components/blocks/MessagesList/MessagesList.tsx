@@ -58,7 +58,7 @@ export const MessagesList: VFC<Props> = ({ messages }) => {
               </div>
             </div>
             <div className="messages__list-item">
-              <p>{message.date && formatDate(message.date)}</p>
+              <p>{message.timestamp && formatDate(message.timestamp)}</p>
             </div>
           </div>
         ))}
