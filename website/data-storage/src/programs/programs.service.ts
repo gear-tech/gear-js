@@ -60,7 +60,6 @@ export class ProgramsService {
         { genesis, owner, id: likeTerm },
         { genesis, owner, title: likeTerm },
         { genesis, owner, name: likeTerm },
-        { genesis, owner, title: likeTerm },
       ],
       ...getPaginationParams(params),
       order: {
