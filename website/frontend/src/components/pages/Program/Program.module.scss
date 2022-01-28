@@ -1,22 +1,22 @@
 @import '../../../assets/scss/variables';
 
-.wrapper {
+.program {
   margin: 0 40px;
   @media (max-width: 768px) {
     margin: 0 20px;
   }
-  .go-back-button {
+  .goBack {
     margin: 40px 0 30px 0;
     padding: 0;
     display: flex;
     align-items: center;
-    .go-back-button__icon {
+    .goBackIcon {
       margin: 0 10px 0 28px;
       @media (max-width: 768px) {
         margin: 0 10px 0 15px;
       }
     }
-    .go-back-button__text {
+    .goBackText {
       font-size: 21px;
       color: $textColor;
       text-transform: uppercase;
@@ -25,7 +25,7 @@
       }
     }
   }
-  .block {
+  .container {
     background-color: $bkgActiveButtonColor;
     border-radius: 2px;
     border: 1px dashed #0e0e0e;
@@ -34,13 +34,13 @@
     @media (max-width: 768px) {
       padding: 15px;
     }
-    .block__wrapper {
+    .list {
       width: 85%;
       @media (max-width: 768px) {
         width: 100%;
       }
     }
-    .block__item {
+    .item {
       width: 100%;
       display: flex;
       margin-bottom: 25px;
@@ -51,25 +51,20 @@
       &:last-child {
         margin-bottom: 0;
       }
-      .block__caption {
+      .itemCaption {
         color: $textColorSecondary;
         font-size: 21px;
         padding-top: 5px;
         min-width: 164px;
         font-style: normal;
         font-weight: normal;
-
-        &--small {
-          font-size: 16px;
-        }
-
         @media (max-width: 768px) {
           width: 100%;
           min-width: 100%;
           margin-right: 0;
         }
       }
-      .block__field {
+      .itemValue {
         width: 85%;
         background-color: $mainBackground;
         border: none;
@@ -83,7 +78,7 @@
           width: 100%;
         }
       }
-      .block__textarea {
+      .itemTextarea {
         width: 85%;
         background-color: $mainBackground;
         box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
@@ -95,17 +90,17 @@
         overflow-y: auto;
         word-break: break-all;
 
-        &.block__textarea_h100 {
+        &.itemTextareaH100 {
           height: 100px;
         }
-        &.block__textarea_h420 {
+        &.itemTextareaH420 {
           height: 420px;
         }
         @media (max-width: 768px) {
           width: 100%;
         }
       }
-      .block__button {
+      .buttons {
         width: 85%;
         margin-left: 164px;
         display: flex;
@@ -116,7 +111,7 @@
           margin-left: 0;
           flex-direction: column;
         }
-        .block__button-elem {
+        .button {
           background-color: $bkgButtonColor;
           border-radius: 2px;
           display: flex;
@@ -126,47 +121,44 @@
           padding: 12px 25px;
           margin-right: 40px;
           margin-top: 10px;
-
           @media (max-width: 768px) {
             width: 100%;
             margin-right: 0;
           }
-
-          &--link {
+          &.link {
             background-color: $successColor;
             box-shadow: 0 0 24px rgb(43 208 113 / 12%);
           }
-
-          .block__button-icon {
+          .buttonIcon {
             margin-right: 16px;
           }
-          .block__button-text {
+          .buttonText {
             font-weight: bold;
             font-size: 16px;
             line-height: 24px;
             color: $textColor;
           }
         }
-        .block__button-upload {
+        .buttonUpload {
           font-size: 14px;
           margin-top: 10px;
           @media (max-width: 768px) {
             margin-top: 8px;
           }
-          .block__button-caption {
+          .buttonCaption {
             color: $textColorSecondary;
             margin-right: 8px;
           }
-          .block__button-date {
+          .buttonTimestamp {
             color: $textColor;
           }
         }
       }
     }
   }
-  .messages-block {
+  .messages {
     margin-bottom: 40px;
-    .messages-block__caption {
+    .messagesCaption {
       text-transform: uppercase;
       color: $textColor;
       font-size: 21px;
