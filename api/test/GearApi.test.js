@@ -32,3 +32,21 @@ describe('GearApi', () => {
     expect(await api.totalIssuance()).toBeDefined();
   });
 });
+
+describe('Blocks', () => {
+  test('get hash of the first block', async () => {
+    expect(await api.blocks.getBlockHash(1)).toBeDefined();
+  });
+
+  test('get events of the first block', async () => {
+    expect(await api.blocks.getEvents(await api.blocks.getBlockHash(1))).toBeDefined();
+  });
+
+  test('get extrinsics of the first block', async () => {
+    expect(await api.blocks.getExtrinsics(await api.blocks.getBlockHash(1))).toBeDefined();
+  });
+
+  test('get finalized head', async () => {
+    expect(await api.blocks.getFinalizedHead()).toBeDefined();
+  });
+});
