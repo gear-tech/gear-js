@@ -77,7 +77,15 @@ export const getLocalPrograms = (params: any) => {
 
       data.result.count = iterationNumber;
 
-      if (iterationNumber <= newLimit && iterationNumber > params.offset) {
+      if (params.term) {
+        if (
+          (elem.name?.includes(params.term) || elem.id?.includes(params.term)) &&
+          iterationNumber <= newLimit &&
+          iterationNumber > params.offset
+        ) {
+          data.result.programs.push(elem);
+        }
+      } else if (iterationNumber <= newLimit && iterationNumber > params.offset) {
         data.result.programs.push(elem);
       }
     })
