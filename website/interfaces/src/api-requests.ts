@@ -8,9 +8,12 @@ export interface AddPayloadParams extends IGenesis, ISignature, Pick<IMessage, '
 export interface GetMessagesParams extends IGenesis, IPaginationParams {
   destination?: string;
   source?: string;
+  term?: string;
 }
 
-export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}
+export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {
+  term?: string;
+}
 
 export interface GetIncomingMessagesParams extends IGenesis, IPaginationParams, Pick<IMessage, 'destination'> {}
 
