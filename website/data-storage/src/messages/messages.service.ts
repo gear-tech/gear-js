@@ -135,10 +135,19 @@ export class MessagesService {
   }
 
   async getMessage(params: FindMessageParams): Promise<IMessage> {
-    const where = {
-      genesis: params.genesis,
-      id: params.id,
-    };
+    const { genesis, id, term } = params;
+    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
+    const strictParamsIfPresent = { genesis, id };
+    const where = [
+      {
+        id: likeTerm,
+        ...strictParamsIfPresent,
+      },
+      {
+        source: likeTerm,
+        ...strictParamsIfPresent,
+      },
+    ];
     const result = await this.messageRepo.findOne({ where });
     return result;
   }
