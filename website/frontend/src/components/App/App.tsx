@@ -94,7 +94,7 @@ const AppComponent: FC = () => {
   }, [history, location]);
 
   useEffect(() => {
-    let unsub: UnsubscribePromise | null = null;
+    let unsub: UnsubscribePromise | undefined;
 
     if (api) {
       unsub = api.gearEvents.subscribeToNewBlocks((event) => {
@@ -116,7 +116,7 @@ const AppComponent: FC = () => {
   }, [api, dispatch]);
 
   useEffect(() => {
-    let unsub: UnsubscribePromise | null = null;
+    let unsub: UnsubscribePromise | undefined;
 
     if (api) {
       unsub = api.allEvents((eventRecords) => {

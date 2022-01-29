@@ -86,51 +86,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
 
   return (
     <div className="switch-block">
-<<<<<<< HEAD
-      {pageType !== SWITCH_PAGE_TYPES.EXPLORER && (
-        <div className="switch-block--wrapper">
-          <div className="switch-buttons">
-            <Link
-              to={routes.main}
-              className={clsx(
-                'switch-buttons__item',
-                pageType === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && 'switch-buttons__item--active'
-              )}
-            >
-              Upload program
-            </Link>
-            <Link
-              to={routes.uploadedPrograms}
-              className={clsx(
-                'switch-buttons__item',
-                pageType === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && 'switch-buttons__item--active'
-              )}
-            >
-              My programs
-            </Link>
-            <Link
-              to={routes.allPrograms}
-              className={clsx(
-                'switch-buttons__item',
-                pageType === SWITCH_PAGE_TYPES.ALL_PROGRAMS && 'switch-buttons__item--active'
-              )}
-            >
-              All programs
-            </Link>
-            {!isDevChain() && (
-              <Link
-                to={routes.messages}
-                className={clsx(
-                  'switch-buttons__item',
-                  pageType === SWITCH_PAGE_TYPES.ALL_MESSAGES && 'switch-buttons__item--active'
-                )}
-              >
-                Messages
-              </Link>
-            )}
-          </div>
-          {/* <div className="switch-block--editor">
-=======
       <div className="switch-block--wrapper">
         <div className="switch-buttons">
           <Link
@@ -171,7 +126,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
           </Link>
         </div>
         {/* <div className="switch-block--editor">
->>>>>>> ff13df5 (Separate program switch's blocks summary component)
           <button
             className={clsx('switch-block--editor__btn', isEditorDropdownOpened && 'is-active')}
             type="button"
