@@ -1,9 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { EventsList } from './EventsList/EventsList';
-import { ProgramSwitch } from 'components/blocks/ProgramSwitch/ProgramSwitch';
-import { SWITCH_PAGE_TYPES } from 'consts';
 import { EventsProps } from 'types/events-list';
+import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 import Arrow from 'assets/images/arrow_back.svg';
 import styles from './Explorer.module.scss';
 
@@ -20,7 +19,7 @@ const Explorer = ({ events }: EventsProps) => {
         <button type="button" aria-label="go back" className="img-wrapper" onClick={handleBackButtonClick}>
           <img src={Arrow} alt="back arrow" />
         </button>
-        <ProgramSwitch pageType={SWITCH_PAGE_TYPES.EXPLORER} />
+        <BlocksSummary />
       </header>
       <EventsList events={events} />
     </div>
