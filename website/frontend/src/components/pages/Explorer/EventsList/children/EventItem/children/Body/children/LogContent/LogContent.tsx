@@ -25,6 +25,19 @@ const LogContent = ({ data }: Props) => {
   const [error, setError] = useState('');
   const isError = !!error;
 
+  // for isHex() it's prolly better to install @polkadot/util
+  const isHex = (value: string) => {
+    const hexRegex = /^0x[\da-fA-F]+/;
+    return hexRegex.test(value);
+  };
+
+  // check if manual decoding needed,
+  // cuz data.toHuman() decodes payload without metadata by itself
+  const isFormattedPayloadHex = () => {
+    const formattedPayload = String(payload.toHuman());
+    return isHex(formattedPayload);
+  };
+
   const handlePayloadDecoding = (typeKey: TypeKey, errorCallback: () => void) => {
     if (metadata) {
       const type = metadata[typeKey];
@@ -54,18 +67,18 @@ const LogContent = ({ data }: Props) => {
   };
 
   useEffect(() => {
-    const { fetchProgram } = programService;
-    const getProgram = isDevChain() ? getLocalProgram : fetchProgram;
-    const id = source.toString();
+    if (isFormattedPayloadHex()) {
+      const { fetchProgram } = programService;
+      const getProgram = isDevChain() ? getLocalProgram : fetchProgram;
+      const id = source.toString();
 
-    getProgram(id)
-      .then(({ result }) => {
+      getProgram(id).then(({ result }) => {
         // there's a warning if the component is unmounted before program is fetched,
         // but there's nothing wrong and warn no longer be present in the next React version
         // source: https://github.com/facebook/react/pull/22114
         setProgram(result);
-      })
-      .catch(handleInitPayloadDecoding);
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -102,15 +115,17 @@ const LogContent = ({ data }: Props) => {
 
   return (
     <>
-      <div className={styles.checkbox}>
-        <Checkbox
-          label="Decoded payload"
-          checked={isDecodedPayload}
-          onChange={handleCheckboxChange}
-          disabled={isError}
-        />
-        {isError && <p className={styles.error}>{error}</p>}
-      </div>
+      {isFormattedPayloadHex() && (
+        <div className={styles.checkbox}>
+          <Checkbox
+            label="Decoded payload"
+            checked={isDecodedPayload}
+            onChange={handleCheckboxChange}
+            disabled={isError}
+          />
+          {isError && <p className={styles.error}>{error}</p>}
+        </div>
+      )}
       <Pre text={isDecodedPayload ? getDecodedPayloadData() : formattedData} />
     </>
   );
