@@ -5,10 +5,9 @@ import { IProgram } from './program';
 
 export interface AddPayloadParams extends IGenesis, ISignature, Pick<IMessage, 'id' | 'payload'> {}
 
-export interface GetMessagesParams extends IGenesis, IPaginationParams {
+export interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam {
   destination?: string;
   source?: string;
-  term?: string;
 }
 
 export interface FindMessageParams extends IGenesis, Pick<IMessage, 'id'> {}
@@ -17,12 +16,12 @@ export interface GetIncomingMessagesParams extends IGenesis, IPaginationParams, 
 
 export interface GetOutgoingMessagesParams extends IGenesis, IPaginationParams, Pick<IMessage, 'source'> {}
 
-export interface GetAllProgramsParams extends IGenesis, IPaginationParams {
+export interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam {
   publicKeyRaw?: string;
   owner?: string;
-  /** Search term supplied by the client. Might be either a program ID, or a part of any of its fields. */
-  term?: string;
 }
+
+export interface GetAllUserProgramsParams extends IGenesis, IPaginationParams, Pick<IProgram, 'owner'>, SearchParam {}
 
 export interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
   owner?: string;
@@ -42,4 +41,8 @@ export interface GetMetaParams extends IGenesis {
 
 export interface GetTestBalanceParams extends IGenesis {
   address: string;
+}
+
+export interface SearchParam {
+  term?: string;
 }
