@@ -1,6 +1,6 @@
 import react, { FC } from 'react';
-import { Metadata } from '@gear-js/api';
-import { getProgramTypes } from 'helpers';
+import { Metadata, getTypeStructure, parseHexTypes } from '@gear-js/api';
+import { Item } from './children/Item/Item';
 import styles from './MetaData.module.scss';
 
 type Props = {
@@ -11,34 +11,33 @@ export const MetaData: FC<Props> = ({ metadata }) => {
   const getItems = () => {
     let items = [];
 
-    if (metadata) {
+    if (metadata && metadata.types) {
+      const types = parseHexTypes(metadata.types);
       let key: keyof typeof metadata;
 
       for (key in metadata) {
-        if (metadata[key]) {
-          const isTypes = key === 'types';
+        if (metadata[key] && key !== 'types' && key !== 'title') {
+          const type = getTypeStructure(metadata[key] as string, types);
 
           items.push({
             label: key,
-            value: isTypes ? getProgramTypes(metadata.types!) : metadata[key],
+            value: metadata[key],
+            type,
           });
         }
       }
     }
 
-    return items.reverse();
+    return items;
   };
 
   return (
-    <div className={styles.list}>
-      {getItems().map((item) => {
-        return (
-          <div className={styles.item}>
-            <span className={styles.label}>{item.label}</span>
-            <span className={styles.value}>{item.value}</span>
-          </div>
-        );
-      })}
+    <div className={styles.fields}>
+      <div className={styles.value}>
+        {getItems().map((item) => (
+          <Item label={item.label} value={item.value} type={item.type} />
+        ))}
+      </div>
     </div>
   );
 };
