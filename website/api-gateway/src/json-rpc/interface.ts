@@ -9,9 +9,9 @@ import {
   GetMessagesParams,
   GetMetaParams,
   GetMetaResult,
-  Message,
-  Program,
-} from 'src/interfaces';
+  IMessage,
+  IProgram,
+} from '@gear-js/interfaces';
 export interface IRpcRequest {
   jsonrpc: '2.0';
   id: number;
@@ -28,7 +28,15 @@ export interface IRpcRequest {
 export interface IRpcResponse {
   jsonrpc: '2.0';
   id: number;
-  result?: AllMessagesResult | GetAllProgramsResult | Program | Message | GetMetaResult | AddMetaResult;
+  result?:
+    | AllMessagesResult
+    | GetAllProgramsResult
+    | IProgram
+    | IMessage
+    | IProgram[]
+    | IMessage[]
+    | GetMetaResult
+    | AddMetaResult;
   error?: IRpcError;
 }
 

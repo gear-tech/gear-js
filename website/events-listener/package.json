@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@gear-js/api": "^0.11.0",
+    "@gear-js/interfaces": "1.0.0",
     "@polkadot/api": "^7.0.2",
     "@swc/core": "^1.2.124",
     "@swc/helpers": "^0.3.2",

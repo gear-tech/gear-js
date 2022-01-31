@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-import { Program } from './programs/entities/program.entity';
+import { Program } from './entities/program.entity';
 import { ProgramsService } from './programs/programs.service';
 
 describe('Programs Service', () => {
@@ -38,10 +38,11 @@ describe('Programs Service', () => {
     // Given an initialized Programs Service,
     // when:
     programsService.save({
-      id: 7357,
+      id: '0x7357',
       genesis: '0x07357',
       owner: '0x7357',
-      uploadedAt: 0,
+      blockHash: '0x1234',
+      timestamp: 0,
     });
 
     // then:

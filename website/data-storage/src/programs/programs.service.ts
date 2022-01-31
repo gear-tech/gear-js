@@ -1,13 +1,17 @@
+import {
+  IProgram,
+  InitStatus,
+  FindProgramParams,
+  GetAllProgramsParams,
+  GetAllProgramsResult,
+  GetAllUserProgramsParams,
+} from '@gear-js/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
-import { Meta } from '../metadata/entities/meta.entity';
-import { InitStatus, Program } from './entities/program.entity';
-import { FindProgramParams, GetAllProgramsParams, GetAllProgramsResult } from '../interfaces';
-import { ErrorLogger, getPaginationParams } from '../utils';
-
-/** Add backslashes before special characters in SQL `LIKE` clause. */
-const escapeSqlLike = (x: string) => x.replace('%', '\\%').replace('_', '\\_');
+import { Repository } from 'typeorm';
+import { Meta } from '../entities/meta.entity';
+import { Program } from '../entities/program.entity';
+import { ErrorLogger, getPaginationParams, getWhere } from '../utils';
 
 const logger = new Logger('ProgramDb');
 const errorLog = new ErrorLogger('ProgramsService');
@@ -19,13 +23,14 @@ export class ProgramsService {
     private readonly programRepo: Repository<Program>,
   ) {}
 
-  async save({ id, genesis, owner, uploadedAt }): Promise<Program> {
+  async save({ id, genesis, owner, timestamp, blockHash }): Promise<IProgram> {
     const program = this.programRepo.create({
       id,
-      genesis,
       owner,
       name: id,
-      uploadedAt: new Date(uploadedAt),
+      genesis,
+      blockHash,
+      timestamp: new Date(timestamp),
     });
     try {
       return await this.programRepo.save(program);
@@ -35,23 +40,25 @@ export class ProgramsService {
     }
   }
 
-  async addProgramInfo(id: string, genesis: string, name?: string, title?: string, meta?: Meta): Promise<Program> {
+  async addProgramInfo(id: string, genesis: string, name?: string, title?: string, meta?: Meta): Promise<IProgram> {
     const program = await this.findProgram({ id, genesis });
-    program.name = name;
-    program.title = title;
-    program.meta = meta;
-    return this.programRepo.save(program);
+    if (program) {
+      program.name = name;
+      program.title = title;
+      program.meta = meta;
+      return this.programRepo.save(program);
+    }
   }
 
-  async getAllUserPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
+  async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
+    const { genesis, owner, term } = params;
     const [result, total] = await this.programRepo.findAndCount({
-      where: { owner: params.owner, genesis: params.genesis },
+      where: getWhere({ genesis, owner }, term, ['id', 'title', 'name']),
       ...getPaginationParams(params),
       order: {
-        uploadedAt: 'DESC',
+        timestamp: 'DESC',
       },
     });
-
     return {
       programs: result,
       count: total,
@@ -60,18 +67,11 @@ export class ProgramsService {
 
   async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const { term, genesis } = params;
-    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
     const [result, total] = await this.programRepo.findAndCount({
-      where: [
-        { genesis, id: likeTerm },
-        { genesis, title: likeTerm },
-        { genesis, owner: likeTerm },
-        { genesis, name: likeTerm },
-        { genesis, title: likeTerm },
-      ],
+      where: getWhere({ genesis }, term, ['id', 'title', 'name']),
       ...getPaginationParams(params),
       order: {
-        uploadedAt: 'DESC',
+        timestamp: 'DESC',
       },
     });
 
@@ -81,7 +81,7 @@ export class ProgramsService {
     };
   }
 
-  async findProgram(params: FindProgramParams): Promise<Program> {
+  async findProgram(params: FindProgramParams): Promise<IProgram> {
     const { id, genesis, owner } = params;
     const where = owner ? { id, genesis, owner } : { id, genesis };
     try {
@@ -95,7 +95,7 @@ export class ProgramsService {
     }
   }
 
-  async setStatus(id: string, genesis: string, status: InitStatus): Promise<Program> {
+  async setStatus(id: string, genesis: string, status: InitStatus): Promise<IProgram> {
     return new Promise((resolve) => {
       setTimeout(async () => {
         let program = await this.findProgram({ id, genesis });

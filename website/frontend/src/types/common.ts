@@ -9,7 +9,7 @@ export type PaginationModel = {
 };
 
 export type UserPrograms = {
-  publicKeyRaw: string | null;
+  owner: string | null;
   limit?: number;
   offset?: number;
   term?: string;

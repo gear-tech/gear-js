@@ -247,6 +247,38 @@ const unsub = await gearApi.gearEvents.subscribeNewBlocks((header) => {
 unsub();
 ```
 
+### Get blockHash by block number
+
+```javascript
+const hash = await gearApi.blocks.getBlockHash(blockNumber);
+console.log(hash.toHex());
+```
+
+### Get block number by blockhash
+
+```javascript
+const hash = await gearApi.blocks.getBlockNumber(blockHash);
+console.log(hash.toNumber());
+```
+
+### Get all block's events
+
+```javascript
+const events = await gearApi.blocks.getEvents(blockHash);
+events.forEach((event) => {
+  console.log(event.toHuman());
+});
+```
+
+### Get all block's extrinsics
+
+```javascript
+const extrinsics = await gearApi.blocks.getExtrinsics(blockHash);
+extrinsics.forEach((extrinsic) => {
+  console.log(extrinsic.toHuman());
+});
+```
+
 ### Create keyring
 
 Creating a new keyring

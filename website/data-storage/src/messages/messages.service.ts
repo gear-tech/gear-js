@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Message } from './entities/message.entity';
+import { Message } from '../entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
 import { MessageNotFound } from 'src/errors/message';
@@ -11,9 +11,9 @@ import {
   FindMessageParams,
   GetMessagesParams,
   IMessage,
-  MessageDispatchedParams,
-} from 'src/interfaces';
-import { ErrorLogger, getPaginationParams } from 'src/utils';
+  MessageDispatched,
+} from '@gear-js/interfaces';
+import { ErrorLogger, getPaginationParams, getWhere } from 'src/utils';
 
 const logger = new Logger('MessageService');
 const errorLog = new ErrorLogger('MessagesService');
@@ -25,43 +25,28 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save(params: IMessage): Promise<Message> {
-    const { id, genesis, destination, payload, source, replyError, replyTo, date } = params;
-    let message = await this.messageRepo.findOne({ id });
-    if (message) {
-      if (payload) {
-        message.payload = payload;
-      }
-      if (replyTo) {
-        message.replyTo = replyTo;
-        message.replyError = replyError;
-      }
-    } else {
-      try {
-        message = this.messageRepo.create({
-          id,
-          genesis,
-          destination,
-          source,
-          payload,
-          date: new Date(date),
-          replyTo,
-          replyError,
-        });
-      } catch (error) {
-        errorLog.error(error, 42);
-        return;
-      }
-    }
+  async save(params: IMessage): Promise<IMessage> {
+    const { id, genesis, destination, payload, source, replyError, replyTo, timestamp, blockHash } = params;
     try {
+      const message = this.messageRepo.create({
+        id,
+        genesis,
+        destination,
+        source,
+        payload,
+        replyTo,
+        replyError,
+        timestamp: new Date(timestamp),
+        blockHash,
+      });
       return await this.messageRepo.save(message);
     } catch (error) {
-      errorLog.error(error, 58);
+      errorLog.error(error, 42);
       return;
     }
   }
 
-  async addPayload(params: AddPayloadParams): Promise<Message> {
+  async addPayload(params: AddPayloadParams): Promise<IMessage> {
     const { id, genesis, signature, payload } = params;
     const message = await this.messageRepo.findOne({ id, genesis });
     if (!message) {
@@ -75,12 +60,13 @@ export class MessagesService {
   }
 
   async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
+    const { genesis, destination, term } = params;
     const [result, total] = await this.messageRepo.findAndCount({
-      where: {
-        destination: params.destination,
-        genesis: params.genesis,
-      },
+      where: getWhere({ genesis, destination }, term, ['id', 'source']),
       ...getPaginationParams(params),
+      order: {
+        timestamp: 'DESC',
+      },
     });
     return {
       messages: result,
@@ -89,9 +75,13 @@ export class MessagesService {
   }
 
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
+    const { genesis, source, term } = params;
     const [result, total] = await this.messageRepo.findAndCount({
-      where: { genesis: params.genesis, source: params.source },
+      where: getWhere({ genesis, source }, term, ['id', 'destination']),
       ...getPaginationParams(params),
+      order: {
+        timestamp: 'DESC',
+      },
     });
     return {
       messages: result,
@@ -100,14 +90,20 @@ export class MessagesService {
   }
 
   async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
-    const where = {
-      genesis: params.genesis,
-      destination: params.destination,
-      source: params.source,
-    };
+    const { genesis, source, destination, term } = params;
+    const strictParams = { genesis };
+    if (source) {
+      strictParams['source'] = source;
+    }
+    if (destination) {
+      strictParams['destination'] = destination;
+    }
     const [result, total] = await this.messageRepo.findAndCount({
-      where,
+      where: getWhere(strictParams, term, ['id', 'source', 'destination']),
       ...getPaginationParams(params),
+      order: {
+        timestamp: 'DESC',
+      },
     });
     return {
       messages: result,
@@ -115,7 +111,7 @@ export class MessagesService {
     };
   }
 
-  async getMessage(params: FindMessageParams): Promise<Message> {
+  async getMessage(params: FindMessageParams): Promise<IMessage> {
     const where = {
       genesis: params.genesis,
       id: params.id,
@@ -124,7 +120,7 @@ export class MessagesService {
     return result;
   }
 
-  setDispatchedStatus(params: MessageDispatchedParams): Promise<void> {
+  setDispatchedStatus(params: MessageDispatched): Promise<void> {
     const error = params.outcome !== 'success' ? params.outcome : null;
     if (error === null) {
       return;

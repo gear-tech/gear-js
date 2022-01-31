@@ -16,6 +16,14 @@ Refer to the [api](https://github.com/gear-tech/gear-js/blob/master/api/README.m
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/api)
 
+## [@gear-js/gear-meta](https://github.com/gear-tech/gear-js/tree/master/utils/meta-cli)
+
+JavaScript CLI tool that provides functionality to work with `.meta.wasm` files.
+
+Refer to the [meta-cli](https://github.com/gear-tech/gear-js/blob/master/utils/meta-cli/README.md) docs for detail
+
+#### [npm package](https://www.npmjs.com/package/@gear-js/gear-meta)
+
 ## [website](https://github.com/gear-tech/gear-js/tree/master/website)
 
 Source code of [idea.gear-tech.io](https://idea.gear-tech.io/) and backend microservices

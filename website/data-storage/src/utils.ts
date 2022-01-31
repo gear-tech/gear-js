@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { PAGINATION_LIMIT } from './config/configuration';
-import { PaginationParams } from './interfaces/general';
+import { IPaginationParams } from '@gear-js/interfaces';
+import { ILike } from 'typeorm';
 
 export class ErrorLogger {
   logger: Logger;
@@ -16,6 +17,20 @@ export class ErrorLogger {
   }
 }
 
-export function getPaginationParams(params: PaginationParams): { take: number; skip: number } {
+export function getPaginationParams(params: IPaginationParams): { take: number; skip: number } {
   return { take: params.limit || PAGINATION_LIMIT, skip: params.offset || 0 };
+}
+
+export const escapeSqlLike = (x: string) => x.replace('%', '\\%').replace('_', '\\_');
+
+export function getWhere(strictParams: any, term: string | null | undefined, searchParams: string[]) {
+  const likeTerm = term ? ILike(`%${escapeSqlLike(term)}%`) : void null;
+  const where = likeTerm
+    ? searchParams.map((param) => {
+        const result = { ...strictParams };
+        result[param] = likeTerm;
+        return result;
+      })
+    : strictParams;
+  return where;
 }
