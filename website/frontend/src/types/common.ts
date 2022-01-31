@@ -1,5 +1,5 @@
 export type PaginationModel = {
-  owner?: string | null;
+  publicKeyRaw?: string | null;
   source?: string | null;
   destination?: string | null;
   limit?: number;
@@ -9,7 +9,7 @@ export type PaginationModel = {
 };
 
 export type UserPrograms = {
-  publicKeyRaw: string | null;
+  owner: string | null;
   limit?: number;
   offset?: number;
   term?: string;
