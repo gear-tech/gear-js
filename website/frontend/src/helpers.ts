@@ -1,3 +1,4 @@
+import { parseHexTypes } from '@gear-js/api';
 import { localPrograms } from 'services/LocalDBService';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 import { GetMetaResponse } from 'api/responses';
@@ -139,3 +140,14 @@ export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DE
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
 
 export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);
+
+export const getProgramTypes = (types: string) => {
+  const parsedTypes = parseHexTypes(types);
+  let displayTypes = '';
+
+  Object.entries(parsedTypes).forEach((value) => {
+    displayTypes += `${value[0]}: ${JSON.stringify(value[1])}\n`;
+  });
+
+  return displayTypes;
+};
