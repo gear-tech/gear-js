@@ -92,3 +92,10 @@
 .img-wrapper {
   display: flex;
 }
+
+.wrapper {
+  margin: 40px;
+  @media (max-width: 768px) {
+    margin: 0 20px;
+  }
+}

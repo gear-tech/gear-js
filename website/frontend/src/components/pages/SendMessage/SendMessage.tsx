@@ -73,7 +73,7 @@ export const SendMessage: VFC = () => {
     </div>
   ) : (
     <div className="wrapper">
-      <Loader color="#fff" className="animation-rotate" />;
+      <Loader color="#fff" className="animation-rotate" />
     </div>
   );
 };
