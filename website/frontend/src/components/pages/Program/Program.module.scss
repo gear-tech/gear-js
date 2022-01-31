@@ -1,12 +1,12 @@
 @import '../../../assets/scss/variables';
 
 .program {
-  margin: 0 40px;
+  margin: 40px;
   @media (max-width: 768px) {
     margin: 0 20px;
   }
   .goBack {
-    margin: 40px 0 30px 0;
+    margin-bottom: 30px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -63,6 +63,12 @@
           min-width: 100%;
           margin-right: 0;
         }
+      }
+      .emptyMetadata {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        color: $textColor;
       }
       .itemValue {
         width: 85%;
