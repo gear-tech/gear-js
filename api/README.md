@@ -247,6 +247,20 @@ const unsub = await gearApi.gearEvents.subscribeNewBlocks((header) => {
 unsub();
 ```
 
+### Get block data
+
+```javascript
+const data = await gearApi.blocks.get(blockNumberOrBlockHash);
+console.log(data.toHuman());
+```
+
+### Get block timestamp
+
+```javascript
+const ts = await gearApi.blocks.getBlockTimestamp(blockNumberOrBlockHash);
+console.log(ts.toNumber());
+```
+
 ### Get blockHash by block number
 
 ```javascript
