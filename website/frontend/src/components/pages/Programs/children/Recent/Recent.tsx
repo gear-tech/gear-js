@@ -40,7 +40,7 @@ export const Recent: VFC = () => {
   useEffect(() => {
     dispatch(
       getUserProgramsAction({
-        publicKeyRaw: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
+        owner: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
         term,

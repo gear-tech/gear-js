@@ -1,5 +1,5 @@
 export type PaginationModel = {
-  publicKeyRaw?: string | null;
+  owner?: string | null;
   source?: string | null;
   destination?: string | null;
   limit?: number;
