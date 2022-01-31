@@ -254,6 +254,13 @@ const hash = await gearApi.blocks.getBlockHash(blockNumber);
 console.log(hash.toHex());
 ```
 
+### Get block number by blockhash
+
+```javascript
+const hash = await gearApi.blocks.getBlockNumber(blockHash);
+console.log(hash.toNumber());
+```
+
 ### Get all block's events
 
 ```javascript

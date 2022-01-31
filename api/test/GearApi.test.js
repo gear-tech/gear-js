@@ -49,4 +49,10 @@ describe('Blocks', () => {
   test('get finalized head', async () => {
     expect(await api.blocks.getFinalizedHead()).toBeDefined();
   });
+
+  test('get block number by hash', async () => {
+    const hash = await api.blocks.getBlockHash(1);
+    const blockNumber = await api.blocks.getBlockNumber(hash.toHex());
+    expect(blockNumber.toNumber()).toBe(1);
+  });
 });
