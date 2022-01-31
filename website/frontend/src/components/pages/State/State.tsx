@@ -11,7 +11,6 @@ import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/ac
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
-import { Loader } from 'react-feather';
 import { EventTypes } from 'types/events';
 import styles from './State.module.scss';
 
