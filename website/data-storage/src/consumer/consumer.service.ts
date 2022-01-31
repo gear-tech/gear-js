@@ -25,6 +25,7 @@ import {
   DispatchMessageEnqueud,
   InitSuccess,
   InitFailure,
+  GetAllUserProgramsParams,
 } from '@gear-js/interfaces';
 @Injectable()
 export class ConsumerService {
@@ -93,9 +94,17 @@ export class ConsumerService {
   async allPrograms(params: GetAllProgramsParams): Result<GetAllProgramsResult> {
     try {
       if (params.owner) {
-        return await this.programService.getAllUserPrograms(params);
+        return await this.programService.getAllUserPrograms(params as GetAllUserProgramsParams);
       }
       return await this.programService.getAllPrograms(params);
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  async allUserPrograms(params: GetAllUserProgramsParams): Result<GetAllProgramsResult> {
+    try {
+      return await this.programService.getAllUserPrograms(params);
     } catch (error) {
       return { error: error.message };
     }
@@ -111,7 +120,6 @@ export class ConsumerService {
 
   async getMeta(params: GetMetaParams): Result<GetMetaResult> {
     try {
-      console.log(params);
       return await this.metaService.getMeta(params);
     } catch (error) {
       return { error: error.message };

@@ -13,6 +13,7 @@ import {
   GetMetaParams,
   GetOutgoingMessagesParams,
   GetTestBalanceParams,
+  GetAllUserProgramsParams,
 } from '@gear-js/interfaces';
 import config from 'src/config/configuration';
 
@@ -86,11 +87,8 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
       all: (params: GetAllProgramsParams) => {
         return this.client.send('program.all', params);
       },
-      allUser: (params: GetAllProgramsParams) => {
-        if (params.publicKeyRaw) {
-          params.owner = params.publicKeyRaw;
-        }
-        return this.client.send('program.all', params);
+      allUser: (params: GetAllUserProgramsParams) => {
+        return this.client.send('program.all.user', params);
       },
     },
     message: {

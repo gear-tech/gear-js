@@ -4,16 +4,14 @@ import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
+  GetAllUserProgramsParams,
 } from '@gear-js/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Meta } from '../entities/meta.entity';
 import { Program } from '../entities/program.entity';
-import { ErrorLogger, getPaginationParams } from '../utils';
-
-/** Add backslashes before special characters in SQL `LIKE` clause. */
-const escapeSqlLike = (x: string) => x.replace('%', '\\%').replace('_', '\\_');
+import { ErrorLogger, getPaginationParams, getWhere } from '../utils';
 
 const logger = new Logger('ProgramDb');
 const errorLog = new ErrorLogger('ProgramsService');
@@ -52,21 +50,15 @@ export class ProgramsService {
     }
   }
 
-  async getAllUserPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
+  async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
     const { genesis, owner, term } = params;
-    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
     const [result, total] = await this.programRepo.findAndCount({
-      where: [
-        { genesis, owner, id: likeTerm },
-        { genesis, owner, title: likeTerm },
-        { genesis, owner, name: likeTerm },
-      ],
+      where: getWhere({ genesis, owner }, term, ['id', 'title', 'name']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
       },
     });
-
     return {
       programs: result,
       count: total,
@@ -75,15 +67,8 @@ export class ProgramsService {
 
   async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const { term, genesis } = params;
-    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
     const [result, total] = await this.programRepo.findAndCount({
-      where: [
-        { genesis, id: likeTerm },
-        { genesis, title: likeTerm },
-        { genesis, owner: likeTerm },
-        { genesis, name: likeTerm },
-        { genesis, title: likeTerm },
-      ],
+      where: getWhere({ genesis }, term, ['id', 'title', 'name']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',

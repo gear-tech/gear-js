@@ -5,6 +5,7 @@ import {
   FindMessageParams,
   FindProgramParams,
   GetAllProgramsParams,
+  GetAllUserProgramsParams,
   GetMessagesParams,
   GetMetaParams,
   KafkaPayload,
@@ -43,6 +44,12 @@ export class ConsumerController {
     return JSON.stringify(result);
   }
 
+  @MessagePattern('program.all.user')
+  async allUserPrograms(@Payload() payload: KafkaPayload<GetAllUserProgramsParams>) {
+    const result = await this.consumerService.allUserPrograms(payload.value);
+    return JSON.stringify(result);
+  }
+
   @MessagePattern('meta.add')
   async addMeta(@Payload() payload: KafkaPayload<AddMetaParams>) {
     const result = await this.consumerService.addMeta(payload.value);
@@ -57,7 +64,6 @@ export class ConsumerController {
 
   @MessagePattern('message.all')
   async allMessages(@Payload() payload: KafkaPayload<GetMessagesParams>) {
-    console.log(payload.value);
     const result = await this.consumerService.allMessages(payload.value);
     return JSON.stringify(result);
   }

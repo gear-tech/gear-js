@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Message } from '../entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
 import { SignNotVerified } from 'src/errors/signature';
@@ -13,10 +13,7 @@ import {
   IMessage,
   MessageDispatched,
 } from '@gear-js/interfaces';
-import { ErrorLogger, getPaginationParams } from 'src/utils';
-
-/** Add backslashes before special characters in SQL `LIKE` clause. */
-const escapeSqlLike = (x: string) => x.replace('%', '\\%').replace('_', '\\_');
+import { ErrorLogger, getPaginationParams, getWhere } from 'src/utils';
 
 const logger = new Logger('MessageService');
 const errorLog = new ErrorLogger('MessagesService');
@@ -64,16 +61,8 @@ export class MessagesService {
 
   async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
     const { genesis, destination, term } = params;
-    const likeTerm = ILike(`%${escapeSqlLike(term || '')}%`);
-    const strictParamsIfPresent = { genesis, destination };
-    const where = [
-      {
-        id: likeTerm,
-        ...strictParamsIfPresent,
-      },
-    ];
     const [result, total] = await this.messageRepo.findAndCount({
-      where,
+      where: getWhere({ genesis, destination }, term, ['id', 'source']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
@@ -87,16 +76,8 @@ export class MessagesService {
 
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
     const { genesis, source, term } = params;
-    const likeTerm = ILike(`%${escapeSqlLike(term || '')}%`);
-    const strictParamsIfPresent = { genesis, source };
-    const where = [
-      {
-        id: likeTerm,
-        ...strictParamsIfPresent,
-      },
-    ];
     const [result, total] = await this.messageRepo.findAndCount({
-      where,
+      where: getWhere({ genesis, source }, term, ['id', 'destination']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
@@ -110,16 +91,15 @@ export class MessagesService {
 
   async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
     const { genesis, source, destination, term } = params;
-    const likeTerm = term != null ? ILike(`%${escapeSqlLike(term)}%`) : void null;
-    const strictParamsIfPresent = { genesis, source, destination };
-    const where = [
-      {
-        id: likeTerm,
-        ...strictParamsIfPresent,
-      },
-    ];
+    const strictParams = { genesis };
+    if (source) {
+      strictParams['source'] = source;
+    }
+    if (destination) {
+      strictParams['destination'] = destination;
+    }
     const [result, total] = await this.messageRepo.findAndCount({
-      where,
+      where: getWhere(strictParams, term, ['id', 'source', 'destination']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
