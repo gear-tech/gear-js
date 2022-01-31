@@ -47,10 +47,11 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
   client: ClientKafka;
 
   patterns = [
-    'meta.add',
     'program.data',
+    'meta.add',
     'meta.get',
     'program.all',
+    'program.all.user',
     'message.all',
     'message.data',
     'message.add.payload',
