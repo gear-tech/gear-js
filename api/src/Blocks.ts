@@ -73,9 +73,9 @@ export class GearBlock {
    */
   async getBlockTimestamp(hashOrNumber: `0x${string}` | Uint8Array | number): Promise<Compact<u64>> {
     const block = await this.get(hashOrNumber);
-    const tsAsU8a = block.block.extrinsics.filter(
+    const tsAsU8a = block.block.extrinsics.find(
       (value) => value.method.method === 'set' && value.method.section === 'timestamp',
-    )[0].data;
+    ).data;
     const ts = CreateType.create('Compact<u64>', tsAsU8a);
     return ts as Compact<u64>;
   }
