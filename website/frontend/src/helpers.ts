@@ -130,4 +130,4 @@ export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DE
 
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
 
-export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);
+export const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);

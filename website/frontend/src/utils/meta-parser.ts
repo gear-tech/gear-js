@@ -6,9 +6,7 @@ import get from 'lodash.get';
 type MetaNull = 'Null';
 const metaNull = 'Null';
 
-enum MetaTypes {
-  Text = 'Text',
-}
+type MetaTypes = 'Text' | 'Null';
 
 export type ParsedValue = {
   type: MetaTypes;
@@ -17,7 +15,7 @@ export type ParsedValue = {
 };
 
 export type ParsedStruct = {
-  [key: string]: ParsedStruct | ParsedValue | null;
+  [key: string]: ParsedStruct | ParsedValue;
 };
 
 export type ParsedShape = {
@@ -87,11 +85,17 @@ function parseField(data: MetaParam) {
             path: [Object.keys(item[1]).join('.'), 'fields', field[0]],
             value: field[1],
           });
+        } else if (field[1] === metaNull) {
+          stack.push({
+            kind: 'enum',
+            path: [Object.keys(item[1]).join('.'), 'fields', field[0]],
+            value: metaNull as MetaNull,
+          });
         } else {
           stack.push({
             kind: 'enum',
             path: [Object.keys(item[1]).join('.'), 'fields', field[0]],
-            value: field[1] === metaNull ? (metaNull as MetaNull) : field[1],
+            value: field[1],
           });
         }
       });
@@ -111,7 +115,10 @@ function parseField(data: MetaParam) {
       if (current.value === metaNull) {
         if (current.kind === 'enum' && result.select) {
           set(result.select, current.path, {
-            [current.path[current.path.length - 1]]: null,
+            type: 'Null',
+            value: 'Null',
+            name: current.path.slice(1).join('.'),
+            label: current.path[current.path.length - 1],
           });
         } else if (current.kind === 'field') {
           // eslint-disable-next-line max-depth
@@ -133,6 +140,7 @@ function parseField(data: MetaParam) {
             label: key,
             name: ['fields', key].join('.'),
             type: current.value,
+            value: '',
           });
         }
       } else {
@@ -148,7 +156,10 @@ function parseField(data: MetaParam) {
             set(result.select, current.path, {
               type: MetaEnums.EnumOption,
               NoFields: {
-                NoFields: null,
+                value: 'Null',
+                type: 'Null',
+                name: 'fields.NoFields', // TODO: add if field deep
+                label: 'NoFields',
               },
             });
             stack.push({
@@ -210,6 +221,7 @@ function parseField(data: MetaParam) {
                   label: key,
                   name: ['fields', ...path.filter((i) => i !== 'fields'), key].join('.'),
                   type: value,
+                  value: '',
                 },
               });
             } else if (current.kind === 'enum_option') {
@@ -222,6 +234,7 @@ function parseField(data: MetaParam) {
                     label: key,
                     name: ['fields', ...path.filter((i) => i !== 'fields'), key].join('.'),
                     type: value,
+                    value: '',
                   },
                 });
               }
@@ -231,6 +244,7 @@ function parseField(data: MetaParam) {
                   label: current.path[current.path.length - 1],
                   name: ['fields', ...current.path.filter((i) => i !== 'fields')].join('.'),
                   type: value,
+                  value: '',
                 });
               }
             } else if (current.kind === 'field') {
@@ -244,6 +258,7 @@ function parseField(data: MetaParam) {
                   label: key,
                   name: ['fields', ...current.path, key].join('.'),
                   type: value,
+                  value: '',
                 },
               });
             }
@@ -252,6 +267,14 @@ function parseField(data: MetaParam) {
       }
     }
   }
+
+  if (result.select && Object.values(result.select).length > 0) {
+    const option = Object.values(result.select)[0];
+    const field = Object.entries(option.fields).reverse()[0];
+    result.fields = { [`${field[0]}`]: field[1] };
+  }
+  console.log(result);
+
   return result;
 }
 

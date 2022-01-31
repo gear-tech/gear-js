@@ -1,4 +1,4 @@
-import React, { useEffect, useState, VFC } from 'react';
+import React, { useEffect, useRef, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
@@ -13,7 +13,7 @@ import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler, getPreformattedText } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
-import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
+import { MetaParam, ParsedShape, ParsedStruct, parseMeta } from 'utils/meta-parser';
 import { FormItem } from 'components/FormItem';
 import { Switch } from 'common/components/Switch';
 import { Schema } from './Schema';
@@ -35,12 +35,18 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, t
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
   const [manualInput, setManualInput] = useState(Boolean(!types));
 
-  const [initialValues] = useState({
+  const initialValues = useRef<{
+    gasLimit: number;
+    value: number;
+    payload: string;
+    destination: string;
+    fields: ParsedStruct | null;
+  }>({
     gasLimit: 20000000,
     value: 0,
     payload: types ? getPreformattedText(types) : '',
     destination: programId,
-    fields: {},
+    fields: null,
   });
 
   useEffect(() => {
@@ -48,8 +54,11 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, t
       const parsedMeta = parseMeta(types);
       setMetaForm(parsedMeta);
       setManualInput(false);
+      if (parsedMeta) {
+        initialValues.current.fields = parsedMeta.fields;
+      }
     }
-  }, [types]);
+  }, [types, initialValues]);
 
   const calculateGas = async (values: any, setFieldValue: any) => {
     if (manualInput && values.payload.length === 0) {
@@ -80,20 +89,17 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta = null, t
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={initialValues.current}
       validationSchema={Schema}
       validateOnBlur
+      enableReinitialize
       onSubmit={(values, { resetForm }) => {
         if (currentAccount) {
-          let pl = values.fields;
-          if (manualInput) {
-            pl = values.payload;
-          }
           const message: MessageModel = {
             gasLimit: values.gasLimit,
             destination: values.destination,
             value: values.value,
-            payload: pl,
+            payload: manualInput ? values.payload : values.fields!,
           };
           if (meta && api) {
             SendMessageToProgram(api, currentAccount, message, meta, dispatch, () => {
