@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { FormItem } from 'components/FormItem';
+import clsx from 'clsx';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
+import { ComponentLoader } from 'components/blocks/ComponentLoader/ComponentLoader';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 import { useHistory, useParams } from 'react-router-dom';
 import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/actions';
@@ -114,36 +116,36 @@ const State: VFC = () => {
         <h2 className={styles.heading}>Read state</h2>
       </header>
       <Formik initialValues={{ fields: {} }} onSubmit={handleSubmit}>
-        <Form className={`block ${styles.form}`}>
-          <div className="block__wrapper">
-            <div className="block__item">
-              <p className="block__caption block__caption--small">Program Id:</p>
-              <p className="block__field">{programId}</p>
+        <Form className={styles.form}>
+          <div className={styles.block}>
+            <div className={styles.item}>
+              <p className={styles.itemCaption}>Program Id:</p>
+              <p className={styles.itemValue}>{programId}</p>
             </div>
             {form && (
-              <div className="block__item">
-                <p className="block__caption block__caption--small">Input Parameters:</p>
-                <div className="block__wrapper">
+              <div className={styles.item}>
+                <p className={clsx(styles.itemCaption, styles.top)}>Input Parameters:</p>
+                <div className={styles.formWrapper}>
                   <FormItem data={form} />
                 </div>
               </div>
             )}
             {state && (
-              <div className="block__item">
-                <p className="block__caption block__caption--small">Statedata:</p>
-                <pre className="block__textarea block__textarea_h420">{state}</pre>
+              <div className={styles.item}>
+                <p className={clsx(styles.itemCaption, styles.top)}>Statedata:</p>
+                <pre className={styles.itemTextarea}>{state}</pre>
               </div>
             )}
-            {isLoading && <Loader color="white" className="animation-rotate" />}
-            <div className="block__item">
-              <div className="block__button">
-                <button className="block__button-elem" type="button" onClick={handleBackButtonClick}>
-                  <img className="block__button-icon" src={BackArrow} alt="Back arrow" />
-                  <span className="block__button-text">Back</span>
+            {isLoading && <ComponentLoader />}
+            <div className={styles.item}>
+              <div className={styles.buttons}>
+                <button className={styles.button} type="button" onClick={handleBackButtonClick}>
+                  <img className={styles.buttonIcon} src={BackArrow} alt="Back arrow" />
+                  <span className={styles.buttonText}>Back</span>
                 </button>
                 {stateInput && (
-                  <button className="block__button-elem block__button-elem--submit" type="submit">
-                    <span className="block__button-text">Read state</span>
+                  <button className={styles.button} type="submit">
+                    <span className={styles.buttonText}>Read state</span>
                   </button>
                 )}
               </div>

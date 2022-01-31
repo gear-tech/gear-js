@@ -53,11 +53,16 @@
       }
       .itemCaption {
         color: $textColorSecondary;
-        font-size: 21px;
-        padding-top: 5px;
+        font-size: 16px;
         min-width: 164px;
         font-style: normal;
         font-weight: normal;
+        display: flex;
+        align-items: center;
+        &.top {
+          padding-top: 5px;
+          align-items: flex-start;
+        }
         @media (max-width: 768px) {
           width: 100%;
           min-width: 100%;

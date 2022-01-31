@@ -86,7 +86,7 @@ export const Program: VFC = () => {
             <p className={styles.itemValue}>{program.title ? program.title : '...'}</p>
           </div>
           <div className={styles.item}>
-            <p className={styles.itemCaption}>Metadata:</p>
+            <p className={clsx(styles.itemCaption, styles.top)}>Metadata:</p>
             {metadata ? <MetaData metadata={metadata} /> : <p className={styles.emptyMetadata}>No metadata</p>}
           </div>
           <div className={styles.item}>
