@@ -1,6 +1,6 @@
 import { GearApi } from './GearApi';
 import { AnyTuple, AnyNumber } from '@polkadot/types/types';
-import { GenericExtrinsic, Vec } from '@polkadot/types';
+import { Compact, GenericExtrinsic, Vec } from '@polkadot/types';
 import { SignedBlock, BlockNumber, BlockHash } from '@polkadot/types/interfaces';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { GetBlockError } from './errors/blocks.errors';
@@ -31,6 +31,16 @@ export class GearBlock {
    */
   async getBlockHash(number: AnyNumber | BlockNumber): Promise<BlockHash> {
     return await this.api.rpc.chain.getBlockHash(number);
+  }
+
+  /**
+   * Get block number
+   * @param hash
+   * @returns Compact<BlockNumber>
+   */
+  async getBlockNumber(hash: `0x${string}` | Uint8Array): Promise<Compact<BlockNumber>> {
+    const block = await this.get(hash);
+    return block.block.header.number;
   }
 
   /**
