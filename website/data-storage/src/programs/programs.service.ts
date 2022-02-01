@@ -23,7 +23,7 @@ export class ProgramsService {
     private readonly programRepo: Repository<Program>,
   ) {}
 
-  async save({ id, genesis, owner, timestamp, blockHash }): Promise<IProgram> {
+  async save({ id, genesis, owner, timestamp, blockHash }: Omit<IProgram, 'initStatus'>): Promise<IProgram | null> {
     const program = this.programRepo.create({
       id,
       owner,
@@ -36,18 +36,25 @@ export class ProgramsService {
       return await this.programRepo.save(program);
     } catch (error) {
       errorLog.error(error, 29);
-      return;
+      return null;
     }
   }
 
-  async addProgramInfo(id: string, genesis: string, name?: string, title?: string, meta?: Meta): Promise<IProgram> {
+  async addProgramInfo(
+    id: string,
+    genesis: string,
+    name?: string,
+    title?: string,
+    meta?: Meta,
+  ): Promise<IProgram | null> {
     const program = await this.findProgram({ id, genesis });
-    if (program) {
-      program.name = name;
-      program.title = title;
-      program.meta = meta;
-      return this.programRepo.save(program);
+    if (!program) {
+      return null;
     }
+    program.name = name;
+    program.title = title;
+    program.meta = meta;
+    return this.programRepo.save(program);
   }
 
   async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
@@ -81,15 +88,15 @@ export class ProgramsService {
     };
   }
 
-  async findProgram(params: FindProgramParams): Promise<IProgram> {
+  async findProgram(params: FindProgramParams): Promise<IProgram | null> {
     const { id, genesis, owner } = params;
     const where = owner ? { id, genesis, owner } : { id, genesis };
     try {
       const program = await this.programRepo.findOne(where, {
         relations: ['meta'],
       });
-      return program;
-    } catch (error) {
+      return program ?? null;
+    } catch (error: any) {
       logger.error(error, error.stack, '');
       return null;
     }
