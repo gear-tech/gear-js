@@ -35,7 +35,7 @@ export const MetaData: FC<Props> = ({ metadata }) => {
     <div className={styles.fields}>
       <div className={styles.value}>
         {getItems().map((item) => (
-          <Item label={item.label} value={item.value} type={item.type} />
+          <Item key={item.label} label={item.label} value={item.value} type={item.type} />
         ))}
       </div>
     </div>
