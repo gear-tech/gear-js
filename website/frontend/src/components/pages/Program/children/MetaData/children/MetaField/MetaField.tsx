@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState, useEffect } from 'react';
+import React, { FC, useRef, useState, useEffect, useCallback } from 'react';
 import styles from './MetaField.module.scss';
 
 type Props = {
@@ -16,19 +16,18 @@ export const MetaField: FC<Props> = ({ label, value, type }) => {
     setIsVisible(!isVisible);
   };
 
-  const handleOutsideClick = ({ target }: MouseEvent) => {
+  const handleOutsideClick = useCallback(({ target }: MouseEvent) => {
     const isElementClicked = ref.current?.contains(target as Node);
 
     if (!isElementClicked) {
       setIsVisible(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
     return () => document.removeEventListener('click', handleOutsideClick);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleOutsideClick]);
 
   return (
     <div className={styles.item}>
