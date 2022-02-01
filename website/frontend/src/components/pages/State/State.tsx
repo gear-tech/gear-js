@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
-import { ComponentLoader } from 'components/blocks/ComponentLoader/ComponentLoader';
+import { Spinner } from 'components/blocks/Spinner/Spinner';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 import { useHistory, useParams } from 'react-router-dom';
 import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/actions';
@@ -135,7 +135,7 @@ const State: VFC = () => {
                 <pre className={styles.itemTextarea}>{state}</pre>
               </div>
             )}
-            {isLoading && <ComponentLoader />}
+            {isLoading && <Spinner />}
             <div className={styles.item}>
               <div className={styles.buttons}>
                 <button className={styles.button} type="button" onClick={handleBackButtonClick}>

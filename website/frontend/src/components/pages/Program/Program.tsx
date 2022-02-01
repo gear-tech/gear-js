@@ -6,7 +6,7 @@ import { getWasmMetadata, Metadata } from '@gear-js/api';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessagesAction } from 'store/actions/actions';
 import { MetaData } from './children/MetaData/MetaData';
-import { ComponentLoader } from 'components/blocks/ComponentLoader/ComponentLoader';
+import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { formatDate } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
@@ -115,7 +115,7 @@ export const Program: VFC = () => {
     </div>
   ) : (
     <div className={styles.program}>
-      <ComponentLoader />
+      <Spinner />
     </div>
   );
 };
