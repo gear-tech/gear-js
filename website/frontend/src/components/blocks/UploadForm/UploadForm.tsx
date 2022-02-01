@@ -1,4 +1,4 @@
-import React, { useState, useRef, VFC } from 'react';
+import React, { useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
