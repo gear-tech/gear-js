@@ -117,7 +117,7 @@ describe('Programs Service', () => {
     expect(Program_save).toHaveBeenCalled();
   });
 
-  it.only('should throw on an attempt to update an inexistent program', () => {
+  it('should throw on an attempt to update an inexistent program', () => {
     // Given:
     Program_findAndCount.mockReturnValueOnce(null);
     Program_findOne.mockReturnValueOnce(null);
