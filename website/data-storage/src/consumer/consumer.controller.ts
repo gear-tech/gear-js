@@ -11,11 +11,9 @@ import {
   KafkaPayload,
   Keys,
 } from '@gear-js/interfaces';
-import { Controller, Logger } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ConsumerService } from './consumer.service';
-
-const logger = new Logger('ConsumerController');
 
 @Controller()
 export class ConsumerController {
@@ -25,11 +23,7 @@ export class ConsumerController {
   async addEvent(@Payload() payload: AddEventKafkaPayload<Keys, any>) {
     const key = payload.key;
     const value = payload.value;
-    try {
-      await this.consumerService.events[key](value);
-    } catch (error) {
-      logger.error(error.message, error.stack);
-    }
+    await this.consumerService.events[key](value);
   }
 
   @MessagePattern('program.data')
