@@ -1,3 +1,5 @@
+@use 'assets/scss/breakpoints' as *;
+
 .search-queries {
   display: flex;
   flex-direction: row;
@@ -95,7 +97,7 @@
 
 .wrapper {
   margin: 40px;
-  @media (max-width: 768px) {
+  @include md {
     margin: 0 20px;
   }
 }
