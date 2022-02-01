@@ -1,5 +1,5 @@
 import React, { FC, useRef, useState, useEffect } from 'react';
-import styles from './Item.module.scss';
+import styles from './MetaField.module.scss';
 
 type Props = {
   label: string;
@@ -7,7 +7,7 @@ type Props = {
   type: any;
 };
 
-export const Item: FC<Props> = ({ label, value, type }) => {
+export const MetaField: FC<Props> = ({ label, value, type }) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
   const [isVisible, setIsVisible] = useState(false);

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Metadata, getTypeStructure, parseHexTypes } from '@gear-js/api';
-import { Item } from './children/Item/Item';
+import { MetaField } from './children/MetaField/MetaField';
 import styles from './MetaData.module.scss';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const MetaData: FC<Props> = ({ metadata }) => {
-  const getItems = () => {
+  const getMetaFields = () => {
     let items = [];
 
     if (metadata && metadata.types) {
@@ -34,8 +34,8 @@ export const MetaData: FC<Props> = ({ metadata }) => {
   return (
     <div className={styles.fields}>
       <div className={styles.value}>
-        {getItems().map((item) => (
-          <Item key={item.label} label={item.label} value={item.value} type={item.type} />
+        {getMetaFields().map((item) => (
+          <MetaField key={item.label} label={item.label} value={item.value} type={item.type} />
         ))}
       </div>
     </div>
