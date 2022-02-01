@@ -42,7 +42,7 @@
     .columns {
       display: flex;
       flex-wrap: wrap;
-      align-items: start;
+      align-items: flex-start;
       @media (max-width: 768px) {
         width: 100%;
         .columnLeft,
@@ -129,7 +129,7 @@
           }
           &.payload {
             flex-direction: column;
-            align-items: start;
+            align-items: flex-start;
             width: 100%;
             .switch {
               margin-bottom: 20px;
