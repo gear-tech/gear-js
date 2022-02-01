@@ -1,4 +1,4 @@
-import react, { FC } from 'react';
+import React, { FC } from 'react';
 import { Metadata, getTypeStructure, parseHexTypes } from '@gear-js/api';
 import { Item } from './children/Item/Item';
 import styles from './MetaData.module.scss';
