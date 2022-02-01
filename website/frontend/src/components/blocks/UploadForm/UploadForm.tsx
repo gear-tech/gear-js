@@ -20,7 +20,7 @@ import { useApi } from 'hooks/useApi';
 import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
-import { readFileAsync, checkFileFormat } from 'helpers';
+import { readFileAsync } from 'helpers';
 import { MIN_GAS_LIMIT, META_FIELDS } from 'consts';
 import styles from './UploadForm.module.scss';
 
@@ -104,18 +104,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       initPayload: '',
       programName: '',
     });
-  };
-
-  const handleChangeMetaFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length) {
-      const isCorrectFormat = checkFileFormat(event.target.files[0]);
-
-      if (isCorrectFormat) {
-        handleUploadMetaFile(event.target.files[0]);
-      } else {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
-      }
-    }
   };
 
   const handleSubmitForm = (values: any) => {
@@ -263,8 +251,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     {isMetaFromFile && (
                       <MetaFile
                         droppedMetaFile={droppedMetaFile}
+                        handleUploadMetaFile={handleUploadMetaFile}
                         handleRemoveMetaFile={handleRemoveMetaFile}
-                        handleChangeMetaFile={handleChangeMetaFile}
                       />
                     )}
                     {isShowFields && (
