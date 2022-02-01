@@ -23,42 +23,9 @@
     font-size: $fontSizeLarge;
     font-weight: 600;
     padding: 32px;
+    border-bottom: 2px solid $successColor;
     @media (max-width: 768px) {
       padding: 16px;
-    }
-  }
-
-  .download {
-    position: relative;
-    overflow: hidden;
-    .progress {
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-      left: -777px;
-    }
-    .progressValue {
-      color: #333;
-      display: block;
-      line-height: 21px;
-      text-align: center;
-    }
-    .progressBg {
-      background: rgba(235, 239, 242, 0.1);
-      position: relative;
-      height: 2px;
-      border-radius: 5px;
-      overflow: hidden;
-      .progressBar {
-        overflow: hidden;
-        background: rgba(43, 208, 113, 1);
-        width: 65%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
     }
   }
 

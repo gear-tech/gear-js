@@ -161,14 +161,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         {({ errors, touched, values, setFieldValue }) => {
           return (
             <Form>
-              <div className={styles.download}>
-                <progress className={styles.progress} max="100" value="65" />
-                <div className={styles.progressValue} />
-                <div className={styles.progressBg}>
-                  <div className={styles.progressBar} />
-                </div>
-              </div>
-
               <div className={styles.columnsWrapper}>
                 <div className={styles.columns}>
                   <div className={styles.columnLeft}>
