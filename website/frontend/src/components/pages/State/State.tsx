@@ -135,7 +135,7 @@ const State: VFC = () => {
                 <pre className={styles.itemTextarea}>{state}</pre>
               </div>
             )}
-            {isLoading && <ComponentLoader />}
+            {isLoading && <ComponentLoader color="#fff" />}
             <div className={styles.item}>
               <div className={styles.buttons}>
                 <button className={styles.button} type="button" onClick={handleBackButtonClick}>

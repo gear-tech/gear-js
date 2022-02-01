@@ -115,7 +115,7 @@ export const Program: VFC = () => {
     </div>
   ) : (
     <div className={styles.program}>
-      <ComponentLoader />
+      <ComponentLoader color="#fff" />
     </div>
   );
 };
