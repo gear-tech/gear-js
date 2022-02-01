@@ -164,6 +164,9 @@
             flex-direction: column;
             align-items: start;
             width: 100%;
+            .switch {
+              margin-bottom: 20px;
+            }
           }
           @media (max-width: 768px) {
             overflow: unset;

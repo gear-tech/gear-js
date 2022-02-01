@@ -45,12 +45,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     gasLimit: MIN_GAS_LIMIT,
     value: 0,
     initPayload: '',
-    init_input: '',
-    init_output: '',
-    handle_input: '',
-    handle_output: '',
     types: '',
-    fields: {},
     programName: '',
   });
 
@@ -63,10 +58,10 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       const fileBuffer = (await readFileAsync(file)) as Buffer;
       const metaWasm: { [key: string]: any } = await getWasmMetadata(fileBuffer);
 
-      if (metaWasm && metaWasm.types && metaWasm.handle_input) {
+      if (metaWasm) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
-        const displayedTypes = parseHexTypes(metaWasm.types);
-        const inputType = getTypeStructure(metaWasm.handle_input, displayedTypes);
+        const displayedTypes = parseHexTypes(metaWasm?.types);
+        const inputType = getTypeStructure(metaWasm?.handle_input, displayedTypes);
         const parsedMeta = parseMeta(inputType);
         let valuesFromFile = {};
 
@@ -87,7 +82,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           ...valuesFromFile,
           programName: metaWasm.title,
           initPayload: JSON.stringify(inputType, null, 4),
-          types: JSON.stringify(inputType),
+          types: JSON.stringify(displayedTypes, null, 4),
         });
         setFieldFromFile([...Object.keys(valuesFromFile).reverse()]);
       }
@@ -103,6 +98,12 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setMetaForm(null);
     setDroppedMetaFile(null);
     setFieldFromFile(null);
+
+    setInitialValues({
+      ...initialValues,
+      initPayload: '',
+      programName: '',
+    });
   };
 
   const handleChangeMetaFile = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,11 +235,13 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       </label>
                       <div className={clsx(styles.value, styles.payload)}>
                         {isShowMetaSwitch && (
-                          <Switch
-                            onChange={() => setIsManualPaylod(!isManualPaylod)}
-                            label="Manual input"
-                            checked={isManualPaylod}
-                          />
+                          <div className={styles.switch}>
+                            <Switch
+                              onChange={() => setIsManualPaylod(!isManualPaylod)}
+                              label="Manual input"
+                              checked={isManualPaylod}
+                            />
+                          </div>
                         )}
                         {isShowMetaForm ? (
                           <div className="message-form--info">
