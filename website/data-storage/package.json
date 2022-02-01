@@ -131,7 +131,7 @@
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.[tj]s$",
     "transform": {
-      "\\.[jt]sx?$": "babel-jest",
+      "\\.[tj]sx?$": "babel-jest",
       "node_modules/@polkadot": "babel-jest"
     },
     "transformIgnorePatterns": [
