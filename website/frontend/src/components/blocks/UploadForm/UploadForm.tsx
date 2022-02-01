@@ -100,8 +100,10 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setFieldFromFile(null);
 
     setInitialValues({
-      ...initialValues,
+      gasLimit: MIN_GAS_LIMIT,
+      value: 0,
       initPayload: '',
+      types: '',
       programName: '',
     });
   };
