@@ -81,6 +81,9 @@ export class ConsumerService {
     MessageDispatched: (value: MessageDispatched) => {
       this.messageService.setDispatchedStatus(value);
     },
+    DatabaseWiped: () => {
+      throw new TypeError('unexpected `DatabaseWiped` event');
+    },
   };
 
   async programData(params: FindProgramParams): Result<IProgram> {
