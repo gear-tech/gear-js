@@ -1,17 +1,13 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { createSelector } from 'reselect';
-import {
-  getUserProgramsAction,
-  uploadMetaResetAction,
-  getProgramAction,
-  resetProgramAction,
-} from 'store/actions/actions';
+import { getUserProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
+import { ProgramModel } from 'types/program';
 
-import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 
+import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
 import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
 
@@ -25,29 +21,15 @@ type ProgramMessageType = {
   programId: string;
 };
 
-const selectPrograms = createSelector(
-  (state: RootState) => state.programs,
-  (_ignore: any, completed: string) => completed,
-  (programs, completed) => programs.programs && programs.programs.filter((item) => item.id.includes(completed))
-);
-
 export const Recent: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const urlSearch = location.search;
-  const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
+  const searchParams = new URLSearchParams(location.search);
+  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
 
-  const [search, setSearch] = useState('');
-
-  const { programsCount } = useSelector((state: RootState) => state.programs);
-  let programs = useSelector((state: RootState) => selectPrograms(state, search));
-
-  const singleProgram = useSelector((state: RootState) => state.programs.program);
-
-  if (singleProgram) {
-    programs = [singleProgram];
-  }
-
+  const [term, setTerm] = useState('');
+  const programs = useSelector((state: RootState) => state.programs.programs);
+  const programsCount = useSelector((state: RootState) => state.programs.programsCount || 0);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
@@ -58,12 +40,13 @@ export const Recent: VFC = () => {
   useEffect(() => {
     dispatch(
       getUserProgramsAction({
-        publicKeyRaw: localStorage.getItem('public_key_raw'),
+        owner: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
+        term,
       })
     );
-  }, [dispatch, offset]);
+  }, [dispatch, offset, term]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
@@ -94,27 +77,26 @@ export const Recent: VFC = () => {
       <div>
         <SearchForm
           handleRemoveQuery={() => {
-            setSearch('');
-            dispatch(resetProgramAction());
+            setTerm('');
           }}
           handleSearch={(val: string) => {
-            setSearch(val);
-            dispatch(getProgramAction(val));
+            setTerm(val);
           }}
-          placeholder="Find program by ID"
+          placeholder="Find program"
         />
         <br />
       </div>
-      {(programs && programs.length && (
+      <ProgramsLegend />
+      {(programs && programsCount && (
         <div>
-          {programs.map((program) => (
+          {programs.map((program: ProgramModel) => (
             <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.id} />
           ))}
         </div>
       )) ||
         null}
 
-      {programs && programs.length > 0 && (
+      {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
           <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
         </div>

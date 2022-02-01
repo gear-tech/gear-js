@@ -1,9 +1,9 @@
 {
   "name": "@gear-js/frontend",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "dependencies": {
-    "@gear-js/api": "^0.9.7",
+    "@gear-js/api": "^0.11.0",
     "@monaco-editor/react": "^4.2.1",
     "@polkadot/api": "^7.3.1",
     "@polkadot/extension-dapp": "^0.42.2",
@@ -16,6 +16,7 @@
     "formik": "^2.2.9",
     "jszip": "^3.7.0",
     "ky": "^0.28.7",
+    "localforage": "^1.10.0",
     "lodash.get": "^4.4.2",
     "lodash.isobject": "^3.0.2",
     "lodash.isstring": "^4.0.1",

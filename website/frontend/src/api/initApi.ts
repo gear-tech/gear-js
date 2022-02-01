@@ -3,7 +3,7 @@ import { GearApi } from '@gear-js/api';
 import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { isNodeAddressValid } from 'helpers';
-import { NODE_ADDRESS, NODE_ADRESS_URL_PARAM } from '../consts';
+import { NODE_ADDRESS, NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
 
 const getNodeAddressFromUrl = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -39,25 +39,25 @@ class NodeApi {
   }
 
   async init() {
-    this._address = getNodeAddressFromUrl() || localStorage.getItem('node_address') || this._address;
+    this._address = getNodeAddressFromUrl() || localStorage.getItem(LOCAL_STORAGE.NODE_ADDRESS) || this._address;
     this._api = await GearApi.create({ providerAddress: this._address });
 
     this.chain = await this._api.chain();
     this.genesis = await this._api.genesisHash.toHex();
 
-    localStorage.setItem('chain', this.chain);
-    localStorage.setItem('genesis', this.genesis);
+    localStorage.setItem(LOCAL_STORAGE.CHAIN, this.chain);
+    localStorage.setItem(LOCAL_STORAGE.GENESIS, this.genesis);
   }
 
-  public subscribeProgramEvents(cb: (event: ProgramEvent) => void) {
+  public subscribeToProgramEvents(cb: (event: ProgramEvent) => void) {
     if (this._api && !('programEvents' in this.subscriptions)) {
-      this.subscriptions.programEvents = this._api.gearEvents.subscribeProgramEvents((event: ProgramEvent) => {
+      this.subscriptions.programEvents = this._api.gearEvents.subscribeToProgramEvents((event: ProgramEvent) => {
         cb(event);
       });
     }
   }
 
-  public unsubscribeProgramEvents() {
+  public unsubscribeFromProgramEvents() {
     if ('programEvents' in this.subscriptions) {
       (async () => {
         (await this.subscriptions.programEvents)();
@@ -65,15 +65,15 @@ class NodeApi {
     }
   }
 
-  public subscribeLogEvents(cb: (event: LogEvent) => void) {
+  public subscribeToLogEvents(cb: (event: LogEvent) => void) {
     if (this._api && !('logEvents' in this.subscriptions)) {
-      this.subscriptions.logEvents = this._api.gearEvents.subscribeLogEvents((event: LogEvent) => {
+      this.subscriptions.logEvents = this._api.gearEvents.subscribeToLogEvents((event: LogEvent) => {
         cb(event);
       });
     }
   }
 
-  public unsubscribeLogEvents() {
+  public unsubscribeFromLogEvents() {
     if ('logEvents' in this.subscriptions) {
       (async () => {
         (await this.subscriptions.logEvents)();
@@ -81,9 +81,9 @@ class NodeApi {
     }
   }
 
-  public subscribeTransferEvents(cb: (event: TransferEvent) => void) {
+  public subscribeToTransferEvents(cb: (event: TransferEvent) => void) {
     if (this._api && !('subscribeTransferEvents' in this.subscriptions)) {
-      this.subscriptions.subscribeTransferEvents = this._api.gearEvents.subscribeTransferEvents(
+      this.subscriptions.subscribeTransferEvents = this._api.gearEvents.subscribeToTransferEvents(
         (event: TransferEvent) => {
           cb(event);
         }
@@ -91,7 +91,7 @@ class NodeApi {
     }
   }
 
-  public unsubscribeTransferEvents() {
+  public unsubscribeFromTransferEvents() {
     if ('subscribeTransferEvents' in this.subscriptions) {
       (async () => {
         (await this.subscriptions.subscribeTransferEvents)();

@@ -8,6 +8,7 @@ import { getMessagesAction } from 'store/actions/actions';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { RootState } from 'store/reducers';
 import { SearchForm } from '../../blocks/SearchForm/SearchForm';
+import { LOCAL_STORAGE } from 'consts';
 import './Messages.scss';
 
 const selectMessages = createSelector(
@@ -19,8 +20,8 @@ const selectMessages = createSelector(
 export const Messages: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const urlSearch = location.search;
-  const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
+  const searchParams = new URLSearchParams(location.search);
+  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
 
   const [search, setSearch] = useState('');
 
@@ -38,7 +39,7 @@ export const Messages: VFC = () => {
   useEffect(() => {
     dispatch(
       getMessagesAction({
-        destination: localStorage.getItem('public_key_raw'),
+        destination: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
       })

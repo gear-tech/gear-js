@@ -1,3 +1,5 @@
+@use 'assets/scss/variables' as *;
+
 .message-form__button {
   background: #2bd071;
   box-shadow: 0 0 24px rgba(43, 208, 113, 0.12);
@@ -205,4 +207,8 @@
     margin-right: 0;
     width: 100%;
   }
+}
+
+.message-form__manual-input-notice {
+  color: $textColorSecondary;
 }

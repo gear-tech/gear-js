@@ -9,6 +9,7 @@ import { formatDate } from 'helpers';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAction } from 'store/actions/actions';
 import backIcon from 'assets/images/arrow_back_thick.svg';
+import { Hint } from 'components/blocks/Hint/Hint';
 import './Message.scss';
 
 type Params = { id: string };
@@ -41,21 +42,26 @@ export const Message: FC = () => {
   }, [dispatch, message]);
 
   useEffect(() => {
-    if (program && program.meta && message) {
+    if (program && message) {
       const createType = new CreateType();
-      const parsedMeta: Metadata = JSON.parse(program.meta.meta as string);
-
       let type = 'Bytes';
+      let decodedPayload = null;
 
-      if (parsedMeta.handle_output) {
-        type = parsedMeta.handle_output;
+      if (program.meta) {
+        const parsedMeta: Metadata = JSON.parse(program.meta.meta as string) ?? null;
+
+        if (parsedMeta?.handle_output) {
+          type = parsedMeta.handle_output;
+        }
+
+        if (!parsedMeta?.handle_output && parsedMeta?.init_output) {
+          type = parsedMeta.init_output;
+        }
+
+        decodedPayload = createType.create(type, message.payload, parsedMeta).toHuman();
+      } else {
+        decodedPayload = createType.create(type, message.payload);
       }
-
-      if (!parsedMeta.handle_output && parsedMeta.init_output) {
-        type = parsedMeta.init_output;
-      }
-
-      const decodedPayload = createType.create(type, message.payload, parsedMeta).toHuman();
 
       setMessagePayload(JSON.stringify(decodedPayload));
     }
@@ -65,17 +71,30 @@ export const Message: FC = () => {
     history.goBack();
   };
 
+  const renderError = (error: string | null) => {
+    if (error !== '0' && error !== '1' && error !== null) {
+      return <Hint>{error}</Hint>;
+    }
+
+    return null;
+  };
+
   return message ? (
     <div className="message">
       <div className={clsx('message__block', 'message__id')}>
         <span className="message__block-caption">MESSAGE ID:</span>
         <div className="message__status-block">
-          <span
-            className={clsx(
-              'message__block-status',
-              message.replyError ? 'message__block-status_error' : 'message__block-status_success'
-            )}
-          />
+          <div className="message__status-is-error">
+            <span
+              className={clsx(
+                'message__block-status',
+                message.replyError === '0' || message.replyError === null
+                  ? 'message__block-status_success'
+                  : 'message__block-status_error '
+              )}
+            />
+            {renderError(message.replyError)}
+          </div>
           <p className="message__block-paragraph">{message.id}</p>
         </div>
       </div>
@@ -89,7 +108,7 @@ export const Message: FC = () => {
       </div>
       <div className="message__block">
         <span className="message__block-caption">Timestamp:</span>
-        <p className="message__block-paragraph">{formatDate(message.date)}</p>
+        <p className="message__block-paragraph">{formatDate(message.timestamp)}</p>
       </div>
       {messagePayload ? (
         <pre className="message__meta">{messagePayload}</pre>

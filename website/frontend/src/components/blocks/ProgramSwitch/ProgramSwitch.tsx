@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
 import { useApi } from '../../../hooks/useApi';
+import { isDevChain } from 'helpers';
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
 // import Editor from 'assets/images/editor_icon.svg';
 
@@ -23,8 +24,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const apiRequest = new ServerRPCRequestService();
 
   const [api] = useApi();
-
-  const chain = localStorage.getItem('chain');
 
   const [timeInstance, setTimeInstance] = useState(0);
   const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
@@ -141,46 +140,49 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
 
   return (
     <div className="switch-block">
-      <div className="switch-block--wrapper">
-        <div className="switch-buttons">
-          <Link
-            to={routes.main}
-            className={clsx(
-              'switch-buttons__item',
-              pageType === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && 'switch-buttons__item--active'
+      {pageType !== SWITCH_PAGE_TYPES.EXPLORER && (
+        <div className="switch-block--wrapper">
+          <div className="switch-buttons">
+            <Link
+              to={routes.main}
+              className={clsx(
+                'switch-buttons__item',
+                pageType === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && 'switch-buttons__item--active'
+              )}
+            >
+              Upload program
+            </Link>
+            <Link
+              to={routes.uploadedPrograms}
+              className={clsx(
+                'switch-buttons__item',
+                pageType === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && 'switch-buttons__item--active'
+              )}
+            >
+              My programs
+            </Link>
+            <Link
+              to={routes.allPrograms}
+              className={clsx(
+                'switch-buttons__item',
+                pageType === SWITCH_PAGE_TYPES.ALL_PROGRAMS && 'switch-buttons__item--active'
+              )}
+            >
+              All programs
+            </Link>
+            {!isDevChain() && (
+              <Link
+                to={routes.messages}
+                className={clsx(
+                  'switch-buttons__item',
+                  pageType === SWITCH_PAGE_TYPES.ALL_MESSAGES && 'switch-buttons__item--active'
+                )}
+              >
+                Messages
+              </Link>
             )}
-          >
-            Upload program
-          </Link>
-          <Link
-            to={routes.uploadedPrograms}
-            className={clsx(
-              'switch-buttons__item',
-              pageType === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && 'switch-buttons__item--active'
-            )}
-          >
-            My programs
-          </Link>
-          <Link
-            to={routes.allPrograms}
-            className={clsx(
-              'switch-buttons__item',
-              pageType === SWITCH_PAGE_TYPES.ALL_PROGRAMS && 'switch-buttons__item--active'
-            )}
-          >
-            All programs
-          </Link>
-          <Link
-            to={routes.messages}
-            className={clsx(
-              'switch-buttons__item',
-              pageType === SWITCH_PAGE_TYPES.ALL_MESSAGES && 'switch-buttons__item--active'
-            )}
-          >
-            Messages
-          </Link>
-        </div>
-        {/* <div className="switch-block--editor">
+          </div>
+          {/* <div className="switch-block--editor">
           <button
             className={clsx('switch-block--editor__btn', isEditorDropdownOpened && 'is-active')}
             type="button"
@@ -193,22 +195,23 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
             <DropdownMenu dropdownMenuRef={dropdownMenuRef} handleDropdownBtnClick={handleTemplate} />
           )}
         </div> */}
-        <div className="switch-block--transfer">
-          {gasCallCounter <= 3 ? (
-            <button
-              className="switch-block--transfer__btn"
-              type="button"
-              onClick={chain === 'Development' ? handleTransferBalanceFromAlice : handleTransferBalance}
-            >
-              Get test balance
-            </button>
-          ) : (
-            <button className="switch-block--transfer__btn" type="button" disabled>
-              Don&apos;t be greedy :)
-            </button>
-          )}
+          <div className="switch-block--transfer">
+            {gasCallCounter <= 3 ? (
+              <button
+                className="switch-block--transfer__btn"
+                type="button"
+                onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTransferBalance}
+              >
+                Get test balance
+              </button>
+            ) : (
+              <button className="switch-block--transfer__btn" type="button" disabled>
+                Don&apos;t be greedy :)
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       <div className="switch-block__info switch-info">
         <div className="switch-info__col">
           <span className="switch-info__title">Last block</span>

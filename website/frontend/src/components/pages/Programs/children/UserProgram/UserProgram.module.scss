@@ -3,22 +3,14 @@
 .programsListItem {
   align-items: center;
   display: flex;
-  padding: 23px 0;
+  padding: 20px;
+  justify-content: space-between;
   position: relative;
+  border-bottom: 1px solid $separateLineColor;
   @media (max-width: 768px) {
     * {
       align-items: unset;
     }
-  }
-
-  &::before {
-    border-top: 1px solid $separateLineColor;
-    content: '';
-    display: block;
-    opacity: 0.6;
-    position: absolute;
-    top: 0;
-    width: 100%;
   }
 }
 
@@ -34,8 +26,7 @@
 .programWrapper {
   display: flex;
   align-items: center;
-  width: 100%;
-  padding-right: 60px;
+  min-width: 270px;
   @media (max-width: 768px) {
     flex-direction: column;
     padding-right: 0;
@@ -77,14 +68,17 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  margin-right: 15px;
 }
 
 .program-item-success {
-  background-color: green;
+  background-color: $successColor;
+  box-shadow: 0px 0px 10px $successColor;
 }
 
 .program-item-failure {
-  background-color: red;
+  background-color: $errorColor;
+  box-shadow: 0px 0px 10px $errorColor;
 }
 
 .program-item--loading {
@@ -104,8 +98,7 @@
 
 .programWrapperData {
   display: flex;
-  flex: 0 1 440px;
-  margin-left: auto;
+  flex: 0 2 300px;
   @media (max-width: 768px) {
     width: 100%;
     margin-left: unset;
@@ -135,12 +128,17 @@
 }
 
 .programsListBtns {
-  position: absolute;
-  right: 0;
   display: flex;
-  flex-direction: row;
   align-items: center;
-
+  flex: 0 1 260px;
+  justify-content: flex-end;
+  button {
+    padding: 0;
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
   @media (max-width: 768px) {
     & {
       top: 30px;

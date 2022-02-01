@@ -24,10 +24,21 @@ export const META_FIELDS = [
   'types',
 ];
 
+export const LOCAL_STORAGE = {
+  CHAIN: 'chain',
+  GENESIS: 'genesis',
+  NODES: 'nodes',
+  NODE_ADDRESS: 'node_address',
+  PUBLIC_KEY_RAW: 'public_key_raw',
+  PROGRAM_COMPILE_ID: 'program_compile_id',
+  SAVED_ACCOUNT: 'saved_account',
+  EVENT_FILTERS: 'eventFilters',
+};
+
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
   INVALID_PARAMS: 'Invalid method parameters',
-  INVALID_TRANSACTION: 'Invalid transaction',
+  INVALID_TRANSACTION: 'Transaction error. Status: isInvalid',
   PROGRAM_INIT_FAILED: 'Program initialization failed',
   GEAR_NODE_ERROR: 'Gear node error',
   BALANCE_LOW: 'Invalid transaction. Account balance too low',
@@ -90,6 +101,7 @@ export const SWITCH_PAGE_TYPES = {
   NOTIFICATIONS: 'NOTIFICATIONS',
   ALL_PROGRAMS: 'ALL_PROGRAMS',
   ALL_MESSAGES: 'ALL_MESSAGES',
+  EXPLORER: 'EXPLORER',
 };
 
 export const PAGE_TYPES = {
@@ -115,6 +127,8 @@ export const KEY_TYPES = {
   MNEMOINIC: 'mnemonic',
   RAW: 'raw',
 };
+
+export const DEVELOPMENT_CHAIN = 'Development';
 
 export enum ZIndexes {
   'alert' = 999,

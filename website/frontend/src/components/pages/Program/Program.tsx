@@ -5,11 +5,11 @@ import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gea
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessagesAction } from 'store/actions/actions';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
-import { formatDate } from 'helpers';
+import { formatDate, getPreformattedText } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
-import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 import './Program.scss';
 
 type Params = { id: string };
@@ -26,7 +26,7 @@ export const Program: VFC = () => {
     id: 'Loading ...',
     name: 'Loading ...',
     title: 'Loading ...',
-    uploadedAt: 'Loading ...',
+    timestamp: 'Loading ...',
     meta: 'Loading ...',
   });
   const [metadata, setMetadata] = useState<Metadata | null>(null);
@@ -45,14 +45,14 @@ export const Program: VFC = () => {
         const parsedMeta: Metadata = JSON.parse(program.meta.meta as string);
         const displayedTypes = parseHexTypes(parsedMeta.types!);
         const inputType = getTypeStructure(parsedMeta.handle_input!, displayedTypes);
-        meta = JSON.stringify(inputType, null, 4);
+        meta = getPreformattedText(inputType);
       }
 
       setData({
         id: program.id,
         name: program.name ? program.name : '...',
         title: program.title ? program.title : '...',
-        uploadedAt: program.uploadedAt ? formatDate(String(program.uploadedAt)) : '...',
+        timestamp: program.timestamp ? formatDate(String(program.timestamp)) : '...',
         meta,
       });
     }
@@ -65,7 +65,7 @@ export const Program: VFC = () => {
     dispatch(
       getMessagesAction({
         source: id,
-        destination: localStorage.getItem('public_key_raw'),
+        destination: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
         limit: INITIAL_LIMIT_BY_PAGE,
       })
     );
@@ -122,7 +122,7 @@ export const Program: VFC = () => {
               )}
               <div className="block__button-upload">
                 <span className="block__button-caption">Uploaded at:</span>
-                <span className="block__button-date">{data.uploadedAt}</span>
+                <span className="block__button-date">{data.timestamp}</span>
               </div>
             </div>
           </div>

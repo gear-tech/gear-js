@@ -2,7 +2,7 @@ export interface MessageModel {
   destination: string;
   source: string;
   id: string;
-  date: string;
+  timestamp: string;
   replyError: any;
   payload: string;
 }

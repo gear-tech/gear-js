@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import ky from 'ky';
-import { API_URL } from 'consts';
+import { API_URL, LOCAL_STORAGE } from 'consts';
 import { KyHeadersInit } from 'ky/distribution/types/options';
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
@@ -70,11 +70,11 @@ export default class ServerRPCRequestService {
   }
 
   private static getChain() {
-    return localStorage.getItem('chain') as string;
+    return localStorage.getItem(LOCAL_STORAGE.CHAIN) as string;
   }
 
   private static getGenesis() {
-    return localStorage.getItem('genesis') as string;
+    return localStorage.getItem(LOCAL_STORAGE.GENESIS) as string;
   }
 
   private getRequest(method: string, postParams: object): RPCRequest {

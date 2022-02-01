@@ -1,8 +1,8 @@
-import { UploadProgramModel, MessageModel, MetaModel } from 'types/program';
+import { UploadProgramModel, MessageModel, MetaModel, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { GearApi, Metadata } from '@gear-js/api';
 import { UserAccount } from 'types/account';
-import { RPC_METHODS } from 'consts';
+import { RPC_METHODS, PROGRAM_ERRORS } from 'consts';
 import { EventTypes } from 'types/alerts';
 import {
   programUploadStartAction,
@@ -13,7 +13,8 @@ import {
   programUploadFailedAction,
   AddAlert,
 } from 'store/actions/actions';
-import { readFileAsync, signPayload } from '../helpers';
+import { localPrograms } from './LocalDBService';
+import { readFileAsync, signPayload, isDevChain } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 // TODO: (dispatch) fix it later
@@ -74,47 +75,107 @@ export const UploadProgram = async (
   console.log(name);
 
   try {
-    // Submit program, receive program ID
     const programId = await api.program.submit(program, meta);
 
-    // Trying to sign transaction, receive
     await api.program.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
       dispatch(programUploadStartAction());
-      dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `UPLOAD STATUS: ${data.status}` }));
-      if (data.status === 'Finalized') {
-        dispatch(programUploadSuccessAction());
-        callback();
 
-        // Sign metadata and save it
-        signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
-          try {
-            const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-              meta: JSON.stringify(meta),
-              signature,
-              programId,
-              name,
-              title,
-              metaFile,
-            });
+      if (data.status.isInBlock) {
+        dispatch(
+          AddAlert({
+            type: EventTypes.SUCCESS,
+            message: `Upload program: In block`,
+          })
+        );
+      }
 
-            if (response.error) {
-              // FIXME 'throw' of exception caught locally
-              throw new Error(response.error.message);
+      if (data.status.isFinalized) {
+        data.events.forEach((event: any) => {
+          const { method } = event.event;
+
+          if (method === 'InitMessageEnqueued') {
+            dispatch(
+              AddAlert({
+                type: EventTypes.SUCCESS,
+                message: `Upload program: Finalized`,
+              })
+            );
+            dispatch(programUploadSuccessAction());
+            callback();
+
+            if (isDevChain()) {
+              localPrograms
+                .setItem(programId, {
+                  id: programId,
+                  name,
+                  title,
+                  initStatus: ProgramStatus.Success,
+                  meta: {
+                    meta: JSON.stringify(meta),
+                    metaFile,
+                    programId,
+                  },
+                  timestamp: Date(),
+                })
+                .then(() => {
+                  dispatch(
+                    AddAlert({ type: EventTypes.SUCCESS, message: `Program added to the localDB successfully` })
+                  );
+                })
+                .catch((error: any) => {
+                  dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+                });
             } else {
-              dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+              // Sign metadata and save it
+              signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
+                try {
+                  const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+                    meta: JSON.stringify(meta),
+                    signature,
+                    programId,
+                    name,
+                    title,
+                    metaFile,
+                  });
+
+                  if (response.error) {
+                    // FIXME 'throw' of exception caught locally
+                    throw new Error(response.error.message);
+                  } else {
+                    dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata saved successfully` }));
+                  }
+                } catch (error) {
+                  dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+                  console.error(error);
+                }
+              });
             }
-          } catch (error) {
-            dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-            console.error(error);
+          }
+
+          if (method === 'ExtrinsicFailed') {
+            dispatch(
+              AddAlert({
+                type: EventTypes.ERROR,
+                message: `Upload program: Extrinsic Failed`,
+              })
+            );
           }
         });
+      }
+
+      if (data.status.isInvalid) {
+        dispatch(programUploadFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
+        dispatch(
+          AddAlert({
+            type: EventTypes.ERROR,
+            message: PROGRAM_ERRORS.INVALID_TRANSACTION,
+          })
+        );
       }
     });
   } catch (error) {
     dispatch(programUploadFailedAction(`${error}`));
-    console.error(error);
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `UPLOAD STATUS: ${error}` }));
-    // alert.error(`status: ${error}`);
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Upload program: ${error}` }));
   }
 };
 
@@ -123,9 +184,9 @@ export const SendMessageToProgram = async (
   api: GearApi,
   account: UserAccount,
   message: MessageModel,
-  meta: Metadata,
   dispatch: any,
-  callback: () => void
+  callback: () => void,
+  meta?: Metadata
 ) => {
   const injector = await web3FromSource(account.meta.source);
 
@@ -133,17 +194,55 @@ export const SendMessageToProgram = async (
     await api.message.submit(message, meta);
     await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
       dispatch(sendMessageStartAction());
-      dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `SEND MESSAGE STATUS: ${data.status}` }));
-      if (data.status === 'Finalized') {
-        console.log('Finalized!');
-        dispatch(sendMessageSuccessAction());
-        callback();
+
+      if (data.status.isInBlock) {
+        dispatch(
+          AddAlert({
+            type: EventTypes.SUCCESS,
+            message: `Send message: In block`,
+          })
+        );
+      }
+
+      if (data.status.isFinalized) {
+        data.events.forEach((event: any) => {
+          const { method } = event.event;
+
+          if (method === 'DispatchMessageEnqueued') {
+            dispatch(
+              AddAlert({
+                type: EventTypes.SUCCESS,
+                message: `Send message: Finalized`,
+              })
+            );
+            dispatch(sendMessageSuccessAction());
+            callback();
+          }
+
+          if (method === 'ExtrinsicFailed') {
+            dispatch(
+              AddAlert({
+                type: EventTypes.ERROR,
+                message: `Extrinsic Failed`,
+              })
+            );
+          }
+        });
+      }
+
+      if (data.status.isInvalid) {
+        dispatch(sendMessageFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
+        dispatch(
+          AddAlert({
+            type: EventTypes.ERROR,
+            message: PROGRAM_ERRORS.INVALID_TRANSACTION,
+          })
+        );
       }
     });
   } catch (error) {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `SEND MESSAGE STATUS: ${error}` }));
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Send message: ${error}` }));
     dispatch(sendMessageFailedAction(`${error}`));
-    console.error(error);
   }
 };
 
@@ -161,25 +260,48 @@ export const addMetadata = async (
 
   // Sign metadata and save it
   signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
-    try {
-      const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
-        meta: JSON.stringify(meta),
-        signature,
-        programId,
-        name,
-        title: meta.title,
-        metaFile,
-      });
+    if (isDevChain()) {
+      localPrograms
+        .getItem(programId)
+        .then((res: any) => {
+          const newData = {
+            ...res,
+            meta: {
+              meta: JSON.stringify(meta),
+              metaFile,
+              programId,
+            },
+            title: meta.title,
+          };
 
-      if (response.error) {
-        // FIXME 'throw' of exception caught locally
-        throw new Error(response.error.message);
-      } else {
-        dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+          localPrograms.setItem(res.id, newData).then(() => {
+            dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+          });
+        })
+        .catch((error) => {
+          dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+        });
+    } else {
+      try {
+        const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+          meta: JSON.stringify(meta),
+          signature,
+          programId,
+          name,
+          title: meta.title,
+          metaFile,
+        });
+
+        if (response.error) {
+          // FIXME 'throw' of exception caught locally
+          throw new Error(response.error.message);
+        } else {
+          dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+        }
+      } catch (error) {
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+        console.error(error);
       }
-    } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-      console.error(error);
     }
   });
 };

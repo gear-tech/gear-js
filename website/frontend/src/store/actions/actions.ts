@@ -2,18 +2,17 @@ import { CreateType, GearKeyring } from '@gear-js/api';
 import { MessageActionTypes, MessagePaginationModel, MessageModel } from 'types/message';
 import { NotificationActionTypes, NotificationPaginationModel, RecentNotificationModel } from 'types/notification';
 import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
-
 import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
 import MessageRequestService from 'services/MessagesRequestServices';
-import ProgramRequestService from 'services/ProgramsRequestService';
+import { programService } from 'services/ProgramsRequestService';
 import NotificationsRequestService from 'services/NotificationsRequestService';
-
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { RPC_METHODS } from 'consts';
+import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
 import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
+import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes, AlertActionTypes } from 'types/alerts';
 
@@ -129,7 +128,6 @@ export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActio
 export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
 const messageService = new MessageRequestService();
-const programService = new ProgramRequestService();
 const notificationService = new NotificationsRequestService();
 
 export const getMessagesAction = (params: PaginationModel) => (dispatch: any) => {
@@ -153,9 +151,10 @@ export const getMessageAction = (id: string) => (dispatch: any) => {
 };
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
+  const getPrograms = isDevChain() ? getLocalPrograms : programService.fetchUserPrograms;
+
   dispatch(fetchUserProgramsAction());
-  programService
-    .fetchUserPrograms(params)
+  getPrograms(params)
     .then((data) => {
       dispatch(fetchUserProgramsSuccessAction(data.result));
     })
@@ -163,9 +162,10 @@ export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) =
 };
 
 export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any) => {
+  const getPrograms = isDevChain() ? getLocalPrograms : programService.fetchAllPrograms;
+
   dispatch(fetchUserProgramsAction());
-  programService
-    .fetchAllPrograms(params)
+  getPrograms(params)
     .then((data) => {
       dispatch(fetchAllProgramsSuccessAction(data.result));
     })
@@ -173,9 +173,10 @@ export const getAllProgramsAction = (params: PaginationModel) => (dispatch: any)
 };
 
 export const getProgramAction = (id: string) => (dispatch: any) => {
+  const getProgram = isDevChain() ? getLocalProgram : programService.fetchProgram;
+
   dispatch(fetchProgramAction());
-  programService
-    .fetchProgram(id)
+  getProgram(id)
     .then((data) => {
       dispatch(fetchProgramSuccessAction(data.result));
     })
@@ -187,7 +188,6 @@ export const handleProgramError = (error: string) => (dispatch: any, getState: a
   if (programs.isProgramUploading) {
     dispatch(programUploadFailedAction(error));
   } else if (programs.isMessageSending) {
-    console.log('hehsash');
     dispatch(sendMessageFailedAction(error));
   } else if (programs.isMetaUploading) {
     dispatch(uploadMetaFailedAction(error));
@@ -231,8 +231,8 @@ export const AddAlert = (payload: AlertModel) => ({
 });
 
 export const subscribeToEvents = () => (dispatch: any) => {
-  const filterKey = localStorage.getItem('public_key_raw');
-  nodeApi.subscribeProgramEvents(({ method, data: { info, reason } }) => {
+  const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
+  nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
       dispatch(
@@ -245,13 +245,22 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 
-  nodeApi.subscribeLogEvents(async ({ data: { source, dest, reply, payload } }) => {
-    const apiRequest = new ServerRPCRequestService();
-    const { result } = await apiRequest.getResource(RPC_METHODS.GET_METADATA, {
-      programId: source.toHex(),
-    });
-    const meta = JSON.parse(result.meta);
+  nodeApi.subscribeToLogEvents(async ({ data: { source, dest, reply, payload } }) => {
+    let meta = null;
     let decodedPayload: any;
+    const programId = source.toHex();
+    const apiRequest = new ServerRPCRequestService();
+
+    const { result } = isDevChain()
+      ? await getLocalProgramMeta(programId)
+      : await apiRequest.getResource(RPC_METHODS.GET_METADATA, { programId });
+
+    if (result && result.meta) {
+      meta = JSON.parse(result.meta);
+    } else {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Metadata is not added' }));
+    }
+
     try {
       decodedPayload =
         meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
@@ -277,7 +286,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 
-  nodeApi.subscribeTransferEvents(({ data: { from, to, value } }) => {
+  nodeApi.subscribeToTransferEvents(({ data: { from, to, value } }) => {
     if (to.toHex() === filterKey) {
       dispatch(
         AddAlert({

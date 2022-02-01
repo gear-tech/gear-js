@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import get from 'lodash.get';
 
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
-import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD } from 'consts';
+import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, LOCAL_STORAGE } from 'consts';
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
 
@@ -96,7 +96,7 @@ export const EditorPage = () => {
     })
       .then((data) => data.json())
       .then((json) => {
-        localStorage.setItem('programCompileId', json.id);
+        localStorage.setItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID, json.id);
         globalDispatch(setIsBuildDone(true));
         globalDispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Compiling, please wait!` }));
       });
