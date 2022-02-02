@@ -1,6 +1,7 @@
 import React from 'react';
 import { LogData } from '@gear-js/api';
 import { Event } from '@polkadot/types/interfaces';
+import { Methods } from 'types/events-list';
 import { Content } from './children/Content/Content';
 import { LogContent } from './children/LogContent/LogContent';
 import styles from './Body.module.scss';
@@ -11,7 +12,7 @@ type Props = {
 };
 
 const Body = ({ method, list }: Props) => {
-  const isLog = method === 'Log';
+  const isLog = method === Methods.LOG;
 
   const getContent = () =>
     list.map((event) => {
