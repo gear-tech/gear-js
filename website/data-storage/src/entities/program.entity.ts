@@ -6,25 +6,25 @@ import { Meta } from './meta.entity';
 @Entity()
 export class Program extends BaseEntity implements IProgram {
   @PrimaryColumn()
-  id: string;
+  id!: string;
 
   @Index()
   @Column()
-  owner: string;
+  owner!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column({ nullable: true })
-  uploadedAt: Date;
+  uploadedAt?: Date;
 
   @OneToOne(() => Meta, { nullable: true })
   @JoinColumn()
-  meta: Meta;
+  meta?: Meta;
 
   @Column({ nullable: true })
-  title: string;
+  title?: string;
 
   @Column({ type: 'enum', enum: InitStatus, default: InitStatus.PROGRESS })
-  initStatus: InitStatus;
+  initStatus!: InitStatus;
 }
