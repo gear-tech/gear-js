@@ -98,6 +98,7 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
             payload: isManualInput ? values.payload : values.fields!,
           };
           if (meta && api) {
+            console.log(message);
             SendMessageToProgram(api, currentAccount, message, meta, () => {
               resetForm();
             });

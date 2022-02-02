@@ -273,7 +273,6 @@ function parseField(data: MetaParam) {
     const field = Object.entries(option.fields).reverse()[0];
     result.fields = { [`${field[0]}`]: field[1] };
   }
-  console.log(result);
 
   return result;
 }
