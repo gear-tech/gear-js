@@ -1,5 +1,6 @@
 import {
   DispatchMessageEnqueuedData,
+  GearApi,
   InitFailureData,
   InitMessageEnqueuedData,
   InitSuccessData,
@@ -21,12 +22,13 @@ import { logger } from './logger';
 
 const log = logger('EventListener');
 
-export const listen = async (api: any, genesis: string, callback: (arg: { key: string; value: any }) => void) => {
+export const listen = async (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) => {
   api.allEvents((events: any) => {
+    const blockHash = events.createdAtHash.toHex();
     const base = {
       genesis,
-      blockHash: events.createdAtHash.toHex(),
-      timestamp: Date.now(),
+      blockHash,
+      timestamp: 0,
     };
 
     events.forEach(async ({ event: { data, method } }: any) => {
@@ -37,6 +39,8 @@ export const listen = async (api: any, genesis: string, callback: (arg: { key: s
         | InitSuccessData
         | InitFailureData
         | MessageDispatchedData;
+
+      base.timestamp = (await api.blocks.getBlockTimestamp(blockHash)).toNumber();
 
       try {
         switch (method) {
