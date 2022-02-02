@@ -1774,7 +1774,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/api-gateway@workspace:website/api-gateway"
   dependencies:
-    "@gear-js/interfaces": 1.0.0
+    "@gear-js/interfaces": "workspace:^"
     "@nestjs/cli": ^8.1.6
     "@nestjs/common": ^8.1.2
     "@nestjs/config": ^1.0.3
@@ -1808,13 +1808,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:^0.11.0":
-  version: 0.11.0
-  resolution: "@gear-js/api@npm:0.11.0"
+"@gear-js/api@npm:^0.11.3":
+  version: 0.11.3
+  resolution: "@gear-js/api@npm:0.11.3"
   peerDependencies:
     "@polkadot/api": ^7.4.1
     rxjs: ^7.3.0
-  checksum: d7c23f566c09435dba9b947e683568ff54dbc192ba8a55e1c3504f01bfff3d2e2e4a5cadb8ed7d81e893076b056e9616d5cc025e6bcc2e660ff10dee3f2204c8
+  checksum: b4a43814049f9beac0c1b3aa97a814d572b3db71c9cbb452550addda3d544a74245cb1070de6bd03af5f9e16f3a3473952475a7bb8be55e5a4113c159f73526a
   languageName: node
   linkType: hard
 
@@ -1828,16 +1828,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.9.7":
-  version: 0.9.7
-  resolution: "@gear-js/api@npm:0.9.7"
-  peerDependencies:
-    "@polkadot/api": ^7.0.2
-    rxjs: ^7.3.0
-  checksum: 8bfd750bd3f084e7c03bdfb89df9974b909ec18e070cd2c7ef3e8e5c620cf61b744672e4681f952d8bb959e1871e370898b51ac2a185ca15e017d530d52d179f
-  languageName: node
-  linkType: hard
-
 "@gear-js/data-storage@workspace:website/data-storage":
   version: 0.0.0-use.local
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
@@ -1847,8 +1837,8 @@ __metadata:
     "@babel/plugin-transform-modules-commonjs": ^7.16.8
     "@babel/plugin-transform-typescript": ^7.16.8
     "@babel/preset-typescript": ^7.16.7
-    "@gear-js/api": ^0.9.7
-    "@gear-js/interfaces": 1.0.0
+    "@gear-js/api": ^0.11.3
+    "@gear-js/interfaces": "workspace:^"
     "@nestjs/cli": ^8.1.6
     "@nestjs/common": ^8.1.2
     "@nestjs/config": ^1.0.3
@@ -1893,8 +1883,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/event-listener@workspace:website/events-listener"
   dependencies:
-    "@gear-js/api": ^0.11.0
-    "@gear-js/interfaces": 1.0.0
+    "@gear-js/api": ^0.11.3
+    "@gear-js/interfaces": "workspace:^"
     "@polkadot/api": ^7.0.2
     "@swc/core": ^1.2.124
     "@swc/helpers": ^0.3.2
@@ -1991,7 +1981,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/interfaces@1.0.0, @gear-js/interfaces@workspace:website/interfaces":
+"@gear-js/interfaces@workspace:^, @gear-js/interfaces@workspace:website/interfaces":
   version: 0.0.0-use.local
   resolution: "@gear-js/interfaces@workspace:website/interfaces"
   languageName: unknown
@@ -2001,7 +1991,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:website/test-balance"
   dependencies:
-    "@gear-js/api": ^0.11.0
+    "@gear-js/api": ^0.11.3
     "@polkadot/api": ^7.0.2
     chalk: ^4.1.2
     dotenv: ^10.0.0
@@ -9830,6 +9820,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-js@workspace:."
   dependencies:
+    "@gear-js/api": ^0.11.3
     husky: ^7.0.2
     lint-staged: ^11.1.2
     prettier: ^2.4.1

@@ -120,9 +120,8 @@ const handleEvent = (
       } as AddEventKafkaPayload<Keys.messageDispatched, MessageDispatched>);
       break;
     default:
-      throw new TypeError(`unexpected event type to handle: ${method}`);
+      console.warn(`unexpected event type to handle: ${method}`);
   }
-  return eventData;
 };
 
 export const listen = async (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) => {
