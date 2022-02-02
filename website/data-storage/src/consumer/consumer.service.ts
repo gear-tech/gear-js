@@ -51,9 +51,9 @@ export class ConsumerService {
         id: value.messageId,
         destination: value.programId,
         source: value.origin,
-        payload: null,
-        replyTo: null,
-        replyError: null,
+        payload: void null,
+        replyTo: void null,
+        replyError: void null,
         genesis: value.genesis,
         blockHash: value.blockHash,
         timestamp: value.timestamp,
@@ -67,9 +67,9 @@ export class ConsumerService {
         source: value.origin,
         blockHash: value.blockHash,
         timestamp: value.timestamp,
-        payload: null,
-        replyTo: null,
-        replyError: null,
+        payload: void null,
+        replyTo: void null,
+        replyError: void null,
       });
     },
     InitSuccess: (value: InitSuccess) => {
@@ -87,75 +87,47 @@ export class ConsumerService {
   };
 
   async programData(params: FindProgramParams): Result<IProgram> {
-    try {
-      return (await this.programService.findProgram(params)) || { error: new ProgramNotFound().message };
-    } catch (error) {
-      return { error: error.message };
+    const found = await this.programService.findProgram(params).catch(({ message }) => ({ error: message }));
+    if (!found) {
+      return { error: new ProgramNotFound().message };
     }
+    return found;
   }
 
   async allPrograms(params: GetAllProgramsParams): Result<GetAllProgramsResult> {
-    try {
-      if (params.owner) {
-        return await this.programService.getAllUserPrograms(params as GetAllUserProgramsParams);
-      }
-      return await this.programService.getAllPrograms(params);
-    } catch (error) {
-      return { error: error.message };
+    if (params.owner) {
+      return await this.programService.getAllUserPrograms(params).catch(({ message }) => ({ error: message }));
     }
+    return await this.programService.getAllPrograms(params).catch(({ message }) => ({ error: message }));
   }
 
   async allUserPrograms(params: GetAllUserProgramsParams): Result<GetAllProgramsResult> {
-    try {
-      return await this.programService.getAllUserPrograms(params);
-    } catch (error) {
-      return { error: error.message };
-    }
+    return await this.programService.getAllUserPrograms(params).catch(({ message }) => ({ error: message }));
   }
 
   async addMeta(params: AddMetaParams): Result<AddMetaResult> {
-    try {
-      return await this.metaService.addMeta(params);
-    } catch (error) {
-      return { error: error.message };
-    }
+    return await this.metaService.addMeta(params).catch(({ message }) => ({ error: message }));
   }
 
   async getMeta(params: GetMetaParams): Result<GetMetaResult> {
-    try {
-      return await this.metaService.getMeta(params);
-    } catch (error) {
-      return { error: error.message };
-    }
+    return await this.metaService.getMeta(params).catch(({ message }) => ({ error: message }));
   }
 
   async addPayload(params: AddPayloadParams): Result<IMessage> {
-    try {
-      return await this.messageService.addPayload(params);
-    } catch (error) {
-      return { error: error.message };
-    }
+    return await this.messageService.addPayload(params).catch(({ message }) => ({ error: message }));
   }
 
   async allMessages(params: GetMessagesParams): Result<AllMessagesResult> {
-    try {
-      if (params.destination && params.source) {
-        return await this.messageService.getAllMessages(params);
-      }
-      if (params.destination) {
-        return await this.messageService.getIncoming(params);
-      }
-      return await this.messageService.getOutgoing(params);
-    } catch (error) {
-      return { error: error.message };
+    if (params.destination && params.source) {
+      return await this.messageService.getAllMessages(params).catch(({ message }) => ({ error: message }));
     }
+    if (params.destination) {
+      return await this.messageService.getIncoming(params).catch(({ message }) => ({ error: message }));
+    }
+    return await this.messageService.getOutgoing(params).catch(({ message }) => ({ error: message }));
   }
 
   async message(params: FindMessageParams): Result<IMessage> {
-    try {
-      return await this.messageService.getMessage(params);
-    } catch (error) {
-      return { error: error.message };
-    }
+    return await this.messageService.getMessage(params).catch(({ message }) => ({ error: message }));
   }
 }
