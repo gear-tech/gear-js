@@ -15,8 +15,8 @@ describe('Programs Service', () => {
 
   const Program_create = jest.fn(() => ({ id: '0x7357' }));
   const Program_save = jest.fn(async () => ({ id: '0x7357' }));
-  const Program_findAndCount = jest.fn(async () => [[{ id: '0x7357' }], 1]);
-  const Program_findOne = jest.fn(async () => ({ id: '0x7357' }));
+  const Program_findAndCount = jest.fn(async (): Promise<[Program[], number]> => [[{ id: '0x7357' } as Program], 1]);
+  const Program_findOne = jest.fn(async (): Promise<Program | null> => ({ id: '0x7357' } as Program));
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -81,8 +81,8 @@ describe('Programs Service', () => {
 
   it('should extend an existing program with its name and title', async () => {
     // Given:
-    Program_findAndCount.mockReturnValue(Promise.resolve([[{ id: '0x7357' }], 1]));
-    Program_findOne.mockReturnValue(Promise.resolve({ id: '0x7357' }));
+    Program_findAndCount.mockReturnValue(Promise.resolve([[{ id: '0x7357' } as Program], 1]));
+    Program_findOne.mockReturnValue(Promise.resolve({ id: '0x7357' } as Program));
 
     const id = '0x7357';
     const genesis = '0x07357';
@@ -105,7 +105,7 @@ describe('Programs Service', () => {
     // Given an initialized Programs Service,
     // when:
     await programsService.save({
-      id: 7357,
+      id: '0x7357',
       genesis: '0x07357',
       owner: '0x7357',
       timestamp: 0,
@@ -119,8 +119,8 @@ describe('Programs Service', () => {
 
   it('should throw on an attempt to update an inexistent program', () => {
     // Given:
-    Program_findAndCount.mockReturnValueOnce(null);
-    Program_findOne.mockReturnValueOnce(null);
+    Program_findAndCount.mockReturnValueOnce(Promise.resolve([[], 0]));
+    Program_findOne.mockReturnValueOnce(Promise.resolve(null));
 
     // when:
     expect(programsService.addProgramInfo('0x7357', '0x07357', 'guestbook', 'guestbook'))
