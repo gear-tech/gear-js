@@ -50,6 +50,14 @@ describe('Blocks', () => {
     expect(await api.blocks.getFinalizedHead()).toBeDefined();
   });
 
+  test('get block by block number', async () => {
+    expect(await api.blocks.get(1)).toBeDefined();
+  });
+
+  test('get block timestamp', async () => {
+    expect(await api.blocks.getBlockTimestamp(1)).toBeDefined();
+  });
+
   test('get block number by hash', async () => {
     const hash = await api.blocks.getBlockHash(1);
     const blockNumber = await api.blocks.getBlockNumber(hash.toHex());
