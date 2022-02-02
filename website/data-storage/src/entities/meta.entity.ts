@@ -4,17 +4,17 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Meta implements IMeta {
   @PrimaryGeneratedColumn('rowid')
-  id: string;
+  id!: string;
 
   @Column()
-  program: string;
+  program!: string;
 
   @Column()
-  owner: string;
+  owner!: string;
 
   @Column({ nullable: true })
-  meta: string;
+  meta?: string;
 
   @Column({ nullable: true })
-  metaFile: string;
+  metaFile?: string;
 }
