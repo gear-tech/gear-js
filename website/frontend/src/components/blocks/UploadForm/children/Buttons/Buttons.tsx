@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import styles from './Button.module.scss';
+import styles from './Buttons.module.scss';
 
 type Props = {
   handleResetForm: () => void;
