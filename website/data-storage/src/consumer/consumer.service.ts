@@ -96,7 +96,9 @@ export class ConsumerService {
 
   async allPrograms(params: GetAllProgramsParams): Result<GetAllProgramsResult> {
     if (params.owner) {
-      return await this.programService.getAllUserPrograms(params).catch(({ message }) => ({ error: message }));
+      return await this.programService
+        .getAllUserPrograms(params as GetAllUserProgramsParams)
+        .catch(({ message }) => ({ error: message }));
     }
     return await this.programService.getAllPrograms(params).catch(({ message }) => ({ error: message }));
   }

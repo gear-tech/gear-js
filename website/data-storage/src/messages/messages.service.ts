@@ -36,13 +36,13 @@ export class MessagesService {
         payload,
         replyTo,
         replyError,
-        timestamp: new Date(timestamp),
+        timestamp: new Date(timestamp ?? 0),
         blockHash,
       });
       return await this.messageRepo.save(message);
     } catch (error) {
       errorLog.error(error, 42);
-      return;
+      throw error;
     }
   }
 
@@ -50,6 +50,9 @@ export class MessagesService {
     const { id, genesis, signature, payload } = params;
     const message = await this.messageRepo.findOne({ id, genesis });
     if (!message) {
+      throw new MessageNotFound();
+    }
+    if (!payload) {
       throw new MessageNotFound();
     }
     if (!GearKeyring.checkSign(message.source, signature, payload)) {
@@ -91,7 +94,7 @@ export class MessagesService {
 
   async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
     const { genesis, source, destination, term } = params;
-    const strictParams = { genesis };
+    const strictParams: Record<string, unknown> = { genesis };
     if (source) {
       strictParams['source'] = source;
     }
@@ -117,12 +120,15 @@ export class MessagesService {
       id: params.id,
     };
     const result = await this.messageRepo.findOne({ where });
+    if (!result) {
+      throw new MessageNotFound();
+    }
     return result;
   }
 
-  setDispatchedStatus(params: MessageDispatched): Promise<void> {
+  setDispatchedStatus(params: MessageDispatched): void {
     const error = params.outcome !== 'success' ? params.outcome : null;
-    if (error === null) {
+    if (error == null) {
       return;
     }
     setTimeout(async () => {
@@ -133,7 +139,7 @@ export class MessagesService {
       if (message) {
         message.error = error;
       }
-      this.messageRepo.save(message);
+      this.messageRepo.save(message ?? {});
       const logMessages = await this.messageRepo.find({
         genesis: params.genesis,
         replyTo: params.messageId,

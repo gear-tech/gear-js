@@ -57,7 +57,7 @@ export class MetadataService {
       throw new ProgramNotFound();
     }
     const meta = await this.metaRepo.findOne({ program: params.programId });
-    if (meta) {
+    if (meta?.meta && meta?.metaFile) {
       return { program: meta.program, meta: meta.meta, metaFile: meta.metaFile };
     } else {
       throw new MetadataNotFound();

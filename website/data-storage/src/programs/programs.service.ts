@@ -30,7 +30,7 @@ export class ProgramsService {
       name: id,
       genesis,
       blockHash,
-      timestamp: new Date(timestamp),
+      timestamp: new Date(timestamp ?? 0),
     });
     try {
       return await this.programRepo.save(program);
