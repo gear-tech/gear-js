@@ -139,11 +139,9 @@ export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DE
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
 
 export const checkFileFormat = (file: File) => {
-  if (file) {
-    const fileExt = file.name.split('.').pop()?.toLowerCase();
-    return fileExt === 'wasm';
-  }
-  return false;
+  const fileExt = file.name.split('.').pop()?.toLowerCase();
+
+  return fileExt === 'wasm';
 };
 
 export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);
