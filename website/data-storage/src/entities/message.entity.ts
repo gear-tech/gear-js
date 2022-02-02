@@ -5,28 +5,28 @@ import { BaseEntity } from './base.entity';
 @Entity()
 export class Message extends BaseEntity implements IMessage {
   @PrimaryColumn()
-  id: string;
+  id!: string;
 
   @Index()
   @Column()
-  destination: string;
+  destination!: string;
 
   @Index()
   @Column()
-  source: string;
+  source!: string;
 
   @Column({ nullable: true })
-  payload: string;
+  payload?: string;
 
   @Column({ nullable: true })
-  error: string;
+  error?: string;
 
   @Column({ nullable: true })
-  replyTo: string;
+  replyTo?: string;
 
   @Column({ nullable: true })
-  replyError: string;
+  replyError?: string;
 
   @Column({ nullable: true })
-  date: Date;
+  date?: Date;
 }
