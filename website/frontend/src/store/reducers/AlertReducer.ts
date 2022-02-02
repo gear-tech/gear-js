@@ -9,9 +9,6 @@ const AlertReducer = (state = initialState, action: AlertAction) => {
     case AlertActionTypes.ADD_ALERT:
       return { ...state, alert: action.payload };
 
-    case AlertActionTypes.ADD_ALERT:
-      return { ...state, alert: null };
-
     default:
       return state;
   }
