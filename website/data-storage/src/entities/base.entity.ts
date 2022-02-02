@@ -1,14 +1,14 @@
 import { IBaseDBRecord } from '@gear-js/interfaces';
-import { Column, Entity, JoinColumn, Index, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Index } from 'typeorm';
 
 export abstract class BaseEntity implements IBaseDBRecord<Date> {
   @Index()
   @Column()
-  genesis: string;
+  genesis!: string;
 
   @Column({ nullable: true })
-  blockHash: string;
+  blockHash?: string;
 
   @Column({ nullable: true })
-  timestamp: Date;
+  timestamp?: Date;
 }
