@@ -16,6 +16,7 @@ import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { PaginationModel, SearchQueryModel } from 'types/common';
 import { NotificationModel } from 'types/notification';
 
+import { Main } from 'common/components/Main/Main';
 import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 import { Pagination } from 'components/Pagination/Pagination';
 import { NotificationInfo } from 'components/NotificationInfo/NotificationInfo';
@@ -102,63 +103,27 @@ export const NotificationsPage: VFC = () => {
   }
 
   return (
-    <div className="notifications">
-      <SearchForm
-        handleSearch={handleAddQuery}
-        handleRemoveQuery={handleRemoveQuery}
-        handleDropdownItemSelect={handleSearchType}
-        searchType={searchType}
-        placeholder="Find program by ID"
-      />
-      {(searchQuery && <SearchQueries searchQuery={searchQuery} handleRemoveQuery={handleRemoveQuery} />) || null}
-      <div className="pagination-wrapper">
-        <div>
-          <span>Total results: {count || 0}</span>
-          {(countUnread && countUnread > 0 && (
-            <button type="button" onClick={() => handleReadAllNotifications()} className="pagination-wrapper__btn">
-              <UnReadNotificationsIcon color="#ffffff" />
-              Mark all us viewed
-            </button>
-          )) ||
-            null}
-        </div>
-        <Pagination
-          page={currentPage}
-          count={count || 1}
-          onPageChange={onPageChange}
-          setShouldReload={setShouldReload}
+    <Main>
+      <div className="notifications">
+        <SearchForm
+          handleSearch={handleAddQuery}
+          handleRemoveQuery={handleRemoveQuery}
+          handleDropdownItemSelect={handleSearchType}
+          searchType={searchType}
+          placeholder="Find program by ID"
         />
-      </div>
-      <div className="notifications--list">
-        {(notifications &&
-          notifications.length &&
-          notifications.map((item) => (
-            <button
-              className={clsx('notification', !item.isRead && 'unread', item.type.toLowerCase() !== 'log' && 'default')}
-              onClick={() => handleNotificationInfo(item)}
-              type="button"
-            >
-              <span className="notification__type">
-                {item.isRead || <div className={clsx('dot unread', item.type === 'InitFailure' && 'warning')} />}
-                {item.type}
-              </span>
-              <span className="notification__program">{item.id}</span>
-              <span className="notification__date">{formatDate(item.date)}</span>
-              <button
-                className="notification__read"
-                type="button"
-                onClick={() => handleReadNotification(item.isRead, item.id)}
-              >
-                {(item.isRead && <ReadNotificationsIcon color="#858585" />) || (
-                  <UnReadNotificationsIcon color="#858585" />
-                )}
+        {(searchQuery && <SearchQueries searchQuery={searchQuery} handleRemoveQuery={handleRemoveQuery} />) || null}
+        <div className="pagination-wrapper">
+          <div>
+            <span>Total results: {count || 0}</span>
+            {(countUnread && countUnread > 0 && (
+              <button type="button" onClick={() => handleReadAllNotifications()} className="pagination-wrapper__btn">
+                <UnReadNotificationsIcon color="#ffffff" />
+                Mark all us viewed
               </button>
-            </button>
-          ))) ||
-          null}
-      </div>
-      {(notifications && notifications.length && (
-        <div className="pagination-bottom">
+            )) ||
+              null}
+          </div>
           <Pagination
             page={currentPage}
             count={count || 1}
@@ -166,8 +131,50 @@ export const NotificationsPage: VFC = () => {
             setShouldReload={setShouldReload}
           />
         </div>
-      )) ||
-        null}
-    </div>
+        <div className="notifications--list">
+          {(notifications &&
+            notifications.length &&
+            notifications.map((item) => (
+              <button
+                className={clsx(
+                  'notification',
+                  !item.isRead && 'unread',
+                  item.type.toLowerCase() !== 'log' && 'default'
+                )}
+                onClick={() => handleNotificationInfo(item)}
+                type="button"
+              >
+                <span className="notification__type">
+                  {item.isRead || <div className={clsx('dot unread', item.type === 'InitFailure' && 'warning')} />}
+                  {item.type}
+                </span>
+                <span className="notification__program">{item.id}</span>
+                <span className="notification__date">{formatDate(item.date)}</span>
+                <button
+                  className="notification__read"
+                  type="button"
+                  onClick={() => handleReadNotification(item.isRead, item.id)}
+                >
+                  {(item.isRead && <ReadNotificationsIcon color="#858585" />) || (
+                    <UnReadNotificationsIcon color="#858585" />
+                  )}
+                </button>
+              </button>
+            ))) ||
+            null}
+        </div>
+        {(notifications && notifications.length && (
+          <div className="pagination-bottom">
+            <Pagination
+              page={currentPage}
+              count={count || 1}
+              onPageChange={onPageChange}
+              setShouldReload={setShouldReload}
+            />
+          </div>
+        )) ||
+          null}
+      </div>
+    </Main>
   );
 };

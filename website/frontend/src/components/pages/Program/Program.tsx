@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessagesAction } from 'store/actions/actions';
+import { Main } from 'common/components/Main/Main';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { formatDate, getPreformattedText } from 'helpers';
 import MessageIcon from 'assets/images/message.svg';
@@ -85,53 +86,55 @@ export const Program: VFC = () => {
   };
 
   return (
-    <div className="wrapper">
-      <button type="button" aria-label="arrowBack" className="go-back-button" onClick={handleGoBack}>
-        <img src={ArrowBack} alt="back" />
-        <img src={ProgramIllustration} alt="program" className="go-back-button__icon" />
-        <span className="go-back-button__text">{data.name}</span>
-      </button>
-      <div className="block">
-        <div className="block__wrapper">
-          <div className="block__item">
-            <p className="block__caption">Id:</p>
-            <p className="block__field">{data.id}</p>
-          </div>
-          <div className="block__item">
-            <p className="block__caption">Name:</p>
-            <p className="block__field">{data.name}</p>
-          </div>
-          <div className="block__item">
-            <p className="block__caption">Title:</p>
-            <p className="block__textarea block__textarea_h100">{data.title}</p>
-          </div>
-          <div className="block__item">
-            <p className="block__caption">Metadata:</p>
-            <pre className="block__textarea block__textarea_h420">{data.meta}</pre>
-          </div>
-          <div className="block__item">
-            <div className="block__button">
-              <Link to={`/send-message/${id}`} className="block__button-elem block__button-elem--link">
-                <img src={MessageIcon} alt="message" className="block__button-icon" />
-                <span className="block__button-text">Send Message</span>
-              </Link>
-              {isState && (
-                <Link to={`/state/${id}`} className="block__button-elem block__button-elem--link">
-                  <span className="block__button-text">Read State</span>
+    <Main>
+      <div className="wrapper">
+        <button type="button" aria-label="arrowBack" className="go-back-button" onClick={handleGoBack}>
+          <img src={ArrowBack} alt="back" />
+          <img src={ProgramIllustration} alt="program" className="go-back-button__icon" />
+          <span className="go-back-button__text">{data.name}</span>
+        </button>
+        <div className="block">
+          <div className="block__wrapper">
+            <div className="block__item">
+              <p className="block__caption">Id:</p>
+              <p className="block__field">{data.id}</p>
+            </div>
+            <div className="block__item">
+              <p className="block__caption">Name:</p>
+              <p className="block__field">{data.name}</p>
+            </div>
+            <div className="block__item">
+              <p className="block__caption">Title:</p>
+              <p className="block__textarea block__textarea_h100">{data.title}</p>
+            </div>
+            <div className="block__item">
+              <p className="block__caption">Metadata:</p>
+              <pre className="block__textarea block__textarea_h420">{data.meta}</pre>
+            </div>
+            <div className="block__item">
+              <div className="block__button">
+                <Link to={`/send-message/${id}`} className="block__button-elem block__button-elem--link">
+                  <img src={MessageIcon} alt="message" className="block__button-icon" />
+                  <span className="block__button-text">Send Message</span>
                 </Link>
-              )}
-              <div className="block__button-upload">
-                <span className="block__button-caption">Uploaded at:</span>
-                <span className="block__button-date">{data.timestamp}</span>
+                {isState && (
+                  <Link to={`/state/${id}`} className="block__button-elem block__button-elem--link">
+                    <span className="block__button-text">Read State</span>
+                  </Link>
+                )}
+                <div className="block__button-upload">
+                  <span className="block__button-caption">Uploaded at:</span>
+                  <span className="block__button-date">{data.timestamp}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <div className="messages-block">
+          <p className="messages-block__caption">MESSAGES</p>
+          <MessagesList messages={messages} />
+        </div>
       </div>
-      <div className="messages-block">
-        <p className="messages-block__caption">MESSAGES</p>
-        <MessagesList messages={messages} />
-      </div>
-    </div>
+    </Main>
   );
 };

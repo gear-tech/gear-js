@@ -11,7 +11,6 @@ import { Program } from 'components/pages/Program/Program';
 import { Message } from 'components/pages/Message/Message';
 import Explorer from 'components/pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
-import { Main } from 'components/layouts/Main/Main';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
 import { SendMessage } from 'components/pages/SendMessage/SendMessage';
@@ -158,44 +157,42 @@ const AppComponent: FC = () => {
           </>
         )}
         <Header />
-        <Main>
-          {isApiReady ? (
-            <Switch>
-              <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
-                <Programs />
-              </Route>
-              <Route exact path={routes.program}>
-                <Program />
-              </Route>
-              <Route exact path={routes.explorer}>
-                <Explorer groupedEvents={groupedEvents} />
-              </Route>
-              <Route exact path={routes.message}>
-                <Message />
-              </Route>
-              <Route exact path={routes.state}>
-                <State />
-              </Route>
-              <Route exact path={routes.sendMessage}>
-                <SendMessage />
-              </Route>
-              <Route exact path={routes.editor}>
-                <EditorPage />
-              </Route>
-              <Route exact path={routes.notifications}>
-                <NotificationsPage />
-              </Route>
-              <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
-                <Document />
-              </Route>
-              <Route exact path="*">
-                <PageNotFound />
-              </Route>
-            </Switch>
-          ) : (
-            <SimpleLoader />
-          )}
-        </Main>
+        {isApiReady ? (
+          <Switch>
+            <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
+              <Programs />
+            </Route>
+            <Route exact path={routes.program}>
+              <Program />
+            </Route>
+            <Route exact path={routes.explorer}>
+              <Explorer groupedEvents={groupedEvents} />
+            </Route>
+            <Route exact path={routes.message}>
+              <Message />
+            </Route>
+            <Route exact path={routes.state}>
+              <State />
+            </Route>
+            <Route exact path={routes.sendMessage}>
+              <SendMessage />
+            </Route>
+            <Route exact path={routes.editor}>
+              <EditorPage />
+            </Route>
+            <Route exact path={routes.notifications}>
+              <NotificationsPage />
+            </Route>
+            <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
+              <Document />
+            </Route>
+            <Route exact path="*">
+              <PageNotFound />
+            </Route>
+          </Switch>
+        ) : (
+          <SimpleLoader />
+        )}
         {isFooterHidden() || <Footer />}
         <Alert />
       </div>

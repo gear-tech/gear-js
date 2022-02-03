@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { EventsList } from './EventsList/EventsList';
+import { Main } from 'common/components/Main/Main';
 import { ProgramSwitch } from 'components/blocks/ProgramSwitch/ProgramSwitch';
 import { SWITCH_PAGE_TYPES } from 'consts';
 import { GroupedEventsProps } from 'types/events-list';
@@ -15,15 +16,17 @@ const Explorer = ({ groupedEvents }: GroupedEventsProps) => {
   };
 
   return (
-    <div className={styles.explorer}>
-      <header className={styles.header}>
-        <button type="button" aria-label="go back" className="img-wrapper" onClick={handleBackButtonClick}>
-          <img src={Arrow} alt="back arrow" />
-        </button>
-        <ProgramSwitch pageType={SWITCH_PAGE_TYPES.EXPLORER} />
-      </header>
-      <EventsList groupedEvents={groupedEvents} />
-    </div>
+    <Main>
+      <div className={styles.explorer}>
+        <header className={styles.header}>
+          <button type="button" aria-label="go back" className="img-wrapper" onClick={handleBackButtonClick}>
+            <img src={Arrow} alt="back arrow" />
+          </button>
+          <ProgramSwitch pageType={SWITCH_PAGE_TYPES.EXPLORER} />
+        </header>
+        <EventsList groupedEvents={groupedEvents} />
+      </div>
+    </Main>
   );
 };
 
