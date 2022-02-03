@@ -1,14 +1,13 @@
+@use 'assets/scss/variables' as *;
+
+.explorer {
+  padding: 40px;
+  color: $textColor;
+}
+
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.explorer {
-  padding: 40px;
-}
-
-.header {
-  display: flex;
   margin-bottom: 40px;
 }

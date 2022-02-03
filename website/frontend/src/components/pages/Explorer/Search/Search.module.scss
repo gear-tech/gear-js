@@ -1,0 +1,53 @@
+@use 'assets/scss/variables' as *;
+
+.search {
+  flex: 1;
+  display: flex;
+  max-width: 655px;
+  margin-right: auto;
+  margin-left: 32px;
+  font-size: 16px;
+}
+
+.wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin-right: 40px;
+  background-color: $mainBackground;
+  border-radius: 4px;
+
+  &::before {
+    content: url('/assets/images/search.svg');
+    padding-left: 20px;
+    font-size: 0;
+  }
+}
+
+.input {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: inherit;
+  font-weight: 400;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  font-size: inherit;
+  font-weight: 700;
+  color: inherit;
+  background-color: $bkgButtonColor;
+  border-radius: 2px;
+
+  &::before {
+    content: url('/assets/images/search.svg');
+    margin-right: 12px;
+    font-size: 0;
+  }
+}
