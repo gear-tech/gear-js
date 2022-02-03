@@ -52,10 +52,7 @@ export class MessagesService {
     if (!message) {
       throw new MessageNotFound();
     }
-    if (!payload) {
-      throw new MessageNotFound();
-    }
-    if (!GearKeyring.checkSign(message.source, signature, payload)) {
+    if (!GearKeyring.checkSign(message.source, signature, payload as any)) {
       throw new SignNotVerified();
     }
     message.payload = payload;
