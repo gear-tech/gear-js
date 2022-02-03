@@ -38,7 +38,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<string | null>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
-  const [metaForm, setMetaForm] = useState<ParsedShape | null>();
+  const [payloadForm, setPayloadForm] = useState<ParsedShape | null>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
   const [isManualPaylod, setIsManualPaylod] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState({
@@ -49,9 +49,10 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     programName: '',
   });
 
+  const isHasInitInput = isMetaFromFile && (payloadForm?.fields || payloadForm?.select);
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
-  const isShowMetaSwitch = isMetaFromFile && meta;
-  const isShowMetaForm = isMetaFromFile && metaForm && !isManualPaylod;
+  const isShowPayload = isHasInitInput || !isMetaFromFile;
+  const isShowPayloadForm = isHasInitInput && !isManualPaylod;
 
   const handleUploadMetaFile = async (file: File) => {
     try {
@@ -60,8 +61,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
       if (metaWasm) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
-        const displayedTypes = parseHexTypes(metaWasm?.types);
-        const inputType = getTypeStructure(metaWasm?.handle_input, displayedTypes);
+        const types = parseHexTypes(metaWasm?.types);
+        const inputType = getTypeStructure(metaWasm?.init_input, types);
         const parsedMeta = parseMeta(inputType);
         let valuesFromFile = {};
 
@@ -76,13 +77,13 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
         setMeta(metaWasm);
         setMetaFile(bufstr);
-        setMetaForm(parsedMeta);
+        setPayloadForm(parsedMeta);
         setInitialValues({
           ...initialValues,
           ...valuesFromFile,
           programName: metaWasm.title,
           initPayload: JSON.stringify(inputType, null, 4),
-          types: JSON.stringify(displayedTypes, null, 4),
+          types: JSON.stringify(types, null, 4),
         });
         setFieldFromFile([...Object.keys(valuesFromFile).reverse()]);
       }
@@ -95,7 +96,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleRemoveMetaFile = () => {
     setMeta(null);
     setMetaFile(null);
-    setMetaForm(null);
+    setPayloadForm(null);
     setDroppedMetaFile(null);
     setFieldFromFile(null);
 
@@ -211,40 +212,42 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         {errors.value && touched.value ? <div className={styles.error}>{errors.value}</div> : null}
                       </div>
                     </div>
-                    <div className={styles.block}>
-                      <label htmlFor="initPayload" className={clsx(styles.caption, styles.top)}>
-                        Initial payload:
-                      </label>
-                      <div className={clsx(styles.value, styles.payload)}>
-                        {isShowMetaSwitch && (
-                          <div className={styles.switch}>
-                            <Switch
-                              onChange={() => setIsManualPaylod(!isManualPaylod)}
-                              label="Manual input"
-                              checked={isManualPaylod}
-                            />
-                          </div>
-                        )}
-                        {isShowMetaForm ? (
-                          <div className="message-form--info">
-                            <FormItem data={metaForm} />
-                          </div>
-                        ) : (
-                          <>
-                            <Field
-                              as="textarea"
-                              id="initPayload"
-                              name="initPayload"
-                              placeholder="// Enter your payload here"
-                              className={clsx(styles.field, styles.textarea)}
-                            />
-                            {errors.initPayload && touched.initPayload ? (
-                              <div className={styles.error}>{errors.initPayload}</div>
-                            ) : null}
-                          </>
-                        )}
+                    {isShowPayload && (
+                      <div className={styles.block}>
+                        <label htmlFor="initPayload" className={clsx(styles.caption, styles.top)}>
+                          Initial payload:
+                        </label>
+                        <div className={clsx(styles.value, styles.payload)}>
+                          {isMetaFromFile && (
+                            <div className={styles.switch}>
+                              <Switch
+                                onChange={() => setIsManualPaylod(!isManualPaylod)}
+                                label="Manual input"
+                                checked={isManualPaylod}
+                              />
+                            </div>
+                          )}
+                          {isShowPayloadForm ? (
+                            <div className="message-form--info">
+                              <FormItem data={payloadForm} />
+                            </div>
+                          ) : (
+                            <>
+                              <Field
+                                as="textarea"
+                                id="initPayload"
+                                name="initPayload"
+                                placeholder="// Enter your payload here"
+                                className={clsx(styles.field, styles.textarea)}
+                              />
+                              {errors.initPayload && touched.initPayload ? (
+                                <div className={styles.error}>{errors.initPayload}</div>
+                              ) : null}
+                            </>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   <div className={styles.meta}>
