@@ -3,8 +3,8 @@ export interface IGenesis {
 }
 
 export interface IBaseDBRecord<Timestamp extends Date | number> extends IGenesis {
-  blockHash: string;
-  timestamp: Timestamp;
+  blockHash?: string;
+  timestamp?: Timestamp;
 }
 
 export interface ISignature {
