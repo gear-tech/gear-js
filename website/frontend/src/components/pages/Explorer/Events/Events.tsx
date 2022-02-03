@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Event } from './children/Event/Event';
 import { Filters } from './children/Filters/Filters';
-import { FilterValues, EventsProps, Event as EventType } from 'types/explorer';
+import { FilterValues, EventsProps, Event as IdeaEvent } from 'types/explorer';
 import { getGroupedEvents } from 'utils/explorer';
 import { LOCAL_STORAGE } from 'consts';
 import * as init from './init';
@@ -13,7 +13,7 @@ const Events = ({ events }: EventsProps) => {
   const [filterValues, setFilterValues] = useState(initFilterValues);
   const isAnyFilterSelected = Object.values(filterValues).includes(true);
 
-  const isEventSelected = ({ method }: EventType) => filterValues[method];
+  const isEventSelected = ({ method }: IdeaEvent) => filterValues[method];
   const filteredEvents = isAnyFilterSelected ? events.filter(isEventSelected) : events;
   const eventsAmount = filteredEvents.length;
 
