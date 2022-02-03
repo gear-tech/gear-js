@@ -5,6 +5,7 @@ import { positions, Provider as AlertProvider } from 'react-alert';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
+import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
 import { Programs } from 'components/pages/Programs/Programs';
 import { Program } from 'components/pages/Program/Program';
 import { Message } from 'components/pages/Message/Message';
@@ -186,6 +187,9 @@ const AppComponent: FC = () => {
               </Route>
               <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
                 <Document />
+              </Route>
+              <Route exact path="*">
+                <PageNotFound />
               </Route>
             </Switch>
           ) : (
