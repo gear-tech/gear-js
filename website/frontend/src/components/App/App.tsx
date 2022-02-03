@@ -34,6 +34,7 @@ import 'assets/scss/index.scss';
 import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
+import { Main } from 'layout/Main/Main';
 
 // alert configuration
 const options = {
@@ -151,42 +152,44 @@ const AppComponent: FC = () => {
           </>
         )}
         <Header />
-        {isApiReady ? (
-          <Switch>
-            <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
-              <Programs />
-            </Route>
-            <Route exact path={routes.program}>
-              <Program />
-            </Route>
-            <Route exact path={routes.explorer}>
-              <Explorer events={events} />
-            </Route>
-            <Route exact path={routes.message}>
-              <Message />
-            </Route>
-            <Route exact path={routes.state}>
-              <State />
-            </Route>
-            <Route exact path={routes.sendMessage}>
-              <SendMessage />
-            </Route>
-            <Route exact path={routes.editor}>
-              <EditorPage />
-            </Route>
-            <Route exact path={routes.notifications}>
-              <NotificationsPage />
-            </Route>
-            <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
-              <Document />
-            </Route>
-            <Route exact path="*">
-              <PageNotFound />
-            </Route>
-          </Switch>
-        ) : (
-          <ApiLoader />
-        )}
+        <Main>
+          {isApiReady ? (
+            <Switch>
+              <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
+                <Programs />
+              </Route>
+              <Route exact path={routes.program}>
+                <Program />
+              </Route>
+              <Route exact path={routes.explorer}>
+                <Explorer events={events} />
+              </Route>
+              <Route exact path={routes.message}>
+                <Message />
+              </Route>
+              <Route exact path={routes.state}>
+                <State />
+              </Route>
+              <Route exact path={routes.sendMessage}>
+                <SendMessage />
+              </Route>
+              <Route exact path={routes.editor}>
+                <EditorPage />
+              </Route>
+              <Route exact path={routes.notifications}>
+                <NotificationsPage />
+              </Route>
+              <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
+                <Document />
+              </Route>
+              <Route exact path="*">
+                <PageNotFound />
+              </Route>
+            </Switch>
+          ) : (
+            <ApiLoader />
+          )}
+        </Main>
         {isFooterHidden() || <Footer />}
         <Alert />
       </div>

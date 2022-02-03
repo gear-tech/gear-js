@@ -9,7 +9,6 @@ import { formatDate } from 'helpers';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAction } from 'store/actions/actions';
 import backIcon from 'assets/images/arrow_back_thick.svg';
-import { Main } from 'common/components/Main/Main';
 import { Hint } from 'components/blocks/Hint/Hint';
 import './Message.scss';
 
@@ -80,58 +79,54 @@ export const Message: FC = () => {
     return null;
   };
 
-  return (
-    <Main>
-      {message ? (
-        <div className="message">
-          <div className={clsx('message__block', 'message__id')}>
-            <span className="message__block-caption">MESSAGE ID:</span>
-            <div className="message__status-block">
-              <div className="message__status-is-error">
-                <span
-                  className={clsx(
-                    'message__block-status',
-                    message.replyError === '0' || message.replyError === null
-                      ? 'message__block-status_success'
-                      : 'message__block-status_error '
-                  )}
-                />
-                {renderError(message.replyError)}
-              </div>
-              <p className="message__block-paragraph">{message.id}</p>
-            </div>
+  return message ? (
+    <div className="message">
+      <div className={clsx('message__block', 'message__id')}>
+        <span className="message__block-caption">MESSAGE ID:</span>
+        <div className="message__status-block">
+          <div className="message__status-is-error">
+            <span
+              className={clsx(
+                'message__block-status',
+                message.replyError === '0' || message.replyError === null
+                  ? 'message__block-status_success'
+                  : 'message__block-status_error '
+              )}
+            />
+            {renderError(message.replyError)}
           </div>
-          <div className="message__block">
-            <span className="message__block-caption">Source:</span>
-            <p className="message__block-paragraph">{message.source}</p>
-          </div>
-          <div className="message__block">
-            <span className="message__block-caption">Destination:</span>
-            <p className="message__block-paragraph">{message.destination}</p>
-          </div>
-          <div className="message__block">
-            <span className="message__block-caption">Timestamp:</span>
-            <p className="message__block-paragraph">{formatDate(message.timestamp)}</p>
-          </div>
-          {messagePayload ? (
-            <pre className="message__meta">{messagePayload}</pre>
-          ) : (
-            <Loader color="#fff" className="animation-rotate" />
-          )}
-          <div className="message__buttons">
-            <button type="button" className="message__button" onClick={handleGoBack}>
-              <img src={backIcon} className="message__button-icon" alt="reply" />
-              <span className="nodes-hide-text">Back</span>
-            </button>
-          </div>
+          <p className="message__block-paragraph">{message.id}</p>
         </div>
+      </div>
+      <div className="message__block">
+        <span className="message__block-caption">Source:</span>
+        <p className="message__block-paragraph">{message.source}</p>
+      </div>
+      <div className="message__block">
+        <span className="message__block-caption">Destination:</span>
+        <p className="message__block-paragraph">{message.destination}</p>
+      </div>
+      <div className="message__block">
+        <span className="message__block-caption">Timestamp:</span>
+        <p className="message__block-paragraph">{formatDate(message.timestamp)}</p>
+      </div>
+      {messagePayload ? (
+        <pre className="message__meta">{messagePayload}</pre>
       ) : (
-        <p>
-          <div className="message">
-            <Loader color="#fff" className="animation-rotate" />
-          </div>
-        </p>
+        <Loader color="#fff" className="animation-rotate" />
       )}
-    </Main>
+      <div className="message__buttons">
+        <button type="button" className="message__button" onClick={handleGoBack}>
+          <img src={backIcon} className="message__button-icon" alt="reply" />
+          <span className="nodes-hide-text">Back</span>
+        </button>
+      </div>
+    </div>
+  ) : (
+    <p>
+      <div className="message">
+        <Loader color="#fff" className="animation-rotate" />
+      </div>
+    </p>
   );
 };

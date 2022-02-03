@@ -13,7 +13,6 @@ import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
-import { Main } from 'common/components/Main/Main';
 import './SendMessage.scss';
 
 type Params = { id: string };
@@ -58,34 +57,23 @@ export const SendMessage: VFC = () => {
     routeHistory.goBack();
   };
 
-  return (
-    <Main>
-      {ready ? (
-        <div className="wrapper">
-          <header className="send-message__header">
-            <button
-              className="send-message__button-back"
-              type="button"
-              aria-label="back"
-              onClick={handleBackButtonClick}
-            >
-              <img src={ArrowBack} alt="back" />
-            </button>
-            <h2 className="send-message__header-text">New message</h2>
-            <img className="send-message__header-icon" src={ProgramIllustration} alt="program" />
-            <h2 className="send-message__header-text send-message__header-text_colored">
-              {fileNameHandler(programId)}
-            </h2>
-          </header>
-          <div className="send-message__block">
-            <MessageForm programId={programId} programName="df" meta={meta} types={types} />
-          </div>
-        </div>
-      ) : (
-        <div className="wrapper">
-          <Loader color="#fff" className="animation-rotate" />
-        </div>
-      )}
-    </Main>
+  return ready ? (
+    <div className="wrapper">
+      <header className="send-message__header">
+        <button className="send-message__button-back" type="button" aria-label="back" onClick={handleBackButtonClick}>
+          <img src={ArrowBack} alt="back" />
+        </button>
+        <h2 className="send-message__header-text">New message</h2>
+        <img className="send-message__header-icon" src={ProgramIllustration} alt="program" />
+        <h2 className="send-message__header-text send-message__header-text_colored">{fileNameHandler(programId)}</h2>
+      </header>
+      <div className="send-message__block">
+        <MessageForm programId={programId} programName="df" meta={meta} types={types} />
+      </div>
+    </div>
+  ) : (
+    <div className="wrapper">
+      <Loader color="#fff" className="animation-rotate" />
+    </div>
   );
 };

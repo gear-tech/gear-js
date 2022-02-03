@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
-import { Main } from 'common/components/Main/Main';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 import { useHistory, useParams } from 'react-router-dom';
@@ -110,52 +109,50 @@ const State: VFC = () => {
   };
 
   return (
-    <Main>
-      <div className="wrapper">
-        <header className={styles.header}>
-          <button className={styles.arrowButton} type="button" aria-label="back" onClick={handleBackButtonClick} />
-          <h2 className={styles.heading}>Read state</h2>
-        </header>
-        <Formik initialValues={{ fields: {} }} onSubmit={handleSubmit}>
-          <Form className={styles.form}>
-            <div className={styles.block}>
+    <div className="wrapper">
+      <header className={styles.header}>
+        <button className={styles.arrowButton} type="button" aria-label="back" onClick={handleBackButtonClick} />
+        <h2 className={styles.heading}>Read state</h2>
+      </header>
+      <Formik initialValues={{ fields: {} }} onSubmit={handleSubmit}>
+        <Form className={styles.form}>
+          <div className={styles.block}>
+            <div className={styles.item}>
+              <p className={styles.itemCaption}>Program Id:</p>
+              <p className={styles.itemValue}>{programId}</p>
+            </div>
+            {form && (
               <div className={styles.item}>
-                <p className={styles.itemCaption}>Program Id:</p>
-                <p className={styles.itemValue}>{programId}</p>
+                <p className={clsx(styles.itemCaption, styles.top)}>Input Parameters:</p>
+                <div className={styles.formWrapper}>
+                  <FormItem data={form} />
+                </div>
               </div>
-              {form && (
-                <div className={styles.item}>
-                  <p className={clsx(styles.itemCaption, styles.top)}>Input Parameters:</p>
-                  <div className={styles.formWrapper}>
-                    <FormItem data={form} />
-                  </div>
-                </div>
-              )}
-              {state && (
-                <div className={styles.item}>
-                  <p className={clsx(styles.itemCaption, styles.top)}>Statedata:</p>
-                  <pre className={styles.itemTextarea}>{state}</pre>
-                </div>
-              )}
-              {isLoading && <Spinner />}
+            )}
+            {state && (
               <div className={styles.item}>
-                <div className={styles.buttons}>
-                  <button className={styles.button} type="button" onClick={handleBackButtonClick}>
-                    <img className={styles.buttonIcon} src={BackArrow} alt="Back arrow" />
-                    <span className={styles.buttonText}>Back</span>
+                <p className={clsx(styles.itemCaption, styles.top)}>Statedata:</p>
+                <pre className={styles.itemTextarea}>{state}</pre>
+              </div>
+            )}
+            {isLoading && <Spinner />}
+            <div className={styles.item}>
+              <div className={styles.buttons}>
+                <button className={styles.button} type="button" onClick={handleBackButtonClick}>
+                  <img className={styles.buttonIcon} src={BackArrow} alt="Back arrow" />
+                  <span className={styles.buttonText}>Back</span>
+                </button>
+                {stateInput && (
+                  <button className={styles.button} type="submit">
+                    <span className={styles.buttonText}>Read state</span>
                   </button>
-                  {stateInput && (
-                    <button className={styles.button} type="submit">
-                      <span className={styles.buttonText}>Read state</span>
-                    </button>
-                  )}
-                </div>
+                )}
               </div>
             </div>
-          </Form>
-        </Formik>
-      </div>
-    </Main>
+          </div>
+        </Form>
+      </Formik>
+    </div>
   );
 };
 

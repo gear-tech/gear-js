@@ -6,7 +6,6 @@ import { getWasmMetadata, Metadata } from '@gear-js/api';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessagesAction } from 'store/actions/actions';
 import { MetaData } from './children/MetaData/MetaData';
-import { Main } from 'common/components/Main/Main';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { formatDate } from 'helpers';
@@ -65,62 +64,58 @@ export const Program: VFC = () => {
     history.goBack();
   };
 
-  return (
-    <Main>
-      {program ? (
-        <div className={styles.program}>
-          <button type="button" aria-label="arrowBack" className={styles.goBack} onClick={handleGoBack}>
-            <img src={ArrowBack} alt="back" />
-            <img src={ProgramIllustration} alt="program" className={styles.goBackIcon} />
-            <span className={styles.goBackText}>{program.name}</span>
-          </button>
-          <div className={styles.container}>
-            <div className={styles.list}>
-              <div className={styles.item}>
-                <p className={styles.itemCaption}>Id:</p>
-                <p className={styles.itemValue}>{program.id}</p>
-              </div>
-              <div className={styles.item}>
-                <p className={styles.itemCaption}>Name:</p>
-                <p className={styles.itemValue}>{program.name}</p>
-              </div>
-              <div className={styles.item}>
-                <p className={styles.itemCaption}>Title:</p>
-                <p className={styles.itemValue}>{program.title ? program.title : '...'}</p>
-              </div>
-              <div className={styles.item}>
-                <p className={clsx(styles.itemCaption, styles.top)}>Metadata:</p>
-                {metadata ? <MetaData metadata={metadata} /> : <p className={styles.emptyMetadata}>No metadata</p>}
-              </div>
-              <div className={styles.item}>
-                <div className={styles.buttons}>
-                  <Link to={`/send-message/${id}`} className={clsx(styles.button, styles.link)}>
-                    <img src={MessageIcon} alt="message" className={styles.buttonIcon} />
-                    <span className={styles.buttonText}>Send Message</span>
-                  </Link>
-                  {isState && (
-                    <Link to={`/state/${id}`} className={clsx(styles.button, styles.link)}>
-                      <span className={styles.buttonText}>Read State</span>
-                    </Link>
-                  )}
-                  <div className={styles.buttonUpload}>
-                    <span className={styles.buttonCaption}>Uploaded at:</span>
-                    <span className={styles.buttonTimestamp}>{formatDate(program.timestamp)}</span>
-                  </div>
-                </div>
+  return program ? (
+    <div className={styles.program}>
+      <button type="button" aria-label="arrowBack" className={styles.goBack} onClick={handleGoBack}>
+        <img src={ArrowBack} alt="back" />
+        <img src={ProgramIllustration} alt="program" className={styles.goBackIcon} />
+        <span className={styles.goBackText}>{program.name}</span>
+      </button>
+      <div className={styles.container}>
+        <div className={styles.list}>
+          <div className={styles.item}>
+            <p className={styles.itemCaption}>Id:</p>
+            <p className={styles.itemValue}>{program.id}</p>
+          </div>
+          <div className={styles.item}>
+            <p className={styles.itemCaption}>Name:</p>
+            <p className={styles.itemValue}>{program.name}</p>
+          </div>
+          <div className={styles.item}>
+            <p className={styles.itemCaption}>Title:</p>
+            <p className={styles.itemValue}>{program.title ? program.title : '...'}</p>
+          </div>
+          <div className={styles.item}>
+            <p className={clsx(styles.itemCaption, styles.top)}>Metadata:</p>
+            {metadata ? <MetaData metadata={metadata} /> : <p className={styles.emptyMetadata}>No metadata</p>}
+          </div>
+          <div className={styles.item}>
+            <div className={styles.buttons}>
+              <Link to={`/send-message/${id}`} className={clsx(styles.button, styles.link)}>
+                <img src={MessageIcon} alt="message" className={styles.buttonIcon} />
+                <span className={styles.buttonText}>Send Message</span>
+              </Link>
+              {isState && (
+                <Link to={`/state/${id}`} className={clsx(styles.button, styles.link)}>
+                  <span className={styles.buttonText}>Read State</span>
+                </Link>
+              )}
+              <div className={styles.buttonUpload}>
+                <span className={styles.buttonCaption}>Uploaded at:</span>
+                <span className={styles.buttonTimestamp}>{formatDate(program.timestamp)}</span>
               </div>
             </div>
           </div>
-          <div className={styles.messages}>
-            <p className={styles.messagesCaption}>MESSAGES</p>
-            <MessagesList messages={messages} />
-          </div>
         </div>
-      ) : (
-        <div className={styles.program}>
-          <Spinner />
-        </div>
-      )}
-    </Main>
+      </div>
+      <div className={styles.messages}>
+        <p className={styles.messagesCaption}>MESSAGES</p>
+        <MessagesList messages={messages} />
+      </div>
+    </div>
+  ) : (
+    <div className={styles.program}>
+      <Spinner />
+    </div>
   );
 };
