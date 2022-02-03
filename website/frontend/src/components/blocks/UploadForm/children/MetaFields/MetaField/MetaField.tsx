@@ -1,32 +1,32 @@
 import React, { FC } from 'react';
-import { Field } from 'formik';
+import { Field, useField } from 'formik';
 import clsx from 'clsx';
 import styles from './MetaField.module.scss';
 
 type Props = {
-  field: string;
+  name: string;
   isDisabled: boolean;
-  errors: any;
-  touched: any;
 };
 
-export const MetaField: FC<Props> = ({ field, isDisabled, errors, touched }) => {
-  const isTextarea = ['types'].includes(field);
+export const MetaField: FC<Props> = ({ name, isDisabled }) => {
+  const [field, meta, helpers] = useField(name);
+  const isTextarea = ['types'].includes(name);
 
   return (
     <div className={styles.item}>
-      <label htmlFor={field} className={clsx(styles.caption, isTextarea && styles.top)}>
-        {field}:
+      <label htmlFor={name} className={clsx(styles.caption, isTextarea && styles.top)}>
+        {name}:
       </label>
       <div className={styles.value}>
         <Field
-          id={field}
-          name={field}
+          {...field}
+          id={name}
+          name={name}
           className={clsx(styles.field, isTextarea && styles.textarea)}
           as={isTextarea ? 'textarea' : 'input'}
           disabled={isDisabled}
         />
-        {errors[field] && touched[field] ? <div className={styles.error}>{errors[field]}</div> : null}
+        {meta.error && meta.touched ? <div className={styles.error}>{meta.error}</div> : null}
       </div>
     </div>
   );

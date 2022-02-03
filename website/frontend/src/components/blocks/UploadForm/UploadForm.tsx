@@ -35,7 +35,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 
-  const [fieldFromFile, setFieldFromFile] = useState<String[] | null>(null);
+  const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<string | null>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
@@ -262,12 +262,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       />
                     )}
                     {isShowFields && (
-                      <MetaFields
-                        fields={isMetaFromFile ? fieldFromFile : META_FIELDS}
-                        isDisabled={isMetaFromFile}
-                        errors={errors}
-                        touched={touched}
-                      />
+                      <MetaFields fields={isMetaFromFile ? fieldFromFile : META_FIELDS} isDisabled={isMetaFromFile} />
                     )}
                   </div>
                 </div>

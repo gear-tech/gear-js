@@ -3,17 +3,18 @@ import { MetaField } from './MetaField/MetaField';
 import styles from './MetaFields.module.scss';
 
 type Props = {
-  fields: any;
+  fields: string[] | null;
   isDisabled: boolean;
-  errors: any;
-  touched: any;
 };
 
-export const MetaFields: FC<Props> = ({ fields, isDisabled, errors, touched }) =>
-  fields ? (
-    fields.map((field: any) => {
-      return <MetaField field={field} isDisabled={isDisabled} errors={errors} touched={touched} />;
-    })
+export const MetaFields: FC<Props> = ({ fields, isDisabled }) => {
+  return fields ? (
+    <>
+      {fields.map((field: string) => {
+        <MetaField key={field} name={field} isDisabled={isDisabled} />;
+      })}
+    </>
   ) : (
     <p className={styles.error}>Please, upload a metafile!</p>
   );
+};
