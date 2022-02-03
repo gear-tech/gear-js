@@ -4,11 +4,11 @@ import { useParams, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
-import { Loader } from 'react-feather';
 import { formatDate } from 'helpers';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAction } from 'store/actions/actions';
 import backIcon from 'assets/images/arrow_back_thick.svg';
+import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { Hint } from 'components/blocks/Hint/Hint';
 import './Message.scss';
 
@@ -110,11 +110,7 @@ export const Message: FC = () => {
         <span className="message__block-caption">Timestamp:</span>
         <p className="message__block-paragraph">{formatDate(message.timestamp)}</p>
       </div>
-      {messagePayload ? (
-        <pre className="message__meta">{messagePayload}</pre>
-      ) : (
-        <Loader color="#fff" className="animation-rotate" />
-      )}
+      {messagePayload ? <pre className="message__meta">{messagePayload}</pre> : <Spinner />}
       <div className="message__buttons">
         <button type="button" className="message__button" onClick={handleGoBack}>
           <img src={backIcon} className="message__button-icon" alt="reply" />
@@ -125,7 +121,7 @@ export const Message: FC = () => {
   ) : (
     <p>
       <div className="message">
-        <Loader color="#fff" className="animation-rotate" />
+        <Spinner />
       </div>
     </p>
   );
