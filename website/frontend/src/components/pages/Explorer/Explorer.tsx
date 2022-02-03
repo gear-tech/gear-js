@@ -1,6 +1,6 @@
 import React from 'react';
-import { EventsList } from './EventsList/EventsList';
-import { EventsProps } from 'types/events-list';
+import { Events } from './Events/Events';
+import { EventsProps } from 'types/explorer';
 import { BackButton } from 'common/components/BackButton/BackButton';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 import { Search } from './Search/Search';
@@ -14,7 +14,7 @@ const Explorer = ({ events }: EventsProps) => {
         <Search />
         <BlocksSummary />
       </header>
-      <EventsList events={events} />
+      <Events events={events} />
     </div>
   );
 };

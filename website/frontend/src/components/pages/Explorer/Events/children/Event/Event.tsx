@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { EventGroup } from 'types/events-list';
+import { EventGroup } from 'types/explorer';
 import { Header } from './children/Header/Header';
 import { Body } from './children/Body/Body';
-import styles from './EventItem.module.scss';
+import styles from './Event.module.scss';
 
 type Props = {
   group: EventGroup;
 };
 
-const EventItem = ({ group }: Props) => {
+const Event = ({ group }: Props) => {
   const { list, method, caption, description } = group;
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,4 +33,4 @@ const EventItem = ({ group }: Props) => {
   );
 };
 
-export { EventItem };
+export { Event };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { LogData } from '@gear-js/api';
 import { Event } from '@polkadot/types/interfaces';
-import { Methods } from 'types/events-list';
+import { Methods } from 'types/explorer';
 import { Content } from './children/Content/Content';
 import { LogContent } from './children/LogContent/LogContent';
 import styles from './Body.module.scss';

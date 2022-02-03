@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { AnyJson } from '@polkadot/types/types';
 import { getPreformattedText } from 'helpers';
-import commonStyles from '../../../../EventItem.module.scss';
+import commonStyles from '../../../../Event.module.scss';
 import styles from './Pre.module.scss';
 
 type Props = {

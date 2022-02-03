@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
-import { EventItem } from './children/EventItem/EventItem';
+import { Event } from './children/Event/Event';
 import { Filters } from './children/Filters/Filters';
-import { FilterValues, EventsProps, Event } from 'types/events-list';
-import { getGroupedEvents } from 'utils/events-list';
+import { FilterValues, EventsProps, Event as EventType } from 'types/explorer';
+import { getGroupedEvents } from 'utils/explorer';
 import { LOCAL_STORAGE } from 'consts';
 import * as init from './init';
-import styles from './EventsList.module.scss';
+import styles from './Events.module.scss';
 
-const EventsList = ({ events }: EventsProps) => {
+const Events = ({ events }: EventsProps) => {
   const localFilterValues = localStorage.getItem(LOCAL_STORAGE.EVENT_FILTERS);
   const initFilterValues: FilterValues = localFilterValues ? JSON.parse(localFilterValues) : init.filterValues;
   const [filterValues, setFilterValues] = useState(initFilterValues);
   const isAnyFilterSelected = Object.values(filterValues).includes(true);
 
-  const isEventSelected = ({ method }: Event) => filterValues[method];
+  const isEventSelected = ({ method }: EventType) => filterValues[method];
   const filteredEvents = isAnyFilterSelected ? events.filter(isEventSelected) : events;
   const eventsAmount = filteredEvents.length;
 
   const groupedEvents = getGroupedEvents(filteredEvents);
-  const getEvents = () => groupedEvents.map((group) => <EventItem key={group.id} group={group} />);
+  const getEvents = () => groupedEvents.map((group) => <Event key={group.id} group={group} />);
 
   return (
     <div className={styles.events}>
@@ -31,4 +31,4 @@ const EventsList = ({ events }: EventsProps) => {
   );
 };
 
-export { EventsList };
+export { Events };

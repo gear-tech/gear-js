@@ -1,4 +1,4 @@
-import { Methods } from 'types/events-list';
+import { Methods } from 'types/explorer';
 
 export const filterValues = {
   [Methods.TRANSFER]: false,

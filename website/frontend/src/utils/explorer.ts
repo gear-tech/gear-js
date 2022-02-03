@@ -1,6 +1,6 @@
 import { Vec } from '@polkadot/types';
 import { EventRecord } from '@polkadot/types/interfaces';
-import { Event, GroupedEvents, Sections } from 'types/events-list';
+import { Event, GroupedEvents, Sections } from 'types/explorer';
 
 const getCaption = ({ method, section }: Event) => `${section}.${method}`;
 

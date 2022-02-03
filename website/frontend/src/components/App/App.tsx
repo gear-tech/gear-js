@@ -25,8 +25,8 @@ import { subscribeToEvents, setApiReady, fetchBlockAction } from '../../store/ac
 import { nodeApi } from '../../api/initApi';
 import { useApi } from 'hooks/useApi';
 import store from '../../store';
-import { getEvents } from 'utils/events-list';
-import { Events } from 'types/events-list';
+import { getEvents } from 'utils/explorer';
+import { Events } from 'types/explorer';
 
 import './App.scss';
 import 'assets/scss/common.scss';

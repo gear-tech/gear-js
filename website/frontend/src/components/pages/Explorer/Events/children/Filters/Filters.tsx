@@ -2,7 +2,7 @@ import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useSta
 import clsx from 'clsx';
 import { Sliders, X } from 'react-feather';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
-import { FilterValues } from 'types/events-list';
+import { FilterValues } from 'types/explorer';
 import { LOCAL_STORAGE } from 'consts';
 import * as init from '../../init';
 import styles from './Filters.module.scss';
