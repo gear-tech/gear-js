@@ -16,7 +16,7 @@ import { Document } from 'components/pages/Document/Document';
 import { SendMessage } from 'components/pages/SendMessage/SendMessage';
 import { EditorPage } from 'features/Editor/EditorPage';
 import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
-import { ApiLoader } from 'common/components/ApiLoader/ApiLoader';
+import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
@@ -187,7 +187,7 @@ const AppComponent: FC = () => {
               </Route>
             </Switch>
           ) : (
-            <ApiLoader />
+            <Loader />
           )}
         </Main>
         {isFooterHidden() || <Footer />}
