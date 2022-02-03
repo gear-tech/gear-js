@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { isHex } from '@polkadot/util';
 import { Block as DotBlock } from '@polkadot/types/interfaces';
 import { useApi } from 'hooks/useApi';
+import { Spinner } from 'components/blocks/Spinner/Spinner';
+import { Summary } from './children/Summary/Summary';
 import styles from './Block.module.scss';
 
 type Props = {
@@ -25,7 +27,17 @@ const Block = ({ blockId }: Props) => {
     }
   }, [api, blockId]);
 
-  return <div></div>;
+  return (
+    <div className={styles.block}>
+      {block ? (
+        <>
+          <Summary block={block} />
+        </>
+      ) : (
+        <Spinner />
+      )}
+    </div>
+  );
 };
 
 export { Block };
