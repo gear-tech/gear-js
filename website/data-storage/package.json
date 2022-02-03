@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-proposal-decorators": "^7.16.7",
     "@babel/plugin-transform-modules-commonjs": "^7.16.8",
     "@babel/plugin-transform-typescript": "^7.16.8",
@@ -73,14 +74,20 @@
     "env": {
       "test": {
         "plugins": [
-          "@babel/plugin-transform-modules-commonjs",
-          "babel-plugin-transform-typescript-metadata",
           [
             "@babel/plugin-proposal-decorators",
             {
               "legacy": true
             }
-          ]
+          ],
+          "babel-plugin-transform-typescript-metadata",
+          [
+            "@babel/plugin-proposal-class-properties",
+            {
+              "loose": true
+            }
+          ],
+          "@babel/plugin-transform-modules-commonjs"
         ],
         "presets": [
           "@babel/preset-typescript",

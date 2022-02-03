@@ -1843,6 +1843,7 @@ __metadata:
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
   dependencies:
     "@babel/core": ^7.16.12
+    "@babel/plugin-proposal-class-properties": ^7.16.7
     "@babel/plugin-proposal-decorators": ^7.16.7
     "@babel/plugin-transform-modules-commonjs": ^7.16.8
     "@babel/plugin-transform-typescript": ^7.16.8
