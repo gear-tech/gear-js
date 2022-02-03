@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, VFC } from 'react';
+import React, { useState, VFC } from 'react';
 import clsx from 'clsx';
 import { Link /* , Redirect */ } from 'react-router-dom';
 import './ProgramSwitch.scss';
@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
 import { useApi } from '../../../hooks/useApi';
+import { isDevChain } from 'helpers';
+import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 // import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
 // import Editor from 'assets/images/editor_icon.svg';
 
@@ -18,71 +20,14 @@ type Props = {
 };
 
 export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
+  const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const apiRequest = new ServerRPCRequestService();
 
-  const [api] = useApi();
-
-  const chain = localStorage.getItem('chain');
-
-  const [timeInstance, setTimeInstance] = useState(0);
-  const [isEditorDropdownOpened, setIsEditorDropdownOpened] = useState(false);
   // const [chosenTemplateId, setChosenTemplateId] = useState<number>(-1);
 
-  const { blocks } = useSelector((state: RootState) => state.blocks);
-  const [totalIssuance, setTotalIssuance] = useState('');
-  const [prevBlockHash, setPrevBlockHash] = useState('');
   const [gasCallCounter, setGasCallCounter] = useState(0);
-
-  const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const getTotal = async () => {
-      if (api) {
-        const totalBalance = await api.totalIssuance();
-        setTotalIssuance(totalBalance);
-      }
-    };
-    getTotal();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalIssuance]);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const decreasedTime = timeInstance + 0.1;
-      setTimeInstance(decreasedTime);
-    }, 100);
-
-    if (blocks && blocks.length) {
-      if (blocks[0].hash !== prevBlockHash) {
-        setTimeInstance(0);
-      }
-      setPrevBlockHash(blocks[0].hash);
-    }
-
-    const handleClickOutsideDropdown = (event: MouseEvent) => {
-      if (isEditorDropdownOpened && dropdownMenuRef && !dropdownMenuRef.current?.contains(event.target as Node)) {
-        setIsEditorDropdownOpened(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutsideDropdown);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutsideDropdown);
-      clearInterval(intervalId);
-    };
-  }, [
-    dispatch,
-    setTimeInstance,
-    timeInstance,
-    setPrevBlockHash,
-    prevBlockHash,
-    blocks,
-    isEditorDropdownOpened,
-    setIsEditorDropdownOpened,
-  ]);
 
   // const handleEditorDropdown = () => {
   //   if (!isEditorDropdownOpened) {
@@ -159,7 +104,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
               pageType === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && 'switch-buttons__item--active'
             )}
           >
-            User programs
+            My programs
           </Link>
           <Link
             to={routes.allPrograms}
@@ -198,7 +143,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
             <button
               className="switch-block--transfer__btn"
               type="button"
-              onClick={chain === 'Development' ? handleTransferBalanceFromAlice : handleTransferBalance}
+              onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTransferBalance}
             >
               Get test balance
             </button>
@@ -209,22 +154,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
           )}
         </div>
       </div>
-      <div className="switch-block__info switch-info">
-        <div className="switch-info__col">
-          <span className="switch-info__title">Last block</span>
-          <div className="switch-info__data switch-info__timer">
-            <div className="switch-info__num">{timeInstance.toFixed(1).slice(0, 1)}</div>.
-            <div className="switch-info__num">{timeInstance.toFixed(1).slice(-1)}</div> s
-          </div>
-        </div>
-        <div className="switch-info__separator" />
-        <div className="switch-info__col">
-          <span className="switch-info__title">Total issuance</span>
-          <span className="switch-info__data">
-            <b className="switch-info__num">{totalIssuance.slice(0, 5)}</b> Munit
-          </span>
-        </div>
-      </div>
+      <BlocksSummary />
     </div>
   );
 };

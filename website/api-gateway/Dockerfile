@@ -1,6 +1,12 @@
 FROM node:16-alpine
-COPY ./website/api-gateway /usr/src/api-gateway
-WORKDIR /usr/src/api-gateway
+
+WORKDIR /src
+COPY package.json .
+COPY yarn.lock .
+COPY ./website/interfaces website/interfaces
+COPY ./website/api-gateway website/api-gateway
 RUN yarn install
-RUN yarn build
-CMD ["node", "dist/main"]
+RUN yarn build:interfaces
+RUN yarn build:api-gateway
+
+CMD ["node", "website/api-gateway/dist/main"]

@@ -1,6 +1,7 @@
 import React, { VFC } from 'react';
 import clsx from 'clsx';
 import { useAlert } from 'react-alert';
+import { Link } from 'react-router-dom';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import copyIcon from 'assets/images/copy.svg';
 import codeIcon from 'assets/images/code_icon.svg';
@@ -39,7 +40,9 @@ export const MessagesList: VFC<Props> = ({ messages }) => {
             key={message.id}
             className={clsx(
               'messages__list-block',
-              !message.replyError ? 'messages__list-block_success' : 'messages__list-block_error'
+              message.replyError === '0' || message.replyError === null
+                ? 'messages__list-block_success'
+                : 'messages__list-block_error'
             )}
           >
             <div className="messages__list-item">
@@ -47,15 +50,17 @@ export const MessagesList: VFC<Props> = ({ messages }) => {
               <p className="messages__list-caption">{message.destination && fileNameHandler(message.destination)}</p>
             </div>
             <div className="messages__list-item">
-              <p className="messages__list-link">{message.id}</p>
+              <Link className="messages__list-link" to={`/message/${message.id}`}>
+                {message.id}
+              </Link>
               <div className="programsCopyId">
                 <button type="button" onClick={() => copyToClipboard(message.id, alert, 'Message ID copied')}>
-                  <img src={copyIcon} alt="copy program ID" />
+                  <img src={copyIcon} alt="copy message ID" />
                 </button>
               </div>
             </div>
             <div className="messages__list-item">
-              <p>{message.date && formatDate(message.date)}</p>
+              <p>{message.timestamp && formatDate(message.timestamp)}</p>
             </div>
           </div>
         ))}

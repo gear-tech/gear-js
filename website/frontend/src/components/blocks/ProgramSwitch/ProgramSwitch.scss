@@ -73,40 +73,6 @@
   color: $textColor;
 }
 
-.switch-info {
-  align-items: center;
-  color: $textColorSecondary;
-  display: flex;
-  gap: 40px;
-  justify-content: space-between;
-}
-.switch-info__col {
-  align-items: flex-end;
-  display: flex;
-  flex-direction: column;
-}
-
-.switch-info__separator {
-  border-left: 1px solid $separateLineColor;
-  height: 37px;
-  opacity: 0.6;
-  width: 1px;
-}
-
-.switch-info__data {
-  font-size: $fontSizeLarge;
-}
-
-.switch-info__timer {
-  display: flex;
-}
-
-.switch-info__num {
-  color: $textColor;
-  font-weight: bold;
-  width: 1ch;
-}
-
 @media (max-width: 768px) {
   .main-content-wrapper {
     margin: 0 16px !important;

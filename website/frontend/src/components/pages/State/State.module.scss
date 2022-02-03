@@ -1,27 +1,133 @@
 @use 'assets/scss/variables' as *;
 
 .header {
-  padding: 25px 0;
+  margin-bottom: 25px;
   display: flex;
-}
+  .heading {
+    font-size: 21px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: $textColorSecondary;
+  }
 
-.heading {
-  font-size: 21px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: $textColorSecondary;
-}
+  .arrowButton {
+    margin-right: 28px;
+    padding: 0;
 
-.arrowButton {
-  margin-right: 28px;
-  padding: 0;
-
-  &::before {
-    content: url('/assets/images/arrow_back.svg');
+    &::before {
+      content: url('/assets/images/arrow_back.svg');
+    }
   }
 }
-
 .form {
+  background-color: $bkgActiveButtonColor;
+  border-radius: 2px;
+  border: 1px dashed #0e0e0e;
+  margin: 0 0 40px 0;
+  padding: 30px 25px;
+  .block {
+    width: 85%;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+    .item {
+      width: 100%;
+      display: flex;
+      margin-bottom: 25px;
+      @media (max-width: 768px) {
+        flex-direction: column;
+        margin-bottom: 10px;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+      .itemCaption {
+        color: $textColorSecondary;
+        font-size: 16px;
+        min-width: 164px;
+        font-style: normal;
+        font-weight: normal;
+        display: flex;
+        align-items: center;
+        &.top {
+          padding-top: 5px;
+          align-items: flex-start;
+        }
+        @media (max-width: 768px) {
+          width: 100%;
+          min-width: 100%;
+          margin-right: 0;
+        }
+      }
+      .formWrapper {
+        width: 100%;
+      }
+      .itemValue {
+        width: 85%;
+        background-color: $mainBackground;
+        border: none;
+        outline: none;
+        padding: 10px 15px;
+        color: $textColor;
+        overflow-x: auto;
+        white-space: nowrap;
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+      }
+      .itemTextarea {
+        width: 85%;
+        background-color: $mainBackground;
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+        border: none;
+        outline: none;
+        padding: 10px 15px;
+        color: $textColor;
+        overflow-y: auto;
+        word-break: break-all;
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+      }
+      .buttons {
+        width: 85%;
+        margin-left: 164px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        @media (max-width: 768px) {
+          width: 100%;
+          margin-left: 0;
+          flex-direction: column;
+        }
+        .button {
+          background-color: $bkgButtonColor;
+          border-radius: 2px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          padding: 12px 25px;
+          margin-right: 40px;
+          margin-top: 10px;
+          @media (max-width: 768px) {
+            width: 100%;
+            margin-right: 0;
+          }
+          .buttonIcon {
+            margin-right: 16px;
+          }
+          .buttonText {
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 24px;
+            color: $textColor;
+          }
+        }
+      }
+    }
+  }
   input,
   textarea {
     width: 100%;

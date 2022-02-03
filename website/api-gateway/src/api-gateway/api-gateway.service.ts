@@ -13,7 +13,8 @@ import {
   GetMetaParams,
   GetOutgoingMessagesParams,
   GetTestBalanceParams,
-} from 'src/interfaces';
+  GetAllUserProgramsParams,
+} from '@gear-js/interfaces';
 import config from 'src/config/configuration';
 
 const logger = new Logger('ApiGatewayService');
@@ -46,10 +47,11 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
   client: ClientKafka;
 
   patterns = [
-    'meta.add',
     'program.data',
+    'meta.add',
     'meta.get',
     'program.all',
+    'program.all.user',
     'message.all',
     'message.data',
     'message.add.payload',
@@ -86,11 +88,8 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
       all: (params: GetAllProgramsParams) => {
         return this.client.send('program.all', params);
       },
-      allUser: (params: GetAllProgramsParams) => {
-        if (params.publicKeyRaw) {
-          params.owner = params.publicKeyRaw;
-        }
-        return this.client.send('program.all', params);
+      allUser: (params: GetAllUserProgramsParams) => {
+        return this.client.send('program.all.user', params);
       },
     },
     message: {

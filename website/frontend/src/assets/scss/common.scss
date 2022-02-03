@@ -1,3 +1,5 @@
+@use 'assets/scss/breakpoints' as *;
+
 .search-queries {
   display: flex;
   flex-direction: row;
@@ -86,5 +88,16 @@
     right: 16px;
     z-index: 2;
     justify-content: center;
+  }
+}
+
+.img-wrapper {
+  display: flex;
+}
+
+.wrapper {
+  margin: 40px;
+  @include md {
+    margin: 0 20px;
   }
 }

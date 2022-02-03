@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import './BlocksList.scss';
 
 export const BlockList = () => {
-
   const { blocks } = useSelector((state: RootState) => state.blocks);
 
   const showMoreClick = () => {

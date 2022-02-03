@@ -1,1 +1,1 @@
-export { AlertTemplate } from "./AlertTemplate"
+export { AlertTemplate } from './AlertTemplate';

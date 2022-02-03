@@ -1,3 +1,9 @@
+import { localPrograms } from 'services/LocalDBService';
+import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
+import { GetMetaResponse } from 'api/responses';
+import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
+import { NODE_ADDRESS_REGEX } from 'regexes';
+
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
 
@@ -57,3 +63,79 @@ export const signPayload = async (injector: any, address: string, payload: any, 
     console.error(err);
   }
 };
+
+export const getLocalPrograms = (params: any) => {
+  const result: ProgramPaginationModel = {
+    count: 0,
+    programs: [],
+  };
+  const data = { result };
+
+  return localPrograms
+    .iterate((elem: ProgramModel, key, iterationNumber) => {
+      const newLimit = params.offset + params.limit;
+
+      data.result.count = iterationNumber;
+
+      if (params.term) {
+        if (
+          (elem.name?.includes(params.term) || elem.id?.includes(params.term)) &&
+          iterationNumber <= newLimit &&
+          iterationNumber > params.offset
+        ) {
+          data.result.programs.push(elem);
+        }
+      } else if (iterationNumber <= newLimit && iterationNumber > params.offset) {
+        data.result.programs.push(elem);
+      }
+    })
+    .then(() => {
+      data.result.programs.sort((prev, next) => (prev.timestamp > next.timestamp ? -1 : 1));
+
+      return data;
+    });
+};
+
+export const getLocalProgram = (id: string) => {
+  const result: ProgramModel = {
+    id: '',
+    timestamp: '',
+    initStatus: ProgramStatus.Success,
+  };
+  const data = { result };
+
+  return localPrograms
+    .getItem<ProgramModel>(id)
+    .then((response) => {
+      if (response) {
+        data.result = response;
+      }
+    })
+    .then(() => data);
+};
+
+export const getLocalProgramMeta = (id: string) => {
+  const result: GetMetaResponse = {
+    meta: '',
+    metaFile: '',
+    program: '',
+  };
+  const data = { result };
+
+  return localPrograms
+    .getItem<ProgramModel>(id)
+    .then((response) => {
+      if (response) {
+        data.result.meta = response.meta.meta;
+        data.result.metaFile = response.meta.metaFile;
+        data.result.program = id;
+      }
+    })
+    .then(() => data);
+};
+
+export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DEVELOPMENT_CHAIN;
+
+export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
+
+export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);
