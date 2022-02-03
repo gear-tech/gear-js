@@ -121,8 +121,17 @@ const AppComponent: FC = () => {
 
     if (api) {
       unsub = api.allEvents((eventRecords) => {
-        const newEvents = getEvents(eventRecords);
-        setEvents((prevEvents) => [...newEvents, ...prevEvents]);
+        const { createdAtHash } = eventRecords;
+
+        // prolly it's better to pass createdAtHash and to get block number inside Event's header
+        if (createdAtHash) {
+          api.blocks.getBlockNumber(createdAtHash).then((blockNumber) => {
+            const formattedBlockNumber = String(blockNumber.toHuman());
+            const newEvents = getEvents(eventRecords, formattedBlockNumber);
+
+            setEvents((prevEvents) => [...newEvents, ...prevEvents]);
+          });
+        }
       });
     }
 

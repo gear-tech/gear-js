@@ -4,14 +4,14 @@ import { Event, GroupedEvents, Sections } from 'types/explorer';
 
 const getCaption = ({ method, section }: Event) => `${section}.${method}`;
 
-export const getEvents = (eventRecords: Vec<EventRecord>) =>
+export const getEvents = (eventRecords: Vec<EventRecord>, blockNumber: string) =>
   // reduce right to keep newer -> older order
   eventRecords.reduceRight((events: Event[], eventRecord) => {
     const { event: dotEvent } = eventRecord;
     const { section } = dotEvent;
 
     if (section !== Sections.SYSTEM) {
-      const event = new Event(dotEvent);
+      const event = new Event(dotEvent, blockNumber);
       events.push(event);
     }
 
@@ -25,14 +25,14 @@ export const getGroupedEvents = (events: Event[]) =>
     const caption = getCaption(event);
 
     if (prevCaption !== caption) {
-      const { method, meta, id } = event;
+      const { method, meta, id, blockNumber } = event;
       const { docs } = meta;
 
       const description = docs.toHuman();
 
       // for eventGroup it's important to maintain exclusive ID (as well as for event itself),
       // so group ID is the ID of first (oldest) event, event that's remaining the same
-      const eventGroup = { id, method, caption, description, list: [] };
+      const eventGroup = { id, method, caption, description, blockNumber, list: [] };
       groupedEvents.push(eventGroup);
     }
 

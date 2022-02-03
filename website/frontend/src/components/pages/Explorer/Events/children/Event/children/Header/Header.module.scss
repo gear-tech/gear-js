@@ -42,4 +42,8 @@
   margin-left: auto;
   font-weight: 600;
   color: $textColorSecondary;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

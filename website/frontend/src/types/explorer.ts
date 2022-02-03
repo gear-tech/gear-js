@@ -4,15 +4,22 @@ import { AnyJson } from '@polkadot/types/types';
 import { generateRandomId } from 'helpers';
 
 export class Event extends GearEvent {
-  constructor(event: DotEvent) {
+  constructor(event: DotEvent, blockNumber: string) {
     super(event);
     this._id = `${event.hash}-${generateRandomId()}`;
+    this._blockNumber = blockNumber;
   }
 
   private _id: string;
 
+  private _blockNumber: string;
+
   get id() {
     return this._id;
+  }
+
+  get blockNumber() {
+    return this._blockNumber;
   }
 }
 
@@ -45,6 +52,7 @@ export type EventGroup = {
   method: string;
   caption: string;
   description: AnyJson;
+  blockNumber: string;
 };
 
 export type GroupedEvents = EventGroup[];

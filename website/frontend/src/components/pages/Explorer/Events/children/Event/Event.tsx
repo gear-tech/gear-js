@@ -10,7 +10,7 @@ type Props = {
 };
 
 const Event = ({ group }: Props) => {
-  const { list, method, caption, description } = group;
+  const { list, method, caption, description, blockNumber } = group;
   const [isOpen, setIsOpen] = useState(false);
 
   const className = clsx('programs-list__item', styles.item);
@@ -24,6 +24,7 @@ const Event = ({ group }: Props) => {
       <Header
         caption={caption}
         description={description}
+        blockNumber={blockNumber}
         isOpen={isOpen}
         onClick={toggle}
         groupEventsAmount={list.length}
