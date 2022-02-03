@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { CreateType, getWasmMetadata, Metadata, LogData } from '@gear-js/api';
+import { isHex } from '@polkadot/util';
 import { Codec } from '@polkadot/types/types';
 import { ProgramModel } from 'types/program';
 import { programService } from 'services/ProgramsRequestService';
@@ -25,18 +26,10 @@ const LogContent = ({ data }: Props) => {
   const [error, setError] = useState('');
   const isError = !!error;
 
-  // for isHex() it's prolly better to install @polkadot/util
-  const isHex = (value: string) => {
-    const hexRegex = /^0x[\da-fA-F]+/;
-    return hexRegex.test(value);
-  };
-
   // check if manual decoding needed,
   // cuz data.toHuman() decodes payload without metadata by itself
-  const isFormattedPayloadHex = () => {
-    const formattedPayload = String(payload.toHuman());
-    return isHex(formattedPayload);
-  };
+  const formattedPayload = payload.toHuman();
+  const isFormattedPayloadHex = isHex(formattedPayload);
 
   const handlePayloadDecoding = (typeKey: TypeKey, errorCallback: () => void) => {
     if (metadata) {
@@ -67,7 +60,7 @@ const LogContent = ({ data }: Props) => {
   };
 
   useEffect(() => {
-    if (isFormattedPayloadHex()) {
+    if (isFormattedPayloadHex) {
       const { fetchProgram } = programService;
       const getProgram = isDevChain() ? getLocalProgram : fetchProgram;
       const id = source.toString();
@@ -115,7 +108,7 @@ const LogContent = ({ data }: Props) => {
 
   return (
     <>
-      {isFormattedPayloadHex() && (
+      {isFormattedPayloadHex && (
         <div className={styles.checkbox}>
           <Checkbox
             label="Decoded payload"
