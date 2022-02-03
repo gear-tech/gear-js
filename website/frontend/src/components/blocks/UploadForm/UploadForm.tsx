@@ -21,7 +21,8 @@ import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
 import { readFileAsync } from 'helpers';
-import { MIN_GAS_LIMIT, META_FIELDS } from 'consts';
+import { MIN_GAS_LIMIT } from 'consts';
+import { META_FIELDS } from './consts';
 import styles from './UploadForm.module.scss';
 
 type Props = {
