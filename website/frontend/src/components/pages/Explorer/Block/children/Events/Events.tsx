@@ -11,7 +11,8 @@ type Props = {
 const Events = ({ events }: Props) => {
   const isAnyEvent = events.length > 0;
 
-  const getEvents = () => events.map((event) => <Event event={event} />);
+  // replace key
+  const getEvents = () => events.map((event, index) => <Event key={index} event={event} />);
 
   return (
     <div className={styles.events}>

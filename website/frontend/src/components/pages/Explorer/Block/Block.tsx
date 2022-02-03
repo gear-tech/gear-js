@@ -4,6 +4,7 @@ import { Block as DotBlock, Event as DotEvent } from '@polkadot/types/interfaces
 import { useApi } from 'hooks/useApi';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { Summary } from './children/Summary/Summary';
+import { Extrinsics } from './children/Extrinsics/Extrinsics';
 import { Events } from './children/Events/Events';
 import styles from './Block.module.scss';
 
@@ -45,6 +46,7 @@ const Block = ({ blockId }: Props) => {
       {block ? (
         <>
           <Summary block={block} />
+          <Extrinsics extrinsics={block.extrinsics} />
           <Events events={events} />
         </>
       ) : (
