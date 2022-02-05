@@ -16,6 +16,8 @@ export declare interface MessageInfo extends Bytes {
   origin: H256;
 }
 
-export declare type ProgramId = `0x${string}` | H256;
+export declare type ProgramId = `0x${string}` | H256 | string;
 
-export declare type AccountId = `0x${string}` | H256 | AccountId32;
+export declare type MessageId = `0x${string}` | H256;
+
+export declare type AccountId = `0x${string}` | H256 | string | AccountId32;

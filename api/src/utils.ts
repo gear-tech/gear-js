@@ -1,5 +1,5 @@
 import { stringCamelCase, isHex } from '@polkadot/util';
-import { Text } from '@polkadot/types';
+import { Bytes, Text } from '@polkadot/types';
 import { Metadata } from './interfaces';
 import { CreateType } from './CreateType';
 
@@ -7,7 +7,7 @@ export function transformTypes(types: object): any {
   return Object.values(types).reduce((res, types): object => ({ ...res, ...types }), {});
 }
 
-export function toCamelCase(array: string[] | Text[]) {
+export function toCamelCase(array: string[] | Text[]): string {
   let result = stringCamelCase(array.join('_'));
   result = result.slice(0, 1).toUpperCase() + result.slice(1, result.length);
   return result;
@@ -55,7 +55,7 @@ export function splitByCommas(str: string) {
   return result;
 }
 
-export function createPayload(createType: CreateType, type: any, data: any, meta?: Metadata) {
+export function createPayload(createType: CreateType, type: any, data: any, meta?: Metadata): string {
   if (data === undefined) {
     return '';
   }

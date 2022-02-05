@@ -5,11 +5,19 @@
         "description": "Get GasSpent",
         "params": [
           {
+            "name": "account_id",
+            "type": "String"
+          },
+          {
             "name": "id",
             "type": "H256"
           },
           {
             "name": "payload",
+            "type": "Bytes"
+          },
+          {
+            "name": "kind",
             "type": "Bytes"
           }
         ],
