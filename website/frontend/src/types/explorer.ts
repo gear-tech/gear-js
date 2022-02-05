@@ -42,6 +42,8 @@ export enum Methods {
   INIT_FAILURE = 'InitFailure',
   DISPATCH_MESSAGE_ENQUEUED = 'DispatchMessageEnqueued',
   MESSAGE_DISPATCHED = 'MessageDispatched',
+  EXTRINSIC_FAILED = 'ExtrinsicFailed',
+  EXTRINSIC_SUCCESS = 'ExtrinsicSuccess',
 }
 
 export type TypeKey = 'handle_output' | 'init_output';
