@@ -1,0 +1,7 @@
+@use 'assets/scss/variables' as *;
+
+.cell {
+  padding-left: 20px;
+  border-bottom: 1px solid $separateLineColor;
+  overflow-x: auto;
+}

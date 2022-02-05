@@ -3,7 +3,10 @@
 .item {
   flex-direction: column;
   align-items: stretch;
-  padding-left: 20px;
+
+  &::before {
+    content: none;
+  }
 }
 
 .text {

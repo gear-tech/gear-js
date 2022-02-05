@@ -1,7 +1,7 @@
 import React from 'react';
 import { Event as DotEvent, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
-import { Extrinsic } from './children/Extrinsic/Extrinsic';
-import { Event } from './children/Event/Event';
+import { Extrinsic } from './Extrinsic/Extrinsic';
+import { Event } from '../../Event/Event';
 import styles from './Row.module.scss';
 
 type Props = {
@@ -14,12 +14,12 @@ const Row = ({ extrinsic, events }: Props) => {
 
   return (
     <>
-      <div>
+      <div className={styles.cell}>
         <Extrinsic extrinsic={extrinsic} />
       </div>
-      <div>{getEvents()}</div>
-      <div></div>
-      <div></div>
+      <div className={styles.cell}>{getEvents()}</div>
+      <div className={styles.cell}></div>
+      <div className={styles.cell}></div>
     </>
   );
 };
