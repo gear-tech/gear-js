@@ -1,14 +1,13 @@
 import React from 'react';
-import { Vec } from '@polkadot/types';
-import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { Extrinsic } from '@polkadot/types/interfaces';
+import { EventRecords } from 'types/explorer';
 import { Row } from './Row/Row';
 import commonStyles from '../../Block.module.scss';
 import styles from './Main.module.scss';
 
 type Props = {
   extrinsics: Extrinsic[];
-  eventRecords: Vec<FrameSystemEventRecord>;
+  eventRecords: EventRecords;
 };
 
 const Main = ({ extrinsics, eventRecords }: Props) => {

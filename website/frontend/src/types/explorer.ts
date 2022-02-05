@@ -1,5 +1,7 @@
 import { GearEvent } from '@gear-js/api';
+import { Vec } from '@polkadot/types';
 import { Event as DotEvent } from '@polkadot/types/interfaces';
+import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { AnyJson } from '@polkadot/types/types';
 import { generateRandomId } from 'helpers';
 
@@ -58,3 +60,5 @@ export type EventGroup = {
 };
 
 export type GroupedEvents = EventGroup[];
+
+export type EventRecords = Vec<FrameSystemEventRecord>;

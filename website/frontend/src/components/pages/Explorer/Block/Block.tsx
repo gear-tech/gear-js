@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { isHex } from '@polkadot/util';
-import { Vec } from '@polkadot/types';
 import { Block as DotBlock } from '@polkadot/types/interfaces';
-import { FrameSystemEventRecord } from '@polkadot/types/lookup';
+import { EventRecords } from 'types/explorer';
 import { useApi } from 'hooks/useApi';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { Summary } from './children/Summary/Summary';
 import { Main } from './children/Main/Main';
+import { System } from './children/System/System';
 import styles from './Block.module.scss';
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 const Block = ({ blockId }: Props) => {
   const [api] = useApi();
   const [block, setBlock] = useState<DotBlock>();
-  const [eventRecords, setEventRecords] = useState<Vec<FrameSystemEventRecord>>();
+  const [eventRecords, setEventRecords] = useState<EventRecords>();
 
   useEffect(() => {
     if (api && blockId) {
@@ -38,6 +38,7 @@ const Block = ({ blockId }: Props) => {
         <>
           <Summary block={block} />
           <Main extrinsics={block.extrinsics} eventRecords={eventRecords} />
+          <System eventRecords={eventRecords} />
         </>
       ) : (
         <Spinner />
