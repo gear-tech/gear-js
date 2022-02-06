@@ -10,8 +10,8 @@ const Search = () => {
     setSearchQuery(value);
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
     const trimmedSearchQuery = searchQuery.trim();
 
     if (trimmedSearchQuery) {
