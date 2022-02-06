@@ -9,3 +9,15 @@
     border-bottom: 1px solid $separateLineColor;
   }
 }
+
+.text {
+  padding-top: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event {
+  &::before {
+    content: none;
+  }
+}

@@ -8,19 +8,20 @@ type Props = {
   description: string;
   blockNumber?: string;
   counter?: number;
+  className?: string;
   children: ReactNode;
 };
 
-const ExpansionPanel = ({ caption, description, blockNumber, counter, children }: Props) => {
+const ExpansionPanel = ({ caption, description, blockNumber, counter, className, children }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const className = clsx('programs-list__item', styles.item);
+  const panelClassName = clsx('programs-list__item', styles.item, className);
 
   const toggle = () => {
     setIsOpen((prevValue) => !prevValue);
   };
 
   return (
-    <li className={className}>
+    <div className={panelClassName}>
       <Header
         caption={caption}
         description={description}
@@ -30,7 +31,7 @@ const ExpansionPanel = ({ caption, description, blockNumber, counter, children }
         onClick={toggle}
       />
       {isOpen && <div className={styles.body}>{children}</div>}
-    </li>
+    </div>
   );
 };
 

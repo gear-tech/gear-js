@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { DispatchInfo, Event as DotEvent, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
 import { Methods, Sections } from 'types/explorer';
 import { Event } from 'components/pages/Explorer/common/Event/Event';
@@ -11,7 +12,7 @@ type Props = {
 };
 
 const Row = ({ extrinsic, events }: Props) => {
-  const getEvents = () => events.map((event, index) => <Event key={index} event={event} />);
+  const getEvents = () => events.map((event, index) => <Event key={index} event={event} className={styles.event} />);
 
   const getInfoEvent = () =>
     events.find(({ section, method }) => {
@@ -38,15 +39,16 @@ const Row = ({ extrinsic, events }: Props) => {
 
   const formattedSigner = isSigned && signer.toString();
   const formattedWeight = weight?.toHuman();
+  const textClassName = clsx(styles.cell, styles.text);
 
   return (
     <>
       <div className={styles.cell}>
-        <Extrinsic extrinsic={extrinsic} />
+        <Extrinsic extrinsic={extrinsic} className={styles.event} />
       </div>
       <div className={styles.cell}>{getEvents()}</div>
-      <div className={styles.cell}>{formattedWeight}</div>
-      <div className={styles.cell}>{formattedSigner}</div>
+      <div className={textClassName}>{formattedWeight}</div>
+      <div className={textClassName}>{formattedSigner}</div>
     </>
   );
 };

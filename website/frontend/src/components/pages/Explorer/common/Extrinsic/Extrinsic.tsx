@@ -6,9 +6,10 @@ import { Pre } from '../Pre/Pre';
 
 type Props = {
   extrinsic: DotExtrinsic;
+  className?: string;
 };
 
-const Extrinsic = ({ extrinsic }: Props) => {
+const Extrinsic = ({ extrinsic, className }: Props) => {
   const { method, section, meta, args } = extrinsic.method;
   const { docs, args: metaArgs } = meta;
 
@@ -26,7 +27,7 @@ const Extrinsic = ({ extrinsic }: Props) => {
   }, {});
 
   return (
-    <ExpansionPanel caption={caption} description={String(description)}>
+    <ExpansionPanel caption={caption} description={String(description)} className={className}>
       <Pre text={data} />
     </ExpansionPanel>
   );

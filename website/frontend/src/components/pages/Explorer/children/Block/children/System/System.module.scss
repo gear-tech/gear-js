@@ -1,11 +1,10 @@
 @use 'assets/scss/variables' as *;
 
 .header {
-  padding-bottom: 20px;
+  margin-bottom: 20px;
   font-size: 21px;
   font-weight: 600;
   color: $textColorSecondary;
-  border-bottom: 1px solid $separateLineColor;
 }
 
 .message {

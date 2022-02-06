@@ -8,9 +8,10 @@ import { LogContent } from '../LogContent/LogContent';
 
 type Props = {
   event: DotEvent;
+  className?: string;
 };
 
-const Event = ({ event }: Props) => {
+const Event = ({ event, className }: Props) => {
   const { method, section, meta, data } = event;
   const { docs } = meta;
 
@@ -21,7 +22,7 @@ const Event = ({ event }: Props) => {
   const content = isLog ? <LogContent data={new LogData(data)} /> : <Content data={data} />;
 
   return (
-    <ExpansionPanel caption={caption} description={String(description)}>
+    <ExpansionPanel caption={caption} description={String(description)} className={className}>
       {content}
     </ExpansionPanel>
   );
