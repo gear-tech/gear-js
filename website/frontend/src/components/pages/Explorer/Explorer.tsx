@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import { EventsProps } from 'types/explorer';
 import { BackButton } from 'common/components/BackButton/BackButton';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
-import { Search } from './Search/Search';
-import { Events } from './Events/Events';
-import { Block } from './Block/Block';
+import { Search } from './children/Search/Search';
+import { Events } from './children/Events/Events';
+import { Block } from './children/Block/Block';
 import styles from './Explorer.module.scss';
 
 type Params = {
