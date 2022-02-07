@@ -119,10 +119,8 @@ export const Message: FC = () => {
       </div>
     </div>
   ) : (
-    <p>
-      <div className="message">
-        <Spinner />
-      </div>
-    </p>
+    <div className="message">
+      <Spinner />
+    </div>
   );
 };
