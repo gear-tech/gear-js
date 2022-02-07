@@ -1,33 +1,18 @@
-import { UnsubscribePromise } from '@polkadot/api/types';
-import { useEffect } from 'react';
+import { Header } from '@polkadot/types/interfaces';
 import { useDispatch } from 'react-redux';
 import { fetchBlockAction } from 'store/actions/actions';
 import { useApi } from './useApi';
+import { useSubscription } from './useSubscription';
 
 export function useBlocks() {
   const [api] = useApi();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    let unsub: UnsubscribePromise | undefined;
+  const setBlock = ({ hash, number }: Header) => {
+    dispatch(fetchBlockAction({ hash: hash.toHex(), number: number.toNumber() }));
+  };
 
-    if (api) {
-      unsub = api.gearEvents.subscribeToNewBlocks((event) => {
-        dispatch(
-          fetchBlockAction({
-            hash: event.hash.toHex(),
-            number: event.number.toNumber(),
-          })
-        );
-      });
-    }
+  const subscribeToBlocks = () => api.gearEvents.subscribeToNewBlocks(setBlock);
 
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-    };
-  }, [api, dispatch]);
+  useSubscription(subscribeToBlocks);
 }

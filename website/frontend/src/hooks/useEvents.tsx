@@ -1,40 +1,29 @@
-import { useEffect, useState } from 'react';
-import { UnsubscribePromise } from '@polkadot/api/types';
+import { useState } from 'react';
 import { Events } from 'types/explorer';
 import { useApi } from './useApi';
 import { getEvents } from 'utils/explorer';
+import { useSubscription } from './useSubscription';
 
 export function useEvents() {
   const [api] = useApi();
   const [events, setEvents] = useState<Events>([]);
 
-  useEffect(() => {
-    let unsub: UnsubscribePromise | undefined;
+  const subscribeToEvents = () =>
+    api.allEvents((eventRecords) => {
+      const { createdAtHash } = eventRecords;
 
-    if (api) {
-      unsub = api.allEvents((eventRecords) => {
-        const { createdAtHash } = eventRecords;
+      // prolly it's better to pass createdAtHash and to get block number inside Event's header
+      if (createdAtHash) {
+        api.blocks.getBlockNumber(createdAtHash).then((blockNumber) => {
+          const formattedBlockNumber = String(blockNumber.toHuman());
+          const newEvents = getEvents(eventRecords, formattedBlockNumber);
 
-        // prolly it's better to pass createdAtHash and to get block number inside Event's header
-        if (createdAtHash) {
-          api.blocks.getBlockNumber(createdAtHash).then((blockNumber) => {
-            const formattedBlockNumber = String(blockNumber.toHuman());
-            const newEvents = getEvents(eventRecords, formattedBlockNumber);
-
-            setEvents((prevEvents) => [...newEvents, ...prevEvents]);
-          });
-        }
-      });
-    }
-
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
+          setEvents((prevEvents) => [...newEvents, ...prevEvents]);
+        });
       }
-    };
-  }, [api]);
+    });
+
+  useSubscription(subscribeToEvents);
 
   return events;
 }
