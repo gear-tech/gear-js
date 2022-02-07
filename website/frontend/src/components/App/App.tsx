@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
@@ -24,9 +24,8 @@ import { RootState } from 'store/reducers';
 import { subscribeToEvents, setApiReady, fetchBlockAction } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
 import { useApi } from 'hooks/useApi';
+import { useEvents } from 'hooks/useEvents';
 import store from '../../store';
-import { getEvents } from 'utils/explorer';
-import { Events } from 'types/explorer';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -59,7 +58,7 @@ const AppComponent: FC = () => {
   const location = useLocation();
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
-  const [events, setEvents] = useState<Events>([]);
+  const events = useEvents();
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
@@ -107,34 +106,6 @@ const AppComponent: FC = () => {
         );
       });
     }
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-    };
-  }, [api, dispatch]);
-
-  useEffect(() => {
-    let unsub: UnsubscribePromise | undefined;
-
-    if (api) {
-      unsub = api.allEvents((eventRecords) => {
-        const { createdAtHash } = eventRecords;
-
-        // prolly it's better to pass createdAtHash and to get block number inside Event's header
-        if (createdAtHash) {
-          api.blocks.getBlockNumber(createdAtHash).then((blockNumber) => {
-            const formattedBlockNumber = String(blockNumber.toHuman());
-            const newEvents = getEvents(eventRecords, formattedBlockNumber);
-
-            setEvents((prevEvents) => [...newEvents, ...prevEvents]);
-          });
-        }
-      });
-    }
-
     return () => {
       if (unsub) {
         (async () => {
