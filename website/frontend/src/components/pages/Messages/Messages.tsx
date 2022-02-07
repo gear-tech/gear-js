@@ -1,7 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { createSelector } from 'reselect';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { Pagination } from 'components/Pagination/Pagination';
 import { getMessagesAction } from 'store/actions/actions';
