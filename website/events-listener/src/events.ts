@@ -124,18 +124,17 @@ const handleEvent = (
   }
 };
 
-export const listen = async (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) => {
-  api.allEvents((events: any) => {
+export const listen = (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) =>
+  api.allEvents(async (events: any) => {
     const blockHash = events.createdAtHash.toHex();
+    const timestamp = await api.blocks.getBlockTimestamp(blockHash);
     const base = {
       genesis,
       blockHash,
-      timestamp: 0,
+      timestamp: timestamp.toNumber(),
     };
 
     events.forEach(async ({ event: { data, method } }: any) => {
-      base.timestamp = (await api.blocks.getBlockTimestamp(blockHash)).toNumber();
-
       try {
         handleEvent(method, base, data, callback);
       } catch (error) {
@@ -144,4 +143,3 @@ export const listen = async (api: GearApi, genesis: string, callback: (arg: { ke
       }
     });
   });
-};
