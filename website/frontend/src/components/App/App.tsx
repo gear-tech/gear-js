@@ -5,18 +5,18 @@ import { positions, Provider as AlertProvider } from 'react-alert';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
+import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
 import { Programs } from 'components/pages/Programs/Programs';
 import { Program } from 'components/pages/Program/Program';
 import { Message } from 'components/pages/Message/Message';
 import Explorer from 'components/pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
-import { Main } from 'components/layouts/Main/Main';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
 import { SendMessage } from 'components/pages/SendMessage/SendMessage';
 import { EditorPage } from 'features/Editor/EditorPage';
 import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
-import { SimpleLoader } from 'components/blocks/SimpleLoader';
+import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
@@ -34,6 +34,7 @@ import 'assets/scss/index.scss';
 import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
 import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
+import { Main } from 'layout/Main/Main';
 
 // alert configuration
 const options = {
@@ -181,9 +182,12 @@ const AppComponent: FC = () => {
               <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
                 <Document />
               </Route>
+              <Route exact path="*">
+                <PageNotFound />
+              </Route>
             </Switch>
           ) : (
-            <SimpleLoader />
+            <Loader />
           )}
         </Main>
         {isFooterHidden() || <Footer />}
