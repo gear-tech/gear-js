@@ -11,22 +11,16 @@ import { SearchForm } from '../../blocks/SearchForm/SearchForm';
 import { LOCAL_STORAGE } from 'consts';
 import './Messages.scss';
 
-const selectMessages = createSelector(
-  (state: RootState) => state.messages,
-  (_ignore: any, completed: string) => completed,
-  (messages, completed) => messages.messages && messages.messages.filter((message) => message.id.includes(completed))
-);
-
 export const Messages: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
 
-  const [search, setSearch] = useState('');
+  const [term, setTerm] = useState('');
 
-  const { messagesCount } = useSelector((state: RootState) => state.messages);
-  const messages = useSelector((state: RootState) => selectMessages(state, search));
+  const messages = useSelector((state: RootState) => state.messages.messages);
+  const messagesCount = useSelector((state: RootState) => state.messages.messagesCount);
 
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
 
@@ -42,9 +36,10 @@ export const Messages: VFC = () => {
         destination: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
+        term,
       })
     );
-  }, [dispatch, offset]);
+  }, [dispatch, offset, term]);
 
   return (
     <div className="messages">
@@ -55,10 +50,10 @@ export const Messages: VFC = () => {
       <div>
         <SearchForm
           handleRemoveQuery={() => {
-            setSearch('');
+            setTerm('');
           }}
           handleSearch={(val: string) => {
-            setSearch(val);
+            setTerm(val);
           }}
           placeholder="Find message by ID"
         />
