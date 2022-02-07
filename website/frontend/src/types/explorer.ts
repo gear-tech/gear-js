@@ -1,18 +1,26 @@
 import { GearEvent } from '@gear-js/api';
-import { Vec } from '@polkadot/types';
-import { Event as DotEvent } from '@polkadot/types/interfaces';
+import { Compact, Vec } from '@polkadot/types';
+import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
-import { AnyJson } from '@polkadot/types/types';
 import { generateRandomId } from 'helpers';
 
-export class Event extends GearEvent {
-  constructor(event: DotEvent, blockNumber: string) {
+export class IdeaEvent extends GearEvent {
+  constructor(event: DotEvent, blockNumber: Compact<BlockNumber>) {
+    const { section, method, meta, hash } = event;
+    const { docs } = meta;
+
     super(event);
-    this._id = `${event.hash}-${generateRandomId()}`;
-    this._blockNumber = blockNumber;
+    this._id = `${hash}-${generateRandomId()}`;
+    this._caption = `${section}.${method}`;
+    this._description = String(docs.toHuman());
+    this._blockNumber = String(blockNumber.toHuman());
   }
 
   private _id: string;
+
+  private _caption: string;
+
+  private _description: string;
 
   private _blockNumber: string;
 
@@ -20,15 +28,23 @@ export class Event extends GearEvent {
     return this._id;
   }
 
+  get caption() {
+    return this._caption;
+  }
+
+  get description() {
+    return this._description;
+  }
+
   get blockNumber() {
     return this._blockNumber;
   }
 }
 
-export type Events = Event[];
+export type IdeaEvents = IdeaEvent[];
 
-export type EventsProps = {
-  events: Events;
+export type IdeaEventsProps = {
+  events: IdeaEvents;
 };
 
 export type FilterValues = { [filter: string]: boolean };
@@ -51,14 +67,10 @@ export enum Methods {
 export type TypeKey = 'handle_output' | 'init_output';
 
 export type EventGroup = {
-  list: Event[];
+  list: IdeaEvents;
   id: string;
-  method: string;
-  caption: string;
-  description: AnyJson;
-  blockNumber: string;
 };
 
-export type GroupedEvents = EventGroup[];
+export type GroupedEvents = IdeaEvents[];
 
 export type EventRecords = Vec<FrameSystemEventRecord>;

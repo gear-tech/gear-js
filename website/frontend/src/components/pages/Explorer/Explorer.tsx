@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { EventsProps } from 'types/explorer';
+import { IdeaEventsProps } from 'types/explorer';
 import { BackButton } from 'common/components/BackButton/BackButton';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 import { Search } from './children/Search/Search';
@@ -12,7 +12,7 @@ type Params = {
   blockId: string | undefined;
 };
 
-const Explorer = ({ events }: EventsProps) => {
+const Explorer = ({ events }: IdeaEventsProps) => {
   const { blockId }: Params = useParams();
 
   return (

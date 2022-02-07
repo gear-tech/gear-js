@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { EventGroup } from '../../common/EventGroup/EventGroup';
 import { Filters } from './Filters/Filters';
-import { FilterValues, EventsProps, Event as IdeaEvent } from 'types/explorer';
-import { getGroupedEvents } from 'utils/explorer';
+import { FilterValues, IdeaEventsProps, IdeaEvent, GroupedEvents } from 'types/explorer';
 import { LOCAL_STORAGE } from 'consts';
 import * as init from './init';
 import styles from './Events.module.scss';
 
-const Events = ({ events }: EventsProps) => {
+const Events = ({ events }: IdeaEventsProps) => {
   const localFilterValues = localStorage.getItem(LOCAL_STORAGE.EVENT_FILTERS);
   const initFilterValues: FilterValues = localFilterValues ? JSON.parse(localFilterValues) : init.filterValues;
   const [filterValues, setFilterValues] = useState(initFilterValues);
@@ -17,8 +16,32 @@ const Events = ({ events }: EventsProps) => {
   const filteredEvents = isAnyFilterSelected ? events.filter(isEventSelected) : events;
   const eventsAmount = filteredEvents.length;
 
-  const groupedEvents = getGroupedEvents(filteredEvents);
-  const getEvents = () => groupedEvents.map((group) => <EventGroup key={group.id} group={group} />);
+  // maybe worth to retrive element's type? to set return type and get rid of any
+  const getLastItem = (array: any[]) => {
+    const lastIndex = array.length - 1;
+    return array[lastIndex];
+  };
+
+  const getGroupedEvents = () =>
+    filteredEvents.reduce((groupedEvents: GroupedEvents, event, index) => {
+      const prevEvent = filteredEvents[index - 1];
+
+      const { caption, blockNumber } = event;
+      const { caption: prevCaption, blockNumber: prevBlockNumber } = prevEvent || {};
+      const isNewGroup = prevCaption !== caption || prevBlockNumber !== blockNumber;
+
+      if (isNewGroup) {
+        groupedEvents.push([]);
+      }
+
+      getLastItem(groupedEvents).push(event);
+
+      return groupedEvents;
+    }, []);
+
+  // for eventGroup it's important to maintain exclusive ID (as well as for event itself),
+  // so group ID is the ID of the oldest event, event that's remaining the same
+  const getEvents = () => getGroupedEvents().map((group) => <EventGroup key={getLastItem(group).id} group={group} />);
 
   return (
     <div className={styles.events}>

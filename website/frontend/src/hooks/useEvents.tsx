@@ -1,25 +1,25 @@
 import { useState } from 'react';
-import { Events } from 'types/explorer';
+import { IdeaEvent, IdeaEvents, Sections } from 'types/explorer';
 import { useApi } from './useApi';
-import { getEvents } from 'utils/explorer';
 import { useSubscription } from './useSubscription';
 
 export function useEvents() {
   const [api] = useApi();
-  const [events, setEvents] = useState<Events>([]);
+  const [events, setEvents] = useState<IdeaEvents>([]);
 
   const subscribeToEvents = () =>
-    api.allEvents((eventRecords) => {
-      const { createdAtHash } = eventRecords;
+    api.allEvents(async (records) => {
+      const { createdAtHash } = records;
 
-      // prolly it's better to pass createdAtHash and to get block number inside Event's header
       if (createdAtHash) {
-        api.blocks.getBlockNumber(createdAtHash).then((blockNumber) => {
-          const formattedBlockNumber = String(blockNumber.toHuman());
-          const newEvents = getEvents(eventRecords, formattedBlockNumber);
+        const blockNumber = await api.blocks.getBlockNumber(createdAtHash);
 
-          setEvents((prevEvents) => [...newEvents, ...prevEvents]);
-        });
+        const newEvents = records
+          .map(({ event }) => new IdeaEvent(event, blockNumber))
+          .filter(({ section }) => section !== Sections.SYSTEM)
+          .reverse();
+
+        setEvents((prevEvents) => [...newEvents, ...prevEvents]);
       }
     });
 
