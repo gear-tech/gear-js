@@ -43,10 +43,12 @@ for (let filePath of testFiles) {
         const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
         const metaFile = readFileSync(join(EXAMPLES_DIR, `${program.name}.meta.wasm`));
         const meta = program.meta ? await getWasmMetadata(metaFile) : {};
-        const programId = api.program.submit(
+        const { programId, salt } = api.program.submit(
           { code, initPayload: program.initPayload, gasLimit: program.gasLimit, value: program.value },
           meta,
         );
+        expect(programId).toBeDefined();
+        expect(salt).toBeDefined();
         programs.set(program.id, {
           id: programId,
           meta,
