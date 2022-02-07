@@ -117,7 +117,7 @@ const program = {
 };
 
 try {
-  const programId = await gearApi.program.submit(uploadProgram, meta);
+  const { programId, salt } = await gearApi.program.submit(uploadProgram, meta);
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
