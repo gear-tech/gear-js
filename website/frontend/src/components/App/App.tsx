@@ -2,7 +2,6 @@ import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
@@ -21,10 +20,10 @@ import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { subscribeToEvents, setApiReady, fetchBlockAction } from '../../store/actions/actions';
+import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
-import { useApi } from 'hooks/useApi';
 import { useEvents } from 'hooks/useEvents';
+import { useBlocks } from 'hooks/useBlocks';
 import store from '../../store';
 
 import './App.scss';
@@ -52,7 +51,7 @@ const options = {
 
 const AppComponent: FC = () => {
   globalStyles();
-  const [api] = useApi();
+  useBlocks();
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -92,28 +91,6 @@ const AppComponent: FC = () => {
       history.replace({ search: searchParams.toString() });
     }
   }, [history, location]);
-
-  useEffect(() => {
-    let unsub: UnsubscribePromise | undefined;
-
-    if (api) {
-      unsub = api.gearEvents.subscribeToNewBlocks((event) => {
-        dispatch(
-          fetchBlockAction({
-            hash: event.hash.toHex(),
-            number: event.number.toNumber(),
-          })
-        );
-      });
-    }
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-    };
-  }, [api, dispatch]);
 
   const isFooterHidden = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');
