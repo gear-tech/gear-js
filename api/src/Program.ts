@@ -1,14 +1,21 @@
-import { Metadata, ProgramId, GetGasSpentOptions } from './interfaces';
+import { Hex, Metadata, ProgramId } from './interfaces';
 import { SubmitProgramError } from './errors';
 import { AnyNumber } from '@polkadot/types/types';
-import { Bytes, U64, u64 } from '@polkadot/types';
+import { Bytes, u64 } from '@polkadot/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
 import { GearTransaction } from './types';
 import { createPayload } from './utils';
-import { GetGasSpentError } from './errors/program.errors';
+import { GearGasSpent } from './GasSpent';
+import { GearApi } from './GearApi';
 
 export class GearProgram extends GearTransaction {
+  gasSpent: GearGasSpent;
+
+  constructor(gearApi: GearApi) {
+    super(gearApi);
+    this.gasSpent = new GearGasSpent(gearApi);
+  }
   /**
    * @param program Uploading program data
    * @param meta Metadata
@@ -24,7 +31,7 @@ export class GearProgram extends GearTransaction {
     },
     meta?: Metadata,
     messageType?: string,
-  ): ProgramId {
+  ): Hex {
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
     let payload = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
@@ -46,50 +53,6 @@ export class GearProgram extends GearTransaction {
       return `0x${prog.toHex().slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
     });
     return programs;
-  }
-
-  /**
-   * @param options Options to get gasSpent
-   * @param meta Program metadata
-   * @returns number in U64 format
-   * @example
-   * ```javascript
-   * const gas = await gearApi.program.getGasSpent({
-   *  accountId: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-   *  programId: '0x63b24c46d63b43659605d29d5c924ff93de13d620c44fe684b7e2f0757cb7602',
-   *  payload: 'PING',
-   *  kind: 'Handle',
-   *  typeOfPayload: 'String'
-   * })
-   * console.log(gas.toHuman())
-   * ```
-   */
-  async getGasSpent(options: GetGasSpentOptions, meta?: Metadata): Promise<U64> {
-    const { accountId, programId, payload, kind, kindReplyOptions, typeOfPayload } = options;
-    let type = typeOfPayload;
-    if (!typeOfPayload) {
-      if (!meta) {
-        throw new GetGasSpentError('Impossible to create bytes from payload without specified type or meta');
-      }
-      switch (kind) {
-        case 'Handle':
-          type = meta.handle_input;
-          break;
-        case 'Init':
-          type = meta.init_input;
-          break;
-        case 'Reply':
-          type = meta.async_handle_input;
-          if (kindReplyOptions?.length < 2) {
-            throw new GetGasSpentError(`kindReplyOptions is required parameter when kind is 'Reply'`);
-          }
-          break;
-      }
-    }
-    const payloadBytes = createPayload(this.createType, type, payload, meta);
-    const kindBytes = this.createType.create('HandleKind', kind === 'Reply' ? { Reply: kindReplyOptions } : kind);
-    const gasSpent = await this.api.rpc.gear.getGasSpent(accountId, programId, payloadBytes, kindBytes.toHex());
-    return gasSpent;
   }
 
   generateProgramId(code: Bytes, salt: string): H256 {

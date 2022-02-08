@@ -1,19 +1,14 @@
-import type { Observable, Codec } from '@polkadot/types/types';
-import type { U64, Bytes } from '@polkadot/types';
+import type { Observable } from '@polkadot/types/types';
+import type { U64 } from '@polkadot/types';
 import { AugmentedRpc } from '@polkadot/api/types';
-import { AccountId, ProgramId } from './gear-api';
+import { Hex } from './gear-type';
 
 declare module '@polkadot/rpc-core/types/jsonrpc' {
   export interface RpcInterface {
     gear: {
-      getGasSpent: AugmentedRpc<
-        (
-          accountId: AccountId,
-          id: ProgramId,
-          payload: string | Bytes | Uint8Array,
-          kind: string | Bytes | Uint8Array | Codec,
-        ) => Observable<U64>
-      >;
+      getInitGasSpent: AugmentedRpc<(source: Hex, code: Hex, payload: Hex) => Observable<U64>>;
+      getHandleGasSpent: AugmentedRpc<(source: Hex, dest: Hex, payload: Hex) => Observable<U64>>;
+      getReplyGasSpent: AugmentedRpc<(source: Hex, messageId: Hex, exitCode: number, payload: Hex) => Observable<U64>>;
     };
   }
 }

@@ -65,16 +65,6 @@
       "message_id": "H256",
       "program_id": "H256",
       "origin": "H256"
-    },
-    "HandleKind": {
-      "_enum": {
-        "Init": "Null",
-        "Handle": "Null",
-        "Reply": {
-          "0": "H256",
-          "1": "ExitCode"
-        }
-      }
     }
   }
 }

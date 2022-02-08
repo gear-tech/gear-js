@@ -1,24 +1,60 @@
 {
   "rpc": {
     "gear": {
-      "getGasSpent": {
-        "description": "Get GasSpent",
+      "getInitGasSpent": {
+        "description": "Get GasSpent for Init message",
         "params": [
           {
-            "name": "account_id",
-            "type": "String"
+            "name": "source",
+            "type": "H256"
           },
           {
-            "name": "id",
+            "name": "code",
+            "type": "Vec<u8>"
+          },
+          {
+            "name": "payload",
+            "type": "Vec<u8>"
+          }
+        ],
+        "type": "u64"
+      },
+      "getHandleGasSpent": {
+        "description": "Get GasSpent for Handle message",
+        "params": [
+          {
+            "name": "source",
+            "type": "H256"
+          },
+          {
+            "name": "dest",
             "type": "H256"
           },
           {
             "name": "payload",
-            "type": "Bytes"
+            "type": "Vec<u8>"
+          }
+        ],
+        "type": "u64"
+      },
+      "getReplyGasSpent": {
+        "description": "Get GasSpent for Handle message",
+        "params": [
+          {
+            "name": "source",
+            "type": "H256"
           },
           {
-            "name": "kind",
-            "type": "Bytes"
+            "name": "message_id",
+            "type": "H256"
+          },
+          {
+            "name": "exit_code",
+            "type": "i32"
+          },
+          {
+            "name": "payload",
+            "type": "Vec<u8>"
           }
         ],
         "type": "u64"

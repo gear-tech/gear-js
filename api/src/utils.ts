@@ -1,6 +1,6 @@
 import { stringCamelCase, isHex } from '@polkadot/util';
 import { Bytes, Text } from '@polkadot/types';
-import { Metadata } from './interfaces';
+import { Hex, Metadata } from './interfaces';
 import { CreateType } from './CreateType';
 
 export function transformTypes(types: object): any {
@@ -55,9 +55,9 @@ export function splitByCommas(str: string) {
   return result;
 }
 
-export function createPayload(createType: CreateType, type: any, data: any, meta?: Metadata): string {
+export function createPayload(createType: CreateType, type: any, data: any, meta?: Metadata): Hex {
   if (data === undefined) {
-    return '';
+    return '0x00';
   }
   if (isHex(data)) {
     return data;
