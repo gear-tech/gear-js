@@ -8,18 +8,8 @@ import { restartIfNeeded, setRestartNeeded } from './lifecycle';
 
 const log = logger('Main');
 
-let shouldRun = true;
-
-process.on('SIGTERM', () => {
-  shouldRun = false;
-});
-
-process.on('SIGINT', () => {
-  shouldRun = false;
-});
-
 const main = async () => {
-  while (shouldRun) {
+  while (true) {
     log.info('Starting...');
     const api = await GearApi.create({ providerAddress: config.api.provider, throwOnConnect: true });
     api.on('error', () => {
