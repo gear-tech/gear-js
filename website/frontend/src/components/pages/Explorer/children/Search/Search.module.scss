@@ -1,12 +1,16 @@
 @use 'assets/scss/variables' as *;
+@use 'assets/scss/breakpoints' as *;
 
 .search {
   flex: 1;
   display: flex;
   max-width: 655px;
-  margin-right: auto;
   margin-left: 32px;
   font-size: 16px;
+
+  @include md {
+    flex-direction: column;
+  }
 }
 
 .wrapper {
@@ -22,10 +26,15 @@
     padding-left: 20px;
     font-size: 0;
   }
+
+  @include md {
+    margin-right: 0;
+    margin-bottom: 16px;
+  }
 }
 
 .input {
-  flex: 1;
+  width: 100%;
   padding: 12px 20px;
   font-size: inherit;
   font-weight: 400;
@@ -37,6 +46,7 @@
 
 .button {
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 12px 24px;
   font-size: inherit;

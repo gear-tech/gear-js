@@ -39,8 +39,8 @@ const Events = ({ events }: IdeaEventsProps) => {
       return groupedEvents;
     }, []);
 
-  // for eventGroup it's important to maintain exclusive ID (as well as for event itself),
-  // so group ID is the ID of the oldest event, event that's remaining the same
+  // it's important to maintain exclusive ID,
+  // so group ID is the ID of the oldest event in this group, event that's remaining the same
   const getEvents = () => getGroupedEvents().map((group) => <Event key={getLastItem(group).id} value={group} />);
 
   return (

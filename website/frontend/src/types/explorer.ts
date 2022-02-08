@@ -47,6 +47,8 @@ export type IdeaEventsProps = {
   events: IdeaEvents;
 };
 
+export type GroupedEvents = IdeaEvents[];
+
 export type FilterValues = { [filter: string]: boolean };
 
 export enum Sections {
@@ -63,14 +65,5 @@ export enum Methods {
   EXTRINSIC_FAILED = 'ExtrinsicFailed',
   EXTRINSIC_SUCCESS = 'ExtrinsicSuccess',
 }
-
-export type TypeKey = 'handle_output' | 'init_output';
-
-export type EventGroup = {
-  list: IdeaEvents;
-  id: string;
-};
-
-export type GroupedEvents = IdeaEvents[];
 
 export type EventRecords = Vec<FrameSystemEventRecord>;

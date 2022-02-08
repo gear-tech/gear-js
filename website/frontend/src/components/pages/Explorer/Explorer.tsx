@@ -18,8 +18,10 @@ const Explorer = ({ events }: IdeaEventsProps) => {
   return (
     <div className={styles.explorer}>
       <header className={styles.header}>
-        <BackButton />
-        <Search />
+        <div className={styles.search}>
+          <BackButton />
+          <Search />
+        </div>
         <BlocksSummary />
       </header>
       {blockId ? <Block blockId={blockId} /> : <Events events={events} />}

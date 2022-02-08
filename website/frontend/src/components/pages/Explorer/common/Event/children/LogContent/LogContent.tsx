@@ -5,10 +5,11 @@ import { Codec } from '@polkadot/types/types';
 import { ProgramModel } from 'types/program';
 import { programService } from 'services/ProgramsRequestService';
 import { getLocalProgram, isDevChain } from 'helpers';
-import { TypeKey } from 'types/explorer';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
 import { Pre } from '../../../Pre/Pre';
 import styles from './LogContent.module.scss';
+
+type TypeKey = 'handle_output' | 'init_output';
 
 type Props = {
   data: LogData;
