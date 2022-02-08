@@ -1,20 +1,20 @@
 import React from 'react';
 import { Extrinsic } from '@polkadot/types/interfaces';
-import { EventRecords } from 'types/explorer';
+import { EventRecords, IdeaEvent } from 'types/explorer';
 import { Row } from './Row/Row';
 import commonStyles from '../../Block.module.scss';
-import styles from './Main.module.scss';
+import styles from './MainTable.module.scss';
 
 type Props = {
   extrinsics: Extrinsic[];
   eventRecords: EventRecords;
 };
 
-const Main = ({ extrinsics, eventRecords }: Props) => {
+const MainTable = ({ extrinsics, eventRecords }: Props) => {
   const getExtrinsicEvents = (index: number) =>
     eventRecords
       .filter(({ phase }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(index))
-      .map(({ event }) => event);
+      .map(({ event }) => new IdeaEvent(event));
 
   const getRows = () =>
     extrinsics.map((extrinsic, index) => <Row key={index} extrinsic={extrinsic} events={getExtrinsicEvents(index)} />);
@@ -30,4 +30,4 @@ const Main = ({ extrinsics, eventRecords }: Props) => {
   );
 };
 
-export { Main };
+export { MainTable };

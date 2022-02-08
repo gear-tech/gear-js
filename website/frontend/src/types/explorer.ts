@@ -5,7 +5,7 @@ import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { generateRandomId } from 'helpers';
 
 export class IdeaEvent extends GearEvent {
-  constructor(event: DotEvent, blockNumber: Compact<BlockNumber>) {
+  constructor(event: DotEvent, blockNumber?: Compact<BlockNumber>) {
     const { section, method, meta, hash } = event;
     const { docs } = meta;
 
@@ -13,7 +13,7 @@ export class IdeaEvent extends GearEvent {
     this._id = `${hash}-${generateRandomId()}`;
     this._caption = `${section}.${method}`;
     this._description = String(docs.toHuman());
-    this._blockNumber = String(blockNumber.toHuman());
+    this._blockNumber = blockNumber ? String(blockNumber.toHuman()) : undefined;
   }
 
   private _id: string;
@@ -22,7 +22,7 @@ export class IdeaEvent extends GearEvent {
 
   private _description: string;
 
-  private _blockNumber: string;
+  private _blockNumber: string | undefined;
 
   get id() {
     return this._id;

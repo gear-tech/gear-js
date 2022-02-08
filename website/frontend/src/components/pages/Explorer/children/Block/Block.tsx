@@ -5,7 +5,7 @@ import { EventRecords } from 'types/explorer';
 import { useApi } from 'hooks/useApi';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { Summary } from './children/Summary/Summary';
-import { Main } from './children/Main/Main';
+import { MainTable } from './children/MainTable/MainTable';
 import { System } from './children/System/System';
 import styles from './Block.module.scss';
 
@@ -37,7 +37,7 @@ const Block = ({ blockId }: Props) => {
       {block && eventRecords ? (
         <>
           <Summary block={block} />
-          <Main extrinsics={block.extrinsics} eventRecords={eventRecords} />
+          <MainTable extrinsics={block.extrinsics} eventRecords={eventRecords} />
           <System eventRecords={eventRecords} />
         </>
       ) : (

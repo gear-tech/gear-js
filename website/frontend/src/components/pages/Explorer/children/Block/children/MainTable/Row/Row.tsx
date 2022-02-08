@@ -1,18 +1,18 @@
 import React from 'react';
 import clsx from 'clsx';
-import { DispatchInfo, Event as DotEvent, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
-import { Methods, Sections } from 'types/explorer';
+import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
+import { IdeaEvents, Methods, Sections } from 'types/explorer';
 import { Event } from 'components/pages/Explorer/common/Event/Event';
 import { Extrinsic } from 'components/pages/Explorer/common/Extrinsic/Extrinsic';
 import styles from './Row.module.scss';
 
 type Props = {
   extrinsic: DotExtrinsic;
-  events: DotEvent[];
+  events: IdeaEvents;
 };
 
 const Row = ({ extrinsic, events }: Props) => {
-  const getEvents = () => events.map((event, index) => <Event key={index} event={event} className={styles.event} />);
+  const getEvents = () => events.map((event, index) => <Event key={index} value={event} className={styles.event} />);
 
   const getInfoEvent = () =>
     events.find(({ section, method }) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { GenericEventData } from '@polkadot/types';
-import { Pre } from '../Pre/Pre';
+import { Pre } from '../../../Pre/Pre';
 
 type Props = {
   data: GenericEventData;

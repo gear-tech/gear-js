@@ -7,7 +7,7 @@ import { programService } from 'services/ProgramsRequestService';
 import { getLocalProgram, isDevChain } from 'helpers';
 import { TypeKey } from 'types/explorer';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
-import { Pre } from '../Pre/Pre';
+import { Pre } from '../../../Pre/Pre';
 import styles from './LogContent.module.scss';
 
 type Props = {

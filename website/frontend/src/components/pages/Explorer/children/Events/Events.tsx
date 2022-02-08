@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { EventGroup } from '../../common/EventGroup/EventGroup';
+import { Event } from '../../common/Event/Event';
 import { Filters } from './Filters/Filters';
 import { FilterValues, IdeaEventsProps, IdeaEvent, GroupedEvents } from 'types/explorer';
 import { LOCAL_STORAGE } from 'consts';
@@ -41,7 +41,7 @@ const Events = ({ events }: IdeaEventsProps) => {
 
   // for eventGroup it's important to maintain exclusive ID (as well as for event itself),
   // so group ID is the ID of the oldest event, event that's remaining the same
-  const getEvents = () => getGroupedEvents().map((group) => <EventGroup key={getLastItem(group).id} group={group} />);
+  const getEvents = () => getGroupedEvents().map((group) => <Event key={getLastItem(group).id} value={group} />);
 
   return (
     <div className={styles.events}>
@@ -49,7 +49,7 @@ const Events = ({ events }: IdeaEventsProps) => {
         <h3 className={styles.heading}>Recent events: {eventsAmount}</h3>
         <Filters values={filterValues} setValues={setFilterValues} isAnySelected={isAnyFilterSelected} />
       </header>
-      {eventsAmount > 0 ? <ul className="programs-list">{getEvents()}</ul> : <p>There are no events.</p>}
+      {eventsAmount > 0 ? <div className="programs-list">{getEvents()}</div> : <p>There are no events.</p>}
     </div>
   );
 };

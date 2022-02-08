@@ -1,29 +1,38 @@
 import React from 'react';
 import { LogData } from '@gear-js/api';
-import { Event as DotEvent } from '@polkadot/types/interfaces';
-import { Methods } from 'types/explorer';
+import { IdeaEvent, IdeaEvents, Methods } from 'types/explorer';
 import { ExpansionPanel } from 'components/pages/Explorer/common/ExpansionPanel/ExpansionPanel';
-import { Content } from '../Content/Content';
-import { LogContent } from '../LogContent/LogContent';
+import { Content } from './children/Content/Content';
+import { LogContent } from './children/LogContent/LogContent';
 
 type Props = {
-  event: DotEvent;
+  value: IdeaEvent | IdeaEvents;
   className?: string;
 };
 
-const Event = ({ event, className }: Props) => {
-  const { method, section, meta, data } = event;
-  const { docs } = meta;
+const Event = ({ value, className }: Props) => {
+  const isGroup = Array.isArray(value);
 
-  const caption = `${section}.${method}`;
-  const description = docs.toHuman();
+  const event = isGroup ? value[0] : value;
+  const { method, caption, description, blockNumber } = event;
 
+  const counter = isGroup ? value.length : undefined;
   const isLog = method === Methods.LOG;
-  const content = isLog ? <LogContent data={new LogData(data)} /> : <Content data={data} />;
+
+  const getContent = ({ id, data }: IdeaEvent = event) =>
+    isLog ? <LogContent key={id} data={new LogData(data)} /> : <Content key={id} data={data} />;
+
+  const getBody = () => (isGroup ? value.map(getContent) : getContent());
 
   return (
-    <ExpansionPanel caption={caption} description={String(description)} className={className}>
-      {content}
+    <ExpansionPanel
+      caption={caption}
+      description={description}
+      className={className}
+      counter={counter}
+      blockNumber={blockNumber}
+    >
+      {getBody()}
     </ExpansionPanel>
   );
 };

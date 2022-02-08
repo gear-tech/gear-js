@@ -1,5 +1,5 @@
 import React from 'react';
-import { EventRecords } from 'types/explorer';
+import { EventRecords, IdeaEvent } from 'types/explorer';
 import { Event } from 'components/pages/Explorer/common/Event/Event';
 import styles from './System.module.scss';
 
@@ -8,15 +8,18 @@ type Props = {
 };
 
 const System = ({ eventRecords }: Props) => {
-  const systemEvents = eventRecords.filter(({ phase }) => !phase.isApplyExtrinsic).map(({ event }) => event);
+  const systemEvents = eventRecords
+    .filter(({ phase }) => !phase.isApplyExtrinsic)
+    .map(({ event }) => new IdeaEvent(event));
+
   const isAnyEvent = systemEvents.length > 0;
 
-  const getEvents = () => systemEvents.map((event, index) => <Event key={index} event={event} />);
+  const getEvents = () => systemEvents.map((event, index) => <Event key={index} value={event} />);
 
   return (
     <div className={styles.system}>
       <div className={styles.header}>System events</div>
-      {isAnyEvent ? <ul>{getEvents()}</ul> : <p className={styles.message}>No events available.</p>}
+      {isAnyEvent ? <div>{getEvents()}</div> : <p className={styles.message}>No events available.</p>}
     </div>
   );
 };
