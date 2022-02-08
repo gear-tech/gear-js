@@ -14,8 +14,11 @@ import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
 import { EventTypes } from 'types/events';
 import styles from './State.module.scss';
+import { getPreformattedText } from 'helpers';
 
 type Params = { id: string };
+type FormValues = { fields: object; payload: string };
+
 const selectProgram = (state: RootState) => state.programs.program;
 
 const State: VFC = () => {
@@ -33,9 +36,11 @@ const State: VFC = () => {
   const types = metadata?.types;
   const stateInput = metadata?.meta_state_input;
 
+  const [typeStructure, setTypeStructure] = useState({});
   const [form, setForm] = useState<ParsedShape | null>(null);
   const [state, setState] = useState('');
   const [isManualInput, setIsManualInput] = useState(false);
+  const initValues = { payload: typeStructure ? getPreformattedText(typeStructure) : '', fields: {} };
 
   useEffect(() => {
     dispatch(getProgramAction(programId));
@@ -63,9 +68,10 @@ const State: VFC = () => {
   const getPayloadForm = useCallback(() => {
     if (stateInput && types) {
       const parsedTypes = parseHexTypes(types);
-      const typeStructure = getTypeStructure(stateInput, parsedTypes);
-      const parsedStructure = parseMeta(typeStructure);
-      setForm(parsedStructure);
+      const typeStruct = getTypeStructure(stateInput, parsedTypes);
+      const parsedStruct = parseMeta(typeStruct);
+      setTypeStructure(typeStruct);
+      setForm(parsedStruct);
     }
   }, [stateInput, types]);
 
@@ -98,9 +104,8 @@ const State: VFC = () => {
     routeHistory.goBack();
   };
 
-  const handleSubmit = (value: { fields: object }) => {
-    const { fields } = value;
-    const [options] = Object.values(fields);
+  const handleSubmit = ({ fields, payload }: FormValues) => {
+    const options = isManualInput ? payload : Object.values(fields)[0];
 
     if (options) {
       readState(options);
@@ -120,7 +125,7 @@ const State: VFC = () => {
         <button className={styles.arrowButton} type="button" aria-label="back" onClick={handleBackButtonClick} />
         <h2 className={styles.heading}>Read state</h2>
       </header>
-      <Formik initialValues={{ fields: {} }} onSubmit={handleSubmit}>
+      <Formik initialValues={initValues} onSubmit={handleSubmit} enableReinitialize>
         <Form className={styles.form}>
           <div className={styles.block}>
             <div className={styles.item}>
