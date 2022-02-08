@@ -19,8 +19,16 @@ const Block = ({ blockId }: Props) => {
   const [eventRecords, setEventRecords] = useState<EventRecords>();
   const [error, setError] = useState('');
 
+  const resetState = () => {
+    setBlock(undefined);
+    setEventRecords(undefined);
+    setError('');
+  };
+
   useEffect(() => {
-    if (api && blockId) {
+    if (api) {
+      resetState();
+
       const isBlockHash = isHex(blockId);
       const id = isBlockHash ? (blockId as `0x${string}`) : Number(blockId);
 
