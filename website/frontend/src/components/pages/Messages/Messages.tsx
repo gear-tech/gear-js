@@ -1,31 +1,25 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { createSelector } from 'reselect';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { Pagination } from 'components/Pagination/Pagination';
 import { getMessagesAction } from 'store/actions/actions';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { RootState } from 'store/reducers';
 import { SearchForm } from '../../blocks/SearchForm/SearchForm';
+import { LOCAL_STORAGE } from 'consts';
 import './Messages.scss';
-
-const selectMessages = createSelector(
-  (state: RootState) => state.messages,
-  (_ignore: any, completed: string) => completed,
-  (messages, completed) => messages.messages && messages.messages.filter((message) => message.id.includes(completed))
-);
 
 export const Messages: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const urlSearch = location.search;
-  const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
+  const searchParams = new URLSearchParams(location.search);
+  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
 
-  const [search, setSearch] = useState('');
+  const [term, setTerm] = useState('');
 
-  const { messagesCount } = useSelector((state: RootState) => state.messages);
-  const messages = useSelector((state: RootState) => selectMessages(state, search));
+  const messages = useSelector((state: RootState) => state.messages.messages);
+  const messagesCount = useSelector((state: RootState) => state.messages.messagesCount);
 
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
 
@@ -38,12 +32,13 @@ export const Messages: VFC = () => {
   useEffect(() => {
     dispatch(
       getMessagesAction({
-        destination: localStorage.getItem('public_key_raw'),
+        destination: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
+        term,
       })
     );
-  }, [dispatch, offset]);
+  }, [dispatch, offset, term]);
 
   return (
     <div className="messages">
@@ -54,10 +49,10 @@ export const Messages: VFC = () => {
       <div>
         <SearchForm
           handleRemoveQuery={() => {
-            setSearch('');
+            setTerm('');
           }}
           handleSearch={(val: string) => {
-            setSearch(val);
+            setTerm(val);
           }}
           placeholder="Find message by ID"
         />

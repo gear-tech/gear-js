@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Meta } from 'components/Meta/Meta';
+import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { getAllProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
@@ -21,8 +22,8 @@ type ProgramMessageType = {
 export const All: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const urlSearch = location.search;
-  const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
+  const searchParams = new URLSearchParams(location.search);
+  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
 
   const [term, setTerm] = useState('');
   const programs = useSelector((state: RootState) => state.programs.allUploadedPrograms);
@@ -76,6 +77,7 @@ export const All: VFC = () => {
         />
         <br />
       </div>
+      <ProgramsLegend />
       <div className={styles.allProgramsList}>
         {(programs &&
           programsCount &&

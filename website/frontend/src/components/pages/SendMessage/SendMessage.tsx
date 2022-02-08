@@ -3,16 +3,16 @@ import { useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
-import { Loader } from 'react-feather';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
 import { EventTypes } from 'types/events';
 import { AddAlert } from 'store/actions/actions';
-import { fileNameHandler } from 'helpers';
+import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
+import { Spinner } from 'components/blocks/Spinner/Spinner';
 import './SendMessage.scss';
 
 type Params = { id: string };
@@ -23,26 +23,26 @@ export const SendMessage: VFC = () => {
   const routeParams = useParams<Params>();
   const programId = routeParams.id;
 
-  const [meta, setMeta] = useState<Metadata | null>(null);
+  const [meta, setMeta] = useState<Metadata>();
   const [types, setTypes] = useState<MetaParam | null>(null);
   const [ready, setReady] = useState(false);
 
-  const getMeta = useCallback(() => {
+  const fetchMeta = useCallback(async (id: string) => {
     const apiRequest = new ServerRPCRequestService();
 
-    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, {
-      programId,
-    });
-  }, [programId]);
+    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId: id });
+  }, []);
+
+  const getMeta = isDevChain() ? getLocalProgramMeta : fetchMeta;
 
   useEffect(() => {
     if (!meta) {
-      getMeta()
+      getMeta(programId)
         .then((res) => setMeta(JSON.parse(res.result.meta) ?? null))
         .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
         .finally(() => setReady(true));
     }
-  }, [meta, getMeta, dispatch]);
+  }, [meta, programId, getMeta, dispatch]);
 
   useEffect(() => {
     if (meta && meta.types && meta.handle_input) {
@@ -73,7 +73,7 @@ export const SendMessage: VFC = () => {
     </div>
   ) : (
     <div className="wrapper">
-      <Loader color="#fff" className="animation-rotate" />;
+      <Spinner />
     </div>
   );
 };

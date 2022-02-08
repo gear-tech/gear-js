@@ -32,3 +32,35 @@ describe('GearApi', () => {
     expect(await api.totalIssuance()).toBeDefined();
   });
 });
+
+describe('Blocks', () => {
+  test('get hash of the first block', async () => {
+    expect(await api.blocks.getBlockHash(1)).toBeDefined();
+  });
+
+  test('get events of the first block', async () => {
+    expect(await api.blocks.getEvents(await api.blocks.getBlockHash(1))).toBeDefined();
+  });
+
+  test('get extrinsics of the first block', async () => {
+    expect(await api.blocks.getExtrinsics(await api.blocks.getBlockHash(1))).toBeDefined();
+  });
+
+  test('get finalized head', async () => {
+    expect(await api.blocks.getFinalizedHead()).toBeDefined();
+  });
+
+  test('get block by block number', async () => {
+    expect(await api.blocks.get(1)).toBeDefined();
+  });
+
+  test('get block timestamp', async () => {
+    expect(await api.blocks.getBlockTimestamp(1)).toBeDefined();
+  });
+
+  test('get block number by hash', async () => {
+    const hash = await api.blocks.getBlockHash(1);
+    const blockNumber = await api.blocks.getBlockNumber(hash.toHex());
+    expect(blockNumber.toNumber()).toBe(1);
+  });
+});

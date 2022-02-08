@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://gear-tech.io">
-    <img src="https://raw.githubusercontent.com/gear-tech/gear/master/images/logo.svg" width="250" alt="GEAR">
+    <img src="https://github.com/gear-tech/gear/blob/master/images/logo-grey.png" width="400" alt="GEAR">
   </a>
 </p>
 <p align=center>
@@ -15,6 +15,14 @@ JavaScript library that provides functionality to connect Gear node and interact
 Refer to the [api](https://github.com/gear-tech/gear-js/blob/master/api/README.md) docs for detail
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/api)
+
+## [@gear-js/gear-meta](https://github.com/gear-tech/gear-js/tree/master/utils/meta-cli)
+
+JavaScript CLI tool that provides functionality to work with `.meta.wasm` files.
+
+Refer to the [meta-cli](https://github.com/gear-tech/gear-js/blob/master/utils/meta-cli/README.md) docs for detail
+
+#### [npm package](https://www.npmjs.com/package/@gear-js/gear-meta)
 
 ## [website](https://github.com/gear-tech/gear-js/tree/master/website)
 

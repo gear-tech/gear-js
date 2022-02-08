@@ -77,12 +77,20 @@ export const getLocalPrograms = (params: any) => {
 
       data.result.count = iterationNumber;
 
-      if (iterationNumber <= newLimit && iterationNumber > params.offset) {
+      if (params.term) {
+        if (
+          (elem.name?.includes(params.term) || elem.id?.includes(params.term)) &&
+          iterationNumber <= newLimit &&
+          iterationNumber > params.offset
+        ) {
+          data.result.programs.push(elem);
+        }
+      } else if (iterationNumber <= newLimit && iterationNumber > params.offset) {
         data.result.programs.push(elem);
       }
     })
     .then(() => {
-      data.result.programs.sort((prev, next) => (prev.uploadedAt > next.uploadedAt ? -1 : 1));
+      data.result.programs.sort((prev, next) => (prev.timestamp > next.timestamp ? -1 : 1));
 
       return data;
     });
@@ -91,7 +99,7 @@ export const getLocalPrograms = (params: any) => {
 export const getLocalProgram = (id: string) => {
   const result: ProgramModel = {
     id: '',
-    uploadedAt: '',
+    timestamp: '',
     initStatus: ProgramStatus.Success,
   };
   const data = { result };
@@ -129,3 +137,5 @@ export const getLocalProgramMeta = (id: string) => {
 export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DEVELOPMENT_CHAIN;
 
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
+
+export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);

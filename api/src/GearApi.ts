@@ -12,6 +12,7 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { PromiseResult } from '@polkadot/api/types';
 import { Vec } from '@polkadot/types';
 import { Observable } from 'rxjs';
+import { GearBlock } from './Blocks';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -22,6 +23,7 @@ export class GearApi extends ApiPromise {
   public allEvents: PromiseResult<() => Observable<Vec<EventRecord>>>;
   public gearEvents: GearEvents;
   public defaultTypes: any;
+  public blocks: GearBlock;
 
   constructor(options?: GearApiOptions) {
     const provider = options?.provider
@@ -48,14 +50,15 @@ export class GearApi extends ApiPromise {
       ...options,
     });
     this.isReady.then(() => {
-      this.program = new GearProgram(this, 'InitMessageEnqueued');
-      this.message = new GearMessage(this, 'DispatchMessageEnqueued');
+      this.program = new GearProgram(this);
+      this.message = new GearMessage(this);
       this.balance = new GearBalance(this);
       this.reply = new GearMessageReply(this);
       this.allEvents = this.query.system.events;
       this.gearEvents = new GearEvents(this);
       this.defaultTypes = defaultTypes;
       this.programState = new GearProgramState(this);
+      this.blocks = new GearBlock(this);
     });
   }
 

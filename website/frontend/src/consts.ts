@@ -11,12 +11,19 @@ export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 
 export const LOCAL_STORAGE = {
   CHAIN: 'chain',
+  GENESIS: 'genesis',
+  NODES: 'nodes',
+  NODE_ADDRESS: 'node_address',
+  PUBLIC_KEY_RAW: 'public_key_raw',
+  PROGRAM_COMPILE_ID: 'program_compile_id',
+  SAVED_ACCOUNT: 'saved_account',
+  EVENT_FILTERS: 'eventFilters',
 };
 
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
   INVALID_PARAMS: 'Invalid method parameters',
-  INVALID_TRANSACTION: 'Invalid transaction',
+  INVALID_TRANSACTION: 'Transaction error. Status: isInvalid',
   PROGRAM_INIT_FAILED: 'Program initialization failed',
   GEAR_NODE_ERROR: 'Gear node error',
   BALANCE_LOW: 'Invalid transaction. Account balance too low',

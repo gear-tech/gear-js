@@ -1,0 +1,38 @@
+{
+  "name": "@gear-js/gear-meta",
+  "description": "CLI tool to decode / encode payloads and work with .meta.wasm files",
+  "type": "module",
+  "bin": "src/app.js",
+  "main": "src/app.js",
+  "version": "0.1.0",
+  "preferGlobal": true,
+  "dependencies": {
+    "@gear-js/api": "^0.10.0",
+    "@polkadot/api": "^7.4.1",
+    "chalk": "^5.0.0",
+    "commander": "^8.3.0",
+    "inquirer": "^8.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gear-tech/gear-js.git"
+  },
+  "keywords": [
+    "gear",
+    "gear-js",
+    "gear-meta",
+    "gear-cli"
+  ],
+  "author": "Gear Technologies",
+  "bugs": {
+    "url": "https://github.com/gear-tech/gear-js/issues"
+  },
+  "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/meta-cli#readme",
+  "license": "GPL-3.0",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "devDependencies": {
+    "jest": "^27.4.7"
+  }
+}

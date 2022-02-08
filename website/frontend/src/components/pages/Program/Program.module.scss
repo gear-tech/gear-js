@@ -1,0 +1,179 @@
+@import '../../../assets/scss/variables';
+
+.program {
+  margin: 40px;
+  @media (max-width: 768px) {
+    margin: 0 20px;
+  }
+  .goBack {
+    margin-bottom: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    .goBackIcon {
+      margin: 0 10px 0 28px;
+      @media (max-width: 768px) {
+        margin: 0 10px 0 15px;
+      }
+    }
+    .goBackText {
+      font-size: 21px;
+      color: $textColor;
+      text-transform: uppercase;
+      @media (max-width: 768px) {
+        font-size: 16px;
+      }
+    }
+  }
+  .container {
+    background-color: $bkgActiveButtonColor;
+    border-radius: 2px;
+    border: 1px dashed #0e0e0e;
+    margin: 0 0 40px 0;
+    padding: 30px 25px;
+    @media (max-width: 768px) {
+      padding: 15px;
+    }
+    .list {
+      width: 85%;
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+    .item {
+      width: 100%;
+      display: flex;
+      margin-bottom: 25px;
+      @media (max-width: 768px) {
+        flex-direction: column;
+        margin-bottom: 10px;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+      .itemCaption {
+        color: $textColorSecondary;
+        font-size: 16px;
+        min-width: 164px;
+        font-style: normal;
+        font-weight: normal;
+        display: flex;
+        align-items: center;
+        &.top {
+          padding-top: 5px;
+          align-items: flex-start;
+        }
+        @media (max-width: 768px) {
+          width: 100%;
+          min-width: 100%;
+          margin-right: 0;
+        }
+      }
+      .emptyMetadata {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        color: $textColor;
+      }
+      .itemValue {
+        width: 85%;
+        background-color: $mainBackground;
+        border: none;
+        outline: none;
+        padding: 10px 15px;
+        color: $textColor;
+        overflow-x: auto;
+        white-space: nowrap;
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+      }
+      .itemTextarea {
+        width: 85%;
+        background-color: $mainBackground;
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+        border: none;
+        outline: none;
+        padding: 10px 15px;
+        height: 100px;
+        color: $textColor;
+        overflow-y: auto;
+        word-break: break-all;
+
+        &.itemTextareaH100 {
+          height: 100px;
+        }
+        &.itemTextareaH420 {
+          height: 420px;
+        }
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+      }
+      .buttons {
+        width: 85%;
+        margin-left: 164px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        @media (max-width: 768px) {
+          width: 100%;
+          margin-left: 0;
+          flex-direction: column;
+        }
+        .button {
+          background-color: $bkgButtonColor;
+          border-radius: 2px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          padding: 12px 25px;
+          margin-right: 40px;
+          margin-top: 10px;
+          @media (max-width: 768px) {
+            width: 100%;
+            margin-right: 0;
+          }
+          &.link {
+            background-color: $successColor;
+            box-shadow: 0 0 24px rgb(43 208 113 / 12%);
+          }
+          .buttonIcon {
+            margin-right: 16px;
+          }
+          .buttonText {
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 24px;
+            color: $textColor;
+          }
+        }
+        .buttonUpload {
+          font-size: 14px;
+          margin-top: 10px;
+          @media (max-width: 768px) {
+            margin-top: 8px;
+          }
+          .buttonCaption {
+            color: $textColorSecondary;
+            margin-right: 8px;
+          }
+          .buttonTimestamp {
+            color: $textColor;
+          }
+        }
+      }
+    }
+  }
+  .messages {
+    margin-bottom: 40px;
+    .messagesCaption {
+      text-transform: uppercase;
+      color: $textColor;
+      font-size: 21px;
+      margin-bottom: 30px;
+    }
+  }
+}

@@ -40,7 +40,9 @@ export const MessagesList: VFC<Props> = ({ messages }) => {
             key={message.id}
             className={clsx(
               'messages__list-block',
-              !message.replyError ? 'messages__list-block_success' : 'messages__list-block_error'
+              message.replyError === '0' || message.replyError === null
+                ? 'messages__list-block_success'
+                : 'messages__list-block_error'
             )}
           >
             <div className="messages__list-item">
@@ -58,7 +60,7 @@ export const MessagesList: VFC<Props> = ({ messages }) => {
               </div>
             </div>
             <div className="messages__list-item">
-              <p>{message.date && formatDate(message.date)}</p>
+              <p>{message.timestamp && formatDate(message.timestamp)}</p>
             </div>
           </div>
         ))}

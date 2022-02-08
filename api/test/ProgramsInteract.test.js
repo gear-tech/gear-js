@@ -2,30 +2,24 @@ const { readFileSync, readdirSync } = require('fs');
 const { join } = require('path');
 const yaml = require('js-yaml');
 const { CreateType, GearApi, GearKeyring, getWasmMetadata } = require('../lib');
+const { checkLog, checkInit, sendTransaction } = require('./checkFunctions.js');
 
 const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();
 const testFiles = readdirSync('test/spec/programs');
 const api = new GearApi();
 const accounts = {
-  alice: GearKeyring.fromSuri('//Alice'),
-  bob: GearKeyring.fromSuri('//Bob'),
+  alice: undefined,
+  bob: undefined,
 };
 const testif = (condition) => (condition ? test : test.skip);
 
-const checkLog = (event, programId, messageId) => {
-  if (event.data.source.toHex() === programId) {
-    if (event.data.reply.unwrap()[1].toNumber() === 0 && event.data.reply.unwrap()[0].toHex() === messageId) {
-      return true;
-    }
-  }
-  return false;
-};
-
-jest.setTimeout(20000);
+jest.setTimeout(15000);
 
 beforeAll(async () => {
   await api.isReady;
+  accounts.alice = await GearKeyring.fromSuri('//Alice');
+  accounts.bob = await GearKeyring.fromSuri('//Bob');
 });
 
 afterAll(async () => {
@@ -49,10 +43,12 @@ for (let filePath of testFiles) {
         const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
         const metaFile = readFileSync(join(EXAMPLES_DIR, `${program.name}.meta.wasm`));
         const meta = program.meta ? await getWasmMetadata(metaFile) : {};
-        const programId = api.program.submit(
+        const { programId, salt } = api.program.submit(
           { code, initPayload: program.initPayload, gasLimit: program.gasLimit, value: program.value },
           meta,
         );
+        expect(programId).toBeDefined();
+        expect(salt).toBeDefined();
         programs.set(program.id, {
           id: programId,
           meta,
@@ -73,24 +69,13 @@ for (let filePath of testFiles) {
           });
         }
 
-        const status = new Promise((resolve) => {
-          unsubs.push(
-            api.gearEvents.subscribeToProgramEvents((event) => {
-              if (event.data.info.programId.toHex() === programs.get(program.id).id) {
-                if (api.events.gear.InitSuccess.is(event)) {
-                  resolve('success');
-                } else {
-                  resolve('failed');
-                }
-              }
-            }),
-          );
-        });
-        expect(
-          await api.program.signAndSend(await accounts[program.account], (data) => {
-            messageId = data.messageId;
-          }),
-        ).toBe(0);
+        // Check program initialization
+        const status = checkInit(api, programs.get(program.id).id);
+        const transactionData = await sendTransaction(api.program, accounts[program.account], 'InitMessageEnqueued');
+        messageId = transactionData.messageId;
+
+        expect(transactionData.programId).toBe(programs.get(program.id).id);
+
         expect(await status).toBe('success');
         if (program.log) {
           expect(await log).toBe(program.log);
@@ -128,11 +113,16 @@ for (let filePath of testFiles) {
             });
           });
         }
-        expect(
-          await api.message.signAndSend(await accounts[message.account], (data) => {
-            messageId = data.messageId;
-          }),
-        ).toBe(0);
+
+        const transactionData = await sendTransaction(
+          api.message,
+          accounts[message.account],
+          'DispatchMessageEnqueued',
+        );
+        messageId = transactionData.messageId;
+
+        expect(transactionData).toBeDefined();
+
         if (message.log) {
           expect(await log).toBe(message.log);
           (await unsub)();

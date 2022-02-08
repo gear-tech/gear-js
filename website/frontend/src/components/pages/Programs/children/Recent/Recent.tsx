@@ -5,8 +5,9 @@ import { getUserProgramsAction, uploadMetaResetAction } from 'store/actions/acti
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 
-import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 
+import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
 import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
 
@@ -23,8 +24,8 @@ type ProgramMessageType = {
 export const Recent: VFC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const urlSearch = location.search;
-  const pageFromUrl = urlSearch ? Number(urlSearch.split('=')[1]) : 1;
+  const searchParams = new URLSearchParams(location.search);
+  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
 
   const [term, setTerm] = useState('');
   const programs = useSelector((state: RootState) => state.programs.programs);
@@ -39,7 +40,7 @@ export const Recent: VFC = () => {
   useEffect(() => {
     dispatch(
       getUserProgramsAction({
-        publicKeyRaw: localStorage.getItem('public_key_raw'),
+        owner: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset,
         term,
@@ -85,6 +86,7 @@ export const Recent: VFC = () => {
         />
         <br />
       </div>
+      <ProgramsLegend />
       {(programs && programsCount && (
         <div>
           {programs.map((program: ProgramModel) => (

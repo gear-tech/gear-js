@@ -5,10 +5,14 @@ on:
     branches: [master]
 
 jobs:
-  test-gear-api:
+  test:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
       - uses: actions/checkout@v2
 
       - name: Install NodeJS 16.x
@@ -22,7 +26,7 @@ jobs:
           mkdir api/test/wasm
           wget -O api/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           chmod +x gear-node
-          ./gear-node --dev --tmp & sleep 10
+          ./gear-node --dev --tmp --pruning archive & sleep 10
 
       - name: Install dependencies and build @gear-js/api
         run: |

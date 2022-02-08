@@ -4,11 +4,12 @@ import { useParams, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
-import { Loader } from 'react-feather';
 import { formatDate } from 'helpers';
 import { RootState } from 'store/reducers';
 import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAction } from 'store/actions/actions';
 import backIcon from 'assets/images/arrow_back_thick.svg';
+import { Spinner } from 'components/blocks/Spinner/Spinner';
+import { Hint } from 'components/blocks/Hint/Hint';
 import './Message.scss';
 
 type Params = { id: string };
@@ -70,17 +71,30 @@ export const Message: FC = () => {
     history.goBack();
   };
 
+  const renderError = (error: string | null) => {
+    if (error !== '0' && error !== '1' && error !== null) {
+      return <Hint>{error}</Hint>;
+    }
+
+    return null;
+  };
+
   return message ? (
     <div className="message">
       <div className={clsx('message__block', 'message__id')}>
         <span className="message__block-caption">MESSAGE ID:</span>
         <div className="message__status-block">
-          <span
-            className={clsx(
-              'message__block-status',
-              message.replyError ? 'message__block-status_error' : 'message__block-status_success'
-            )}
-          />
+          <div className="message__status-is-error">
+            <span
+              className={clsx(
+                'message__block-status',
+                message.replyError === '0' || message.replyError === null
+                  ? 'message__block-status_success'
+                  : 'message__block-status_error '
+              )}
+            />
+            {renderError(message.replyError)}
+          </div>
           <p className="message__block-paragraph">{message.id}</p>
         </div>
       </div>
@@ -94,13 +108,9 @@ export const Message: FC = () => {
       </div>
       <div className="message__block">
         <span className="message__block-caption">Timestamp:</span>
-        <p className="message__block-paragraph">{formatDate(message.date)}</p>
+        <p className="message__block-paragraph">{formatDate(message.timestamp)}</p>
       </div>
-      {messagePayload ? (
-        <pre className="message__meta">{messagePayload}</pre>
-      ) : (
-        <Loader color="#fff" className="animation-rotate" />
-      )}
+      {messagePayload ? <pre className="message__meta">{messagePayload}</pre> : <Spinner />}
       <div className="message__buttons">
         <button type="button" className="message__button" onClick={handleGoBack}>
           <img src={backIcon} className="message__button-icon" alt="reply" />
@@ -110,7 +120,7 @@ export const Message: FC = () => {
     </div>
   ) : (
     <div className="message">
-      <Loader color="#fff" className="animation-rotate" />
+      <Spinner />
     </div>
   );
 };

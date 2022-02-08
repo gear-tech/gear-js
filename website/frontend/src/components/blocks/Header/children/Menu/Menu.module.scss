@@ -1,0 +1,23 @@
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/mixins.scss' as *;
+@use 'assets/scss/breakpoints.scss' as *;
+
+.menu {
+  @include flexGap(40px);
+  display: flex;
+
+  @include sm {
+    @include flexGap(20px);
+    flex-direction: column;
+  }
+}
+
+.link {
+  color: inherit;
+  transition: all 0.25s;
+  cursor: pointer;
+
+  &:hover {
+    color: $textColorSecondary;
+  }
+}

@@ -1,0 +1,23 @@
+@use 'assets/scss/variables' as *;
+
+.label {
+  display: flex;
+  color: $textColor;
+}
+
+.input {
+  $size: 20px;
+  width: $size;
+  height: $size;
+  margin-right: 8px;
+  appearance: none;
+  border: 2px solid #909090;
+  border-radius: 2px;
+  transition: border-color 0.25s;
+  cursor: pointer;
+
+  &:checked {
+    background: url('/assets/images/check.svg') center no-repeat;
+    border-color: $successColor;
+  }
+}
