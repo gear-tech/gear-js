@@ -138,20 +138,35 @@ for (let filePath of testFiles) {
       }
     });
 
-    testif(!testFile.skip && testFile.gasSpent)('Get gas spent', async () => {
-      const messages = testFile.gasSpent.map((id) => {
-        return testFile.messages.find((message) => message.id === id);
-      });
-      for (let message of messages) {
-        const gasSpent = await api.program.getGasSpent(
-          programs.get(message.program).id,
-          message.payload,
-          programs.get(message.program).meta.handle_input,
-          programs.get(message.program).meta,
-        );
-        expect(gasSpent).toBeDefined();
+    testif(!testFile.skip && testFile.handleGasSpent)('Get handle gas spent', async () => {
+      for (let options of testFile.handleGasSpent) {
+        const { source, dest, payload, type, meta } = options;
+        expect(
+          await api.program.gasSpent.handle(
+            GearKeyring.decodeAddress(accounts[source].address),
+            programs.get(dest).id,
+            payload,
+            meta ? programs.get(dest).meta : type,
+          ),
+        ).toBeDefined();
+      }
+    });
+
+    testif(!testFile.skip && testFile.initGasSpent)('Get init gas spent', async () => {
+      for (let options of testFile.initGasSpent) {
+        const { source, program, payload, type, meta } = options;
+        expect(
+          await api.program.gasSpent.init(
+            GearKeyring.decodeAddress(accounts[source].address),
+            readFileSync(join(EXAMPLES_DIR, `${testFile.programs[program - 1].name}.opt.wasm`)),
+            payload,
+            meta ? programs.get(program).meta : type,
+          ),
+        ).toBeDefined();
       }
     });
   });
   programs.clear();
 }
+
+test.todo('Get reply gas spent');

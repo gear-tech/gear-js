@@ -16,4 +16,13 @@ messages:
     account: alice
     meta: false
 
-gasSpent: [1]
+handleGasSpent:
+  - source: alice
+    dest: 1
+    payload: PING
+    type: String
+
+initGasSpent:
+  - source: alice
+    program: 1
+    payload: '0x00'

@@ -4,6 +4,7 @@ import { hexToU8a, isU8a, stringToU8a, isString, u8aToHex } from '@polkadot/util
 import { mnemonicGenerate, mnemonicToMiniSecret, signatureVerify } from '@polkadot/util-crypto';
 import { Keypair } from '@polkadot/util-crypto/types';
 import { waitReady } from '@polkadot/wasm-crypto';
+import { Hex } from './interfaces';
 
 export class GearKeyring {
   private static unlock(keyring: KeyringPair, passphrase?: string) {
@@ -90,7 +91,7 @@ export class GearKeyring {
     return keyring.sign(stringToU8a(message));
   }
 
-  static decodeAddress(publicKey: string): string {
+  static decodeAddress(publicKey: string): Hex {
     return u8aToHex(new Keyring().decodeAddress(publicKey));
   }
 
