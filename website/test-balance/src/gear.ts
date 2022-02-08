@@ -21,6 +21,17 @@ export class GearService {
 
   async connect() {
     this.api = await GearApi.create({ providerAddress: config.gear.providerAddress });
+    this.api.on('error', () => {
+      GearApi.create({ providerAddress: config.gear.providerAddress }).then(
+        (newApi) => {
+          this.api = newApi;
+        },
+        (error) => {
+          console.error('could not reconnect:', error);
+          throw error;
+        },
+      );
+    });
     log.info(`Connected to ${await this.api.chain()} with genesis ${this.genesisHash}`);
     this.account = await GearKeyring.fromSeed(config.gear.accountSeed);
     this.rootAccount =
