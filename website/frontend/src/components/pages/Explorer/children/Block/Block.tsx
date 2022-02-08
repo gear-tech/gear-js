@@ -17,20 +17,28 @@ const Block = ({ blockId }: Props) => {
   const [api] = useApi();
   const [block, setBlock] = useState<DotBlock>();
   const [eventRecords, setEventRecords] = useState<EventRecords>();
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (api && blockId) {
       const isBlockHash = isHex(blockId);
       const id = isBlockHash ? (blockId as `0x${string}`) : Number(blockId);
 
-      // FIXME: remove after eslint config upgrade
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      api.blocks.get(id).then(({ block }) => {
-        api.blocks.getEvents(block.hash).then(setEventRecords);
-        setBlock(block);
-      });
+      api.blocks
+        .get(id)
+        .then(({ block: newBlock }) => {
+          api.blocks.getEvents(newBlock.hash).then(setEventRecords);
+          setBlock(newBlock);
+        })
+        .catch(({ message }: Error) => {
+          setError(message);
+        });
     }
   }, [api, blockId]);
+
+  if (error) {
+    return <p className={styles.message}>Something went wrong. {error}</p>;
+  }
 
   return (
     <div className={styles.block}>
