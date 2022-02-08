@@ -25,9 +25,7 @@ export class GearGasSpent {
     const [type, meta] = isString(metaOrTypeOfPayload)
       ? [metaOrTypeOfPayload, undefined]
       : [metaOrTypeOfPayload[meta_type], metaOrTypeOfPayload];
-    const p = createPayload(this.createType, type, payload, meta);
-    console.log(p);
-    return p;
+    return createPayload(this.createType, type, payload, meta);
   }
 
   /**
