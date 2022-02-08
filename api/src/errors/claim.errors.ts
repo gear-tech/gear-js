@@ -4,6 +4,6 @@ export class ClaimValueError extends GearError {
   name = 'ClaimValueError';
 
   constructor(message?: string) {
-    super(message || `Can't claim value from mailbox. Params are invalid`);
+    super(message || `Unable to claim value from mailbox. Params are invalid`);
   }
 }
