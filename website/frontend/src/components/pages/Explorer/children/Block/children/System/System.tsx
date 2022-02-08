@@ -1,6 +1,7 @@
 import React from 'react';
 import { EventRecords, IdeaEvent } from 'types/explorer';
 import { Event } from 'components/pages/Explorer/common/Event/Event';
+import commonStyles from '../../Block.module.scss';
 import styles from './System.module.scss';
 
 type Props = {
@@ -19,7 +20,7 @@ const System = ({ eventRecords }: Props) => {
   return (
     <div className={styles.system}>
       <div className={styles.header}>System events</div>
-      {isAnyEvent ? <div>{getEvents()}</div> : <p className={styles.message}>No events available.</p>}
+      {isAnyEvent ? <div>{getEvents()}</div> : <p className={commonStyles.message}>No events available.</p>}
     </div>
   );
 };

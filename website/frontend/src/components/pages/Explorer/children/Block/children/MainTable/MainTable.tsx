@@ -11,6 +11,8 @@ type Props = {
 };
 
 const MainTable = ({ extrinsics, eventRecords }: Props) => {
+  const isAnyExtrinsic = extrinsics.length > 0;
+
   const getExtrinsicEvents = (index: number) =>
     eventRecords
       .filter(({ phase }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(index))
@@ -25,7 +27,7 @@ const MainTable = ({ extrinsics, eventRecords }: Props) => {
       <div className={commonStyles.header}>Events</div>
       <div className={commonStyles.header}>Weight</div>
       <div className={commonStyles.header}>Signer</div>
-      {getRows()}
+      {isAnyExtrinsic ? getRows() : <p className={commonStyles.message}>No extrinsics available.</p>}
     </div>
   );
 };
