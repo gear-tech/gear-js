@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true, // Only for Polkadot packages used by specs. Should be removed once Polkadot could run under Jest.
     "strict": true,
     "module": "ESNext",
     "target": "ESNext",
