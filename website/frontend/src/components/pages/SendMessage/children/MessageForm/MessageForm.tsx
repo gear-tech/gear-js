@@ -75,10 +75,8 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
         metaOrTypeOfPayload
       );
 
-      console.log(estimatedGas.toHuman());
-
-      // dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
-      // setFieldValue('gasLimit', Number(`${estimatedGas.toHuman()}`));
+      dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
+      setFieldValue('gasLimit', estimatedGas.toHuman());
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
       console.error(error);
