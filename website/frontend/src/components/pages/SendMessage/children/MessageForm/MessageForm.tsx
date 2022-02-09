@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
-import { Metadata } from '@gear-js/api';
+import { Metadata, Hex } from '@gear-js/api';
 import { ErrorBoundary } from 'react-error-boundary';
 import { SendMessageToProgram } from 'services/ApiService';
 import { MessageModel } from 'types/program';
@@ -17,6 +17,7 @@ import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { FormItem } from 'components/FormItem';
 import { Switch } from 'common/components/Switch';
 import { Schema } from './Schema';
+import { LOCAL_STORAGE } from 'consts';
 
 import './MessageForm.scss';
 import { MetaErrorMessage } from './styles';
@@ -58,16 +59,26 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
     }
 
     try {
-      const pl = isManualInput ? values.payload : values.fields;
+      const payload = isManualInput ? values.payload : values.fields;
 
-      if (Object.keys(pl).length === 0) {
+      if (Object.keys(payload).length === 0) {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Form is empty' }));
         return;
       }
 
-      const estimatedGas = await api?.program.getGasSpent(programId, pl, meta?.handle_input, meta);
-      dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas}` }));
-      setFieldValue('gasLimit', Number(`${estimatedGas}`));
+      const metaOrTypeOfPayload: any = meta ? meta : 'String';
+
+      const estimatedGas = await api.program.gasSpent.handle(
+        localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+        programId as Hex,
+        payload,
+        metaOrTypeOfPayload
+      );
+
+      console.log(estimatedGas.toHuman());
+
+      // dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
+      // setFieldValue('gasLimit', Number(`${estimatedGas.toHuman()}`));
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
       console.error(error);
