@@ -3,20 +3,13 @@
 .header {
   margin-bottom: 25px;
   display: flex;
+  align-items: center;
   .heading {
+    margin-left: 28px;
     font-size: 21px;
     font-weight: 600;
     text-transform: uppercase;
     color: $textColorSecondary;
-  }
-
-  .arrowButton {
-    margin-right: 28px;
-    padding: 0;
-
-    &::before {
-      content: url('/assets/images/arrow_back.svg');
-    }
   }
 }
 .form {

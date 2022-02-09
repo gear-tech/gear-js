@@ -11,11 +11,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
 import { EventTypes } from 'types/events';
-import styles from './State.module.scss';
-import { getPreformattedText } from 'helpers';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
+import { BackButton } from 'common/components/BackButton/BackButton';
+import { getPreformattedText } from 'helpers';
+import styles from './State.module.scss';
 
 type Params = { id: string };
+// FIXME: fields type shouldn't be any
 type FormValues = { fields: object; payload: string };
 
 const selectProgram = (state: RootState) => state.programs.program;
@@ -41,6 +43,10 @@ const State: VFC = () => {
   const [isManualInput, setIsManualInput] = useState(false);
   const initValues = { payload: typeStructure ? getPreformattedText(typeStructure) : '', fields: {} };
 
+  const disableLoading = () => {
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     dispatch(getProgramAction(programId));
     return () => {
@@ -50,17 +56,11 @@ const State: VFC = () => {
   }, []);
 
   useEffect(() => {
-    if (metadata || state) {
-      setIsLoading(false);
-    }
-  }, [metadata, state]);
-
-  useEffect(() => {
     const metaFile = program?.meta?.metaFile;
 
     if (metaFile) {
       metaBuffer.current = Buffer.from(metaFile, 'base64');
-      getWasmMetadata(metaBuffer.current).then(setMetadata);
+      getWasmMetadata(metaBuffer.current).then(setMetadata).finally(disableLoading);
     }
   }, [program]);
 
@@ -74,16 +74,23 @@ const State: VFC = () => {
     }
   }, [stateInput, types]);
 
-  const readState = useCallback(
-    (options?: object) => {
-      if (metaBuffer.current) {
-        setIsLoading(true);
+  const resetState = () => {
+    setIsLoading(true);
+    setState('');
+  };
 
-        api?.programState.read(programId as `0x${string}`, metaBuffer.current, options).then((result) => {
-          const decodedState = result.toHuman();
-          const stringifiedState = JSON.stringify(decodedState, null, 2);
-          setState(stringifiedState);
-        });
+  const readState = useCallback(
+    (options?: object | string) => {
+      if (metaBuffer.current) {
+        resetState();
+
+        api?.programState
+          .read(programId as `0x${string}`, metaBuffer.current, options)
+          .then((result) => {
+            const formattedState = result.toHuman();
+            setState(getPreformattedText(formattedState));
+          })
+          .finally(disableLoading);
       }
     },
     [api, programId]
@@ -117,7 +124,7 @@ const State: VFC = () => {
   return (
     <div className="wrapper">
       <header className={styles.header}>
-        <button className={styles.arrowButton} type="button" aria-label="back" onClick={handleBackButtonClick} />
+        <BackButton />
         <h2 className={styles.heading}>Read state</h2>
       </header>
       <Formik initialValues={initValues} onSubmit={handleSubmit} enableReinitialize>
