@@ -13,6 +13,7 @@ export { GearMailbox } from './Mailbox';
 export { GearProgramState } from './State';
 export { GearBlock } from './Blocks';
 export { GearGasSpent } from './GasSpent';
+export { GearClaimValue } from './Claim';
 export * from './interfaces';
 export * from './types';
 export * from './utils';

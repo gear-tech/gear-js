@@ -13,6 +13,8 @@ import { PromiseResult } from '@polkadot/api/types';
 import { Vec } from '@polkadot/types';
 import { Observable } from 'rxjs';
 import { GearBlock } from './Blocks';
+import { GearMailbox } from './Mailbox';
+import { GearClaimValue } from './Claim';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -24,6 +26,8 @@ export class GearApi extends ApiPromise {
   public gearEvents: GearEvents;
   public defaultTypes: any;
   public blocks: GearBlock;
+  public mailbox: GearMailbox;
+  public claimValueFromMailbox: GearClaimValue;
 
   constructor(options?: GearApiOptions) {
     const provider = options?.provider
@@ -59,6 +63,8 @@ export class GearApi extends ApiPromise {
       this.defaultTypes = defaultTypes;
       this.programState = new GearProgramState(this);
       this.blocks = new GearBlock(this);
+      this.claimValueFromMailbox = new GearClaimValue(this);
+      this.mailbox = new GearMailbox(this);
     });
   }
 

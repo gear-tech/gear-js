@@ -15,6 +15,12 @@ messages:
     gasLimit: 30000000
     account: alice
     meta: false
+    log: '0x504f4e47'
+
+mailbox:
+  - message: 1
+    claim: true
+    account: alice
 
 handleGasSpent:
   - source: alice
