@@ -4,6 +4,7 @@ import { Option, BTreeMap } from '@polkadot/types';
 import { AccountId32, H256 } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { GearClaimValue } from './Claim';
+
 export class GearMailbox {
   api: GearApi;
   subscription: UnsubscribePromise;
@@ -26,7 +27,7 @@ export class GearMailbox {
    * ```
    */
   async read(accountId: Hex | AccountId32 | string): Promise<Option<BTreeMap<H256, Message>>> {
-    return this.api.query.gear.mailbox(accountId) as Promise<Option<BTreeMap<H256, Message>>>;
+    return this.api.query.gear.mailbox(accountId);
   }
 
   /**
@@ -35,8 +36,8 @@ export class GearMailbox {
    * @param callback callback with mailbox data
    * @examples
    * ```javascript
-   * gearApi.mailbox.subscribe('0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', (data) => {
-   *    console.log(data.toHuman())
+   * const unsub = await gearApi.mailbox.subscribe('0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', (data) => {
+   *    console.log(data.toHuman());
    * })
    * ```
    */
