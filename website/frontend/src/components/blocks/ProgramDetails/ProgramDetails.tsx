@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, VFC } from 'react';
-import { getWasmMetadata, parseHexTypes } from '@gear-js/api';
+import { getWasmMetadata, parseHexTypes, Hex } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
@@ -18,6 +18,7 @@ import { RootState } from 'store/reducers';
 import { Schema } from './Schema';
 import { readFileAsync } from '../../../helpers';
 import { useApi } from '../../../hooks/useApi';
+import { LOCAL_STORAGE } from 'consts';
 
 type Props = {
   setDroppedFile: (file: File | null) => void;
@@ -112,6 +113,32 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
         setWrongMetaFormat(false);
       }
+    }
+  };
+
+  const calculateGas = async (values: any, setFieldValue: any) => {
+    if (values.initPayload === '') {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
+      return;
+    }
+
+    try {
+      const payload = values.initPayload;
+      const metaOrTypeOfPayload: any = metaWasm ? metaWasm : 'String';
+      const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
+
+      const estimatedGas = await api.program.gasSpent.init(
+        localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+        Buffer.from(new Uint8Array(fileBuffer)),
+        payload,
+        metaOrTypeOfPayload
+      );
+
+      dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
+      setFieldValue('gasLimit', estimatedGas.toHuman());
+    } catch (error) {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+      console.error(error);
     }
   };
 
@@ -511,11 +538,20 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                 <button type="submit" className="program-details__upload" aria-label="uploadProgramm">
                   Upload program
                 </button>
+                <button
+                  type="button"
+                  className="program-details__upload"
+                  aria-label="calculateGas"
+                  onClick={() => {
+                    calculateGas(values, setFieldValue);
+                  }}
+                >
+                  Calculate Gas
+                </button>
                 {/* eslint-disable react/button-has-type */}
                 <button type="reset" className="program-details__cancel" aria-label="closeProgramDetails">
                   Cancel upload
                 </button>
-                {/* eslint-enable react/button-has-type */}
               </div>
             </div>
           </Form>
