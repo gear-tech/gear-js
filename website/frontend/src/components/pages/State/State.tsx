@@ -60,7 +60,10 @@ const State: VFC = () => {
 
     if (metaFile) {
       metaBuffer.current = Buffer.from(metaFile, 'base64');
-      getWasmMetadata(metaBuffer.current).then(setMetadata).finally(disableLoading);
+      getWasmMetadata(metaBuffer.current).then((result) => {
+        setMetadata(result);
+        disableLoading();
+      });
     }
   }, [program]);
 
@@ -84,13 +87,11 @@ const State: VFC = () => {
       if (metaBuffer.current) {
         resetState();
 
-        api?.programState
-          .read(programId as `0x${string}`, metaBuffer.current, options)
-          .then((result) => {
-            const formattedState = result.toHuman();
-            setState(getPreformattedText(formattedState));
-          })
-          .finally(disableLoading);
+        api?.programState.read(programId as `0x${string}`, metaBuffer.current, options).then((result) => {
+          const formattedState = result.toHuman();
+          setState(getPreformattedText(formattedState));
+          disableLoading();
+        });
       }
     },
     [api, programId]
