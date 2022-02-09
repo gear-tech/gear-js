@@ -1,20 +1,19 @@
-import React, { ChangeEvent, useCallback, useEffect, useRef, useState, VFC } from 'react';
-import { FormItem } from 'components/FormItem';
+import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import clsx from 'clsx';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 import { useHistory, useParams } from 'react-router-dom';
 import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { Switch } from 'common/components/Switch';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
 import { EventTypes } from 'types/events';
 import styles from './State.module.scss';
 import { getPreformattedText } from 'helpers';
+import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 
 type Params = { id: string };
 type FormValues = { fields: object; payload: string };
@@ -115,10 +114,6 @@ const State: VFC = () => {
     }
   };
 
-  const handleManualInputChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
-    setIsManualInput(checked);
-  };
-
   return (
     <div className="wrapper">
       <header className={styles.header}>
@@ -135,29 +130,12 @@ const State: VFC = () => {
             {form && (
               <div className={styles.item}>
                 <p className={clsx(styles.itemCaption, styles.top)}>Input Parameters:</p>
-                <div className={styles.formWrapper}>
-                  <Switch
-                    label="Manual input"
-                    className={styles.switch}
-                    checked={isManualInput}
-                    onChange={handleManualInputChange}
-                  />
-                  {isManualInput ? (
-                    <>
-                      <p className="message-form__manual-input-notice">JSON or hex</p>
-                      <Field
-                        id="payload"
-                        name="payload"
-                        as="textarea"
-                        type="text"
-                        placeholder="// Enter your payload here"
-                        rows={15}
-                      />
-                    </>
-                  ) : (
-                    <FormItem data={form} />
-                  )}
-                </div>
+                <FormPayload
+                  className={styles.formWrapper}
+                  isManualInput={isManualInput}
+                  setIsManualInput={setIsManualInput}
+                  formData={form}
+                />
               </div>
             )}
             {state && (
