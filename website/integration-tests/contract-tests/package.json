@@ -33,82 +33,9 @@
     "ts-node": "^10.4.0",
     "typeorm": "^0.2.41"
   },
-  "babel": {
-    "env": {
-      "test": {
-        "plugins": [
-          "@babel/plugin-transform-modules-commonjs",
-          "babel-plugin-transform-typescript-metadata",
-          [
-            "@babel/plugin-proposal-decorators",
-            {
-              "legacy": true
-            }
-          ]
-        ],
-        "presets": [
-          "@babel/preset-typescript",
-          "jest",
-          [
-            "env",
-            {
-              "modules": "commonjs",
-              "targets": {
-                "node": "current"
-              },
-              "useBuiltIns": true
-            }
-          ]
-        ]
-      }
-    }
-  },
   "jest": {
     "preset": "ts-jest/presets/js-with-babel",
     "clearMocks": true,
-    "moduleNameMapper": {
-      "@polkadot/types/metadata": "<rootDir>/../node_modules/@polkadot/types/metadata/index.cjs",
-      "@polkadot/hw-ledger-transports$": "<rootDir>/../node_modules/@polkadot/index.cjs",
-      "@polkadot/hw-ledger-transports/(.*)$": "<rootDir>/../node_modules/@polkadot/hw-ledger-transports/$1.cjs",
-      "@polkadot/hw-ledger$": "<rootDir>/../node_modules/@polkadot/hw-ledger/index.cjs",
-      "@polkadot/hw-ledger/(.*)$": "<rootDir>/../node_modules/@polkadot/hw-ledger/$1.cjs",
-      "@polkadot/keyring$": "<rootDir>/../node_modules/@polkadot/keyring/index.cjs",
-      "@polkadot/keyring/(.*)$": "<rootDir>/../node_modules/@polkadot/keyring/$1.cjs",
-      "@polkadot/networks$": "<rootDir>/../node_modules/@polkadot/networks/index.cjs",
-      "@polkadot/networks/(.*?)(?:[.]cjs)?$": "<rootDir>/../node_modules/@polkadot/networks/$1.cjs",
-      "@polkadot/util-(crypto)$": "<rootDir>/../node_modules/@polkadot/util-$1/index.cjs",
-      "@polkadot/util-(crypto)/(.*?)(?:[.]cjs)?$": "<rootDir>/../node_modules/@polkadot/util-$1/$2.cjs",
-      "@polkadot/util$": "<rootDir>/../node_modules/@polkadot/util/index.cjs",
-      "@polkadot/util/(.*?)(?:[.]cjs)?$": "<rootDir>/../node_modules/@polkadot/util/$1.cjs",
-      "@polkadot/wasm-crypto": "<rootDir>/../node_modules/@polkadot/wasm-crypto/index.cjs",
-      "@polkadot/wasm-crypto/(.*?)(?:[.]cjs)?$": "<rootDir>/../node_modules/@polkadot/wasm-crypto/$1.cjs",
-      "@polkadot/x-(bigint|global)$": "<rootDir>/../node_modules/@polkadot/x-$1/index.cjs",
-      "@polkadot/x-(bigint|global)/(.*?)(?:[.]cjs)?$": "<rootDir>/../node_modules/@polkadot/x-$1/$2.cjs",
-      "@polkadot/x-(fetch|randomvalues|textdecoder|textencoder|ws)$": "<rootDir>/../node_modules/@polkadot/x-$1/node.cjs",
-      "@polkadot/x-(fetch|randomvalues|textdecoder|textencoder|ws)/(.*)$": "<rootDir>/../node_modules/@polkadot/x-$1/$2.cjs",
-      "src/(.*)$": "<rootDir>/$1"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": "^.+\\.spec.[tj]s$",
-    "transform": {
-      "^.+\\.[tj]s$": "babel-jest",
-      "node_modules/@polkadot": "babel-jest"
-    },
-    "transformIgnorePatterns": [
-      "/node_modules/(?!@polkadot|@babel/runtime/helpers/esm/)"
-    ],
-    "setupFiles": [
-      "<rootDir>/reflect-metadata.ts"
-    ],
-    "collectCoverageFrom": [
-      "**/*.[tj]s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "transformIgnorePatterns": ["<rootDir>/node_modules/(?!@polkadot|@babel/runtime/helpers/esm/)"]
   }
 }
