@@ -1,33 +1,46 @@
 import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Field } from 'formik';
 import { Switch } from 'common/components/Switch';
 import { FormItem } from 'components/FormItem';
-import styles from './FormPayload.module.scss';
 import { ParsedShape } from 'utils/meta-parser';
+import styles from './FormPayload.module.scss';
 
 type Props = {
-  className: string;
+  className?: string;
   isManualInput: boolean;
   setIsManualInput: Dispatch<SetStateAction<boolean>>;
-  formData: ParsedShape;
+  formData: ParsedShape | null | undefined;
 };
 
 const FormPayload = ({ className, isManualInput, setIsManualInput, formData }: Props) => {
+  // this check is for MessageForm UX,
+  // since in State we simply don't render FormPayload if there's no formData
+  const isLocked = !formData;
+
   const handleManualInputChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
     setIsManualInput(checked);
   };
 
+  const handleFormItemError = (error: Error) => {
+    setIsManualInput(true);
+    console.error(error);
+  };
+
   return (
     <div className={className}>
-      <Switch
-        label="Manual input"
-        className={styles.switch}
-        checked={isManualInput}
-        onChange={handleManualInputChange}
-      />
-      {isManualInput ? (
+      {formData && (
+        <Switch
+          label="Manual input"
+          className={styles.switch}
+          checked={isManualInput}
+          onChange={handleManualInputChange}
+        />
+      )}
+      {isManualInput || isLocked ? (
         <>
-          <p className="message-form__manual-input-notice">JSON or hex</p>
+          {isLocked && <p className={styles.message}>Can't parse metadata, try to use manual input.</p>}
+          <p className={styles.notice}>JSON or hex</p>
           <Field
             id="payload"
             name="payload"
@@ -38,7 +51,12 @@ const FormPayload = ({ className, isManualInput, setIsManualInput, formData }: P
           />
         </>
       ) : (
-        <FormItem data={formData} />
+        <ErrorBoundary
+          fallback={<p className={styles.message}>Sorry, something went wrong. You can use manual input.</p>}
+          onError={handleFormItemError}
+        >
+          <FormItem data={formData} />
+        </ErrorBoundary>
       )}
     </div>
   );
