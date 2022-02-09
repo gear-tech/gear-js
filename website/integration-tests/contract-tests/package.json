@@ -33,6 +33,36 @@
     "ts-node": "^10.4.0",
     "typeorm": "^0.2.41"
   },
+  "babel": {
+    "env": {
+      "test": {
+        "plugins": [
+          "@babel/plugin-transform-modules-commonjs",
+          "babel-plugin-transform-typescript-metadata",
+          [
+            "@babel/plugin-proposal-decorators",
+            {
+              "legacy": true
+            }
+          ]
+        ],
+        "presets": [
+          "@babel/preset-typescript",
+          "jest",
+          [
+            "env",
+            {
+              "modules": "commonjs",
+              "targets": {
+                "node": "current"
+              },
+              "useBuiltIns": true
+            }
+          ]
+        ]
+      }
+    }
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",
