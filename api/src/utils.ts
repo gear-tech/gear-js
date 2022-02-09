@@ -1,13 +1,13 @@
 import { stringCamelCase, isHex } from '@polkadot/util';
-import { Text } from '@polkadot/types';
-import { Metadata } from './interfaces';
+import { Bytes, Text } from '@polkadot/types';
+import { Hex, Metadata } from './interfaces';
 import { CreateType } from './CreateType';
 
 export function transformTypes(types: object): any {
   return Object.values(types).reduce((res, types): object => ({ ...res, ...types }), {});
 }
 
-export function toCamelCase(array: string[] | Text[]) {
+export function toCamelCase(array: string[] | Text[]): string {
   let result = stringCamelCase(array.join('_'));
   result = result.slice(0, 1).toUpperCase() + result.slice(1, result.length);
   return result;
@@ -55,17 +55,24 @@ export function splitByCommas(str: string) {
   return result;
 }
 
-export function createPayload(createType: CreateType, type: any, data: any, meta?: Metadata) {
+export function createPayload(createType: CreateType, type: any, data: any, meta?: Metadata): Hex {
   if (data === undefined) {
-    return '';
+    return '0x00';
   }
   if (isHex(data)) {
     return data;
   }
-  let payload: string = data;
+  let payload = data;
   if (meta && type) {
     const encoded = createType.create(type, data, meta);
     payload = isHex(encoded) ? encoded : encoded.toHex();
+  } else if (type) {
+    try {
+      const encoded = createType.create(type, data);
+      payload = isHex(encoded) ? encoded : encoded.toHex();
+    } catch (error) {
+      console.error(error.message);
+    }
   }
   return payload;
 }
