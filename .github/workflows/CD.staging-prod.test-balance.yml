@@ -1,0 +1,38 @@
+name: CI/CD test-balance
+
+on: [workflow_dispatch]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  Docker-Build:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+  Deploy-Staging:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+  Tests-execution:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+  Docker-production-tag:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+  Deploy-production:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
