@@ -6,6 +6,7 @@ import NumberFormat from 'react-number-format';
 import { Metadata, Hex } from '@gear-js/api';
 import { ErrorBoundary } from 'react-error-boundary';
 import { SendMessageToProgram } from 'services/ApiService';
+import { InitialValues, SetFieldValue } from './types';
 import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/events';
@@ -36,7 +37,7 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
   const [isManualInput, setIsManualInput] = useState(Boolean(!types));
 
-  const [initialValues] = useState({
+  const [initialValues] = useState<InitialValues>({
     gasLimit: 20000000,
     value: 0,
     payload: types ? getPreformattedText(types) : '',
@@ -52,7 +53,7 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
     }
   }, [types]);
 
-  const calculateGas = async (values: any, setFieldValue: any) => {
+  const calculateGas = async (values: InitialValues, setFieldValue: SetFieldValue) => {
     if (isManualInput && values.payload.length === 0) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
       return;

@@ -6,6 +6,7 @@ import NumberFormat from 'react-number-format';
 import { UploadProgramModel } from 'types/program';
 import { useDispatch, useSelector } from 'react-redux';
 import { UploadProgram } from 'services/ApiService';
+import { SetFieldValue } from './types';
 import { EventTypes } from 'types/events';
 import { AddAlert, programUploadStartAction } from 'store/actions/actions';
 import { StatusPanel } from 'components/blocks/StatusPanel/StatusPanel';
@@ -116,7 +117,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     }
   };
 
-  const calculateGas = async (values: any, setFieldValue: any) => {
+  const calculateGas = async (values: UploadProgramModel, setFieldValue: SetFieldValue) => {
     if (values.initPayload === '') {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
       return;
