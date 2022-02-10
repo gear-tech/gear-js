@@ -13,6 +13,7 @@ import { PromiseResult } from '@polkadot/api/types';
 import { Vec } from '@polkadot/types';
 import { Observable } from 'rxjs';
 import { GearBlock } from './Blocks';
+import { GearStorage } from './Storage';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -24,6 +25,7 @@ export class GearApi extends ApiPromise {
   public gearEvents: GearEvents;
   public defaultTypes: any;
   public blocks: GearBlock;
+  public storage: GearStorage;
 
   constructor(options?: GearApiOptions) {
     const provider = options?.provider
@@ -59,6 +61,7 @@ export class GearApi extends ApiPromise {
       this.defaultTypes = defaultTypes;
       this.programState = new GearProgramState(this);
       this.blocks = new GearBlock(this);
+      this.storage = new GearStorage(this);
     });
   }
 
