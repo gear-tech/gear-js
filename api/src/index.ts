@@ -14,6 +14,7 @@ export { GearProgramState } from './State';
 export { GearBlock } from './Blocks';
 export { GearGasSpent } from './GasSpent';
 export { GearStorage } from './Storage';
+export { GearClaimValue } from './Claim';
 export * from './interfaces';
 export * from './types';
 export * from './utils';
