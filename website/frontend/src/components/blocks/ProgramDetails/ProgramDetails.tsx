@@ -124,7 +124,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
     try {
       const payload = values.initPayload;
-      const metaOrTypeOfPayload: any = metaWasm ? metaWasm : 'String';
+      const metaOrTypeOfPayload: any = metaWasm || 'String';
       const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
 
       const estimatedGas = await api.program.gasSpent.init(

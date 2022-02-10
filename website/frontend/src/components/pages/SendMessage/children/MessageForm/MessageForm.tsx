@@ -66,7 +66,7 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
         return;
       }
 
-      const metaOrTypeOfPayload: any = meta ? meta : 'String';
+      const metaOrTypeOfPayload: any = meta || 'String';
 
       const estimatedGas = await api.program.gasSpent.handle(
         localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
