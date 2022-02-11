@@ -1,5 +1,6 @@
 export const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS;
 export const NODE_ADRESS_URL_PARAM = 'node';
+export const DEFAULT_NODES_URL = process.env.REACT_APP_DEFAULT_NODES_URL;
 
 export const API_URL = process.env.REACT_APP_API_URL as string;
 export const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER_URL}/build`;
@@ -8,9 +9,6 @@ export const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER_URL}/get
 export const isProd = process.env.NODE_ENV === 'production';
 export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
-
-export const DEFAULT_NODES_URL =
-  'https://gist.githubusercontent.com/osipov-mit/2060babd8b06cfae93da91e1bfddbb7b/raw/9c4b27689a243d54ef21c0440bd0266ef7c0fcf0/gear-default-nodes.json';
 
 export const LOCAL_STORAGE = {
   CHAIN: 'chain',

@@ -14,6 +14,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { EventTypes } from 'types/events';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE, DEFAULT_NODES_URL } from 'consts';
+import * as init from './init';
 import './Sidebar.scss';
 
 type Props = {
@@ -41,8 +42,8 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
   const isApiNodeExist = isNodeExist(nodeApi.address);
   const [newNode, setNewNode] = useState(isApiNodeExist ? '' : nodeApi.address);
 
-  const fetchNodes = () => {
-    fetch(DEFAULT_NODES_URL)
+  const fetchNodes = (url: string) => {
+    fetch(url)
       .then((response) => response.json())
       .then((result) => {
         setNodes(result);
@@ -53,7 +54,11 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
 
   useEffect(() => {
     if (!isAnyNode) {
-      fetchNodes();
+      if (DEFAULT_NODES_URL) {
+        fetchNodes(DEFAULT_NODES_URL);
+      } else {
+        setNodes(init.nodes);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
