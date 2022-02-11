@@ -75,12 +75,18 @@
 .programs-list__name {
   color: $textColor;
   font-size: $fontSizeBase;
-  margin-left: 24px;
+  margin: 0 24px;
   @media (max-width: 768px) {
     font-size: 14px;
     word-break: break-all;
-    margin-left: 16px;
+    margin-left: 0 16px;
   }
+}
+
+.programs-list__time {
+  margin-left: auto;
+  color: $textColorSecondary;
+  font-weight: 500;
 }
 
 .programs-list__message-btn img {
