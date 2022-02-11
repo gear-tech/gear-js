@@ -1,0 +1,6 @@
+title: demo_sum
+
+programs:
+  - name: demo_sum
+    submit_code: true
+    account: alice

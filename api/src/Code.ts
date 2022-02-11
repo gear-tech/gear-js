@@ -1,6 +1,7 @@
 import { GearTransaction } from './types';
 import { Hex } from './interfaces';
-import { Bytes, u64 } from '@polkadot/types';
+import { Bytes } from '@polkadot/types';
+import { generateCodeHash } from './utils';
 
 export class GearCode extends GearTransaction {
   /**
@@ -11,7 +12,7 @@ export class GearCode extends GearTransaction {
   submit(code: Buffer): Hex {
     const codeBytes = this.createType.create('bytes', Array.from(code)) as Bytes;
     this.submitted = this.api.tx.gear.submitCode(codeBytes);
-    const codeHash = undefined;
+    const codeHash = generateCodeHash(code);
     return codeHash;
   }
 }

@@ -16,6 +16,7 @@ import { GearBlock } from './Blocks';
 import { GearStorage } from './Storage';
 import { GearMailbox } from './Mailbox';
 import { GearClaimValue } from './Claim';
+import { GearCode } from './Code';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -30,6 +31,7 @@ export class GearApi extends ApiPromise {
   public storage: GearStorage;
   public mailbox: GearMailbox;
   public claimValueFromMailbox: GearClaimValue;
+  public code: GearCode;
 
   constructor(options?: GearApiOptions) {
     const provider = options?.provider
@@ -68,6 +70,7 @@ export class GearApi extends ApiPromise {
       this.storage = new GearStorage(this);
       this.claimValueFromMailbox = new GearClaimValue(this);
       this.mailbox = new GearMailbox(this);
+      this.code = new GearCode(this);
     });
   }
 
