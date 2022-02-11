@@ -2,10 +2,10 @@ import { Hex, Metadata, ProgramId } from './interfaces';
 import { SubmitProgramError } from './errors';
 import { AnyNumber } from '@polkadot/types/types';
 import { Bytes, u64 } from '@polkadot/types';
-import { H256, BalanceOf } from '@polkadot/types/interfaces';
-import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
+import { BalanceOf } from '@polkadot/types/interfaces';
+import { randomAsHex } from '@polkadot/util-crypto';
 import { GearTransaction } from './types';
-import { createPayload } from './utils';
+import { createPayload, generateProgramId } from './utils';
 import { GearGasSpent } from './GasSpent';
 import { GearApi } from './GearApi';
 
@@ -37,8 +37,8 @@ export class GearProgram extends GearTransaction {
     let payload = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
     try {
       this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
-      const programId = this.generateProgramId(code, salt);
-      return { programId: programId.toHex(), salt };
+      const programId = generateProgramId(code, salt);
+      return { programId, salt };
     } catch (error) {
       throw new SubmitProgramError();
     }
@@ -53,16 +53,5 @@ export class GearProgram extends GearTransaction {
       return `0x${prog.toHex().slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
     });
     return programs;
-  }
-
-  generateProgramId(code: Bytes, salt: string): H256 {
-    const codeArr = this.api.createType('Vec<u8>', code).toU8a();
-    const saltArr = this.api.createType('Vec<u8>', salt).toU8a();
-
-    const id = new Uint8Array(codeArr.length + saltArr.length);
-    id.set(codeArr);
-    id.set(saltArr, codeArr.length);
-
-    return this.api.createType('H256', blake2AsU8a(id, 256));
   }
 }
