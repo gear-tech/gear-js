@@ -5,8 +5,8 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-export const Switch = React.forwardRef<HTMLInputElement, Props>(({ label, ...props }, ref) => (
-  <Label>
+export const Switch = React.forwardRef<HTMLInputElement, Props>(({ label, className, ...props }, ref) => (
+  <Label className={className}>
     <SwitchEl>
       <input {...props} type="checkbox" ref={ref} />
       <span className="slider" />

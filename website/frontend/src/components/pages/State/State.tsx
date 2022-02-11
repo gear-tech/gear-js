@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
-import { FormItem } from 'components/FormItem';
 import clsx from 'clsx';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
@@ -12,9 +11,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
 import { EventTypes } from 'types/events';
+import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
+import { BackButton } from 'common/components/BackButton/BackButton';
+import { getPreformattedText } from 'helpers';
 import styles from './State.module.scss';
 
 type Params = { id: string };
+// FIXME: fields type shouldn't be any
+type FormValues = { fields: object; payload: string };
+
 const selectProgram = (state: RootState) => state.programs.program;
 
 const State: VFC = () => {
@@ -32,8 +37,15 @@ const State: VFC = () => {
   const types = metadata?.types;
   const stateInput = metadata?.meta_state_input;
 
+  const [typeStructure, setTypeStructure] = useState({});
   const [form, setForm] = useState<ParsedShape | null>(null);
   const [state, setState] = useState('');
+  const [isManualInput, setIsManualInput] = useState(false);
+  const initValues = { payload: typeStructure ? getPreformattedText(typeStructure) : '', fields: {} };
+
+  const disableLoading = () => {
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     dispatch(getProgramAction(programId));
@@ -44,38 +56,41 @@ const State: VFC = () => {
   }, []);
 
   useEffect(() => {
-    if (metadata || state) {
-      setIsLoading(false);
-    }
-  }, [metadata, state]);
-
-  useEffect(() => {
     const metaFile = program?.meta?.metaFile;
 
     if (metaFile) {
       metaBuffer.current = Buffer.from(metaFile, 'base64');
-      getWasmMetadata(metaBuffer.current).then(setMetadata);
+      getWasmMetadata(metaBuffer.current).then((result) => {
+        setMetadata(result);
+        disableLoading();
+      });
     }
   }, [program]);
 
   const getPayloadForm = useCallback(() => {
     if (stateInput && types) {
       const parsedTypes = parseHexTypes(types);
-      const typeStructure = getTypeStructure(stateInput, parsedTypes);
-      const parsedStructure = parseMeta(typeStructure);
-      setForm(parsedStructure);
+      const typeStruct = getTypeStructure(stateInput, parsedTypes);
+      const parsedStruct = parseMeta(typeStruct);
+      setTypeStructure(typeStruct);
+      setForm(parsedStruct);
     }
   }, [stateInput, types]);
 
+  const resetState = () => {
+    setIsLoading(true);
+    setState('');
+  };
+
   const readState = useCallback(
-    (options?: object) => {
+    (options?: object | string) => {
       if (metaBuffer.current) {
-        setIsLoading(true);
+        resetState();
 
         api?.programState.read(programId as `0x${string}`, metaBuffer.current, options).then((result) => {
-          const decodedState = result.toHuman();
-          const stringifiedState = JSON.stringify(decodedState, null, 2);
-          setState(stringifiedState);
+          const formattedState = result.toHuman();
+          setState(getPreformattedText(formattedState));
+          disableLoading();
         });
       }
     },
@@ -96,9 +111,8 @@ const State: VFC = () => {
     routeHistory.goBack();
   };
 
-  const handleSubmit = (value: { fields: object }) => {
-    const { fields } = value;
-    const [options] = Object.values(fields);
+  const handleSubmit = ({ fields, payload }: FormValues) => {
+    const options = isManualInput ? payload : Object.values(fields)[0];
 
     if (options) {
       readState(options);
@@ -111,10 +125,10 @@ const State: VFC = () => {
   return (
     <div className="wrapper">
       <header className={styles.header}>
-        <button className={styles.arrowButton} type="button" aria-label="back" onClick={handleBackButtonClick} />
+        <BackButton />
         <h2 className={styles.heading}>Read state</h2>
       </header>
-      <Formik initialValues={{ fields: {} }} onSubmit={handleSubmit}>
+      <Formik initialValues={initValues} onSubmit={handleSubmit} enableReinitialize>
         <Form className={styles.form}>
           <div className={styles.block}>
             <div className={styles.item}>
@@ -124,9 +138,12 @@ const State: VFC = () => {
             {form && (
               <div className={styles.item}>
                 <p className={clsx(styles.itemCaption, styles.top)}>Input Parameters:</p>
-                <div className={styles.formWrapper}>
-                  <FormItem data={form} />
-                </div>
+                <FormPayload
+                  className={styles.formWrapper}
+                  isManualInput={isManualInput}
+                  setIsManualInput={setIsManualInput}
+                  formData={form}
+                />
               </div>
             )}
             {state && (
