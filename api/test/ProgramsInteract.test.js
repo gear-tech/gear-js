@@ -6,7 +6,9 @@ const { checkLog, checkInit, sendTransaction } = require('./checkFunctions.js');
 
 const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();
+const messages = new Map();
 const testFiles = readdirSync('test/spec/programs');
+const submitCodeTestFiles = readdirSync('test/spec/submit_code');
 const api = new GearApi();
 const accounts = {
   alice: undefined,
@@ -36,9 +38,11 @@ for (let filePath of testFiles) {
    * @type {{title: string, programs: {name: string, id: number, gasLimit: number, value: number, account: string, meta: boolean, initPayload: any}[], messages: {id: number, program: number, payload: any, gasLimit: number, value: number, log: string}[], gasSpent: number[]}}
    */
   const testFile = yaml.load(readFileSync(join('./test/spec/programs', filePath), 'utf8'));
-
+  if (testFile.skip) {
+    continue;
+  }
   describe(testFile.title, () => {
-    testif(!testFile.skip)('Upload programs', async () => {
+    test('Upload programs', async () => {
       for (let program of testFile.programs) {
         const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
         const metaFile = readFileSync(join(EXAMPLES_DIR, `${program.name}.meta.wasm`));
@@ -87,7 +91,7 @@ for (let filePath of testFiles) {
       return;
     });
 
-    testif(!testFile.skip && testFile.messages)('Sending messages', async () => {
+    testif(testFile.messages)('Sending messages', async () => {
       for (let message of testFile.messages) {
         let payload = message.payload;
         const meta = programs.get(message.program).meta;
@@ -108,6 +112,10 @@ for (let filePath of testFiles) {
           log = new Promise((resolve) => {
             unsub = api.gearEvents.subscribeToLogEvents((event) => {
               if (checkLog(event, programs.get(message.program).id, messageId)) {
+                messages.set(message.id, {
+                  logId: event.data.id.toHex(),
+                  source: event.data.source.toHex(),
+                });
                 resolve(event.data.payload.toHex());
               }
             });
@@ -130,7 +138,7 @@ for (let filePath of testFiles) {
       }
     });
 
-    testif(!testFile.skip && testFile.state)('Read state', async () => {
+    testif(testFile.state)('Read state', async () => {
       for (let state of testFile.state) {
         const program = programs.get(state.program);
         const result = await api.programState.read(program.id, program.metaFile, state.payload);
@@ -138,7 +146,7 @@ for (let filePath of testFiles) {
       }
     });
 
-    testif(!testFile.skip && testFile.handleGasSpent)('Get handle gas spent', async () => {
+    testif(testFile.handleGasSpent)('Get handle gas spent', async () => {
       for (let options of testFile.handleGasSpent) {
         const { source, dest, payload, type, meta } = options;
         expect(
@@ -152,7 +160,7 @@ for (let filePath of testFiles) {
       }
     });
 
-    testif(!testFile.skip && testFile.initGasSpent)('Get init gas spent', async () => {
+    testif(testFile.initGasSpent)('Get init gas spent', async () => {
       for (let options of testFile.initGasSpent) {
         const { source, program, payload, type, meta } = options;
         expect(
@@ -165,8 +173,46 @@ for (let filePath of testFiles) {
         ).toBeDefined();
       }
     });
+
+    testif(testFile.mailbox)('Mailbox', async () => {
+      for (let options of testFile.mailbox) {
+        const { message, claim, account } = options;
+        const messageId = messages.get(message).logId;
+        let mailbox = await api.mailbox.read(GearKeyring.decodeAddress(accounts[account].address));
+        expect(mailbox.toHuman()).not.toBe(null);
+        expect(Object.keys(mailbox.toHuman()).includes(messageId)).toBe(true);
+        if (claim) {
+          const submitted = api.claimValueFromMailbox.submit(messageId);
+          const transactionData = await sendTransaction(submitted, accounts[account], 'ClaimedValueFromMailbox');
+          expect(transactionData).toBe(messageId);
+          mailbox = await api.mailbox.read(GearKeyring.decodeAddress(accounts[account].address));
+          expect(Object.keys(mailbox.toHuman()).includes(messageId)).toBe(false);
+        }
+      }
+    });
   });
   programs.clear();
+}
+
+for (let filePath of submitCodeTestFiles) {
+  const testFile = yaml.load(readFileSync(join('./test/spec/submit_code', filePath), 'utf8'));
+  if (testFile.skip) {
+    continue;
+  }
+  describe(testFile.title, () => {
+    test('Submit code', async () => {
+      for (let program of testFile.programs) {
+        const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
+        const codeHash = api.code.submit(code);
+        expect(codeHash).toBeDefined();
+
+        const transactionData = await sendTransaction(api.code, accounts[program.account], 'CodeSaved');
+
+        expect(transactionData).toBe(codeHash);
+      }
+      return;
+    });
+  });
 }
 
 test.todo('Get reply gas spent');

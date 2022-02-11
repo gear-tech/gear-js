@@ -98,7 +98,7 @@ export class ProgramsService {
   async setStatus(id: string, genesis: string, status: InitStatus): Promise<IProgram> {
     return new Promise((resolve) => {
       setTimeout(async () => {
-        let program = await this.findProgram({ id, genesis });
+        const program = await this.findProgram({ id, genesis });
         if (program) {
           program.initStatus = status;
           resolve(await this.programRepo.save(program));

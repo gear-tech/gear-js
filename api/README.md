@@ -157,6 +157,22 @@ try {
 }
 ```
 
+### Submit code
+
+```javascript
+const code = fs.readFileSync('path/to/program.opt.wasm');
+const codeHash = gearApi.code.submit(code);
+gearApi.code.signAndSend(alice, () => {
+  events.forEach(({ event: { method, data } }) => {
+    if (method === 'ExtrinsicFailed') {
+      throw new Error(data.toString());
+    } else if (method === 'CodeSaved') {
+      console.log(data.toHuman());
+    }
+  });
+});
+```
+
 ### Get gasSpent
 
 #### For init message
