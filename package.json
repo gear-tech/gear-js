@@ -34,8 +34,5 @@
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
   },
   "packageManager": "yarn@3.1.1",
-  "version": "0.0.2",
-  "dependencies": {
-    "@gear-js/api": "^0.11.3"
-  }
+  "version": "0.0.2"
 }
