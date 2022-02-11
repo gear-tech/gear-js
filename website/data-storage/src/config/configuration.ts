@@ -2,15 +2,15 @@ import { strict as assert } from 'assert';
 import { config } from 'dotenv';
 config();
 
-const checkEnv = (env: string) => {
+const checkEnv = (env: typeof process.env['']) => {
   assert.notStrictEqual(env, undefined);
-  return env;
+  return env as string;
 };
 
 export default () => ({
   database: {
     host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT, 10) || 5432,
+    port: parseInt(process.env.DB_PORT || '5432', 10),
     user: checkEnv(process.env.DB_USER),
     password: checkEnv(process.env.DB_PASSWORD),
     name: checkEnv(process.env.DB_NAME),
