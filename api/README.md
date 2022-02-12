@@ -45,7 +45,7 @@ Getting node info
 ```javascript
 const chain = await gearApi.chain();
 const nodeName = await gearApi.nodeName();
-const version = await gearApi.version();
+const nodeVersion = await gearApi.nodeVersion();
 const genesis = gearApi.genesisHash.toHex();
 ```
 
@@ -304,7 +304,7 @@ unsub();
 Subscribe to new blocks
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeNewBlocks((header) => {
+const unsub = await gearApi.gearEvents.subscribeToNewBlocks((header) => {
   console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
 });
 // Unsubscribe
