@@ -2,6 +2,7 @@ import isObject from 'lodash.isobject';
 import isString from 'lodash.isstring';
 import set from 'lodash.set';
 import get from 'lodash.get';
+import merge from 'lodash.merge';
 
 type MetaNull = 'Null';
 const metaNull = 'Null';
@@ -18,6 +19,10 @@ export type ParsedStruct = {
   [key: string]: ParsedStruct | ParsedValue;
 };
 
+export type ParsedFormValue = {
+  [key: string]: ParsedFormValue;
+};
+
 export type ParsedShape = {
   select: Record<
     string,
@@ -30,6 +35,7 @@ export type ParsedShape = {
     }
   > | null;
   fields: ParsedStruct | null;
+  values: ParsedStruct | null;
 };
 
 // function isObjectEmpty(obj: object) {
@@ -53,12 +59,13 @@ enum MetaEnums {
 }
 
 type MetaField = { [key: string]: { [key: string]: string | MetaField } };
-export type MetaParam = {} | [] | MetaField;
+type MetaParam = {} | [] | MetaField;
 
 function parseField(data: MetaParam) {
   const result: ParsedShape = {
     select: null,
     fields: null,
+    values: null,
   };
 
   const stack: {
@@ -116,19 +123,28 @@ function parseField(data: MetaParam) {
         if (current.kind === 'enum' && result.select) {
           set(result.select, current.path, {
             type: 'Null',
-            value: 'Null',
             name: current.path.slice(1).join('.'),
             label: current.path[current.path.length - 1],
           });
+
+          // eslint-disable-next-line max-depth
+          if (!result.values) {
+            result.values = {};
+          }
+          set(result.values, current.path.slice(2), null);
         } else if (current.kind === 'field') {
           // eslint-disable-next-line max-depth
           if (!result.fields) {
             result.fields = {};
           }
-
           set(result.fields, current.path, {
             [current.path.toString()]: null,
           });
+
+          if (!result.values) {
+            result.values = {};
+          }
+          set(result.values, current.path, '');
         }
       }
       if (isString(current.value) && current.value !== metaNull) {
@@ -136,12 +152,16 @@ function parseField(data: MetaParam) {
           const path = [...current.path];
           path.shift();
           const key = path[path.length - 1];
-          set(result.select, [...current.path], {
+          set(result.select, current.path, {
             label: key,
             name: ['fields', key].join('.'),
             type: current.value,
-            value: '',
           });
+
+          if (!result.values) {
+            result.values = {};
+          }
+          set(result.values, path.slice(1), '');
         }
       } else {
         Object.entries(current.value).forEach((item) => {
@@ -156,7 +176,6 @@ function parseField(data: MetaParam) {
             set(result.select, current.path, {
               type: MetaEnums.EnumOption,
               NoFields: {
-                value: 'Null',
                 type: 'Null',
                 name: 'fields.NoFields', // TODO: add if field deep
                 label: 'NoFields',
@@ -215,28 +234,47 @@ function parseField(data: MetaParam) {
 
               const path = [...current.path];
               path.shift();
-              set(result.select, [...current.path], {
-                ...get(result.select, current.path),
-                [key]: {
-                  label: key,
-                  name: ['fields', ...path.filter((i) => i !== 'fields'), key].join('.'),
-                  type: value,
-                  value: '',
-                },
-              });
-            } else if (current.kind === 'enum_option') {
-              if (result.select) {
-                const path = [...current.path];
-                path.shift();
-                set(result.select, current.path, {
-                  ...get(result.select, current.path),
+              set(
+                result.select,
+                [...current.path],
+                merge(get(result.select, current.path), {
                   [key]: {
                     label: key,
                     name: ['fields', ...path.filter((i) => i !== 'fields'), key].join('.'),
                     type: value,
-                    value: '',
                   },
-                });
+                })
+              );
+
+              if (!result.values) {
+                result.values = {};
+              }
+              set(result.values, [...current.path.slice(2), key], '');
+            } else if (current.kind === 'enum_option') {
+              if (result.select) {
+                const path = [...current.path];
+                const root = path.shift();
+
+                const pt = [...path.filter((i) => i !== 'fields'), key];
+                set(
+                  result.select,
+                  current.path,
+                  merge(get(result.select, current.path), {
+                    [key]: {
+                      label: key,
+                      name: ['fields', ...pt].join('.'),
+                      type: value,
+                    },
+                  })
+                );
+
+                if (!result.values) {
+                  result.values = {};
+                }
+                if (root) {
+                  // FIXME: refactor this
+                  set(result.values, pt[0] === root ? root : [root, ...pt], '');
+                }
               }
             } else if (current.kind === 'enum_result') {
               if (result.select) {
@@ -244,23 +282,39 @@ function parseField(data: MetaParam) {
                   label: current.path[current.path.length - 1],
                   name: ['fields', ...current.path.filter((i) => i !== 'fields')].join('.'),
                   type: value,
-                  value: '',
                 });
+
+                if (!result.values) {
+                  result.values = {};
+                }
+                set(result.values, current.path.slice(2), '');
               }
             } else if (current.kind === 'field') {
               if (!result.fields) {
                 result.fields = {};
               }
+              set(
+                result.fields,
+                current.path,
+                merge(get(result.fields, current.path), {
+                  [key]: {
+                    label: key,
+                    name: ['fields', ...current.path, key].join('.'),
+                    type: value,
+                  },
+                })
+              );
 
-              set(result.fields, current.path, {
-                ...get(result.fields, current.path),
-                [key]: {
-                  label: key,
-                  name: ['fields', ...current.path, key].join('.'),
-                  type: value,
-                  value: '',
-                },
-              });
+              if (!result.values) {
+                result.values = {};
+              }
+              set(
+                result.values,
+                current.path,
+                merge(get(result.values, current.path), {
+                  [key]: '',
+                })
+              );
             }
           }
         });
@@ -271,7 +325,7 @@ function parseField(data: MetaParam) {
   if (result.select && Object.values(result.select).length > 0) {
     const option = Object.values(result.select)[0];
     const field = Object.entries(option.fields).reverse()[0];
-    result.fields = { [`${field[0]}`]: field[1] };
+    result.fields = { [`${field[0]}`]: JSON.parse(JSON.stringify(field[1])) };
   }
 
   return result;

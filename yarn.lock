@@ -1873,6 +1873,7 @@ __metadata:
     "@types/lodash.get": ^4.4.6
     "@types/lodash.isobject": ^3.0.6
     "@types/lodash.isstring": ^4.0.6
+    "@types/lodash.merge": ^4.6.6
     "@types/lodash.set": ^4.3.6
     "@types/node": ^17.0.1
     "@types/react": ^17.0.37
@@ -1901,6 +1902,7 @@ __metadata:
     lodash.get: ^4.4.2
     lodash.isobject: ^3.0.2
     lodash.isstring: ^4.0.1
+    lodash.merge: ^4.6.2
     lodash.set: ^4.3.2
     monaco-editor: ^0.26.1
     nanoid: ^3.1.23
@@ -3940,6 +3942,15 @@ __metadata:
   dependencies:
     "@types/lodash": "*"
   checksum: ac171e3e3cac9aa0a2b4a80817699188604d48d9ecb3e665b52718db9cbf1a543f87974e9e6d786e5f3e361c0f2bf768255ff81cc83a5b83fda44ed5e513774c
+  languageName: node
+  linkType: hard
+
+"@types/lodash.merge@npm:^4.6.6":
+  version: 4.6.6
+  resolution: "@types/lodash.merge@npm:4.6.6"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 62ec56f14b3077f7174497856e9b277db811943cd11b1d67d2a8e51a1803bd49319e8aaf62e745c696af972354a575dbb8a85d3aecf4ae774caf062dc31ac46e
   languageName: node
   linkType: hard
 

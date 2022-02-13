@@ -57,14 +57,18 @@ describe('test parser', () => {
             label: 'author',
             type: 'Text',
             name: 'fields.AddMessage.author',
-            value: '',
           },
           msg: {
             label: 'msg',
             type: 'Text',
             name: 'fields.AddMessage.msg',
-            value: '',
           },
+        },
+      },
+      values: {
+        AddMessage: {
+          author: '',
+          msg: '',
         },
       },
     });
@@ -80,27 +84,33 @@ describe('test parser', () => {
               type: 'Text',
               name: 'fields.AddMessage.To.name',
               label: 'name',
-              value: '',
             },
             from: {
               type: 'Text',
               name: 'fields.AddMessage.To.from',
               label: 'from',
-              value: '',
             },
           },
           author: {
             type: 'Text',
             name: 'fields.AddMessage.author',
             label: 'author',
-            value: '',
           },
           msg: {
             type: 'Text',
             name: 'fields.AddMessage.msg',
             label: 'msg',
-            value: '',
           },
+        },
+      },
+      values: {
+        AddMessage: {
+          To: {
+            name: '',
+            from: '',
+          },
+          author: '',
+          msg: '',
         },
       },
     });
@@ -117,26 +127,22 @@ describe('test parser', () => {
                 type: 'Text',
                 name: 'fields.AddMessage.author',
                 label: 'author',
-                value: '',
               },
               msg: {
                 type: 'Text',
                 name: 'fields.AddMessage.msg',
                 label: 'msg',
-                value: '',
               },
             },
             Post: {
               type: 'Text',
               name: 'fields.Post',
               label: 'Post',
-              value: '',
             },
             ViewMessages: {
               type: 'Null',
               name: 'fields.ViewMessages',
               label: 'ViewMessages',
-              value: 'Null',
             },
           },
         },
@@ -147,15 +153,21 @@ describe('test parser', () => {
             type: 'Text',
             name: 'fields.AddMessage.author',
             label: 'author',
-            value: '',
           },
           msg: {
             type: 'Text',
             name: 'fields.AddMessage.msg',
             label: 'msg',
-            value: '',
           },
         },
+      },
+      values: {
+        AddMessage: {
+          author: '',
+          msg: '',
+        },
+        Post: '',
+        ViewMessages: null,
       },
     });
   });
@@ -170,18 +182,25 @@ describe('test parser', () => {
               type: 'String',
               name: 'fields.field',
               label: 'field',
-              value: '',
             },
           },
           NoFields: {
-            value: 'Null',
             name: 'fields.NoFields',
             label: 'NoFields',
             type: 'Null',
           },
         },
       },
-      fields: null,
+      fields: {
+        field: {
+          type: 'String',
+          name: 'fields.field',
+          label: 'field',
+        },
+      },
+      values: {
+        field: '',
+      },
     });
   });
 
@@ -196,13 +215,11 @@ describe('test parser', () => {
                 type: 'u64',
                 name: 'fields.id.decimal',
                 label: 'decimal',
-                value: '',
               },
               hex: {
                 type: 'Bytes',
                 name: 'fields.id.hex',
                 label: 'hex',
-                value: '',
               },
             },
             person: {
@@ -210,25 +227,47 @@ describe('test parser', () => {
                 type: 'Text',
                 name: 'fields.person.surname',
                 label: 'surname',
-                value: '',
               },
               name: {
                 type: 'Text',
                 name: 'fields.person.name',
                 label: 'name',
-                value: '',
               },
             },
           },
           NoFields: {
-            value: 'Null',
             name: 'fields.NoFields',
             label: 'NoFields',
             type: 'Null',
           },
         },
       },
-      fields: null,
+      fields: {
+        id: {
+          decimal: {
+            type: 'u64',
+            name: 'fields.id.decimal',
+            label: 'decimal',
+          },
+          hex: {
+            type: 'Bytes',
+            name: 'fields.id.hex',
+            label: 'hex',
+          },
+        },
+      },
+      values: {
+        res: {
+          id: {
+            decimal: '',
+            hex: '',
+          },
+          person: {
+            surname: '',
+            name: '',
+          },
+        },
+      },
     });
   });
 
@@ -242,18 +281,26 @@ describe('test parser', () => {
               type: 'u8',
               name: 'fields.exchangeRate.ok',
               label: 'ok',
-              value: '',
             },
             err: {
               type: 'u8',
               name: 'fields.exchangeRate.err',
               label: 'err',
-              value: '',
             },
           },
         },
       },
-      fields: null,
+      fields: {
+        ok: {
+          type: 'u8',
+          name: 'fields.exchangeRate.ok',
+          label: 'ok',
+        },
+      },
+      values: {
+        ok: '',
+        err: '',
+      },
     });
   });
 
@@ -276,7 +323,17 @@ describe('test parser', () => {
           },
         },
       },
-      fields: null,
+      fields: {
+        ok: {
+          label: 'ok',
+          name: 'fields.exchangeRate.ok',
+          type: 'u8',
+        },
+      },
+      values: {
+        err: '',
+        ok: '',
+      },
     });
   });
 });
