@@ -1,1 +1,8 @@
-export type SetFieldValue = (field: string, value: any, shouldValidate?: boolean | undefined) => void;
+export type InitialValues = {
+  gasLimit: number;
+  value: number;
+  payload: string;
+  types: string;
+  fields: {};
+  programName: string;
+};
