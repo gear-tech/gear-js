@@ -19,6 +19,12 @@ import {
 
 // enum custom fields from select
 
+// {
+//   "initialValues": {
+//   "payload": "{\n    \"_enum_Option\": \"String\"\n}",
+//     "fields": "{}"
+// }
+
 describe('test parser', () => {
   // it("empty array", () => {
   //     expect(parseMeta([])).toEqual(null);
@@ -56,12 +62,12 @@ describe('test parser', () => {
           author: {
             label: 'author',
             type: 'Text',
-            name: 'fields.AddMessage.author',
+            name: 'meta.AddMessage.author',
           },
           msg: {
             label: 'msg',
             type: 'Text',
-            name: 'fields.AddMessage.msg',
+            name: 'meta.AddMessage.msg',
           },
         },
       },
@@ -82,23 +88,23 @@ describe('test parser', () => {
           To: {
             name: {
               type: 'Text',
-              name: 'fields.AddMessage.To.name',
+              name: 'meta.AddMessage.To.name',
               label: 'name',
             },
             from: {
               type: 'Text',
-              name: 'fields.AddMessage.To.from',
+              name: 'meta.AddMessage.To.from',
               label: 'from',
             },
           },
           author: {
             type: 'Text',
-            name: 'fields.AddMessage.author',
+            name: 'meta.AddMessage.author',
             label: 'author',
           },
           msg: {
             type: 'Text',
-            name: 'fields.AddMessage.msg',
+            name: 'meta.AddMessage.msg',
             label: 'msg',
           },
         },
@@ -125,23 +131,23 @@ describe('test parser', () => {
             AddMessage: {
               author: {
                 type: 'Text',
-                name: 'fields.AddMessage.author',
+                name: 'meta.AddMessage.author',
                 label: 'author',
               },
               msg: {
                 type: 'Text',
-                name: 'fields.AddMessage.msg',
+                name: 'meta.AddMessage.msg',
                 label: 'msg',
               },
             },
             Post: {
               type: 'Text',
-              name: 'fields.Post',
+              name: 'meta.Post',
               label: 'Post',
             },
             ViewMessages: {
               type: 'Null',
-              name: 'fields.ViewMessages',
+              name: 'meta.ViewMessages',
               label: 'ViewMessages',
             },
           },
@@ -151,12 +157,12 @@ describe('test parser', () => {
         AddMessage: {
           author: {
             type: 'Text',
-            name: 'fields.AddMessage.author',
+            name: 'meta.AddMessage.author',
             label: 'author',
           },
           msg: {
             type: 'Text',
-            name: 'fields.AddMessage.msg',
+            name: 'meta.AddMessage.msg',
             label: 'msg',
           },
         },
@@ -167,7 +173,7 @@ describe('test parser', () => {
           msg: '',
         },
         Post: '',
-        ViewMessages: null,
+        ViewMessages: 'Null',
       },
     });
   });
@@ -180,12 +186,12 @@ describe('test parser', () => {
           fields: {
             field: {
               type: 'String',
-              name: 'fields.field',
+              name: 'meta.field',
               label: 'field',
             },
           },
           NoFields: {
-            name: 'fields.NoFields',
+            name: 'meta.NoFields',
             label: 'NoFields',
             type: 'Null',
           },
@@ -194,7 +200,7 @@ describe('test parser', () => {
       fields: {
         field: {
           type: 'String',
-          name: 'fields.field',
+          name: 'meta.field',
           label: 'field',
         },
       },
@@ -213,30 +219,30 @@ describe('test parser', () => {
             id: {
               decimal: {
                 type: 'u64',
-                name: 'fields.id.decimal',
+                name: 'meta.id.decimal',
                 label: 'decimal',
               },
               hex: {
                 type: 'Bytes',
-                name: 'fields.id.hex',
+                name: 'meta.id.hex',
                 label: 'hex',
               },
             },
             person: {
               surname: {
                 type: 'Text',
-                name: 'fields.person.surname',
+                name: 'meta.person.surname',
                 label: 'surname',
               },
               name: {
                 type: 'Text',
-                name: 'fields.person.name',
+                name: 'meta.person.name',
                 label: 'name',
               },
             },
           },
           NoFields: {
-            name: 'fields.NoFields',
+            name: 'meta.NoFields',
             label: 'NoFields',
             type: 'Null',
           },
@@ -246,12 +252,12 @@ describe('test parser', () => {
         id: {
           decimal: {
             type: 'u64',
-            name: 'fields.id.decimal',
+            name: 'meta.id.decimal',
             label: 'decimal',
           },
           hex: {
             type: 'Bytes',
-            name: 'fields.id.hex',
+            name: 'meta.id.hex',
             label: 'hex',
           },
         },
@@ -279,12 +285,12 @@ describe('test parser', () => {
           fields: {
             ok: {
               type: 'u8',
-              name: 'fields.exchangeRate.ok',
+              name: 'meta.exchangeRate.ok',
               label: 'ok',
             },
             err: {
               type: 'u8',
-              name: 'fields.exchangeRate.err',
+              name: 'meta.exchangeRate.err',
               label: 'err',
             },
           },
@@ -293,7 +299,7 @@ describe('test parser', () => {
       fields: {
         ok: {
           type: 'u8',
-          name: 'fields.exchangeRate.ok',
+          name: 'meta.exchangeRate.ok',
           label: 'ok',
         },
       },
@@ -312,12 +318,12 @@ describe('test parser', () => {
           fields: {
             ok: {
               type: 'u8',
-              name: 'fields.exchangeRate.ok',
+              name: 'meta.exchangeRate.ok',
               label: 'ok',
             },
             err: {
               type: 'u8',
-              name: 'fields.exchangeRate.err',
+              name: 'meta.exchangeRate.err',
               label: 'err',
             },
           },
@@ -326,7 +332,7 @@ describe('test parser', () => {
       fields: {
         ok: {
           label: 'ok',
-          name: 'fields.exchangeRate.ok',
+          name: 'meta.exchangeRate.ok',
           type: 'u8',
         },
       },

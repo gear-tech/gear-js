@@ -4,50 +4,46 @@ import { Field, useFormikContext } from 'formik';
 import { ParsedShape, ParsedStruct } from '../../utils/meta-parser';
 import { MetaFormItem, MetaInput, Fieldset, EnumSelect } from './styles';
 
-const createFieldset = ({ legend, fields }: { legend: string; fields: ParsedStruct }) => (
-  <Fieldset key={legend} name={legend}>
-    <legend>{legend}</legend>
-    {fields &&
-      Object.entries(fields).map((field) => {
-        if (field && field[1] && 'type' in field[1] && 'name' in field[1]) {
-          return (
-            <MetaInput key={field[1].name as string}>
-              <label>
-                {field[1].label} (type: {field[1].type}) <br />
-                {/* FIXME: uncontrolled input is changing to be controlled */}
-                <Field name={`${field[1].name}.value`} disabled={field[1].type === 'Null'} />
-                <br />
-              </label>
-            </MetaInput>
-          );
-        }
-        if (isObject(field[1])) {
-          return createFieldset({
-            legend: field[0],
-            fields: field[1] as ParsedStruct,
-          });
-        }
-        return null;
-      })}
-  </Fieldset>
-);
+const createFieldset = ({ legend, fields }: { legend: string; fields: ParsedStruct }) => {
+  return (
+    <Fieldset key={legend} name={legend}>
+      <legend>{legend}</legend>
+      {fields &&
+        Object.entries(fields).map((field) => {
+          if (field && field[1] && 'type' in field[1] && 'name' in field[1]) {
+            return (
+              <MetaInput key={field[1].name as string}>
+                <label>
+                  {field[1].label} (type: {field[1].type}) <br />
+                  {/* FIXME: uncontrolled input is changing to be controlled */}
+                  <Field name={field[1].name} disabled={field[1].type === 'Null'} />
+                  <br />
+                </label>
+              </MetaInput>
+            );
+          }
+          if (isObject(field[1])) {
+            return createFieldset({
+              legend: field[0],
+              fields: field[1] as ParsedStruct,
+            });
+          }
+          return null;
+        })}
+    </Fieldset>
+  );
+};
 
 export const FormItem = ({ data }: { data: ParsedShape }) => {
   const formikContext = useFormikContext();
   const [activeEnums, setActiveEnums] = useState<ParsedStruct>({});
   const [result, setResult] = useState<[null | ReactNode, null | ReactNode]>([null, null]);
 
-  console.log(data);
   useEffect(() => {
     const struct: [null | ReactNode, null | ReactNode] = [null, null];
     if (data.select) {
       struct[0] = Object.entries(data.select).map((item, index) => {
         const { type, fields } = item[1];
-        if (Object.values(activeEnums).length === 0 && index === 0) {
-          setActiveEnums({
-            [`${Object.keys(item[1]).reverse()[0]}`]: fields[Object.keys(fields).reverse()[0]],
-          });
-        }
         if (type === '_enum') {
           return (
             <EnumSelect key={item[0]}>
@@ -59,13 +55,13 @@ export const FormItem = ({ data }: { data: ParsedShape }) => {
                   key={item[0]}
                   onChange={(event) => {
                     const { value } = event.target;
-                    if (data.select) {
+                    if (data.select && data.values) {
                       const selected = { [`${value}`]: data.select[item[0]].fields[value] };
                       setActiveEnums(selected);
                       formikContext.resetForm({
                         values: {
                           ...(formikContext.values as object),
-                          fields: selected,
+                          meta: { [`${value}`]: data.values[value] },
                         },
                       });
                     }
@@ -103,11 +99,11 @@ export const FormItem = ({ data }: { data: ParsedShape }) => {
                           label: 'NoFields',
                         },
                       });
-                    } else if (data.select) {
+                    } else if (data.select && data.values) {
                       const selected = { [`${value}`]: data.select[item[0]].fields[value] };
                       setActiveEnums({ selected });
                       formikContext.resetForm({
-                        values: { ...(formikContext.values as object), fields: selected },
+                        values: { ...(formikContext.values as object), meta: { [`${value}`]: data.values[value] } },
                       });
                     }
                   }}
@@ -190,7 +186,7 @@ export const FormItem = ({ data }: { data: ParsedShape }) => {
     if (JSON.stringify(struct) !== JSON.stringify(result)) {
       setResult(struct);
     }
-  }, [activeEnums, data.fields, data.select, result, formikContext]);
+  }, [activeEnums, data.fields, data.values, data.select, result, formikContext]);
 
   return <MetaFormItem>{result}</MetaFormItem>;
 };

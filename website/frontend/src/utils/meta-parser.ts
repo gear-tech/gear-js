@@ -59,7 +59,7 @@ enum MetaEnums {
 }
 
 type MetaField = { [key: string]: { [key: string]: string | MetaField } };
-type MetaParam = {} | [] | MetaField;
+export type MetaParam = {} | [] | MetaField;
 
 function parseField(data: MetaParam) {
   const result: ParsedShape = {
@@ -123,7 +123,10 @@ function parseField(data: MetaParam) {
         if (current.kind === 'enum' && result.select) {
           set(result.select, current.path, {
             type: 'Null',
-            name: current.path.slice(1).join('.'),
+            name: current.path
+              .slice(1)
+              .map((i) => (i === 'fields' ? 'meta' : i))
+              .join('.'),
             label: current.path[current.path.length - 1],
           });
 
@@ -131,7 +134,7 @@ function parseField(data: MetaParam) {
           if (!result.values) {
             result.values = {};
           }
-          set(result.values, current.path.slice(2), null);
+          set(result.values, current.path.slice(2), metaNull);
         } else if (current.kind === 'field') {
           // eslint-disable-next-line max-depth
           if (!result.fields) {
@@ -154,7 +157,7 @@ function parseField(data: MetaParam) {
           const key = path[path.length - 1];
           set(result.select, current.path, {
             label: key,
-            name: ['fields', key].join('.'),
+            name: ['meta', key].join('.'),
             type: current.value,
           });
 
@@ -177,7 +180,7 @@ function parseField(data: MetaParam) {
               type: MetaEnums.EnumOption,
               NoFields: {
                 type: 'Null',
-                name: 'fields.NoFields', // TODO: add if field deep
+                name: 'meta.NoFields', // TODO: add if field deep
                 label: 'NoFields',
               },
             });
@@ -240,7 +243,7 @@ function parseField(data: MetaParam) {
                 merge(get(result.select, current.path), {
                   [key]: {
                     label: key,
-                    name: ['fields', ...path.filter((i) => i !== 'fields'), key].join('.'),
+                    name: ['meta', ...path.filter((i) => i !== 'fields'), key].join('.'),
                     type: value,
                   },
                 })
@@ -262,7 +265,7 @@ function parseField(data: MetaParam) {
                   merge(get(result.select, current.path), {
                     [key]: {
                       label: key,
-                      name: ['fields', ...pt].join('.'),
+                      name: ['meta', ...pt].join('.'),
                       type: value,
                     },
                   })
@@ -280,7 +283,7 @@ function parseField(data: MetaParam) {
               if (result.select) {
                 set(result.select, current.path, {
                   label: current.path[current.path.length - 1],
-                  name: ['fields', ...current.path.filter((i) => i !== 'fields')].join('.'),
+                  name: ['meta', ...current.path.filter((i) => i !== 'fields')].join('.'),
                   type: value,
                 });
 
@@ -299,7 +302,7 @@ function parseField(data: MetaParam) {
                 merge(get(result.fields, current.path), {
                   [key]: {
                     label: key,
-                    name: ['fields', ...current.path, key].join('.'),
+                    name: ['meta', ...current.path, key].join('.'),
                     type: value,
                   },
                 })

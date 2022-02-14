@@ -20,6 +20,7 @@ import { Schema } from './Schema';
 
 import './MessageForm.scss';
 import { MetaErrorMessage } from './styles';
+import { findReplaceNull } from '../../../../../utils/find-replace-null';
 
 type Props = {
   programId: string;
@@ -40,13 +41,13 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
     value: number;
     payload: string;
     destination: string;
-    fields: ParsedStruct | null;
+    meta: ParsedStruct | null;
   }>({
     gasLimit: 20000000,
     value: 0,
     payload: types ? getPreformattedText(types) : '',
     destination: programId,
-    fields: null,
+    meta: null,
   });
 
   useEffect(() => {
@@ -54,8 +55,11 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
       const parsedMeta = parseMeta(types);
       setMetaForm(parsedMeta);
       setIsManualInput(false);
-      if (parsedMeta) {
-        initialValues.current.fields = parsedMeta.fields;
+      if (parsedMeta && parsedMeta.fields && parsedMeta.values) {
+        const key = Object.keys(parsedMeta.fields)[0];
+        initialValues.current.meta = {
+          [key]: parsedMeta.values[key],
+        };
       }
     }
   }, [types, initialValues]);
@@ -67,7 +71,7 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
     }
 
     try {
-      const pl = isManualInput ? values.payload : values.fields;
+      const pl = isManualInput ? values.payload : values.meta;
 
       if (Object.keys(pl).length === 0) {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Form is empty' }));
@@ -90,15 +94,18 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
       validateOnBlur
       enableReinitialize
       onSubmit={(values, { resetForm }) => {
-        if (currentAccount) {
+        const prepared = findReplaceNull(values.meta);
+
+        // TODO: find out how to improve this one
+        if (currentAccount && values.meta && prepared) {
           const message: MessageModel = {
             gasLimit: values.gasLimit,
             destination: values.destination,
             value: values.value,
-            payload: isManualInput ? values.payload : values.fields!,
+            payload: isManualInput ? values.payload : prepared,
           };
+
           if (meta && api) {
-            console.log(message);
             SendMessageToProgram(api, currentAccount, message, meta, () => {
               resetForm();
             });
