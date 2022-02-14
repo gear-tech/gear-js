@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const MetaField: FC<Props> = ({ name, isDisabled }) => {
-  const [field, meta, helpers] = useField(name);
+  const [field, meta] = useField(name);
   const isTextarea = ['types'].includes(name);
 
   return (
