@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
-import { Metadata } from '@gear-js/api';
-import { ErrorBoundary } from 'react-error-boundary';
+import { Metadata, Hex } from '@gear-js/api';
 import { SendMessageToProgram } from 'services/ApiService';
-import { InitialValues } from './types';
+import { InitialValues, SetFieldValue } from './types';
+import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
@@ -15,13 +15,10 @@ import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
-import { FormItem } from 'components/FormItem';
-import { Switch } from 'common/components/Switch';
 import { Schema } from './Schema';
 import { LOCAL_STORAGE } from 'consts';
 
 import './MessageForm.scss';
-import { MetaErrorMessage } from './styles';
 
 type Props = {
   programId: string;
@@ -52,6 +49,37 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
       setIsManualInput(false);
     }
   }, [types]);
+
+  const calculateGas = async (values: InitialValues, setFieldValue: SetFieldValue) => {
+    if (isManualInput && values.payload.length === 0) {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
+      return;
+    }
+
+    try {
+      const payload = isManualInput ? values.payload : values.fields;
+
+      if (Object.keys(payload).length === 0) {
+        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Form is empty' }));
+        return;
+      }
+
+      const metaOrTypeOfPayload: any = meta || 'String';
+
+      const estimatedGas = await api.program.gasSpent.handle(
+        localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+        programId as Hex,
+        payload,
+        metaOrTypeOfPayload
+      );
+
+      dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
+      setFieldValue('gasLimit', estimatedGas.toHuman());
+    } catch (error) {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+      console.error(error);
+    }
+  };
 
   return (
     <Formik
@@ -106,52 +134,12 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
                 <label htmlFor="payload" className="message-form__field">
                   Payload:
                 </label>
-                <div className="message-form__field-wrapper">
-                  {metaForm && (
-                    <Switch
-                      onChange={() => {
-                        setIsManualInput(!isManualInput);
-                      }}
-                      label="Manual input"
-                      checked={isManualInput}
-                    />
-                  )}
-                  <ErrorBoundary
-                    fallback={
-                      <>
-                        <MetaErrorMessage>
-                          Sorry, something went wrong. Unfortunately we can't parse metadata, you could use manual
-                          input.
-                        </MetaErrorMessage>
-                        <br />
-                      </>
-                    }
-                    onError={(error) => {
-                      setIsManualInput(true);
-                      console.error(error);
-                    }}
-                  >
-                    {!isManualInput && metaForm ? <FormItem data={metaForm} /> : <></>}
-                  </ErrorBoundary>
-                  {!metaForm && <MetaErrorMessage>Can't parse metadata, try to use manual input.</MetaErrorMessage>}
-                  {isManualInput && (
-                    <div>
-                      <p className="message-form__manual-input-notice">JSON or hex</p>
-                      <Field
-                        id="payload"
-                        name="payload"
-                        as="textarea"
-                        type="text"
-                        className={clsx('', errors.payload && touched.payload && 'message-form__input-error')}
-                        placeholder="// Enter your payload here"
-                        rows={15}
-                      />
-                      {errors.payload && touched.payload ? (
-                        <div className="message-form__error">{errors.payload}</div>
-                      ) : null}
-                    </div>
-                  )}
-                </div>
+                <FormPayload
+                  className="message-form__field-wrapper"
+                  isManualInput={isManualInput}
+                  setIsManualInput={setIsManualInput}
+                  formData={metaForm}
+                />
               </div>
 
               <div className="message-form--info">

@@ -1,58 +1,11 @@
-import { GearApi } from './GearApi';
 import { CreateType } from './CreateType';
 import { getWasmMetadata } from './WasmMeta';
-import { IGearPages, IProgram, ProgramId } from './interfaces';
-import { u32, Option, Raw } from '@polkadot/types';
+import { IGearPages, ProgramId } from './interfaces';
 import { Codec } from '@polkadot/types/types';
 import { ReadStateError } from './errors/state.errors';
+import { GearStorage } from './Storage';
 
-const PREFIXES = {
-  prog: Buffer.from('g::prog::').toString('hex'),
-  pages: Buffer.from('g::pages::').toString('hex'),
-};
-
-const SEPARATOR = Buffer.from('::').toString('hex');
-
-export class GearProgramState {
-  api: GearApi;
-
-  constructor(api: GearApi) {
-    this.api = api;
-  }
-
-  /**
-   * Get program form chain
-   * @param programId
-   * @returns
-   */
-  async gProg(programId: ProgramId): Promise<IProgram> {
-    const storage = (await this.api.rpc.state.getStorage(`0x${PREFIXES.prog}${programId.slice(2)}`)) as Option<Raw>;
-    const decoded: IProgram = this.api.createType('Program', storage.unwrap());
-    return decoded;
-  }
-
-  /**
-   * Get list of pages for program
-   * @param programId
-   * @param pagesList - list with pages numbers
-   * @returns
-   */
-  async gPages(programId: ProgramId, pagesList: u32[]): Promise<IGearPages> {
-    const keys = {};
-    pagesList.forEach((value: u32) => {
-      keys[value.toNumber()] = `0x${PREFIXES.pages}${programId.slice(2)}${SEPARATOR}${this.api
-        .createType('Bytes', Array.from(this.api.createType('u32', value).toU8a()))
-        .toHex()
-        .slice(2)}`;
-    });
-    const pages = {};
-    for (let key of Object.keys(keys)) {
-      const storage = ((await this.api.rpc.state.getStorage(keys[key])) as Option<Codec>).unwrap().toU8a();
-      pages[key] = storage;
-    }
-    return pages;
-  }
-
+export class GearProgramState extends GearStorage {
   /**
    * Decode state to meta_state_output type
    * @param metaWasm - file with metadata

@@ -5,3 +5,5 @@ export type InitialValues = {
   destination: string;
   fields: {};
 };
+
+export type SetFieldValue = (field: string, value: any, shouldValidate?: boolean | undefined) => void;

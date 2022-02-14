@@ -1,5 +1,6 @@
 .button {
   padding: 0;
+  display: flex;
 
   &::after {
     content: url('/assets/images/arrow_back.svg');
