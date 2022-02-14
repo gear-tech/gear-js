@@ -1,0 +1,40 @@
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/mixins' as *;
+
+.summary {
+  @include flexGap(0, 80px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: $textColorSecondary;
+}
+
+.section {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &:not(:last-child) {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 1px;
+      height: 37px;
+      margin: auto;
+      background-color: $separateLineColor;
+    }
+  }
+}
+
+.data {
+  font-size: $fontSizeLarge;
+}
+
+.number {
+  color: $textColor;
+  font-weight: 600;
+}

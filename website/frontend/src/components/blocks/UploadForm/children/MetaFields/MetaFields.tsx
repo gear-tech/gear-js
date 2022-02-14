@@ -11,7 +11,7 @@ export const MetaFields: FC<Props> = ({ fields, isDisabled }) => {
   return fields ? (
     <>
       {fields.map((field: string) => {
-        <MetaField key={field} name={field} isDisabled={isDisabled} />;
+        return <MetaField key={field} name={field} isDisabled={isDisabled} />;
       })}
     </>
   ) : (

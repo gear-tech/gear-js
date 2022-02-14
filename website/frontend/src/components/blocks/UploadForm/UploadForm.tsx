@@ -6,6 +6,7 @@ import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, parseHexTypes, getTypeStructure } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
+import { InitialValues } from './types';
 import { EventTypes } from 'types/alerts';
 import { FormItem } from 'components/FormItem';
 import { Switch } from 'common/components/Switch';
@@ -20,7 +21,7 @@ import { useApi } from 'hooks/useApi';
 import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
-import { readFileAsync } from 'helpers';
+import { readFileAsync, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
 import styles from './UploadForm.module.scss';
@@ -41,19 +42,18 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [payloadForm, setPayloadForm] = useState<ParsedShape | null>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
-  const [isManualPaylod, setIsManualPaylod] = useState<boolean>(false);
-  const [initialValues, setInitialValues] = useState({
+  const [isManualPayload, setIsManualPayload] = useState<boolean>(false);
+  const [initialValues, setInitialValues] = useState<InitialValues>({
     gasLimit: MIN_GAS_LIMIT,
     value: 0,
-    initPayload: '',
+    payload: '',
     types: '',
+    fields: {},
     programName: '',
   });
 
-  const isHasInitInput = isMetaFromFile && (payloadForm?.fields || payloadForm?.select);
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
-  const isShowPayload = isHasInitInput || !isMetaFromFile;
-  const isShowPayloadForm = isHasInitInput && !isManualPaylod;
+  const isShowPayloadForm = payloadForm && !isManualPayload;
 
   const handleUploadMetaFile = async (file: File) => {
     try {
@@ -63,8 +63,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       if (metaWasm) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
         const types = parseHexTypes(metaWasm?.types);
-        const inputType = getTypeStructure(metaWasm?.init_input, types);
-        const parsedMeta = parseMeta(inputType);
+        const typeStructure = getTypeStructure(metaWasm?.init_input, types);
+        const parsedStructure = parseMeta(typeStructure);
         let valuesFromFile = {};
 
         for (const key in metaWasm) {
@@ -78,12 +78,12 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
         setMeta(metaWasm);
         setMetaFile(bufstr);
-        setPayloadForm(parsedMeta);
+        setPayloadForm(parsedStructure);
         setInitialValues({
           ...initialValues,
           ...valuesFromFile,
           programName: metaWasm.title,
-          initPayload: JSON.stringify(inputType, null, 4),
+          payload: JSON.stringify(typeStructure, null, 4),
           types: JSON.stringify(types, null, 4),
         });
         setFieldFromFile([...Object.keys(valuesFromFile).reverse()]);
@@ -104,8 +104,9 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setInitialValues({
       gasLimit: MIN_GAS_LIMIT,
       value: 0,
-      initPayload: '',
+      payload: '',
       types: '',
+      fields: {},
       programName: '',
     });
   };
@@ -113,8 +114,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleSubmitForm = (values: any) => {
     if (currentAccount) {
       if (isMetaFromFile) {
-        const pl = isManualPaylod ? values.initPayload : values.fields;
-        const updatedValues = { ...values, initPayload: pl };
+        const pl = isManualPayload ? values.payload : values.fields;
+        const updatedValues = { ...values, payload: pl };
 
         UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
           setDroppedFile(null);
@@ -213,42 +214,41 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         {errors.value && touched.value ? <div className={styles.error}>{errors.value}</div> : null}
                       </div>
                     </div>
-                    {isShowPayload && (
-                      <div className={styles.block}>
-                        <label htmlFor="initPayload" className={clsx(styles.caption, styles.top)}>
-                          Initial payload:
-                        </label>
-                        <div className={clsx(styles.value, styles.payload)}>
-                          {isMetaFromFile && (
-                            <div className={styles.switch}>
-                              <Switch
-                                onChange={() => setIsManualPaylod(!isManualPaylod)}
-                                label="Manual input"
-                                checked={isManualPaylod}
-                              />
-                            </div>
-                          )}
-                          {isShowPayloadForm ? (
-                            <div className="message-form--info">
-                              <FormItem data={payloadForm} />
-                            </div>
-                          ) : (
-                            <>
-                              <Field
-                                as="textarea"
-                                id="initPayload"
-                                name="initPayload"
-                                placeholder="// Enter your payload here"
-                                className={clsx(styles.field, styles.textarea)}
-                              />
-                              {errors.initPayload && touched.initPayload ? (
-                                <div className={styles.error}>{errors.initPayload}</div>
-                              ) : null}
-                            </>
-                          )}
-                        </div>
+
+                    <div className={styles.block}>
+                      <label htmlFor="payload" className={clsx(styles.caption, styles.top)}>
+                        Initial payload:
+                      </label>
+                      <div className={clsx(styles.value, styles.payload)}>
+                        {isShowPayloadForm && (
+                          <div className={styles.switch}>
+                            <Switch
+                              onChange={() => setIsManualPayload(!isManualPayload)}
+                              label="Manual input"
+                              checked={isManualPayload}
+                            />
+                          </div>
+                        )}
+                        {isShowPayloadForm ? (
+                          <div className="message-form--info">
+                            <FormItem data={payloadForm} />
+                          </div>
+                        ) : (
+                          <>
+                            <Field
+                              as="textarea"
+                              id="payload"
+                              name="payload"
+                              placeholder="// Enter your payload here"
+                              className={clsx(styles.field, styles.textarea)}
+                            />
+                            {errors.payload && touched.payload ? (
+                              <div className={styles.error}>{errors.payload}</div>
+                            ) : null}
+                          </>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </div>
 
                   <div className={styles.meta}>
@@ -266,7 +266,22 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     )}
                   </div>
                 </div>
-                <Buttons handleResetForm={handleResetForm} />
+                <Buttons
+                  handleCalculateGas={() => {
+                    calculateGas(
+                      'init',
+                      api,
+                      isManualPayload,
+                      values,
+                      setFieldValue,
+                      dispatch,
+                      meta,
+                      droppedFile,
+                      null
+                    );
+                  }}
+                  handleResetForm={handleResetForm}
+                />
               </div>
             </Form>
           );

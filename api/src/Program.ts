@@ -1,13 +1,21 @@
-import { Metadata, ProgramId } from './interfaces';
+import { Hex, Metadata, ProgramId } from './interfaces';
 import { SubmitProgramError } from './errors';
 import { AnyNumber } from '@polkadot/types/types';
-import { Bytes, U64, u64 } from '@polkadot/types';
+import { Bytes, u64 } from '@polkadot/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex, blake2AsU8a } from '@polkadot/util-crypto';
 import { GearTransaction } from './types';
 import { createPayload } from './utils';
+import { GearGasSpent } from './GasSpent';
+import { GearApi } from './GearApi';
 
 export class GearProgram extends GearTransaction {
+  gasSpent: GearGasSpent;
+
+  constructor(gearApi: GearApi) {
+    super(gearApi);
+    this.gasSpent = new GearGasSpent(gearApi);
+  }
   /**
    * @param program Uploading program data
    * @param meta Metadata
@@ -16,21 +24,21 @@ export class GearProgram extends GearTransaction {
   submit(
     program: {
       code: Buffer;
-      salt?: string;
+      salt?: `0x${string}`;
       initPayload?: string | any;
       gasLimit: u64 | AnyNumber;
       value?: BalanceOf | AnyNumber;
     },
     meta?: Metadata,
     messageType?: string,
-  ): ProgramId {
+  ): { programId: ProgramId; salt: Hex } {
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
-    let payload: string = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
+    let payload = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
     try {
       this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
       const programId = this.generateProgramId(code, salt);
-      return programId.toHex();
+      return { programId: programId.toHex(), salt };
     } catch (error) {
       throw new SubmitProgramError();
     }
@@ -45,12 +53,6 @@ export class GearProgram extends GearTransaction {
       return `0x${prog.toHex().slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
     });
     return programs;
-  }
-
-  async getGasSpent(programId: string, payload: any, type: any, meta?: Metadata): Promise<U64> {
-    const payloadBytes = createPayload(this.createType, type, payload, meta);
-    const gasSpent = await this.api.rpc.gear.getGasSpent(programId, payloadBytes);
-    return gasSpent;
   }
 
   generateProgramId(code: Bytes, salt: string): H256 {

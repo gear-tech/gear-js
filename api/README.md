@@ -117,7 +117,7 @@ const program = {
 };
 
 try {
-  const programId = await gearApi.program.submit(uploadProgram, meta);
+  const { programId, salt } = await gearApi.program.submit(uploadProgram, meta);
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
@@ -155,6 +155,54 @@ try {
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
+```
+
+### Get gasSpent
+
+#### For init message
+
+```javascript
+const code = fs.readFileSync('demo_ping.opt.wasm');
+const gas = await gearApi.program.gasSpent.init(
+  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
+  code,
+  '0x00',
+);
+console.log(gas.toHuman());
+```
+
+#### For handle message
+
+```javascript
+const code = fs.readFileSync('demo_meta.opt.wasm');
+const meta = await getWasmMetadata(fs.readFileSync('demo_meta.opt.wasm'));
+const gas = await gearApi.program.gasSpent.handle(
+  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+  '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', //program id
+  {
+    id: {
+      decimal: 64,
+      hex: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+    },
+  },
+  meta,
+);
+console.log(gas.toHuman());
+```
+
+#### For reply message
+
+```javascript
+const code = fs.readFileSync('demo_async.opt.wasm');
+const meta = await getWasmMetadata(fs.readFileSync('demo_async.opt.wasm'));
+const gas = await gearApi.program.gasSpent.reply(
+  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+  '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635', // message id
+  0, // exit code
+  'PONG',
+  meta,
+);
+console.log(gas.toHuman());
 ```
 
 ### Read state of program
@@ -245,6 +293,20 @@ const unsub = await gearApi.gearEvents.subscribeNewBlocks((header) => {
 });
 // Unsubscribe
 unsub();
+```
+
+### Get block data
+
+```javascript
+const data = await gearApi.blocks.get(blockNumberOrBlockHash);
+console.log(data.toHuman());
+```
+
+### Get block timestamp
+
+```javascript
+const ts = await gearApi.blocks.getBlockTimestamp(blockNumberOrBlockHash);
+console.log(ts.toNumber());
 ```
 
 ### Get blockHash by block number

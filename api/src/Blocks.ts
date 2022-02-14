@@ -1,10 +1,11 @@
 import { GearApi } from './GearApi';
+import { GetBlockError } from './errors/blocks.errors';
 import { AnyTuple, AnyNumber } from '@polkadot/types/types';
-import { Compact, GenericExtrinsic, Vec } from '@polkadot/types';
+import { u64, Compact, GenericExtrinsic, Vec } from '@polkadot/types';
 import { SignedBlock, BlockNumber, BlockHash } from '@polkadot/types/interfaces';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
-import { GetBlockError } from './errors/blocks.errors';
-
+import { isHex, isU8a } from '@polkadot/util';
+import { CreateType } from './CreateType';
 export class GearBlock {
   protected api: GearApi;
   constructor(api: GearApi) {
@@ -12,11 +13,33 @@ export class GearBlock {
   }
 
   /**
-   * Get data of particular block
+   * Get data of particular block by blockHash
    * @param hash
    * @returns
    */
-  async get(hash: `0x${string}` | Uint8Array): Promise<SignedBlock> {
+  async get(hash: `0x${string}` | Uint8Array): Promise<SignedBlock>;
+
+  /**
+   * Get data of particular block by blockNumber
+   * @param number
+   * @returns
+   */
+  async get(number: number): Promise<SignedBlock>;
+
+  /**
+   * Get data of particular block by blockNumber or blockHash
+   * @param hashOrNumber
+   * @returns
+   */
+  async get(hashOrNumber: `0x${string}` | Uint8Array | number): Promise<SignedBlock>;
+
+  /**
+   * Get data of particular block by blockNumber or blockHash
+   * @param hashOrNumber
+   * @returns
+   */
+  async get(hashOrNumber: `0x${string}` | Uint8Array | number): Promise<SignedBlock> {
+    const hash = isU8a(hashOrNumber) || isHex(hashOrNumber) ? hashOrNumber : await this.getBlockHash(+hashOrNumber);
     try {
       return await this.api.rpc.chain.getBlock(hash);
     } catch (error) {
@@ -41,6 +64,20 @@ export class GearBlock {
   async getBlockNumber(hash: `0x${string}` | Uint8Array): Promise<Compact<BlockNumber>> {
     const block = await this.get(hash);
     return block.block.header.number;
+  }
+
+  /**
+   * Get timestamp of block
+   * @param hashOrNumber hash or number of particular block
+   * @returns
+   */
+  async getBlockTimestamp(hashOrNumber: `0x${string}` | Uint8Array | number): Promise<Compact<u64>> {
+    const block = await this.get(hashOrNumber);
+    const tsAsU8a = block.block.extrinsics.find(
+      (value) => value.method.method === 'set' && value.method.section === 'timestamp',
+    ).data;
+    const ts = CreateType.create('Compact<u64>', tsAsU8a);
+    return ts as Compact<u64>;
   }
 
   /**

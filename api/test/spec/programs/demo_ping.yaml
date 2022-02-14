@@ -15,5 +15,20 @@ messages:
     gasLimit: 30000000
     account: alice
     meta: false
+    log: '0x504f4e47'
 
-gasSpent: [1]
+mailbox:
+  - message: 1
+    claim: true
+    account: alice
+
+handleGasSpent:
+  - source: alice
+    dest: 1
+    payload: PING
+    type: String
+
+initGasSpent:
+  - source: alice
+    program: 1
+    payload: '0x00'
