@@ -42,11 +42,11 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [payloadForm, setPayloadForm] = useState<ParsedShape | null>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
-  const [isManualPayload, setIsManualPayload] = useState<boolean>(false);
+  const [isManualPayload, setIsManualPayload] = useState<boolean>(true);
   const [initialValues, setInitialValues] = useState<InitialValues>({
     gasLimit: MIN_GAS_LIMIT,
     value: 0,
-    payload: '',
+    payload: '0x00',
     types: '',
     fields: {},
     programName: '',
@@ -214,7 +214,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         {errors.value && touched.value ? <div className={styles.error}>{errors.value}</div> : null}
                       </div>
                     </div>
-
                     <div className={styles.block}>
                       <label htmlFor="payload" className={clsx(styles.caption, styles.top)}>
                         Initial payload:
@@ -250,7 +249,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       </div>
                     </div>
                   </div>
-
                   <div className={styles.meta}>
                     <span className={styles.title}>Metadata: </span>
                     <MetaSwitch isMetaFromFile={isMetaFromFile} setIsMetaFromFile={setIsMetaFromFile} />
