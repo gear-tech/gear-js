@@ -165,7 +165,7 @@ export const calculateGas = async (
   programId?: String | null
 ) => {
   const payload = isManualPayload ? values.payload : values.fields;
-  console.log(isManualPayload);
+
   if (isManualPayload && payload === '') {
     dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
     return;
