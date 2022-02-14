@@ -43,7 +43,7 @@ export const ProgramDetails: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const program = {
     gasLimit: 20000000,
     value: 0,
-    initPayload: '',
+    initPayload: '0x00',
     init_input: '',
     init_output: '',
     handle_input: '',
