@@ -45,7 +45,7 @@ Getting node info
 ```javascript
 const chain = await gearApi.chain();
 const nodeName = await gearApi.nodeName();
-const version = await gearApi.version();
+const nodeVersion = await gearApi.nodeVersion();
 const genesis = gearApi.genesisHash.toHex();
 ```
 
@@ -117,7 +117,7 @@ const program = {
 };
 
 try {
-  const programId = await gearApi.program.submit(uploadProgram, meta);
+  const { programId, salt } = await gearApi.program.submit(uploadProgram, meta);
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
@@ -155,6 +155,70 @@ try {
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
+```
+
+### Submit code
+
+```javascript
+const code = fs.readFileSync('path/to/program.opt.wasm');
+const codeHash = gearApi.code.submit(code);
+gearApi.code.signAndSend(alice, () => {
+  events.forEach(({ event: { method, data } }) => {
+    if (method === 'ExtrinsicFailed') {
+      throw new Error(data.toString());
+    } else if (method === 'CodeSaved') {
+      console.log(data.toHuman());
+    }
+  });
+});
+```
+
+### Get gasSpent
+
+#### For init message
+
+```javascript
+const code = fs.readFileSync('demo_ping.opt.wasm');
+const gas = await gearApi.program.gasSpent.init(
+  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
+  code,
+  '0x00',
+);
+console.log(gas.toHuman());
+```
+
+#### For handle message
+
+```javascript
+const code = fs.readFileSync('demo_meta.opt.wasm');
+const meta = await getWasmMetadata(fs.readFileSync('demo_meta.opt.wasm'));
+const gas = await gearApi.program.gasSpent.handle(
+  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+  '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', //program id
+  {
+    id: {
+      decimal: 64,
+      hex: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+    },
+  },
+  meta,
+);
+console.log(gas.toHuman());
+```
+
+#### For reply message
+
+```javascript
+const code = fs.readFileSync('demo_async.opt.wasm');
+const meta = await getWasmMetadata(fs.readFileSync('demo_async.opt.wasm'));
+const gas = await gearApi.program.gasSpent.reply(
+  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+  '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635', // message id
+  0, // exit code
+  'PONG',
+  meta,
+);
+console.log(gas.toHuman());
 ```
 
 ### Read state of program
@@ -240,7 +304,7 @@ unsub();
 Subscribe to new blocks
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeNewBlocks((header) => {
+const unsub = await gearApi.gearEvents.subscribeToNewBlocks((header) => {
   console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
 });
 // Unsubscribe

@@ -10,7 +10,7 @@ export class GearMessage extends GearTransaction {
     meta?: Metadata,
     messageType?: string,
   ): any {
-    let payload: string = createPayload(this.createType, messageType || meta?.handle_input, message.payload, meta);
+    let payload = createPayload(this.createType, messageType || meta?.handle_input, message.payload, meta);
 
     try {
       this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);

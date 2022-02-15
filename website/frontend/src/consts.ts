@@ -1,5 +1,6 @@
 export const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS;
 export const NODE_ADRESS_URL_PARAM = 'node';
+export const DEFAULT_NODES_URL = process.env.REACT_APP_DEFAULT_NODES_URL;
 
 export const API_URL = process.env.REACT_APP_API_URL as string;
 export const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER_URL}/build`;
@@ -86,7 +87,6 @@ export const SWITCH_PAGE_TYPES = {
   NOTIFICATIONS: 'NOTIFICATIONS',
   ALL_PROGRAMS: 'ALL_PROGRAMS',
   ALL_MESSAGES: 'ALL_MESSAGES',
-  EXPLORER: 'EXPLORER',
 };
 
 export const PAGE_TYPES = {

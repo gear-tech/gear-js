@@ -1,3 +1,5 @@
+@use 'assets/scss/breakpoints' as *;
+
 .search-queries {
   display: flex;
   flex-direction: row;
@@ -91,4 +93,12 @@
 
 .img-wrapper {
   display: flex;
+}
+
+.wrapper {
+  padding: 40px;
+
+  @include md {
+    padding: 20px;
+  }
 }

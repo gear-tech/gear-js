@@ -1,3 +1,3 @@
-export { GearError, CreateTypeError, TransactionError } from './gear.errors';
-export { SendMessageError, SendReplyError } from './message.errors';
-export { SubmitProgramError } from './program.errors';
+export * from './gear.errors';
+export * from './message.errors';
+export * from './program.errors';

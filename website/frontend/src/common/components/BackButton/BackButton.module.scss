@@ -1,0 +1,10 @@
+.button {
+  padding: 0;
+  display: flex;
+
+  &::after {
+    content: url('/assets/images/arrow_back.svg');
+    // to get rid of extra space
+    font-size: 0;
+  }
+}

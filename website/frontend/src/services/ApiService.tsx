@@ -71,7 +71,7 @@ export const UploadProgram = async (
   };
 
   try {
-    const programId = await api.program.submit(program, meta);
+    const { programId } = await api.program.submit(program, meta);
 
     await api.program.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
       dispatch(programUploadStartAction());

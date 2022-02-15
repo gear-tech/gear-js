@@ -8,3 +8,6 @@ export * from './program';
 export * from './transaction';
 export * from './events';
 export * from './system';
+export * from './augment-api-query';
+export * from './augment-api-rpc';
+export * from './augment-api-tx';

@@ -1,7 +1,8 @@
 import { GearApi } from './GearApi';
 import { Metadata } from './interfaces';
 import { CreateTypeError } from './errors';
-import { toCamelCase, splitByCommas, toJSON, isJSON } from './utils';
+import { toCamelCase, splitByCommas } from './utils/string';
+import { toJSON, isJSON } from './utils/json';
 import { isHex, hexToU8a, isU8a } from '@polkadot/util';
 import { Registry, Codec } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';

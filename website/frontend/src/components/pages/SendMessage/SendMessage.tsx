@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
-import { Loader } from 'react-feather';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
@@ -13,6 +12,7 @@ import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
+import { Spinner } from 'components/blocks/Spinner/Spinner';
 import './SendMessage.scss';
 
 type Params = { id: string };
@@ -73,7 +73,7 @@ export const SendMessage: VFC = () => {
     </div>
   ) : (
     <div className="wrapper">
-      <Loader color="#fff" className="animation-rotate" />;
+      <Spinner />
     </div>
   );
 };

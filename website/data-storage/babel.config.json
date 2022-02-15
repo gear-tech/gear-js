@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    "@babel/plugin-transform-modules-commonjs",
+    "babel-plugin-transform-typescript-metadata",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }]
+  ],
+  "presets": [
+    "@babel/preset-typescript",
+    "jest",
+    ["env", { "modules": "commonjs", "targets": { "node": "current" }, "useBuiltIns": true }]
+  ]
+}
