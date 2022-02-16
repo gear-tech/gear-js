@@ -2,10 +2,11 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import cross from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import { nodeApi } from 'api/initApi';
-import { useDispatch } from 'react-redux';
-import { resetApiReady } from 'store/actions/actions';
+// import { useDispatch } from 'react-redux';
+// import { resetApiReady } from 'store/actions/actions';
 import { useHistory, useLocation } from 'react-router-dom';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
+import { isNodeAddressValid } from 'helpers';
 import { Node as NodeType, NodeSection } from 'types/sidebar';
 import { Section } from './Section/Section';
 import { Node } from './Node/Node';
@@ -17,7 +18,7 @@ type Props = {
 };
 
 const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
 
@@ -40,6 +41,7 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
         key={index}
         address={node.address}
         isCustom={node.custom}
+        setLocalNodes={setLocalNodes}
         selectedNode={selectedNode}
         setSelectedNode={setSelectedNode}
       />
@@ -80,8 +82,7 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
       // remove param to update it during nodeApi init
       removeNodeFromUrl();
       localStorage.setItem(LOCAL_STORAGE.NODE_ADDRESS, selectedNode);
-      localStorage.setItem(LOCAL_STORAGE.NODES, JSON.stringify(nodeSections));
-      dispatch(resetApiReady());
+      // dispatch(resetApiReady());
       window.location.reload();
     }
   };
@@ -103,7 +104,7 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
         <button
           type="button"
           onClick={addNode}
-          // disabled={!isNodeAddressValid(newNode)}
+          disabled={!isNodeAddressValid(nodeAddress)}
           className="nodes__add-button"
         >
           Add
