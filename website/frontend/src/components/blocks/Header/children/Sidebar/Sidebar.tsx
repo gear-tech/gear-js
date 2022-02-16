@@ -2,8 +2,6 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import cross from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import { nodeApi } from 'api/initApi';
-// import { useDispatch } from 'react-redux';
-// import { resetApiReady } from 'store/actions/actions';
 import { useHistory, useLocation } from 'react-router-dom';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
 import { isNodeAddressValid } from 'helpers';
@@ -18,8 +16,7 @@ type Props = {
 };
 
 const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
-  // const dispatch = useDispatch();
-  const location = useLocation();
+  const { search } = useLocation();
   const history = useHistory();
 
   const getLocalNodes = (): NodeType[] => {
@@ -28,8 +25,15 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
   };
 
   const [localNodes, setLocalNodes] = useState<NodeType[]>(getLocalNodes());
+
+  const isNodeExist = (address: string) => {
+    const nodes = nodeSections.flatMap((section) => section.nodes);
+    const concatedNodes = [...nodes, ...localNodes];
+    return concatedNodes.some((node) => node.address === address);
+  };
+
   const [selectedNode, setSelectedNode] = useState(nodeApi.address);
-  const [nodeAddress, setNodeAddress] = useState('');
+  const [nodeAddress, setNodeAddress] = useState(isNodeExist(nodeApi.address) ? '' : nodeApi.address);
 
   useEffect(() => {
     localStorage.setItem('nodes', JSON.stringify(localNodes));
@@ -64,13 +68,14 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
   };
 
   const addNode = () => {
-    const node = { address: nodeAddress, custom: true };
-    setLocalNodes((prevNodes) => [...prevNodes, node]);
-    setNodeAddress('');
+    if (!isNodeExist(nodeAddress)) {
+      const node = { address: nodeAddress, custom: true };
+      setLocalNodes((prevNodes) => [...prevNodes, node]);
+      setNodeAddress('');
+    }
   };
 
   const removeNodeFromUrl = () => {
-    const { search } = location;
     const searchParams = new URLSearchParams(search);
     searchParams.delete(NODE_ADRESS_URL_PARAM);
     // push instead of replace to preserve previous node param history
@@ -82,7 +87,6 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
       // remove param to update it during nodeApi init
       removeNodeFromUrl();
       localStorage.setItem(LOCAL_STORAGE.NODE_ADDRESS, selectedNode);
-      // dispatch(resetApiReady());
       window.location.reload();
     }
   };
