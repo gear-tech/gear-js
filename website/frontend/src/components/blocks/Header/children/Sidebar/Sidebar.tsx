@@ -6,41 +6,21 @@ import { useDispatch } from 'react-redux';
 import { resetApiReady } from 'store/actions/actions';
 import { useHistory, useLocation } from 'react-router-dom';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
+import { Node as NodeType, NodeSection } from 'types/sidebar';
 import { Section } from './Section/Section';
 import { Node } from './Node/Node';
 import './Sidebar.scss';
 
 type Props = {
   closeSidebar: () => void;
+  nodeSections: NodeSection[];
 };
 
-type NodeType = {
-  address: string;
-  isCustom: boolean;
-};
-
-type NodeSection = {
-  caption: string;
-  nodes: NodeType[];
-};
-
-const initNodeSections = [
-  {
-    caption: 'test network',
-    nodes: [{ address: 'wss://rpc-node.gear-tech.io:443', isCustom: false }],
-  },
-  {
-    caption: 'development',
-    nodes: [{ address: 'ws://localhost:9944', isCustom: false }],
-  },
-];
-
-const Sidebar = ({ closeSidebar }: Props) => {
+const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
 
-  const [nodeSections, setNodeSections] = useState<NodeSection[]>(initNodeSections);
   const [selectedNode, setSelectedNode] = useState(nodeApi.address);
 
   const getNodes = (nodes: NodeType[]) =>

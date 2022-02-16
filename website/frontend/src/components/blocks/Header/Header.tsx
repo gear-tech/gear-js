@@ -7,6 +7,7 @@ import { WASM_COMPILER_GET, LOCAL_STORAGE } from 'consts';
 import { EventTypes } from 'types/alerts';
 import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
+import { useSidebarNodes } from 'hooks/useSidebarNodes';
 import { Logo } from './children/Logo/Logo';
 import { Menu } from './children/Menu/Menu';
 import { Sidebar } from './children/Sidebar/Sidebar';
@@ -14,6 +15,7 @@ import styles from './Header.module.scss';
 
 export const Header: VFC = () => {
   const dispatch = useDispatch();
+  const sidebarNodes = useSidebarNodes();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   let { isBuildDone } = useSelector((state: RootState) => state.compiler);
@@ -74,7 +76,7 @@ export const Header: VFC = () => {
         <Menu openSidebar={openSidebar} />
       </nav>
       <Wallet />
-      {isSidebarOpen && <Sidebar closeSidebar={closeSidebar} />}
+      {isSidebarOpen && <Sidebar closeSidebar={closeSidebar} nodeSections={sidebarNodes} />}
     </header>
   );
 };
