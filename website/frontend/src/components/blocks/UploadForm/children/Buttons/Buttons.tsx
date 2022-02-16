@@ -3,7 +3,7 @@ import styles from './Buttons.module.scss';
 
 type Props = {
   handleResetForm: () => void;
-  handleCalculateGas: () => void;
+  handleCalculateGas: any;
 };
 
 export const Buttons: FC<Props> = ({ handleResetForm, handleCalculateGas }) => {

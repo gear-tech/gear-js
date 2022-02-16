@@ -161,7 +161,7 @@ export const calculateGas = async (
   setFieldValue: SetFieldValue,
   dispatch: any,
   meta: any,
-  file?: File | null,
+  code?: Uint8Array | null,
   programId?: String | null
 ) => {
   const payload = isManualPayload ? values.payload : values.fields;
@@ -181,7 +181,7 @@ export const calculateGas = async (
 
     const estimatedGas = await api.program.gasSpent[method](
       localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-      method === 'init' ? file : programId,
+      method === 'init' ? code : programId,
       payload,
       metaOrTypeOfPayload
     );

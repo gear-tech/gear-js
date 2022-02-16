@@ -8,6 +8,7 @@ import { Formik, Form, Field } from 'formik';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
 import { EventTypes } from 'types/alerts';
+import { SetFieldValue } from 'types/common';
 import { FormItem } from 'components/FormItem';
 import { Switch } from 'common/components/Switch';
 
@@ -54,7 +55,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
   const isShowPayloadForm = payloadForm && !isManualPayload;
-
+  console.log(payloadForm);
   const handleUploadMetaFile = async (file: File) => {
     try {
       const fileBuffer = (await readFileAsync(file)) as Buffer;
@@ -64,7 +65,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
         const types = parseHexTypes(metaWasm?.types);
         const typeStructure = getTypeStructure(metaWasm?.init_input, types);
-        const parsedStructure = parseMeta(typeStructure);
+        const parsedStructure = parseMeta(types);
         let valuesFromFile = {};
 
         for (const key in metaWasm) {
@@ -138,6 +139,13 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleResetForm = () => {
     setDroppedFile(null);
     setDroppedMetaFile(null);
+  };
+
+  const handleCalculateGas = async (values: InitialValues, setFieldValue: SetFieldValue) => {
+    const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
+    const code = Buffer.from(new Uint8Array(fileBuffer));
+
+    calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code, null);
   };
 
   return (
@@ -266,17 +274,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                 </div>
                 <Buttons
                   handleCalculateGas={() => {
-                    calculateGas(
-                      'init',
-                      api,
-                      isManualPayload,
-                      values,
-                      setFieldValue,
-                      dispatch,
-                      meta,
-                      droppedFile,
-                      null
-                    );
+                    handleCalculateGas(values, setFieldValue);
                   }}
                   handleResetForm={handleResetForm}
                 />
