@@ -1,0 +1,41 @@
+@use 'assets/scss/variables' as *;
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  border-radius: 2px;
+}
+
+.normal {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 700;
+
+  .icon {
+    margin-right: 16px;
+  }
+}
+
+.small {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+
+  .icon {
+    margin-right: 10px;
+  }
+}
+
+.success {
+  background-color: $successColor;
+}
+
+.error {
+  background-color: $errorColor;
+}
+
+.main {
+  background-color: $bkgButtonColor;
+}

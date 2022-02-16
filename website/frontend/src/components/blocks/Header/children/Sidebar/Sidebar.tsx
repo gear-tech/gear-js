@@ -3,6 +3,7 @@ import cross from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import { nodeApi } from 'api/initApi';
 import { useHistory, useLocation } from 'react-router-dom';
+import { Button } from 'common/components/Button/Button';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
 import { isNodeAddressValid } from 'helpers';
 import { Node as NodeType, NodeSection } from 'types/sidebar';
@@ -81,10 +82,7 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
   return (
     <div className="nodes">
       <div className="nodes__header">
-        <button type="button" aria-label="arrowBack" onClick={switchNode} className="nodes__switch-button">
-          <img src={refresh} className="nodes__switch-icon" alt="switch node" />
-          <span className="nodes-hide-text">Switch</span>
-        </button>
+        <Button text="Switch" size="small" icon={refresh} />
         <button type="button" aria-label="arrowBack" onClick={closeSidebar} className="nodes__hide-button">
           <img src={cross} alt="back" />
         </button>
@@ -92,14 +90,7 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
       <ul className="nodes__wrap">{getNodeSections()}</ul>
       <div className="nodes__add">
         <input type="text" className="nodes__add-input" value={nodeAddress} onChange={handleNodeAddressChange} />
-        <button
-          type="button"
-          onClick={addNode}
-          disabled={!isNodeAddressValid(nodeAddress)}
-          className="nodes__add-button"
-        >
-          Add
-        </button>
+        <Button text="Add" onClick={addNode} disabled={!isNodeAddressValid(nodeAddress)} />
       </div>
     </div>
   );
