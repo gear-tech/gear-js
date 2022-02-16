@@ -143,7 +143,7 @@ function parseField(data: MetaParam) {
           set(result.fields, current.path,
             {
               label: key,
-              name: ['meta', ...current.path].join('.'),
+              name: ['fields', ...current.path].join('.'),
               type: current.value,
           });
         }

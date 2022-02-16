@@ -60,12 +60,12 @@ describe('test parser', () => {
         amount: {
           label: 'amount',
           type: 'u8',
-          name: 'meta.amount',
+          name: 'fields.amount',
         },
         currency: {
           label: 'currency',
           type: 'Text',
-          name: 'meta.currency',
+          name: 'fields.currency',
         },
       }
     });
