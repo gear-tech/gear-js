@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import cross from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import { nodeApi } from 'api/initApi';
@@ -21,25 +21,51 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
   const location = useLocation();
   const history = useHistory();
 
+  const getLocalNodes = (): NodeType[] => {
+    const nodes = localStorage.getItem('nodes');
+    return nodes ? JSON.parse(nodes) : [];
+  };
+
+  const [localNodes, setLocalNodes] = useState<NodeType[]>(getLocalNodes());
   const [selectedNode, setSelectedNode] = useState(nodeApi.address);
+  const [nodeAddress, setNodeAddress] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('nodes', JSON.stringify(localNodes));
+  }, [localNodes]);
 
   const getNodes = (nodes: NodeType[]) =>
     nodes.map((node, index) => (
       <Node
         key={index}
         address={node.address}
-        isCustom={node.isCustom}
+        isCustom={node.custom}
         selectedNode={selectedNode}
         setSelectedNode={setSelectedNode}
       />
     ));
 
   const getNodeSections = () =>
-    nodeSections.map((section, index) => (
-      <Section key={index} caption={section.caption}>
-        {getNodes(section.nodes)}
-      </Section>
-    ));
+    nodeSections.map((section, index) => {
+      const { caption, nodes } = section;
+      const concatedNodes = caption === 'development' ? [...nodes, ...localNodes] : nodes;
+
+      return (
+        <Section key={index} caption={caption}>
+          {getNodes(concatedNodes)}
+        </Section>
+      );
+    });
+
+  const handleNodeAddressChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    setNodeAddress(value);
+  };
+
+  const addNode = () => {
+    const node = { address: nodeAddress, custom: true };
+    setLocalNodes((prevNodes) => [...prevNodes, node]);
+    setNodeAddress('');
+  };
 
   const removeNodeFromUrl = () => {
     const { search } = location;
@@ -73,16 +99,10 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
       </div>
       <ul className="nodes__wrap">{getNodeSections()}</ul>
       <div className="nodes__add">
-        <input
-          id="addNode"
-          type="text"
-          // value={newNode}
-          // onChange={(event) => setNewNode(event.target.value)}
-          className="nodes__add-input"
-        />
+        <input type="text" className="nodes__add-input" value={nodeAddress} onChange={handleNodeAddressChange} />
         <button
           type="button"
-          // onClick={handleAddNode}
+          onClick={addNode}
           // disabled={!isNodeAddressValid(newNode)}
           className="nodes__add-button"
         >

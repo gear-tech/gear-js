@@ -21,17 +21,19 @@ const Node = ({ address, isCustom, selectedNode, setSelectedNode }: Props) => {
     setSelectedNode(address);
   };
 
+  const handleCopy = () => {
+    copyToClipboard(address, alert, 'Node address copied');
+  };
+
+  const removeNode = () => {};
+
   return (
     <li className="nodes__item-elem">
       <div className="nodes__item-choose">
         <Radio label={address} name="node" checked={selectedNode === address} onChange={handleChange} />
       </div>
       <div className="nodes__item-btns">
-        <button
-          className="nodes__item-btn"
-          type="button"
-          onClick={() => copyToClipboard(address, alert, 'Node address copied')}
-        >
+        <button className="nodes__item-btn" type="button" onClick={handleCopy}>
           <img className="nodes__item-icon" src={copy} alt="copy node address" />
         </button>
         {isCustom && (
