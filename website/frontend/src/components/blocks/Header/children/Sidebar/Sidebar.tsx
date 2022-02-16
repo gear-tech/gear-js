@@ -6,8 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
 import { isNodeAddressValid } from 'helpers';
 import { Node as NodeType, NodeSection } from 'types/sidebar';
-import { Section } from './Section/Section';
-import { Node } from './Node/Node';
+import { Nodes } from './Nodes/Nodes';
 import './Sidebar.scss';
 
 type Props = {
@@ -39,30 +38,6 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
     localStorage.setItem('nodes', JSON.stringify(localNodes));
   }, [localNodes]);
 
-  const getNodes = (nodes: NodeType[]) =>
-    nodes.map((node, index) => (
-      <Node
-        key={index}
-        address={node.address}
-        isCustom={node.custom}
-        setLocalNodes={setLocalNodes}
-        selectedNode={selectedNode}
-        setSelectedNode={setSelectedNode}
-      />
-    ));
-
-  const getNodeSections = () =>
-    nodeSections.map((section, index) => {
-      const { caption, nodes } = section;
-      const concatedNodes = caption === 'development' ? [...nodes, ...localNodes] : nodes;
-
-      return (
-        <Section key={index} caption={caption}>
-          {getNodes(concatedNodes)}
-        </Section>
-      );
-    });
-
   const handleNodeAddressChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     setNodeAddress(value);
   };
@@ -82,7 +57,7 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
     history.push({ search: searchParams.toString() });
   };
 
-  const handleSwitchNode = () => {
+  const switchNode = () => {
     if (selectedNode !== nodeApi.address) {
       // remove param to update it during nodeApi init
       removeNodeFromUrl();
@@ -91,10 +66,22 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
     }
   };
 
+  const getNodeSections = () =>
+    nodeSections.map((section, index) => (
+      <Nodes
+        key={index}
+        section={section}
+        localNodes={localNodes}
+        setLocalNodes={setLocalNodes}
+        selectedNode={selectedNode}
+        setSelectedNode={setSelectedNode}
+      />
+    ));
+
   return (
     <div className="nodes">
       <div className="nodes__header">
-        <button type="button" aria-label="arrowBack" onClick={handleSwitchNode} className="nodes__switch-button">
+        <button type="button" aria-label="arrowBack" onClick={switchNode} className="nodes__switch-button">
           <img src={refresh} className="nodes__switch-icon" alt="switch node" />
           <span className="nodes-hide-text">Switch</span>
         </button>
