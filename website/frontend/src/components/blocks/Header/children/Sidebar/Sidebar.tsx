@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { nodeApi } from 'api/initApi';
+import { useOutsideClick } from 'hooks/useOutsideClick';
 import { Node, NodeSection } from 'types/sidebar';
 import { Header } from './children/Header/Header';
 import { Form } from './children/Form/Form';
@@ -19,13 +20,14 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
 
   const [localNodes, setLocalNodes] = useState<Node[]>(getLocalNodes());
   const [selectedNode, setSelectedNode] = useState(nodeApi.address);
+  const ref = useOutsideClick(closeSidebar);
 
   useEffect(() => {
     localStorage.setItem('nodes', JSON.stringify(localNodes));
   }, [localNodes]);
 
   return (
-    <div className={styles.sidebar}>
+    <div className={styles.sidebar} ref={ref}>
       <Header closeSidebar={closeSidebar} selectedNode={selectedNode} />
       <Nodes
         nodeSections={nodeSections}
