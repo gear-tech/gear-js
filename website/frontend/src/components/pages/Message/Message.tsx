@@ -63,7 +63,7 @@ export const Message: FC = () => {
         decodedPayload = createType.create(type, message.payload);
       }
 
-      setMessagePayload(JSON.stringify(decodedPayload));
+      setMessagePayload(JSON.stringify(decodedPayload, null, 4));
     }
   }, [program, message]);
 
