@@ -42,7 +42,7 @@
       "dotenv/config"
     ],
     "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!@polkadot|@babel/runtime/helpers/esm/)"
+      "<rootDir>/node_modules/(?!@polkadot|@babel/runtime/helpers/esm/|.*fetch.*|data-uri-to-buffer|formdata-polyfill)"
     ]
   }
 }
