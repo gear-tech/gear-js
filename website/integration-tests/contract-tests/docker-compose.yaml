@@ -48,10 +48,11 @@ services:
 
   # The system under test:
   data_storage:
-    image: ../../data-storage
-    profiles: ['contract']
+    build:
+      context: ../../..
+      dockerfile: website/data-storage/Dockerfile
     volumes:
-      - ../../data-storage:/usr/src/data-storage:ro
+      - ./website/data-storage:/usr/src/data-storage:ro
     depends_on:
       - postgres
     environment: &mock-environment
@@ -65,24 +66,33 @@ services:
       KAFKA_SASL_USERNAME: kafka_user
       KAFKA_SASL_PASSWORD: passwd
 
-  # api_gateway:
-  #   ports:
-  #     - '3000:3000'
-  #   image: mithriy/gear-api-gateway:nightly
-  #   environment:
-  #     <<: *mock-environment
-  #     KAFKA_GROUP_ID: api-gateway
-  #     KAFKA_CLIENT_ID: api-gateway
-  #     PORT: 3000
+  api_gateway:
+    build:
+      context: ../../..
+      dockerfile: website/api-gateway/Dockerfile
+    volumes:
+      - ./website/api-gateway:/usr/src/api-gateway:ro
+    ports:
+      - '3000:3000'
+    environment:
+      <<: *mock-environment
+      KAFKA_GROUP_ID: api-gateway
+      KAFKA_CLIENT_ID: api-gateway
+      PORT: 3000
 
-  # events_testnet:
-  #   image: mithriy/gear-event-listener:nightly
-  #   environment:
-  #     <<: *mock-environment
-  #     KAFKA_CLIENT_ID: events-testnet
-  #     KAFKA_GROUP_ID: events-testnet
-  #     WS_PROVIDER: ${WS_PROVIDER_TESTNET}
+  event_testnet:
+    build:
+      context: ../../..
+      dockerfile: website/events-listener/Dockerfile # TODO: correct spelling in paths
+    volumes:
+      - ./website/events-listener:/usr/src/events-listener:ro
+    environment:
+      <<: *mock-environment
+      KAFKA_CLIENT_ID: events-testnet
+      KAFKA_GROUP_ID: events-testnet
+      WS_PROVIDER: ${WS_PROVIDER_TESTNET}
 
+  # TODO: make this happen:
   # events_wrsh:
   #   image: mithriy/gear-event-listener:nightly
   #   environment:
@@ -93,11 +103,20 @@ services:
 
   # The test suite:
   contract_test:
+    profiles: ['contract_test']
     build:
       context: ./
     depends_on:
       - postgres
       - data_storage
+      - api_gateway
+    volumes:
+      - ./src:/usr/app:ro
+
+  browser_test:
+    profiles: ['browser_test']
+    build:
+      context: ./
     volumes:
       - ./src:/usr/app:ro
 
