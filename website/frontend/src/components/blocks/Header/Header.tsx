@@ -7,10 +7,10 @@ import { WASM_COMPILER_GET, LOCAL_STORAGE } from 'consts';
 import { EventTypes } from 'types/alerts';
 import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
-import { useSidebarNodes } from 'hooks/useSidebarNodes';
 import { Logo } from './children/Logo/Logo';
 import { Menu } from './children/Menu/Menu';
 import { Sidebar } from './children/Sidebar/Sidebar';
+import { useSidebarNodes } from './hooks';
 import styles from './Header.module.scss';
 
 export const Header: VFC = () => {
