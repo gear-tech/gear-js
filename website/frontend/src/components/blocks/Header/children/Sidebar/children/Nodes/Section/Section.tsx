@@ -20,7 +20,7 @@ const Section = ({ section, localNodes, setLocalNodes, selectedNode, setSelected
       <Node
         key={index}
         address={node.address}
-        isCustom={node.custom}
+        isCustom={node.isCustom}
         setLocalNodes={setLocalNodes}
         selectedNode={selectedNode}
         setSelectedNode={setSelectedNode}

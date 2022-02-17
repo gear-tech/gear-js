@@ -1,5 +1,5 @@
 export type Node = {
-  custom: boolean;
+  isCustom: boolean;
   address: string;
 };
 

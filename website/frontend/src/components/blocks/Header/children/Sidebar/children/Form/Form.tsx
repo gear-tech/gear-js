@@ -25,7 +25,7 @@ const Form = ({ nodeSections, localNodes, setLocalNodes }: Props) => {
   };
 
   const addNode = () => {
-    const node = { address, custom: true };
+    const node = { address, isCustom: true };
     setLocalNodes((prevNodes) => [...prevNodes, node]);
   };
 
