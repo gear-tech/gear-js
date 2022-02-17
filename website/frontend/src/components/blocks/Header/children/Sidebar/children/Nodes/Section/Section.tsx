@@ -11,7 +11,7 @@ type Props = {
   setSelectedNode: Dispatch<SetStateAction<string>>;
 };
 
-const Nodes = ({ section, localNodes, setLocalNodes, selectedNode, setSelectedNode }: Props) => {
+const Section = ({ section, localNodes, setLocalNodes, selectedNode, setSelectedNode }: Props) => {
   const { caption, nodes } = section;
   const concatedNodes = caption === 'development' ? [...nodes, ...localNodes] : nodes;
 
@@ -28,11 +28,11 @@ const Nodes = ({ section, localNodes, setLocalNodes, selectedNode, setSelectedNo
     ));
 
   return (
-    <li key={caption} className="nodes__item">
-      <p className="nodes__item-caption">{caption}</p>
-      <ul className="nodes__item-list">{getNodes()}</ul>
+    <li key={caption} className={styles.section}>
+      <p className={styles.caption}>{caption}</p>
+      <ul>{getNodes()}</ul>
     </li>
   );
 };
 
-export { Nodes };
+export { Section };

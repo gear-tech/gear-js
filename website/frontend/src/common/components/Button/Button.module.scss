@@ -6,6 +6,11 @@
   justify-content: center;
   color: inherit;
   border-radius: 2px;
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 }
 
 .normal {

@@ -32,16 +32,20 @@ const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
   };
 
   return (
-    <li className="nodes__item-elem">
-      <div className="nodes__item-choose">
-        <Radio label={address} name="node" checked={selectedNode === address} onChange={handleChange} />
-      </div>
-      <div className="nodes__item-btns">
-        <button className="nodes__item-btn" type="button" onClick={handleCopy}>
-          <img className="nodes__item-icon" src={copy} alt="copy node address" />
+    <li className={styles.node}>
+      <Radio
+        label={address}
+        name="node"
+        className={styles.radio}
+        checked={selectedNode === address}
+        onChange={handleChange}
+      />
+      <div className={styles.buttons}>
+        <button type="button" onClick={handleCopy}>
+          <img src={copy} alt="copy node address" />
         </button>
         {isCustom && (
-          <button className="nodes__item-btn" type="button" onClick={removeNode} disabled={address === nodeApi.address}>
+          <button type="button" onClick={removeNode} disabled={address === nodeApi.address}>
             <Trash2 color="#ffffff" size="22" strokeWidth="1.5" />
           </button>
         )}

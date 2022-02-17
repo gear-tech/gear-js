@@ -1,0 +1,18 @@
+.node {
+  display: flex;
+  justify-content: space-between;
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.radio {
+  margin-right: 10px;
+}
+
+.buttons {
+  & > *:not(:last-child) {
+    margin-right: 10px;
+  }
+}

@@ -1,14 +1,10 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import cross from 'assets/images/close.svg';
-import refresh from 'assets/images/refresh2.svg';
+import React, { useEffect, useState } from 'react';
 import { nodeApi } from 'api/initApi';
-import { useHistory, useLocation } from 'react-router-dom';
-import { Button } from 'common/components/Button/Button';
-import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
-import { isNodeAddressValid } from 'helpers';
-import { Node as NodeType, NodeSection } from 'types/sidebar';
-import { Nodes } from './Nodes/Nodes';
-import './Sidebar.scss';
+import { Node, NodeSection } from 'types/sidebar';
+import { Header } from './children/Header/Header';
+import { Form } from './children/Form/Form';
+import styles from './Sidebar.module.scss';
+import { Nodes } from './children/Nodes/Nodes';
 
 type Props = {
   closeSidebar: () => void;
@@ -16,82 +12,29 @@ type Props = {
 };
 
 const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
-  const { search } = useLocation();
-  const history = useHistory();
-
-  const getLocalNodes = (): NodeType[] => {
+  const getLocalNodes = (): Node[] => {
     const nodes = localStorage.getItem('nodes');
     return nodes ? JSON.parse(nodes) : [];
   };
 
-  const [localNodes, setLocalNodes] = useState<NodeType[]>(getLocalNodes());
-
-  const isNodeExist = (address: string) => {
-    const nodes = nodeSections.flatMap((section) => section.nodes);
-    const concatedNodes = [...nodes, ...localNodes];
-    return concatedNodes.some((node) => node.address === address);
-  };
-
+  const [localNodes, setLocalNodes] = useState<Node[]>(getLocalNodes());
   const [selectedNode, setSelectedNode] = useState(nodeApi.address);
-  const [nodeAddress, setNodeAddress] = useState(isNodeExist(nodeApi.address) ? '' : nodeApi.address);
 
   useEffect(() => {
     localStorage.setItem('nodes', JSON.stringify(localNodes));
   }, [localNodes]);
 
-  const handleNodeAddressChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    setNodeAddress(value);
-  };
-
-  const addNode = () => {
-    if (!isNodeExist(nodeAddress)) {
-      const node = { address: nodeAddress, custom: true };
-      setLocalNodes((prevNodes) => [...prevNodes, node]);
-      setNodeAddress('');
-    }
-  };
-
-  const removeNodeFromUrl = () => {
-    const searchParams = new URLSearchParams(search);
-    searchParams.delete(NODE_ADRESS_URL_PARAM);
-    // push instead of replace to preserve previous node param history
-    history.push({ search: searchParams.toString() });
-  };
-
-  const switchNode = () => {
-    if (selectedNode !== nodeApi.address) {
-      // remove param to update it during nodeApi init
-      removeNodeFromUrl();
-      localStorage.setItem(LOCAL_STORAGE.NODE_ADDRESS, selectedNode);
-      window.location.reload();
-    }
-  };
-
-  const getNodeSections = () =>
-    nodeSections.map((section, index) => (
+  return (
+    <div className={styles.sidebar}>
+      <Header closeSidebar={closeSidebar} selectedNode={selectedNode} />
       <Nodes
-        key={index}
-        section={section}
+        nodeSections={nodeSections}
         localNodes={localNodes}
         setLocalNodes={setLocalNodes}
         selectedNode={selectedNode}
         setSelectedNode={setSelectedNode}
       />
-    ));
-
-  return (
-    <div className="nodes">
-      <div className="nodes__header">
-        <Button text="Switch" size="small" icon={refresh} />
-        <button type="button" aria-label="arrowBack" onClick={closeSidebar} className="nodes__hide-button">
-          <img src={cross} alt="back" />
-        </button>
-      </div>
-      <ul className="nodes__wrap">{getNodeSections()}</ul>
-      <div className="nodes__add">
-        <input type="text" className="nodes__add-input" value={nodeAddress} onChange={handleNodeAddressChange} />
-        <Button text="Add" onClick={addNode} disabled={!isNodeAddressValid(nodeAddress)} />
-      </div>
+      <Form nodeSections={nodeSections} localNodes={localNodes} setLocalNodes={setLocalNodes} />
     </div>
   );
 };
