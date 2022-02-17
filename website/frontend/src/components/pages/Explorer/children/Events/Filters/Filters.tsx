@@ -1,9 +1,10 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import clsx from 'clsx';
 import { Sliders, X } from 'react-feather';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
 import { FilterValues } from 'types/explorer';
 import { LOCAL_STORAGE } from 'consts';
+import { useOutsideClick } from 'hooks/useOutsideClick';
 import * as init from '../init';
 import styles from './Filters.module.scss';
 
@@ -15,7 +16,6 @@ type Props = {
 
 const Filters = ({ values, setValues, isAnySelected }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
   const filters = Object.keys(values);
 
   const handleChange = ({ target: { name, checked } }: ChangeEvent<HTMLInputElement>) => {
@@ -55,20 +55,7 @@ const Filters = ({ values, setValues, isAnySelected }: Props) => {
     close();
   };
 
-  const handleOutsideClick = ({ target }: MouseEvent) => {
-    const isElementClicked = ref.current?.contains(target as Node);
-
-    if (!isElementClicked) {
-      close();
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('click', handleOutsideClick);
-    return () => document.removeEventListener('click', handleOutsideClick);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  const ref = useOutsideClick(close);
   const toggleButtonClassName = clsx(styles.button, styles.toggleButton);
   const resetButtonClassName = clsx(styles.button, styles.resetButton);
 
