@@ -2,15 +2,34 @@ import React, { ButtonHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import styles from './Button.module.scss';
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  text: string;
+interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  text?: string;
+  icon?: string;
   color?: 'success' | 'error' | 'main';
   size?: 'normal' | 'small';
-  icon?: string;
 }
 
-const Button = ({ text, className, color = 'success', size = 'normal', icon, ...attrs }: Props) => {
-  const buttonClassName = clsx(styles.button, className, styles[color], styles[size]);
+interface TextProps extends BaseProps {
+  text: string;
+}
+
+interface IconProps extends BaseProps {
+  icon: string;
+}
+
+type Props = TextProps | IconProps;
+
+const Button = ({ text, icon, className, color, size, ...attrs }: Props) => {
+  const colorName = color || (text ? 'success' : '');
+  const sizeName = size || (text ? 'normal' : '');
+
+  const buttonClassName = clsx(
+    styles.button,
+    className,
+    styles[colorName],
+    styles[sizeName],
+    icon && color && styles.singleIcon
+  );
 
   return (
     <button className={buttonClassName} {...attrs}>

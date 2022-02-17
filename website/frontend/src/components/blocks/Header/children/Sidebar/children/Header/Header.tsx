@@ -35,9 +35,7 @@ const Header = ({ closeSidebar, selectedNode }: Props) => {
   return (
     <header className={styles.header}>
       <Button text="Switch" size="small" icon={refresh} onClick={switchNode} />
-      <button type="button" aria-label="arrowBack" onClick={closeSidebar}>
-        <img src={cross} alt="back" />
-      </button>
+      <Button icon={cross} onClick={closeSidebar} />
     </header>
   );
 };
