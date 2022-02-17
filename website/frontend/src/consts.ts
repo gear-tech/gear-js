@@ -1,4 +1,4 @@
-export const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS;
+export const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS as string;
 export const NODE_ADRESS_URL_PARAM = 'node';
 export const DEFAULT_NODES_URL = process.env.REACT_APP_DEFAULT_NODES_URL as string;
 
