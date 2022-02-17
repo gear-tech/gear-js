@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { nodeApi } from 'api/initApi';
 import { useOutsideClick } from 'hooks/useOutsideClick';
-import { Node, NodeSection } from 'types/sidebar';
+import { LOCAL_STORAGE } from 'consts';
+import { Nodes as NodesType, NodeSections } from '../../types';
 import { Header } from './children/Header/Header';
+import { Nodes } from './children/Nodes/Nodes';
 import { Form } from './children/Form/Form';
 import styles from './Sidebar.module.scss';
-import { Nodes } from './children/Nodes/Nodes';
 
 type Props = {
   closeSidebar: () => void;
-  nodeSections: NodeSection[];
+  nodeSections: NodeSections;
 };
 
 const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
-  const getLocalNodes = (): Node[] => {
-    const nodes = localStorage.getItem('nodes');
+  const getLocalNodes = (): NodesType => {
+    const nodes = localStorage.getItem(LOCAL_STORAGE.NODES);
     return nodes ? JSON.parse(nodes) : [];
   };
 
-  const [localNodes, setLocalNodes] = useState<Node[]>(getLocalNodes());
+  const [localNodes, setLocalNodes] = useState<NodesType>(getLocalNodes());
   const [selectedNode, setSelectedNode] = useState(nodeApi.address);
   const ref = useOutsideClick(closeSidebar);
 
   useEffect(() => {
-    localStorage.setItem('nodes', JSON.stringify(localNodes));
+    localStorage.setItem(LOCAL_STORAGE.NODES, JSON.stringify(localNodes));
   }, [localNodes]);
 
   return (

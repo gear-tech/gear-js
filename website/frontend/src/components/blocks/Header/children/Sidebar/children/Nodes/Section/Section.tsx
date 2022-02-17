@@ -1,12 +1,12 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { Node as NodeType, NodeSection } from 'types/sidebar';
+import { Nodes, NodeSection } from '../../../../../types';
 import { Node } from './Node/Node';
 import styles from './Section.module.scss';
 
 type Props = {
   section: NodeSection;
-  localNodes: NodeType[];
-  setLocalNodes: Dispatch<React.SetStateAction<NodeType[]>>;
+  localNodes: Nodes;
+  setLocalNodes: Dispatch<React.SetStateAction<Nodes>>;
   selectedNode: string;
   setSelectedNode: Dispatch<SetStateAction<string>>;
 };

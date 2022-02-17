@@ -5,5 +5,9 @@ export type Node = {
 
 export type NodeSection = {
   caption: string;
-  nodes: Node[];
+  nodes: Nodes;
 };
+
+export type Nodes = Node[];
+
+export type NodeSections = NodeSection[];

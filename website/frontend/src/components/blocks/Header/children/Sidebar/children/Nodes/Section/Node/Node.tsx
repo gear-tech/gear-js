@@ -6,13 +6,13 @@ import { Button } from 'common/components/Button/Button';
 import { Radio } from 'common/components/Radio/Radio';
 import { nodeApi } from 'api/initApi';
 import { copyToClipboard } from 'helpers';
-import { Node as NodeType } from 'types/sidebar';
+import { Nodes } from '../../../../../../types';
 import styles from './Node.module.scss';
 
 type Props = {
   address: string;
   isCustom: boolean;
-  setLocalNodes: Dispatch<React.SetStateAction<NodeType[]>>;
+  setLocalNodes: Dispatch<React.SetStateAction<Nodes>>;
   selectedNode: string;
   setSelectedNode: Dispatch<SetStateAction<string>>;
 };

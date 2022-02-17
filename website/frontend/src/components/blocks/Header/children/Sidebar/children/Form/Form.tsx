@@ -2,13 +2,13 @@ import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } fro
 import { Button } from 'common/components/Button/Button';
 import { isNodeAddressValid } from 'helpers';
 import { nodeApi } from 'api/initApi';
-import { Node, NodeSection } from 'types/sidebar';
+import { Nodes, NodeSections } from '../../../../types';
 import styles from './Form.module.scss';
 
 type Props = {
-  nodeSections: NodeSection[];
-  localNodes: Node[];
-  setLocalNodes: Dispatch<SetStateAction<Node[]>>;
+  nodeSections: NodeSections;
+  localNodes: Nodes;
+  setLocalNodes: Dispatch<SetStateAction<Nodes>>;
 };
 
 const Form = ({ nodeSections, localNodes, setLocalNodes }: Props) => {
@@ -32,16 +32,14 @@ const Form = ({ nodeSections, localNodes, setLocalNodes }: Props) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!isNodeExist(address)) {
-      addNode();
-      setAddress('');
-    }
+    addNode();
+    setAddress('');
   };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <input type="text" className={styles.input} value={address} onChange={handleChange} />
-      <Button type="submit" text="Add" disabled={!isNodeAddressValid(address)} />
+      <Button type="submit" text="Add" disabled={!isNodeAddressValid(address) || isNodeExist(address)} />
     </form>
   );
 };
