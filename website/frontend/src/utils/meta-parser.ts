@@ -165,6 +165,22 @@ function parseField(data: MetaParam) {
             result.values = {};
           }
           set(result.values, path.slice(1), '');
+        } else if (current.kind === 'field') {
+          const key = current.path[current.path.length - 1];
+          if (!result.fields) {
+            result.fields = {};
+          }
+
+          set(result.fields, current.path, {
+            label: key,
+            name: ['meta', ...current.path].join('.'),
+            type: current.value,
+          });
+
+          if (!result.values) {
+            result.values = {};
+          }
+          set(result.values, current.path, '');
         }
       } else {
         Object.entries(current.value).forEach((item) => {
