@@ -3,6 +3,9 @@
 .upload {
   display: flex;
   margin-bottom: 25px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   .caption {
     display: flex;
     align-items: center;
