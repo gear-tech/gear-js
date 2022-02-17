@@ -55,7 +55,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
   const isShowPayloadForm = payloadForm && !isManualPayload;
-  console.log(payloadForm);
   const handleUploadMetaFile = async (file: File) => {
     try {
       const fileBuffer = (await readFileAsync(file)) as Buffer;
@@ -64,8 +63,9 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       if (metaWasm) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
         const types = parseHexTypes(metaWasm?.types);
-        const typeStructure = getTypeStructure(metaWasm?.init_input, types);
-        const parsedStructure = parseMeta(types);
+        const typeStructure = getTypeStructure(metaWasm?.init_input || metaWasm?.handle_input, types);
+        const parsedStructure = parseMeta(typeStructure);
+
         let valuesFromFile = {};
 
         for (const key in metaWasm) {
@@ -227,7 +227,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         Initial payload:
                       </label>
                       <div className={clsx(styles.value, styles.payload)}>
-                        {isShowPayloadForm && (
+                        {payloadForm && (
                           <div className={styles.switch}>
                             <Switch
                               onChange={() => setIsManualPayload(!isManualPayload)}

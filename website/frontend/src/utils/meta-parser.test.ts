@@ -49,6 +49,29 @@ describe('test parser', () => {
   // });
 
   it('simple struct', () => {
+    expect(
+      parseMeta({
+        amount: 'u8',
+        currency: 'Text',
+      })
+    ).toEqual({
+      select: null,
+      fields: {
+        amount: {
+          label: 'amount',
+          type: 'u8',
+          name: 'fields.amount',
+        },
+        currency: {
+          label: 'currency',
+          type: 'Text',
+          name: 'fields.currency',
+        },
+      },
+    });
+  });
+
+  it('simple struct with key', () => {
     expect(parseMeta(simpleStruct)).toEqual({
       select: null,
       fields: {

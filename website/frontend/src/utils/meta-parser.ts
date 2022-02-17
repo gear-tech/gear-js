@@ -134,6 +134,17 @@ function parseField(data: MetaParam) {
             name: ['fields', key].join('.'),
             type: current.value,
           });
+        } else if (current.kind === 'field') {
+          const key = current.path[current.path.length - 1];
+          if (!result.fields) {
+            result.fields = {};
+          }
+
+          set(result.fields, current.path, {
+            label: key,
+            name: ['fields', ...current.path].join('.'),
+            type: current.value,
+          });
         }
       } else {
         Object.entries(current.value).forEach((item) => {
