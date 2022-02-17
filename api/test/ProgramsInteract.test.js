@@ -2,7 +2,7 @@ const { readFileSync, readdirSync } = require('fs');
 const { join } = require('path');
 const yaml = require('js-yaml');
 const { CreateType, GearApi, GearKeyring, getWasmMetadata } = require('../lib');
-const { checkLog, checkInit, sendTransaction } = require('./checkFunctions.js');
+const { checkLog, checkInit, sendTransaction } = require('./utilsFunctions.js');
 
 const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();

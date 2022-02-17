@@ -7,7 +7,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "clean": "rm -rf lib",
-    "test": "jest",
+    "test": "jest --runInBand",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "rollup --config rollup.config.js",
     "build:types": "tsc --p tsconfig.types.json",
