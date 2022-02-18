@@ -1,15 +1,19 @@
-import React, { VFC } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { routes } from 'routes';
-import './Footer.scss';
+import styles from './Footer.module.scss';
 
-export const Footer: VFC = () => {
-  const location = useLocation();
-  const lightColored = location.pathname !== routes.main || location.pathname !== routes.uploadedPrograms;
+const Footer = () => {
+  const { pathname } = useLocation();
+  const isLight = pathname !== routes.main || pathname !== routes.uploadedPrograms;
+  const className = clsx(styles.footer, isLight && styles.light);
+
   return (
-    <footer className={clsx('footer', lightColored && 'footer--light-colored')}>
-      <span className="footer__content">2022. All rights reserved.</span>
+    <footer className={className}>
+      <span className={styles.content}>2022. All rights reserved.</span>
     </footer>
   );
 };
+
+export { Footer };
