@@ -166,7 +166,9 @@ export const FormItem = ({ data }: { data: ParsedShape }) => {
         if (item[1] !== null && Object.keys(item[1])) {
           return createFieldset({
             legend: item[0],
-            fields: item[1] as ParsedStruct,
+            fields: {
+              [item[0]]: item[1],
+            } as ParsedStruct,
           });
         }
         return null;
