@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from './children/Button/Button';
+import { DotButton } from './children/DotButton/DotButton';
 import { Copyright } from './children/Copyright/Copyright';
 import { Socials } from './children/Socials/Socials';
 import styles from './Footer.module.scss';
@@ -7,7 +7,7 @@ import styles from './Footer.module.scss';
 const Footer = () => {
   return (
     <footer className={styles.footer}>
-      <Button />
+      <DotButton />
       <Copyright />
       <Socials />
     </footer>
