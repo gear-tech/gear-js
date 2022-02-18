@@ -1,5 +1,5 @@
 import { GearApi } from './GearApi';
-import { Hex, IGearPages, IProgram, ProgramId } from './interfaces';
+import { Hex, IActiveProgram, IGearPages, IProgram, ProgramId } from './interfaces';
 import { u32, Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { u8aToHex } from '@polkadot/util';
@@ -22,10 +22,10 @@ export class GearStorage {
    * @param programId
    * @returns
    */
-  async gProg(programId: ProgramId): Promise<IProgram> {
+  async gProg(programId: ProgramId): Promise<IActiveProgram> {
     const storage = (await this.api.rpc.state.getStorage(`0x${PREFIXES.prog}${programId.slice(2)}`)) as Option<Raw>;
-    const decoded: IProgram = this.api.createType('Program', storage.unwrap());
-    return decoded;
+    const program = this.api.createType('Program', storage.unwrap()) as IProgram;
+    return program.isActive ? program.asActive : program.asTerminated;
   }
 
   /**
