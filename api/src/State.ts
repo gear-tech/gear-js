@@ -44,6 +44,9 @@ export class GearProgramState extends GearStorage {
    */
   async read(programId: ProgramId, metaWasm: Buffer, inputValue?: any): Promise<Codec> {
     const program = await this.gProg(programId);
+    if (!program) {
+      throw new ReadStateError('Program is terminated');
+    }
     const pages = await this.gPages(programId, program.persistent_pages);
 
     const encodedInput = inputValue !== undefined ? await this.encodeInput(metaWasm, inputValue) : undefined;
