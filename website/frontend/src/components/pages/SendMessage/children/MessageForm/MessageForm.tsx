@@ -73,9 +73,9 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
     }
 
     try {
-      const pl = isManualInput ? values.payload : values.meta;
+      const payload = isManualInput ? values.payload : values.meta;
 
-      if (Object.keys(pl).length === 0) {
+      if (payload && Object.keys(payload).length === 0) {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Form is empty' }));
         return;
       }
