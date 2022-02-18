@@ -8,7 +8,8 @@ function useSidebarNodes() {
   useEffect(() => {
     fetch(DEFAULT_NODES_URL)
       .then((result) => result.json())
-      .then(setNodeSections);
+      .then(setNodeSections)
+      .catch(console.error);
   }, []);
 
   return nodeSections;
