@@ -79,6 +79,8 @@
       "src/(.*)$": "<rootDir>/src/$1"
     },
     "testEnvironment": "node",
-    "transformIgnorePatterns": ["<rootDir>/node_modules/(?!@polkadot|@babel/runtime/helpers/esm/)"]
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!@polkadot|@babel/runtime/helpers/esm/)"
+    ]
   }
 }

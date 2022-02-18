@@ -1818,13 +1818,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.12.0":
-  version: 0.12.0
-  resolution: "@gear-js/api@npm:0.12.0"
+"@gear-js/api@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "@gear-js/api@npm:0.13.0"
   peerDependencies:
     "@polkadot/api": ^7.4.1
     rxjs: ^7.3.0
-  checksum: 828d29366b38a4cf1e8412b1695d0e285bdc734f2ca72abc5e69db54fbe369b7af3f7bf09edb0fcf67b8bb2fba44336be66eeb8c93aee5fbcf63922fa94829e0
+  checksum: 6fb4647c73fd8d4fd22f605fd00ef95327526b9b906b1c9c5e5fa33d2e10dd4c98e3c88202672f83a56dda9b72cc0607fc0414ec4c04b3818108d86d1569f4a8
   languageName: node
   linkType: hard
 
@@ -1916,7 +1916,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": ^6.4.3
-    "@gear-js/api": ^0.12.0
+    "@gear-js/api": ^0.13.0
     "@monaco-editor/react": ^4.2.1
     "@polkadot/api": ^7.3.1
     "@polkadot/extension-dapp": ^0.42.2
