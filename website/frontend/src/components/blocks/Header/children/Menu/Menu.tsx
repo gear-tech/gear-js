@@ -29,6 +29,11 @@ const Menu = ({ openSidebar }: Props) => {
           &lt;/&gt; IDE
         </Link>
       </li>
+      <li>
+        <Link to={routes.mailbox} className={styles.link}>
+          Mailbox
+        </Link>
+      </li>
     </ul>
   );
 };

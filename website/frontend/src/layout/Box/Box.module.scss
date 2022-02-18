@@ -1,3 +1,5 @@
+@use 'assets/scss/variables' as *;
+
 .box {
   background-color: $bkgActiveButtonColor;
   border-radius: $borderRadiusBase;
@@ -5,5 +7,6 @@
   margin: 0 0 40px 0;
   padding: 30px 25px;
   .content {
+    width: 85%;
   }
 }

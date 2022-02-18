@@ -1,0 +1,45 @@
+@use 'assets/scss/variables' as *;
+
+.item {
+  .form {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    .caption {
+      color: $textColorSecondary;
+      font-size: 16px;
+      min-width: 164px;
+      font-style: normal;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+    }
+    .value {
+      background-color: $mainBackground;
+      width: 70%;
+      padding: 10px 15px;
+      color: $textColor;
+      display: flex;
+      box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+      .btn {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+        padding: 0;
+      }
+      .field {
+        background-color: transparent;
+        overflow-x: auto;
+        white-space: nowrap;
+        border: none;
+        outline: none;
+        color: $textColor;
+        font-size: 14px;
+        width: 100%;
+      }
+    }
+  }
+}
