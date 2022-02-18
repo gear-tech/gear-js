@@ -2,7 +2,9 @@ import React from 'react';
 import styles from './Footer.module.scss';
 
 const Footer = () => {
-  return <footer className={styles.footer}>2022. All rights reserved.</footer>;
+  const year = new Date().getFullYear();
+
+  return <footer className={styles.footer}>{year}. All rights reserved.</footer>;
 };
 
 export { Footer };
