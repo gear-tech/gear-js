@@ -1,10 +1,17 @@
 import React from 'react';
+import { Button } from './children/Button/Button';
+import { Copyright } from './children/Copyright/Copyright';
+import { Socials } from './children/Socials/Socials';
 import styles from './Footer.module.scss';
 
 const Footer = () => {
-  const year = new Date().getFullYear();
-
-  return <footer className={styles.footer}>{year}. All rights reserved.</footer>;
+  return (
+    <footer className={styles.footer}>
+      <Button />
+      <Copyright />
+      <Socials />
+    </footer>
+  );
 };
 
 export { Footer };

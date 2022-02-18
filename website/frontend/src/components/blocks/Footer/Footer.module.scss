@@ -1,8 +1,10 @@
 @use 'assets/scss/variables' as *;
 
 .footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 20px 40px;
-  text-align: center;
   color: $textColorSecondary;
   background-color: #232323;
   border-top: 1px solid $separateLineColor;
