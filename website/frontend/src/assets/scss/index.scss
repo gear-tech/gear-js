@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  background: #282828;
+  background-color: #232323;
   font-size: 14px;
   scrollbar-gutter: stable both-edges;
 }
@@ -35,6 +35,10 @@ button {
   border: none;
   cursor: pointer;
   outline: none;
+}
+
+small {
+  font: inherit;
 }
 
 input::-webkit-outer-spin-button,
