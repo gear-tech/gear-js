@@ -11,7 +11,6 @@ import { Upload } from './children/Upload/Upload';
 import { BlockList } from './children/BlocksList/BlocksList';
 import { Recent } from './children/Recent/Recent';
 import './Programs.scss';
-import { RecentNotifications } from '../../blocks/RecentNotifications/RecentNotifications';
 
 export const Programs: VFC = () => {
   const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);
@@ -41,7 +40,6 @@ export const Programs: VFC = () => {
       {currentPage === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && <Recent />}
       {currentPage === SWITCH_PAGE_TYPES.ALL_PROGRAMS && <All />}
       {currentPage === SWITCH_PAGE_TYPES.ALL_MESSAGES && <Messages />}
-      <RecentNotifications />
     </div>
   );
 };
