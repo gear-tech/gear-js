@@ -10,8 +10,6 @@ async function processPrepare(api: GearApi): Promise<{
   programs: IPreparedPrograms;
   messages: IPreparedMessages;
 }> {
-  await setup();
-  throw new Error();
   const programs = load(readFileSync('./spec/programs.yaml', 'utf8')) as { [program: string]: IProgramSpec };
   const uploadedPrograms = await uploadPrograms(api, programs);
 
