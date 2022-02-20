@@ -4,7 +4,6 @@ import { readFileSync } from 'fs';
 import { sendMessages, uploadPrograms } from './prepare';
 import { IMessageSpec, IProgramSpec, IPreparedPrograms, IPreparedMessages } from './interfaces';
 import base from './config/base';
-import setup from './prepare/setup';
 
 async function processPrepare(api: GearApi): Promise<{
   programs: IPreparedPrograms;
