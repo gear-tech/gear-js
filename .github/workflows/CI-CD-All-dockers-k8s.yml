@@ -179,4 +179,4 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master                            
         with:                                                            
           args:
-            get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=20s
+            get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=40s
