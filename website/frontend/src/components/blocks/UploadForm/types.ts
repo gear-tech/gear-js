@@ -2,6 +2,7 @@ export type InitialValues = {
   gasLimit: number;
   value: number;
   payload: string;
-  destination: string;
+  types: string;
   fields: {};
+  programName: string;
 };

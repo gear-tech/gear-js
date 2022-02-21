@@ -4,7 +4,7 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { RootState } from 'store/reducers';
 import { WASM_COMPILER_GET, LOCAL_STORAGE } from 'consts';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { Wallet } from '../Wallet';
 import { setIsBuildDone, AddAlert } from '../../../store/actions/actions';
 import { Logo } from './children/Logo/Logo';

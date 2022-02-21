@@ -6,7 +6,7 @@ import { MetaParam } from 'utils/meta-parser';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
 import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';

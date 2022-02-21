@@ -39,7 +39,7 @@ import { Main } from 'layout/Main/Main';
 // alert configuration
 const options = {
   position: positions.BOTTOM_CENTER,
-  timeout: 5000,
+  timeout: 10000,
   containerStyle: {
     zIndex: ZIndexes.alert,
     width: '100%',

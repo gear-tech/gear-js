@@ -1,0 +1,5 @@
+@use 'assets/scss/variables' as *;
+
+.error {
+  color: $errorColor;
+}
