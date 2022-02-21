@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: test-balance-workshop-node
-          image: mithriy/gear-test-balance:nightly
+          image: ghcr.io/gear-tech/gear-js-test-balance:dev
           env:
             - name: DB_HOST
               value: postgres-testbalance

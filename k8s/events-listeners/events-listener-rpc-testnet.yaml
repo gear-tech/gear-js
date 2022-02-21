@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: events-listener-rpc-testnet
-          image: mithriy/gear-event-listener:nightly
+          image: ghcr.io/gear-tech/gear-js-events-listener:dev
           env:
             - name: KAFKA_CLIENT_ID
               value: events-rpc-testnet

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: mithriy/gear-api-gateway:nightly
+          image: ghcr.io/gear-tech/gear-js-api-gateway:dev
           ports:
             - containerPort: 3000
           env:
