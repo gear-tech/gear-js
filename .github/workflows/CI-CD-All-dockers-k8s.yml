@@ -168,3 +168,8 @@ jobs:
         with:                                                            
           args: |
             rollout status deployment api-gateway --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment data-storage --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment frontend-nginx --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment test-balance-workshop-node --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment events-listener-workshop-node --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment events-listener-rpc-testnet --timeout=20s -n $KUBE_NAMESPACE
