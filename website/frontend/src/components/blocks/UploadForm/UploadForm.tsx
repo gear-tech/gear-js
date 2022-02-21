@@ -69,13 +69,18 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         let valuesFromFile = {};
 
         for (const key in metaWasm) {
-          if (META_FIELDS.includes(key) && metaWasm[key]) {
+          if (META_FIELDS.includes(key) && metaWasm[key] && key !== 'types') {
             valuesFromFile = {
               ...valuesFromFile,
               [key]: JSON.stringify(metaWasm[key]),
             };
           }
         }
+
+        valuesFromFile = {
+          ...valuesFromFile,
+          types: metaWasm.types,
+        };
 
         setMeta(metaWasm);
         setMetaFile(bufstr);
@@ -87,7 +92,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           payload: JSON.stringify(typeStructure, null, 4),
           types: JSON.stringify(types, null, 4),
         });
-        setFieldFromFile([...Object.keys(valuesFromFile).reverse()]);
+        setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
