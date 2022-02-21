@@ -1,0 +1,175 @@
+name: Build and Deploy All containers to k8s
+
+on:
+  push:
+    branches: ['master']
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  KUBE_NAMESPACE: dev-1
+
+jobs:
+  build-and-push-frontend-image:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      packages: write
+   
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+     
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Build and push Frontend Docker image
+        uses: docker/build-push-action@master
+        with:
+          context: website/frontend
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:dev
+
+
+  build-and-push-data-storage-image:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      packages: write
+   
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+     
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Build and push Data Storage Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: website/data-storage/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:dev
+
+  build-and-push-api-gateway-image:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      packages: write
+   
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+     
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Build and push Api Gateway Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: website/api-gateway/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:dev
+
+  build-and-push-event-listeners-image:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      packages: write
+   
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+     
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Build and push Events Listener Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: website/events-listener/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:dev
+
+  build-and-push-test-balance-image:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      packages: write
+   
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+     
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Build and push Test Balance Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: website/test-balance/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:dev
+
+  deploy-to-k8s-dev1-namespace: 
+    needs: [build-and-push-frontend-image,build-and-push-data-storage-image,build-and-push-api-gateway-image,build-and-push-event-listeners-image,build-and-push-test-balance-image]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Configure AWS credentials                          
+        uses: aws-actions/configure-aws-credentials@v1           
+        with:                                                    
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}        
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s                               
+        uses: kodermax/kubectl-aws-eks@master                            
+        with:                                                            
+          args: |
+            rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node events-listener-workshop-node events-listener-rpc-testnet -n $KUBE_NAMESPACE
+    
+  check-k8s-deployments: 
+    needs: [deploy-to-k8s-dev1-namespace]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check k8s deployments                               
+        uses: kodermax/kubectl-aws-eks@master                            
+        with:                                                            
+          args: |
+            rollout status deployment api-gateway --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment data-storage --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment frontend-nginx --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment test-balance-workshop-node --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment events-listener-workshop-node --timeout=20s -n $KUBE_NAMESPACE
+            rollout status deployment events-listener-rpc-testnet --timeout=20s -n $KUBE_NAMESPACE
