@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: frontend-nginx
-          image: mithriy/gear-frontend:nightly
+          image: ghcr.io/gear-tech/gear-js-frontend:dev
           volumeMounts:
             - name: nginx-gear-frontend
               mountPath: "/etc/nginx/conf.d/"
