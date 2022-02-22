@@ -30,10 +30,24 @@
       "value": "u128",
       "reply": "Option<(H256, i32)>"
     },
+    "QueuedMessage": {
+      "id": "H256",
+      "source": "H256",
+      "dest": "H256",
+      "payload": "Vec<u8>",
+      "value": "u128",
+      "reply": "Option<(H256, i32)>"
+    },
     "DispatchKind": ["Init", "Handle", "HandleReply"],
     "Dispatch": {
       "kind": "DispatchKind",
-      "message": "Message"
+      "message": "Message",
+      "payload_store": "Option<PayloadStore>"
+    },
+    "QueuedDispatch": {
+      "kind": "DispatchKind",
+      "message": "QueuedMessage",
+      "payload_store": "Option<PayloadStore>"
     },
     "Node": {
       "value": "Dispatch",
