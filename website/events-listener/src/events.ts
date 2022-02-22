@@ -41,7 +41,7 @@ const handleEvent = (method: EventType, data: any): { key: Keys; value: any } | 
 
   switch (method) {
     case 'InitMessageEnqueued':
-      eventData = new InitMessageEnqueuedData(data) as InitMessageEnqueuedData;
+      eventData = new InitMessageEnqueuedData(data);
       return {
         key: Keys.initMessage,
         value: {
