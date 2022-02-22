@@ -1,4 +1,4 @@
-import React, { VFC, useState } from 'react';
+import React, { VFC, useState, useEffect } from 'react';
 import cross from 'assets/images/close.svg';
 import refresh from 'assets/images/refresh2.svg';
 import selected from 'assets/images/radio-selected.svg';
@@ -11,10 +11,11 @@ import { useAlert } from 'react-alert';
 import { useDispatch } from 'react-redux';
 import { AddAlert, resetApiReady } from 'store/actions/actions';
 import { useHistory, useLocation } from 'react-router-dom';
-import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
+import { Spinner } from 'components/blocks/Spinner/Spinner';
+import { EventTypes } from 'types/alerts';
+import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE, DEFAULT_NODES_URL } from 'consts';
 import * as init from './init';
 import './Sidebar.scss';
-import { EventTypes } from 'types/events';
 
 type Props = {
   closeSidebar: () => void;
@@ -26,17 +27,41 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
   const location = useLocation();
   const history = useHistory();
 
-  const [nodes, setNodes] = useState(localStorage.nodes ? JSON.parse(localStorage.nodes) : init.nodes);
+  const [nodes, setNodes] = useState(localStorage.nodes ? JSON.parse(localStorage.nodes) : []);
   const [selectedNode, setSelectedNode] = useState(nodeApi.address);
+  const isAnyNode = nodes.length > 0;
 
   const isNodeExist = (address: string) => {
-    const allNodes = [...nodes[0].nodes, ...nodes[1].nodes];
-    const nodeIndex = allNodes.findIndex((node) => node.address === address);
-    return nodeIndex > -1;
+    if (isAnyNode) {
+      const allNodes = [...nodes[0].nodes, ...nodes[1].nodes];
+      const nodeIndex = allNodes.findIndex((node) => node.address === address);
+      return nodeIndex > -1;
+    }
   };
 
   const isApiNodeExist = isNodeExist(nodeApi.address);
   const [newNode, setNewNode] = useState(isApiNodeExist ? '' : nodeApi.address);
+
+  const fetchNodes = (url: string) => {
+    fetch(url)
+      .then((response) => response.json())
+      .then((result) => {
+        setNodes(result);
+        localStorage.setItem(LOCAL_STORAGE.NODES, JSON.stringify(result));
+      })
+      .catch(console.error);
+  };
+
+  useEffect(() => {
+    if (!isAnyNode) {
+      if (DEFAULT_NODES_URL) {
+        fetchNodes(DEFAULT_NODES_URL);
+      } else {
+        setNodes(init.nodes);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAddNode = () => {
     if (!isNodeExist(newNode)) {
@@ -115,8 +140,7 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
         </button>
       </div>
       <ul className="nodes__wrap">
-        {nodes &&
-          nodes.length &&
+        {isAnyNode ? (
           nodes.map((nodeItem: any) => (
             <li key={nodeItem.id} className="nodes__item">
               <p className="nodes__item-caption">{nodeItem.caption}</p>
@@ -158,7 +182,10 @@ const Sidebar: VFC<Props> = ({ closeSidebar }) => {
                   ))}
               </ul>
             </li>
-          ))}
+          ))
+        ) : (
+          <Spinner />
+        )}
       </ul>
       <div className="nodes__add">
         <input

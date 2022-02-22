@@ -11,7 +11,7 @@ import selected from 'assets/images/radio-selected.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { readFileAsync } from '../../../helpers';
 import { Schema } from './Schema';
 import './MetaForm.scss';

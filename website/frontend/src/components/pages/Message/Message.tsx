@@ -10,6 +10,7 @@ import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAct
 import backIcon from 'assets/images/arrow_back_thick.svg';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { Hint } from 'components/blocks/Hint/Hint';
+import { getPreformattedText } from 'helpers';
 import './Message.scss';
 
 type Params = { id: string };
@@ -63,7 +64,7 @@ export const Message: FC = () => {
         decodedPayload = createType.create(type, message.payload);
       }
 
-      setMessagePayload(JSON.stringify(decodedPayload));
+      setMessagePayload(getPreformattedText(decodedPayload));
     }
   }, [program, message]);
 

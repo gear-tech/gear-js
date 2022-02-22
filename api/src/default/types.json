@@ -1,10 +1,25 @@
 {
   "types": {
     "Program": {
+      "_enum": {
+        "Active": "ActiveProgram",
+        "Terminated": "Null"
+      }
+    },
+    "ActiveProgram": {
       "static_pages": "u32",
       "persistent_pages": "BTreeSet<u32>",
       "code_hash": "H256",
-      "nonce": "u64"
+      "nonce": "u64",
+      "state": "ProgramState"
+    },
+    "ProgramState": {
+      "_enum": {
+        "Uninitialized": {
+          "message_id": "H256"
+        },
+        "Initialized": "Null"
+      }
     },
     "Message": {
       "id": "H256",
@@ -15,8 +30,13 @@
       "value": "u128",
       "reply": "Option<(H256, i32)>"
     },
+    "DispatchKind": ["Init", "Handle", "HandleReply"],
+    "Dispatch": {
+      "kind": "DispatchKind",
+      "message": "Message"
+    },
     "Node": {
-      "value": "Message",
+      "value": "Dispatch",
       "next": "Option<H256>"
     },
     "IntermediateMessage": {

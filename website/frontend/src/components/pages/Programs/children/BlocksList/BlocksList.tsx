@@ -27,6 +27,7 @@ export const BlockList = () => {
                 <li className="programs-list__item" key={block.number}>
                   <span className="programs-list__number">{block.number}</span>
                   <span className="programs-list__name">{block.hash}</span>
+                  <span className="programs-list__time">{block.time}</span>
                 </li>
               ))}
           </ul>
