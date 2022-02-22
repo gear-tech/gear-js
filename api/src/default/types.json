@@ -38,21 +38,6 @@
       "value": "u128",
       "reply": "Option<(H256, i32)>"
     },
-    "DispatchKind": ["Init", "Handle", "HandleReply"],
-    "Dispatch": {
-      "kind": "DispatchKind",
-      "message": "Message",
-      "payload_store": "Option<PayloadStore>"
-    },
-    "QueuedDispatch": {
-      "kind": "DispatchKind",
-      "message": "QueuedMessage",
-      "payload_store": "Option<PayloadStore>"
-    },
-    "Node": {
-      "value": "Dispatch",
-      "next": "Option<H256>"
-    },
     "IntermediateMessage": {
       "_enum": {
         "InitProgram": {
