@@ -39,7 +39,7 @@ import { Main } from 'layout/Main/Main';
 // alert configuration
 const options = {
   position: positions.BOTTOM_CENTER,
-  timeout: 5000,
+  timeout: 10000,
   containerStyle: {
     zIndex: ZIndexes.alert,
     width: '100%',
@@ -98,11 +98,17 @@ const AppComponent: FC = () => {
     let unsub: UnsubscribePromise | undefined;
 
     if (api) {
-      unsub = api.gearEvents.subscribeToNewBlocks((event) => {
+      unsub = api.gearEvents.subscribeToNewBlocks(async (header) => {
+        const { hash, number } = header;
+
+        const timestamp = await api.blocks.getBlockTimestamp(hash);
+        const date = new Date(timestamp.toNumber());
+
         dispatch(
           fetchBlockAction({
-            hash: event.hash.toHex(),
-            number: event.number.toNumber(),
+            hash: hash.toHex(),
+            number: number.toNumber(),
+            time: date.toLocaleTimeString(),
           })
         );
       });

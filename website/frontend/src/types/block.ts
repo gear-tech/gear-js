@@ -1,6 +1,7 @@
 export interface BlockModel {
   hash: string;
   number: number;
+  time: string;
 }
 
 export interface TotalIssuanceModel {

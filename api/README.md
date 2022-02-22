@@ -45,7 +45,7 @@ Getting node info
 ```javascript
 const chain = await gearApi.chain();
 const nodeName = await gearApi.nodeName();
-const version = await gearApi.version();
+const nodeVersion = await gearApi.nodeVersion();
 const genesis = gearApi.genesisHash.toHex();
 ```
 
@@ -155,6 +155,22 @@ try {
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
+```
+
+### Submit code
+
+```javascript
+const code = fs.readFileSync('path/to/program.opt.wasm');
+const codeHash = gearApi.code.submit(code);
+gearApi.code.signAndSend(alice, () => {
+  events.forEach(({ event: { method, data } }) => {
+    if (method === 'ExtrinsicFailed') {
+      throw new Error(data.toString());
+    } else if (method === 'CodeSaved') {
+      console.log(data.toHuman());
+    }
+  });
+});
 ```
 
 ### Get gasSpent
@@ -288,7 +304,7 @@ unsub();
 Subscribe to new blocks
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeNewBlocks((header) => {
+const unsub = await gearApi.gearEvents.subscribeToNewBlocks((header) => {
   console.log(`New block with number: ${header.number.toNumber()} and hash: ${header.hash.toHex()}`);
 });
 // Unsubscribe

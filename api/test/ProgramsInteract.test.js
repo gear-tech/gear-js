@@ -2,12 +2,13 @@ const { readFileSync, readdirSync } = require('fs');
 const { join } = require('path');
 const yaml = require('js-yaml');
 const { CreateType, GearApi, GearKeyring, getWasmMetadata } = require('../lib');
-const { checkLog, checkInit, sendTransaction } = require('./checkFunctions.js');
+const { checkLog, checkInit, sendTransaction } = require('./utilsFunctions.js');
 
 const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();
 const messages = new Map();
 const testFiles = readdirSync('test/spec/programs');
+const submitCodeTestFiles = readdirSync('test/spec/submit_code');
 const api = new GearApi();
 const accounts = {
   alice: undefined,
@@ -191,6 +192,27 @@ for (let filePath of testFiles) {
     });
   });
   programs.clear();
+}
+
+for (let filePath of submitCodeTestFiles) {
+  const testFile = yaml.load(readFileSync(join('./test/spec/submit_code', filePath), 'utf8'));
+  if (testFile.skip) {
+    continue;
+  }
+  describe(testFile.title, () => {
+    test('Submit code', async () => {
+      for (let program of testFile.programs) {
+        const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
+        const codeHash = api.code.submit(code);
+        expect(codeHash).toBeDefined();
+
+        const transactionData = await sendTransaction(api.code, accounts[program.account], 'CodeSaved');
+
+        expect(transactionData).toBe(codeHash);
+      }
+      return;
+    });
+  });
 }
 
 test.todo('Get reply gas spent');

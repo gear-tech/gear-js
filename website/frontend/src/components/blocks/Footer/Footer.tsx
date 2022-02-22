@@ -1,15 +1,17 @@
-import React, { VFC } from 'react';
-import { useLocation } from 'react-router-dom';
-import clsx from 'clsx';
-import { routes } from 'routes';
-import './Footer.scss';
+import React from 'react';
+import { DotButton } from './children/DotButton/DotButton';
+import { Copyright } from './children/Copyright/Copyright';
+import { Socials } from './children/Socials/Socials';
+import styles from './Footer.module.scss';
 
-export const Footer: VFC = () => {
-  const location = useLocation();
-  const lightColored = location.pathname !== routes.main || location.pathname !== routes.uploadedPrograms;
+const Footer = () => {
   return (
-    <footer className={clsx('footer', lightColored && 'footer--light-colored')}>
-      <span className="footer__content">2022. All rights reserved.</span>
+    <footer className={styles.footer}>
+      <DotButton />
+      <Copyright />
+      <Socials />
     </footer>
   );
 };
+
+export { Footer };

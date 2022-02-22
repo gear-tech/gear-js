@@ -1,0 +1,21 @@
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/breakpoints' as *;
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: $desktopSidesMargin;
+  padding: 20px 0;
+  text-align: center;
+  color: $textColorSecondary;
+  border-top: 1px solid $separateLineColor;
+
+  @include md {
+    flex-direction: column;
+
+    & > *:not(:last-child) {
+      margin-bottom: 32px;
+    }
+  }
+}

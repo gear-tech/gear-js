@@ -2,11 +2,11 @@ import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { AddAlert, programUploadResetAction } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import './Upload.scss';
-import { ProgramDetails } from '../../../../blocks/ProgramDetails/ProgramDetails';
+import { UploadForm } from 'components/blocks/UploadForm/UploadForm';
 
 export const Upload = () => {
   const dispatch = useDispatch();
@@ -106,7 +106,7 @@ export const Upload = () => {
 
   return (
     <>
-      {(droppedFile && <ProgramDetails setDroppedFile={setDroppedFile} droppedFile={droppedFile} />) || (
+      {(droppedFile && <UploadForm setDroppedFile={setDroppedFile} droppedFile={droppedFile} />) || (
         <div className={dropBlockClassName} ref={drop}>
           <div className="drop-block__no-file-hover">
             <input className="drop-block__input-file" ref={hiddenFileInput} type="file" onChange={handleChange} />
