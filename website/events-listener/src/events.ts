@@ -30,12 +30,7 @@ type EventType =
   | 'InitFailure'
   | 'MessageDispatched';
 
-const handleEvent = (
-  method: EventType,
-  base: { genesis: string; blockHash: any; timestamp: number },
-  data: any,
-  callback: (arg: { key: string; value: any }) => void,
-) => {
+const handleEvent = (method: EventType, data: any): { key: Keys; value: any } | null => {
   let eventData:
     | InitMessageEnqueuedData
     | DispatchMessageEnqueuedData
@@ -47,34 +42,29 @@ const handleEvent = (
   switch (method) {
     case 'InitMessageEnqueued':
       eventData = new InitMessageEnqueuedData(data) as InitMessageEnqueuedData;
-      callback({
+      return {
         key: Keys.initMessage,
         value: {
-          ...base,
           programId: eventData.programId.toHex(),
           messageId: eventData.messageId.toHex(),
           origin: eventData.origin.toHex(),
         },
-      } as AddEventKafkaPayload<Keys.initMessage, InitMessageEnqueued>);
-      break;
+      } as AddEventKafkaPayload<Keys.initMessage, InitMessageEnqueued>;
     case 'DispatchMessageEnqueued':
       eventData = new DispatchMessageEnqueuedData(data);
-      callback({
+      return {
         key: Keys.dispatchMessage,
         value: {
-          ...base,
           programId: eventData.programId.toHex(),
           messageId: eventData.messageId.toHex(),
           origin: eventData.origin.toHex(),
         },
-      } as AddEventKafkaPayload<Keys.dispatchMessage, DispatchMessageEnqueud>);
-      break;
+      } as AddEventKafkaPayload<Keys.dispatchMessage, DispatchMessageEnqueud>;
     case 'Log':
       eventData = new LogData(data);
-      callback({
+      return {
         key: Keys.log,
         value: {
-          ...base,
           id: eventData.id.toHex(),
           source: eventData.source.toHex(),
           destination: eventData.dest.toHex(),
@@ -82,45 +72,38 @@ const handleEvent = (
           replyTo: eventData.reply.isSome ? eventData.reply.unwrap()[0].toHex() : null,
           replyError: eventData.reply.isSome ? `${eventData.reply.unwrap()[1].toNumber()}` : null,
         },
-      } as AddEventKafkaPayload<Keys.log, Log>);
-      break;
+      } as AddEventKafkaPayload<Keys.log, Log>;
     case 'InitSuccess':
       eventData = new InitSuccessData(data);
-      callback({
+      return {
         key: Keys.initSuccess,
         value: {
-          ...base,
           programId: eventData.programId.toHex(),
           messageId: eventData.messageId.toHex(),
           origin: eventData.origin.toHex(),
         },
-      } as AddEventKafkaPayload<Keys.initSuccess, InitSuccess>);
-      break;
+      } as AddEventKafkaPayload<Keys.initSuccess, InitSuccess>;
     case 'InitFailure':
       eventData = new InitFailureData(data);
-      callback({
+      return {
         key: Keys.initFailure,
         value: {
-          ...base,
           programId: eventData.info.programId.toHex(),
           messageId: eventData.info.messageId.toHex(),
           origin: eventData.info.origin.toHex(),
         },
-      } as AddEventKafkaPayload<Keys.initFailure, InitFailure>);
-      break;
+      } as AddEventKafkaPayload<Keys.initFailure, InitFailure>;
     case 'MessageDispatched':
       eventData = new MessageDispatchedData(data);
-      callback({
+      return {
         key: Keys.messageDispatched,
         value: {
-          ...base,
           messageId: eventData.messageId.toHex(),
           outcome: eventData.outcome.isFailure ? eventData.outcome.asFailure.toHuman() : 'success',
         },
-      } as AddEventKafkaPayload<Keys.messageDispatched, MessageDispatched>);
-      break;
+      } as AddEventKafkaPayload<Keys.messageDispatched, MessageDispatched>;
     default:
-      console.warn(`unexpected event type to handle: ${method}`);
+      return null;
   }
 };
 
@@ -136,7 +119,8 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
 
     events.forEach(async ({ event: { data, method } }: any) => {
       try {
-        handleEvent(method, base, data, callback);
+        const addEvent = handleEvent(method, data);
+        addEvent !== null && callback({ key: addEvent.key, value: { ...addEvent.value, ...base } });
       } catch (error) {
         log.error({ method, data: data.toHuman() });
         log.error(error);
