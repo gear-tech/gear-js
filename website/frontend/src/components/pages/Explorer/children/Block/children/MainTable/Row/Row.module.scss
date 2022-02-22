@@ -17,7 +17,5 @@
 }
 
 .event {
-  &::before {
-    content: none;
-  }
+  border-top: none;
 }
