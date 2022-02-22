@@ -3,6 +3,7 @@ import { load } from 'js-yaml';
 import { readFileSync } from 'fs';
 import { sendMessages, uploadPrograms } from './prepare';
 import { IMessageSpec, IProgramSpec, IPreparedPrograms, IPreparedMessages } from './interfaces';
+import { test } from './e2e';
 import base from './config/base';
 
 async function processPrepare(api: GearApi): Promise<{
@@ -21,8 +22,8 @@ async function processPrepare(api: GearApi): Promise<{
 async function main() {
   const api = await GearApi.create({ providerAddress: base.gear.wsProvider });
   const prepared = await processPrepare(api);
-  console.log(prepared);
   console.log(`*** Preparation finished ***`);
+  await test('0xb612424a0c14e11e8e3365e23f30dcf9eaefd407ac7ea2019f0c8bd879990616', prepared);
 }
 
 main()

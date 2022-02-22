@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
+    "module": "commonjs",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
