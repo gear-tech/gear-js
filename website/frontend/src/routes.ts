@@ -12,6 +12,7 @@ export const routes = {
   message: '/message/:id',
   state: '/state/:id',
   sendMessage: '/send-message/:id',
+  replyMessage: '/reply-message/:id',
   explorer: '/explorer',
   mailbox: '/mailbox',
 };

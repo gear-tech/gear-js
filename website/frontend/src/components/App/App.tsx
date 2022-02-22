@@ -14,6 +14,7 @@ import Explorer from 'components/pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
+import { ReplyMessage } from 'components/pages/ReplyMessage/ReplyMessage';
 import { SendMessage } from 'components/pages/SendMessage/SendMessage';
 import { EditorPage } from 'features/Editor/EditorPage';
 import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
@@ -179,6 +180,9 @@ const AppComponent: FC = () => {
               </Route>
               <Route exact path={routes.sendMessage}>
                 <SendMessage />
+              </Route>
+              <Route exact path={routes.replyMessage}>
+                <ReplyMessage />
               </Route>
               <Route exact path={routes.editor}>
                 <EditorPage />
