@@ -10,12 +10,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Meta } from '../entities/meta.entity';
-import { ErrorLogger, getPaginationParams, getWhere } from '../utils';
+import { getPaginationParams, getWhere } from '../utils';
 import { ProgramNotFound } from 'src/errors';
 import { Program } from 'src/entities/program.entity';
 
 const logger = new Logger('ProgramDb');
-const errorLog = new ErrorLogger('ProgramsService');
 
 @Injectable()
 export class ProgramsService {
@@ -36,7 +35,7 @@ export class ProgramsService {
     try {
       return await this.programRepo.save(program);
     } catch (error) {
-      errorLog.error(error, 37);
+      logger.error(error, error.stack);
       return;
     }
   }
@@ -101,7 +100,7 @@ export class ProgramsService {
           program.initStatus = status;
           resolve(await this.programRepo.save(program));
         } catch (error) {
-          errorLog.error(error, 101);
+          logger.error(error, error.stack);
         }
       }, 1000);
     });

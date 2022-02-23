@@ -13,10 +13,9 @@ import {
   IMessage,
   MessageDispatched,
 } from '@gear-js/interfaces';
-import { ErrorLogger, getPaginationParams, getWhere } from 'src/utils';
+import { getPaginationParams, getWhere } from 'src/utils';
 
 const logger = new Logger('MessageService');
-const errorLog = new ErrorLogger('MessagesService');
 
 @Injectable()
 export class MessagesService {
@@ -41,7 +40,7 @@ export class MessagesService {
       });
       return await this.messageRepo.save(message);
     } catch (error) {
-      errorLog.error(error, 42);
+      logger.error(error, error.stack);
       return;
     }
   }

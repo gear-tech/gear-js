@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { GearKeyring } from '@gear-js/api';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProgramNotFound, SignNotVerified, MetadataNotFound } from '../errors';
+import { SignNotVerified, MetadataNotFound } from '../errors';
 import { ProgramsService } from '../programs/programs.service';
 import { Meta } from '../entities/meta.entity';
 import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/interfaces';
