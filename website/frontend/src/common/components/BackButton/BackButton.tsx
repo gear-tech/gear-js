@@ -1,17 +1,19 @@
-import React, { ButtonHTMLAttributes } from 'react';
-import clsx from 'clsx';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import styles from './BackButton.module.scss';
+import arrow from 'assets/images/arrow_back.svg';
+import { Button } from '../Button/Button';
+import { Props } from '../Button/types';
 
-const BackButton = ({ className, ...attrs }: ButtonHTMLAttributes<HTMLButtonElement>) => {
+type OmittedProps = 'text' | 'icon' | 'color' | 'size' | 'onClick';
+
+const BackButton = (props: Omit<Props, OmittedProps>) => {
   const history = useHistory();
-  const buttonClassName = clsx(styles.button, className);
 
   const handleClick = () => {
     history.goBack();
   };
 
-  return <button type="button" className={buttonClassName} onClick={handleClick} {...attrs} />;
+  return <Button icon={arrow} onClick={handleClick} {...props} />;
 };
 
 export { BackButton };

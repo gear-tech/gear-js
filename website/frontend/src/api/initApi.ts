@@ -1,5 +1,4 @@
 import { GearApi } from '@gear-js/api';
-
 import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { isNodeAddressValid } from 'helpers';
@@ -31,7 +30,7 @@ class NodeApi {
 
   readonly subscriptions: Record<string, UnsubscribePromise> = {};
 
-  constructor(address = 'ws://localhost:9944') {
+  constructor(address: string) {
     this._address = address;
     this.subscriptions = {};
     this.chain = null;
@@ -39,7 +38,6 @@ class NodeApi {
   }
 
   async init() {
-    this._address = getNodeAddressFromUrl() || localStorage.getItem(LOCAL_STORAGE.NODE_ADDRESS) || this._address;
     this._api = await GearApi.create({ providerAddress: this._address });
 
     this.chain = await this._api.chain();
@@ -100,4 +98,6 @@ class NodeApi {
   }
 }
 
-export const nodeApi = new NodeApi(NODE_ADDRESS);
+const address = getNodeAddressFromUrl() || localStorage.getItem(LOCAL_STORAGE.NODE_ADDRESS) || NODE_ADDRESS;
+
+export const nodeApi = new NodeApi(address);
