@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { GearKeyring } from '@gear-js/api';
 import { useAlert } from 'react-alert';
 import { LogoutIcon } from 'assets/Icons';
@@ -25,23 +26,13 @@ export const Wallet = () => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 
-  const getAllAccounts = useCallback(async () => {
-    if (typeof window !== `undefined`) {
-      const { web3Accounts, web3Enable } = await import('@polkadot/extension-dapp');
+  const getAllAccounts = async () => {
+    const extensions = await web3Enable('Gear App');
 
-      const extensions = await web3Enable('Gear App');
-
-      if (extensions.length === 0) {
-        return null;
-      }
-
-      const accounts: UserAccount[] = await web3Accounts();
-
-      return accounts;
+    if (extensions.length !== 0) {
+      return web3Accounts();
     }
-
-    return null;
-  }, []);
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -59,7 +50,7 @@ export const Wallet = () => {
         })
         .catch((err) => console.error(err));
     }, 300);
-  }, [dispatch, getAllAccounts]);
+  }, [dispatch]);
 
   const getBalance = useCallback(
     async (address: string) => {
