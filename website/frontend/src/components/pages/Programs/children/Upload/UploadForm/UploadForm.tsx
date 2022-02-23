@@ -30,11 +30,10 @@ import styles from './UploadForm.module.scss';
 
 type Props = {
   setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
-  droppedFile: DroppedFile;
+  droppedFile: File;
 };
 
 export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
-  const { file } = droppedFile;
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
@@ -57,9 +56,9 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
   const isShowPayloadForm = payloadForm && !isManualPayload;
-  const handleUploadMetaFile = async (droppedMeta: File) => {
+  const handleUploadMetaFile = async (file: File) => {
     try {
-      const fileBuffer = (await readFileAsync(droppedMeta)) as Buffer;
+      const fileBuffer = (await readFileAsync(file)) as Buffer;
       const metaWasm: { [key: string]: any } = await getWasmMetadata(fileBuffer);
 
       if (metaWasm) {
@@ -99,7 +98,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
     }
-    setDroppedMetaFile(droppedMeta);
+    setDroppedMetaFile(file);
   };
 
   const handleRemoveMetaFile = () => {
@@ -119,24 +118,20 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     });
   };
 
-  const resetFile = () => {
-    setDroppedFile(null);
-  };
-
   const handleSubmitForm = (values: any) => {
     if (currentAccount) {
       if (isMetaFromFile) {
         const pl = isManualPayload ? values.payload : values.fields;
         const updatedValues = { ...values, payload: pl };
 
-        UploadProgram(api, currentAccount, file, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
-          resetFile();
+        UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
+          setDroppedFile(null);
         });
       } else {
         try {
           const manualTypes = values.types.length > 0 ? JSON.parse(values.types) : values.types;
-          UploadProgram(api, currentAccount, file, { ...values, types: manualTypes }, null, dispatch, () => {
-            resetFile();
+          UploadProgram(api, currentAccount, droppedFile, { ...values, types: manualTypes }, null, dispatch, () => {
+            setDroppedFile(null);
           });
         } catch (error) {
           dispatch(AddAlert({ type: EventTypes.ERROR, message: `Invalid JSON format` }));
@@ -148,12 +143,12 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   };
 
   const handleResetForm = () => {
-    resetFile();
+    setDroppedFile(null);
     setDroppedMetaFile(null);
   };
 
   const handleCalculateGas = async (values: InitialValues, setFieldValue: SetFieldValue) => {
-    const fileBuffer = (await readFileAsync(file)) as ArrayBuffer;
+    const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
     calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code, null);
@@ -179,7 +174,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     <div className={styles.block}>
                       <span className={styles.caption}>File:</span>
                       <div className={clsx(styles.value, styles.filename)}>
-                        {file.name}
+                        {droppedFile.name}
                         <button type="button" onClick={handleResetForm}>
                           <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                         </button>

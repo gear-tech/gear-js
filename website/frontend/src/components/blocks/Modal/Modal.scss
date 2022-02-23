@@ -14,8 +14,6 @@
 }
 
 .modal__box {
-  width: 100%;
-  max-width: 485px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -29,6 +27,7 @@
   margin-top: 4rem;
   margin-bottom: 4rem;
   max-height: 90vh;
+  color: $textColor;
 }
 
 .modal__content {
@@ -69,15 +68,10 @@
   font-family: 'Syncopate', sans-serif;
   font-weight: bold;
   font-size: 1.6em;
-  color: $textColor;
   line-height: 150%;
   padding: 0 0 30px;
   margin: 0;
   text-align: center;
-}
-
-.modal__text {
-  color: $textColor;
 }
 
 @media (max-width: 768px) {
