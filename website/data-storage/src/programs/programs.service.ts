@@ -89,7 +89,6 @@ export class ProgramsService {
       });
       return program;
     } catch (error) {
-      logger.error(error, error.stack, '');
       throw new ProgramNotFound();
     }
   }
