@@ -9,7 +9,7 @@ import { InitialValues, SetFieldValue } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler, getPreformattedText } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';

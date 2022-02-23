@@ -8,7 +8,7 @@ import MessageIcon from 'assets/images/message.svg';
 import ClaimIcon from 'assets/images/claim.svg';
 import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import styles from './MailItem.module.scss';
 
 type Props = {
