@@ -1,5 +1,6 @@
 import { PaginationModel, UserPrograms } from 'types/common';
 import { ProgramModel, ProgramPaginationModel } from 'types/program';
+import { GetMetaResponse } from 'api/responses';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
@@ -27,7 +28,7 @@ class ProgramRequestService {
   };
 
   public fetchMeta = (id: string) => {
-    return this.apiRequest.callRPC(this.GET_METADATA, { id });
+    return this.apiRequest.callRPC<GetMetaResponse>(this.GET_METADATA, { id });
   };
 }
 
