@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import upload from 'assets/images/upload.svg';
 import editor from 'assets/images/editor_icon.svg';
 import { Colors } from 'common/components/Button/types';
-import { UploadForm } from 'components/blocks/UploadForm/UploadForm';
+import { UploadForm } from './UploadForm/UploadForm';
 import { DropTarget } from './DropTarget/DropTarget';
 import styles from './Upload.module.scss';
 
