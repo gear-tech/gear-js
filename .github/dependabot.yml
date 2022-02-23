@@ -1,12 +1,49 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/api" # Location of package manifests
-    labels: dependency
+  - package-ecosystem: 'npm'
+    directory: '/api'
+    labels:
+      - dependency
+      - api
     schedule:
-      interval: "daily"
+      interval: 'daily'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/frontend'
+    labels:
+      - dependency
+      - frontend
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/events-listener'
+    labels:
+      - dependency
+      - backend
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/data-storage'
+    labels:
+      - dependency
+      - backend
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/api-gateway'
+    labels:
+      - dependency
+      - backend
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/test-balance'
+    labels:
+      - dependency
+      - backend
+    schedule:
+      interval: 'weekly'
