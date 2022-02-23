@@ -3,6 +3,8 @@ import { DropTargetMonitor, useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
+import upload from 'assets/images/upload.svg';
+import { Button } from 'common/components/Button/Button';
 import { RootState } from 'store/reducers';
 import { AddAlert, programUploadResetAction } from 'store/actions/actions';
 import { EventTypes } from 'types/alerts';
@@ -110,9 +112,7 @@ const DropTarget = ({ setDroppedFile }: Props) => {
     <div className={className} ref={drop}>
       <div className={styles.noFile}>
         <input className={styles.input} ref={hiddenFileInput} type="file" onChange={handleChange} />
-        <button className={styles.button} type="button" onClick={handleClick}>
-          Upload program
-        </button>
+        <Button text="Upload program" icon={upload} onClick={handleClick} />
         <div className={styles.text}>Click “Upload program” to browse or drag and drop your .wasm files here</div>
       </div>
       <div className={styles.file}>

@@ -11,6 +11,7 @@ export const Upload = () => {
   ) : (
     <div className={styles.upload}>
       <DropTarget setDroppedFile={setDroppedFile} />
+      <DropTarget setDroppedFile={setDroppedFile} />
     </div>
   );
 };

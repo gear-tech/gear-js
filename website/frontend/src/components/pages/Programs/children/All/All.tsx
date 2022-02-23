@@ -9,7 +9,7 @@ import { getAllProgramsAction, uploadMetaResetAction } from 'store/actions/actio
 import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 import MessageIcon from 'assets/images/message.svg';
-import UploadIcon from 'assets/images/upload.svg';
+import UploadIcon from 'assets/images/upload-cloud.svg';
 import { UserProgram } from '../UserProgram/UserProgram';
 import styles from './All.module.scss';
 import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
