@@ -13,6 +13,6 @@ export const routes = {
   state: '/state/:id',
   sendMessage: '/send-message/:id',
   replyMessage: '/reply-message/:id',
-  explorer: '/explorer',
   mailbox: '/mailbox',
+  explorer: '/explorer/:blockId?',
 };

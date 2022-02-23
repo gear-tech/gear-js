@@ -1,0 +1,22 @@
+@use 'assets/scss/variables' as *;
+
+.icon {
+  margin-right: 10px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  padding: 14px 25px;
+  font-size: 16px;
+  font-weight: 500;
+  color: $textColor;
+  background-color: $bkgButtonColor;
+  border-radius: 2px;
+  transition: all 0.25s;
+
+  &:hover {
+    color: $bkgButtonColor;
+    background-color: $textColor;
+  }
+}

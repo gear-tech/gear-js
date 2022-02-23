@@ -1,14 +1,10 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { GearApi } from './GearApi';
-import { DebugDataSnapshotEvent } from './types';
+import { DebugDataSnapshotEvent, GearTransaction } from './types';
 
-export class DebugMode {
-  api: GearApi;
+export class DebugMode extends GearTransaction {
   enabled: any;
-  constructor(gearApi: GearApi) {
-    this.api = gearApi;
-  }
 
   enable() {
     this.enabled = this.api.tx.sudo.sudo(this.api.tx.gearDebug.enableDebugMode(true));
@@ -16,18 +12,6 @@ export class DebugMode {
 
   disable() {
     this.enabled = this.api.tx.sudo.sudo(this.api.tx.gearDebug.enableDebugMode(false));
-  }
-
-  signAndSend(keyring: KeyringPair): Promise<{ method: string; data: boolean }> {
-    return new Promise((resolve) => {
-      this.enabled.signAndSend(keyring, ({ events, status }) => {
-        events.forEach(({ event: { method, data } }) => {
-          if (status.isFinalized) {
-            resolve({ method, data: data[0].toHuman() });
-          }
-        });
-      });
-    });
   }
 
   snapshots(callback: (event: DebugDataSnapshotEvent) => void | Promise<void>): UnsubscribePromise {

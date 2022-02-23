@@ -1,8 +1,7 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
@@ -23,12 +22,11 @@ import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { subscribeToEvents, setApiReady, fetchBlockAction } from '../../store/actions/actions';
+import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
-import { useApi } from 'hooks/useApi';
+import { useEvents } from 'hooks/useEvents';
+import { useBlocks } from 'hooks/useBlocks';
 import store from '../../store';
-import { getEvents } from 'utils/events-list';
-import { Events } from 'types/events-list';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -41,7 +39,7 @@ import { Main } from 'layout/Main/Main';
 // alert configuration
 const options = {
   position: positions.BOTTOM_CENTER,
-  timeout: 5000,
+  timeout: 10000,
   containerStyle: {
     zIndex: ZIndexes.alert,
     width: '100%',
@@ -55,13 +53,13 @@ const options = {
 
 const AppComponent: FC = () => {
   globalStyles();
-  const [api] = useApi();
+  useBlocks();
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
-  const [events, setEvents] = useState<Events>([]);
+  const events = useEvents();
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
@@ -95,53 +93,6 @@ const AppComponent: FC = () => {
       history.replace({ search: searchParams.toString() });
     }
   }, [history, location]);
-
-  useEffect(() => {
-    let unsub: UnsubscribePromise | undefined;
-
-    if (api) {
-      unsub = api.gearEvents.subscribeToNewBlocks(async (header) => {
-        const { hash, number } = header;
-
-        const timestamp = await api.blocks.getBlockTimestamp(hash);
-        const date = new Date(timestamp.toNumber());
-
-        dispatch(
-          fetchBlockAction({
-            hash: hash.toHex(),
-            number: number.toNumber(),
-            time: date.toLocaleTimeString(),
-          })
-        );
-      });
-    }
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-    };
-  }, [api, dispatch]);
-
-  useEffect(() => {
-    let unsub: UnsubscribePromise | undefined;
-
-    if (api) {
-      unsub = api.allEvents((eventRecords) => {
-        const newEvents = getEvents(eventRecords);
-        setEvents((prevEvents) => [...newEvents, ...prevEvents]);
-      });
-    }
-
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-    };
-  }, [api, dispatch]);
 
   const isFooterHidden = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');

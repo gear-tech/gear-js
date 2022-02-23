@@ -10,7 +10,7 @@ import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/ac
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { BackButton } from 'common/components/BackButton/BackButton';
 import { getPreformattedText } from 'helpers';

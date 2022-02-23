@@ -1,0 +1,49 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/api'
+    labels:
+      - dependency
+      - api
+    schedule:
+      interval: 'daily'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/frontend'
+    labels:
+      - dependency
+      - frontend
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/events-listener'
+    labels:
+      - dependency
+      - backend
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/data-storage'
+    labels:
+      - dependency
+      - backend
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/api-gateway'
+    labels:
+      - dependency
+      - backend
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'npm'
+    directory: '/website/test-balance'
+    labels:
+      - dependency
+      - backend
+    schedule:
+      interval: 'weekly'

@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { AddAlert, resetApiReady } from 'store/actions/actions';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE, DEFAULT_NODES_URL } from 'consts';
 import * as init from './init';
 import './Sidebar.scss';

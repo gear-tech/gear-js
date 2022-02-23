@@ -17,6 +17,26 @@ export class GearMessageReply {
     this.createType = new CreateType(gearApi);
   }
 
+  /**
+   * Sends reply message
+   * @param message Message paramters
+   * @param meta Metadata
+   * @param messageType MessageType
+   * @returns Submitted result
+   * @example
+   * ```javascript
+   * const api = await GearApi.create()
+   * const messageId = '0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6'
+   * api.reply.submit({
+   *  toId: messageId,
+   *  payload: 'Reply message',
+   *  gasLimit: 20_000_000
+   * }, undefiend, 'String')
+   * api.reply.signAndSend(account, (events) => {
+   *  events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
   submitReply(
     message: {
       toId: H256 | string;

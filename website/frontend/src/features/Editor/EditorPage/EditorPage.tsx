@@ -13,7 +13,7 @@ import { routes } from 'routes';
 import { RootState } from 'store/reducers';
 
 import { setIsBuildDone, AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
