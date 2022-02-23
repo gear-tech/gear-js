@@ -1,6 +1,8 @@
-@import '../../../../../assets/scss/variables';
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/breakpoints' as *;
 
-.drop-block {
+.drop {
+  flex: 1;
   align-items: center;
   background: rgba(0, 0, 0, 0.05);
   border: 1px dotted #0e0e0e;
@@ -9,37 +11,62 @@
   height: 345px;
   justify-content: center;
   margin-bottom: 54px;
+
+  @include md {
+    align-items: unset;
+    margin-bottom: 26px;
+    height: fit-content;
+  }
+
+  &.active {
+    border: 1px dashed $successColor;
+
+    &.noFile {
+      display: none;
+    }
+
+    &.file {
+      display: block;
+    }
+  }
 }
-.drop-block__input-file {
+.input {
   display: none;
 }
 
-.drop-block__no-file-hover {
+.noFile {
   align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @include md {
+    margin-top: 14px;
+    justify-content: unset;
+    width: 100%;
+    margin-bottom: 14px;
+  }
 }
 
-.drop-block__file-hover {
+.file {
   color: $textColor;
   display: none;
   font-size: 16px;
   font-weight: 600;
 }
 
-.drop-block--file-over {
-  border: 1px dashed $successColor;
-}
-.drop-block--file-over.drop-block__no-file-hover {
-  display: none;
+.text {
+  color: $textColorSecondary;
+  padding-top: 24px;
+  text-align: center;
+  width: 259px;
+
+  @include md {
+    display: none;
+  }
 }
 
-.drop-block--file-over.drop-block__file-hover {
-  display: block;
-}
-
-.drop-block__button {
+.button {
   background: $successColor
     url("data:image/svg+xml,%3Csvg width='14' height='18' viewBox='0 0 14 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 13.8599H10V7.85986H14L7 0.859863L0 7.85986H4V13.8599ZM0 15.8599H14V17.8599H0V15.8599Z' fill='white'/%3E%3C/svg%3E%0A")
     no-repeat 89px 50%;
@@ -49,28 +76,4 @@
   font-weight: 500;
   padding: 12px 83px 12px 123px;
   width: 336px;
-}
-
-.drop-block__info {
-  color: $textColorSecondary;
-  padding-top: 24px;
-  text-align: center;
-  width: 259px;
-}
-
-@media (max-width: 768px) {
-  .drop-block {
-    align-items: unset;
-    margin-bottom: 26px;
-    height: fit-content;
-  }
-  .drop-block__no-file-hover {
-    margin-top: 14px;
-    justify-content: unset;
-    width: 100%;
-    margin-bottom: 14px;
-  }
-  .drop-block__info {
-    display: none;
-  }
 }
