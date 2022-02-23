@@ -192,3 +192,9 @@ export const calculateGas = async (
     dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
   }
 };
+
+export const isHex = (value: unknown) => {
+  const isString = typeof value === 'string';
+  const hexRegex = /^0x[\da-fA-F]+/;
+  return isString && hexRegex.test(value);
+};
