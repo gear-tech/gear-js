@@ -9,6 +9,20 @@ updates:
       interval: 'daily'
     pull-request-branch-name:
       separator: '-'
+    reviewers:
+      - 'osipov-mit'
+
+  - package-ecosystem: 'npm'
+    directory: '/utils/meta-cli'
+    labels:
+      - dependency
+      - gear-meta
+    schedule:
+      interval: 'weekly'
+    pull-request-branch-name:
+      separator: '-'
+    reviewers:
+      - 'osipov-mit'
 
   - package-ecosystem: 'npm'
     directory: '/'
@@ -20,3 +34,8 @@ updates:
     open-pull-requests-limit: 10
     pull-request-branch-name:
       separator: '-'
+    reviewers:
+      - 'osipov-mit'
+      - 'aderrod94'
+      - 'codev0'
+      - 'nikitayutanov'
