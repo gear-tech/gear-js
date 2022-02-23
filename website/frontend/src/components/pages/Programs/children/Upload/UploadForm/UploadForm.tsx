@@ -1,4 +1,4 @@
-import React, { useState, VFC } from 'react';
+import React, { Dispatch, SetStateAction, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
@@ -25,14 +25,16 @@ import { UploadProgram } from 'services/ApiService';
 import { readFileAsync, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
+import { DroppedFile } from '../types';
 import styles from './UploadForm.module.scss';
 
 type Props = {
-  setDroppedFile: (file: File | null) => void;
-  droppedFile: File;
+  setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
+  droppedFile: DroppedFile;
 };
 
 export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
+  const { file } = droppedFile;
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
@@ -55,9 +57,9 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
   const isShowPayloadForm = payloadForm && !isManualPayload;
-  const handleUploadMetaFile = async (file: File) => {
+  const handleUploadMetaFile = async (droppedMeta: File) => {
     try {
-      const fileBuffer = (await readFileAsync(file)) as Buffer;
+      const fileBuffer = (await readFileAsync(droppedMeta)) as Buffer;
       const metaWasm: { [key: string]: any } = await getWasmMetadata(fileBuffer);
 
       if (metaWasm) {
@@ -97,7 +99,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     } catch (error) {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
     }
-    setDroppedMetaFile(file);
+    setDroppedMetaFile(droppedMeta);
   };
 
   const handleRemoveMetaFile = () => {
@@ -117,20 +119,24 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     });
   };
 
+  const resetFile = () => {
+    setDroppedFile(null);
+  };
+
   const handleSubmitForm = (values: any) => {
     if (currentAccount) {
       if (isMetaFromFile) {
         const pl = isManualPayload ? values.payload : values.fields;
         const updatedValues = { ...values, payload: pl };
 
-        UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
-          setDroppedFile(null);
+        UploadProgram(api, currentAccount, file, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
+          resetFile();
         });
       } else {
         try {
           const manualTypes = values.types.length > 0 ? JSON.parse(values.types) : values.types;
-          UploadProgram(api, currentAccount, droppedFile, { ...values, types: manualTypes }, null, dispatch, () => {
-            setDroppedFile(null);
+          UploadProgram(api, currentAccount, file, { ...values, types: manualTypes }, null, dispatch, () => {
+            resetFile();
           });
         } catch (error) {
           dispatch(AddAlert({ type: EventTypes.ERROR, message: `Invalid JSON format` }));
@@ -142,12 +148,12 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   };
 
   const handleResetForm = () => {
-    setDroppedFile(null);
+    resetFile();
     setDroppedMetaFile(null);
   };
 
   const handleCalculateGas = async (values: InitialValues, setFieldValue: SetFieldValue) => {
-    const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
+    const fileBuffer = (await readFileAsync(file)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
     calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code, null);
@@ -173,7 +179,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     <div className={styles.block}>
                       <span className={styles.caption}>File:</span>
                       <div className={clsx(styles.value, styles.filename)}>
-                        {droppedFile.name}
+                        {file.name}
                         <button type="button" onClick={handleResetForm}>
                           <Trash2 color="#ffffff" size="20" strokeWidth="1" />
                         </button>

@@ -8,16 +8,18 @@ import { Colors } from 'common/components/Button/types';
 import { RootState } from 'store/reducers';
 import { AddAlert, programUploadResetAction } from 'store/actions/actions';
 import { EventTypes } from 'types/alerts';
+import { DroppedFile, UploadTypes } from '../types';
 import styles from './DropTarget.module.scss';
 
 type Props = {
   text: string;
   icon: string;
   color?: Colors;
-  setDroppedFile: Dispatch<SetStateAction<File | null>>;
+  type: UploadTypes;
+  setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
 };
 
-const DropTarget = ({ text, icon, color, setDroppedFile }: Props) => {
+const DropTarget = ({ text, icon, color, type, setDroppedFile }: Props) => {
   const dispatch = useDispatch();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
@@ -37,10 +39,10 @@ const DropTarget = ({ text, icon, color, setDroppedFile }: Props) => {
   }, []);
 
   const handleFilesUpload = useCallback(
-    (file) => {
-      setDroppedFile(file);
+    (file: File) => {
+      setDroppedFile({ file, type });
     },
-    [setDroppedFile]
+    [setDroppedFile, type]
   );
 
   const hiddenFileInput = React.useRef(null);
