@@ -1,9 +1,15 @@
 import { ButtonHTMLAttributes } from 'react';
 
+export enum Colors {
+  SUCCESS = 'success',
+  ERROR = 'error',
+  MAIN = 'main',
+}
+
 interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
   icon?: string;
-  color?: 'success' | 'error' | 'main';
+  color?: Colors;
   size?: 'normal' | 'small';
 }
 

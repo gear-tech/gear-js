@@ -3,18 +3,21 @@ import { DropTargetMonitor, useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
-import upload from 'assets/images/upload.svg';
 import { Button } from 'common/components/Button/Button';
+import { Colors } from 'common/components/Button/types';
 import { RootState } from 'store/reducers';
 import { AddAlert, programUploadResetAction } from 'store/actions/actions';
 import { EventTypes } from 'types/alerts';
 import styles from './DropTarget.module.scss';
 
 type Props = {
+  text: string;
+  icon: string;
+  color?: Colors;
   setDroppedFile: Dispatch<SetStateAction<File | null>>;
 };
 
-const DropTarget = ({ setDroppedFile }: Props) => {
+const DropTarget = ({ text, icon, color, setDroppedFile }: Props) => {
   const dispatch = useDispatch();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
@@ -112,8 +115,8 @@ const DropTarget = ({ setDroppedFile }: Props) => {
     <div className={className} ref={drop}>
       <div className={styles.noFile}>
         <input className={styles.input} ref={hiddenFileInput} type="file" onChange={handleChange} />
-        <Button text="Upload program" icon={upload} onClick={handleClick} />
-        <div className={styles.text}>Click “Upload program” to browse or drag and drop your .wasm files here</div>
+        <Button text={text} icon={icon} color={color} onClick={handleClick} />
+        <div className={styles.text}>{`Click “${text}” to browse or drag and drop your .wasm files here`}</div>
       </div>
       <div className={styles.file}>
         <span className={styles.text}>Drop your .wasm files here to upload</span>
