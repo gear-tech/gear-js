@@ -1,4 +1,4 @@
-const { CreateType, getWasmMetadata, parseHexTypes } = require('../lib');
+const { CreateType, getWasmMetadata, decodeHexTypes } = require('../lib');
 const yaml = require('js-yaml');
 const fs = require('fs');
 const { join } = require('path');
@@ -15,7 +15,7 @@ describe('Create type test', () => {
       for (let type in testFile.types) {
         expect(meta[type]).toBe(testFile.types[type]);
       }
-      expect(parseHexTypes(meta.types)).toEqual(testFile.displayed_types);
+      expect(decodeHexTypes(meta.types)).toEqual(testFile.displayed_types);
       const createType = new CreateType();
       const encode = testFile.payloads.encode;
       for (let payloadType in encode) {

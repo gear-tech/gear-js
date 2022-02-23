@@ -1,5 +1,5 @@
 import { GearApi } from './GearApi';
-import { CreateType } from './CreateType';
+import { CreateType } from './create-type';
 import { createPayload } from './utils';
 import { Metadata } from './interfaces';
 import { SendReplyError } from './errors';

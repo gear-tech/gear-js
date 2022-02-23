@@ -1,4 +1,4 @@
-import { CreateType } from './CreateType';
+import { CreateType } from './create-type';
 import { getWasmMetadata } from './WasmMeta';
 import { IGearPages, ProgramId } from './interfaces';
 import { Codec } from '@polkadot/types/types';
