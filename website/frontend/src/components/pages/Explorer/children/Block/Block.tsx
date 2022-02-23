@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { isHex } from '@polkadot/util';
 import { Block as DotBlock } from '@polkadot/types/interfaces';
 import { EventRecords } from 'types/explorer';
 import { useApi } from 'hooks/useApi';
+import { isHex } from 'helpers';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { Summary } from './children/Summary/Summary';
 import { MainTable } from './children/MainTable/MainTable';

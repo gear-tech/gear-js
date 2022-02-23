@@ -1,10 +1,9 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { CreateType, getWasmMetadata, Metadata, LogData } from '@gear-js/api';
-import { isHex } from '@polkadot/util';
 import { Codec } from '@polkadot/types/types';
 import { ProgramModel } from 'types/program';
 import { programService } from 'services/ProgramsRequestService';
-import { getLocalProgram, isDevChain } from 'helpers';
+import { getLocalProgram, isDevChain, isHex } from 'helpers';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
 import { Pre } from '../../../Pre/Pre';
 import styles from './LogContent.module.scss';

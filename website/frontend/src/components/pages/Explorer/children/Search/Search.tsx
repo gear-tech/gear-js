@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { isHex } from '@polkadot/util';
 import { useHistory } from 'react-router-dom';
+import { isHex } from 'helpers';
 import { DIGITS_REGEX } from 'regexes';
 import styles from './Search.module.scss';
 
@@ -9,7 +9,7 @@ const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const isNumeric = DIGITS_REGEX.test(searchQuery);
-  const isValid = isHex(searchQuery, 256) || isNumeric;
+  const isValid = isHex(searchQuery) || isNumeric;
 
   const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(value);
