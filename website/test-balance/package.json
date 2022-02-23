@@ -13,7 +13,7 @@
   "dependencies": {
     "@gear-js/api": "^0.11.3",
     "@polkadot/api": "^7.0.2",
-    "chalk": "^4.1.2",
+    "chalk": "^5.0.0",
     "kafkajs": "^1.15.0",
     "pg": "^8.7.1",
     "postgres": "^1.0.2",
