@@ -30,8 +30,8 @@ class NodeApi {
 
   readonly subscriptions: Record<string, UnsubscribePromise> = {};
 
-  constructor() {
-    this._address = getNodeAddressFromUrl() || localStorage.getItem(LOCAL_STORAGE.NODE_ADDRESS) || NODE_ADDRESS;
+  constructor(address: string) {
+    this._address = address;
     this.subscriptions = {};
     this.chain = null;
     this.genesis = null;
@@ -98,4 +98,6 @@ class NodeApi {
   }
 }
 
-export const nodeApi = new NodeApi();
+const address = getNodeAddressFromUrl() || localStorage.getItem(LOCAL_STORAGE.NODE_ADDRESS) || NODE_ADDRESS;
+
+export const nodeApi = new NodeApi(address);

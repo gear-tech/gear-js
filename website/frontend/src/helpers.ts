@@ -198,5 +198,3 @@ export const isHex = (value: unknown) => {
   const hexRegex = /^0x[\da-fA-F]+/;
   return isString && hexRegex.test(value);
 };
-
-export const getLastItem = (value: unknown[]) => value[value.length - 1];
