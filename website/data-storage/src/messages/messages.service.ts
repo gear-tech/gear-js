@@ -132,8 +132,8 @@ export class MessagesService {
       });
       if (message) {
         message.error = error;
+        this.messageRepo.save(message);
       }
-      this.messageRepo.save(message);
       const logMessages = await this.messageRepo.find({
         genesis: params.genesis,
         replyTo: params.messageId,

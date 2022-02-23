@@ -20,32 +20,21 @@ export class MetadataService {
       id: params.programId,
       genesis: params.genesis,
     });
-    if (!program) {
-      throw new ProgramNotFound();
-    }
+
     if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
       throw new SignNotVerified();
-    } else {
-      const metadata = this.metaRepo.create({
-        owner: program.owner,
-        meta: typeof params.meta === 'string' ? params.meta : JSON.stringify(params.meta),
-        metaFile: params.metaFile,
-        program: program.id,
-      });
-      const savedMeta = await this.metaRepo.save(metadata);
-      try {
-        await this.programService.addProgramInfo(
-          params.programId,
-          params.genesis,
-          params.name,
-          params.title,
-          savedMeta,
-        );
-      } catch (error) {
-        throw error;
-      }
-      return { status: 'Metadata added' };
     }
+
+    const metadata = this.metaRepo.create({
+      owner: program.owner,
+      meta: typeof params.meta === 'string' ? params.meta : JSON.stringify(params.meta),
+      metaFile: params.metaFile,
+      program: program.id,
+    });
+    const savedMeta = await this.metaRepo.save(metadata);
+    await this.programService.addProgramInfo(params.programId, params.genesis, params.name, params.title, savedMeta);
+
+    return { status: 'Metadata added' };
   }
 
   async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
@@ -53,9 +42,6 @@ export class MetadataService {
       id: params.programId,
       genesis: params.genesis,
     });
-    if (!program) {
-      throw new ProgramNotFound();
-    }
     const meta = await this.metaRepo.findOne({ program: params.programId });
     if (meta) {
       return { program: meta.program, meta: meta.meta, metaFile: meta.metaFile };
