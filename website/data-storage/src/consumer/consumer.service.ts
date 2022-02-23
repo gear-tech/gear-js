@@ -85,9 +85,9 @@ export class ConsumerService {
 
   async programData(params: FindProgramParams): Result<IProgram> {
     try {
-      return (await this.programService.findProgram(params)) || { error: new ProgramNotFound().message };
-    } catch (error) {
-      return { error: error.message };
+      return (await this.programService.findProgram(params));
+    } catch ({ message }) {
+      return { error: { message } };
     }
   }
 
@@ -97,8 +97,8 @@ export class ConsumerService {
         return await this.programService.getAllUserPrograms(params as GetAllUserProgramsParams);
       }
       return await this.programService.getAllPrograms(params);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message }) {
+      return { error: { message } };
     }
   }
 
@@ -113,24 +113,24 @@ export class ConsumerService {
   async addMeta(params: AddMetaParams): Result<AddMetaResult> {
     try {
       return await this.metaService.addMeta(params);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message }) {
+      return { error: { message } };
     }
   }
 
   async getMeta(params: GetMetaParams): Result<GetMetaResult> {
     try {
       return await this.metaService.getMeta(params);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message }) {
+      return { error: { message } };
     }
   }
 
   async addPayload(params: AddPayloadParams): Result<IMessage> {
     try {
       return await this.messageService.addPayload(params);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message }) {
+      return { error: { message } };
     }
   }
 
@@ -143,16 +143,16 @@ export class ConsumerService {
         return await this.messageService.getIncoming(params);
       }
       return await this.messageService.getOutgoing(params);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message }) {
+      return { error: { message } };
     }
   }
 
   async message(params: FindMessageParams): Result<IMessage> {
     try {
       return await this.messageService.getMessage(params);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message }) {
+      return { error: { message } };
     }
   }
 }
