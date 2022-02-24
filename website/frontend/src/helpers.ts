@@ -162,7 +162,9 @@ export const calculateGas = async (
   dispatch: any,
   meta: any,
   code?: Uint8Array | null,
-  programId?: String | null
+  programId?: String | null,
+  messageId?: String | null,
+  exitCode?: String | null
 ) => {
   const payload = isManualPayload ? values.payload : values.fields;
 
@@ -179,12 +181,35 @@ export const calculateGas = async (
   try {
     const metaOrTypeOfPayload: Metadata | string = meta || 'String';
 
-    const estimatedGas = await api.program.gasSpent[method](
-      localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-      method === 'init' ? code : programId,
-      payload,
-      metaOrTypeOfPayload
-    );
+    let estimatedGas;
+
+    switch (method) {
+      case 'init':
+        estimatedGas = await api.program.gasSpent.init(
+          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+          code,
+          payload,
+          metaOrTypeOfPayload
+        );
+        break;
+      case 'handle':
+        estimatedGas = await api.program.gasSpent.handle(
+          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+          programId,
+          payload,
+          metaOrTypeOfPayload
+        );
+        break;
+      case 'reply':
+        estimatedGas = await api.program.gasSpent.reply(
+          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+          messageId,
+          Number(exitCode),
+          payload,
+          metaOrTypeOfPayload
+        );
+        break;
+    }
 
     dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
     setFieldValue('gasLimit', estimatedGas.toHuman());
