@@ -1,7 +1,7 @@
 import { AnyJson } from '@polkadot/types-codec/types';
 import { isHex, isString } from '@polkadot/util';
 import { u64 } from '@polkadot/types';
-import { CreateType } from './CreateType';
+import { CreateType } from './create-type';
 import { Hex, Metadata } from './interfaces';
 import { GearApi } from './GearApi';
 import { createPayload } from './utils';

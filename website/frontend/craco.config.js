@@ -19,6 +19,11 @@ module.exports = {
         'REACT_APP_WASM_COMPILER_URL not provided'
       );
       assert.notStrictEqual(process.env.REACT_APP_RRT, undefined, 'REACT_APP_RRT not provided');
+      assert.notStrictEqual(
+        process.env.REACT_APP_DEFAULT_NODES_URL,
+        undefined,
+        'REACT_APP_DEFAULT_NODES_URL not provided'
+      );
 
       config.resolve.fallback = {
         ...config.resolve.fallback,

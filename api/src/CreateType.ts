@@ -1,12 +1,7 @@
-import { GearApi } from './GearApi';
-import { Metadata } from './interfaces';
-import { CreateTypeError } from './errors';
-import { toCamelCase, splitByCommas } from './utils/string';
+import { splitByCommas } from './utils/string';
 import { toJSON, isJSON } from './utils/json';
-import { isHex, hexToU8a, isU8a } from '@polkadot/util';
-import { Registry, Codec } from '@polkadot/types/types';
-import { Bytes, TypeRegistry } from '@polkadot/types';
-import { PortableRegistry } from '@polkadot/types/metadata';
+import { hexToU8a } from '@polkadot/util';
+import { getTypesFromTypeDef, replaceNamespaces } from './create-type';
 
 const REGULAR_EXP = {
   endWord: /\b\w+\b/g,
@@ -42,132 +37,11 @@ const STD_TYPES = {
   },
 };
 
-export class CreateType {
-  registry: Registry;
-  namespaces: Map<string, string>;
-
-  constructor(gearApi?: GearApi) {
-    this.registry = gearApi?.registry || new TypeRegistry();
-    this.namespaces = undefined;
-  }
-
-  private createRegistry(types?: any): Map<string, string> {
-    if (!types) {
-      return null;
-    }
-    if (isHex(types) || isU8a(types)) {
-      const { typesFromTypeDef, namespaces } = CreateType.getTypesFromTypeDef(
-        isHex(types) ? hexToU8a(types) : types,
-        this.registry,
-      );
-      types = typesFromTypeDef;
-      this.namespaces = namespaces;
-    }
-    this.registerTypes(types);
-    return this.namespaces;
-  }
-
-  static getTypesFromTypeDef(
-    types: Uint8Array,
-    registry?: Registry,
-  ): { typesFromTypeDef: any; namespaces: Map<string, string> } {
-    if (!registry) {
-      registry = new TypeRegistry();
-    }
-    const typesFromTypeDef = {};
-    const namespaces = new Map<string, string>();
-    const portableReg = new PortableRegistry(registry, types);
-    portableReg.types.forEach(({ id, type: { path } }) => {
-      const typeDef = portableReg.getTypeDef(id);
-      if (path.length === 0 || (!typeDef.lookupName && !typeDef.lookupNameRoot)) {
-        return;
-      }
-      const name = portableReg.getName(id);
-      let camelCasedNamespace = toCamelCase(path.slice(0, path.length - 1));
-      if (camelCasedNamespace === name) {
-        camelCasedNamespace = toCamelCase(path.slice(0, path.length - 2));
-      }
-      namespaces.set(name.replace(camelCasedNamespace, ''), name);
-      typesFromTypeDef[typeDef.lookupName || typeDef.lookupNameRoot] = typeDef.type.toString();
-    });
-    return { typesFromTypeDef, namespaces };
-  }
-
-  private registerTypes(types?: any) {
-    this.registry.setKnownTypes({ types: { ...types } });
-    this.registry.register({ ...types });
-  }
-
-  private checkTypePayload(type: any, payload: any) {
-    if (payload === undefined) {
-      throw new CreateTypeError('Data is not specified');
-    }
-    if (!type) {
-      return null;
-    }
-    return type;
-  }
-
-  create(type: any, payload: any, meta?: Metadata): Codec {
-    type = this.checkTypePayload(type, payload);
-    if (!type) {
-      return payload;
-    }
-    const namespaces = meta?.types ? this.createRegistry(meta.types) : this.createRegistry();
-
-    if (isJSON(type)) {
-      const types = toJSON(`{"Custom": ${JSON.stringify(toJSON(type))}}`);
-      this.registerTypes(types);
-      return this.createType('Custom', toJSON(payload));
-    } else {
-      return this.createType(
-        namespaces ? setNamespaces(type, namespaces) : type,
-        isJSON(payload) ? toJSON(payload) : payload,
-      );
-    }
-  }
-
-  static create(type: any, payload: any, meta?: Metadata): Codec {
-    const createType = new CreateType();
-    return createType.create(type, payload, meta);
-  }
-
-  static encode(type: any, payload: any, meta?: Metadata): Codec {
-    const createType = new CreateType();
-    return createType.create(type, payload, meta);
-  }
-
-  static decode(type: string, payload: any, meta?: Metadata): Codec {
-    const createType = new CreateType();
-    return createType.create(type, payload, meta);
-  }
-
-  private createType(type: any, data: any): Codec {
-    if (typeIsString(type, data)) {
-      return this.registry.createType('String', data);
-    } else if (type.toLowerCase() === 'bytes') {
-      if (data instanceof Uint8Array) {
-        return this.registry.createType('Bytes', Array.from(data));
-      } else if (data instanceof Bytes) {
-        return data;
-      }
-      return this.registry.createType('Bytes', data);
-    } else {
-      return this.registry.createType(type, data);
-    }
-  }
-}
-
-function typeIsString(type: any, data?: any): boolean {
-  if (data) {
-    return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase()) && typeof data === 'string';
-  } else {
-    return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase());
-  }
-}
-
+/**
+ * @deprecated use `decodeHexTypes`
+ */
 export function parseHexTypes(hexTypes: string) {
-  let { typesFromTypeDef, namespaces } = CreateType.getTypesFromTypeDef(hexToU8a(hexTypes));
+  let { typesFromTypeDef, namespaces } = getTypesFromTypeDef(hexToU8a(hexTypes));
   const result = {};
   namespaces.forEach((value, key) => {
     const replaced = replaceNamespaces(typesFromTypeDef[value], namespaces);
@@ -176,28 +50,9 @@ export function parseHexTypes(hexTypes: string) {
   return result;
 }
 
-function setNamespaces(type: string, namespaces: Map<string, string>): string {
-  const matches = type.match(REGULAR_EXP.endWord);
-  matches.forEach((match, index) => {
-    if (namespaces) {
-      if (namespaces.has(match)) {
-        type = type.replace(match, namespaces.get(match));
-      } else if (index < matches.length - 1 && namespaces.has(`${match}${matches[index + 1]}`)) {
-        type = type.replace(match, namespaces.get(`${match}${matches[index + 1]}`));
-      }
-    }
-  });
-  return type;
-}
-
-function replaceNamespaces(type: string, namespaces: Map<string, string>): string {
-  const match = type.match(REGULAR_EXP.endWord);
-  namespaces.forEach((value, key) => {
-    type = match.includes(value) ? type.replace(value, key) : type;
-  });
-  return type;
-}
-
+/**
+ * @deprecated will be removed in 0.16.0 version
+ */
 export function getTypeStructure(typeName: string, types: any) {
   if (!typeName) {
     return undefined;

@@ -123,8 +123,6 @@ describe('Programs Service', () => {
     Program_findOne.mockReturnValueOnce(null);
 
     // when:
-    expect(programsService.addProgramInfo('0x7357', '0x07357', 'guestbook', 'guestbook'))
-      // then it should silently fail.
-      .resolves.toBeUndefined();
+    expect(programsService.addProgramInfo('0x7357', '0x07357', 'guestbook', 'guestbook')).rejects.toBeDefined();
   });
 });

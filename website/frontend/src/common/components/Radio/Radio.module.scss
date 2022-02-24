@@ -1,0 +1,22 @@
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/mixins' as *;
+
+.label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.input {
+  @include square(20px);
+  margin-right: 10px;
+  appearance: none;
+  border: 2px solid #909090;
+  border-radius: 50%;
+  transition: border-color 0.25s;
+
+  &:checked {
+    background: url('/assets/images/radio.svg') center no-repeat;
+    border-color: $successColor;
+  }
+}

@@ -57,8 +57,8 @@ export const UploadProgram = async (
 
   const program = {
     code: new Uint8Array(fileBuffer),
-    gasLimit,
-    value,
+    gasLimit: gasLimit.toString(),
+    value: value.toString(),
     initPayload,
   };
 
@@ -179,12 +179,19 @@ export const UploadProgram = async (
 export const SendMessageToProgram = async (
   api: GearApi,
   account: UserAccount,
-  message: MessageModel,
+  _message: MessageModel,
   dispatch: any,
   callback: () => void,
   meta?: Metadata
 ) => {
   const injector = await web3FromSource(account.meta.source);
+
+  const { gasLimit, value } = _message;
+  const message = {
+    ..._message,
+    gasLimit: gasLimit.toString(),
+    value: value.toString(),
+  };
 
   try {
     await api.message.submit(message, meta);

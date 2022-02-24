@@ -34,4 +34,5 @@ jobs:
           REACT_APP_API_URL: 'https://ci.test'
           REACT_APP_NODE_ADDRESS: 'wss://ci.test'
           REACT_APP_WASM_COMPILER_URL: 'https://ci.test'
+          REACT_APP_DEFAULT_NODES_URL: 'https://idea.gear-tech.io/gear-nodes'
           REACT_APP_RRT: ''

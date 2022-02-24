@@ -1,20 +1,19 @@
 @use 'assets/scss/variables' as *;
+@use 'assets/scss/mixins' as *;
 
 .label {
   display: flex;
   color: $textColor;
+  cursor: pointer;
 }
 
 .input {
-  $size: 20px;
-  width: $size;
-  height: $size;
+  @include square(20px);
   margin-right: 8px;
   appearance: none;
   border: 2px solid #909090;
   border-radius: 2px;
   transition: border-color 0.25s;
-  cursor: pointer;
 
   &:checked {
     background: url('/assets/images/check.svg') center no-repeat;
