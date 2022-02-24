@@ -8,7 +8,7 @@ import { transformTypes } from './utils';
 import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { EventRecord, ContractExecResultErr } from '@polkadot/types/interfaces';
+import { EventRecord, ContractExecResultErr, Event } from '@polkadot/types/interfaces';
 import { PromiseResult } from '@polkadot/api/types';
 import { Vec } from '@polkadot/types';
 import { Observable } from 'rxjs';
@@ -96,8 +96,8 @@ export class GearApi extends ApiPromise {
     return (await this.rpc.system.version()).toHuman();
   }
 
-  getExtrinsicFailedError(event: EventRecord) {
-    const error = event.event.data[0] as ContractExecResultErr;
+  getExtrinsicFailedError(event: Event) {
+    const error = event.data[0] as ContractExecResultErr;
 
     if (error.isModule) {
       return this.registry.findMetaError(error.asModule);

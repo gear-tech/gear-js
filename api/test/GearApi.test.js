@@ -1,4 +1,4 @@
-const { GearKeyring, GearApi } = require('../lib');
+const { GearApi } = require('../lib');
 
 const api = new GearApi();
 
