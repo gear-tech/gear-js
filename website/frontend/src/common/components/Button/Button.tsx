@@ -1,10 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Colors, Props } from './types';
+import { Props } from './types';
 import styles from './Button.module.scss';
 
 const Button = ({ text, icon, className, color, size, ...attrs }: Props) => {
-  const colorName = color || (text ? Colors.SUCCESS : '');
+  const colorName = color || (text ? 'success' : '');
   const sizeName = size || (text ? 'normal' : '');
 
   const buttonClassName = clsx(

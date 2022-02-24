@@ -3,8 +3,9 @@ import { DropTargetMonitor, useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
+import upload from 'assets/images/upload.svg';
+import editor from 'assets/images/editor_icon.svg';
 import { Button } from 'common/components/Button/Button';
-import { Colors } from 'common/components/Button/types';
 import { RootState } from 'store/reducers';
 import { AddAlert, programUploadResetAction } from 'store/actions/actions';
 import { EventTypes } from 'types/alerts';
@@ -12,14 +13,11 @@ import { DroppedFile, UploadTypes } from '../types';
 import styles from './DropTarget.module.scss';
 
 type Props = {
-  text: string;
-  icon: string;
-  color?: Colors;
   type: UploadTypes;
   setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
 };
 
-const DropTarget = ({ text, icon, color, type, setDroppedFile }: Props) => {
+const DropTarget = ({ type, setDroppedFile }: Props) => {
   const dispatch = useDispatch();
 
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
@@ -112,13 +110,20 @@ const DropTarget = ({ text, icon, color, type, setDroppedFile }: Props) => {
 
   const isActive = canDrop && isOver;
   const className = clsx(styles.drop, isActive && styles.active);
+  const isProgramUpload = type === UploadTypes.PROGRAM;
+  const buttonText = `Upload ${type}`;
 
   return (
     <div className={className} ref={drop}>
       <div className={styles.noFile}>
         <input className={styles.input} ref={hiddenFileInput} type="file" onChange={handleChange} />
-        <Button text={text} icon={icon} color={color} onClick={handleClick} />
-        <div className={styles.text}>{`Click “${text}” to browse or drag and drop your .wasm files here`}</div>
+        <Button
+          text={buttonText}
+          icon={isProgramUpload ? upload : editor}
+          color={isProgramUpload ? 'success' : 'main'}
+          onClick={handleClick}
+        />
+        <div className={styles.text}>{`Click “${buttonText}” to browse or drag and drop your .wasm files here`}</div>
       </div>
       <div className={styles.file}>
         <span className={styles.text}>Drop your .wasm files here to upload</span>

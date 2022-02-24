@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import upload from 'assets/images/upload.svg';
-import editor from 'assets/images/editor_icon.svg';
-import { Colors } from 'common/components/Button/types';
 import { UploadForm } from './UploadForm/UploadForm';
 import { DropTarget } from './DropTarget/DropTarget';
 import { CodeModal } from './CodeModal/CodeModal';
@@ -17,14 +14,8 @@ export const Upload = () => {
         <UploadForm setDroppedFile={setDroppedFile} droppedFile={droppedFile.file} />
       ) : (
         <div className={styles.upload}>
-          <DropTarget text="Upload program" icon={upload} type={UploadTypes.PROGRAM} setDroppedFile={setDroppedFile} />
-          <DropTarget
-            text="Upload code"
-            icon={editor}
-            color={Colors.MAIN}
-            type={UploadTypes.CODE}
-            setDroppedFile={setDroppedFile}
-          />
+          <DropTarget type={UploadTypes.PROGRAM} setDroppedFile={setDroppedFile} />
+          <DropTarget type={UploadTypes.CODE} setDroppedFile={setDroppedFile} />
         </div>
       )}
       {droppedFile?.type === UploadTypes.CODE && <CodeModal file={droppedFile.file} setDroppedFile={setDroppedFile} />}
