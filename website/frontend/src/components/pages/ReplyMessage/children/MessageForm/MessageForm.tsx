@@ -11,23 +11,23 @@ import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
-import { fileNameHandler, getPreformattedText } from 'helpers';
+import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { Schema } from './Schema';
-import { LOCAL_STORAGE } from 'consts';
 
 import './MessageForm.scss';
 
 type Props = {
-  programId: string;
+  messageId: string;
   programName: string;
+  reply: string;
   meta?: Metadata;
   types: MetaParam | null;
 };
 
-export const MessageForm: VFC<Props> = ({ programId, programName, meta, types }) => {
+export const MessageForm: VFC<Props> = ({ messageId, programName, reply, meta, types }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
@@ -38,7 +38,7 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
     gasLimit: 20000000,
     value: 0,
     payload: types ? getPreformattedText(types) : '',
-    destination: programId,
+    destination: messageId,
     fields: {},
   });
 
@@ -49,37 +49,6 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
       setIsManualInput(false);
     }
   }, [types]);
-
-  const calculateGas = async (values: InitialValues, setFieldValue: SetFieldValue) => {
-    if (isManualInput && values.payload.length === 0) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
-      return;
-    }
-
-    try {
-      const payload = isManualInput ? values.payload : values.fields;
-
-      if (Object.keys(payload).length === 0) {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Form is empty' }));
-        return;
-      }
-
-      const metaOrTypeOfPayload: any = meta || 'String';
-
-      const estimatedGas = await api.program.gasSpent.handle(
-        localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-        programId as Hex,
-        payload,
-        metaOrTypeOfPayload
-      );
-
-      dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
-      setFieldValue('gasLimit', estimatedGas.toHuman());
-    } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-      console.error(error);
-    }
-  };
 
   return (
     <Formik
@@ -186,7 +155,19 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
                     className="message-form__button"
                     type="button"
                     onClick={() => {
-                      calculateGas(values, setFieldValue);
+                      calculateGas(
+                        'reply',
+                        api,
+                        isManualInput,
+                        values,
+                        setFieldValue,
+                        dispatch,
+                        meta,
+                        null,
+                        null,
+                        messageId,
+                        reply
+                      );
                     }}
                   >
                     Calculate Gas
