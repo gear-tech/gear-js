@@ -17,6 +17,7 @@ import { GearStorage } from './Storage';
 import { GearMailbox } from './Mailbox';
 import { GearClaimValue } from './Claim';
 import { GearCode } from './Code';
+import { RegistryError } from '@polkadot/types-codec/types';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -96,7 +97,12 @@ export class GearApi extends ApiPromise {
     return (await this.rpc.system.version()).toHuman();
   }
 
-  getExtrinsicFailedError(event: Event) {
+  /**
+   * Method provides opportunity to get informations about error occurs in ExtrinsicFailed event
+   * @param event
+   * @returns
+   */
+  getExtrinsicFailedError(event: Event): RegistryError {
     const error = event.data[0] as ContractExecResultErr;
 
     if (error.isModule) {
