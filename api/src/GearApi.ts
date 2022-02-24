@@ -107,4 +107,5 @@ export class GearApi extends ApiPromise {
 
     const { isModule, asModule } = error;
     return isModule ? this.registry.findMetaError(asModule) : null;
+  }
 }
