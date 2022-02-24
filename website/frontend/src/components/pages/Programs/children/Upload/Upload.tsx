@@ -7,10 +7,12 @@ import styles from './Upload.module.scss';
 
 export const Upload = () => {
   const [droppedFile, setDroppedFile] = useState<DroppedFile | null>(null);
+  const isProgramUpload = droppedFile?.type === UploadTypes.PROGRAM;
+  const isCodeUpload = droppedFile?.type === UploadTypes.CODE;
 
   return (
     <>
-      {droppedFile?.type === UploadTypes.PROGRAM ? (
+      {isProgramUpload ? (
         <UploadForm setDroppedFile={setDroppedFile} droppedFile={droppedFile.file} />
       ) : (
         <div className={styles.upload}>
@@ -18,7 +20,7 @@ export const Upload = () => {
           <DropTarget type={UploadTypes.CODE} setDroppedFile={setDroppedFile} />
         </div>
       )}
-      {droppedFile?.type === UploadTypes.CODE && <CodeModal file={droppedFile.file} setDroppedFile={setDroppedFile} />}
+      {isCodeUpload && <CodeModal file={droppedFile.file} setDroppedFile={setDroppedFile} />}
     </>
   );
 };
