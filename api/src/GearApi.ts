@@ -105,9 +105,6 @@ export class GearApi extends ApiPromise {
   getExtrinsicFailedError(event: Event): RegistryError {
     const error = event.data[0] as ContractExecResultErr;
 
-    if (error.isModule) {
-      return this.registry.findMetaError(error.asModule);
-    }
-    return null;
-  }
+    const { isModule, asModule } = error;
+    return isModule ? this.registry.findMetaError(asModule) : null;
 }
