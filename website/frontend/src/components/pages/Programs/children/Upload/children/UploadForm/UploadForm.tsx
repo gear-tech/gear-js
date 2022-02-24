@@ -25,7 +25,7 @@ import { UploadProgram } from 'services/ApiService';
 import { readFileAsync, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
-import { DroppedFile } from '../types';
+import { DroppedFile } from '../../types';
 import styles from './UploadForm.module.scss';
 
 type Props = {

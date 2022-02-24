@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { UploadForm } from './UploadForm/UploadForm';
-import { DropTarget } from './DropTarget/DropTarget';
-import { CodeModal } from './CodeModal/CodeModal';
+import { UploadForm } from './children/UploadForm/UploadForm';
+import { DropTarget } from './children/DropTarget/DropTarget';
+import { CodeModal } from './children/CodeModal/CodeModal';
 import { DroppedFile, UploadTypes } from './types';
 import styles from './Upload.module.scss';
 

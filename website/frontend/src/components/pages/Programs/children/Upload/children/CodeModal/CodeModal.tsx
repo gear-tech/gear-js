@@ -13,7 +13,7 @@ import { AddAlert } from 'store/actions/actions';
 import { Button } from 'common/components/Button/Button';
 import { Modal } from 'components/blocks/Modal';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
-import { DroppedFile } from '../types';
+import { DroppedFile } from '../../types';
 import styles from './CodeModal.module.scss';
 
 type Props = {

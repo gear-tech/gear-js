@@ -9,7 +9,7 @@ import { Button } from 'common/components/Button/Button';
 import { RootState } from 'store/reducers';
 import { AddAlert, programUploadResetAction } from 'store/actions/actions';
 import { EventTypes } from 'types/alerts';
-import { DroppedFile, UploadTypes } from '../types';
+import { DroppedFile, UploadTypes } from '../../types';
 import styles from './DropTarget.module.scss';
 
 type Props = {
