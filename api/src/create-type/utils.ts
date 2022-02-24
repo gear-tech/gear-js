@@ -15,10 +15,7 @@ export function checkTypeAndPayload(type: string, payload: any): string {
   if (payload === undefined) {
     throw new CreateTypeError('Payload is not specified');
   }
-  if (!type) {
-    return 'Bytes';
-  }
-  return type;
+  return type || 'Bytes';
 }
 
 export function setNamespaces(type: string, namespaces: Map<string, string>): string {
