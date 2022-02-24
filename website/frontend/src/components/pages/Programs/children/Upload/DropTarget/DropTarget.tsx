@@ -115,19 +115,22 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
 
   return (
     <div className={className} ref={drop}>
-      <div className={styles.noFile}>
-        <input className={styles.input} ref={hiddenFileInput} type="file" onChange={handleChange} />
-        <Button
-          text={buttonText}
-          icon={isProgramUpload ? upload : editor}
-          color={isProgramUpload ? 'success' : 'main'}
-          onClick={handleClick}
-        />
-        <div className={styles.text}>{`Click “${buttonText}” to browse or drag and drop your .wasm files here`}</div>
-      </div>
-      <div className={styles.file}>
-        <span className={styles.text}>Drop your .wasm files here to upload</span>
-      </div>
+      {isActive ? (
+        <div className={styles.file}>
+          <span className={styles.text}>Drop your .wasm files here to upload</span>
+        </div>
+      ) : (
+        <div className={styles.noFile}>
+          <input className={styles.input} ref={hiddenFileInput} type="file" onChange={handleChange} />
+          <Button
+            text={buttonText}
+            icon={isProgramUpload ? upload : editor}
+            color={isProgramUpload ? 'success' : 'main'}
+            onClick={handleClick}
+          />
+          <div className={styles.text}>{`Click “${buttonText}” to browse or drag and drop your .wasm files here`}</div>
+        </div>
+      )}
     </div>
   );
 };

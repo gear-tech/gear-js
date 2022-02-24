@@ -20,14 +20,6 @@
 
   &.active {
     border: 1px dashed $successColor;
-
-    &.noFile {
-      display: none;
-    }
-
-    &.file {
-      display: block;
-    }
   }
 }
 .input {
@@ -35,7 +27,6 @@
 }
 
 .noFile {
-  align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -50,7 +41,6 @@
 
 .file {
   color: $textColor;
-  display: none;
   font-size: 16px;
   font-weight: 600;
 }
@@ -64,16 +54,4 @@
   @include md {
     display: none;
   }
-}
-
-.button {
-  background: $successColor
-    url("data:image/svg+xml,%3Csvg width='14' height='18' viewBox='0 0 14 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 13.8599H10V7.85986H14L7 0.859863L0 7.85986H4V13.8599ZM0 15.8599H14V17.8599H0V15.8599Z' fill='white'/%3E%3C/svg%3E%0A")
-    no-repeat 89px 50%;
-  border-radius: $borderRadiusBase;
-  color: $textColor;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 12px 83px 12px 123px;
-  width: 336px;
 }
