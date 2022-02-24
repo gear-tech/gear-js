@@ -26,22 +26,19 @@ export function createPayload(createType: CreateType, type: any, data: any, meta
   return payload;
 }
 
-export function generateCodeHash(code: Buffer): Hex {
-  const id = new Uint8Array(code.byteLength);
-  id.set(code);
-
-  const codeArr = CreateType.create('Bytes', code).toU8a().slice(2);
-  const testId = new Uint8Array(codeArr.byteLength);
-  testId.set(codeArr);
+export function generateCodeHash(code: Buffer | Bytes | Uint8Array): Hex {
+  const codeArr =
+    code instanceof Buffer ? CreateType.create('Bytes', code).toU8a() : code instanceof Bytes ? code.toU8a() : code;
+  const id = new Uint8Array(codeArr.slice(2).byteLength);
+  id.set(codeArr);
   return blake2AsHex(code, 256);
 }
 
 export function generateProgramId(code: Buffer | Bytes | Uint8Array, salt: Hex): Hex {
-  const codeArr =
-    code instanceof Buffer ? CreateType.create('Bytes', code).toU8a() : code instanceof Bytes ? code.toU8a() : code;
+  const codeHash = CreateType.create('Bytes', generateCodeHash(code)).toU8a();
   const saltU8a = CreateType.create('Vec<u8>', salt).toU8a();
-  const id = new Uint8Array(codeArr.byteLength + saltU8a.byteLength);
-  id.set(codeArr);
-  id.set(saltU8a, codeArr.byteLength);
+  const id = new Uint8Array(codeHash.byteLength + saltU8a.byteLength);
+  id.set(codeHash);
+  id.set(saltU8a, codeHash.byteLength);
   return blake2AsHex(id, 256);
 }
