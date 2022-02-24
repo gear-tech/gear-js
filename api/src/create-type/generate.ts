@@ -1,19 +1,8 @@
 import { Types, TypeTree } from './interfaces';
 
 const getTree = (type: Types, name: string, value: string | object | TypeTree, count?: number): TypeTree => {
-  if (type === 'Array') {
-    return {
-      type,
-      name,
-      value,
-      count,
-    };
-  }
-  return {
-    type,
-    name,
-    value,
-  };
+  const tree = { type, name, value };
+  return type === 'Array' ? { ...tree, count } : tree;
 };
 
 export default {
