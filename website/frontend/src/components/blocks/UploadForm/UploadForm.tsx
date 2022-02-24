@@ -150,7 +150,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code, null);
+    calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code);
   };
 
   return (
