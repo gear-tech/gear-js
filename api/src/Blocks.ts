@@ -5,7 +5,7 @@ import { u64, Compact, GenericExtrinsic, Vec } from '@polkadot/types';
 import { SignedBlock, BlockNumber, BlockHash } from '@polkadot/types/interfaces';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { isHex, isU8a } from '@polkadot/util';
-import { CreateType } from './CreateType';
+import { CreateType } from './create-type';
 export class GearBlock {
   protected api: GearApi;
   constructor(api: GearApi) {
