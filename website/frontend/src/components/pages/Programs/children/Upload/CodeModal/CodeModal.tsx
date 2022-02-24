@@ -42,9 +42,9 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
     dispatch(AddAlert({ type: EventTypes.SUCCESS, message: 'Code uploaded' }));
   };
 
-  const handleFail = () => {
+  const handleFail = (message: string) => {
     close();
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: 'ExtrinsicFailed: Something when wrong' }));
+    dispatch(AddAlert({ type: EventTypes.ERROR, message }));
   };
 
   const submit = async () => {
@@ -58,7 +58,7 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
       if (method === 'CodeSaved') {
         handleSuccess(hash);
       } else if (method === 'ExtrinsicFailed') {
-        handleFail();
+        handleFail('ExtrinsicFailed');
       }
     });
 
@@ -80,7 +80,12 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
   };
 
   useEffect(() => {
-    uploadCode();
+    try {
+      uploadCode();
+    } catch (error) {
+      console.error(error);
+      handleFail('Something went wrong');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
