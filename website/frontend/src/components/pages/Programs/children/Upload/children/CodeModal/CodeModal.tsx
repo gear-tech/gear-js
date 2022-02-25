@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { Hex } from '@gear-js/api';
 import { ISubmittableResult } from '@polkadot/types/types';
+import { Event } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import copy from 'assets/images/copy.svg';
 import { copyToClipboard, readFileAsync } from 'helpers';
@@ -53,12 +54,21 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
     return api.code.submit(buffer);
   };
 
+  const getErrorMessage = (event: Event) => {
+    const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
+    const formattedDocs = docs.filter(Boolean).join('. ');
+
+    return `${errorMethod}: ${formattedDocs}`;
+  };
+
   const handleUpload = ({ events }: ISubmittableResult, hash: Hex) =>
-    events.forEach(({ event: { method } }) => {
+    events.forEach(({ event }) => {
+      const { method } = event;
+
       if (method === 'CodeSaved') {
         handleSuccess(hash);
       } else if (method === 'ExtrinsicFailed') {
-        handleFail('ExtrinsicFailed');
+        handleFail(getErrorMessage(event));
       }
     });
 
