@@ -1,4 +1,5 @@
 export const data1 = { id: { decimal: 'u64', hex: 'Bytes' } };
+
 export const data2 = {
   exchangeRate: { _enum_Result: { ok: 'u8', err: 'u8' } },
   sum: 'u8',
@@ -18,9 +19,11 @@ export const data5 = [
     },
   },
 ];
+
 export const simpleStruct = {
   AddMessage: { author: 'Text', msg: 'Text' },
 };
+
 export const simpleDeepStruct = {
   AddMessage: {
     author: 'Text',
@@ -31,6 +34,7 @@ export const simpleDeepStruct = {
     },
   },
 };
+
 export const simpleEnum = {
   _enum: {
     AddMessage: { author: 'Text', msg: 'Text' },
@@ -38,11 +42,17 @@ export const simpleEnum = {
     ViewMessages: 'Null',
   },
 };
+
 export const simpleEnumOption = {
+  _enum_Option: 'String',
+};
+
+export const nestedEnumOption = {
   field: {
     _enum_Option: 'String',
   },
 };
+
 export const complexEnumOption = {
   res: {
     _enum_Option: {
@@ -51,15 +61,20 @@ export const complexEnumOption = {
     },
   },
 };
+
 export const simpleEnumResult = {
   exchangeRate: {
     _enum_Result: { ok: 'u8', err: 'u8' },
   },
 };
+
 export const complexEnumResult = {
   exchangeRate: {
     _enum_Result: {
-      ok: 'u8',
+      ok: {
+        firstName: 'Text',
+        secondName: 'Text',
+      },
       err: { _enum_Option: 'String' },
     },
   },

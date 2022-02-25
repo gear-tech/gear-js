@@ -7,6 +7,7 @@ import {
   simpleEnumOption,
   complexEnumOption,
   simpleEnumResult,
+  nestedEnumOption,
 } from './meta-fixtures';
 
 // result
@@ -54,7 +55,7 @@ describe('test parser', () => {
   //     });
   // });
 
-  it('to simple struct', () => {
+  it('simple struct', () => {
     expect(
       parseMeta({
         amount: 'u8',
@@ -81,7 +82,7 @@ describe('test parser', () => {
     });
   });
 
-  it('simple struct', () => {
+  it('nested simple struct', () => {
     expect(parseMeta(simpleStruct)).toEqual({
       select: null,
       fields: {
@@ -205,8 +206,40 @@ describe('test parser', () => {
     });
   });
 
-  it('with simple option enum', () => {
+  it('simple option enum', () => {
     expect(parseMeta(simpleEnumOption)).toEqual({
+      select: {
+        ['__field[0]']: {
+          type: '_enum_Option',
+          fields: {
+            ['__field[0]']: {
+              type: 'String',
+              name: 'meta.__field[0]',
+              label: '__field[0]',
+            },
+          },
+          NoFields: {
+            name: 'meta.NoFields',
+            label: 'NoFields',
+            type: 'Null',
+          },
+        },
+      },
+      fields: {
+        ['__field[0]']: {
+          type: 'String',
+          name: 'meta.__field[0]',
+          label: '__field[0]',
+        },
+      },
+      values: {
+        ['__field[0]']: '',
+      },
+    });
+  });
+
+  it('nested option enum', () => {
+    expect(parseMeta(nestedEnumOption)).toEqual({
       select: {
         field: {
           type: '_enum_Option',

@@ -74,7 +74,7 @@ function parseField(data: MetaParam) {
     value: (string | MetaField) | MetaNull;
   }[] = [];
 
-  Object.entries(data).forEach((item) => {
+  Object.entries(data).forEach((item, index) => {
     if (item[0] === MetaEnums.Enum) {
       if (!result.select) {
         result.select = {};
@@ -106,6 +106,13 @@ function parseField(data: MetaParam) {
           });
         }
       });
+    } else if (item[0] === MetaEnums.EnumOption) {
+      stack.push({
+        kind: 'enum_option',
+        path: [`__field[${index}]`],
+        value: item[1] as MetaField,
+      });
+    } else if (item[0] === MetaEnums.EnumResult) {
     } else {
       stack.push({
         kind: 'field',
@@ -165,6 +172,38 @@ function parseField(data: MetaParam) {
             result.values = {};
           }
           set(result.values, path.slice(1), '');
+        } else if (current.kind === 'enum_option') {
+          const root = current.path[0];
+          if (!result.select) {
+            result.select = {};
+          }
+          set(result.select, current.path, {
+            type: MetaEnums.EnumOption,
+            NoFields: {
+              type: 'Null',
+              name: 'meta.NoFields', // TODO: add if field deep
+              label: 'NoFields',
+            },
+          });
+
+          const key = current.path[current.path.length - 1];
+          const fieldsPath = [...current.path, 'fields'];
+          set(
+            result.select,
+            fieldsPath,
+            merge(get(result.select, fieldsPath), {
+              [key]: {
+                label: key,
+                name: ['meta', key].join('.'),
+                type: current.value,
+              },
+            })
+          );
+
+          if (!result.values) {
+            result.values = {};
+          }
+          set(result.values, current.path, '');
         } else if (current.kind === 'field') {
           const key = current.path[current.path.length - 1];
           if (!result.fields) {
