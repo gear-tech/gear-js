@@ -51,7 +51,7 @@ export class GearProgramState extends GearStorage {
     if (!metadata.meta_state_output) {
       throw new ReadStateError(`Unable to read state. meta_state_output type is not specified in metadata`);
     }
-    const encodedInput = inputValue !== undefined ? await this.encodeInput(metadata, inputValue) : undefined;
+    const encodedInput = inputValue === undefined ? undefined : await this.encodeInput(metadata, inputValue);
     const state = await readState(metaWasm, pages, encodedInput);
 
     return await this.decodeState(state, pages, metadata, encodedInput);
