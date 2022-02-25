@@ -3,7 +3,7 @@ import { getExportValue } from './utils';
 
 export async function readState(wasmBytes: Buffer, pages: any, inputValue?: Uint8Array): Promise<Uint8Array> {
   const memory = new WebAssembly.Memory({ initial: Object.keys(pages).length });
-  let module = await WebAssembly.instantiate(wasmBytes, importObj(memory, false, inputValue));
+  const module = await WebAssembly.instantiate(wasmBytes, importObj(memory, false, inputValue));
   Object.keys(pages).forEach((pageNumber: string) => {
     const start = +pageNumber * 65536;
     const end = start + 65536;
@@ -12,9 +12,6 @@ export async function readState(wasmBytes: Buffer, pages: any, inputValue?: Uint
       new Uint8Array(memory.buffer)[i] = page[i % 65536];
     }
   });
-  const exports = module.instance.exports;
-  if (!exports) {
-    return null;
-  }
-  return new Uint8Array(getExportValue(memory, exports.meta_state));
+  const { exports } = module.instance;
+  return exports?.meta_state ? new Uint8Array(getExportValue(memory, exports.meta_state)) : null;
 }

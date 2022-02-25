@@ -6,10 +6,10 @@ export function getExportValue(memory: WebAssembly.Memory, func: any): ArrayBuff
   if (!func) {
     return undefined;
   }
-  let result_ptr = func();
-  let pointer = new Uint32Array(memory.buffer.slice(result_ptr, result_ptr + 4))[0];
-  let length = new Uint32Array(memory.buffer.slice(result_ptr + 4, result_ptr + 8))[0];
-  let buf = memory.buffer.slice(pointer, pointer + length);
+  const result_ptr = func();
+  const pointer = new Uint32Array(memory.buffer.slice(result_ptr, result_ptr + 4))[0];
+  const length = new Uint32Array(memory.buffer.slice(result_ptr + 4, result_ptr + 8))[0];
+  const buf = memory.buffer.slice(pointer, pointer + length);
   return buf;
 }
 
