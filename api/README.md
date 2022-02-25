@@ -53,7 +53,7 @@ const genesis = gearApi.genesisHash.toHex();
 
 Encode and decode data
 
-````javascript
+```javascript
 import { CreateType } from '@gear-js/api';
 
 // If "TypeName" alredy registred
