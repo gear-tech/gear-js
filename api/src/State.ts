@@ -12,7 +12,7 @@ export class GearProgramState extends GearStorage {
    * @param pages - pages with program state
    * @returns decoded state
    */
-  async decodeState(state: Uint8Array, pages: IGearPages, meta: Metadata, encodedInput?: Uint8Array): Promise<Codec> {
+  async decodeState(state: Uint8Array, meta: Metadata): Promise<Codec> {
     if (!state) {
       throw new ReadStateError(`Unable to read state. meta_state function is not specified in metadata`);
     }
@@ -54,6 +54,6 @@ export class GearProgramState extends GearStorage {
     const encodedInput = inputValue === undefined ? undefined : await this.encodeInput(metadata, inputValue);
     const state = await readState(metaWasm, pages, encodedInput);
 
-    return await this.decodeState(state, pages, metadata, encodedInput);
+    return await this.decodeState(state, metadata);
   }
 }
