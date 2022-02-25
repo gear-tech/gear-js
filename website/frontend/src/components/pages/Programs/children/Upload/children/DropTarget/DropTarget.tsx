@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import { NativeTypes } from 'react-dnd-html5-backend';
@@ -19,10 +19,10 @@ type Props = {
 
 const DropTarget = ({ type, setDroppedFile }: Props) => {
   const dispatch = useDispatch();
-
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
 
   const [wrongFormat, setWrongFormat] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   if (wrongFormat) {
     setTimeout(() => setWrongFormat(false), 3000);
@@ -43,13 +43,8 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
     [setDroppedFile, type]
   );
 
-  const hiddenFileInput = React.useRef(null);
-
-  const handleClick = () => {
-    if (hiddenFileInput !== null && hiddenFileInput.current !== null) {
-      // @ts-ignore
-      hiddenFileInput.current.click();
-    }
+  const emulateInputClick = () => {
+    inputRef.current?.click();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,12 +119,12 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         </div>
       ) : (
         <div className={styles.noFile}>
-          <input className={styles.input} ref={hiddenFileInput} type="file" onChange={handleChange} />
+          <input className={styles.input} ref={inputRef} type="file" onChange={handleChange} />
           <Button
             text={buttonText}
             icon={isProgramUpload ? upload : editor}
             color={isProgramUpload ? 'success' : 'main'}
-            onClick={handleClick}
+            onClick={emulateInputClick}
           />
           <div className={styles.text}>{`Click “${buttonText}” to browse or drag and drop your .wasm files here`}</div>
         </div>
