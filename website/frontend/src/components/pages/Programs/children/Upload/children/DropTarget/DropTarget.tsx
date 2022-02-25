@@ -61,6 +61,9 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
       setWrongFormat(isCorrectFormat);
       if (!isCorrectFormat) {
         handleFilesUpload(files[0]);
+        // since type='file' input can't be controlled,
+        // reset it's value to trigger onChange again in case the same file selected twice
+        event.target.value = '';
       } else {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
         setWrongFormat(false);
