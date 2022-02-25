@@ -20,10 +20,10 @@ spec:
           image: ghcr.io/gear-tech/gear-js-frontend:dev
           volumeMounts:
             - name: nginx-gear-frontend
-              mountPath: "/etc/nginx/conf.d/"
+              mountPath: '/etc/nginx/conf.d/'
               readOnly: true
             - name: nginx-gear-backend
-              mountPath: "/etc/nginx/conf.d/"
+              mountPath: '/etc/nginx/conf.d/'
               readOnly: true
           ports:
             - containerPort: 80
@@ -35,6 +35,8 @@ spec:
               value: wss://rpc-node.gear-tech.io
             - name: REACT_APP_WASM_COMPILER_URL
               value: https://idea.gear-tech.io/wasm-compiler
+            - name: REACT_APP_DEFAULT_NODES_URL
+              value: http://13.56.230.75/gear-nodes
       volumes:
         - name: nginx-gear-frontend
           configMap:
@@ -53,7 +55,7 @@ metadata:
     app: frontend-nginx
 spec:
   ports:
-  - port: 80
-    name: frontend-nginx
+    - port: 80
+      name: frontend-nginx
   selector:
     app: frontend-nginx
