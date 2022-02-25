@@ -4,7 +4,7 @@ import { readMetaValue } from './utils';
 
 export async function getWasmMetadata(wasmBytes: Buffer, showDebug = false): Promise<Metadata> {
   const memory = new WebAssembly.Memory({ initial: 256 });
-  let module = await WebAssembly.instantiate(wasmBytes, importObj(memory, showDebug));
+  const module = await WebAssembly.instantiate(wasmBytes, importObj(memory, showDebug));
   const exports = module.instance.exports;
   if (!exports) {
     return {};
