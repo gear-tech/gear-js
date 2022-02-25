@@ -10,11 +10,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Meta } from '../entities/meta.entity';
-import { Program } from '../entities/program.entity';
-import { ErrorLogger, getPaginationParams, getWhere } from '../utils';
+import { getPaginationParams, getWhere } from '../utils';
+import { ProgramNotFound } from 'src/errors';
+import { Program } from 'src/entities/program.entity';
 
 const logger = new Logger('ProgramDb');
-const errorLog = new ErrorLogger('ProgramsService');
 
 @Injectable()
 export class ProgramsService {
@@ -35,19 +35,17 @@ export class ProgramsService {
     try {
       return await this.programRepo.save(program);
     } catch (error) {
-      errorLog.error(error, 29);
+      logger.error(error, error.stack);
       return;
     }
   }
 
   async addProgramInfo(id: string, genesis: string, name?: string, title?: string, meta?: Meta): Promise<IProgram> {
     const program = await this.findProgram({ id, genesis });
-    if (program) {
-      program.name = name;
-      program.title = title;
-      program.meta = meta;
-      return this.programRepo.save(program);
-    }
+    program.name = name;
+    program.title = title;
+    program.meta = meta;
+    return this.programRepo.save(program);
   }
 
   async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
@@ -90,28 +88,21 @@ export class ProgramsService {
       });
       return program;
     } catch (error) {
-      logger.error(error, error.stack, '');
-      return null;
+      throw new ProgramNotFound();
     }
   }
 
   async setStatus(id: string, genesis: string, status: InitStatus): Promise<IProgram> {
     return new Promise((resolve) => {
       setTimeout(async () => {
-        const program = await this.findProgram({ id, genesis });
-        if (program) {
+        try {
+          const program = await this.findProgram({ id, genesis });
           program.initStatus = status;
           resolve(await this.programRepo.save(program));
+        } catch (error) {
+          logger.error(error, error.stack);
         }
       }, 1000);
     });
-  }
-
-  async isInDB(id: string, genesis: string): Promise<boolean> {
-    if (await this.findProgram({ id, genesis })) {
-      return true;
-    } else {
-      return false;
-    }
   }
 }

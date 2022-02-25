@@ -51,23 +51,15 @@ const genesis = gearApi.genesisHash.toHex();
 
 ### Encode / decode payloads
 
-Encode data
+Encode and decode data
 
-```javascript
+````javascript
 import { CreateType } from '@gear-js/api';
 
 // If "TypeName" alredy registred
-const result = CreateType.encode('TypeName', somePayload);
+const result = CreateType.create('TypeName', somePayload);
 // Otherwise need to add metadata containing TypeName and all required types
-const result = CreateType.encode('TypeName', somePayload, metadata);
-```
-
-By analogy data is decoded
-
-```javascript
-const result = CreateType.decode('TypeName', someBytes);
-// or
-const result = CreateType.decode('TypeName', someBytes, metadata);
+const result = CreateType.create('TypeName', somePayload, metadata);
 ```
 
 Result of this functions is data of type `Codec` and it has the next methods
@@ -448,3 +440,4 @@ const { mnemonic, seed } = GearKeyring.generateMnemonic();
 // Getting a seed from mnemonic
 const { seed } = GearKeyring.generateSeed(mnemonic);
 ```
+````

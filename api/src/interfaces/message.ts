@@ -12,6 +12,7 @@ export declare interface Reply extends Tuple {
   0: H256;
   1: i32;
 }
+
 export declare interface Message extends Codec {
   id: H256;
   source: H256;
@@ -21,3 +22,5 @@ export declare interface Message extends Codec {
   value: u128;
   reply: Option<Reply>;
 }
+
+export declare interface QueuedMessage extends Omit<Message, 'gas_limit'> {}
