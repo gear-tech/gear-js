@@ -9,7 +9,7 @@ import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 
 import MessageIcon from 'assets/images/message.svg';
-import UploadIcon from 'assets/images/upload.svg';
+import UploadIcon from 'assets/images/upload-cloud.svg';
 
 import { UserProgram } from 'components/pages/Programs/children/UserProgram/UserProgram';
 

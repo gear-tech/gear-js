@@ -5,7 +5,7 @@ import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { useAlert } from 'react-alert';
 import { Link } from 'react-router-dom';
 import MessageIllustration from 'assets/images/message.svg';
-import UploadIcon from 'assets/images/upload.svg';
+import UploadIcon from 'assets/images/upload-cloud.svg';
 import Copy from 'assets/images/copy.svg';
 import styles from './UserProgram.module.scss';
 

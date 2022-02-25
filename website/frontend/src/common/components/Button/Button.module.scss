@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: inherit;
+  color: $textColor;
   border-radius: 2px;
 
   &:disabled {
