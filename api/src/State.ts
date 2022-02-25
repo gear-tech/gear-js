@@ -12,11 +12,7 @@ export class GearProgramState extends GearStorage {
    * @param pages - pages with program state
    * @returns decoded state
    */
-  async decodeState(metaWasm: Buffer, pages: IGearPages, meta: Metadata, encodedInput?: Uint8Array): Promise<Codec> {
-    if (!meta.meta_state_output) {
-      throw new ReadStateError(`Unable to read state. meta_state_output type is not specified in metadata`);
-    }
-    const state = await readState(metaWasm, pages, encodedInput);
+  async decodeState(state: Uint8Array, pages: IGearPages, meta: Metadata, encodedInput?: Uint8Array): Promise<Codec> {
     if (!state) {
       throw new ReadStateError(`Unable to read state. meta_state function is not specified in metadata`);
     }
@@ -48,10 +44,16 @@ export class GearProgramState extends GearStorage {
       throw new ReadStateError('Program is terminated');
     }
     const pages = await this.gPages(programId, program.persistent_pages);
-
+    if (!pages) {
+      throw new ReadStateError(`Unable to read state. Unable to recieve program pages from chain`);
+    }
     const metadata = await getWasmMetadata(metaWasm);
+    if (!metadata.meta_state_output) {
+      throw new ReadStateError(`Unable to read state. meta_state_output type is not specified in metadata`);
+    }
     const encodedInput = inputValue !== undefined ? await this.encodeInput(metadata, inputValue) : undefined;
+    const state = await readState(metaWasm, pages, encodedInput);
 
-    return await this.decodeState(metaWasm, pages, metadata, encodedInput);
+    return await this.decodeState(state, pages, metadata, encodedInput);
   }
 }
