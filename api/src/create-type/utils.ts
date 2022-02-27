@@ -1,6 +1,6 @@
 import { Registry } from '@polkadot/types/types';
 import { PortableRegistry } from '@polkadot/types/metadata';
-import { isHex, hexToU8a, isU8a } from '@polkadot/util';
+import { isHex, hexToU8a } from '@polkadot/util';
 import { TypeRegistry } from '@polkadot/types';
 import { toCamelCase } from '../utils/string';
 import { CreateTypeError } from '../errors';
