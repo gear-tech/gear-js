@@ -43,13 +43,16 @@ export class GearProgramState extends GearStorage {
     if (!program) {
       throw new ReadStateError('Program is terminated');
     }
-    const pages = await this.gPages(programId, program.persistent_pages);
+    const pages = await this.gPages(programId, program);
     if (!pages) {
       throw new ReadStateError(`Unable to read state. Unable to recieve program pages from chain`);
     }
     const metadata = await getWasmMetadata(metaWasm);
     if (!metadata.meta_state_output) {
       throw new ReadStateError(`Unable to read state. meta_state_output type is not specified in metadata`);
+    }
+    if (metadata.meta_state_input && inputValue === undefined) {
+      throw new ReadStateError(`Unable to read state. inputValue not specified`);
     }
     const encodedInput = inputValue === undefined ? undefined : await this.encodeInput(metadata, inputValue);
     const state = await readState(metaWasm, pages, encodedInput);

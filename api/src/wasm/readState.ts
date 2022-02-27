@@ -1,8 +1,9 @@
+import { IGearPages } from '..';
 import importObj from './importObj';
-import { getExportValue } from './utils';
+import { getExportValue, getInitialLength } from './utils';
 
-export async function readState(wasmBytes: Buffer, pages: any, inputValue?: Uint8Array): Promise<Uint8Array> {
-  const memory = new WebAssembly.Memory({ initial: Object.keys(pages).length });
+export async function readState(wasmBytes: Buffer, pages: IGearPages, inputValue?: Uint8Array): Promise<Uint8Array> {
+  const memory = new WebAssembly.Memory({ initial: getInitialLength(pages) });
   const module = await WebAssembly.instantiate(wasmBytes, importObj(memory, false, inputValue));
   Object.keys(pages).forEach((pageNumber: string) => {
     const start = +pageNumber * 65536;

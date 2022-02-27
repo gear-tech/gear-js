@@ -1,3 +1,5 @@
+import { IGearPages } from '..';
+
 export function readMetaValue(memory: WebAssembly.Memory, func: any): string {
   return ab2str(getExportValue(memory, func));
 }
@@ -15,4 +17,18 @@ export function getExportValue(memory: WebAssembly.Memory, func: any): ArrayBuff
 
 export function ab2str(buf: ArrayBuffer): string {
   return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
+
+export function getInitialLength(pages: IGearPages) {
+  return (
+    parseInt(
+      Object.keys(pages).reduce((prev, cur) => {
+        console.log({ prev, cur });
+        if (parseInt(cur) > parseInt(prev)) {
+          return cur;
+        }
+        return prev;
+      }),
+    ) + 1
+  );
 }
