@@ -23,7 +23,6 @@ export function getInitialLength(pages: IGearPages) {
   return (
     parseInt(
       Object.keys(pages).reduce((prev, cur) => {
-        console.log({ prev, cur });
         if (parseInt(cur) > parseInt(prev)) {
           return cur;
         }
@@ -32,3 +31,5 @@ export function getInitialLength(pages: IGearPages) {
     ) + 1
   );
 }
+
+export const PAGE_SIZE = 65536;
