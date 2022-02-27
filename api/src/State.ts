@@ -1,6 +1,6 @@
 import { CreateType } from './create-type';
 import { getWasmMetadata, readState } from './wasm';
-import { IGearPages, Metadata, ProgramId } from './interfaces';
+import { Metadata, ProgramId } from './interfaces';
 import { Codec } from '@polkadot/types/types';
 import { ReadStateError } from './errors/state.errors';
 import { GearStorage } from './Storage';
@@ -12,7 +12,7 @@ export class GearProgramState extends GearStorage {
    * @param pages - pages with program state
    * @returns decoded state
    */
-  async decodeState(state: Uint8Array, meta: Metadata): Promise<Codec> {
+  decodeState(state: Uint8Array, meta: Metadata): Codec {
     if (!state) {
       throw new ReadStateError(`Unable to read state. meta_state function is not specified in metadata`);
     }
@@ -27,7 +27,7 @@ export class GearProgramState extends GearStorage {
    * @param inputValue - input parameters
    * @returns ArrayBuffer with encoded data
    */
-  async encodeInput(meta: Metadata, inputValue: any): Promise<Uint8Array> {
+  encodeInput(meta: Metadata, inputValue: any): Uint8Array {
     const encoded = CreateType.create(meta.meta_state_input, inputValue, meta);
     return encoded.toU8a();
   }
@@ -54,9 +54,9 @@ export class GearProgramState extends GearStorage {
     if (metadata.meta_state_input && inputValue === undefined) {
       throw new ReadStateError(`Unable to read state. inputValue not specified`);
     }
-    const encodedInput = inputValue === undefined ? undefined : await this.encodeInput(metadata, inputValue);
+    const encodedInput = inputValue === undefined ? undefined : this.encodeInput(metadata, inputValue);
     const state = await readState(metaWasm, pages, encodedInput);
 
-    return await this.decodeState(state, metadata);
+    return this.decodeState(state, metadata);
   }
 }
