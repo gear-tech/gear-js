@@ -20,10 +20,7 @@ export class CreateType {
       return null;
     }
     if (isHex(types) || isU8a(types)) {
-      const { typesFromTypeDef, namespaces } = getTypesFromTypeDef(
-        isHex(types) ? hexToU8a(types) : types,
-        this.registry,
-      );
+      const { typesFromTypeDef, namespaces } = getTypesFromTypeDef(types, this.registry);
       types = typesFromTypeDef;
       this.namespaces = namespaces;
     }

@@ -49,7 +49,7 @@ export function getTypesFromTypeDef(
   }
   const typesFromTypeDef = {};
   const namespaces = new Map<string, string>();
-  const portableReg = new PortableRegistry(registry, isHex(types) ? hexToU8a(types) : types);
+  const portableReg = new PortableRegistry(registry, isHex(types) ? hexToU8a(types) : types, true);
   portableReg.types.forEach(({ id, type: { path } }) => {
     const typeDef = portableReg.getTypeDef(id);
     if (path.length === 0 || (!typeDef.lookupName && !typeDef.lookupNameRoot)) {
