@@ -1,6 +1,6 @@
 import { Registry } from '@polkadot/types/types';
 import { PortableRegistry } from '@polkadot/types/metadata';
-import { isHex, hexToU8a, isU8a } from '@polkadot/util';
+import { isHex, hexToU8a } from '@polkadot/util';
 import { TypeRegistry } from '@polkadot/types';
 import { toCamelCase } from '../utils/string';
 import { CreateTypeError } from '../errors';
@@ -49,7 +49,7 @@ export function getTypesFromTypeDef(
   }
   const typesFromTypeDef = {};
   const namespaces = new Map<string, string>();
-  const portableReg = new PortableRegistry(registry, isHex(types) ? hexToU8a(types) : types);
+  const portableReg = new PortableRegistry(registry, isHex(types) ? hexToU8a(types) : types, true);
   portableReg.types.forEach(({ id, type: { path } }) => {
     const typeDef = portableReg.getTypeDef(id);
     if (path.length === 0 || (!typeDef.lookupName && !typeDef.lookupNameRoot)) {

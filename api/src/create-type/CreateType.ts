@@ -1,7 +1,7 @@
 import { GearApi } from '../GearApi';
 import { Metadata } from '../interfaces';
 import { toJSON, isJSON } from '../utils/json';
-import { isHex, hexToU8a, isU8a } from '@polkadot/util';
+import { isHex, isU8a } from '@polkadot/util';
 import { Registry, Codec } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
 import { checkTypeAndPayload, getTypesFromTypeDef, setNamespaces, typeIsString } from './utils';
@@ -20,10 +20,7 @@ export class CreateType {
       return null;
     }
     if (isHex(types) || isU8a(types)) {
-      const { typesFromTypeDef, namespaces } = getTypesFromTypeDef(
-        isHex(types) ? hexToU8a(types) : types,
-        this.registry,
-      );
+      const { typesFromTypeDef, namespaces } = getTypesFromTypeDef(types, this.registry);
       types = typesFromTypeDef;
       this.namespaces = namespaces;
     }
