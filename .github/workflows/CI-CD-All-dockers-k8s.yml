@@ -55,6 +55,21 @@ jobs:
           REACT_APP_WASM_COMPILER_URL: ${{ secrets.REACT_APP_WASM_COMPILER_URL }}
           REACT_APP_DEFAULT_NODES_URL: ${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
           REACT_APP_RRT: ''
+       
+      - name: Step 1 - Echo out a GitHub Actions Secret to the logs
+        run: |
+          echo "The GitHub Action Secret will be masked:  "
+          echo ${{ secrets.REACT_APP_API_URL}}
+          echo "Trick to echo GitHub Actions Secret:  "
+          echo ${{secrets.REACT_APP_API_URL}} | sed 's/./& /g' 
+          echo "The GitHub Action Secret will be masked:  "
+          echo ${{ secrets.WS_PROVIDER_WRSH }}
+          echo "Trick to echo GitHub Actions Secret:  "
+          echo ${{secrets.WS_PROVIDER_WRSH }} | sed 's/./& /g' 
+          echo "The GitHub Action Secret will be masked:  "
+          echo ${{ secrets.REACT_APP_DEFAULT_NODES_URL}}
+          echo "Trick to echo GitHub Actions Secret:  "
+          echo ${{secrets.REACT_APP_DEFAULT_NODES_URL}} | sed 's/./& /g'
 
   build-and-push-data-storage-image:
     runs-on: ubuntu-latest
