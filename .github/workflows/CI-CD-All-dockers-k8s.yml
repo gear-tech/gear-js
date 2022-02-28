@@ -49,12 +49,11 @@ jobs:
           context: website/frontend
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:dev
-        env:
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          REACT_APP_NODE_ADDRESS: ${{ secrets.WS_PROVIDER_WRSH }}
-          REACT_APP_WASM_COMPILER_URL: ${{ secrets.REACT_APP_WASM_COMPILER_URL }}
-          REACT_APP_DEFAULT_NODES_URL: ${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
-          REACT_APP_RRT: ''
+          build-args: |
+            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
+            REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
+            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
        
   build-and-push-data-storage-image:
     runs-on: ubuntu-latest
