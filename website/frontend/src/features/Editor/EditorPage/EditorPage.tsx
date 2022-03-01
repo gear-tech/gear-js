@@ -3,13 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import get from 'lodash.get';
 
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, LOCAL_STORAGE } from 'consts';
-import { routes } from 'routes';
 import { RootState } from 'store/reducers';
 
 import { setIsBuildDone, AddAlert } from 'store/actions/actions';
@@ -27,12 +26,12 @@ import { SimpleExample } from '../../../fixtures/code';
 
 export const EditorPage = () => {
   const globalDispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { isBuildDone } = useSelector((state: RootState) => state.compiler);
 
   const [state, dispatch] = useReducer(reducer, { tree: null });
   const [currentFile, setCurrentFile] = useState<string[] | null>(null);
-  const [isCodeEdited, setIsCodeEdited] = useState(false);
   const [programName, setProgramName] = useState('');
   const [isProgramNameError, setIsProgramNameError] = useState(false);
 
@@ -123,7 +122,7 @@ export const EditorPage = () => {
   }
 
   function handleClose() {
-    setIsCodeEdited(true);
+    navigate(-1);
   }
 
   function onNodeClick(node: EditorItem) {
@@ -176,10 +175,6 @@ export const EditorPage = () => {
     }
 
     return lang;
-  }
-
-  if (isCodeEdited) {
-    return <Navigate to={{ pathname: routes.main }} />;
   }
 
   // @ts-ignore
