@@ -8,12 +8,8 @@ import { Events } from './children/Events/Events';
 import { Block } from './children/Block/Block';
 import styles from './Explorer.module.scss';
 
-type Params = {
-  blockId: string | undefined;
-};
-
 const Explorer = ({ events }: IdeaEventsProps) => {
-  const { blockId }: Params = useParams();
+  const { blockId } = useParams();
 
   return (
     <div className={styles.explorer}>

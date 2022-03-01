@@ -1,11 +1,11 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { isHex } from 'helpers';
 import { DIGITS_REGEX } from 'regexes';
 import styles from './Search.module.scss';
 
 const Search = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
   const isNumeric = DIGITS_REGEX.test(searchQuery);
@@ -17,8 +17,10 @@ const Search = () => {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+
     const path = `/explorer/${searchQuery}`;
-    history.push(path);
+
+    navigate(path);
     setSearchQuery('');
   };
 

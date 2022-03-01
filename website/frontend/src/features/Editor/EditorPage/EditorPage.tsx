@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import clsx from 'clsx';
 import get from 'lodash.get';
 
@@ -179,13 +179,7 @@ export const EditorPage = () => {
   }
 
   if (isCodeEdited) {
-    return (
-      <Redirect
-        to={{
-          pathname: routes.main,
-        }}
-      />
-    );
+    return <Navigate to={{ pathname: routes.main }} />;
   }
 
   // @ts-ignore
