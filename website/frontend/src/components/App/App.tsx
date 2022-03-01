@@ -48,6 +48,9 @@ const options = {
   },
 };
 
+const mainRoutes = [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages];
+const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
+
 const AppComponent: FC = () => {
   globalStyles();
   useBlocks();
@@ -95,6 +98,10 @@ const AppComponent: FC = () => {
     return locationPath === privacyPath || locationPath === termsOfUsePath;
   };
 
+  // we'll get rid of multiple paths in one route anyway, so temp solution
+  const getMultipleRoutes = (paths: string[], element: JSX.Element) =>
+    paths.map((path) => <Route key={path} path={path} element={element} />);
+
   return (
     <AlertProvider template={AlertTemplate} {...options}>
       <div className="app">
@@ -108,17 +115,20 @@ const AppComponent: FC = () => {
         <Main>
           {isApiReady ? (
             <Routes>
-              <Route
-                path={routes.main || routes.uploadedPrograms || routes.allPrograms || routes.messages}
-                element={<Programs />}
-              />
+              {getMultipleRoutes(mainRoutes, <Programs />)}
+              {getMultipleRoutes(utilRoutes, <Document />)}
+
+              {/* temp solution since in react-router v6 optional parameters are gone */}
+              <Route path={routes.explorer}>
+                <Route path="" element={<Explorer events={events} />} />
+                <Route path=":blockId" element={<Explorer events={events} />} />
+              </Route>
+
               <Route path={routes.program} element={<Program />} />
-              <Route path={routes.explorer} element={<Explorer events={events} />} />
               <Route path={routes.message} element={<Message />} />
               <Route path={routes.state} element={<State />} />
               <Route path={routes.sendMessage} element={<SendMessage />} />
               <Route path={routes.editor} element={<EditorPage />} />
-              <Route path={routes.privacyPolicy || routes.termsOfUse} element={<Document />} />
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           ) : (
