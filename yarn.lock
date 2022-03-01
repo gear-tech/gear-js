@@ -2018,7 +2018,6 @@ __metadata:
     redux-thunk: ^2.4.1
     reselect: ^4.1.5
     sass: ^1.49.9
-    scss: ^0.2.4
     stream-browserify: ^3.0.0
     tua-body-scroll-lock: ^1.2.1
     typescript: ^4.6.2
@@ -13243,13 +13242,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ometa@npm:0.2.2":
-  version: 0.2.2
-  resolution: "ometa@npm:0.2.2"
-  checksum: 363aaba90c25fdc9e58617ce81c775235e361576312b5dd1d1cc430661e40ec05baf446ff42a14463b78357eb2255c5028ec48a3992888c6ddb631179be0e323
-  languageName: node
-  linkType: hard
-
 "on-finished@npm:^2.3.0":
   version: 2.4.1
   resolution: "on-finished@npm:2.4.1"
@@ -16093,15 +16085,6 @@ __metadata:
     ajv-formats: ^2.1.1
     ajv-keywords: ^5.0.0
   checksum: c843e92fdd1a5c145dbb6ffdae33e501867f9703afac67bdf35a685e49f85b1dcc10ea250033175a64bd9d31f0555bc6785b8359da0c90bcea30cf6dfbb55a8f
-  languageName: node
-  linkType: hard
-
-"scss@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "scss@npm:0.2.4"
-  dependencies:
-    ometa: 0.2.2
-  checksum: e2223e8982b1a6a9fd4fd87b721de6fca31c596845dc809099a1bb976faa0070d08e14b15637c348d40e30be8572d791763c744db3841892b5b0d12648a734f2
   languageName: node
   linkType: hard
 
