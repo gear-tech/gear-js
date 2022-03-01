@@ -14,7 +14,6 @@ import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
 import { SendMessage } from 'components/pages/SendMessage/SendMessage';
 import { EditorPage } from 'features/Editor/EditorPage';
-import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
 import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
 
@@ -132,9 +131,6 @@ const AppComponent: FC = () => {
               </Route>
               <Route exact path={routes.editor}>
                 <EditorPage />
-              </Route>
-              <Route exact path={routes.notifications}>
-                <NotificationsPage />
               </Route>
               <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
                 <Document />

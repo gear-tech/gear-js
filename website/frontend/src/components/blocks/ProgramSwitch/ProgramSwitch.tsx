@@ -1,6 +1,6 @@
 import React, { useState, VFC } from 'react';
 import clsx from 'clsx';
-import { Link /* , Redirect */ } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { AddAlert } from 'store/actions/actions';
@@ -12,8 +12,6 @@ import { RootState } from 'store/reducers';
 import { useApi } from '../../../hooks/useApi';
 import { isDevChain } from 'helpers';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
-// import { DropdownMenu } from 'components/blocks/DropdownMenu/DropdownMenu';
-// import Editor from 'assets/images/editor_icon.svg';
 
 type Props = {
   pageType: string;
@@ -24,16 +22,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const apiRequest = new ServerRPCRequestService();
-
-  // const [chosenTemplateId, setChosenTemplateId] = useState<number>(-1);
-
   const [gasCallCounter, setGasCallCounter] = useState(0);
-
-  // const handleEditorDropdown = () => {
-  //   if (!isEditorDropdownOpened) {
-  //     setIsEditorDropdownOpened(true);
-  //   }
-  // };
 
   const handleTransferBalance = async () => {
     try {
@@ -69,20 +58,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
     }
   };
-
-  // const handleTemplate = (index: number) => {
-  //   setChosenTemplateId(index);
-  // };
-
-  // if (chosenTemplateId > -1) {
-  //   return (
-  //     <Redirect
-  //       to={{
-  //         pathname: routes.editor,
-  //       }}
-  //     />
-  //   );
-  // }
 
   return (
     <div className="switch-block">
@@ -125,19 +100,6 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
             Messages
           </Link>
         </div>
-        {/* <div className="switch-block--editor">
-          <button
-            className={clsx('switch-block--editor__btn', isEditorDropdownOpened && 'is-active')}
-            type="button"
-            onClick={handleEditorDropdown}
-          >
-            <img src={Editor} alt="editor-icon" />
-            Write code
-          </button>
-          {isEditorDropdownOpened && (
-            <DropdownMenu dropdownMenuRef={dropdownMenuRef} handleDropdownBtnClick={handleTemplate} />
-          )}
-        </div> */}
         <div className="switch-block--transfer">
           {gasCallCounter <= 3 ? (
             <button

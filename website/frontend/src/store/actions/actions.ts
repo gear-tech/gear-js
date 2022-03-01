@@ -1,12 +1,10 @@
 import { CreateType, GearKeyring } from '@gear-js/api';
 import { MessageActionTypes, MessagePaginationModel, MessageModel } from 'types/message';
-import { NotificationActionTypes, NotificationPaginationModel, RecentNotificationModel } from 'types/notification';
 import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
 import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
 import MessageRequestService from 'services/MessagesRequestServices';
 import { programService } from 'services/ProgramsRequestService';
-import NotificationsRequestService from 'services/NotificationsRequestService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
@@ -87,35 +85,6 @@ const uploadMetaFailedAction = (payload: string) => ({ type: ProgramActionTypes.
 
 export const programStatusAction = (payload: string) => ({ type: ProgramActionTypes.PROGRAM_STATUS, payload });
 
-const fetchNotificationsCountAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS_COUNT });
-const fetchNotificationsCountSuccessAction = (payload: number) => ({
-  type: NotificationActionTypes.FETCH_NOTIFICATIONS_COUNT_SUCCESS,
-  payload,
-});
-const fetchNotificationsCountErrorAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS_COUNT_ERROR });
-
-const fetchNotificationsAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS });
-const fetchNotificationsSuccessAction = (payload: NotificationPaginationModel) => ({
-  type: NotificationActionTypes.FETCH_NOTIFICATIONS_SUCCESS,
-  payload,
-});
-const fetchNotificationsErrorAction = () => ({ type: NotificationActionTypes.FETCH_NOTIFICATIONS_ERROR });
-
-export const fetchRecentNotificationSuccessAction = (payload: RecentNotificationModel) => ({
-  type: NotificationActionTypes.FETCH_RECENT_NOTIFICATION,
-  payload,
-});
-
-export const markRecentNotificationsAsReadAction = (payload: string) => ({
-  type: NotificationActionTypes.MARK_AS_READ_RECENT,
-  payload,
-});
-export const markAllRecentNotificationsAsReadAction = () => ({ type: NotificationActionTypes.MARK_AS_READ_ALL_RECENT });
-export const markCertainRecentNotificationsAsReadAction = (payload: string[]) => ({
-  type: NotificationActionTypes.MARK_AS_READ_CERTAIN_RECENT,
-  payload,
-});
-
 export const fetchGasAction = (payload: number) => ({ type: ProgramActionTypes.FETCH_GAS, payload });
 export const resetGasAction = () => ({ type: ProgramActionTypes.RESET_GAS });
 
@@ -128,7 +97,6 @@ export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActio
 export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
 const messageService = new MessageRequestService();
-const notificationService = new NotificationsRequestService();
 
 export const getMessagesAction = (params: PaginationModel) => (dispatch: any) => {
   dispatch(fetchMessagesAction());
@@ -203,26 +171,6 @@ export const handleProgramSuccess = () => (dispatch: any, getState: any) => {
   } else if (programs.isMetaUploading) {
     dispatch(uploadMetaSuccessAction());
   }
-};
-
-export const getNotificationsAction = (params: PaginationModel) => (dispatch: any) => {
-  dispatch(fetchNotificationsAction());
-  notificationService
-    .fetchAllNotifications(params)
-    .then((data) => {
-      dispatch(fetchNotificationsSuccessAction(data.result));
-    })
-    .catch(() => dispatch(fetchNotificationsErrorAction()));
-};
-
-export const getUnreadNotificationsCount = () => (dispatch: any) => {
-  dispatch(fetchNotificationsCountAction());
-  notificationService
-    .fetchUnreadNotificationsCount()
-    .then((data) => {
-      dispatch(fetchNotificationsCountSuccessAction(data.result));
-    })
-    .catch(() => dispatch(fetchNotificationsCountErrorAction()));
 };
 
 export const AddAlert = (payload: AlertModel) => ({
