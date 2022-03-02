@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { CreateType } from '@gear-js/api';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
@@ -13,12 +13,11 @@ import { Hint } from 'components/blocks/Hint/Hint';
 import { getPreformattedText } from 'helpers';
 import './Message.scss';
 
-type Params = { id: string };
-
 export const Message: FC = () => {
-  const routeParams = useParams<Params>();
-  const messageId = routeParams.id;
-  const history = useHistory();
+  const routeParams = useParams();
+  const messageId = routeParams.id as string;
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { message } = useSelector((state: RootState) => state.messages);
@@ -69,7 +68,7 @@ export const Message: FC = () => {
   }, [program, message]);
 
   const handleGoBack = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   const renderError = (error: string | null) => {

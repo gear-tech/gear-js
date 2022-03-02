@@ -11,5 +11,5 @@ export const routes = {
   message: '/message/:id',
   state: '/state/:id',
   sendMessage: '/send-message/:id',
-  explorer: '/explorer/:blockId?',
+  explorer: '/explorer',
 };

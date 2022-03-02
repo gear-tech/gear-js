@@ -1,5 +1,5 @@
 import React, { VFC } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { routes } from 'routes';
@@ -13,9 +13,9 @@ import { Recent } from './children/Recent/Recent';
 import './Programs.scss';
 
 export const Programs: VFC = () => {
-  const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);
-  const isAllProgramsPage = useRouteMatch(routes.allPrograms);
-  const isAllMessagesPage = useRouteMatch(routes.messages);
+  const isUploadedProgramsPage = useMatch(routes.uploadedPrograms);
+  const isAllProgramsPage = useMatch(routes.allPrograms);
+  const isAllMessagesPage = useMatch(routes.messages);
   let currentPage = SWITCH_PAGE_TYPES.UPLOAD_PROGRAM;
 
   if (isUploadedProgramsPage) {

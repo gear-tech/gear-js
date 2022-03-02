@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import refresh from 'assets/images/refresh2.svg';
 import cross from 'assets/images/close.svg';
 import { nodeApi } from 'api/initApi';
@@ -13,14 +13,12 @@ type Props = {
 };
 
 const Header = ({ closeSidebar, selectedNode }: Props) => {
-  const { search } = useLocation();
-  const history = useHistory();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const removeNodeFromUrl = () => {
-    const searchParams = new URLSearchParams(search);
     searchParams.delete(NODE_ADRESS_URL_PARAM);
     // push instead of replace to preserve previous node param history
-    history.push({ search: searchParams.toString() });
+    setSearchParams(searchParams);
   };
 
   const switchNode = () => {
