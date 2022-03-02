@@ -1,6 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
 import { RPCResponseError } from 'services/ServerRPCRequestService';
@@ -20,9 +20,9 @@ type Params = { id: string };
 
 export const ReplyMessage: VFC = () => {
   const dispatch = useDispatch();
-  const routeHistory = useHistory();
+  const navigate = useNavigate();
   const routeParams = useParams<Params>();
-  const messageId = routeParams.id;
+  const messageId = routeParams.id as string;
 
   const [meta, setMeta] = useState<Metadata>();
   const [types, setTypes] = useState<MetaParam | null>(null);
@@ -56,7 +56,7 @@ export const ReplyMessage: VFC = () => {
   }, [meta, setTypes]);
 
   const handleBackButtonClick = () => {
-    routeHistory.goBack();
+    navigate(-1);
   };
 
   return ready && message ? (
