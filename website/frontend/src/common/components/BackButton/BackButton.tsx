@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import arrow from 'assets/images/arrow_back.svg';
 import { Button } from '../Button/Button';
 import { Props } from '../Button/types';
@@ -7,10 +7,10 @@ import { Props } from '../Button/types';
 type OmittedProps = 'text' | 'icon' | 'color' | 'size' | 'onClick';
 
 const BackButton = (props: Omit<Props, OmittedProps>) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   return <Button icon={arrow} onClick={handleClick} {...props} />;

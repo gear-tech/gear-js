@@ -1,4 +1,4 @@
-@import '../../../assets/scss/variables.scss';
+@use 'assets/scss/variables' as *;
 
 .uploadForm {
   display: flex;

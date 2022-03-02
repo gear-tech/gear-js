@@ -1,5 +1,5 @@
 import React, { VFC, useEffect, useState } from 'react';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { getWasmMetadata, Metadata } from '@gear-js/api';
@@ -13,17 +13,14 @@ import MessageIcon from 'assets/images/message.svg';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
 import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
-
 import styles from './Program.module.scss';
-
-type Params = { id: string };
 
 export const Program: VFC = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const params = useParams<Params>();
+  const navigate = useNavigate();
 
-  const id = params.id;
+  const params = useParams();
+  const id = params.id as string;
 
   const { program } = useSelector((state: RootState) => state.programs);
   const { messages } = useSelector((state: RootState) => state.messages);
@@ -61,7 +58,7 @@ export const Program: VFC = () => {
   }, [program]);
 
   const handleGoBack = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   return program ? (

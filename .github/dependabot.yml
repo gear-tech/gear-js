@@ -7,43 +7,35 @@ updates:
       - api
     schedule:
       interval: 'daily'
+    pull-request-branch-name:
+      separator: '-'
+    reviewers:
+      - 'osipov-mit'
 
   - package-ecosystem: 'npm'
-    directory: '/website/frontend'
+    directory: '/utils/meta-cli'
     labels:
       - dependency
-      - frontend
+      - gear-meta
     schedule:
       interval: 'weekly'
+    pull-request-branch-name:
+      separator: '-'
+    reviewers:
+      - 'osipov-mit'
 
   - package-ecosystem: 'npm'
-    directory: '/website/events-listener'
+    directory: '/'
     labels:
       - dependency
-      - backend
+      - website
     schedule:
       interval: 'weekly'
-
-  - package-ecosystem: 'npm'
-    directory: '/website/data-storage'
-    labels:
-      - dependency
-      - backend
-    schedule:
-      interval: 'weekly'
-
-  - package-ecosystem: 'npm'
-    directory: '/website/api-gateway'
-    labels:
-      - dependency
-      - backend
-    schedule:
-      interval: 'weekly'
-
-  - package-ecosystem: 'npm'
-    directory: '/website/test-balance'
-    labels:
-      - dependency
-      - backend
-    schedule:
-      interval: 'weekly'
+    open-pull-requests-limit: 10
+    pull-request-branch-name:
+      separator: '-'
+    reviewers:
+      - 'osipov-mit'
+      - 'aderrod94'
+      - 'codev0'
+      - 'nikitayutanov'

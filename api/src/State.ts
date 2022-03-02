@@ -1,6 +1,6 @@
 import { CreateType } from './create-type';
-import { getWasmMetadata } from './WasmMeta';
-import { IGearPages, ProgramId } from './interfaces';
+import { getWasmMetadata, readState } from './wasm';
+import { Metadata, ProgramId } from './interfaces';
 import { Codec } from '@polkadot/types/types';
 import { ReadStateError } from './errors/state.errors';
 import { GearStorage } from './Storage';
@@ -12,15 +12,12 @@ export class GearProgramState extends GearStorage {
    * @param pages - pages with program state
    * @returns decoded state
    */
-  async decodeState(metaWasm: Buffer, pages: IGearPages, encodedInput?: Uint8Array): Promise<Codec> {
-    const meta = await getWasmMetadata(metaWasm, true, pages, encodedInput);
-    if (!meta.meta_state_output) {
-      throw new ReadStateError(`Can't read state. meta_state_output type is not specified in metadata`);
-    } else if (!meta.meta_state) {
-      throw new ReadStateError(`Can't read state. meta_state function is not specified in metadata`);
+  decodeState(state: Uint8Array, meta: Metadata): Codec {
+    if (!state) {
+      throw new ReadStateError(`Unable to read state. meta_state function is not specified in metadata`);
     }
-    const bytes = this.api.createType('Bytes', Array.from(meta.meta_state));
-    const decoded = CreateType.decode(meta.meta_state_output, bytes, meta);
+    const bytes = this.api.createType('Bytes', Array.from(state));
+    const decoded = CreateType.create(meta.meta_state_output, bytes, meta);
     return decoded;
   }
 
@@ -30,9 +27,8 @@ export class GearProgramState extends GearStorage {
    * @param inputValue - input parameters
    * @returns ArrayBuffer with encoded data
    */
-  async encodeInput(metaWasm: Buffer, inputValue: any): Promise<Uint8Array> {
-    const meta = await getWasmMetadata(metaWasm);
-    const encoded = CreateType.encode(meta.meta_state_input, inputValue, meta);
+  encodeInput(meta: Metadata, inputValue: any): Uint8Array {
+    const encoded = CreateType.create(meta.meta_state_input, inputValue, meta);
     return encoded.toU8a();
   }
 
@@ -47,10 +43,20 @@ export class GearProgramState extends GearStorage {
     if (!program) {
       throw new ReadStateError('Program is terminated');
     }
-    const pages = await this.gPages(programId, program.persistent_pages);
+    const pages = await this.gPages(programId, program);
+    if (!pages) {
+      throw new ReadStateError(`Unable to read state. Unable to recieve program pages from chain`);
+    }
+    const metadata = await getWasmMetadata(metaWasm);
+    if (!metadata.meta_state_output) {
+      throw new ReadStateError(`Unable to read state. meta_state_output type is not specified in metadata`);
+    }
+    if (metadata.meta_state_input && inputValue === undefined) {
+      throw new ReadStateError(`Unable to read state. inputValue not specified`);
+    }
+    const encodedInput = inputValue === undefined ? undefined : this.encodeInput(metadata, inputValue);
+    const state = await readState(metaWasm, pages, encodedInput);
 
-    const encodedInput = inputValue !== undefined ? await this.encodeInput(metaWasm, inputValue) : undefined;
-
-    return await this.decodeState(metaWasm, pages, encodedInput);
+    return this.decodeState(state, metadata);
   }
 }

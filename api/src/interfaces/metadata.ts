@@ -11,5 +11,4 @@ export interface Metadata {
   types?: string;
   meta_state_input?: string;
   meta_state_output?: string;
-  meta_state?: Uint8Array;
 }

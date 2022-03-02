@@ -1,4 +1,4 @@
-import React, { useState, VFC } from 'react';
+import React, { Dispatch, SetStateAction, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
@@ -25,10 +25,11 @@ import { UploadProgram } from 'services/ApiService';
 import { readFileAsync, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
+import { DroppedFile } from '../../types';
 import styles from './UploadForm.module.scss';
 
 type Props = {
-  setDroppedFile: (file: File | null) => void;
+  setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
   droppedFile: File;
 };
 

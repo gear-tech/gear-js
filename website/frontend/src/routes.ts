@@ -6,7 +6,6 @@ export const routes = {
   termsOfUse: '/terms-of-use',
   editor: '/editor',
   allPrograms: '/all-programs',
-  notifications: '/notifications',
   program: '/program/:id',
   messages: '/messages',
   message: '/message/:id',
@@ -14,5 +13,5 @@ export const routes = {
   sendMessage: '/send-message/:id',
   replyMessage: '/reply-message/:id',
   mailbox: '/mailbox',
-  explorer: '/explorer/:blockId?',
+  explorer: '/explorer',
 };

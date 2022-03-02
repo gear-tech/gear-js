@@ -53,7 +53,7 @@ const genesis = gearApi.genesisHash.toHex();
 
 Encode and decode data
 
-````javascript
+```javascript
 import { CreateType } from '@gear-js/api';
 
 // If "TypeName" alredy registred
@@ -440,4 +440,7 @@ const { mnemonic, seed } = GearKeyring.generateMnemonic();
 // Getting a seed from mnemonic
 const { seed } = GearKeyring.generateSeed(mnemonic);
 ```
-````
+
+```
+
+```

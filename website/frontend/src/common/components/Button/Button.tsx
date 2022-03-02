@@ -12,7 +12,7 @@ const Button = ({ text, icon, className, color, size, ...attrs }: Props) => {
     className,
     styles[colorName],
     styles[sizeName],
-    icon && color && styles.singleIcon
+    icon && color && !text && styles.singleIcon
   );
 
   return (
