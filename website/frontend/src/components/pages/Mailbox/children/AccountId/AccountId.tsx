@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { useMailBoxContext } from '../../context/context';
 import { LOCAL_STORAGE } from 'consts';
@@ -10,7 +10,7 @@ import styles from './AccountId.module.scss';
 
 export const AccountId: FC = () => {
   const [api] = useApi();
-  const { state, dispatch } = useMailBoxContext();
+  const { dispatch } = useMailBoxContext();
 
   const initialValues = {
     publicKey: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),

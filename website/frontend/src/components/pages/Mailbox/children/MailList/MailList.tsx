@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useApi } from 'hooks/useApi';
 import { Hex } from '@gear-js/api';
 import { Spinner } from 'components/blocks/Spinner/Spinner';

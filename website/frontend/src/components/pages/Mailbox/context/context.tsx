@@ -7,8 +7,6 @@ const MailBoxContext = createContext<{ state: State; dispatch: Dispatch } | unde
 const MailBoxContextProvider = (props: any) => {
   const [state, dispatch] = useReducer(reducer, { mails: [] });
 
-  const value = { state, dispatch };
-
   return <MailBoxContext.Provider value={{ state, dispatch }}>{props.children}</MailBoxContext.Provider>;
 };
 
