@@ -24,6 +24,8 @@ import { EditorTree } from '../EditorTree';
 import { addParentToNode } from '../EditorTree/utils';
 import { SimpleExample } from '../../../fixtures/code';
 
+import './styles.scss';
+
 export const EditorPage = () => {
   const globalDispatch = useDispatch();
   const navigate = useNavigate();
