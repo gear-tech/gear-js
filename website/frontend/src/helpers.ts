@@ -187,7 +187,7 @@ export const calculateGas = async (
     );
 
     dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
-    setFieldValue('gasLimit', estimatedGas.toHuman());
+    setFieldValue('gasLimit', estimatedGas.toNumber());
   } catch (error) {
     dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
   }

@@ -122,7 +122,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     if (currentAccount) {
       if (isMetaFromFile) {
         const pl = isManualPayload ? values.payload : values.fields;
-        const updatedValues = { ...values, payload: pl };
+        const updatedValues = { ...values, initPayload: pl };
 
         UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
           setDroppedFile(null);
