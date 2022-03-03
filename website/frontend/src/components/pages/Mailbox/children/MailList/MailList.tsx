@@ -1,7 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { useApi } from 'hooks/useApi';
 import { Hex } from '@gear-js/api';
-import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { useMailBoxContext } from '../../context/context';
 import { MailItem } from './children/MailItem/MailItem';
 import { getMails } from '../../helpers';
