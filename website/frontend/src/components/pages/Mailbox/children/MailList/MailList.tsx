@@ -30,7 +30,7 @@ export const MailList: FC = () => {
           })}
         </div>
       ) : (
-        <Spinner />
+        <p className={styles.empty}>No messages</p>
       )}
     </div>
   );
