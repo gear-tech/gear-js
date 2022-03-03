@@ -31,6 +31,8 @@ export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, han
       } else {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
       }
+
+      event.target.value = '';
     }
   };
 
