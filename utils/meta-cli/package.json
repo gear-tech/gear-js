@@ -33,6 +33,6 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "devDependencies": {
-    "jest": "^27.4.7"
+    "jest": "27.5.1"
   }
 }
