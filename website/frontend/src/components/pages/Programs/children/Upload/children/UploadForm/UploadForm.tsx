@@ -64,7 +64,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       if (metaWasm) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
         const types = parseHexTypes(metaWasm?.types);
-        const typeStructure = getTypeStructure(metaWasm?.init_input || metaWasm?.handle_input, types);
+        const typeStructure = getTypeStructure(metaWasm?.init_input, types);
         const parsedStructure = parseMeta(typeStructure);
 
         let valuesFromFile = {};
@@ -122,7 +122,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     if (currentAccount) {
       if (isMetaFromFile) {
         const pl = isManualPayload ? values.payload : values.fields;
-        const updatedValues = { ...values, payload: pl };
+        const updatedValues = { ...values, initPayload: pl };
 
         UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
           setDroppedFile(null);

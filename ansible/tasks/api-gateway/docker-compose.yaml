@@ -5,7 +5,7 @@ services:
     restart: always
     ports:
       - 3000:3000
-    image: mithriy/gear-api-gateway:nightly
+    image: ghcr.io/gear-tech/gear-js-api-gateway:dev
     environment:
       KAFKA_GROUP_ID: ${KAFKA_GROUP_ID}
       KAFKA_CLIENT_ID: ${KAFKA_CLIENT_ID}
