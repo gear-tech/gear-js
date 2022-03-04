@@ -3,6 +3,7 @@
   "labels": ["dependencies"],
   "branchPrefix": "renovate-",
   "ignorePaths": ["ansible/**", ".github/**"],
+  "assignAutomerge": true,
   "packageRules": [
     {
       "matchPaths": ["api/**"],
@@ -15,6 +16,7 @@
       "matchPaths": ["website/frontend/**"],
       "groupName": "frontend",
       "reviewers": ["nikitayutanov", "aderrod94", "codev0"],
+      "labels": ["frontend"],
       "automerge": true
     },
     {
@@ -27,6 +29,7 @@
       ],
       "groupName": "backend",
       "reviewers": ["osipov-mit"],
+      "labels": ["backend"],
       "automerge": true
     },
     {
