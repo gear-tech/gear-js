@@ -1,5 +1,5 @@
 {
-  "extends": [
-    "config:base"
-  ]
+  "extends": ["config:base"],
+  "labels": ["dependencies"],
+  "ignorePaths": ["ansible/**", ".github/**"]
 }
