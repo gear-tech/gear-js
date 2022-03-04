@@ -1,5 +1,6 @@
 {
   "extends": ["config:base"],
   "labels": ["dependencies"],
+  "branch-prefix": "renovate-",
   "ignorePaths": ["ansible/**", ".github/**"]
 }
