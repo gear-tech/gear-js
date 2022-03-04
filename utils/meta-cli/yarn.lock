@@ -426,7 +426,7 @@ __metadata:
     chalk: ^5.0.0
     commander: ^8.3.0
     inquirer: ^8.2.0
-    jest: ^27.4.7
+    jest: 27.4.7
   bin:
     gear-meta: src/app.js
   languageName: unknown
@@ -3165,7 +3165,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^27.4.7":
+"jest@npm:27.4.7":
   version: 27.4.7
   resolution: "jest@npm:27.4.7"
   dependencies:

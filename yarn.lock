@@ -156,7 +156,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.1.0, @babel/core@npm:^7.11.1, @babel/core@npm:^7.12.3, @babel/core@npm:^7.16.0, @babel/core@npm:^7.16.12, @babel/core@npm:^7.7.2, @babel/core@npm:^7.8.0":
+"@babel/core@npm:7.17.5, @babel/core@npm:^7.1.0, @babel/core@npm:^7.11.1, @babel/core@npm:^7.12.3, @babel/core@npm:^7.16.0, @babel/core@npm:^7.7.2, @babel/core@npm:^7.8.0":
   version: 7.17.5
   resolution: "@babel/core@npm:7.17.5"
   dependencies:
@@ -551,7 +551,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-decorators@npm:^7.16.4, @babel/plugin-proposal-decorators@npm:^7.16.7":
+"@babel/plugin-proposal-decorators@npm:7.17.2, @babel/plugin-proposal-decorators@npm:^7.16.4":
   version: 7.17.2
   resolution: "@babel/plugin-proposal-decorators@npm:7.17.2"
   dependencies:
@@ -1128,7 +1128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-modules-commonjs@npm:^7.16.8":
+"@babel/plugin-transform-modules-commonjs@npm:7.16.8, @babel/plugin-transform-modules-commonjs@npm:^7.16.8":
   version: 7.16.8
   resolution: "@babel/plugin-transform-modules-commonjs@npm:7.16.8"
   dependencies:
@@ -1379,7 +1379,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-typescript@npm:^7.16.7, @babel/plugin-transform-typescript@npm:^7.16.8":
+"@babel/plugin-transform-typescript@npm:7.16.8, @babel/plugin-transform-typescript@npm:^7.16.7":
   version: 7.16.8
   resolution: "@babel/plugin-transform-typescript@npm:7.16.8"
   dependencies:
@@ -1530,7 +1530,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-typescript@npm:^7.16.0, @babel/preset-typescript@npm:^7.16.7":
+"@babel/preset-typescript@npm:7.16.7, @babel/preset-typescript@npm:^7.16.0":
   version: 7.16.7
   resolution: "@babel/preset-typescript@npm:7.16.7"
   dependencies:
@@ -1615,7 +1615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@craco/craco@npm:^6.4.3":
+"@craco/craco@npm:6.4.3":
   version: 6.4.3
   resolution: "@craco/craco@npm:6.4.3"
   dependencies:
@@ -1834,40 +1834,40 @@ __metadata:
   resolution: "@gear-js/api-gateway@workspace:website/api-gateway"
   dependencies:
     "@gear-js/interfaces": 1.0.0
-    "@nestjs/cli": ^8.1.6
-    "@nestjs/common": ^8.1.2
-    "@nestjs/config": ^1.0.3
-    "@nestjs/core": ^8.1.2
-    "@nestjs/microservices": ^8.1.2
-    "@nestjs/platform-express": ^8.1.2
-    "@nestjs/schematics": ^8.0.4
-    "@nestjs/testing": ^8.1.2
-    "@nestjs/typeorm": ^8.0.2
-    "@types/express": ^4.17.11
+    "@nestjs/cli": 8.2.1
+    "@nestjs/common": 8.3.1
+    "@nestjs/config": 1.2.0
+    "@nestjs/core": 8.3.1
+    "@nestjs/microservices": 8.3.1
+    "@nestjs/platform-express": 8.3.1
+    "@nestjs/schematics": 8.0.7
+    "@nestjs/testing": 8.3.1
+    "@nestjs/typeorm": 8.0.3
+    "@types/express": 4.17.13
     "@types/jest": ^26.0.22
-    "@types/node": ^14.14.36
-    "@types/supertest": ^2.0.10
-    "@typescript-eslint/eslint-plugin": ^4.19.0
-    "@typescript-eslint/parser": ^4.19.0
-    eslint: ^7.22.0
-    eslint-config-prettier: ^8.1.0
-    eslint-plugin-prettier: ^3.3.1
-    kafkajs: ^1.15.0
-    prettier: ^2.2.1
-    reflect-metadata: ^0.1.13
-    rimraf: ^3.0.2
-    rxjs: ^7.1.0
-    supertest: ^6.1.3
-    ts-jest: ^26.5.4
-    ts-loader: ^8.0.18
-    ts-node: ^9.1.1
-    tsconfig-paths: ^3.9.0
-    typescript: ^4.2.3
-    zod: ^3.11.6
+    "@types/node": 14.18.12
+    "@types/supertest": 2.0.11
+    "@typescript-eslint/eslint-plugin": 4.33.0
+    "@typescript-eslint/parser": 4.33.0
+    eslint: 7.32.0
+    eslint-config-prettier: 8.4.0
+    eslint-plugin-prettier: 3.4.1
+    kafkajs: 1.16.0
+    prettier: 2.5.1
+    reflect-metadata: 0.1.13
+    rimraf: 3.0.2
+    rxjs: 7.5.4
+    supertest: 6.2.2
+    ts-jest: 26.5.6
+    ts-loader: 8.3.0
+    ts-node: 9.1.1
+    tsconfig-paths: 3.12.0
+    typescript: 4.6.2
+    zod: 3.12.0
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:^0.14.2":
+"@gear-js/api@npm:0.14.2, @gear-js/api@npm:^0.14.2":
   version: 0.14.2
   resolution: "@gear-js/api@npm:0.14.2"
   peerDependencies:
@@ -1881,50 +1881,50 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
   dependencies:
-    "@babel/core": ^7.16.12
-    "@babel/plugin-proposal-decorators": ^7.16.7
-    "@babel/plugin-transform-modules-commonjs": ^7.16.8
-    "@babel/plugin-transform-typescript": ^7.16.8
-    "@babel/preset-typescript": ^7.16.7
-    "@gear-js/api": ^0.14.2
+    "@babel/core": 7.17.5
+    "@babel/plugin-proposal-decorators": 7.17.2
+    "@babel/plugin-transform-modules-commonjs": 7.16.8
+    "@babel/plugin-transform-typescript": 7.16.8
+    "@babel/preset-typescript": 7.16.7
+    "@gear-js/api": 0.14.2
     "@gear-js/interfaces": 1.0.0
-    "@nestjs/cli": ^8.1.6
-    "@nestjs/common": ^8.1.2
-    "@nestjs/config": ^1.0.3
-    "@nestjs/core": ^8.1.2
-    "@nestjs/microservices": ^8.1.2
-    "@nestjs/platform-express": ^8.1.2
-    "@nestjs/schematics": ^8.0.4
-    "@nestjs/testing": ^8.1.2
-    "@nestjs/typeorm": ^8.0.2
-    "@polkadot/api": ^7.10.1
-    "@types/express": ^4.17.11
+    "@nestjs/cli": 8.2.1
+    "@nestjs/common": 8.3.1
+    "@nestjs/config": 1.2.0
+    "@nestjs/core": 8.3.1
+    "@nestjs/microservices": 8.3.1
+    "@nestjs/platform-express": 8.3.1
+    "@nestjs/schematics": 8.0.7
+    "@nestjs/testing": 8.3.1
+    "@nestjs/typeorm": 8.0.3
+    "@polkadot/api": 7.10.1
+    "@types/express": 4.17.13
     "@types/jest": ^27.4.0
-    "@types/node": ^14.14.36
-    "@types/supertest": ^2.0.10
-    "@typescript-eslint/eslint-plugin": ^4.19.0
-    "@typescript-eslint/parser": ^4.19.0
-    babel-jest: ^27.4.6
-    babel-plugin-transform-typescript-metadata: ^0.3.2
-    babel-preset-env: ^1.7.0
-    babel-preset-jest: ^27.4.0
-    eslint: ^7.22.0
-    eslint-config-prettier: ^8.1.0
-    eslint-plugin-prettier: ^3.3.1
-    jest: ^27.4.7
-    kafkajs: ^1.15.0
-    pg: ^8.7.1
-    prettier: ^2.2.1
-    reflect-metadata: ^0.1.13
-    rimraf: ^3.0.2
-    rxjs: ^7.1.0
-    supertest: ^6.1.3
-    ts-jest: ^27.1.3
-    ts-loader: ^8.0.18
-    ts-node: ^9.1.1
-    tsconfig-paths: ^3.9.0
-    typeorm: ^0.2.38
-    typescript: ^4.2.3
+    "@types/node": 14.18.12
+    "@types/supertest": 2.0.11
+    "@typescript-eslint/eslint-plugin": 4.33.0
+    "@typescript-eslint/parser": 4.33.0
+    babel-jest: 27.5.1
+    babel-plugin-transform-typescript-metadata: 0.3.2
+    babel-preset-env: 1.7.0
+    babel-preset-jest: 27.5.1
+    eslint: 7.32.0
+    eslint-config-prettier: 8.4.0
+    eslint-plugin-prettier: 3.4.1
+    jest: 27.5.1
+    kafkajs: 1.16.0
+    pg: 8.7.3
+    prettier: 2.5.1
+    reflect-metadata: 0.1.13
+    rimraf: 3.0.2
+    rxjs: 7.5.4
+    supertest: 6.2.2
+    ts-jest: 27.1.3
+    ts-loader: 8.3.0
+    ts-node: 9.1.1
+    tsconfig-paths: 3.12.0
+    typeorm: 0.2.44
+    typescript: 4.6.2
   languageName: unknown
   linkType: soft
 
@@ -1935,15 +1935,15 @@ __metadata:
     "@gear-js/api": ^0.14.2
     "@gear-js/interfaces": 1.0.0
     "@polkadot/api": ^7.10.1
-    "@types/node": ^17.0.10
+    "@types/node": 17.0.21
     avsc: ^5.7.3
     chalk: ^4.1.2
     dotenv: ^10.0.0
     kafkajs: ^1.15.0
-    nodemon: ^2.0.14
-    ts-node: ^10.4.0
-    ts-node-dev: ^1.1.8
-    typescript: ^4.5.4
+    nodemon: 2.0.15
+    ts-node: 10.5.0
+    ts-node-dev: 1.1.8
+    typescript: 4.6.2
     winston: ^3.3.3
   languageName: unknown
   linkType: soft
@@ -1952,77 +1952,77 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
-    "@craco/craco": ^6.4.3
-    "@gear-js/api": ^0.14.2
-    "@monaco-editor/react": ^4.3.1
-    "@polkadot/api": ^7.10.1
-    "@polkadot/extension-dapp": ^0.42.7
-    "@polkadot/react-identicon": ^1.1.1
-    "@polkadot/types": ^7.10.1
-    "@polkadot/wasm-crypto": ^4.5.1
-    "@stitches/react": ^1.2.7
-    "@testing-library/jest-dom": ^5.16.2
-    "@testing-library/react": ^12.1.3
-    "@testing-library/user-event": ^13.5.0
-    "@types/file-saver": ^2.0.5
+    "@craco/craco": 6.4.3
+    "@gear-js/api": 0.14.2
+    "@monaco-editor/react": 4.3.1
+    "@polkadot/api": 7.10.1
+    "@polkadot/extension-dapp": 0.42.7
+    "@polkadot/react-identicon": 1.1.1
+    "@polkadot/types": 7.10.1
+    "@polkadot/wasm-crypto": 4.5.1
+    "@stitches/react": 1.2.7
+    "@testing-library/jest-dom": 5.16.2
+    "@testing-library/react": 12.1.3
+    "@testing-library/user-event": 13.5.0
+    "@types/file-saver": 2.0.5
     "@types/jest": ^27.4.1
-    "@types/lodash.get": ^4.4.6
-    "@types/lodash.isobject": ^3.0.6
-    "@types/lodash.isstring": ^4.0.6
-    "@types/lodash.set": ^4.3.6
-    "@types/node": ^17.0.21
-    "@types/react": ^17.0.39
-    "@types/react-alert": ^5.2.1
-    "@types/react-dom": ^17.0.11
-    "@types/react-redux": ^7.1.22
-    buffer: ^6.0.3
-    clsx: ^1.1.1
-    crypto-browserify: ^3.12.0
-    eslint: ^8.10.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^16.1.0
-    eslint-config-prettier: ^8.4.0
-    eslint-plugin-import: ^2.25.4
-    eslint-plugin-jsx-a11y: ^6.5.1
-    eslint-plugin-react: ^7.29.2
-    eslint-plugin-react-hooks: ^4.3.0
-    file-saver: ^2.0.5
-    formik: ^2.2.9
-    husky: ^7.0.4
-    jszip: ^3.7.1
-    ky: ^0.29.0
-    lint-staged: ^12.3.4
-    localforage: ^1.10.0
-    lodash.get: ^4.4.2
-    lodash.isobject: ^3.0.2
-    lodash.isstring: ^4.0.1
-    lodash.set: ^4.3.2
-    monaco-editor: ^0.32.1
-    nanoid: ^3.3.1
-    prettier: ^2.5.1
-    prop-types: ^15.8.1
-    react: ^17.0.2
-    react-alert: ^7.0.3
-    react-dnd: ^15.1.1
-    react-dnd-html5-backend: ^15.1.2
-    react-dom: ^17.0.2
-    react-error-boundary: ^3.1.4
-    react-feather: ^2.0.9
-    react-number-format: ^4.9.1
-    react-redux: ^7.2.6
-    react-router-dom: ^6.2.2
-    react-scripts: ^5.0.0
-    redux: ^4.1.2
-    redux-devtools-extension: ^2.13.9
-    redux-thunk: ^2.4.1
-    reselect: ^4.1.5
-    sass: ^1.49.9
-    stream-browserify: ^3.0.0
-    tua-body-scroll-lock: ^1.2.1
-    typescript: ^4.6.2
-    vercel: ^24.0.0
-    web-vitals: ^2.1.4
-    yup: ^0.32.11
+    "@types/lodash.get": 4.4.6
+    "@types/lodash.isobject": 3.0.6
+    "@types/lodash.isstring": 4.0.6
+    "@types/lodash.set": 4.3.6
+    "@types/node": 17.0.21
+    "@types/react": 17.0.39
+    "@types/react-alert": 5.2.1
+    "@types/react-dom": 17.0.11
+    "@types/react-redux": 7.1.22
+    buffer: 6.0.3
+    clsx: 1.1.1
+    crypto-browserify: 3.12.0
+    eslint: 8.10.0
+    eslint-config-airbnb: 19.0.4
+    eslint-config-airbnb-typescript: 16.1.0
+    eslint-config-prettier: 8.4.0
+    eslint-plugin-import: 2.25.4
+    eslint-plugin-jsx-a11y: 6.5.1
+    eslint-plugin-react: 7.29.2
+    eslint-plugin-react-hooks: 4.3.0
+    file-saver: 2.0.5
+    formik: 2.2.9
+    husky: 7.0.4
+    jszip: 3.7.1
+    ky: 0.29.0
+    lint-staged: 12.3.4
+    localforage: 1.10.0
+    lodash.get: 4.4.2
+    lodash.isobject: 3.0.2
+    lodash.isstring: 4.0.1
+    lodash.set: 4.3.2
+    monaco-editor: 0.32.1
+    nanoid: 3.3.1
+    prettier: 2.5.1
+    prop-types: 15.8.1
+    react: 17.0.2
+    react-alert: 7.0.3
+    react-dnd: 15.1.1
+    react-dnd-html5-backend: 15.1.2
+    react-dom: 17.0.2
+    react-error-boundary: 3.1.4
+    react-feather: 2.0.9
+    react-number-format: 4.9.1
+    react-redux: 7.2.6
+    react-router-dom: 6.2.2
+    react-scripts: 5.0.0
+    redux: 4.1.2
+    redux-devtools-extension: 2.13.9
+    redux-thunk: 2.4.1
+    reselect: 4.1.5
+    sass: 1.49.9
+    stream-browserify: 3.0.0
+    tua-body-scroll-lock: 1.2.1
+    typescript: 4.6.2
+    vercel: 24.0.0
+    web-vitals: 2.1.4
+    yup: 0.32.11
   languageName: unknown
   linkType: soft
 
@@ -2039,13 +2039,13 @@ __metadata:
     "@gear-js/api": ^0.14.2
     "@polkadot/api": ^7.10.1
     chalk: ^4.1.2
-    dotenv: ^10.0.0
+    dotenv: 10.0.0
     kafkajs: ^1.15.0
     pg: ^8.7.1
     postgres: ^1.0.2
-    ts-node-dev: ^1.1.8
+    ts-node-dev: 1.1.8
     typeorm: ^0.2.41
-    typescript: ^4.5.4
+    typescript: 4.6.2
     winston: ^3.3.3
   languageName: unknown
   linkType: soft
@@ -2054,39 +2054,39 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/wasm-compiler@workspace:website/wasm-compiler"
   dependencies:
-    "@nestjs/cli": ^8.1.6
-    "@nestjs/common": ^8.0.6
-    "@nestjs/config": ^1.0.1
-    "@nestjs/core": ^8.0.6
-    "@nestjs/microservices": ^8.0.6
-    "@nestjs/platform-express": ^8.0.6
-    "@nestjs/schematics": ^7.3.0
-    "@nestjs/testing": ^8.0.6
-    "@nestjs/typeorm": ^8.0.2
-    "@nestjs/websockets": ^8.0.6
-    "@types/express": ^4.17.11
+    "@nestjs/cli": 8.2.1
+    "@nestjs/common": 8.3.1
+    "@nestjs/config": 1.2.0
+    "@nestjs/core": 8.3.1
+    "@nestjs/microservices": 8.3.1
+    "@nestjs/platform-express": 8.3.1
+    "@nestjs/schematics": 7.3.1
+    "@nestjs/testing": 8.3.1
+    "@nestjs/typeorm": 8.0.3
+    "@nestjs/websockets": 8.3.1
+    "@types/express": 4.17.13
     "@types/jest": ^26.0.22
-    "@types/node": ^14.14.36
-    "@types/supertest": ^2.0.10
-    "@typescript-eslint/eslint-plugin": ^4.19.0
-    "@typescript-eslint/parser": ^4.19.0
-    adm-zip: ^0.5.5
-    dockerode: ^3.3.1
-    eslint: ^7.22.0
-    eslint-config-prettier: ^8.1.0
-    eslint-plugin-prettier: ^3.3.1
-    nats: ^2.1.0
-    pg: ^8.7.1
-    prettier: ^2.2.1
-    reflect-metadata: ^0.1.13
-    rimraf: ^3.0.2
-    rxjs: ^7.1.0
-    supertest: ^6.1.3
-    ts-loader: ^8.0.18
-    ts-node: ^9.1.1
-    tsconfig-paths: ^3.9.0
-    typeorm: ^0.2.41
-    typescript: ^4.2.3
+    "@types/node": 14.18.12
+    "@types/supertest": 2.0.11
+    "@typescript-eslint/eslint-plugin": 4.33.0
+    "@typescript-eslint/parser": 4.33.0
+    adm-zip: 0.5.9
+    dockerode: 3.3.1
+    eslint: 7.32.0
+    eslint-config-prettier: 8.4.0
+    eslint-plugin-prettier: 3.4.1
+    nats: 2.6.1
+    pg: 8.7.3
+    prettier: 2.5.1
+    reflect-metadata: 0.1.13
+    rimraf: 3.0.2
+    rxjs: 7.5.4
+    supertest: 6.2.2
+    ts-loader: 8.3.0
+    ts-node: 9.1.1
+    tsconfig-paths: 3.12.0
+    typeorm: 0.2.44
+    typescript: 4.6.2
   languageName: unknown
   linkType: soft
 
@@ -2388,7 +2388,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@monaco-editor/react@npm:^4.3.1":
+"@monaco-editor/react@npm:4.3.1":
   version: 4.3.1
   resolution: "@monaco-editor/react@npm:4.3.1"
   dependencies:
@@ -2402,7 +2402,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/cli@npm:^8.1.6":
+"@nestjs/cli@npm:8.2.1":
   version: 8.2.1
   resolution: "@nestjs/cli@npm:8.2.1"
   dependencies:
@@ -2434,7 +2434,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/common@npm:^8.0.6, @nestjs/common@npm:^8.1.2":
+"@nestjs/common@npm:8.3.1":
   version: 8.3.1
   resolution: "@nestjs/common@npm:8.3.1"
   dependencies:
@@ -2459,7 +2459,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/config@npm:^1.0.1, @nestjs/config@npm:^1.0.3":
+"@nestjs/config@npm:1.2.0":
   version: 1.2.0
   resolution: "@nestjs/config@npm:1.2.0"
   dependencies:
@@ -2475,7 +2475,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/core@npm:^8.0.6, @nestjs/core@npm:^8.1.2":
+"@nestjs/core@npm:8.3.1":
   version: 8.3.1
   resolution: "@nestjs/core@npm:8.3.1"
   dependencies:
@@ -2504,7 +2504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/microservices@npm:^8.0.6, @nestjs/microservices@npm:^8.1.2":
+"@nestjs/microservices@npm:8.3.1":
   version: 8.3.1
   resolution: "@nestjs/microservices@npm:8.3.1"
   dependencies:
@@ -2548,7 +2548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/platform-express@npm:^8.0.6, @nestjs/platform-express@npm:^8.1.2":
+"@nestjs/platform-express@npm:8.3.1":
   version: 8.3.1
   resolution: "@nestjs/platform-express@npm:8.3.1"
   dependencies:
@@ -2564,7 +2564,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/schematics@npm:^7.3.0":
+"@nestjs/schematics@npm:7.3.1":
   version: 7.3.1
   resolution: "@nestjs/schematics@npm:7.3.1"
   dependencies:
@@ -2579,7 +2579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/schematics@npm:^8.0.3, @nestjs/schematics@npm:^8.0.4":
+"@nestjs/schematics@npm:8.0.7, @nestjs/schematics@npm:^8.0.3":
   version: 8.0.7
   resolution: "@nestjs/schematics@npm:8.0.7"
   dependencies:
@@ -2594,7 +2594,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/testing@npm:^8.0.6, @nestjs/testing@npm:^8.1.2":
+"@nestjs/testing@npm:8.3.1":
   version: 8.3.1
   resolution: "@nestjs/testing@npm:8.3.1"
   dependencies:
@@ -2614,7 +2614,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/typeorm@npm:^8.0.2":
+"@nestjs/typeorm@npm:8.0.3":
   version: 8.0.3
   resolution: "@nestjs/typeorm@npm:8.0.3"
   dependencies:
@@ -2629,7 +2629,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/websockets@npm:^8.0.6":
+"@nestjs/websockets@npm:8.3.1":
   version: 8.3.1
   resolution: "@nestjs/websockets@npm:8.3.1"
   dependencies:
@@ -2833,7 +2833,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/extension-dapp@npm:^0.42.7":
+"@polkadot/extension-dapp@npm:0.42.7":
   version: 0.42.7
   resolution: "@polkadot/extension-dapp@npm:0.42.7"
   dependencies:
@@ -2890,7 +2890,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/react-identicon@npm:^1.1.1":
+"@polkadot/react-identicon@npm:1.1.1":
   version: 1.1.1
   resolution: "@polkadot/react-identicon@npm:1.1.1"
   dependencies:
@@ -3021,7 +3021,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:7.10.1, @polkadot/types@npm:^7.10.1, @polkadot/types@npm:^7.5.1":
+"@polkadot/types@npm:7.10.1, @polkadot/types@npm:^7.5.1":
   version: 7.10.1
   resolution: "@polkadot/types@npm:7.10.1"
   dependencies:
@@ -3121,7 +3121,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/wasm-crypto@npm:^4.5.1":
+"@polkadot/wasm-crypto@npm:4.5.1, @polkadot/wasm-crypto@npm:^4.5.1":
   version: 4.5.1
   resolution: "@polkadot/wasm-crypto@npm:4.5.1"
   dependencies:
@@ -3333,7 +3333,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stitches/react@npm:^1.2.7":
+"@stitches/react@npm:1.2.7":
   version: 1.2.7
   resolution: "@stitches/react@npm:1.2.7"
   peerDependencies:
@@ -3517,7 +3517,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:^5.16.2":
+"@testing-library/jest-dom@npm:5.16.2":
   version: 5.16.2
   resolution: "@testing-library/jest-dom@npm:5.16.2"
   dependencies:
@@ -3534,7 +3534,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^12.1.3":
+"@testing-library/react@npm:12.1.3":
   version: 12.1.3
   resolution: "@testing-library/react@npm:12.1.3"
   dependencies:
@@ -3548,7 +3548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^13.5.0":
+"@testing-library/user-event@npm:13.5.0":
   version: 13.5.0
   resolution: "@testing-library/user-event@npm:13.5.0"
   dependencies:
@@ -3772,7 +3772,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:^4.17.11, @types/express@npm:^4.17.13":
+"@types/express@npm:*, @types/express@npm:4.17.13, @types/express@npm:^4.17.13":
   version: 4.17.13
   resolution: "@types/express@npm:4.17.13"
   dependencies:
@@ -3784,7 +3784,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/file-saver@npm:^2.0.5":
+"@types/file-saver@npm:2.0.5":
   version: 2.0.5
   resolution: "@types/file-saver@npm:2.0.5"
   checksum: a31d6ee2abf99598647139f8f35b37b6e1bacf6c7ddf05c66651b9b0e6e53381aa0e8ed13f37faa6e496e0eb1da87c97e6c70fd589d5b83b0c95c57cb64ce92a
@@ -3894,7 +3894,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.get@npm:^4.4.6":
+"@types/lodash.get@npm:4.4.6":
   version: 4.4.6
   resolution: "@types/lodash.get@npm:4.4.6"
   dependencies:
@@ -3903,7 +3903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.isobject@npm:^3.0.6":
+"@types/lodash.isobject@npm:3.0.6":
   version: 3.0.6
   resolution: "@types/lodash.isobject@npm:3.0.6"
   dependencies:
@@ -3912,7 +3912,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.isstring@npm:^4.0.6":
+"@types/lodash.isstring@npm:4.0.6":
   version: 4.0.6
   resolution: "@types/lodash.isstring@npm:4.0.6"
   dependencies:
@@ -3921,7 +3921,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.set@npm:^4.3.6":
+"@types/lodash.set@npm:4.3.6":
   version: 4.3.6
   resolution: "@types/lodash.set@npm:4.3.6"
   dependencies:
@@ -3954,14 +3954,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^17.0.10, @types/node@npm:^17.0.21":
+"@types/node@npm:*, @types/node@npm:17.0.21":
   version: 17.0.21
   resolution: "@types/node@npm:17.0.21"
   checksum: 89dcd2fe82f21d3634266f8384e9c865cf8af49685639fbdbd799bdd1040480fb1e8eeda2d3b9fce41edbe704d2a4be9f427118c4ae872e8d9bb7cbeb3c41a94
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.0.26, @types/node@npm:^14.14.36":
+"@types/node@npm:14.18.12, @types/node@npm:^14.0.26":
   version: 14.18.12
   resolution: "@types/node@npm:14.18.12"
   checksum: 8a0273caa0584020adb8802784fc7d4f18f05e6c205335b7f3818a91d6b0c22736b9f51da3428d5bc54076ad47f1a4d6d57990a3ce8489a520ac66b2b3ff24bc
@@ -4010,7 +4010,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-alert@npm:^5.2.1":
+"@types/react-alert@npm:5.2.1":
   version: 5.2.1
   resolution: "@types/react-alert@npm:5.2.1"
   dependencies:
@@ -4019,7 +4019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:*, @types/react-dom@npm:^17.0.11":
+"@types/react-dom@npm:*, @types/react-dom@npm:17.0.11":
   version: 17.0.11
   resolution: "@types/react-dom@npm:17.0.11"
   dependencies:
@@ -4028,7 +4028,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-redux@npm:^7.1.20, @types/react-redux@npm:^7.1.22":
+"@types/react-redux@npm:7.1.22, @types/react-redux@npm:^7.1.20":
   version: 7.1.22
   resolution: "@types/react-redux@npm:7.1.22"
   dependencies:
@@ -4040,7 +4040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^17.0.39":
+"@types/react@npm:*, @types/react@npm:17.0.39":
   version: 17.0.39
   resolution: "@types/react@npm:17.0.39"
   dependencies:
@@ -4142,7 +4142,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/supertest@npm:^2.0.10":
+"@types/supertest@npm:2.0.11":
   version: 2.0.11
   resolution: "@types/supertest@npm:2.0.11"
   dependencies:
@@ -4210,7 +4210,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^4.19.0":
+"@typescript-eslint/eslint-plugin@npm:4.33.0":
   version: 4.33.0
   resolution: "@typescript-eslint/eslint-plugin@npm:4.33.0"
   dependencies:
@@ -4282,7 +4282,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^4.19.0":
+"@typescript-eslint/parser@npm:4.33.0":
   version: 4.33.0
   resolution: "@typescript-eslint/parser@npm:4.33.0"
   dependencies:
@@ -4754,7 +4754,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"adm-zip@npm:^0.5.5":
+"adm-zip@npm:0.5.9":
   version: 0.5.9
   resolution: "adm-zip@npm:0.5.9"
   checksum: 4909bc04119fdd5e8f8ba43826e50623e5c427cf0a939c809d4f9456a6a03c6aa0544e82088739de9ba16b7649f71b99ccbbddc7b2c38bd6143f9c4726cc7ed9
@@ -5380,7 +5380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-jest@npm:^27.4.2, babel-jest@npm:^27.4.6, babel-jest@npm:^27.5.1":
+"babel-jest@npm:27.5.1, babel-jest@npm:^27.4.2, babel-jest@npm:^27.5.1":
   version: 27.5.1
   resolution: "babel-jest@npm:27.5.1"
   dependencies:
@@ -5846,7 +5846,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-transform-typescript-metadata@npm:^0.3.2":
+"babel-plugin-transform-typescript-metadata@npm:0.3.2":
   version: 0.3.2
   resolution: "babel-plugin-transform-typescript-metadata@npm:0.3.2"
   dependencies:
@@ -5877,7 +5877,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-preset-env@npm:^1.7.0":
+"babel-preset-env@npm:1.7.0":
   version: 1.7.0
   resolution: "babel-preset-env@npm:1.7.0"
   dependencies:
@@ -5915,7 +5915,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-preset-jest@npm:^27.4.0, babel-preset-jest@npm:^27.5.1":
+"babel-preset-jest@npm:27.5.1, babel-preset-jest@npm:^27.5.1":
   version: 27.5.1
   resolution: "babel-preset-jest@npm:27.5.1"
   dependencies:
@@ -6359,6 +6359,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"buffer@npm:6.0.3, buffer@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "buffer@npm:6.0.3"
+  dependencies:
+    base64-js: ^1.3.1
+    ieee754: ^1.2.1
+  checksum: 5ad23293d9a731e4318e420025800b42bf0d264004c0286c8cc010af7a270c7a0f6522e84f54b9ad65cbd6db20b8badbfd8d2ebf4f80fa03dab093b89e68c3f9
+  languageName: node
+  linkType: hard
+
 "buffer@npm:^5.5.0":
   version: 5.7.1
   resolution: "buffer@npm:5.7.1"
@@ -6366,16 +6376,6 @@ __metadata:
     base64-js: ^1.3.1
     ieee754: ^1.1.13
   checksum: e2cf8429e1c4c7b8cbd30834ac09bd61da46ce35f5c22a78e6c2f04497d6d25541b16881e30a019c6fd3154150650ccee27a308eff3e26229d788bbdeb08ab84
-  languageName: node
-  linkType: hard
-
-"buffer@npm:^6.0.3":
-  version: 6.0.3
-  resolution: "buffer@npm:6.0.3"
-  dependencies:
-    base64-js: ^1.3.1
-    ieee754: ^1.2.1
-  checksum: 5ad23293d9a731e4318e420025800b42bf0d264004c0286c8cc010af7a270c7a0f6522e84f54b9ad65cbd6db20b8badbfd8d2ebf4f80fa03dab093b89e68c3f9
   languageName: node
   linkType: hard
 
@@ -6830,7 +6830,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:^1.1.1":
+"clsx@npm:1.1.1":
   version: 1.1.1
   resolution: "clsx@npm:1.1.1"
   checksum: ff052650329773b9b245177305fc4c4dc3129f7b2be84af4f58dc5defa99538c61d4207be7419405a5f8f3d92007c954f4daba5a7b74e563d5de71c28c830063
@@ -7326,7 +7326,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-browserify@npm:^3.12.0":
+"crypto-browserify@npm:3.12.0":
   version: 3.12.0
   resolution: "crypto-browserify@npm:3.12.0"
   dependencies:
@@ -8057,7 +8057,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dockerode@npm:^3.3.1":
+"dockerode@npm:3.3.1":
   version: 3.3.1
   resolution: "dockerode@npm:3.3.1"
   dependencies:
@@ -8218,17 +8218,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:10.0.0, dotenv@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "dotenv@npm:10.0.0"
+  checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
+  languageName: node
+  linkType: hard
+
 "dotenv@npm:16.0.0":
   version: 16.0.0
   resolution: "dotenv@npm:16.0.0"
   checksum: 664cebb51f0a9a1d1b930f51f0271e72e26d62feaecc9dc03df39453dd494b4e724809ca480fb3ec3213382b1ed3f791aaeb83569a137f9329ce58efd4853dbf
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "dotenv@npm:10.0.0"
-  checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
   languageName: node
   linkType: hard
 
@@ -8612,7 +8612,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-airbnb-typescript@npm:^16.1.0":
+"eslint-config-airbnb-typescript@npm:16.1.0":
   version: 16.1.0
   resolution: "eslint-config-airbnb-typescript@npm:16.1.0"
   dependencies:
@@ -8624,7 +8624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-airbnb@npm:^19.0.4":
+"eslint-config-airbnb@npm:19.0.4":
   version: 19.0.4
   resolution: "eslint-config-airbnb@npm:19.0.4"
   dependencies:
@@ -8641,7 +8641,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:^8.1.0, eslint-config-prettier@npm:^8.4.0":
+"eslint-config-prettier@npm:8.4.0":
   version: 8.4.0
   resolution: "eslint-config-prettier@npm:8.4.0"
   peerDependencies:
@@ -8710,7 +8710,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.25.3, eslint-plugin-import@npm:^2.25.4":
+"eslint-plugin-import@npm:2.25.4, eslint-plugin-import@npm:^2.25.3":
   version: 2.25.4
   resolution: "eslint-plugin-import@npm:2.25.4"
   dependencies:
@@ -8750,7 +8750,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsx-a11y@npm:^6.5.1":
+"eslint-plugin-jsx-a11y@npm:6.5.1, eslint-plugin-jsx-a11y@npm:^6.5.1":
   version: 6.5.1
   resolution: "eslint-plugin-jsx-a11y@npm:6.5.1"
   dependencies:
@@ -8772,7 +8772,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^3.3.1":
+"eslint-plugin-prettier@npm:3.4.1":
   version: 3.4.1
   resolution: "eslint-plugin-prettier@npm:3.4.1"
   dependencies:
@@ -8787,7 +8787,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^4.3.0":
+"eslint-plugin-react-hooks@npm:4.3.0, eslint-plugin-react-hooks@npm:^4.3.0":
   version: 4.3.0
   resolution: "eslint-plugin-react-hooks@npm:4.3.0"
   peerDependencies:
@@ -8796,7 +8796,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.27.1, eslint-plugin-react@npm:^7.29.2":
+"eslint-plugin-react@npm:7.29.2, eslint-plugin-react@npm:^7.27.1":
   version: 7.29.2
   resolution: "eslint-plugin-react@npm:7.29.2"
   dependencies:
@@ -8908,7 +8908,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.22.0":
+"eslint@npm:7.32.0":
   version: 7.32.0
   resolution: "eslint@npm:7.32.0"
   dependencies:
@@ -8958,7 +8958,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.10.0, eslint@npm:^8.3.0":
+"eslint@npm:8.10.0, eslint@npm:^8.3.0":
   version: 8.10.0
   resolution: "eslint@npm:8.10.0"
   dependencies:
@@ -9383,7 +9383,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-saver@npm:^2.0.5":
+"file-saver@npm:2.0.5":
   version: 2.0.5
   resolution: "file-saver@npm:2.0.5"
   checksum: c62d96e5cebc58b4bdf3ae8a60d5cf9607ad82f75f798c33a4ee63435ac2203002584d5256a2a780eda7feb5e19dc3b6351c2212e58b3f529e63d265a7cc79f7
@@ -9578,7 +9578,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"formik@npm:^2.2.9":
+"formik@npm:2.2.9":
   version: 2.2.9
   resolution: "formik@npm:2.2.9"
   dependencies:
@@ -9723,9 +9723,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-js@workspace:."
   dependencies:
-    husky: ^7.0.2
-    lint-staged: ^11.1.2
-    prettier: ^2.4.1
+    husky: 7.0.4
+    lint-staged: 11.2.6
+    prettier: 2.5.1
   languageName: unknown
   linkType: soft
 
@@ -10324,7 +10324,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^7.0.2, husky@npm:^7.0.4":
+"husky@npm:7.0.4":
   version: 7.0.4
   resolution: "husky@npm:7.0.4"
   bin:
@@ -11604,7 +11604,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^27.4.3, jest@npm:^27.4.7":
+"jest@npm:27.5.1, jest@npm:^27.4.3":
   version: 27.5.1
   resolution: "jest@npm:27.5.1"
   dependencies:
@@ -11839,7 +11839,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jszip@npm:^3.7.1":
+"jszip@npm:3.7.1":
   version: 3.7.1
   resolution: "jszip@npm:3.7.1"
   dependencies:
@@ -11851,7 +11851,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kafkajs@npm:^1.15.0":
+"kafkajs@npm:1.16.0, kafkajs@npm:^1.15.0":
   version: 1.16.0
   resolution: "kafkajs@npm:1.16.0"
   checksum: 78dbb8705bb231aa1d7767554e40acfde19cae97daf43a893fd7b0c286445a0c02d7b67ce04fa10029d341dfc81b698cb1071106eaf1c3439d721332f6a96964
@@ -11895,7 +11895,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ky@npm:^0.29.0":
+"ky@npm:0.29.0":
   version: 0.29.0
   resolution: "ky@npm:0.29.0"
   checksum: f54fcb4d6ab3783e4227f66a502514021d670e684d6e1d7853595af061429739ffbf144912e4149a9ed0f54bf3ccdffd49e895f2d0ef1ea6d35cf6612eff0b31
@@ -11986,7 +11986,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^11.1.2":
+"lint-staged@npm:11.2.6":
   version: 11.2.6
   resolution: "lint-staged@npm:11.2.6"
   dependencies:
@@ -12010,7 +12010,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^12.3.4":
+"lint-staged@npm:12.3.4":
   version: 12.3.4
   resolution: "lint-staged@npm:12.3.4"
   dependencies:
@@ -12111,7 +12111,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"localforage@npm:^1.10.0":
+"localforage@npm:1.10.0":
   version: 1.10.0
   resolution: "localforage@npm:1.10.0"
   dependencies:
@@ -12172,21 +12172,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.get@npm:^4.4.2":
+"lodash.get@npm:4.4.2":
   version: 4.4.2
   resolution: "lodash.get@npm:4.4.2"
   checksum: e403047ddb03181c9d0e92df9556570e2b67e0f0a930fcbbbd779370972368f5568e914f913e93f3b08f6d492abc71e14d4e9b7a18916c31fa04bd2306efe545
   languageName: node
   linkType: hard
 
-"lodash.isobject@npm:^3.0.2":
+"lodash.isobject@npm:3.0.2":
   version: 3.0.2
   resolution: "lodash.isobject@npm:3.0.2"
   checksum: 6c1667cbc4494d0a13a3617a4b23278d6d02dac520311f2bbb43f16f2cf71d2e6eb9dec8057315b77459df4890c756a256a087d3f4baa44a79ab5d6c968b060e
   languageName: node
   linkType: hard
 
-"lodash.isstring@npm:^4.0.1":
+"lodash.isstring@npm:4.0.1":
   version: 4.0.1
   resolution: "lodash.isstring@npm:4.0.1"
   checksum: eaac87ae9636848af08021083d796e2eea3d02e80082ab8a9955309569cb3a463ce97fd281d7dc119e402b2e7d8c54a23914b15d2fc7fff56461511dc8937ba0
@@ -12207,7 +12207,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.set@npm:^4.3.2":
+"lodash.set@npm:4.3.2, lodash.set@npm:^4.3.2":
   version: 4.3.2
   resolution: "lodash.set@npm:4.3.2"
   checksum: a9122f49eef9f2d0fc9061a33d87f8e5b8c6b23d46e8b9e9ce1529d3588d79741bd1145a3abdfa3b13082703e65af27ff18d8a07bfc22b9be32f3fc36f763f70
@@ -12718,7 +12718,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monaco-editor@npm:^0.32.1":
+"monaco-editor@npm:0.32.1":
   version: 0.32.1
   resolution: "monaco-editor@npm:0.32.1"
   checksum: f63e96fadca3e46ee639c3c7fead95bc03413d4b47d27ffdf5636270e2753c45391e830dd34ae5404004b8fc6a06b50a91d9ae4b593e1fc21cfc20ee00ca98c5
@@ -12815,7 +12815,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.1":
+"nanoid@npm:3.3.1, nanoid@npm:^3.3.1":
   version: 3.3.1
   resolution: "nanoid@npm:3.3.1"
   bin:
@@ -12824,7 +12824,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nats@npm:^2.1.0":
+"nats@npm:2.6.1":
   version: 2.6.1
   resolution: "nats@npm:2.6.1"
   dependencies:
@@ -12968,7 +12968,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemon@npm:^2.0.14":
+"nodemon@npm:2.0.15":
   version: 2.0.15
   resolution: "nodemon@npm:2.0.15"
   dependencies:
@@ -13675,7 +13675,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg@npm:^8.7.1":
+"pg@npm:8.7.3, pg@npm:^8.7.1":
   version: 8.7.3
   resolution: "pg@npm:8.7.3"
   dependencies:
@@ -14661,7 +14661,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.2.1, prettier@npm:^2.4.1, prettier@npm:^2.5.1":
+"prettier@npm:2.5.1":
   version: 2.5.1
   resolution: "prettier@npm:2.5.1"
   bin:
@@ -14767,7 +14767,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.8, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:15.8.1, prop-types@npm:^15.5.8, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -14987,7 +14987,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-alert@npm:^7.0.3":
+"react-alert@npm:7.0.3":
   version: 7.0.3
   resolution: "react-alert@npm:7.0.3"
   dependencies:
@@ -15058,7 +15058,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dnd-html5-backend@npm:^15.1.2":
+"react-dnd-html5-backend@npm:15.1.2":
   version: 15.1.2
   resolution: "react-dnd-html5-backend@npm:15.1.2"
   dependencies:
@@ -15067,7 +15067,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dnd@npm:^15.1.1":
+"react-dnd@npm:15.1.1":
   version: 15.1.1
   resolution: "react-dnd@npm:15.1.1"
   dependencies:
@@ -15092,7 +15092,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^17.0.2":
+"react-dom@npm:17.0.2":
   version: 17.0.2
   resolution: "react-dom@npm:17.0.2"
   dependencies:
@@ -15105,7 +15105,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^3.1.4":
+"react-error-boundary@npm:3.1.4":
   version: 3.1.4
   resolution: "react-error-boundary@npm:3.1.4"
   dependencies:
@@ -15130,7 +15130,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-feather@npm:^2.0.9":
+"react-feather@npm:2.0.9":
   version: 2.0.9
   resolution: "react-feather@npm:2.0.9"
   dependencies:
@@ -15155,7 +15155,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-number-format@npm:^4.9.1":
+"react-number-format@npm:4.9.1":
   version: 4.9.1
   resolution: "react-number-format@npm:4.9.1"
   dependencies:
@@ -15167,7 +15167,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-redux@npm:^7.2.6":
+"react-redux@npm:7.2.6":
   version: 7.2.6
   resolution: "react-redux@npm:7.2.6"
   dependencies:
@@ -15195,7 +15195,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^6.2.2":
+"react-router-dom@npm:6.2.2":
   version: 6.2.2
   resolution: "react-router-dom@npm:6.2.2"
   dependencies:
@@ -15219,7 +15219,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-scripts@npm:^5.0.0":
+"react-scripts@npm:5.0.0":
   version: 5.0.0
   resolution: "react-scripts@npm:5.0.0"
   dependencies:
@@ -15301,7 +15301,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^17.0.2":
+"react@npm:17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
@@ -15386,7 +15386,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux-devtools-extension@npm:^2.13.9":
+"redux-devtools-extension@npm:2.13.9":
   version: 2.13.9
   resolution: "redux-devtools-extension@npm:2.13.9"
   peerDependencies:
@@ -15395,7 +15395,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux-thunk@npm:^2.4.1":
+"redux-thunk@npm:2.4.1":
   version: 2.4.1
   resolution: "redux-thunk@npm:2.4.1"
   peerDependencies:
@@ -15404,7 +15404,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.0, redux@npm:^4.1.1, redux@npm:^4.1.2":
+"redux@npm:4.1.2, redux@npm:^4.0.0, redux@npm:^4.1.1":
   version: 4.1.2
   resolution: "redux@npm:4.1.2"
   dependencies:
@@ -15413,7 +15413,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reflect-metadata@npm:^0.1.13":
+"reflect-metadata@npm:0.1.13, reflect-metadata@npm:^0.1.13":
   version: 0.1.13
   resolution: "reflect-metadata@npm:0.1.13"
   checksum: 798d379a7b6f6455501145419505c97dd11cbc23857a386add2b9ef15963ccf15a48d9d15507afe01d4cd74116df8a213247200bac00320bd7c11ddeaa5e8fb4
@@ -15614,7 +15614,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reselect@npm:^4.1.5":
+"reselect@npm:4.1.5":
   version: 4.1.5
   resolution: "reselect@npm:4.1.5"
   checksum: 54c13c1e795b2ea70cba8384138aebe78adda00cbea303cc94b64da0a70d74c896cc9a03115ae38b8bff990e7a60dcd6452ab68cbec01b0b38c1afda70714cf0
@@ -15859,7 +15859,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.1.0, rxjs@npm:^7.2.0, rxjs@npm:^7.5.1, rxjs@npm:^7.5.4":
+"rxjs@npm:7.5.4, rxjs@npm:^7.2.0, rxjs@npm:^7.5.1, rxjs@npm:^7.5.4":
   version: 7.5.4
   resolution: "rxjs@npm:7.5.4"
   dependencies:
@@ -15928,7 +15928,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.49.9":
+"sass@npm:1.49.9":
   version: 1.49.9
   resolution: "sass@npm:1.49.9"
   dependencies:
@@ -16559,7 +16559,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stream-browserify@npm:^3.0.0":
+"stream-browserify@npm:3.0.0":
   version: 3.0.0
   resolution: "stream-browserify@npm:3.0.0"
   dependencies:
@@ -16844,7 +16844,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supertest@npm:^6.1.3":
+"supertest@npm:6.2.2":
   version: 6.2.2
   resolution: "supertest@npm:6.2.2"
   dependencies:
@@ -17361,7 +17361,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^26.5.4":
+"ts-jest@npm:26.5.6":
   version: 26.5.6
   resolution: "ts-jest@npm:26.5.6"
   dependencies:
@@ -17384,7 +17384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^27.1.3":
+"ts-jest@npm:27.1.3":
   version: 27.1.3
   resolution: "ts-jest@npm:27.1.3"
   dependencies:
@@ -17418,7 +17418,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-loader@npm:^8.0.18":
+"ts-loader@npm:8.3.0":
   version: 8.3.0
   resolution: "ts-loader@npm:8.3.0"
   dependencies:
@@ -17434,7 +17434,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node-dev@npm:^1.1.8":
+"ts-node-dev@npm:1.1.8":
   version: 1.1.8
   resolution: "ts-node-dev@npm:1.1.8"
   dependencies:
@@ -17461,27 +17461,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:8.9.1":
-  version: 8.9.1
-  resolution: "ts-node@npm:8.9.1"
-  dependencies:
-    arg: ^4.1.0
-    diff: ^4.0.1
-    make-error: ^1.1.1
-    source-map-support: ^0.5.17
-    yn: 3.1.1
-  peerDependencies:
-    typescript: ">=2.7"
-  bin:
-    ts-node: dist/bin.js
-    ts-node-script: dist/bin-script.js
-    ts-node-transpile-only: dist/bin-transpile.js
-    ts-script: dist/bin-script-deprecated.js
-  checksum: 59997e32cfb84323317f9fd33ff62d025b467ff36c296c3ad1ee54f08fd355c58fab37e096e2a63fd01fced929384b16b9d74bf324713a21844e527ddd5f6c17
-  languageName: node
-  linkType: hard
-
-"ts-node@npm:^10.4.0, ts-node@npm:^10.5.0":
+"ts-node@npm:10.5.0, ts-node@npm:^10.5.0":
   version: 10.5.0
   resolution: "ts-node@npm:10.5.0"
   dependencies:
@@ -17518,7 +17498,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^9.0.0, ts-node@npm:^9.1.1":
+"ts-node@npm:8.9.1":
+  version: 8.9.1
+  resolution: "ts-node@npm:8.9.1"
+  dependencies:
+    arg: ^4.1.0
+    diff: ^4.0.1
+    make-error: ^1.1.1
+    source-map-support: ^0.5.17
+    yn: 3.1.1
+  peerDependencies:
+    typescript: ">=2.7"
+  bin:
+    ts-node: dist/bin.js
+    ts-node-script: dist/bin-script.js
+    ts-node-transpile-only: dist/bin-transpile.js
+    ts-script: dist/bin-script-deprecated.js
+  checksum: 59997e32cfb84323317f9fd33ff62d025b467ff36c296c3ad1ee54f08fd355c58fab37e096e2a63fd01fced929384b16b9d74bf324713a21844e527ddd5f6c17
+  languageName: node
+  linkType: hard
+
+"ts-node@npm:9.1.1, ts-node@npm:^9.0.0":
   version: 9.1.1
   resolution: "ts-node@npm:9.1.1"
   dependencies:
@@ -17599,7 +17599,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tua-body-scroll-lock@npm:^1.2.1":
+"tua-body-scroll-lock@npm:1.2.1":
   version: 1.2.1
   resolution: "tua-body-scroll-lock@npm:1.2.1"
   checksum: 695d367f0d6facea4c14ed31b5d6e4ec70c4f92e7151c30ac639adb9030c3f1bf49a84ed623b012911d5d2212c4c178f1f073174d03d7a0f76feb2c624869884
@@ -17713,7 +17713,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typeorm@npm:^0.2.38, typeorm@npm:^0.2.41":
+"typeorm@npm:0.2.44, typeorm@npm:^0.2.41":
   version: 0.2.44
   resolution: "typeorm@npm:0.2.44"
   dependencies:
@@ -17807,7 +17807,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.2.3, typescript@npm:^4.5.4, typescript@npm:^4.6.2":
+"typescript@npm:4.6.2":
   version: 4.6.2
   resolution: "typescript@npm:4.6.2"
   bin:
@@ -17837,7 +17837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.2.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.5.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.2#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.6.2#~builtin<compat/typescript>":
   version: 4.6.2
   resolution: "typescript@patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=493e53"
   bin:
@@ -18104,7 +18104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vercel@npm:^24.0.0":
+"vercel@npm:24.0.0":
   version: 24.0.0
   resolution: "vercel@npm:24.0.0"
   dependencies:
@@ -18176,7 +18176,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:^2.1.4":
+"web-vitals@npm:2.1.4":
   version: 2.1.4
   resolution: "web-vitals@npm:2.1.4"
   checksum: 03d3f47dbf55c3dce07beb0ff5de8ddd52e2d0a53a8df5c84e7a16dda93543341d67231fa79b1d9772b091419af4ec0fd395b8bcf451a0e26846e3f76b3d0efc
@@ -18992,7 +18992,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yup@npm:^0.32.11":
+"yup@npm:0.32.11":
   version: 0.32.11
   resolution: "yup@npm:0.32.11"
   dependencies:
@@ -19023,7 +19023,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.11.6":
+"zod@npm:3.12.0":
   version: 3.12.0
   resolution: "zod@npm:3.12.0"
   checksum: b753d9bf5f3518873a4f98119a79b1401e3933e164caa1621b901e01778deb4a9b35cb9230d0d7acc5e7c81cf3198352db040095904b619998a3c4de3d5a68ae
