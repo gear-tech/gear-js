@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 5
+  version: 6
   cacheKey: 8
 
 "@babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.16.7":
@@ -407,13 +407,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.10.0":
-  version: 0.10.0
-  resolution: "@gear-js/api@npm:0.10.0"
+"@gear-js/api@npm:^0.14.0":
+  version: 0.14.2
+  resolution: "@gear-js/api@npm:0.14.2"
   peerDependencies:
-    "@polkadot/api": ^7.4.1
+    "@polkadot/api": ^7.10.1
     rxjs: ^7.3.0
-  checksum: 71b11ea5cdf333e270f8a99b5b7083bf9d1bc538d0013afde21e5d5c1fb5587371935b71841c9ba117a3bfc25a2c479e596db23ec199a954373a28b5a45d43b0
+  checksum: be748475f84296c9409f593c63b29c6e7147edd5de65d84c713f75f567abd89f51ebc5abaac34069e170847bd6f54c5d056d969532620bc2620861351aad6af5
   languageName: node
   linkType: hard
 
@@ -421,12 +421,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/gear-meta@workspace:."
   dependencies:
-    "@gear-js/api": ^0.10.0
+    "@gear-js/api": ^0.14.0
     "@polkadot/api": ^7.4.1
     chalk: ^5.0.0
     commander: ^8.3.0
     inquirer: ^8.2.0
-    jest: ^27.4.7
+    jest: 27.4.7
   bin:
     gear-meta: src/app.js
   languageName: unknown
@@ -3165,7 +3165,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^27.4.7":
+"jest@npm:27.4.7":
   version: 27.4.7
   resolution: "jest@npm:27.4.7"
   dependencies:
