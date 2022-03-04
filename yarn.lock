@@ -1974,7 +1974,7 @@ __metadata:
     "@types/react": ^17.0.39
     "@types/react-alert": ^5.2.1
     "@types/react-dom": ^17.0.11
-    "@types/react-redux": ^7.1.22
+    "@types/react-redux": 7.1.23
     buffer: ^6.0.3
     clsx: ^1.1.1
     crypto-browserify: ^3.12.0
@@ -4028,7 +4028,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-redux@npm:^7.1.20, @types/react-redux@npm:^7.1.22":
+"@types/react-redux@npm:7.1.23":
+  version: 7.1.23
+  resolution: "@types/react-redux@npm:7.1.23"
+  dependencies:
+    "@types/hoist-non-react-statics": ^3.3.0
+    "@types/react": "*"
+    hoist-non-react-statics: ^3.3.0
+    redux: ^4.0.0
+  checksum: 7cedb0f20806ce67255f676fab2d4d9534c12705d43636df95224cfa77fdf5a2e792dc76c6e072c02cad1c88030aea822c14f36fe85d459b898ee68fcff6f05c
+  languageName: node
+  linkType: hard
+
+"@types/react-redux@npm:^7.1.20":
   version: 7.1.22
   resolution: "@types/react-redux@npm:7.1.22"
   dependencies:
