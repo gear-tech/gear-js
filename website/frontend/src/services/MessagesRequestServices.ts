@@ -3,7 +3,7 @@ import { MessagePaginationModel, MessageModel } from 'types/message';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
-export default class MessagesRequestService {
+class MessagesRequestService {
   apiRequest = new ServerRPCRequestService();
 
   protected readonly API_MESSAGES_ALL = RPC_METHODS.GET_ALL_MESSAGES;
@@ -18,3 +18,5 @@ export default class MessagesRequestService {
     return this.apiRequest.callRPC<MessageModel>(this.API_MESSAGE, { id });
   }
 }
+
+export const messagesService = new MessagesRequestService();

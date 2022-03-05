@@ -3,8 +3,8 @@ import { MessageActionTypes, MessagePaginationModel, MessageModel } from 'types/
 import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
 import { UserAccount, AccountActionTypes } from 'types/account';
 import { ApiActionTypes } from 'types/api';
-import MessageRequestService from 'services/MessagesRequestServices';
 import { programService } from 'services/ProgramsRequestService';
+import { messagesService } from 'services/MessagesRequestServices';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
@@ -96,11 +96,9 @@ export const resetApiReady = () => ({ type: ApiActionTypes.RESET_API });
 export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActionTypes.SET_ACCOUNT, payload });
 export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
-const messageService = new MessageRequestService();
-
 export const getMessagesAction = (params: PaginationModel) => (dispatch: any) => {
   dispatch(fetchMessagesAction());
-  messageService
+  messagesService
     .fetchMessages(params)
     .then((data) => {
       dispatch(fetchMessagesSuccessAction(data.result));
@@ -110,7 +108,7 @@ export const getMessagesAction = (params: PaginationModel) => (dispatch: any) =>
 
 export const getMessageAction = (id: string) => (dispatch: any) => {
   dispatch(fetchMessageAction());
-  messageService
+  messagesService
     .fetchMessage(id)
     .then((data) => {
       dispatch(fetchMessageSuccessAction(data.result));
