@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import ApiReducer from './ApiReduces';
 import AccountReducer from './AccountReducer';
 import BlockReducer from './BlocksReducer';
 import ProgramReducer from './ProgramReducer';
@@ -11,7 +10,6 @@ const rootReducer = combineReducers({
   programs: ProgramReducer,
   blocks: BlockReducer,
   alert: AlertReducer,
-  api: ApiReducer,
   account: AccountReducer,
   compiler: CompilerReducer,
   messages: MessageReducer,

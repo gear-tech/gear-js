@@ -19,13 +19,12 @@ import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
+import { subscribeToEvents } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
-import { useEvents } from 'hooks/useEvents';
-import { useBlocks } from 'hooks/useBlocks';
 import store from '../../store';
 
 import { ApiProvider } from 'context/api';
+import { useApi, useEvents, useBlocks } from 'hooks';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -57,8 +56,8 @@ const AppComponent: FC = () => {
   globalStyles();
   useBlocks();
   const dispatch = useDispatch();
+  const { isApiReady } = useApi();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isApiReady } = useSelector((state: RootState) => state.api);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
   const events = useEvents();
 
@@ -69,14 +68,6 @@ const AppComponent: FC = () => {
       document.body.style.overflowY = 'unset';
     }
   }, [isProgramUploading, isMessageSending]);
-
-  useEffect(() => {
-    if (!isApiReady) {
-      nodeApi.init().then(() => {
-        dispatch(setApiReady());
-      });
-    }
-  }, [dispatch, isApiReady]);
 
   useEffect(() => {
     if (isApiReady) {

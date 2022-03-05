@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { IdeaEvent, IdeaEvents, Sections } from 'types/explorer';
-import { useApi } from '.';
-import { useSubscription } from './useSubscription';
+import { useApi, useSubscription } from '.';
 
 export function useEvents() {
   const { api } = useApi();
