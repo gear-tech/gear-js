@@ -2,11 +2,11 @@ import { Header } from '@polkadot/types/interfaces';
 import { IU8a } from '@polkadot/types/types';
 import { useDispatch } from 'react-redux';
 import { fetchBlockAction } from 'store/actions/actions';
-import { useApi } from './useApi';
+import { useApi } from '.';
 import { useSubscription } from './useSubscription';
 
 export function useBlocks() {
-  const [api] = useApi();
+  const { api } = useApi();
   const dispatch = useDispatch();
 
   const getTime = async (hash: IU8a) => {

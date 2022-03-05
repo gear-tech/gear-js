@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useApi } from 'hooks/useApi';
+import { useApi } from 'hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import styles from './BlocksSummary.module.scss';
 
 const BlocksSummary = () => {
-  const [api] = useApi();
+  const { api } = useApi();
   const dispatch = useDispatch();
 
   const { blocks } = useSelector((state: RootState) => state.blocks);

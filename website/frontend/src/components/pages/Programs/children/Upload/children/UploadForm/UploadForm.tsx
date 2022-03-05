@@ -18,7 +18,7 @@ import { MetaFields } from './children/MetaFields/MetaFields';
 import { Buttons } from './children/Buttons/Buttons';
 
 import { Schema } from './Schema';
-import { useApi } from 'hooks/useApi';
+import { useApi } from 'hooks';
 import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
@@ -34,7 +34,7 @@ type Props = {
 };
 
 export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
-  const [api] = useApi();
+  const { api } = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 

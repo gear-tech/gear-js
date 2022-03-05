@@ -8,7 +8,7 @@ import { LogoutIcon } from 'assets/Icons';
 import { RootState } from 'store/reducers';
 import { setCurrentAccount, resetCurrentAccount } from 'store/actions/actions';
 import { UserAccount } from '../../../types/account';
-import { useApi } from '../../../hooks/useApi';
+import { useApi } from 'hooks';
 import { Modal } from '../Modal';
 import { AccountList } from './AccountList';
 import { nodeApi } from '../../../api/initApi';
@@ -21,7 +21,7 @@ export const Wallet = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const alert = useAlert();
-  const [api] = useApi();
+  const { api } = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 

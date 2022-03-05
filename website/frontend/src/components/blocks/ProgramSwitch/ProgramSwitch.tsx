@@ -9,7 +9,7 @@ import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'con
 import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RootState } from 'store/reducers';
-import { useApi } from '../../../hooks/useApi';
+import { useApi } from 'hooks';
 import { isDevChain } from 'helpers';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
-  const [api] = useApi();
+  const { api } = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const apiRequest = new ServerRPCRequestService();

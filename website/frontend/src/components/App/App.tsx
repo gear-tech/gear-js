@@ -25,6 +25,8 @@ import { useEvents } from 'hooks/useEvents';
 import { useBlocks } from 'hooks/useBlocks';
 import store from '../../store';
 
+import { ApiProvider } from 'context/api';
+
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
@@ -144,8 +146,10 @@ const AppComponent: FC = () => {
 
 export const App = () => (
   <Provider store={store}>
-    <BrowserRouter>
-      <AppComponent />
-    </BrowserRouter>
+    <ApiProvider>
+      <BrowserRouter>
+        <AppComponent />
+      </BrowserRouter>
+    </ApiProvider>
   </Provider>
 );

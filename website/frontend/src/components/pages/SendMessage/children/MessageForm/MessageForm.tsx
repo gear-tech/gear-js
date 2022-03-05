@@ -13,7 +13,7 @@ import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
-import { useApi } from 'hooks/useApi';
+import { useApi } from 'hooks';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { Schema } from './Schema';
 
@@ -27,7 +27,7 @@ type Props = {
 };
 
 export const MessageForm: VFC<Props> = ({ programId, programName, meta, types }) => {
-  const [api] = useApi();
+  const { api } = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();

@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
-import { useApi } from 'hooks/useApi';
+import { useApi } from 'hooks';
 import { EventTypes } from 'types/alerts';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { BackButton } from 'common/components/BackButton/BackButton';
@@ -22,7 +22,7 @@ type FormValues = { fields: object; payload: string };
 const selectProgram = (state: RootState) => state.programs.program;
 
 const State: VFC = () => {
-  const [api] = useApi();
+  const { api } = useApi();
   const dispatch = useDispatch();
   const routeParams = useParams();
   const navigate = useNavigate();

@@ -7,7 +7,7 @@ import { Event } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import copy from 'assets/images/copy.svg';
 import { copyToClipboard, readFileAsync } from 'helpers';
-import { useApi } from 'hooks/useApi';
+import { useApi } from 'hooks';
 import { EventTypes } from 'types/alerts';
 import { RootState } from 'store/reducers';
 import { AddAlert } from 'store/actions/actions';
@@ -23,7 +23,7 @@ type Props = {
 };
 
 const CodeModal = ({ file, setDroppedFile }: Props) => {
-  const [api] = useApi();
+  const { api } = useApi();
   const alert = useAlert();
   const dispatch = useDispatch();
   const { account } = useSelector((state: RootState) => state.account);
