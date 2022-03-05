@@ -1,9 +1,18 @@
-import { getLocalProgram, isDevChain } from 'helpers';
+import { PaginationModel, UserPrograms } from 'types/common';
+import { getLocalProgram, getLocalPrograms, isDevChain } from 'helpers';
 import { programService } from './ProgramsRequestService';
 import { messagesService } from './MessagesRequestServices';
-import { PaginationModel } from 'types/common';
 
-export const getProgram = (id: string) => (isDevChain() ? getLocalProgram(id) : programService.fetchProgram(id));
+const { fetchAllPrograms, fetchUserPrograms, fetchProgram } = programService;
+const { fetchMessages, fetchMessage } = messagesService;
 
-export const getMessages = (params: PaginationModel) => messagesService.fetchMessages(params);
-export const getMessage = (id: string) => messagesService.fetchMessage(id);
+export const getPrograms = (params: PaginationModel) =>
+  isDevChain() ? getLocalPrograms(params) : fetchAllPrograms(params);
+
+export const getUserPrograms = (params: UserPrograms) =>
+  isDevChain() ? getLocalPrograms(params) : fetchUserPrograms(params);
+
+export const getProgram = (id: string) => (isDevChain() ? getLocalProgram(id) : fetchProgram(id));
+
+export const getMessages = (params: PaginationModel) => fetchMessages(params);
+export const getMessage = (id: string) => fetchMessage(id);

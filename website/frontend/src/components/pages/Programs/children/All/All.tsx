@@ -13,6 +13,7 @@ import UploadIcon from 'assets/images/upload-cloud.svg';
 import { UserProgram } from '../UserProgram/UserProgram';
 import styles from './All.module.scss';
 import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
+import { getPrograms } from 'services';
 
 type ProgramMessageType = {
   programName: string;
@@ -26,18 +27,22 @@ export const All: VFC = () => {
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
 
   const [term, setTerm] = useState('');
-  const programs = useSelector((state: RootState) => state.programs.allUploadedPrograms);
-  const programsCount = useSelector((state: RootState) => state.programs.allUploadedProgramsCount || 0);
+  const [programs, setPrograms] = useState<ProgramModel[]>([]);
+  const [programsCount, setProgramsCount] = useState(0);
+
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
-  const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
-
   useEffect(() => {
-    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term }));
-  }, [dispatch, offset, term]);
+    const programParams = { limit: INITIAL_LIMIT_BY_PAGE, offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE, term };
+
+    getPrograms(programParams).then(({ result }) => {
+      setPrograms(result.programs);
+      setProgramsCount(result.count);
+    });
+  }, [currentPage, term]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {

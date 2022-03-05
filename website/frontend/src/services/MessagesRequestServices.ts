@@ -10,13 +10,13 @@ class MessagesRequestService {
 
   protected readonly API_MESSAGE = RPC_METHODS.GET_MESSAGE;
 
-  public fetchMessages(params: PaginationModel) {
+  public fetchMessages = (params: PaginationModel) => {
     return this.apiRequest.callRPC<MessagePaginationModel>(this.API_MESSAGES_ALL, { ...params });
-  }
+  };
 
-  public fetchMessage(id: string) {
+  public fetchMessage = (id: string) => {
     return this.apiRequest.callRPC<MessageModel>(this.API_MESSAGE, { id });
-  }
+  };
 }
 
 export const messagesService = new MessagesRequestService();
