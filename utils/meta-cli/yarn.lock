@@ -407,7 +407,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.14.0":
+"@gear-js/api@npm:^0.14.2":
   version: 0.14.2
   resolution: "@gear-js/api@npm:0.14.2"
   peerDependencies:
@@ -421,7 +421,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/gear-meta@workspace:."
   dependencies:
-    "@gear-js/api": ^0.14.0
+    "@gear-js/api": ^0.14.2
     "@polkadot/api": ^7.4.1
     chalk: ^5.0.0
     commander: ^9.0.0

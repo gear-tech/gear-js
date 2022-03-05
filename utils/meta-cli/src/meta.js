@@ -1,4 +1,4 @@
-import { getWasmMetadata, CreateType, isJSON, toJSON, getTypeStructure, parseHexTypes } from '@gear-js/api';
+import { getWasmMetadata, CreateType, isJSON, toJSON, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { readFileSync } from 'fs';
 
 export const DEFAULT_TYPES = [
@@ -39,5 +39,5 @@ export async function createType(payload, type, pathToMeta) {
 export async function getTypeStruct(type, pathToMeta) {
   const meta = await getWasmMetadata(readFileSync(pathToMeta));
   type = getType(type, meta);
-  return { typeName: type, struct: getTypeStructure(type, parseHexTypes(meta.types)) };
+  return { typeName: type, struct: createPayloadTypeStructure(type, decodeHexTypes(meta.types)) };
 }
