@@ -4,4 +4,6 @@ import { messagesService } from './MessagesRequestServices';
 import { PaginationModel } from 'types/common';
 
 export const getProgram = (id: string) => (isDevChain() ? getLocalProgram(id) : programService.fetchProgram(id));
+
 export const getMessages = (params: PaginationModel) => messagesService.fetchMessages(params);
+export const getMessage = (id: string) => messagesService.fetchMessage(id);

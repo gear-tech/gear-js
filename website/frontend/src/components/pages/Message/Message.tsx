@@ -1,45 +1,37 @@
 import React, { FC, useEffect, useState } from 'react';
 import { CreateType } from '@gear-js/api';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
 import { formatDate } from 'helpers';
-import { RootState } from 'store/reducers';
-import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAction } from 'store/actions/actions';
 import backIcon from 'assets/images/arrow_back_thick.svg';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { Hint } from 'components/blocks/Hint/Hint';
 import { getPreformattedText } from 'helpers';
+import { getMessage, getProgram } from 'services';
+import { MessageModel } from 'types/message';
+import { ProgramModel } from 'types/program';
 import './Message.scss';
 
 export const Message: FC = () => {
+  const navigate = useNavigate();
   const routeParams = useParams();
   const messageId = routeParams.id as string;
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const { message } = useSelector((state: RootState) => state.messages);
-  const { program } = useSelector((state: RootState) => state.programs);
-
+  const [message, setMessage] = useState<MessageModel>();
+  const [program, setProgram] = useState<ProgramModel>();
   const [messagePayload, setMessagePayload] = useState('');
 
   useEffect(() => {
-    dispatch(getMessageAction(messageId));
-    return () => {
-      dispatch(resetMessageAction());
-    };
-  }, [dispatch, messageId]);
+    getMessage(messageId).then(({ result }) => setMessage(result));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (message) {
-      dispatch(getProgramAction(message.source));
+      getProgram(message.source).then(({ result }) => setProgram(result));
     }
-    return () => {
-      dispatch(resetProgramAction());
-    };
-  }, [dispatch, message]);
+  }, [message]);
 
   useEffect(() => {
     if (program && message) {
