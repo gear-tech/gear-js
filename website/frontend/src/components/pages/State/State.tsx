@@ -6,20 +6,19 @@ import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/actions';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/reducers';
+import { AddAlert } from 'store/actions/actions';
+import { useDispatch } from 'react-redux';
 import { useApi } from 'hooks';
 import { EventTypes } from 'types/alerts';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { BackButton } from 'common/components/BackButton/BackButton';
 import { getPreformattedText } from 'helpers';
+import { ProgramModel } from 'types/program';
+import { getProgram } from 'services';
 import styles from './State.module.scss';
 
 // FIXME: fields type shouldn't be any
 type FormValues = { fields: object; payload: string };
-
-const selectProgram = (state: RootState) => state.programs.program;
 
 const State: VFC = () => {
   const { api } = useApi();
@@ -29,7 +28,7 @@ const State: VFC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const programId = routeParams.id as string;
-  const program = useSelector(selectProgram);
+  const [program, setProgram] = useState<ProgramModel>();
 
   const [metadata, setMetadata] = useState<Metadata | null>(null);
   const metaBuffer = useRef<Buffer | null>(null);
@@ -47,10 +46,7 @@ const State: VFC = () => {
   };
 
   useEffect(() => {
-    dispatch(getProgramAction(programId));
-    return () => {
-      dispatch(resetProgramAction());
-    };
+    getProgram(programId).then(({ result }) => setProgram(result));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
