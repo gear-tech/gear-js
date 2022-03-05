@@ -4,20 +4,25 @@
   "branchPrefix": "renovate-",
   "ignorePaths": ["ansible/**", ".github/**"],
   "assignAutomerge": true,
+  "automergeType": "pr-comment",
+  "automergeComment": "deps: r+",
   "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    },
     {
       "matchPaths": ["api/**"],
       "groupName": "@gear-js/api",
       "reviewers": ["osipov-mit"],
-      "automerge": true,
       "labels": ["api"]
     },
     {
       "matchPaths": ["website/frontend/**"],
       "groupName": "frontend",
       "reviewers": ["nikitayutanov", "aderrod94", "codev0"],
-      "labels": ["frontend"],
-      "automerge": true
+      "labels": ["frontend"]
     },
     {
       "matchPaths": [
@@ -29,14 +34,12 @@
       ],
       "groupName": "backend",
       "reviewers": ["osipov-mit"],
-      "labels": ["backend"],
-      "automerge": true
+      "labels": ["backend"]
     },
     {
       "matchPaths": ["utils/**"],
       "groupName": "utils",
       "reviewers": ["osipov-mit"],
-      "automerge": true,
       "labels": ["utils"]
     }
   ]
