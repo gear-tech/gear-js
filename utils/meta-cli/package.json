@@ -7,7 +7,7 @@
   "version": "0.1.0",
   "preferGlobal": true,
   "dependencies": {
-    "@gear-js/api": "^0.10.0",
+    "@gear-js/api": "^0.14.0",
     "@polkadot/api": "^7.4.1",
     "chalk": "^5.0.0",
     "commander": "^8.3.0",
@@ -33,6 +33,6 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "devDependencies": {
-    "jest": "^27.4.7"
+    "jest": "27.4.7"
   }
 }
