@@ -4,7 +4,6 @@ import BlockReducer from './BlocksReducer';
 import ProgramReducer from './ProgramReducer';
 import AlertReducer from './AlertReducer';
 import CompilerReducer from './CompilerReducer';
-import MessageReducer from './MessageReducer';
 
 const rootReducer = combineReducers({
   programs: ProgramReducer,
@@ -12,7 +11,6 @@ const rootReducer = combineReducers({
   alert: AlertReducer,
   account: AccountReducer,
   compiler: CompilerReducer,
-  messages: MessageReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -1,10 +1,7 @@
 import { CreateType, GearKeyring } from '@gear-js/api';
-import { MessageActionTypes, MessagePaginationModel, MessageModel } from 'types/message';
 import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
 import { UserAccount, AccountActionTypes } from 'types/account';
-import { ApiActionTypes } from 'types/api';
 import { programService } from 'services/ProgramsRequestService';
-import { messagesService } from 'services/MessagesRequestServices';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
@@ -13,28 +10,6 @@ import { PaginationModel, UserPrograms } from 'types/common';
 import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, EventTypes, AlertActionTypes } from 'types/alerts';
-
-const fetchMessagesAction = () => ({ type: MessageActionTypes.FETCH_MESSAGES });
-
-const fetchMessagesSuccessAction = (payload: MessagePaginationModel) => ({
-  type: MessageActionTypes.FETCH_MESSAGES_SUCCESS,
-  payload,
-});
-
-const fetchMessagesErrorAction = () => ({
-  type: MessageActionTypes.FETCH_MESSAGES_ERROR,
-});
-
-const fetchMessageAction = () => ({ type: MessageActionTypes.FETCH_MESSAGE });
-
-const fetchMessageSuccessAction = (payload: MessageModel) => ({
-  type: MessageActionTypes.FETCH_MESSAGE_SUCCESS,
-  payload,
-});
-
-const fetchMessageErrorAction = () => ({ type: MessageActionTypes.FETCH_MESSAGE_ERROR });
-
-export const resetMessageAction = () => ({ type: MessageActionTypes.RESET_MESSAGE });
 
 const fetchUserProgramsAction = () => ({ type: ProgramActionTypes.FETCH_USER_PROGRAMS });
 const fetchUserProgramsSuccessAction = (payload: ProgramPaginationModel) => ({
@@ -90,31 +65,8 @@ export const resetGasAction = () => ({ type: ProgramActionTypes.RESET_GAS });
 
 export const resetBlocksAction = () => ({ type: BlockActionTypes.RESET_BLOCKS });
 
-export const setApiReady = () => ({ type: ApiActionTypes.SET_API });
-export const resetApiReady = () => ({ type: ApiActionTypes.RESET_API });
-
 export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActionTypes.SET_ACCOUNT, payload });
 export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
-
-export const getMessagesAction = (params: PaginationModel) => (dispatch: any) => {
-  dispatch(fetchMessagesAction());
-  messagesService
-    .fetchMessages(params)
-    .then((data) => {
-      dispatch(fetchMessagesSuccessAction(data.result));
-    })
-    .catch(() => dispatch(fetchMessagesErrorAction()));
-};
-
-export const getMessageAction = (id: string) => (dispatch: any) => {
-  dispatch(fetchMessageAction());
-  messagesService
-    .fetchMessage(id)
-    .then((data) => {
-      dispatch(fetchMessageSuccessAction(data.result));
-    })
-    .catch(() => dispatch(fetchMessageErrorAction()));
-};
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
   const getPrograms = isDevChain() ? getLocalPrograms : programService.fetchUserPrograms;
