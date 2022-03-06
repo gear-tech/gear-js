@@ -22,7 +22,7 @@ import { useApi } from 'hooks/useApi';
 import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
-import { readFileAsync, calculateGas } from 'helpers';
+import { readFileAsync, calculateGas, getPreformattedText } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
 import { DroppedFile } from '../../types';
@@ -79,7 +79,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
         valuesFromFile = {
           ...valuesFromFile,
-          types: JSON.stringify(types, null, 4),
+          types: getPreformattedText(types),
         };
 
         setMeta(metaWasm);
