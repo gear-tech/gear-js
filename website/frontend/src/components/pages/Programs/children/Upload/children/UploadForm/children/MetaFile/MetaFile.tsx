@@ -16,10 +16,16 @@ type Props = {
 
 export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, resetMetaForm }) => {
   const dispatch = useDispatch();
-  const metaFieldRef = useRef<HTMLDivElement>(null);
+  let metaFieldRef = useRef<HTMLInputElement>();
 
   const uploadMetaFile = () => {
     metaFieldRef.current?.click();
+  };
+
+  const resetFileInput = () => {
+    if (metaFieldRef.current) {
+      metaFieldRef.current.value = '';
+    }
   };
 
   const handleChangeMetaFile = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,11 +35,15 @@ export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, res
       if (isCorrectFormat) {
         handleUploadMetaFile(event.target.files[0]);
       } else {
+        resetFileInput();
         dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
       }
-
-      event.target.value = '';
     }
+  };
+
+  const handleRemoveButtonClick = () => {
+    resetMetaForm();
+    resetFileInput();
   };
 
   return (
@@ -53,7 +63,7 @@ export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, res
         {droppedMetaFile ? (
           <div className={clsx(styles.value, styles.filename)}>
             {droppedMetaFile.name}
-            <button type="button" onClick={resetMetaForm}>
+            <button type="button" onClick={handleRemoveButtonClick}>
               <Trash2 color="#ffffff" size="20" strokeWidth="1" />
             </button>
           </div>
