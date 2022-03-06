@@ -89,7 +89,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           ...initialValues,
           ...valuesFromFile,
           programName: metaWasm.title,
-          payload: JSON.stringify(typeStructure, null, 4),
+          payload: getPreformattedText(typeStructure),
         });
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
