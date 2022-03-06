@@ -16,7 +16,7 @@ type Props = {
 
 export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, resetMetaForm }) => {
   const dispatch = useDispatch();
-  const metaFieldRef = useRef<HTMLInputElement>();
+  const metaFieldRef = useRef<HTMLInputElement>(null);
 
   const uploadMetaFile = () => {
     metaFieldRef.current?.click();
