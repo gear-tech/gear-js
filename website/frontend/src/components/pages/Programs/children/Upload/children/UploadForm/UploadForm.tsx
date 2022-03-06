@@ -49,7 +49,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     gasLimit: MIN_GAS_LIMIT,
     value: 0,
     payload: '0x00',
-    types: '',
     fields: {},
     programName: '',
   });
@@ -80,7 +79,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
         valuesFromFile = {
           ...valuesFromFile,
-          types: metaWasm.types,
+          types: JSON.stringify(types, null, 4),
         };
 
         setMeta(metaWasm);
@@ -91,7 +90,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           ...valuesFromFile,
           programName: metaWasm.title,
           payload: JSON.stringify(typeStructure, null, 4),
-          types: JSON.stringify(types, null, 4),
         });
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
@@ -112,7 +110,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       gasLimit: MIN_GAS_LIMIT,
       value: 0,
       payload: '0x00',
-      types: '',
       fields: {},
       programName: '',
     });
