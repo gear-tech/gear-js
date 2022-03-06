@@ -101,7 +101,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setDroppedMetaFile(file);
   };
 
-  const handleRemoveMetaFile = () => {
+  const resetMetaForm = () => {
     setMeta(null);
     setMetaFile(null);
     setPayloadForm(null);
@@ -270,7 +270,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       <MetaFile
                         droppedMetaFile={droppedMetaFile}
                         handleUploadMetaFile={handleUploadMetaFile}
-                        handleRemoveMetaFile={handleRemoveMetaFile}
+                        resetMetaForm={resetMetaForm}
                       />
                     )}
                     {isShowFields && (

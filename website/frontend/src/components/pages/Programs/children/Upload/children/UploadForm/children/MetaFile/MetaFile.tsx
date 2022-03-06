@@ -11,10 +11,10 @@ import styles from './MetaFile.module.scss';
 type Props = {
   droppedMetaFile: File | null;
   handleUploadMetaFile: (file: File) => void;
-  handleRemoveMetaFile: () => void;
+  resetMetaForm: () => void;
 };
 
-export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, handleRemoveMetaFile }) => {
+export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, resetMetaForm }) => {
   const dispatch = useDispatch();
   const metaFieldRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +53,7 @@ export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, han
         {droppedMetaFile ? (
           <div className={clsx(styles.value, styles.filename)}>
             {droppedMetaFile.name}
-            <button type="button" onClick={handleRemoveMetaFile}>
+            <button type="button" onClick={resetMetaForm}>
               <Trash2 color="#ffffff" size="20" strokeWidth="1" />
             </button>
           </div>
