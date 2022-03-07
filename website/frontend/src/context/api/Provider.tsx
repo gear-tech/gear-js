@@ -1,11 +1,8 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { GearApi } from '@gear-js/api';
 import { nodeApi } from 'api/initApi';
+import { Props } from '../types';
 import { ApiContext } from './Context';
-
-type Props = {
-  children: ReactNode;
-};
 
 const { Provider } = ApiContext;
 
@@ -20,8 +17,6 @@ const useApi = () => {
   return { api: api as GearApi, isApiReady };
 };
 
-const ApiProvider = ({ children }: Props) => (
-  <Provider value={useApi()}>{children}</Provider>
-);
+const ApiProvider = ({ children }: Props) => <Provider value={useApi()}>{children}</Provider>;
 
 export { ApiProvider };

@@ -24,7 +24,8 @@ import { nodeApi } from '../../api/initApi';
 import store from '../../store';
 
 import { ApiProvider } from 'context/api';
-import { useApi, useEvents, useBlocks } from 'hooks';
+import { BlocksProvider } from 'context/blocks';
+import { useApi, useEvents } from 'hooks';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -54,7 +55,6 @@ const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
 const AppComponent: FC = () => {
   globalStyles();
-  useBlocks();
   const dispatch = useDispatch();
   const { isApiReady } = useApi();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -138,9 +138,11 @@ const AppComponent: FC = () => {
 export const App = () => (
   <Provider store={store}>
     <ApiProvider>
-      <BrowserRouter>
-        <AppComponent />
-      </BrowserRouter>
+      <BlocksProvider>
+        <BrowserRouter>
+          <AppComponent />
+        </BrowserRouter>
+      </BlocksProvider>
     </ApiProvider>
   </Provider>
 );
