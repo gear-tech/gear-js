@@ -1988,10 +1988,8 @@ __metadata:
     eslint-plugin-react-hooks: 4.3.0
     file-saver: 2.0.5
     formik: 2.2.9
-    husky: 7.0.4
     jszip: 3.7.1
     ky: 0.29.0
-    lint-staged: 12.3.4
     localforage: 1.10.0
     lodash.get: 4.4.2
     lodash.isobject: 3.0.2
@@ -11943,29 +11941,6 @@ __metadata:
   version: 1.2.4
   resolution: "lines-and-columns@npm:1.2.4"
   checksum: 0c37f9f7fa212b38912b7145e1cd16a5f3cd34d782441c3e6ca653485d326f58b3caccda66efce1c5812bde4961bbde3374fae4b0d11bf1226152337f3894aa5
-  languageName: node
-  linkType: hard
-
-"lint-staged@npm:12.3.4":
-  version: 12.3.4
-  resolution: "lint-staged@npm:12.3.4"
-  dependencies:
-    cli-truncate: ^3.1.0
-    colorette: ^2.0.16
-    commander: ^8.3.0
-    debug: ^4.3.3
-    execa: ^5.1.1
-    lilconfig: 2.0.4
-    listr2: ^4.0.1
-    micromatch: ^4.0.4
-    normalize-path: ^3.0.0
-    object-inspect: ^1.12.0
-    string-argv: ^0.3.1
-    supports-color: ^9.2.1
-    yaml: ^1.10.2
-  bin:
-    lint-staged: bin/lint-staged.js
-  checksum: 4e0b4b9da4183a0daeab35d41e4d243fb1270a39db997efa0c3745fa148a7a4b8b723a51cb757595fc8bb118796ca1465e67aede72f25e9ea48165aec36cec3b
   languageName: node
   linkType: hard
 
