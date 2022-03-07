@@ -1,5 +1,4 @@
 @use 'assets/scss/variables' as *;
-@use 'assets/scss/mixins' as *;
 @use 'assets/scss/breakpoints' as *;
 
 .header {
@@ -13,13 +12,20 @@
 }
 
 .nav {
-  @include flexGap(100px);
   display: flex;
   align-items: center;
 
   @include lg {
-    @include flexGap(32px);
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  & > *:not(:last-child) {
+    margin-right: 100px;
+
+    @include lg {
+      margin-right: 0;
+      margin-bottom: 32px;
+    }
   }
 }

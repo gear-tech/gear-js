@@ -1,14 +1,20 @@
 @use 'assets/scss/variables' as *;
-@use 'assets/scss/mixins.scss' as *;
 @use 'assets/scss/breakpoints.scss' as *;
 
 .menu {
-  @include flexGap(40px);
   display: flex;
 
   @include sm {
-    @include flexGap(20px);
     flex-direction: column;
+  }
+
+  & > *:not(:last-child) {
+    margin-right: 40px;
+
+    @include sm {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
   }
 }
 
