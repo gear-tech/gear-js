@@ -16,8 +16,13 @@
   color: inherit;
   transition: all 0.25s;
   cursor: pointer;
+  border-bottom: 2px solid transparent;
 
   &:hover {
     color: $textColorSecondary;
+  }
+
+  &.active {
+    border-bottom: 2px solid $successColor;
   }
 }
