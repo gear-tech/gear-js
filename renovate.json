@@ -1,0 +1,46 @@
+{
+  "extends": ["config:base"],
+  "labels": ["dependencies"],
+  "branchPrefix": "renovate-",
+  "ignorePaths": ["ansible/**", ".github/**"],
+  "assignAutomerge": true,
+  "automergeType": "pr-comment",
+  "automergeComment": "deps: r+",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    },
+    {
+      "matchPaths": ["api/**"],
+      "groupName": "@gear-js/api",
+      "reviewers": ["osipov-mit"],
+      "labels": ["api"]
+    },
+    {
+      "matchPaths": ["website/frontend/**"],
+      "groupName": "frontend",
+      "reviewers": ["nikitayutanov", "aderrod94", "codev0"],
+      "labels": ["frontend"]
+    },
+    {
+      "matchPaths": [
+        "website/api-gateway/**",
+        "website/data-storage/**",
+        "website/events-listener/**",
+        "website/test-balance/**",
+        "website/wasm-compiler/**"
+      ],
+      "groupName": "backend",
+      "reviewers": ["osipov-mit"],
+      "labels": ["backend"]
+    },
+    {
+      "matchPaths": ["utils/**"],
+      "groupName": "utils",
+      "reviewers": ["osipov-mit"],
+      "labels": ["utils"]
+    }
+  ]
+}

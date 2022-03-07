@@ -21,8 +21,8 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "dotenv": "^10.0.0",
-    "ts-node-dev": "^1.1.8",
-    "typescript": "^4.5.4"
+    "dotenv": "10.0.0",
+    "ts-node-dev": "1.1.8",
+    "typescript": "4.6.2"
   }
 }

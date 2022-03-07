@@ -17,9 +17,9 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "husky": "^7.0.2",
-    "lint-staged": "^11.1.2",
-    "prettier": "^2.4.1"
+    "husky": "7.0.4",
+    "lint-staged": "12.3.5",
+    "prettier": "2.5.1"
   },
   "workspaces": [
     "website/api-gateway",
@@ -33,6 +33,6 @@
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
   },
-  "packageManager": "yarn@3.1.1",
+  "packageManager": "yarn@3.2.0",
   "version": "0.0.2"
 }
