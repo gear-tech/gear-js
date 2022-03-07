@@ -2,8 +2,6 @@ export type InitialValues = {
   gasLimit: number;
   value: number;
   payload: string;
-  destination: string;
+  messageId: string;
   fields: {};
 };
-
-export type SetFieldValue = (field: string, value: any, shouldValidate?: boolean | undefined) => void;

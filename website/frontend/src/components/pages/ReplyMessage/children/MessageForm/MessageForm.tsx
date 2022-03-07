@@ -38,7 +38,7 @@ export const MessageForm: VFC<Props> = ({ messageId, programName, reply, meta, t
     gasLimit: 20000000,
     value: 0,
     payload: types ? getPreformattedText(types) : '',
-    destination: messageId,
+    messageId,
     fields: {},
   });
 
@@ -61,7 +61,7 @@ export const MessageForm: VFC<Props> = ({ messageId, programName, reply, meta, t
 
           const message: MessageModel = {
             gasLimit: values.gasLimit,
-            destination: values.destination,
+            destination: values.messageId,
             value: values.value,
             payload: pl,
           };
@@ -83,18 +83,18 @@ export const MessageForm: VFC<Props> = ({ messageId, programName, reply, meta, t
                 <span>{fileNameHandler(programName)}</span>
               </div>
               <div className="message-form--info">
-                <label htmlFor="destination" className="message-form__field">
-                  Destination:
+                <label htmlFor="messageId" className="message-form__field">
+                  Message ID:
                 </label>
                 <div className="message-form__field-wrapper">
                   <Field
-                    id="destination"
-                    name="destination"
+                    id="messageId"
+                    name="messageId"
                     type="text"
-                    className={clsx('', errors.destination && touched.destination && 'message-form__input-error')}
+                    className={clsx('', errors.messageId && touched.messageId && 'message-form__input-error')}
                   />
-                  {errors.destination && touched.destination ? (
-                    <div className="message-form__error">{errors.destination}</div>
+                  {errors.messageId && touched.messageId ? (
+                    <div className="message-form__error">{errors.messageId}</div>
                   ) : null}
                 </div>
               </div>
