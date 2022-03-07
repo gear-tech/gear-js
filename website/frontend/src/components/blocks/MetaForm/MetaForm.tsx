@@ -8,11 +8,11 @@ import { addMetadata } from 'services/ApiService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/reducers';
+import { useDispatch } from 'react-redux';
 import { AddAlert } from 'store/actions/actions';
 import { EventTypes } from 'types/alerts';
 import { readFileAsync } from '../../../helpers';
+import { useAccount } from 'hooks';
 import { Schema } from './Schema';
 import './MetaForm.scss';
 
@@ -29,7 +29,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
   const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { account: currentAccount } = useAccount();
 
   const metaFieldRef = useRef<any>(null);
 

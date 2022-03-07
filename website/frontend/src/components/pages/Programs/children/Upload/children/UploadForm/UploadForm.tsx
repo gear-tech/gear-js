@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
@@ -18,9 +18,8 @@ import { MetaFields } from './children/MetaFields/MetaFields';
 import { Buttons } from './children/Buttons/Buttons';
 
 import { Schema } from './Schema';
-import { useApi } from 'hooks';
+import { useAccount, useApi } from 'hooks';
 import { AddAlert } from 'store/actions/actions';
-import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
 import { readFileAsync, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
@@ -36,7 +35,7 @@ type Props = {
 export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const { api } = useApi();
   const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { account: currentAccount } = useAccount();
 
   const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);

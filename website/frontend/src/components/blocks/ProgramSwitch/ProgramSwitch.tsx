@@ -6,10 +6,9 @@ import { routes } from 'routes';
 import { AddAlert } from 'store/actions/actions';
 import { EventTypes } from 'types/alerts';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'consts';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { RootState } from 'store/reducers';
-import { useApi } from 'hooks';
+import { useAccount, useApi } from 'hooks';
 import { isDevChain } from 'helpers';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 
@@ -20,7 +19,7 @@ type Props = {
 export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const { api } = useApi();
   const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { account: currentAccount } = useAccount();
   const apiRequest = new ServerRPCRequestService();
   const [gasCallCounter, setGasCallCounter] = useState(0);
 

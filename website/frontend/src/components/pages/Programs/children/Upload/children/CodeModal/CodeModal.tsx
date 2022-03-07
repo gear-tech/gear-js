@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { Hex } from '@gear-js/api';
 import { ISubmittableResult } from '@polkadot/types/types';
@@ -7,9 +7,8 @@ import { Event } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import copy from 'assets/images/copy.svg';
 import { copyToClipboard, readFileAsync } from 'helpers';
-import { useApi } from 'hooks';
+import { useApi, useAccount } from 'hooks';
 import { EventTypes } from 'types/alerts';
-import { RootState } from 'store/reducers';
 import { AddAlert } from 'store/actions/actions';
 import { Button } from 'common/components/Button/Button';
 import { Modal } from 'components/blocks/Modal';
@@ -26,7 +25,7 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
   const { api } = useApi();
   const alert = useAlert();
   const dispatch = useDispatch();
-  const { account } = useSelector((state: RootState) => state.account);
+  const { account } = useAccount();
   const [codeHash, setCodeHash] = useState('' as Hex);
 
   const close = () => {

@@ -1,18 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
 import { GearKeyring } from '@gear-js/api';
 import { useAlert } from 'react-alert';
 import { LogoutIcon } from 'assets/Icons';
-import { RootState } from 'store/reducers';
-import { setCurrentAccount, resetCurrentAccount } from 'store/actions/actions';
 import { UserAccount } from '../../../types/account';
 import { useApi } from 'hooks';
 import { Modal } from '../Modal';
 import { AccountList } from './AccountList';
 import { nodeApi } from '../../../api/initApi';
 import { LOCAL_STORAGE } from 'consts';
+import { useAccount } from 'hooks';
 import styles from './Wallet.module.scss';
 
 export const Wallet = () => {
@@ -22,8 +20,7 @@ export const Wallet = () => {
 
   const alert = useAlert();
   const { api } = useApi();
-  const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { account: currentAccount, setAccount } = useAccount();
 
   const getAllAccounts = useCallback(async () => {
     if (typeof window !== `undefined`) {
@@ -51,7 +48,7 @@ export const Wallet = () => {
             allAccounts.forEach((acc: UserAccount) => {
               if (acc.address === localStorage.getItem(LOCAL_STORAGE.SAVED_ACCOUNT)) {
                 acc.isActive = true;
-                dispatch(setCurrentAccount(acc));
+                setAccount(acc);
               }
             });
             setInjectedAccounts(allAccounts);
@@ -59,7 +56,7 @@ export const Wallet = () => {
         })
         .catch((err) => console.error(err));
     }, 300);
-  }, [dispatch, getAllAccounts]);
+  }, [setAccount, getAllAccounts]);
 
   const getBalance = useCallback(
     async (address: string) => {
@@ -75,7 +72,7 @@ export const Wallet = () => {
         setAccountBalance(result.toHuman());
       });
     }
-  }, [currentAccount, api, dispatch, getBalance]);
+  }, [currentAccount, api, getBalance]);
 
   const subscriptionRef = useRef<VoidFunction | null>(null);
 
@@ -114,14 +111,14 @@ export const Wallet = () => {
           localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, GearKeyring.decodeAddress(acc.address));
         }
       });
-      dispatch(setCurrentAccount(injectedAccounts[index]));
+      setAccount(injectedAccounts[index]);
       toggleModal();
       alert.success('Account successfully changed');
     }
   };
 
   const handleLogout = () => {
-    dispatch(resetCurrentAccount());
+    setAccount(undefined);
     localStorage.removeItem(LOCAL_STORAGE.SAVED_ACCOUNT);
     localStorage.removeItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
     toggleModal();

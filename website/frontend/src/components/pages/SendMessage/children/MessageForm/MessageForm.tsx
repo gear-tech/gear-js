@@ -1,5 +1,5 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
@@ -8,12 +8,11 @@ import { SendMessageToProgram } from 'services/ApiService';
 import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { MessageModel } from 'types/program';
-import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
-import { useApi } from 'hooks';
+import { useAccount, useApi } from 'hooks';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { Schema } from './Schema';
 
@@ -29,7 +28,7 @@ type Props = {
 export const MessageForm: VFC<Props> = ({ programId, programName, meta, types }) => {
   const { api } = useApi();
   const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { account: currentAccount } = useAccount();
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
   const [isManualInput, setIsManualInput] = useState(Boolean(!types));
 
