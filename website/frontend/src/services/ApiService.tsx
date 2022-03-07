@@ -1,7 +1,7 @@
 import { UploadProgramModel, MessageModel, MetaModel, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { GearApi, Metadata } from '@gear-js/api';
-import { UserAccount } from 'types/account';
 import { RPC_METHODS, PROGRAM_ERRORS } from 'consts';
 import { EventTypes } from 'types/alerts';
 import {
@@ -21,7 +21,7 @@ import ServerRPCRequestService from './ServerRPCRequestService';
 
 export const UploadProgram = async (
   api: any,
-  account: UserAccount,
+  account: InjectedAccountWithMeta,
   file: File,
   opts: UploadProgramModel,
   metaFile: any,
@@ -178,7 +178,7 @@ export const UploadProgram = async (
 // TODO: (dispatch) fix it later
 export const SendMessageToProgram = async (
   api: GearApi,
-  account: UserAccount,
+  account: InjectedAccountWithMeta,
   _message: MessageModel,
   dispatch: any,
   callback: () => void,
@@ -253,7 +253,7 @@ export const SendMessageToProgram = async (
 export const addMetadata = async (
   meta: MetaModel,
   metaFile: any,
-  account: UserAccount,
+  account: InjectedAccountWithMeta,
   programId: string,
   name: any,
   dispatch: any

@@ -1,6 +1,5 @@
 import { CreateType, GearKeyring } from '@gear-js/api';
 import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/program';
-import { UserAccount, AccountActionTypes } from 'types/account';
 import { programService } from 'services/ProgramsRequestService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
@@ -58,9 +57,6 @@ export const programStatusAction = (payload: string) => ({ type: ProgramActionTy
 
 export const fetchGasAction = (payload: number) => ({ type: ProgramActionTypes.FETCH_GAS, payload });
 export const resetGasAction = () => ({ type: ProgramActionTypes.RESET_GAS });
-
-export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActionTypes.SET_ACCOUNT, payload });
-export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });
 
 export const getUserProgramsAction = (params: UserPrograms) => (dispatch: any) => {
   const getPrograms = isDevChain() ? getLocalPrograms : programService.fetchUserPrograms;

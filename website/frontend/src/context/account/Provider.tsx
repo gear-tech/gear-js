@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { AccountContext } from './Context';
 import { Props } from '../types';
