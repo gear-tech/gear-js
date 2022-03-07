@@ -5,7 +5,6 @@ import { programService } from 'services/ProgramsRequestService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
 import { CompilerActionTypes } from 'types/compiler';
-import { BlockActionTypes, BlockModel } from 'types/block';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
@@ -30,9 +29,6 @@ const fetchProgramSuccessAction = (payload: ProgramModel) => ({
 export const resetProgramAction = () => ({ type: ProgramActionTypes.RESET_PROGRAM });
 
 const fetchProgramErrorAction = () => ({ type: ProgramActionTypes.FETCH_PROGRAM_ERROR });
-
-export const fetchTotalIssuanceAction = (payload: {}) => ({ type: BlockActionTypes.FETCH_TOTALISSUANCE, payload });
-export const fetchBlockAction = (payload: BlockModel) => ({ type: BlockActionTypes.FETCH_BLOCK, payload });
 
 export const programUploadStartAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_START });
 export const programUploadResetAction = () => ({ type: ProgramActionTypes.PROGRAM_UPLOAD_RESET });
@@ -62,8 +58,6 @@ export const programStatusAction = (payload: string) => ({ type: ProgramActionTy
 
 export const fetchGasAction = (payload: number) => ({ type: ProgramActionTypes.FETCH_GAS, payload });
 export const resetGasAction = () => ({ type: ProgramActionTypes.RESET_GAS });
-
-export const resetBlocksAction = () => ({ type: BlockActionTypes.RESET_BLOCKS });
 
 export const setCurrentAccount = (payload: UserAccount) => ({ type: AccountActionTypes.SET_ACCOUNT, payload });
 export const resetCurrentAccount = () => ({ type: AccountActionTypes.RESET_ACCOUNT });

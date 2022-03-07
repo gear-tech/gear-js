@@ -1,13 +1,11 @@
 import { combineReducers } from 'redux';
 import AccountReducer from './AccountReducer';
-import BlockReducer from './BlocksReducer';
 import ProgramReducer from './ProgramReducer';
 import AlertReducer from './AlertReducer';
 import CompilerReducer from './CompilerReducer';
 
 const rootReducer = combineReducers({
   programs: ProgramReducer,
-  blocks: BlockReducer,
   alert: AlertReducer,
   account: AccountReducer,
   compiler: CompilerReducer,
