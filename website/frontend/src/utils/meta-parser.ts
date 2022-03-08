@@ -7,389 +7,181 @@ import merge from 'lodash.merge';
 type MetaNull = 'Null';
 const metaNull = 'Null';
 
+type MetaItem = {
+  [key: string | MetaEnumType]: string | MetaItem;
+};
+
 type MetaTypes = 'Text' | 'Null';
 
-export type ParsedValue = {
+type MetaField = {
   type: MetaTypes;
   name: string;
   label: string;
 };
 
-export type ParsedStruct = {
-  [key: string]: ParsedStruct | ParsedValue;
+type MetaFormItem = {
+  [key: string]: MetaField | MetaFieldset;
 };
 
-export type ParsedFormValue = {
-  [key: string]: ParsedFormValue;
+type MetaFieldset = {
+  __name: string;
+  __type: string;
+  __select: MetaFormItem | null;
+  __fields: MetaFormItem | null;
 };
 
-export type ParsedShape = {
-  select: Record<
-    string,
-    {
-      type: MetaEnums;
-      fields: { [key: string]: ParsedStruct };
-      NoFields?: {
-        NoFields: null;
-      };
-    }
-  > | null;
-  fields: ParsedStruct | null;
-  values: ParsedStruct | null;
+type FormValues = {
+  [key: string]: string | FormValues;
 };
 
-// function isObjectEmpty(obj: object) {
-//     for (const i in obj) return false;
-//     return true;
-// }
+type MetaFormStruct = {
+  __root: MetaFieldset | null;
+  __values: FormValues | null;
+};
 
-// function isObject(obj: unknown) {
-//     const type = typeof obj;
-//     return type === "function" || (type === "object" && !!obj);
-// }
+type MetaEnumType = '_enum' | '_enum_Option' | '_enum_Result' | string;
 
-// function isString(str: unknown): boolean {
-//     return typeof str === 'string' || str instanceof String
-// }
-
-enum MetaEnums {
+enum MetaEnum {
   Enum = '_enum',
   EnumOption = '_enum_Option',
   EnumResult = '_enum_Result',
 }
 
-type MetaField = { [key: string]: { [key: string]: string | MetaField } };
-export type MetaParam = {} | [] | MetaField;
+type StackKind = 'field' | 'fieldset' | 'enum' | 'enum_option' | 'enum_result';
 
-function parseField(data: MetaParam) {
-  const result: ParsedShape = {
-    select: null,
-    fields: null,
-    values: null,
-  };
+type StackItem = {
+  kind: StackKind;
+  path: string[];
+  value: string | MetaItem;
+};
 
-  const stack: {
-    kind: 'field' | 'enum' | 'enum_option' | 'enum_result';
-    path: string[];
-    value: (string | MetaField) | MetaNull;
-  }[] = [];
-
-  Object.entries(data).forEach((item, index) => {
-    if (item[0] === MetaEnums.Enum) {
-      if (!result.select) {
-        result.select = {};
-      }
-
-      result.select[Object.keys(item[1]).join('.')] = {
-        type: MetaEnums.Enum,
-        fields: {},
-      };
-
-      Object.entries(item[1]).forEach((field) => {
-        if (isObject(field[1])) {
-          stack.push({
-            kind: 'enum',
-            path: [Object.keys(item[1]).join('.'), 'fields', field[0]],
-            value: field[1],
-          });
-        } else if (field[1] === metaNull) {
-          stack.push({
-            kind: 'enum',
-            path: [Object.keys(item[1]).join('.'), 'fields', field[0]],
-            value: metaNull as MetaNull,
-          });
-        } else {
-          stack.push({
-            kind: 'enum',
-            path: [Object.keys(item[1]).join('.'), 'fields', field[0]],
-            value: field[1],
-          });
-        }
+function processFields(data: MetaItem, path?: string[]): StackItem[] {
+  return Object.entries(data).reduce<StackItem[]>((accum, item) => {
+    const [key, value] = item;
+    if (key === MetaEnum.Enum) {
+      accum.push({
+        kind: 'enum',
+        path: [],
+        value: value as MetaItem, // TODO: find out why types not infer as expected
       });
-    } else if (item[0] === MetaEnums.EnumOption) {
-      stack.push({
-        kind: 'enum_option',
-        path: [`__field[${index}]`],
-        value: item[1] as MetaField,
+    } else if (key === MetaEnum.EnumOption) {
+    } else if (key === MetaEnum.EnumResult) {
+    } else if (isObject(value)) {
+      accum.push({
+        kind: 'fieldset',
+        path: [...(path || []), key],
+        value: value,
       });
-    } else if (item[0] === MetaEnums.EnumResult) {
-    } else {
-      stack.push({
+    } else if (isString(value)) {
+      accum.push({
         kind: 'field',
-        path: [item[0]],
-        value: item[1] as MetaField,
+        path: [...(path || []), key],
+        value: value,
       });
     }
-  });
+    return accum;
+  }, []);
+}
+
+type PathSpecialKeys = '__select' | '__fields' | '__name' | '__values' | '__type';
+
+function isOdd(num: number) {
+  return num % 2;
+}
+
+function createFieldsetPath(path: string[]) {
+  return path.reduce<string[]>((accum, item, index) => {
+    if (!isOdd(index)) {
+      accum.push(item);
+      accum.push('__fields');
+      return accum;
+    }
+
+    accum.push(item);
+    return accum;
+  }, []);
+}
+
+function parseField(data: MetaItem) {
+  const result: MetaFormStruct = {
+    __root: null,
+    __values: null,
+  };
+
+  const stack: StackItem[] = [];
+
+  stack.push(
+    ...processFields({
+      __root: data,
+    })
+  );
 
   while (stack.length > 0) {
     const current = stack.pop();
 
     if (current) {
-      if (current.value === metaNull) {
-        if (current.kind === 'enum' && result.select) {
-          set(result.select, current.path, {
-            type: 'Null',
-            name: current.path
-              .slice(1)
-              .map((i) => (i === 'fields' ? 'meta' : i))
-              .join('.'),
-            label: current.path[current.path.length - 1],
-          });
-
-          // eslint-disable-next-line max-depth
-          if (!result.values) {
-            result.values = {};
-          }
-          set(result.values, current.path.slice(2), metaNull);
-        } else if (current.kind === 'field') {
-          // eslint-disable-next-line max-depth
-          if (!result.fields) {
-            result.fields = {};
-          }
-          set(result.fields, current.path, {
-            [current.path.toString()]: null,
-          });
-
-          if (!result.values) {
-            result.values = {};
-          }
-          set(result.values, current.path, '');
-        }
+      if (!result.__values) {
+        result.__values = {};
       }
-      if (isString(current.value) && current.value !== metaNull) {
-        if (current.kind === 'enum' && result.select) {
-          const path = [...current.path];
-          path.shift();
-          const key = path[path.length - 1];
-          set(result.select, current.path, {
-            label: key,
-            name: ['meta', key].join('.'),
-            type: current.value,
-          });
 
-          if (!result.values) {
-            result.values = {};
-          }
-          set(result.values, path.slice(1), '');
-        } else if (current.kind === 'enum_option') {
-          const root = current.path[0];
-          if (!result.select) {
-            result.select = {};
-          }
-          set(result.select, current.path, {
-            type: MetaEnums.EnumOption,
-            NoFields: {
-              type: 'Null',
-              name: 'meta.NoFields', // TODO: add if field deep
-              label: 'NoFields',
-            },
-          });
-
-          const key = current.path[current.path.length - 1];
-          const fieldsPath = [...current.path, 'fields'];
-          set(
-            result.select,
-            fieldsPath,
-            merge(get(result.select, fieldsPath), {
-              [key]: {
-                label: key,
-                name: ['meta', key].join('.'),
-                type: current.value,
-              },
-            })
-          );
-
-          if (!result.values) {
-            result.values = {};
-          }
-          set(result.values, current.path, '');
-        } else if (current.kind === 'field') {
-          const key = current.path[current.path.length - 1];
-          if (!result.fields) {
-            result.fields = {};
-          }
-
-          set(result.fields, current.path, {
-            label: key,
-            name: ['meta', ...current.path].join('.'),
-            type: current.value,
-          });
-
-          if (!result.values) {
-            result.values = {};
-          }
-          set(result.values, current.path, '');
-        }
-      } else {
-        Object.entries(current.value).forEach((item) => {
-          const key = item[0];
-          const value = item[1];
-
-          // Detecting _enum_Option field
-          if (key === MetaEnums.EnumOption) {
-            if (!result.select) {
-              result.select = {};
-            }
-            set(result.select, current.path, {
-              type: MetaEnums.EnumOption,
-              NoFields: {
-                type: 'Null',
-                name: 'meta.NoFields', // TODO: add if field deep
-                label: 'NoFields',
-              },
-            });
-            stack.push({
-              kind: 'enum_option',
-              path: [...current.path, 'fields'],
-              value: { [`${current.path}`]: value },
-            });
-          }
-          // Detecting _enum_Result field
-          else if (key === MetaEnums.EnumResult) {
-            if (!result.select) {
-              result.select = {};
-            }
-            set(result.select, current.path, {
-              type: MetaEnums.EnumResult,
-            });
-            Object.entries(value).forEach((val) => {
-              if (val[0] === 'ok') {
-                stack.push({
-                  kind: 'enum_result',
-                  path: [...current.path, 'fields', 'ok'],
-                  value: { [`${current.path}`]: val[1] } as MetaField,
-                });
-              }
-              if (val[0] === 'err') {
-                stack.push({
-                  kind: 'enum_result',
-                  path: [...current.path, 'fields', 'err'],
-                  value: { [`${current.path}`]: val[1] } as MetaField,
-                });
-              }
-            });
-          } else if (isObject(value)) {
-            // Parse _enum_Option values
-            if (current.kind === 'enum_option') {
-              stack.push({
-                kind: 'enum_option',
-                path: current.path[0] === key ? current.path : [...current.path, key],
-                value: value as MetaField,
-              });
-            } else if (current.kind === 'field') {
-              stack.push({
-                kind: 'field',
-                path: [...current.path, key],
-                value: value as MetaField,
-              });
-            }
-          } else if (isString(value) || value === null) {
-            if (current.kind === 'enum' && current.value !== metaNull) {
-              if (!result.select) {
-                result.select = {};
-              }
-
-              const path = [...current.path];
-              path.shift();
-              set(
-                result.select,
-                [...current.path],
-                merge(get(result.select, current.path), {
-                  [key]: {
-                    label: key,
-                    name: ['meta', ...path.filter((i) => i !== 'fields'), key].join('.'),
-                    type: value,
-                  },
-                })
-              );
-
-              if (!result.values) {
-                result.values = {};
-              }
-              set(result.values, [...current.path.slice(2), key], '');
-            } else if (current.kind === 'enum_option') {
-              if (result.select) {
-                const path = [...current.path];
-                const root = path.shift();
-
-                const pt = [...path.filter((i) => i !== 'fields'), key];
-                set(
-                  result.select,
-                  current.path,
-                  merge(get(result.select, current.path), {
-                    [key]: {
-                      label: key,
-                      name: ['meta', ...pt].join('.'),
-                      type: value,
-                    },
-                  })
-                );
-
-                if (!result.values) {
-                  result.values = {};
-                }
-                if (root) {
-                  // FIXME: refactor this
-                  set(result.values, pt[0] === root ? root : [root, ...pt], '');
-                }
-              }
-            } else if (current.kind === 'enum_result') {
-              if (result.select) {
-                set(result.select, current.path, {
-                  label: current.path[current.path.length - 1],
-                  name: ['meta', ...current.path.filter((i) => i !== 'fields')].join('.'),
-                  type: value,
-                });
-
-                if (!result.values) {
-                  result.values = {};
-                }
-                set(result.values, current.path.slice(2), '');
-              }
-            } else if (current.kind === 'field') {
-              if (!result.fields) {
-                result.fields = {};
-              }
-              set(
-                result.fields,
-                current.path,
-                merge(get(result.fields, current.path), {
-                  [key]: {
-                    label: key,
-                    name: ['meta', ...current.path, key].join('.'),
-                    type: value,
-                  },
-                })
-              );
-
-              if (!result.values) {
-                result.values = {};
-              }
-              set(
-                result.values,
-                current.path,
-                merge(get(result.values, current.path), {
-                  [key]: '',
-                })
-              );
-            }
-          }
+      // Check if this field
+      if (isString(current.value) && current.kind === 'field') {
+        const key = current.path.at(-1);
+        set(result, current.path, {
+          label: key,
+          name: current.path.filter((i) => i !== '__fields').join('.'),
+          type: current.value,
         });
+
+        set(
+          result.__values,
+          current.path.filter((i) => !['__root', '__fields'].includes(i)),
+          ''
+        );
+      }
+      // Parse if it is fieldset
+      else if (isObject(current.value)) {
+        if (current.kind === 'fieldset') {
+          const key = current.path.at(-1);
+          set(result, [...current.path, '__fields'], null);
+          set(result, [...current.path, '__select'], null);
+          set(result, [...current.path, '__name'], key);
+          set(result, [...current.path, '__type'], '__fieldset');
+
+          // Process fieldset fields
+          Object.entries(current.value).forEach(([vKey, vValue]) => {
+            // field
+            if (isString(vValue)) {
+              stack.push(
+                ...processFields(
+                  {
+                    [vKey]: vValue,
+                  },
+                  [...current.path, '__fields']
+                )
+              );
+            }
+            // fieldset
+            if (isObject(vValue)) {
+              stack.push(
+                ...processFields(
+                  {
+                    [vKey]: vValue,
+                  },
+                  [...current.path, '__fields']
+                )
+              );
+            }
+          });
+        }
       }
     }
-  }
-
-  if (result.select && Object.values(result.select).length > 0) {
-    const option = Object.values(result.select)[0];
-    const field = Object.entries(option.fields).reverse()[0];
-    result.fields = { [`${field[0]}`]: JSON.parse(JSON.stringify(field[1])) };
   }
 
   return result;
 }
 
-export function parseMeta(data: MetaParam): ParsedShape | null {
+export function parseMeta(data: MetaItem): MetaFormStruct | null {
   if (isObject(data)) {
     if (Object.keys(data).length === 0) {
       return null;

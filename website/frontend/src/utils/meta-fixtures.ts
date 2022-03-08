@@ -1,25 +1,3 @@
-export const data1 = { id: { decimal: 'u64', hex: 'Bytes' } };
-
-export const data2 = {
-  exchangeRate: { _enum_Result: { ok: 'u8', err: 'u8' } },
-  sum: 'u8',
-};
-
-export const data5 = [
-  {
-    AddMessage: {
-      author: 'Text',
-      msg: 'Text',
-    },
-  },
-  {
-    AddMessage: {
-      author: 'Text',
-      msg: 'Text',
-    },
-  },
-];
-
 export const simpleStruct = {
   AddMessage: { author: 'Text', msg: 'Text' },
 };
@@ -43,8 +21,15 @@ export const simpleEnum = {
   },
 };
 
-export const simpleEnumOption = {
+export const enumOptionSimple = {
   _enum_Option: 'String',
+};
+
+export const enumOptionWithFieldsObject = {
+  _enum_Option: {
+    firstName: 'Text',
+    lastName: 'Text',
+  },
 };
 
 export const nestedEnumOption = {

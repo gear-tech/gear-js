@@ -4,10 +4,11 @@ import {
   simpleDeepStruct,
   simpleStruct,
   simpleEnum,
-  simpleEnumOption,
+  enumOptionSimple,
   complexEnumOption,
   simpleEnumResult,
   nestedEnumOption,
+  enumOptionWithFieldsObject,
 } from './meta-fixtures';
 
 // result
@@ -27,33 +28,7 @@ import {
 // }
 
 describe('test parser', () => {
-  // it("empty array", () => {
-  //     expect(parseMeta([])).toEqual(null);
-  // });
-  //
-  // it("empty object", () => {
-  //     expect(parseMeta({})).toEqual(null);
-  // });
-
-  // it("array of simple structs", () => {
-  //     expect(parseMeta(data5)).toEqual({
-  //         select: null,
-  //         fields: [
-  //             {
-  //                 AddMessage: {
-  //                     type: "Text",
-  //                     name: "author",
-  //                 }
-  //             },
-  //             {
-  //                 AddMessage: {
-  //                     type: "Text",
-  //                     name: "author",
-  //                 }
-  //             },
-  //         ]
-  //     });
-  // });
+  // TODO add edge case tests e.g for null, empty array, empty objects
 
   it('simple struct', () => {
     expect(
@@ -62,20 +37,24 @@ describe('test parser', () => {
         currency: 'Text',
       })
     ).toEqual({
-      select: null,
-      fields: {
-        amount: {
-          label: 'amount',
-          type: 'u8',
-          name: 'meta.amount',
-        },
-        currency: {
-          label: 'currency',
-          type: 'Text',
-          name: 'meta.currency',
+      __root: {
+        __type: '__fieldset',
+        __name: '__root',
+        __select: null,
+        __fields: {
+          amount: {
+            label: 'amount',
+            type: 'u8',
+            name: '__root.amount',
+          },
+          currency: {
+            label: 'currency',
+            type: 'Text',
+            name: '__root.currency',
+          },
         },
       },
-      values: {
+      __values: {
         amount: '',
         currency: '',
       },
@@ -84,22 +63,31 @@ describe('test parser', () => {
 
   it('nested simple struct', () => {
     expect(parseMeta(simpleStruct)).toEqual({
-      select: null,
-      fields: {
-        AddMessage: {
-          author: {
-            label: 'author',
-            type: 'Text',
-            name: 'meta.AddMessage.author',
-          },
-          msg: {
-            label: 'msg',
-            type: 'Text',
-            name: 'meta.AddMessage.msg',
+      __root: {
+        __type: '__fieldset',
+        __name: '__root',
+        __select: null,
+        __fields: {
+          AddMessage: {
+            __type: '__fieldset',
+            __name: 'AddMessage',
+            __select: null,
+            __fields: {
+              author: {
+                label: 'author',
+                type: 'Text',
+                name: '__root.AddMessage.author',
+              },
+              msg: {
+                label: 'msg',
+                type: 'Text',
+                name: '__root.AddMessage.msg',
+              },
+            },
           },
         },
       },
-      values: {
+      __values: {
         AddMessage: {
           author: '',
           msg: '',
@@ -110,34 +98,48 @@ describe('test parser', () => {
 
   it('simple deep struct', () => {
     expect(parseMeta(simpleDeepStruct)).toEqual({
-      select: null,
-      fields: {
-        AddMessage: {
-          To: {
-            name: {
-              type: 'Text',
-              name: 'meta.AddMessage.To.name',
-              label: 'name',
+      __root: {
+        __type: '__fieldset',
+        __name: '__root',
+        __select: null,
+        __fields: {
+          AddMessage: {
+            __type: '__fieldset',
+            __name: 'AddMessage',
+            __select: null,
+            __fields: {
+              To: {
+                __type: '__fieldset',
+                __name: 'To',
+                __select: null,
+                __fields: {
+                  name: {
+                    type: 'Text',
+                    name: '__root.AddMessage.To.name',
+                    label: 'name',
+                  },
+                  from: {
+                    type: 'Text',
+                    name: '__root.AddMessage.To.from',
+                    label: 'from',
+                  },
+                },
+              },
+              author: {
+                type: 'Text',
+                name: '__root.AddMessage.author',
+                label: 'author',
+              },
+              msg: {
+                type: 'Text',
+                name: '__root.AddMessage.msg',
+                label: 'msg',
+              },
             },
-            from: {
-              type: 'Text',
-              name: 'meta.AddMessage.To.from',
-              label: 'from',
-            },
-          },
-          author: {
-            type: 'Text',
-            name: 'meta.AddMessage.author',
-            label: 'author',
-          },
-          msg: {
-            type: 'Text',
-            name: 'meta.AddMessage.msg',
-            label: 'msg',
           },
         },
       },
-      values: {
+      __values: {
         AddMessage: {
           To: {
             name: '',
@@ -152,46 +154,45 @@ describe('test parser', () => {
 
   it('simple enum', () => {
     expect(parseMeta(simpleEnum)).toEqual({
-      select: {
-        'AddMessage.Post.ViewMessages': {
-          type: '_enum',
-          fields: {
-            AddMessage: {
-              author: {
-                type: 'Text',
-                name: 'meta.AddMessage.author',
-                label: 'author',
-              },
-              msg: {
-                type: 'Text',
-                name: 'meta.AddMessage.msg',
-                label: 'msg',
-              },
-            },
-            Post: {
+      __root: {
+        __type: '__fieldset',
+        __name: '__root',
+        __select: {
+          AddMessage: {
+            author: {
               type: 'Text',
-              name: 'meta.Post',
-              label: 'Post',
+              name: 'meta.AddMessage.author',
+              label: 'author',
             },
-            ViewMessages: {
-              type: 'Null',
-              name: 'meta.ViewMessages',
-              label: 'ViewMessages',
+            msg: {
+              type: 'Text',
+              name: 'meta.AddMessage.msg',
+              label: 'msg',
             },
+          },
+          Post: {
+            type: 'Text',
+            name: 'meta.Post',
+            label: 'Post',
+          },
+          ViewMessages: {
+            type: 'Null',
+            name: 'meta.ViewMessages',
+            label: 'ViewMessages',
           },
         },
-      },
-      fields: {
-        AddMessage: {
-          author: {
-            type: 'Text',
-            name: 'meta.AddMessage.author',
-            label: 'author',
-          },
-          msg: {
-            type: 'Text',
-            name: 'meta.AddMessage.msg',
-            label: 'msg',
+        __fields: {
+          AddMessage: {
+            author: {
+              type: 'Text',
+              name: 'meta.AddMessage.author',
+              label: 'author',
+            },
+            msg: {
+              type: 'Text',
+              name: 'meta.AddMessage.msg',
+              label: 'msg',
+            },
           },
         },
       },
@@ -207,15 +208,54 @@ describe('test parser', () => {
   });
 
   it('simple option enum', () => {
-    expect(parseMeta(simpleEnumOption)).toEqual({
+    expect(parseMeta(enumOptionSimple)).toEqual({
+      select: {
+        __root__: {
+          type: '_enum_Option',
+          fields: {
+            __root__: {
+              type: 'String',
+              name: 'meta.__root__',
+              label: '__root__',
+            },
+          },
+          NoFields: {
+            name: 'meta.NoFields',
+            label: 'NoFields',
+            type: 'Null',
+          },
+        },
+      },
+      fields: {
+        __root__: {
+          type: 'String',
+          name: 'meta.__root__',
+          label: '__root__',
+        },
+      },
+      values: {
+        __root__: '',
+      },
+    });
+  });
+
+  it('option enum with fields object', () => {
+    expect(parseMeta(enumOptionWithFieldsObject)).toEqual({
       select: {
         ['__field[0]']: {
           type: '_enum_Option',
           fields: {
             ['__field[0]']: {
-              type: 'String',
-              name: 'meta.__field[0]',
-              label: '__field[0]',
+              firstName: {
+                type: 'String',
+                name: 'meta.__field[0].firstName',
+                label: 'firstName',
+              },
+              lastName: {
+                type: 'String',
+                name: 'meta.__field[0].firstName',
+                label: 'firstName',
+              },
             },
           },
           NoFields: {
