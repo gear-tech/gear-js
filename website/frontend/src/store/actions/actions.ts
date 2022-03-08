@@ -3,7 +3,6 @@ import { ProgramActionTypes, ProgramModel, ProgramPaginationModel } from 'types/
 import { programService } from 'services/ProgramsRequestService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
-import { CompilerActionTypes } from 'types/compiler';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
@@ -187,8 +186,3 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
   });
 };
-
-export const setIsBuildDone = (payload: boolean) => ({
-  type: CompilerActionTypes.SET_IS_BUILD_DONE,
-  payload,
-});
