@@ -33,7 +33,6 @@ import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
 import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
-import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
 import { Main } from 'layout/Main/Main';
 
@@ -130,7 +129,6 @@ const AppComponent: FC = () => {
         )}
       </Main>
       {isFooterHidden() || <Footer />}
-      <Alert />
     </div>
   );
 };

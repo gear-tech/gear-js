@@ -1,12 +1,11 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Meta } from 'components/Meta/Meta';
 import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
-import { getAllProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
-import { RootState } from 'store/reducers';
+import { uploadMetaResetAction } from 'store/actions/actions';
 import { ProgramModel } from 'types/program';
 import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload-cloud.svg';
