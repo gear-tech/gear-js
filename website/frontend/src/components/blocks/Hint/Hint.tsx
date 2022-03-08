@@ -1,19 +1,18 @@
 import React, { FC } from 'react';
-import { useDispatch } from 'react-redux';
 import { HelpCircle } from 'react-feather';
-import { AddAlert } from 'store/actions/actions';
 import { AlertTypes } from 'types/alerts';
 import styles from './Hint.module.scss';
+import { useAlert } from 'react-alert';
 
 type Params = {
   children: string;
 };
 
 export const Hint: FC<Params> = ({ children }) => {
-  const dispatch = useDispatch();
+  const alert = useAlert();
 
   const handleClick = () => {
-    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${children}` }));
+    alert.show(`${children}`, { type: AlertTypes.ERROR });
   };
 
   return (

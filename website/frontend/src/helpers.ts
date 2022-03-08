@@ -1,5 +1,7 @@
+import { ReactNode } from 'react';
 import { Hex } from '@gear-js/api';
 import { Metadata } from '@polkadot/types';
+import { AlertCustomOptionsWithType } from 'react-alert';
 import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
@@ -9,7 +11,6 @@ import { InitialValues as UploadInitialValues } from './components/pages/Program
 import { SetFieldValue } from 'types/common';
 import { AlertTypes } from 'types/alerts';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
-import { AddAlert } from 'store/actions/actions';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
@@ -159,7 +160,7 @@ export const calculateGas = async (
   isManualPayload: boolean,
   values: UploadInitialValues | SendMessageInitialValues,
   setFieldValue: SetFieldValue,
-  dispatch: any,
+  showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void,
   meta: any,
   code?: Uint8Array | null,
   programId?: String | null
@@ -167,12 +168,12 @@ export const calculateGas = async (
   const payload = isManualPayload ? values.payload : values.fields;
 
   if (isManualPayload && payload === '') {
-    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Error: payload can't be empty` }));
+    showAlert(`Error: payload can't be empty`, { type: AlertTypes.ERROR });
     return;
   }
 
   if (!isManualPayload && Object.keys(payload).length === 0) {
-    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Error: form can't be empty` }));
+    showAlert(`Error: form can't be empty`, { type: AlertTypes.ERROR });
     return;
   }
 
@@ -186,10 +187,10 @@ export const calculateGas = async (
       metaOrTypeOfPayload
     );
 
-    dispatch(AddAlert({ type: AlertTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
+    showAlert(`Estimated gas ${estimatedGas.toHuman()}`, { type: AlertTypes.INFO });
     setFieldValue('gasLimit', estimatedGas.toNumber());
   } catch (error) {
-    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
+    showAlert(`${error}`, { type: AlertTypes.ERROR });
   }
 };
 

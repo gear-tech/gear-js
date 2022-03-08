@@ -1,5 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch } from 'react-redux';
+import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
@@ -9,7 +10,6 @@ import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { MessageModel } from 'types/program';
 import { AlertTypes } from 'types/alerts';
-import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useAccount, useApi } from 'hooks';
@@ -27,6 +27,7 @@ type Props = {
 
 export const MessageForm: VFC<Props> = ({ programId, programName, meta, types }) => {
   const { api } = useApi();
+  const alert = useAlert();
   const dispatch = useDispatch();
   const { account: currentAccount } = useAccount();
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
@@ -65,10 +66,10 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
           };
 
           if (api) {
-            SendMessageToProgram(api, currentAccount, message, dispatch, resetForm, meta);
+            SendMessageToProgram(api, currentAccount, message, dispatch, alert.show, resetForm, meta);
           }
         } else {
-          dispatch(AddAlert({ type: AlertTypes.ERROR, message: `WALLET NOT CONNECTED` }));
+          alert.show(`WALLET NOT CONNECTED`, { type: AlertTypes.ERROR });
         }
       }}
     >
@@ -159,7 +160,7 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
                         isManualInput,
                         values,
                         setFieldValue,
-                        dispatch,
+                        alert.show,
                         meta,
                         null,
                         programId

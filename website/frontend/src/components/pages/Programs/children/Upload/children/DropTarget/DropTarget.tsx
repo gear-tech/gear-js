@@ -7,10 +7,11 @@ import upload from 'assets/images/upload.svg';
 import editor from 'assets/images/editor_icon.svg';
 import { Button } from 'common/components/Button/Button';
 import { RootState } from 'store/reducers';
-import { AddAlert, programUploadResetAction } from 'store/actions/actions';
+import { programUploadResetAction } from 'store/actions/actions';
 import { AlertTypes } from 'types/alerts';
 import { DroppedFile, UploadTypes } from '../../types';
 import styles from './DropTarget.module.scss';
+import { useAlert } from 'react-alert';
 
 type Props = {
   type: UploadTypes;
@@ -19,6 +20,7 @@ type Props = {
 
 const DropTarget = ({ type, setDroppedFile }: Props) => {
   const dispatch = useDispatch();
+  const alert = useAlert();
   const { programUploadingError } = useSelector((state: RootState) => state.programs);
 
   const [wrongFormat, setWrongFormat] = useState(false);
@@ -60,7 +62,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         // reset it's value to trigger onChange again in case the same file selected twice
         event.target.value = '';
       } else {
-        dispatch(AddAlert({ type: AlertTypes.ERROR, message: 'Wrong file format' }));
+        alert.show('Wrong file format', { type: AlertTypes.ERROR });
         setWrongFormat(false);
         if (programUploadingError) {
           dispatch(programUploadResetAction());
@@ -78,7 +80,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         if (!isCorrectFormat) {
           handleFilesUpload(files[0]);
         } else {
-          dispatch(AddAlert({ type: AlertTypes.ERROR, message: 'Wrong file format' }));
+          alert.show('Wrong file format', { type: AlertTypes.ERROR });
           setWrongFormat(false);
           if (programUploadingError) {
             dispatch(programUploadResetAction());

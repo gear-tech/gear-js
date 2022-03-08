@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
+import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
@@ -6,8 +7,6 @@ import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AddAlert } from 'store/actions/actions';
-import { useDispatch } from 'react-redux';
 import { useApi } from 'hooks';
 import { AlertTypes } from 'types/alerts';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
@@ -22,7 +21,7 @@ type FormValues = { fields: object; payload: string };
 
 const State: VFC = () => {
   const { api } = useApi();
-  const dispatch = useDispatch();
+  const alert = useAlert();
   const routeParams = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -112,8 +111,7 @@ const State: VFC = () => {
     if (options) {
       readState(options);
     } else {
-      const alert = { type: AlertTypes.ERROR, message: 'Form is empty' };
-      dispatch(AddAlert(alert));
+      alert.show('Form is empty', { type: AlertTypes.ERROR });
     }
   };
 

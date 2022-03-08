@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState, VFC } from 'react';
 import { getWasmMetadata } from '@gear-js/api';
 import { Field, Form, Formik } from 'formik';
+import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { fileNameHandler } from 'helpers';
 import { MetaModel } from 'types/program';
@@ -9,7 +10,6 @@ import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
 import { useDispatch } from 'react-redux';
-import { AddAlert } from 'store/actions/actions';
 import { AlertTypes } from 'types/alerts';
 import { readFileAsync } from '../../../helpers';
 import { useAccount } from 'hooks';
@@ -29,6 +29,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
   const dispatch = useDispatch();
+  const alert = useAlert();
   const { account: currentAccount } = useAccount();
 
   const metaFieldRef = useRef<any>(null);
@@ -65,7 +66,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
         setMetaWasmFile(bufstr);
         setMetaWasm(meta);
       } catch (error) {
-        dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
+        alert.show(`${error}`, { type: AlertTypes.ERROR });
       }
       setDroppedMetaFile(file);
     },
@@ -113,7 +114,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
             if (metaWasm) {
               addMetadata(metaWasm, metaWasmFile, currentAccount, programId, values.name, dispatch);
             } else {
-              dispatch(AddAlert({ type: AlertTypes.ERROR, message: `ERROR: metadata not loaded` }));
+              alert.show(`ERROR: metadata not loaded`, { type: AlertTypes.ERROR });
             }
           } else {
             const { name, ...meta } = values;
@@ -121,7 +122,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
           }
           resetForm();
         } else {
-          dispatch(AddAlert({ type: AlertTypes.ERROR, message: `WALLET NOT CONNECTED` }));
+          alert.show(`WALLET NOT CONNECTED`, { type: AlertTypes.ERROR });
         }
       }}
     >

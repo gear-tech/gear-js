@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useSearchParams } from 'react-router-dom';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import { positions, Provider as AlertProvider } from 'react-alert';
+import { Provider, useSelector } from 'react-redux';
+import { positions, Provider as AlertProvider, useAlert } from 'react-alert';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
@@ -57,8 +57,8 @@ const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
 const AppComponent: FC = () => {
   globalStyles();
-  const dispatch = useDispatch();
   const { isApiReady } = useApi();
+  const alert = useAlert();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
   const events = useEvents();
@@ -73,9 +73,9 @@ const AppComponent: FC = () => {
 
   useEffect(() => {
     if (isApiReady) {
-      dispatch(subscribeToEvents());
+      subscribeToEvents(alert.show);
     }
-  }, [dispatch, isApiReady]);
+  }, [isApiReady, alert]);
 
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
@@ -98,57 +98,57 @@ const AppComponent: FC = () => {
     paths.map((path) => <Route key={path} path={path} element={element} />);
 
   return (
-    <AlertProvider template={AlertTemplate} {...options}>
-      <div className="app">
-        {(isProgramUploading || isMessageSending) && (
-          <>
-            <div className="overlay" />
-            <LoadingPopup />
-          </>
+    <div className="app">
+      {(isProgramUploading || isMessageSending) && (
+        <>
+          <div className="overlay" />
+          <LoadingPopup />
+        </>
+      )}
+      <Header />
+      <Main>
+        {isApiReady ? (
+          <Routes>
+            {getMultipleRoutes(mainRoutes, <Programs />)}
+            {getMultipleRoutes(utilRoutes, <Document />)}
+
+            {/* temp solution since in react-router v6 optional parameters are gone */}
+            <Route path={routes.explorer}>
+              <Route path="" element={<Explorer events={events} />} />
+              <Route path=":blockId" element={<Explorer events={events} />} />
+            </Route>
+
+            <Route path={routes.program} element={<Program />} />
+            <Route path={routes.message} element={<Message />} />
+            <Route path={routes.state} element={<State />} />
+            <Route path={routes.sendMessage} element={<SendMessage />} />
+            <Route path={routes.editor} element={<EditorPage />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        ) : (
+          <Loader />
         )}
-        <Header />
-        <Main>
-          {isApiReady ? (
-            <Routes>
-              {getMultipleRoutes(mainRoutes, <Programs />)}
-              {getMultipleRoutes(utilRoutes, <Document />)}
-
-              {/* temp solution since in react-router v6 optional parameters are gone */}
-              <Route path={routes.explorer}>
-                <Route path="" element={<Explorer events={events} />} />
-                <Route path=":blockId" element={<Explorer events={events} />} />
-              </Route>
-
-              <Route path={routes.program} element={<Program />} />
-              <Route path={routes.message} element={<Message />} />
-              <Route path={routes.state} element={<State />} />
-              <Route path={routes.sendMessage} element={<SendMessage />} />
-              <Route path={routes.editor} element={<EditorPage />} />
-              <Route path="*" element={<PageNotFound />} />
-            </Routes>
-          ) : (
-            <Loader />
-          )}
-        </Main>
-        {isFooterHidden() || <Footer />}
-        <Alert />
-      </div>
-    </AlertProvider>
+      </Main>
+      {isFooterHidden() || <Footer />}
+      <Alert />
+    </div>
   );
 };
 
 export const App = () => (
   <Provider store={store}>
-    <ApiProvider>
-      <BlocksProvider>
-        <AccountProvider>
-          <EditorProvider>
-            <BrowserRouter>
-              <AppComponent />
-            </BrowserRouter>
-          </EditorProvider>
-        </AccountProvider>
-      </BlocksProvider>
-    </ApiProvider>
+    <AlertProvider template={AlertTemplate} {...options}>
+      <ApiProvider>
+        <BlocksProvider>
+          <AccountProvider>
+            <EditorProvider>
+              <BrowserRouter>
+                <AppComponent />
+              </BrowserRouter>
+            </EditorProvider>
+          </AccountProvider>
+        </BlocksProvider>
+      </ApiProvider>
+    </AlertProvider>
   </Provider>
 );

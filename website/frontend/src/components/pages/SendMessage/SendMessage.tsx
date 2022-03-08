@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, VFC } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAlert } from 'react-alert';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
@@ -7,7 +7,6 @@ import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
 import { AlertTypes } from 'types/alerts';
-import { AddAlert } from 'store/actions/actions';
 import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
 import ArrowBack from 'assets/images/arrow_back.svg';
@@ -16,7 +15,7 @@ import { Spinner } from 'components/blocks/Spinner/Spinner';
 import './SendMessage.scss';
 
 export const SendMessage: VFC = () => {
-  const dispatch = useDispatch();
+  const alert = useAlert();
   const navigate = useNavigate();
   const routeParams = useParams();
   const programId = routeParams.id as string;
@@ -37,10 +36,10 @@ export const SendMessage: VFC = () => {
     if (!meta) {
       getMeta(programId)
         .then((res) => setMeta(JSON.parse(res.result.meta) ?? null))
-        .catch((err: RPCResponseError) => dispatch(AddAlert({ type: AlertTypes.ERROR, message: err.message })))
+        .catch((err: RPCResponseError) => alert.show(err.message, { type: AlertTypes.ERROR }))
         .finally(() => setReady(true));
     }
-  }, [meta, programId, getMeta, dispatch]);
+  }, [meta, programId, getMeta, alert]);
 
   useEffect(() => {
     if (meta && meta.types && meta.handle_input) {

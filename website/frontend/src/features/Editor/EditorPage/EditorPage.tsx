@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useReducer, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAlert } from 'react-alert';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
@@ -11,7 +11,6 @@ import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import { useEditor } from 'hooks';
 import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, LOCAL_STORAGE } from 'consts';
 
-import { AddAlert } from 'store/actions/actions';
 import { AlertTypes } from 'types/alerts';
 
 import EditorDownload from 'assets/images/editor-download.svg';
@@ -25,8 +24,8 @@ import { addParentToNode } from '../EditorTree/utils';
 import { SimpleExample } from '../../../fixtures/code';
 
 export const EditorPage = () => {
-  const globalDispatch = useDispatch();
   const navigate = useNavigate();
+  const alert = useAlert();
 
   const { isBuildDone, setIsBuildDone } = useEditor();
 
@@ -97,7 +96,7 @@ export const EditorPage = () => {
       .then((json) => {
         localStorage.setItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID, json.id);
         setIsBuildDone(true);
-        globalDispatch(AddAlert({ type: AlertTypes.SUCCESS, message: `Compiling, please wait!` }));
+        alert.show('Compiling, please wait!', { type: AlertTypes.SUCCESS });
       });
   }
 

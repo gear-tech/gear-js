@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useAlert } from 'react-alert';
 import JSZip from 'jszip';
 import saveAs from 'file-saver';
+import { AlertTypes } from 'types/alerts';
 import { EditorContext } from './Context';
 import { Props } from '../types';
 import { LOCAL_STORAGE, WASM_COMPILER_GET } from 'consts';
@@ -8,6 +10,7 @@ import { LOCAL_STORAGE, WASM_COMPILER_GET } from 'consts';
 const { Provider } = EditorContext;
 
 const useEditor = () => {
+  const alert = useAlert();
   const [isBuildDone, setIsBuildDone] = useState(false);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const useEditor = () => {
                 setIsBuildDone(false);
                 localStorage.removeItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID);
                 clearInterval(timerId);
-                // AddAlert({ type: AlertTypes.SUCCESS, message: `Program is ready!` }
+                alert.show('Program is ready!', { type: AlertTypes.SUCCESS });
               });
             });
           })
@@ -45,7 +48,7 @@ const useEditor = () => {
     return () => {
       clearInterval(timerId);
     };
-  }, [isBuildDone]);
+  }, [isBuildDone, alert]);
 
   return { isBuildDone, setIsBuildDone };
 };

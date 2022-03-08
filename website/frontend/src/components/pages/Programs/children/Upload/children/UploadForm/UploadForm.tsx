@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, useState, VFC } from 'react';
 import { useDispatch } from 'react-redux';
+import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
@@ -19,7 +20,6 @@ import { Buttons } from './children/Buttons/Buttons';
 
 import { Schema } from './Schema';
 import { useAccount, useApi } from 'hooks';
-import { AddAlert } from 'store/actions/actions';
 import { UploadProgram } from 'services/ApiService';
 import { readFileAsync, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
@@ -35,6 +35,7 @@ type Props = {
 export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const { api } = useApi();
   const dispatch = useDispatch();
+  const alert = useAlert();
   const { account: currentAccount } = useAccount();
 
   const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
@@ -95,7 +96,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
     } catch (error) {
-      dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
+      alert.show(`${error}`, { type: AlertTypes.ERROR });
     }
     setDroppedMetaFile(file);
   };
@@ -123,21 +124,39 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         const pl = isManualPayload ? values.payload : values.fields;
         const updatedValues = { ...values, initPayload: pl };
 
-        UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
-          setDroppedFile(null);
-        });
+        UploadProgram(
+          api,
+          currentAccount,
+          droppedFile,
+          { ...updatedValues, ...meta },
+          metaFile,
+          dispatch,
+          alert.show,
+          () => {
+            setDroppedFile(null);
+          }
+        );
       } else {
         try {
           const manualTypes = values.types.length > 0 ? JSON.parse(values.types) : values.types;
-          UploadProgram(api, currentAccount, droppedFile, { ...values, types: manualTypes }, null, dispatch, () => {
-            setDroppedFile(null);
-          });
+          UploadProgram(
+            api,
+            currentAccount,
+            droppedFile,
+            { ...values, types: manualTypes },
+            null,
+            dispatch,
+            alert.show,
+            () => {
+              setDroppedFile(null);
+            }
+          );
         } catch (error) {
-          dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Invalid JSON format` }));
+          alert.show(`Invalid JSON format`, { type: AlertTypes.ERROR });
         }
       }
     } else {
-      dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Wallet not connected` }));
+      alert.show(`Wallet not connected`, { type: AlertTypes.ERROR });
     }
   };
 
@@ -150,7 +169,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code, null);
+    calculateGas('init', api, isManualPayload, values, setFieldValue, alert.show, meta, code, null);
   };
 
   return (

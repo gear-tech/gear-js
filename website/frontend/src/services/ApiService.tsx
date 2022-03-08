@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+import { AlertCustomOptionsWithType } from 'react-alert';
 import { UploadProgramModel, MessageModel, MetaModel, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
@@ -11,7 +13,6 @@ import {
   sendMessageFailedAction,
   programUploadSuccessAction,
   programUploadFailedAction,
-  AddAlert,
 } from 'store/actions/actions';
 import { localPrograms } from './LocalDBService';
 import { readFileAsync, signPayload, isDevChain } from 'helpers';
@@ -26,6 +27,7 @@ export const UploadProgram = async (
   opts: UploadProgramModel,
   metaFile: any,
   dispatch: any,
+  showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void,
   callback: () => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
@@ -77,12 +79,7 @@ export const UploadProgram = async (
       dispatch(programUploadStartAction());
 
       if (data.status.isInBlock) {
-        dispatch(
-          AddAlert({
-            type: AlertTypes.SUCCESS,
-            message: `Upload program: In block`,
-          })
-        );
+        showAlert('Upload program: In block', { type: AlertTypes.SUCCESS });
       }
 
       if (data.status.isFinalized) {
@@ -90,12 +87,7 @@ export const UploadProgram = async (
           const { method } = event.event;
 
           if (method === 'InitMessageEnqueued') {
-            dispatch(
-              AddAlert({
-                type: AlertTypes.SUCCESS,
-                message: `Upload program: Finalized`,
-              })
-            );
+            showAlert('Upload program: Finalized', { type: AlertTypes.SUCCESS });
             dispatch(programUploadSuccessAction());
             callback();
 
@@ -114,12 +106,10 @@ export const UploadProgram = async (
                   timestamp: Date(),
                 })
                 .then(() => {
-                  dispatch(
-                    AddAlert({ type: AlertTypes.SUCCESS, message: `Program added to the localDB successfully` })
-                  );
+                  showAlert('Program added to the localDB successfully', { type: AlertTypes.SUCCESS });
                 })
                 .catch((error: any) => {
-                  dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Error: ${error}` }));
+                  showAlert(`Error: ${error}`, { type: AlertTypes.ERROR });
                 });
             } else {
               // Sign metadata and save it
@@ -138,10 +128,10 @@ export const UploadProgram = async (
                     // FIXME 'throw' of exception caught locally
                     throw new Error(response.error.message);
                   } else {
-                    dispatch(AddAlert({ type: AlertTypes.SUCCESS, message: `Metadata saved successfully` }));
+                    showAlert('Metadata saved successfully', { type: AlertTypes.SUCCESS });
                   }
                 } catch (error) {
-                  dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
+                  showAlert(`${error}`, { type: AlertTypes.ERROR });
                   console.error(error);
                 }
               });
@@ -149,29 +139,19 @@ export const UploadProgram = async (
           }
 
           if (method === 'ExtrinsicFailed') {
-            dispatch(
-              AddAlert({
-                type: AlertTypes.ERROR,
-                message: `Upload program: Extrinsic Failed`,
-              })
-            );
+            showAlert('Upload program: Extrinsic Failed', { type: AlertTypes.ERROR });
           }
         });
       }
 
       if (data.status.isInvalid) {
         dispatch(programUploadFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
-        dispatch(
-          AddAlert({
-            type: AlertTypes.ERROR,
-            message: PROGRAM_ERRORS.INVALID_TRANSACTION,
-          })
-        );
+        showAlert(PROGRAM_ERRORS.INVALID_TRANSACTION, { type: AlertTypes.ERROR });
       }
     });
   } catch (error) {
     dispatch(programUploadFailedAction(`${error}`));
-    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Upload program: ${error}` }));
+    showAlert(`Upload program: ${error}`, { type: AlertTypes.ERROR });
   }
 };
 
@@ -181,6 +161,7 @@ export const SendMessageToProgram = async (
   account: InjectedAccountWithMeta,
   _message: MessageModel,
   dispatch: any,
+  showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void,
   callback: () => void,
   meta?: Metadata
 ) => {
@@ -199,12 +180,7 @@ export const SendMessageToProgram = async (
       dispatch(sendMessageStartAction());
 
       if (data.status.isInBlock) {
-        dispatch(
-          AddAlert({
-            type: AlertTypes.SUCCESS,
-            message: `Send message: In block`,
-          })
-        );
+        showAlert('Send message: In block', { type: AlertTypes.SUCCESS });
       }
 
       if (data.status.isFinalized) {
@@ -212,39 +188,24 @@ export const SendMessageToProgram = async (
           const { method } = event.event;
 
           if (method === 'DispatchMessageEnqueued') {
-            dispatch(
-              AddAlert({
-                type: AlertTypes.SUCCESS,
-                message: `Send message: Finalized`,
-              })
-            );
+            showAlert('Send message: Finalized', { type: AlertTypes.SUCCESS });
             dispatch(sendMessageSuccessAction());
             callback();
           }
 
           if (method === 'ExtrinsicFailed') {
-            dispatch(
-              AddAlert({
-                type: AlertTypes.ERROR,
-                message: `Extrinsic Failed`,
-              })
-            );
+            showAlert('Extrinsic Failed', { type: AlertTypes.ERROR });
           }
         });
       }
 
       if (data.status.isInvalid) {
         dispatch(sendMessageFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
-        dispatch(
-          AddAlert({
-            type: AlertTypes.ERROR,
-            message: PROGRAM_ERRORS.INVALID_TRANSACTION,
-          })
-        );
+        showAlert(PROGRAM_ERRORS.INVALID_TRANSACTION, { type: AlertTypes.ERROR });
       }
     });
   } catch (error) {
-    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Send message: ${error}` }));
+    showAlert(`Send message: ${error}`, { type: AlertTypes.ERROR });
     dispatch(sendMessageFailedAction(`${error}`));
   }
 };
@@ -256,7 +217,7 @@ export const addMetadata = async (
   account: InjectedAccountWithMeta,
   programId: string,
   name: any,
-  dispatch: any
+  showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);
@@ -278,11 +239,11 @@ export const addMetadata = async (
           };
 
           localPrograms.setItem(res.id, newData).then(() => {
-            dispatch(AddAlert({ type: AlertTypes.SUCCESS, message: `Metadata added successfully` }));
+            showAlert('Metadata added successfully', { type: AlertTypes.SUCCESS });
           });
         })
         .catch((error) => {
-          dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Error: ${error}` }));
+          showAlert(`Error: ${error}`, { type: AlertTypes.ERROR });
         });
     } else {
       try {
@@ -299,10 +260,10 @@ export const addMetadata = async (
           // FIXME 'throw' of exception caught locally
           throw new Error(response.error.message);
         } else {
-          dispatch(AddAlert({ type: AlertTypes.SUCCESS, message: `Metadata added successfully` }));
+          showAlert('Metadata added successfully', { type: AlertTypes.SUCCESS });
         }
       } catch (error) {
-        dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
+        showAlert(`${error}`, { type: AlertTypes.ERROR });
         console.error(error);
       }
     }

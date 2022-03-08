@@ -1,9 +1,8 @@
 import React, { FC, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAlert } from 'react-alert';
 import { Field } from 'formik';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
-import { AddAlert } from 'store/actions/actions';
 import { checkFileFormat } from 'helpers';
 import { AlertTypes } from 'types/alerts';
 import styles from './MetaFile.module.scss';
@@ -15,7 +14,7 @@ type Props = {
 };
 
 export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, handleRemoveMetaFile }) => {
-  const dispatch = useDispatch();
+  const alert = useAlert();
   const metaFieldRef = useRef<HTMLDivElement>(null);
 
   const uploadMetaFile = () => {
@@ -29,7 +28,7 @@ export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, han
       if (isCorrectFormat) {
         handleUploadMetaFile(event.target.files[0]);
       } else {
-        dispatch(AddAlert({ type: AlertTypes.ERROR, message: 'Wrong file format' }));
+        alert.show('Wrong file format', { type: AlertTypes.ERROR });
       }
     }
   };

@@ -7,6 +7,8 @@ import { PaginationModel, UserPrograms } from 'types/common';
 import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
 import { AlertModel, AlertTypes, AlertActionTypes } from 'types/alerts';
+import { ReactNode } from 'react';
+import { AlertCustomOptionsWithType } from 'react-alert';
 
 const fetchUserProgramsAction = () => ({ type: ProgramActionTypes.FETCH_USER_PROGRAMS });
 const fetchUserProgramsSuccessAction = (payload: ProgramPaginationModel) => ({
@@ -112,23 +114,12 @@ export const handleProgramSuccess = () => (dispatch: any, getState: any) => {
   }
 };
 
-export const AddAlert = (payload: AlertModel) => ({
-  type: AlertActionTypes.ADD_ALERT,
-  payload,
-});
-
-export const subscribeToEvents = () => (dispatch: any) => {
+export const subscribeToEvents = (showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
-      dispatch(
-        AddAlert({
-          type: reason ? AlertTypes.ERROR : AlertTypes.SUCCESS,
-          message: `${method}\n
-          ${info.programId.toHex()}`,
-        })
-      );
+      showAlert(`${method}\n ${info.programId.toHex()}`, { type: reason ? AlertTypes.ERROR : AlertTypes.SUCCESS });
     }
   });
 
@@ -145,7 +136,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
     if (result && result.meta) {
       meta = JSON.parse(result.meta);
     } else {
-      dispatch(AddAlert({ type: AlertTypes.ERROR, message: 'Metadata is not added' }));
+      showAlert('Metadata is not added', { type: AlertTypes.ERROR });
     }
 
     try {
@@ -158,31 +149,21 @@ export const subscribeToEvents = () => (dispatch: any) => {
     }
     // @ts-ignore
     if (dest.toHex() === filterKey) {
-      dispatch(
-        AddAlert({
-          type:
-            (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone
-              ? AlertTypes.SUCCESS
-              : AlertTypes.ERROR,
-          message: `LOG from program\n
-          ${source.toHex()}\n
-          ${decodedPayload ? `Response: ${decodedPayload}` : ''}
-          `, // TODO: add payload parsing
-        })
-      );
+      // TODO: add payload parsing
+      const msg = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
+      const options = {
+        type:
+          (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone ? AlertTypes.SUCCESS : AlertTypes.ERROR,
+      };
+
+      showAlert(msg, options);
     }
   });
 
   nodeApi.subscribeToTransferEvents(({ data: { from, to, value } }) => {
     if (to.toHex() === filterKey) {
-      dispatch(
-        AddAlert({
-          type: AlertTypes.INFO,
-          message: `TRANSFER BALANCE\n
-            FROM:${GearKeyring.encodeAddress(from.toHex())}\n
-            VALUE:${value.toString()}`,
-        })
-      );
+      const msg = `TRANSFER BALANCE\n FROM:${GearKeyring.encodeAddress(from.toHex())}\n VALUE:${value.toString()}`;
+      showAlert(msg, { type: AlertTypes.INFO });
     }
   });
 };
