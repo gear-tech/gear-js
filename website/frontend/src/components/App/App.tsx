@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useSearchParams } from 'react-router-dom';
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { positions, Provider as AlertProvider, useAlert } from 'react-alert';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
@@ -18,7 +18,6 @@ import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
-import { RootState } from 'store/reducers';
 import { subscribeToEvents } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
 import store from '../../store';
@@ -27,7 +26,8 @@ import { ApiProvider } from 'context/api';
 import { BlocksProvider } from 'context/blocks';
 import { AccountProvider } from 'context/account';
 import { EditorProvider } from 'context/editor';
-import { useApi, useEvents } from 'hooks';
+import { LoadingProvider } from 'context/loading';
+import { useApi, useEvents, useLoading } from 'hooks';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -58,17 +58,17 @@ const AppComponent: FC = () => {
   globalStyles();
   const { isApiReady } = useApi();
   const alert = useAlert();
+  const { isLoading } = useLoading();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
   const events = useEvents();
 
   useEffect(() => {
-    if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
+    if (isLoading && document.body.style.overflowY !== 'hidden') {
       document.body.style.overflowY = 'hidden';
-    } else if (!(isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'unset') {
+    } else if (!isLoading && document.body.style.overflowY !== 'unset') {
       document.body.style.overflowY = 'unset';
     }
-  }, [isProgramUploading, isMessageSending]);
+  }, [isLoading]);
 
   useEffect(() => {
     if (isApiReady) {
@@ -98,7 +98,7 @@ const AppComponent: FC = () => {
 
   return (
     <div className="app">
-      {(isProgramUploading || isMessageSending) && (
+      {isLoading && (
         <>
           <div className="overlay" />
           <LoadingPopup />
@@ -140,9 +140,11 @@ export const App = () => (
         <BlocksProvider>
           <AccountProvider>
             <EditorProvider>
-              <BrowserRouter>
-                <AppComponent />
-              </BrowserRouter>
+              <LoadingProvider>
+                <BrowserRouter>
+                  <AppComponent />
+                </BrowserRouter>
+              </LoadingProvider>
             </EditorProvider>
           </AccountProvider>
         </BlocksProvider>

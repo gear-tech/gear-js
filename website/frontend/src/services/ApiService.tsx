@@ -6,14 +6,6 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { GearApi, Metadata } from '@gear-js/api';
 import { RPC_METHODS, PROGRAM_ERRORS } from 'consts';
 import { AlertTypes } from 'types/alerts';
-import {
-  programUploadStartAction,
-  sendMessageSuccessAction,
-  sendMessageStartAction,
-  sendMessageFailedAction,
-  programUploadSuccessAction,
-  programUploadFailedAction,
-} from 'store/actions/actions';
 import { localPrograms } from './LocalDBService';
 import { readFileAsync, signPayload, isDevChain } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
@@ -26,7 +18,8 @@ export const UploadProgram = async (
   file: File,
   opts: UploadProgramModel,
   metaFile: any,
-  dispatch: any,
+  enableLoading: () => void,
+  disableLoading: () => void,
   showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void,
   callback: () => void
 ) => {
@@ -76,7 +69,7 @@ export const UploadProgram = async (
     const { programId } = await api.program.submit(program, meta);
 
     await api.program.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
-      dispatch(programUploadStartAction());
+      enableLoading();
 
       if (data.status.isInBlock) {
         showAlert('Upload program: In block', { type: AlertTypes.SUCCESS });
@@ -88,7 +81,7 @@ export const UploadProgram = async (
 
           if (method === 'InitMessageEnqueued') {
             showAlert('Upload program: Finalized', { type: AlertTypes.SUCCESS });
-            dispatch(programUploadSuccessAction());
+            disableLoading();
             callback();
 
             if (isDevChain()) {
@@ -145,12 +138,12 @@ export const UploadProgram = async (
       }
 
       if (data.status.isInvalid) {
-        dispatch(programUploadFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
+        disableLoading();
         showAlert(PROGRAM_ERRORS.INVALID_TRANSACTION, { type: AlertTypes.ERROR });
       }
     });
   } catch (error) {
-    dispatch(programUploadFailedAction(`${error}`));
+    disableLoading();
     showAlert(`Upload program: ${error}`, { type: AlertTypes.ERROR });
   }
 };
@@ -160,7 +153,8 @@ export const SendMessageToProgram = async (
   api: GearApi,
   account: InjectedAccountWithMeta,
   _message: MessageModel,
-  dispatch: any,
+  enableLoading: () => void,
+  disableLoading: () => void,
   showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void,
   callback: () => void,
   meta?: Metadata
@@ -177,7 +171,7 @@ export const SendMessageToProgram = async (
   try {
     await api.message.submit(message, meta);
     await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
-      dispatch(sendMessageStartAction());
+      enableLoading();
 
       if (data.status.isInBlock) {
         showAlert('Send message: In block', { type: AlertTypes.SUCCESS });
@@ -189,7 +183,7 @@ export const SendMessageToProgram = async (
 
           if (method === 'DispatchMessageEnqueued') {
             showAlert('Send message: Finalized', { type: AlertTypes.SUCCESS });
-            dispatch(sendMessageSuccessAction());
+            disableLoading();
             callback();
           }
 
@@ -200,13 +194,13 @@ export const SendMessageToProgram = async (
       }
 
       if (data.status.isInvalid) {
-        dispatch(sendMessageFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
+        disableLoading();
         showAlert(PROGRAM_ERRORS.INVALID_TRANSACTION, { type: AlertTypes.ERROR });
       }
     });
   } catch (error) {
     showAlert(`Send message: ${error}`, { type: AlertTypes.ERROR });
-    dispatch(sendMessageFailedAction(`${error}`));
+    disableLoading();
   }
 };
 

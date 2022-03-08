@@ -9,7 +9,6 @@ import { addMetadata } from 'services/ApiService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import { useDispatch } from 'react-redux';
 import { AlertTypes } from 'types/alerts';
 import { readFileAsync } from '../../../helpers';
 import { useAccount } from 'hooks';
@@ -23,14 +22,13 @@ type Props = {
 };
 
 export const MetaForm: VFC<Props> = ({ programName, programId }) => {
+  const alert = useAlert();
+  const { account: currentAccount } = useAccount();
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
   const [metaWasmFile, setMetaWasmFile] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
-  const dispatch = useDispatch();
-  const alert = useAlert();
-  const { account: currentAccount } = useAccount();
 
   const metaFieldRef = useRef<any>(null);
 
@@ -112,13 +110,13 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
         if (currentAccount) {
           if (isMetaByFile) {
             if (metaWasm) {
-              addMetadata(metaWasm, metaWasmFile, currentAccount, programId, values.name, dispatch);
+              addMetadata(metaWasm, metaWasmFile, currentAccount, programId, values.name, alert.show);
             } else {
               alert.show(`ERROR: metadata not loaded`, { type: AlertTypes.ERROR });
             }
           } else {
             const { name, ...meta } = values;
-            addMetadata(meta, null, currentAccount, programId, name, dispatch);
+            addMetadata(meta, null, currentAccount, programId, name, alert.show);
           }
           resetForm();
         } else {

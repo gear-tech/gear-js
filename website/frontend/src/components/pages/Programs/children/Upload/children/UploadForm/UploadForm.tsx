@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction, useState, VFC } from 'react';
-import { useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
@@ -19,7 +18,7 @@ import { MetaFields } from './children/MetaFields/MetaFields';
 import { Buttons } from './children/Buttons/Buttons';
 
 import { Schema } from './Schema';
-import { useAccount, useApi } from 'hooks';
+import { useAccount, useApi, useLoading } from 'hooks';
 import { UploadProgram } from 'services/ApiService';
 import { readFileAsync, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
@@ -34,9 +33,9 @@ type Props = {
 
 export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const { api } = useApi();
-  const dispatch = useDispatch();
   const alert = useAlert();
   const { account: currentAccount } = useAccount();
+  const { enableLoading, disableLoading } = useLoading();
 
   const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);
@@ -130,7 +129,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           droppedFile,
           { ...updatedValues, ...meta },
           metaFile,
-          dispatch,
+          enableLoading,
+          disableLoading,
           alert.show,
           () => {
             setDroppedFile(null);
@@ -145,7 +145,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
             droppedFile,
             { ...values, types: manualTypes },
             null,
-            dispatch,
+            enableLoading,
+            disableLoading,
             alert.show,
             () => {
               setDroppedFile(null);

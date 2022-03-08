@@ -1,17 +1,14 @@
 import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
+import { useAlert } from 'react-alert';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import { NativeTypes } from 'react-dnd-html5-backend';
-import { useDispatch, useSelector } from 'react-redux';
 import upload from 'assets/images/upload.svg';
 import editor from 'assets/images/editor_icon.svg';
 import { Button } from 'common/components/Button/Button';
-import { RootState } from 'store/reducers';
-import { programUploadResetAction } from 'store/actions/actions';
 import { AlertTypes } from 'types/alerts';
 import { DroppedFile, UploadTypes } from '../../types';
 import styles from './DropTarget.module.scss';
-import { useAlert } from 'react-alert';
 
 type Props = {
   type: UploadTypes;
@@ -19,9 +16,7 @@ type Props = {
 };
 
 const DropTarget = ({ type, setDroppedFile }: Props) => {
-  const dispatch = useDispatch();
   const alert = useAlert();
-  const { programUploadingError } = useSelector((state: RootState) => state.programs);
 
   const [wrongFormat, setWrongFormat] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -64,9 +59,6 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
       } else {
         alert.show('Wrong file format', { type: AlertTypes.ERROR });
         setWrongFormat(false);
-        if (programUploadingError) {
-          dispatch(programUploadResetAction());
-        }
       }
     }
   };
@@ -82,9 +74,6 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         } else {
           alert.show('Wrong file format', { type: AlertTypes.ERROR });
           setWrongFormat(false);
-          if (programUploadingError) {
-            dispatch(programUploadResetAction());
-          }
         }
       }
     },

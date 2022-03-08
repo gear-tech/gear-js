@@ -1,5 +1,4 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
@@ -12,7 +11,7 @@ import { MessageModel } from 'types/program';
 import { AlertTypes } from 'types/alerts';
 import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
-import { useAccount, useApi } from 'hooks';
+import { useAccount, useApi, useLoading } from 'hooks';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { Schema } from './Schema';
 
@@ -28,7 +27,7 @@ type Props = {
 export const MessageForm: VFC<Props> = ({ programId, programName, meta, types }) => {
   const { api } = useApi();
   const alert = useAlert();
-  const dispatch = useDispatch();
+  const { enableLoading, disableLoading } = useLoading();
   const { account: currentAccount } = useAccount();
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
   const [isManualInput, setIsManualInput] = useState(Boolean(!types));
@@ -66,7 +65,16 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
           };
 
           if (api) {
-            SendMessageToProgram(api, currentAccount, message, dispatch, alert.show, resetForm, meta);
+            SendMessageToProgram(
+              api,
+              currentAccount,
+              message,
+              enableLoading,
+              disableLoading,
+              alert.show,
+              resetForm,
+              meta
+            );
           }
         } else {
           alert.show(`WALLET NOT CONNECTED`, { type: AlertTypes.ERROR });
