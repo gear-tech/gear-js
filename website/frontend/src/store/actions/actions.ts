@@ -6,7 +6,7 @@ import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
-import { AlertModel, AlertTypes, AlertActionTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import { ReactNode } from 'react';
 import { AlertCustomOptionsWithType } from 'react-alert';
 
