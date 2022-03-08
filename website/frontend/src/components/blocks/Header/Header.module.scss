@@ -3,15 +3,19 @@
 
 .header {
   min-height: 80px;
-  padding: 16px 40px;
+  padding: 0 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: $textColor;
   background-color: $mainBackground;
+  @include lg {
+    padding: 16px 40px;
+  }
 }
 
 .nav {
+  min-height: 80px;
   display: flex;
   align-items: center;
 

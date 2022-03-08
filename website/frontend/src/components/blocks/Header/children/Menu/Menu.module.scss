@@ -8,27 +8,36 @@
     flex-direction: column;
   }
 
-  & > *:not(:last-child) {
+  .item {
     margin-right: 40px;
-
     @include sm {
       margin-right: 0;
       margin-bottom: 20px;
     }
-  }
-}
 
-.link {
-  color: inherit;
-  transition: all 0.25s;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
+    &:last-child {
+      margin-right: 0;
+    }
 
-  &:hover {
-    color: $textColorSecondary;
-  }
+    .link {
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      color: inherit;
+      transition: all 0.25s;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      @include lg {
+        min-height: auto;
+      }
 
-  &.active {
-    border-bottom: 2px solid $successColor;
+      &:hover {
+        color: $textColorSecondary;
+      }
+
+      &.active {
+        border-bottom: 2px solid $successColor;
+      }
+    }
   }
 }
