@@ -5,3 +5,10 @@ export type InitialValues = {
   messageId: string;
   fields: {};
 };
+
+export type ReplyType = {
+  messageId: string;
+  value: number;
+  gasLimit: number;
+  payload: object;
+};

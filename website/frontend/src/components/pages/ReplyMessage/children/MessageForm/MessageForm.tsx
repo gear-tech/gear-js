@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
 import { Metadata } from '@gear-js/api';
-import { SendMessageToProgram } from 'services/ApiService';
+import { ReplyMessage } from 'services/ApiService';
 import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
-import { MessageModel } from 'types/program';
+import { ReplyType } from './types';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
@@ -57,17 +57,17 @@ export const MessageForm: VFC<Props> = ({ messageId, programName, reply, meta, t
       validateOnBlur
       onSubmit={(values, { resetForm }) => {
         if (currentAccount) {
-          const pl = isManualInput ? values.payload : values.fields;
+          const payload = isManualInput ? values.payload : values.fields;
 
-          const message: MessageModel = {
-            gasLimit: values.gasLimit,
-            destination: values.messageId,
+          const message: ReplyType = {
+            messageId: messageId,
             value: values.value,
-            payload: pl,
+            gasLimit: values.gasLimit,
+            payload,
           };
 
           if (api) {
-            SendMessageToProgram(api, currentAccount, message, dispatch, resetForm, meta);
+            ReplyMessage(api, currentAccount, message, dispatch, meta);
           }
         } else {
           dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
