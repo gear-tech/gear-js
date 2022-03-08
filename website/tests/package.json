@@ -1,9 +1,9 @@
 {
   "name": "@gear-js/web-tests",
   "packageManager": "yarn@3.1.1",
-  "type": "module",
   "scripts": {
     "start": "ts-node src/index.ts",
+    "build": "tsc",
     "watch": "ts-node-dev src/index.ts"
   },
   "devDependencies": {
@@ -15,7 +15,7 @@
     "@gear-js/api": "^0.13.0",
     "@polkadot/api": "^7.8.1",
     "js-yaml": "^4.1.0",
-    "node-fetch": "^3.2.0",
+    "node-fetch": "2",
     "ts-node": "^10.5.0"
   }
 }

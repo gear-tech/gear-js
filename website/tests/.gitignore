@@ -1,2 +1,3 @@
 wasm/
 .env
+dist/

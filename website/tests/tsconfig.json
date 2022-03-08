@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    "target": "esnext",
+    "experimentalDecorators": true,
     "allowJs": true,
+    "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
+    "outDir": "./dist",
     "esModuleInterop": true,
     "moduleResolution": "Node",
     "resolveJsonModule": true,

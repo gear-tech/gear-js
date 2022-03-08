@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 import base from '../config/base';
 
 export default async function (method: string, params: any) {
