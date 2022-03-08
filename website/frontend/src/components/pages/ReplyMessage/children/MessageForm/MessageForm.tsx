@@ -67,7 +67,7 @@ export const MessageForm: VFC<Props> = ({ messageId, programName, reply, meta, t
           };
 
           if (api) {
-            ReplyMessage(api, currentAccount, message, dispatch, meta);
+            ReplyMessage(api, currentAccount, message, dispatch, resetForm, meta);
           }
         } else {
           dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));

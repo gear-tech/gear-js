@@ -255,6 +255,7 @@ export const ReplyMessage = async (
   account: UserAccount,
   message: ReplyType,
   dispatch: any,
+  callback: () => void,
   meta?: Metadata
 ) => {
   const injector = await web3FromSource(account.meta.source);
@@ -292,6 +293,7 @@ export const ReplyMessage = async (
               })
             );
             dispatch(sendMessageSuccessAction());
+            callback();
           }
 
           if (method === 'ExtrinsicFailed') {
