@@ -3,7 +3,7 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { GearApi, Metadata } from '@gear-js/api';
 import { RPC_METHODS, PROGRAM_ERRORS } from 'consts';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import {
   programUploadStartAction,
   sendMessageSuccessAction,
@@ -79,7 +79,7 @@ export const UploadProgram = async (
       if (data.status.isInBlock) {
         dispatch(
           AddAlert({
-            type: EventTypes.SUCCESS,
+            type: AlertTypes.SUCCESS,
             message: `Upload program: In block`,
           })
         );
@@ -92,7 +92,7 @@ export const UploadProgram = async (
           if (method === 'InitMessageEnqueued') {
             dispatch(
               AddAlert({
-                type: EventTypes.SUCCESS,
+                type: AlertTypes.SUCCESS,
                 message: `Upload program: Finalized`,
               })
             );
@@ -115,11 +115,11 @@ export const UploadProgram = async (
                 })
                 .then(() => {
                   dispatch(
-                    AddAlert({ type: EventTypes.SUCCESS, message: `Program added to the localDB successfully` })
+                    AddAlert({ type: AlertTypes.SUCCESS, message: `Program added to the localDB successfully` })
                   );
                 })
                 .catch((error: any) => {
-                  dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+                  dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Error: ${error}` }));
                 });
             } else {
               // Sign metadata and save it
@@ -138,10 +138,10 @@ export const UploadProgram = async (
                     // FIXME 'throw' of exception caught locally
                     throw new Error(response.error.message);
                   } else {
-                    dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata saved successfully` }));
+                    dispatch(AddAlert({ type: AlertTypes.SUCCESS, message: `Metadata saved successfully` }));
                   }
                 } catch (error) {
-                  dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+                  dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
                   console.error(error);
                 }
               });
@@ -151,7 +151,7 @@ export const UploadProgram = async (
           if (method === 'ExtrinsicFailed') {
             dispatch(
               AddAlert({
-                type: EventTypes.ERROR,
+                type: AlertTypes.ERROR,
                 message: `Upload program: Extrinsic Failed`,
               })
             );
@@ -163,7 +163,7 @@ export const UploadProgram = async (
         dispatch(programUploadFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
         dispatch(
           AddAlert({
-            type: EventTypes.ERROR,
+            type: AlertTypes.ERROR,
             message: PROGRAM_ERRORS.INVALID_TRANSACTION,
           })
         );
@@ -171,7 +171,7 @@ export const UploadProgram = async (
     });
   } catch (error) {
     dispatch(programUploadFailedAction(`${error}`));
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Upload program: ${error}` }));
+    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Upload program: ${error}` }));
   }
 };
 
@@ -201,7 +201,7 @@ export const SendMessageToProgram = async (
       if (data.status.isInBlock) {
         dispatch(
           AddAlert({
-            type: EventTypes.SUCCESS,
+            type: AlertTypes.SUCCESS,
             message: `Send message: In block`,
           })
         );
@@ -214,7 +214,7 @@ export const SendMessageToProgram = async (
           if (method === 'DispatchMessageEnqueued') {
             dispatch(
               AddAlert({
-                type: EventTypes.SUCCESS,
+                type: AlertTypes.SUCCESS,
                 message: `Send message: Finalized`,
               })
             );
@@ -225,7 +225,7 @@ export const SendMessageToProgram = async (
           if (method === 'ExtrinsicFailed') {
             dispatch(
               AddAlert({
-                type: EventTypes.ERROR,
+                type: AlertTypes.ERROR,
                 message: `Extrinsic Failed`,
               })
             );
@@ -237,14 +237,14 @@ export const SendMessageToProgram = async (
         dispatch(sendMessageFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
         dispatch(
           AddAlert({
-            type: EventTypes.ERROR,
+            type: AlertTypes.ERROR,
             message: PROGRAM_ERRORS.INVALID_TRANSACTION,
           })
         );
       }
     });
   } catch (error) {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Send message: ${error}` }));
+    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Send message: ${error}` }));
     dispatch(sendMessageFailedAction(`${error}`));
   }
 };
@@ -278,11 +278,11 @@ export const addMetadata = async (
           };
 
           localPrograms.setItem(res.id, newData).then(() => {
-            dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+            dispatch(AddAlert({ type: AlertTypes.SUCCESS, message: `Metadata added successfully` }));
           });
         })
         .catch((error) => {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: ${error}` }));
+          dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Error: ${error}` }));
         });
     } else {
       try {
@@ -299,10 +299,10 @@ export const addMetadata = async (
           // FIXME 'throw' of exception caught locally
           throw new Error(response.error.message);
         } else {
-          dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Metadata added successfully` }));
+          dispatch(AddAlert({ type: AlertTypes.SUCCESS, message: `Metadata added successfully` }));
         }
       } catch (error) {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+        dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
         console.error(error);
       }
     }

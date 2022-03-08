@@ -10,7 +10,7 @@ import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
 import { useDispatch } from 'react-redux';
 import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import { readFileAsync } from '../../../helpers';
 import { useAccount } from 'hooks';
 import { Schema } from './Schema';
@@ -65,7 +65,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
         setMetaWasmFile(bufstr);
         setMetaWasm(meta);
       } catch (error) {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+        dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
       }
       setDroppedMetaFile(file);
     },
@@ -113,7 +113,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
             if (metaWasm) {
               addMetadata(metaWasm, metaWasmFile, currentAccount, programId, values.name, dispatch);
             } else {
-              dispatch(AddAlert({ type: EventTypes.ERROR, message: `ERROR: metadata not loaded` }));
+              dispatch(AddAlert({ type: AlertTypes.ERROR, message: `ERROR: metadata not loaded` }));
             }
           } else {
             const { name, ...meta } = values;
@@ -121,7 +121,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
           }
           resetForm();
         } else {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
+          dispatch(AddAlert({ type: AlertTypes.ERROR, message: `WALLET NOT CONNECTED` }));
         }
       }}
     >

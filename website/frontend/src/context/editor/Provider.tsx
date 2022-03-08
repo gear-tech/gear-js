@@ -34,7 +34,7 @@ const useEditor = () => {
                 setIsBuildDone(false);
                 localStorage.removeItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID);
                 clearInterval(timerId);
-                // AddAlert({ type: EventTypes.SUCCESS, message: `Program is ready!` }
+                // AddAlert({ type: AlertTypes.SUCCESS, message: `Program is ready!` }
               });
             });
           })

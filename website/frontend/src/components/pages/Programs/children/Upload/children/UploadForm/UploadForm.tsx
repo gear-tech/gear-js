@@ -7,7 +7,7 @@ import { Metadata, getWasmMetadata, parseHexTypes, getTypeStructure } from '@gea
 import { Formik, Form, Field } from 'formik';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
 import { FormItem } from 'components/FormItem';
 import { Switch } from 'common/components/Switch';
@@ -95,7 +95,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
     } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+      dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
     }
     setDroppedMetaFile(file);
   };
@@ -133,11 +133,11 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
             setDroppedFile(null);
           });
         } catch (error) {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `Invalid JSON format` }));
+          dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Invalid JSON format` }));
         }
       }
     } else {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Wallet not connected` }));
+      dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Wallet not connected` }));
     }
   };
 

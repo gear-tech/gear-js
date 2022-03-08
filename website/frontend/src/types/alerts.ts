@@ -1,11 +1,11 @@
-export enum EventTypes {
+export enum AlertTypes {
   INFO = 'info',
   SUCCESS = 'success',
   ERROR = 'error',
 }
 
 export interface AlertModel {
-  type: EventTypes;
+  type: AlertTypes;
   message: string;
 }
 

@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AddAlert } from 'store/actions/actions';
 import { useDispatch } from 'react-redux';
 import { useApi } from 'hooks';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { BackButton } from 'common/components/BackButton/BackButton';
 import { getPreformattedText } from 'helpers';
@@ -112,7 +112,7 @@ const State: VFC = () => {
     if (options) {
       readState(options);
     } else {
-      const alert = { type: EventTypes.ERROR, message: 'Form is empty' };
+      const alert = { type: AlertTypes.ERROR, message: 'Form is empty' };
       dispatch(AddAlert(alert));
     }
   };

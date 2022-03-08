@@ -7,7 +7,7 @@ import { NODE_ADDRESS_REGEX } from 'regexes';
 import { InitialValues as SendMessageInitialValues } from './components/pages/SendMessage/children/MessageForm/types';
 import { InitialValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { SetFieldValue } from 'types/common';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 import { AddAlert } from 'store/actions/actions';
 
@@ -167,12 +167,12 @@ export const calculateGas = async (
   const payload = isManualPayload ? values.payload : values.fields;
 
   if (isManualPayload && payload === '') {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
+    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Error: payload can't be empty` }));
     return;
   }
 
   if (!isManualPayload && Object.keys(payload).length === 0) {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: form can't be empty` }));
+    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `Error: form can't be empty` }));
     return;
   }
 
@@ -186,10 +186,10 @@ export const calculateGas = async (
       metaOrTypeOfPayload
     );
 
-    dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
+    dispatch(AddAlert({ type: AlertTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
     setFieldValue('gasLimit', estimatedGas.toNumber());
   } catch (error) {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+    dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
   }
 };
 

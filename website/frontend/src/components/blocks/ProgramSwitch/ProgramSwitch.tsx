@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'consts';
 import { useDispatch } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
@@ -34,13 +34,13 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
       });
 
       if (response.error) {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${response.error.error}` }));
+        dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${response.error.error}` }));
       }
 
       // count the number of crane calls
       setGasCallCounter(gasCallCounter + 1);
     } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+      dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
     }
   };
 
@@ -54,7 +54,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         api.balance.transferFromAlice(currentAccount.address, GEAR_BALANCE_TRANSFER_VALUE);
       }
     } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+      dispatch(AddAlert({ type: AlertTypes.ERROR, message: `${error}` }));
     }
   };
 

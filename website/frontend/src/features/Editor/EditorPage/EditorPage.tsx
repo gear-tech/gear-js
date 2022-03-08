@@ -12,7 +12,7 @@ import { useEditor } from 'hooks';
 import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, LOCAL_STORAGE } from 'consts';
 
 import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
@@ -97,7 +97,7 @@ export const EditorPage = () => {
       .then((json) => {
         localStorage.setItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID, json.id);
         setIsBuildDone(true);
-        globalDispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Compiling, please wait!` }));
+        globalDispatch(AddAlert({ type: AlertTypes.SUCCESS, message: `Compiling, please wait!` }));
       });
   }
 

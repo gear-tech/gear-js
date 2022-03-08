@@ -8,7 +8,7 @@ import editor from 'assets/images/editor_icon.svg';
 import { Button } from 'common/components/Button/Button';
 import { RootState } from 'store/reducers';
 import { AddAlert, programUploadResetAction } from 'store/actions/actions';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import { DroppedFile, UploadTypes } from '../../types';
 import styles from './DropTarget.module.scss';
 
@@ -60,7 +60,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         // reset it's value to trigger onChange again in case the same file selected twice
         event.target.value = '';
       } else {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
+        dispatch(AddAlert({ type: AlertTypes.ERROR, message: 'Wrong file format' }));
         setWrongFormat(false);
         if (programUploadingError) {
           dispatch(programUploadResetAction());
@@ -78,7 +78,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         if (!isCorrectFormat) {
           handleFilesUpload(files[0]);
         } else {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
+          dispatch(AddAlert({ type: AlertTypes.ERROR, message: 'Wrong file format' }));
           setWrongFormat(false);
           if (programUploadingError) {
             dispatch(programUploadResetAction());

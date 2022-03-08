@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import { AddAlert } from 'store/actions/actions';
 import { checkFileFormat } from 'helpers';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import styles from './MetaFile.module.scss';
 
 type Props = {
@@ -29,7 +29,7 @@ export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, han
       if (isCorrectFormat) {
         handleUploadMetaFile(event.target.files[0]);
       } else {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
+        dispatch(AddAlert({ type: AlertTypes.ERROR, message: 'Wrong file format' }));
       }
     }
   };

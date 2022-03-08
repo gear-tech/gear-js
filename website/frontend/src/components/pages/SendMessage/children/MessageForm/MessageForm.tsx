@@ -8,7 +8,7 @@ import { SendMessageToProgram } from 'services/ApiService';
 import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { MessageModel } from 'types/program';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
 import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
@@ -68,7 +68,7 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
             SendMessageToProgram(api, currentAccount, message, dispatch, resetForm, meta);
           }
         } else {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
+          dispatch(AddAlert({ type: AlertTypes.ERROR, message: `WALLET NOT CONNECTED` }));
         }
       }}
     >

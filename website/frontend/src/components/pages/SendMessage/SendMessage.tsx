@@ -6,7 +6,7 @@ import { MetaParam } from 'utils/meta-parser';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
-import { EventTypes } from 'types/alerts';
+import { AlertTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
 import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
@@ -37,7 +37,7 @@ export const SendMessage: VFC = () => {
     if (!meta) {
       getMeta(programId)
         .then((res) => setMeta(JSON.parse(res.result.meta) ?? null))
-        .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
+        .catch((err: RPCResponseError) => dispatch(AddAlert({ type: AlertTypes.ERROR, message: err.message })))
         .finally(() => setReady(true));
     }
   }, [meta, programId, getMeta, dispatch]);

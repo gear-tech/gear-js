@@ -6,7 +6,7 @@ import { RPC_METHODS, LOCAL_STORAGE } from 'consts';
 import { PaginationModel, UserPrograms } from 'types/common';
 import { getLocalPrograms, getLocalProgram, getLocalProgramMeta, isDevChain } from 'helpers';
 import { nodeApi } from '../../api/initApi';
-import { AlertModel, EventTypes, AlertActionTypes } from 'types/alerts';
+import { AlertModel, AlertTypes, AlertActionTypes } from 'types/alerts';
 
 const fetchUserProgramsAction = () => ({ type: ProgramActionTypes.FETCH_USER_PROGRAMS });
 const fetchUserProgramsSuccessAction = (payload: ProgramPaginationModel) => ({
@@ -124,7 +124,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
     if (info.origin.toHex() === filterKey) {
       dispatch(
         AddAlert({
-          type: reason ? EventTypes.ERROR : EventTypes.SUCCESS,
+          type: reason ? AlertTypes.ERROR : AlertTypes.SUCCESS,
           message: `${method}\n
           ${info.programId.toHex()}`,
         })
@@ -145,7 +145,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
     if (result && result.meta) {
       meta = JSON.parse(result.meta);
     } else {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Metadata is not added' }));
+      dispatch(AddAlert({ type: AlertTypes.ERROR, message: 'Metadata is not added' }));
     }
 
     try {
@@ -162,8 +162,8 @@ export const subscribeToEvents = () => (dispatch: any) => {
         AddAlert({
           type:
             (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone
-              ? EventTypes.SUCCESS
-              : EventTypes.ERROR,
+              ? AlertTypes.SUCCESS
+              : AlertTypes.ERROR,
           message: `LOG from program\n
           ${source.toHex()}\n
           ${decodedPayload ? `Response: ${decodedPayload}` : ''}
@@ -177,7 +177,7 @@ export const subscribeToEvents = () => (dispatch: any) => {
     if (to.toHex() === filterKey) {
       dispatch(
         AddAlert({
-          type: EventTypes.INFO,
+          type: AlertTypes.INFO,
           message: `TRANSFER BALANCE\n
             FROM:${GearKeyring.encodeAddress(from.toHex())}\n
             VALUE:${value.toString()}`,
