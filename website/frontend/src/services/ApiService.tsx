@@ -3,12 +3,13 @@ import { AlertCustomOptionsWithType } from 'react-alert';
 import { UploadProgramModel, MessageModel, MetaModel, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { GearApi, Metadata } from '@gear-js/api';
-import { RPC_METHODS, PROGRAM_ERRORS } from 'consts';
+import { CreateType, GearApi, GearKeyring, Metadata } from '@gear-js/api';
+import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE } from 'consts';
 import { AlertTypes } from 'types/alerts';
 import { localPrograms } from './LocalDBService';
-import { readFileAsync, signPayload, isDevChain } from 'helpers';
+import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
+import { nodeApi } from 'api/initApi';
 
 // TODO: (dispatch) fix it later
 
@@ -260,6 +261,60 @@ export const addMetadata = async (
         showAlert(`${error}`, { type: AlertTypes.ERROR });
         console.error(error);
       }
+    }
+  });
+};
+
+export const subscribeToEvents = (showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void) => {
+  const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
+  nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
+    // @ts-ignore
+    if (info.origin.toHex() === filterKey) {
+      showAlert(`${method}\n ${info.programId.toHex()}`, { type: reason ? AlertTypes.ERROR : AlertTypes.SUCCESS });
+    }
+  });
+
+  nodeApi.subscribeToLogEvents(async ({ data: { source, dest, reply, payload } }) => {
+    let meta = null;
+    let decodedPayload: any;
+    const programId = source.toHex();
+    const apiRequest = new ServerRPCRequestService();
+
+    const { result } = isDevChain()
+      ? await getLocalProgramMeta(programId)
+      : await apiRequest.getResource(RPC_METHODS.GET_METADATA, { programId });
+
+    if (result && result.meta) {
+      meta = JSON.parse(result.meta);
+    } else {
+      showAlert('Metadata is not added', { type: AlertTypes.ERROR });
+    }
+
+    try {
+      decodedPayload =
+        meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
+          ? CreateType.decode(meta.output, payload, meta).toHuman()
+          : payload.toHuman();
+    } catch (error) {
+      console.error('Decode payload failed');
+    }
+    // @ts-ignore
+    if (dest.toHex() === filterKey) {
+      // TODO: add payload parsing
+      const msg = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
+      const options = {
+        type:
+          (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone ? AlertTypes.SUCCESS : AlertTypes.ERROR,
+      };
+
+      showAlert(msg, options);
+    }
+  });
+
+  nodeApi.subscribeToTransferEvents(({ data: { from, to, value } }) => {
+    if (to.toHex() === filterKey) {
+      const msg = `TRANSFER BALANCE\n FROM:${GearKeyring.encodeAddress(from.toHex())}\n VALUE:${value.toString()}`;
+      showAlert(msg, { type: AlertTypes.INFO });
     }
   });
 };

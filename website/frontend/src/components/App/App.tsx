@@ -1,6 +1,5 @@
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useSearchParams } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import { positions, Provider as AlertProvider, useAlert } from 'react-alert';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
@@ -18,9 +17,8 @@ import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
-import { subscribeToEvents } from '../../store/actions/actions';
+import { subscribeToEvents } from 'services/ApiService';
 import { nodeApi } from '../../api/initApi';
-import store from '../../store';
 
 import { ApiProvider } from 'context/api';
 import { BlocksProvider } from 'context/blocks';
@@ -134,21 +132,19 @@ const AppComponent: FC = () => {
 };
 
 export const App = () => (
-  <Provider store={store}>
-    <AlertProvider template={AlertTemplate} {...options}>
-      <ApiProvider>
-        <BlocksProvider>
-          <AccountProvider>
-            <EditorProvider>
-              <LoadingProvider>
-                <BrowserRouter>
-                  <AppComponent />
-                </BrowserRouter>
-              </LoadingProvider>
-            </EditorProvider>
-          </AccountProvider>
-        </BlocksProvider>
-      </ApiProvider>
-    </AlertProvider>
-  </Provider>
+  <AlertProvider template={AlertTemplate} {...options}>
+    <ApiProvider>
+      <BlocksProvider>
+        <AccountProvider>
+          <EditorProvider>
+            <LoadingProvider>
+              <BrowserRouter>
+                <AppComponent />
+              </BrowserRouter>
+            </LoadingProvider>
+          </EditorProvider>
+        </AccountProvider>
+      </BlocksProvider>
+    </ApiProvider>
+  </AlertProvider>
 );
