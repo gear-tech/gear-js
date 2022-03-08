@@ -29,7 +29,7 @@ export const ReplyMessage: VFC = () => {
   const [ready, setReady] = useState(false);
 
   const { message } = useSelector((state: RootState) => state.messages);
-  console.log(message);
+
   const { fetchMeta } = programService;
   const getMeta = isDevChain() ? getLocalProgramMeta : fetchMeta;
 
