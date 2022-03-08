@@ -49,18 +49,6 @@
     "lint:fix": "eslint ./src --fix --color",
     "format": "prettier --write src/"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{ts,tsx,json}": [
-      "eslint --fix src/",
-      "prettier --write",
-      "git add"
-    ]
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -106,8 +94,6 @@
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-react": "7.29.2",
     "eslint-plugin-react-hooks": "4.3.0",
-    "husky": "7.0.4",
-    "lint-staged": "12.3.4",
     "prettier": "2.5.1",
     "sass": "1.49.9",
     "stream-browserify": "3.0.0",
