@@ -26,6 +26,7 @@ import store from '../../store';
 import { ApiProvider } from 'context/api';
 import { BlocksProvider } from 'context/blocks';
 import { AccountProvider } from 'context/account';
+import { EditorProvider } from 'context/editor';
 import { useApi, useEvents } from 'hooks';
 
 import './App.scss';
@@ -141,9 +142,11 @@ export const App = () => (
     <ApiProvider>
       <BlocksProvider>
         <AccountProvider>
-          <BrowserRouter>
-            <AppComponent />
-          </BrowserRouter>
+          <EditorProvider>
+            <BrowserRouter>
+              <AppComponent />
+            </BrowserRouter>
+          </EditorProvider>
         </AccountProvider>
       </BlocksProvider>
     </ApiProvider>
