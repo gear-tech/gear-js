@@ -1,11 +1,9 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useDispatch } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Meta } from 'components/Meta/Meta';
 import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
-import { uploadMetaResetAction } from 'store/actions/actions';
 import { ProgramModel } from 'types/program';
 import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload-cloud.svg';
@@ -20,7 +18,6 @@ type ProgramMessageType = {
 };
 
 export const All: VFC = () => {
-  const dispatch = useDispatch();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
@@ -53,7 +50,6 @@ export const All: VFC = () => {
   };
 
   const handleCloseMetaForm = () => {
-    dispatch(uploadMetaResetAction());
     setProgramMeta(null);
   };
 

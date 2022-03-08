@@ -1,7 +1,5 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { uploadMetaResetAction } from 'store/actions/actions';
 import { ProgramModel } from 'types/program';
 
 import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
@@ -22,7 +20,6 @@ type ProgramMessageType = {
 };
 
 export const Recent: VFC = () => {
-  const dispatch = useDispatch();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
@@ -60,7 +57,6 @@ export const Recent: VFC = () => {
   };
 
   const handleCloseMetaForm = () => {
-    dispatch(uploadMetaResetAction());
     setProgramMeta(null);
   };
 
