@@ -1,3 +1,3 @@
 export interface ExecutionError {
-  error: string;
+  error: { message: string };
 }

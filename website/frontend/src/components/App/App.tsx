@@ -1,8 +1,7 @@
-import React, { FC, useEffect, useState } from 'react';
-import { BrowserRouter, Route, Switch, useHistory, useLocation } from 'react-router-dom';
+import React, { FC, useEffect } from 'react';
+import { BrowserRouter, Route, Routes, useSearchParams } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { positions, Provider as AlertProvider } from 'react-alert';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
@@ -15,18 +14,16 @@ import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
 import { SendMessage } from 'components/pages/SendMessage/SendMessage';
 import { EditorPage } from 'features/Editor/EditorPage';
-import { NotificationsPage } from 'components/pages/Notifications/NotificationsPage';
 import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { RootState } from 'store/reducers';
-import { subscribeToEvents, setApiReady, fetchBlockAction } from '../../store/actions/actions';
+import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
 import { nodeApi } from '../../api/initApi';
-import { useApi } from 'hooks/useApi';
+import { useEvents } from 'hooks/useEvents';
+import { useBlocks } from 'hooks/useBlocks';
 import store from '../../store';
-import { getEvents } from 'utils/events-list';
-import { Events } from 'types/events-list';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -39,7 +36,7 @@ import { Main } from 'layout/Main/Main';
 // alert configuration
 const options = {
   position: positions.BOTTOM_CENTER,
-  timeout: 5000,
+  timeout: 10000,
   containerStyle: {
     zIndex: ZIndexes.alert,
     width: '100%',
@@ -51,15 +48,17 @@ const options = {
   },
 };
 
+const mainRoutes = [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages];
+const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
+
 const AppComponent: FC = () => {
   globalStyles();
-  const [api] = useApi();
+  useBlocks();
   const dispatch = useDispatch();
-  const history = useHistory();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isApiReady } = useSelector((state: RootState) => state.api);
   const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
-  const [events, setEvents] = useState<Events>([]);
+  const events = useEvents();
 
   useEffect(() => {
     if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
@@ -84,62 +83,13 @@ const AppComponent: FC = () => {
   }, [dispatch, isApiReady]);
 
   useEffect(() => {
-    const { search } = location;
-    const searchParams = new URLSearchParams(search);
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
 
     if (!urlNodeAddress) {
       searchParams.set(NODE_ADRESS_URL_PARAM, nodeApi.address);
-      history.replace({ search: searchParams.toString() });
+      setSearchParams(searchParams, { replace: true });
     }
-  }, [history, location]);
-
-  useEffect(() => {
-    let unsub: UnsubscribePromise | undefined;
-
-    if (api) {
-      unsub = api.gearEvents.subscribeToNewBlocks(async (header) => {
-        const { hash, number } = header;
-
-        const timestamp = await api.blocks.getBlockTimestamp(hash);
-        const date = new Date(timestamp.toNumber());
-
-        dispatch(
-          fetchBlockAction({
-            hash: hash.toHex(),
-            number: number.toNumber(),
-            time: date.toLocaleTimeString(),
-          })
-        );
-      });
-    }
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-    };
-  }, [api, dispatch]);
-
-  useEffect(() => {
-    let unsub: UnsubscribePromise | undefined;
-
-    if (api) {
-      unsub = api.allEvents((eventRecords) => {
-        const newEvents = getEvents(eventRecords);
-        setEvents((prevEvents) => [...newEvents, ...prevEvents]);
-      });
-    }
-
-    return () => {
-      if (unsub) {
-        (async () => {
-          (await unsub)();
-        })();
-      }
-    };
-  }, [api, dispatch]);
+  }, [searchParams, setSearchParams]);
 
   const isFooterHidden = () => {
     const locationPath = window.location.pathname.replaceAll('/', '');
@@ -147,6 +97,10 @@ const AppComponent: FC = () => {
     const termsOfUsePath = routes.termsOfUse.replaceAll('/', '');
     return locationPath === privacyPath || locationPath === termsOfUsePath;
   };
+
+  // we'll get rid of multiple paths in one route anyway, so temp solution
+  const getMultipleRoutes = (paths: string[], element: JSX.Element) =>
+    paths.map((path) => <Route key={path} path={path} element={element} />);
 
   return (
     <AlertProvider template={AlertTemplate} {...options}>
@@ -160,38 +114,23 @@ const AppComponent: FC = () => {
         <Header />
         <Main>
           {isApiReady ? (
-            <Switch>
-              <Route exact path={[routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages]}>
-                <Programs />
+            <Routes>
+              {getMultipleRoutes(mainRoutes, <Programs />)}
+              {getMultipleRoutes(utilRoutes, <Document />)}
+
+              {/* temp solution since in react-router v6 optional parameters are gone */}
+              <Route path={routes.explorer}>
+                <Route path="" element={<Explorer events={events} />} />
+                <Route path=":blockId" element={<Explorer events={events} />} />
               </Route>
-              <Route exact path={routes.program}>
-                <Program />
-              </Route>
-              <Route exact path={routes.explorer}>
-                <Explorer events={events} />
-              </Route>
-              <Route exact path={routes.message}>
-                <Message />
-              </Route>
-              <Route exact path={routes.state}>
-                <State />
-              </Route>
-              <Route exact path={routes.sendMessage}>
-                <SendMessage />
-              </Route>
-              <Route exact path={routes.editor}>
-                <EditorPage />
-              </Route>
-              <Route exact path={routes.notifications}>
-                <NotificationsPage />
-              </Route>
-              <Route exact path={[routes.privacyPolicy, routes.termsOfUse]}>
-                <Document />
-              </Route>
-              <Route exact path="*">
-                <PageNotFound />
-              </Route>
-            </Switch>
+
+              <Route path={routes.program} element={<Program />} />
+              <Route path={routes.message} element={<Message />} />
+              <Route path={routes.state} element={<State />} />
+              <Route path={routes.sendMessage} element={<SendMessage />} />
+              <Route path={routes.editor} element={<EditorPage />} />
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
           ) : (
             <Loader />
           )}

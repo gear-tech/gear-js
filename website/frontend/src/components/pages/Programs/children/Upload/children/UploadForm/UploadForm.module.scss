@@ -1,0 +1,189 @@
+@use 'assets/scss/variables' as *;
+
+.uploadForm {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px dashed #0e0e0e;
+  border-radius: 2px;
+  margin-bottom: 40px;
+  @media (max-width: 768px) {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 111;
+    background-color: #181818;
+    overflow: scroll;
+  }
+
+  .heading {
+    color: $textColor;
+    font-size: $fontSizeLarge;
+    font-weight: 600;
+    padding: 32px;
+    border-bottom: 2px solid $successColor;
+    @media (max-width: 768px) {
+      padding: 16px;
+    }
+  }
+
+  .columnsWrapper {
+    padding: 32px;
+    @media (max-width: 768px) {
+      .program-details__wrapper {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding: 26px 16px;
+      }
+    }
+    .columns {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      @media (max-width: 768px) {
+        width: 100%;
+        .columnLeft,
+        .meta {
+          width: 100%;
+        }
+      }
+
+      .columnLeft {
+        width: 50%;
+      }
+
+      .meta {
+        width: 45%;
+        border: 1px solid $bkgButtonColor;
+        border-radius: 2px;
+        padding: 30px;
+        position: relative;
+        margin-top: 10px;
+        .title {
+          position: absolute;
+          color: $textColor;
+          font-size: 12px;
+          top: -10px;
+          left: 25px;
+          padding: 0 5px;
+          background-color: $bkgActiveButtonColor;
+        }
+      }
+
+      .block {
+        display: flex;
+        margin-bottom: 25px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        @media (max-width: 768px) {
+          flex-direction: column;
+          position: relative;
+          margin-bottom: 32px;
+        }
+        .caption {
+          display: flex;
+          align-items: center;
+          flex-wrap: nowrap;
+          color: $textColorSecondary;
+          font-weight: 300;
+          min-width: 200px;
+          font-size: 16px;
+          line-height: 130%;
+          &.top {
+            align-items: flex-start;
+          }
+          @media (max-width: 768px) {
+            margin-bottom: 4px;
+          }
+          @media (min-width: 769px) and (max-width: 1270px) {
+            font-size: 16px;
+            min-width: 160px;
+          }
+        }
+        .value {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          position: relative;
+          &.filename {
+            color: #e0e0e0;
+            padding: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: transparent;
+            button {
+              display: flex;
+              align-content: center;
+            }
+          }
+          &.payload {
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            .switch {
+              margin-bottom: 20px;
+            }
+          }
+          @media (max-width: 768px) {
+            overflow: unset;
+            display: flex;
+            justify-content: space-between;
+            max-width: unset;
+            width: 100%;
+          }
+          .field {
+            width: 100%;
+            height: 38px;
+            background-color: $bkgInputColor;
+            border: none;
+            font-size: 14px;
+            padding: 0 16px;
+            outline: none;
+            color: #e0e0e0;
+            &:disabled {
+              color: #858585;
+            }
+            &.textarea {
+              resize: vertical;
+              min-height: 150px;
+              padding: 16px;
+            }
+          }
+          .error {
+            color: #ff0000;
+            font-size: 14px;
+            position: absolute;
+            bottom: -20px;
+          }
+        }
+        .switch {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 24px;
+          .switchButton {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 14px;
+            color: $textColor;
+            padding: 0;
+            .img {
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -34,9 +34,9 @@ export class GearStorage {
    * @param pagesList - list with pages numbers
    * @returns
    */
-  async gPages(programId: ProgramId, pagesList: u32[]): Promise<IGearPages> {
+  async gPages(programId: ProgramId, gProg: IActiveProgram): Promise<IGearPages> {
     const keys = {};
-    pagesList.forEach((value: u32) => {
+    gProg.persistent_pages.forEach((value: u32) => {
       keys[value.toNumber()] = `0x${PREFIXES.pages}${programId.slice(2)}${SEPARATOR}${this.api
         .createType('Bytes', Array.from(this.api.createType('u32', value).toU8a()))
         .toHex()

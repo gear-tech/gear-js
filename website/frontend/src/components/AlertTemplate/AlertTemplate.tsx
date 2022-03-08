@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { AlertComponentPropsWithStyle } from 'react-alert';
-import { AlertCircle, CheckCircle, Info } from 'react-feather';
+import { AlertCircle, CheckCircle, Info, X } from 'react-feather';
 
 const alertStyle = {
   backgroundColor: '#151515',
@@ -16,8 +16,15 @@ const alertStyle = {
   boxSizing: 'border-box',
 };
 
+const textStyle = {
+  margin: '0 10px',
+};
+
 const buttonStyle = {
-  marginLeft: '20px',
+  display: 'flex',
+  alignItems: 'center',
+  padding: '0',
+  marginLeft: '5px',
   border: 'none',
   backgroundColor: 'transparent',
   cursor: 'pointer',
@@ -30,9 +37,9 @@ export const AlertTemplate: FC<AlertComponentPropsWithStyle> = ({ message, optio
     {options.type === 'info' && <Info color="blue" />}
     {options.type === 'success' && <CheckCircle color="green" />}
     {options.type === 'error' && <AlertCircle color="red" />}
-    &nbsp;<span style={{ flex: 2 }}>{message}</span>
+    <span style={textStyle}>{message}</span>
     <button onClick={close} style={buttonStyle} type="button">
-      &times;
+      <X size="18" />
     </button>
   </div>
 );

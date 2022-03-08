@@ -30,14 +30,13 @@
       "value": "u128",
       "reply": "Option<(H256, i32)>"
     },
-    "DispatchKind": ["Init", "Handle", "HandleReply"],
-    "Dispatch": {
-      "kind": "DispatchKind",
-      "message": "Message"
-    },
-    "Node": {
-      "value": "Dispatch",
-      "next": "Option<H256>"
+    "QueuedMessage": {
+      "id": "H256",
+      "source": "H256",
+      "dest": "H256",
+      "payload": "Vec<u8>",
+      "value": "u128",
+      "reply": "Option<(H256, i32)>"
     },
     "IntermediateMessage": {
       "_enum": {

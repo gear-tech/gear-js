@@ -3,20 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
-import { Metadata, Hex } from '@gear-js/api';
+import { Metadata } from '@gear-js/api';
 import { SendMessageToProgram } from 'services/ApiService';
-import { InitialValues, SetFieldValue } from './types';
+import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
-import { fileNameHandler, getPreformattedText } from 'helpers';
+import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { Schema } from './Schema';
-import { LOCAL_STORAGE } from 'consts';
 
 import './MessageForm.scss';
 
@@ -49,37 +48,6 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
       setIsManualInput(false);
     }
   }, [types]);
-
-  const calculateGas = async (values: InitialValues, setFieldValue: SetFieldValue) => {
-    if (isManualInput && values.payload.length === 0) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
-      return;
-    }
-
-    try {
-      const payload = isManualInput ? values.payload : values.fields;
-
-      if (Object.keys(payload).length === 0) {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Form is empty' }));
-        return;
-      }
-
-      const metaOrTypeOfPayload: any = meta || 'String';
-
-      const estimatedGas = await api.program.gasSpent.handle(
-        localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-        programId as Hex,
-        payload,
-        metaOrTypeOfPayload
-      );
-
-      dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
-      setFieldValue('gasLimit', estimatedGas.toHuman());
-    } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-      console.error(error);
-    }
-  };
 
   return (
     <Formik
@@ -186,7 +154,17 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
                     className="message-form__button"
                     type="button"
                     onClick={() => {
-                      calculateGas(values, setFieldValue);
+                      calculateGas(
+                        'handle',
+                        api,
+                        isManualInput,
+                        values,
+                        setFieldValue,
+                        dispatch,
+                        meta,
+                        null,
+                        programId
+                      );
                     }}
                   >
                     Calculate Gas

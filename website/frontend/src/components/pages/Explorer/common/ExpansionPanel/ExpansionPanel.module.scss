@@ -1,0 +1,17 @@
+@use 'assets/scss/variables' as *;
+
+.item {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.body {
+  margin-top: 15px;
+  padding-left: 30px;
+}
+
+.text {
+  font-size: 14px;
+  font-weight: 400;
+  color: $textColorSecondary;
+}

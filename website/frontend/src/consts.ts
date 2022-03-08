@@ -1,6 +1,6 @@
-export const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS;
+export const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS as string;
 export const NODE_ADRESS_URL_PARAM = 'node';
-export const DEFAULT_NODES_URL = process.env.REACT_APP_DEFAULT_NODES_URL;
+export const DEFAULT_NODES_URL = process.env.REACT_APP_DEFAULT_NODES_URL as string;
 
 export const API_URL = process.env.REACT_APP_API_URL as string;
 export const WASM_COMPILER_BUILD = `${process.env.REACT_APP_WASM_COMPILER_URL}/build`;
@@ -9,6 +9,7 @@ export const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER_URL}/get
 export const isProd = process.env.NODE_ENV === 'production';
 export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
+export const MIN_GAS_LIMIT = 20_000_000;
 
 export const LOCAL_STORAGE = {
   CHAIN: 'chain',
@@ -79,12 +80,9 @@ export const RPC_METHODS = {
   GET_MESSAGE: 'message.data',
 };
 
-export const EDITOR_DROPDOWN = ['Empty Rust template'];
-
 export const SWITCH_PAGE_TYPES = {
   UPLOAD_PROGRAM: 'UPLOAD_PROGRAM',
   UPLOADED_PROGRAMS: 'UPLOADED_PROGRAMS',
-  NOTIFICATIONS: 'NOTIFICATIONS',
   ALL_PROGRAMS: 'ALL_PROGRAMS',
   ALL_MESSAGES: 'ALL_MESSAGES',
 };
@@ -93,7 +91,6 @@ export const PAGE_TYPES = {
   MESSAGE_FORM_PAGE: 'MESSAGE_FORM_PAGE',
   EDITOR_PAGE: 'EDITOR_PAGE',
   META_FORM_PAGE: 'META_FORM_PAGE',
-  NOTIFICATION_INFO: 'NOTIFICATION_INFO',
 };
 
 export const EDITOR_BTNS = {
@@ -101,11 +98,6 @@ export const EDITOR_BTNS = {
   DOWNLOAD: 'DOWNLOAD',
   RUN: 'RUN',
   BUILD_RUN: 'BUILD_RUN',
-};
-
-export const SEARCH_TYPES = {
-  NOTIFICATIONS: 'NOTIFICATIONS',
-  PROGRAMS: 'PROGRAMS',
 };
 
 export const KEY_TYPES = {

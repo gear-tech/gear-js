@@ -124,6 +124,7 @@ export const Wallet = () => {
     dispatch(resetCurrentAccount());
     localStorage.removeItem(LOCAL_STORAGE.SAVED_ACCOUNT);
     localStorage.removeItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
+    toggleModal();
   };
 
   const accButtonClassName = clsx(styles.button, styles.accountButton);

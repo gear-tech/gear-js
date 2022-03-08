@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { useDispatch } from 'react-redux';
 import { HelpCircle } from 'react-feather';
 import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import styles from './Hint.module.scss';
 
 type Params = {

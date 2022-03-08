@@ -1,0 +1,14 @@
+@use 'assets/scss/variables' as *;
+
+.section {
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+}
+
+.caption {
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: $textColor;
+  text-transform: uppercase;
+}

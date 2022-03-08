@@ -1,5 +1,5 @@
 import React, { VFC } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { routes } from 'routes';
@@ -11,12 +11,11 @@ import { Upload } from './children/Upload/Upload';
 import { BlockList } from './children/BlocksList/BlocksList';
 import { Recent } from './children/Recent/Recent';
 import './Programs.scss';
-import { RecentNotifications } from '../../blocks/RecentNotifications/RecentNotifications';
 
 export const Programs: VFC = () => {
-  const isUploadedProgramsPage = useRouteMatch(routes.uploadedPrograms);
-  const isAllProgramsPage = useRouteMatch(routes.allPrograms);
-  const isAllMessagesPage = useRouteMatch(routes.messages);
+  const isUploadedProgramsPage = useMatch(routes.uploadedPrograms);
+  const isAllProgramsPage = useMatch(routes.allPrograms);
+  const isAllMessagesPage = useMatch(routes.messages);
   let currentPage = SWITCH_PAGE_TYPES.UPLOAD_PROGRAM;
 
   if (isUploadedProgramsPage) {
@@ -41,7 +40,6 @@ export const Programs: VFC = () => {
       {currentPage === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && <Recent />}
       {currentPage === SWITCH_PAGE_TYPES.ALL_PROGRAMS && <All />}
       {currentPage === SWITCH_PAGE_TYPES.ALL_MESSAGES && <Messages />}
-      <RecentNotifications />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { GearApi } from './GearApi';
-import { Hex, Message } from './interfaces';
+import { Hex, QueuedMessage } from './interfaces';
 import { Option, BTreeMap } from '@polkadot/types';
 import { AccountId32, H256 } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
@@ -26,7 +26,7 @@ export class GearMailbox {
    * console.log(mailbox.toHuman());
    * ```
    */
-  async read(accountId: Hex | AccountId32 | string): Promise<Option<BTreeMap<H256, Message>>> {
+  async read(accountId: Hex | AccountId32 | string): Promise<Option<BTreeMap<H256, QueuedMessage>>> {
     return this.api.query.gear.mailbox(accountId);
   }
 
@@ -43,7 +43,7 @@ export class GearMailbox {
    */
   subscribe(
     accountId: Hex | AccountId32 | string,
-    callback: (data: Option<BTreeMap<H256, Message>>) => void,
+    callback: (data: Option<BTreeMap<H256, QueuedMessage>>) => void,
   ): UnsubscribePromise {
     this.subscription = this.api.query.gear.mailbox(accountId, callback);
     return this.subscription;

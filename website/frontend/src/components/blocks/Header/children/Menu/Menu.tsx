@@ -20,7 +20,7 @@ const Menu = ({ openSidebar }: Props) => {
         </span>
       </li>
       <li>
-        <Link to={routes.explorer} className={styles.link}>
+        <Link to="/explorer" className={styles.link}>
           Explorer
         </Link>
       </li>

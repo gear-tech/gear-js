@@ -1,31 +1,26 @@
-import React, { FC } from 'react';
-
-import './Modal.scss';
+import React, { FC, MouseEvent } from 'react';
 import { CloseIcon } from '../../../assets/Icons';
 import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import './Modal.scss';
 
 type Props = {
   open: boolean;
   content: React.ReactNode;
   title?: string;
   handleClose: () => void;
-  isModal?: boolean;
 };
 
-export const Modal: FC<Props> = ({ open, content, handleClose, isModal, title }) => {
+export const Modal: FC<Props> = ({ open, content, handleClose, title }) => {
   const targetRef = useBodyScrollLock<HTMLDivElement>(open);
 
+  const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
+    if (target === currentTarget) {
+      handleClose();
+    }
+  };
+
   return open ? (
-    <div
-      className="modal__wrapper"
-      ref={targetRef}
-      onClick={() => {
-        if (isModal) {
-          handleClose();
-        }
-      }}
-      aria-hidden="true"
-    >
+    <div className="modal__wrapper" ref={targetRef} onClick={handleOverlayClick} aria-hidden="true">
       <div className="modal__box">
         <button className="modal__close" onClick={handleClose} type="button">
           <span className="modal__close-x">
@@ -33,15 +28,8 @@ export const Modal: FC<Props> = ({ open, content, handleClose, isModal, title })
           </span>
         </button>
         {title && <h2 className="modal__title">{title}</h2>}
-        <div className="modal__content">
-          <div className="modal__text">{content}</div>
-        </div>
+        <div className="modal__content">{content}</div>
       </div>
     </div>
   ) : null;
-};
-
-Modal.defaultProps = {
-  title: undefined,
-  isModal: true,
 };
