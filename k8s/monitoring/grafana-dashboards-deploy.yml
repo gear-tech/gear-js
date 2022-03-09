@@ -36,7 +36,7 @@ data:
       "gnetId": 11074,
       "graphTooltip": 0,
       "id": 2,
-      "iteration": 1646887477760,
+      "iteration": 1646894788951,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -62,7 +62,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "mode": "continuous-GrYlRd"
+                "mode": "palette-classic"
               },
               "decimals": 0,
               "mappings": [],
@@ -1138,6 +1138,6 @@ data:
       "timezone": "browser",
       "title": "Dashboard",
       "uid": "xfpJB9FGz",
-      "version": 6,
+      "version": 9,
       "weekStart": ""
     }
