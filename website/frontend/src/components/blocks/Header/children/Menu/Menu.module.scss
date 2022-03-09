@@ -9,7 +9,8 @@
   }
 
   .item {
-    margin-right: 40px;
+    margin-right: 30px;
+
     @include sm {
       margin-right: 0;
       margin-bottom: 20px;
@@ -20,15 +21,15 @@
     }
 
     .link {
-      min-height: 80px;
-      display: flex;
-      align-items: center;
+      display: block;
+      padding: 28px 10px;
+      text-align: center;
       color: inherit;
       transition: all 0.25s;
       cursor: pointer;
       border-bottom: 2px solid transparent;
-      @include lg {
-        min-height: auto;
+      @include sm {
+        padding: 5px;
       }
 
       &:hover {

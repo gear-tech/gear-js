@@ -13,6 +13,10 @@ type Props = {
 const Menu = ({ openSidebar }: Props) => {
   const { isApiReady } = useSelector((state: RootState) => state.api);
 
+  const setClassName = (isActive: boolean) => {
+    return isActive ? clsx(styles.link, styles.active) : styles.link;
+  };
+
   return (
     <ul className={styles.menu}>
       <li className={styles.item}>
@@ -21,19 +25,13 @@ const Menu = ({ openSidebar }: Props) => {
         </span>
       </li>
       <li className={styles.item}>
-        <NavLink
-          className={({ isActive }) => (isActive ? clsx(styles.link, styles.active) : styles.link)}
-          to={routes.explorer}
-        >
-          <span>Explorer</span>
+        <NavLink className={({ isActive }) => setClassName(isActive)} to={routes.explorer}>
+          Explorer
         </NavLink>
       </li>
       <li className={styles.item}>
-        <NavLink
-          className={({ isActive }) => (isActive ? clsx(styles.link, styles.active) : styles.link)}
-          to={routes.editor}
-        >
-          <span>IDE</span>
+        <NavLink className={({ isActive }) => setClassName(isActive)} to={routes.editor}>
+          &lt;/&gt; IDE
         </NavLink>
       </li>
     </ul>

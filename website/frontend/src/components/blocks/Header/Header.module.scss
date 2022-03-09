@@ -2,7 +2,6 @@
 @use 'assets/scss/breakpoints' as *;
 
 .header {
-  min-height: 80px;
   padding: 0 40px;
   display: flex;
   justify-content: space-between;
@@ -10,12 +9,14 @@
   color: $textColor;
   background-color: $mainBackground;
   @include lg {
-    padding: 16px 40px;
+    padding-top: 16px;
+  }
+  @include sm {
+    padding-bottom: 16px;
   }
 }
 
 .nav {
-  min-height: 80px;
   display: flex;
   align-items: center;
 
