@@ -102,9 +102,13 @@ spec:
                 name: grafana-secrets
                 key: pass
           - name: GF_INSTALL_PLUGINS
-            value: camptocamp-prometheus-alertmanager-datasource
+            value: 'camptocamp-prometheus-alertmanager-datasource'
           - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
-            value: /var/lib/grafana/dashboards/main_dashboard.json
+            value: '/var/lib/grafana/dashboards/main_dashboard.json'
+          - name: GF_SERVER_DOMAIN
+            value: 'monitoring.gear-tech.io'
+          - name: GF_SERVER_ROOT_URL
+            value: '%(protocol)s://%(domain)s:/grafana'
       volumes:
         - name: grafana-datasources
           configMap:
@@ -136,4 +140,3 @@ spec:
   - name: grafana
     protocol: TCP
     port: 3000
-    nodePort: 30003

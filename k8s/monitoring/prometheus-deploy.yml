@@ -159,7 +159,8 @@ spec:
           - '--storage.tsdb.retention=24h'
           - '--storage.tsdb.path=/prometheus'
           - '--config.file=/etc/prometheus/prometheus.yml'
-          - '--web.external-url=http://prometheus:9090'
+          - '--web.route-prefix=/'
+          - '--web.external-url=https://monitoring.gear-tech.io/prometheus'
       volumes:
         - name: prometheus-conf
           configMap:
@@ -185,5 +186,4 @@ spec:
   - name: prometheus
     protocol: TCP
     port: 9090
-    nodePort: 30909
  
