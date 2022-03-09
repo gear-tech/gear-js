@@ -2,17 +2,20 @@
 @use 'assets/scss/breakpoints' as *;
 
 .header {
+  $padding: 16px;
   padding: 0 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: $textColor;
   background-color: $mainBackground;
+
   @include lg {
-    padding-top: 16px;
+    padding-top: $padding;
   }
+
   @include sm {
-    padding-bottom: 16px;
+    padding-bottom: $padding;
   }
 }
 

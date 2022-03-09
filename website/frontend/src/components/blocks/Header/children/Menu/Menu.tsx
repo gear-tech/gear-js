@@ -19,17 +19,17 @@ const Menu = ({ openSidebar }: Props) => {
 
   return (
     <ul className={styles.menu}>
-      <li className={styles.item}>
+      <li>
         <span className={styles.link} onClick={openSidebar}>
           {isApiReady ? localStorage.chain : 'Loading...'}
         </span>
       </li>
-      <li className={styles.item}>
+      <li>
         <NavLink className={({ isActive }) => setClassName(isActive)} to={routes.explorer}>
           Explorer
         </NavLink>
       </li>
-      <li className={styles.item}>
+      <li>
         <NavLink className={({ isActive }) => setClassName(isActive)} to={routes.editor}>
           &lt;/&gt; IDE
         </NavLink>
