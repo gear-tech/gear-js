@@ -26,7 +26,7 @@ type MetaFormItem = {
 type MetaFieldset = {
   __name: string;
   __type: string;
-  __select: MetaFormItem | null;
+  __select: boolean;
   __fields: MetaFormItem | null;
 };
 
@@ -61,7 +61,7 @@ function processFields(data: MetaItem, path?: string[]): StackItem[] {
     if (key === MetaEnum.Enum) {
       accum.push({
         kind: 'enum',
-        path: [],
+        path: [...(path || []), key],
         value: value as MetaItem, // TODO: find out why types not infer as expected
       });
     } else if (key === MetaEnum.EnumOption) {
@@ -136,20 +136,26 @@ function parseField(data: MetaItem) {
         set(
           result.__values,
           current.path.filter((i) => !['__root', '__fields'].includes(i)),
-          ''
+          current.value === 'Null' ? 'Null' : ''
         );
-      }
-      // Parse if it is fieldset
-      else if (isObject(current.value)) {
+      } else if (isObject(current.value)) {
+        // Parse if it is fieldset
         if (current.kind === 'fieldset') {
           const key = current.path.at(-1);
           set(result, [...current.path, '__fields'], null);
-          set(result, [...current.path, '__select'], null);
           set(result, [...current.path, '__name'], key);
           set(result, [...current.path, '__type'], '__fieldset');
 
+          const entries = Object.entries(current.value);
+
+          set(
+            result,
+            [...current.path, '__select'],
+            entries[0].some((i) => i === '_enum' || i === '_enum_Result' || i === '_enum_Option')
+          );
+
           // Process fieldset fields
-          Object.entries(current.value).forEach(([vKey, vValue]) => {
+          entries.forEach(([vKey, vValue]) => {
             // field
             if (isString(vValue)) {
               stack.push(
@@ -169,6 +175,36 @@ function parseField(data: MetaItem) {
                     [vKey]: vValue,
                   },
                   [...current.path, '__fields']
+                )
+              );
+            }
+          });
+        }
+
+        // Parse if it is enum
+        else if (current.kind === 'enum') {
+          // Process fieldset fields
+          Object.entries(current.value).forEach(([vKey, vValue]) => {
+            const path = current.path.filter((item) => item !== '_enum');
+            // field
+            if (isString(vValue)) {
+              stack.push(
+                ...processFields(
+                  {
+                    [vKey]: vValue,
+                  },
+                  [...path]
+                )
+              );
+            }
+            // fieldset
+            if (isObject(vValue)) {
+              stack.push(
+                ...processFields(
+                  {
+                    [vKey]: vValue,
+                  },
+                  [...path]
                 )
               );
             }

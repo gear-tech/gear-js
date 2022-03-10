@@ -40,7 +40,7 @@ describe('test parser', () => {
       __root: {
         __type: '__fieldset',
         __name: '__root',
-        __select: null,
+        __select: false,
         __fields: {
           amount: {
             label: 'amount',
@@ -66,12 +66,12 @@ describe('test parser', () => {
       __root: {
         __type: '__fieldset',
         __name: '__root',
-        __select: null,
+        __select: false,
         __fields: {
           AddMessage: {
             __type: '__fieldset',
             __name: 'AddMessage',
-            __select: null,
+            __select: false,
             __fields: {
               author: {
                 label: 'author',
@@ -101,17 +101,17 @@ describe('test parser', () => {
       __root: {
         __type: '__fieldset',
         __name: '__root',
-        __select: null,
+        __select: false,
         __fields: {
           AddMessage: {
             __type: '__fieldset',
             __name: 'AddMessage',
-            __select: null,
+            __select: false,
             __fields: {
               To: {
                 __type: '__fieldset',
                 __name: 'To',
-                __select: null,
+                __select: false,
                 __fields: {
                   name: {
                     type: 'Text',
@@ -157,46 +157,38 @@ describe('test parser', () => {
       __root: {
         __type: '__fieldset',
         __name: '__root',
-        __select: {
+        __select: true,
+        __fields: {
           AddMessage: {
-            author: {
-              type: 'Text',
-              name: 'meta.AddMessage.author',
-              label: 'author',
-            },
-            msg: {
-              type: 'Text',
-              name: 'meta.AddMessage.msg',
-              label: 'msg',
+            __type: '__fieldset',
+            __name: 'AddMessage',
+            __select: false,
+            __fields: {
+              author: {
+                type: 'Text',
+                name: '__root.AddMessage.author',
+                label: 'author',
+              },
+              msg: {
+                type: 'Text',
+                name: '__root.AddMessage.msg',
+                label: 'msg',
+              },
             },
           },
           Post: {
             type: 'Text',
-            name: 'meta.Post',
+            name: '__root.Post',
             label: 'Post',
           },
           ViewMessages: {
             type: 'Null',
-            name: 'meta.ViewMessages',
+            name: '__root.ViewMessages',
             label: 'ViewMessages',
           },
         },
-        __fields: {
-          AddMessage: {
-            author: {
-              type: 'Text',
-              name: 'meta.AddMessage.author',
-              label: 'author',
-            },
-            msg: {
-              type: 'Text',
-              name: 'meta.AddMessage.msg',
-              label: 'msg',
-            },
-          },
-        },
       },
-      values: {
+      __values: {
         AddMessage: {
           author: '',
           msg: '',
