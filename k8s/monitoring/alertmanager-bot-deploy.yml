@@ -1,0 +1,64 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager-bot
+  namespace: monitoring
+  labels:
+    app: alertmanager-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager-bot
+  template:
+    metadata:
+      labels:
+        app: alertmanager-bot
+    spec:
+      securityContext:
+        runAsUser: 0
+      containers:
+      - name: alertmanager-bot
+        image: metalmatze/alertmanager-bot:latest
+        ports:
+          - containerPort: 8080
+        command:
+          - alertmanager-bot
+        args:
+          - '--alertmanager.url=http://alertmanager:9093'
+          - '--store=bolt'
+          - '--bolt.path=/data/bot.db'
+        env:
+          - name: TELEGRAM_ADMIN
+            valueFrom:
+              secretKeyRef:
+                name: telegram-secrets
+                key: user_id
+          - name: TELEGRAM_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: telegram-secrets
+                key: token
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager-bot
+  namespace: monitoring
+  labels:
+    app: alertmanager-bot
+spec:
+  selector:
+    app: alertmanager-bot
+  ports:
+  - name: alertmanager-bot
+    protocol: TCP
+    port: 8080
