@@ -92,7 +92,7 @@ describe('test tree utils', () => {
             name: 'src',
             type: EditorTypes.folder,
             parentId: 'root',
-            path: ['root', 'src'],
+            path: ['root', 'children', 'src'],
             children: {
               'src/lib.rs': {
                 id: 'src/lib.rs',
@@ -101,14 +101,14 @@ describe('test tree utils', () => {
                 lang: Languages.Rust,
                 value: 'lib.rs',
                 parentId: 'src',
-                path: ['root', 'src', 'src/lib.rs'],
+                path: ['root', 'children', 'src', 'children', 'src/lib.rs'],
               },
               'src/sub': {
                 id: 'src/sub',
                 name: 'sub',
                 type: EditorTypes.folder,
                 parentId: 'src',
-                path: ['root', 'src', 'src/sub'],
+                path: ['root', 'children', 'src', 'children', 'src/sub'],
                 children: {
                   'src/sub/lib.rs': {
                     id: 'src/sub/lib.rs',
@@ -117,7 +117,7 @@ describe('test tree utils', () => {
                     lang: Languages.Rust,
                     value: 'lib.rs',
                     parentId: 'src/sub',
-                    path: ['root', 'src', 'src/sub', 'src/sub/lib.rs'],
+                    path: ['root', 'children', 'src', 'children', 'src/sub', 'children', 'src/sub/lib.rs'],
                   },
                 },
               },
@@ -128,7 +128,7 @@ describe('test tree utils', () => {
             name: 'src2',
             type: EditorTypes.folder,
             parentId: 'root',
-            path: ['root', 'src2'],
+            path: ['root', 'children', 'src2'],
             children: {
               'src2/lib.rs': {
                 id: 'src2/lib.rs',
@@ -137,14 +137,14 @@ describe('test tree utils', () => {
                 lang: Languages.Rust,
                 value: 'lib.rs',
                 parentId: 'src2',
-                path: ['root', 'src2', 'src2/lib.rs'],
+                path: ['root', 'children', 'src2', 'children', 'src2/lib.rs'],
               },
               'src2/sub': {
                 id: 'src2/sub',
                 name: 'sub',
                 type: EditorTypes.folder,
                 parentId: 'src2',
-                path: ['root', 'src2', 'src2/sub'],
+                path: ['root', 'children', 'src2', 'children', 'src2/sub'],
                 children: {
                   'src2/sub/lib.rs': {
                     id: 'src2/sub/lib.rs',
@@ -153,7 +153,7 @@ describe('test tree utils', () => {
                     lang: Languages.Rust,
                     value: 'lib.rs',
                     parentId: 'src2/sub',
-                    path: ['root', 'src2', 'src2/sub', 'src2/sub/lib.rs'],
+                    path: ['root', 'children', 'src2', 'children', 'src2/sub', 'children', 'src2/sub/lib.rs'],
                   },
                 },
               },
@@ -166,7 +166,7 @@ describe('test tree utils', () => {
             lang: Languages.Toml,
             value: 'Cargo.toml',
             parentId: 'root',
-            path: ['root', 'Cargo.toml'],
+            path: ['root', 'children', 'Cargo.toml'],
           },
         },
       },
