@@ -35,6 +35,6 @@
   }
 
   &.active {
-    border-bottom: 3px solid $successColor;
+    box-shadow: inset 0 -3px 0 $successColor;
   }
 }

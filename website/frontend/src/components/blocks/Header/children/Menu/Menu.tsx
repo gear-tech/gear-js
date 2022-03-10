@@ -17,7 +17,7 @@ type ClassNameProps = {
 const Menu = ({ openSidebar }: Props) => {
   const { isApiReady } = useSelector((state: RootState) => state.api);
 
-  const getClassName = (isActive: ClassNameProps) => clsx(styles.link, isActive && styles.active);
+  const getClassName = ({ isActive }: ClassNameProps) => clsx(styles.link, isActive && styles.active);
 
   return (
     <ul className={styles.menu}>
