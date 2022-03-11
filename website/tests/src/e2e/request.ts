@@ -3,6 +3,7 @@ import base from '../config/base';
 
 export default async function (method: string, params: any) {
   const response = await fetch(base.gear.api, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
