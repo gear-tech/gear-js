@@ -21,9 +21,10 @@ async function processPrepare(api: GearApi): Promise<{
 
 async function main() {
   const api = await GearApi.create({ providerAddress: base.gear.wsProvider });
+  const genesis = api.genesisHash.toHex();
   const prepared = await processPrepare(api);
   console.log(`*** Preparation finished ***`);
-  await test('0xb612424a0c14e11e8e3365e23f30dcf9eaefd407ac7ea2019f0c8bd879990616', prepared);
+  await test(genesis, prepared);
 }
 
 main()
