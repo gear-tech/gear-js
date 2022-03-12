@@ -1,11 +1,11 @@
-name: Build and Deploy All containers to k8s
+name: 'e2e test'
 
 on:
-  push:
-    branches: ['master']
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: master
     paths:
       - website/**
-      - k8s/**
 
 env:
   REGISTRY: ghcr.io
@@ -14,20 +14,51 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-  KUBE_NAMESPACE: dev-1
+  KUBE_NAMESPACE: test-env
 
 jobs:
   wait-previous-run:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-      - uses: mktcode/consecutive-workflow-action@v1 # please read security note
+    
+      - name: Wait previous run
+        uses: mktcode/consecutive-workflow-action@v1 # please read security note
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-  build-and-push-frontend-image:
+  build-and-push-gear-node-image:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
-    environment: staging
+    environment: dev
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Data Storage Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: k8s/gear-node/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-gear-node:dev
+          
+  build-and-push-frontend-image:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run]
+    environment: dev
     permissions:
       contents: read
       packages: write
@@ -48,7 +79,7 @@ jobs:
         with:
           context: website/frontend
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:dev
           build-args: |
             REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
@@ -56,9 +87,10 @@ jobs:
             REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
        
   build-and-push-data-storage-image:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
-    environment: staging
+    environment: dev
     permissions:
       contents: read
       packages: write
@@ -79,12 +111,13 @@ jobs:
         with:
           file: website/data-storage/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:dev
 
   build-and-push-api-gateway-image:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
-    environment: staging
+    environment: dev
     permissions:
       contents: read
       packages: write
@@ -105,12 +138,13 @@ jobs:
         with:
           file: website/api-gateway/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:dev
 
   build-and-push-event-listeners-image:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
-    environment: staging
+    environment: dev
     permissions:
       contents: read
       packages: write
@@ -131,12 +165,13 @@ jobs:
         with:
           file: website/events-listener/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:dev
 
   build-and-push-test-balance-image:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
-    environment: staging
+    environment: dev
     permissions:
       contents: read
       packages: write
@@ -157,9 +192,11 @@ jobs:
         with:
           file: website/test-balance/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:dev
 
-  deploy-to-k8s-dev1-namespace:
+
+  purge-k8s-test-env:
+    if: github.event.pull_request.draft == false
     needs:
       [
         build-and-push-frontend-image,
@@ -182,14 +219,45 @@ jobs:
       - name: Deploy to k8s
         uses: kodermax/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node events-listener-workshop-node events-listener-rpc-testnet -n $KUBE_NAMESPACE
+          args: rollout restart deployment gear-node api-gateway-testenv frontend-nginx-testenv events-listener-rpc-testenv postgres-testenv -n $KUBE_NAMESPACE
 
-  check-k8s-deployments:
-    needs: [deploy-to-k8s-dev1-namespace, wait-previous-run]
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Check k8s deployments
         uses: kodermax/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
+     
+      - name: Deploy to k8s data-storage
+        uses: kodermax/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment data-storage-testenv -n $KUBE_NAMESPACE
+
+      - name: Check k8s deployment data-storage
+        uses: kodermax/kubectl-aws-eks@master
+        with:
+          args: rollout status deployment data-storage-testenv -n $KUBE_NAMESPACE --timeout=120s
+          
+  run-e2e-tests:
+    if: github.event.pull_request.draft == false
+    needs: [purge-k8s-test-env, wait-previous-run]
+    runs-on: ubuntu-latest
+    environment: dev
+   
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install NodeJS 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+          
+      - name: Prepare&Run Tests
+        working-directory: website/tests
+        env:
+          API_ADDRESS: ${{ secrets.API_ADDRESS_URL_TEST }}
+          WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
+        run: |
+          ./download-examples.sh
+          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+          yarn start
