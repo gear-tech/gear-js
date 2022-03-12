@@ -1,23 +1,40 @@
 @use 'assets/scss/variables' as *;
-@use 'assets/scss/mixins.scss' as *;
 @use 'assets/scss/breakpoints.scss' as *;
 
 .menu {
-  @include flexGap(40px);
   display: flex;
 
+  & > *:not(:last-child) {
+    margin-right: 40px;
+
+    @include sm {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+  }
+
   @include sm {
-    @include flexGap(20px);
     flex-direction: column;
   }
 }
 
 .link {
+  display: block;
+  padding: 28px 10px;
+  text-align: center;
   color: inherit;
   transition: all 0.25s;
   cursor: pointer;
 
+  @include sm {
+    padding: 5px;
+  }
+
   &:hover {
     color: $textColorSecondary;
+  }
+
+  &.active {
+    box-shadow: inset 0 -3px 0 $successColor;
   }
 }
