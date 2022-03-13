@@ -152,152 +152,104 @@ describe('test parser', () => {
     });
   });
 
-  it('simple enum', () => {
-    expect(parseMeta(simpleEnum)).toEqual({
+  it('simple option enum', () => {
+    expect(parseMeta(enumOptionSimple)).toEqual({
       __root: {
-        __type: '__fieldset',
         __name: '__root',
+        __type: 'enum_option',
         __select: true,
         __fields: {
-          AddMessage: {
-            __type: '__fieldset',
-            __name: 'AddMessage',
-            __select: false,
-            __fields: {
-              author: {
-                type: 'Text',
-                name: '__root.AddMessage.author',
-                label: 'author',
-              },
-              msg: {
-                type: 'Text',
-                name: '__root.AddMessage.msg',
-                label: 'msg',
-              },
-            },
+          [`__field[0]`]: {
+            type: 'String',
+            name: '__root.__field[0]',
+            label: '__field[0]',
           },
-          Post: {
-            type: 'Text',
-            name: '__root.Post',
-            label: 'Post',
-          },
-          ViewMessages: {
+          __null: {
+            name: '__root.__null',
+            label: '__null',
             type: 'Null',
-            name: '__root.ViewMessages',
-            label: 'ViewMessages',
           },
         },
       },
       __values: {
-        AddMessage: {
-          author: '',
-          msg: '',
-        },
-        Post: '',
-        ViewMessages: 'Null',
-      },
-    });
-  });
-
-  it('simple option enum', () => {
-    expect(parseMeta(enumOptionSimple)).toEqual({
-      select: {
-        __root__: {
-          type: '_enum_Option',
-          fields: {
-            __root__: {
-              type: 'String',
-              name: 'meta.__root__',
-              label: '__root__',
-            },
-          },
-          NoFields: {
-            name: 'meta.NoFields',
-            label: 'NoFields',
-            type: 'Null',
-          },
-        },
-      },
-      fields: {
-        __root__: {
-          type: 'String',
-          name: 'meta.__root__',
-          label: '__root__',
-        },
-      },
-      values: {
-        __root__: '',
+        [`__field[0]`]: '',
+        __null: 'Null',
       },
     });
   });
 
   it('option enum with fields object', () => {
     expect(parseMeta(enumOptionWithFieldsObject)).toEqual({
-      select: {
-        ['__field[0]']: {
-          type: '_enum_Option',
-          fields: {
-            ['__field[0]']: {
+      __root: {
+        __name: '__root',
+        __type: 'enum_option',
+        __select: true,
+        __fields: {
+          ['__field[0]']: {
+            __fields: {
               firstName: {
-                type: 'String',
-                name: 'meta.__field[0].firstName',
                 label: 'firstName',
+                name: '__root.__field[0].firstName',
+                type: 'Text',
               },
               lastName: {
-                type: 'String',
-                name: 'meta.__field[0].firstName',
-                label: 'firstName',
+                label: 'lastName',
+                name: '__root.__field[0].lastName',
+                type: 'Text',
               },
             },
+            __name: '__field[0]',
+            __select: false,
+            __type: '__fieldset',
           },
-          NoFields: {
-            name: 'meta.NoFields',
-            label: 'NoFields',
+          __null: {
+            name: '__root.__null',
+            label: '__null',
             type: 'Null',
           },
         },
       },
-      fields: {
-        ['__field[0]']: {
-          type: 'String',
-          name: 'meta.__field[0]',
-          label: '__field[0]',
+      __values: {
+        '__field[0]': {
+          firstName: '',
+          lastName: '',
         },
-      },
-      values: {
-        ['__field[0]']: '',
+        __null: 'Null',
       },
     });
   });
 
   it('nested option enum', () => {
     expect(parseMeta(nestedEnumOption)).toEqual({
-      select: {
-        field: {
-          type: '_enum_Option',
-          fields: {
-            field: {
-              type: 'String',
-              name: 'meta.field',
-              label: 'field',
+      __root: {
+        __name: '__root',
+        __type: '__fieldset',
+        __select: false,
+        __fields: {
+          field: {
+            __name: 'field',
+            __type: 'enum_option',
+            __select: true,
+            __fields: {
+              [`__field[0]`]: {
+                type: 'String',
+                name: '__root.field.__field[0]',
+                label: '__field[0]',
+              },
+              __null: {
+                name: '__root.field.__null',
+                label: '__null',
+                type: 'Null',
+              },
             },
           },
-          NoFields: {
-            name: 'meta.NoFields',
-            label: 'NoFields',
-            type: 'Null',
-          },
         },
       },
-      fields: {
+      __values: {
         field: {
-          type: 'String',
-          name: 'meta.field',
-          label: 'field',
+          [`__field[0]`]: '',
+          __null: 'Null',
         },
-      },
-      values: {
-        field: '',
       },
     });
   });

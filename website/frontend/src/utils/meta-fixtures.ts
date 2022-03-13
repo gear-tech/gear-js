@@ -38,6 +38,15 @@ export const nestedEnumOption = {
   },
 };
 
+export const nestedEnumOptionWithFieldsObject = {
+  field: {
+    _enum_Option: {
+      firstName: 'Text',
+      lastName: 'Text',
+    },
+  },
+};
+
 export const complexEnumOption = {
   res: {
     _enum_Option: {

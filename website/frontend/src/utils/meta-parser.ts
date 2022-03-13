@@ -65,6 +65,11 @@ function processFields(data: MetaItem, path?: string[]): StackItem[] {
         value: value as MetaItem, // TODO: find out why types not infer as expected
       });
     } else if (key === MetaEnum.EnumOption) {
+      accum.push({
+        kind: 'enum_option',
+        path: [...(path || []), key],
+        value: value as MetaItem,
+      });
     } else if (key === MetaEnum.EnumResult) {
     } else if (isObject(value)) {
       accum.push({
@@ -154,8 +159,32 @@ function parseField(data: MetaItem) {
             entries[0].some((i) => i === '_enum' || i === '_enum_Result' || i === '_enum_Option')
           );
 
+          if (entries[0].some((i) => i === '_enum_Option')) {
+            set(result, [...current.path, '__type'], 'enum_option');
+          }
+
           // Process fieldset fields
-          entries.forEach(([vKey, vValue]) => {
+          entries.forEach(([vKey, vValue], index) => {
+            // Enum option
+            if (vKey === '_enum_Option') {
+              stack.push(
+                ...processFields(
+                  {
+                    [`__field[${index}]`]: vValue,
+                  },
+                  [...current.path, '__fields']
+                )
+              );
+              stack.push(
+                ...processFields(
+                  {
+                    __null: 'Null',
+                  },
+                  [...current.path, '__fields']
+                )
+              );
+              return;
+            }
             // field
             if (isString(vValue)) {
               stack.push(
@@ -166,6 +195,7 @@ function parseField(data: MetaItem) {
                   [...current.path, '__fields']
                 )
               );
+              return;
             }
             // fieldset
             if (isObject(vValue)) {
@@ -177,6 +207,38 @@ function parseField(data: MetaItem) {
                   [...current.path, '__fields']
                 )
               );
+              return;
+            }
+          });
+        }
+
+        // enum_Option
+        if (current.kind === 'enum_option') {
+          Object.entries(current.value).forEach(([vKey, vValue], index) => {
+            const path = current.path.filter((item) => item !== '_enum_Option');
+            // field
+            if (isString(vValue)) {
+              stack.push(
+                ...processFields(
+                  {
+                    [vKey]: vValue,
+                  },
+                  [...path]
+                )
+              );
+              return;
+            }
+            // fieldset
+            if (isObject(vValue)) {
+              stack.push(
+                ...processFields(
+                  {
+                    [vKey]: vValue,
+                  },
+                  [...path]
+                )
+              );
+              return;
             }
           });
         }
@@ -196,6 +258,7 @@ function parseField(data: MetaItem) {
                   [...path]
                 )
               );
+              return;
             }
             // fieldset
             if (isObject(vValue)) {
@@ -207,6 +270,7 @@ function parseField(data: MetaItem) {
                   [...path]
                 )
               );
+              return;
             }
           });
         }
