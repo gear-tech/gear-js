@@ -2,7 +2,6 @@ import isObject from 'lodash.isobject';
 import isString from 'lodash.isstring';
 import set from 'lodash.set';
 import get from 'lodash.get';
-import merge from 'lodash.merge';
 
 type MetaNull = 'Null';
 const metaNull = 'Null';
@@ -222,9 +221,8 @@ function parseField(data: MetaItem) {
             type: current.value,
           });
         }
-
         // enum_Option
-        if (current.kind === 'enum_option') {
+        else if (current.kind === 'enum_option') {
           Object.entries(current.value).forEach(([vKey, vValue], index) => {
             const path = current.path.filter((item) => item !== '_enum_Option');
             // field
@@ -253,7 +251,9 @@ function parseField(data: MetaItem) {
             }
           });
         }
-
+        //
+        else if (current.kind === 'enum_result') {
+        }
         // Parse if it is enum
         else if (current.kind === 'enum') {
           // Process fieldset fields

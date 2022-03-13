@@ -256,66 +256,79 @@ describe('test parser', () => {
 
   it('with complex option enum', () => {
     expect(parseMeta(complexEnumOption)).toEqual({
-      select: {
+      __root: {
+        __name: '__root',
+        __type: '__fieldset',
+        __select: false,
+        __fields: {
+          res: {
+            __fields: {
+              '__field[0]': {
+                __fields: {
+                  id: {
+                    __fields: {
+                      decimal: {
+                        label: 'decimal',
+                        name: '__root.res.__field[0].id.decimal',
+                        type: 'u64',
+                      },
+                      hex: {
+                        label: 'hex',
+                        name: '__root.res.__field[0].id.hex',
+                        type: 'Bytes',
+                      },
+                    },
+                    __name: 'id',
+                    __select: false,
+                    __type: '__fieldset',
+                  },
+                  person: {
+                    __fields: {
+                      name: {
+                        label: 'name',
+                        name: '__root.res.__field[0].person.name',
+                        type: 'Text',
+                      },
+                      surname: {
+                        label: 'surname',
+                        name: '__root.res.__field[0].person.surname',
+                        type: 'Text',
+                      },
+                    },
+                    __name: 'person',
+                    __select: false,
+                    __type: '__fieldset',
+                  },
+                },
+                __name: '__field[0]',
+                __select: false,
+                __type: '__fieldset',
+              },
+              __null: {
+                label: '__null',
+                name: '__root.res.__null',
+                type: 'Null',
+              },
+            },
+            __name: 'res',
+            __select: true,
+            __type: 'enum_option',
+          },
+        },
+      },
+      __values: {
         res: {
-          type: '_enum_Option',
-          fields: {
+          '__field[0]': {
             id: {
-              decimal: {
-                type: 'u64',
-                name: 'meta.id.decimal',
-                label: 'decimal',
-              },
-              hex: {
-                type: 'Bytes',
-                name: 'meta.id.hex',
-                label: 'hex',
-              },
+              decimal: '',
+              hex: '',
             },
             person: {
-              surname: {
-                type: 'Text',
-                name: 'meta.person.surname',
-                label: 'surname',
-              },
-              name: {
-                type: 'Text',
-                name: 'meta.person.name',
-                label: 'name',
-              },
+              name: '',
+              surname: '',
             },
           },
-          NoFields: {
-            name: 'meta.NoFields',
-            label: 'NoFields',
-            type: 'Null',
-          },
-        },
-      },
-      fields: {
-        id: {
-          decimal: {
-            type: 'u64',
-            name: 'meta.id.decimal',
-            label: 'decimal',
-          },
-          hex: {
-            type: 'Bytes',
-            name: 'meta.id.hex',
-            label: 'hex',
-          },
-        },
-      },
-      values: {
-        res: {
-          id: {
-            decimal: '',
-            hex: '',
-          },
-          person: {
-            surname: '',
-            name: '',
-          },
+          __null: 'Null',
         },
       },
     });
