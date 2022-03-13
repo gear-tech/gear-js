@@ -8,7 +8,7 @@ import { transformTypes } from './utils';
 import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { EventRecord } from '@polkadot/types/interfaces';
+import { EventRecord, ContractExecResultErr, Event } from '@polkadot/types/interfaces';
 import { PromiseResult } from '@polkadot/api/types';
 import { Vec } from '@polkadot/types';
 import { Observable } from 'rxjs';
@@ -17,6 +17,7 @@ import { GearStorage } from './Storage';
 import { GearMailbox } from './Mailbox';
 import { GearClaimValue } from './Claim';
 import { GearCode } from './Code';
+import { RegistryError } from '@polkadot/types-codec/types';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -94,5 +95,17 @@ export class GearApi extends ApiPromise {
 
   async nodeVersion(): Promise<string> {
     return (await this.rpc.system.version()).toHuman();
+  }
+
+  /**
+   * Method provides opportunity to get informations about error occurs in ExtrinsicFailed event
+   * @param event
+   * @returns
+   */
+  getExtrinsicFailedError(event: Event): RegistryError {
+    const error = event.data[0] as ContractExecResultErr;
+
+    const { isModule, asModule } = error;
+    return isModule ? this.registry.findMetaError(asModule) : null;
   }
 }

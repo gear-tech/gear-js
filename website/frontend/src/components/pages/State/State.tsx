@@ -5,18 +5,17 @@ import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gea
 import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AddAlert, getProgramAction, resetProgramAction } from 'store/actions/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { BackButton } from 'common/components/BackButton/BackButton';
 import { getPreformattedText } from 'helpers';
 import styles from './State.module.scss';
 
-type Params = { id: string };
 // FIXME: fields type shouldn't be any
 type FormValues = { fields: object; payload: string };
 
@@ -25,11 +24,11 @@ const selectProgram = (state: RootState) => state.programs.program;
 const State: VFC = () => {
   const [api] = useApi();
   const dispatch = useDispatch();
-  const routeParams = useParams<Params>();
-  const routeHistory = useHistory();
+  const routeParams = useParams();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
-  const programId = routeParams.id;
+  const programId = routeParams.id as string;
   const program = useSelector(selectProgram);
 
   const [metadata, setMetadata] = useState<Metadata | null>(null);
@@ -108,7 +107,7 @@ const State: VFC = () => {
   }, [metadata, stateInput, getPayloadForm, readState]);
 
   const handleBackButtonClick = () => {
-    routeHistory.goBack();
+    navigate(-1);
   };
 
   const handleSubmit = ({ fields, payload }: FormValues) => {

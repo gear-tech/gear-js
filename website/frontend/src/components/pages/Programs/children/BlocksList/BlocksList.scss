@@ -37,6 +37,7 @@
 .programs-list--short-list {
   height: 234px;
   overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .programs-list__item {
@@ -44,20 +45,12 @@
   display: flex;
   padding: 23px 0;
   position: relative;
+  border-top: 1px solid $separateLineColor;
+
   @media (max-width: 768px) {
     * {
       align-items: unset;
     }
-  }
-
-  &::before {
-    border-top: 1px solid $separateLineColor;
-    content: '';
-    display: block;
-    opacity: 0.6;
-    position: absolute;
-    top: 0;
-    width: 100%;
   }
 }
 

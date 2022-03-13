@@ -7,5 +7,3 @@ export type InitialValues = {
   destination: string;
   meta: null | ParsedStruct;
 };
-
-export type SetFieldValue = (field: string, value: any, shouldValidate?: boolean | undefined) => void;

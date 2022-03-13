@@ -7,9 +7,5 @@
     "outDir": "dist",
     "skipLibCheck": true // TODO
   },
-  "ts-node": {
-    "transpileOnly": true,
-    "transpiler": "ts-node/transpilers/swc-experimental"
-  },
   "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

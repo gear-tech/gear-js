@@ -1,4 +1,4 @@
-import { CreateType } from '../CreateType';
+import { CreateType } from '../create-type';
 import { GearApi } from '../GearApi';
 import { TransactionStatusCb } from '../interfaces';
 import { isFunction } from '@polkadot/util';

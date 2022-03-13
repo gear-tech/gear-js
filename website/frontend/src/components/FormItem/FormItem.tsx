@@ -4,35 +4,35 @@ import { Field, useFormikContext } from 'formik';
 import { ParsedShape, ParsedStruct } from '../../utils/meta-parser';
 import { MetaFormItem, MetaInput, Fieldset, EnumSelect } from './styles';
 
-const createFieldset = ({ legend, fields }: { legend: string; fields: ParsedStruct }) => {
-  return (
-    <Fieldset key={legend} name={legend}>
-      <legend>{legend}</legend>
-      {fields &&
-        Object.entries(fields).map((field) => {
-          if (field && field[1] && 'type' in field[1] && 'name' in field[1]) {
-            return (
-              <MetaInput key={field[1].name as string}>
-                <label>
-                  {field[1].label} (type: {field[1].type}) <br />
-                  {/* FIXME: uncontrolled input is changing to be controlled */}
-                  <Field name={field[1].name} disabled={field[1].type === 'Null'} />
-                  <br />
-                </label>
-              </MetaInput>
-            );
-          }
-          if (isObject(field[1])) {
-            return createFieldset({
-              legend: field[0],
-              fields: field[1] as ParsedStruct,
-            });
-          }
-          return null;
-        })}
-    </Fieldset>
-  );
-};
+const createFieldset = ({ legend, fields }: { legend: string; fields: ParsedStruct }) => (
+  <Fieldset key={legend} name={legend}>
+    <legend>{legend}</legend>
+    {fields &&
+      Object.entries(fields).map((field) => {
+        if (field && field[1] && 'type' in field[1] && 'name' in field[1]) {
+          return (
+            <MetaInput key={field[1].name as string}>
+              <label>
+                {field[1].label} (type: {field[1].type}) <br />
+                {/* TOFIX: uncontrolled input is changing to be controlled */}
+                <Field name={field[1].name} /> <br />
+              </label>
+            </MetaInput>
+          );
+        }
+        if (isObject(field[1])) {
+          return createFieldset({
+            legend: field[0],
+            fields: field[1] as ParsedStruct,
+          });
+        }
+        if (field[1] === null) {
+          return <div key={field[1]}>Null</div>;
+        }
+        return null;
+      })}
+  </Fieldset>
+);
 
 export const FormItem = ({ data }: { data: ParsedShape }) => {
   const formikContext = useFormikContext();
@@ -169,6 +169,7 @@ export const FormItem = ({ data }: { data: ParsedShape }) => {
             fields: {
               [item[0]]: item[1],
             } as ParsedStruct,
+            fields: { [item[0]]: item[1] as ParsedStruct },
           });
         }
         return null;

@@ -210,6 +210,17 @@ function parseField(data: MetaItem) {
               return;
             }
           });
+        } else if (current.kind === 'field') {
+          const key = current.path[current.path.length - 1];
+          if (!result.fields) {
+            result.fields = {};
+          }
+
+          set(result.fields, current.path, {
+            label: key,
+            name: ['fields', ...current.path].join('.'),
+            type: current.value,
+          });
         }
 
         // enum_Option

@@ -1,0 +1,21 @@
+@use 'assets/scss/variables' as *;
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.number {
+  &::before {
+    content: url('/assets/images/code_icon.svg');
+    margin-right: 10px;
+  }
+}
+
+.link {
+  color: $textColor;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

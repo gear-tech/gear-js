@@ -44,9 +44,6 @@ export class LogData extends GearEventData {
   public get payload(): Vec<u8> {
     return this[0]['payload'];
   }
-  public get gasLimit(): u64 {
-    return this[0]['gasLimit'];
-  }
   public get value(): u128 {
     return this[0]['value'];
   }

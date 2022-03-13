@@ -51,23 +51,15 @@ const genesis = gearApi.genesisHash.toHex();
 
 ### Encode / decode payloads
 
-Encode data
+Encode and decode data
 
 ```javascript
 import { CreateType } from '@gear-js/api';
 
 // If "TypeName" alredy registred
-const result = CreateType.encode('TypeName', somePayload);
+const result = CreateType.create('TypeName', somePayload);
 // Otherwise need to add metadata containing TypeName and all required types
-const result = CreateType.encode('TypeName', somePayload, metadata);
-```
-
-By analogy data is decoded
-
-```javascript
-const result = CreateType.decode('TypeName', someBytes);
-// or
-const result = CreateType.decode('TypeName', someBytes, metadata);
+const result = CreateType.create('TypeName', somePayload, metadata);
 ```
 
 Result of this functions is data of type `Codec` and it has the next methods
@@ -157,6 +149,32 @@ try {
 }
 ```
 
+### Send reply message
+
+```javascript
+try {
+  const reply = {
+    toId: messageId,
+    payload: somePayload,
+    gasLimit: 10000000,
+    value: 1000,
+  };
+  // In that case payload will be encoded using meta.async_handle_input type
+  await gearApi.reply.submit(reply, meta);
+  // So if you want to use another type you can specify it
+  await gearApi.reply.submit(reply, meta, meta.async_init_input);
+} catch (error) {
+  console.error(`${error.name}: ${error.message}`);
+}
+try {
+  await gearApi.reply.signAndSend(keyring, (events) => {
+    console.log(event.toHuman());
+  });
+} catch (error) {
+  console.error(`${error.name}: ${error.message}`);
+}
+```
+
 ### Submit code
 
 ```javascript
@@ -228,6 +246,27 @@ const metaWasm = fs.readFileSync('path/to/meta.wasm');
 const state = gearApi.programState.read(programId, metaWasm);
 // If program expects inputValue in meta_state function it's possible to specify it
 const state = gearApi.programState.read(programId, metaWasm, inputValue);
+```
+
+### Mailbox
+
+#### Read
+
+```javascript
+const api = await GearApi.create();
+const mailbox = await api.mailbox.read('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
+console.log(mailbox.toHuman());
+```
+
+#### Subscribe to mailbox changes
+
+```javascript
+const unsub = await gearApi.mailbox.subscribe(
+  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+  (data) => {
+    console.log(data.toHuman());
+  },
+);
 ```
 
 ### Subscribe to events
@@ -400,4 +439,8 @@ const { mnemonic, seed } = GearKeyring.generateMnemonic();
 
 // Getting a seed from mnemonic
 const { seed } = GearKeyring.generateSeed(mnemonic);
+```
+
+```
+
 ```

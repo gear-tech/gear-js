@@ -21,8 +21,6 @@ export const PageHeader: VFC<Props> = ({ programName, pageType, handleClose }) =
   } else if (pageType === PAGE_TYPES.META_FORM_PAGE) {
     headInscription = 'Upload metadata';
     formId = 'meta-form';
-  } else if (pageType === PAGE_TYPES.NOTIFICATION_INFO) {
-    headInscription = 'Notification';
   }
 
   return (
@@ -41,11 +39,9 @@ export const PageHeader: VFC<Props> = ({ programName, pageType, handleClose }) =
         <h2 className="message-header--info__filename">{fileNameHandler(programName)}</h2>
       </div>
       <Wallet />
-      {/* eslint-disable react/button-has-type */}
       <button type="reset" aria-label="closeButton" form={formId} className="message-header--info__close">
         <img src={close} alt="close" />
       </button>
-      {/* eslint-disable react/button-has-type */}
     </div>
   );
 };

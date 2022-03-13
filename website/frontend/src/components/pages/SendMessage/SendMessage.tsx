@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState, VFC } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
 import { GetMetaResponse } from 'api/responses';
-import { EventTypes } from 'types/events';
+import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
 import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
@@ -15,13 +15,11 @@ import ProgramIllustration from 'assets/images/program_icon.svg';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import './SendMessage.scss';
 
-type Params = { id: string };
-
 export const SendMessage: VFC = () => {
   const dispatch = useDispatch();
-  const routeHistory = useHistory();
-  const routeParams = useParams<Params>();
-  const programId = routeParams.id;
+  const navigate = useNavigate();
+  const routeParams = useParams();
+  const programId = routeParams.id as string;
 
   const [meta, setMeta] = useState<Metadata>();
   const [types, setTypes] = useState<MetaParam | null>(null);
@@ -54,7 +52,7 @@ export const SendMessage: VFC = () => {
   }, [meta, setTypes]);
 
   const handleBackButtonClick = () => {
-    routeHistory.goBack();
+    navigate(-1);
   };
 
   return ready ? (

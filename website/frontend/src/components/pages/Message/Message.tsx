@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { CreateType } from '@gear-js/api';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
@@ -10,14 +10,14 @@ import { getProgramAction, resetProgramAction, getMessageAction, resetMessageAct
 import backIcon from 'assets/images/arrow_back_thick.svg';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { Hint } from 'components/blocks/Hint/Hint';
+import { getPreformattedText } from 'helpers';
 import './Message.scss';
 
-type Params = { id: string };
-
 export const Message: FC = () => {
-  const routeParams = useParams<Params>();
-  const messageId = routeParams.id;
-  const history = useHistory();
+  const routeParams = useParams();
+  const messageId = routeParams.id as string;
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { message } = useSelector((state: RootState) => state.messages);
@@ -63,12 +63,12 @@ export const Message: FC = () => {
         decodedPayload = createType.create(type, message.payload);
       }
 
-      setMessagePayload(JSON.stringify(decodedPayload));
+      setMessagePayload(getPreformattedText(decodedPayload));
     }
   }, [program, message]);
 
   const handleGoBack = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   const renderError = (error: string | null) => {
