@@ -3,12 +3,13 @@ import { parseMeta } from './meta-parser';
 import {
   simpleDeepStruct,
   simpleStruct,
-  simpleEnum,
-  enumOptionSimple,
-  complexEnumOption,
-  simpleEnumResult,
-  nestedEnumOption,
-  enumOptionWithFieldsObject,
+  enumSimple,
+  optionEnumSimple,
+  optionEnumComplex,
+  optionEnumNested,
+  optionEnumWithFieldsObject,
+  resultEnumSimple,
+  resultEnumComplex,
 } from './meta-fixtures';
 
 // result
@@ -152,8 +153,55 @@ describe('test parser', () => {
     });
   });
 
+  it('simple enum', () => {
+    expect(parseMeta(enumSimple)).toEqual({
+      __root: {
+        __type: '__fieldset',
+        __name: '__root',
+        __select: true,
+        __fields: {
+          AddMessage: {
+            __type: '__fieldset',
+            __name: 'AddMessage',
+            __select: false,
+            __fields: {
+              author: {
+                type: 'Text',
+                name: '__root.AddMessage.author',
+                label: 'author',
+              },
+              msg: {
+                type: 'Text',
+                name: '__root.AddMessage.msg',
+                label: 'msg',
+              },
+            },
+          },
+          Post: {
+            type: 'Text',
+            name: '__root.Post',
+            label: 'Post',
+          },
+          ViewMessages: {
+            type: 'Null',
+            name: '__root.ViewMessages',
+            label: 'ViewMessages',
+          },
+        },
+      },
+      __values: {
+        AddMessage: {
+          author: '',
+          msg: '',
+        },
+        Post: '',
+        ViewMessages: 'Null',
+      },
+    });
+  });
+
   it('simple option enum', () => {
-    expect(parseMeta(enumOptionSimple)).toEqual({
+    expect(parseMeta(optionEnumSimple)).toEqual({
       __root: {
         __name: '__root',
         __type: 'enum_option',
@@ -179,7 +227,7 @@ describe('test parser', () => {
   });
 
   it('option enum with fields object', () => {
-    expect(parseMeta(enumOptionWithFieldsObject)).toEqual({
+    expect(parseMeta(optionEnumWithFieldsObject)).toEqual({
       __root: {
         __name: '__root',
         __type: 'enum_option',
@@ -220,7 +268,7 @@ describe('test parser', () => {
   });
 
   it('nested option enum', () => {
-    expect(parseMeta(nestedEnumOption)).toEqual({
+    expect(parseMeta(optionEnumNested)).toEqual({
       __root: {
         __name: '__root',
         __type: '__fieldset',
@@ -255,7 +303,7 @@ describe('test parser', () => {
   });
 
   it('with complex option enum', () => {
-    expect(parseMeta(complexEnumOption)).toEqual({
+    expect(parseMeta(optionEnumComplex)).toEqual({
       __root: {
         __name: '__root',
         __type: '__fieldset',
@@ -335,67 +383,101 @@ describe('test parser', () => {
   });
 
   it('with simple result enum', () => {
-    expect(parseMeta(simpleEnumResult)).toEqual({
-      select: {
-        exchangeRate: {
-          type: '_enum_Result',
-          fields: {
-            ok: {
-              type: 'u8',
-              name: 'meta.exchangeRate.ok',
-              label: 'ok',
-            },
-            err: {
-              type: 'u8',
-              name: 'meta.exchangeRate.err',
-              label: 'err',
+    expect(parseMeta(resultEnumSimple)).toEqual({
+      __root: {
+        __name: '__root',
+        __type: '__fieldset',
+        __select: false,
+        __fields: {
+          exchangeRate: {
+            __name: 'exchangeRate',
+            __type: 'enum_result',
+            __select: true,
+            __fields: {
+              ok: {
+                type: 'u8',
+                name: '__root.exchangeRate.ok',
+                label: 'ok',
+              },
+              err: {
+                type: 'u8',
+                name: '__root.exchangeRate.err',
+                label: 'err',
+              },
             },
           },
         },
       },
-      fields: {
-        ok: {
-          type: 'u8',
-          name: 'meta.exchangeRate.ok',
-          label: 'ok',
+      __values: {
+        exchangeRate: {
+          ok: '',
+          err: '',
         },
-      },
-      values: {
-        ok: '',
-        err: '',
       },
     });
   });
 
   it('with complex result enum', () => {
-    expect(parseMeta(simpleEnumResult)).toEqual({
-      select: {
-        exchangeRate: {
-          type: '_enum_Result',
-          fields: {
-            ok: {
-              type: 'u8',
-              name: 'meta.exchangeRate.ok',
-              label: 'ok',
+    expect(parseMeta(resultEnumComplex)).toEqual({
+      __root: {
+        __fields: {
+          exchangeRate: {
+            __fields: {
+              err: {
+                __fields: {
+                  '__field[0]': {
+                    label: '__field[0]',
+                    name: '__root.exchangeRate.err.__field[0]',
+                    type: 'String',
+                  },
+                  __null: {
+                    label: '__null',
+                    name: '__root.exchangeRate.err.__null',
+                    type: 'Null',
+                  },
+                },
+                __name: 'err',
+                __select: true,
+                __type: 'enum_option',
+              },
+              ok: {
+                __fields: {
+                  firstName: {
+                    label: 'firstName',
+                    name: '__root.exchangeRate.ok.firstName',
+                    type: 'Text',
+                  },
+                  secondName: {
+                    label: 'secondName',
+                    name: '__root.exchangeRate.ok.secondName',
+                    type: 'Text',
+                  },
+                },
+                __name: 'ok',
+                __select: false,
+                __type: '__fieldset',
+              },
             },
-            err: {
-              type: 'u8',
-              name: 'meta.exchangeRate.err',
-              label: 'err',
-            },
+            __name: 'exchangeRate',
+            __select: true,
+            __type: 'enum_result',
           },
         },
+        __name: '__root',
+        __select: false,
+        __type: '__fieldset',
       },
-      fields: {
-        ok: {
-          label: 'ok',
-          name: 'meta.exchangeRate.ok',
-          type: 'u8',
+      __values: {
+        exchangeRate: {
+          err: {
+            '__field[0]': '',
+            __null: 'Null',
+          },
+          ok: {
+            firstName: '',
+            secondName: '',
+          },
         },
-      },
-      values: {
-        err: '',
-        ok: '',
       },
     });
   });

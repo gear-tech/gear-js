@@ -70,6 +70,11 @@ function processFields(data: MetaItem, path?: string[]): StackItem[] {
         value: value as MetaItem,
       });
     } else if (key === MetaEnum.EnumResult) {
+      accum.push({
+        kind: 'enum_result',
+        path: [...(path || []), key],
+        value: value as MetaItem,
+      });
     } else if (isObject(value)) {
       accum.push({
         kind: 'fieldset',
@@ -160,6 +165,10 @@ function parseField(data: MetaItem) {
 
           if (entries[0].some((i) => i === '_enum_Option')) {
             set(result, [...current.path, '__type'], 'enum_option');
+          }
+
+          if (entries[0].some((i) => i === '_enum_Result')) {
+            set(result, [...current.path, '__type'], 'enum_result');
           }
 
           // Process fieldset fields
@@ -253,6 +262,33 @@ function parseField(data: MetaItem) {
         }
         //
         else if (current.kind === 'enum_result') {
+          Object.entries(current.value).forEach(([vKey, vValue], index) => {
+            const path = current.path.filter((item) => item !== '_enum_Result');
+            // field
+            if (isString(vValue)) {
+              stack.push(
+                ...processFields(
+                  {
+                    [vKey]: vValue,
+                  },
+                  [...path]
+                )
+              );
+              return;
+            }
+            // fieldset
+            if (isObject(vValue)) {
+              stack.push(
+                ...processFields(
+                  {
+                    [vKey]: vValue,
+                  },
+                  [...path]
+                )
+              );
+              return;
+            }
+          });
         }
         // Parse if it is enum
         else if (current.kind === 'enum') {

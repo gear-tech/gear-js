@@ -13,7 +13,7 @@ export const simpleDeepStruct = {
   },
 };
 
-export const simpleEnum = {
+export const enumSimple = {
   _enum: {
     AddMessage: { author: 'Text', msg: 'Text' },
     Post: 'Text',
@@ -21,24 +21,24 @@ export const simpleEnum = {
   },
 };
 
-export const enumOptionSimple = {
+export const optionEnumSimple = {
   _enum_Option: 'String',
 };
 
-export const enumOptionWithFieldsObject = {
+export const optionEnumWithFieldsObject = {
   _enum_Option: {
     firstName: 'Text',
     lastName: 'Text',
   },
 };
 
-export const nestedEnumOption = {
+export const optionEnumNested = {
   field: {
     _enum_Option: 'String',
   },
 };
 
-export const nestedEnumOptionWithFieldsObject = {
+export const optionEnumNestedWithFieldsObject = {
   field: {
     _enum_Option: {
       firstName: 'Text',
@@ -47,7 +47,7 @@ export const nestedEnumOptionWithFieldsObject = {
   },
 };
 
-export const complexEnumOption = {
+export const optionEnumComplex = {
   res: {
     _enum_Option: {
       id: { decimal: 'u64', hex: 'Bytes' },
@@ -56,13 +56,13 @@ export const complexEnumOption = {
   },
 };
 
-export const simpleEnumResult = {
+export const resultEnumSimple = {
   exchangeRate: {
     _enum_Result: { ok: 'u8', err: 'u8' },
   },
 };
 
-export const complexEnumResult = {
+export const resultEnumComplex = {
   exchangeRate: {
     _enum_Result: {
       ok: {
