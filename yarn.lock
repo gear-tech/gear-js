@@ -1877,7 +1877,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.14.3, @gear-js/api@npm:^0.14.2":
+"@gear-js/api@npm:0.14.3, @gear-js/api@npm:^0.14.2, @gear-js/api@npm:^0.14.3":
   version: 0.14.3
   resolution: "@gear-js/api@npm:0.14.3"
   peerDependencies:
@@ -1985,8 +1985,8 @@ __metadata:
     "@types/react-alert": 7.0.0
     "@types/react-dom": 17.0.13
     "@types/react-redux": 7.1.23
-    "@typescript-eslint/eslint-plugin": ^5.14.0
-    "@typescript-eslint/parser": ^5.14.0
+    "@typescript-eslint/eslint-plugin": 5.14.0
+    "@typescript-eslint/parser": 5.14.0
     buffer: 6.0.3
     clsx: 1.1.1
     crypto-browserify: 3.12.0
@@ -2097,6 +2097,21 @@ __metadata:
     tsconfig-paths: 3.13.0
     typeorm: 0.2.45
     typescript: 4.6.2
+  languageName: unknown
+  linkType: soft
+
+"@gear-js/web-tests@workspace:website/tests":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/web-tests@workspace:website/tests"
+  dependencies:
+    "@gear-js/api": ^0.14.3
+    "@polkadot/api": ^7.8.1
+    "@types/js-yaml": ^4.0.5
+    js-yaml: ^4.1.0
+    node-fetch: 2
+    ts-node: ^10.5.0
+    ts-node-dev: ^1.1.8
+    typescript: ^4.5.5
   languageName: unknown
   linkType: soft
 
@@ -2904,7 +2919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:7.12.1, @polkadot/api@npm:^7.10.1":
+"@polkadot/api@npm:7.12.1, @polkadot/api@npm:^7.10.1, @polkadot/api@npm:^7.8.1":
   version: 7.12.1
   resolution: "@polkadot/api@npm:7.12.1"
   dependencies:
@@ -2946,18 +2961,18 @@ __metadata:
   linkType: hard
 
 "@polkadot/extension-inject@npm:^0.42.7":
-  version: 0.42.7
-  resolution: "@polkadot/extension-inject@npm:0.42.7"
+  version: 0.42.9
+  resolution: "@polkadot/extension-inject@npm:0.42.9"
   dependencies:
-    "@babel/runtime": ^7.16.7
-    "@polkadot/rpc-provider": ^7.5.1
-    "@polkadot/types": ^7.5.1
-    "@polkadot/util": ^8.3.3
-    "@polkadot/util-crypto": ^8.3.3
-    "@polkadot/x-global": ^8.3.3
+    "@babel/runtime": ^7.17.2
+    "@polkadot/rpc-provider": ^7.12.1
+    "@polkadot/types": ^7.12.1
+    "@polkadot/util": ^8.5.1
+    "@polkadot/util-crypto": ^8.5.1
+    "@polkadot/x-global": ^8.5.1
   peerDependencies:
     "@polkadot/api": "*"
-  checksum: b0d03e4dc9738a920006b9a6ef8ca29a3d399d03cb586730f25d71e90017cf6137d0a6b35cd98b6c587852d93fe2d12f1824273994e7c8e256172a1fa173a6f5
+  checksum: 2540651789bd92a6521ff58aea4e37c93c7305ab9ed603737004d6dd3d70929783a246d751258180ff729ff27299df7c687ad1a9b8f9347f1a5b009dfbe71fc9
   languageName: node
   linkType: hard
 
@@ -3087,7 +3102,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/rpc-provider@npm:7.12.1, @polkadot/rpc-provider@npm:^7.5.1":
+"@polkadot/rpc-provider@npm:7.12.1, @polkadot/rpc-provider@npm:^7.12.1":
   version: 7.12.1
   resolution: "@polkadot/rpc-provider@npm:7.12.1"
   dependencies:
@@ -3237,7 +3252,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:7.12.1, @polkadot/types@npm:^7.5.1":
+"@polkadot/types@npm:7.12.1, @polkadot/types@npm:^7.12.1":
   version: 7.12.1
   resolution: "@polkadot/types@npm:7.12.1"
   dependencies:
@@ -3377,7 +3392,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-global@npm:8.5.1, @polkadot/x-global@npm:^8.3.3, @polkadot/x-global@npm:^8.4.1, @polkadot/x-global@npm:^8.5.1":
+"@polkadot/x-global@npm:8.5.1, @polkadot/x-global@npm:^8.4.1, @polkadot/x-global@npm:^8.5.1":
   version: 8.5.1
   resolution: "@polkadot/x-global@npm:8.5.1"
   dependencies:
@@ -4091,6 +4106,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/js-yaml@npm:^4.0.5":
+  version: 4.0.5
+  resolution: "@types/js-yaml@npm:4.0.5"
+  checksum: 7dcac8c50fec31643cc9d6444b5503239a861414cdfaa7ae9a38bc22597c4d850c4b8cec3d82d73b3fbca408348ce223b0408d598b32e094470dfffc6d486b4d
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:*, @types/json-schema@npm:^7.0.4, @types/json-schema@npm:^7.0.5, @types/json-schema@npm:^7.0.7, @types/json-schema@npm:^7.0.8, @types/json-schema@npm:^7.0.9":
   version: 7.0.9
   resolution: "@types/json-schema@npm:7.0.9"
@@ -4452,7 +4474,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.14.0, @typescript-eslint/eslint-plugin@npm:^5.5.0":
+"@typescript-eslint/eslint-plugin@npm:5.14.0, @typescript-eslint/eslint-plugin@npm:^5.5.0":
   version: 5.14.0
   resolution: "@typescript-eslint/eslint-plugin@npm:5.14.0"
   dependencies:
@@ -4519,7 +4541,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.14.0, @typescript-eslint/parser@npm:^5.5.0":
+"@typescript-eslint/parser@npm:5.14.0, @typescript-eslint/parser@npm:^5.5.0":
   version: 5.14.0
   resolution: "@typescript-eslint/parser@npm:5.14.0"
   dependencies:
@@ -13029,7 +13051,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
+"node-fetch@npm:2, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
   version: 2.6.7
   resolution: "node-fetch@npm:2.6.7"
   dependencies:
@@ -17531,7 +17553,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node-dev@npm:1.1.8":
+"ts-node-dev@npm:1.1.8, ts-node-dev@npm:^1.1.8":
   version: 1.1.8
   resolution: "ts-node-dev@npm:1.1.8"
   dependencies:
@@ -17636,7 +17658,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.6.0":
+"ts-node@npm:^10.5.0, ts-node@npm:^10.6.0":
   version: 10.7.0
   resolution: "ts-node@npm:10.7.0"
   dependencies:
@@ -17956,7 +17978,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.6.2":
+"typescript@npm:4.6.2, typescript@npm:^4.5.5":
   version: 4.6.2
   resolution: "typescript@npm:4.6.2"
   bin:
@@ -17976,7 +17998,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.6.2#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.6.2#~builtin<compat/typescript>, typescript@patch:typescript@^4.5.5#~builtin<compat/typescript>":
   version: 4.6.2
   resolution: "typescript@patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=bda367"
   bin:

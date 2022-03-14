@@ -28,7 +28,8 @@
     "website/frontend",
     "website/test-balance",
     "website/wasm-compiler",
-    "website/interfaces"
+    "website/interfaces",
+    "website/tests"
   ],
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
