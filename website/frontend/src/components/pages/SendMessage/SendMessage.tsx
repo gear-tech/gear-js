@@ -66,7 +66,7 @@ export const SendMessage: VFC = () => {
         <h2 className="send-message__header-text send-message__header-text_colored">{fileNameHandler(programId)}</h2>
       </header>
       <div className="send-message__block">
-        <MessageForm programId={programId} programName="df" meta={meta} types={types} />
+        <MessageForm programId={programId} meta={meta} types={types} />
       </div>
     </div>
   ) : (
