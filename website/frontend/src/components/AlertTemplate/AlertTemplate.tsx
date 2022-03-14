@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { AlertComponentPropsWithStyle } from 'react-alert';
+import React from 'react';
+import { AlertTemplateProps } from 'react-alert';
 import { AlertCircle, CheckCircle, Info, X } from 'react-feather';
 
 const alertStyle = {
@@ -31,7 +31,7 @@ const buttonStyle = {
   color: '#FFFFFF',
 };
 
-export const AlertTemplate: FC<AlertComponentPropsWithStyle> = ({ message, options, style, close }) => (
+const AlertTemplate = ({ message, options, style, close }: AlertTemplateProps) => (
   // @ts-ignore
   <div style={{ ...alertStyle, ...style }}>
     {options.type === 'info' && <Info color="blue" />}
@@ -43,3 +43,5 @@ export const AlertTemplate: FC<AlertComponentPropsWithStyle> = ({ message, optio
     </button>
   </div>
 );
+
+export { AlertTemplate };
