@@ -1,0 +1,60 @@
+@use 'assets/scss/variables' as *;
+
+.mailItem {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  position: relative;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .body {
+    width: 80%;
+    padding: 10px 15px;
+    background-color: $mainBackground;
+    border-radius: $borderRadiusBase;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.14), 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+    color: $textColor;
+    overflow-x: auto;
+    min-height: 230px;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+
+    .button {
+      width: 165px;
+      height: 34px;
+      border: none;
+      outline: none;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $textColor;
+
+      &:first-child {
+        background-color: $successColor;
+        .image {
+          width: 15px;
+        }
+      }
+
+      &:last-child {
+        background-color: $bkgButtonColor;
+        margin-bottom: 0;
+
+        .image {
+          width: 13px;
+        }
+      }
+
+      .image {
+        margin-right: 8px;
+      }
+    }
+  }
+}
