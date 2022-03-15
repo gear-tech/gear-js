@@ -12,7 +12,7 @@ const Input = ({ label, className, ...attrs }: Props) => {
   return (
     <label className={labelClassName}>
       {label}
-      <input type="text" {...attrs} />
+      <input className={styles.input} {...attrs} />
     </label>
   );
 };

@@ -1,0 +1,29 @@
+@use 'assets/scss/variables' as *;
+
+%reset {
+  border: none;
+  outline: none;
+}
+
+.label {
+  font-size: 16px;
+  font-weight: 300;
+  color: $textColorSecondary;
+}
+
+.input {
+  @extend %reset;
+  padding: 10px 20px;
+  color: $textColor;
+  background-color: #000;
+  border-radius: 2px;
+
+  &:read-only {
+    background-color: #282828;
+    box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
+  }
+
+  &::placeholder {
+    color: $textColorSecondary;
+  }
+}
