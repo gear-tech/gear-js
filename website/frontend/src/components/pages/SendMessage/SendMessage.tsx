@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, VFC } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createPayloadTypeStructure, Metadata, decodeHexTypes } from '@gear-js/api';
+import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
