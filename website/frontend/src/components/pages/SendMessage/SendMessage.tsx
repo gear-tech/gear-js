@@ -44,10 +44,10 @@ export const SendMessage: VFC = () => {
 
   useEffect(() => {
     if (meta && meta.types && meta.handle_input) {
-      const displayedTypes = decodeHexTypes(meta.types);
-      const inputType = createPayloadTypeStructure(meta.handle_input, displayedTypes, true);
+      const decodedTypes = decodeHexTypes(meta.types);
+      const typeStructure = createPayloadTypeStructure(meta.handle_input, decodedTypes, true);
 
-      setTypes(inputType);
+      setTypes(typeStructure);
     }
   }, [meta, setTypes]);
 
