@@ -1,5 +1,6 @@
 import React, { InputHTMLAttributes } from 'react';
 import clsx from 'clsx';
+import { Icon, Text } from './children';
 import styles from './Input.module.scss';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
@@ -14,9 +15,9 @@ const Input = ({ label, icon, className, ...attrs }: Props) => {
 
   return (
     <label className={labelClassName} data-testid="label">
-      {label && <span className={styles.text}>{label}</span>}
+      {label && <Text txt={label} />}
       <div className={wrapperClassName} data-testid="wrapper">
-        {icon && <img src={icon} alt="input icon" className={styles.icon} />}
+        {icon && <Icon src={icon} />}
         <input className={styles.input} {...attrs} />
       </div>
     </label>

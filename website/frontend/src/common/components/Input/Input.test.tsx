@@ -20,7 +20,7 @@ describe('input tests', () => {
     render(<Input label="label" icon={close} />);
 
     const label = screen.getByTestId('label');
-    const icon = screen.getByAltText('input icon');
+    const icon = screen.getByRole('img');
 
     expect(label).toContainElement(icon);
   });
