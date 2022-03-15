@@ -1,27 +1,39 @@
 @use 'assets/scss/variables' as *;
 
 %reset {
+  background: none;
   border: none;
   outline: none;
 }
 
 .label {
+  display: flex;
+  align-items: center;
   font-size: 16px;
   font-weight: 300;
   color: $textColorSecondary;
 }
 
-.input {
-  @extend %reset;
-  padding: 10px 20px;
-  color: $textColor;
+.icon {
+  margin-right: 16px;
+}
+
+.wrapper {
+  display: flex;
+  padding: 0 20px;
   background-color: #000;
   border-radius: 2px;
 
-  &:read-only {
+  &.readOnly {
     background-color: #282828;
     box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
   }
+}
+
+.input {
+  @extend %reset;
+  padding: 10px 0;
+  color: $textColor;
 
   &::placeholder {
     color: $textColorSecondary;
