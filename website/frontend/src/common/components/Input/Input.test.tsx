@@ -31,9 +31,15 @@ describe('input tests', () => {
     expect(label).toHaveClass('class');
   });
 
-  it('applies read only styles to input wrapper', () => {
+  it('renders read only input', () => {
     render(<Input readOnly />);
     const wrapper = screen.getByTestId('wrapper');
     expect(wrapper).toHaveClass(styles.readOnly);
+  });
+
+  it('renders disabled input', () => {
+    render(<Input disabled />);
+    const label = screen.getByTestId('label');
+    expect(label).toHaveClass('disabled');
   });
 });

@@ -14,7 +14,6 @@ import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
 import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 import styles from './Program.module.scss';
-import { Input } from 'common/components/Input/Input';
 
 export const Program: VFC = () => {
   const dispatch = useDispatch();
@@ -71,7 +70,10 @@ export const Program: VFC = () => {
       </button>
       <div className={styles.container}>
         <div className={styles.list}>
-          <Input label="Id:" value={program.id} className={styles.input} readOnly />
+          <div className={styles.item}>
+            <p className={styles.itemCaption}>Id:</p>
+            <p className={styles.itemValue}>{program.id}</p>
+          </div>
           <div className={styles.item}>
             <p className={styles.itemCaption}>Name:</p>
             <p className={styles.itemValue}>{program.name}</p>
