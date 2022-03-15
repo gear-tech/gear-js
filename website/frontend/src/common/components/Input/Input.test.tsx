@@ -13,4 +13,10 @@ describe('input tests', () => {
     const input = screen.getByLabelText('label');
     expect(input).toBeInTheDocument();
   });
+
+  it('applies className to label (top wrapper) element', () => {
+    render(<Input label="label" className="class" />);
+    const label = screen.getByText('label');
+    expect(label).toHaveClass('class');
+  });
 });

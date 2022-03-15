@@ -11,6 +11,7 @@ import { Upload } from './children/Upload/Upload';
 import { BlockList } from './children/BlocksList/BlocksList';
 import { Recent } from './children/Recent/Recent';
 import './Programs.scss';
+import { Input } from 'common/components/Input/Input';
 
 export const Programs: VFC = () => {
   const isUploadedProgramsPage = useMatch(routes.uploadedPrograms);
@@ -29,6 +30,7 @@ export const Programs: VFC = () => {
   return (
     <div className="main-content-wrapper">
       <ProgramSwitch pageType={currentPage} />
+      <Input />
       {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
         <>
           <DndProvider backend={HTML5Backend}>
