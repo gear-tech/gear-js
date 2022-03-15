@@ -14,6 +14,16 @@ describe('Create type structure test', () => {
       AStruct: { id: 'Bytes', online: 'bool' },
       CustomStructU8: { field: 'u8' },
       CustomStructOption: { field: 'Option<(Option<u8>,u128,[u8;3])>' },
+      FungibleTokenAction: {
+        _enum: {
+          Mint: 'u128',
+          Burn: 'u128',
+          Transfer: '{"from":"ActorId","to":"ActorId","amount":"u128"}',
+          Approve: '{"to":"ActorId","amount":"u128"}',
+          TotalSupply: 'Null',
+          BalanceOf: 'ActorId',
+        },
+      },
     };
   });
   test('Enum', () => {
@@ -203,6 +213,39 @@ describe('Create type structure test', () => {
         type: 'Primitive',
         name: 'u8',
         value: 'u8',
+      },
+    });
+  });
+  test('FungibleTokenAction', () => {
+    expect(createPayloadTypeStructure('FungibleTokenAction', types)).toEqual({
+      type: 'Enum',
+      name: 'FungibleTokenAction',
+      value: {
+        Mint: { type: 'Primitive', name: 'u128', value: 'u128' },
+        Burn: { type: 'Primitive', name: 'u128', value: 'u128' },
+        Transfer: {
+          type: 'Struct',
+          name: '{"from":"ActorId","to":"ActorId","amount":"u128"}',
+          value: {
+            from: { type: 'Primitive', name: 'ActorId', value: 'ActorId' },
+            to: { type: 'Primitive', name: 'ActorId', value: 'ActorId' },
+            amount: { type: 'Primitive', name: 'u128', value: 'u128' },
+          },
+        },
+        Approve: {
+          type: 'Struct',
+          name: '{"to":"ActorId","amount":"u128"}',
+          value: {
+            to: { type: 'Primitive', name: 'ActorId', value: 'ActorId' },
+            amount: { type: 'Primitive', name: 'u128', value: 'u128' },
+          },
+        },
+        TotalSupply: { type: 'Primitive', name: 'Null', value: 'Null' },
+        BalanceOf: {
+          type: 'Primitive',
+          name: 'ActorId',
+          value: 'ActorId',
+        },
       },
     });
   });

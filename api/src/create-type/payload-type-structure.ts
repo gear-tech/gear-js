@@ -1,5 +1,5 @@
 import { enumTypes, TypeTree } from './interfaces';
-import { splitByCommas } from '../utils';
+import { isJSON, splitByCommas, toJSON } from '../utils';
 import generate from './generate';
 import { REGULAR_EXP } from './regexp';
 
@@ -45,14 +45,20 @@ function getIfGeneric(typeName: string, types: any): TypeTree | null {
 }
 
 function getIfStruct(typeName: string, types: any): TypeTree | null {
+  const value: any = {};
   if (types[typeName] && typeof types[typeName] === 'object') {
-    const value: any = {};
     Object.keys(types[typeName]).forEach((field) => {
       value[field] = createPayloadTypeStructure(types[typeName][field], types);
     });
-    return generate.Struct(typeName, value);
+  } else if (isJSON(typeName)) {
+    const jsonTypeName = toJSON(typeName);
+    Object.keys(jsonTypeName).forEach((field) => {
+      value[field] = createPayloadTypeStructure(jsonTypeName[field], types);
+    });
+  } else {
+    return null;
   }
-  return null;
+  return generate.Struct(typeName, value);
 }
 
 function getIfEnum(typeName: string, types: any): TypeTree | null {
