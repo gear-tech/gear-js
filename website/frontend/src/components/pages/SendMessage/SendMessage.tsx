@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, VFC } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
+import { createPayloadTypeStructure, Metadata, decodeHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
@@ -44,8 +44,8 @@ export const SendMessage: VFC = () => {
 
   useEffect(() => {
     if (meta && meta.types && meta.handle_input) {
-      const displayedTypes = parseHexTypes(meta.types);
-      const inputType = getTypeStructure(meta.handle_input, displayedTypes);
+      const displayedTypes = decodeHexTypes(meta.types);
+      const inputType = createPayloadTypeStructure(meta.handle_input, displayedTypes, true);
 
       setTypes(inputType);
     }
