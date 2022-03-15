@@ -32,7 +32,7 @@ export const Programs: VFC = () => {
   return (
     <div className="main-content-wrapper">
       <ProgramSwitch pageType={currentPage} />
-      <Input label="Label" icon={cross} readOnly />
+      <Input icon={cross} />
       {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
         <>
           <DndProvider backend={HTML5Backend}>

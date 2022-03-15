@@ -1,12 +1,7 @@
 @use 'assets/scss/variables' as *;
 
-%reset {
-  background: none;
-  border: none;
-  outline: none;
-}
-
 .label {
+  width: 100%;
   display: flex;
   align-items: center;
   font-size: 16px;
@@ -14,13 +9,19 @@
   color: $textColorSecondary;
 }
 
+.text,
 .icon {
   margin-right: 16px;
 }
 
+.wrapper,
+.input {
+  flex: 1;
+}
+
 .wrapper {
   display: flex;
-  padding: 0 20px;
+  padding: 10px 20px;
   background-color: #000;
   border-radius: 2px;
 
@@ -31,9 +32,11 @@
 }
 
 .input {
-  @extend %reset;
-  padding: 10px 0;
+  padding: 0;
   color: $textColor;
+  background: none;
+  border: none;
+  outline: none;
 
   &::placeholder {
     color: $textColorSecondary;

@@ -177,3 +177,8 @@
     }
   }
 }
+
+.input {
+  display: grid;
+  grid-template-columns: 165px 1fr;
+}

@@ -19,15 +19,15 @@ describe('input tests', () => {
   it('renders input with icon', () => {
     render(<Input label="label" icon={close} />);
 
-    const label = screen.getByText('label');
+    const label = screen.getByTestId('label');
     const icon = screen.getByAltText('input icon');
 
     expect(label).toContainElement(icon);
   });
 
-  it('applies className to top wrapper', () => {
+  it('applies className to label wrapper', () => {
     render(<Input label="label" className="class" />);
-    const label = screen.getByText('label');
+    const label = screen.getByTestId('label');
     expect(label).toHaveClass('class');
   });
 

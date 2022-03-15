@@ -9,13 +9,12 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 
 const Input = ({ label, icon, className, ...attrs }: Props) => {
   const { readOnly } = attrs;
-
   const labelClassName = clsx(styles.label, className);
   const wrapperClassName = clsx(styles.wrapper, readOnly && styles.readOnly);
 
   return (
-    <label className={labelClassName}>
-      {label}
+    <label className={labelClassName} data-testid="label">
+      {label && <span className={styles.text}>{label}</span>}
       <div className={wrapperClassName} data-testid="wrapper">
         {icon && <img src={icon} alt="input icon" className={styles.icon} />}
         <input className={styles.input} {...attrs} />
