@@ -24,7 +24,7 @@ function getIfArray(typeName: string, types: any, raw: boolean): TypeTree | [Typ
   return null;
 }
 
-function getIfGeneric(typeName: string, types: any, raw: boolean): TypeTree | null {
+function getIfGeneric(typeName: string, types: any, raw: boolean): TypeTree | any | null {
   const match = typeName.match(REGULAR_EXP.angleBracket);
   if (match) {
     const type = typeName.slice(0, match.index);
@@ -35,7 +35,19 @@ function getIfGeneric(typeName: string, types: any, raw: boolean): TypeTree | nu
         createPayloadTypeStructure(splitted[0], types, raw),
         createPayloadTypeStructure(splitted[1], types, raw),
       ];
-      return raw ? { [`_${type}`]: value } : generate[type](typeName, ...value);
+      if (raw) {
+        if (type === 'Result') {
+          return {
+            _Result: {
+              ok: value[0],
+              err: value[1],
+            },
+          };
+        } else {
+          return { [`_${type}`]: value[1] ? value : value[0] };
+        }
+      }
+      return generate[type](typeName, ...value);
     } else {
       return createPayloadTypeStructure(type, types, raw);
     }
@@ -78,6 +90,7 @@ function getIfEnum(typeName: string, types: any, raw: boolean): TypeTree | { _en
  *
  * @param typeName to create its structure
  * @param types
+ * @param raw set it to true if there is a need to get type structure without additional fields
  * @returns
  */
 export function createPayloadTypeStructure(typeName: string, types: any, raw = false): TypeTree | any {

@@ -131,6 +131,14 @@ describe('Create type structure test', () => {
       },
     });
   });
+  test('Raw Result', () => {
+    expect(createPayloadTypeStructure('Result<String, i32>', {}, true)).toEqual({
+      _Result: {
+        ok: 'String',
+        err: 'i32',
+      },
+    });
+  });
   test('Primitive', () => {
     expect(createPayloadTypeStructure('String', {})).toEqual({
       type: 'Primitive',
@@ -161,6 +169,9 @@ describe('Create type structure test', () => {
       ],
     });
   });
+  test('Raw Tuple', () => {
+    expect(createPayloadTypeStructure('(String, u8)', types, true)).toEqual(['String', 'u8']);
+  });
   test('Array', () => {
     expect(createPayloadTypeStructure('[u8;4]', types)).toEqual({
       type: 'Array',
@@ -173,6 +184,9 @@ describe('Create type structure test', () => {
       count: 4,
     });
   });
+  test('Raw Array', () => {
+    expect(createPayloadTypeStructure('[u8;4]', types, true)).toEqual(['u8', 4]);
+  });
   test('Option', () => {
     expect(createPayloadTypeStructure('Option<AStruct>', types)).toEqual({
       type: 'Option',
@@ -184,6 +198,14 @@ describe('Create type structure test', () => {
           id: { type: 'Primitive', name: 'Bytes', value: 'Bytes' },
           online: { type: 'Primitive', name: 'bool', value: 'bool' },
         },
+      },
+    });
+  });
+  test('Raw Option', () => {
+    expect(createPayloadTypeStructure('Option<AStruct>', types, true)).toEqual({
+      _Option: {
+        id: 'Bytes',
+        online: 'bool',
       },
     });
   });
@@ -205,6 +227,11 @@ describe('Create type structure test', () => {
       },
     });
   });
+  test('Raw BTreeMap', () => {
+    expect(createPayloadTypeStructure('BTreeMap<String, u8>', types, true)).toEqual({
+      _BTreeMap: ['String', 'u8'],
+    });
+  });
   test('BTreeSet', () => {
     expect(createPayloadTypeStructure('BTreeSet<u8>', types)).toEqual({
       type: 'BTreeSet',
@@ -214,6 +241,11 @@ describe('Create type structure test', () => {
         name: 'u8',
         value: 'u8',
       },
+    });
+  });
+  test('Raw BTreeSet', () => {
+    expect(createPayloadTypeStructure('BTreeSet<u8>', types, true)).toEqual({
+      _BTreeSet: 'u8',
     });
   });
   test('FungibleTokenAction', () => {
@@ -246,6 +278,18 @@ describe('Create type structure test', () => {
           name: 'ActorId',
           value: 'ActorId',
         },
+      },
+    });
+  });
+  test('Raw FungibleTokenAction', () => {
+    expect(createPayloadTypeStructure('FungibleTokenAction', types, true)).toEqual({
+      _enum: {
+        Mint: 'u128',
+        Burn: 'u128',
+        Transfer: { from: 'ActorId', to: 'ActorId', amount: 'u128' },
+        Approve: { to: 'ActorId', amount: 'u128' },
+        TotalSupply: 'Null',
+        BalanceOf: 'ActorId',
       },
     });
   });
