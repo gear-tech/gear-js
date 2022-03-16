@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useState, VFC } from 'react';
+import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTypeStructure, Metadata, parseHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
-import { RPC_METHODS } from 'consts';
-import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
-import { GetMetaResponse } from 'api/responses';
+import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { EventTypes } from 'types/alerts';
+import { programService } from 'services/ProgramsRequestService';
 import { AddAlert } from 'store/actions/actions';
 import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
@@ -25,12 +24,7 @@ export const SendMessage: VFC = () => {
   const [types, setTypes] = useState<MetaParam | null>(null);
   const [ready, setReady] = useState(false);
 
-  const fetchMeta = useCallback(async (id: string) => {
-    const apiRequest = new ServerRPCRequestService();
-
-    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId: id });
-  }, []);
-
+  const { fetchMeta } = programService;
   const getMeta = isDevChain() ? getLocalProgramMeta : fetchMeta;
 
   useEffect(() => {
