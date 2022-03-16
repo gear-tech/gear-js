@@ -11,7 +11,7 @@ import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
-import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
+import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
