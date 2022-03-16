@@ -1,12 +1,12 @@
 @use 'assets/scss/variables' as *;
 
 .button {
-  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   color: $textColor;
   border-radius: 2px;
+  transition: 0.25s all;
 
   &:disabled {
     pointer-events: none;
@@ -17,7 +17,7 @@
 .normal {
   padding: 12px 24px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
 
   .icon {
     margin-right: 16px;
@@ -26,26 +26,35 @@
 
 .small {
   padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
 
   .icon {
     margin-right: 10px;
   }
 }
 
-.singleIcon {
+.noText {
   padding: 10px 12px;
 }
 
-.success {
+.primary {
   background-color: $successColor;
+
+  &:hover {
+    background-color: #12582f;
+  }
 }
 
-.error {
-  background-color: $errorColor;
-}
-
-.main {
+.secondary {
   background-color: $bkgButtonColor;
+
+  &:hover {
+    color: #282828;
+    background-color: $textColor;
+  }
+}
+
+.transparent {
+  padding: 0;
+  background-color: transparent;
 }
