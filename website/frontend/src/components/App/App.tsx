@@ -128,8 +128,10 @@ const AppComponent: FC = () => {
               <Route path={routes.program} element={<Program />} />
               <Route path={routes.message} element={<Message />} />
               <Route path={routes.state} element={<State />} />
-              <Route path={routes.sendMessage} element={<SendMessage />} />
-              <Route path={routes.replyMessage} element={<ReplyMessage />} />
+              <Route path={routes.send}>
+                <Route path={routes.sendMessage} element={<SendMessage />} />
+                <Route path={routes.replyMessage} element={<SendMessage />} />
+              </Route>
               <Route path={routes.editor} element={<EditorPage />} />
               <Route path={routes.mailbox} element={<Mailbox />} />
               <Route path="*" element={<PageNotFound />} />
