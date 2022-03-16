@@ -72,7 +72,7 @@ export const ReplyMessage: VFC = () => {
         </h2>
       </header>
       <div className="send-message__block">
-        <MessageForm messageId={message.source} reply={message.replyError} programName="df" meta={meta} types={types} />
+        <MessageForm messageId={message.source} reply={message.replyError} meta={meta} types={types} />
       </div>
     </div>
   ) : (

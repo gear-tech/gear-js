@@ -21,13 +21,12 @@ import './MessageForm.scss';
 
 type Props = {
   messageId: string;
-  programName: string;
   reply: string;
   meta?: Metadata;
   types: MetaParam | null;
 };
 
-export const MessageForm: VFC<Props> = ({ messageId, programName, reply, meta, types }) => {
+export const MessageForm: VFC<Props> = ({ messageId, reply, meta, types }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
@@ -78,10 +77,6 @@ export const MessageForm: VFC<Props> = ({ messageId, programName, reply, meta, t
         <Form id="message-form">
           <div className="message-form--wrapper">
             <div className="message-form--col">
-              <div className="message-form--info">
-                <span>File:</span>
-                <span>{fileNameHandler(programName)}</span>
-              </div>
               <div className="message-form--info">
                 <label htmlFor="messageId" className="message-form__field">
                   Message ID:
