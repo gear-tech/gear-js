@@ -49,12 +49,15 @@
   background-color: $bkgButtonColor;
 
   &:hover {
-    color: #282828;
-    background-color: $textColor;
+    background-color: $textColorSecondary;
   }
 }
 
 .transparent {
   padding: 0;
   background-color: transparent;
+
+  &:hover {
+    opacity: 0.5;
+  }
 }
