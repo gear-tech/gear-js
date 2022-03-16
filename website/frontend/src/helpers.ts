@@ -4,7 +4,6 @@ import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
-import { InitialValues as ReplyMessageInitialValues } from './components/pages/ReplyMessage/children/MessageForm/types';
 import { InitialValues as SendMessageInitialValues } from './components/pages/SendMessage/children/MessageForm/types';
 import { InitialValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { SetFieldValue } from 'types/common';
@@ -158,7 +157,7 @@ export const calculateGas = async (
   method: string,
   api: any,
   isManualPayload: boolean,
-  values: UploadInitialValues | SendMessageInitialValues | ReplyMessageInitialValues,
+  values: UploadInitialValues | SendMessageInitialValues,
   setFieldValue: SetFieldValue,
   dispatch: any,
   meta: any,
