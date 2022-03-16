@@ -13,7 +13,6 @@ import Explorer from 'components/pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
-import { ReplyMessage } from 'components/pages/ReplyMessage/ReplyMessage';
 import { SendMessage } from 'components/pages/SendMessage/SendMessage';
 import { EditorPage } from 'features/Editor/EditorPage/EditorPage';
 import { Loader } from 'components/blocks/Loader/Loader';
