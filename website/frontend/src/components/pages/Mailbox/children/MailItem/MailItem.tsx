@@ -33,7 +33,7 @@ export const MailItem: FC<Props> = ({ elem }) => {
     <div className={styles.mailItem}>
       <pre className={styles.body}>{getPreformattedText(elem)}</pre>
       <div className={styles.buttons}>
-        <Link to={`/reply-message/${elem.id}`} className={styles.button}>
+        <Link to={`/send/reply/${elem.id}`} className={styles.button}>
           <img className={styles.image} src={MessageIcon} alt="send reply icon" />
           <span className={styles.buttonText}>Send reply</span>
         </Link>

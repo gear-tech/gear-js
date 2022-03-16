@@ -74,7 +74,7 @@ export const BlockListAllUploaded: VFC = () => {
               <div className="all-programs--item" key={item.id}>
                 <p className="all-programs--item__hash">{item.id}</p>
                 <div className="programs-list--btns">
-                  <Link className="programs-list__message-btn" to={`/send-message/${item.id}`}>
+                  <Link className="programs-list__message-btn" to={`/send/message/${item.id}`}>
                     <img src={MessageIcon} alt="Send message to program" />
                   </Link>
                   <button
