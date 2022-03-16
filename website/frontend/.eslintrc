@@ -37,7 +37,13 @@
     "react/destructuring-assignment": ["off"],
     "no-underscore-dangle": "off",
     "@typescript-eslint/no-unused-vars": ["warn"],
-    "@typescript-eslint/no-redeclare": "off"
+    "@typescript-eslint/no-redeclare": "off",
+
+    // allow devDeps import in test files
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["**/*.test.ts", "**/*.test.tsx", "**/*[Tt]ests.ts"] }
+    ]
   },
   "settings": {
     "react": {
