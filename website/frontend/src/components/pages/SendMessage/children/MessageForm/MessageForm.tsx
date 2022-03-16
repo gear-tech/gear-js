@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
 import { Metadata } from '@gear-js/api';
-import { SendMessageToProgram } from 'services/ApiService';
+import { SendMessageToProgram } from 'components/pages/SendMessage/helpers';
 import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { MessageModel } from 'types/program';

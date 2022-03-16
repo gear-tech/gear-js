@@ -1,15 +1,10 @@
-import { UploadProgramModel, MessageModel, MetaModel, ProgramStatus } from 'types/program';
+import { UploadProgramModel, MetaModel, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { GearApi, Metadata } from '@gear-js/api';
 import { UserAccount } from 'types/account';
 import { RPC_METHODS, PROGRAM_ERRORS } from 'consts';
 import { EventTypes } from 'types/alerts';
-import { ReplyType } from 'components/pages/ReplyMessage/children/MessageForm/types';
 import {
   programUploadStartAction,
-  sendMessageSuccessAction,
-  sendMessageStartAction,
-  sendMessageFailedAction,
   programUploadSuccessAction,
   programUploadFailedAction,
   AddAlert,
@@ -174,150 +169,6 @@ export const UploadProgram = async (
     dispatch(programUploadFailedAction(`${error}`));
     dispatch(AddAlert({ type: EventTypes.ERROR, message: `Upload program: ${error}` }));
   }
-};
-
-// TODO: (dispatch) fix it later
-export const SendMessageToProgram = async (
-  api: GearApi,
-  account: UserAccount,
-  _message: MessageModel,
-  dispatch: any,
-  callback: () => void,
-  meta?: Metadata
-) => {
-  const injector = await web3FromSource(account.meta.source);
-
-  const { gasLimit, value } = _message;
-  const message = {
-    ..._message,
-    gasLimit: gasLimit.toString(),
-    value: value.toString(),
-  };
-
-  try {
-    await api.message.submit(message, meta);
-    await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
-      dispatch(sendMessageStartAction());
-
-      if (data.status.isInBlock) {
-        dispatch(
-          AddAlert({
-            type: EventTypes.SUCCESS,
-            message: `Send message: In block`,
-          })
-        );
-      }
-
-      if (data.status.isFinalized) {
-        data.events.forEach((event: any) => {
-          const { method } = event.event;
-
-          if (method === 'DispatchMessageEnqueued') {
-            dispatch(
-              AddAlert({
-                type: EventTypes.SUCCESS,
-                message: `Send message: Finalized`,
-              })
-            );
-            dispatch(sendMessageSuccessAction());
-            callback();
-          }
-
-          if (method === 'ExtrinsicFailed') {
-            dispatch(
-              AddAlert({
-                type: EventTypes.ERROR,
-                message: `Extrinsic Failed`,
-              })
-            );
-          }
-        });
-      }
-
-      if (data.status.isInvalid) {
-        dispatch(sendMessageFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
-        dispatch(
-          AddAlert({
-            type: EventTypes.ERROR,
-            message: PROGRAM_ERRORS.INVALID_TRANSACTION,
-          })
-        );
-      }
-    });
-  } catch (error) {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Send message: ${error}` }));
-    dispatch(sendMessageFailedAction(`${error}`));
-  }
-};
-
-export const ReplyMessage = async (
-  api: GearApi,
-  account: UserAccount,
-  message: ReplyType,
-  dispatch: any,
-  callback: () => void,
-  meta?: Metadata
-) => {
-  const injector = await web3FromSource(account.meta.source);
-
-  try {
-    const reply = {
-      toId: message.messageId,
-      payload: message.payload,
-      gasLimit: message.gasLimit,
-      value: message.value,
-    };
-
-    await api.reply.submitReply(reply, meta);
-    await api.reply.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
-      dispatch(sendMessageStartAction());
-
-      if (data.status.isInBlock) {
-        dispatch(
-          AddAlert({
-            type: EventTypes.SUCCESS,
-            message: `Send message: In block`,
-          })
-        );
-      }
-
-      if (data.status.isFinalized) {
-        data.events.forEach((event: any) => {
-          const { method } = event.event;
-
-          if (method === 'DispatchMessageEnqueued') {
-            dispatch(
-              AddAlert({
-                type: EventTypes.SUCCESS,
-                message: `Send message: Finalized`,
-              })
-            );
-            dispatch(sendMessageSuccessAction());
-            callback();
-          }
-
-          if (method === 'ExtrinsicFailed') {
-            dispatch(
-              AddAlert({
-                type: EventTypes.ERROR,
-                message: `Extrinsic Failed`,
-              })
-            );
-          }
-        });
-      }
-
-      if (data.status.isInvalid) {
-        dispatch(sendMessageFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
-        dispatch(
-          AddAlert({
-            type: EventTypes.ERROR,
-            message: PROGRAM_ERRORS.INVALID_TRANSACTION,
-          })
-        );
-      }
-    });
-  } catch (error) {}
 };
 
 // TODO: (dispatch) fix it later

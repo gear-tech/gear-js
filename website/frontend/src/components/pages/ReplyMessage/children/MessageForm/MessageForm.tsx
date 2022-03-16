@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
 import { Metadata } from '@gear-js/api';
-import { ReplyMessage } from 'services/ApiService';
+import { ReplyMessage } from 'components/pages/ReplyMessage/helpers';
 import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { ReplyType } from './types';
