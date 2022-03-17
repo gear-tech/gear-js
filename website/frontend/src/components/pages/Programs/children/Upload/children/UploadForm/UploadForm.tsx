@@ -5,7 +5,7 @@ import { Int } from '@polkadot/types';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { Hex } from '@gear-js/api';
-import { Metadata, getWasmMetadata, parseHexTypes, getTypeStructure } from '@gear-js/api';
+import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
@@ -65,8 +65,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
       if (metaWasm) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
-        const types = parseHexTypes(metaWasm?.types);
-        const typeStructure = getTypeStructure(metaWasm?.init_input, types);
+        const decodedTypes = decodeHexTypes(metaWasm?.types);
+        const typeStructure = createPayloadTypeStructure(metaWasm?.init_input, decodedTypes, true);
         const parsedStructure = parseMeta(typeStructure);
 
         let valuesFromFile = {};
@@ -82,7 +82,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
         valuesFromFile = {
           ...valuesFromFile,
-          types: getPreformattedText(types),
+          types: getPreformattedText(decodedTypes),
         };
 
         setMeta(metaWasm);
