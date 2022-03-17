@@ -38,7 +38,7 @@ export const Programs: VFC = () => {
   return (
     <div className="main-content-wrapper">
       <ProgramSwitch pageType={currentPage} />
-      <Select options={options} />
+      <Select options={options} label="test" />
       {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
         <>
           <DndProvider backend={HTML5Backend}>

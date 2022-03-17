@@ -4,17 +4,22 @@ import styles from './Select.module.scss';
 
 interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
   options: OptionHTMLAttributes<HTMLOptionElement>[];
+  label?: string;
 }
 
-const Select = ({ options, className, ...attrs }: Props) => {
-  const selectClassName = clsx(styles.select, className);
+const Select = ({ options, label, className, ...attrs }: Props) => {
+  const { disabled } = attrs;
+  const labelClassName = clsx(styles.label, className, disabled && 'disabled');
 
   const getOptions = () => options.map((option, index) => <option key={index} {...option} />);
 
   return (
-    <select className={selectClassName} {...attrs}>
-      {getOptions()}
-    </select>
+    <label className={labelClassName} data-testid="label">
+      {label && <span className={styles.text}>{label}</span>}
+      <select className={styles.select} {...attrs}>
+        {getOptions()}
+      </select>
+    </label>
   );
 };
 

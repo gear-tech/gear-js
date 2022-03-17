@@ -1,6 +1,20 @@
 @use 'assets/scss/variables' as *;
 
+.label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 300;
+  color: $textColorSecondary;
+}
+
+.text {
+  margin-right: 16px;
+}
+
 .select {
+  flex: 1;
   padding: 10px 45px 10px 20px;
   color: $textColor;
   background: #282828 url('./images/arrow.svg') center right 16px no-repeat;
@@ -9,8 +23,4 @@
   appearance: none;
   border: none;
   outline: none;
-
-  &:disabled {
-    opacity: 0.5;
-  }
 }

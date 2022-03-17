@@ -20,9 +20,21 @@ describe('select tests', () => {
     options.forEach((option) => expect(select).toContainElement(option));
   });
 
-  it('applies className', () => {
+  it('renders select with label', () => {
+    render(<Select options={initOptions} label="random text" />);
+    const select = screen.getByLabelText('random text');
+    expect(select).toBeInTheDocument();
+  });
+
+  it('applies className to label wrapper', () => {
     render(<Select options={initOptions} className="className" />);
-    const select = screen.getByRole('combobox');
-    expect(select).toHaveClass(styles.select, 'className');
+    const label = screen.getByTestId('label');
+    expect(label).toHaveClass(styles.label, 'className');
+  });
+
+  it('renders disabled select', () => {
+    render(<Select options={initOptions} disabled />);
+    const label = screen.getByTestId('label');
+    expect(label).toHaveClass('disabled');
   });
 });
