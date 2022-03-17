@@ -28,7 +28,7 @@ class ProgramRequestService {
   };
 
   public fetchMeta = (id: string) => {
-    return this.apiRequest.callRPC<GetMetaResponse>(this.GET_METADATA, { id });
+    return this.apiRequest.callRPC<GetMetaResponse>(this.GET_METADATA, { programId: id });
   };
 }
 
