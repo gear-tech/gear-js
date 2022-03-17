@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useApi } from 'hooks/useApi';
@@ -7,7 +8,6 @@ import MessageIcon from 'assets/images/message.svg';
 import ClaimIcon from 'assets/images/claim.svg';
 import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
-import { claimValue } from 'components/pages/Mailbox/helpers';
 import { EventTypes } from 'types/alerts';
 import { Mail } from '../../types';
 import styles from './MailItem.module.scss';
@@ -23,7 +23,20 @@ export const MailItem: FC<Props> = ({ elem }) => {
 
   const handleClaim = async () => {
     if (currentAccount) {
-      claimValue(api, currentAccount, elem, dispatch);
+      try {
+        const injector = await web3FromSource(currentAccount.meta.source);
+
+        await api.claimValueFromMailbox.submit(elem.id);
+        await api.claimValueFromMailbox.signAndSend(
+          currentAccount.address,
+          { signer: injector.signer },
+          (data: any) => {
+            dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Status: ${data.status}` }));
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      }
     } else {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `Wallet not connected` }));
     }
