@@ -37,9 +37,9 @@ const Menu = ({ openSidebar }: Props) => {
         </NavLink>
       </li>
       <li>
-        <Link to={routes.mailbox} className={styles.link}>
+        <NavLink className={getClassName} to={routes.mailbox}>
           Mailbox
-        </Link>
+        </NavLink>
       </li>
     </ul>
   );
