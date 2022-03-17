@@ -11,12 +11,12 @@ import styles from './MetaFile.module.scss';
 type Props = {
   droppedMetaFile: File | null;
   handleUploadMetaFile: (file: File) => void;
-  handleRemoveMetaFile: () => void;
+  resetMetaForm: () => void;
 };
 
-export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, handleRemoveMetaFile }) => {
+export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, resetMetaForm }) => {
   const dispatch = useDispatch();
-  const metaFieldRef = useRef<HTMLDivElement>(null);
+  const metaFieldRef = useRef<HTMLInputElement>(null);
 
   const uploadMetaFile = () => {
     metaFieldRef.current?.click();
@@ -31,6 +31,8 @@ export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, han
       } else {
         dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
       }
+
+      event.target.value = '';
     }
   };
 
@@ -51,7 +53,7 @@ export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, han
         {droppedMetaFile ? (
           <div className={clsx(styles.value, styles.filename)}>
             {droppedMetaFile.name}
-            <button type="button" onClick={handleRemoveMetaFile}>
+            <button type="button" onClick={resetMetaForm}>
               <Trash2 color="#ffffff" size="20" strokeWidth="1" />
             </button>
           </div>

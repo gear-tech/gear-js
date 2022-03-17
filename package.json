@@ -19,7 +19,7 @@
   "devDependencies": {
     "husky": "7.0.4",
     "lint-staged": "12.3.5",
-    "prettier": "2.5.1"
+    "prettier": "2.6.0"
   },
   "workspaces": [
     "website/api-gateway",
@@ -28,7 +28,8 @@
     "website/frontend",
     "website/test-balance",
     "website/wasm-compiler",
-    "website/interfaces"
+    "website/interfaces",
+    "website/tests"
   ],
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"

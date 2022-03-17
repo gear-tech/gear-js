@@ -24,7 +24,7 @@ import { useApi } from 'hooks/useApi';
 import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
-import { readFileAsync } from 'helpers';
+import { readFileAsync, getPreformattedText } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
 import { DroppedFile } from '../../types';
@@ -52,7 +52,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     gasLimit: MIN_GAS_LIMIT,
     value: 0,
     payload: '0x00',
-    types: '',
     fields: {},
     programName: '',
   });
@@ -83,7 +82,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
         valuesFromFile = {
           ...valuesFromFile,
-          types: metaWasm.types,
+          types: getPreformattedText(types),
         };
 
         setMeta(metaWasm);
@@ -93,8 +92,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           ...initialValues,
           ...valuesFromFile,
           programName: metaWasm.title,
-          payload: JSON.stringify(typeStructure, null, 4),
-          types: JSON.stringify(types, null, 4),
+          payload: getPreformattedText(typeStructure),
         });
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
@@ -104,7 +102,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setDroppedMetaFile(file);
   };
 
-  const handleRemoveMetaFile = () => {
+  const resetMetaForm = () => {
     setMeta(null);
     setMetaFile(null);
     setPayloadForm(null);
@@ -115,7 +113,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       gasLimit: MIN_GAS_LIMIT,
       value: 0,
       payload: '0x00',
-      types: '',
       fields: {},
       programName: '',
     });
@@ -292,7 +289,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       <MetaFile
                         droppedMetaFile={droppedMetaFile}
                         handleUploadMetaFile={handleUploadMetaFile}
-                        handleRemoveMetaFile={handleRemoveMetaFile}
+                        resetMetaForm={resetMetaForm}
                       />
                     )}
                     {isShowFields && (
