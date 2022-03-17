@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Metadata, getTypeStructure, parseHexTypes } from '@gear-js/api';
+import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { MetaField } from './children/MetaField/MetaField';
 import styles from './MetaData.module.scss';
 
@@ -12,12 +12,12 @@ export const MetaData: FC<Props> = ({ metadata }) => {
     let items = [];
 
     if (metadata && metadata.types) {
-      const types = parseHexTypes(metadata.types);
+      const decodedTypes = decodeHexTypes(metadata.types);
       let key: keyof typeof metadata;
 
       for (key in metadata) {
         if (metadata[key] && key !== 'types' && key !== 'title') {
-          const type = getTypeStructure(metadata[key] as string, types);
+          const type = createPayloadTypeStructure(metadata[key] as string, decodedTypes, true);
 
           items.push({
             label: key,

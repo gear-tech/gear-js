@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import clsx from 'clsx';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
-import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
+import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
@@ -68,8 +68,8 @@ const State: VFC = () => {
 
   const getPayloadForm = useCallback(() => {
     if (stateInput && types) {
-      const parsedTypes = parseHexTypes(types);
-      const typeStruct = getTypeStructure(stateInput, parsedTypes);
+      const decodedTypes = decodeHexTypes(types);
+      const typeStruct = createPayloadTypeStructure(stateInput, decodedTypes, true);
       const parsedStruct = parseMeta(typeStruct);
       setTypeStructure(typeStruct);
       setForm(parsedStruct);
