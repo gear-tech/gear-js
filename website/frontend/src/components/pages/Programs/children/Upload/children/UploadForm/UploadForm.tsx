@@ -1,10 +1,8 @@
 import React, { Dispatch, SetStateAction, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { Int } from '@polkadot/types';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
-import { Hex } from '@gear-js/api';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
@@ -24,11 +22,10 @@ import { useApi } from 'hooks/useApi';
 import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
-import { readFileAsync, getPreformattedText } from 'helpers';
+import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
 import { DroppedFile } from '../../types';
-import { LOCAL_STORAGE } from 'consts';
 import styles from './UploadForm.module.scss';
 
 type Props = {
@@ -148,29 +145,10 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   };
 
   const handleCalculateGas = async (values: InitialValues, setFieldValue: SetFieldValue) => {
-    if (isManualPayload && values.payload === '') {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
-      return;
-    }
-
-    if (!isManualPayload && Object.keys(values.payload).length === 0) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: form can't be empty` }));
-      return;
-    }
-
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
-    const metaOrTypeOfPayload: any = meta || 'String';
 
-    api.program.gasSpent
-      .init(localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex, code, values.payload, metaOrTypeOfPayload)
-      .then((data: Int) => {
-        dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${data.toHuman()}` }));
-        setFieldValue('gasLimit', data.toHuman());
-      })
-      .catch((error: string) => {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-      });
+    calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code);
   };
 
   return (

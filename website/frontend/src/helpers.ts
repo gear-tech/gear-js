@@ -1,8 +1,15 @@
+import { Hex } from '@gear-js/api';
+import { Metadata } from '@polkadot/types';
 import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
+import { InitialValues as SendMessageInitialValues } from './components/pages/SendMessage/children/MessageForm/types';
+import { InitialValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
+import { SetFieldValue } from 'types/common';
+import { EventTypes } from 'types/alerts';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
+import { AddAlert } from 'store/actions/actions';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
@@ -145,6 +152,70 @@ export const checkFileFormat = (file: File) => {
 };
 
 export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);
+
+export const calculateGas = async (
+  method: string,
+  api: any,
+  isManualPayload: boolean,
+  values: UploadInitialValues | SendMessageInitialValues,
+  setFieldValue: SetFieldValue,
+  dispatch: any,
+  meta: any,
+  code?: Uint8Array | null,
+  addressId?: String | null,
+  replyCode?: String | null
+) => {
+  const payload = isManualPayload ? values.payload : values.fields;
+
+  if (isManualPayload && payload === '') {
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
+    return;
+  }
+
+  if (!isManualPayload && Object.keys(payload).length === 0) {
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: form can't be empty` }));
+    return;
+  }
+
+  try {
+    const metaOrTypeOfPayload: Metadata | string = meta || 'String';
+
+    let estimatedGas;
+
+    switch (method) {
+      case 'init':
+        estimatedGas = await api.program.gasSpent.init(
+          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+          code,
+          payload,
+          metaOrTypeOfPayload
+        );
+        break;
+      case 'handle':
+        estimatedGas = await api.program.gasSpent.handle(
+          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+          addressId,
+          payload,
+          metaOrTypeOfPayload
+        );
+        break;
+      case 'reply':
+        estimatedGas = await api.program.gasSpent.reply(
+          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+          addressId,
+          Number(replyCode),
+          payload,
+          metaOrTypeOfPayload
+        );
+        break;
+    }
+
+    dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${estimatedGas.toHuman()}` }));
+    setFieldValue('gasLimit', estimatedGas.toNumber());
+  } catch (error) {
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+  }
+};
 
 export const isHex = (value: unknown) => {
   const isString = typeof value === 'string';

@@ -1,7 +1,5 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Int } from '@polkadot/types';
-import { Hex } from '@gear-js/api';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
@@ -13,12 +11,11 @@ import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
 import { AddAlert } from 'store/actions/actions';
-import { getPreformattedText } from 'helpers';
+import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { Schema } from './Schema';
-import { LOCAL_STORAGE } from 'consts';
 import './MessageForm.scss';
 
 type Props = {
@@ -51,57 +48,13 @@ export const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) =
     }
   }, [types]);
 
-  const setAndShowGas = (gas: string, setFieldValue: SetFieldValue) => {
-    dispatch(AddAlert({ type: EventTypes.INFO, message: `Estimated gas ${gas}` }));
-    setFieldValue('gasLimit', gas);
-  };
-
   const handleCalculateGas = (values: InitialValues, setFieldValue: SetFieldValue) => {
-    if (isManualInput && values.payload === '') {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
-      return;
-    }
-
-    if (!isManualInput && Object.keys(values.payload).length === 0) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: form can't be empty` }));
-      return;
-    }
-
-    const metaOrTypeOfPayload: any = meta || 'String';
-
     if (replyCode) {
-      api.program.gasSpent
-        .reply(
-          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          addressId as Hex,
-          Number(replyCode),
-          values.payload,
-          metaOrTypeOfPayload
-        )
-        .then((data: Int) => {
-          setAndShowGas(data.toHuman(), setFieldValue);
-        })
-        .catch((error: string) => {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-        });
+      calculateGas('reply', api, isManualInput, values, setFieldValue, dispatch, meta, null, addressId, replyCode);
     } else {
-      api.program.gasSpent
-        .handle(
-          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          addressId as Hex,
-          values.payload,
-          metaOrTypeOfPayload
-        )
-        .then((data: Int) => {
-          setAndShowGas(data.toHuman(), setFieldValue);
-        })
-        .catch((error: string) => {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
-        });
+      calculateGas('handle', api, isManualInput, values, setFieldValue, dispatch, meta, null, addressId);
     }
   };
-
-  console.log(replyCode);
 
   return (
     <Formik
