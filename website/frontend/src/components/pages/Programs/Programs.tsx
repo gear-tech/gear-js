@@ -11,15 +11,6 @@ import { Upload } from './children/Upload/Upload';
 import { BlockList } from './children/BlocksList/BlocksList';
 import { Recent } from './children/Recent/Recent';
 import './Programs.scss';
-import { Select } from 'common/components/Select/Select';
-
-const options = [
-  { value: 'Option 1', label: 'option 1' },
-  { value: 'Option 2', label: 'option 2' },
-  { value: 'Option 3', label: 'option 3' },
-  { value: 'Option 4', label: 'option 4' },
-  { value: 'Option 5', label: 'option 5' },
-];
 
 export const Programs: VFC = () => {
   const isUploadedProgramsPage = useMatch(routes.uploadedPrograms);
@@ -38,7 +29,6 @@ export const Programs: VFC = () => {
   return (
     <div className="main-content-wrapper">
       <ProgramSwitch pageType={currentPage} />
-      <Select options={options} label="test" />
       {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
         <>
           <DndProvider backend={HTML5Backend}>

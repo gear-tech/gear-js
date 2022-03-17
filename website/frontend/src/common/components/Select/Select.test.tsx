@@ -34,7 +34,11 @@ describe('select tests', () => {
 
   it('renders disabled select', () => {
     render(<Select options={initOptions} disabled />);
+
     const label = screen.getByTestId('label');
+    const select = screen.getByRole('combobox');
+
+    expect(select).toBeDisabled();
     expect(label).toHaveClass('disabled');
   });
 });
