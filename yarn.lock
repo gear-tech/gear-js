@@ -1877,11 +1877,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-<<<<<<< HEAD
-"@gear-js/api@npm:0.14.3":
-=======
 "@gear-js/api@npm:0.14.3, @gear-js/api@npm:^0.14.2":
->>>>>>> master
   version: 0.14.3
   resolution: "@gear-js/api@npm:0.14.3"
   peerDependencies:
@@ -1891,8 +1887,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-<<<<<<< HEAD
-=======
 "@gear-js/api@npm:0.14.4":
   version: 0.14.4
   resolution: "@gear-js/api@npm:0.14.4"
@@ -1903,7 +1897,6 @@ __metadata:
   languageName: node
   linkType: hard
 
->>>>>>> master
 "@gear-js/data-storage@workspace:website/data-storage":
   version: 0.0.0-use.local
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
