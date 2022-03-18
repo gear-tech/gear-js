@@ -10,6 +10,7 @@ import {
   optionEnumWithFieldsObject,
   resultEnumSimple,
   resultEnumComplex,
+  simpleNestedStruct,
 } from './meta-fixtures';
 
 // result
@@ -32,12 +33,7 @@ describe('test parser', () => {
   // TODO add edge case tests e.g for null, empty array, empty objects
 
   it('simple struct', () => {
-    expect(
-      parseMeta({
-        amount: 'u8',
-        currency: 'Text',
-      })
-    ).toEqual({
+    expect(parseMeta(simpleStruct)).toEqual({
       __root: {
         __type: '__fieldset',
         __name: '__root',
@@ -63,7 +59,7 @@ describe('test parser', () => {
   });
 
   it('nested simple struct', () => {
-    expect(parseMeta(simpleStruct)).toEqual({
+    expect(parseMeta(simpleNestedStruct)).toEqual({
       __root: {
         __type: '__fieldset',
         __name: '__root',

@@ -6,7 +6,7 @@ import get from 'lodash.get';
 type MetaNull = 'Null';
 const metaNull = 'Null';
 
-type MetaItem = {
+export type MetaItem = {
   [key: string | MetaEnumType]: string | MetaItem;
 };
 
@@ -18,22 +18,45 @@ type MetaField = {
   label: string;
 };
 
-type MetaFormItem = {
+export function isMetaField(value: unknown): value is MetaField {
+  return (
+    !(typeof value == 'boolean') &&
+    !isString(value) &&
+    isObject(value) &&
+    'type' in value &&
+    'name' in value &&
+    'label' in value
+  );
+}
+
+export type MetaFormItem = {
   [key: string]: MetaField | MetaFieldset;
 };
 
-type MetaFieldset = {
+export type MetaFieldset = {
   __name: string;
   __type: string;
   __select: boolean;
   __fields: MetaFormItem | null;
 };
 
+export function isMetaFieldset(value: unknown): value is MetaFieldset {
+  return (
+    !(typeof value == 'boolean') &&
+    !isString(value) &&
+    isObject(value) &&
+    '__name' in value &&
+    '__type' in value &&
+    '__select' in value &&
+    '__fields' in value
+  );
+}
+
 type FormValues = {
   [key: string]: string | FormValues;
 };
 
-type MetaFormStruct = {
+export type MetaFormStruct = {
   __root: MetaFieldset | null;
   __values: FormValues | null;
 };

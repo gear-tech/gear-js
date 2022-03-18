@@ -1,4 +1,9 @@
 export const simpleStruct = {
+  amount: 'u8',
+  currency: 'Text',
+};
+
+export const simpleNestedStruct = {
   AddMessage: { author: 'Text', msg: 'Text' },
 };
 
