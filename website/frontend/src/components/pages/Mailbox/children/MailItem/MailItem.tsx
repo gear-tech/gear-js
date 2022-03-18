@@ -9,11 +9,11 @@ import ClaimIcon from 'assets/images/claim.svg';
 import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
 import { EventTypes } from 'types/alerts';
-import { Mail } from '../../types';
+import { MessageType } from '../../types';
 import styles from './MailItem.module.scss';
 
 type Props = {
-  elem: Mail;
+  elem: MessageType;
 };
 
 export const MailItem: FC<Props> = ({ elem }) => {
