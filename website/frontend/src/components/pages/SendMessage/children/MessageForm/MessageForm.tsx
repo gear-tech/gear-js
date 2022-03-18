@@ -1,21 +1,29 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ISubmittableResult } from '@polkadot/types/types';
+import { web3FromSource } from '@polkadot/extension-dapp';
+import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
-import { Metadata } from '@gear-js/api';
-import { sendMessageToProgram, replyMessageToProgram } from 'components/pages/SendMessage/helpers';
 import { InitialValues, SendMessage } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
-import { AddAlert } from 'store/actions/actions';
+import { UserAccount } from 'types/account';
+import {
+  AddAlert,
+  sendMessageSuccessAction,
+  sendMessageStartAction,
+  sendMessageFailedAction,
+} from 'store/actions/actions';
 import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { Schema } from './Schema';
+import { PROGRAM_ERRORS } from 'consts';
 import './MessageForm.scss';
 
 type Props = {
@@ -56,6 +64,87 @@ export const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) =
     }
   };
 
+  const dispatchAlert = (text: string, isSuccess: boolean) => {
+    dispatch(
+      AddAlert({
+        type: isSuccess ? EventTypes.SUCCESS : EventTypes.ERROR,
+        message: text,
+      })
+    );
+  };
+
+  const showStatus = (data: ISubmittableResult, resetForm: () => void) => {
+    dispatch(sendMessageStartAction());
+
+    if (data.status.isInBlock) {
+      dispatchAlert('Send message: In block', true);
+    }
+
+    if (data.status.isFinalized) {
+      data.events.forEach((event: any) => {
+        const { method } = event.event;
+
+        if (method === 'DispatchMessageEnqueued') {
+          dispatchAlert('Send message: Finalized', true);
+          dispatch(sendMessageSuccessAction());
+          resetForm();
+        }
+
+        if (method === 'ExtrinsicFailed') {
+          dispatchAlert('Extrinsic Failed', false);
+        }
+      });
+    }
+
+    if (data.status.isInvalid) {
+      dispatchAlert(PROGRAM_ERRORS.INVALID_TRANSACTION, false);
+      dispatch(sendMessageFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
+    }
+  };
+
+  const showError = (error: any) => {
+    dispatchAlert(`Send message: ${error}`, false);
+    dispatch(sendMessageFailedAction(`${error}`));
+  };
+
+  const sendMessageToProgram = async (account: UserAccount, message: SendMessage, resetForm: () => void) => {
+    const injector = await web3FromSource(account.meta.source);
+    const sendData = {
+      destination: message.addressId,
+      gasLimit: message.gasLimit,
+      value: message.value,
+      payload: message.payload,
+    };
+
+    try {
+      await api.message.submit(sendData, meta);
+      await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) =>
+        showStatus(data, resetForm)
+      );
+    } catch (error) {
+      showError(error);
+    }
+  };
+
+  const replyMessageToProgram = async (account: UserAccount, message: SendMessage, resetForm: () => void) => {
+    const injector = await web3FromSource(account.meta.source);
+    const replyData = {
+      toId: message.addressId,
+      gasLimit: message.gasLimit,
+      value: message.value,
+      payload: message.payload,
+    };
+
+    try {
+      await api.reply.submitReply(replyData, meta);
+      await api.reply.signAndSend(account.address, { signer: injector.signer }, (data: any) =>
+        showStatus(data, resetForm)
+      );
+    } catch (error) {
+      showError(error);
+    }
+  };
+
   return (
     <Formik
       initialValues={initialValues}
@@ -74,9 +163,9 @@ export const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) =
 
           if (api) {
             if (replyCode) {
-              replyMessageToProgram(api, currentAccount, message, dispatch, resetForm, meta);
+              replyMessageToProgram(currentAccount, message, resetForm);
             } else {
-              sendMessageToProgram(api, currentAccount, message, dispatch, resetForm, meta);
+              sendMessageToProgram(currentAccount, message, resetForm);
             }
           }
         } else {
