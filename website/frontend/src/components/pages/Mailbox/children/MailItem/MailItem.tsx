@@ -21,7 +21,7 @@ export const MailItem: FC<Props> = ({ elem }) => {
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
 
-  const handleClaim = async () => {
+  const handleClaimValue = async () => {
     if (currentAccount) {
       try {
         const injector = await web3FromSource(currentAccount.meta.source);
@@ -50,7 +50,7 @@ export const MailItem: FC<Props> = ({ elem }) => {
           <img className={styles.image} src={MessageIcon} alt="send reply icon" />
           <span className={styles.buttonText}>Send reply</span>
         </Link>
-        <button className={styles.button} onClick={handleClaim}>
+        <button className={styles.button} onClick={handleClaimValue}>
           <img className={styles.image} src={ClaimIcon} alt="send reply icon" />
           <span className={styles.buttonText}>Claim value</span>
         </button>
