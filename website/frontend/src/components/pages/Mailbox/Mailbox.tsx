@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { useApi } from 'hooks/useApi';
 import { Hex } from '@gear-js/api';
 import { Box } from 'layout/Box/Box';
-import { MailItem } from './children/MailItem/MailItem';
+import { Message } from './children/Message/Message';
 import { MessageType } from './types';
 import { LOCAL_STORAGE } from 'consts';
 import styles from './Mailbox.module.scss';
@@ -30,7 +30,7 @@ export const Mailbox: FC = () => {
         {messages && messages.length ? (
           <div className={styles.list}>
             {messages.map((elem: MessageType) => {
-              return <MailItem key={elem.id} elem={elem} />;
+              return <Message key={elem.id} elem={elem} />;
             })}
           </div>
         ) : (

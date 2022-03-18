@@ -10,13 +10,13 @@ import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
 import { EventTypes } from 'types/alerts';
 import { MessageType } from '../../types';
-import styles from './MailItem.module.scss';
+import styles from './Message.module.scss';
 
 type Props = {
   elem: MessageType;
 };
 
-export const MailItem: FC<Props> = ({ elem }) => {
+export const Message: FC<Props> = ({ elem }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
