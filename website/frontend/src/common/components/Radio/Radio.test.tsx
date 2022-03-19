@@ -1,0 +1,63 @@
+import { useState } from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { RadioGroup } from './RadioGroup';
+
+const initButtons = [
+  { label: 'first radio', value: '0' },
+  { label: 'second radio', value: '1' },
+  { label: 'third radio', value: '2', name: 'random name', checked: true, onChange: () => {} },
+];
+
+describe('radio group tests', () => {
+  it('overrides button attributes', () => {
+    render(<RadioGroup buttons={initButtons} name="test" />);
+
+    const buttons = screen.getAllByRole('radio');
+    const lastButton = screen.getByLabelText('third radio');
+
+    buttons.forEach((button) => expect(button).toHaveAttribute('name', 'test'));
+    expect(lastButton).toHaveAttribute('value', '2');
+    expect(lastButton).toBeChecked();
+  });
+
+  it('overrides checked attribute on set value', () => {
+    render(<RadioGroup buttons={initButtons} name="test" value="0" onChange={() => {}} />);
+
+    const firstButton = screen.getByLabelText('first radio');
+    const lastButton = screen.getByLabelText('third radio');
+
+    fireEvent.click(lastButton);
+    expect(firstButton).toBeChecked();
+  });
+
+  it('clicks button', () => {
+    render(<RadioGroup buttons={initButtons} />);
+
+    const firstButton = screen.getByLabelText('first radio');
+
+    fireEvent.click(firstButton);
+    expect(firstButton).toBeChecked();
+  });
+
+  it('clicks controlled button', () => {
+    const ControlledRadioGroup = () => {
+      const [value, setValue] = useState('0');
+
+      return (
+        <RadioGroup
+          buttons={initButtons}
+          name="test"
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+        />
+      );
+    };
+
+    render(<ControlledRadioGroup />);
+
+    const secondButton = screen.getByLabelText('second radio');
+
+    fireEvent.click(secondButton);
+    expect(secondButton).toBeChecked();
+  });
+});
