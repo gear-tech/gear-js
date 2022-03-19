@@ -10,7 +10,7 @@ import { InitialValues } from './types';
 import { EventTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
 import { FormItem } from 'components/FormItem';
-import { Switch } from 'common/components/Switch';
+import { Checkbox } from 'common/components/Checkbox/Checkbox';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
 import { MetaFile } from './children/MetaFile/MetaFile';
@@ -232,7 +232,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       <div className={clsx(styles.value, styles.payload)}>
                         {payloadForm && (
                           <div className={styles.switch}>
-                            <Switch
+                            <Checkbox
+                              type="switch"
                               onChange={() => setIsManualPayload(!isManualPayload)}
                               label="Manual input"
                               checked={isManualPayload}
