@@ -3,7 +3,18 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { FormItem } from './FormItem';
 import { Form, Formik } from 'formik';
 import { MetaItem, parseMeta } from '../../utils/meta-parser';
-import { simpleStruct, simpleNestedStruct, simpleDeepStruct, enumSimple } from '../../utils/meta-fixtures';
+import {
+  simpleStruct,
+  simpleNestedStruct,
+  simpleDeepStruct,
+  enumSimple,
+  optionEnumSimple,
+  optionEnumWithFieldsObject,
+  optionEnumNested,
+  optionEnumComplex,
+  resultEnumSimple,
+  resultEnumComplex,
+} from '../../utils/meta-fixtures';
 
 type MetaFormWrapper = {
   metaData: MetaItem;
@@ -54,3 +65,21 @@ SimpleDeepStruct.args = { metaData: simpleDeepStruct };
 
 export const EnumSimpleStruct = Template.bind({});
 EnumSimpleStruct.args = { metaData: enumSimple };
+
+export const OptionEnumSimpleStruct = Template.bind({});
+OptionEnumSimpleStruct.args = { metaData: optionEnumSimple };
+
+export const OptionEnumWithFieldsStruct = Template.bind({});
+OptionEnumWithFieldsStruct.args = { metaData: optionEnumWithFieldsObject };
+
+export const OptionEnumNestedStruct = Template.bind({});
+OptionEnumNestedStruct.args = { metaData: optionEnumNested };
+
+export const OptionEnumComplexStruct = Template.bind({});
+OptionEnumComplexStruct.args = { metaData: optionEnumComplex };
+
+export const ResultEnumSimpleStruct = Template.bind({});
+ResultEnumSimpleStruct.args = { metaData: resultEnumSimple };
+
+export const ResultEnumComplexStruct = Template.bind({});
+ResultEnumComplexStruct.args = { metaData: resultEnumComplex };

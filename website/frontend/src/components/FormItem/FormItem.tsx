@@ -17,7 +17,7 @@ const createMetaFormItem = (data: MetaFormItem) => {
   }
   if (isMetaFieldset(data)) {
     return (
-      <>
+      <Fieldset key={data.__name}>
         {data.__select && data.__fields && (
           <EnumSelect>
             <label>
@@ -34,11 +34,9 @@ const createMetaFormItem = (data: MetaFormItem) => {
             </label>
           </EnumSelect>
         )}
-        <Fieldset key={data.__name}>
-          <legend>{data.__name}</legend>
-          {data.__fields ? createMetaFormItem(data.__fields) : 'No fields'}
-        </Fieldset>
-      </>
+        <legend>{data.__name}</legend>
+        {data.__fields ? createMetaFormItem(data.__fields) : 'No fields'}
+      </Fieldset>
     );
   }
   return Object.entries(data).map(([key, value]) => {
@@ -54,28 +52,28 @@ const createMetaFormItem = (data: MetaFormItem) => {
     }
     if (isMetaFieldset(value)) {
       return (
-        <>
-          {value.__select && value.__fields && (
-            <EnumSelect>
-              <label>
-                Select field from enum <br />
-                <select>
-                  {Object.entries(value.__fields).map((item) => {
-                    return (
-                      <option key={item[0]} value={item[0]}>
-                        {item[0]}
-                      </option>
-                    );
-                  })}
-                </select>
-              </label>
-            </EnumSelect>
-          )}
-          <Fieldset key={value.__name}>
-            <legend>{value.__name}</legend>
-            {value.__fields ? createMetaFormItem(value.__fields) : 'No fields'}
-          </Fieldset>
-        </>
+        <Fieldset key={value.__name}>
+          <div>
+            {value.__select && value.__fields && (
+              <EnumSelect>
+                <label>
+                  Select field from enum <br />
+                  <select>
+                    {Object.entries(value.__fields).map((item) => {
+                      return (
+                        <option key={item[0]} value={item[0]}>
+                          {item[0]}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </label>
+              </EnumSelect>
+            )}
+          </div>
+          <legend>{value.__name}</legend>
+          {value.__fields ? createMetaFormItem(value.__fields) : 'No fields'}
+        </Fieldset>
       );
     }
     return null;
@@ -90,6 +88,7 @@ export const FormItem = ({ data }: { data: MetaFormStruct }) => {
     formikContext.resetForm({
       values: { ...(formikContext.values as object), meta: data.__values },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (data.__root) {
