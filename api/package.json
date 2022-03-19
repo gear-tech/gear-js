@@ -25,8 +25,8 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "^7.10.1",
-    "rxjs": "^7.3.0"
+    "@polkadot/api": "^7.12.1",
+    "rxjs": "^7.5.5"
   },
   "devDependencies": {
     "@babel/preset-env": "7.16.11",
