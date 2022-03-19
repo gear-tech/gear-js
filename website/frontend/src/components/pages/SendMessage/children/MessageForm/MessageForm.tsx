@@ -6,11 +6,10 @@ import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
-import { InitialValues, SendMessage } from './types';
+import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
-import { SetFieldValue } from 'types/common';
 import { UserAccount } from 'types/account';
 import {
   AddAlert,
@@ -56,14 +55,6 @@ export const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) =
     }
   }, [types]);
 
-  const handleCalculateGas = (values: InitialValues, setFieldValue: SetFieldValue) => {
-    if (replyCode) {
-      calculateGas('reply', api, isManualInput, values, setFieldValue, dispatch, meta, null, addressId, replyCode);
-    } else {
-      calculateGas('handle', api, isManualInput, values, setFieldValue, dispatch, meta, null, addressId);
-    }
-  };
-
   const dispatchAlert = (text: string, isSuccess: boolean) => {
     dispatch(
       AddAlert({
@@ -102,46 +93,40 @@ export const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) =
     }
   };
 
-  const showError = (error: any) => {
+  const showError = (error: string) => {
     dispatchAlert(`Send message: ${error}`, false);
     dispatch(sendMessageFailedAction(`${error}`));
   };
 
-  const sendMessageToProgram = async (account: UserAccount, message: SendMessage, resetForm: () => void) => {
-    const injector = await web3FromSource(account.meta.source);
-    const sendData = {
-      destination: message.addressId,
-      gasLimit: message.gasLimit,
-      value: message.value,
-      payload: message.payload,
-    };
+  const sendMessage = (account: UserAccount, sendData: any, resetForm: () => void) => {
+    api[replyCode ? 'reply' : 'message'].submit(sendData, meta);
 
-    try {
-      await api.message.submit(sendData, meta);
-      await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) =>
-        showStatus(data, resetForm)
-      );
-    } catch (error) {
-      showError(error);
-    }
+    web3FromSource(account.meta.source)
+      .then((injector: any) => {
+        api[replyCode ? 'reply' : 'message'].signAndSend(
+          account.address,
+          { signer: injector.signer },
+          (data: ISubmittableResult) => showStatus(data, resetForm)
+        );
+      })
+      .catch(showError);
   };
 
-  const replyMessageToProgram = async (account: UserAccount, message: SendMessage, resetForm: () => void) => {
-    const injector = await web3FromSource(account.meta.source);
-    const replyData = {
-      toId: message.addressId,
-      gasLimit: message.gasLimit,
-      value: message.value,
-      payload: message.payload,
-    };
+  const handleSubmit = (values: InitialValues, resetForm: () => void) => {
+    if (currentAccount) {
+      const payload = isManualInput ? values.payload : values.fields;
+      const prop = replyCode ? 'replyToId' : 'destination';
 
-    try {
-      await api.reply.submitReply(replyData, meta);
-      await api.reply.signAndSend(account.address, { signer: injector.signer }, (data: any) =>
-        showStatus(data, resetForm)
-      );
-    } catch (error) {
-      showError(error);
+      const data = {
+        [prop]: values.addressId,
+        gasLimit: values.gasLimit,
+        value: values.value,
+        payload,
+      };
+
+      sendMessage(currentAccount, data, resetForm);
+    } else {
+      dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
     }
   };
 
@@ -150,28 +135,7 @@ export const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) =
       initialValues={initialValues}
       validationSchema={Schema}
       validateOnBlur
-      onSubmit={(values, { resetForm }) => {
-        if (currentAccount) {
-          const payload = isManualInput ? values.payload : values.fields;
-
-          const message: SendMessage = {
-            addressId: values.addressId,
-            gasLimit: values.gasLimit.toString(),
-            value: values.value.toString(),
-            payload,
-          };
-
-          if (api) {
-            if (replyCode) {
-              replyMessageToProgram(currentAccount, message, resetForm);
-            } else {
-              sendMessageToProgram(currentAccount, message, resetForm);
-            }
-          }
-        } else {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
-        }
-      }}
+      onSubmit={(values, { resetForm }) => handleSubmit(values, resetForm)}
     >
       {({ errors, touched, values, setFieldValue }) => (
         <Form id="message-form">
@@ -246,7 +210,20 @@ export const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) =
                   <button
                     className="message-form__button"
                     type="button"
-                    onClick={() => handleCalculateGas(values, setFieldValue)}
+                    onClick={() =>
+                      calculateGas(
+                        replyCode ? 'reply' : 'handle',
+                        api,
+                        isManualInput,
+                        values,
+                        setFieldValue,
+                        dispatch,
+                        meta,
+                        null,
+                        addressId,
+                        replyCode ? replyCode : null
+                      )
+                    }
                   >
                     Calculate Gas
                   </button>
