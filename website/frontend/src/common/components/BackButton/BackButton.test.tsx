@@ -1,5 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { renderWithRouter } from 'utils/tests';
+import arrow from 'assets/images/arrow_back.svg';
 import { BackButton } from './BackButton';
 
 const mockNavigate = jest.fn();
@@ -12,8 +13,12 @@ jest.mock('react-router-dom', () => ({
 describe('back button tests', () => {
   it('renders button', () => {
     renderWithRouter(<BackButton />);
+
     const button = screen.getByRole('button');
-    expect(button).toBeInTheDocument();
+    const icon = screen.getByRole('img');
+
+    expect(button).toContainElement(icon);
+    expect(icon).toHaveAttribute('src', arrow);
   });
 
   it('navigates to previous route', () => {
