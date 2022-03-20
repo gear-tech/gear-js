@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styles from './Box.module.scss';
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 const Box = ({ children }: Props) => <div className={styles.box}>{children}</div>;
 
-export default Box;
+export { Box };
