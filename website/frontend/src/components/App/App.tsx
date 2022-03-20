@@ -7,7 +7,7 @@ import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
 import { Programs } from 'components/pages/Programs/Programs';
 import { Program } from 'components/pages/Program/Program';
-import { Mailbox } from 'components/pages/Mailbox/Mailbox';
+import Mailbox from 'components/pages/Mailbox/Mailbox';
 import { Message } from 'components/pages/Message/Message';
 import Explorer from 'components/pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
