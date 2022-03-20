@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useApi } from 'hooks/useApi';
 import { Hex } from '@gear-js/api';
-import { Box } from 'layout/Box/Box';
+import Box from 'layout/Box/Box';
 import Message from './children/Message/Message';
 import { MessageType } from './types';
 import { LOCAL_STORAGE } from 'consts';
@@ -39,12 +39,14 @@ const Mailbox = () => {
   };
 
   return (
-    <Box>
-      <div className={styles.container}>
-        <h2 className={styles.heading}>Mailbox:</h2>
-        {isAnyMessage ? getMessages() : renderEmptyBlock()}
-      </div>
-    </Box>
+    <div className="wrapper">
+      <Box>
+        <div className={styles.container}>
+          <h2 className={styles.heading}>Mailbox:</h2>
+          {isAnyMessage ? getMessages() : renderEmptyBlock()}
+        </div>
+      </Box>
+    </div>
   );
 };
 
