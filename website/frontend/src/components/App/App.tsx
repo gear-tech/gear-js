@@ -13,7 +13,7 @@ import Explorer from 'components/pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
-import { SendMessage } from 'components/pages/SendMessage/SendMessage';
+import Send from 'components/pages/Send/Send';
 import { EditorPage } from 'features/Editor/EditorPage/EditorPage';
 import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
@@ -127,9 +127,9 @@ const AppComponent: FC = () => {
               <Route path={routes.program} element={<Program />} />
               <Route path={routes.message} element={<Message />} />
               <Route path={routes.state} element={<State />} />
-              <Route path={routes.send}>
-                <Route path={routes.sendMessage} element={<SendMessage />} />
-                <Route path={routes.replyMessage} element={<SendMessage />} />
+              <Route path={routes.send} element={<Send />}>
+                <Route path={routes.sendMessage} />
+                <Route path={routes.reply} />
               </Route>
               <Route path={routes.editor} element={<EditorPage />} />
               <Route path={routes.mailbox} element={<Mailbox />} />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, VFC } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
@@ -13,17 +13,12 @@ import { MessageForm } from './children/MessageForm/MessageForm';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
-import './SendMessage.scss';
+import './Send.scss';
 
-type Params = {
-  programId: string;
-  messageId: string;
-};
-
-export const SendMessage: VFC = () => {
+const Send = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { programId = '', messageId = '' } = useParams<Params>();
+  const { programId = '', messageId = '' } = useParams();
 
   const [meta, setMeta] = useState<Metadata>();
   const [types, setTypes] = useState<MetaParam | null>(null);
@@ -85,3 +80,5 @@ export const SendMessage: VFC = () => {
     </div>
   );
 };
+
+export default Send;
