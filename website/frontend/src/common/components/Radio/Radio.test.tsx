@@ -1,12 +1,41 @@
 import { useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RadioGroup } from './RadioGroup';
+import { Radio } from './Radio';
 
 const initButtons = [
   { label: 'first radio', value: '0' },
   { label: 'second radio', value: '1' },
   { label: 'third radio', value: '2', name: 'random name', checked: true, onChange: () => {} },
 ];
+
+describe('radio button tests', () => {
+  it('renders radio button', () => {
+    render(<Radio label="test radio" />);
+    const button = screen.getByLabelText('test radio');
+    expect(button).toBeInTheDocument();
+  });
+
+  it('applies className to label wrapper', () => {
+    render(<Radio label="test radio" className="className" />);
+
+    const button = screen.getByRole('radio');
+    const label = screen.getByText('test radio');
+
+    expect(button).not.toHaveClass('className');
+    expect(label).toHaveClass('className');
+  });
+
+  it('renders disabled button', () => {
+    render(<Radio label="test radio" disabled />);
+
+    const button = screen.getByRole('radio');
+    const label = screen.getByText('test radio');
+
+    expect(button).toBeDisabled();
+    expect(label).toHaveClass('disabled');
+  });
+});
 
 describe('radio group tests', () => {
   it('overrides button attributes', () => {

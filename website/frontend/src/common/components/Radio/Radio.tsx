@@ -4,7 +4,8 @@ import { Props } from './types';
 import styles from './Radio.module.scss';
 
 const Radio = ({ label, className, ...attrs }: Props) => {
-  const labelClassName = clsx(styles.label, className);
+  const { disabled } = attrs;
+  const labelClassName = clsx(styles.label, className, disabled && 'disabled');
 
   return (
     <label className={labelClassName}>
