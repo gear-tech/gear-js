@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useApi } from 'hooks/useApi';
-import { Hex } from '@gear-js/api';
 import Box from 'layout/Box/Box';
 import Message from './children/Message/Message';
 import { MessageType } from './types';
@@ -13,7 +12,7 @@ const Mailbox = () => {
   const isAnyMessage = messages.length > 0;
 
   useEffect(() => {
-    const publicKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex;
+    const publicKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
 
     if (publicKey) {
       api.mailbox
@@ -24,27 +23,13 @@ const Mailbox = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getMessages = () => {
-    return (
-      <div className={styles.messages}>
-        {messages.map((message: MessageType) => {
-          return <Message key={message.id} message={message} />;
-        })}
-      </div>
-    );
-  };
-
-  const renderEmptyBlock = () => {
-    return <p className={styles.emptyBlock}>No messages</p>;
-  };
+  const getMessages = () => messages.map((message) => <Message key={message.id} message={message} />);
 
   return (
     <div className="wrapper">
-      <Box>
-        <div className={styles.container}>
-          <h2 className={styles.heading}>Mailbox:</h2>
-          {isAnyMessage ? getMessages() : renderEmptyBlock()}
-        </div>
+      <Box className={styles.box}>
+        <h2 className={styles.heading}>Mailbox:</h2>
+        <div className={styles.messages}>{isAnyMessage ? getMessages() : <p>No messages</p>}</div>
       </Box>
     </div>
   );

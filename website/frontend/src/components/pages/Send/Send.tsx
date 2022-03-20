@@ -26,9 +26,6 @@ const Send = () => {
 
   const { message } = useSelector((state: RootState) => state.messages);
 
-  const { fetchMeta } = programService;
-  const getMeta = isDevChain() ? getLocalProgramMeta : fetchMeta;
-
   useEffect(() => {
     if (messageId) {
       dispatch(getMessageAction(messageId));
@@ -37,13 +34,16 @@ const Send = () => {
   }, []);
 
   useEffect(() => {
-    if (!meta && (programId || message)) {
-      getMeta(message ? message.source : programId)
+    if (!meta) {
+      const getMeta = isDevChain() ? getLocalProgramMeta : programService.fetchMeta;
+      const metaSource = message?.source || programId;
+
+      getMeta(metaSource)
         .then((res) => setMeta(JSON.parse(res.result.meta) ?? null))
         .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
         .finally(() => setReady(true));
     }
-  }, [meta, programId, message, getMeta, dispatch]);
+  }, [meta, programId, message, dispatch]);
 
   useEffect(() => {
     if (meta && meta.types && meta.handle_input) {

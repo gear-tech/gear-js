@@ -1,4 +1,6 @@
 import React from 'react';
+import clsx from 'clsx';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -9,8 +11,9 @@ import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
 import { EventTypes } from 'types/alerts';
 import { MessageType } from '../../types';
-import MessageIcon from 'assets/images/message.svg';
-import ClaimIcon from './images/claim.svg';
+import messageIcon from 'assets/images/message.svg';
+import claimIcon from './images/claim.svg';
+import buttonStyles from 'common/components/Button/Button.module.scss';
 import styles from './Message.module.scss';
 
 type Props = {
@@ -18,44 +21,44 @@ type Props = {
 };
 
 const Message = ({ message }: Props) => {
+  const { id } = message;
   const [api] = useApi();
   const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { account } = useSelector((state: RootState) => state.account);
 
-  const showError = (error: string) => {
-    dispatch(
-      AddAlert({
-        type: EventTypes.ERROR,
-        message: error,
-      })
-    );
+  const linkClassName = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.success, styles.link);
+  const iconClassName = clsx(buttonStyles.icon, styles.icon);
+
+  const showErrorAlert = (error: string) => {
+    dispatch(AddAlert({ type: EventTypes.ERROR, message: error }));
   };
 
-  const handleClaimValue = () => {
-    if (currentAccount) {
-      api.claimValueFromMailbox.submit(message.id);
+  const showSuccessAlert = (data: ISubmittableResult) => {
+    dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Status: ${data.status}` }));
+  };
 
-      web3FromSource(currentAccount.meta.source)
-        .then((injector: any) => {
-          api.claimValueFromMailbox.signAndSend(currentAccount.address, { signer: injector.signer }, (data: any) => {
-            dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Status: ${data.status}` }));
-          });
-        })
-        .catch(showError);
+  const handleClaimButtonClick = () => {
+    if (account) {
+      const { address, meta } = account;
+      api.claimValueFromMailbox.submit(id);
+
+      web3FromSource(meta.source)
+        .then(({ signer }) => api.claimValueFromMailbox.signAndSend(address, { signer }, showSuccessAlert))
+        .catch((error: Error) => showErrorAlert(error.message));
     } else {
-      showError('Wallet not connected');
+      showErrorAlert('Wallet not connected');
     }
   };
 
   return (
-    <div className={styles.container}>
-      <pre className={styles.message}>{getPreformattedText(message)}</pre>
-      <div className={styles.buttons}>
-        <Link to={`/send/reply/${message.id}`} className={styles.link}>
-          <img className={styles.icon} src={MessageIcon} alt="send reply icon" />
-          <span>Send reply</span>
+    <div className={styles.message}>
+      <pre className={styles.pre}>{getPreformattedText(message)}</pre>
+      <div>
+        <Link to={`/send/reply/${id}`} className={linkClassName}>
+          <img className={iconClassName} src={messageIcon} alt="send reply icon" />
+          Send reply
         </Link>
-        <Button text="Claim value" icon={ClaimIcon} color="main" size="small" onClick={handleClaimValue} />
+        <Button text="Claim value" icon={claimIcon} color="main" size="small" onClick={handleClaimButtonClick} />
       </div>
     </div>
   );
