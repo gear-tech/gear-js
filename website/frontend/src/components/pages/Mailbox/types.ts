@@ -1,10 +1,11 @@
 import { Hex } from '@gear-js/api';
+import { AnyJson } from '@polkadot/types/types';
 
-export type MessageType = {
+export type Message = {
   dest: Hex;
   id: Hex;
-  payload: string | object;
-  reply: [];
-  source: string;
+  payload: AnyJson;
+  reply: string[];
+  source: Hex;
   value: string;
 };

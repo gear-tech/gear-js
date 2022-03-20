@@ -8,7 +8,7 @@ import { Button } from 'common/components/Button/Button';
 import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
 import { EventTypes } from 'types/alerts';
-import { MessageType } from '../../types';
+import { Message as MessageType } from '../../types';
 import MessageIcon from 'assets/images/message.svg';
 import ClaimIcon from './images/claim.svg';
 import styles from './Message.module.scss';

@@ -3,7 +3,7 @@ import { useApi } from 'hooks/useApi';
 import { Hex } from '@gear-js/api';
 import { Box } from 'layout/Box/Box';
 import { Message } from './children/Message/Message';
-import { MessageType } from './types';
+import { Message as MessageType } from './types';
 import { LOCAL_STORAGE } from 'consts';
 import styles from './Mailbox.module.scss';
 
