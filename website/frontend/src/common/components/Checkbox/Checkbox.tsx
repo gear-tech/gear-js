@@ -8,7 +8,8 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Checkbox = ({ label, className, type, ...attrs }: Props) => {
-  const labelClassName = clsx(styles.label, className);
+  const { disabled } = attrs;
+  const labelClassName = clsx(styles.label, className, disabled && 'disabled');
   const inputClassName = clsx(styles.input, type === 'switch' ? styles.switch : styles.checkbox);
 
   return (
