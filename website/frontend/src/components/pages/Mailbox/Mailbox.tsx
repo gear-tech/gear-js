@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useApi } from 'hooks/useApi';
 import { Hex } from '@gear-js/api';
 import Box from 'layout/Box/Box';
-import Message from './children/Message/Message';
+import { Message } from './children/Message/Message';
 import { MessageType } from './types';
 import { LOCAL_STORAGE } from 'consts';
 import styles from './Mailbox.module.scss';
@@ -50,4 +50,4 @@ const Mailbox = () => {
   );
 };
 
-export default Mailbox;
+export { Mailbox };

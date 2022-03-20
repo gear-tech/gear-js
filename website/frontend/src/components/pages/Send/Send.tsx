@@ -81,4 +81,4 @@ const Send = () => {
   );
 };
 
-export default Send;
+export { Send };

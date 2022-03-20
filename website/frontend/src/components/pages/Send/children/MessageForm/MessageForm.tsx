@@ -32,7 +32,7 @@ type Props = {
   types: MetaParam | null;
 };
 
-export const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) => {
+const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
@@ -242,3 +242,5 @@ export const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) =
     </Formik>
   );
 };
+
+export { MessageForm };
