@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import { QueuedMessage } from '@gear-js/api';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,21 +11,20 @@ import { Button } from 'common/components/Button/Button';
 import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
 import { EventTypes } from 'types/alerts';
-import { MessageType } from '../../types';
 import messageIcon from 'assets/images/message.svg';
 import claimIcon from './images/claim.svg';
 import buttonStyles from 'common/components/Button/Button.module.scss';
 import styles from './Message.module.scss';
 
 type Props = {
-  message: MessageType;
+  message: QueuedMessage;
 };
 
 const Message = ({ message }: Props) => {
-  const { id } = message;
   const [api] = useApi();
   const dispatch = useDispatch();
   const { account } = useSelector((state: RootState) => state.account);
+  const id = message.id.toHex();
 
   const linkClassName = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.success, styles.link);
   const iconClassName = clsx(buttonStyles.icon, styles.icon);

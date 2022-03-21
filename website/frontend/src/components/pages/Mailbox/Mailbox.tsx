@@ -1,29 +1,42 @@
 import React, { useEffect, useState } from 'react';
+import { QueuedMessage } from '@gear-js/api';
+import { BTreeMap, Option } from '@polkadot/types';
+import { H256 } from '@polkadot/types/interfaces';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
 import Box from 'layout/Box/Box';
 import Message from './children/Message/Message';
-import { MessageType } from './types';
-import { LOCAL_STORAGE } from 'consts';
 import styles from './Mailbox.module.scss';
+
+type QueuedMessages = QueuedMessage[];
+type QueuedMessagesOption = Option<BTreeMap<H256, QueuedMessage>>;
 
 const Mailbox = () => {
   const [api] = useApi();
-  const [messages, setMessages] = useState<MessageType[]>([]);
+  const { account } = useSelector((state: RootState) => state.account);
+  const [messages, setMessages] = useState<QueuedMessages>([]);
   const isAnyMessage = messages.length > 0;
 
-  useEffect(() => {
-    const publicKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
+  const getQueuedMessages = (option: QueuedMessagesOption) => {
+    const queuedMessages: QueuedMessages = [];
 
-    if (publicKey) {
-      api.mailbox
-        .read(publicKey)
-        .then((data) => data.toHuman())
-        .then((formattedData) => formattedData && setMessages(Object.values(formattedData)));
+    if (option.isSome) {
+      option.unwrap().forEach((message) => queuedMessages.push(message));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  const getMessages = () => messages.map((message) => <Message key={message.id} message={message} />);
+    return queuedMessages;
+  };
+
+  useEffect(() => {
+    if (account) {
+      api.mailbox.read(account.address).then(getQueuedMessages).then(setMessages);
+    } else {
+      setMessages([]);
+    }
+  }, [account, api.mailbox]);
+
+  const getMessages = () => messages.map((message, index) => <Message key={index} message={message} />);
 
   return (
     <div className="wrapper">
