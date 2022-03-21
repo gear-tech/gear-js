@@ -1,0 +1,32 @@
+{
+  "types": {
+    "ProgramId": "[u8; 32]",
+    "Program": {
+      "_enum": {
+        "Active": "ActiveProgram",
+        "Terminated": "Null"
+      }
+    },
+    "ActiveProgram": {
+      "static_pages": "u32",
+      "persistent_pages": "BTreeSet<u32>",
+      "code_hash": "H256",
+      "nonce": "u64",
+      "state": "ProgramState"
+    },
+    "ProgramState": {
+      "_enum": {
+        "Uninitialized": {
+          "message_id": "H256"
+        },
+        "Initialized": "Null"
+      }
+    },
+    "ExecutionResult": {
+      "_enum": {
+        "Success": "Null",
+        "Failure": "Vec<u8>"
+      }
+    }
+  }
+}
