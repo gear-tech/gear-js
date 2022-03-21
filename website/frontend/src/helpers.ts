@@ -163,7 +163,7 @@ export const calculateGas = async (
   meta: any,
   code?: Uint8Array | null,
   addressId?: String | null,
-  replyCode?: String | null
+  replyCodeError?: string
 ) => {
   const payload = isManualPayload ? values.payload : values.fields;
 
@@ -178,6 +178,7 @@ export const calculateGas = async (
   }
 
   try {
+    const { value } = values;
     const metaOrTypeOfPayload: Metadata | string = meta || 'String';
 
     let estimatedGas;
@@ -188,6 +189,7 @@ export const calculateGas = async (
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
           code,
           payload,
+          value,
           metaOrTypeOfPayload
         );
         break;
@@ -196,6 +198,7 @@ export const calculateGas = async (
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
           addressId,
           payload,
+          value,
           metaOrTypeOfPayload
         );
         break;
@@ -203,8 +206,9 @@ export const calculateGas = async (
         estimatedGas = await api.program.gasSpent.reply(
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
           addressId,
-          Number(replyCode),
+          Number(replyCodeError),
           payload,
+          value,
           metaOrTypeOfPayload
         );
         break;

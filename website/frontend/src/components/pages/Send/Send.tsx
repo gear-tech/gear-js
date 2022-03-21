@@ -7,7 +7,7 @@ import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { EventTypes } from 'types/alerts';
 import { programService } from 'services/ProgramsRequestService';
 import { RootState } from 'store/reducers';
-import { AddAlert, getMessageAction } from 'store/actions/actions';
+import { AddAlert, getMessageAction, resetMessageAction } from 'store/actions/actions';
 import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
 import ArrowBack from 'assets/images/arrow_back.svg';
@@ -31,6 +31,10 @@ const Send = () => {
     if (messageId) {
       dispatch(getMessageAction(messageId));
     }
+
+    return () => {
+      dispatch(resetMessageAction());
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -70,7 +74,7 @@ const Send = () => {
         <h2 className="send-message__header-text send-message__header-text_colored">{fileNameHandler(id)}</h2>
       </header>
       <div className="send-message__block">
-        <MessageForm addressId={id} replyCode={message?.replyError} meta={meta} types={types} />
+        <MessageForm id={id} replyErrorCode={message?.replyError} meta={meta} types={types} />
       </div>
     </div>
   ) : (
