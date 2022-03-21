@@ -47,6 +47,7 @@ export class GearGasSpent {
    *     amount: 255,
    *     currency: 'GRT',
    *   },
+   *   0,
    *   meta
    * );
    * console.log(gas.toHuman());
@@ -74,7 +75,8 @@ export class GearGasSpent {
    * const gas = await gearApi.program.gasSpent.init(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   code,
-   *   '0x00'
+   *   '0x00',
+   *   0
    * );
    * console.log(gas.toHuman());
    * ```
@@ -107,7 +109,7 @@ export class GearGasSpent {
       sourceId,
       isHex(code) ? code : this.createType.create('bytes', Array.from(code)).toHex(),
       this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
-      value ? value : 0,
+      value || 0,
     );
   }
 
@@ -132,6 +134,7 @@ export class GearGasSpent {
    *         hex: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *       },
    *    },
+   *   0,
    *   meta
    * );
    * console.log(gas.toHuman());
@@ -160,6 +163,7 @@ export class GearGasSpent {
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   'PING',
+   *   0,
    *   'String'
    * );
    * console.log(gas.toHuman());
@@ -193,7 +197,7 @@ export class GearGasSpent {
       sourceId,
       destinationId,
       this.getPayload(payload, metaOrTypeOfPayload, 'handle_input'),
-      value ? value : 0,
+      value || 0,
     );
   }
 
@@ -215,6 +219,7 @@ export class GearGasSpent {
    *   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635',
    *   0,
    *   'PONG',
+   *   1000,
    *   meta,
    * );
    * console.log(gas.toHuman());
@@ -247,6 +252,7 @@ export class GearGasSpent {
    *   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635',
    *   0,
    *   'PONG',
+   *   1000,
    *   'String',
    * );
    * console.log(gas.toHuman());
@@ -284,7 +290,7 @@ export class GearGasSpent {
       messageId,
       exitCode,
       this.getPayload(payload, metaOrTypeOfPayload, 'async_handle_input'),
-      value ? value : 0,
+      value || 0,
     );
   }
 }
