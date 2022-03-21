@@ -1,6 +1,7 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ISubmittableResult } from '@polkadot/types/types';
+import { EventRecord } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
@@ -10,7 +11,6 @@ import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
-import { UserAccount } from 'types/account';
 import {
   AddAlert,
   sendMessageSuccessAction,
@@ -35,7 +35,7 @@ type Props = {
 const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { account } = useSelector((state: RootState) => state.account);
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
   const [isManualInput, setIsManualInput] = useState(Boolean(!types));
 
@@ -55,76 +55,90 @@ const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) => {
     }
   }, [types]);
 
-  const dispatchAlert = (text: string, isSuccess: boolean) => {
-    dispatch(
-      AddAlert({
-        type: isSuccess ? EventTypes.SUCCESS : EventTypes.ERROR,
-        message: text,
-      })
-    );
+  const showSuccessAlert = (message: string) => {
+    dispatch(AddAlert({ type: EventTypes.SUCCESS, message }));
   };
 
-  const showStatus = (data: ISubmittableResult, resetForm: () => void) => {
+  const showErrorAlert = (message: string) => {
+    dispatch(AddAlert({ type: EventTypes.ERROR, message }));
+  };
+
+  const handleFinalizedStatus = (events: EventRecord[], callback: () => void) => {
+    events.forEach(({ event: { method } }) => {
+      const isSuccess = method === 'DispatchMessageEnqueued';
+      const isFailure = method === 'ExtrinsicFailed';
+
+      if (isSuccess) {
+        showSuccessAlert('Send message: Finalized');
+        dispatch(sendMessageSuccessAction());
+        callback();
+      }
+
+      if (isFailure) {
+        showErrorAlert('Extrinsic Failed');
+      }
+    });
+  };
+
+  const handleSendStatus = ({ status, events }: ISubmittableResult, callback: () => void) => {
+    const { isInBlock, isFinalized, isInvalid } = status;
+
     dispatch(sendMessageStartAction());
 
-    if (data.status.isInBlock) {
-      dispatchAlert('Send message: In block', true);
+    if (isInBlock) {
+      showSuccessAlert('Send message: In block');
     }
 
-    if (data.status.isFinalized) {
-      data.events.forEach((event: any) => {
-        const { method } = event.event;
-
-        if (method === 'DispatchMessageEnqueued') {
-          dispatchAlert('Send message: Finalized', true);
-          dispatch(sendMessageSuccessAction());
-          resetForm();
-        }
-
-        if (method === 'ExtrinsicFailed') {
-          dispatchAlert('Extrinsic Failed', false);
-        }
-      });
+    if (isFinalized) {
+      handleFinalizedStatus(events, callback);
     }
 
-    if (data.status.isInvalid) {
-      dispatchAlert(PROGRAM_ERRORS.INVALID_TRANSACTION, false);
+    if (isInvalid) {
+      showErrorAlert(PROGRAM_ERRORS.INVALID_TRANSACTION);
       dispatch(sendMessageFailedAction(PROGRAM_ERRORS.INVALID_TRANSACTION));
     }
   };
 
-  const showError = (error: string) => {
-    dispatchAlert(`Send message: ${error}`, false);
+  const showSendMessageError = (error: Error) => {
+    showErrorAlert(`Send message: ${error}`);
     dispatch(sendMessageFailedAction(`${error}`));
   };
 
-  const sendMessage = (account: UserAccount, sendData: any, resetForm: () => void) => {
-    api[replyCode ? 'reply' : 'message'].submit(sendData, meta);
-
-    web3FromSource(account.meta.source)
-      .then((injector: any) => {
-        api[replyCode ? 'reply' : 'message'].signAndSend(
-          account.address,
-          { signer: injector.signer },
-          (data: ISubmittableResult) => showStatus(data, resetForm)
-        );
-      })
-      .catch(showError);
-  };
-
-  const handleSubmit = (values: InitialValues, resetForm: () => void) => {
-    if (currentAccount) {
+  const sendMessage = (values: InitialValues, resetForm: () => void) => {
+    if (account) {
+      const { address, meta: accountMeta } = account;
       const payload = isManualInput ? values.payload : values.fields;
-      const prop = replyCode ? 'replyToId' : 'destination';
+      const method = replyCode ? 'reply' : 'message';
 
       const data = {
-        [prop]: values.addressId,
         gasLimit: values.gasLimit,
         value: values.value,
         payload,
       };
 
-      sendMessage(currentAccount, data, resetForm);
+      const replyData = {
+        replyToId: values.addressId,
+        ...data,
+      };
+
+      const sendData = {
+        destination: values.addressId,
+        ...data,
+      };
+
+      if (replyCode) {
+        api.reply.submit(replyData, meta);
+      } else {
+        api.message.submit(sendData, meta);
+      }
+
+      web3FromSource(accountMeta.source)
+        .then(({ signer }) => {
+          api[method].signAndSend(address, { signer }, (result: ISubmittableResult) =>
+            handleSendStatus(result, resetForm)
+          );
+        })
+        .catch(showSendMessageError);
     } else {
       dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
     }
@@ -135,7 +149,7 @@ const MessageForm: VFC<Props> = ({ addressId, replyCode, meta, types }) => {
       initialValues={initialValues}
       validationSchema={Schema}
       validateOnBlur
-      onSubmit={(values, { resetForm }) => handleSubmit(values, resetForm)}
+      onSubmit={(values, { resetForm }) => sendMessage(values, resetForm)}
     >
       {({ errors, touched, values, setFieldValue }) => (
         <Form id="message-form">
