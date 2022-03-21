@@ -1,19 +1,16 @@
 import React from 'react';
-import clsx from 'clsx';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { useApi } from 'hooks/useApi';
 import { RootState } from 'store/reducers';
 import { Button } from 'common/components/Button/Button';
+import { ReplyLink } from './children/ReplyLink/ReplyLink';
 import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
 import { EventTypes } from 'types/alerts';
 import { Message as MessageType } from '../../types';
-import messageIcon from 'assets/images/message.svg';
 import claimIcon from './images/claim.svg';
-import buttonStyles from 'common/components/Button/Button.module.scss';
 import styles from './Message.module.scss';
 
 type Props = {
@@ -25,9 +22,6 @@ const Message = ({ message }: Props) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const { account } = useSelector((state: RootState) => state.account);
-
-  const linkClassName = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.success, styles.link);
-  const iconClassName = clsx(buttonStyles.icon, styles.icon);
 
   const showErrorAlert = (error: string) => {
     dispatch(AddAlert({ type: EventTypes.ERROR, message: error }));
@@ -54,10 +48,7 @@ const Message = ({ message }: Props) => {
     <div className={styles.message}>
       <pre className={styles.pre}>{getPreformattedText(message)}</pre>
       <div>
-        <Link to={`/send/reply/${id}`} className={linkClassName}>
-          <img className={iconClassName} src={messageIcon} alt="send reply icon" />
-          Send reply
-        </Link>
+        <ReplyLink id={id} />
         <Button text="Claim value" icon={claimIcon} color="main" size="small" onClick={handleClaimButtonClick} />
       </div>
     </div>
