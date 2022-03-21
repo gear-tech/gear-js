@@ -6,9 +6,13 @@ import { Hex } from './gear-type';
 declare module '@polkadot/rpc-core/types/jsonrpc' {
   export interface RpcInterface {
     gear: {
-      getInitGasSpent: AugmentedRpc<(source: Hex, code: Hex, payload: Hex) => Observable<U64>>;
-      getHandleGasSpent: AugmentedRpc<(source: Hex, dest: Hex, payload: Hex) => Observable<U64>>;
-      getReplyGasSpent: AugmentedRpc<(source: Hex, messageId: Hex, exitCode: number, payload: Hex) => Observable<U64>>;
+      getInitGasSpent: AugmentedRpc<(source: Hex, code: Hex, payload: Hex, value: number | string) => Observable<U64>>;
+      getHandleGasSpent: AugmentedRpc<
+        (source: Hex, dest: Hex, payload: Hex, value: number | string) => Observable<U64>
+      >;
+      getReplyGasSpent: AugmentedRpc<
+        (source: Hex, messageId: Hex, exitCode: number, payload: Hex, value: number | string) => Observable<U64>
+      >;
     };
   }
 }
