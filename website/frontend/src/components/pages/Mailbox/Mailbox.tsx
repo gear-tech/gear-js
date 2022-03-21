@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
 import Box from 'layout/Box/Box';
-import Message from './children/Message/Message';
+import { Message } from './children';
 import styles from './Mailbox.module.scss';
 
 type QueuedMessages = QueuedMessage[];
