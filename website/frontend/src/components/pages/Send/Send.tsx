@@ -19,6 +19,7 @@ const Send = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { programId = '', messageId = '' } = useParams();
+  const id = programId || messageId;
 
   const [meta, setMeta] = useState<Metadata>();
   const [types, setTypes] = useState<MetaParam | null>(null);
@@ -66,12 +67,10 @@ const Send = () => {
         </button>
         <h2 className="send-message__header-text">{programId ? 'New message' : 'Send reply'}</h2>
         <img className="send-message__header-icon" src={ProgramIllustration} alt="program" />
-        <h2 className="send-message__header-text send-message__header-text_colored">
-          {fileNameHandler(programId || messageId)}
-        </h2>
+        <h2 className="send-message__header-text send-message__header-text_colored">{fileNameHandler(id)}</h2>
       </header>
       <div className="send-message__block">
-        <MessageForm addressId={programId || messageId} replyCode={message?.replyError} meta={meta} types={types} />
+        <MessageForm addressId={id} replyCode={message?.replyError} meta={meta} types={types} />
       </div>
     </div>
   ) : (
