@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ReactNode } from 'react';
 import clsx from 'clsx';
 import { Edit, FilePlus, Folder, FolderPlus, Trash } from 'react-feather';
 import { EditorFolder, EditorTypes } from '../../../types/editor';
@@ -8,14 +8,14 @@ import { EditorTreeInput } from './EditorTreeInput';
 
 interface ItemProps {
   item: EditorFolder;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
   const { dispatch, setCurrentFile } = useEditorTreeContext();
   const [isEditing, setEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [childrenCopy, setChildrenCopy] = useState<React.ReactNode[]>([]);
+  const [childrenCopy, setChildrenCopy] = useState<ReactNode[]>([]);
 
   useEffect(() => {
     setChildrenCopy([children]);

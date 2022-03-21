@@ -9,4 +9,4 @@ type Props = {
 
 const Box = ({ children, className }: Props) => <div className={clsx(styles.box, className)}>{children}</div>;
 
-export default Box;
+export { Box };

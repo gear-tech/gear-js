@@ -10,7 +10,7 @@ import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
 import { EventTypes } from 'types/alerts';
 import claimIcon from './images/claim.svg';
-import { Reply } from './children';
+import { ReplyLink } from './children';
 import styles from './Message.module.scss';
 
 type Props = {
@@ -46,7 +46,7 @@ const Message = ({ message }: Props) => {
     <div className={styles.message}>
       <pre className={styles.pre}>{getPreformattedText(message)}</pre>
       <div>
-        <Reply to={id} />
+        <ReplyLink to={id} />
         <Button text="Claim value" icon={claimIcon} color="main" size="small" onClick={handleClaimButtonClick} />
       </div>
     </div>

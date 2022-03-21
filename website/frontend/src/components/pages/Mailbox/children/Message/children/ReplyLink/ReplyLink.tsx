@@ -4,13 +4,13 @@ import clsx from 'clsx';
 import { Hex } from '@gear-js/api';
 import messageIcon from 'assets/images/message.svg';
 import buttonStyles from 'common/components/Button/Button.module.scss';
-import styles from './Reply.module.scss';
+import styles from './ReplyLink.module.scss';
 
 type Props = {
   to: Hex;
 };
 
-const Reply = ({ to }: Props) => {
+const ReplyLink = ({ to }: Props) => {
   const linkClassName = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.success, styles.link);
   const iconClassName = clsx(buttonStyles.icon, styles.icon);
 
@@ -22,4 +22,4 @@ const Reply = ({ to }: Props) => {
   );
 };
 
-export { Reply };
+export { ReplyLink };

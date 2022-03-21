@@ -1,3 +1,3 @@
-import { Reply } from './Reply/Reply';
+import { ReplyLink } from './ReplyLink/ReplyLink';
 
-export { Reply };
+export { ReplyLink };

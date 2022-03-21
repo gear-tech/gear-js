@@ -5,8 +5,8 @@ import { H256 } from '@polkadot/types/interfaces';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
-import Box from 'layout/Box/Box';
-import { Message } from './children';
+import { Box } from 'layout/Box/Box';
+import { Message } from './children/Message/Message';
 import styles from './Mailbox.module.scss';
 
 type QueuedMessages = QueuedMessage[];
@@ -48,4 +48,4 @@ const Mailbox = () => {
   );
 };
 
-export default Mailbox;
+export { Mailbox };
