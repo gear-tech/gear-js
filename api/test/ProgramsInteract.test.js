@@ -154,6 +154,7 @@ for (let filePath of testFiles) {
             GearKeyring.decodeAddress(accounts[source].address),
             programs.get(dest).id,
             payload,
+            0,
             meta ? programs.get(dest).meta : type,
           ),
         ).toBeDefined();
@@ -168,6 +169,7 @@ for (let filePath of testFiles) {
             GearKeyring.decodeAddress(accounts[source].address),
             readFileSync(join(EXAMPLES_DIR, `${testFile.programs[program - 1].name}.opt.wasm`)),
             payload,
+            0,
             meta ? programs.get(program).meta : type,
           ),
         ).toBeDefined();
