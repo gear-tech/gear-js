@@ -28,8 +28,12 @@ describe('select tests', () => {
 
   it('applies className to label wrapper', () => {
     render(<Select options={initOptions} className="className" />);
+
     const label = screen.getByTestId('label');
+    const select = screen.getByRole('combobox');
+
     expect(label).toHaveClass(styles.label, 'className');
+    expect(select).not.toHaveClass('className');
   });
 
   it('renders disabled select', () => {
