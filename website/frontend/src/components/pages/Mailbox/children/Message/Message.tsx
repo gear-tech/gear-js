@@ -21,6 +21,8 @@ const Message = ({ message }: Props) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const { account } = useSelector((state: RootState) => state.account);
+
+  const formattedMessage = message.toHuman();
   const id = message.id.toHex();
 
   const showErrorAlert = (error: string) => {
@@ -44,7 +46,7 @@ const Message = ({ message }: Props) => {
 
   return (
     <div className={styles.message}>
-      <pre className={styles.pre}>{getPreformattedText(message)}</pre>
+      <pre className={styles.pre}>{getPreformattedText(formattedMessage)}</pre>
       <div>
         <ReplyLink to={id} />
         <Button text="Claim value" icon={claimIcon} color="main" size="small" onClick={handleClaimButtonClick} />
