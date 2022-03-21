@@ -13,4 +13,30 @@ describe('textarea tests', () => {
     const textarea = screen.getByLabelText('test label');
     expect(textarea).toBeInTheDocument();
   });
+
+  it('applies className to label wrapper', () => {
+    render(<Textarea className="className" />);
+
+    const label = screen.getByTestId('label');
+    const textarea = screen.getByRole('textbox');
+
+    expect(label).toHaveClass('className');
+    expect(textarea).not.toHaveClass('className');
+  });
+
+  it('renders disabled textarea', () => {
+    render(<Textarea className="className" disabled />);
+
+    const label = screen.getByTestId('label');
+    const textarea = screen.getByRole('textbox');
+
+    expect(label).toHaveClass('disabled');
+    expect(textarea).toBeDisabled();
+  });
+
+  it('passes rows attribute', () => {
+    render(<Textarea rows={10} />);
+    const textarea = screen.getByRole('textbox');
+    expect(textarea).toHaveAttribute('rows', '10');
+  });
 });
