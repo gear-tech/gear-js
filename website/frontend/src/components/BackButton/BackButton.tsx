@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import arrow from 'assets/images/arrow_back.svg';
-import { Button } from '../Button/Button';
-import { Props } from '../Button/types';
+import { Button } from 'common/components/Button/Button';
+import { Props } from 'common/components/Button/types';
 
 type OmittedProps = 'text' | 'icon' | 'color' | 'size' | 'onClick';
 
