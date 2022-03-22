@@ -8,7 +8,7 @@ export function useEvents() {
   const [events, setEvents] = useState<IdeaEvents>([]);
 
   const subscribeToEvents = () =>
-    api.allEvents(async (records) => {
+    api.query.system.events(async (records) => {
       const { createdAtHash } = records;
 
       if (createdAtHash) {

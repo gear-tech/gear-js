@@ -11,7 +11,6 @@
   },
   "rules": {
     "import/prefer-default-export": "off",
-    "import/no-extraneous-dependencies": ["off", {"devDependencies": ["**/*.test.js", "**/*.spec.js"]}], // TODO make sure correctness
     "no-alert": "off",
     "curly": ["warn"],
     "max-depth": ["warn", 4],
@@ -38,7 +37,13 @@
     "react/destructuring-assignment": ["off"],
     "no-underscore-dangle": "off",
     "@typescript-eslint/no-unused-vars": ["warn"],
-    "@typescript-eslint/no-redeclare": "off"
+    "@typescript-eslint/no-redeclare": "off",
+
+    // allow devDeps import in test files
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["**/*.test.ts", "**/*.test.tsx", "**/*[Tt]ests.ts", "**/*.stories.tsx"] }
+    ]
   },
   "settings": {
     "react": {

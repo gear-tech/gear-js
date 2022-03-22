@@ -48,7 +48,7 @@ jobs:
         with:
           context: website/frontend
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:dev
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:qa
           build-args: |
             REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
@@ -79,7 +79,7 @@ jobs:
         with:
           file: website/data-storage/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:dev
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:qa
 
   build-and-push-api-gateway-image:
     runs-on: ubuntu-latest
@@ -105,7 +105,7 @@ jobs:
         with:
           file: website/api-gateway/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:dev
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:qa
 
   build-and-push-event-listeners-image:
     runs-on: ubuntu-latest
@@ -131,7 +131,7 @@ jobs:
         with:
           file: website/events-listener/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:dev
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:qa
 
   build-and-push-test-balance-image:
     runs-on: ubuntu-latest
@@ -157,7 +157,7 @@ jobs:
         with:
           file: website/test-balance/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:dev
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:qa
 
   deploy-to-k8s-dev1-namespace:
     needs:
