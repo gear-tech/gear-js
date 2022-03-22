@@ -42,8 +42,10 @@ const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
         onChange={handleChange}
       />
       <div className={styles.buttons}>
-        <Button icon={copy} onClick={handleCopy} />
-        {isCustom && <Button icon={trash} onClick={removeNode} disabled={address === nodeApi.address} />}
+        <Button icon={copy} color="transparent" onClick={handleCopy} />
+        {isCustom && (
+          <Button icon={trash} color="transparent" onClick={removeNode} disabled={address === nodeApi.address} />
+        )}
       </div>
     </li>
   );
