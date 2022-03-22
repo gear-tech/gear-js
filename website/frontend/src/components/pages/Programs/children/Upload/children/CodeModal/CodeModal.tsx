@@ -109,7 +109,7 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
           <>
             <p>Code hash:</p>
             <p>{codeHash}</p>
-            <Button icon={copy} onClick={handleClick} className={styles.button} />
+            <Button icon={copy} color="transparent" onClick={handleClick} className={styles.button} />
           </>
         ) : (
           <Spinner />

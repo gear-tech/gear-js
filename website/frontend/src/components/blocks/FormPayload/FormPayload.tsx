@@ -1,7 +1,7 @@
 import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Field } from 'formik';
-import { Switch } from 'common/components/Switch';
+import { Checkbox } from 'common/components/Checkbox/Checkbox';
 import { FormItem } from 'components/FormItem';
 import { ParsedShape } from 'utils/meta-parser';
 import styles from './FormPayload.module.scss';
@@ -30,7 +30,8 @@ const FormPayload = ({ className, isManualInput, setIsManualInput, formData }: P
   return (
     <div className={className}>
       {formData && (
-        <Switch
+        <Checkbox
+          type="switch"
           label="Manual input"
           className={styles.switch}
           checked={isManualInput}
