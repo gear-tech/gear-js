@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { FormItem } from './FormItem';
+import { MetaFields } from './MetaFields';
 import { Form, Formik } from 'formik';
 import { MetaItem, parseMeta } from '../../utils/meta-parser';
 import {
@@ -13,7 +13,6 @@ import {
   optionEnumNested,
   optionEnumComplex,
   resultEnumSimple,
-  resultEnumComplex,
 } from '../../utils/meta-fixtures';
 
 type MetaFormWrapper = {
@@ -33,7 +32,7 @@ const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData }) => {
         }}
       >
         <Form>
-          {meta && <FormItem data={meta} />}
+          {meta && <MetaFields data={meta} />}
           <button type="submit">Submit</button>
         </Form>
       </Formik>
@@ -43,9 +42,8 @@ const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData }) => {
 
 export default {
   title: 'FORM/Meta form',
-  component: FormItem,
+  component: MetaFields,
   parameters: {
-    // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'fullscreen',
   },
 } as ComponentMeta<typeof MetaFormWrapper>;
@@ -81,5 +79,4 @@ OptionEnumComplexStruct.args = { metaData: optionEnumComplex };
 export const ResultEnumSimpleStruct = Template.bind({});
 ResultEnumSimpleStruct.args = { metaData: resultEnumSimple };
 
-export const ResultEnumComplexStruct = Template.bind({});
-ResultEnumComplexStruct.args = { metaData: resultEnumComplex };
+// TODO add resultEnumComplex handling

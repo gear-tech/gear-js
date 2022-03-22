@@ -12,7 +12,7 @@ export type MetaItem = {
 
 type MetaTypes = 'Text' | 'Null';
 
-type MetaField = {
+export type MetaField = {
   type: MetaTypes;
   name: string;
   label: string;
@@ -29,15 +29,14 @@ export function isMetaField(value: unknown): value is MetaField {
   );
 }
 
-export type MetaFormItem = {
-  [key: string]: MetaField | MetaFieldset;
-};
+export type MetaFormItem = MetaField | MetaFieldset;
+export type MetaFormItemStruct = Record<string, MetaFormItem>;
 
 export type MetaFieldset = {
   __name: string;
   __type: string;
   __select: boolean;
-  __fields: MetaFormItem | null;
+  __fields: MetaFormItemStruct;
 };
 
 export function isMetaFieldset(value: unknown): value is MetaFieldset {

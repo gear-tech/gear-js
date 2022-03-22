@@ -9,7 +9,7 @@ import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
 import { EventTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
-import { FormItem } from 'components/FormItem';
+import { MetaFields } from 'components/FormItem';
 import { Switch } from 'common/components/Switch';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
@@ -241,7 +241,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         )}
                         {isShowPayloadForm ? (
                           <div className="message-form--info">
-                            <FormItem data={payloadForm} />
+                            <MetaFields data={payloadForm} />
                           </div>
                         ) : (
                           <>
