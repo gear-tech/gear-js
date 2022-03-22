@@ -33,6 +33,7 @@ export class GearGasSpent {
    * @param sourceId Account id
    * @param code Program code
    * @param payload Payload of init message
+   * @param value Value of message
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -46,18 +47,26 @@ export class GearGasSpent {
    *     amount: 255,
    *     currency: 'GRT',
    *   },
+   *   0,
    *   meta
    * );
    * console.log(gas.toHuman());
    * ```
    */
-  async init(sourceId: Hex, code: Hex | Buffer, payload: Hex | AnyJson, meta?: Metadata): Promise<u64>;
+  async init(
+    sourceId: Hex,
+    code: Hex | Buffer,
+    payload: Hex | AnyJson,
+    value: number | string,
+    meta?: Metadata,
+  ): Promise<u64>;
 
   /**
    * Get gas spent of init message
    * @param sourceId Account id
    * @param code Program code
    * @param payload Payload of init message
+   * @param value Value of message
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -66,18 +75,26 @@ export class GearGasSpent {
    * const gas = await gearApi.program.gasSpent.init(
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   code,
-   *   '0x00'
+   *   '0x00',
+   *   0
    * );
    * console.log(gas.toHuman());
    * ```
    */
-  async init(sourceId: Hex, code: Hex | Buffer, payload: Hex | AnyJson, typeOfPayload?: string): Promise<u64>;
+  async init(
+    sourceId: Hex,
+    code: Hex | Buffer,
+    payload: Hex | AnyJson,
+    value: number | string,
+    typeOfPayload?: string,
+  ): Promise<u64>;
 
   /**
    * Get gas spent of init message
    * @param sourceId Account id
    * @param code Program code
    * @param payload Payload of init message
+   * @param value Value of message
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -85,12 +102,14 @@ export class GearGasSpent {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: Hex | AnyJson,
+    value: number | string,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64> {
     return await this.api.rpc['gear'].getInitGasSpent(
       sourceId,
       isHex(code) ? code : this.createType.create('bytes', Array.from(code)).toHex(),
       this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
+      value || 0,
     );
   }
 
@@ -99,6 +118,7 @@ export class GearGasSpent {
    * @param sourceId Account id
    * @param destinationId Program id
    * @param payload Payload of message
+   * @param value Value of message
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -114,18 +134,26 @@ export class GearGasSpent {
    *         hex: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *       },
    *    },
+   *   0,
    *   meta
    * );
    * console.log(gas.toHuman());
    * ```
    */
-  async handle(sourceId: Hex, destinationId: Hex | Buffer, payload: Hex | AnyJson, meta: Metadata): Promise<u64>;
+  async handle(
+    sourceId: Hex,
+    destinationId: Hex | Buffer,
+    payload: Hex | AnyJson,
+    value: number | string,
+    meta: Metadata,
+  ): Promise<u64>;
 
   /**
    * Get gas spent of hanle message
    * @param sourceId Account id
    * @param destinationId Program id
    * @param payload Payload of message
+   * @param value Value of message
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -135,18 +163,26 @@ export class GearGasSpent {
    *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   'PING',
+   *   0,
    *   'String'
    * );
    * console.log(gas.toHuman());
    * ```
    */
-  async handle(sourceId: Hex, destinationId: Hex | Buffer, payload: Hex | AnyJson, typeOfPayload: string): Promise<u64>;
+  async handle(
+    sourceId: Hex,
+    destinationId: Hex | Buffer,
+    payload: Hex | AnyJson,
+    value: number | string,
+    typeOfPayload: string,
+  ): Promise<u64>;
 
   /**
    * Get gas spent of hanle message
    * @param sourceId Account id
    * @param destinationId Program id
    * @param payload Payload of message
+   * @param value Value of message
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -154,12 +190,14 @@ export class GearGasSpent {
     sourceId: Hex,
     destinationId: Hex,
     payload: Hex | AnyJson,
+    value: number | string,
     metaOrTypeOfPayload: string | Metadata,
   ): Promise<u64> {
     return await this.api.rpc['gear'].getHandleGasSpent(
       sourceId,
       destinationId,
       this.getPayload(payload, metaOrTypeOfPayload, 'handle_input'),
+      value || 0,
     );
   }
 
@@ -169,6 +207,7 @@ export class GearGasSpent {
    * @param messageId Message id of a message waiting for response
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
+   * @param value Value of message
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -180,12 +219,20 @@ export class GearGasSpent {
    *   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635',
    *   0,
    *   'PONG',
+   *   1000,
    *   meta,
    * );
    * console.log(gas.toHuman());
    * ```
    */
-  async reply(sourceId: Hex, messageId: Hex, exitCode: number, payload: Hex | AnyJson, meta: Metadata): Promise<u64>;
+  async reply(
+    sourceId: Hex,
+    messageId: Hex,
+    exitCode: number,
+    payload: Hex | AnyJson,
+    value: number | string,
+    meta: Metadata,
+  ): Promise<u64>;
 
   /**
    * Get gas spent of reply message
@@ -193,6 +240,7 @@ export class GearGasSpent {
    * @param messageId Message id of a message waiting for response
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
+   * @param value Value of message
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -204,6 +252,7 @@ export class GearGasSpent {
    *   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635',
    *   0,
    *   'PONG',
+   *   1000,
    *   'String',
    * );
    * console.log(gas.toHuman());
@@ -214,6 +263,7 @@ export class GearGasSpent {
     messageId: Hex,
     exitCode: number,
     payload: Hex | AnyJson,
+    value: number | string,
     typeOfPayload: string,
   ): Promise<u64>;
 
@@ -223,6 +273,7 @@ export class GearGasSpent {
    * @param messageId Message id of a message waiting for response
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
+   * @param value Value of message
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -231,6 +282,7 @@ export class GearGasSpent {
     messageId: Hex,
     exitCode: number,
     payload: Hex | AnyJson,
+    value: number | string,
     metaOrTypeOfPayload: string | Metadata,
   ): Promise<u64> {
     return await this.api.rpc['gear'].getReplyGasSpent(
@@ -238,6 +290,7 @@ export class GearGasSpent {
       messageId,
       exitCode,
       this.getPayload(payload, metaOrTypeOfPayload, 'async_handle_input'),
+      value || 0,
     );
   }
 }
