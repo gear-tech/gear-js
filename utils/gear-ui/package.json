@@ -1,0 +1,9 @@
+{
+  "name": "@gear-js/ui-kit",
+  "version": "0.0.1",
+  "description": "DESCRIPTION",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "types": "lib/index.d.ts",
+  "packageManager": "yarn@3.2.0"
+}
