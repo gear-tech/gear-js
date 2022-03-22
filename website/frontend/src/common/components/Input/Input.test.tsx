@@ -38,11 +38,11 @@ describe('input tests', () => {
   it('renders read only input', () => {
     render(<Input readOnly />);
 
-    const input = screen.getByRole('textbox');
     const wrapper = screen.getByTestId('wrapper');
+    const input = screen.getByRole('textbox');
 
-    expect(input).toHaveAttribute('readOnly');
     expect(wrapper).toHaveClass(styles.readOnly);
+    expect(input).toHaveAttribute('readOnly');
   });
 
   it('renders disabled input', () => {

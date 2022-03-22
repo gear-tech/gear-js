@@ -13,7 +13,7 @@ const BackButton = (props: Omit<Props, OmittedProps>) => {
     navigate(-1);
   };
 
-  return <Button icon={arrow} onClick={handleClick} {...props} />;
+  return <Button icon={arrow} color="transparent" onClick={handleClick} {...props} />;
 };
 
 export { BackButton };

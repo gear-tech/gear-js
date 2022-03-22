@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes } from 'react';
 interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
   icon?: string;
-  color?: 'success' | 'error' | 'main';
+  color?: 'primary' | 'secondary' | 'transparent';
   size?: 'normal' | 'small';
 }
 
