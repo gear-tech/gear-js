@@ -39,5 +39,5 @@ export async function createType(payload, type, pathToMeta) {
 export async function getTypeStruct(type, pathToMeta) {
   const meta = await getWasmMetadata(readFileSync(pathToMeta));
   type = getType(type, meta);
-  return { typeName: type, struct: createPayloadTypeStructure(type, decodeHexTypes(meta.types)) };
+  return { typeName: type, struct: createPayloadTypeStructure(type, decodeHexTypes(meta.types), true) };
 }
