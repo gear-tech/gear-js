@@ -1,4 +1,4 @@
-import React, { OptionHTMLAttributes, SelectHTMLAttributes } from 'react';
+import { OptionHTMLAttributes, SelectHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import styles from './Select.module.scss';
 

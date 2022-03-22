@@ -8,7 +8,7 @@
     "skipLibCheck": true,
 
     // custom
-    "jsx": "react",
+    "jsx": "react-jsx",
     "module": "esnext",
     "declaration": true,
     "declarationDir": "types",

@@ -1,4 +1,4 @@
-import React, { TextareaHTMLAttributes } from 'react';
+import { TextareaHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import styles from './Textarea.module.scss';
 

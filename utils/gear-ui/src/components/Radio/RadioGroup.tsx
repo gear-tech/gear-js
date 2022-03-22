@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes } from 'react';
 import { Props as RadioProps } from './types';
 import { Radio } from './Radio';
 

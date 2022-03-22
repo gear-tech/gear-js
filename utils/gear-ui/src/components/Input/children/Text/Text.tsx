@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './Text.module.scss';
 
 type Props = {

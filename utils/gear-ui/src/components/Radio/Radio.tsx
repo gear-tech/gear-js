@@ -1,4 +1,3 @@
-import React from 'react';
 import clsx from 'clsx';
 import { Props } from './types';
 import styles from './Radio.module.scss';
