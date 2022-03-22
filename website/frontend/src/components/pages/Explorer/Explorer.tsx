@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { IdeaEventsProps } from 'types/explorer';
-import { BackButton } from 'common/components/BackButton/BackButton';
+import { BackButton } from 'components/BackButton/BackButton';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 import { Search } from './children/Search/Search';
 import { Events } from './children/Events/Events';
