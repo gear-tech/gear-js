@@ -22,7 +22,7 @@ jobs:
         uses: EndBug/version-check@v1
         id: check
         with:
-          file-name: api/package.json
+          file-name: utils/meta-cli/package.json
           file-url: https://unpkg.com/@gear-js/gear-meta@latest/package.json
           static-checking: localIsNew
 
