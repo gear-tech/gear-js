@@ -154,12 +154,12 @@ try {
 ```javascript
 try {
   const reply = {
-    toId: messageId,
+    replyToId: messageId,
     payload: somePayload,
     gasLimit: 10000000,
     value: 1000,
   };
-  // In that case payload will be encoded using meta.async_handle_input type
+  // In that case payload will be encoded using meta.async_handle_input type if it exsits, if not it will be used meta.async_init_input
   await gearApi.reply.submit(reply, meta);
   // So if you want to use another type you can specify it
   await gearApi.reply.submit(reply, meta, meta.async_init_input);
@@ -440,4 +440,7 @@ const { mnemonic, seed } = GearKeyring.generateMnemonic();
 // Getting a seed from mnemonic
 const { seed } = GearKeyring.generateSeed(mnemonic);
 ```
-````
+
+```
+
+```

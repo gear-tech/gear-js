@@ -183,6 +183,7 @@ export const calculateGas = async (
       localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
       method === 'init' ? code : programId,
       payload,
+      values.value,
       metaOrTypeOfPayload
     );
 

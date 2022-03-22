@@ -23,9 +23,9 @@ export function setNamespaces(type: string, namespaces: Map<string, string>): st
   matches.forEach((match, index) => {
     if (namespaces) {
       if (namespaces.has(match)) {
-        type = type.replace(match, namespaces.get(match));
+        type = type.replace(new RegExp(match, 'g'), namespaces.get(match));
       } else if (index < matches.length - 1 && namespaces.has(`${match}${matches[index + 1]}`)) {
-        type = type.replace(match, namespaces.get(`${match}${matches[index + 1]}`));
+        type = type.replace(new RegExp(match, 'g'), namespaces.get(`${match}${matches[index + 1]}`));
       }
     }
   });
@@ -35,7 +35,7 @@ export function setNamespaces(type: string, namespaces: Map<string, string>): st
 export function replaceNamespaces(type: string, namespaces: Map<string, string>): string {
   const match = type.match(REGULAR_EXP.endWord);
   namespaces.forEach((value, key) => {
-    type = match.includes(value) ? type.replace(value, key) : type;
+    type = match.includes(value) ? type.replace(new RegExp(value, 'g'), key) : type;
   });
   return type;
 }

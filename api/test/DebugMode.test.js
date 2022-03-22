@@ -49,8 +49,8 @@ describe('DebugMode', () => {
 
     const snapshotData = await snapshot.promise;
     (await unsub)();
-    expect(snapshotData[0].toHuman()).toHaveProperty('dispatchQueue');
-    expect(snapshotData[0].toHuman()).toHaveProperty('programs');
+    expect(snapshotData[0]).toHaveProperty('dispatchQueue');
+    expect(snapshotData[0]).toHaveProperty('programs');
   });
 
   test('disable debug mode', async () => {

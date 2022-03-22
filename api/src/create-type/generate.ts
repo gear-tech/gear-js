@@ -1,7 +1,8 @@
+import { isJSON, toJSON } from '../utils';
 import { Types, TypeTree } from './interfaces';
 
 const getTree = (type: Types, name: string, value: string | object | TypeTree, count?: number): TypeTree => {
-  const tree = { type, name, value };
+  const tree = { type, name, value: isJSON(value) ? toJSON(value) : value };
   return type === 'Array' ? { ...tree, count } : tree;
 };
 

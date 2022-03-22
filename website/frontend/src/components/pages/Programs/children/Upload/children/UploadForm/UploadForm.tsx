@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
-import { Metadata, getWasmMetadata, parseHexTypes, getTypeStructure } from '@gear-js/api';
+import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
@@ -22,7 +22,7 @@ import { useApi } from 'hooks/useApi';
 import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
-import { readFileAsync, calculateGas } from 'helpers';
+import { readFileAsync, calculateGas, getPreformattedText } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
 import { DroppedFile } from '../../types';
@@ -49,7 +49,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     gasLimit: MIN_GAS_LIMIT,
     value: 0,
     payload: '0x00',
-    types: '',
     fields: {},
     programName: '',
   });
@@ -63,8 +62,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
       if (metaWasm) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
-        const types = parseHexTypes(metaWasm?.types);
-        const typeStructure = getTypeStructure(metaWasm?.init_input, types);
+        const decodedTypes = decodeHexTypes(metaWasm?.types);
+        const typeStructure = createPayloadTypeStructure(metaWasm?.init_input, decodedTypes, true);
         const parsedStructure = parseMeta(typeStructure);
 
         let valuesFromFile = {};
@@ -80,7 +79,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
         valuesFromFile = {
           ...valuesFromFile,
-          types: metaWasm.types,
+          types: getPreformattedText(decodedTypes),
         };
 
         setMeta(metaWasm);
@@ -90,8 +89,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           ...initialValues,
           ...valuesFromFile,
           programName: metaWasm.title,
-          payload: JSON.stringify(typeStructure, null, 4),
-          types: JSON.stringify(types, null, 4),
+          payload: getPreformattedText(typeStructure),
         });
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
@@ -101,7 +99,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setDroppedMetaFile(file);
   };
 
-  const handleRemoveMetaFile = () => {
+  const resetMetaForm = () => {
     setMeta(null);
     setMetaFile(null);
     setPayloadForm(null);
@@ -112,7 +110,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       gasLimit: MIN_GAS_LIMIT,
       value: 0,
       payload: '0x00',
-      types: '',
       fields: {},
       programName: '',
     });
@@ -270,7 +267,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       <MetaFile
                         droppedMetaFile={droppedMetaFile}
                         handleUploadMetaFile={handleUploadMetaFile}
-                        handleRemoveMetaFile={handleRemoveMetaFile}
+                        resetMetaForm={resetMetaForm}
                       />
                     )}
                     {isShowFields && (

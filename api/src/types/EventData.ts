@@ -1,4 +1,4 @@
-import { MessageInfo, Reason, Reply, Message, ProgramDetails } from '../interfaces';
+import { MessageInfo, Reason, Reply, QueuedDispatch, ProgramDetails } from '../interfaces';
 import { Vec, u64, u128, Option, u8, GenericEventData, Null, Bytes, Type } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 
@@ -71,8 +71,8 @@ export class InitSuccessData extends MessageInfoData {}
 export class InitFailureData extends ProgramData {}
 
 export class DebugData extends GearEventData {
-  public get dispatchQueue(): Vec<Message> {
-    return this[0]['messageQueue'];
+  public get dispatchQueue(): Vec<QueuedDispatch> {
+    return this[0]['dispatchQueue'];
   }
 
   public get programs(): Vec<ProgramDetails> {
