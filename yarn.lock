@@ -2124,7 +2124,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/web-tests@workspace:website/tests"
   dependencies:
-    "@gear-js/api": 0.14.4
+    "@gear-js/api": 0.15.1
     "@polkadot/api": 7.12.1
     "@types/js-yaml": 4.0.5
     js-yaml: 4.1.0
