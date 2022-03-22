@@ -1,0 +1,21 @@
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/mixins' as *;
+
+.label {
+  display: flex;
+  align-items: center;
+  color: $textColor;
+  cursor: pointer;
+}
+
+.input {
+  @include square(15px);
+  appearance: none;
+  margin-right: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg width='15' height='15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='7.5' cy='7.5' r='7' stroke='%23909090'/%3E%3C/svg%3E");
+  cursor: inherit;
+
+  &:checked {
+    background-image: url("data:image/svg+xml,%3Csvg width='15' height='15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='7.5' cy='7.5' r='3.5' fill='%232BD071'/%3E%3Ccircle cx='7.5' cy='7.5' r='7' stroke='%232BD071'/%3E%3C/svg%3E");
+  }
+}

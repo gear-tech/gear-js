@@ -1,0 +1,63 @@
+@use 'assets/scss/variables' as *;
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $textColor;
+  border-radius: 2px;
+  transition: 0.25s all;
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+.normal {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+
+  .icon {
+    margin-right: 16px;
+  }
+}
+
+.small {
+  padding: 8px 16px;
+  font-weight: 500;
+
+  .icon {
+    margin-right: 10px;
+  }
+}
+
+.noText {
+  padding: 10px 12px;
+}
+
+.primary {
+  background-color: $successColor;
+
+  &:hover {
+    background-color: #12582f;
+  }
+}
+
+.secondary {
+  background-color: $bkgButtonColor;
+
+  &:hover {
+    background-color: $textColorSecondary;
+  }
+}
+
+.transparent {
+  padding: 0;
+  background-color: transparent;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
