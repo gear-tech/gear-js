@@ -25,7 +25,7 @@ const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData }) => {
     <div style={{ margin: '0 auto', maxWidth: '600px' }}>
       <Formik
         initialValues={{
-          meta: null,
+          __root: null,
         }}
         onSubmit={(values) => {
           console.log(values);

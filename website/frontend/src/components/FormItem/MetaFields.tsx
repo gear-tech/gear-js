@@ -1,13 +1,11 @@
 import React, { useEffect, useState, ReactNode, createElement } from 'react';
-import { Field, useFormikContext } from 'formik';
+import { Field, FormikContextType, useFormikContext } from 'formik';
 import type { MetaField, MetaFieldset, MetaFormItem, MetaFormStruct } from '../../utils/meta-parser';
 import { isMetaFieldset, isMetaField, MetaFormItemStruct } from '../../utils/meta-parser';
 import { MetaInput, Fieldset, EnumSelect } from './styles';
+import isObject from 'lodash.isobject';
 
-function getFieldData(
-  field: MetaFieldset, // TODO find out how to set __fields not null
-  key: string | undefined
-) {
+function getFieldData(field: MetaFieldset, key: string | undefined) {
   if (key && field.__select) {
     return field.__fields[key];
   }
@@ -99,18 +97,28 @@ function createMetaFormItem(data: MetaFormItemStruct | MetaFormItem) {
   });
 }
 
+function valuesHasRoot(obj: unknown): obj is FormikContextType<Record<string, object>> {
+  return isObject(obj) && '__root' in obj;
+}
+
 export const MetaFields = ({ data }: { data: MetaFormStruct }) => {
   const formikContext = useFormikContext();
   const [firstKey, setFirstKey] = useState(Object.keys(data.__root!.__fields!)[0]);
 
   useEffect(() => {
     formikContext.resetForm({
-      values: { ...(formikContext.values as object), meta: data.__values },
+      values: { ...(formikContext.values as object), __root: data.__values },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (data.__root) {
+  if (
+    data.__root &&
+    isObject(formikContext.values) &&
+    '__root' in formikContext.values &&
+    // @ts-ignore
+    formikContext.values.__root
+  ) {
     return (
       <Fieldset>
         <legend>Metadata</legend>

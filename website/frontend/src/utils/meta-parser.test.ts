@@ -13,22 +13,6 @@ import {
   simpleNestedStruct,
 } from './meta-fixtures';
 
-// result
-// 1. OK
-// 2. Err
-
-// option
-// 1. null
-// 2. type
-
-// enum custom fields from select
-
-// {
-//   "initialValues": {
-//   "payload": "{\n    \"_enum_Option\": \"String\"\n}",
-//     "fields": "{}"
-// }
-
 describe('test parser', () => {
   // TODO add edge case tests e.g for null, empty array, empty objects
 
