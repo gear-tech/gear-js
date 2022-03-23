@@ -30,7 +30,7 @@ export class GearApi extends ApiPromise {
   public code: GearCode;
 
   constructor(options?: GearApiOptions) {
-    const { types, providerAddress, ...remain } = options;
+    const { types, providerAddress, ...restOptions } = options;
     const provider = remain?.provider || new WsProvider(providerAddress ?? 'ws://127.0.0.1:9944');
     const defaultTypes = types ? { ...types, ...gearTypes } : gearTypes;
 
