@@ -8,8 +8,8 @@ import { GearStorage } from './Storage';
 export class GearProgramState extends GearStorage {
   /**
    * Decode state to meta_state_output type
-   * @param metaWasm - file with metadata
-   * @param pages - pages with program state
+   * @param state - Uint8Array state representation
+   * @param meta - Metadata
    * @returns decoded state
    */
   decodeState(state: Uint8Array, meta: Metadata): Codec {
@@ -17,18 +17,18 @@ export class GearProgramState extends GearStorage {
       throw new ReadStateError(`Unable to read state. meta_state function is not specified in metadata`);
     }
     const bytes = this.api.createType('Bytes', Array.from(state));
-    const decoded = CreateType.create(meta.meta_state_output, bytes, meta);
+    const decoded = this.createType.create(meta.meta_state_output, bytes, meta);
     return decoded;
   }
 
   /**
    * Encode input parameters to read meta state
-   * @param metaWasm - file with metadata
+   * @param meta - Metadata
    * @param inputValue - input parameters
    * @returns ArrayBuffer with encoded data
    */
   encodeInput(meta: Metadata, inputValue: any): Uint8Array {
-    const encoded = CreateType.create(meta.meta_state_input, inputValue, meta);
+    const encoded = this.createType.create(meta.meta_state_input, inputValue, meta);
     return encoded.toU8a();
   }
 

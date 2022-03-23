@@ -3,6 +3,7 @@ import { Hex, IActiveProgram, IGearPages, IProgram, ProgramId } from './interfac
 import { u32, Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { u8aToHex } from '@polkadot/util';
+import { CreateType } from './create-type';
 
 const PREFIXES = {
   prog: Buffer.from('g::prog::').toString('hex'),
@@ -13,9 +14,11 @@ const SEPARATOR = Buffer.from('::').toString('hex');
 
 export class GearStorage {
   api: GearApi;
+  createType: CreateType;
 
   constructor(api: GearApi) {
     this.api = api;
+    this.createType = new CreateType(api);
   }
   /**
    * Get program from chain
