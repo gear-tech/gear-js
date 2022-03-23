@@ -22,7 +22,7 @@ import { useApi } from 'hooks/useApi';
 import { AddAlert } from 'store/actions/actions';
 import { RootState } from 'store/reducers';
 import { UploadProgram } from 'services/ApiService';
-import { readFileAsync, calculateGas, getPreformattedText } from 'helpers';
+import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
 import { DroppedFile } from '../../types';
@@ -148,7 +148,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code, null);
+    calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code);
   };
 
   return (

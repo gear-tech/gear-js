@@ -1,6 +1,6 @@
-import { UploadProgramModel, MessageModel, MetaModel, ProgramStatus } from 'types/program';
+import { UploadProgramModel, MetaModel, ProgramStatus, Message, Reply } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { GearApi, Metadata } from '@gear-js/api';
+import { GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
 import { UserAccount } from 'types/account';
 import { RPC_METHODS, PROGRAM_ERRORS } from 'consts';
 import { EventTypes } from 'types/alerts';
@@ -176,26 +176,19 @@ export const UploadProgram = async (
 };
 
 // TODO: (dispatch) fix it later
-export const SendMessageToProgram = async (
-  api: GearApi,
+export const sendMessage = async (
+  api: GearMessage | GearMessageReply,
   account: UserAccount,
-  _message: MessageModel,
+  message: Message & Reply,
   dispatch: any,
   callback: () => void,
   meta?: Metadata
 ) => {
-  const injector = await web3FromSource(account.meta.source);
-
-  const { gasLimit, value } = _message;
-  const message = {
-    ..._message,
-    gasLimit: gasLimit.toString(),
-    value: value.toString(),
-  };
-
   try {
-    await api.message.submit(message, meta);
-    await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
+    const { signer } = await web3FromSource(account.meta.source);
+
+    await api.submit(message, meta);
+    await api.signAndSend(account.address, { signer }, (data: any) => {
       dispatch(sendMessageStartAction());
 
       if (data.status.isInBlock) {

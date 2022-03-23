@@ -1,11 +1,11 @@
-import React, { FC, MouseEvent } from 'react';
+import React, { FC, MouseEvent, ReactNode } from 'react';
 import { CloseIcon } from '../../../assets/Icons';
 import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
 import './Modal.scss';
 
 type Props = {
   open: boolean;
-  content: React.ReactNode;
+  content: ReactNode;
   title?: string;
   handleClose: () => void;
 };
