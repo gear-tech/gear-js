@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import close from 'assets/images/close.svg';
 import { Button } from './Button';
 import styles from './Button.module.scss';
+
+const arrowIcon = 'icon-path';
 
 describe('button tests', () => {
   it('renders button', () => {
@@ -11,7 +12,7 @@ describe('button tests', () => {
   });
 
   it('renders icon button', () => {
-    render(<Button icon={close} />);
+    render(<Button icon={arrowIcon} />);
 
     const button = screen.getByRole('button');
     const icon = screen.getByRole('img');
@@ -21,7 +22,7 @@ describe('button tests', () => {
   });
 
   it('renders button with icon and text', () => {
-    render(<Button text="button text" icon={close} />);
+    render(<Button text="button text" icon={arrowIcon} />);
 
     const button = screen.getByText('button text');
     const icon = screen.getByRole('img');

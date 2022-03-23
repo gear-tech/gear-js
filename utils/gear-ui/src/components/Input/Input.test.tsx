@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import close from 'assets/images/close.svg';
 import { Input } from './Input';
 import styles from './Input.module.scss';
+
+const arrowIcon = 'icon-path';
 
 describe('input tests', () => {
   it('renders input', () => {
@@ -17,7 +18,7 @@ describe('input tests', () => {
   });
 
   it('renders input with icon', () => {
-    render(<Input label="label" icon={close} />);
+    render(<Input label="label" icon={arrowIcon} />);
 
     const label = screen.getByTestId('label');
     const icon = screen.getByRole('img');
