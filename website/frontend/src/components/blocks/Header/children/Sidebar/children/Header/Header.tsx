@@ -33,7 +33,7 @@ const Header = ({ closeSidebar, selectedNode }: Props) => {
   return (
     <header className={styles.header}>
       <Button text="Switch" size="small" icon={refresh} onClick={switchNode} />
-      <Button icon={cross} onClick={closeSidebar} />
+      <Button icon={cross} color="transparent" onClick={closeSidebar} />
     </header>
   );
 };

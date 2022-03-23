@@ -27,19 +27,31 @@ describe('input tests', () => {
 
   it('applies className to label wrapper', () => {
     render(<Input label="label" className="class" />);
+
+    const input = screen.getByRole('textbox');
     const label = screen.getByTestId('label');
+
+    expect(input).not.toHaveClass('class');
     expect(label).toHaveClass('class');
   });
 
   it('renders read only input', () => {
     render(<Input readOnly />);
+
     const wrapper = screen.getByTestId('wrapper');
+    const input = screen.getByRole('textbox');
+
     expect(wrapper).toHaveClass(styles.readOnly);
+    expect(input).toHaveAttribute('readOnly');
   });
 
   it('renders disabled input', () => {
     render(<Input disabled />);
+
+    const input = screen.getByRole('textbox');
     const label = screen.getByTestId('label');
+
+    expect(input).toBeDisabled();
     expect(label).toHaveClass('disabled');
   });
 });

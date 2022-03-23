@@ -109,12 +109,12 @@
   min-width: 164px;
 }
 
-.message-form--info input {
+.message-form--info input:not([type='checkbox']) {
   height: 38px;
   width: 100%;
 }
 
-.message-form--info input,
+.message-form--info input:not([type='checkbox']),
 .message-form--info textarea {
   padding: 10px 16px;
   background: #000000;
@@ -129,7 +129,7 @@
   min-height: 38px;
 }
 
-.message-form--info input::placeholder {
+.message-form--info input:not([type='checkbox'])::placeholder {
   color: #8b8b8b;
 }
 

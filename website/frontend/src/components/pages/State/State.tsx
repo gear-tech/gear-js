@@ -12,7 +12,7 @@ import { RootState } from 'store/reducers';
 import { useApi } from 'hooks/useApi';
 import { EventTypes } from 'types/alerts';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
-import { BackButton } from 'common/components/BackButton/BackButton';
+import { BackButton } from 'components/BackButton/BackButton';
 import { getPreformattedText } from 'helpers';
 import styles from './State.module.scss';
 
