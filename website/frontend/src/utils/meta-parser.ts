@@ -51,7 +51,7 @@ export function isMetaFieldset(value: unknown): value is MetaFieldset {
   );
 }
 
-type FormValues = {
+export type FormValues = {
   [key: string]: string | FormValues;
 };
 
@@ -359,4 +359,44 @@ export function parseMeta(data: MetaItem): MetaFormStruct | null {
   }
 
   return null;
+}
+
+export function prepareToSend(data: FormValues) {
+  const stack: Record<
+    string,
+    {
+      path: string[];
+      value: string | FormValues;
+    }
+  >[] = [];
+  Object.entries(data).forEach(([key, value]) => {
+    stack.push({
+      [key]: {
+        path: [key],
+        value,
+      },
+    });
+  });
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (current) {
+      Object.entries(current).forEach((item) => {
+        if (isString(item[1].value) && item[1].value === 'Null') {
+          set(data, item[1].path, null);
+        }
+        if (isObject(item[1].value)) {
+          Object.entries(item[1].value).forEach(([first, second]) => {
+            stack.push({
+              [first]: {
+                path: [...item[1].path, first],
+                value: second,
+              },
+            });
+          });
+        }
+      });
+    }
+  }
+  return data;
 }

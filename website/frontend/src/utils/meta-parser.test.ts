@@ -1,4 +1,4 @@
-import { parseMeta } from './meta-parser';
+import { parseMeta, prepareToSend } from './meta-parser';
 
 import {
   simpleDeepStruct,
@@ -457,6 +457,26 @@ describe('test parser', () => {
             firstName: '',
             secondName: '',
           },
+        },
+      },
+    });
+  });
+
+  it('test prepare to send', () => {
+    expect(
+      prepareToSend({
+        __root: {
+          field: {
+            __null: 'Null',
+            '__field[0]': '',
+          },
+        },
+      })
+    ).toEqual({
+      __root: {
+        field: {
+          __null: null,
+          '__field[0]': '',
         },
       },
     });
