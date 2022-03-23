@@ -11,7 +11,7 @@ type Props = {
 };
 
 const ReplyLink = ({ to }: Props) => {
-  const linkClassName = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.success, styles.link);
+  const linkClassName = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.primary, styles.link);
   const iconClassName = clsx(buttonStyles.icon, styles.icon);
 
   return (

@@ -49,7 +49,7 @@ const Message = ({ message }: Props) => {
       <pre className={styles.pre}>{getPreformattedText(formattedMessage)}</pre>
       <div>
         <ReplyLink to={id} />
-        <Button text="Claim value" icon={claimIcon} color="main" size="small" onClick={handleClaimButtonClick} />
+        <Button text="Claim value" icon={claimIcon} color="secondary" size="small" onClick={handleClaimButtonClick} />
       </div>
     </div>
   );
