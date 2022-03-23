@@ -31,7 +31,7 @@ export class GearApi extends ApiPromise {
 
   constructor(options?: GearApiOptions) {
     const { types, providerAddress, ...restOptions } = options;
-    const provider = remain?.provider || new WsProvider(providerAddress ?? 'ws://127.0.0.1:9944');
+    const provider = restOptions?.provider || new WsProvider(providerAddress ?? 'ws://127.0.0.1:9944');
     const defaultTypes = types ? { ...types, ...gearTypes } : gearTypes;
 
     super({
@@ -43,7 +43,7 @@ export class GearApi extends ApiPromise {
       rpc: {
         ...gearRpc,
       },
-      ...remain,
+      ...restOptions,
     });
 
     this.isReady.then(() => {
