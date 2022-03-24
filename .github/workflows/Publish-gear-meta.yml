@@ -30,7 +30,7 @@ jobs:
         if: steps.check.outputs.changed == 'true'
         working-directory: utils/meta-cli
         run: |
-          npm config set //registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN
+          npm config set //registry.npmjs.org/:_authToken=$GITHUB_ACTOR
           npm publish
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}

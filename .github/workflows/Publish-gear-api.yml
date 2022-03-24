@@ -5,6 +5,8 @@ on:
     branches: [master]
     paths:
       - api/**
+  pull_request:
+    branches: [master]
 
 jobs:
   build:
@@ -29,9 +31,10 @@ jobs:
       - name: Publish
         if: steps.check.outputs.changed == 'true'
         working-directory: api
-        run: |
-          npm ci
-          npm config set //registry.npmjs.org/:_authToken=$GITHUB_ACTOR
-          npm publish
+        run: echo $GITHUB_ACTOR
+        # run: |
+        #   npm ci
+        #   npm config set //registry.npmjs.org/:_authToken=$GITHUB_ACTOR
+        #   npm publish
         env:
           osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
