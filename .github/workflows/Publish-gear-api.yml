@@ -30,8 +30,9 @@ jobs:
         if: steps.check.outputs.changed == 'true'
         working-directory: api
         run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
           npm ci
-          npm config set //registry.npmjs.org/:_authToken=$GITHUB_ACTOR.NPM_TOKEN
+          npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
-          osipov-mit.NPM_TOKEN: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
