@@ -31,7 +31,7 @@ jobs:
         working-directory: api
         run: |
           npm ci
-          npm config set //registry.npmjs.org/:_authToken=$GITHUB_ACTOR.NPM_TOKEN
+          npm config set //registry.npmjs.org/:_authToken=$GITHUB_ACTOR
           npm publish
         env:
-          osipov-mit.NPM_TOKEN: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
