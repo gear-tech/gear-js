@@ -1,0 +1,39 @@
+@use 'src/assets/styles/variables' as *;
+
+.label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 300;
+  color: $textColorSecondary;
+}
+
+.wrapper,
+.input {
+  flex: 1;
+}
+
+.wrapper {
+  display: flex;
+  padding: 10px 20px;
+  background-color: #000;
+  border-radius: 2px;
+
+  &.readOnly {
+    background-color: #282828;
+    box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
+  }
+}
+
+.input {
+  padding: 0;
+  color: $textColor;
+  background: none;
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    color: $textColorSecondary;
+  }
+}
