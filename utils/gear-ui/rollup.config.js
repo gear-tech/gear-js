@@ -5,6 +5,7 @@ import dts from 'rollup-plugin-dts';
 import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import copy from 'rollup-plugin-copy';
 
 const packageJson = require('./package.json');
 
@@ -30,6 +31,7 @@ export default [
       postcss(),
       terser(),
       peerDepsExternal(),
+      copy({ targets: [{ src: 'src/assets/styles/*', dest: 'dist' }] }),
     ],
   },
   {
