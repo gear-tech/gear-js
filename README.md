@@ -22,6 +22,8 @@ JavaScript CLI tool that provides functionality to work with `.meta.wasm` files.
 
 Refer to the [meta-cli](https://github.com/gear-tech/gear-js/blob/master/utils/meta-cli/README.md) docs for detail
 
+#### [npm package](https://www.npmjs.com/package/@gear-js/gear-meta)
+
 ## [@gear-js/ui](https://github.com/gear-tech/gear-js/tree/master/utils/gear-ui)
 
 React UI components used across Gear applications.
