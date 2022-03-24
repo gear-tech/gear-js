@@ -18,7 +18,7 @@
   display: flex;
   padding: 10px 20px;
   background-color: #000;
-  border-radius: 2px;
+  border-radius: $borderRadius;
 
   &.readOnly {
     background-color: #282828;
