@@ -2118,7 +2118,7 @@ __metadata:
     "@polkadot/api": 7.12.1
     "@types/js-yaml": 4.0.5
     js-yaml: 4.1.0
-    node-fetch: 2
+    node-fetch: 2.6.7
     ts-node: 10.7.0
     ts-node-dev: 1.1.8
     typescript: 4.6.2
@@ -13062,7 +13062,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:2, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
+"node-fetch@npm:2.6.7, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
   version: 2.6.7
   resolution: "node-fetch@npm:2.6.7"
   dependencies:
