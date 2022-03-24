@@ -34,4 +34,4 @@ jobs:
           npm config set //registry.npmjs.org/:_authToken=$GITHUB_ACTOR.NPM_TOKEN
           npm publish
         env:
-          osipov-mit.NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          osipov-mit.NPM_TOKEN: ${{ secrets.OSIPOV_NPM_TOKEN }}
