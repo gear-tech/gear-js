@@ -15,10 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
+      # - name: Use node 16.x
+      #   uses: actions/setup-node@v2.1.5
+      #   with:
+      #     node-version: 16.x
 
       # - name: Check package version
       #   uses: EndBug/version-check@v1
@@ -29,8 +29,8 @@ jobs:
       #     static-checking: localIsNew
 
       - name: Publish
-        if: steps.check.outputs.changed == 'true'
-        working-directory: api
+        # if: steps.check.outputs.changed == 'true'
+        # working-directory: api
         run: echo $GITHUB_ACTOR
         # run: |
         #   npm ci
