@@ -4,14 +4,10 @@ import { GearBalance } from './Balance';
 import { GearEvents } from './Events';
 import { GearProgramState } from './State';
 import { GearMessageReply } from './MessageReply';
-import { transformTypes } from './utils';
 import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { EventRecord, ContractExecResultErr, Event } from '@polkadot/types/interfaces';
-import { PromiseResult } from '@polkadot/api/types';
-import { Vec } from '@polkadot/types';
-import { Observable } from 'rxjs';
+import { ContractExecResultErr, Event } from '@polkadot/types/interfaces';
 import { GearBlock } from './Blocks';
 import { GearStorage } from './Storage';
 import { GearMailbox } from './Mailbox';
@@ -25,7 +21,6 @@ export class GearApi extends ApiPromise {
   public message: GearMessage;
   public reply: GearMessageReply;
   public balance: GearBalance;
-  public allEvents: PromiseResult<() => Observable<Vec<EventRecord>>>;
   public gearEvents: GearEvents;
   public defaultTypes: any;
   public blocks: GearBlock;
@@ -34,19 +29,11 @@ export class GearApi extends ApiPromise {
   public claimValueFromMailbox: GearClaimValue;
   public code: GearCode;
 
-  constructor(options?: GearApiOptions) {
-    const provider = options?.provider
-      ? options.provider
-      : new WsProvider(options?.providerAddress ?? 'ws://127.0.0.1:9944');
+  constructor(options: GearApiOptions = {}) {
+    const { types, providerAddress, ...restOptions } = options;
+    const provider = restOptions?.provider || new WsProvider(providerAddress ?? 'ws://127.0.0.1:9944');
+    const defaultTypes = types ? { ...types, ...gearTypes } : gearTypes;
 
-    const defaultTypes = options?.customTypes
-      ? {
-          ...gearTypes,
-          ...transformTypes(
-            'types' in options.customTypes ? options.customTypes : { types: { ...options.customTypes } },
-          ),
-        }
-      : gearTypes;
     super({
       provider,
       derives: {},
@@ -56,14 +43,14 @@ export class GearApi extends ApiPromise {
       rpc: {
         ...gearRpc,
       },
-      ...options,
+      ...restOptions,
     });
+
     this.isReady.then(() => {
       this.program = new GearProgram(this);
       this.message = new GearMessage(this);
       this.balance = new GearBalance(this);
       this.reply = new GearMessageReply(this);
-      this.allEvents = this.query.system.events;
       this.gearEvents = new GearEvents(this);
       this.defaultTypes = defaultTypes;
       this.programState = new GearProgramState(this);

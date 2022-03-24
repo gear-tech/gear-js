@@ -47,12 +47,18 @@ export interface UploadProgramModel {
   programName?: string;
 }
 
-export interface MessageModel {
-  destination: string;
+interface MessageModel {
   gasLimit: AnyNumber;
-  value: number;
+  value: AnyNumber;
   payload: object;
-  additional?: any;
+}
+
+export interface Message extends MessageModel {
+  destination: string;
+}
+
+export interface Reply extends MessageModel {
+  replyToId: string;
 }
 
 export interface ProgramsPagintaionModel {
