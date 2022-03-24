@@ -20,13 +20,13 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Check package version
-        uses: EndBug/version-check@v1
-        id: check
-        with:
-          file-name: api/package.json
-          file-url: https://unpkg.com/@gear-js/api@latest/package.json
-          static-checking: localIsNew
+      # - name: Check package version
+      #   uses: EndBug/version-check@v1
+      #   id: check
+      #   with:
+      #     file-name: api/package.json
+      #     file-url: https://unpkg.com/@gear-js/api@latest/package.json
+      #     static-checking: localIsNew
 
       - name: Publish
         if: steps.check.outputs.changed == 'true'
