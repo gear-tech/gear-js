@@ -21,6 +21,7 @@ describe('test parser', () => {
       __root: {
         __type: '__fieldset',
         __name: '__root',
+        __path: '__root',
         __select: false,
         __fields: {
           amount: {
@@ -47,11 +48,13 @@ describe('test parser', () => {
       __root: {
         __type: '__fieldset',
         __name: '__root',
+        __path: '__root',
         __select: false,
         __fields: {
           AddMessage: {
             __type: '__fieldset',
             __name: 'AddMessage',
+            __path: '__root.AddMessage',
             __select: false,
             __fields: {
               author: {
@@ -82,16 +85,19 @@ describe('test parser', () => {
       __root: {
         __type: '__fieldset',
         __name: '__root',
+        __path: '__root',
         __select: false,
         __fields: {
           AddMessage: {
             __type: '__fieldset',
             __name: 'AddMessage',
+            __path: '__root.AddMessage',
             __select: false,
             __fields: {
               To: {
                 __type: '__fieldset',
                 __name: 'To',
+                __path: '__root.AddMessage.To',
                 __select: false,
                 __fields: {
                   name: {
@@ -138,11 +144,13 @@ describe('test parser', () => {
       __root: {
         __type: '__fieldset',
         __name: '__root',
+        __path: '__root',
         __select: true,
         __fields: {
           AddMessage: {
             __type: '__fieldset',
             __name: 'AddMessage',
+            __path: '__root.AddMessage',
             __select: false,
             __fields: {
               author: {
@@ -184,13 +192,14 @@ describe('test parser', () => {
     expect(parseMeta(optionEnumSimple)).toEqual({
       __root: {
         __name: '__root',
+        __path: '__root',
         __type: 'enum_option',
         __select: true,
         __fields: {
-          [`__field[0]`]: {
+          [`__field-0`]: {
             type: 'String',
-            name: '__root.__field[0]',
-            label: '__field[0]',
+            name: '__root.__field-0',
+            label: '__field-0',
           },
           __null: {
             name: '__root.__null',
@@ -200,7 +209,7 @@ describe('test parser', () => {
         },
       },
       __values: {
-        [`__field[0]`]: '',
+        [`__field-0`]: '',
         __null: 'Null',
       },
     });
@@ -210,23 +219,25 @@ describe('test parser', () => {
     expect(parseMeta(optionEnumWithFieldsObject)).toEqual({
       __root: {
         __name: '__root',
+        __path: '__root',
         __type: 'enum_option',
         __select: true,
         __fields: {
-          ['__field[0]']: {
+          ['__field-0']: {
             __fields: {
               firstName: {
                 label: 'firstName',
-                name: '__root.__field[0].firstName',
+                name: '__root.__field-0.firstName',
                 type: 'Text',
               },
               lastName: {
                 label: 'lastName',
-                name: '__root.__field[0].lastName',
+                name: '__root.__field-0.lastName',
                 type: 'Text',
               },
             },
-            __name: '__field[0]',
+            __name: '__field-0',
+            __path: '__root.__field-0',
             __select: false,
             __type: '__fieldset',
           },
@@ -238,7 +249,7 @@ describe('test parser', () => {
         },
       },
       __values: {
-        '__field[0]': {
+        '__field-0': {
           firstName: '',
           lastName: '',
         },
@@ -251,18 +262,20 @@ describe('test parser', () => {
     expect(parseMeta(optionEnumNested)).toEqual({
       __root: {
         __name: '__root',
+        __path: '__root',
         __type: '__fieldset',
         __select: false,
         __fields: {
           field: {
             __name: 'field',
+            __path: '__root.field',
             __type: 'enum_option',
             __select: true,
             __fields: {
-              [`__field[0]`]: {
+              [`__field-0`]: {
                 type: 'String',
-                name: '__root.field.__field[0]',
-                label: '__field[0]',
+                name: '__root.field.__field-0',
+                label: '__field-0',
               },
               __null: {
                 name: '__root.field.__null',
@@ -275,7 +288,7 @@ describe('test parser', () => {
       },
       __values: {
         field: {
-          [`__field[0]`]: '',
+          [`__field-0`]: '',
           __null: 'Null',
         },
       },
@@ -286,27 +299,29 @@ describe('test parser', () => {
     expect(parseMeta(optionEnumComplex)).toEqual({
       __root: {
         __name: '__root',
+        __path: '__root',
         __type: '__fieldset',
         __select: false,
         __fields: {
           res: {
             __fields: {
-              '__field[0]': {
+              '__field-0': {
                 __fields: {
                   id: {
                     __fields: {
                       decimal: {
                         label: 'decimal',
-                        name: '__root.res.__field[0].id.decimal',
+                        name: '__root.res.__field-0.id.decimal',
                         type: 'u64',
                       },
                       hex: {
                         label: 'hex',
-                        name: '__root.res.__field[0].id.hex',
+                        name: '__root.res.__field-0.id.hex',
                         type: 'Bytes',
                       },
                     },
                     __name: 'id',
+                    __path: '__root.res.__field-0.id',
                     __select: false,
                     __type: '__fieldset',
                   },
@@ -314,21 +329,23 @@ describe('test parser', () => {
                     __fields: {
                       name: {
                         label: 'name',
-                        name: '__root.res.__field[0].person.name',
+                        name: '__root.res.__field-0.person.name',
                         type: 'Text',
                       },
                       surname: {
                         label: 'surname',
-                        name: '__root.res.__field[0].person.surname',
+                        name: '__root.res.__field-0.person.surname',
                         type: 'Text',
                       },
                     },
                     __name: 'person',
+                    __path: '__root.res.__field-0.person',
                     __select: false,
                     __type: '__fieldset',
                   },
                 },
-                __name: '__field[0]',
+                __name: '__field-0',
+                __path: '__root.res.__field-0',
                 __select: false,
                 __type: '__fieldset',
               },
@@ -339,6 +356,7 @@ describe('test parser', () => {
               },
             },
             __name: 'res',
+            __path: '__root.res',
             __select: true,
             __type: 'enum_option',
           },
@@ -346,7 +364,7 @@ describe('test parser', () => {
       },
       __values: {
         res: {
-          '__field[0]': {
+          '__field-0': {
             id: {
               decimal: '',
               hex: '',
@@ -366,11 +384,13 @@ describe('test parser', () => {
     expect(parseMeta(resultEnumSimple)).toEqual({
       __root: {
         __name: '__root',
+        __path: '__root',
         __type: '__fieldset',
         __select: false,
         __fields: {
           exchangeRate: {
             __name: 'exchangeRate',
+            __path: '__root.exchangeRate',
             __type: 'enum_result',
             __select: true,
             __fields: {
@@ -405,9 +425,9 @@ describe('test parser', () => {
             __fields: {
               err: {
                 __fields: {
-                  '__field[0]': {
-                    label: '__field[0]',
-                    name: '__root.exchangeRate.err.__field[0]',
+                  '__field-0': {
+                    label: '__field-0',
+                    name: '__root.exchangeRate.err.__field-0',
                     type: 'String',
                   },
                   __null: {
@@ -417,6 +437,7 @@ describe('test parser', () => {
                   },
                 },
                 __name: 'err',
+                __path: '__root.exchangeRate.err',
                 __select: true,
                 __type: 'enum_option',
               },
@@ -434,23 +455,26 @@ describe('test parser', () => {
                   },
                 },
                 __name: 'ok',
+                __path: '__root.exchangeRate.ok',
                 __select: false,
                 __type: '__fieldset',
               },
             },
             __name: 'exchangeRate',
+            __path: '__root.exchangeRate',
             __select: true,
             __type: 'enum_result',
           },
         },
         __name: '__root',
+        __path: '__root',
         __select: false,
         __type: '__fieldset',
       },
       __values: {
         exchangeRate: {
           err: {
-            '__field[0]': '',
+            '__field-0': '',
             __null: 'Null',
           },
           ok: {
@@ -468,7 +492,7 @@ describe('test parser', () => {
         __root: {
           field: {
             __null: 'Null',
-            '__field[0]': '',
+            '__field-0': '',
           },
         },
       })
@@ -476,7 +500,7 @@ describe('test parser', () => {
       __root: {
         field: {
           __null: null,
-          '__field[0]': '',
+          '__field-0': '',
         },
       },
     });

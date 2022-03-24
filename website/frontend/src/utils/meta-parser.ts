@@ -34,6 +34,7 @@ export type MetaFormItemStruct = Record<string, MetaFormItem>;
 
 export type MetaFieldset = {
   __name: string;
+  __path: string;
   __type: string;
   __select: boolean;
   __fields: MetaFormItemStruct;
@@ -114,25 +115,6 @@ function processFields(data: MetaItem, path?: string[]): StackItem[] {
   }, []);
 }
 
-type PathSpecialKeys = '__select' | '__fields' | '__name' | '__values' | '__type';
-
-function isOdd(num: number) {
-  return num % 2;
-}
-
-function createFieldsetPath(path: string[]) {
-  return path.reduce<string[]>((accum, item, index) => {
-    if (!isOdd(index)) {
-      accum.push(item);
-      accum.push('__fields');
-      return accum;
-    }
-
-    accum.push(item);
-    return accum;
-  }, []);
-}
-
 function parseField(data: MetaItem) {
   const result: MetaFormStruct = {
     __root: null,
@@ -170,11 +152,12 @@ function parseField(data: MetaItem) {
           current.value === 'Null' ? 'Null' : ''
         );
       } else if (isObject(current.value)) {
-        // Parse if it is fieldset
+        // region Parse if it is fieldset
         if (current.kind === 'fieldset') {
           const key = current.path.at(-1);
           set(result, [...current.path, '__fields'], null);
           set(result, [...current.path, '__name'], key);
+          set(result, [...current.path, '__path'], current.path.filter((i) => i !== '__fields').join('.'));
           set(result, [...current.path, '__type'], '__fieldset');
 
           const entries = Object.entries(current.value);
@@ -200,7 +183,7 @@ function parseField(data: MetaItem) {
               stack.push(
                 ...processFields(
                   {
-                    [`__field[${index}]`]: vValue,
+                    [`__field-${index}`]: vValue,
                   },
                   [...current.path, '__fields']
                 )
@@ -240,19 +223,9 @@ function parseField(data: MetaItem) {
               return;
             }
           });
-        } else if (current.kind === 'field') {
-          const key = current.path[current.path.length - 1];
-          if (!result.fields) {
-            result.fields = {};
-          }
-
-          set(result.fields, current.path, {
-            label: key,
-            name: ['fields', ...current.path].join('.'),
-            type: current.value,
-          });
         }
-        // enum_Option
+        // endregion
+        // region enum_Option
         else if (current.kind === 'enum_option') {
           Object.entries(current.value).forEach(([vKey, vValue], index) => {
             const path = current.path.filter((item) => item !== '_enum_Option');
@@ -282,7 +255,8 @@ function parseField(data: MetaItem) {
             }
           });
         }
-        //
+        // endregion
+        // region enum_Result
         else if (current.kind === 'enum_result') {
           Object.entries(current.value).forEach(([vKey, vValue], index) => {
             const path = current.path.filter((item) => item !== '_enum_Result');
@@ -312,7 +286,8 @@ function parseField(data: MetaItem) {
             }
           });
         }
-        // Parse if it is enum
+        // endregion
+        //region Parse if it is enum
         else if (current.kind === 'enum') {
           // Process fieldset fields
           Object.entries(current.value).forEach(([vKey, vValue]) => {
@@ -343,6 +318,7 @@ function parseField(data: MetaItem) {
             }
           });
         }
+        //endregion
       }
     }
   }
