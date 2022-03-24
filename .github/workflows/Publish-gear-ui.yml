@@ -1,10 +1,10 @@
-name: 'Publish @gear-js/gear-meta'
+name: 'Publish @gear-js/ui'
 
 on:
   push:
     branches: [master]
     paths:
-      - utils/meta-cli/**
+      - utils/gear-ui/**
 
 jobs:
   build:
@@ -22,16 +22,18 @@ jobs:
         uses: EndBug/version-check@v1
         id: check
         with:
-          file-name: utils/meta-cli/package.json
-          file-url: https://unpkg.com/@gear-js/gear-meta@latest/package.json
+          file-name: utils/gear-ui/package.json
+          file-url: https://unpkg.com/@gear-js/ui@latest/package.json
           static-checking: localIsNew
 
       - name: Publish
         if: steps.check.outputs.changed == 'true'
-        working-directory: utils/meta-cli
+        working-directory: utils/gear-ui
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm ci
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
           osipov-mit.NPM_TOKEN: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          nikitayutanov.NPM_TOKEN: ${{ secrets.YUTANOV_NPM_TOKEN }}
