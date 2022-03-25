@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
-import { getTypeStructure, getWasmMetadata, Metadata, parseHexTypes } from '@gear-js/api';
+import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
@@ -10,7 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from 'hooks';
 import { AlertTypes } from 'types/alerts';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
-import { BackButton } from 'common/components/BackButton/BackButton';
+import { BackButton } from 'components/BackButton/BackButton';
 import { getPreformattedText } from 'helpers';
 import { ProgramModel } from 'types/program';
 import { getProgram } from 'services';
@@ -63,8 +63,8 @@ const State: VFC = () => {
 
   const getPayloadForm = useCallback(() => {
     if (stateInput && types) {
-      const parsedTypes = parseHexTypes(types);
-      const typeStruct = getTypeStructure(stateInput, parsedTypes);
+      const decodedTypes = decodeHexTypes(types);
+      const typeStruct = createPayloadTypeStructure(stateInput, decodedTypes, true);
       const parsedStruct = parseMeta(typeStruct);
       setTypeStructure(typeStruct);
       setForm(parsedStruct);

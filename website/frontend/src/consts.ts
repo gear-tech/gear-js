@@ -55,7 +55,8 @@ export const SOCKET_RESULT_STATUSES = {
 export const RPC_METHODS = {
   PROGRAM_UPLOAD: 'program.upload',
   PROGRAM_DATA: 'program.data',
-  PROGRAM_ALL: 'program.all',
+  PROGRAMS_ALL: 'program.all',
+  PROGRAMS_USER: 'program.allUser',
   TOTAL_ISSUANCE: 'system.totalIssuance',
   SUBSCRIBE_BLOCKS: 'blocks.newBlocks',
   UNSUBSCRIBE_BLOCKS: 'blocks.unsubscribe',

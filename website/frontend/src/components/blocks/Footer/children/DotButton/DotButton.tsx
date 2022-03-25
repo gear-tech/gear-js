@@ -10,7 +10,7 @@ const DotButton = () => {
   return (
     <a href={href} target="_blank" rel="noreferrer" className={styles.button}>
       <img src={dot} alt="logo" className={styles.icon} />
-      Polkadot
+      Polkadot Explorer
     </a>
   );
 };

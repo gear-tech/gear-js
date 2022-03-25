@@ -6,7 +6,7 @@ import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
-import { InitialValues as SendMessageInitialValues } from './components/pages/SendMessage/children/MessageForm/types';
+import { InitialValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
 import { InitialValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { SetFieldValue } from 'types/common';
 import { AlertTypes } from 'types/alerts';
@@ -163,7 +163,8 @@ export const calculateGas = async (
   showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void,
   meta: any,
   code?: Uint8Array | null,
-  programId?: String | null
+  addressId?: String | null,
+  replyCodeError?: string
 ) => {
   const payload = isManualPayload ? values.payload : values.fields;
 
@@ -178,14 +179,41 @@ export const calculateGas = async (
   }
 
   try {
+    const { value } = values;
     const metaOrTypeOfPayload: Metadata | string = meta || 'String';
 
-    const estimatedGas = await api.program.gasSpent[method](
-      localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-      method === 'init' ? code : programId,
-      payload,
-      metaOrTypeOfPayload
-    );
+    let estimatedGas;
+
+    switch (method) {
+      case 'init':
+        estimatedGas = await api.program.gasSpent.init(
+          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+          code,
+          payload,
+          value,
+          metaOrTypeOfPayload
+        );
+        break;
+      case 'handle':
+        estimatedGas = await api.program.gasSpent.handle(
+          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+          addressId,
+          payload,
+          value,
+          metaOrTypeOfPayload
+        );
+        break;
+      case 'reply':
+        estimatedGas = await api.program.gasSpent.reply(
+          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
+          addressId,
+          Number(replyCodeError),
+          payload,
+          value,
+          metaOrTypeOfPayload
+        );
+        break;
+    }
 
     showAlert(`Estimated gas ${estimatedGas.toHuman()}`, { type: AlertTypes.INFO });
     setFieldValue('gasLimit', estimatedGas.toNumber());

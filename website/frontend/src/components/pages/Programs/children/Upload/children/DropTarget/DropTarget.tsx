@@ -114,7 +114,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
           <Button
             text={buttonText}
             icon={isProgramUpload ? upload : editor}
-            color={isProgramUpload ? 'success' : 'main'}
+            color={isProgramUpload ? 'primary' : 'secondary'}
             onClick={emulateInputClick}
           />
           <div className={styles.text}>{`Click “${buttonText}” to browse or drag and drop your .wasm files here`}</div>

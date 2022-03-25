@@ -23,6 +23,8 @@ import { EditorTree } from '../EditorTree';
 import { addParentToNode } from '../EditorTree/utils';
 import { SimpleExample } from '../../../fixtures/code';
 
+import './styles.scss';
+
 export const EditorPage = () => {
   const navigate = useNavigate();
   const alert = useAlert();

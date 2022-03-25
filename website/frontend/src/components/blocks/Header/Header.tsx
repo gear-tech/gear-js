@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Wallet } from '../Wallet';
+import { Wallet } from '../Wallet/Wallet';
 import { Logo } from './children/Logo/Logo';
 import { Menu } from './children/Menu/Menu';
 import { Sidebar } from './children/Sidebar/Sidebar';

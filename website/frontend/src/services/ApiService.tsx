@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
-import { AlertCustomOptionsWithType } from 'react-alert';
-import { UploadProgramModel, MessageModel, MetaModel, ProgramStatus } from 'types/program';
+import { AlertOptions } from 'react-alert';
+import { UploadProgramModel, Message, Reply, MetaModel, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { CreateType, GearApi, GearKeyring, Metadata } from '@gear-js/api';
+import { CreateType, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
 import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE } from 'consts';
 import { AlertTypes } from 'types/alerts';
 import { localPrograms } from './LocalDBService';
@@ -21,7 +21,7 @@ export const UploadProgram = async (
   metaFile: any,
   enableLoading: () => void,
   disableLoading: () => void,
-  showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void,
+  showAlert: (message?: ReactNode, options?: AlertOptions) => void,
   callback: () => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
@@ -150,28 +150,21 @@ export const UploadProgram = async (
 };
 
 // TODO: (dispatch) fix it later
-export const SendMessageToProgram = async (
-  api: GearApi,
+export const sendMessage = async (
+  api: GearMessage | GearMessageReply,
   account: InjectedAccountWithMeta,
-  _message: MessageModel,
+  message: Message & Reply,
   enableLoading: () => void,
   disableLoading: () => void,
-  showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void,
+  showAlert: (message?: ReactNode, options?: AlertOptions) => void,
   callback: () => void,
   meta?: Metadata
 ) => {
-  const injector = await web3FromSource(account.meta.source);
-
-  const { gasLimit, value } = _message;
-  const message = {
-    ..._message,
-    gasLimit: gasLimit.toString(),
-    value: value.toString(),
-  };
-
   try {
-    await api.message.submit(message, meta);
-    await api.message.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
+    const { signer } = await web3FromSource(account.meta.source);
+
+    await api.submit(message, meta);
+    await api.signAndSend(account.address, { signer }, (data: any) => {
       enableLoading();
 
       if (data.status.isInBlock) {
@@ -212,7 +205,7 @@ export const addMetadata = async (
   account: InjectedAccountWithMeta,
   programId: string,
   name: any,
-  showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void
+  showAlert: (message?: ReactNode, options?: AlertOptions) => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);
@@ -265,7 +258,7 @@ export const addMetadata = async (
   });
 };
 
-export const subscribeToEvents = (showAlert: (message?: ReactNode, options?: AlertCustomOptionsWithType) => void) => {
+export const subscribeToEvents = (showAlert: (message?: ReactNode, options?: AlertOptions) => void) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore

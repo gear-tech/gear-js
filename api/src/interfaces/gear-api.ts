@@ -5,7 +5,6 @@ import { ApiOptions } from '@polkadot/api/types';
 import { AccountId32 } from '@polkadot/types/interfaces';
 export interface GearApiOptions extends ApiOptions {
   providerAddress?: string;
-  customTypes?: GearType;
 }
 
 export interface ExitCode extends i32 {}

@@ -1,15 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useApi } from 'hooks';
 import { routes } from 'routes';
+import clsx from 'clsx';
 import styles from './Menu.module.scss';
 
 type Props = {
   openSidebar: () => void;
 };
 
+type ClassNameProps = {
+  isActive: boolean;
+};
+
 const Menu = ({ openSidebar }: Props) => {
   const { isApiReady } = useApi();
+
+  const getClassName = ({ isActive }: ClassNameProps) => clsx(styles.link, isActive && styles.active);
 
   return (
     <ul className={styles.menu}>
@@ -19,14 +26,19 @@ const Menu = ({ openSidebar }: Props) => {
         </span>
       </li>
       <li>
-        <Link to="/explorer" className={styles.link}>
+        <NavLink className={getClassName} to={routes.explorer}>
           Explorer
-        </Link>
+        </NavLink>
       </li>
       <li>
-        <Link to={routes.editor} className={styles.link}>
+        <NavLink className={getClassName} to={routes.editor}>
           &lt;/&gt; IDE
-        </Link>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink className={getClassName} to={routes.mailbox}>
+          Mailbox
+        </NavLink>
       </li>
     </ul>
   );

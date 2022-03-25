@@ -6,13 +6,14 @@ import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
 import { Programs } from 'components/pages/Programs/Programs';
 import { Program } from 'components/pages/Program/Program';
+import { Mailbox } from 'components/pages/Mailbox/Mailbox';
 import { Message } from 'components/pages/Message/Message';
 import Explorer from 'components/pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
-import { SendMessage } from 'components/pages/SendMessage/SendMessage';
-import { EditorPage } from 'features/Editor/EditorPage';
+import { Send } from 'components/pages/Send/Send';
+import { EditorPage } from 'features/Editor/EditorPage/EditorPage';
 import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
 
@@ -114,12 +115,15 @@ const AppComponent: FC = () => {
               <Route path="" element={<Explorer events={events} />} />
               <Route path=":blockId" element={<Explorer events={events} />} />
             </Route>
-
             <Route path={routes.program} element={<Program />} />
             <Route path={routes.message} element={<Message />} />
             <Route path={routes.state} element={<State />} />
-            <Route path={routes.sendMessage} element={<SendMessage />} />
+            <Route path={routes.send}>
+              <Route path={routes.sendMessage} element={<Send />} />
+              <Route path={routes.reply} element={<Send />} />
+            </Route>
             <Route path={routes.editor} element={<EditorPage />} />
+            <Route path={routes.mailbox} element={<Mailbox />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         ) : (

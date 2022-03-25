@@ -3,14 +3,14 @@ import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
-import { Metadata, getWasmMetadata, parseHexTypes, getTypeStructure } from '@gear-js/api';
+import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
 import { AlertTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
 import { FormItem } from 'components/FormItem';
-import { Switch } from 'common/components/Switch';
+import { Checkbox } from 'common/components/Checkbox/Checkbox';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
 import { MetaFile } from './children/MetaFile/MetaFile';
@@ -20,7 +20,7 @@ import { Buttons } from './children/Buttons/Buttons';
 import { Schema } from './Schema';
 import { useAccount, useApi, useLoading } from 'hooks';
 import { UploadProgram } from 'services/ApiService';
-import { readFileAsync, calculateGas } from 'helpers';
+import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
 import { DroppedFile } from '../../types';
@@ -48,7 +48,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     gasLimit: MIN_GAS_LIMIT,
     value: 0,
     payload: '0x00',
-    types: '',
     fields: {},
     programName: '',
   });
@@ -62,8 +61,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
       if (metaWasm) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
-        const types = parseHexTypes(metaWasm?.types);
-        const typeStructure = getTypeStructure(metaWasm?.init_input, types);
+        const decodedTypes = decodeHexTypes(metaWasm?.types);
+        const typeStructure = createPayloadTypeStructure(metaWasm?.init_input, decodedTypes, true);
         const parsedStructure = parseMeta(typeStructure);
 
         let valuesFromFile = {};
@@ -79,7 +78,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
         valuesFromFile = {
           ...valuesFromFile,
-          types: metaWasm.types,
+          types: getPreformattedText(decodedTypes),
         };
 
         setMeta(metaWasm);
@@ -89,8 +88,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           ...initialValues,
           ...valuesFromFile,
           programName: metaWasm.title,
-          payload: JSON.stringify(typeStructure, null, 4),
-          types: JSON.stringify(types, null, 4),
+          payload: getPreformattedText(typeStructure),
         });
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
@@ -111,7 +109,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       gasLimit: MIN_GAS_LIMIT,
       value: 0,
       payload: '0x00',
-      types: '',
       fields: {},
       programName: '',
     });
@@ -170,7 +167,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, isManualPayload, values, setFieldValue, alert.show, meta, code, null);
+    calculateGas('init', api, isManualPayload, values, setFieldValue, alert.show, meta, code);
   };
 
   return (
@@ -254,7 +251,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       <div className={clsx(styles.value, styles.payload)}>
                         {payloadForm && (
                           <div className={styles.switch}>
-                            <Switch
+                            <Checkbox
+                              type="switch"
                               onChange={() => setIsManualPayload(!isManualPayload)}
                               label="Manual input"
                               checked={isManualPayload}
