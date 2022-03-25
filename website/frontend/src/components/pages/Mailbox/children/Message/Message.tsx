@@ -1,14 +1,12 @@
 import React from 'react';
+import { useAlert } from 'react-alert';
 import { QueuedMessage } from '@gear-js/api';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { useSelector, useDispatch } from 'react-redux';
-import { useApi } from 'hooks/useApi';
-import { RootState } from 'store/reducers';
+import { useApi, useAccount } from 'hooks';
 import { Button } from 'common/components/Button/Button';
-import { AddAlert } from 'store/actions/actions';
+import { AlertTypes } from 'types/alerts';
 import { getPreformattedText } from 'helpers';
-import { EventTypes } from 'types/alerts';
 import claimIcon from './images/claim.svg';
 import { ReplyLink } from './children';
 import styles from './Message.module.scss';
@@ -18,19 +16,19 @@ type Props = {
 };
 
 const Message = ({ message }: Props) => {
-  const [api] = useApi();
-  const dispatch = useDispatch();
-  const { account } = useSelector((state: RootState) => state.account);
+  const { api } = useApi();
+  const { account } = useAccount();
+  const alert = useAlert();
 
   const formattedMessage = message.toHuman();
   const id = message.id.toHex();
 
   const showErrorAlert = (error: string) => {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: error }));
+    alert.show(error, { type: AlertTypes.ERROR });
   };
 
   const showSuccessAlert = (data: ISubmittableResult) => {
-    dispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Status: ${data.status}` }));
+    alert.show(`Status: ${data.status}`, { type: AlertTypes.SUCCESS });
   };
 
   const handleClaimButtonClick = () => {
