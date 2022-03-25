@@ -8,7 +8,6 @@ import { Spinner } from 'components/blocks/Spinner/Spinner';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApi } from 'hooks';
-import { AlertTypes } from 'types/alerts';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { BackButton } from 'components/BackButton/BackButton';
 import { getPreformattedText } from 'helpers';
@@ -111,7 +110,7 @@ const State: VFC = () => {
     if (options) {
       readState(options);
     } else {
-      alert.show('Form is empty', { type: AlertTypes.ERROR });
+      alert.error('Form is empty');
     }
   };
 

@@ -9,7 +9,6 @@ import { addMetadata } from 'services/ApiService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import { AlertTypes } from 'types/alerts';
 import { readFileAsync } from '../../../helpers';
 import { useAccount } from 'hooks';
 import { Schema } from './Schema';
@@ -64,7 +63,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
         setMetaWasmFile(bufstr);
         setMetaWasm(meta);
       } catch (error) {
-        alert.show(`${error}`, { type: AlertTypes.ERROR });
+        alert.error(`${error}`);
       }
       setDroppedMetaFile(file);
     },
@@ -110,17 +109,17 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
         if (currentAccount) {
           if (isMetaByFile) {
             if (metaWasm) {
-              addMetadata(metaWasm, metaWasmFile, currentAccount, programId, values.name, alert.show);
+              addMetadata(metaWasm, metaWasmFile, currentAccount, programId, values.name, alert);
             } else {
-              alert.show(`ERROR: metadata not loaded`, { type: AlertTypes.ERROR });
+              alert.error(`ERROR: metadata not loaded`);
             }
           } else {
             const { name, ...meta } = values;
-            addMetadata(meta, null, currentAccount, programId, name, alert.show);
+            addMetadata(meta, null, currentAccount, programId, name, alert);
           }
           resetForm();
         } else {
-          alert.show(`WALLET NOT CONNECTED`, { type: AlertTypes.ERROR });
+          alert.error(`WALLET NOT CONNECTED`);
         }
       }}
     >

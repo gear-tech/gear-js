@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useAlert } from 'react-alert';
 import JSZip from 'jszip';
 import saveAs from 'file-saver';
-import { AlertTypes } from 'types/alerts';
 import { EditorContext } from './Context';
 import { Props } from '../types';
 import { LOCAL_STORAGE, WASM_COMPILER_GET } from 'consts';
@@ -37,7 +36,7 @@ const useEditor = () => {
                 setIsBuildDone(false);
                 localStorage.removeItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID);
                 clearInterval(timerId);
-                alert.show('Program is ready!', { type: AlertTypes.SUCCESS });
+                alert.success('Program is ready!');
               });
             });
           })

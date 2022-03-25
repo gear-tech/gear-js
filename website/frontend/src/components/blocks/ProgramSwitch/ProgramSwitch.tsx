@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
-import { AlertTypes } from 'types/alerts';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'consts';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { useAccount, useApi } from 'hooks';
@@ -33,13 +32,13 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
       });
 
       if (response.error) {
-        alert.show(`${response.error.error}`, { type: AlertTypes.ERROR });
+        alert.error(`${response.error.error}`);
       }
 
       // count the number of crane calls
       setGasCallCounter(gasCallCounter + 1);
     } catch (error) {
-      alert.show(`${error}`, { type: AlertTypes.ERROR });
+      alert.error(`${error}`);
     }
   };
 
@@ -53,7 +52,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         api.balance.transferFromAlice(currentAccount.address, GEAR_BALANCE_TRANSFER_VALUE);
       }
     } catch (error) {
-      alert.show(`${error}`, { type: AlertTypes.ERROR });
+      alert.error(`${error}`);
     }
   };
 

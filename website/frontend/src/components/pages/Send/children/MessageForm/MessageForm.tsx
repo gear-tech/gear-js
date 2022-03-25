@@ -7,7 +7,6 @@ import { Metadata } from '@gear-js/api';
 import { sendMessage } from 'services/ApiService';
 import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
-import { AlertTypes } from 'types/alerts';
 import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useAccount, useApi, useLoading } from 'hooks';
@@ -72,13 +71,13 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
               message,
               enableLoading,
               disableLoading,
-              alert.show,
+              alert,
               resetForm,
               meta
             );
           }
         } else {
-          alert.show(`WALLET NOT CONNECTED`, { type: AlertTypes.ERROR });
+          alert.error(`WALLET NOT CONNECTED`);
         }
       }}
     >
@@ -164,7 +163,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
                       isManualInput,
                       values,
                       setFieldValue,
-                      alert.show,
+                      alert,
                       meta,
                       null,
                       id,

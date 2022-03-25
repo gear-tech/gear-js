@@ -11,8 +11,6 @@ import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import { useEditor } from 'hooks';
 import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, LOCAL_STORAGE } from 'consts';
 
-import { AlertTypes } from 'types/alerts';
-
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
 
@@ -98,7 +96,7 @@ export const EditorPage = () => {
       .then((json) => {
         localStorage.setItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID, json.id);
         setIsBuildDone(true);
-        alert.show('Compiling, please wait!', { type: AlertTypes.SUCCESS });
+        alert.success('Compiling, please wait!');
       });
   }
 

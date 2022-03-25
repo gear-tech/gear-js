@@ -71,7 +71,7 @@ const AppComponent: FC = () => {
 
   useEffect(() => {
     if (isApiReady) {
-      subscribeToEvents(alert.show);
+      subscribeToEvents(alert);
     }
   }, [isApiReady, alert]);
 

@@ -7,7 +7,6 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import copy from 'assets/images/copy.svg';
 import { copyToClipboard, readFileAsync } from 'helpers';
 import { useApi, useAccount } from 'hooks';
-import { AlertTypes } from 'types/alerts';
 import { Button } from 'common/components/Button/Button';
 import { Modal } from 'components/blocks/Modal';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
@@ -36,12 +35,12 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
 
   const handleSuccess = (hash: Hex) => {
     setCodeHash(hash);
-    alert.show('Code uploaded', { type: AlertTypes.SUCCESS });
+    alert.success('Code uploaded');
   };
 
   const handleFail = (message: string) => {
     close();
-    alert.show(message, { type: AlertTypes.ERROR });
+    alert.error(message);
   };
 
   const submit = async () => {
@@ -81,7 +80,7 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
       // TODO: general wrapper for .wasm files upload, since this check also exists on UploadForm submit.
       // we can do this in DropTarget component, but then there'll be need to assert account variable type
       close();
-      alert.show('Wallet not connected', { type: AlertTypes.ERROR });
+      alert.error('Wallet not connected');
     }
   };
 

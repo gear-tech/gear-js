@@ -4,7 +4,6 @@ import { Field } from 'formik';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import { checkFileFormat } from 'helpers';
-import { AlertTypes } from 'types/alerts';
 import styles from './MetaFile.module.scss';
 
 type Props = {
@@ -28,7 +27,7 @@ export const MetaFile: FC<Props> = ({ droppedMetaFile, handleUploadMetaFile, res
       if (isCorrectFormat) {
         handleUploadMetaFile(event.target.files[0]);
       } else {
-        alert.show('Wrong file format', { type: AlertTypes.ERROR });
+        alert.error('Wrong file format');
       }
 
       event.target.value = '';

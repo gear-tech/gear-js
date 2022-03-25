@@ -5,7 +5,6 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useApi, useAccount } from 'hooks';
 import { Button } from 'common/components/Button/Button';
-import { AlertTypes } from 'types/alerts';
 import { getPreformattedText } from 'helpers';
 import claimIcon from './images/claim.svg';
 import { ReplyLink } from './children';
@@ -24,11 +23,11 @@ const Message = ({ message }: Props) => {
   const id = message.id.toHex();
 
   const showErrorAlert = (error: string) => {
-    alert.show(error, { type: AlertTypes.ERROR });
+    alert.error(error);
   };
 
   const showSuccessAlert = (data: ISubmittableResult) => {
-    alert.show(`Status: ${data.status}`, { type: AlertTypes.SUCCESS });
+    alert.success(`Status: ${data.status}`);
   };
 
   const handleClaimButtonClick = () => {

@@ -1,11 +1,9 @@
-import { ReactNode } from 'react';
-import { AlertOptions } from 'react-alert';
+import { AlertContainer } from 'react-alert';
 import { UploadProgramModel, Message, Reply, MetaModel, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { CreateType, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
 import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE } from 'consts';
-import { AlertTypes } from 'types/alerts';
 import { localPrograms } from './LocalDBService';
 import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
@@ -21,7 +19,7 @@ export const UploadProgram = async (
   metaFile: any,
   enableLoading: () => void,
   disableLoading: () => void,
-  showAlert: (message?: ReactNode, options?: AlertOptions) => void,
+  alert: AlertContainer,
   callback: () => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
@@ -73,7 +71,7 @@ export const UploadProgram = async (
       enableLoading();
 
       if (data.status.isInBlock) {
-        showAlert('Upload program: In block', { type: AlertTypes.SUCCESS });
+        alert.success('Upload program: In block');
       }
 
       if (data.status.isFinalized) {
@@ -81,7 +79,7 @@ export const UploadProgram = async (
           const { method } = event.event;
 
           if (method === 'InitMessageEnqueued') {
-            showAlert('Upload program: Finalized', { type: AlertTypes.SUCCESS });
+            alert.success('Upload program: Finalized');
             disableLoading();
             callback();
 
@@ -100,10 +98,10 @@ export const UploadProgram = async (
                   timestamp: Date(),
                 })
                 .then(() => {
-                  showAlert('Program added to the localDB successfully', { type: AlertTypes.SUCCESS });
+                  alert.success('Program added to the localDB successfully');
                 })
                 .catch((error: any) => {
-                  showAlert(`Error: ${error}`, { type: AlertTypes.ERROR });
+                  alert.error(`Error: ${error}`);
                 });
             } else {
               // Sign metadata and save it
@@ -122,10 +120,10 @@ export const UploadProgram = async (
                     // FIXME 'throw' of exception caught locally
                     throw new Error(response.error.message);
                   } else {
-                    showAlert('Metadata saved successfully', { type: AlertTypes.SUCCESS });
+                    alert.success('Metadata saved successfully');
                   }
                 } catch (error) {
-                  showAlert(`${error}`, { type: AlertTypes.ERROR });
+                  alert.error(`${error}`);
                   console.error(error);
                 }
               });
@@ -133,19 +131,19 @@ export const UploadProgram = async (
           }
 
           if (method === 'ExtrinsicFailed') {
-            showAlert('Upload program: Extrinsic Failed', { type: AlertTypes.ERROR });
+            alert.error('Upload program: Extrinsic Failed');
           }
         });
       }
 
       if (data.status.isInvalid) {
         disableLoading();
-        showAlert(PROGRAM_ERRORS.INVALID_TRANSACTION, { type: AlertTypes.ERROR });
+        alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
       }
     });
   } catch (error) {
     disableLoading();
-    showAlert(`Upload program: ${error}`, { type: AlertTypes.ERROR });
+    alert.error(`Upload program: ${error}`);
   }
 };
 
@@ -156,7 +154,7 @@ export const sendMessage = async (
   message: Message & Reply,
   enableLoading: () => void,
   disableLoading: () => void,
-  showAlert: (message?: ReactNode, options?: AlertOptions) => void,
+  alert: AlertContainer,
   callback: () => void,
   meta?: Metadata
 ) => {
@@ -168,7 +166,7 @@ export const sendMessage = async (
       enableLoading();
 
       if (data.status.isInBlock) {
-        showAlert('Send message: In block', { type: AlertTypes.SUCCESS });
+        alert.success('Send message: In block');
       }
 
       if (data.status.isFinalized) {
@@ -176,24 +174,24 @@ export const sendMessage = async (
           const { method } = event.event;
 
           if (method === 'DispatchMessageEnqueued') {
-            showAlert('Send message: Finalized', { type: AlertTypes.SUCCESS });
+            alert.success('Send message: Finalized');
             disableLoading();
             callback();
           }
 
           if (method === 'ExtrinsicFailed') {
-            showAlert('Extrinsic Failed', { type: AlertTypes.ERROR });
+            alert.error('Extrinsic Failed');
           }
         });
       }
 
       if (data.status.isInvalid) {
         disableLoading();
-        showAlert(PROGRAM_ERRORS.INVALID_TRANSACTION, { type: AlertTypes.ERROR });
+        alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
       }
     });
   } catch (error) {
-    showAlert(`Send message: ${error}`, { type: AlertTypes.ERROR });
+    alert.error(`Send message: ${error}`);
     disableLoading();
   }
 };
@@ -205,7 +203,7 @@ export const addMetadata = async (
   account: InjectedAccountWithMeta,
   programId: string,
   name: any,
-  showAlert: (message?: ReactNode, options?: AlertOptions) => void
+  alert: AlertContainer
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);
@@ -227,11 +225,11 @@ export const addMetadata = async (
           };
 
           localPrograms.setItem(res.id, newData).then(() => {
-            showAlert('Metadata added successfully', { type: AlertTypes.SUCCESS });
+            alert.success('Metadata added successfully');
           });
         })
         .catch((error) => {
-          showAlert(`Error: ${error}`, { type: AlertTypes.ERROR });
+          alert.error(`Error: ${error}`);
         });
     } else {
       try {
@@ -248,22 +246,24 @@ export const addMetadata = async (
           // FIXME 'throw' of exception caught locally
           throw new Error(response.error.message);
         } else {
-          showAlert('Metadata added successfully', { type: AlertTypes.SUCCESS });
+          alert.success('Metadata added successfully');
         }
       } catch (error) {
-        showAlert(`${error}`, { type: AlertTypes.ERROR });
+        alert.error(`${error}`);
         console.error(error);
       }
     }
   });
 };
 
-export const subscribeToEvents = (showAlert: (message?: ReactNode, options?: AlertOptions) => void) => {
+export const subscribeToEvents = (alert: AlertContainer) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
-      showAlert(`${method}\n ${info.programId.toHex()}`, { type: reason ? AlertTypes.ERROR : AlertTypes.SUCCESS });
+      const message = `${method}\n ${info.programId.toHex()}`;
+      const showAlert = reason ? alert.error : alert.success;
+      showAlert(message);
     }
   });
 
@@ -280,7 +280,7 @@ export const subscribeToEvents = (showAlert: (message?: ReactNode, options?: Ale
     if (result && result.meta) {
       meta = JSON.parse(result.meta);
     } else {
-      showAlert('Metadata is not added', { type: AlertTypes.ERROR });
+      alert.error('Metadata is not added');
     }
 
     try {
@@ -294,20 +294,18 @@ export const subscribeToEvents = (showAlert: (message?: ReactNode, options?: Ale
     // @ts-ignore
     if (dest.toHex() === filterKey) {
       // TODO: add payload parsing
-      const msg = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
-      const options = {
-        type:
-          (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone ? AlertTypes.SUCCESS : AlertTypes.ERROR,
-      };
+      const message = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
+      const isSuccess = (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone;
+      const showAlert = isSuccess ? alert.success : alert.error;
 
-      showAlert(msg, options);
+      showAlert(message);
     }
   });
 
   nodeApi.subscribeToTransferEvents(({ data: { from, to, value } }) => {
     if (to.toHex() === filterKey) {
-      const msg = `TRANSFER BALANCE\n FROM:${GearKeyring.encodeAddress(from.toHex())}\n VALUE:${value.toString()}`;
-      showAlert(msg, { type: AlertTypes.INFO });
+      const message = `TRANSFER BALANCE\n FROM:${GearKeyring.encodeAddress(from.toHex())}\n VALUE:${value.toString()}`;
+      alert.info(message);
     }
   });
 };

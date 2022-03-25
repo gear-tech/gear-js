@@ -1,7 +1,6 @@
-import { ReactNode } from 'react';
 import { Hex } from '@gear-js/api';
 import { Metadata } from '@polkadot/types';
-import { AlertOptions } from 'react-alert';
+import { AlertContainer } from 'react-alert';
 import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
@@ -9,7 +8,6 @@ import { NODE_ADDRESS_REGEX } from 'regexes';
 import { InitialValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
 import { InitialValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { SetFieldValue } from 'types/common';
-import { AlertTypes } from 'types/alerts';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 
 export const fileNameHandler = (filename: string) => {
@@ -160,7 +158,7 @@ export const calculateGas = async (
   isManualPayload: boolean,
   values: UploadInitialValues | SendMessageInitialValues,
   setFieldValue: SetFieldValue,
-  showAlert: (message?: ReactNode, options?: AlertOptions) => void,
+  alert: AlertContainer,
   meta: any,
   code?: Uint8Array | null,
   addressId?: String | null,
@@ -169,12 +167,12 @@ export const calculateGas = async (
   const payload = isManualPayload ? values.payload : values.fields;
 
   if (isManualPayload && payload === '') {
-    showAlert(`Error: payload can't be empty`, { type: AlertTypes.ERROR });
+    alert.error(`Error: payload can't be empty`);
     return;
   }
 
   if (!isManualPayload && Object.keys(payload).length === 0) {
-    showAlert(`Error: form can't be empty`, { type: AlertTypes.ERROR });
+    alert.error(`Error: form can't be empty`);
     return;
   }
 
@@ -215,10 +213,10 @@ export const calculateGas = async (
         break;
     }
 
-    showAlert(`Estimated gas ${estimatedGas.toHuman()}`, { type: AlertTypes.INFO });
+    alert.info(`Estimated gas ${estimatedGas.toHuman()}`);
     setFieldValue('gasLimit', estimatedGas.toNumber());
   } catch (error) {
-    showAlert(`${error}`, { type: AlertTypes.ERROR });
+    alert.error(`${error}`);
   }
 };
 

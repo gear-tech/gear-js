@@ -6,7 +6,6 @@ import { NativeTypes } from 'react-dnd-html5-backend';
 import upload from 'assets/images/upload.svg';
 import editor from 'assets/images/editor_icon.svg';
 import { Button } from 'common/components/Button/Button';
-import { AlertTypes } from 'types/alerts';
 import { DroppedFile, UploadTypes } from '../../types';
 import styles from './DropTarget.module.scss';
 
@@ -57,7 +56,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         // reset it's value to trigger onChange again in case the same file selected twice
         event.target.value = '';
       } else {
-        alert.show('Wrong file format', { type: AlertTypes.ERROR });
+        alert.error('Wrong file format');
         setWrongFormat(false);
       }
     }
@@ -72,7 +71,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         if (!isCorrectFormat) {
           handleFilesUpload(files[0]);
         } else {
-          alert.show('Wrong file format', { type: AlertTypes.ERROR });
+          alert.error('Wrong file format');
           setWrongFormat(false);
         }
       }

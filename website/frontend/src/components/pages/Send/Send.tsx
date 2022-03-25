@@ -6,7 +6,6 @@ import { MetaParam } from 'utils/meta-parser';
 import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { messagesService } from 'services/MessagesRequestServices';
 import { programService } from 'services/ProgramsRequestService';
-import { AlertTypes } from 'types/alerts';
 import { MessageModel } from 'types/message';
 import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
@@ -40,7 +39,7 @@ const Send = () => {
 
       getMeta(metaSource)
         .then((res) => setMeta(JSON.parse(res.result.meta) ?? null))
-        .catch((err: RPCResponseError) => alert.show(err.message, { type: AlertTypes.ERROR }))
+        .catch((err: RPCResponseError) => alert.error(err.message))
         .finally(() => setReady(true));
     }
   }, [meta, programId, message, alert]);

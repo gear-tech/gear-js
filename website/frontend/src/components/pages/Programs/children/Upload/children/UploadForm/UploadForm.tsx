@@ -7,7 +7,6 @@ import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes }
 import { Formik, Form, Field } from 'formik';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
-import { AlertTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
 import { FormItem } from 'components/FormItem';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
@@ -93,7 +92,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
     } catch (error) {
-      alert.show(`${error}`, { type: AlertTypes.ERROR });
+      alert.error(`${error}`);
     }
     setDroppedMetaFile(file);
   };
@@ -128,7 +127,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           metaFile,
           enableLoading,
           disableLoading,
-          alert.show,
+          alert,
           () => {
             setDroppedFile(null);
           }
@@ -144,17 +143,17 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
             null,
             enableLoading,
             disableLoading,
-            alert.show,
+            alert,
             () => {
               setDroppedFile(null);
             }
           );
         } catch (error) {
-          alert.show(`Invalid JSON format`, { type: AlertTypes.ERROR });
+          alert.error(`Invalid JSON format`);
         }
       }
     } else {
-      alert.show(`Wallet not connected`, { type: AlertTypes.ERROR });
+      alert.error(`Wallet not connected`);
     }
   };
 
@@ -167,7 +166,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, isManualPayload, values, setFieldValue, alert.show, meta, code);
+    calculateGas('init', api, isManualPayload, values, setFieldValue, alert, meta, code);
   };
 
   return (
