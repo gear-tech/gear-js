@@ -36,6 +36,11 @@ const Menu = ({ openSidebar }: Props) => {
           &lt;/&gt; IDE
         </NavLink>
       </li>
+      <li>
+        <NavLink className={getClassName} to={routes.mailbox}>
+          Mailbox
+        </NavLink>
+      </li>
     </ul>
   );
 };

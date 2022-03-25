@@ -1,46 +1,54 @@
-import React, { useCallback, useEffect, useState, VFC } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
-import { RPC_METHODS } from 'consts';
-import ServerRPCRequestService, { RPCResponseError } from 'services/ServerRPCRequestService';
-import { GetMetaResponse } from 'api/responses';
+import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { EventTypes } from 'types/alerts';
-import { AddAlert } from 'store/actions/actions';
+import { programService } from 'services/ProgramsRequestService';
+import { RootState } from 'store/reducers';
+import { AddAlert, getMessageAction, resetMessageAction } from 'store/actions/actions';
 import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
-import './SendMessage.scss';
+import './Send.scss';
 
-export const SendMessage: VFC = () => {
+const Send = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const routeParams = useParams();
-  const programId = routeParams.id as string;
+  const { programId = '', messageId = '' } = useParams();
+  const id = programId || messageId;
 
   const [meta, setMeta] = useState<Metadata>();
   const [types, setTypes] = useState<MetaParam | null>(null);
   const [ready, setReady] = useState(false);
 
-  const fetchMeta = useCallback(async (id: string) => {
-    const apiRequest = new ServerRPCRequestService();
+  const { message } = useSelector((state: RootState) => state.messages);
 
-    return apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId: id });
+  useEffect(() => {
+    if (messageId) {
+      dispatch(getMessageAction(messageId));
+    }
+
+    return () => {
+      dispatch(resetMessageAction());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const getMeta = isDevChain() ? getLocalProgramMeta : fetchMeta;
 
   useEffect(() => {
     if (!meta) {
-      getMeta(programId)
+      const getMeta = isDevChain() ? getLocalProgramMeta : programService.fetchMeta;
+      const metaSource = message?.source || programId;
+
+      getMeta(metaSource)
         .then((res) => setMeta(JSON.parse(res.result.meta) ?? null))
         .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
         .finally(() => setReady(true));
     }
-  }, [meta, programId, getMeta, dispatch]);
+  }, [meta, programId, message, dispatch]);
 
   useEffect(() => {
     if (meta && meta.types && meta.handle_input) {
@@ -61,12 +69,12 @@ export const SendMessage: VFC = () => {
         <button className="send-message__button-back" type="button" aria-label="back" onClick={handleBackButtonClick}>
           <img src={ArrowBack} alt="back" />
         </button>
-        <h2 className="send-message__header-text">New message</h2>
+        <h2 className="send-message__header-text">{programId ? 'New message' : 'Send reply'}</h2>
         <img className="send-message__header-icon" src={ProgramIllustration} alt="program" />
-        <h2 className="send-message__header-text send-message__header-text_colored">{fileNameHandler(programId)}</h2>
+        <h2 className="send-message__header-text send-message__header-text_colored">{fileNameHandler(id)}</h2>
       </header>
       <div className="send-message__block">
-        <MessageForm programId={programId} programName="df" meta={meta} types={types} />
+        <MessageForm id={id} replyErrorCode={message?.replyError} meta={meta} types={types} />
       </div>
     </div>
   ) : (
@@ -75,3 +83,5 @@ export const SendMessage: VFC = () => {
     </div>
   );
 };
+
+export { Send };

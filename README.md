@@ -24,6 +24,14 @@ Refer to the [meta-cli](https://github.com/gear-tech/gear-js/blob/master/utils/m
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/gear-meta)
 
+## [@gear-js/ui](https://github.com/gear-tech/gear-js/tree/master/utils/gear-ui)
+
+React UI components used across Gear applications.
+
+Refer to the [gear-ui](https://github.com/gear-tech/gear-js/blob/master/utils/gear-ui/README.md) docs for detail
+
+#### [npm package](https://www.npmjs.com/package/@gear-js/ui)
+
 ## [website](https://github.com/gear-tech/gear-js/tree/master/website)
 
 Source code of [idea.gear-tech.io](https://idea.gear-tech.io/) and backend microservices

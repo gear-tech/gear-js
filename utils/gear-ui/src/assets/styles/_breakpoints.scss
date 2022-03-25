@@ -1,0 +1,32 @@
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+
+@function getMaxWidth($width) {
+  @return 'max-width: #{$width - 1}';
+}
+
+@mixin sm {
+  @media screen and (getMaxWidth($sm)) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media screen and (getMaxWidth($md)) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media screen and (getMaxWidth($lg)) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media screen and (getMaxWidth($xl)) {
+    @content;
+  }
+}

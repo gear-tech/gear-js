@@ -88,7 +88,7 @@ export const Program: VFC = () => {
           </div>
           <div className={styles.item}>
             <div className={styles.buttons}>
-              <Link to={`/send-message/${id}`} className={clsx(styles.button, styles.link)}>
+              <Link to={`/send/message/${id}`} className={clsx(styles.button, styles.link)}>
                 <img src={MessageIcon} alt="message" className={styles.buttonIcon} />
                 <span className={styles.buttonText}>Send Message</span>
               </Link>

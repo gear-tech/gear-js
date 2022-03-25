@@ -4,31 +4,27 @@ import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
 import { Metadata } from '@gear-js/api';
-import { SendMessageToProgram } from 'services/ApiService';
+import { sendMessage } from 'services/ApiService';
 import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
-import { MessageModel } from 'types/program';
 import { RootState } from 'store/reducers';
 import { EventTypes } from 'types/alerts';
 import { AddAlert } from 'store/actions/actions';
-import { fileNameHandler, getPreformattedText, calculateGas } from 'helpers';
+import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { Schema } from './Schema';
-
 import './MessageForm.scss';
-import { MetaErrorMessage } from './styles';
-import { findReplaceNull } from '../../../../../utils/find-replace-null';
 
 type Props = {
-  programId: string;
-  programName: string;
+  id: string;
   meta?: Metadata;
   types: MetaParam | null;
+  replyErrorCode?: string;
 };
 
-export const MessageForm: VFC<Props> = ({ programId, programName, meta, types }) => {
+export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => {
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
@@ -45,9 +41,11 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
     gasLimit: 20000000,
     value: 0,
     payload: types ? getPreformattedText(types) : '',
-    destination: programId,
+    destination: id,
     meta: null,
   });
+
+  const isReply = !!replyErrorCode;
 
   useEffect(() => {
     if (types) {
@@ -74,17 +72,16 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
 
         // TODO: find out how to improve this one
         if (currentAccount && values.meta && prepared) {
-          const message: MessageModel = {
-            gasLimit: values.gasLimit,
+          const message = {
+            replyToId: values.destination,
             destination: values.destination,
-            value: values.value,
+            gasLimit: values.gasLimit.toString(),
+            value: values.value.toString(),
             payload: isManualInput ? values.payload : prepared,
           };
 
           if (meta && api) {
-            SendMessageToProgram(api, currentAccount, message, meta, () => {
-              resetForm();
-            });
+            sendMessage(isReply ? api.reply : api.message, currentAccount, message, dispatch, resetForm, meta);
           }
         } else {
           dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
@@ -96,12 +93,8 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
           <div className="message-form--wrapper">
             <div className="message-form--col">
               <div className="message-form--info">
-                <span>File:</span>
-                <span>{fileNameHandler(programName)}</span>
-              </div>
-              <div className="message-form--info">
                 <label htmlFor="destination" className="message-form__field">
-                  Destination:
+                  {isReply ? 'Message Id:' : 'Destination:'}
                 </label>
                 <div className="message-form__field-wrapper">
                   <Field
@@ -167,33 +160,30 @@ export const MessageForm: VFC<Props> = ({ programId, programName, meta, types })
                 </div>
               </div>
               <div className="message-form--btns">
-                <>
-                  <button
-                    className="message-form__button"
-                    type="button"
-                    onClick={() => {
-                      calculateGas(
-                        'handle',
-                        api,
-                        isManualInput,
-                        values,
-                        setFieldValue,
-                        dispatch,
-                        meta,
-                        null,
-                        programId
-                      );
-                    }}
-                  >
-                    Calculate Gas
-                  </button>
-                  <button className="message-form__button" type="submit">
-                    <>
-                      <img src={MessageIllustration} alt="message" />
-                      Send message
-                    </>
-                  </button>
-                </>
+                <button
+                  className="message-form__button"
+                  type="button"
+                  onClick={() => {
+                    calculateGas(
+                      isReply ? 'reply' : 'handle',
+                      api,
+                      isManualInput,
+                      values,
+                      setFieldValue,
+                      dispatch,
+                      meta,
+                      null,
+                      id,
+                      replyErrorCode
+                    );
+                  }}
+                >
+                  Calculate Gas
+                </button>
+                <button className="message-form__button" type="submit">
+                  <img src={MessageIllustration} alt="message" />
+                  {isReply ? 'Send reply' : 'Send message'}
+                </button>
               </div>
             </div>
           </div>

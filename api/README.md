@@ -440,7 +440,3 @@ const { mnemonic, seed } = GearKeyring.generateMnemonic();
 // Getting a seed from mnemonic
 const { seed } = GearKeyring.generateSeed(mnemonic);
 ```
-
-```
-
-```
