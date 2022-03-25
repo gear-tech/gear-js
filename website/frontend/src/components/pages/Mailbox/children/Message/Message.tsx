@@ -1,11 +1,11 @@
 import React from 'react';
 import { QueuedMessage } from '@gear-js/api';
+import { Button } from '@gear-js/ui';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSelector, useDispatch } from 'react-redux';
 import { useApi } from 'hooks/useApi';
 import { RootState } from 'store/reducers';
-import { Button } from 'common/components/Button/Button';
 import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText } from 'helpers';
 import { EventTypes } from 'types/alerts';

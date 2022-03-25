@@ -1974,6 +1974,7 @@ __metadata:
   dependencies:
     "@craco/craco": 6.4.3
     "@gear-js/api": 0.15.1
+    "@gear-js/ui": 0.0.3
     "@monaco-editor/react": 4.3.1
     "@polkadot/api": 7.10.1
     "@polkadot/extension-dapp": 0.42.7
@@ -2069,6 +2070,16 @@ __metadata:
     winston: ^3.3.3
   languageName: unknown
   linkType: soft
+
+"@gear-js/ui@npm:0.0.3":
+  version: 0.0.3
+  resolution: "@gear-js/ui@npm:0.0.3"
+  peerDependencies:
+    clsx: ^1.1.1
+    react: ^17.0.2
+  checksum: 5deeda3e652c2471e3f26be25645784ad263ba955e93984bf49355063659cfcc21c2ac4015b2b5079e9f70703dc897bdd265ee18eb44976eaa92e43b7b0a9939
+  languageName: node
+  linkType: hard
 
 "@gear-js/wasm-compiler@workspace:website/wasm-compiler":
   version: 0.0.0-use.local

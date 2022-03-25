@@ -4,13 +4,13 @@ import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
+import { Checkbox } from '@gear-js/ui';
 import { Formik, Form, Field } from 'formik';
 import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
 import { EventTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
 import { FormItem } from 'components/FormItem';
-import { Checkbox } from 'common/components/Checkbox/Checkbox';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
 import { MetaFile } from './children/MetaFile/MetaFile';

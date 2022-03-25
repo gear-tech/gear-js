@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Hex } from '@gear-js/api';
 import messageIcon from 'assets/images/message.svg';
-import buttonStyles from 'common/components/Button/Button.module.scss';
+// import buttonStyles from 'common/components/Button/Button.module.scss';
 import styles from './ReplyLink.module.scss';
+
+const buttonStyles: any = {};
 
 type Props = {
   to: Hex;
