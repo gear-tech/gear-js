@@ -1,12 +1,11 @@
 import { InputHTMLAttributes } from 'react';
-import { Props as RadioProps } from './types';
-import { Radio } from './Radio';
+import { Radio, RadioProps } from './Radio';
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface RadioGroupProps extends InputHTMLAttributes<HTMLInputElement> {
   buttons: RadioProps[];
 }
 
-const RadioGroup = ({ buttons, value, ...attrs }: Props) => {
+const RadioGroup = ({ buttons, value, ...attrs }: RadioGroupProps) => {
   const getButtons = () =>
     buttons.map((button, index) => {
       const checked = value === button.value;
@@ -18,4 +17,4 @@ const RadioGroup = ({ buttons, value, ...attrs }: Props) => {
   return <>{getButtons()}</>;
 };
 
-export { RadioGroup };
+export { RadioGroup, RadioGroupProps };

@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/ui",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React UI components used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",
@@ -17,7 +17,7 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/gear-ui#readme",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rm -rf dist && rollup -c",
     "test": "jest",
     "prepare": "npm run build"
   },
@@ -41,6 +41,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
     "rollup": "^2.70.1",
+    "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-dts": "^4.2.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
