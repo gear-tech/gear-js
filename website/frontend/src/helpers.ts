@@ -165,14 +165,14 @@ export const calculateGas = async (
   addressId?: String | null,
   replyCodeError?: string
 ) => {
-  const payload = isManualPayload ? values.payload : values.fields;
+  const payload = isManualPayload ? values.payload : values.meta;
 
   if (isManualPayload && payload === '') {
     dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: payload can't be empty` }));
     return;
   }
 
-  if (!isManualPayload && Object.keys(payload).length === 0) {
+  if (!isManualPayload && payload && Object.keys(payload).length === 0) {
     dispatch(AddAlert({ type: EventTypes.ERROR, message: `Error: form can't be empty` }));
     return;
   }

@@ -13,14 +13,14 @@ import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useApi } from 'hooks/useApi';
-import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
+import { MetaItem, MetaFormStruct, parseMeta, prepareToSend } from 'utils/meta-parser';
 import { Schema } from './Schema';
 import './MessageForm.scss';
 
 type Props = {
   id: string;
   meta?: Metadata;
-  types: MetaParam | null;
+  types: MetaItem | null;
   replyErrorCode?: string;
 };
 
@@ -28,16 +28,10 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
   const [api] = useApi();
   const dispatch = useDispatch();
   const currentAccount = useSelector((state: RootState) => state.account.account);
-  const [metaForm, setMetaForm] = useState<ParsedShape | null>();
+  const [metaForm, setMetaForm] = useState<MetaFormStruct | null>();
   const [isManualInput, setIsManualInput] = useState(Boolean(!types));
 
-  const initialValues = useRef<{
-    gasLimit: number;
-    value: number;
-    payload: string;
-    destination: string;
-    meta: ParsedStruct | null;
-  }>({
+  const initialValues = useRef<InitialValues>({
     gasLimit: 20000000,
     value: 0,
     payload: types ? getPreformattedText(types) : '',
@@ -51,12 +45,9 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
     if (types) {
       const parsedMeta = parseMeta(types);
       setMetaForm(parsedMeta);
-      setIsManualInput(false);
-      if (parsedMeta && parsedMeta.fields && parsedMeta.values) {
-        const key = Object.keys(parsedMeta.fields)[0];
-        initialValues.current.meta = {
-          [key]: parsedMeta.values[key],
-        };
+      if (parsedMeta && parsedMeta.__root && parsedMeta.__values) {
+        setIsManualInput(false);
+        initialValues.current.meta = parsedMeta.__values;
       }
     }
   }, [types, initialValues]);
@@ -68,10 +59,9 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
       validateOnBlur
       enableReinitialize
       onSubmit={(values, { resetForm }) => {
-        const prepared = findReplaceNull(values.meta);
-
         // TODO: find out how to improve this one
-        if (currentAccount && values.meta && prepared) {
+        if (currentAccount && values.meta) {
+          const prepared = prepareToSend(values.meta);
           const message = {
             replyToId: values.destination,
             destination: values.destination,

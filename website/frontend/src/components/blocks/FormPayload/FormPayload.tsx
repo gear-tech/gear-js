@@ -2,15 +2,15 @@ import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Field } from 'formik';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
-import { FormItem } from 'components/FormItem';
-import { ParsedShape } from 'utils/meta-parser';
+import { MetaFields } from 'components/MetaFields';
+import { MetaFormStruct } from 'utils/meta-parser';
 import styles from './FormPayload.module.scss';
 
 type Props = {
   className?: string;
   isManualInput: boolean;
   setIsManualInput: Dispatch<SetStateAction<boolean>>;
-  formData: ParsedShape | null | undefined;
+  formData: MetaFormStruct | null | undefined;
 };
 
 const FormPayload = ({ className, isManualInput, setIsManualInput, formData }: Props) => {
@@ -56,7 +56,7 @@ const FormPayload = ({ className, isManualInput, setIsManualInput, formData }: P
           fallback={<p className={styles.message}>Sorry, something went wrong. You can use manual input.</p>}
           onError={handleFormItemError}
         >
-          <FormItem data={formData} />
+          <MetaFields data={formData} />
         </ErrorBoundary>
       )}
     </div>

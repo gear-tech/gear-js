@@ -5,11 +5,11 @@ import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form, Field } from 'formik';
-import { ParsedShape, parseMeta } from 'utils/meta-parser';
+import { MetaFormStruct, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
 import { EventTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
-import { FormItem } from 'components/FormItem';
+import { MetaFields as MetaForm } from 'components/MetaFields';
 import { Checkbox } from 'common/components/Checkbox/Checkbox';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
@@ -42,14 +42,14 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<string | null>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
-  const [payloadForm, setPayloadForm] = useState<ParsedShape | null>();
+  const [payloadForm, setPayloadForm] = useState<MetaFormStruct | null>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
   const [isManualPayload, setIsManualPayload] = useState<boolean>(true);
   const [initialValues, setInitialValues] = useState<InitialValues>({
     gasLimit: MIN_GAS_LIMIT,
     value: 0,
     payload: '0x00',
-    fields: {},
+    meta: null,
     programName: '',
   });
 
@@ -110,7 +110,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       gasLimit: MIN_GAS_LIMIT,
       value: 0,
       payload: '0x00',
-      fields: {},
+      meta: null,
       programName: '',
     });
   };
@@ -242,7 +242,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         )}
                         {isShowPayloadForm ? (
                           <div className="message-form--info">
-                            <FormItem data={payloadForm} />
+                            <MetaForm data={payloadForm} />
                           </div>
                         ) : (
                           <>

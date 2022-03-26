@@ -1,9 +1,9 @@
-import { ParsedStruct } from '../../../../../utils/meta-parser';
+import { MetaFormValues } from '../../../../../utils/meta-parser';
 
 export type InitialValues = {
   gasLimit: number;
   value: number;
   payload: string;
   destination: string;
-  meta: null | ParsedStruct;
+  meta: MetaFormValues | null;
 };

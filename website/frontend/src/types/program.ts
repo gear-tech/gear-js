@@ -1,5 +1,5 @@
 import { AnyNumber } from '@polkadot/types/types';
-import { ParsedStruct } from '../utils/meta-parser';
+import { PreparedMetaData } from '../utils/meta-parser';
 
 export enum ProgramStatus {
   Success = 'success',
@@ -51,7 +51,7 @@ export interface UploadProgramModel {
 interface MessageModel {
   gasLimit: AnyNumber;
   value: AnyNumber;
-  payload: ParsedStruct | string;
+  payload: PreparedMetaData | string;
 }
 
 export interface Message extends MessageModel {

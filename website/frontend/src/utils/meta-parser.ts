@@ -1,10 +1,6 @@
 import isObject from 'lodash.isobject';
 import isString from 'lodash.isstring';
 import set from 'lodash.set';
-import get from 'lodash.get';
-
-type MetaNull = 'Null';
-const metaNull = 'Null';
 
 export type MetaItem = {
   [key: string | MetaEnumType]: string | MetaItem;
@@ -52,13 +48,13 @@ export function isMetaFieldset(value: unknown): value is MetaFieldset {
   );
 }
 
-export type FormValues = {
-  [key: string]: string | FormValues;
+export type MetaFormValues = {
+  [key: string]: string | MetaFormValues;
 };
 
 export type MetaFormStruct = {
   __root: MetaFieldset | null;
-  __values: FormValues | null;
+  __values: MetaFormValues | null;
 };
 
 type MetaEnumType = '_enum' | '_enum_Option' | '_enum_Result' | string;
@@ -168,10 +164,12 @@ function parseField(data: MetaItem) {
             entries[0].some((i) => i === '_enum' || i === '_enum_Result' || i === '_enum_Option')
           );
 
+          // eslint-disable-next-line max-depth
           if (entries[0].some((i) => i === '_enum_Option')) {
             set(result, [...current.path, '__type'], 'enum_option');
           }
 
+          // eslint-disable-next-line max-depth
           if (entries[0].some((i) => i === '_enum_Result')) {
             set(result, [...current.path, '__type'], 'enum_result');
           }
@@ -227,7 +225,7 @@ function parseField(data: MetaItem) {
         // endregion
         // region enum_Option
         else if (current.kind === 'enum_option') {
-          Object.entries(current.value).forEach(([vKey, vValue], index) => {
+          Object.entries(current.value).forEach(([vKey, vValue]) => {
             const path = current.path.filter((item) => item !== '_enum_Option');
             // field
             if (isString(vValue)) {
@@ -258,7 +256,7 @@ function parseField(data: MetaItem) {
         // endregion
         // region enum_Result
         else if (current.kind === 'enum_result') {
-          Object.entries(current.value).forEach(([vKey, vValue], index) => {
+          Object.entries(current.value).forEach(([vKey, vValue]) => {
             const path = current.path.filter((item) => item !== '_enum_Result');
             // field
             if (isString(vValue)) {
@@ -337,12 +335,16 @@ export function parseMeta(data: MetaItem): MetaFormStruct | null {
   return null;
 }
 
-export function prepareToSend(data: FormValues) {
+export type PreparedMetaData = {
+  [key: string]: string | PreparedMetaData;
+};
+
+export function prepareToSend(data: PreparedMetaData) {
   const stack: Record<
     string,
     {
       path: string[];
-      value: string | FormValues;
+      value: string | PreparedMetaData;
     }
   >[] = [];
   Object.entries(data).forEach(([key, value]) => {

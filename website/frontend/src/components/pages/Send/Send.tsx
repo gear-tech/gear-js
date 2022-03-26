@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
-import { MetaParam } from 'utils/meta-parser';
+import { MetaItem } from 'utils/meta-parser';
 import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { EventTypes } from 'types/alerts';
 import { programService } from 'services/ProgramsRequestService';
@@ -22,7 +22,7 @@ const Send = () => {
   const id = programId || messageId;
 
   const [meta, setMeta] = useState<Metadata>();
-  const [types, setTypes] = useState<MetaParam | null>(null);
+  const [types, setTypes] = useState<MetaItem | null>(null);
   const [ready, setReady] = useState(false);
 
   const { message } = useSelector((state: RootState) => state.messages);

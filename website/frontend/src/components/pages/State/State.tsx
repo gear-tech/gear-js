@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import clsx from 'clsx';
-import { ParsedShape, parseMeta } from 'utils/meta-parser';
+import { MetaFormStruct, parseMeta } from 'utils/meta-parser';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
@@ -37,7 +37,7 @@ const State: VFC = () => {
   const stateInput = metadata?.meta_state_input;
 
   const [typeStructure, setTypeStructure] = useState({});
-  const [form, setForm] = useState<ParsedShape | null>(null);
+  const [form, setForm] = useState<MetaFormStruct | null>(null);
   const [state, setState] = useState('');
   const [isManualInput, setIsManualInput] = useState(false);
   const initValues = { payload: typeStructure ? getPreformattedText(typeStructure) : '', fields: {} };
