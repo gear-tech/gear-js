@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 16.x
       - run: |
-          yarn install
+          yarn install --frozen-lockfile
           yarn build:backend
 
   build-frontend:
@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: 16.x
       - run: |
-          yarn install
+          yarn install --frozen-lockfile
           yarn build:frontend
         env:
           REACT_APP_API_URL: 'https://ci.test'
