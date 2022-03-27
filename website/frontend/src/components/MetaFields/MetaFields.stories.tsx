@@ -13,6 +13,7 @@ import {
   optionEnumNested,
   optionEnumComplex,
   resultEnumSimple,
+  resultEnumComplex,
 } from '../../utils/meta-fixtures';
 
 type MetaFormWrapper = {
@@ -80,4 +81,5 @@ OptionEnumComplexStruct.args = { metaData: optionEnumComplex };
 export const ResultEnumSimpleStruct = Template.bind({});
 ResultEnumSimpleStruct.args = { metaData: resultEnumSimple };
 
-// TODO add resultEnumComplex handling
+export const ResultEnumComplexStruct = Template.bind({});
+ResultEnumComplexStruct.args = { metaData: resultEnumComplex };
