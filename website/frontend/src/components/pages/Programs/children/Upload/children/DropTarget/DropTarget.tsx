@@ -3,9 +3,9 @@ import { useAlert } from 'react-alert';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import { NativeTypes } from 'react-dnd-html5-backend';
+import { Button } from '@gear-js/ui';
 import upload from 'assets/images/upload.svg';
 import editor from 'assets/images/editor_icon.svg';
-import { Button } from 'common/components/Button/Button';
 import { DroppedFile, UploadTypes } from '../../types';
 import styles from './DropTarget.module.scss';
 
