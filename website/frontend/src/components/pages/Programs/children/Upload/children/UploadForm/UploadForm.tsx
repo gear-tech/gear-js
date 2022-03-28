@@ -28,6 +28,14 @@ import { META_FIELDS } from './consts';
 import { DroppedFile } from '../../types';
 import styles from './UploadForm.module.scss';
 
+const INITIAL_VALUES = {
+  gasLimit: MIN_GAS_LIMIT,
+  value: 0,
+  payload: '0x00',
+  __root: null,
+  programName: '',
+};
+
 type Props = {
   setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
   droppedFile: File;
@@ -45,13 +53,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [payloadForm, setPayloadForm] = useState<MetaFormStruct | null>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
   const [isManualPayload, setIsManualPayload] = useState<boolean>(true);
-  const [initialValues, setInitialValues] = useState<InitialValues>({
-    gasLimit: MIN_GAS_LIMIT,
-    value: 0,
-    payload: '0x00',
-    meta: null,
-    programName: '',
-  });
+  const [initialValues, setInitialValues] = useState<InitialValues>(INITIAL_VALUES);
 
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
   const isShowPayloadForm = payloadForm && !isManualPayload;
@@ -106,19 +108,13 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setDroppedMetaFile(null);
     setFieldFromFile(null);
 
-    setInitialValues({
-      gasLimit: MIN_GAS_LIMIT,
-      value: 0,
-      payload: '0x00',
-      meta: null,
-      programName: '',
-    });
+    setInitialValues(INITIAL_VALUES);
   };
 
   const handleSubmitForm = (values: any) => {
     if (currentAccount) {
       if (isMetaFromFile) {
-        const pl = isManualPayload ? values.payload : values.fields;
+        const pl = isManualPayload ? values.payload : values.__root;
         const updatedValues = { ...values, initPayload: pl };
 
         UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {

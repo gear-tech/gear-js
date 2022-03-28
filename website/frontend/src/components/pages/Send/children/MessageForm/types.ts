@@ -5,5 +5,5 @@ export type InitialValues = {
   value: number;
   payload: string;
   destination: string;
-  meta: MetaFormValues | null;
+  __root: MetaFormValues | null;
 };

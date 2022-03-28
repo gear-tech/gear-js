@@ -36,7 +36,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
     value: 0,
     payload: types ? getPreformattedText(types) : '',
     destination: id,
-    meta: null,
+    __root: null,
   });
 
   const isReply = !!replyErrorCode;
@@ -47,7 +47,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
       setMetaForm(parsedMeta);
       if (parsedMeta && parsedMeta.__root && parsedMeta.__values) {
         setIsManualInput(false);
-        initialValues.current.meta = parsedMeta.__values;
+        initialValues.current.__root = parsedMeta.__values;
       }
     }
   }, [types, initialValues]);
@@ -60,8 +60,8 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
       enableReinitialize
       onSubmit={(values, { resetForm }) => {
         // TODO: find out how to improve this one
-        if (currentAccount && values.meta) {
-          const prepared = prepareToSend(values.meta);
+        if (currentAccount && values.__root) {
+          const prepared = prepareToSend(values.__root);
           const message = {
             replyToId: values.destination,
             destination: values.destination,
