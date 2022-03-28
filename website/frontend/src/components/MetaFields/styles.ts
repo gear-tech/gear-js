@@ -17,6 +17,12 @@ export const MetaInput = styled('div', {
 
 export const Fieldset = styled('fieldset', {
   padding: '1rem',
+  color: 'white',
+
+  '&.first-item': {
+    padding: 0,
+    border: 0,
+  },
 });
 
 export const EnumSelect = styled('div', {

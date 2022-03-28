@@ -154,8 +154,7 @@ export const MetaFields = ({ data }: { data: MetaFormStruct }) => {
   ) {
     return (
       <MetaFormProvider data={data}>
-        <Fieldset>
-          <legend>Metadata</legend>
+        <Fieldset className="first-item">
           {data.__root.__select && data.__root.__fields && (
             <EnumSelect>
               <label>
