@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useContext, ReactNode } from 'react';
 import { Field, useFormikContext } from 'formik';
-import type { MetaField, MetaFieldset, MetaFormItem, MetaFormStruct } from '../../utils/meta-parser';
+import type { MetaField, MetaFieldset, MetaFormItem, MetaFormStruct, MetaFormValues } from '../../utils/meta-parser';
 import { isMetaFieldset, isMetaField, MetaFormItemStruct } from '../../utils/meta-parser';
 import { Fieldset, EnumSelect } from './styles';
 import isObject from 'lodash.isobject';
 import set from 'lodash.set';
 import get from 'lodash.get';
+import isString from 'lodash.isstring';
 
 const MetaFormContext = React.createContext({});
+
 function MetaFormProvider({ children, data }: { children: ReactNode; data: MetaFormStruct }) {
   return <MetaFormContext.Provider value={data}>{children}</MetaFormContext.Provider>;
 }
@@ -132,18 +134,20 @@ export const MetaFields = ({ data }: { data: MetaFormStruct }) => {
   const [firstKey, setFirstKey] = useState(Object.keys(data.__root!.__fields!)[0]);
 
   useEffect(() => {
-    if (data.__root) {
+    if (data.__root && data.__values) {
+      let values: MetaFormValues | string = data.__values;
+      if (data.__root.__select) {
+        values = isString(data.__values[firstKey]) ? { [firstKey]: '' } : data.__values[firstKey];
+      }
       formikContext.resetForm({
         values: {
           ...(formikContext.values as object),
-          __root: getFieldData(data.__root, firstKey),
+          __root: values,
         },
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  console.log(data);
 
   if (
     data.__root &&
