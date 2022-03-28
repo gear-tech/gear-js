@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
-import { Button } from 'common/components/Button/Button';
+import { Button } from '@gear-js/ui';
 import { isNodeAddressValid } from 'helpers';
 import { nodeApi } from 'api/initApi';
 import { Nodes, NodeSections } from '../../../../types';
