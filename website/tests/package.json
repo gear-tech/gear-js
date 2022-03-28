@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@gear-js/api": "0.15.2",
-    "@polkadot/api": "7.12.1",
+    "@polkadot/api": "7.14.3",
     "js-yaml": "4.1.0",
     "node-fetch": "2",
     "ts-node": "10.7.0"
