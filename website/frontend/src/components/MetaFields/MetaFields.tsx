@@ -132,15 +132,18 @@ export const MetaFields = ({ data }: { data: MetaFormStruct }) => {
   const [firstKey, setFirstKey] = useState(Object.keys(data.__root!.__fields!)[0]);
 
   useEffect(() => {
-    const values = data.__root?.__select && data.__values ? data.__values[firstKey] : data.__values;
-    formikContext.resetForm({
-      values: {
-        ...(formikContext.values as object),
-        __root: values,
-      },
-    });
+    if (data.__root) {
+      formikContext.resetForm({
+        values: {
+          ...(formikContext.values as object),
+          __root: getFieldData(data.__root, firstKey),
+        },
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  console.log(data);
 
   if (
     data.__root &&

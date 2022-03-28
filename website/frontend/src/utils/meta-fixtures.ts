@@ -78,3 +78,37 @@ export const resultEnumComplex = {
     },
   },
 };
+
+export const daoMeta = {
+  _enum: {
+    RequestForMembership: 'u128',
+    SubmitMembershipProposal: {
+      applicant: 'ActorId',
+      tokenTribute: 'u128',
+      sharesRequested: 'u128',
+      quorum: 'u128',
+      details: 'Text',
+    },
+    SubmitFundingProposal: {
+      applicant: 'ActorId',
+      amount: 'u128',
+      quorum: 'u128',
+      details: 'Text',
+    },
+    ProcessProposal: 'u128',
+    SubmitVote: {
+      proposalId: 'u128',
+      vote: {
+        _enum: {
+          '0': 'Yes',
+          '1': 'No',
+        },
+      },
+    },
+    RageQuit: 'u128',
+    Abort: 'u128',
+    CancelProposal: 'u128',
+    UpdateDelegateKey: 'ActorId',
+    SetAdmin: 'ActorId',
+  },
+};

@@ -14,6 +14,7 @@ import {
   optionEnumComplex,
   resultEnumSimple,
   resultEnumComplex,
+  daoMeta,
 } from '../../utils/meta-fixtures';
 
 type MetaFormWrapper = {
@@ -83,3 +84,6 @@ ResultEnumSimpleStruct.args = { metaData: resultEnumSimple };
 
 export const ResultEnumComplexStruct = Template.bind({});
 ResultEnumComplexStruct.args = { metaData: resultEnumComplex };
+
+export const DaoStruct = Template.bind({});
+DaoStruct.args = { metaData: daoMeta };

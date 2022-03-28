@@ -11,6 +11,7 @@ import {
   resultEnumSimple,
   resultEnumComplex,
   simpleNestedStruct,
+  daoMeta,
 } from './meta-fixtures';
 
 describe('test parser', () => {
@@ -184,6 +185,27 @@ describe('test parser', () => {
         },
         Post: '',
         ViewMessages: 'Null',
+      },
+    });
+  });
+
+  it('dao enum', () => {
+    expect(parseMeta(daoMeta)).toEqual({
+      __root: {
+        __fields: {
+          RequestForMembership: {
+            label: 'RequestForMembership',
+            name: '__root.RequestForMembership',
+            type: 'u128',
+          },
+        },
+        __name: '__root',
+        __path: '__root',
+        __select: true,
+        __type: '__fieldset',
+      },
+      __values: {
+        RequestForMembership: '',
       },
     });
   });
