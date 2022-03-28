@@ -1,20 +1,24 @@
 import React, { FC } from 'react';
 import Identicon from '@polkadot/react-identicon';
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
-import { UserAccount } from 'types/account';
 import { toShortAddress } from 'helpers';
 import './AccountList.scss';
+import { LOCAL_STORAGE } from 'consts';
 
 type Props = {
-  list: Array<UserAccount>;
+  list: Array<InjectedAccountWithMeta>;
   toggleAccount: (index: number) => void;
 };
 
 export const AccountList: FC<Props> = ({ list, toggleAccount }: Props) => {
-  const accountItem = list.map((account: UserAccount, index: number) => (
+  const accountItem = list.map((account, index) => (
     <button
       type="button"
-      className={clsx('account-list__item', account.isActive && 'active')}
+      className={clsx(
+        'account-list__item',
+        localStorage.getItem(LOCAL_STORAGE.SAVED_ACCOUNT) === account.address && 'active'
+      )}
       key={account.address}
       onClick={() => {
         toggleAccount(index);

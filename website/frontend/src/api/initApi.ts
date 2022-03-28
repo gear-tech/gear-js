@@ -39,12 +39,13 @@ class NodeApi {
 
   async init() {
     this._api = await GearApi.create({ providerAddress: this._address });
-
     this.chain = await this._api.chain();
     this.genesis = await this._api.genesisHash.toHex();
 
     localStorage.setItem(LOCAL_STORAGE.CHAIN, this.chain);
     localStorage.setItem(LOCAL_STORAGE.GENESIS, this.genesis);
+
+    return this._api;
   }
 
   public subscribeToProgramEvents(cb: (event: ProgramEvent) => void) {

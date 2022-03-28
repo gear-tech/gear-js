@@ -1,15 +1,12 @@
 import React, { useState, VFC } from 'react';
+import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
-import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/alerts';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'consts';
-import { useDispatch, useSelector } from 'react-redux';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { RootState } from 'store/reducers';
-import { useApi } from '../../../hooks/useApi';
+import { useAccount, useApi } from 'hooks';
 import { isDevChain } from 'helpers';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 
@@ -18,9 +15,9 @@ type Props = {
 };
 
 export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
-  const [api] = useApi();
-  const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { api } = useApi();
+  const alert = useAlert();
+  const { account: currentAccount } = useAccount();
   const apiRequest = new ServerRPCRequestService();
   const [gasCallCounter, setGasCallCounter] = useState(0);
 
@@ -35,13 +32,13 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
       });
 
       if (response.error) {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${response.error.error}` }));
+        alert.error(`${response.error.error}`);
       }
 
       // count the number of crane calls
       setGasCallCounter(gasCallCounter + 1);
     } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+      alert.error(`${error}`);
     }
   };
 
@@ -55,7 +52,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         api.balance.transferFromAlice(currentAccount.address, GEAR_BALANCE_TRANSFER_VALUE);
       }
     } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+      alert.error(`${error}`);
     }
   };
 

@@ -1,14 +1,11 @@
 import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
+import { useAlert } from 'react-alert';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import { NativeTypes } from 'react-dnd-html5-backend';
-import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@gear-js/ui';
 import upload from 'assets/images/upload.svg';
 import editor from 'assets/images/editor_icon.svg';
-import { RootState } from 'store/reducers';
-import { AddAlert, programUploadResetAction } from 'store/actions/actions';
-import { EventTypes } from 'types/alerts';
 import { DroppedFile, UploadTypes } from '../../types';
 import styles from './DropTarget.module.scss';
 
@@ -18,8 +15,7 @@ type Props = {
 };
 
 const DropTarget = ({ type, setDroppedFile }: Props) => {
-  const dispatch = useDispatch();
-  const { programUploadingError } = useSelector((state: RootState) => state.programs);
+  const alert = useAlert();
 
   const [wrongFormat, setWrongFormat] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,11 +56,8 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         // reset it's value to trigger onChange again in case the same file selected twice
         event.target.value = '';
       } else {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
+        alert.error('Wrong file format');
         setWrongFormat(false);
-        if (programUploadingError) {
-          dispatch(programUploadResetAction());
-        }
       }
     }
   };
@@ -78,11 +71,8 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         if (!isCorrectFormat) {
           handleFilesUpload(files[0]);
         } else {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: 'Wrong file format' }));
+          alert.error('Wrong file format');
           setWrongFormat(false);
-          if (programUploadingError) {
-            dispatch(programUploadResetAction());
-          }
         }
       }
     },

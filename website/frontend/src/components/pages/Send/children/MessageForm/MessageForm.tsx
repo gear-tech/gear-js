@@ -1,5 +1,5 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
 import NumberFormat from 'react-number-format';
@@ -7,12 +7,9 @@ import { Metadata } from '@gear-js/api';
 import { sendMessage } from 'services/ApiService';
 import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
-import { RootState } from 'store/reducers';
-import { EventTypes } from 'types/alerts';
-import { AddAlert } from 'store/actions/actions';
 import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
-import { useApi } from 'hooks/useApi';
+import { useAccount, useApi, useLoading } from 'hooks';
 import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
 import { Schema } from './Schema';
 import './MessageForm.scss';
@@ -25,9 +22,10 @@ type Props = {
 };
 
 export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => {
-  const [api] = useApi();
-  const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { api } = useApi();
+  const alert = useAlert();
+  const { enableLoading, disableLoading } = useLoading();
+  const { account: currentAccount } = useAccount();
   const [metaForm, setMetaForm] = useState<ParsedShape | null>();
   const [isManualInput, setIsManualInput] = useState(Boolean(!types));
 
@@ -67,10 +65,19 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
           };
 
           if (api) {
-            sendMessage(isReply ? api.reply : api.message, currentAccount, message, dispatch, resetForm, meta);
+            sendMessage(
+              isReply ? api.reply : api.message,
+              currentAccount,
+              message,
+              enableLoading,
+              disableLoading,
+              alert,
+              resetForm,
+              meta
+            );
           }
         } else {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
+          alert.error(`WALLET NOT CONNECTED`);
         }
       }}
     >
@@ -156,7 +163,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
                       isManualInput,
                       values,
                       setFieldValue,
-                      dispatch,
+                      alert,
                       meta,
                       null,
                       id,

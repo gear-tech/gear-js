@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { QueuedMessage } from '@gear-js/api';
 import { BTreeMap, Option } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/reducers';
-import { useApi } from 'hooks/useApi';
+import { useApi, useAccount } from 'hooks';
 import { Box } from 'layout/Box/Box';
 import { Message } from './children/Message/Message';
 import styles from './Mailbox.module.scss';
@@ -13,8 +11,8 @@ type QueuedMessages = QueuedMessage[];
 type QueuedMessagesOption = Option<BTreeMap<H256, QueuedMessage>>;
 
 const Mailbox = () => {
-  const [api] = useApi();
-  const { account } = useSelector((state: RootState) => state.account);
+  const { api } = useApi();
+  const { account } = useAccount();
   const [messages, setMessages] = useState<QueuedMessages>([]);
   const isAnyMessage = messages.length > 0;
 

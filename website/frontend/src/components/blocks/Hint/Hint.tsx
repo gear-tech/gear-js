@@ -1,8 +1,6 @@
 import React, { FC } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAlert } from 'react-alert';
 import { HelpCircle } from 'react-feather';
-import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/alerts';
 import styles from './Hint.module.scss';
 
 type Params = {
@@ -10,10 +8,10 @@ type Params = {
 };
 
 export const Hint: FC<Params> = ({ children }) => {
-  const dispatch = useDispatch();
+  const alert = useAlert();
 
   const handleClick = () => {
-    dispatch(AddAlert({ type: EventTypes.ERROR, message: `${children}` }));
+    alert.error(`${children}`);
   };
 
   return (

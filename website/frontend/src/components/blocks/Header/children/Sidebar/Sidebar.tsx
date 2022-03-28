@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { nodeApi } from 'api/initApi';
-import { useOutsideClick } from 'hooks/useOutsideClick';
+import { useOutsideClick } from 'hooks';
 import { LOCAL_STORAGE } from 'consts';
 import { Nodes as NodesType, NodeSections } from '../../types';
 import { Header } from './children/Header/Header';

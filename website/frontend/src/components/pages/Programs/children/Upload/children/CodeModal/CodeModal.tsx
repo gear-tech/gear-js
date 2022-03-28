@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
@@ -8,10 +7,7 @@ import { Event } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import copy from 'assets/images/copy.svg';
 import { copyToClipboard, readFileAsync } from 'helpers';
-import { useApi } from 'hooks/useApi';
-import { EventTypes } from 'types/alerts';
-import { RootState } from 'store/reducers';
-import { AddAlert } from 'store/actions/actions';
+import { useApi, useAccount } from 'hooks';
 import { Modal } from 'components/blocks/Modal';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { DroppedFile } from '../../types';
@@ -23,10 +19,9 @@ type Props = {
 };
 
 const CodeModal = ({ file, setDroppedFile }: Props) => {
-  const [api] = useApi();
+  const { api } = useApi();
   const alert = useAlert();
-  const dispatch = useDispatch();
-  const { account } = useSelector((state: RootState) => state.account);
+  const { account } = useAccount();
   const [codeHash, setCodeHash] = useState('' as Hex);
 
   const close = () => {
@@ -40,12 +35,12 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
 
   const handleSuccess = (hash: Hex) => {
     setCodeHash(hash);
-    dispatch(AddAlert({ type: EventTypes.SUCCESS, message: 'Code uploaded' }));
+    alert.success('Code uploaded');
   };
 
   const handleFail = (message: string) => {
     close();
-    dispatch(AddAlert({ type: EventTypes.ERROR, message }));
+    alert.error(message);
   };
 
   const submit = async () => {
@@ -85,7 +80,7 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
       // TODO: general wrapper for .wasm files upload, since this check also exists on UploadForm submit.
       // we can do this in DropTarget component, but then there'll be need to assert account variable type
       close();
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Wallet not connected` }));
+      alert.error('Wallet not connected');
     }
   };
 

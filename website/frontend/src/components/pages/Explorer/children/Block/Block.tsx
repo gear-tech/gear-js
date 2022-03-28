@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Block as DotBlock } from '@polkadot/types/interfaces';
 import { EventRecords } from 'types/explorer';
-import { useApi } from 'hooks/useApi';
+import { useApi } from 'hooks';
 import { isHex } from 'helpers';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { Summary } from './children/Summary/Summary';
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const Block = ({ blockId }: Props) => {
-  const [api] = useApi();
+  const { api } = useApi();
   const [block, setBlock] = useState<DotBlock>();
   const [eventRecords, setEventRecords] = useState<EventRecords>();
   const [error, setError] = useState('');

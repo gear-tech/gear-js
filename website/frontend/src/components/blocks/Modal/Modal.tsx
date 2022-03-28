@@ -1,6 +1,6 @@
 import React, { FC, MouseEvent, ReactNode } from 'react';
 import { CloseIcon } from '../../../assets/Icons';
-import { useBodyScrollLock } from '../../../hooks/useBodyScrollLock';
+import { useBodyScrollLock } from 'hooks';
 import './Modal.scss';
 
 type Props = {

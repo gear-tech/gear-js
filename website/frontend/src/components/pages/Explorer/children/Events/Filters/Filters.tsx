@@ -4,7 +4,7 @@ import { Sliders, X } from 'react-feather';
 import { Checkbox } from '@gear-js/ui';
 import { FilterValues } from 'types/explorer';
 import { LOCAL_STORAGE } from 'consts';
-import { useOutsideClick } from 'hooks/useOutsideClick';
+import { useOutsideClick } from 'hooks';
 import * as init from '../init';
 import styles from './Filters.module.scss';
 
