@@ -1887,13 +1887,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.15.2":
-  version: 0.15.2
-  resolution: "@gear-js/api@npm:0.15.2"
+"@gear-js/api@npm:0.15.3":
+  version: 0.15.3
+  resolution: "@gear-js/api@npm:0.15.3"
   peerDependencies:
     "@polkadot/api": ^7.12.1
     rxjs: ^7.5.5
-  checksum: 4ddb8c65636393515cd95c0a48f2237448b84d59536b7b80b8ca4fcdc231f9d1caff8aebaab6eaabed130433cbe1f6f612c2d2f8d01db4b82014bd16882e11a6
+  checksum: a4db42e98ef3253e0b62c99aadb638411ffa11253da1e2a7e74dcc43ccd8aa43cea649cfdf6d643fe6b1780c2984c926d2afe289e4803df51166303cd3610ad4
   languageName: node
   linkType: hard
 
@@ -2131,7 +2131,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/web-tests@workspace:website/tests"
   dependencies:
-    "@gear-js/api": 0.15.2
+    "@gear-js/api": 0.15.3
     "@polkadot/api": 7.12.1
     "@types/js-yaml": 4.0.5
     js-yaml: 4.1.0
