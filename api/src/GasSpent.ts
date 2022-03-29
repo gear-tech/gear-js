@@ -209,8 +209,6 @@ export class GearGasSpent {
     value: number | string,
     metaOrTypeOfPayload: string | Metadata,
   ): Promise<u64> {
-    let meta: Metadata;
-    this.handle('0xx', '0xx', '0xx', 1, 'sgi' || meta);
     return await this.api.rpc['gear'].getHandleGasSpent(
       sourceId,
       destinationId,
