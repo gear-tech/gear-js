@@ -104,6 +104,14 @@ export class GearGasSpent {
     payload: Hex | AnyJson,
     value: number | string,
     metaOrTypeOfPayload?: string | Metadata,
+  ): Promise<u64>;
+
+  async init(
+    sourceId: Hex,
+    code: Hex | Buffer,
+    payload: Hex | AnyJson,
+    value: number | string,
+    metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64> {
     return await this.api.rpc['gear'].getInitGasSpent(
       sourceId,
@@ -188,11 +196,21 @@ export class GearGasSpent {
    */
   async handle(
     sourceId: Hex,
+    destinationId: Hex | Buffer,
+    payload: Hex | AnyJson,
+    value: number | string,
+    metaOrTypeOfPayload: string | Metadata,
+  ): Promise<u64>;
+
+  async handle(
+    sourceId: Hex,
     destinationId: Hex,
     payload: Hex | AnyJson,
     value: number | string,
     metaOrTypeOfPayload: string | Metadata,
   ): Promise<u64> {
+    let meta: Metadata;
+    this.handle('0xx', '0xx', '0xx', 1, 'sgi' || meta);
     return await this.api.rpc['gear'].getHandleGasSpent(
       sourceId,
       destinationId,
@@ -277,6 +295,15 @@ export class GearGasSpent {
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
+  async reply(
+    sourceId: Hex,
+    messageId: Hex,
+    exitCode: number,
+    payload: Hex | AnyJson,
+    value: number | string,
+    metaOrTypeOfPayload: string | Metadata,
+  ): Promise<u64>;
+
   async reply(
     sourceId: Hex,
     messageId: Hex,
