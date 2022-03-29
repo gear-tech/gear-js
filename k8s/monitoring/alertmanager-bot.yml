@@ -22,8 +22,6 @@ spec:
       labels:
         app: alertmanager-bot
     spec:
-      securityContext:
-        runAsUser: 0
       containers:
       - name: alertmanager-bot
         image: metalmatze/alertmanager-bot:latest

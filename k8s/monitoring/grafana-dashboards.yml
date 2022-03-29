@@ -35,8 +35,8 @@ data:
       "fiscalYearStartMonth": 0,
       "gnetId": 11074,
       "graphTooltip": 0,
-      "id": 2,
-      "iteration": 1646894788951,
+      "id": 3,
+      "iteration": 1647265854772,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -190,7 +190,7 @@ data:
           "options": {
             "legend": {
               "calcs": [],
-              "displayMode": "list",
+              "displayMode": "table",
               "placement": "bottom"
             },
             "tooltip": {
@@ -283,7 +283,7 @@ data:
           "options": {
             "legend": {
               "calcs": [],
-              "displayMode": "list",
+              "displayMode": "table",
               "placement": "bottom"
             },
             "tooltip": {
@@ -383,8 +383,8 @@ data:
             "overrides": []
           },
           "gridPos": {
-            "h": 7,
-            "w": 8,
+            "h": 8,
+            "w": 6,
             "x": 0,
             "y": 10
           },
@@ -393,7 +393,7 @@ data:
           "options": {
             "legend": {
               "calcs": [],
-              "displayMode": "list",
+              "displayMode": "table",
               "placement": "bottom"
             },
             "tooltip": {
@@ -474,9 +474,9 @@ data:
             "overrides": []
           },
           "gridPos": {
-            "h": 7,
-            "w": 8,
-            "x": 8,
+            "h": 8,
+            "w": 6,
+            "x": 6,
             "y": 10
           },
           "id": 7,
@@ -484,7 +484,7 @@ data:
           "options": {
             "legend": {
               "calcs": [],
-              "displayMode": "list",
+              "displayMode": "table",
               "placement": "bottom"
             },
             "tooltip": {
@@ -635,9 +635,9 @@ data:
             ]
           },
           "gridPos": {
-            "h": 7,
-            "w": 8,
-            "x": 16,
+            "h": 8,
+            "w": 6,
+            "x": 12,
             "y": 10
           },
           "id": 156,
@@ -645,7 +645,7 @@ data:
           "options": {
             "legend": {
               "calcs": [],
-              "displayMode": "list",
+              "displayMode": "table",
               "placement": "bottom"
             },
             "tooltip": {
@@ -747,17 +747,17 @@ data:
             "overrides": []
           },
           "gridPos": {
-            "h": 7,
-            "w": 8,
-            "x": 0,
-            "y": 17
+            "h": 8,
+            "w": 6,
+            "x": 18,
+            "y": 10
           },
           "id": 174,
           "links": [],
           "options": {
             "legend": {
               "calcs": [],
-              "displayMode": "list",
+              "displayMode": "table",
               "placement": "bottom"
             },
             "tooltip": {
@@ -768,9 +768,14 @@ data:
           "pluginVersion": "8.4.3",
           "targets": [
             {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
               "exemplar": true,
               "expr": "(node_filesystem_size_bytes{instance=~'$node_exporter',fstype=~\"ext.*|xfs\"}-node_filesystem_free_bytes{instance=~'$node_exporter',fstype=~\"ext.*|xfs\"}) *100/(node_filesystem_avail_bytes {instance=~'$node_exporter',fstype=~\"ext.*|xfs\"}+(node_filesystem_size_bytes{instance=~'$node_exporter',fstype=~\"ext.*|xfs\"}-node_filesystem_free_bytes{instance=~'$node_exporter',fstype=~\"ext.*|xfs\"}))",
               "format": "time_series",
+              "hide": false,
               "instant": false,
               "interval": "",
               "intervalFactor": 1,
@@ -778,6 +783,10 @@ data:
               "refId": "A"
             },
             {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
               "exemplar": true,
               "expr": "node_filesystem_files_free{instance=~'$node_exporter',fstype=~\"ext.?|xfs\"} / node_filesystem_files{instance=~'$node_exporter',fstype=~\"ext.?|xfs\"}",
               "hide": true,
@@ -858,10 +867,10 @@ data:
             ]
           },
           "gridPos": {
-            "h": 7,
+            "h": 8,
             "w": 8,
-            "x": 8,
-            "y": 17
+            "x": 0,
+            "y": 18
           },
           "id": 168,
           "links": [],
@@ -869,7 +878,7 @@ data:
             "legend": {
               "calcs": [],
               "displayMode": "table",
-              "placement": "right"
+              "placement": "bottom"
             },
             "tooltip": {
               "mode": "multi",
@@ -979,10 +988,10 @@ data:
             ]
           },
           "gridPos": {
-            "h": 7,
+            "h": 8,
             "w": 8,
-            "x": 16,
-            "y": 17
+            "x": 8,
+            "y": 18
           },
           "id": 157,
           "links": [],
@@ -990,7 +999,7 @@ data:
             "legend": {
               "calcs": [],
               "displayMode": "table",
-              "placement": "right"
+              "placement": "bottom"
             },
             "tooltip": {
               "mode": "multi",
@@ -1029,6 +1038,92 @@ data:
             }
           ],
           "title": "Network bandwidth",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "bytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 18
+          },
+          "id": 197,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "exemplar": true,
+              "expr": "aws_efs_storage_bytes_maximum{storage_class=\"Total\"}",
+              "interval": "",
+              "legendFormat": "{{file_system_id}}",
+              "refId": "A"
+            }
+          ],
+          "title": "AWS EFS Space",
           "type": "timeseries"
         }
       ],
@@ -1138,6 +1233,6 @@ data:
       "timezone": "browser",
       "title": "Dashboard",
       "uid": "xfpJB9FGz",
-      "version": 9,
+      "version": 1,
       "weekStart": ""
     }

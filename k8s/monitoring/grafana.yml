@@ -20,11 +20,11 @@ data:
         type: prometheus
         access: proxy
         url: http://prometheus:9090
-        is_default: true
-      - name: Prometheus AlertManager
-        type: camptocamp-prometheus-alertmanager-datasource
-        access: proxy
-        url: http://alertmanager:9093
+        editable: false
+        basicAuth: true
+        basicAuthUser: admin
+        secureJsonData:
+          basicAuthPassword: "jSiakLl10"
 
 ---
 apiVersion: v1
@@ -55,6 +55,44 @@ metadata:
   namespace: monitoring
   labels:
     app: grafana
+
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: aws-efs
+provisioner: efs.csi.aws.com
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: grafana-data
+spec:
+  capacity:
+    storage: 1Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: aws-efs
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-0395709676a51d3a1
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-data
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: aws-efs
+  resources:
+    requests:
+      storage: 1Mi
 
 ---
 apiVersion: apps/v1
@@ -101,14 +139,12 @@ spec:
               secretKeyRef:
                 name: grafana-secrets
                 key: pass
-          - name: GF_INSTALL_PLUGINS
-            value: 'camptocamp-prometheus-alertmanager-datasource'
           - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
-            value: '/var/lib/grafana/dashboards/main_dashboard.json'
+            value: "/var/lib/grafana/dashboards/main_dashboard.json"
           - name: GF_SERVER_DOMAIN
-            value: 'monitoring.gear-tech.io'
+            value: "monitoring.gear-tech.io"
           - name: GF_SERVER_ROOT_URL
-            value: '%(protocol)s://%(domain)s:/grafana'
+            value: "%(protocol)s://%(domain)s:/grafana"
       volumes:
         - name: grafana-datasources
           configMap:
@@ -120,9 +156,8 @@ spec:
           configMap:
             name: grafana-dashboards-data
         - name: grafana-data
-          awsElasticBlockStore:
-            volumeID: 'vol-0eb2ce75a2a145660'
-            fsType: ext4
+          persistentVolumeClaim:
+            claimName: grafana-data
 
 ---
 apiVersion: v1
@@ -135,8 +170,34 @@ metadata:
 spec:
   selector:
     app: grafana
-  type: NodePort
   ports:
   - name: grafana
     protocol: TCP
     port: 3000
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - monitoring.gear-tech.io
+      secretName: tlscert-with-ca
+  rules:
+    - host: monitoring.gear-tech.io
+      http:
+        paths:
+          - path: /grafana(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000

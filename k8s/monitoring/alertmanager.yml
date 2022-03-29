@@ -59,6 +59,7 @@ spec:
         - name: alertmanager-conf
           configMap:
             name: alertmanager-conf
+
 ---
 apiVersion: v1
 kind: Service
@@ -70,7 +71,6 @@ metadata:
 spec:
   selector:
     app: alertmanager
-  type: NodePort
   ports:
   - name: prometheus
     protocol: TCP

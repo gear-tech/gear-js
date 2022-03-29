@@ -31,6 +31,9 @@ data:
         scrape_interval: 5s
         static_configs:
           - targets: [ 'prometheus:9090' ]
+        basic_auth:
+          username: 'admin'
+          password: 'jSiakLl10'
       - job_name: 'node_exporter'
         scrape_interval: 5s
         static_configs:
@@ -64,6 +67,14 @@ data:
         - targets: [ '54.153.5.48:9615' ]
           labels:
             hostname: 'testnet-gear04'
+      - job_name: 'aws_exporter'
+        scrape_interval: 5s
+        static_configs:
+        - targets: [ 'aws-exporter:9106' ]
+      - job_name: 'github_exporter'
+        scrape_interval: 5s
+        static_configs:
+        - targets: [ 'github-exporter:8080' ]
 
   rules.yml: |
     groups:
@@ -76,7 +87,7 @@ data:
               severity: critical
             annotations:
               summary: 'Instance [{{ $labels.hostname }} - {{ $labels.instance }}]
-              has been down more the 30 seconds!'
+              has been down more then 30 seconds!'
 
           - alert: HostHighCpuLoad
             expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode='idle'}[5m])) * 100) > 80
@@ -88,13 +99,13 @@ data:
               CPU load > 80% in the past 5 minutes!'
 
           - alert: HostOutOfMemory
-            expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 20
+            expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
             for: 5m
             labels:
               severity: warning
             annotations:
               summary: 'On instance [{{ $labels.hostname }} - {{ $labels.instance }}]
-              RAM used > 80% in the past 5 minutes!'
+              RAM used > 90% in the past 5 minutes!'
 
           - alert: HostOutOfDiskSpace
             expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 20 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
@@ -122,6 +133,89 @@ data:
             annotations:
               summary: 'Instance [{{ $labels.instance }}]
               has not new incoming connection in the past 5 minutes!'
+
+          - alert: EfsUsedDiskSpace
+            expr: (aws_efs_storage_bytes_maximum{storage_class="Total"} / 1000000) > 1000
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: 'AWS EFS [{{ $labels.file_system_id }}]
+              used more then 1Gb disk space!'
+
+          - alert: GithubOperationsStatus
+            expr: (service_status{service="GitHub",component="GitHub Operations"}) > 0
+            for: 30s
+            labels:
+              severity: warning
+            annotations:
+              summary: 'Maintenance for GitHub Operations! 
+              Visit https://www.githubstatus.com for more information!'
+
+          - alert: GithubActionStatus
+            expr: (service_status{service="GitHub",component="GitHub Actions"}) > 0
+            for: 30s
+            labels:
+              severity: warning
+            annotations:
+              summary: 'Maintenance for GitHub Actions! 
+              Visit https://www.githubstatus.com for more information!'
+
+          - alert: GithubPackagesStatus
+            expr: (service_status{service="GitHub",component="GitHub Packages"}) > 0
+            for: 30s
+            labels:
+              severity: warning
+            annotations:
+              summary: 'Maintenance for GitHub Packages! 
+              Visit https://www.githubstatus.com for more information!'
+
+          - alert: GithubIssuesStatus
+            expr: (service_status{service="GitHub",component="Issues"}) > 0
+            for: 30s
+            labels:
+              severity: warning
+            annotations:
+              summary: 'Maintenance for GitHub Issues! 
+              Visit https://www.githubstatus.com for more information!'
+
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: aws-efs
+provisioner: efs.csi.aws.com
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prometheus-data
+spec:
+  capacity:
+    storage: 1Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: aws-efs
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-017931a692795341d
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-data
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: aws-efs
+  resources:
+    requests:
+      storage: 1Mi
 
 ---
 apiVersion: apps/v1
@@ -160,15 +254,14 @@ spec:
           - '--storage.tsdb.path=/prometheus'
           - '--config.file=/etc/prometheus/prometheus.yml'
           - '--web.route-prefix=/'
-          - '--web.external-url=https://monitoring.gear-tech.io/prometheus'
+          - '--web.external-url=http://monitoring.gear-tech.io/prometheus'
       volumes:
         - name: prometheus-conf
           configMap:
             name: prometheus-conf
         - name: prometheus-data
-          awsElasticBlockStore:
-            volumeID: 'vol-035b71ba840f01e1c'
-            fsType: ext4
+          persistentVolumeClaim:
+            claimName: prometheus-data
 
 ---
 apiVersion: v1
@@ -181,9 +274,37 @@ metadata:
 spec:
   selector:
     app: prometheus
-  type: NodePort
   ports:
   - name: prometheus
     protocol: TCP
     port: 9090
- 
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus-ingress
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: prometheus-secrets
+    nginx.ingress.kubernetes.io/auth-realm: 'Enter your credentials'
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - monitoring.gear-tech.io
+      secretName: tlscert-with-ca
+  rules:
+    - host: monitoring.gear-tech.io
+      http:
+        paths:
+          - path: /prometheus(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus
+                port:
+                  number: 9090

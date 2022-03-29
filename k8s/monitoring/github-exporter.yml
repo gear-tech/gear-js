@@ -1,0 +1,73 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: github-exporter-conf
+  namespace: monitoring
+  labels:
+    app: github-exporter
+data:
+  config.json: |
+    [
+      {
+          "name": "Github",
+          "url": "www.githubstatus.com"
+      }
+    ]
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-exporter
+  namespace: monitoring
+  labels:
+    app: github-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-exporter
+  template:
+    metadata:
+      labels:
+        app: github-exporter
+    spec:
+      containers:
+      - name: github-exporter
+        image: kvs96/github-status-exporter:latest
+        ports:
+          - containerPort: 8080
+        volumeMounts:
+          - name: github-exporter-conf
+            mountPath: /config/config.json
+            subPath: config.json
+        env:
+          - name: STATUS_CONFIG_FILE
+            value: /config/config.json
+      volumes:
+        - name: github-exporter-conf
+          configMap:
+            name: github-exporter-conf
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: github-exporter
+  namespace: monitoring
+  labels:
+    app: github-exporter
+spec:
+  selector:
+    app: github-exporter
+  ports:
+  - name: github-exporter
+    protocol: TCP
+    port: 8080
