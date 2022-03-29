@@ -22,8 +22,14 @@
     "prettier": "2.6.0"
   },
   "workspaces": [
+    "website/api-gateway",
     "website/data-storage",
-    "website/interfaces"
+    "website/events-listener",
+    "website/frontend",
+    "website/test-balance",
+    "website/wasm-compiler",
+    "website/interfaces",
+    "website/tests"
   ],
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
