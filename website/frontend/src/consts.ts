@@ -38,12 +38,6 @@ export const PROGRESS_BAR_STATUSES = {
   COMPLETED: 'COMPLETED',
 };
 
-export const PROGRAM_UPLOAD_STATUSES = {
-  IN_BLOCK: 'in block',
-  FINALIZED: 'finalized',
-  PROGRAM_INITIALIZED: 'program initialized',
-};
-
 export const EVENT_TYPES = {
   PROGRAM_INITIALIZED: 'ProgramInitialized',
   PROGRAM_INITIALIZATION_FAILURE: 'InitFailure',

@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { IdeaEvent, IdeaEvents, Sections } from 'types/explorer';
-import { useApi } from './useApi';
-import { useSubscription } from './useSubscription';
+import { useApi, useSubscription } from '.';
 
 export function useEvents() {
-  const [api] = useApi();
+  const { api } = useApi();
   const [events, setEvents] = useState<IdeaEvents>([]);
 
   const subscribeToEvents = () =>

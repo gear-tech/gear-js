@@ -2,12 +2,12 @@ import { InputHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import styles from './Checkbox.module.scss';
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   type?: 'switch';
 }
 
-const Checkbox = ({ label, className, type, ...attrs }: Props) => {
+const Checkbox = ({ label, className, type, ...attrs }: CheckboxProps) => {
   const { disabled } = attrs;
   const labelClassName = clsx(styles.label, className, disabled && 'disabled');
   const inputClassName = clsx(styles.input, type === 'switch' ? styles.switch : styles.checkbox);
@@ -20,4 +20,4 @@ const Checkbox = ({ label, className, type, ...attrs }: Props) => {
   );
 };
 
-export { Checkbox };
+export { Checkbox, CheckboxProps };

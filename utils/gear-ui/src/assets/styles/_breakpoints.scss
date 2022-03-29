@@ -1,20 +1,14 @@
-$sm: 576px;
-$md: 768px;
-$lg: 992px;
 $xl: 1200px;
+$lg: 992px;
+$md: 768px;
+$sm: 576px;
 
 @function getMaxWidth($width) {
   @return 'max-width: #{$width - 1}';
 }
 
-@mixin sm {
-  @media screen and (getMaxWidth($sm)) {
-    @content;
-  }
-}
-
-@mixin md {
-  @media screen and (getMaxWidth($md)) {
+@mixin xl {
+  @media screen and (getMaxWidth($xl)) {
     @content;
   }
 }
@@ -25,8 +19,14 @@ $xl: 1200px;
   }
 }
 
-@mixin xl {
-  @media screen and (getMaxWidth($xl)) {
+@mixin md {
+  @media screen and (getMaxWidth($md)) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media screen and (getMaxWidth($sm)) {
     @content;
   }
 }

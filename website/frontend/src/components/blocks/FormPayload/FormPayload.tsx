@@ -1,7 +1,7 @@
 import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Field } from 'formik';
-import { Checkbox } from 'common/components/Checkbox/Checkbox';
+import { Checkbox } from '@gear-js/ui';
 import { MetaFields } from 'components/MetaFields';
 import { MetaFormStruct } from 'utils/meta-parser';
 import styles from './FormPayload.module.scss';

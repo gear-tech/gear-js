@@ -1,9 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { useApi } from 'hooks';
 import { routes } from 'routes';
 import clsx from 'clsx';
-import { RootState } from 'store/reducers';
 import styles from './Menu.module.scss';
 
 type Props = {
@@ -15,7 +14,7 @@ type ClassNameProps = {
 };
 
 const Menu = ({ openSidebar }: Props) => {
-  const { isApiReady } = useSelector((state: RootState) => state.api);
+  const { isApiReady } = useApi();
 
   const getClassName = ({ isActive }: ClassNameProps) => clsx(styles.link, isActive && styles.active);
 

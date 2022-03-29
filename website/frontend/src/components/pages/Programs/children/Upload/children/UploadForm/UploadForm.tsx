@@ -1,16 +1,15 @@
 import React, { Dispatch, SetStateAction, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
+import { Checkbox } from '@gear-js/ui';
 import { Formik, Form, Field } from 'formik';
 import { MetaFormStruct, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
-import { EventTypes } from 'types/alerts';
 import { SetFieldValue } from 'types/common';
 import { MetaFields as MetaForm } from 'components/MetaFields';
-import { Checkbox } from 'common/components/Checkbox/Checkbox';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
 import { MetaFile } from './children/MetaFile/MetaFile';
@@ -18,9 +17,7 @@ import { MetaFields } from './children/MetaFields/MetaFields';
 import { Buttons } from './children/Buttons/Buttons';
 
 import { Schema } from './Schema';
-import { useApi } from 'hooks/useApi';
-import { AddAlert } from 'store/actions/actions';
-import { RootState } from 'store/reducers';
+import { useAccount, useApi, useLoading } from 'hooks';
 import { UploadProgram } from 'services/ApiService';
 import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
 import { MIN_GAS_LIMIT } from 'consts';
@@ -42,9 +39,10 @@ type Props = {
 };
 
 export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
-  const [api] = useApi();
-  const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { api } = useApi();
+  const alert = useAlert();
+  const { account: currentAccount } = useAccount();
+  const { enableLoading, disableLoading } = useLoading();
 
   const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);
@@ -96,7 +94,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }
     } catch (error) {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+      alert.error(`${error}`);
     }
     setDroppedMetaFile(file);
   };
@@ -117,21 +115,41 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         const pl = isManualPayload ? values.payload : values.__root;
         const updatedValues = { ...values, initPayload: pl };
 
-        UploadProgram(api, currentAccount, droppedFile, { ...updatedValues, ...meta }, metaFile, dispatch, () => {
-          setDroppedFile(null);
-        });
+        UploadProgram(
+          api,
+          currentAccount,
+          droppedFile,
+          { ...updatedValues, ...meta },
+          metaFile,
+          enableLoading,
+          disableLoading,
+          alert,
+          () => {
+            setDroppedFile(null);
+          }
+        );
       } else {
         try {
           const manualTypes = values.types.length > 0 ? JSON.parse(values.types) : values.types;
-          UploadProgram(api, currentAccount, droppedFile, { ...values, types: manualTypes }, null, dispatch, () => {
-            setDroppedFile(null);
-          });
+          UploadProgram(
+            api,
+            currentAccount,
+            droppedFile,
+            { ...values, types: manualTypes },
+            null,
+            enableLoading,
+            disableLoading,
+            alert,
+            () => {
+              setDroppedFile(null);
+            }
+          );
         } catch (error) {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `Invalid JSON format` }));
+          alert.error(`Invalid JSON format`);
         }
       }
     } else {
-      dispatch(AddAlert({ type: EventTypes.ERROR, message: `Wallet not connected` }));
+      alert.error(`Wallet not connected`);
     }
   };
 
@@ -144,7 +162,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, isManualPayload, values, setFieldValue, dispatch, meta, code);
+    calculateGas('init', api, isManualPayload, values, setFieldValue, alert, meta, code);
   };
 
   return (

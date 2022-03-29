@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState, VFC } from 'react';
 import { getWasmMetadata } from '@gear-js/api';
 import { Field, Form, Formik } from 'formik';
+import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { fileNameHandler } from 'helpers';
 import { MetaModel } from 'types/program';
@@ -8,11 +9,8 @@ import { addMetadata } from 'services/ApiService';
 import cancel from 'assets/images/cancel.svg';
 import deselected from 'assets/images/radio-deselected.svg';
 import selected from 'assets/images/radio-selected.svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/reducers';
-import { AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/alerts';
 import { readFileAsync } from '../../../helpers';
+import { useAccount } from 'hooks';
 import { Schema } from './Schema';
 import './MetaForm.scss';
 
@@ -23,13 +21,13 @@ type Props = {
 };
 
 export const MetaForm: VFC<Props> = ({ programName, programId }) => {
+  const alert = useAlert();
+  const { account: currentAccount } = useAccount();
   const [isMetaByFile, setIsMetaByFile] = useState(true);
   const [metaWasm, setMetaWasm] = useState<any>(null);
   const [metaWasmFile, setMetaWasmFile] = useState<any>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [wrongMetaFormat, setWrongMetaFormat] = useState(false);
-  const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
 
   const metaFieldRef = useRef<any>(null);
 
@@ -65,7 +63,7 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
         setMetaWasmFile(bufstr);
         setMetaWasm(meta);
       } catch (error) {
-        dispatch(AddAlert({ type: EventTypes.ERROR, message: `${error}` }));
+        alert.error(`${error}`);
       }
       setDroppedMetaFile(file);
     },
@@ -111,17 +109,17 @@ export const MetaForm: VFC<Props> = ({ programName, programId }) => {
         if (currentAccount) {
           if (isMetaByFile) {
             if (metaWasm) {
-              addMetadata(metaWasm, metaWasmFile, currentAccount, programId, values.name, dispatch);
+              addMetadata(metaWasm, metaWasmFile, currentAccount, programId, values.name, alert);
             } else {
-              dispatch(AddAlert({ type: EventTypes.ERROR, message: `ERROR: metadata not loaded` }));
+              alert.error(`ERROR: metadata not loaded`);
             }
           } else {
             const { name, ...meta } = values;
-            addMetadata(meta, null, currentAccount, programId, name, dispatch);
+            addMetadata(meta, null, currentAccount, programId, name, alert);
           }
           resetForm();
         } else {
-          dispatch(AddAlert({ type: EventTypes.ERROR, message: `WALLET NOT CONNECTED` }));
+          alert.error(`WALLET NOT CONNECTED`);
         }
       }}
     >

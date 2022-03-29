@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Button } from '@gear-js/ui';
 import refresh from 'assets/images/refresh2.svg';
 import cross from 'assets/images/close.svg';
 import { nodeApi } from 'api/initApi';
 import { LOCAL_STORAGE, NODE_ADRESS_URL_PARAM } from 'consts';
-import { Button } from 'common/components/Button/Button';
 import styles from './Header.module.scss';
 
 type Props = {

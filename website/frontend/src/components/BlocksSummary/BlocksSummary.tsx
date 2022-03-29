@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useApi } from 'hooks/useApi';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/reducers';
+import { useApi, useBlocks } from 'hooks';
 import styles from './BlocksSummary.module.scss';
 
 const BlocksSummary = () => {
-  const [api] = useApi();
-  const dispatch = useDispatch();
-
-  const { blocks } = useSelector((state: RootState) => state.blocks);
+  const { api } = useApi();
+  const blocks = useBlocks();
 
   const [timeInstance, setTimeInstance] = useState(0);
   const [totalIssuance, setTotalIssuance] = useState('');
@@ -34,7 +30,7 @@ const BlocksSummary = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [dispatch, setTimeInstance, timeInstance, setPrevBlockHash, prevBlockHash, blocks]);
+  }, [setTimeInstance, timeInstance, setPrevBlockHash, prevBlockHash, blocks]);
 
   useEffect(() => {
     const getTotal = async () => {
