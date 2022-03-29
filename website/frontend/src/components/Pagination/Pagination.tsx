@@ -16,7 +16,9 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
   const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
   const isDisabledPrev = page === 1;
   const isDisabledNext = page === totalPages || totalPages === 0;
-  const { pathname: url } = useLocation();
+  const { pathname } = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
 
   const onPreviousClickHandler = () => {
     if (setShouldReload) {
@@ -32,10 +34,14 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
     onPageChange(page + 1);
   };
 
+  const getUrl = (newPage: number) => {
+    return `${pathname}?page=${newPage}${termFromUrl ? `&term=${termFromUrl}` : ``}`;
+  };
+
   return (
     <div className="pagination">
       {!isDisabledPrev ? (
-        <Link className="pagination--box" to={`${url}?page=${page - 1}`} onClick={onPreviousClickHandler}>
+        <Link className="pagination--box" to={getUrl(page - 1)} onClick={onPreviousClickHandler}>
           <PaginationArrow color="#C4CDD5" />
         </Link>
       ) : (
@@ -48,7 +54,7 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
       </button>
       <p className="pagination__total">of {totalPages}</p>
       {!isDisabledNext ? (
-        <Link className="pagination--box" to={`${url}?page=${page + 1}`} onClick={onNextClickHandler}>
+        <Link className="pagination--box" to={getUrl(page + 1)} onClick={onNextClickHandler}>
           <PaginationArrow color="#C4CDD5" />
         </Link>
       ) : (
