@@ -22,8 +22,6 @@ export class MetadataService {
     });
     console.log(program);
     console.log(params);
-    console.log(`*** Signature is valid: ${GearKeyring.checkSign(program.owner, params.signature, params.meta)}`);
-    console.log(`*** TYPEOF params.meta: ${typeof params.meta}`);
     console.log(
       `*** CHECK GearKeyring.checkSign: ${GearKeyring.checkSign(
         '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
