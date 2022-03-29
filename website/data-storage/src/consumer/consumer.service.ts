@@ -103,7 +103,14 @@ export class ConsumerService {
 
   @CatchGearErrros
   async addMeta(params: AddMetaParams): Result<AddMetaResult> {
-    return await this.metaService.addMeta(params);
+    console.log('*** ADD META ***');
+    console.log(params);
+    try {
+      return await this.metaService.addMeta(params);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   @CatchGearErrros
