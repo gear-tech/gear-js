@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import React from 'react';
 import { Field, Form, Formik } from 'formik';
 import { SearchModel } from 'types/program';
 import { SearchIcon } from 'assets/Icons';
@@ -6,26 +6,22 @@ import { Schema } from './Schema';
 import './SearchForm.scss';
 
 type Props = {
-  handleSearch: (searchQuery: string) => void;
-  handleRemoveQuery: () => void;
+  term: string;
   placeholder: string;
+  handleSearch: (term: string) => void;
 };
 
-export const SearchForm: VFC<Props> = ({ handleSearch, handleRemoveQuery, placeholder }) => {
-  const mapInitialValues = () => ({
-    searchQuery: '',
-  });
-
+const SearchForm = ({ term, placeholder, handleSearch }: Props) => {
   return (
     <Formik
-      initialValues={mapInitialValues()}
+      initialValues={{ term }}
       validationSchema={Schema}
       validateOnBlur
       onSubmit={(values: SearchModel) => {
-        handleSearch(values.searchQuery);
+        handleSearch(values.term);
       }}
       onReset={() => {
-        handleRemoveQuery();
+        handleSearch('');
       }}
     >
       {() => (
@@ -35,13 +31,7 @@ export const SearchForm: VFC<Props> = ({ handleSearch, handleRemoveQuery, placeh
               <div className="search-form__icon">
                 <SearchIcon color="#BBBBBB" />
               </div>
-              <Field
-                id="searchQuery"
-                name="searchQuery"
-                type="text"
-                className="search-form__input"
-                placeholder={placeholder}
-              />
+              <Field id="term" name="term" type="text" className="search-form__input" placeholder={placeholder} />
             </div>
             <div className="search-form--btns">
               <button className="search-form--btns__button" type="submit">
@@ -58,3 +48,5 @@ export const SearchForm: VFC<Props> = ({ handleSearch, handleRemoveQuery, placeh
     </Formik>
   );
 };
+
+export { SearchForm };
