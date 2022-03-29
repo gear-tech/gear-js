@@ -1,0 +1,67 @@
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/breakpoints.scss' as *;
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+
+  @include lg {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  background: $mainBackground;
+  border-radius: $borderRadiusBase;
+  padding: 12px 20px;
+  height: 48px;
+  width: 100%;
+}
+
+.iconWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input {
+  background: none;
+  border: none;
+  outline: none;
+  color: $textColor;
+  padding: 0;
+  margin-left: 20px;
+  letter-spacing: 0.15px;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  width: 100%;
+
+  &::placeholder {
+    color: $textColorSecondary;
+  }
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0;
+
+  @include lg {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.resetButton {
+  width: 150px;
+}

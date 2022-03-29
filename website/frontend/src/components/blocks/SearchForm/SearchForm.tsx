@@ -2,8 +2,10 @@ import React from 'react';
 import { Field, Form, Formik } from 'formik';
 import { SearchModel } from 'types/program';
 import { SearchIcon } from 'assets/Icons';
+import searchIcon from 'assets/images/search.svg';
 import { Schema } from './Schema';
-import './SearchForm.scss';
+import { Button } from 'common/components/Button/Button';
+import styles from './SearchForm.module.scss';
 
 type Props = {
   term: string;
@@ -26,21 +28,16 @@ const SearchForm = ({ term, placeholder, handleSearch }: Props) => {
     >
       {() => (
         <Form>
-          <div className="search-form">
-            <div className="search-form--field-wrapper">
-              <div className="search-form__icon">
+          <div className={styles.searchForm}>
+            <div className={styles.inputWrapper}>
+              <div className={styles.iconWrapper}>
                 <SearchIcon color="#BBBBBB" />
               </div>
-              <Field id="term" name="term" type="text" className="search-form__input" placeholder={placeholder} />
+              <Field className={styles.input} id="term" name="term" type="text" placeholder={placeholder} />
             </div>
-            <div className="search-form--btns">
-              <button className="search-form--btns__button" type="submit">
-                <SearchIcon color="#FFFFFF" />
-                Search
-              </button>
-              <button className="search-form--btns__button" type="reset" aria-label="resetSearch">
-                Reset search
-              </button>
+            <div className={styles.buttons}>
+              <Button text="Search" type="submit" color="secondary" icon={searchIcon} />
+              <Button className={styles.resetButton} text="Reset search" type="reset" color="transparent" />
             </div>
           </div>
         </Form>
