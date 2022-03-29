@@ -1,6 +1,6 @@
 import React, { useEffect, useState, VFC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Meta } from 'components/Meta/Meta';
 import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
@@ -21,13 +21,16 @@ type ProgramMessageType = {
 
 export const All: VFC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
+  const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
 
-  const [term, setTerm] = useState('');
   const programs = useSelector((state: RootState) => state.programs.allUploadedPrograms);
   const programsCount = useSelector((state: RootState) => state.programs.allUploadedProgramsCount || 0);
+
+  const [term, setTerm] = useState(termFromUrl);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
@@ -59,6 +62,14 @@ export const All: VFC = () => {
     );
   }
 
+  const handleSearch = (value: string) => {
+    const path = `/all-programs/?page=1${value ? `&term=${value}` : ``}`;
+
+    setTerm(value);
+    setCurrentPage(1);
+    navigate(path);
+  };
+
   return (
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
@@ -66,15 +77,7 @@ export const All: VFC = () => {
         <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
-        <SearchForm
-          handleRemoveQuery={() => {
-            setTerm('');
-          }}
-          handleSearch={(val: string) => {
-            setTerm(val);
-          }}
-          placeholder="Find program"
-        />
+        <SearchForm term={term} placeholder="Find program" handleSearch={handleSearch} />
         <br />
       </div>
       <ProgramsLegend />
