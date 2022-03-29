@@ -21,6 +21,9 @@ export class MetadataService {
       genesis: params.genesis,
     });
 
+    console.log(program);
+    console.log(params);
+    console.log(`*** Signature is valid: ${GearKeyring.checkSign(program.owner, params.signature, params.meta)}`);
     if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
       throw new SignNotVerified();
     }
