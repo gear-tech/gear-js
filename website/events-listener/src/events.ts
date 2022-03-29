@@ -108,7 +108,7 @@ const handleEvent = (method: EventType, data: any): { key: Keys; value: any } | 
 };
 
 export const listen = (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) =>
-  api.allEvents(async (events: any) => {
+  api.query.system.events(async (events: any) => {
     const blockHash = events.createdAtHash.toHex();
     const timestamp = await api.blocks.getBlockTimestamp(blockHash);
     const base = {
