@@ -23,7 +23,9 @@ export class MetadataService {
 
     console.log(program);
     console.log(params);
+    params.signature;
     console.log(`*** Signature is valid: ${GearKeyring.checkSign(program.owner, params.signature, params.meta)}`);
+    console.log(`!GearKeyring.checkSign(${program.owner}, ${params.signature}, ${params.meta})`);
     if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
       throw new SignNotVerified();
     }
