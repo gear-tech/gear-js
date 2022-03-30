@@ -77,8 +77,6 @@ export class RpcMessageHandler {
   }
 
   executeMethod(method: (params: any) => Observable<any>, procedure: IRpcRequest): Promise<IRpcResponse> {
-    console.log('*** Send: ');
-    console.log(procedure.params);
     const result = method(procedure.params);
 
     if (!result) {
@@ -86,8 +84,6 @@ export class RpcMessageHandler {
     }
     return new Promise((resolve) => {
       result.forEach((value) => {
-        console.log('*** Received: ');
-        console.log(value);
         if (!value) {
           resolve(this.getResponse(procedure, { error: 'Service is not available' }));
         } else if ('error' in value) {

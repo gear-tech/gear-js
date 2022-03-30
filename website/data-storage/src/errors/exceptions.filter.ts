@@ -2,7 +2,6 @@ export function CatchGearErrros(target: Object, propertyKey: string, descriptor:
   const originalMethod = descriptor.value;
   descriptor.value = async function SafeWrapper() {
     try {
-      console.log(arguments);
       return { result: await originalMethod.apply(this, arguments) };
     } catch (ex) {
       console.log(ex);

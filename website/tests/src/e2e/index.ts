@@ -10,7 +10,7 @@ export async function test(
   },
 ) {
   await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[]);
-  for (let program of Object.keys(prepared.programs)) {
-    await getProgramData(genesis, program);
-  }
+  // for (let program of Object.keys(prepared.programs)) {
+  //   await getProgramData(genesis, program);
+  // }
 }

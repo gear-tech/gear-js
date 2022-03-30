@@ -27,8 +27,7 @@
     "website/events-listener",
     "website/frontend",
     "website/test-balance",
-    "website/interfaces",
-    "website/tests"
+    "website/interfaces"
   ],
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
