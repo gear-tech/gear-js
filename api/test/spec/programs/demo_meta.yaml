@@ -22,11 +22,3 @@ state:
   - program: 1
     payload: null
     result: '0x08010000000000000004012c536f6d655375726e616d6520536f6d654e616d6502000000000000000402244f746865724e616d65304f746865725375726e616d65'
-
-initGasSpent:
-  - source: alice
-    program: 1
-    payload:
-      amount: 8
-      currency: GRT
-    meta: true

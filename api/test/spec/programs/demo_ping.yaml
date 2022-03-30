@@ -7,7 +7,6 @@ programs:
     value: 0
     meta: false
     account: alice
-
 messages:
   - id: 1
     program: 1
@@ -21,14 +20,3 @@ mailbox:
   - message: 1
     claim: true
     account: alice
-
-handleGasSpent:
-  - source: alice
-    dest: 1
-    payload: PING
-    type: String
-
-initGasSpent:
-  - source: alice
-    program: 1
-    payload: '0x00'
