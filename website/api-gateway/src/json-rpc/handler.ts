@@ -27,7 +27,7 @@ export class RpcMessageHandler {
       id: procedure.id,
     };
     if (error) {
-      response['error'] = error.message;
+      response['error'] = error;
     } else if (result) {
       response['result'] = result;
     }
