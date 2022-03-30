@@ -12,3 +12,8 @@ export async function getAllPrograms(genesis: string, expected: Hex[]) {
       assert.ok(expected.includes(programId));
     });
 }
+
+export async function getProgramData(genesis: string, programId: string) {
+  const response = await request('program.data', { genesis, programId });
+  assert.ok(response);
+}
