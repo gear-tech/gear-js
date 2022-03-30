@@ -1,7 +1,7 @@
 import { isHex } from '@polkadot/util';
 import { Hex, Metadata } from '../interfaces';
 import { CreateType } from '../create-type/CreateType';
-import { blake2AsHex } from '@polkadot/util-crypto';
+import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 
 export function createPayload(createType: CreateType, type: any, data: any, meta?: Metadata): Hex {
   if (data === undefined) {
@@ -29,9 +29,9 @@ export function generateCodeHash(code: Buffer | Uint8Array): Hex {
   return blake2AsHex(code, 256);
 }
 
-export function generateProgramId(code: Buffer | Uint8Array, salt: Hex): Hex {
-  const codeHashU8a = CreateType.create('Vec<u8>', generateCodeHash(code)).toU8a().slice(1);
-  const saltU8a = CreateType.create('Vec<u8>', salt).toU8a();
+export function generateProgramId(code: Buffer | Uint8Array, salt: string | Hex | Uint8Array): Hex {
+  const codeHashU8a = blake2AsU8a(code, 256);
+  const saltU8a = CreateType.create('Vec<u8>', salt).toU8a().slice(1);
   const id = new Uint8Array(codeHashU8a.byteLength + saltU8a.byteLength);
   id.set(codeHashU8a);
   id.set(saltU8a, codeHashU8a.byteLength);

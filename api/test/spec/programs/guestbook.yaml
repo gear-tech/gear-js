@@ -34,17 +34,3 @@ messages:
     gasLimit: 50000000
     account: alice
     log: '0x081c446d69747269793048656c6c6f20576f726c64211c446d697472697938476f6f6462796520576f726c6421'
-
-handleGasSpent:
-  - source: alice
-    dest: 1
-    payload:
-      AddMessage:
-        author: Dmitriy
-        msg: Hello World!
-    meta: true
-
-initGasSpent:
-  - source: alice
-    program: 1
-    payload: '0x00'
