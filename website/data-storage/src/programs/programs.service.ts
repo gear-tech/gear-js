@@ -72,7 +72,6 @@ export class ProgramsService {
         timestamp: 'DESC',
       },
     });
-    throw new Error('test error');
     return {
       programs: result,
       count: total,
