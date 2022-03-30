@@ -80,13 +80,14 @@ export class RpcMessageHandler {
     console.log('*** Send: ');
     console.log(procedure.params);
     const result = method(procedure.params);
-    console.log('*** Received: ');
-    console.log(result);
+
     if (!result) {
       return;
     }
     return new Promise((resolve) => {
       result.forEach((value) => {
+        console.log('*** Received: ');
+        console.log(value);
         if (!value) {
           resolve(this.getResponse(procedure, { error: 'Service is not available' }));
         } else if ('error' in value) {
