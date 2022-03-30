@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import configuration from './config/configuration';
+import { waitReady } from '@polkadot/wasm-crypto';
 
 async function bootstrap() {
   const configKafka = configuration().kafka;
@@ -22,6 +23,7 @@ async function bootstrap() {
       },
     },
   });
+  await waitReady();
   await app.listen();
 }
 bootstrap();
