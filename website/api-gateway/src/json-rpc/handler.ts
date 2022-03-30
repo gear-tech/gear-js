@@ -77,7 +77,11 @@ export class RpcMessageHandler {
   }
 
   executeMethod(method: (params: any) => Observable<any>, procedure: IRpcRequest): Promise<IRpcResponse> {
+    console.log('*** Send: ');
+    console.log(procedure.params);
     const result = method(procedure.params);
+    console.log('*** Received: ');
+    console.log(result);
     if (!result) {
       return;
     }

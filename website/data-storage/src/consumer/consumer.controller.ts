@@ -40,7 +40,9 @@ export class ConsumerController {
 
   @MessagePattern('program.all')
   async allPrograms(@Payload() payload: KafkaPayload<GetAllProgramsParams>) {
+    console.log(payload);
     const result = await this.consumerService.allPrograms(payload.value);
+    console.log(result);
     return JSON.stringify(result);
   }
 
