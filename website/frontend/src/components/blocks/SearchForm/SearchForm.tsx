@@ -1,10 +1,10 @@
 import React from 'react';
+import { Button } from '@gear-js/ui';
 import { Field, Form, Formik } from 'formik';
 import { SearchModel } from 'types/program';
 import { SearchIcon } from 'assets/Icons';
 import searchIcon from 'assets/images/search.svg';
 import { Schema } from './Schema';
-import { Button } from 'common/components/Button/Button';
 import styles from './SearchForm.module.scss';
 
 type Props = {
