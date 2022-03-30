@@ -12,7 +12,7 @@ describe('Generate IDs', () => {
 
   test('generate programId', async () => {
     expect(generateProgramId(Buffer.from('0x12345678'), '0x1234')).toBe(
-      '0x1d54c1a17c7c3b23579fe9fde5fb8dc40099ee9afbb3a25f13c75766cf92bbc5',
+      '0xd3bd038bdf4a403a1209eebdfb6dc9f05b8e70cae93fc3a038a76175893ba8ca',
     );
   });
 
