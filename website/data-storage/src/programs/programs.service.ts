@@ -102,7 +102,7 @@ export class ProgramsService {
         } catch (error) {
           logger.error(error, error.stack);
         }
-      }, 1000);
+      }, 2000);
     });
   }
 }
