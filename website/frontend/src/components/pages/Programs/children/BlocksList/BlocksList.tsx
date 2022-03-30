@@ -1,10 +1,9 @@
 import React from 'react';
-import { RootState } from 'store/reducers';
-import { useSelector } from 'react-redux';
+import { useBlocks } from 'hooks';
 import './BlocksList.scss';
 
 export const BlockList = () => {
-  const { blocks } = useSelector((state: RootState) => state.blocks);
+  const blocks = useBlocks();
 
   const showMoreClick = () => {
     const list = document.querySelector('.programs-list--short-list');

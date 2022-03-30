@@ -1,9 +1,9 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect } from 'react';
-import { useApi } from './useApi';
+import { useApi } from '.';
 
 export function useSubscription(callback: () => UnsubscribePromise) {
-  const [api] = useApi();
+  const { api } = useApi();
 
   useEffect(() => {
     let unsub: UnsubscribePromise | undefined;

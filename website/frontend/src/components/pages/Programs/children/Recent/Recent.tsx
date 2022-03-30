@@ -1,8 +1,5 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getUserProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
-import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 
 import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
@@ -15,6 +12,7 @@ import styles from './Recent.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
 
 import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
+import { getUserPrograms } from 'services';
 
 type ProgramMessageType = {
   programName: string;
@@ -22,15 +20,14 @@ type ProgramMessageType = {
 };
 
 export const Recent: VFC = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
   const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
 
-  const programs = useSelector((state: RootState) => state.programs.programs);
-  const programsCount = useSelector((state: RootState) => state.programs.programsCount || 0);
+  const [programs, setPrograms] = useState<ProgramModel[]>([]);
+  const [programsCount, setProgramsCount] = useState(0);
 
   const [term, setTerm] = useState(termFromUrl);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
@@ -38,18 +35,19 @@ export const Recent: VFC = () => {
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
-  const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
-
   useEffect(() => {
-    dispatch(
-      getUserProgramsAction({
-        owner: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
-        limit: INITIAL_LIMIT_BY_PAGE,
-        offset,
-        term,
-      })
-    );
-  }, [dispatch, offset, term]);
+    const programParams = {
+      owner: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
+      limit: INITIAL_LIMIT_BY_PAGE,
+      offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE,
+      term,
+    };
+
+    getUserPrograms(programParams).then(({ result }) => {
+      setPrograms(result.programs);
+      setProgramsCount(result.count);
+    });
+  }, [currentPage, term]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
@@ -61,7 +59,6 @@ export const Recent: VFC = () => {
   };
 
   const handleCloseMetaForm = () => {
-    dispatch(uploadMetaResetAction());
     setProgramMeta(null);
   };
 

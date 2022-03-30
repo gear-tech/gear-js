@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAlert } from 'react-alert';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { MetaParam } from 'utils/meta-parser';
 import { RPCResponseError } from 'services/ServerRPCRequestService';
-import { EventTypes } from 'types/alerts';
+import { messagesService } from 'services/MessagesRequestServices';
 import { programService } from 'services/ProgramsRequestService';
-import { RootState } from 'store/reducers';
-import { AddAlert, getMessageAction, resetMessageAction } from 'store/actions/actions';
+import { MessageModel } from 'types/message';
 import { isDevChain, getLocalProgramMeta, fileNameHandler } from 'helpers';
 import { MessageForm } from './children/MessageForm/MessageForm';
 import ArrowBack from 'assets/images/arrow_back.svg';
@@ -16,25 +15,20 @@ import { Spinner } from 'components/blocks/Spinner/Spinner';
 import './Send.scss';
 
 const Send = () => {
-  const dispatch = useDispatch();
+  const alert = useAlert();
   const navigate = useNavigate();
   const { programId = '', messageId = '' } = useParams();
   const id = programId || messageId;
 
+  const [message, setMessage] = useState<MessageModel>();
   const [meta, setMeta] = useState<Metadata>();
   const [types, setTypes] = useState<MetaParam | null>(null);
   const [ready, setReady] = useState(false);
 
-  const { message } = useSelector((state: RootState) => state.messages);
-
   useEffect(() => {
     if (messageId) {
-      dispatch(getMessageAction(messageId));
+      messagesService.fetchMessage(messageId).then(({ result }) => setMessage(result));
     }
-
-    return () => {
-      dispatch(resetMessageAction());
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,10 +39,10 @@ const Send = () => {
 
       getMeta(metaSource)
         .then((res) => setMeta(JSON.parse(res.result.meta) ?? null))
-        .catch((err: RPCResponseError) => dispatch(AddAlert({ type: EventTypes.ERROR, message: err.message })))
+        .catch((err: RPCResponseError) => alert.error(err.message))
         .finally(() => setReady(true));
     }
-  }, [meta, programId, message, dispatch]);
+  }, [meta, programId, message, alert]);
 
   useEffect(() => {
     if (meta && meta.types && meta.handle_input) {

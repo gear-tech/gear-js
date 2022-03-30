@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useReducer, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAlert } from 'react-alert';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
@@ -8,11 +8,8 @@ import clsx from 'clsx';
 import get from 'lodash.get';
 
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
+import { useEditor } from 'hooks';
 import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, LOCAL_STORAGE } from 'consts';
-import { RootState } from 'store/reducers';
-
-import { setIsBuildDone, AddAlert } from 'store/actions/actions';
-import { EventTypes } from 'types/alerts';
 
 import EditorDownload from 'assets/images/editor-download.svg';
 import EditorBuild from 'assets/images/editor-build.svg';
@@ -27,10 +24,10 @@ import { SimpleExample } from '../../../fixtures/code';
 import './styles.scss';
 
 export const EditorPage = () => {
-  const globalDispatch = useDispatch();
   const navigate = useNavigate();
+  const alert = useAlert();
 
-  const { isBuildDone } = useSelector((state: RootState) => state.compiler);
+  const { isBuildDone, setIsBuildDone } = useEditor();
 
   const [state, dispatch] = useReducer(reducer, { tree: null });
   const [currentFile, setCurrentFile] = useState<string[] | null>(null);
@@ -98,8 +95,8 @@ export const EditorPage = () => {
       .then((data) => data.json())
       .then((json) => {
         localStorage.setItem(LOCAL_STORAGE.PROGRAM_COMPILE_ID, json.id);
-        globalDispatch(setIsBuildDone(true));
-        globalDispatch(AddAlert({ type: EventTypes.SUCCESS, message: `Compiling, please wait!` }));
+        setIsBuildDone(true);
+        alert.success('Compiling, please wait!');
       });
   }
 

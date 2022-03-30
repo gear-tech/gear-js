@@ -1984,6 +1984,7 @@ __metadata:
   dependencies:
     "@craco/craco": 6.4.3
     "@gear-js/api": 0.15.1
+    "@gear-js/ui": 0.0.3
     "@monaco-editor/react": 4.3.1
     "@polkadot/api": 7.10.1
     "@polkadot/extension-dapp": 0.42.7
@@ -2039,12 +2040,8 @@ __metadata:
     react-error-boundary: 3.1.4
     react-feather: 2.0.9
     react-number-format: 4.9.1
-    react-redux: 7.2.6
     react-router-dom: 6.2.2
     react-scripts: 5.0.0
-    redux: 4.1.2
-    redux-devtools-extension: 2.13.9
-    redux-thunk: 2.4.1
     reselect: 4.1.5
     sass: 1.49.9
     stream-browserify: 3.0.0
@@ -2079,6 +2076,16 @@ __metadata:
     winston: ^3.3.3
   languageName: unknown
   linkType: soft
+
+"@gear-js/ui@npm:0.0.3":
+  version: 0.0.3
+  resolution: "@gear-js/ui@npm:0.0.3"
+  peerDependencies:
+    clsx: ^1.1.1
+    react: ^17.0.2
+  checksum: 5deeda3e652c2471e3f26be25645784ad263ba955e93984bf49355063659cfcc21c2ac4015b2b5079e9f70703dc897bdd265ee18eb44976eaa92e43b7b0a9939
+  languageName: node
+  linkType: hard
 
 "@gear-js/wasm-compiler@workspace:website/wasm-compiler":
   version: 0.0.0-use.local
@@ -4290,7 +4297,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-redux@npm:7.1.23, @types/react-redux@npm:^7.1.20":
+"@types/react-redux@npm:7.1.23":
   version: 7.1.23
   resolution: "@types/react-redux@npm:7.1.23"
   dependencies:
@@ -15304,7 +15311,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^17.0.1, react-is@npm:^17.0.2":
+"react-is@npm:^17.0.1":
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
@@ -15320,27 +15327,6 @@ __metadata:
     react: ^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0
     react-dom: ^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0
   checksum: f057e7c9b1ce7f551610fff1298413c6d1ea5a0abb0c98825da32c60ef061105d2d320300068640d1c72a4364d16485d0222765c23e436ef02fc7f56daf81e33
-  languageName: node
-  linkType: hard
-
-"react-redux@npm:7.2.6":
-  version: 7.2.6
-  resolution: "react-redux@npm:7.2.6"
-  dependencies:
-    "@babel/runtime": ^7.15.4
-    "@types/react-redux": ^7.1.20
-    hoist-non-react-statics: ^3.3.2
-    loose-envify: ^1.4.0
-    prop-types: ^15.7.2
-    react-is: ^17.0.2
-  peerDependencies:
-    react: ^16.8.3 || ^17
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 0bf142ce0d0b80aef955650fd5e9489fca32d94f19ee23893b332f1b01ceee7bd3623337c942cbda642667d1dc9de5ac869c3c1946afa6cf2046407b57d24741
   languageName: node
   linkType: hard
 
@@ -15542,25 +15528,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux-devtools-extension@npm:2.13.9":
-  version: 2.13.9
-  resolution: "redux-devtools-extension@npm:2.13.9"
-  peerDependencies:
-    redux: ^3.1.0 || ^4.0.0
-  checksum: 603d48fd6acf3922ef373b251ab3fdbb990035e90284191047b29d25b06ea18122bc4ef01e0704ccae495acb27ab5e47b560937e98213605dd88299470025db9
-  languageName: node
-  linkType: hard
-
-"redux-thunk@npm:2.4.1":
-  version: 2.4.1
-  resolution: "redux-thunk@npm:2.4.1"
-  peerDependencies:
-    redux: ^4
-  checksum: af5abb425fb9dccda02e5f387d6f3003997f62d906542a3d35fc9420088f550dc1a018bdc246c7d23ee852b4d4ab8b5c64c5be426e45a328d791c4586a3c6b6e
-  languageName: node
-  linkType: hard
-
-"redux@npm:4.1.2, redux@npm:^4.0.0, redux@npm:^4.1.1":
+"redux@npm:^4.0.0, redux@npm:^4.1.1":
   version: 4.1.2
   resolution: "redux@npm:4.1.2"
   dependencies:

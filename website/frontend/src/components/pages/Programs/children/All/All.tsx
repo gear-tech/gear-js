@@ -1,18 +1,16 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Meta } from 'components/Meta/Meta';
 import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
-import { getAllProgramsAction, uploadMetaResetAction } from 'store/actions/actions';
-import { RootState } from 'store/reducers';
 import { ProgramModel } from 'types/program';
 import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload-cloud.svg';
 import { UserProgram } from '../UserProgram/UserProgram';
 import styles from './All.module.scss';
 import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
+import { getPrograms } from 'services';
 
 type ProgramMessageType = {
   programName: string;
@@ -20,27 +18,29 @@ type ProgramMessageType = {
 };
 
 export const All: VFC = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
   const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
 
-  const programs = useSelector((state: RootState) => state.programs.allUploadedPrograms);
-  const programsCount = useSelector((state: RootState) => state.programs.allUploadedProgramsCount || 0);
-
   const [term, setTerm] = useState(termFromUrl);
+  const [programs, setPrograms] = useState<ProgramModel[]>([]);
+  const [programsCount, setProgramsCount] = useState(0);
+
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
-  const offset = (currentPage - 1) * INITIAL_LIMIT_BY_PAGE;
-
   useEffect(() => {
-    dispatch(getAllProgramsAction({ limit: INITIAL_LIMIT_BY_PAGE, offset, term }));
-  }, [dispatch, offset, term]);
+    const programParams = { limit: INITIAL_LIMIT_BY_PAGE, offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE, term };
+
+    getPrograms(programParams).then(({ result }) => {
+      setPrograms(result.programs);
+      setProgramsCount(result.count);
+    });
+  }, [currentPage, term]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
@@ -52,7 +52,6 @@ export const All: VFC = () => {
   };
 
   const handleCloseMetaForm = () => {
-    dispatch(uploadMetaResetAction());
     setProgramMeta(null);
   };
 

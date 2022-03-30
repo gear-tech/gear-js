@@ -1,7 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useSearchParams } from 'react-router-dom';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import { positions, Provider as AlertProvider } from 'react-alert';
+import { positions, Provider as AlertProvider, useAlert } from 'react-alert';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
@@ -19,18 +18,20 @@ import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
 
 import { routes } from 'routes';
-import { RootState } from 'store/reducers';
-import { subscribeToEvents, setApiReady } from '../../store/actions/actions';
+import { subscribeToEvents } from 'services/ApiService';
 import { nodeApi } from '../../api/initApi';
-import { useEvents } from 'hooks/useEvents';
-import { useBlocks } from 'hooks/useBlocks';
-import store from '../../store';
+
+import { ApiProvider } from 'context/api';
+import { BlocksProvider } from 'context/blocks';
+import { AccountProvider } from 'context/account';
+import { EditorProvider } from 'context/editor';
+import { LoadingProvider } from 'context/loading';
+import { useApi, useEvents, useLoading } from 'hooks';
 
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
 import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
-import { Alert } from '../Alerts';
 import { globalStyles } from './styles';
 import { Main } from 'layout/Main/Main';
 
@@ -54,34 +55,25 @@ const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
 const AppComponent: FC = () => {
   globalStyles();
-  useBlocks();
-  const dispatch = useDispatch();
+  const { isApiReady } = useApi();
+  const alert = useAlert();
+  const { isLoading } = useLoading();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isApiReady } = useSelector((state: RootState) => state.api);
-  const { isProgramUploading, isMessageSending } = useSelector((state: RootState) => state.programs);
   const events = useEvents();
 
   useEffect(() => {
-    if ((isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'hidden') {
+    if (isLoading && document.body.style.overflowY !== 'hidden') {
       document.body.style.overflowY = 'hidden';
-    } else if (!(isProgramUploading || isMessageSending) && document.body.style.overflowY !== 'unset') {
+    } else if (!isLoading && document.body.style.overflowY !== 'unset') {
       document.body.style.overflowY = 'unset';
     }
-  }, [isProgramUploading, isMessageSending]);
-
-  useEffect(() => {
-    if (!isApiReady) {
-      nodeApi.init().then(() => {
-        dispatch(setApiReady());
-      });
-    }
-  }, [dispatch, isApiReady]);
+  }, [isLoading]);
 
   useEffect(() => {
     if (isApiReady) {
-      dispatch(subscribeToEvents());
+      subscribeToEvents(alert);
     }
-  }, [dispatch, isApiReady]);
+  }, [isApiReady, alert]);
 
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
@@ -104,52 +96,59 @@ const AppComponent: FC = () => {
     paths.map((path) => <Route key={path} path={path} element={element} />);
 
   return (
-    <AlertProvider template={AlertTemplate} {...options}>
-      <div className="app">
-        {(isProgramUploading || isMessageSending) && (
-          <>
-            <div className="overlay" />
-            <LoadingPopup />
-          </>
-        )}
-        <Header />
-        <Main>
-          {isApiReady ? (
-            <Routes>
-              {getMultipleRoutes(mainRoutes, <Programs />)}
-              {getMultipleRoutes(utilRoutes, <Document />)}
+    <div className="app">
+      {isLoading && (
+        <>
+          <div className="overlay" />
+          <LoadingPopup />
+        </>
+      )}
+      <Header />
+      <Main>
+        {isApiReady ? (
+          <Routes>
+            {getMultipleRoutes(mainRoutes, <Programs />)}
+            {getMultipleRoutes(utilRoutes, <Document />)}
 
-              {/* temp solution since in react-router v6 optional parameters are gone */}
-              <Route path={routes.explorer}>
-                <Route path="" element={<Explorer events={events} />} />
-                <Route path=":blockId" element={<Explorer events={events} />} />
-              </Route>
-              <Route path={routes.program} element={<Program />} />
-              <Route path={routes.message} element={<Message />} />
-              <Route path={routes.state} element={<State />} />
-              <Route path={routes.send}>
-                <Route path={routes.sendMessage} element={<Send />} />
-                <Route path={routes.reply} element={<Send />} />
-              </Route>
-              <Route path={routes.editor} element={<EditorPage />} />
-              <Route path={routes.mailbox} element={<Mailbox />} />
-              <Route path="*" element={<PageNotFound />} />
-            </Routes>
-          ) : (
-            <Loader />
-          )}
-        </Main>
-        {isFooterHidden() || <Footer />}
-        <Alert />
-      </div>
-    </AlertProvider>
+            {/* temp solution since in react-router v6 optional parameters are gone */}
+            <Route path={routes.explorer}>
+              <Route path="" element={<Explorer events={events} />} />
+              <Route path=":blockId" element={<Explorer events={events} />} />
+            </Route>
+            <Route path={routes.program} element={<Program />} />
+            <Route path={routes.message} element={<Message />} />
+            <Route path={routes.state} element={<State />} />
+            <Route path={routes.send}>
+              <Route path={routes.sendMessage} element={<Send />} />
+              <Route path={routes.reply} element={<Send />} />
+            </Route>
+            <Route path={routes.editor} element={<EditorPage />} />
+            <Route path={routes.mailbox} element={<Mailbox />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        ) : (
+          <Loader />
+        )}
+      </Main>
+      {isFooterHidden() || <Footer />}
+    </div>
   );
 };
 
 export const App = () => (
-  <Provider store={store}>
-    <BrowserRouter>
-      <AppComponent />
-    </BrowserRouter>
-  </Provider>
+  <AlertProvider template={AlertTemplate} {...options}>
+    <ApiProvider>
+      <BlocksProvider>
+        <AccountProvider>
+          <EditorProvider>
+            <LoadingProvider>
+              <BrowserRouter>
+                <AppComponent />
+              </BrowserRouter>
+            </LoadingProvider>
+          </EditorProvider>
+        </AccountProvider>
+      </BlocksProvider>
+    </ApiProvider>
+  </AlertProvider>
 );

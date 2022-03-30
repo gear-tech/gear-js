@@ -1,29 +1,26 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { GearKeyring } from '@gear-js/api';
 import { useAlert } from 'react-alert';
 import { LogoutIcon } from 'assets/Icons';
-import { RootState } from 'store/reducers';
-import { setCurrentAccount, resetCurrentAccount } from 'store/actions/actions';
-import { UserAccount } from '../../../types/account';
-import { useApi } from '../../../hooks/useApi';
+import { useApi } from 'hooks';
 import { Modal } from '../Modal';
 import { AccountList } from './AccountList';
 import { nodeApi } from '../../../api/initApi';
 import { LOCAL_STORAGE } from 'consts';
+import { useAccount } from 'hooks';
 import styles from './Wallet.module.scss';
 
 export const Wallet = () => {
-  const [injectedAccounts, setInjectedAccounts] = useState<Array<UserAccount> | null>(null);
+  const [injectedAccounts, setInjectedAccounts] = useState<Array<InjectedAccountWithMeta> | null>(null);
   const [accountBalance, setAccountBalance] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const alert = useAlert();
-  const [api] = useApi();
-  const dispatch = useDispatch();
-  const currentAccount = useSelector((state: RootState) => state.account.account);
+  const { api } = useApi();
+  const { account: currentAccount, setAccount } = useAccount();
 
   const getAllAccounts = useCallback(async () => {
     if (typeof window !== `undefined`) {
@@ -35,7 +32,7 @@ export const Wallet = () => {
         return null;
       }
 
-      const accounts: UserAccount[] = await web3Accounts();
+      const accounts = await web3Accounts();
 
       return accounts;
     }
@@ -48,10 +45,9 @@ export const Wallet = () => {
       getAllAccounts()
         .then((allAccounts) => {
           if (allAccounts) {
-            allAccounts.forEach((acc: UserAccount) => {
+            allAccounts.forEach((acc) => {
               if (acc.address === localStorage.getItem(LOCAL_STORAGE.SAVED_ACCOUNT)) {
-                acc.isActive = true;
-                dispatch(setCurrentAccount(acc));
+                setAccount(acc);
               }
             });
             setInjectedAccounts(allAccounts);
@@ -59,7 +55,7 @@ export const Wallet = () => {
         })
         .catch((err) => console.error(err));
     }, 300);
-  }, [dispatch, getAllAccounts]);
+  }, [setAccount, getAllAccounts]);
 
   const getBalance = useCallback(
     async (address: string) => {
@@ -75,7 +71,7 @@ export const Wallet = () => {
         setAccountBalance(result.toHuman());
       });
     }
-  }, [currentAccount, api, dispatch, getBalance]);
+  }, [currentAccount, api, getBalance]);
 
   const subscriptionRef = useRef<VoidFunction | null>(null);
 
@@ -106,22 +102,20 @@ export const Wallet = () => {
   // Setting current account and save it into the LocalStage
   const selectAccount = (index: number) => {
     if (injectedAccounts) {
-      injectedAccounts.forEach((acc: UserAccount, i: number) => {
-        acc.isActive = false;
+      injectedAccounts.forEach((acc, i) => {
         if (i === index) {
-          acc.isActive = true;
           localStorage.setItem(LOCAL_STORAGE.SAVED_ACCOUNT, acc.address);
           localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, GearKeyring.decodeAddress(acc.address));
         }
       });
-      dispatch(setCurrentAccount(injectedAccounts[index]));
+      setAccount(injectedAccounts[index]);
       toggleModal();
       alert.success('Account successfully changed');
     }
   };
 
   const handleLogout = () => {
-    dispatch(resetCurrentAccount());
+    setAccount(undefined);
     localStorage.removeItem(LOCAL_STORAGE.SAVED_ACCOUNT);
     localStorage.removeItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
     toggleModal();
