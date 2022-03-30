@@ -199,7 +199,6 @@ jobs:
     if: github.event.pull_request.draft == false
     needs:
       [
-        build-and-push-frontend-image,
         build-and-push-data-storage-image,
         build-and-push-api-gateway-image,
         build-and-push-event-listeners-image,
