@@ -17,13 +17,6 @@ beforeAll(async () => {
   const initStatus = checkInit(api, programId);
   api.program.signAndSend(alice, () => {});
   expect(await initStatus).toBe('success');
-  await Promise.all([
-    new Promise((resolve) =>
-      setTimeout(() => {
-        resolve();
-      }, 1000),
-    ),
-  ]);
 });
 
 afterAll(async () => {
