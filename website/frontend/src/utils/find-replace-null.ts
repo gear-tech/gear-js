@@ -1,5 +1,5 @@
 import isObject from 'lodash.isobject';
-import set from 'lodash.set';
+import setWith from 'lodash.setwith';
 
 type FormStruct = {
   [key: string]: null | string | FormStruct;
@@ -33,7 +33,7 @@ export function findReplaceNull(struct: FormStruct | null) {
         if (!nilledStruct) {
           nilledStruct = {};
         }
-        set(nilledStruct, current.path, current.value === 'Null' ? null : current.value);
+        setWith(nilledStruct, current.path, current.value === 'Null' ? null : current.value, Object);
       }
     }
   }
