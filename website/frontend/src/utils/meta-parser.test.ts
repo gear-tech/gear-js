@@ -193,10 +193,132 @@ describe('test parser', () => {
     expect(parseMeta(daoMeta)).toEqual({
       __root: {
         __fields: {
+          Abort: {
+            label: 'Abort',
+            name: '__root.Abort',
+            type: 'u128',
+          },
+          CancelProposal: {
+            label: 'CancelProposal',
+            name: '__root.CancelProposal',
+            type: 'u128',
+          },
+          ProcessProposal: {
+            label: 'ProcessProposal',
+            name: '__root.ProcessProposal',
+            type: 'u128',
+          },
+          RageQuit: {
+            label: 'RageQuit',
+            name: '__root.RageQuit',
+            type: 'u128',
+          },
           RequestForMembership: {
             label: 'RequestForMembership',
             name: '__root.RequestForMembership',
             type: 'u128',
+          },
+          SetAdmin: {
+            label: 'SetAdmin',
+            name: '__root.SetAdmin',
+            type: 'ActorId',
+          },
+          SubmitFundingProposal: {
+            __fields: {
+              amount: {
+                label: 'amount',
+                name: '__root.SubmitFundingProposal.amount',
+                type: 'u128',
+              },
+              applicant: {
+                label: 'applicant',
+                name: '__root.SubmitFundingProposal.applicant',
+                type: 'ActorId',
+              },
+              details: {
+                label: 'details',
+                name: '__root.SubmitFundingProposal.details',
+                type: 'Text',
+              },
+              quorum: {
+                label: 'quorum',
+                name: '__root.SubmitFundingProposal.quorum',
+                type: 'u128',
+              },
+            },
+            __name: 'SubmitFundingProposal',
+            __path: '__root.SubmitFundingProposal',
+            __select: false,
+            __type: '__fieldset',
+          },
+          SubmitMembershipProposal: {
+            __fields: {
+              applicant: {
+                label: 'applicant',
+                name: '__root.SubmitMembershipProposal.applicant',
+                type: 'ActorId',
+              },
+              details: {
+                label: 'details',
+                name: '__root.SubmitMembershipProposal.details',
+                type: 'Text',
+              },
+              quorum: {
+                label: 'quorum',
+                name: '__root.SubmitMembershipProposal.quorum',
+                type: 'u128',
+              },
+              sharesRequested: {
+                label: 'sharesRequested',
+                name: '__root.SubmitMembershipProposal.sharesRequested',
+                type: 'u128',
+              },
+              tokenTribute: {
+                label: 'tokenTribute',
+                name: '__root.SubmitMembershipProposal.tokenTribute',
+                type: 'u128',
+              },
+            },
+            __name: 'SubmitMembershipProposal',
+            __path: '__root.SubmitMembershipProposal',
+            __select: false,
+            __type: '__fieldset',
+          },
+          SubmitVote: {
+            __fields: {
+              proposalId: {
+                label: 'proposalId',
+                name: '__root.SubmitVote.proposalId',
+                type: 'u128',
+              },
+              vote: {
+                __fields: {
+                  '0': {
+                    label: '0',
+                    name: '__root.SubmitVote.vote.0',
+                    type: 'Yes',
+                  },
+                  '1': {
+                    label: '1',
+                    name: '__root.SubmitVote.vote.1',
+                    type: 'No',
+                  },
+                },
+                __name: 'vote',
+                __path: '__root.SubmitVote.vote',
+                __select: true,
+                __type: '__fieldset',
+              },
+            },
+            __name: 'SubmitVote',
+            __path: '__root.SubmitVote',
+            __select: false,
+            __type: '__fieldset',
+          },
+          UpdateDelegateKey: {
+            label: 'UpdateDelegateKey',
+            name: '__root.UpdateDelegateKey',
+            type: 'ActorId',
           },
         },
         __name: '__root',
@@ -205,7 +327,33 @@ describe('test parser', () => {
         __type: '__fieldset',
       },
       __values: {
+        Abort: '',
+        CancelProposal: '',
+        ProcessProposal: '',
+        RageQuit: '',
         RequestForMembership: '',
+        SetAdmin: '',
+        SubmitFundingProposal: {
+          amount: '',
+          applicant: '',
+          details: '',
+          quorum: '',
+        },
+        SubmitMembershipProposal: {
+          applicant: '',
+          details: '',
+          quorum: '',
+          sharesRequested: '',
+          tokenTribute: '',
+        },
+        SubmitVote: {
+          proposalId: '',
+          vote: {
+            '0': '',
+            '1': '',
+          },
+        },
+        UpdateDelegateKey: '',
       },
     });
   });

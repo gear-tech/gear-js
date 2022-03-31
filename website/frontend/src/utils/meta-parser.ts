@@ -1,6 +1,6 @@
 import isObject from 'lodash.isobject';
 import isString from 'lodash.isstring';
-import set from 'lodash.set';
+import setWith from 'lodash.setwith';
 
 export type MetaItem = {
   [key: string | MetaEnumType]: string | MetaItem;
@@ -136,42 +136,49 @@ function parseField(data: MetaItem) {
       // Check if this field
       if (isString(current.value) && current.kind === 'field') {
         const key = current.path.at(-1);
-        set(result, current.path, {
-          label: key,
-          name: current.path.filter((i) => i !== '__fields').join('.'),
-          type: current.value,
-        });
+        setWith(
+          result,
+          current.path,
+          {
+            label: key,
+            name: current.path.filter((i) => i !== '__fields').join('.'),
+            type: current.value,
+          },
+          Object
+        );
 
-        set(
+        setWith(
           result.__values,
           current.path.filter((i) => !['__root', '__fields'].includes(i)),
-          current.value === 'Null' ? 'Null' : ''
+          current.value === 'Null' ? 'Null' : '',
+          Object
         );
       } else if (isObject(current.value)) {
         // region Parse if it is fieldset
         if (current.kind === 'fieldset') {
           const key = current.path.at(-1);
-          set(result, [...current.path, '__fields'], null);
-          set(result, [...current.path, '__name'], key);
-          set(result, [...current.path, '__path'], current.path.filter((i) => i !== '__fields').join('.'));
-          set(result, [...current.path, '__type'], '__fieldset');
+          setWith(result, [...current.path, '__fields'], null, Object);
+          setWith(result, [...current.path, '__name'], key, Object);
+          setWith(result, [...current.path, '__path'], current.path.filter((i) => i !== '__fields').join('.'), Object);
+          setWith(result, [...current.path, '__type'], '__fieldset', Object);
 
           const entries = Object.entries(current.value);
 
-          set(
+          setWith(
             result,
             [...current.path, '__select'],
-            entries[0].some((i) => i === '_enum' || i === '_enum_Result' || i === '_enum_Option')
+            entries[0].some((i) => i === '_enum' || i === '_enum_Result' || i === '_enum_Option'),
+            Object
           );
 
           // eslint-disable-next-line max-depth
           if (entries[0].some((i) => i === '_enum_Option')) {
-            set(result, [...current.path, '__type'], 'enum_option');
+            setWith(result, [...current.path, '__type'], 'enum_option', Object);
           }
 
           // eslint-disable-next-line max-depth
           if (entries[0].some((i) => i === '_enum_Result')) {
-            set(result, [...current.path, '__type'], 'enum_result');
+            setWith(result, [...current.path, '__type'], 'enum_result', Object);
           }
 
           // Process fieldset fields
@@ -361,7 +368,7 @@ export function prepareToSend(data: PreparedMetaData) {
     if (current) {
       Object.entries(current).forEach((item) => {
         if (isString(item[1].value) && item[1].value === 'Null') {
-          set(data, item[1].path, null);
+          setWith(data, item[1].path, null, Object);
         }
         if (isObject(item[1].value)) {
           Object.entries(item[1].value).forEach(([first, second]) => {
