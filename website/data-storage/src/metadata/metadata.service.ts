@@ -20,7 +20,6 @@ export class MetadataService {
       id: params.programId,
       genesis: params.genesis,
     });
-
     if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
       throw new SignNotVerified();
     }

@@ -4,6 +4,7 @@ export function CatchGearErrros(target: Object, propertyKey: string, descriptor:
     try {
       return { result: await originalMethod.apply(this, arguments) };
     } catch (ex) {
+      console.log(ex);
       return { error: ex.message };
     }
   };

@@ -72,7 +72,6 @@ export class ProgramsService {
         timestamp: 'DESC',
       },
     });
-
     return {
       programs: result,
       count: total,
@@ -102,7 +101,7 @@ export class ProgramsService {
         } catch (error) {
           logger.error(error, error.stack);
         }
-      }, 1000);
+      }, 2000);
     });
   }
 }

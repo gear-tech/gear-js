@@ -8,7 +8,6 @@ const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();
 const messages = new Map();
 const testFiles = readdirSync('test/spec/programs');
-const submitCodeTestFiles = readdirSync('test/spec/submit_code');
 const api = new GearApi();
 const accounts = {
   alice: undefined,
@@ -35,7 +34,7 @@ afterAll(async () => {
 
 for (let filePath of testFiles) {
   /**
-   * @type {{title: string, programs: {name: string, id: number, gasLimit: number, value: number, account: string, meta: boolean, initPayload: any}[], messages: {id: number, program: number, payload: any, gasLimit: number, value: number, log: string}[], gasSpent: number[]}}
+   * @type {{title: string, programs: {name: string, id: number, gasLimit: number, value: number, salt: string, account: string, meta: boolean, initPayload: any}[], messages: {id: number, program: number, payload: any, gasLimit: number, value: number, log: string}[], gasSpent: number[]}}
    */
   const testFile = yaml.load(readFileSync(join('./test/spec/programs', filePath), 'utf8'));
   if (testFile.skip) {
@@ -48,7 +47,13 @@ for (let filePath of testFiles) {
         const metaFile = readFileSync(join(EXAMPLES_DIR, `${program.name}.meta.wasm`));
         const meta = program.meta ? await getWasmMetadata(metaFile) : {};
         const { programId, salt } = api.program.submit(
-          { code, initPayload: program.initPayload, gasLimit: program.gasLimit, value: program.value },
+          {
+            code,
+            initPayload: program.initPayload,
+            salt: program.salt || undefined,
+            gasLimit: program.gasLimit,
+            value: program.value,
+          },
           meta,
         );
         expect(programId).toBeDefined();
@@ -146,36 +151,6 @@ for (let filePath of testFiles) {
       }
     });
 
-    testif(testFile.handleGasSpent)('Get handle gas spent', async () => {
-      for (let options of testFile.handleGasSpent) {
-        const { source, dest, payload, type, meta } = options;
-        expect(
-          await api.program.gasSpent.handle(
-            GearKeyring.decodeAddress(accounts[source].address),
-            programs.get(dest).id,
-            payload,
-            0,
-            meta ? programs.get(dest).meta : type,
-          ),
-        ).toBeDefined();
-      }
-    });
-
-    testif(testFile.initGasSpent)('Get init gas spent', async () => {
-      for (let options of testFile.initGasSpent) {
-        const { source, program, payload, type, meta } = options;
-        expect(
-          await api.program.gasSpent.init(
-            GearKeyring.decodeAddress(accounts[source].address),
-            readFileSync(join(EXAMPLES_DIR, `${testFile.programs[program - 1].name}.opt.wasm`)),
-            payload,
-            0,
-            meta ? programs.get(program).meta : type,
-          ),
-        ).toBeDefined();
-      }
-    });
-
     testif(testFile.mailbox)('Mailbox', async () => {
       for (let options of testFile.mailbox) {
         const { message, claim, account } = options;
@@ -195,26 +170,3 @@ for (let filePath of testFiles) {
   });
   programs.clear();
 }
-
-for (let filePath of submitCodeTestFiles) {
-  const testFile = yaml.load(readFileSync(join('./test/spec/submit_code', filePath), 'utf8'));
-  if (testFile.skip) {
-    continue;
-  }
-  describe(testFile.title, () => {
-    test('Submit code', async () => {
-      for (let program of testFile.programs) {
-        const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
-        const codeHash = api.code.submit(code);
-        expect(codeHash).toBeDefined();
-
-        const transactionData = await sendTransaction(api.code, accounts[program.account], 'CodeSaved');
-
-        expect(transactionData).toBe(codeHash);
-      }
-      return;
-    });
-  });
-}
-
-test.todo('Get reply gas spent');
