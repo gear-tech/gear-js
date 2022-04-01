@@ -143,14 +143,6 @@ for (let filePath of testFiles) {
       }
     });
 
-    testif(testFile.state)('Read state', async () => {
-      for (let state of testFile.state) {
-        const program = programs.get(state.program);
-        const result = await api.programState.read(program.id, program.metaFile, state.payload);
-        expect(result.toHex()).toBe(state.result);
-      }
-    });
-
     testif(testFile.mailbox)('Mailbox', async () => {
       for (let options of testFile.mailbox) {
         const { message, claim, account } = options;

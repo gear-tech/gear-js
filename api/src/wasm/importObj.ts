@@ -1,4 +1,11 @@
-export default (memory: WebAssembly.Memory, showDebug?: boolean, inputValue?: Uint8Array) => ({
+import { u64, Compact } from '@polkadot/types';
+
+export default (
+  memory: WebAssembly.Memory,
+  showDebug?: boolean,
+  inputValue?: Uint8Array,
+  timestamp?: Compact<u64>,
+) => ({
   env: {
     abortStackOverflow: () => {
       throw new Error('overflow');
@@ -13,12 +20,12 @@ export default (memory: WebAssembly.Memory, showDebug?: boolean, inputValue?: Ui
     memoryBase: 1024,
     STACKTOP: 0,
     STACK_MAX: memory.buffer.byteLength,
-    alloc: (pages) => {
+    alloc: (pages: number) => {
       return memory.grow(pages);
     },
-    free: (_pages) => {},
+    free: () => {},
     gr_block_height: () => {},
-    gr_block_timestamp: () => {},
+    gr_block_timestamp: () => timestamp,
     gr_exit: () => {},
     gr_gas_available: () => {},
     gr_program_id: () => {},
@@ -48,7 +55,7 @@ export default (memory: WebAssembly.Memory, showDebug?: boolean, inputValue?: Ui
     gr_source: () => {},
     gr_value: () => {},
     gr_create_program_wgas: () => {},
-    gr_debug: (msg) => {
+    gr_debug: (msg: string) => {
       showDebug && console.log('GR_DEBUG: ', msg);
     },
   },
