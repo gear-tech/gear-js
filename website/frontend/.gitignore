@@ -25,3 +25,5 @@ yarn-error.log*
 
 .idea
 .env
+test-results/
+playwright-report/
