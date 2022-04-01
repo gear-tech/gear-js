@@ -96,7 +96,7 @@ export class GearBlock {
    */
   async getEvents(blockHash: `0x${string}` | Uint8Array): Promise<Vec<FrameSystemEventRecord>> {
     const apiAt = await this.api.at(blockHash);
-    return await apiAt.query.system.events();
+    return (await apiAt.query.system.events()) as Vec<FrameSystemEventRecord>;
   }
 
   /**

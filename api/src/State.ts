@@ -44,8 +44,8 @@ export class GearProgramState extends GearStorage {
     }
 
     const pages = await this.gPages(programId, program);
-    const curBlock = await this.api.blocks.getFinalizedHead();
-    const blockTimestamp = await this.api.blocks.getBlockTimestamp(curBlock.toHex());
+    const block = await this.api.blocks.getFinalizedHead();
+    const blockTimestamp = await this.api.blocks.getBlockTimestamp(block.toHex());
 
     if (!pages) {
       throw new ReadStateError(`Unable to read state. Unable to recieve program pages from chain`);
