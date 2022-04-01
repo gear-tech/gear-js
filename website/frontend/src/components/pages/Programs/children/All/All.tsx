@@ -1,5 +1,5 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
 import { Meta } from 'components/Meta/Meta';
 import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
@@ -19,8 +19,7 @@ type ProgramMessageType = {
 
 export const All: VFC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
+  const [searchParams] = useSearchParams();
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
   const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
 

@@ -1,5 +1,5 @@
 import React, { VFC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import { PaginationArrow } from 'assets/Icons';
@@ -13,12 +13,12 @@ type Props = {
 };
 
 export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldReload }) => {
+  const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+  const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
   const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
   const isDisabledPrev = page === 1;
   const isDisabledNext = page === totalPages || totalPages === 0;
-  const { pathname } = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
 
   const onPreviousClickHandler = () => {
     if (setShouldReload) {
