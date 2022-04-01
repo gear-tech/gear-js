@@ -14,7 +14,7 @@
     "@gear-js/api": "0.16.0",
     "@polkadot/api": "7.14.3",
     "js-yaml": "4.1.0",
-    "node-fetch": "2.6.7",
+    "node-fetch": "3.2.3",
     "ts-node": "10.7.0"
   }
 }
