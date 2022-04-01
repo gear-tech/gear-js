@@ -5,7 +5,6 @@ import { isMetaFieldset, isMetaField, MetaFormItemStruct } from '../../utils/met
 import { Fieldset, EnumSelect } from './styles';
 import isObject from 'lodash.isobject';
 import get from 'lodash.get';
-import isString from 'lodash.isstring';
 import setWith from 'lodash.setwith';
 
 const MetaFormContext = React.createContext<MetaFormStruct>({
@@ -145,18 +144,19 @@ function createMetaFormItem(data: MetaFormItemStruct | MetaFormItem) {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const _MetaFields = ({ data }: { data: MetaFormStruct }) => {
+const MetaFieldsComponent = () => {
   const formikContext = useFormikContext();
-  const [firstKey, setFirstKey] = useState(Object.keys(data.__root!.__fields!)[0]);
+  const metaFieldsContext = useContext(MetaFormContext);
+  const [firstKey, setFirstKey] = useState(Object.keys(metaFieldsContext.__root!.__fields!)[0]);
 
   const changeValues = useCallback(
     (key: string) => {
-      if (data.__root && data.__values) {
-        let values: MetaFormValues | string = data.__values;
-        console.log(values);
-        if (data.__root.__select) {
-          values = isString(data.__values[firstKey]) ? { [firstKey]: '' } : data.__values[firstKey];
+      if (metaFieldsContext.__root && metaFieldsContext.__values) {
+        let values: MetaFormValues | string = metaFieldsContext.__values;
+        if (metaFieldsContext.__root.__select) {
+          values = {
+            [key]: metaFieldsContext.__values[key],
+          };
         }
         formikContext.resetForm({
           values: {
@@ -166,7 +166,7 @@ const _MetaFields = ({ data }: { data: MetaFormStruct }) => {
         });
       }
     },
-    [data.__root, data.__values, firstKey, formikContext]
+    [metaFieldsContext.__root, metaFieldsContext.__values, formikContext]
   );
 
   useEffect(() => {
@@ -175,7 +175,7 @@ const _MetaFields = ({ data }: { data: MetaFormStruct }) => {
   }, []);
 
   if (
-    data.__root &&
+    metaFieldsContext.__root &&
     isObject(formikContext.values) &&
     '__root' in formikContext.values &&
     // @ts-ignore
@@ -183,17 +183,17 @@ const _MetaFields = ({ data }: { data: MetaFormStruct }) => {
   ) {
     return (
       <Fieldset className="first-item">
-        {data.__root.__select && data.__root.__fields && (
+        {metaFieldsContext.__root.__select && metaFieldsContext.__root.__fields && (
           <EnumSelect>
             <label>
               Select field from enum <br />
               <select
                 onChange={(event) => {
-                  setFirstKey(event.target.value);
                   changeValues(event.target.value);
+                  setFirstKey(event.target.value);
                 }}
               >
-                {Object.entries(data.__root.__fields).map((item) => {
+                {Object.entries(metaFieldsContext.__root.__fields).map((item) => {
                   return (
                     <option key={item[0]} value={item[0]}>
                       {item[0]}
@@ -205,8 +205,12 @@ const _MetaFields = ({ data }: { data: MetaFormStruct }) => {
           </EnumSelect>
         )}
 
-        {data.__root.__fields
-          ? createMetaFormItem(data.__root.__select ? data.__root.__fields[firstKey] : data.__root.__fields)
+        {metaFieldsContext.__root.__fields
+          ? createMetaFormItem(
+              metaFieldsContext.__root.__select
+                ? metaFieldsContext.__root.__fields[firstKey]
+                : metaFieldsContext.__root.__fields
+            )
           : 'meta data not parsed'}
       </Fieldset>
     );
@@ -218,7 +222,7 @@ const _MetaFields = ({ data }: { data: MetaFormStruct }) => {
 export const MetaFields = ({ data }: { data: MetaFormStruct }) => {
   return (
     <MetaFormProvider data={data}>
-      <MetaFields data={data} />{' '}
+      <MetaFieldsComponent />
     </MetaFormProvider>
   );
 };
