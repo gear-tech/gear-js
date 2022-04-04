@@ -20,5 +20,7 @@ module.exports = {
     project: './tsconfig.json',
   },
   plugins: ['react', '@typescript-eslint'],
-  rules: {},
+  rules: {
+    'react/require-default-props': 'off', // we don't use prop-types
+  },
 };
