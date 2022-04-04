@@ -54,7 +54,6 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-node:dev
           
-       
   build-and-push-data-storage-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest

@@ -27,7 +27,7 @@ export class RpcMessageHandler {
       id: procedure.id,
     };
     if (error) {
-      response['error'] = error.message;
+      response['error'] = error;
     } else if (result) {
       response['result'] = result;
     }
@@ -78,6 +78,7 @@ export class RpcMessageHandler {
 
   executeMethod(method: (params: any) => Observable<any>, procedure: IRpcRequest): Promise<IRpcResponse> {
     const result = method(procedure.params);
+
     if (!result) {
       return;
     }

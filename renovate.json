@@ -5,7 +5,6 @@
   "ignorePaths": ["ansible/**", ".github/**"],
   "assignAutomerge": true,
   "automergeType": "pr-comment",
-  "automergeComment": "deps: r+",
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
@@ -16,13 +15,13 @@
       "matchPaths": ["api/**"],
       "groupName": "@gear-js/api",
       "reviewers": ["osipov-mit"],
-      "labels": ["api"]
+      "labels": ["api", "dependencies"]
     },
     {
       "matchPaths": ["website/frontend/**"],
       "groupName": "frontend",
       "reviewers": ["nikitayutanov", "aderrod94", "codev0"],
-      "labels": ["frontend"]
+      "labels": ["frontend", "dependencies"]
     },
     {
       "matchPaths": [
@@ -34,13 +33,25 @@
       ],
       "groupName": "backend",
       "reviewers": ["osipov-mit"],
-      "labels": ["backend"]
+      "labels": ["backend", "dependencies"]
     },
     {
-      "matchPaths": ["utils/**"],
+      "matchPaths": ["website/tests/**"],
+      "groupName": "tests",
+      "reviewers": ["osipov-mit"],
+      "labels": ["tests", "dependencies"]
+    },
+    {
+      "matchPaths": ["utils/meta-cli/**"],
       "groupName": "utils",
       "reviewers": ["osipov-mit"],
-      "labels": ["utils"]
+      "labels": ["utils", "dependencies"]
+    },
+    {
+      "matchPaths": ["utils/gear-ui/**"],
+      "groupName": "utils",
+      "reviewers": ["nikitayutanov"],
+      "labels": ["utils", "dependencies"]
     }
   ]
 }
