@@ -1,11 +1,14 @@
 const { GearApi, GearKeyring, getWasmMetadata } = require('../lib');
 const { readFileSync } = require('fs');
 const { checkInit } = require('./utilsFunctions.js');
+const { join } = require('path');
+
+const EXAMPLES_DIR = 'test/wasm';
 
 const api = new GearApi();
 const demo_meta_test = {
-  code: readFileSync('test/wasm/demo_meta.opt.wasm'),
-  meta: readFileSync('test/wasm/demo_meta.meta.wasm'),
+  code: readFileSync(join(EXAMPLES_DIR, 'demo_meta.opt.wasm')),
+  meta: readFileSync(join(EXAMPLES_DIR, 'demo_meta.meta.wasm')),
   id: undefined,
 };
 const timestamp_test = {
