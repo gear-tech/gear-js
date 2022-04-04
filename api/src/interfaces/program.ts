@@ -1,4 +1,4 @@
-import { Vec, Bytes, u8, u32, u64, Null, Map, Type } from '@polkadot/types';
+import { Vec, Bytes, u8, u32, u64, Null, Map, Type, Compact } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 export declare interface Reason extends Bytes {
   isError: Boolean;
@@ -21,7 +21,7 @@ export declare interface IProgram extends Type {
 }
 
 export declare interface IActiveProgram extends Map {
-  static_pages: u32;
+  static_pages: Compact<u32>;
   persistent_pages: u32[];
   code_hash: Uint8Array;
   nonce: u64;
