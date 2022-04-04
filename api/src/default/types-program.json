@@ -8,7 +8,7 @@
       }
     },
     "ActiveProgram": {
-      "static_pages": "u32",
+      "static_pages": "Compact<u32>",
       "persistent_pages": "BTreeSet<u32>",
       "code_hash": "H256",
       "nonce": "u64",
