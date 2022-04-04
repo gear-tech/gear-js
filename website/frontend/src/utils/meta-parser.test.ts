@@ -12,6 +12,7 @@ import {
   resultEnumComplex,
   simpleNestedStruct,
   daoMeta,
+  nestedEnum,
 } from './meta-fixtures';
 
 describe('test parser', () => {
@@ -185,6 +186,65 @@ describe('test parser', () => {
         },
         Post: '',
         ViewMessages: 'Null',
+      },
+    });
+  });
+
+  it('nested enum', () => {
+    expect(parseMeta(nestedEnum)).toEqual({
+      __root: {
+        __fields: {
+          Action: {
+            __fields: {
+              AddMessage: {
+                label: 'AddMessage',
+                name: '__root.Action.AddMessage',
+                type: 'MessageIn',
+              },
+              ViewMessages: {
+                label: 'ViewMessages',
+                name: '__root.Action.ViewMessages',
+                type: 'Null',
+              },
+            },
+            __name: 'Action',
+            __path: '__root.Action',
+            __select: true,
+            __type: '__fieldset',
+          },
+          MessageIn: {
+            __fields: {
+              author: {
+                label: 'author',
+                name: '__root.MessageIn.author',
+                type: 'Text',
+              },
+              msg: {
+                label: 'msg',
+                name: '__root.MessageIn.msg',
+                type: 'Text',
+              },
+            },
+            __name: 'MessageIn',
+            __path: '__root.MessageIn',
+            __select: false,
+            __type: '__fieldset',
+          },
+        },
+        __name: '__root',
+        __path: '__root',
+        __select: false,
+        __type: '__fieldset',
+      },
+      __values: {
+        Action: {
+          AddMessage: '',
+          ViewMessages: 'Null',
+        },
+        MessageIn: {
+          author: '',
+          msg: '',
+        },
       },
     });
   });

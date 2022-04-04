@@ -112,3 +112,16 @@ export const daoMeta = {
     SetAdmin: 'ActorId',
   },
 };
+
+export const nestedEnum = {
+  Action: {
+    _enum: {
+      AddMessage: 'MessageIn',
+      ViewMessages: 'Null',
+    },
+  },
+  MessageIn: {
+    author: 'Text',
+    msg: 'Text',
+  },
+};
