@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/ui",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "React UI components used across Gear applications",
   "author": "Gear Technologies",
   "license": "GPL-3.0",
@@ -17,7 +17,7 @@
   ],
   "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/gear-ui#readme",
   "scripts": {
-    "build": "rm -rf dist && rollup -c",
+    "build": "rm -rf dist && rm -rf *.scss && rm -rf fonts && cp -R ./src/assets/styles/. . && rollup -c",
     "test": "jest",
     "prepare": "npm run build"
   },
@@ -53,6 +53,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "src/assets/styles/**/*"
+    "*.scss",
+    "fonts"
   ]
 }
