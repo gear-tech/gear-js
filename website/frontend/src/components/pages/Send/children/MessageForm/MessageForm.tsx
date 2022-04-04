@@ -10,7 +10,7 @@ import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useAccount, useApi, useLoading } from 'hooks';
-import { MetaItem, MetaFormStruct, parseMeta, prepareToSend } from 'utils/meta-parser';
+import { MetaItem, MetaFormStruct, parseMeta, prepareToSend } from 'components/MetaFields';
 import { Schema } from './Schema';
 import './MessageForm.scss';
 

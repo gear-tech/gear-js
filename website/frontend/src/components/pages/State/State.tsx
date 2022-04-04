@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
-import { MetaFormStruct, parseMeta } from 'utils/meta-parser';
+import { MetaFormStruct, parseMeta } from 'components/MetaFields';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';

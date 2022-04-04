@@ -1,5 +1,5 @@
 import { AnyNumber } from '@polkadot/types/types';
-import { PreparedMetaData } from '../utils/meta-parser';
+import { PreparedMetaData } from 'components/MetaFields';
 
 export enum ProgramStatus {
   Success = 'success',

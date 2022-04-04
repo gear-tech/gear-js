@@ -6,10 +6,9 @@ import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Checkbox } from '@gear-js/ui';
 import { Formik, Form, Field } from 'formik';
-import { MetaFormStruct, parseMeta, prepareToSend } from 'utils/meta-parser';
 import { InitialValues } from './types';
 import { SetFieldValue } from 'types/common';
-import { MetaFields as MetaForm } from 'components/MetaFields';
+import { MetaFormStruct, parseMeta, prepareToSend, MetaFields as MetaForm } from 'components/MetaFields';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
 import { MetaFile } from './children/MetaFile/MetaFile';

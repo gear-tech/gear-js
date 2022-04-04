@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { MetaFields } from './MetaFields';
 import { Form, Formik } from 'formik';
-import { MetaFormValues, MetaItem, parseMeta, prepareToSend } from '../../utils/meta-parser';
+import { MetaFormValues, MetaItem, parseMeta, prepareToSend } from './meta-parser';
 import {
   simpleStruct,
   simpleNestedStruct,
@@ -16,7 +16,7 @@ import {
   resultEnumComplex,
   daoMeta,
   nestedEnum,
-} from '../../utils/meta-fixtures';
+} from './meta-fixtures';
 
 type MetaFormWrapper = {
   metaData: MetaItem;

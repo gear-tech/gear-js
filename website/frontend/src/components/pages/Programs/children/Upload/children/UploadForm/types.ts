@@ -1,4 +1,4 @@
-import { MetaFormValues } from '../../../../../../../utils/meta-parser';
+import { MetaFormValues } from 'components/MetaFields';
 
 export type InitialValues = {
   gasLimit: number;
