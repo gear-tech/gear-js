@@ -6,7 +6,7 @@ import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Checkbox } from '@gear-js/ui';
 import { Formik, Form, Field } from 'formik';
-import { MetaFormStruct, parseMeta } from 'utils/meta-parser';
+import { MetaFormStruct, parseMeta, prepareToSend } from 'utils/meta-parser';
 import { InitialValues } from './types';
 import { SetFieldValue } from 'types/common';
 import { MetaFields as MetaForm } from 'components/MetaFields';
@@ -112,7 +112,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleSubmitForm = (values: any) => {
     if (currentAccount) {
       if (isMetaFromFile) {
-        const pl = isManualPayload ? values.payload : values.__root;
+        const prepared = prepareToSend(values.__root);
+        const pl = isManualPayload ? values.payload : prepared;
         const updatedValues = { ...values, initPayload: pl };
 
         UploadProgram(
