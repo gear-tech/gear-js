@@ -30,6 +30,7 @@ $border: url("data:image/svg+xml,%3Csvg width='430' height='431' fill='none' xml
 }
 
 .heading {
+  // TOFIX: replace with common shared class/mixin when done
   font-family: 'Syncopate', sans-serif;
   font-size: 24px;
   line-height: 32px;
