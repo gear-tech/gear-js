@@ -4,9 +4,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: inherit;
   color: $textColor;
+  border: none;
   border-radius: $borderRadius;
   transition: 0.25s all;
+  cursor: pointer;
 
   &:disabled {
     pointer-events: none;
