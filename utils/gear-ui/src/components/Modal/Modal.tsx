@@ -1,50 +1,49 @@
 import { ReactNode, useEffect, useState, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { Button } from '@gear-js/ui';
+import { Button } from '../Button/Button';
 import icon from './images/x.svg';
 import styles from './Modal.module.scss';
 
-type Props = {
-  caption: string;
+type ModalProps = {
+  heading: string;
   close: () => void;
   children?: ReactNode;
   className?: string;
 };
 
-function Modal({ caption, close, children, className }: Props) {
+const Modal = ({ heading, close, children, className }: ModalProps) => {
   const [root, setRoot] = useState<HTMLDivElement>();
 
   const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
     if (target === currentTarget) close();
   };
 
-  const mountRoot = () => {
-    const modalRoot = document.createElement('div');
-    modalRoot.id = 'modal-root';
-    document.body.appendChild(modalRoot);
-    setRoot(modalRoot);
-  };
-
-  const unmountRoot = () => {
-    if (root) document.body.removeChild(root);
-  };
-
   useEffect(() => {
-    mountRoot();
-    return () => unmountRoot();
+    const div = document.createElement('div');
+    div.id = 'modal-root';
+    document.body.appendChild(div);
+    setRoot(div);
+
+    return () => {
+      document.body.removeChild(div);
+    };
   }, []);
 
   const component = (
-    <div className={styles.overlay} onClick={handleOverlayClick}>
-      <div className={styles.modal}>
+    <div className={styles.overlay} onClick={handleOverlayClick} data-testid="overlay">
+      <div className={styles.modal} data-testid="modal">
         <Button className={styles.button} icon={icon} color="transparent" onClick={close} />
-        <h3 className={styles.caption}>{caption}</h3>
-        {children && <div className={className}>{children}</div>}
+        <h3 className={styles.heading}>{heading}</h3>
+        {children && (
+          <div className={className} data-testid="body">
+            {children}
+          </div>
+        )}
       </div>
     </div>
   );
 
   return root ? createPortal(component, root) : null;
-}
+};
 
-export { Modal };
+export { Modal, ModalProps };
