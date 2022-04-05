@@ -1,6 +1,8 @@
 @use 'src/assets/styles/variables' as *;
+@use 'src/assets/styles/mixins' as *;
 
 .button {
+  @include transition();
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8,7 +10,6 @@
   color: $textColor;
   border: none;
   border-radius: $borderRadius;
-  transition: 0.25s all;
   cursor: pointer;
 
   &:disabled {
