@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:17-alpine
 WORKDIR /test-balance
 COPY ./website/test-balance/ .
 RUN yarn install 
