@@ -47,7 +47,7 @@ export class MessagesService {
 
   async addPayload(params: AddPayloadParams): Promise<IMessage> {
     const { id, genesis, signature, payload } = params;
-    const message = await this.messageRepo.findOne({ id, genesis });
+    const message = await this.messageRepo.findOne({ where: { id, genesis } });
     if (!message) {
       throw new MessageNotFound();
     }
@@ -126,17 +126,14 @@ export class MessagesService {
     }
     setTimeout(async () => {
       const message = await this.messageRepo.findOne({
-        genesis: params.genesis,
-        id: params.messageId,
+        where: { genesis: params.genesis, id: params.messageId },
       });
       if (message) {
         message.error = error;
         this.messageRepo.save(message);
       }
       const logMessages = await this.messageRepo.find({
-        genesis: params.genesis,
-        replyTo: params.messageId,
-        replyError: '1',
+        where: { genesis: params.genesis, replyTo: params.messageId, replyError: '1' },
       });
       if (logMessages.length > 0) {
         logMessages.forEach((log) => {
