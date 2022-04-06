@@ -41,7 +41,7 @@ export class MetadataService {
       id: params.programId,
       genesis: params.genesis,
     });
-    const meta = await this.metaRepo.findOne({ program: params.programId });
+    const meta = await this.metaRepo.findOne({ where: { program: params.programId } });
     if (meta) {
       return { program: meta.program, meta: meta.meta, metaFile: meta.metaFile };
     } else {
