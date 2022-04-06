@@ -7,18 +7,6 @@ on:
       - website/**
 
 jobs:
-  build-backend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-      - run: |
-          yarn install
-          yarn build:backend
-
   build-frontend:
     runs-on: ubuntu-latest
     steps:
