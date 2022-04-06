@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@gear-js/api": "0.16.0",
+    "@gear-js/api": "0.16.3",
     "@gear-js/interfaces": "1.0.0",
     "@nestjs/common": "8.4.0",
     "@nestjs/config": "1.2.0",
@@ -29,7 +29,7 @@
     "@nestjs/microservices": "8.4.0",
     "@nestjs/platform-express": "8.4.0",
     "@nestjs/typeorm": "8.0.3",
-    "@polkadot/api": "7.14.3",
+    "@polkadot/api": "7.15.1",
     "kafkajs": "1.16.0",
     "pg": "8.7.3",
     "reflect-metadata": "0.1.13",
