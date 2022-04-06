@@ -1,4 +1,4 @@
 dist
 
-*.scss
-fonts
+/*.scss
+/fonts
