@@ -3,8 +3,8 @@ const { join } = require('path');
 const yaml = require('js-yaml');
 const { CreateType, GearApi, GearKeyring, getWasmMetadata } = require('../lib');
 const { checkLog, checkInit, sendTransaction } = require('./utilsFunctions.js');
+const { TEST_WASM_DIR } = require('./config');
 
-const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();
 const messages = new Map();
 const testFiles = readdirSync('test/spec/programs');
@@ -43,8 +43,8 @@ for (let filePath of testFiles) {
   describe(testFile.title, () => {
     test('Upload programs', async () => {
       for (let program of testFile.programs) {
-        const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
-        const metaFile = readFileSync(join(EXAMPLES_DIR, `${program.name}.meta.wasm`));
+        const code = readFileSync(join(TEST_WASM_DIR, `${program.name}.opt.wasm`));
+        const metaFile = readFileSync(join(TEST_WASM_DIR, `${program.name}.meta.wasm`));
         const meta = program.meta ? await getWasmMetadata(metaFile) : {};
         const { programId, salt } = api.program.submit(
           {
