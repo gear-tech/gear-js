@@ -1,4 +1,5 @@
 @use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/mixins' as *;
 @use './styles';
 
 #root {
@@ -17,4 +18,12 @@ main {
 
 body {
   background: $bgColor url('./assets/bg.svg');
+}
+
+a {
+  @include transition();
+
+  &:hover {
+    opacity: 0.5;
+  }
 }

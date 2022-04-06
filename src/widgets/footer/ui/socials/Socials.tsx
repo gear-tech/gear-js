@@ -15,7 +15,7 @@ function Socials() {
   const getItems = () =>
     socials.map(({ href, icon: Icon }) => (
       <li key={href}>
-        <a href={href} target="_blank" rel="noreferrer" className="lightIcon">
+        <a href={href} target="_blank" rel="noreferrer">
           <Icon data-testid="svg" />
         </a>
       </li>

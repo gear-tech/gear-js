@@ -3,7 +3,7 @@ import { ReactComponent as SVG } from './assets/logo.svg';
 
 function Logo() {
   return (
-    <Link to="/" className="lightIcon">
+    <Link to="/">
       <SVG data-testid="svg" />
     </Link>
   );

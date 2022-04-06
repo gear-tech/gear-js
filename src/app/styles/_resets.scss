@@ -20,8 +20,7 @@ p {
 }
 
 a {
-  // TOFIX: replace with mixin from @gear-js/ui
-  transition: all 0.25s;
+  color: inherit;
 }
 
 img,

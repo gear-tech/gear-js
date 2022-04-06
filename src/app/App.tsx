@@ -1,6 +1,6 @@
 import Routing from 'pages';
 import { Header, Footer } from 'widgets';
-import withRouter from './providers';
+import withProviders from './providers';
 import './App.scss';
 
 function App() {
@@ -15,4 +15,4 @@ function App() {
   );
 }
 
-export default withRouter(App);
+export default withProviders(App);
