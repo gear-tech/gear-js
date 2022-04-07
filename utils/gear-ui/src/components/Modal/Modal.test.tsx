@@ -53,7 +53,7 @@ describe('modal tests', () => {
     expect(body).toContainElement(content);
   });
 
-  it('passes className to body', () => {
+  it('applies className to body', () => {
     render(
       <Modal heading="test" close={close} className="testClassName">
         modal content
