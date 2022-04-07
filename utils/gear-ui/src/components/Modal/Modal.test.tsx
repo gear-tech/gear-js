@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Modal } from './Modal';
+import styles from './Modal.module.scss';
 
 const close = jest.fn();
 
@@ -50,6 +51,18 @@ describe('modal tests', () => {
 
     expect(modal).toContainElement(body);
     expect(body).toContainElement(content);
+  });
+
+  it('applies className to body', () => {
+    render(
+      <Modal heading="test" close={close} className="testClassName">
+        modal content
+      </Modal>,
+    );
+
+    const body = screen.getByText('modal content');
+
+    expect(body).toHaveClass(styles.body, 'testClassName');
   });
 
   it('clicks close button', () => {
