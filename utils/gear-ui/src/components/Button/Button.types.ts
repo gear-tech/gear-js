@@ -15,4 +15,4 @@ interface IconProps extends BaseProps {
   icon: string;
 }
 
-export type ButtonProps = TextProps | IconProps;
+export type Props = TextProps | IconProps;

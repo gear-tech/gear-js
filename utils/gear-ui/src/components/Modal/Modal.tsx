@@ -4,14 +4,14 @@ import { Button } from '../Button/Button';
 import icon from './images/x.svg';
 import styles from './Modal.module.scss';
 
-type ModalProps = {
+type Props = {
   heading: string;
   close: () => void;
   children?: ReactNode;
   className?: string;
 };
 
-const Modal = ({ heading, close, children, className }: ModalProps) => {
+const Modal = ({ heading, close, children, className }: Props) => {
   const [root, setRoot] = useState<HTMLDivElement>();
 
   const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
@@ -46,4 +46,4 @@ const Modal = ({ heading, close, children, className }: ModalProps) => {
   return root ? createPortal(component, root) : null;
 };
 
-export { Modal, ModalProps };
+export { Modal, Props as ModalProps, styles as modalStyles };
