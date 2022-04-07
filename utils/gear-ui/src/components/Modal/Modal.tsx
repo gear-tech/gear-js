@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { ReactNode, useEffect, useState, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '../Button/Button';
@@ -13,6 +14,7 @@ type Props = {
 
 const Modal = ({ heading, close, children, className }: Props) => {
   const [root, setRoot] = useState<HTMLDivElement>();
+  const bodyClassName = clsx(styles.body, className);
 
   const handleOverlayClick = ({ target, currentTarget }: MouseEvent) => {
     if (target === currentTarget) close();
@@ -35,7 +37,7 @@ const Modal = ({ heading, close, children, className }: Props) => {
         <Button className={styles.button} icon={icon} color="transparent" onClick={close} />
         <h3 className={styles.heading}>{heading}</h3>
         {children && (
-          <div className={className} data-testid="body">
+          <div className={bodyClassName} data-testid="body">
             {children}
           </div>
         )}
