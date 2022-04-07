@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
@@ -9,10 +9,18 @@ interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 interface TextProps extends BaseProps {
   text: string;
+  children?: never;
 }
 
 interface IconProps extends BaseProps {
   icon: string;
+  children?: never;
 }
 
-export type ButtonProps = TextProps | IconProps;
+interface ChildrenProps extends BaseProps {
+  children: ReactNode;
+  text?: never;
+  icon?: never;
+}
+
+export type Props = TextProps | IconProps | ChildrenProps;
