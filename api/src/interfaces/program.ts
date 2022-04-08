@@ -21,7 +21,7 @@ export declare interface IProgram extends Type {
 }
 
 export declare interface IActiveProgram extends Map {
-  static_pages: Compact<u32>;
+  static_pages: u32;
   persistent_pages: u32[];
   code_hash: Uint8Array;
   nonce: u64;

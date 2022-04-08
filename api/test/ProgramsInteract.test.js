@@ -148,14 +148,13 @@ for (let filePath of testFiles) {
         const { message, claim, account } = options;
         const messageId = messages.get(message).logId;
         let mailbox = await api.mailbox.read(GearKeyring.decodeAddress(accounts[account].address));
-        expect(mailbox.toHuman()).not.toBe(null);
-        expect(Object.keys(mailbox.toHuman()).includes(messageId)).toBe(true);
+        expect(mailbox.filter((value) => value[0][1] === messageId).length).not.toBe(0);
         if (claim) {
           const submitted = api.claimValueFromMailbox.submit(messageId);
           const transactionData = await sendTransaction(submitted, accounts[account], 'ClaimedValueFromMailbox');
           expect(transactionData).toBe(messageId);
           mailbox = await api.mailbox.read(GearKeyring.decodeAddress(accounts[account].address));
-          expect(Object.keys(mailbox.toHuman()).includes(messageId)).toBe(false);
+          expect(mailbox.filter((value) => value[0][1] === messageId).length).toBe(0);
         }
       }
     });

@@ -32,4 +32,4 @@ export function getInitialLength(pages: IGearPages) {
   );
 }
 
-export const PAGE_SIZE = 65536;
+export const PAGE_SIZE = 4096;

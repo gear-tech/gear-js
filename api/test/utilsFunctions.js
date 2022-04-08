@@ -27,20 +27,17 @@ const checkInit = async (api, programId) => {
 };
 
 const sendTransaction = async (submitted, account, methodName) => {
-  let transactionResolve;
-  const transactionPromise = new Promise((resolve) => {
-    transactionResolve = resolve;
-  });
-  submitted.signAndSend(account, ({ events = [] }) => {
-    events.forEach(({ event: { method, data } }) => {
-      if (method === 'ExtrinsicFailed') {
-        throw new Error(data.toString());
-      } else if (method === methodName) {
-        transactionResolve(data[0].toHuman());
-      }
+  return new Promise((resolve, reject) => {
+    submitted.signAndSend(account, ({ events = [] }) => {
+      events.forEach(({ event: { method, data } }) => {
+        if (method === 'ExtrinsicFailed') {
+          reject(data.toString());
+        } else if (method === methodName) {
+          resolve(data[0].toHuman());
+        }
+      });
     });
   });
-  return await transactionPromise;
 };
 
 module.exports = { checkInit, checkLog, sendTransaction };
