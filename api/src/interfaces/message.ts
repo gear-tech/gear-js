@@ -1,7 +1,8 @@
 import { u8, u64, u128, Type, Null, Option, Vec, Tuple, Map, BTreeMap } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { H256 } from '@polkadot/types/interfaces';
-import { ExitCode } from '.';
+import { Hex } from './gear-type';
+import { ExitCode, MessageId } from './gear-api';
 
 export declare interface Reply extends Tuple {
   0: H256;
@@ -43,4 +44,15 @@ export declare interface QueuedDispatch extends Codec {
   kind: DispatchKind;
   message: QueuedMessage;
   payload_store: Option<PayloadStore>;
+}
+
+export declare interface StoredMessage extends Omit<Message, 'gas_limit'> {}
+
+export interface HumanedMessage {
+  id: MessageId;
+  source: Hex;
+  dest: Hex;
+  payload: Hex | string;
+  value: string;
+  reply: [Hex, number];
 }

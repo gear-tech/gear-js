@@ -7,11 +7,12 @@
         "Terminated": "Null"
       }
     },
+    "WasmPageNumber": "u32",
+    "PageNumber": "u32",
     "ActiveProgram": {
-      "static_pages": "u32",
-      "persistent_pages": "BTreeSet<u32>",
+      "static_pages": "WasmPageNumber",
+      "persistent_pages": "BTreeSet<PageNumber>",
       "code_hash": "H256",
-      "nonce": "u64",
       "state": "ProgramState"
     },
     "ProgramState": {

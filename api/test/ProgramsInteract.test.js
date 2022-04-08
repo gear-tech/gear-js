@@ -3,8 +3,8 @@ const { join } = require('path');
 const yaml = require('js-yaml');
 const { CreateType, GearApi, GearKeyring, getWasmMetadata } = require('../lib');
 const { checkLog, checkInit, sendTransaction } = require('./utilsFunctions.js');
+const { TEST_WASM_DIR } = require('./config');
 
-const EXAMPLES_DIR = 'test/wasm';
 const programs = new Map();
 const messages = new Map();
 const testFiles = readdirSync('test/spec/programs');
@@ -43,8 +43,8 @@ for (let filePath of testFiles) {
   describe(testFile.title, () => {
     test('Upload programs', async () => {
       for (let program of testFile.programs) {
-        const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
-        const metaFile = readFileSync(join(EXAMPLES_DIR, `${program.name}.meta.wasm`));
+        const code = readFileSync(join(TEST_WASM_DIR, `${program.name}.opt.wasm`));
+        const metaFile = readFileSync(join(TEST_WASM_DIR, `${program.name}.meta.wasm`));
         const meta = program.meta ? await getWasmMetadata(metaFile) : {};
         const { programId, salt } = api.program.submit(
           {
@@ -148,14 +148,13 @@ for (let filePath of testFiles) {
         const { message, claim, account } = options;
         const messageId = messages.get(message).logId;
         let mailbox = await api.mailbox.read(GearKeyring.decodeAddress(accounts[account].address));
-        expect(mailbox.toHuman()).not.toBe(null);
-        expect(Object.keys(mailbox.toHuman()).includes(messageId)).toBe(true);
+        expect(mailbox.filter((value) => value[0][1] === messageId).length).not.toBe(0);
         if (claim) {
           const submitted = api.claimValueFromMailbox.submit(messageId);
           const transactionData = await sendTransaction(submitted, accounts[account], 'ClaimedValueFromMailbox');
           expect(transactionData).toBe(messageId);
           mailbox = await api.mailbox.read(GearKeyring.decodeAddress(accounts[account].address));
-          expect(Object.keys(mailbox.toHuman()).includes(messageId)).toBe(false);
+          expect(mailbox.filter((value) => value[0][1] === messageId).length).toBe(0);
         }
       }
     });

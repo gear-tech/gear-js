@@ -82,9 +82,7 @@ export class ProgramsService {
     const { id, genesis, owner } = params;
     const where = owner ? { id, genesis, owner } : { id, genesis };
     try {
-      const program = await this.programRepo.findOne(where, {
-        relations: ['meta'],
-      });
+      const program = await this.programRepo.findOne({ where, relations: ['meta'] });
       return program;
     } catch (error) {
       throw new ProgramNotFound();

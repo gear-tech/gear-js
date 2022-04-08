@@ -255,18 +255,7 @@ const state = gearApi.programState.read(programId, metaWasm, inputValue);
 ```javascript
 const api = await GearApi.create();
 const mailbox = await api.mailbox.read('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
-console.log(mailbox.toHuman());
-```
-
-#### Subscribe to mailbox changes
-
-```javascript
-const unsub = await gearApi.mailbox.subscribe(
-  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-  (data) => {
-    console.log(data.toHuman());
-  },
-);
+console.log(mailbox);
 ```
 
 ### Subscribe to events

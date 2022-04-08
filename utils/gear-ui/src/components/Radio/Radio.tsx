@@ -2,11 +2,11 @@ import { InputHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import styles from './Radio.module.scss';
 
-interface RadioProps extends InputHTMLAttributes<HTMLInputElement> {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-const Radio = ({ label, className, ...attrs }: RadioProps) => {
+const Radio = ({ label, className, ...attrs }: Props) => {
   const { disabled } = attrs;
   const labelClassName = clsx(styles.label, className, disabled && 'disabled');
 
@@ -18,4 +18,4 @@ const Radio = ({ label, className, ...attrs }: RadioProps) => {
   );
 };
 
-export { Radio, RadioProps };
+export { Radio, Props as RadioProps, styles as radioStyles };

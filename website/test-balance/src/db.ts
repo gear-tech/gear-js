@@ -34,7 +34,7 @@ export class DbService {
 
   async possibleToTransfer(account: string, genesis: string) {
     console.log(`${account}.${genesis}`);
-    const transfer = await this.repo.findOne({ account: `${account}.${genesis}` });
+    const transfer = await this.repo.findOne({ where: { account: `${account}.${genesis}` } });
     console.log(transfer);
     if (!transfer) {
       return true;

@@ -5,7 +5,7 @@ services:
     restart: always
     ports:
       - 3000:3000
-    image: ghcr.io/gear-tech/gear-js-api-gateway:dev
+    image: ghcr.io/gear-tech/gear-js-api-gateway:qa
     environment:
       KAFKA_GROUP_ID: ${KAFKA_GROUP_ID}
       KAFKA_CLIENT_ID: ${KAFKA_CLIENT_ID}
