@@ -1,8 +1,8 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Modal } from '@gear-js/ui';
-import AccountButton from 'shared/ui';
-import { useAccount } from 'entities/account';
-import isLoggedIn from '../../lib';
+import useAccount from 'hooks';
+import isLoggedIn from '../utils';
+import AccountButton from '../account-button';
 import styles from './AccountsModal.module.scss';
 
 type Props = {

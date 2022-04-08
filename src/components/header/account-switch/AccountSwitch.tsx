@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Account, useAccount } from 'entities/account';
-import useAccounts from '../model';
-import isLoggedIn from '../lib';
+import useAccount from 'hooks';
+import useAccounts from './hooks';
+import isLoggedIn from './utils';
+import Account from './account';
 import AccountsModal from './accounts-modal';
 
 function AccountSwitch() {

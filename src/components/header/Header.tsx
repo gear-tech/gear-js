@@ -1,5 +1,5 @@
-import AccountSwitch from 'features/account-switch';
 import Logo from './logo';
+import AccountSwitch from './account-switch';
 import styles from './Header.module.scss';
 
 function Header() {

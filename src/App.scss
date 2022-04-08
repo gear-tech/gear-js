@@ -1,6 +1,6 @@
+@use 'assets/styles';
 @use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/mixins' as *;
-@use './styles';
 
 #root {
   max-width: 1200px;
@@ -17,7 +17,7 @@ main {
 }
 
 body {
-  background: $bgColor url('./assets/bg.svg');
+  background: $bgColor url('assets/images/bg.svg');
 }
 
 a {

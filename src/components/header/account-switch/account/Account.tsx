@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
-import AccountButton from 'shared/ui';
-import { useAccount } from '../model';
+import useAccount from 'hooks';
+import AccountButton from '../account-button';
 import icon from './assets/user.svg';
 
 type Props = {

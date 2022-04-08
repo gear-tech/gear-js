@@ -1,10 +1,10 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from 'app';
+import App from './App';
 
-// TOFIX: remove ! after @types upgrade to 18.0.0
-const container = document.getElementById('root')!;
-const root = createRoot(container);
+// TODO: check for cra ts updates, mb casting won't be needed
+const container = document.getElementById('root');
+const root = createRoot(container as HTMLElement);
 
 root.render(
   <React.StrictMode>
