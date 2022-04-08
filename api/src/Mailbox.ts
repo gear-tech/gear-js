@@ -23,7 +23,7 @@ export class GearMailbox {
    * ```javascript
    * const api = await GearApi.create();
    * const mailbox = await api.mailbox.read('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
-   * console.log(mailbox.toHuman());
+   * console.log(mailbox);
    * ```
    */
   async read(accountId: Hex | AccountId32 | string, messageId?: Hex | H256): Promise<IMailbox> {
