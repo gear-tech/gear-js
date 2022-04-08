@@ -40,6 +40,7 @@ export class GearTransaction {
       return await this.submitted.signAndSend(account, options, callback);
     } catch (error) {
       const errorCode = +error.message.split(':')[0];
+      console.log(error);
       if (errorCode === 1010) {
         throw new TransactionError('Account balance too low');
       } else {

@@ -1,6 +1,6 @@
 import { GearApi } from './GearApi';
-import { Hex, QueuedMessage } from './interfaces';
-import { Option, BTreeMap } from '@polkadot/types';
+import { AccountId, Hex, HumanedMessage, IMailbox, QueuedMessage, StoredMessage } from './interfaces';
+import { Option } from '@polkadot/types';
 import { AccountId32, H256 } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { GearClaimValue } from './Claim';
@@ -26,8 +26,25 @@ export class GearMailbox {
    * console.log(mailbox.toHuman());
    * ```
    */
-  async read(accountId: Hex | AccountId32 | string): Promise<Option<BTreeMap<H256, QueuedMessage>>> {
-    return this.api.query.gear.mailbox(accountId);
+  async read(accountId: Hex | AccountId32 | string, messageId?: Hex | H256): Promise<IMailbox> {
+    if (messageId) {
+      const mailbox = await this.api.query.gear['mailbox'](accountId, messageId);
+      return mailbox.toHuman() as any;
+    } else {
+      const keys = await this.api.query.gear['mailbox'].keys(accountId);
+      if (keys.length === 0) {
+        return null;
+      }
+      const keyPrefixes = this.api.query.gear['mailbox'].keyPrefix(accountId);
+      const keysPaged = await this.api.rpc.state.getKeysPaged(keyPrefixes, 1000, keyPrefixes);
+      const mailbox = (await this.api.rpc.state.queryStorageAt(keysPaged)) as Option<StoredMessage>[];
+      return mailbox.map((value, index) => {
+        return [
+          keys[index].toHuman() as [AccountId, Hex],
+          this.api.createType('GearCoreMessageStoredStoredMessage', value.unwrap()).toHuman() as any,
+        ];
+      });
+    }
   }
 
   /**
@@ -41,20 +58,20 @@ export class GearMailbox {
    * })
    * ```
    */
-  subscribe(
-    accountId: Hex | AccountId32 | string,
-    callback: (data: Option<BTreeMap<H256, QueuedMessage>>) => void,
-  ): UnsubscribePromise {
-    this.subscription = this.api.query.gear.mailbox(accountId, callback);
-    return this.subscription;
-  }
+  // subscribe(
+  //   accountId: Hex | AccountId32 | string,
+  //   callback: (data: Option<BTreeMap<H256, QueuedMessage>>) => void,
+  // ): UnsubscribePromise {
+  //   this.subscription = this.api.query.gear.mailbox(accountId, '', callback);
+  //   return this.subscription;
+  // }
 
   /**
    * Unsubscribe from user mailbox changes
    */
-  unsubscribe() {
-    this.subscription.then((fn) => {
-      fn();
-    });
-  }
+  // unsubscribe() {
+  //   this.subscription.then((fn) => {
+  //     fn();
+  //   });
+  // }
 }
