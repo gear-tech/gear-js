@@ -1,0 +1,29 @@
+@use 'assets/styles';
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/mixins' as *;
+
+#root {
+  max-width: 1200px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: content-box;
+}
+
+main {
+  flex: 1;
+}
+
+body {
+  background: $bgColor url('assets/images/bg.svg');
+}
+
+a {
+  @include transition();
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
