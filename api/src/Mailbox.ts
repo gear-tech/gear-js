@@ -33,7 +33,7 @@ export class GearMailbox {
     } else {
       const keys = await this.api.query.gear['mailbox'].keys(accountId);
       if (keys.length === 0) {
-        return null;
+        return [];
       }
       const keyPrefixes = this.api.query.gear['mailbox'].keyPrefix(accountId);
       const keysPaged = await this.api.rpc.state.getKeysPaged(keyPrefixes, 1000, keyPrefixes);
