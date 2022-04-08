@@ -2,3 +2,7 @@
   width: $size;
   height: $size;
 }
+
+@mixin transition($prop: all) {
+  transition: 0.25s $prop;
+}

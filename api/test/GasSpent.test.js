@@ -1,9 +1,9 @@
 const { readFileSync, fstat } = require('fs');
 const { join } = require('path');
 const { GearApi, GearKeyring } = require('../lib');
+const { TEST_WASM_DIR } = require('./config');
 const { checkInit } = require('./utilsFunctions');
 
-const EXAMPLES_DIR = 'test/wasm';
 const api = new GearApi();
 let alice = undefined;
 let programId = undefined;
@@ -12,7 +12,7 @@ jest.setTimeout(15000);
 beforeAll(async () => {
   await api.isReady;
   alice = await GearKeyring.fromSuri('//Alice');
-  const code = readFileSync('test/wasm/demo_ping.wasm');
+  const code = readFileSync(join(TEST_WASM_DIR, 'demo_ping.wasm'));
   programId = api.program.submit({ code, gasLimit: 200_000_000 }).programId;
   const initStatus = checkInit(api, programId);
   api.program.signAndSend(alice, () => {});
@@ -32,7 +32,7 @@ test('Get init gas spent', async () => {
   expect(
     await api.program.gasSpent.init(
       GearKeyring.decodeAddress(alice.address),
-      readFileSync(join(EXAMPLES_DIR, `demo_ping.opt.wasm`)),
+      readFileSync(join(TEST_WASM_DIR, `demo_ping.opt.wasm`)),
       '0x50494e47',
       0,
     ),

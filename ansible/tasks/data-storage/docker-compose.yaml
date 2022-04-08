@@ -14,7 +14,7 @@ services:
       - '5433:5432'
 
   data_storage:
-    image: ghcr.io/gear-tech/gear-js-data-storage:dev
+    image: ghcr.io/gear-tech/gear-js-data-storage:qa
     restart: always
     depends_on:
       - pg_data_storage

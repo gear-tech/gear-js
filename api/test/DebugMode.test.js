@@ -1,6 +1,8 @@
 const { GearKeyring, GearApi, DebugMode } = require('../lib');
 const { sendTransaction } = require('./utilsFunctions');
 const { readFileSync } = require('fs');
+const { join } = require('path');
+const { TEST_WASM_DIR } = require('./config');
 
 const api = new GearApi();
 let alice;
@@ -42,7 +44,7 @@ describe('DebugMode', () => {
       snapshot.resolve(event.data);
     });
     api.program.submit({
-      code: readFileSync('test/wasm/demo_ping.opt.wasm'),
+      code: readFileSync(join(TEST_WASM_DIR, 'demo_ping.opt.wasm')),
       gasLimit: 50_000_000,
     });
     await sendTransaction(api.program.submitted, alice, 'InitMessageEnqueued');

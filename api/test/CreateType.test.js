@@ -2,9 +2,9 @@ const { CreateType, getWasmMetadata, decodeHexTypes } = require('../lib');
 const yaml = require('js-yaml');
 const fs = require('fs');
 const { join } = require('path');
+const { TEST_WASM_DIR } = require('./config');
 
 const testFiles = fs.readdirSync('test/spec/meta');
-const TEST_WASM_DIR = 'test/wasm';
 
 describe('Create type test', () => {
   for (let filePath of testFiles) {

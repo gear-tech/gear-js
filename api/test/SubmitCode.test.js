@@ -3,8 +3,8 @@ const { join } = require('path');
 const yaml = require('js-yaml');
 const { sendTransaction } = require('./utilsFunctions.js');
 const { GearApi, GearKeyring } = require('../lib');
+const { TEST_WASM_DIR } = require('./config.js');
 
-const EXAMPLES_DIR = 'test/wasm';
 const submitCodeTestFiles = readdirSync('test/spec/submit_code');
 const api = new GearApi();
 const accounts = {
@@ -37,7 +37,7 @@ for (let filePath of submitCodeTestFiles) {
   describe(testFile.title, () => {
     test('Submit code', async () => {
       for (let program of testFile.programs) {
-        const code = readFileSync(join(EXAMPLES_DIR, `${program.name}.opt.wasm`));
+        const code = readFileSync(join(TEST_WASM_DIR, `${program.name}.opt.wasm`));
         const codeHash = api.code.submit(code);
         expect(codeHash).toBeDefined();
 
