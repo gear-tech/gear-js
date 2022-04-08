@@ -29,7 +29,7 @@ export class GearMailbox {
   async read(accountId: Hex | AccountId32 | string, messageId?: Hex | H256): Promise<IMailbox> {
     if (messageId) {
       const mailbox = await this.api.query.gear['mailbox'](accountId, messageId);
-      return mailbox.toHuman() as any;
+      return mailbox.toHuman() as IMailbox;
     } else {
       const keys = await this.api.query.gear['mailbox'].keys(accountId);
       if (keys.length === 0) {
@@ -38,10 +38,12 @@ export class GearMailbox {
       const keyPrefixes = this.api.query.gear['mailbox'].keyPrefix(accountId);
       const keysPaged = await this.api.rpc.state.getKeysPaged(keyPrefixes, 1000, keyPrefixes);
       const mailbox = (await this.api.rpc.state.queryStorageAt(keysPaged)) as Option<StoredMessage>[];
-      return mailbox.map((value, index) => {
+      return mailbox.map((option, index) => {
         return [
           keys[index].toHuman() as [AccountId, Hex],
-          this.api.createType('GearCoreMessageStoredStoredMessage', value.unwrap()).toHuman() as any,
+          this.api
+            .createType('GearCoreMessageStoredStoredMessage', option.unwrap())
+            .toHuman() as unknown as HumanedMessage,
         ];
       });
     }
