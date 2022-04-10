@@ -162,7 +162,7 @@ function parseField(data: MetaItem) {
           setWith(result, [...current.path, '__path'], current.path.filter((i) => i !== '__fields').join('.'), Object);
           setWith(result, [...current.path, '__type'], '__fieldset', Object);
 
-          const entries = Object.entries(current.value);
+          const entries = Object.entries(current.value).reverse();
 
           setWith(
             result,
@@ -188,7 +188,7 @@ function parseField(data: MetaItem) {
               stack.push(
                 ...processFields(
                   {
-                    [`__field-${index}`]: vValue,
+                    __null: 'Null',
                   },
                   [...current.path, '__fields']
                 )
@@ -196,7 +196,7 @@ function parseField(data: MetaItem) {
               stack.push(
                 ...processFields(
                   {
-                    __null: 'Null',
+                    [`__field-${index}`]: vValue,
                   },
                   [...current.path, '__fields']
                 )
@@ -232,96 +232,102 @@ function parseField(data: MetaItem) {
         // endregion
         // region enum_Option
         else if (current.kind === 'enum_option') {
-          Object.entries(current.value).forEach(([vKey, vValue]) => {
-            const path = current.path.filter((item) => item !== '_enum_Option');
-            // field
-            if (isString(vValue)) {
-              stack.push(
-                ...processFields(
-                  {
-                    [vKey]: vValue,
-                  },
-                  [...path]
-                )
-              );
-              return;
-            }
-            // fieldset
-            if (isObject(vValue)) {
-              stack.push(
-                ...processFields(
-                  {
-                    [vKey]: vValue,
-                  },
-                  [...path]
-                )
-              );
-              return;
-            }
-          });
+          Object.entries(current.value)
+            .reverse()
+            .forEach(([vKey, vValue]) => {
+              const path = current.path.filter((item) => item !== '_enum_Option');
+              // field
+              if (isString(vValue)) {
+                stack.push(
+                  ...processFields(
+                    {
+                      [vKey]: vValue,
+                    },
+                    [...path]
+                  )
+                );
+                return;
+              }
+              // fieldset
+              if (isObject(vValue)) {
+                stack.push(
+                  ...processFields(
+                    {
+                      [vKey]: vValue,
+                    },
+                    [...path]
+                  )
+                );
+                return;
+              }
+            });
         }
         // endregion
         // region enum_Result
         else if (current.kind === 'enum_result') {
-          Object.entries(current.value).forEach(([vKey, vValue]) => {
-            const path = current.path.filter((item) => item !== '_enum_Result');
-            // field
-            if (isString(vValue)) {
-              stack.push(
-                ...processFields(
-                  {
-                    [vKey]: vValue,
-                  },
-                  [...path]
-                )
-              );
-              return;
-            }
-            // fieldset
-            if (isObject(vValue)) {
-              stack.push(
-                ...processFields(
-                  {
-                    [vKey]: vValue,
-                  },
-                  [...path]
-                )
-              );
-              return;
-            }
-          });
+          Object.entries(current.value)
+            .reverse()
+            .forEach(([vKey, vValue]) => {
+              const path = current.path.filter((item) => item !== '_enum_Result');
+              // field
+              if (isString(vValue)) {
+                stack.push(
+                  ...processFields(
+                    {
+                      [vKey]: vValue,
+                    },
+                    [...path]
+                  )
+                );
+                return;
+              }
+              // fieldset
+              if (isObject(vValue)) {
+                stack.push(
+                  ...processFields(
+                    {
+                      [vKey]: vValue,
+                    },
+                    [...path]
+                  )
+                );
+                return;
+              }
+            });
         }
         // endregion
         //region Parse if it is enum
         else if (current.kind === 'enum') {
           // Process fieldset fields
-          Object.entries(current.value).forEach(([vKey, vValue]) => {
-            const path = current.path.filter((item) => item !== '_enum');
-            // field
-            if (isString(vValue)) {
-              stack.push(
-                ...processFields(
-                  {
-                    [vKey]: vValue,
-                  },
-                  [...path]
-                )
-              );
-              return;
-            }
-            // fieldset
-            if (isObject(vValue)) {
-              stack.push(
-                ...processFields(
-                  {
-                    [vKey]: vValue,
-                  },
-                  [...path]
-                )
-              );
-              return;
-            }
-          });
+          Object.entries(current.value)
+            .reverse()
+            .forEach(([vKey, vValue]) => {
+              const path = current.path.filter((item) => item !== '_enum');
+              // field
+              if (isString(vValue)) {
+                stack.push(
+                  ...processFields(
+                    {
+                      [vKey]: vValue,
+                    },
+                    [...path]
+                  )
+                );
+                return;
+              }
+              // fieldset
+              if (isObject(vValue)) {
+                stack.push(
+                  ...processFields(
+                    {
+                      [vKey]: vValue,
+                    },
+                    [...path]
+                  )
+                );
+                return;
+              }
+            });
         }
         //endregion
       }
@@ -345,43 +351,3 @@ export function parseMeta(data: MetaItem): MetaFormStruct | null {
 export type PreparedMetaData = {
   [key: string]: string | PreparedMetaData;
 };
-
-export function prepareToSend(data: PreparedMetaData) {
-  const stack: Record<
-    string,
-    {
-      path: string[];
-      value: string | PreparedMetaData;
-    }
-  >[] = [];
-  Object.entries(data).forEach(([key, value]) => {
-    stack.push({
-      [key]: {
-        path: [key],
-        value,
-      },
-    });
-  });
-
-  while (stack.length > 0) {
-    const current = stack.pop();
-    if (current) {
-      Object.entries(current).forEach((item) => {
-        if (isString(item[1].value) && item[1].value === 'Null') {
-          setWith(data, item[1].path, null, Object);
-        }
-        if (isObject(item[1].value)) {
-          Object.entries(item[1].value).forEach(([first, second]) => {
-            stack.push({
-              [first]: {
-                path: [...item[1].path, first],
-                value: second,
-              },
-            });
-          });
-        }
-      });
-    }
-  }
-  return data;
-}

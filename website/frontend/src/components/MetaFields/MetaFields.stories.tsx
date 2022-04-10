@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { MetaFields } from './MetaFields';
-import { Form, Formik } from 'formik';
-import { MetaFormValues, MetaItem, parseMeta, prepareToSend } from './meta-parser';
+import { Form, Formik, FormikValues } from 'formik';
+import { MetaFormStruct, MetaFormValues, MetaItem, parseMeta } from './meta-parser';
+import { prepareToSend } from './prepare-to-send';
 import {
   simpleStruct,
   simpleNestedStruct,
@@ -15,14 +16,16 @@ import {
   resultEnumSimple,
   resultEnumComplex,
   daoMeta,
-  nestedEnum,
+  enumNested,
 } from './meta-fixtures';
 
 type MetaFormWrapper = {
   metaData: MetaItem;
+  children: (meta: MetaFormStruct) => React.ReactNode;
+  onSubmit: (values: FormikValues) => void;
 };
 
-const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData }) => {
+export const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData, children, onSubmit }) => {
   const meta = parseMeta(metaData);
   return (
     <div style={{ margin: '0 auto', maxWidth: '600px' }}>
@@ -31,13 +34,14 @@ const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData }) => {
           __root: null,
         }}
         onSubmit={(values) => {
-          const copy: MetaFormValues = JSON.parse(JSON.stringify(values));
-          console.log(prepareToSend(copy));
+          onSubmit(values);
         }}
       >
         <Form>
-          {meta && <MetaFields data={meta} />}
-          <button type="submit">Submit</button>
+          {meta && children(meta)}
+          <button role={'button'} type="submit">
+            Submit
+          </button>
         </Form>
       </Formik>
     </div>
@@ -53,7 +57,17 @@ export default {
 } as ComponentMeta<typeof MetaFormWrapper>;
 
 const Template: ComponentStory<typeof MetaFormWrapper> = (args) => {
-  return <MetaFormWrapper metaData={args.metaData} />;
+  return (
+    <MetaFormWrapper
+      onSubmit={(values) => {
+        const copy: MetaFormValues = JSON.parse(JSON.stringify(values));
+        console.log(prepareToSend(copy));
+      }}
+      metaData={args.metaData}
+    >
+      {(meta) => <MetaFields data={meta} />}
+    </MetaFormWrapper>
+  );
 };
 
 export const SimpleStruct = Template.bind({});
@@ -69,7 +83,7 @@ export const EnumSimpleStruct = Template.bind({});
 EnumSimpleStruct.args = { metaData: enumSimple };
 
 export const EnumNestedStruct = Template.bind({});
-EnumNestedStruct.args = { metaData: nestedEnum };
+EnumNestedStruct.args = { metaData: enumNested };
 
 export const OptionEnumSimpleStruct = Template.bind({});
 OptionEnumSimpleStruct.args = { metaData: optionEnumSimple };

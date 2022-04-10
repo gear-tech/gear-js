@@ -6,6 +6,7 @@ import { Fieldset, EnumSelect } from './styles';
 import isObject from 'lodash.isobject';
 import get from 'lodash.get';
 import setWith from 'lodash.setwith';
+import styles from './MetaFields.module.scss';
 
 const MetaFormContext = React.createContext<MetaFormStruct>({
   __root: null,
@@ -16,21 +17,14 @@ function MetaFormProvider({ children, data }: { children: ReactNode; data: MetaF
   return <MetaFormContext.Provider value={data}>{children}</MetaFormContext.Provider>;
 }
 
-function getFieldData(field: MetaFieldset, key: string | undefined) {
-  if (key && field.__select) {
-    return field.__fields[key];
-  }
-  return field.__fields;
-}
-
 function MetaFormField({ value }: { value: MetaField }) {
   return (
-    <label key={value.name}>
-      <div>
+    <div>
+      <label className={styles.label} key={value.name} htmlFor={value.name} data-testid={value.name}>
         {value.label}&nbsp;({value.type})
-      </div>
-      <Field name={value.name} disabled={value.type === 'Null'} />
-    </label>
+      </label>
+      <Field id={value.name} name={value.name} disabled={value.type === 'Null'} />
+    </div>
   );
 }
 
@@ -64,84 +58,78 @@ function useMetaFieldsContext(fieldset: MetaFieldset | null) {
   return changeFormikValues;
 }
 
-function MetaFormFieldset({
-  fieldset,
-  children,
-}: {
-  fieldset: MetaFieldset;
-  children: (key: string | undefined) => React.ReactNode;
-}) {
+function CreateMetaFormItem({ data }: { data: MetaFormItem }) {
   const [currentSelected, setCurrentSelected] = useState<string>();
-  const changeFormikValues = useMetaFieldsContext(fieldset);
+  const changeFormikValues = useMetaFieldsContext(isMetaFieldset(data) ? data : null);
 
   useEffect(() => {
-    if (fieldset.__select && fieldset.__fields) {
-      const key = Object.keys(fieldset.__fields)[0];
+    if (isMetaFieldset(data) && data.__select && data.__fields) {
+      const key = currentSelected ? currentSelected : Object.keys(data.__fields)[0];
       setCurrentSelected(key);
       changeFormikValues(key);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentSelected, data]);
 
-  return (
-    <Fieldset key={fieldset.__name}>
-      {fieldset.__select && fieldset.__fields && (
-        <EnumSelect>
-          <label>
-            Select field from enum <br />
-            <select
-              onChange={(event) => {
-                setCurrentSelected(event.target.value);
-                changeFormikValues(event.target.value);
-              }}
-            >
-              {Object.entries(fieldset.__fields).map((item) => {
-                return (
-                  <option key={item[0]} value={item[0]}>
-                    {item[0]}
-                  </option>
-                );
-              })}
-            </select>
-          </label>
-        </EnumSelect>
-      )}
-      <legend>{fieldset.__name}</legend>
-      {children(currentSelected)}
-    </Fieldset>
-  );
-}
+  const createFieldset = (fieldset: MetaFieldset) => {
+    return (
+      <Fieldset key={fieldset.__name}>
+        {fieldset.__select && fieldset.__fields && (
+          <EnumSelect>
+            <label>
+              Select field from enum <br />
+              <select
+                onChange={(event) => {
+                  setCurrentSelected(event.target.value);
+                  changeFormikValues(event.target.value);
+                }}
+                data-testid={fieldset.__path}
+              >
+                {Object.entries(fieldset.__fields).map((item) => {
+                  return (
+                    <option key={item[0]} value={item[0]}>
+                      {item[0]}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
+          </EnumSelect>
+        )}
+        <legend>{fieldset.__name}</legend>
+        {fieldset.__select && currentSelected ? (
+          <CreateMetaFormItem data={fieldset.__fields[currentSelected]} />
+        ) : (
+          <>
+            {Object.entries(fieldset.__fields).map(([key, value]) => {
+              return <CreateMetaFormItem data={value} key={key} />;
+            })}
+          </>
+        )}
+      </Fieldset>
+    );
+  };
 
-function createMetaFormItem(data: MetaFormItemStruct | MetaFormItem) {
   if (isMetaField(data)) {
     return <MetaFormField value={data} />;
   }
-  if (isMetaFieldset(data) && data) {
-    return (
-      <MetaFormFieldset fieldset={data}>
-        {(key) => {
-          return data.__fields ? createMetaFormItem(getFieldData(data, key)) : 'No fields';
-        }}
-      </MetaFormFieldset>
-    );
+
+  if (isMetaFieldset(data)) {
+    return createFieldset(data);
   }
 
-  return Object.entries(data).map(([key, value]) => {
-    if (isMetaField(value)) {
-      return <MetaFormField value={value} key={key} />;
-    }
-    if (isMetaFieldset(value)) {
-      return (
-        <MetaFormFieldset fieldset={value} key={key}>
-          {(kKey) => {
-            return value.__fields ? createMetaFormItem(getFieldData(value, kKey)) : 'No fields';
-          }}
-        </MetaFormFieldset>
-      );
-    }
-
-    return null;
-  });
+  return (
+    <>
+      {Object.entries(data).map(([key, value]) => {
+        if (isMetaField(value)) {
+          return <MetaFormField value={value} key={key} />;
+        }
+        if (isMetaFieldset(value)) {
+          return createFieldset(value);
+        }
+      })}
+    </>
+  );
 }
 
 const MetaFieldsComponent = () => {
@@ -192,6 +180,7 @@ const MetaFieldsComponent = () => {
                   changeValues(event.target.value);
                   setFirstKey(event.target.value);
                 }}
+                data-testid={metaFieldsContext.__root.__path}
               >
                 {Object.entries(metaFieldsContext.__root.__fields).map((item) => {
                   return (
@@ -205,13 +194,19 @@ const MetaFieldsComponent = () => {
           </EnumSelect>
         )}
 
-        {metaFieldsContext.__root.__fields
-          ? createMetaFormItem(
-              metaFieldsContext.__root.__select
-                ? metaFieldsContext.__root.__fields[firstKey]
-                : metaFieldsContext.__root.__fields
-            )
-          : 'meta data not parsed'}
+        {metaFieldsContext.__root?.__fields ? (
+          <>
+            {metaFieldsContext.__root.__select ? (
+              <CreateMetaFormItem data={metaFieldsContext.__root.__fields[firstKey]} />
+            ) : (
+              Object.entries(metaFieldsContext.__root.__fields).map(([key, value]) => {
+                return <CreateMetaFormItem data={value} key={key} />;
+              })
+            )}
+          </>
+        ) : (
+          'meta data not parsed'
+        )}
       </Fieldset>
     );
   }
