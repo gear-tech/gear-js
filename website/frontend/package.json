@@ -85,16 +85,16 @@
   "devDependencies": {
     "@craco/craco": "6.4.3",
     "@mdx-js/react": "^1.6.22",
-    "@storybook/addon-actions": "^6.4.19",
-    "@storybook/addon-docs": "^6.4.19",
-    "@storybook/addon-essentials": "^6.4.19",
-    "@storybook/addon-interactions": "^6.4.19",
-    "@storybook/addon-links": "^6.4.19",
-    "@storybook/builder-webpack5": "^6.4.19",
-    "@storybook/manager-webpack5": "^6.4.19",
-    "@storybook/node-logger": "^6.4.19",
-    "@storybook/preset-create-react-app": "^4.0.2",
-    "@storybook/react": "^6.4.19",
+    "@storybook/addon-actions": "^6.4.21",
+    "@storybook/addon-docs": "^6.4.21",
+    "@storybook/addon-essentials": "^6.4.21",
+    "@storybook/addon-interactions": "^6.4.21",
+    "@storybook/addon-links": "^6.4.21",
+    "@storybook/builder-webpack5": "^6.4.21",
+    "@storybook/manager-webpack5": "^6.4.21",
+    "@storybook/node-logger": "^6.4.21",
+    "@storybook/preset-create-react-app": "^4.1.0",
+    "@storybook/react": "^6.4.21",
     "@storybook/testing-library": "^0.0.9",
     "@testing-library/jest-dom": "5.16.4",
     "@testing-library/react": "12.1.4",
@@ -127,6 +127,7 @@
     "stream-browserify": "3.0.0",
     "typescript": "4.6.3",
     "vercel": "24.0.1",
-    "web-vitals": "2.1.4"
+    "web-vitals": "2.1.4",
+    "webpack": "^5.70.0"
   }
 }
