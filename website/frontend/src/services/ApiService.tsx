@@ -279,8 +279,6 @@ export const subscribeToEvents = (alert: AlertContainer) => {
 
     if (result && result.meta) {
       meta = JSON.parse(result.meta);
-    } else {
-      alert.error('Metadata is not added');
     }
 
     try {
