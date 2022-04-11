@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, ReactNode, useCallback } from 'react';
 import { Field, useFormikContext } from 'formik';
 import type { MetaField, MetaFieldset, MetaFormItem, MetaFormStruct, MetaFormValues } from './meta-parser';
-import { isMetaFieldset, isMetaField, MetaFormItemStruct } from './meta-parser';
+import { isMetaFieldset, isMetaField } from './meta-parser';
 import { Fieldset, EnumSelect } from './styles';
 import isObject from 'lodash.isobject';
 import get from 'lodash.get';
