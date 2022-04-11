@@ -9,11 +9,20 @@ import {
   simpleDeepStructResult,
   daoMeta,
   daoMetaResult,
+  resultEnumSimple,
+  resultEnumSimpleResult,
+  resultEnumComplex,
+  resultEnumComplexResult,
+  optionEnumSimple,
+  optionEnumSimpleResult,
+  optionEnumComplex,
+  optionEnumComplexResult,
 } from './meta-fixtures';
 import { MetaFormWrapper } from './MetaFields.stories';
 
 describe('form generated for meta data', () => {
-  test('renders and submits simple struct form', async () => {
+  // region Fields struct
+  test('simple struct submit', async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={simpleStruct}>
@@ -30,7 +39,7 @@ describe('form generated for meta data', () => {
     });
   });
 
-  test('renders and submits nested deep struct form', async () => {
+  test('deep struct submit', async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={simpleDeepStruct}>
@@ -65,8 +74,10 @@ describe('form generated for meta data', () => {
       });
     });
   });
+  // endregion
 
-  test('render and submit dao enum form', async () => {
+  // region Enum
+  test('dao enum submit', async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={daoMeta}>
@@ -86,7 +97,7 @@ describe('form generated for meta data', () => {
     });
   });
 
-  test('enum selecting and submit dao enum form', async () => {
+  test('dao enum select and submit', async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={daoMeta}>
@@ -117,4 +128,232 @@ describe('form generated for meta data', () => {
       });
     });
   });
+  // endregion
+
+  // region enum Result
+  test('simple enum result submit', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumSimple}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    await userEvent.type(getByTestId(resultEnumSimpleResult.__root.__fields.exchangeRate.__fields.ok.name), 'ok');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        __root: {
+          exchangeRate: {
+            ok: 'ok',
+          },
+        },
+      });
+    });
+  });
+
+  test('simple enum result select and submit', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumSimple}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    await userEvent.selectOptions(getByTestId(resultEnumSimpleResult.__root.__fields.exchangeRate.__path), 'err');
+    await userEvent.type(getByTestId(resultEnumSimpleResult.__root.__fields.exchangeRate.__fields.err.name), 'err');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        __root: {
+          exchangeRate: {
+            err: 'err',
+          },
+        },
+      });
+    });
+  });
+
+  test('complex enum result submit', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumComplex}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    await userEvent.type(
+      getByTestId(resultEnumComplexResult.__root.__fields.exchangeRate.__fields.ok.__fields.firstName.name),
+      'firstName'
+    );
+    await userEvent.type(
+      getByTestId(resultEnumComplexResult.__root.__fields.exchangeRate.__fields.ok.__fields.secondName.name),
+      'secondName'
+    );
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        __root: {
+          exchangeRate: {
+            ok: {
+              firstName: 'firstName',
+              secondName: 'secondName',
+            },
+          },
+        },
+      });
+    });
+  });
+
+  test('complex enum result select and submit', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumComplex}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    await userEvent.selectOptions(getByTestId(resultEnumComplexResult.__root.__fields.exchangeRate.__path), 'err');
+    await userEvent.type(
+      getByTestId(resultEnumComplexResult.__root.__fields.exchangeRate.__fields.err.__fields['__field-0'].name),
+      '__field-0'
+    );
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        __root: {
+          exchangeRate: {
+            err: {
+              '__field-0': '__field-0',
+            },
+          },
+        },
+      });
+    });
+  });
+  // endregion
+
+  // region enum Option
+  test('simple enum option submit', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumSimple}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    await userEvent.type(getByTestId(optionEnumSimpleResult.__root.__fields['__field-0'].name), '__field-0');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        __root: {
+          '__field-0': '__field-0',
+        },
+      });
+    });
+  });
+
+  test('simple enum option select and submit', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumSimple}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    await userEvent.selectOptions(getByTestId(optionEnumSimpleResult.__root.__path), '__null');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        __root: {
+          __null: 'Null',
+        },
+      });
+    });
+  });
+
+  test('complex enum option submit', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumComplex}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    await userEvent.type(
+      getByTestId(optionEnumComplexResult.__root.__fields.res.__fields['__field-0'].__fields.id.__fields.hex.name),
+      'hex'
+    );
+    await userEvent.type(
+      getByTestId(optionEnumComplexResult.__root.__fields.res.__fields['__field-0'].__fields.id.__fields.decimal.name),
+      'decimal'
+    );
+    await userEvent.type(
+      getByTestId(optionEnumComplexResult.__root.__fields.res.__fields['__field-0'].__fields.person.__fields.name.name),
+      'name'
+    );
+    await userEvent.type(
+      getByTestId(
+        optionEnumComplexResult.__root.__fields.res.__fields['__field-0'].__fields.person.__fields.surname.name
+      ),
+      'surname'
+    );
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        __root: {
+          res: {
+            '__field-0': {
+              id: {
+                decimal: 'decimal',
+                hex: 'hex',
+              },
+              person: {
+                surname: 'surname',
+                name: 'name',
+              },
+            },
+          },
+        },
+      });
+    });
+  });
+
+  test('complex enum option select and submit', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumComplex}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    await userEvent.selectOptions(getByTestId(optionEnumComplexResult.__root.__fields.res.__path), '__null');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        __root: {
+          res: {
+            __null: 'Null',
+          },
+        },
+      });
+    });
+  });
+  // endregion
 });
