@@ -153,7 +153,7 @@ export class GearGasSpent {
     destinationId: Hex | Buffer,
     payload: Hex | AnyJson,
     value: number | string,
-    meta: Metadata,
+    meta?: Metadata,
   ): Promise<u64>;
 
   /**
@@ -182,7 +182,7 @@ export class GearGasSpent {
     destinationId: Hex | Buffer,
     payload: Hex | AnyJson,
     value: number | string,
-    typeOfPayload: string,
+    typeOfPayload?: string,
   ): Promise<u64>;
 
   /**
@@ -199,7 +199,7 @@ export class GearGasSpent {
     destinationId: Hex | Buffer,
     payload: Hex | AnyJson,
     value: number | string,
-    metaOrTypeOfPayload: string | Metadata,
+    metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64>;
 
   async handle(
@@ -207,7 +207,7 @@ export class GearGasSpent {
     destinationId: Hex,
     payload: Hex | AnyJson,
     value: number | string,
-    metaOrTypeOfPayload: string | Metadata,
+    metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64> {
     return await this.api.rpc['gear'].getHandleGasSpent(
       sourceId,
@@ -247,7 +247,7 @@ export class GearGasSpent {
     exitCode: number,
     payload: Hex | AnyJson,
     value: number | string,
-    meta: Metadata,
+    meta?: Metadata,
   ): Promise<u64>;
 
   /**
@@ -280,7 +280,7 @@ export class GearGasSpent {
     exitCode: number,
     payload: Hex | AnyJson,
     value: number | string,
-    typeOfPayload: string,
+    typeOfPayload?: string,
   ): Promise<u64>;
 
   /**
@@ -299,7 +299,7 @@ export class GearGasSpent {
     exitCode: number,
     payload: Hex | AnyJson,
     value: number | string,
-    metaOrTypeOfPayload: string | Metadata,
+    metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64>;
 
   async reply(
@@ -308,7 +308,7 @@ export class GearGasSpent {
     exitCode: number,
     payload: Hex | AnyJson,
     value: number | string,
-    metaOrTypeOfPayload: string | Metadata,
+    metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64> {
     return await this.api.rpc['gear'].getReplyGasSpent(
       sourceId,
