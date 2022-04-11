@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import useAccount from 'hooks';
+import { useAccount } from 'hooks';
 import useAccounts from './hooks';
 import isLoggedIn from './utils';
 import LoginButton from './login-button';

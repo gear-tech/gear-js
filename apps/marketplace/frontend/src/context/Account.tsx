@@ -1,13 +1,10 @@
-import { useState, ReactNode, createContext, Dispatch, SetStateAction } from 'react';
+import { useState, createContext, Dispatch, SetStateAction } from 'react';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import Props from './types';
 
 type Value = {
   account: InjectedAccountWithMeta | undefined;
   setAccount: Dispatch<SetStateAction<InjectedAccountWithMeta | undefined>>;
-};
-
-type Props = {
-  children: ReactNode;
 };
 
 const AccountContext = createContext({} as Value);

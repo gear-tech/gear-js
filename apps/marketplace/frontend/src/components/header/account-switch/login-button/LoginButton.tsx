@@ -1,5 +1,5 @@
 import { Button } from '@gear-js/ui';
-import useAccount from 'hooks';
+import { useAccount } from 'hooks';
 import AccountButton from '../account-button';
 import userIcon from './assets/user.svg';
 
