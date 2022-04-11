@@ -1,0 +1,10 @@
+.list {
+  button {
+    // TODO: checkout when @gear-js/ui button will have 'block' prop
+    width: 100%;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: 16px;
+  }
+}

@@ -1,9 +1,6 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Modal } from '@gear-js/ui';
-import useAccount from 'hooks';
-import isLoggedIn from '../utils';
-import AccountButton from '../account-button';
-import styles from './AccountsModal.module.scss';
+import Accounts from '../accounts';
 
 type Props = {
   accounts: InjectedAccountWithMeta[] | undefined;
@@ -11,30 +8,10 @@ type Props = {
 };
 
 function AccountsModal({ accounts, close }: Props) {
-  const { setAccount } = useAccount();
-
-  const switchAccount = (account: InjectedAccountWithMeta) => {
-    setAccount(account);
-    // TODO: 'account' to consts
-    localStorage.setItem('account', account.address);
-    close();
-  };
-
-  const getAccounts = () =>
-    accounts?.map((account) => (
-      <AccountButton
-        key={account.address}
-        address={account.address}
-        name={account.meta.name}
-        isActive={isLoggedIn(account)}
-        onClick={() => switchAccount(account)}
-      />
-    ));
-
   return (
-    <Modal heading="Connect" close={close} className={styles.modal}>
+    <Modal heading="Connect" close={close}>
       {accounts ? (
-        getAccounts()
+        <Accounts list={accounts} onChange={close} />
       ) : (
         <p>
           Polkadot extension was not found or disabled. Please,{' '}
