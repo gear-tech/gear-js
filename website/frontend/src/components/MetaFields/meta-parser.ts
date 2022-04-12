@@ -25,15 +25,15 @@ export function isMetaField(value: unknown): value is MetaField {
   );
 }
 
-export type MetaFormItem = MetaField | MetaFieldset;
-export type MetaFormItemStruct = Record<string, MetaFormItem>;
+export type MetaFieldsItem = MetaField | MetaFieldset;
+export type MetaFieldsItemStruct = Record<string, MetaFieldsItem>;
 
 export type MetaFieldset = {
   __name: string;
   __path: string;
   __type: string;
   __select: boolean;
-  __fields: MetaFormItemStruct;
+  __fields: MetaFieldsItemStruct;
 };
 
 export function isMetaFieldset(value: unknown): value is MetaFieldset {
@@ -48,13 +48,13 @@ export function isMetaFieldset(value: unknown): value is MetaFieldset {
   );
 }
 
-export type MetaFormValues = {
-  [key: string]: string | MetaFormValues;
+export type MetaFieldsValues = {
+  [key: string]: string | MetaFieldsValues;
 };
 
-export type MetaFormStruct = {
+export type MetaFieldsStruct = {
   __root: MetaFieldset | null;
-  __values: MetaFormValues | null;
+  __values: MetaFieldsValues | null;
 };
 
 type MetaEnumType = '_enum' | '_enum_Option' | '_enum_Result' | string;
@@ -112,7 +112,7 @@ function processFields(data: MetaItem, path?: string[]): StackItem[] {
 }
 
 function parseField(data: MetaItem) {
-  const result: MetaFormStruct = {
+  const result: MetaFieldsStruct = {
     __root: null,
     __values: null,
   };
@@ -337,7 +337,7 @@ function parseField(data: MetaItem) {
   return result;
 }
 
-export function parseMeta(data: MetaItem): MetaFormStruct | null {
+export function parseMeta(data: MetaItem): MetaFieldsStruct | null {
   if (isObject(data)) {
     if (Object.keys(data).length === 0) {
       return null;

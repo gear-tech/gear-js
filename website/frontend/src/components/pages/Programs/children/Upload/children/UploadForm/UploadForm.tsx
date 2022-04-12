@@ -8,7 +8,7 @@ import { Checkbox } from '@gear-js/ui';
 import { Formik, Form, Field } from 'formik';
 import { InitialValues } from './types';
 import { SetFieldValue } from 'types/common';
-import { MetaFormStruct, parseMeta, prepareToSend, MetaFields as MetaForm } from 'components/MetaFields';
+import { MetaFieldsStruct, parseMeta, prepareToSend, MetaFields as MetaForm } from 'components/MetaFields';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
 import { MetaFile } from './children/MetaFile/MetaFile';
@@ -47,7 +47,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<string | null>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
-  const [payloadForm, setPayloadForm] = useState<MetaFormStruct | null>();
+  const [payloadForm, setPayloadForm] = useState<MetaFieldsStruct | null>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
   const [isManualPayload, setIsManualPayload] = useState<boolean>(true);
   const [initialValues, setInitialValues] = useState<InitialValues>(INITIAL_VALUES);

@@ -1,20 +1,20 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
-import { MetaFormItem } from './MetaFormItem';
+import { MetaFieldsItem } from './MetaFieldsItem';
 import { useFormikContext } from 'formik';
-import type { MetaFormStruct, MetaFormValues } from './meta-parser';
-import { MetaFormContext, MetaFormContextProvider } from './MetaFormContext';
+import type { MetaFieldsStruct, MetaFieldsValues } from './meta-parser';
+import { MetaFieldsContext, MetaFieldsContextProvider } from './MetaFieldsContext';
 import { Fieldset, EnumSelect } from './styles';
 import isObject from 'lodash.isobject';
 
 const MetaFieldsComponent = () => {
   const formikContext = useFormikContext();
-  const metaFieldsContext = useContext(MetaFormContext);
+  const metaFieldsContext = useContext(MetaFieldsContext);
   const [firstKey, setFirstKey] = useState(Object.keys(metaFieldsContext.__root!.__fields!)[0]);
 
   const changeValues = useCallback(
     (key: string) => {
       if (metaFieldsContext.__root && metaFieldsContext.__values) {
-        let values: MetaFormValues | string = metaFieldsContext.__values;
+        let values: MetaFieldsValues | string = metaFieldsContext.__values;
         if (metaFieldsContext.__root.__select) {
           values = {
             [key]: metaFieldsContext.__values[key],
@@ -71,10 +71,10 @@ const MetaFieldsComponent = () => {
         {metaFieldsContext.__root?.__fields ? (
           <>
             {metaFieldsContext.__root.__select ? (
-              <MetaFormItem data={metaFieldsContext.__root.__fields[firstKey]} />
+              <MetaFieldsItem data={metaFieldsContext.__root.__fields[firstKey]} />
             ) : (
               Object.entries(metaFieldsContext.__root.__fields).map(([key, value]) => {
-                return <MetaFormItem data={value} key={key} />;
+                return <MetaFieldsItem data={value} key={key} />;
               })
             )}
           </>
@@ -88,10 +88,10 @@ const MetaFieldsComponent = () => {
   return null;
 };
 
-export const MetaFields = ({ data }: { data: MetaFormStruct }) => {
+export const MetaFields = ({ data }: { data: MetaFieldsStruct }) => {
   return (
-    <MetaFormContextProvider data={data}>
+    <MetaFieldsContextProvider data={data}>
       <MetaFieldsComponent />
-    </MetaFormContextProvider>
+    </MetaFieldsContextProvider>
   );
 };

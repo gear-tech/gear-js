@@ -1,14 +1,14 @@
 import { useContext } from 'react';
 import { MetaFieldset } from './meta-parser';
 import { useFormikContext } from 'formik';
-import { MetaFormContext } from './MetaFormContext';
+import { MetaFieldsContext } from './MetaFieldsContext';
 import get from 'lodash.get';
 import isObject from 'lodash.isobject';
 import setWith from 'lodash.setwith';
 
 export function useMetaFieldsContext(fieldset: MetaFieldset | null) {
   const formikContext = useFormikContext();
-  const ctx = useContext(MetaFormContext);
+  const ctx = useContext(MetaFieldsContext);
 
   const changeFormikValues = (key: string) => {
     if (key && fieldset) {

@@ -2,14 +2,14 @@ import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Field } from 'formik';
 import { Checkbox } from '@gear-js/ui';
-import { MetaFields, MetaFormStruct } from 'components/MetaFields';
+import { MetaFields, MetaFieldsStruct } from 'components/MetaFields';
 import styles from './FormPayload.module.scss';
 
 type Props = {
   className?: string;
   isManualInput: boolean;
   setIsManualInput: Dispatch<SetStateAction<boolean>>;
-  formData: MetaFormStruct | null | undefined;
+  formData: MetaFieldsStruct | null | undefined;
 };
 
 const FormPayload = ({ className, isManualInput, setIsManualInput, formData }: Props) => {

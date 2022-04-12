@@ -1,10 +1,5 @@
 import { styled } from 'stitches.config';
 
-export const MetaFormItem = styled('div', {
-  flex: '1',
-  color: '$white',
-});
-
 export const MetaInput = styled('div', {
   '&:not(:last-child)': {
     marginBottom: '1rem',

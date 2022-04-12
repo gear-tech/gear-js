@@ -10,7 +10,7 @@ import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useAccount, useApi, useLoading } from 'hooks';
-import { MetaItem, MetaFormStruct, parseMeta, prepareToSend } from 'components/MetaFields';
+import { MetaItem, MetaFieldsStruct, parseMeta, prepareToSend } from 'components/MetaFields';
 import { Schema } from './Schema';
 import './MessageForm.scss';
 
@@ -26,7 +26,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
   const alert = useAlert();
   const { enableLoading, disableLoading } = useLoading();
   const { account: currentAccount } = useAccount();
-  const [metaForm, setMetaForm] = useState<MetaFormStruct | null>();
+  const [metaForm, setMetaForm] = useState<MetaFieldsStruct | null>();
   const [isManualInput, setIsManualInput] = useState(Boolean(!types));
 
   const initialValues = useRef<InitialValues>({

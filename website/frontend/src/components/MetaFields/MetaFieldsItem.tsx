@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useMetaFieldsContext } from './useMetaFieldsContext';
 import { isMetaField, isMetaFieldset, MetaFieldset } from './meta-parser';
-import type { MetaFormItem as TMetaFormItem } from './meta-parser';
+import type { MetaFieldsItem as TMetaFieldsItem } from './meta-parser';
 import { EnumSelect, Fieldset } from './styles';
-import { MetaFormField } from './MetaFormField';
+import { MetaField } from './MetaField';
 
-export function MetaFormItem({ data }: { data: TMetaFormItem }) {
+export function MetaFieldsItem({ data }: { data: TMetaFieldsItem }) {
   const [currentSelected, setCurrentSelected] = useState<string>();
   const changeFormikValues = useMetaFieldsContext(isMetaFieldset(data) ? data : null);
 
@@ -45,11 +45,11 @@ export function MetaFormItem({ data }: { data: TMetaFormItem }) {
         )}
         <legend>{fieldset.__name}</legend>
         {fieldset.__select && currentSelected ? (
-          <MetaFormItem data={fieldset.__fields[currentSelected]} />
+          <MetaFieldsItem data={fieldset.__fields[currentSelected]} />
         ) : (
           <>
             {Object.entries(fieldset.__fields).map(([key, value]) => {
-              return <MetaFormItem data={value} key={key} />;
+              return <MetaFieldsItem data={value} key={key} />;
             })}
           </>
         )}
@@ -58,7 +58,7 @@ export function MetaFormItem({ data }: { data: TMetaFormItem }) {
   };
 
   if (isMetaField(data)) {
-    return <MetaFormField value={data} />;
+    return <MetaField value={data} />;
   }
 
   if (isMetaFieldset(data)) {
@@ -69,7 +69,7 @@ export function MetaFormItem({ data }: { data: TMetaFormItem }) {
     <>
       {Object.entries(data).map(([key, value]) => {
         if (isMetaField(value)) {
-          return <MetaFormField value={value} key={key} />;
+          return <MetaField value={value} key={key} />;
         }
         if (isMetaFieldset(value)) {
           return createFieldset(value);
