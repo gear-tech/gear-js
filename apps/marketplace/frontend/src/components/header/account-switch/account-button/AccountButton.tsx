@@ -7,13 +7,15 @@ type Props = {
   name: string | undefined;
   onClick: () => void;
   isActive?: boolean;
+  block?: boolean;
 };
 
-function AccountButton({ address, name, onClick, isActive }: Props) {
+function AccountButton({ address, name, onClick, isActive, block }: Props) {
   const className = clsx(
     buttonStyles.button,
     buttonStyles.normal,
     isActive ? buttonStyles.primary : buttonStyles.secondary,
+    block && buttonStyles.block,
   );
 
   return (

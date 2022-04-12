@@ -1,8 +1,6 @@
 @use '@gear-js/ui/variables' as *;
 
 .filter {
-  // TODO: checkout after @gear-js/ui button inline-flex update
-  display: flex;
   padding: 4px;
   background-color: #3d3d3d;
   border-radius: $borderRadius;

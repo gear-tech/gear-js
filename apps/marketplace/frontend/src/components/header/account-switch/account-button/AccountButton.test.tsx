@@ -19,15 +19,15 @@ describe('account button tests', () => {
     expect(onClick).toBeCalledTimes(1);
   });
 
-  it('renders and clicks active button', () => {
-    render(<AccountButton address="123" name="test name" onClick={onClick} isActive />);
+  it('renders and clicks active block button', () => {
+    render(<AccountButton address="123" name="test name" onClick={onClick} isActive block />);
 
     const button = screen.getByRole('button');
     const identicon = document.querySelector(`.${buttonStyles.icon}`);
 
     expect(button).toContainElement(identicon as HTMLElement);
     expect(button).toHaveTextContent('test name');
-    expect(button).toHaveClass(buttonStyles.primary);
+    expect(button).toHaveClass(buttonStyles.primary, buttonStyles.block);
 
     fireEvent.click(button);
     expect(onClick).toBeCalledTimes(1);

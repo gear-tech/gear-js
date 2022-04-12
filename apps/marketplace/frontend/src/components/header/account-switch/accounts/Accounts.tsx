@@ -28,6 +28,7 @@ function Accounts({ list, onChange }: Props) {
           name={account.meta.name}
           isActive={isLoggedIn(account)}
           onClick={() => switchAccount(account)}
+          block
         />
       </li>
     ));
