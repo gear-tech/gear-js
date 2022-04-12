@@ -27,54 +27,54 @@ import {
   resultEnumComplexResult,
 } from './meta-fixtures';
 
-describe('test parser', () => {
+describe('meta parser tests', () => {
   // TODO add edge case tests e.g for null, empty array, empty objects
 
-  it('simple struct', () => {
+  test('simple struct data parse', () => {
     expect(parseMeta(simpleStruct)).toEqual(simpleStructResult);
   });
 
-  it('nested simple struct', () => {
+  test('nested simple struct data parse', () => {
     expect(parseMeta(simpleNestedStruct)).toEqual(simpleNestedStructResult);
   });
 
-  it('simple deep struct', () => {
+  test('simple deep struct parse', () => {
     expect(parseMeta(simpleDeepStruct)).toEqual(simpleDeepStructResult);
   });
 
-  it('simple enum', () => {
+  test('simple enum data parse', () => {
     expect(parseMeta(enumSimple)).toEqual(enumSimpleResult);
   });
 
-  it('nested enum', () => {
+  test('nested enum data parse', () => {
     expect(parseMeta(enumNested)).toEqual(enumNestedResult);
   });
 
-  it('dao enum', () => {
+  test('dao enum data parse', () => {
     expect(parseMeta(daoMeta)).toEqual(daoMetaResult);
   });
 
-  it('simple option enum', () => {
+  test('simple option enum data parse', () => {
     expect(parseMeta(optionEnumSimple)).toEqual(optionEnumSimpleResult);
   });
 
-  it('option enum with fields object', () => {
+  test('option enum with fields data parse', () => {
     expect(parseMeta(optionEnumWithFieldsObject)).toEqual(optionEnumWithFieldsObjectResult);
   });
 
-  it('nested option enum', () => {
+  test('option enum nested field data parse', () => {
     expect(parseMeta(optionEnumNested)).toEqual(optionEnumNestedResult);
   });
 
-  it('with complex option enum', () => {
+  test('option enum complex data parse', () => {
     expect(parseMeta(optionEnumComplex)).toEqual(optionEnumComplexResult);
   });
 
-  it('with simple result enum', () => {
+  test('result enum simple data parse', () => {
     expect(parseMeta(resultEnumSimple)).toEqual(resultEnumSimpleResult);
   });
 
-  it('with complex result enum', () => {
+  test('result enum complex data parse', () => {
     expect(parseMeta(resultEnumComplex)).toEqual(resultEnumComplexResult);
   });
 });
