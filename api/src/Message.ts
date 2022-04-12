@@ -1,7 +1,7 @@
-import { Metadata } from './interfaces';
+import { Metadata } from './types/interfaces';
 import { SendMessageError } from './errors';
-import { GearTransaction } from './types';
 import { createPayload } from './utils';
+import { GearTransaction } from './Transaction';
 import { H256 } from '@polkadot/types/interfaces';
 import { AnyNumber, ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';

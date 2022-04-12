@@ -1,4 +1,4 @@
-import { Metadata } from '../interfaces';
+import { Metadata } from '../types/interfaces';
 import importObj from './importObj';
 import { readMetaValue } from './utils';
 

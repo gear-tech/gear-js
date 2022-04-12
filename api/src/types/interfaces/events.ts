@@ -1,4 +1,4 @@
-import { GearEvent } from '../';
+import { GearEvent } from '../../events-types/Event';
 import { Header } from '@polkadot/types/interfaces';
 import { Balance } from '@polkadot/types/interfaces';
 

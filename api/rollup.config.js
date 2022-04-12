@@ -1,4 +1,4 @@
-import typescript from '@rollup/plugin-typescript';
+import typescript from 'rollup-plugin-typescript2';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -9,7 +9,7 @@ export default [
     output: [
       {
         file: 'lib/index.mjs',
-        format: 'es',
+        format: 'esm',
         sourcemap: true,
       },
     ],
@@ -18,7 +18,7 @@ export default [
         tsconfig: 'tsconfig.esm.json',
       }),
       json(),
-      nodeResolve({ preferBuiltins: true }),
+      nodeResolve({ preferBuiltins: true, resolveOnly: (module) => !module.includes('polkadot') }),
       commonjs(),
     ],
   },

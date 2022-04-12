@@ -1,8 +1,8 @@
-import { u8, u64, u128, Type, Null, Option, Vec, Tuple, Map, BTreeMap } from '@polkadot/types';
+import { u8, u64, u128, Type, Null, Option, Vec, Tuple, BTreeMap } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { H256 } from '@polkadot/types/interfaces';
-import { Hex } from './gear-type';
-import { ExitCode, MessageId } from './gear-api';
+import { MessageId } from '../ids';
+import { Hex, ExitCode } from '../common';
 
 export declare interface Reply extends Tuple {
   0: H256;

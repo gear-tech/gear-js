@@ -1,10 +1,11 @@
-import { Hex, Metadata, ProgramId } from './interfaces';
+import { Hex, ProgramId } from './types';
+import { Metadata } from './types/interfaces';
 import { SubmitProgramError } from './errors';
 import { AnyNumber, ISubmittableResult } from '@polkadot/types/types';
 import { Bytes, u64 } from '@polkadot/types';
 import { BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex } from '@polkadot/util-crypto';
-import { GearTransaction } from './types';
+import { GearTransaction } from './Transaction';
 import { createPayload, generateProgramId } from './utils';
 import { GearGasSpent } from './GasSpent';
 import { GearApi } from './GearApi';

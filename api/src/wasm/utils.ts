@@ -1,4 +1,4 @@
-import { IGearPages } from '..';
+import { IGearPages } from '../types/interfaces';
 
 export function readMetaValue(memory: WebAssembly.Memory, func: any): string {
   return ab2str(getExportValue(memory, func));

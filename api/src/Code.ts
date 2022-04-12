@@ -1,5 +1,5 @@
-import { GearTransaction } from './types';
-import { Hex } from './interfaces';
+import { GearTransaction } from './Transaction';
+import { Hex } from './types';
 import { Bytes } from '@polkadot/types';
 import { generateCodeHash } from './utils';
 

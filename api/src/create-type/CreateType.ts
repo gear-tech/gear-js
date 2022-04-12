@@ -1,5 +1,5 @@
 import { GearApi } from '../GearApi';
-import { Metadata } from '../interfaces';
+import { Metadata } from '../types/interfaces';
 import { toJSON, isJSON } from '../utils/json';
 import { isHex, isU8a } from '@polkadot/util';
 import { Registry, Codec } from '@polkadot/types/types';
