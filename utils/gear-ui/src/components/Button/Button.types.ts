@@ -5,6 +5,7 @@ interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: string;
   color?: 'primary' | 'secondary' | 'transparent';
   size?: 'normal' | 'small';
+  block?: boolean;
 }
 
 interface TextProps extends BaseProps {
