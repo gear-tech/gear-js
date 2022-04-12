@@ -19,6 +19,6 @@ export * from './CreateType';
 export * from './create-type';
 export * from './types/interfaces';
 export * from './types';
-export * from './events';
+export * from './events-types';
 export * from './utils';
 export * from './events-types';

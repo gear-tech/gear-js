@@ -7,6 +7,4 @@ export * from './keyring';
 export * from './program';
 export * from './events';
 export * from './system';
-export * from './augment-api-rpc';
-export * from './augment-api-tx';
 export * from './system';
