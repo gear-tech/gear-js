@@ -3,7 +3,7 @@
 
 .button {
   @include transition();
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: inherit;
@@ -16,6 +16,10 @@
     pointer-events: none;
     opacity: 0.5;
   }
+}
+
+.block {
+  width: 100%;
 }
 
 .normal {
