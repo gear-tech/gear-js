@@ -1,4 +1,4 @@
-export function CatchGearErrros(target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
+export function FormResponse(target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
   const originalMethod = descriptor.value;
   descriptor.value = async function SafeWrapper() {
     try {

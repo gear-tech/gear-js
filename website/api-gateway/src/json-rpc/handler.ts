@@ -85,13 +85,13 @@ export class RpcMessageHandler {
     return new Promise((resolve) => {
       result.forEach((value) => {
         if (!value) {
-          resolve(this.getResponse(procedure, { error: 'Service is not available' }));
+          resolve(this.getResponse(procedure, 'Service is not available'));
         } else if ('error' in value) {
           resolve(this.getResponse(procedure, value.error));
         } else if ('result' in value) {
           resolve(this.getResponse(procedure, null, value.result));
         } else {
-          resolve(this.getResponse(procedure, { error: 'Unable to get data' }));
+          resolve(this.getResponse(procedure, 'Unable to get data'));
         }
       });
     });

@@ -6,6 +6,7 @@ import { SignNotVerified, MetadataNotFound } from '../errors';
 import { ProgramsService } from '../programs/programs.service';
 import { Meta } from '../entities/meta.entity';
 import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/interfaces';
+import { sleep } from 'src/utils';
 
 @Injectable()
 export class MetadataService {
@@ -16,6 +17,7 @@ export class MetadataService {
   ) {}
 
   async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
+    await sleep(1000);
     const program = await this.programService.findProgram({
       id: params.programId,
       genesis: params.genesis,
@@ -23,7 +25,6 @@ export class MetadataService {
     if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
       throw new SignNotVerified();
     }
-
     const metadata = this.metaRepo.create({
       owner: program.owner,
       meta: typeof params.meta === 'string' ? params.meta : JSON.stringify(params.meta),
@@ -37,15 +38,10 @@ export class MetadataService {
   }
 
   async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
-    const program = await this.programService.findProgram({
-      id: params.programId,
-      genesis: params.genesis,
-    });
     const meta = await this.metaRepo.findOne({ where: { program: params.programId } });
-    if (meta) {
-      return { program: meta.program, meta: meta.meta, metaFile: meta.metaFile };
-    } else {
+    if (!meta) {
       throw new MetadataNotFound();
     }
+    return { program: meta.program, meta: meta.meta, metaFile: meta.metaFile };
   }
 }

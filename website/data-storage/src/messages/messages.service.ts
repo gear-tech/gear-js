@@ -13,7 +13,7 @@ import {
   IMessage,
   MessageDispatched,
 } from '@gear-js/interfaces';
-import { getPaginationParams, getWhere } from 'src/utils';
+import { getPaginationParams, getWhere, sleep } from 'src/utils';
 
 const logger = new Logger('MessageService');
 
@@ -119,28 +119,27 @@ export class MessagesService {
     return result;
   }
 
-  setDispatchedStatus(params: MessageDispatched): Promise<void> {
+  async setDispatchedStatus(params: MessageDispatched): Promise<void> {
     const error = params.outcome !== 'success' ? params.outcome : null;
     if (error === null) {
       return;
     }
-    setTimeout(async () => {
-      const message = await this.messageRepo.findOne({
-        where: { genesis: params.genesis, id: params.messageId },
+    await sleep(1000);
+    const message = await this.messageRepo.findOne({
+      where: { genesis: params.genesis, id: params.messageId },
+    });
+    if (message) {
+      message.error = error;
+      this.messageRepo.save(message);
+    }
+    const logMessages = await this.messageRepo.find({
+      where: { genesis: params.genesis, replyTo: params.messageId, replyError: '1' },
+    });
+    if (logMessages.length > 0) {
+      logMessages.forEach((log) => {
+        log.replyError = error;
+        this.messageRepo.save(log);
       });
-      if (message) {
-        message.error = error;
-        this.messageRepo.save(message);
-      }
-      const logMessages = await this.messageRepo.find({
-        where: { genesis: params.genesis, replyTo: params.messageId, replyError: '1' },
-      });
-      if (logMessages.length > 0) {
-        logMessages.forEach((log) => {
-          log.replyError = error;
-          this.messageRepo.save(log);
-        });
-      }
-    }, 1000);
+    }
   }
 }
