@@ -15,7 +15,7 @@ describe('Consumer service', () => {
   let consumerService: ConsumerService;
 
   const find_one = jest.fn(async () => {
-    throw new Error();
+    return null;
   });
 
   beforeAll(async () => {
@@ -29,11 +29,13 @@ describe('Consumer service', () => {
         },
         {
           provide: getRepositoryToken(Message),
-          useValue: {},
+          useValue: { findOne: find_one },
         },
         {
           provide: getRepositoryToken(Meta),
-          useValue: {},
+          useValue: {
+            findOne: find_one,
+          },
         },
         ProgramsService,
         MessagesService,
@@ -50,6 +52,18 @@ describe('Consumer service', () => {
     it('programData should returns error message', async () => {
       expect(await consumerService.programData({ id: '0x00', genesis: '0x00' })).toEqual({
         error: 'Program not found',
+      });
+    });
+
+    it('getMeta should returns error message', async () => {
+      expect(await consumerService.getMeta({ programId: '0x00', genesis: '0x00' })).toEqual({
+        error: 'Metadata not found',
+      });
+    });
+
+    it('getMeta should returns error message', async () => {
+      expect(await consumerService.message({ id: '0x00', genesis: '0x00' })).toEqual({
+        error: 'Message not found',
       });
     });
   });
