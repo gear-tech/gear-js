@@ -1,15 +1,8 @@
 import { Button } from '@gear-js/ui';
+import CardType from '../types';
 import styles from './Card.module.scss';
 
-type Props = {
-  image: string;
-  collection: string;
-  name: string;
-  value: number;
-  isAuction: boolean;
-};
-
-function Card({ image, collection, name, value, isAuction }: Props) {
+function Card({ image, collection, name, value, isAuction }: CardType) {
   const valueHeading = isAuction ? 'Top bid' : 'Price';
   const valueText = `${value} Gear`;
   const buttonText = isAuction ? 'Make bid' : 'Buy now';
