@@ -17,37 +17,6 @@ env:
   KUBE_NAMESPACE: dev-1
 
 jobs:
-  run-unit-tests:
-    name: Unit Tests for `data-storage`
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel previous workflow runs
-        uses: styfle/cancel-workflow-action@0.4.0
-        with:
-          access_token: ${{ github.token }}
-
-      - name: Load current commit
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-
-      - name: Install dependencies
-        uses: borales/actions-yarn@v2.3.0
-        with:
-          cmd: install
-
-      - name: Build interfaces
-        run: yarn build:interfaces
-
-      - name: Run tests
-        working-directory: 'website/data-storage'
-        run: yarn test
-
   wait-previous-run:
     runs-on: ubuntu-latest
     steps:
