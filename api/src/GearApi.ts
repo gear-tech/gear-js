@@ -5,7 +5,7 @@ import { GearEvents } from './Events';
 import { GearProgramState } from './State';
 import { GearMessageReply } from './MessageReply';
 import { gearRpc, gearTypes } from './default';
-import { GearApiOptions } from './interfaces';
+import { GearApiOptions } from './types/interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { ContractExecResultErr, Event } from '@polkadot/types/interfaces';
 import { GearBlock } from './Blocks';

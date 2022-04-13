@@ -1,10 +1,10 @@
 import { createPayload } from './utils';
-import { Metadata } from './interfaces';
+import { Metadata } from './types/interfaces';
 import { SendReplyError } from './errors';
 import { u64 } from '@polkadot/types';
 import { AnyNumber, ISubmittableResult } from '@polkadot/types/types';
 import { H256, BalanceOf } from '@polkadot/types/interfaces';
-import { GearTransaction } from './types';
+import { GearTransaction } from './Transaction';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 export class GearMessageReply extends GearTransaction {

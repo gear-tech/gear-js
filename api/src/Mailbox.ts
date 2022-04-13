@@ -1,5 +1,6 @@
 import { GearApi } from './GearApi';
-import { AccountId, Hex, HumanedMessage, IMailbox, QueuedMessage, StoredMessage } from './interfaces';
+import { HumanedMessage, StoredMessage } from './types/interfaces';
+import { MailboxType, AccountId, Hex } from './types';
 import { Option } from '@polkadot/types';
 import { AccountId32, H256 } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
@@ -26,10 +27,10 @@ export class GearMailbox {
    * console.log(mailbox);
    * ```
    */
-  async read(accountId: Hex | AccountId32 | string, messageId?: Hex | H256): Promise<IMailbox> {
+  async read(accountId: Hex | AccountId32 | string, messageId?: Hex | H256): Promise<MailboxType> {
     if (messageId) {
       const mailbox = await this.api.query.gear['mailbox'](accountId, messageId);
-      return mailbox.toHuman() as IMailbox;
+      return mailbox.toHuman() as MailboxType;
     } else {
       const keys = await this.api.query.gear['mailbox'].keys(accountId);
       if (keys.length === 0) {

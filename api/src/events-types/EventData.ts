@@ -1,5 +1,5 @@
-import { MessageInfo, Reason, Reply, QueuedDispatch, ProgramDetails } from '../interfaces';
-import { Vec, u64, u128, Option, u8, GenericEventData, Null, Bytes, Type } from '@polkadot/types';
+import { MessageInfo, Reason, Reply, QueuedDispatch, ProgramDetails } from '../types/interfaces';
+import { Vec, u128, Option, u8, GenericEventData, Null, Bytes, Type } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 
 export class GearEventData extends GenericEventData {

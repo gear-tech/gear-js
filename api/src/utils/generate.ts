@@ -1,5 +1,6 @@
 import { isHex } from '@polkadot/util';
-import { Hex, Metadata } from '../interfaces';
+import { Metadata } from '../types/interfaces';
+import { Hex } from '../types';
 import { CreateType } from '../create-type/CreateType';
 import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 

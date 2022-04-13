@@ -1,7 +1,7 @@
 import { GearApi } from './GearApi';
 import { GearKeyring } from './Keyring';
 import { TransactionError } from './errors';
-import { ISystemAccountInfo } from './interfaces';
+import { ISystemAccountInfo } from './types/interfaces';
 import { Balance } from '@polkadot/types/interfaces';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { BN } from '@polkadot/util';

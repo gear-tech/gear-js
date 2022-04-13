@@ -1,5 +1,6 @@
 import { getWasmMetadata, readState } from './wasm';
-import { Metadata, ProgramId } from './interfaces';
+import { Metadata } from './types/interfaces';
+import { ProgramId } from './types';
 import { Codec } from '@polkadot/types/types';
 import { ReadStateError } from './errors/state.errors';
 import { GearStorage } from './Storage';

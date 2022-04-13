@@ -1,8 +1,8 @@
 import { GearApi } from './GearApi';
-import { IBalanceCallback, IBlocksCallback, IEventCallback } from './interfaces';
-import { LogEvent, ProgramEvent, TransferEvent } from './types';
+import { IBalanceCallback, IBlocksCallback, IEventCallback } from './types/interfaces';
+import { LogEvent, ProgramEvent, TransferEvent } from './events-types';
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { ISystemAccountInfo } from './interfaces/system';
+import { ISystemAccountInfo } from './types/interfaces';
 
 export class GearEvents {
   private api: GearApi;
