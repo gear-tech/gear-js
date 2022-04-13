@@ -26,7 +26,7 @@ import {
   InitFailure,
   GetAllUserProgramsParams,
 } from '@gear-js/interfaces';
-import { CatchGearErrros } from 'src/errors/exceptions.filter';
+import { FormResponse } from 'src/middleware/formResponse';
 @Injectable()
 export class ConsumerService {
   constructor(
@@ -83,12 +83,12 @@ export class ConsumerService {
     },
   };
 
-  @CatchGearErrros
+  @FormResponse
   async programData(params: FindProgramParams): Result<IProgram> {
     return await this.programService.findProgram(params);
   }
 
-  @CatchGearErrros
+  @FormResponse
   async allPrograms(params: GetAllProgramsParams): Result<GetAllProgramsResult> {
     if (params.owner) {
       return await this.programService.getAllUserPrograms(params as GetAllUserProgramsParams);
@@ -96,27 +96,27 @@ export class ConsumerService {
     return await this.programService.getAllPrograms(params);
   }
 
-  @CatchGearErrros
+  @FormResponse
   async allUserPrograms(params: GetAllUserProgramsParams): Result<GetAllProgramsResult> {
     return await this.programService.getAllUserPrograms(params);
   }
 
-  @CatchGearErrros
+  @FormResponse
   async addMeta(params: AddMetaParams): Result<AddMetaResult> {
     return await this.metaService.addMeta(params);
   }
 
-  @CatchGearErrros
+  @FormResponse
   async getMeta(params: GetMetaParams): Result<GetMetaResult> {
     return await this.metaService.getMeta(params);
   }
 
-  @CatchGearErrros
+  @FormResponse
   async addPayload(params: AddPayloadParams): Result<IMessage> {
     return await this.messageService.addPayload(params);
   }
 
-  @CatchGearErrros
+  @FormResponse
   async allMessages(params: GetMessagesParams): Result<AllMessagesResult> {
     if (params.destination && params.source) {
       return await this.messageService.getAllMessages(params);
@@ -127,7 +127,7 @@ export class ConsumerService {
     return await this.messageService.getOutgoing(params);
   }
 
-  @CatchGearErrros
+  @FormResponse
   async message(params: FindMessageParams): Result<IMessage> {
     return await this.messageService.getMessage(params);
   }
