@@ -116,6 +116,9 @@ export class MessagesService {
       id: params.id,
     };
     const result = await this.messageRepo.findOne({ where });
+    if (!result) {
+      throw new MessageNotFound();
+    }
     return result;
   }
 
