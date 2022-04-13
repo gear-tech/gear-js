@@ -1,10 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
-import Home from './home';
+import Listings from './listings';
 
 function Routing() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Listings />} />
     </Routes>
   );
 }
