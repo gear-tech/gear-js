@@ -41,8 +41,8 @@ jobs:
         with:
           cmd: install
 
-      - name: Build interfaces
-        run: yarn build:interfaces
+      - name: Build interfaces and jsonrpc-errors
+        run: yarn build:interfaces && yarn build:jsonrpc-errors
 
       - name: Run tests
         working-directory: 'website/data-storage'
@@ -53,7 +53,6 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-    
       - name: Wait previous run
         uses: mktcode/consecutive-workflow-action@v1 # please read security note
         with:
@@ -85,7 +84,7 @@ jobs:
           file: k8s/gear-node/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-node:dev
-          
+
   build-and-push-data-storage-image:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
@@ -194,7 +193,6 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:dev
 
-
   purge-k8s-test-env:
     if: github.event.pull_request.draft == false
     needs:
@@ -203,7 +201,7 @@ jobs:
         build-and-push-api-gateway-image,
         build-and-push-event-listeners-image,
         build-and-push-test-balance-image,
-        wait-previous-run
+        wait-previous-run,
       ]
     runs-on: ubuntu-latest
 
@@ -224,7 +222,7 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
-     
+
       - name: Deploy to k8s data-storage
         uses: kodermax/kubectl-aws-eks@master
         with:
@@ -234,15 +232,14 @@ jobs:
         uses: kodermax/kubectl-aws-eks@master
         with:
           args: rollout status deployment data-storage-testenv -n $KUBE_NAMESPACE --timeout=120s
-          
+
   run-e2e-tests:
     if: github.event.pull_request.draft == false
     needs: [purge-k8s-test-env, wait-previous-run]
     runs-on: ubuntu-latest
     environment: dev
-   
-    steps:
 
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -250,7 +247,7 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 16.x
-          
+
       - name: Prepare&Run Tests
         working-directory: website/tests
         env:
