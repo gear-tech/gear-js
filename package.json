@@ -35,7 +35,7 @@
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
   },
   "resolutions": {
-    "@types/react": "17.0.43"
+    "@types/react": "17.0.44"
   },
   "packageManager": "yarn@3.2.0",
   "version": "0.0.2"
