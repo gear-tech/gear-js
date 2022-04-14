@@ -1,13 +1,13 @@
-name: CI
+name: CI-frontend
 
 on:
   pull_request:
     branches: [master]
     paths:
-      - website/**
+      - website/frontend/**
 
 jobs:
-  build-frontend:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
