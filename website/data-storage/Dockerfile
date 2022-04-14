@@ -8,6 +8,8 @@ COPY .yarnrc.yml .
 COPY ./website/interfaces website/interfaces
 COPY ./website/jsonrpc-errors website/jsonrpc-errors
 COPY ./website/data-storage website/data-storage
+COPY ./dev dev
+RUN ./dev/generate-root-package-json.js data-storage package.json
 RUN yarn install
 RUN yarn build:interfaces
 RUN yarn build:jsonrpc-errors
