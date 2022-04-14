@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IMailbox } from '@gear-js/api';
+import { MailboxType } from '@gear-js/api';
 import { useApi, useAccount } from 'hooks';
 import { Box } from 'layout/Box/Box';
 import { Message } from './children/Message/Message';
@@ -8,7 +8,7 @@ import styles from './Mailbox.module.scss';
 const Mailbox = () => {
   const { api } = useApi();
   const { account } = useAccount();
-  const [mailbox, setMailbox] = useState<IMailbox>([]);
+  const [mailbox, setMailbox] = useState<MailboxType>([]);
   const isAnyMessage = mailbox.length > 0;
 
   useEffect(() => {
