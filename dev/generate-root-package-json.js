@@ -42,14 +42,7 @@ switch (serviceName) {
     neccessary = [workspaces.frontend];
     break;
   case 'backend':
-    neccessary = [
-      workspaces.apiGateway,
-      workspaces.dataStorage,
-      workspaces.eventsListener,
-      workspaces.testBalance,
-      workspaces.interfaces,
-      workspaces.jsonrpcErrors,
-    ];
+    neccessary = Object.values(workspaces).filter((value) => value === workspaces.frontend);
     break;
   case 'all':
     neccessary = Object.values(workspaces);
