@@ -1,4 +1,4 @@
-import { isHex, isString, isU8a } from '@polkadot/util';
+import { isHex, isString, isU8a, u8aToHex } from '@polkadot/util';
 import { u64 } from '@polkadot/types';
 import { CreateType } from './create-type';
 import { Metadata } from './types/interfaces';
@@ -20,8 +20,10 @@ export class GearGasSpent {
     metaOrTypeOfPayload: string | Metadata,
     meta_type: string,
   ): Hex | Uint8Array {
-    if (isHex(payload) || isU8a(payload)) {
+    if (isHex(payload)) {
       return payload;
+    } else if (isU8a(payload)) {
+      return u8aToHex(payload);
     }
     if (!metaOrTypeOfPayload) {
       throw new GetGasSpentError('Impossible to create bytes from payload without specified type or meta');

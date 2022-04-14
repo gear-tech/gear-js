@@ -1,4 +1,4 @@
-import { isHex } from '@polkadot/util';
+import { isHex, isU8a, u8aToHex } from '@polkadot/util';
 import { Metadata } from '../types/interfaces';
 import { Hex } from '../types';
 import { CreateType } from '../create-type/CreateType';
@@ -10,6 +10,8 @@ export function createPayload(createType: CreateType, type: any, data: any, meta
   }
   if (isHex(data)) {
     return data;
+  } else if (isU8a(data)) {
+    return u8aToHex(data);
   }
   let payload = data;
   if (meta && type) {
