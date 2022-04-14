@@ -1,9 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-import { Program } from './entities/program.entity';
-import { Meta } from './entities/meta.entity';
-import { ProgramsService } from './programs/programs.service';
+import { Program } from '../src/entities/program.entity';
+import { Meta } from '../src/entities/meta.entity';
+import { ProgramsService } from '../src/programs/programs.service';
 
 describe('Programs Service', () => {
   let programsService!: ProgramsService;

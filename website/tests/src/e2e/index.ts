@@ -1,6 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { IPreparedMessages, IPreparedPrograms } from '../interfaces';
-import { getAllPrograms, getProgramData } from './programs';
+import { errorGetProgramData } from './errors';
+import { getAllPrograms } from './programs';
 
 export async function test(
   genesis: Hex,
@@ -9,8 +10,14 @@ export async function test(
     messages: IPreparedMessages;
   },
 ) {
-  await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[]);
-  // for (let program of Object.keys(prepared.programs)) {
-  //   await getProgramData(genesis, program);
-  // }
+  return Promise.all([getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[]), errorGetProgramData(genesis)])
+    .then(() => {
+      console.log('PASSED');
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error(err);
+      console.log('FAILED');
+      process.exit(1);
+    });
 }

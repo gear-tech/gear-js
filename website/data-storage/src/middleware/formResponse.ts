@@ -8,7 +8,7 @@ export function FormResponse(target: Object, propertyKey: string, descriptor: Ty
       return { result: await originalMethod.apply(this, arguments) };
     } catch (ex) {
       logger.warn(ex);
-      return { error: ex.message };
+      return { error: ex.name };
     }
   };
   return descriptor;

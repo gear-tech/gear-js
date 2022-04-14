@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import configuration from './config/configuration';
 import { waitReady } from '@polkadot/wasm-crypto';
+import errors from '@gear-js/jsonrpc-errors';
 
 async function bootstrap() {
   const configKafka = configuration().kafka;

@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Message } from '../entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
-import { SignNotVerified } from 'src/errors/signature';
-import { MessageNotFound } from 'src/errors/message';
+import { Message } from '../entities/message.entity';
+import { MessageNotFound, SignatureNotVerified } from '../errors';
+import { getPaginationParams, getWhere, sleep } from '../utils';
 import {
   AddPayloadParams,
   AllMessagesResult,
@@ -13,7 +13,6 @@ import {
   IMessage,
   MessageDispatched,
 } from '@gear-js/interfaces';
-import { getPaginationParams, getWhere, sleep } from 'src/utils';
 
 const logger = new Logger('MessageService');
 
@@ -52,7 +51,7 @@ export class MessagesService {
       throw new MessageNotFound();
     }
     if (!GearKeyring.checkSign(message.source, signature, payload)) {
-      throw new SignNotVerified();
+      throw new SignatureNotVerified();
     }
     message.payload = payload;
     return this.messageRepo.save(message);
