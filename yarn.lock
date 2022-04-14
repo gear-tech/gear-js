@@ -1803,6 +1803,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gear-js/api@npm:0.17.0":
+  version: 0.17.0
+  resolution: "@gear-js/api@npm:0.17.0"
+  peerDependencies:
+    "@polkadot/api": ^7.15.1
+    rxjs: ^7.5.5
+  checksum: 728f85944721a321f30add60eb9c3e53be13b671592b7fb966320b83d148b3b310e0024eafbb31721dd5906af5e63f5921b079a557287d63fa62290015ac3207
+  languageName: node
+  linkType: hard
+
 "@gear-js/api@npm:0.17.2, @gear-js/api@npm:^0.17.2":
   version: 0.17.2
   resolution: "@gear-js/api@npm:0.17.2"
@@ -1894,7 +1904,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.17.2
+    "@gear-js/api": 0.17.0
     "@gear-js/ui": 0.0.5
     "@monaco-editor/react": 4.4.1
     "@polkadot/api": 7.15.1
