@@ -2,11 +2,11 @@ import { Repository } from 'typeorm';
 import { GearKeyring } from '@gear-js/api';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SignNotVerified, MetadataNotFound } from '../errors';
+import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/interfaces';
+import { SignatureNotVerified, MetadataNotFound } from '../errors';
 import { ProgramsService } from '../programs/programs.service';
 import { Meta } from '../entities/meta.entity';
-import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/interfaces';
-import { sleep } from 'src/utils';
+import { sleep } from '../utils';
 
 @Injectable()
 export class MetadataService {
@@ -23,7 +23,7 @@ export class MetadataService {
       genesis: params.genesis,
     });
     if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
-      throw new SignNotVerified();
+      throw new SignatureNotVerified();
     }
     const metadata = this.metaRepo.create({
       owner: program.owner,

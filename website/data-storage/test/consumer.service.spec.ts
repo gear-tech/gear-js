@@ -6,7 +6,7 @@ import { Program } from 'src/entities/program.entity';
 import { MessagesService } from 'src/messages/messages.service';
 import { MetadataService } from 'src/metadata/metadata.service';
 import { ProgramsService } from 'src/programs/programs.service';
-import { ConsumerService } from './consumer.service';
+import { ConsumerService } from '../src/consumer/consumer.service';
 
 describe('Consumer service', () => {
   let programService: ProgramsService;
@@ -51,19 +51,19 @@ describe('Consumer service', () => {
   describe('Program', () => {
     it('programData should returns error message', async () => {
       expect(await consumerService.programData({ id: '0x00', genesis: '0x00' })).toEqual({
-        error: 'Program not found',
+        error: 'ProgramNotFound',
       });
     });
 
     it('getMeta should returns error message', async () => {
       expect(await consumerService.getMeta({ programId: '0x00', genesis: '0x00' })).toEqual({
-        error: 'Metadata not found',
+        error: 'MetadataNotFound',
       });
     });
 
     it('getMeta should returns error message', async () => {
       expect(await consumerService.message({ id: '0x00', genesis: '0x00' })).toEqual({
-        error: 'Message not found',
+        error: 'MessageNotFound',
       });
     });
   });

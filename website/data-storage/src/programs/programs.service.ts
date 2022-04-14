@@ -11,8 +11,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Meta } from '../entities/meta.entity';
 import { getPaginationParams, getWhere, sleep } from '../utils';
-import { ProgramNotFound } from 'src/errors';
-import { Program } from 'src/entities/program.entity';
+import { ProgramNotFound } from '../errors';
+import { Program } from '../entities/program.entity';
 
 const logger = new Logger('ProgramDb');
 

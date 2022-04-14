@@ -1939,6 +1939,7 @@ __metadata:
   resolution: "@gear-js/api-gateway@workspace:website/api-gateway"
   dependencies:
     "@gear-js/interfaces": 1.0.0
+    "@gear-js/jsonrpc-errors": "workspace:^"
     "@nestjs/cli": 8.2.5
     "@nestjs/common": 8.4.4
     "@nestjs/config": 1.2.1
@@ -1972,17 +1973,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.17.0":
-  version: 0.17.0
-  resolution: "@gear-js/api@npm:0.17.0"
-  peerDependencies:
-    "@polkadot/api": ^7.15.1
-    rxjs: ^7.5.5
-  checksum: 728f85944721a321f30add60eb9c3e53be13b671592b7fb966320b83d148b3b310e0024eafbb31721dd5906af5e63f5921b079a557287d63fa62290015ac3207
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:0.17.2":
+"@gear-js/api@npm:0.17.2, @gear-js/api@npm:^0.17.2":
   version: 0.17.2
   resolution: "@gear-js/api@npm:0.17.2"
   dependencies:
@@ -1996,16 +1987,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.17.0":
-  version: 0.17.1
-  resolution: "@gear-js/api@npm:0.17.1"
-  peerDependencies:
-    "@polkadot/api": ^8.0.1
-    rxjs: ^7.5.5
-  checksum: b18a48923c17508a1a23e5ac59c571a733096fca29f01c25ee22b89c053a068deddeecde2221481ca7e5cc8e1592134356eec43e900b1b895535184c153be14f
-  languageName: node
-  linkType: hard
-
 "@gear-js/data-storage@workspace:website/data-storage":
   version: 0.0.0-use.local
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
@@ -2016,7 +1997,8 @@ __metadata:
     "@babel/plugin-transform-typescript": 7.16.8
     "@babel/preset-typescript": 7.16.7
     "@gear-js/api": 0.17.2
-    "@gear-js/interfaces": 1.0.0
+    "@gear-js/interfaces": "workspace:^"
+    "@gear-js/jsonrpc-errors": "workspace:^"
     "@nestjs/cli": 8.2.5
     "@nestjs/common": 8.4.4
     "@nestjs/config": 1.2.1
@@ -2061,7 +2043,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/event-listener@workspace:website/events-listener"
   dependencies:
-    "@gear-js/api": ^0.17.0
+    "@gear-js/api": ^0.17.2
     "@gear-js/interfaces": 1.0.0
     "@polkadot/api": ^7.15.1
     "@types/node": 17.0.21
@@ -2082,7 +2064,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.17.0
+    "@gear-js/api": 0.17.2
     "@gear-js/ui": 0.0.5
     "@monaco-editor/react": 4.4.1
     "@polkadot/api": 7.15.1
@@ -2152,9 +2134,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/interfaces@1.0.0, @gear-js/interfaces@workspace:website/interfaces":
+"@gear-js/interfaces@1.0.0, @gear-js/interfaces@workspace:^, @gear-js/interfaces@workspace:website/interfaces":
   version: 0.0.0-use.local
   resolution: "@gear-js/interfaces@workspace:website/interfaces"
+  languageName: unknown
+  linkType: soft
+
+"@gear-js/jsonrpc-errors@workspace:^, @gear-js/jsonrpc-errors@workspace:website/jsonrpc-errors":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/jsonrpc-errors@workspace:website/jsonrpc-errors"
   languageName: unknown
   linkType: soft
 
@@ -2162,7 +2150,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:website/test-balance"
   dependencies:
-    "@gear-js/api": ^0.17.0
+    "@gear-js/api": ^0.17.2
+    "@gear-js/jsonrpc-errors": "workspace:^"
     "@polkadot/api": ^7.15.1
     chalk: ^4.1.2
     dotenv: 10.0.0
