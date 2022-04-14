@@ -33,7 +33,7 @@ switch (serviceName) {
     neccessary = [workspaces.apiGateway, workspaces.interfaces, workspaces.jsonrpcErrors];
     break;
   case 'events-listener':
-    neccessary = [workspaces.eventsListener];
+    neccessary = [workspaces.eventsListener, workspaces.interfaces];
     break;
   case 'test-balance':
     neccessary = [workspaces.testBalance, workspaces.jsonrpcErrors];
@@ -50,6 +50,9 @@ switch (serviceName) {
       workspaces.interfaces,
       workspaces.jsonrpcErrors,
     ];
+    break;
+  case 'all':
+    neccessary = Object.values(workspaces);
     break;
 }
 

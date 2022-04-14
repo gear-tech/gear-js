@@ -8,7 +8,7 @@ export async function getAllPrograms(genesis: string, expected: Hex[]) {
   assert.ok(responseHasResult(response));
   assert.equal(response.result.count, expected.length);
 
-  response.programs
+  response.result.programs
     .map((program) => program.id)
     .forEach((programId) => {
       assert.ok(expected.includes(programId));
