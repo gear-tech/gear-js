@@ -15,8 +15,7 @@ import { ProgramModel } from 'types/program';
 import { getProgram } from 'services';
 import styles from './State.module.scss';
 
-// FIXME: fields type shouldn't be any
-type FormValues = { fields: object; payload: string };
+type FormValues = { __root: object; payload: string };
 
 const State: VFC = () => {
   const { api } = useApi();
@@ -37,7 +36,7 @@ const State: VFC = () => {
   const [form, setForm] = useState<MetaFieldsStruct | null>(null);
   const [state, setState] = useState('');
   const [isManualInput, setIsManualInput] = useState(false);
-  const initValues = { payload: typeStructure ? getPreformattedText(typeStructure) : '', fields: {} };
+  const initValues = { payload: typeStructure ? getPreformattedText(typeStructure) : '', __root: {} };
 
   const disableLoading = () => {
     setIsLoading(false);
@@ -104,8 +103,8 @@ const State: VFC = () => {
     navigate(-1);
   };
 
-  const handleSubmit = ({ fields, payload }: FormValues) => {
-    const options = isManualInput ? payload : Object.values(fields)[0];
+  const handleSubmit = ({ __root, payload }: FormValues) => {
+    const options = isManualInput ? payload : Object.values(__root)[0];
 
     if (options) {
       readState(options);
