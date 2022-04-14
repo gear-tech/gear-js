@@ -8,6 +8,7 @@ import { localPrograms } from './LocalDBService';
 import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
 import { nodeApi } from 'api/initApi';
+import { GetMetaResponse } from 'api/responses';
 
 // TODO: (dispatch) fix it later
 
@@ -107,7 +108,7 @@ export const UploadProgram = async (
               // Sign metadata and save it
               signPayload(injector, account.address, JSON.stringify(meta), async (signature: string) => {
                 try {
-                  const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+                  const response = await apiRequest.callRPC(RPC_METHODS.ADD_METADATA, {
                     meta: JSON.stringify(meta),
                     signature,
                     programId,
@@ -233,7 +234,7 @@ export const addMetadata = async (
         });
     } else {
       try {
-        const response = await apiRequest.getResource(RPC_METHODS.ADD_METADATA, {
+        const response = await apiRequest.callRPC(RPC_METHODS.ADD_METADATA, {
           meta: JSON.stringify(meta),
           signature,
           programId,
@@ -275,7 +276,7 @@ export const subscribeToEvents = (alert: AlertContainer) => {
 
     const { result } = isDevChain()
       ? await getLocalProgramMeta(programId)
-      : await apiRequest.getResource(RPC_METHODS.GET_METADATA, { programId });
+      : await apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId });
 
     if (result && result.meta) {
       meta = JSON.parse(result.meta);
