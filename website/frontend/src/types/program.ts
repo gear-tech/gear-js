@@ -1,4 +1,3 @@
-import { PayloadType } from '@gear-js/api';
 import { AnyNumber } from '@polkadot/types/types';
 
 export enum ProgramStatus {
@@ -51,7 +50,7 @@ export interface UploadProgramModel {
 interface MessageModel {
   gasLimit: AnyNumber;
   value: AnyNumber;
-  payload: PayloadType;
+  payload: object;
 }
 
 export interface Message extends MessageModel {
