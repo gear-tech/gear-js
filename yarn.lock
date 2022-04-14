@@ -2137,12 +2137,16 @@ __metadata:
 "@gear-js/interfaces@1.0.0, @gear-js/interfaces@workspace:^, @gear-js/interfaces@workspace:website/interfaces":
   version: 0.0.0-use.local
   resolution: "@gear-js/interfaces@workspace:website/interfaces"
+  dependencies:
+    typescript: ^4.6.3
   languageName: unknown
   linkType: soft
 
 "@gear-js/jsonrpc-errors@workspace:^, @gear-js/jsonrpc-errors@workspace:website/jsonrpc-errors":
   version: 0.0.0-use.local
   resolution: "@gear-js/jsonrpc-errors@workspace:website/jsonrpc-errors"
+  dependencies:
+    typescript: ^4.6.3
   languageName: unknown
   linkType: soft
 
@@ -17757,7 +17761,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.6.3":
+"typescript@npm:4.6.3, typescript@npm:^4.6.3":
   version: 4.6.3
   resolution: "typescript@npm:4.6.3"
   bin:
@@ -17787,7 +17791,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.6.3#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.6.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.3#~builtin<compat/typescript>":
   version: 4.6.3
   resolution: "typescript@patch:typescript@npm%3A4.6.3#~builtin<compat/typescript>::version=4.6.3&hash=bda367"
   bin:

@@ -20,7 +20,7 @@ export const UploadProgram = async (
   enableLoading: () => void,
   disableLoading: () => void,
   alert: AlertContainer,
-  callback: () => void
+  callback: () => void,
 ) => {
   const apiRequest = new ServerRPCRequestService();
 
@@ -156,7 +156,7 @@ export const sendMessage = async (
   disableLoading: () => void,
   alert: AlertContainer,
   callback: () => void,
-  meta?: Metadata
+  meta?: Metadata,
 ) => {
   try {
     const { signer } = await web3FromSource(account.meta.source);
@@ -203,7 +203,7 @@ export const addMetadata = async (
   account: InjectedAccountWithMeta,
   programId: string,
   name: any,
-  alert: AlertContainer
+  alert: AlertContainer,
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);
