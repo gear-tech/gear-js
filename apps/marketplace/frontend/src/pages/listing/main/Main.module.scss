@@ -1,0 +1,33 @@
+@use '@gear-js/ui/variables' as *;
+
+.main {
+  flex: 1;
+}
+
+.card {
+  margin-bottom: 30px;
+  padding: 65px 70px;
+  background-image: linear-gradient(122.79deg, rgba(255, 255, 255, 0) 18.08%, rgba(255, 255, 255, 0.05) 74.41%);
+  border-radius: $borderRadius;
+}
+
+.image {
+  // prolly img-fluid
+  width: 100%;
+  max-width: 450px;
+
+  display: block;
+  margin: 0 auto;
+}
+
+.buttons {
+  display: flex;
+}
+
+.button {
+  flex: 1;
+
+  &:not(:last-child) {
+    margin-right: 30px;
+  }
+}

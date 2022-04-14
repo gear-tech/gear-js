@@ -1,0 +1,28 @@
+@use '@gear-js/ui/variables' as *;
+
+.offer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
+
+  & > *:not(:last-child) {
+    margin-right: 30px;
+  }
+}
+
+.bid,
+.bidder {
+  font-size: $fontSizeMedium;
+}
+
+.bid {
+  font-weight: 600;
+}
+
+.time {
+  color: $textColorSecondary;
+}

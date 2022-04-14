@@ -1,0 +1,19 @@
+@use '@gear-js/ui/variables' as *;
+
+.heading {
+  margin-bottom: 30px;
+  // TODO: replace w/ @gear-js/ui
+  font-family: Syncopate, sans-serif;
+  font-size: 32px;
+  line-height: 40px;
+  text-align: center;
+}
+
+.listing {
+  display: flex;
+  margin-bottom: 60px;
+
+  & > *:not(:last-child) {
+    margin-right: 30px;
+  }
+}

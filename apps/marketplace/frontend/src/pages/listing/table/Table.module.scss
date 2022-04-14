@@ -1,0 +1,24 @@
+@use '@gear-js/ui/variables' as *;
+
+.table {
+  width: 100%;
+  border-spacing: 0 2px;
+
+  th {
+    font-size: $fontSize;
+    font-weight: 600;
+    text-align: left;
+    background-color: $bgColor;
+  }
+
+  td {
+    font-size: $fontSizeMedium;
+    background-color: rgba($bgColor, 0.5);
+  }
+
+  th,
+  td {
+    width: 20%;
+    padding: 10px 20px;
+  }
+}
