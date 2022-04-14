@@ -3,6 +3,8 @@ FROM node:16-alpine
 WORKDIR /src
 COPY package.json .
 COPY yarn.lock .
+COPY .yarn .yarn
+COPY .yarnrc.yml .
 COPY ./website/interfaces website/interfaces
 COPY ./website/jsonrpc-errors website/jsonrpc-errors
 COPY ./website/api-gateway website/api-gateway
