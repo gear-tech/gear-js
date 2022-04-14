@@ -1,15 +1,39 @@
-name: 'Publish @gear-js/ui'
+name: 'CI-CD @gear-js/gear-ui'
 
 on:
-  push:
+  pull_request:
     branches: [master]
     paths:
       - utils/gear-ui/**
 
 jobs:
-  build:
+  test:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    steps:
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
 
+      - uses: actions/checkout@v2
+
+      - name: Install NodeJS 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        working-directory: utils/gear-ui
+        run: npm install
+
+      - name: Run tests
+        working-directory: utils/gear-ui
+        run: npm test
+
+  publish-to-npm:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 

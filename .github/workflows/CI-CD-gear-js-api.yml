@@ -1,4 +1,4 @@
-name: '@gear-js/api'
+name: 'CI-CD @gear-js/api'
 
 on:
   pull_request:
