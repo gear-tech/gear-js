@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
-import { MetaFieldsStruct, parseMeta } from 'components/MetaFields';
+import { MetaFieldsStruct, MetaFieldsValues, parseMeta } from 'components/MetaFields';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
@@ -15,7 +15,7 @@ import { ProgramModel } from 'types/program';
 import { getProgram } from 'services';
 import styles from './State.module.scss';
 
-type FormValues = { __root: object; payload: string };
+type FormValues = { __root: MetaFieldsValues | null; payload: string };
 
 const State: VFC = () => {
   const { api } = useApi();
@@ -36,7 +36,7 @@ const State: VFC = () => {
   const [form, setForm] = useState<MetaFieldsStruct | null>(null);
   const [state, setState] = useState('');
   const [isManualInput, setIsManualInput] = useState(false);
-  const initValues = { payload: typeStructure ? getPreformattedText(typeStructure) : '', __root: {} };
+  const initValues = useRef({ payload: typeStructure ? getPreformattedText(typeStructure) : '', __root: null });
 
   const disableLoading = () => {
     setIsLoading(false);
@@ -104,12 +104,14 @@ const State: VFC = () => {
   };
 
   const handleSubmit = ({ __root, payload }: FormValues) => {
-    const options = isManualInput ? payload : Object.values(__root)[0];
+    if (__root) {
+      const options = isManualInput ? payload : Object.values(__root)[0];
 
-    if (options) {
-      readState(options);
-    } else {
-      alert.error('Form is empty');
+      if (options) {
+        readState(options);
+      } else {
+        alert.error('Form is empty');
+      }
     }
   };
 
@@ -119,7 +121,7 @@ const State: VFC = () => {
         <BackButton />
         <h2 className={styles.heading}>Read state</h2>
       </header>
-      <Formik initialValues={initValues} onSubmit={handleSubmit} enableReinitialize>
+      <Formik initialValues={initValues.current} onSubmit={handleSubmit} enableReinitialize>
         <Form className={styles.form}>
           <div className={styles.block}>
             <div className={styles.item}>
