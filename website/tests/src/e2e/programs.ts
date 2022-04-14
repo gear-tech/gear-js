@@ -1,10 +1,12 @@
 import request from './request';
 import assert from 'assert';
 import { Hex } from '@gear-js/api';
+import { responseHasResult } from './utils';
 
 export async function getAllPrograms(genesis: string, expected: Hex[]) {
   const response = await request('program.all', { genesis });
-  assert.equal(response.count, expected.length);
+  assert.ok(responseHasResult(response));
+  assert.equal(response.result.count, expected.length);
 
   response.programs
     .map((program) => program.id)
