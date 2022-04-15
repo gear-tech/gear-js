@@ -9753,7 +9753,7 @@ __metadata:
   resolution: "gear-js@workspace:."
   dependencies:
     husky: 7.0.4
-    lint-staged: 12.3.6
+    lint-staged: 12.3.8
     prettier: 2.6.0
   languageName: unknown
   linkType: soft
@@ -12018,9 +12018,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:12.3.6":
-  version: 12.3.6
-  resolution: "lint-staged@npm:12.3.6"
+"lint-staged@npm:12.3.8":
+  version: 12.3.8
+  resolution: "lint-staged@npm:12.3.8"
   dependencies:
     cli-truncate: ^3.1.0
     colorette: ^2.0.16
@@ -12038,7 +12038,7 @@ __metadata:
     yaml: ^1.10.2
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: b5075addb79cefd3a01eb3e4b511cdbe255c86e80ac4f27c4ce90bbd5a6ef3765ec0c70ddc33e37d13aef54218b6026f52fcd0ed0ac9bf3a205a533b994ed387
+  checksum: af6a89ae4244e4eac7180c6e7da452f378fd156ff38eaa666ecbb78f1e2efb7f1a9fc766dcc1cdde2bd76e03da68e602056ca9d2f1c6e46cf10aa83d20bf4d49
   languageName: node
   linkType: hard
 
