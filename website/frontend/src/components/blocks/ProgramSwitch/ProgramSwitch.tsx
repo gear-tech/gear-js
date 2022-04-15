@@ -27,12 +27,12 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         throw new Error(`WALLET NOT CONNECTED`);
       }
 
-      const response = await apiRequest.getResource(RPC_METHODS.GET_TEST_BALANCE, {
+      const response = await apiRequest.callRPC(RPC_METHODS.GET_TEST_BALANCE, {
         address: `${currentAccount.address}`,
       });
 
       if (response.error) {
-        alert.error(`${response.error.error}`);
+        alert.error(`${response.error.message}`);
       }
 
       // count the number of crane calls
