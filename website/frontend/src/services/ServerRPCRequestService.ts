@@ -50,6 +50,7 @@ export class RPCResponseError extends Error {
     super();
     this.message = err.error.message;
     this.code = err.error.code;
+    this.name = 'RPCResponseError';
   }
 }
 
