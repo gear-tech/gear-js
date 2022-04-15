@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import { GearApi } from '@gear-js/api';
+import { NODE_ADDRESS } from 'utils/consts';
 import Props from './types';
 
 type Value = {
@@ -16,8 +17,7 @@ function ApiProvider({ children }: Props) {
   const value = { api: api as GearApi, isApiReady: !!api };
 
   useEffect(() => {
-    const providerAddress = process.env.REACT_APP_NODE_ADDRESS;
-    GearApi.create({ providerAddress }).then(setApi);
+    GearApi.create({ providerAddress: NODE_ADDRESS }).then(setApi);
   }, []);
 
   return <Provider value={value}>{children}</Provider>;
