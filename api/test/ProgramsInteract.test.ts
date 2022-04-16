@@ -1,9 +1,9 @@
-const { readFileSync, readdirSync } = require('fs');
-const { join } = require('path');
-const yaml = require('js-yaml');
-const { CreateType, GearApi, GearKeyring, getWasmMetadata } = require('../lib');
-const { checkLog, checkInit, sendTransaction } = require('./utilsFunctions.js');
-const { TEST_WASM_DIR } = require('./config');
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+import yaml from 'js-yaml';
+import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '../src';
+import { checkLog, checkInit, sendTransaction } from './utilsFunctions';
+import { TEST_WASM_DIR } from './config';
 
 const programs = new Map();
 const messages = new Map();
@@ -26,9 +26,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await api.disconnect();
   await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
+    setTimeout(resolve, 2000);
   });
 });
 

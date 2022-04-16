@@ -17,4 +17,5 @@ module.exports = {
   transformIgnorePatterns: ['node_modules/(?!@polkadot)/'],
   verbose: true,
   testSequencer: './test/testSequencer.js',
+  preset: 'ts-jest/presets/js-with-babel',
 };

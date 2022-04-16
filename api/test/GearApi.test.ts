@@ -1,4 +1,4 @@
-const { GearApi } = require('../lib');
+import { GearApi } from '../src';
 
 const api = new GearApi();
 
@@ -9,9 +9,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await api.disconnect();
   await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
+    setTimeout(resolve, 2000);
   });
 });
 

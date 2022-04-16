@@ -1,8 +1,8 @@
-const { GearApi, GearKeyring, getWasmMetadata } = require('../lib');
-const { readFileSync } = require('fs');
-const { join } = require('path');
-const { checkInit } = require('./utilsFunctions.js');
-const { TEST_WASM_DIR } = require('./config');
+import { GearApi, GearKeyring, getWasmMetadata } from '../src';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { checkInit } from './utilsFunctions';
+import { TEST_WASM_DIR } from './config';
 
 const api = new GearApi();
 const demo_meta_test = {
@@ -44,9 +44,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await api.disconnect();
   await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
+    setTimeout(resolve, 2000);
   });
 });
 

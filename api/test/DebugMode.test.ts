@@ -1,8 +1,8 @@
-const { GearKeyring, GearApi, DebugMode } = require('../lib');
-const { sendTransaction } = require('./utilsFunctions');
-const { readFileSync } = require('fs');
-const { join } = require('path');
-const { TEST_WASM_DIR } = require('./config');
+import { GearKeyring, GearApi, DebugMode } from '../src';
+import { sendTransaction } from './utilsFunctions';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { TEST_WASM_DIR } from './config';
 
 const api = new GearApi();
 let alice;
@@ -17,9 +17,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await api.disconnect();
   await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
+    setTimeout(resolve, 2000);
   });
 });
 

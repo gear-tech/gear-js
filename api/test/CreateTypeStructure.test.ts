@@ -1,4 +1,4 @@
-const { createPayloadTypeStructure } = require('../lib');
+import { createPayloadTypeStructure } from '../src';
 
 describe('Create type structure test', () => {
   let types;
@@ -24,6 +24,9 @@ describe('Create type structure test', () => {
           BalanceOf: 'ActorId',
         },
       },
+      GenericInStruct:
+        '{"nftContractId":"ActorId","ftContractId":"Option<ActorId>","tokenId":"U256","price":"Option<u128>"}',
+      TupleInStruct: '{"nftContractId":"ActorId","someTuple":"(u128, String)"}',
     };
   });
   test('Enum', () => {
@@ -109,6 +112,59 @@ describe('Create type structure test', () => {
                 count: 3,
               },
             ],
+          },
+        },
+      },
+    });
+    expect(createPayloadTypeStructure('TupleInStruct', types, false)).toEqual({
+      type: 'Struct',
+      name: 'TupleInStruct',
+      value: {
+        nftContractId: {
+          type: 'Primitive',
+          name: 'ActorId',
+          value: 'ActorId',
+        },
+        someTuple: {
+          type: 'Tuple',
+          name: '(u128, String)',
+          value: [
+            { type: 'Primitive', name: 'u128', value: 'u128' },
+            { type: 'Primitive', name: 'String', value: 'String' },
+          ],
+        },
+      },
+    });
+    expect(createPayloadTypeStructure('GenericInStruct', types)).toEqual({
+      type: 'Struct',
+      name: 'GenericInStruct',
+      value: {
+        nftContractId: {
+          type: 'Primitive',
+          name: 'ActorId',
+          value: 'ActorId',
+        },
+        ftContractId: {
+          type: 'Option',
+          name: 'Option<ActorId>',
+          value: {
+            type: 'Primitive',
+            name: 'ActorId',
+            value: 'ActorId',
+          },
+        },
+        tokenId: {
+          type: 'Primitive',
+          name: 'U256',
+          value: 'U256',
+        },
+        price: {
+          type: 'Option',
+          name: 'Option<u128>',
+          value: {
+            type: 'Primitive',
+            name: 'u128',
+            value: 'u128',
           },
         },
       },

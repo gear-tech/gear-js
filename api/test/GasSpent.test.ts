@@ -1,8 +1,8 @@
-const { readFileSync, fstat } = require('fs');
-const { join } = require('path');
-const { GearApi, GearKeyring } = require('../lib');
-const { TEST_WASM_DIR } = require('./config');
-const { checkInit } = require('./utilsFunctions');
+import { readFileSync, fstat } from 'fs';
+import { join } from 'path';
+import { GearApi, GearKeyring } from '../src';
+import { TEST_WASM_DIR } from './config';
+import { checkInit } from './utilsFunctions';
 
 const api = new GearApi();
 let alice = undefined;
@@ -24,9 +24,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await api.disconnect();
   await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
+    setTimeout(resolve, 2000);
   });
 });
 

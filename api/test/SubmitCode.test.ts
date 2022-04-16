@@ -1,9 +1,9 @@
-const { readFileSync, readdirSync } = require('fs');
-const { join } = require('path');
-const yaml = require('js-yaml');
-const { sendTransaction } = require('./utilsFunctions.js');
-const { GearApi, GearKeyring } = require('../lib');
-const { TEST_WASM_DIR } = require('./config.js');
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+import yaml from 'js-yaml';
+import { sendTransaction } from './utilsFunctions';
+import { GearApi, GearKeyring } from '../lib';
+import { TEST_WASM_DIR } from './config';
 
 const submitCodeTestFiles = readdirSync('test/spec/submit_code');
 const api = new GearApi();
@@ -23,9 +23,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await api.disconnect();
   await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
+    setTimeout(resolve, 2000);
   });
 });
 
