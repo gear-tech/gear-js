@@ -1,4 +1,4 @@
-import { GearApi, ProgramId } from '../src';
+import { GearApi, GearKeyring, ProgramId } from '../src';
 
 export const checkLog = (event: any, programId: ProgramId, messageId: string) => {
   if (event.data[0].source.toHex() === programId) {
@@ -36,3 +36,9 @@ export const sendTransaction = async (submitted: any, account: any, methodName: 
     });
   });
 };
+
+export const getAccount = () => {
+  return Promise.all([GearKeyring.fromSuri('//Alice'), GearKeyring.fromSuri('//Bob')]);
+};
+
+export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));

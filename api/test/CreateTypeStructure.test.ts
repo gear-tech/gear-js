@@ -1,7 +1,7 @@
 import { createPayloadTypeStructure } from '../src';
 
 describe('Create type structure test', () => {
-  let types;
+  let types: any;
   beforeAll(() => {
     types = {
       Action: {

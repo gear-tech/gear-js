@@ -1,20 +1,19 @@
 import { GearKeyring, GearApi } from '../src';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { RegistryError } from '@polkadot/types-codec/types';
+import { getAccount, sleep } from './utilsFunctions';
 
 let api: GearApi;
 let alice: KeyringPair;
 
 beforeAll(async () => {
   api = await GearApi.create();
-  alice = await GearKeyring.fromSuri('//Alice');
+  [alice] = await getAccount();
 });
 
 afterAll(async () => {
   await api.disconnect();
-  await new Promise((resolve) => {
-    setTimeout(resolve, 2000);
-  });
+  await sleep(2000);
 });
 
 describe('Get extrinsic errors', () => {
