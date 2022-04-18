@@ -1,26 +1,16 @@
 @use 'assets/scss/variables' as *;
 
-.inputBlock {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  background: $mainBackground;
-  border-radius: $borderRadiusBase;
-  padding: 12px 20px;
-  height: 48px;
-  width: 100%;
-}
-
-.icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .inputWrapper {
   & > div {
-    background-color: transparent;
+    height: 48px;
+    align-items: center;
+    background: $mainBackground;
+    border-radius: $borderRadiusBase;
+
+    img {
+      width: 18px;
+      height: 18px;
+    }
 
     input {
       font-size: 16px;
