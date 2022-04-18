@@ -14,13 +14,13 @@ type Props = {
 
 const Pagination = ({ page, count, onPageChange }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
+  const queryFromUrl = searchParams.has('query') ? String(searchParams.get('query')) : '';
   const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
   const isDisabledPrev = page === 1;
   const isDisabledNext = page === totalPages || totalPages === 0;
 
   const handleClick = (newPage: number) => {
-    setSearchParams({ page: String(newPage), term: termFromUrl });
+    setSearchParams({ page: String(newPage), query: queryFromUrl });
     onPageChange(newPage);
   };
 

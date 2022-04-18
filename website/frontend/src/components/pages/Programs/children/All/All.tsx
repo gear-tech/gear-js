@@ -21,9 +21,9 @@ export const All: VFC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
-  const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
+  const queryFromUrl = searchParams.has('query') ? String(searchParams.get('query')) : '';
 
-  const [term, setTerm] = useState(termFromUrl);
+  const [query, setQuery] = useState(queryFromUrl);
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
 
@@ -33,13 +33,17 @@ export const All: VFC = () => {
   const onPageChange = (page: number) => setCurrentPage(page);
 
   useEffect(() => {
-    const programParams = { limit: INITIAL_LIMIT_BY_PAGE, offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE, term };
+    const programParams = {
+      limit: INITIAL_LIMIT_BY_PAGE,
+      offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE,
+      term: query,
+    };
 
     getPrograms(programParams).then(({ result }) => {
       setPrograms(result.programs);
       setProgramsCount(result.count);
     });
-  }, [currentPage, term]);
+  }, [currentPage, query]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
@@ -61,9 +65,9 @@ export const All: VFC = () => {
   }
 
   const handleSearch = (value: string) => {
-    const path = `/all-programs/?page=1${value ? `&term=${value}` : ``}`;
+    const path = `/all-programs/?page=1${value ? `&query=${value}` : ``}`;
 
-    setTerm(value);
+    setQuery(value);
     setCurrentPage(1);
     navigate(path);
   };
@@ -75,7 +79,7 @@ export const All: VFC = () => {
         <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
       </div>
       <div>
-        <SearchForm term={term} placeholder="Find program" handleSearch={handleSearch} />
+        <SearchForm query={query} placeholder="Find program" handleSearch={handleSearch} />
         <br />
       </div>
       <ProgramsLegend />

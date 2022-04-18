@@ -8,19 +8,19 @@ import { Schema } from './Schema';
 import styles from './SearchForm.module.scss';
 
 type Props = {
-  term: string;
+  query: string;
   placeholder: string;
-  handleSearch: (term: string) => void;
+  handleSearch: (query: string) => void;
 };
 
-const SearchForm = ({ term, placeholder, handleSearch }: Props) => {
+const SearchForm = ({ query, placeholder, handleSearch }: Props) => {
   return (
     <Formik
-      initialValues={{ term }}
+      initialValues={{ query }}
       validationSchema={Schema}
       validateOnBlur
       onSubmit={(values: SearchModel) => {
-        handleSearch(values.term);
+        handleSearch(values.query);
       }}
       onReset={() => {
         handleSearch('');
@@ -29,7 +29,7 @@ const SearchForm = ({ term, placeholder, handleSearch }: Props) => {
       {() => (
         <Form>
           <div className={styles.searchForm}>
-            <Field as={InputBlock} name="term" placeholder={placeholder} />
+            <Field as={InputBlock} name="query" placeholder={placeholder} />
             <div className={styles.buttons}>
               <Button text="Search" type="submit" color="secondary" icon={searchIcon} />
               <Button className={styles.resetButton} text="Reset search" type="reset" color="transparent" />

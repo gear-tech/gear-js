@@ -12,9 +12,9 @@ export const Messages: VFC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
-  const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
+  const queryFromUrl = searchParams.has('query') ? String(searchParams.get('query')) : '';
 
-  const [term, setTerm] = useState(termFromUrl);
+  const [query, setQuery] = useState(queryFromUrl);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [messagesCount, setMessagesCount] = useState(0);
@@ -24,19 +24,19 @@ export const Messages: VFC = () => {
       destination: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
       limit: INITIAL_LIMIT_BY_PAGE,
       offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE,
-      term,
+      term: query,
     };
 
     getMessages(messageParams).then(({ result }) => {
       setMessages(result.messages);
       setMessagesCount(result.count);
     });
-  }, [currentPage, term]);
+  }, [currentPage, query]);
 
   const handleSearch = (value: string) => {
-    const path = `/messages/?page=1${value ? `&term=${value}` : ``}`;
+    const path = `/messages/?page=1${value ? `&query=${value}` : ``}`;
 
-    setTerm(value);
+    setQuery(value);
     setCurrentPage(1);
     navigate(path);
   };
@@ -48,7 +48,7 @@ export const Messages: VFC = () => {
         <Pagination page={currentPage} count={messagesCount || 1} onPageChange={setCurrentPage} />
       </div>
       <div>
-        <SearchForm term={term} placeholder="Find message by ID" handleSearch={handleSearch} />
+        <SearchForm query={query} placeholder="Find message by ID" handleSearch={handleSearch} />
         <br />
       </div>
       <MessagesList messages={messages} />

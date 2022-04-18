@@ -79,7 +79,7 @@ export interface BalanceModel {
 }
 
 export interface SearchModel {
-  term: string;
+  query: string;
 }
 
 export interface ProgramState {

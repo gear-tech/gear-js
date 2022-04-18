@@ -5,14 +5,14 @@ export type PaginationModel = {
   limit?: number;
   offset?: number;
   type?: string;
-  term?: string;
+  query?: string;
 };
 
 export type UserPrograms = {
   owner: string | null;
   limit?: number;
   offset?: number;
-  term?: string;
+  query?: string;
 };
 
 export type SearchQueryModel = {
