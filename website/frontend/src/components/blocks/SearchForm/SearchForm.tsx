@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@gear-js/ui';
 import { Field, Form, Formik } from 'formik';
 import { SearchModel } from 'types/program';
-import { SearchIcon } from 'assets/Icons';
+import { InputBlock } from './children';
 import searchIcon from 'assets/images/search.svg';
 import { Schema } from './Schema';
 import styles from './SearchForm.module.scss';
@@ -29,12 +29,7 @@ const SearchForm = ({ term, placeholder, handleSearch }: Props) => {
       {() => (
         <Form>
           <div className={styles.searchForm}>
-            <div className={styles.inputWrapper}>
-              <div className={styles.iconWrapper}>
-                <SearchIcon color="#BBBBBB" />
-              </div>
-              <Field className={styles.input} id="term" name="term" type="text" placeholder={placeholder} />
-            </div>
+            <Field as={InputBlock} name="term" placeholder={placeholder} />
             <div className={styles.buttons}>
               <Button text="Search" type="submit" color="secondary" icon={searchIcon} />
               <Button className={styles.resetButton} text="Reset search" type="reset" color="transparent" />
