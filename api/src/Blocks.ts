@@ -96,7 +96,7 @@ export class GearBlock {
    */
   async getEvents(blockHash: `0x${string}` | Uint8Array): Promise<Vec<FrameSystemEventRecord>> {
     const apiAt = await this.api.at(blockHash);
-    return await apiAt.query.system.events();
+    return apiAt.query.system.events();
   }
 
   /**
@@ -104,6 +104,6 @@ export class GearBlock {
    * @returns Hash of finalized head
    */
   async getFinalizedHead(): Promise<BlockHash> {
-    return await this.api.rpc.chain.getFinalizedHead();
+    return this.api.rpc.chain.getFinalizedHead();
   }
 }

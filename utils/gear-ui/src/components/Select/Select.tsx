@@ -2,12 +2,12 @@ import { OptionHTMLAttributes, SelectHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import styles from './Select.module.scss';
 
-interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
   options: OptionHTMLAttributes<HTMLOptionElement>[];
   label?: string;
 }
 
-const Select = ({ options, label, className, ...attrs }: SelectProps) => {
+const Select = ({ options, label, className, ...attrs }: Props) => {
   const { disabled } = attrs;
   const labelClassName = clsx(styles.label, className, disabled && 'disabled');
 
@@ -23,4 +23,4 @@ const Select = ({ options, label, className, ...attrs }: SelectProps) => {
   );
 };
 
-export { Select, SelectProps };
+export { Select, Props as SelectProps, styles as selectStyles };

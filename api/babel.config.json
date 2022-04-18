@@ -7,6 +7,8 @@
           "node": true
         }
       }
-    ]
+    ],
+    "jest",
+    "@babel/preset-typescript"
   ]
 }

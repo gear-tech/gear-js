@@ -1,6 +1,5 @@
-import { GearError } from './base';
+import { GearJsonRPCError } from './base';
 
-export class MetadataNotFound extends GearError {
+export class MetadataNotFound extends GearJsonRPCError {
   name = 'MetadataNotFound';
-  message = 'Metadata not found';
 }

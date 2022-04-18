@@ -1,6 +1,6 @@
-import { CreateType } from './create-type';
 import { getWasmMetadata, readState } from './wasm';
-import { Metadata, ProgramId } from './interfaces';
+import { Metadata } from './types/interfaces';
+import { ProgramId } from './types';
 import { Codec } from '@polkadot/types/types';
 import { ReadStateError } from './errors/state.errors';
 import { GearStorage } from './Storage';
@@ -43,7 +43,11 @@ export class GearProgramState extends GearStorage {
     if (!program) {
       throw new ReadStateError('Program is terminated');
     }
+
     const pages = await this.gPages(programId, program);
+    const block = await this.api.blocks.getFinalizedHead();
+    const blockTimestamp = await this.api.blocks.getBlockTimestamp(block.toHex());
+
     if (!pages) {
       throw new ReadStateError(`Unable to read state. Unable to recieve program pages from chain`);
     }
@@ -55,7 +59,7 @@ export class GearProgramState extends GearStorage {
       throw new ReadStateError(`Unable to read state. inputValue not specified`);
     }
     const encodedInput = inputValue === undefined ? undefined : this.encodeInput(metadata, inputValue);
-    const state = await readState(metaWasm, pages, encodedInput);
+    const state = await readState(metaWasm, pages, encodedInput, blockTimestamp);
 
     return this.decodeState(state, metadata);
   }

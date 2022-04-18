@@ -1,17 +1,25 @@
 @use 'src/assets/styles/variables' as *;
+@use 'src/assets/styles/mixins' as *;
 
 .button {
-  display: flex;
+  @include transition();
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-family: inherit;
   color: $textColor;
+  border: none;
   border-radius: $borderRadius;
-  transition: 0.25s all;
+  cursor: pointer;
 
   &:disabled {
     pointer-events: none;
     opacity: 0.5;
   }
+}
+
+.block {
+  width: 100%;
 }
 
 .normal {

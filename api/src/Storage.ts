@@ -1,6 +1,7 @@
 import { GearApi } from './GearApi';
-import { Hex, IActiveProgram, IGearPages, IProgram, ProgramId } from './interfaces';
-import { u32, Option, Raw } from '@polkadot/types';
+import { IActiveProgram, IGearPages, IProgram } from './types/interfaces';
+import { Hex, ProgramId } from './types';
+import { Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { u8aToHex } from '@polkadot/util';
 import { CreateType } from './create-type';
@@ -39,7 +40,7 @@ export class GearStorage {
    */
   async gPages(programId: ProgramId, gProg: IActiveProgram): Promise<IGearPages> {
     const keys = {};
-    gProg.persistent_pages.forEach((value: u32) => {
+    gProg.persistent_pages.forEach((value) => {
       keys[value.toNumber()] = `0x${PREFIXES.pages}${programId.slice(2)}${SEPARATOR}${this.api
         .createType('Bytes', Array.from(this.api.createType('u32', value).toU8a()))
         .toHex()

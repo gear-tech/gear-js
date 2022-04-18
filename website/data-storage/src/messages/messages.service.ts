@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Message } from '../entities/message.entity';
 import { GearKeyring } from '@gear-js/api';
-import { SignNotVerified } from 'src/errors/signature';
-import { MessageNotFound } from 'src/errors/message';
+import { Message } from '../entities/message.entity';
+import { MessageNotFound, SignatureNotVerified } from '../errors';
+import { getPaginationParams, getWhere, sleep } from '../utils';
 import {
   AddPayloadParams,
   AllMessagesResult,
@@ -13,7 +13,6 @@ import {
   IMessage,
   MessageDispatched,
 } from '@gear-js/interfaces';
-import { getPaginationParams, getWhere } from 'src/utils';
 
 const logger = new Logger('MessageService');
 
@@ -47,12 +46,12 @@ export class MessagesService {
 
   async addPayload(params: AddPayloadParams): Promise<IMessage> {
     const { id, genesis, signature, payload } = params;
-    const message = await this.messageRepo.findOne({ id, genesis });
+    const message = await this.messageRepo.findOne({ where: { id, genesis } });
     if (!message) {
       throw new MessageNotFound();
     }
     if (!GearKeyring.checkSign(message.source, signature, payload)) {
-      throw new SignNotVerified();
+      throw new SignatureNotVerified();
     }
     message.payload = payload;
     return this.messageRepo.save(message);
@@ -116,34 +115,33 @@ export class MessagesService {
       id: params.id,
     };
     const result = await this.messageRepo.findOne({ where });
+    if (!result) {
+      throw new MessageNotFound();
+    }
     return result;
   }
 
-  setDispatchedStatus(params: MessageDispatched): Promise<void> {
+  async setDispatchedStatus(params: MessageDispatched): Promise<void> {
     const error = params.outcome !== 'success' ? params.outcome : null;
     if (error === null) {
       return;
     }
-    setTimeout(async () => {
-      const message = await this.messageRepo.findOne({
-        genesis: params.genesis,
-        id: params.messageId,
+    await sleep(1000);
+    const message = await this.messageRepo.findOne({
+      where: { genesis: params.genesis, id: params.messageId },
+    });
+    if (message) {
+      message.error = error;
+      this.messageRepo.save(message);
+    }
+    const logMessages = await this.messageRepo.find({
+      where: { genesis: params.genesis, replyTo: params.messageId, replyError: '1' },
+    });
+    if (logMessages.length > 0) {
+      logMessages.forEach((log) => {
+        log.replyError = error;
+        this.messageRepo.save(log);
       });
-      if (message) {
-        message.error = error;
-        this.messageRepo.save(message);
-      }
-      const logMessages = await this.messageRepo.find({
-        genesis: params.genesis,
-        replyTo: params.messageId,
-        replyError: '1',
-      });
-      if (logMessages.length > 0) {
-        logMessages.forEach((log) => {
-          log.replyError = error;
-          this.messageRepo.save(log);
-        });
-      }
-    }, 1000);
+    }
   }
 }

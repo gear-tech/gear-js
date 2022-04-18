@@ -7,8 +7,20 @@ const arrowIcon = 'icon-path';
 describe('button tests', () => {
   it('renders button', () => {
     render(<Button text="button text" />);
+
     const button = screen.getByRole('button');
+
     expect(button).toHaveTextContent('button text');
+    expect(button).toHaveAttribute('type', 'button');
+  });
+
+  it('render submit button', () => {
+    render(<Button type="submit" text="button text" />);
+
+    const button = screen.getByRole('button');
+
+    expect(button).toHaveTextContent('button text');
+    expect(button).toHaveAttribute('type', 'submit');
   });
 
   it('renders icon button', () => {
@@ -41,5 +53,11 @@ describe('button tests', () => {
     render(<Button text="button text" color="transparent" />);
     const button = screen.getByRole('button');
     expect(button).toHaveClass(styles.transparent);
+  });
+
+  it('renders block button', () => {
+    render(<Button text="button text" block />);
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass(styles.block);
   });
 });

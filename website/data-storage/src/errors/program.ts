@@ -1,6 +1,5 @@
-import { GearError } from './base';
+import { GearJsonRPCError } from './base';
 
-export class ProgramNotFound extends GearError {
+export class ProgramNotFound extends GearJsonRPCError {
   name = 'ProgramNotFound';
-  message = 'Program not found';
 }

@@ -1,4 +1,4 @@
-import { IGearPages } from '..';
+import { IGearPages } from '../types/interfaces';
 
 export function readMetaValue(memory: WebAssembly.Memory, func: any): string {
   return ab2str(getExportValue(memory, func));
@@ -32,4 +32,4 @@ export function getInitialLength(pages: IGearPages) {
   );
 }
 
-export const PAGE_SIZE = 65536;
+export const PAGE_SIZE = 4096;

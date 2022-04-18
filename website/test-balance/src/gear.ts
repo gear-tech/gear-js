@@ -58,16 +58,10 @@ export class GearService {
   }
 
   async transferBalance(to: string, from = this.account, value = this.balanceToTransfer) {
-    try {
-      console.log(from.address, to, value);
-      await this.api.balance.transferBalance(from, to, value);
-      if (to !== this.account.address) {
-        await this.dbService.setTransferDate(to, this.genesisHash);
-      }
-      return { status: 'ok', transferedBalance: value.toString() };
-    } catch (error) {
-      log.error(error.message);
-      return { error: error.message };
+    await this.api.balance.transferBalance(from, to, value);
+    if (to !== this.account.address) {
+      await this.dbService.setTransferDate(to, this.genesisHash);
     }
+    return { status: 'ok', transferedBalance: value.toString() };
   }
 }

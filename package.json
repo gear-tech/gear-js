@@ -2,8 +2,9 @@
   "name": "gear-js",
   "private": true,
   "scripts": {
-    "build:backend": "yarn build:interfaces && yarn workspaces foreach -ptR --from '{@gear-js/event-listener,@gear-js/api-gateway,@gear-js/data-storage,@gear-js/test-balance}' run build",
+    "build:backend": "yarn build:interfaces && yarn build:jsonrpc-errors && yarn workspaces foreach -ptR --from '{@gear-js/event-listener,@gear-js/api-gateway,@gear-js/data-storage,@gear-js/test-balance}' run build",
     "build:interfaces": "yarn workspace @gear-js/interfaces build",
+    "build:jsonrpc-errors": "yarn workspace @gear-js/jsonrpc-errors build",
     "build:events-listener": "yarn workspace @gear-js/event-listener build",
     "build:api-gateway": "yarn workspace @gear-js/api-gateway build",
     "build:data-storage": "yarn workspace @gear-js/data-storage build",
@@ -27,10 +28,14 @@
     "website/events-listener",
     "website/frontend",
     "website/test-balance",
-    "website/interfaces"
+    "website/interfaces",
+    "website/jsonrpc-errors"
   ],
   "lint-staged": {
     "*.{js,css,md,ts,tsx,scss}": "prettier --write"
+  },
+  "resolutions": {
+    "@types/react": "17.0.44"
   },
   "packageManager": "yarn@3.2.0",
   "version": "0.0.2"

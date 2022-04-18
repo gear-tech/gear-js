@@ -3,12 +3,12 @@ import clsx from 'clsx';
 import { Icon, Text } from './children';
 import styles from './Input.module.scss';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   icon?: string;
 }
 
-const Input = ({ label, icon, className, ...attrs }: InputProps) => {
+const Input = ({ label, icon, className, ...attrs }: Props) => {
   const { readOnly, disabled } = attrs;
   const labelClassName = clsx(styles.label, disabled && 'disabled', className);
   const wrapperClassName = clsx(styles.wrapper, readOnly && styles.readOnly);
@@ -24,4 +24,4 @@ const Input = ({ label, icon, className, ...attrs }: InputProps) => {
   );
 };
 
-export { Input, InputProps };
+export { Input, Props as InputProps, styles as inputStyles };

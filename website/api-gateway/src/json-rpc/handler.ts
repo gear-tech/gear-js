@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { MethodNotFoundError } from './errors';
 import { IRpcRequest, IRpcResponse } from './interface';
+import errors from '@gear-js/jsonrpc-errors';
 
 @Injectable()
 export class RpcMessageHandler {
@@ -27,7 +28,7 @@ export class RpcMessageHandler {
       id: procedure.id,
     };
     if (error) {
-      response['error'] = error;
+      response['error'] = { message: errors[error].message, code: errors[error].code };
     } else if (result) {
       response['result'] = result;
     }
@@ -85,13 +86,13 @@ export class RpcMessageHandler {
     return new Promise((resolve) => {
       result.forEach((value) => {
         if (!value) {
-          resolve(this.getResponse(procedure, { error: 'Service is not available' }));
+          resolve(this.getResponse(procedure, errors.ServiceIsNotAvaiable.name));
         } else if ('error' in value) {
           resolve(this.getResponse(procedure, value.error));
         } else if ('result' in value) {
           resolve(this.getResponse(procedure, null, value.result));
         } else {
-          resolve(this.getResponse(procedure, { error: 'Unable to get data' }));
+          resolve(this.getResponse(procedure, errors.UnableToGetData.name));
         }
       });
     });

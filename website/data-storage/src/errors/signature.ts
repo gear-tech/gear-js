@@ -1,6 +1,5 @@
-import { GearError } from './base';
+import { GearJsonRPCError } from './base';
 
-export class SignNotVerified extends GearError {
+export class SignatureNotVerified extends GearJsonRPCError {
   name = 'SignatureNotVerified';
-  message = 'Signature not verified';
 }

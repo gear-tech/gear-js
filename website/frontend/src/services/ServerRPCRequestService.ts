@@ -90,16 +90,6 @@ export default class ServerRPCRequestService {
     };
   }
 
-  // FIXME replace this method to callRPC then
-  public async getResource(method: string = '', postParams: object = {}, headers: KyHeadersInit = {}) {
-    return ky
-      .post(this.url, {
-        headers: { ...headers, 'Content-Type': 'application/json;charset=utf-8' },
-        body: JSON.stringify(this.getRequest(method, postParams)),
-      })
-      .json<Promise<any>>();
-  }
-
   public async callRPC<Result>(method: string = '', postParams: Object = {}, headers: KyHeadersInit = {}) {
     const response = ky
       .post(this.url, {

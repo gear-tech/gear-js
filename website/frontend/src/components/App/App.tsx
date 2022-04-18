@@ -1,3 +1,4 @@
+import '@polkadot/api-augment'; // dot types fix, source: https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#701-dec-20-2021
 import React, { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useSearchParams } from 'react-router-dom';
 import { positions, Provider as AlertProvider, useAlert } from 'react-alert';

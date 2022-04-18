@@ -1,25 +1,13 @@
-name: CI
+name: CI-frontend
 
 on:
   pull_request:
     branches: [master]
     paths:
-      - website/**
+      - website/frontend/**
 
 jobs:
-  build-backend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-      - run: |
-          yarn install
-          yarn build:backend
-
-  build-frontend:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

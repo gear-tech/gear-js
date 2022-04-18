@@ -19,3 +19,10 @@ export function getWhere(strictParams: any, term: string | null | undefined, sea
     : strictParams;
   return where;
 }
+
+export const sleep = (ms: number) =>
+  new Promise((resolve) =>
+    setTimeout(() => {
+      resolve(true);
+    }, ms),
+  );

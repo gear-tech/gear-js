@@ -5,7 +5,7 @@ import { TypeRegistry } from '@polkadot/types';
 import { toCamelCase } from '../utils/string';
 import { CreateTypeError } from '../errors';
 import { REGULAR_EXP } from './regexp';
-import { Hex } from '../interfaces';
+import { Hex } from '../types';
 
 export function typeIsString(type: string): boolean {
   return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase());

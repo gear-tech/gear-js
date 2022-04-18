@@ -5,6 +5,7 @@ interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: string;
   color?: 'primary' | 'secondary' | 'transparent';
   size?: 'normal' | 'small';
+  block?: boolean;
 }
 
 interface TextProps extends BaseProps {
@@ -15,4 +16,4 @@ interface IconProps extends BaseProps {
   icon: string;
 }
 
-export type ButtonProps = TextProps | IconProps;
+export type Props = TextProps | IconProps;

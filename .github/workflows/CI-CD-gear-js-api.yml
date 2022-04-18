@@ -1,0 +1,73 @@
+name: 'CI-CD @gear-js/api'
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  test:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+
+      - name: Install NodeJS 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Prepare
+        run: |
+          wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
+          mkdir api/test/wasm
+          wget -O api/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
+          chmod +x gear-node
+          ./gear-node --dev --tmp --pruning archive & sleep 10
+
+      - name: Install dependencies and build @gear-js/api
+        run: |
+          cd api
+          npm install
+
+      - name: Run tests
+        run: |
+          cd api/test/wasm
+          tar -xvf examples.tar.gz
+          cd ../..
+          npm test
+
+  publish-to-npm:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use node 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Check package version
+        uses: EndBug/version-check@v1
+        id: check
+        with:
+          file-name: api/package.json
+          file-url: https://unpkg.com/@gear-js/api@latest/package.json
+          static-checking: localIsNew
+
+      - name: Publish
+        if: steps.check.outputs.changed == 'true'
+        working-directory: api
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm ci
+          npm config set //registry.npmjs.org/:_authToken=$token
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
