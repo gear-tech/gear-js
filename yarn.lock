@@ -1817,9 +1817,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.17.4":
-  version: 0.17.4
-  resolution: "@gear-js/api@npm:0.17.4"
+"@gear-js/api@npm:0.17.5":
+  version: 0.17.5
+  resolution: "@gear-js/api@npm:0.17.5"
   dependencies:
     "@types/rollup-plugin-peer-deps-external": ^2.2.1
     rollup-plugin-peer-deps-external: ^2.2.4
@@ -1828,7 +1828,7 @@ __metadata:
     "@polkadot/api": ^8.0.2
     "@polkadot/wasm-crypto": ^6.0.1
     rxjs: ^7.5.5
-  checksum: f7b3da57c4896faaa31fc06e89d0188495d3cf16f1f570ef5ca65d8d922547c2537e90e3c77963f5636e77013ae3dee57c42e58fc96f3e1e86cff46884c7c84a
+  checksum: ca123b90b23d0523a1ae62a8923ea28b87cbaf1cfe776317a84cb57e4059d94221b417e4dfea2629ff2c66f3cb517ffde7770713509f2c35afecec606c796c9a
   languageName: node
   linkType: hard
 
@@ -1924,7 +1924,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.17.4
+    "@gear-js/api": 0.17.5
     "@gear-js/ui": 0.1.2
     "@monaco-editor/react": 4.4.2
     "@polkadot/api": 8.0.2
