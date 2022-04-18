@@ -14,6 +14,7 @@ import { getPreformattedText } from 'helpers';
 import { ProgramModel } from 'types/program';
 import { getProgram } from 'services';
 import styles from './State.module.scss';
+import { cloneDeep } from '../../../features/Editor/EditorTree/utils';
 
 type FormValues = { __root: MetaFieldsValues | null; payload: string };
 
@@ -36,7 +37,10 @@ const State: VFC = () => {
   const [form, setForm] = useState<MetaFieldsStruct | null>(null);
   const [state, setState] = useState('');
   const [isManualInput, setIsManualInput] = useState(false);
-  const initValues = useRef({ payload: typeStructure ? getPreformattedText(typeStructure) : '', __root: null });
+  const initValues = useRef<{ payload: string; __root: MetaFieldsValues | null }>({
+    payload: typeStructure ? getPreformattedText(typeStructure) : '',
+    __root: null,
+  });
 
   const disableLoading = () => {
     setIsLoading(false);
@@ -105,7 +109,7 @@ const State: VFC = () => {
 
   const handleSubmit = ({ __root, payload }: FormValues) => {
     if (__root) {
-      const options = isManualInput ? payload : prepareToSend(__root);
+      const options = isManualInput ? payload : prepareToSend(cloneDeep(__root));
 
       if (options) {
         readState(options);
@@ -117,8 +121,10 @@ const State: VFC = () => {
 
   const handleManalSwitch = (val: boolean) => {
     setIsManualInput(val);
-    // @ts-ignore
-    initValues.current = { payload: typeStructure ? getPreformattedText(typeStructure) : '', __root: form };
+    initValues.current = {
+      payload: typeStructure ? getPreformattedText(typeStructure) : '',
+      __root: form ? form.__values : null,
+    };
   };
 
   return (
