@@ -1,26 +1,23 @@
-const { GearKeyring, GearApi, DebugMode } = require('../lib');
-const { sendTransaction } = require('./utilsFunctions');
-const { readFileSync } = require('fs');
-const { join } = require('path');
-const { TEST_WASM_DIR } = require('./config');
+import { GearApi, DebugMode } from '../src';
+import { getAccount, sendTransaction, sleep } from './utilsFunctions';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { TEST_WASM_DIR } from './config';
+import { KeyringPair } from '@polkadot/keyring/types';
 
 const api = new GearApi();
-let alice;
+let alice: KeyringPair;
 
 jest.setTimeout(15000);
 
 beforeAll(async () => {
   await api.isReady;
-  alice = await GearKeyring.fromSuri('//Alice');
+  [alice] = await getAccount();
 });
 
 afterAll(async () => {
   await api.disconnect();
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
-  });
+  await sleep(2000);
 });
 
 describe('DebugMode', () => {

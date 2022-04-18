@@ -1,7 +1,7 @@
 version: '3'
 services:
   events_testnet:
-    image: ghcr.io/gear-tech/gear-js-events-listener:dev
+    image: ghcr.io/gear-tech/gear-js-events-listener:qa
     restart: always
     environment:
       - WS_PROVIDER=${WS_PROVIDER_TESTNET}
@@ -10,7 +10,7 @@ services:
       - KAFKA_SASL_USERNAME=${KAFKA_SASL_USERNAME}
       - KAFKA_SASL_PASSWORD=${KAFKA_SASL_PASSWORD}
   events_wrsh:
-    image: ghcr.io/gear-tech/gear-js-events-listener:dev
+    image: ghcr.io/gear-tech/gear-js-events-listener:qa
     restart: always
     environment:
       - WS_PROVIDER=${WS_PROVIDER_WRSH}

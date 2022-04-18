@@ -1,8 +1,8 @@
-const { CreateType, getWasmMetadata, decodeHexTypes } = require('../lib');
-const yaml = require('js-yaml');
-const fs = require('fs');
-const { join } = require('path');
-const { TEST_WASM_DIR } = require('./config');
+import { CreateType, getWasmMetadata, decodeHexTypes } from '../src';
+import yaml from 'js-yaml';
+import fs from 'fs';
+import { join } from 'path';
+import { TEST_WASM_DIR } from './config';
 
 const testFiles = fs.readdirSync('test/spec/meta');
 

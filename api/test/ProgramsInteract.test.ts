@@ -1,9 +1,9 @@
-const { readFileSync, readdirSync } = require('fs');
-const { join } = require('path');
-const yaml = require('js-yaml');
-const { CreateType, GearApi, GearKeyring, getWasmMetadata } = require('../lib');
-const { checkLog, checkInit, sendTransaction } = require('./utilsFunctions.js');
-const { TEST_WASM_DIR } = require('./config');
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+import yaml from 'js-yaml';
+import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '../src';
+import { checkLog, checkInit, sendTransaction, getAccount, sleep } from './utilsFunctions';
+import { TEST_WASM_DIR } from './config';
 
 const programs = new Map();
 const messages = new Map();
@@ -19,24 +19,42 @@ jest.setTimeout(15000);
 
 beforeAll(async () => {
   await api.isReady;
-  accounts.alice = await GearKeyring.fromSuri('//Alice');
-  accounts.bob = await GearKeyring.fromSuri('//Bob');
+  [accounts.alice, accounts.bob] = await getAccount();
 });
 
 afterAll(async () => {
   await api.disconnect();
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
-  });
+  await sleep(2000);
 });
 
 for (let filePath of testFiles) {
-  /**
-   * @type {{title: string, programs: {name: string, id: number, gasLimit: number, value: number, salt: string, account: string, meta: boolean, initPayload: any}[], messages: {id: number, program: number, payload: any, gasLimit: number, value: number, log: string}[], gasSpent: number[]}}
-   */
-  const testFile = yaml.load(readFileSync(join('./test/spec/programs', filePath), 'utf8'));
+  const testFile: {
+    title: string;
+    skip: boolean;
+    programs: {
+      name: string;
+      id: number;
+      gasLimit: number;
+      value: number;
+      salt: `0x${string}`;
+      account: string;
+      meta: boolean;
+      initPayload: any;
+      log: boolean;
+    }[];
+    messages: {
+      id: number;
+      program: number;
+      account: string;
+      payload: any;
+      gasLimit: number;
+      asHex: boolean;
+      value: number;
+      log: string;
+    }[];
+    mailbox: { message: number; claim: boolean; account: string }[];
+  } = yaml.load(readFileSync(join('./test/spec/programs', filePath), 'utf8'));
+
   if (testFile.skip) {
     continue;
   }

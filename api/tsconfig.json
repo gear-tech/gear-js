@@ -18,5 +18,5 @@
     }
   },
   "exclude": ["test", "examples", "node_modules", "dist"],
-  "include": ["src"]
+  "include": ["src", "src/**/*.json"]
 }

@@ -58,7 +58,7 @@ export function getTypesFromTypeDef(
     const name = portableReg.getName(id);
     let camelCasedNamespace = toCamelCase(path.slice(0, path.length - 1));
     if (camelCasedNamespace === name) {
-      camelCasedNamespace = toCamelCase(path.slice(0, path.length - 2));
+      camelCasedNamespace = path.length > 2 ? toCamelCase(path.slice(0, path.length - 2)) : undefined;
     }
     namespaces.set(name.replace(camelCasedNamespace, ''), name);
     typesFromTypeDef[typeDef.lookupName || typeDef.lookupNameRoot] = typeDef.type.toString();
