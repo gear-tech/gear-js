@@ -1,0 +1,54 @@
+{
+  "name": "@gear-js/gear-js-wrapper",
+  "description": "CLI tool to generate js interface around programs",
+  "version": "0.0.1",
+  "exports": "./bin/app.js",
+  "type": "module",
+  "bin": {
+    "gear-js-wrapper": "./bin/app.js"
+  },
+  "preferGlobal": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x bin/app.js",
+    "clean": "rm -rf bin",
+    "start": "ts-node ./src/app.ts"
+  },
+  "dependencies": {
+    "@gear-js/gear-wrapper": "./",
+    "chalk": "3.0.0",
+    "commander": "^9.0.0",
+    "ejs": "^3.1.6",
+    "esformatter": "^0.11.3",
+    "global": "^4.4.0",
+    "inquirer": "^8.2.0",
+    "js-beautify": "^1.14.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8.2.0",
+    "@types/node": "^17.0.21",
+    "ts-node": "^10.6.0",
+    "typescript": "^4.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gear-tech/gear-js.git"
+  },
+  "author": "Gear Technologies",
+  "bugs": {
+    "url": "https://github.com/gear-tech/gear-js/issues"
+  },
+  "homepage": "https://github.com/gear-tech/gear-js/tree/master/utils/meta-cli#readme",
+  "license": "GPL-3.0",
+  "keywords": [
+    "gear",
+    "gear-js",
+    "gear-js-wrapper",
+    "gear-cli"
+  ]
+}
