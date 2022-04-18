@@ -150,7 +150,7 @@ export const checkFileFormat = (file: File) => {
   return fileExt === 'wasm';
 };
 
-export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);
+export const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
 export const calculateGas = async (
   method: string,
