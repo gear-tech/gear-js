@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
-import { MetaFieldsStruct, MetaFieldsValues, parseMeta } from 'components/MetaFields';
+import { MetaFieldsStruct, MetaFieldsValues, parseMeta, prepareToSend } from 'components/MetaFields';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
@@ -105,7 +105,7 @@ const State: VFC = () => {
 
   const handleSubmit = ({ __root, payload }: FormValues) => {
     if (__root) {
-      const options = isManualInput ? payload : Object.values(__root)[0];
+      const options = isManualInput ? payload : prepareToSend(__root);
 
       if (options) {
         readState(options);
@@ -113,6 +113,12 @@ const State: VFC = () => {
         alert.error('Form is empty');
       }
     }
+  };
+
+  const handleManalSwitch = (val: boolean) => {
+    setIsManualInput(val);
+    // @ts-ignore
+    initValues.current = { payload: typeStructure ? getPreformattedText(typeStructure) : '', __root: form };
   };
 
   return (
@@ -134,7 +140,7 @@ const State: VFC = () => {
                 <FormPayload
                   className={styles.formWrapper}
                   isManualInput={isManualInput}
-                  setIsManualInput={setIsManualInput}
+                  setIsManualInput={handleManalSwitch}
                   formData={form}
                 />
               </div>

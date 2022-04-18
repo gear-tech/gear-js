@@ -8,7 +8,7 @@ import styles from './FormPayload.module.scss';
 type Props = {
   className?: string;
   isManualInput: boolean;
-  setIsManualInput: Dispatch<SetStateAction<boolean>>;
+  setIsManualInput: (value: boolean) => void;
   formData: MetaFieldsStruct | null | undefined;
 };
 
