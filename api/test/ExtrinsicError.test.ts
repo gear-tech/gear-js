@@ -1,26 +1,25 @@
-const { GearKeyring, GearApi } = require('../lib');
+import { GearKeyring, GearApi } from '../src';
+import { KeyringPair } from '@polkadot/keyring/types';
+import { RegistryError } from '@polkadot/types-codec/types';
+import { getAccount, sleep } from './utilsFunctions';
 
-let api;
-let alice;
+let api: GearApi;
+let alice: KeyringPair;
 
 beforeAll(async () => {
   api = await GearApi.create();
-  alice = await GearKeyring.fromSuri('//Alice');
+  [alice] = await getAccount();
 });
 
 afterAll(async () => {
   await api.disconnect();
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
-  });
+  await sleep(2000);
 });
 
 describe('Get extrinsic errors', () => {
   test('send incorrect transaction', async () => {
     const submitted = api.tx.gear.submitProgram('0x123456', '0x123', '0x00', 1000, 0);
-    const error = await new Promise((resolve) => {
+    const error: RegistryError = await new Promise((resolve) => {
       submitted.signAndSend(alice, ({ events = [] }) => {
         events.forEach(({ event }) => {
           if (api.events.system.ExtrinsicFailed.is(event)) {

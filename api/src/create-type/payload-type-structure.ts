@@ -4,6 +4,7 @@ import generate from './generate';
 import { REGULAR_EXP } from './regexp';
 
 function getIfTuple(typeName: string, types: any, raw: boolean): TypeTree | TypeTree[] | null {
+  if (typeName.includes(':')) return null;
   const match = typeName.match(REGULAR_EXP.roundBracket);
   if (match) {
     const entryType = match[0].slice(1, match[0].length - 1);
@@ -25,6 +26,8 @@ function getIfArray(typeName: string, types: any, raw: boolean): TypeTree | [Typ
 }
 
 function getIfGeneric(typeName: string, types: any, raw: boolean): TypeTree | any | null {
+  if (typeName.includes(':')) return null;
+
   const match = typeName.match(REGULAR_EXP.angleBracket);
   if (match) {
     const type = typeName.slice(0, match.index);
@@ -57,14 +60,15 @@ function getIfGeneric(typeName: string, types: any, raw: boolean): TypeTree | an
 
 function getIfStruct(typeName: string, types: any, raw: boolean): TypeTree | null {
   const value: any = {};
-  if (types[typeName] && typeof types[typeName] === 'object') {
-    Object.keys(types[typeName]).forEach((field) => {
-      value[field] = createPayloadTypeStructure(types[typeName][field], types, raw);
+  if (types[typeName] && isJSON(types[typeName])) {
+    const jsoned = toJSON(types[typeName]);
+    Object.keys(jsoned).forEach((field) => {
+      value[field] = createPayloadTypeStructure(jsoned[field], types, raw);
     });
   } else if (isJSON(typeName)) {
-    const jsonTypeName = toJSON(typeName);
-    Object.keys(jsonTypeName).forEach((field) => {
-      value[field] = createPayloadTypeStructure(jsonTypeName[field], types, raw);
+    const jsonedTypeName = toJSON(typeName);
+    Object.keys(jsonedTypeName).forEach((field) => {
+      value[field] = createPayloadTypeStructure(jsonedTypeName[field], types, raw);
     });
   } else {
     return null;
@@ -97,11 +101,14 @@ export function createPayloadTypeStructure(typeName: string, types: any, raw = f
   if (!typeName) {
     return undefined;
   }
+  if (typeof typeName !== 'string') {
+    typeName = JSON.stringify(typeName);
+  }
+
   const tuple = getIfTuple(typeName, types, raw);
   if (tuple) {
     return tuple;
   }
-
   const array = getIfArray(typeName, types, raw);
   if (array) {
     return array;

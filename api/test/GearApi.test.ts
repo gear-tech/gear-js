@@ -1,4 +1,5 @@
-const { GearApi } = require('../lib');
+import { GearApi } from '../src';
+import { sleep } from './utilsFunctions';
 
 const api = new GearApi();
 
@@ -8,11 +9,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await api.disconnect();
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
-  });
+  await sleep(2000);
 });
 
 describe('GearApi', () => {

@@ -1,5 +1,5 @@
-const { generateCodeHash, generateProgramId } = require('../lib');
-const { readFileSync } = require('fs');
+import { generateCodeHash, generateProgramId } from '../src';
+import { readFileSync } from 'fs';
 
 const pingCode = readFileSync('test/demo_ping.opt.wasm');
 

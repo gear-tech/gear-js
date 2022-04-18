@@ -1,9 +1,9 @@
-const { readFileSync, readdirSync } = require('fs');
-const { join } = require('path');
-const yaml = require('js-yaml');
-const { sendTransaction } = require('./utilsFunctions.js');
-const { GearApi, GearKeyring } = require('../lib');
-const { TEST_WASM_DIR } = require('./config.js');
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+import yaml from 'js-yaml';
+import { getAccount, sendTransaction, sleep } from './utilsFunctions';
+import { GearApi, GearKeyring } from '../lib';
+import { TEST_WASM_DIR } from './config';
 
 const submitCodeTestFiles = readdirSync('test/spec/submit_code');
 const api = new GearApi();
@@ -16,17 +16,12 @@ jest.setTimeout(15000);
 
 beforeAll(async () => {
   await api.isReady;
-  accounts.alice = await GearKeyring.fromSuri('//Alice');
-  accounts.bob = await GearKeyring.fromSuri('//Bob');
+  [accounts.alice, accounts.bob] = await getAccount();
 });
 
 afterAll(async () => {
   await api.disconnect();
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
-  });
+  await sleep(2000);
 });
 
 for (let filePath of submitCodeTestFiles) {

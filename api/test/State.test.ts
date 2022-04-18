@@ -1,8 +1,8 @@
-const { GearApi, GearKeyring, getWasmMetadata } = require('../lib');
-const { readFileSync } = require('fs');
-const { join } = require('path');
-const { checkInit } = require('./utilsFunctions.js');
-const { TEST_WASM_DIR } = require('./config');
+import { GearApi, getWasmMetadata } from '../src';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { checkInit, getAccount, sleep } from './utilsFunctions';
+import { TEST_WASM_DIR } from './config';
 
 const api = new GearApi();
 const demo_meta_test = {
@@ -18,7 +18,7 @@ const timestamp_test = {
 
 beforeAll(async () => {
   await api.isReady;
-  const alice = await GearKeyring.fromSuri('//Alice');
+  const [alice] = await getAccount();
 
   timestamp_test.id = api.program.submit({
     code: timestamp_test.code,
@@ -43,11 +43,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await api.disconnect();
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 2000);
-  });
+  await sleep(2000);
 });
 
 describe('Read State', () => {
