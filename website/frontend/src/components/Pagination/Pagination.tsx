@@ -1,52 +1,42 @@
-import React, { VFC } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import React from 'react';
+import { Button } from '@gear-js/ui';
+import { useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
-import { PaginationArrow } from 'assets/Icons';
+import arrow from './images/arrow.svg';
 import './Pagination.scss';
 
 type Props = {
   page: number;
   count: number;
   onPageChange: (count: number) => void;
-  setShouldReload?: (value: boolean) => void;
 };
 
-export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldReload }) => {
-  const { pathname } = useLocation();
-  const [searchParams] = useSearchParams();
+const Pagination = ({ page, count, onPageChange }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const termFromUrl = searchParams.has('term') ? String(searchParams.get('term')) : '';
   const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
   const isDisabledPrev = page === 1;
   const isDisabledNext = page === totalPages || totalPages === 0;
 
-  const onPreviousClickHandler = () => {
-    if (setShouldReload) {
-      setShouldReload(true);
-    }
-    onPageChange(page - 1);
-  };
-
-  const onNextClickHandler = () => {
-    if (setShouldReload) {
-      setShouldReload(true);
-    }
-    onPageChange(page + 1);
-  };
-
-  const getUrl = (newPage: number) => {
-    return `${pathname}?page=${newPage}${termFromUrl ? `&term=${termFromUrl}` : ``}`;
+  const handleClick = (newPage: number) => {
+    setSearchParams({ page: String(newPage), term: termFromUrl });
+    onPageChange(newPage);
   };
 
   return (
     <div className="pagination">
       {!isDisabledPrev ? (
-        <Link className="pagination--box" to={getUrl(page - 1)} onClick={onPreviousClickHandler}>
-          <PaginationArrow color="#C4CDD5" />
-        </Link>
+        <Button
+          color="transparent"
+          size="normal"
+          icon={arrow}
+          className="pagination--box pagination--box-prev"
+          onClick={() => handleClick(page - 1)}
+        />
       ) : (
         <div className={clsx('pagination--box', 'disabled')}>
-          <PaginationArrow color="#C4CDD5" />
+          <img className="pagination--img-prev" src={arrow} alt="arrow" />
         </div>
       )}
       <button type="button" className="pagination--box selected">
@@ -54,18 +44,20 @@ export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldRel
       </button>
       <p className="pagination__total">of {totalPages}</p>
       {!isDisabledNext ? (
-        <Link className="pagination--box" to={getUrl(page + 1)} onClick={onNextClickHandler}>
-          <PaginationArrow color="#C4CDD5" />
-        </Link>
+        <Button
+          color="transparent"
+          size="normal"
+          icon={arrow}
+          className="pagination--box"
+          onClick={() => handleClick(page + 1)}
+        />
       ) : (
         <div className={clsx('pagination--box', 'disabled')}>
-          <PaginationArrow color="#C4CDD5" />
+          <img src={arrow} alt="arrow" />
         </div>
       )}
     </div>
   );
 };
 
-Pagination.defaultProps = {
-  setShouldReload: undefined,
-};
+export { Pagination };

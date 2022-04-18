@@ -22,6 +22,11 @@
   height: 32px;
 }
 
+.pagination--box-prev img,
+.pagination--img-prev {
+  transform: rotate(180deg);
+}
+
 .pagination__total {
   font-weight: normal;
   font-size: 14px;
