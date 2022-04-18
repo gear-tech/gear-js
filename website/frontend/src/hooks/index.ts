@@ -1,9 +1,5 @@
 import { useContext } from 'react';
-import { ApiContext } from 'context/api';
-import { BlocksContext } from 'context/blocks';
-import { AccountContext } from 'context/account';
-import { EditorContext } from 'context/editor';
-import { LoadingContext } from 'context/loading';
+import { ApiContext, AccountContext, BlocksContext, EditorContext, LoadingContext } from 'context';
 import { useEvents } from './useEvents';
 import { useOutsideClick } from './useOutsideClick';
 import { useBodyScrollLock } from './useBodyScrollLock';
