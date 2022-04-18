@@ -2,12 +2,12 @@
 #![feature(const_btree_new)]
 
 use codec::{Decode, Encode};
-use gstd::{msg, prelude::*, debug};
+use gstd::{debug, msg, prelude::*};
 use scale_info::TypeInfo;
 
 static mut STATE: BTreeMap<i32, MessageIn> = BTreeMap::new();
 
-#[derive(TypeInfo, Decode, Encode)]
+#[derive(TypeInfo, Decode, Encode, Clone)]
 pub struct MessageIn {
     pub author: String,
     pub msg: String,
@@ -37,16 +37,16 @@ pub unsafe extern "C" fn handle() {
 #[no_mangle]
 pub unsafe extern "C" fn init() {}
 
-
 pub unsafe extern "C" fn meta_state() -> *mut [i32; 2] {
-    let author: Option<String> = msg::load().expect("Unable to decode input argument");
-    let encoded = match author {
-        None => STATE.encode(),
-        Some(lookup_id) => WALLETS
-            .iter()
-            .filter(|w| w.id == lookup_id)
-            .cloned()
-            .collect::<Vec<Wallet>>()
+    let input: Option<String> = msg::load().expect("Unable to decode input argument");
+    let encoded = match input {
+        Some(author) => STATE
+            .clone()
+            .into_iter()
+            .filter(|(_, value)| value.author == author)
+            .collect::<BTreeMap<i32, MessageIn>>()
             .encode(),
+        None => STATE.encode(),
     };
+    gstd::util::to_leak_ptr(encoded)
 }

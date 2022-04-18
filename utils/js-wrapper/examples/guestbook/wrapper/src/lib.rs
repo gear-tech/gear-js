@@ -1,8 +1,8 @@
-use wasm_bindgen::prelude::*;
+use codec::{Decode, Encode};
 use gstd::prelude::*;
 use scale_info::TypeInfo;
-use codec::{Decode, Encode};
-use serde::{Serialize};
+use serde::Serialize;
+use wasm_bindgen::prelude::*;
 
 pub fn decode<D: Decode>(bytes: Vec<u8>) -> Result<D, String> {
     D::decode(&mut bytes.as_ref()).map_err(|_| String::from("Unable to decode"))

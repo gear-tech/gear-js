@@ -1,6 +1,9 @@
 build:
 	RUSTFLAGS="-C link-args=--import-memory" cargo +nightly build --target wasm32-unknown-unknown --release
 
+wasm-proc:
+	wasm-proc -p target/wasm32-unknown-unknown/release/bindgen_guestbook.wasm 
+
 bindgen_web:
 	wasm-bindgen target/wasm32-unknown-unknown/release/wrapper.wasm --out-dir ./pkg_web/ --target web
 
