@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { processGenerate } from './action.js';
-import { checkPath, checkTarget } from './check.js';
+import { checkPath, checkTarget, checkType } from './check.js';
 
 export function setupCommands(program: Command) {
   program

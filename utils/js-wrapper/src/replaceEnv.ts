@@ -1,5 +1,5 @@
 import { cpSync, readFileSync, writeFileSync } from 'fs';
-import { Target } from 'interfaces';
+import { PkgType, Target } from 'interfaces';
 import { join } from 'path';
 
 export function replaceEnvImport(filePath: string, target: Target): void {
@@ -16,7 +16,6 @@ export function replaceEnvImport(filePath: string, target: Target): void {
 export function writeEnvFile(pkgPath: string, ts: boolean, target: Target): void {
   if (target === 'nodejs') {
     cpSync('./templates/env.js', join(pkgPath, 'env.js'));
-    ts && cpSync('./templates/env.d.ts', join(pkgPath, 'env.d.ts'));
   } else if (target === 'web') {
     cpSync('./templates/env.esm.js', join(pkgPath, 'env.js'));
   }

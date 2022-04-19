@@ -49,12 +49,14 @@ function pathExt(path: string): string | null {
 
 export function writePackageJson(pathToPkg: string, target: Target) {
   if (['web', 'bundler'].includes(target)) {
-    cpSync('templates/package.json', join(pathToPkg, 'package.json'));
+    cpSync('templates/package.module.json', join(pathToPkg, 'package.json'));
+  } else if (target === 'nodejs') {
+    cpSync('templates/package.commonjs.json', join(pathToPkg, 'package.json'));
   }
 }
 
 export function rmPackageJson(pathToPkg: string, target: Target) {
-  if (target === 'web') {
+  if (['web', 'nodejs'].includes(target)) {
     rmSync(join(pathToPkg, 'package.json'));
   }
 }

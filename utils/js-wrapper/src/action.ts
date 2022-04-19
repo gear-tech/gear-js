@@ -3,7 +3,7 @@ import { generate, getFuncSignature, getFunctionsNames } from './generate/index.
 import { join, resolve } from 'path';
 import { getPaths, rmPackageJson, writePackageJson } from './utils.js';
 import { replaceEnvImport, writeEnvFile } from './replaceEnv.js';
-import { Target } from 'interfaces';
+import { PkgType, Target } from 'interfaces.js';
 
 export async function processGenerate(path: string, ts: boolean, target: Target) {
   const { modPath, declarationPath, pkgPath, name } = getPaths(resolve(path));

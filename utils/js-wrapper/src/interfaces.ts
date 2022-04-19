@@ -11,3 +11,5 @@ export interface IFunction {
 export type Target = 'web' | 'nodejs' | 'bundler';
 
 export type Paths = { pkgPath: string; declarationPath?: string; modPath: string; name: string };
+
+export type PkgType = 'cjs' | 'esm';

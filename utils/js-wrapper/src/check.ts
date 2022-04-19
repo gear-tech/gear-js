@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import logger from './logger.js';
-import { Target } from './interfaces.js';
+import { PkgType, Target } from './interfaces.js';
 
 export async function checkPath(path: string): Promise<string> {
   if (path === undefined) {
@@ -28,4 +28,22 @@ export async function checkTarget(target: Target): Promise<Target> {
     return target;
   }
   return target;
+}
+
+export async function checkType(type: PkgType): Promise<PkgType> {
+  if (!['esm', 'cjs'].includes(type)) {
+    let { type } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'type',
+        message: 'Enter type of package, valid values are [web, nodejs, bundler]',
+      },
+    ]);
+    if (!['esm', 'cjs'].includes(type)) {
+      type = 'esm';
+      logger.info('Type set to esm');
+    }
+    return type;
+  }
+  return type;
 }
