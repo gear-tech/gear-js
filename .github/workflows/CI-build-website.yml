@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 16.x
       - run: |
-          yarn install --immutable
+          yarn install
           yarn build:frontend
         env:
           REACT_APP_API_URL: 'https://ci.test'
