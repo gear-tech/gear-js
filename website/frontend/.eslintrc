@@ -11,9 +11,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/*.stories.*"
-      ],
+      "files": ["**/*.stories.*"],
       "rules": {
         "import/no-anonymous-default-export": "off"
       }
@@ -52,7 +50,7 @@
     // allow devDeps import in test files
     "import/no-extraneous-dependencies": [
       "error",
-      { "devDependencies": ["**/*.test.ts", "**/*.test.tsx", "**/*[Tt]ests.ts", "**/*.stories.tsx"] }
+      { "devDependencies": ["**/*.test.{ts,tsx}", "**/*[Tt]ests.{ts,tsx}", "**/*.stories.tsx"] }
     ]
   },
   "settings": {
