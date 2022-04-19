@@ -2200,7 +2200,6 @@ __metadata:
     "@craco/craco": 6.4.3
     "@gear-js/api": 0.17.5
     "@gear-js/ui": 0.1.2
-    "@mdx-js/react": ^1.6.22
     "@monaco-editor/react": 4.4.2
     "@polkadot/api": 8.0.2
     "@polkadot/api-augment": 8.0.2
@@ -2210,7 +2209,6 @@ __metadata:
     "@polkadot/wasm-crypto": 6.0.1
     "@stitches/react": 1.2.7
     "@storybook/addon-actions": ^6.4.21
-    "@storybook/addon-docs": ^6.4.21
     "@storybook/addon-essentials": ^6.4.21
     "@storybook/addon-interactions": ^6.4.21
     "@storybook/addon-links": ^6.4.21
@@ -4140,7 +4138,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-docs@npm:6.4.22, @storybook/addon-docs@npm:^6.4.21":
+"@storybook/addon-docs@npm:6.4.22":
   version: 6.4.22
   resolution: "@storybook/addon-docs@npm:6.4.22"
   dependencies:
