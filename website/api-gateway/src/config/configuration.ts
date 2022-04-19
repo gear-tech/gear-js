@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 config();
 
 const checkEnv = (env: string) => {
-  assert.notStrictEqual(env, undefined);
+  assert.notStrictEqual(env, undefined, `${env} is not specified`);
   return env;
 };
 

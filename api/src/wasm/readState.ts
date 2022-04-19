@@ -1,4 +1,4 @@
-import { IGearPages } from '..';
+import { IGearPages } from '../types/interfaces';
 import importObj from './importObj';
 import { getExportValue, getInitialLength, PAGE_SIZE } from './utils';
 import { u64, Compact } from '@polkadot/types';

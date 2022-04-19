@@ -1,5 +1,6 @@
 import { GearApi } from './GearApi';
-import { Hex, IActiveProgram, IGearPages, IProgram, ProgramId } from './interfaces';
+import { IActiveProgram, IGearPages, IProgram } from './types/interfaces';
+import { Hex, ProgramId } from './types';
 import { Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { u8aToHex } from '@polkadot/util';

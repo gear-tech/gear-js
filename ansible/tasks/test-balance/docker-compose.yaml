@@ -13,7 +13,7 @@ services:
       - '5434:5432'
 
   test_balance_testnet:
-    image: ghcr.io/gear-tech/gear-js-test-balance:dev
+    image: ghcr.io/gear-tech/gear-js-test-balance:qa
     restart: always
     depends_on:
       - pg_test_balance
@@ -34,7 +34,7 @@ services:
       - TEST_BALANCE_VALUE=${TEST_BALANCE_VALUE_TESTNET}
 
   test_balance_wrsh:
-    image: ghcr.io/gear-tech/gear-js-test-balance:dev
+    image: ghcr.io/gear-tech/gear-js-test-balance:qa
     restart: always
     depends_on:
       - pg_test_balance

@@ -3,6 +3,7 @@ import config from './config';
 import { DbService } from './db';
 import { GearService } from './gear';
 import { KafkaLogger, Logger } from './logger';
+import errors from '@gear-js/jsonrpc-errors';
 
 const log = Logger('KafkaConsumer');
 
@@ -56,22 +57,20 @@ export class KafkaConsumer {
     try {
       payload = JSON.parse(message.value.toString());
     } catch (error) {
-      log.error(error.message);
-      console.log(error);
-      return;
+      log.error(error.message, error.stack);
+      return { error: errors.InternalError.name };
     }
 
     if (payload.genesis === this.gearService.genesisHash) {
       try {
         if (await this.dbService.possibleToTransfer(payload.address, payload.genesis)) {
-          result = await this.gearService.transferBalance(payload.address);
+          result = { result: await this.gearService.transferBalance(payload.address) };
         } else {
-          result = { error: 'Limit to transfer balance is reached for today' };
+          result = { error: errors.TransferLimitReached.name };
         }
       } catch (error) {
-        log.error(error.message);
-        console.log(error);
-        result = { error: error.message };
+        log.error(error.message, error.stack);
+        result = { error: errors.InternalError.name };
       }
       this.sendReply(message, JSON.stringify(result));
     }

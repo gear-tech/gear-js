@@ -10,9 +10,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Meta } from '../entities/meta.entity';
-import { getPaginationParams, getWhere } from '../utils';
-import { ProgramNotFound } from 'src/errors';
-import { Program } from 'src/entities/program.entity';
+import { getPaginationParams, getWhere, sleep } from '../utils';
+import { ProgramNotFound } from '../errors';
+import { Program } from '../entities/program.entity';
 
 const logger = new Logger('ProgramDb');
 
@@ -81,25 +81,17 @@ export class ProgramsService {
   async findProgram(params: FindProgramParams): Promise<IProgram> {
     const { id, genesis, owner } = params;
     const where = owner ? { id, genesis, owner } : { id, genesis };
-    try {
-      const program = await this.programRepo.findOne({ where, relations: ['meta'] });
-      return program;
-    } catch (error) {
+    const program = await this.programRepo.findOne({ where, relations: ['meta'] });
+    if (!program) {
       throw new ProgramNotFound();
     }
+    return program;
   }
 
   async setStatus(id: string, genesis: string, status: InitStatus): Promise<IProgram> {
-    return new Promise((resolve) => {
-      setTimeout(async () => {
-        try {
-          const program = await this.findProgram({ id, genesis });
-          program.initStatus = status;
-          resolve(await this.programRepo.save(program));
-        } catch (error) {
-          logger.error(error, error.stack);
-        }
-      }, 2000);
-    });
+    await sleep(2000);
+    const program = await this.findProgram({ id, genesis });
+    program.initStatus = status;
+    return this.programRepo.save(program);
   }
 }

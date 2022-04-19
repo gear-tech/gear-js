@@ -1,6 +1,5 @@
-import { GearError } from './base';
+import { GearJsonRPCError } from './base';
 
-export class MessageNotFound extends GearError {
+export class MessageNotFound extends GearJsonRPCError {
   name = 'MessageNotFound';
-  message = 'Message not found';
 }

@@ -1,7 +1,6 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { KeyringPair } from '@polkadot/keyring/types';
-import { GearApi } from './GearApi';
-import { DebugDataSnapshotEvent, GearTransaction } from './types';
+import { GearTransaction } from './Transaction';
+import { DebugDataSnapshotEvent } from './events-types';
 
 export class DebugMode extends GearTransaction {
   enabled: any;

@@ -1,6 +1,6 @@
-export class GearError extends Error {
-  name = 'Gear Error';
-  constructor(message?: string) {
-    super(message);
+export class GearJsonRPCError extends Error {
+  name = 'GearJsonRPCError';
+  constructor(data?: string) {
+    super(data);
   }
 }

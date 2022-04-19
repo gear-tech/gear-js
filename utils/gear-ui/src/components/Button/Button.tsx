@@ -2,8 +2,23 @@ import clsx from 'clsx';
 import { Props } from './Button.types';
 import styles from './Button.module.scss';
 
-const Button = ({ text, icon, className, type = 'button', color = 'primary', size = 'normal', ...attrs }: Props) => {
-  const buttonClassName = clsx(styles.button, className, styles[color], styles[text ? size : 'noText']);
+const Button = ({
+  text,
+  icon,
+  className,
+  block,
+  type = 'button',
+  color = 'primary',
+  size = 'normal',
+  ...attrs
+}: Props) => {
+  const buttonClassName = clsx(
+    styles.button,
+    className,
+    styles[color],
+    styles[text ? size : 'noText'],
+    block && styles.block,
+  );
 
   return (
     <button type={type} className={buttonClassName} {...attrs}>

@@ -1,10 +1,11 @@
-import { Metadata } from './interfaces';
+import { Metadata } from './types/interfaces';
 import { SendMessageError } from './errors';
-import { GearTransaction } from './types';
 import { createPayload } from './utils';
+import { GearTransaction } from './Transaction';
 import { H256 } from '@polkadot/types/interfaces';
 import { AnyNumber, ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { PayloadType } from './types';
 export class GearMessage extends GearTransaction {
   /**
    * Send message
@@ -26,7 +27,7 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   submit(
-    message: { destination: string | H256; payload: string | any; gasLimit: AnyNumber; value?: AnyNumber },
+    message: { destination: string | H256; payload: PayloadType; gasLimit: AnyNumber; value?: AnyNumber },
     meta?: Metadata,
     messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {

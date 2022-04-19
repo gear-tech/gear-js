@@ -54,4 +54,10 @@ describe('button tests', () => {
     const button = screen.getByRole('button');
     expect(button).toHaveClass(styles.transparent);
   });
+
+  it('renders block button', () => {
+    render(<Button text="button text" block />);
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass(styles.block);
+  });
 });

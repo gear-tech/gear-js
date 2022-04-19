@@ -1,8 +1,8 @@
-import { AnyJson } from '@polkadot/types-codec/types';
-import { isHex, isString } from '@polkadot/util';
+import { isHex, isString, isU8a, u8aToHex } from '@polkadot/util';
 import { u64 } from '@polkadot/types';
 import { CreateType } from './create-type';
-import { Hex, Metadata } from './interfaces';
+import { Metadata } from './types/interfaces';
+import { Hex, PayloadType } from './types';
 import { GearApi } from './GearApi';
 import { createPayload } from './utils';
 import { GetGasSpentError } from './errors/program.errors';
@@ -15,9 +15,15 @@ export class GearGasSpent {
     this.createType = new CreateType(this.api);
   }
 
-  private getPayload(payload: Hex | AnyJson, metaOrTypeOfPayload: string | Metadata, meta_type: string): Hex {
+  private getPayload(
+    payload: PayloadType,
+    metaOrTypeOfPayload: string | Metadata,
+    meta_type: string,
+  ): Hex | Uint8Array {
     if (isHex(payload)) {
       return payload;
+    } else if (isU8a(payload)) {
+      return u8aToHex(payload);
     }
     if (!metaOrTypeOfPayload) {
       throw new GetGasSpentError('Impossible to create bytes from payload without specified type or meta');
@@ -56,7 +62,7 @@ export class GearGasSpent {
   async init(
     sourceId: Hex,
     code: Hex | Buffer,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     meta?: Metadata,
   ): Promise<u64>;
@@ -84,7 +90,7 @@ export class GearGasSpent {
   async init(
     sourceId: Hex,
     code: Hex | Buffer,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     typeOfPayload?: string,
   ): Promise<u64>;
@@ -101,7 +107,7 @@ export class GearGasSpent {
   async init(
     sourceId: Hex,
     code: Hex | Buffer,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64>;
@@ -109,7 +115,7 @@ export class GearGasSpent {
   async init(
     sourceId: Hex,
     code: Hex | Buffer,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64> {
@@ -151,7 +157,7 @@ export class GearGasSpent {
   async handle(
     sourceId: Hex,
     destinationId: Hex | Buffer,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     meta?: Metadata,
   ): Promise<u64>;
@@ -180,7 +186,7 @@ export class GearGasSpent {
   async handle(
     sourceId: Hex,
     destinationId: Hex | Buffer,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     typeOfPayload?: string,
   ): Promise<u64>;
@@ -197,7 +203,7 @@ export class GearGasSpent {
   async handle(
     sourceId: Hex,
     destinationId: Hex | Buffer,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64>;
@@ -205,7 +211,7 @@ export class GearGasSpent {
   async handle(
     sourceId: Hex,
     destinationId: Hex,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64> {
@@ -245,7 +251,7 @@ export class GearGasSpent {
     sourceId: Hex,
     messageId: Hex,
     exitCode: number,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     meta?: Metadata,
   ): Promise<u64>;
@@ -278,7 +284,7 @@ export class GearGasSpent {
     sourceId: Hex,
     messageId: Hex,
     exitCode: number,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     typeOfPayload?: string,
   ): Promise<u64>;
@@ -297,7 +303,7 @@ export class GearGasSpent {
     sourceId: Hex,
     messageId: Hex,
     exitCode: number,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64>;
@@ -306,7 +312,7 @@ export class GearGasSpent {
     sourceId: Hex,
     messageId: Hex,
     exitCode: number,
-    payload: Hex | AnyJson,
+    payload: PayloadType,
     value: number | string,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<u64> {
