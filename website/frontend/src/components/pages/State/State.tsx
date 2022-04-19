@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
-import { ParsedShape, parseMeta } from 'utils/meta-parser';
+import { MetaFieldsStruct, MetaFieldsValues, parseMeta, prepareToSend } from 'components/MetaFields';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Formik, Form } from 'formik';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
@@ -14,9 +14,9 @@ import { getPreformattedText } from 'helpers';
 import { ProgramModel } from 'types/program';
 import { getProgram } from 'services';
 import styles from './State.module.scss';
+import { cloneDeep } from '../../../features/Editor/EditorTree/utils';
 
-// FIXME: fields type shouldn't be any
-type FormValues = { fields: object; payload: string };
+type FormValues = { __root: MetaFieldsValues | null; payload: string };
 
 const State: VFC = () => {
   const { api } = useApi();
@@ -34,10 +34,13 @@ const State: VFC = () => {
   const stateInput = metadata?.meta_state_input;
 
   const [typeStructure, setTypeStructure] = useState({});
-  const [form, setForm] = useState<ParsedShape | null>(null);
+  const [form, setForm] = useState<MetaFieldsStruct | null>(null);
   const [state, setState] = useState('');
   const [isManualInput, setIsManualInput] = useState(false);
-  const initValues = { payload: typeStructure ? getPreformattedText(typeStructure) : '', fields: {} };
+  const initValues = useRef<{ payload: string; __root: MetaFieldsValues | null }>({
+    payload: typeStructure ? getPreformattedText(typeStructure) : '',
+    __root: null,
+  });
 
   const disableLoading = () => {
     setIsLoading(false);
@@ -104,14 +107,24 @@ const State: VFC = () => {
     navigate(-1);
   };
 
-  const handleSubmit = ({ fields, payload }: FormValues) => {
-    const options = isManualInput ? payload : Object.values(fields)[0];
+  const handleSubmit = ({ __root, payload }: FormValues) => {
+    if (__root) {
+      const options = isManualInput ? payload : prepareToSend(cloneDeep(__root));
 
-    if (options) {
-      readState(options);
-    } else {
-      alert.error('Form is empty');
+      if (options) {
+        readState(options);
+      } else {
+        alert.error('Form is empty');
+      }
     }
+  };
+
+  const handleManalSwitch = (val: boolean) => {
+    setIsManualInput(val);
+    initValues.current = {
+      payload: typeStructure ? getPreformattedText(typeStructure) : '',
+      __root: form ? form.__values : null,
+    };
   };
 
   return (
@@ -120,7 +133,7 @@ const State: VFC = () => {
         <BackButton />
         <h2 className={styles.heading}>Read state</h2>
       </header>
-      <Formik initialValues={initValues} onSubmit={handleSubmit} enableReinitialize>
+      <Formik initialValues={initValues.current} onSubmit={handleSubmit} enableReinitialize>
         <Form className={styles.form}>
           <div className={styles.block}>
             <div className={styles.item}>
@@ -133,7 +146,7 @@ const State: VFC = () => {
                 <FormPayload
                   className={styles.formWrapper}
                   isManualInput={isManualInput}
-                  setIsManualInput={setIsManualInput}
+                  setIsManualInput={handleManalSwitch}
                   formData={form}
                 />
               </div>

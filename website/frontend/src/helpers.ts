@@ -150,7 +150,7 @@ export const checkFileFormat = (file: File) => {
   return fileExt === 'wasm';
 };
 
-export const getPreformattedText = (data: any) => JSON.stringify(data, null, 4);
+export const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
 export const calculateGas = async (
   method: string,
@@ -164,14 +164,14 @@ export const calculateGas = async (
   addressId?: String | null,
   replyCodeError?: string
 ) => {
-  const payload = isManualPayload ? values.payload : values.fields;
+  const payload = isManualPayload ? values.payload : values.__root;
 
   if (isManualPayload && payload === '') {
     alert.error(`Error: payload can't be empty`);
     return;
   }
 
-  if (!isManualPayload && Object.keys(payload).length === 0) {
+  if (!isManualPayload && payload && Object.keys(payload).length === 0) {
     alert.error(`Error: form can't be empty`);
     return;
   }

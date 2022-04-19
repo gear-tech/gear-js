@@ -9,6 +9,16 @@
     "browser": true,
     "jest": true
   },
+  "overrides": [
+    {
+      "files": [
+        "**/*.stories.*"
+      ],
+      "rules": {
+        "import/no-anonymous-default-export": "off"
+      }
+    }
+  ],
   "rules": {
     "import/prefer-default-export": "off",
     "no-alert": "off",
@@ -42,7 +52,7 @@
     // allow devDeps import in test files
     "import/no-extraneous-dependencies": [
       "error",
-      { "devDependencies": ["**/*.test.ts", "**/*.test.tsx", "**/*[Tt]ests.ts"] }
+      { "devDependencies": ["**/*.test.ts", "**/*.test.tsx", "**/*[Tt]ests.ts", "**/*.stories.tsx"] }
     ]
   },
   "settings": {

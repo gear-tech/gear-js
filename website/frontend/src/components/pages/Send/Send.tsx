@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAlert } from 'react-alert';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
-import { MetaParam } from 'utils/meta-parser';
+import { MetaItem } from 'components/MetaFields';
 import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { messagesService } from 'services/MessagesRequestServices';
 import { programService } from 'services/ProgramsRequestService';
@@ -22,7 +22,7 @@ const Send = () => {
 
   const [message, setMessage] = useState<MessageModel>();
   const [meta, setMeta] = useState<Metadata>();
-  const [types, setTypes] = useState<MetaParam | null>(null);
+  const [types, setTypes] = useState<MetaItem | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
