@@ -42,14 +42,6 @@ export const Messages: VFC = () => {
     setQuery(queryFromUrl);
   }, [queryFromUrl, setQuery]);
 
-  const handleSearch = (value: string) => {
-    const path = `/messages/?page=1${value ? `&query=${value}` : ``}`;
-
-    setQuery(value);
-    setCurrentPage(1);
-    navigate(path);
-  };
-
   return (
     <div className="messages">
       <div className="pagination__wrapper">
@@ -57,8 +49,7 @@ export const Messages: VFC = () => {
         <Pagination count={messagesCount || 1} />
       </div>
       <div>
-        <SearchForm query={query} placeholder="Find message by ID" handleSearch={handleSearch} />
-        <br />
+        <SearchForm placeholder="Find message by ID" />
       </div>
       <MessagesList messages={messages} />
       <div className="pagination_bottom">

@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 40px;
+  margin-bottom: 20px;
 
   @include lg {
     flex-direction: column;
@@ -13,7 +14,26 @@
   }
 }
 
-.buttons {
+.inputWrapper {
+  & > div {
+    height: 48px;
+    align-items: center;
+    background: $mainBackground;
+    border-radius: $borderRadiusBase;
+
+    img {
+      width: 18px;
+      height: 18px;
+    }
+
+    input {
+      font-size: 16px;
+      line-height: 24px;
+    }
+  }
+}
+
+.links {
   display: flex;
   justify-content: flex-start;
   align-items: center;

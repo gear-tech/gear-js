@@ -73,15 +73,6 @@ export const Recent: VFC = () => {
       <Meta programId={programMeta.programId} programName={programMeta.programName} handleClose={handleCloseMetaForm} />
     );
   }
-
-  const handleSearch = (value: string) => {
-    const path = `/uploaded-programs/?page=1${value ? `&query=${value}` : ``}`;
-
-    setQuery(value);
-    setCurrentPage(1);
-    navigate(path);
-  };
-
   return (
     <div className={styles.blockList}>
       <div className={styles.paginationWrapper}>
@@ -89,8 +80,7 @@ export const Recent: VFC = () => {
         <Pagination count={programsCount || 1} />
       </div>
       <div>
-        <SearchForm query={query} placeholder="Find program" handleSearch={handleSearch} />
-        <br />
+        <SearchForm placeholder="Find program" />
       </div>
       <ProgramsLegend />
       {(programs && programsCount && (

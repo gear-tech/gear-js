@@ -71,14 +71,6 @@ export const All: VFC = () => {
     );
   }
 
-  const handleSearch = (value: string) => {
-    const path = `/all-programs/?page=1${value ? `&query=${value}` : ``}`;
-
-    setQuery(value);
-    setCurrentPage(1);
-    navigate(path);
-  };
-
   return (
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
@@ -86,8 +78,7 @@ export const All: VFC = () => {
         <Pagination count={programsCount || 1} />
       </div>
       <div>
-        <SearchForm query={query} placeholder="Find program" handleSearch={handleSearch} />
-        <br />
+        <SearchForm placeholder="Find program" />
       </div>
       <ProgramsLegend />
       <div className={styles.allProgramsList}>

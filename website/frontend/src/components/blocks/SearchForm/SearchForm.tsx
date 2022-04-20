@@ -1,43 +1,62 @@
-import React from 'react';
-import { Button } from '@gear-js/ui';
-import { Field, Form, Formik } from 'formik';
-import { SearchModel } from 'types/program';
-import { InputBlock } from './children';
+import React, { ChangeEvent, useState } from 'react';
+import { Button, Input, buttonStyles } from '@gear-js/ui';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import searchIcon from 'assets/images/search.svg';
-import { Schema } from './Schema';
+import { URL_PARAMS } from 'consts';
 import styles from './SearchForm.module.scss';
+import clsx from 'clsx';
 
 type Props = {
-  query: string;
   placeholder: string;
-  handleSearch: (query: string) => void;
 };
 
-const SearchForm = ({ query, placeholder, handleSearch }: Props) => {
+const SearchForm = ({ placeholder }: Props) => {
+  const linkClasses = clsx(buttonStyles.button, buttonStyles.secondary, buttonStyles.normal);
+  const { pathname: url } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [value, setValue] = useState('');
+
+  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    setValue(target.value);
+  };
+
+  const getUrl = () => {
+    return `${url}?${URL_PARAMS.PAGE}=1&${URL_PARAMS.QUERY}=${value}`;
+  };
+
+  const resetSearch = () => {
+    setValue('');
+    searchParams.delete(URL_PARAMS.QUERY);
+    setSearchParams(searchParams);
+  };
+
   return (
-    <Formik
-      initialValues={{ query }}
-      validationSchema={Schema}
-      validateOnBlur
-      onSubmit={(values: SearchModel) => {
-        handleSearch(values.query);
-      }}
-      onReset={() => {
-        handleSearch('');
-      }}
-    >
-      {() => (
-        <Form>
-          <div className={styles.searchForm}>
-            <Field as={InputBlock} name="query" placeholder={placeholder} />
-            <div className={styles.buttons}>
-              <Button text="Search" type="submit" color="secondary" icon={searchIcon} />
-              <Button className={styles.resetButton} text="Reset search" type="reset" color="transparent" />
-            </div>
-          </div>
-        </Form>
-      )}
-    </Formik>
+    <form>
+      <div className={styles.searchForm}>
+        <Input
+          icon={searchIcon}
+          className={styles.inputWrapper}
+          type="text"
+          placeholder={placeholder}
+          name={URL_PARAMS.QUERY}
+          value={value}
+          onChange={handleChange}
+        />
+        <div className={styles.links}>
+          <Link className={linkClasses} to={getUrl()}>
+            <img className={buttonStyles.icon} src={searchIcon} alt="search icon" />
+            <p>Search</p>
+          </Link>
+          <Button
+            className={styles.resetButton}
+            text="Reset search"
+            type="reset"
+            color="transparent"
+            onClick={resetSearch}
+          />
+        </div>
+      </div>
+    </form>
   );
 };
 
