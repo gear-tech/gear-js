@@ -102,6 +102,11 @@ export const KEY_TYPES = {
 
 export const DEVELOPMENT_CHAIN = 'Development';
 
+export const URL_PARAMS = {
+  PAGE: 'page',
+  QUERY: 'query',
+};
+
 export enum ZIndexes {
   'alert' = 999,
 }

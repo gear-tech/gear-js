@@ -10,6 +10,7 @@ import UploadIcon from 'assets/images/upload-cloud.svg';
 import { UserProgram } from '../UserProgram/UserProgram';
 import styles from './All.module.scss';
 import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
+import { URL_PARAMS } from 'consts';
 import { getPrograms } from 'services';
 
 type ProgramMessageType = {
@@ -20,8 +21,8 @@ type ProgramMessageType = {
 export const All: VFC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
-  const queryFromUrl = searchParams.has('query') ? String(searchParams.get('query')) : '';
+  const pageFromUrl = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
+  const queryFromUrl = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
 
   const [query, setQuery] = useState(queryFromUrl);
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
@@ -29,8 +30,6 @@ export const All: VFC = () => {
 
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
-
-  const onPageChange = (page: number) => setCurrentPage(page);
 
   useEffect(() => {
     const programParams = {
@@ -44,6 +43,14 @@ export const All: VFC = () => {
       setProgramsCount(result.count);
     });
   }, [currentPage, query]);
+
+  useEffect(() => {
+    setCurrentPage(pageFromUrl);
+  }, [pageFromUrl, setCurrentPage]);
+
+  useEffect(() => {
+    setQuery(queryFromUrl);
+  }, [queryFromUrl, setQuery]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
@@ -76,7 +83,7 @@ export const All: VFC = () => {
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
-        <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
+        <Pagination count={programsCount || 1} />
       </div>
       <div>
         <SearchForm query={query} placeholder="Find program" handleSearch={handleSearch} />
@@ -112,7 +119,7 @@ export const All: VFC = () => {
       </div>
       {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
+          <Pagination count={programsCount || 1} />
         </div>
       )}
     </div>

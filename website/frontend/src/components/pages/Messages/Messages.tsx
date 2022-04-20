@@ -6,13 +6,14 @@ import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 import { SearchForm } from '../../blocks/SearchForm/SearchForm';
 import { MessageModel } from 'types/message';
 import { getMessages } from 'services';
+import { URL_PARAMS } from 'consts';
 import './Messages.scss';
 
 export const Messages: VFC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
-  const queryFromUrl = searchParams.has('query') ? String(searchParams.get('query')) : '';
+  const pageFromUrl = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
+  const queryFromUrl = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
 
   const [query, setQuery] = useState(queryFromUrl);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
@@ -33,6 +34,14 @@ export const Messages: VFC = () => {
     });
   }, [currentPage, query]);
 
+  useEffect(() => {
+    setCurrentPage(pageFromUrl);
+  }, [pageFromUrl, setCurrentPage]);
+
+  useEffect(() => {
+    setQuery(queryFromUrl);
+  }, [queryFromUrl, setQuery]);
+
   const handleSearch = (value: string) => {
     const path = `/messages/?page=1${value ? `&query=${value}` : ``}`;
 
@@ -45,7 +54,7 @@ export const Messages: VFC = () => {
     <div className="messages">
       <div className="pagination__wrapper">
         <span className="pagination__wrapper-caption">Total results: {messagesCount || 0}</span>
-        <Pagination page={currentPage} count={messagesCount || 1} onPageChange={setCurrentPage} />
+        <Pagination count={messagesCount || 1} />
       </div>
       <div>
         <SearchForm query={query} placeholder="Find message by ID" handleSearch={handleSearch} />
@@ -53,7 +62,7 @@ export const Messages: VFC = () => {
       </div>
       <MessagesList messages={messages} />
       <div className="pagination_bottom">
-        <Pagination page={currentPage} count={messagesCount || 1} onPageChange={setCurrentPage} />
+        <Pagination count={messagesCount || 1} />
       </div>
     </div>
   );

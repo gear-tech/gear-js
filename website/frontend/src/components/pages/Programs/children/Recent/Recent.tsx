@@ -12,6 +12,7 @@ import styles from './Recent.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
 
 import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
+import { URL_PARAMS } from 'consts';
 import { getUserPrograms } from 'services';
 
 type ProgramMessageType = {
@@ -22,8 +23,8 @@ type ProgramMessageType = {
 export const Recent: VFC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
-  const queryFromUrl = searchParams.has('query') ? String(searchParams.get('query')) : '';
+  const pageFromUrl = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
+  const queryFromUrl = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
 
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
@@ -31,8 +32,6 @@ export const Recent: VFC = () => {
   const [query, setQuery] = useState(queryFromUrl);
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
-
-  const onPageChange = (page: number) => setCurrentPage(page);
 
   useEffect(() => {
     const programParams = {
@@ -47,6 +46,14 @@ export const Recent: VFC = () => {
       setProgramsCount(result.count);
     });
   }, [currentPage, query]);
+
+  useEffect(() => {
+    setCurrentPage(pageFromUrl);
+  }, [pageFromUrl, setCurrentPage]);
+
+  useEffect(() => {
+    setQuery(queryFromUrl);
+  }, [queryFromUrl, setQuery]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
@@ -79,7 +86,7 @@ export const Recent: VFC = () => {
     <div className={styles.blockList}>
       <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
-        <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
+        <Pagination count={programsCount || 1} />
       </div>
       <div>
         <SearchForm query={query} placeholder="Find program" handleSearch={handleSearch} />
@@ -97,7 +104,7 @@ export const Recent: VFC = () => {
 
       {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
+          <Pagination count={programsCount || 1} />
         </div>
       )}
     </div>
