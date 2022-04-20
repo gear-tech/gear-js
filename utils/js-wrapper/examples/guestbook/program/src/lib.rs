@@ -16,13 +16,12 @@ pub struct MessageIn {
 #[no_mangle]
 pub unsafe extern "C" fn handle() {
     let input: Vec<u8> = msg::load_bytes();
-    debug!(input);
     match input.first().unwrap() {
         &0 => {
             let v: Vec<u8> = input[1..].to_vec();
             let len: i32 = STATE.len() as i32 + 1;
             STATE.insert(len, MessageIn::decode(&mut v.as_slice()).unwrap());
-            msg::reply(len.encode(), 0).unwrap();
+            debug!(len);
         }
         &1 => {
             let v: Vec<u8> = input[1..].to_vec();

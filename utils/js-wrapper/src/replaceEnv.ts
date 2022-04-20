@@ -1,5 +1,5 @@
 import { cpSync, readFileSync, writeFileSync } from 'fs';
-import { PkgType, Target } from 'interfaces';
+import { Target } from 'interfaces';
 import { join } from 'path';
 
 export function replaceEnvImport(filePath: string, target: Target): void {

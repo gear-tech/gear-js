@@ -37,7 +37,7 @@ pub fn __query_view_messages(author: Option<String>) -> Vec<u8> {
 }
 
 #[wasm_bindgen]
-pub fn __decode_view_messages(bytes: Vec<u8>) -> String {
-    let m: Vec<MessageIn> = decode(bytes).unwrap();
+pub fn __decode_log(bytes: Vec<u8>) -> String {
+    let m: Option<MessageIn> = decode(bytes).unwrap();
     serde_json::to_string(&m).unwrap()
 }

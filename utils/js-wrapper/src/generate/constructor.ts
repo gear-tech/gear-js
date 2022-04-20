@@ -1,13 +1,16 @@
+import { Target } from '../interfaces.js';
 import { getType } from './utils.js';
 
-export function generateConstructor(ts: boolean) {
-  const constructs = [
+export function generateConstructor(ts: boolean, target: Target) {
+  const overloads = [
     `constructor(api${getType(': GearApi', ts)}, programId${getType(': `0x${string}`', ts)})\n`,
     `  constructor(providerAddress${getType(': string', ts)}, programId${getType(': `0x${string}`', ts)})\n`,
-    `  constructor(providerAddressOrApi${getType(': string | GearApi', ts)}, programId${getType(
-      ': `0x${string}`',
-      ts,
-    )}) {
+  ];
+
+  const constructor = `  constructor(providerAddressOrApi${getType(': string | GearApi', ts)}, programId${getType(
+    ': `0x${string}`',
+    ts,
+  )}) {
     this.programId = programId;
     if (typeof providerAddressOrApi === 'string') {
       this.providerAddress = providerAddressOrApi;
@@ -17,7 +20,6 @@ export function generateConstructor(ts: boolean) {
     this.isReady = new Promise((resolve, reject) => {
       this.init().then(() => resolve('ready')).catch((error) => reject(error))
     });
-  }\n`,
-  ];
-  return constructs.join('\n');
+  }\n`;
+  return target !== 'nodejs' ? [...overloads, constructor].join('\n') : constructor;
 }
