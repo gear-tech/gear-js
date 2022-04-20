@@ -12,7 +12,7 @@ type Props = {
 
 const Pagination = ({ count }: Props) => {
   const [searchParams] = useSearchParams();
-  const location = useLocation();
+  const { pathname: url } = useLocation();
   const pageFromUrl = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
   const queryFromUrl = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
   const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
@@ -24,7 +24,7 @@ const Pagination = ({ count }: Props) => {
     const pageParam = `${URL_PARAMS.PAGE}=${newPage}`;
     const queryParam = queryFromUrl && `&${URL_PARAMS.QUERY}=${queryFromUrl}`;
 
-    return `${location.pathname}?${pageParam}${queryParam}`;
+    return `${url}?${pageParam}${queryParam}`;
   };
 
   return (
