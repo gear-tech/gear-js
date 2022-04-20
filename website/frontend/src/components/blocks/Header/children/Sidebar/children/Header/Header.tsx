@@ -22,18 +22,22 @@ const Header = ({ closeSidebar, selectedNode }: Props) => {
   };
 
   const switchNode = () => {
-    if (selectedNode !== nodeApi.address) {
-      // remove param to update it during nodeApi init
-      removeNodeFromUrl();
-      localStorage.setItem(LOCAL_STORAGE.NODE_ADDRESS, selectedNode);
-      window.location.reload();
-    }
+    // remove param to update it during nodeApi init
+    removeNodeFromUrl();
+    localStorage.setItem(LOCAL_STORAGE.NODE_ADDRESS, selectedNode);
+    window.location.reload();
   };
 
   return (
     <header className={styles.header}>
-      <Button text="Switch" size="small" icon={refresh} onClick={switchNode} />
-      <Button icon={cross} color="transparent" onClick={closeSidebar} />
+      <Button
+        text="Switch"
+        size="small"
+        icon={refresh}
+        onClick={switchNode}
+        disabled={selectedNode === nodeApi.address}
+      />
+      <Button aria-label="Close sidebar" icon={cross} color="transparent" onClick={closeSidebar} />
     </header>
   );
 };

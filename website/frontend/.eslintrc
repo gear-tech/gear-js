@@ -50,7 +50,7 @@
     // allow devDeps import in test files
     "import/no-extraneous-dependencies": [
       "error",
-      { "devDependencies": ["**/*.test.{ts,tsx}", "**/*[Tt]ests.{ts,tsx}", "**/*.stories.tsx"] }
+      { "devDependencies": ["src/tests/**", "src/setupTests.ts", "**/*.stories.tsx"] }
     ]
   },
   "settings": {
