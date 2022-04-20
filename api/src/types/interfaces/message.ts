@@ -14,7 +14,7 @@ export declare interface Payload extends Vec<u8> {}
 export declare interface Message extends Codec {
   id: H256;
   source: H256;
-  dest: H256;
+  destination: H256;
   payload: Vec<u8>;
   gas_limit: u64;
   value: u128;
@@ -51,7 +51,7 @@ export declare interface StoredMessage extends Omit<Message, 'gas_limit'> {}
 export interface HumanedMessage {
   id: MessageId;
   source: Hex;
-  dest: Hex;
+  destination: Hex;
   payload: Hex | string;
   value: string;
   reply: [Hex, number];

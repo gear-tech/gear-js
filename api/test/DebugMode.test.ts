@@ -1,4 +1,4 @@
-import { GearApi, DebugMode } from '../src';
+import { GearApi, DebugMode, ProgramState } from '../src';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -30,26 +30,29 @@ describe('DebugMode', () => {
   });
 
   test('get snapshots', async () => {
-    const snapshot = {
-      promise: undefined,
-      resolve: undefined,
-    };
-    snapshot.promise = new Promise((resolve) => {
-      snapshot.resolve = resolve;
-    });
+    const snapshots = [];
     const unsub = debug.snapshots((event) => {
-      snapshot.resolve(event.data);
+      snapshots.push(event.data);
     });
-    api.program.submit({
+    const { programId } = api.program.submit({
       code: readFileSync(join(TEST_WASM_DIR, 'demo_ping.opt.wasm')),
       gasLimit: 50_000_000,
     });
     await sendTransaction(api.program.submitted, alice, 'InitMessageEnqueued');
-
-    const snapshotData = await snapshot.promise;
+    api.message.submit({ destination: programId, payload: 'PING', gasLimit: 200_000_000 });
+    await sendTransaction(api.message.submitted, alice, 'DispatchMessageEnqueued');
     (await unsub)();
-    expect(snapshotData[0]).toHaveProperty('dispatchQueue');
-    expect(snapshotData[0]).toHaveProperty('programs');
+    expect(snapshots).toHaveLength(2);
+    for (let snapshot of snapshots) {
+      expect(snapshot[0]).toHaveProperty('dispatchQueue');
+      expect(snapshot[0]).toHaveProperty('programs');
+    }
+    expect(snapshots[0][0].programs).toHaveLength(1);
+    expect(snapshots[0][0].programs[0]).toHaveProperty('state');
+    expect(snapshots[0][0].programs[0].state.isActive).toBeTruthy();
+    for (let prop of ['codeHash', 'persistentPages', 'staticPages']) {
+      expect(snapshots[0][0].programs[0].state.asActive).toHaveProperty(prop);
+    }
   });
 
   test('disable debug mode', async () => {
