@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: actions-runner
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: Runner
+metadata:
+  name: actions-runner
+  namespace: actions-runner
+spec:
+  image: ghcr.io/kvsdevops/gear-js/actions-runner:latest
+  imagePullPolicy: Always
+  organization: kvsdevops
+  ephemeral: false
+  dockerEnabled: false
+  dockerdWithinRunnerContainer: true
+  labels:
+    - k8s-runner
+    - no-ephemeral
+    - with-docker
+  volumes:
+    - name: actions-runner-data
+      awsElasticBlockStore:
+        volumeID: vol-0fe30025db6d67321
+        fsType: xfs
+  volumeMounts:
+    - mountPath: /mnt
+      name: actions-runner-data
+  nodeSelector:
+    failure-domain.beta.kubernetes.io/zone: us-west-1c

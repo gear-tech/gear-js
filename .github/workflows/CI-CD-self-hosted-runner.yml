@@ -1,0 +1,71 @@
+name: 'CI\CD self-hosted runner'
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master,vkrinitsyn_self-hosted-runner]
+    paths: 
+      - docker/actions-runner/**
+      - k8s/actions-runner/**
+
+env:
+  DOCKER_REGISTRY: ghcr.io
+  DOCKER_USER: ${{ github.actor }}
+  DOCKER_PASSWORD: ${{ github.token }}
+  DOCKER_REPOSITORY: ${{ github.repository }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: styfle/cancel-workflow-action@HEAD
+        with:
+          access_token: ${{ github.token }}
+          
+      - uses: actions/checkout@HEAD
+
+      - uses: docker/login-action@HEAD
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ env.DOCKER_USER }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - uses: docker/build-push-action@HEAD
+        with:
+          file: docker/actions-runner/Dockerfile
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/actions-runner:latest
+          push: true
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@HEAD
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: kodermax/kubectl-aws-eks@master
+        with:
+          args: create secret generic actions-runner-system --from-literal=github_token=${{ github.token }} -n actions-runner-system --dry-run=client
+
+      - uses: kodermax/kubectl-aws-eks@master
+        with:
+          args: apply -f k8s/actions-runner/actions-runner.yml --force
+
+      - uses: kodermax/kubectl-aws-eks@master
+        with:
+          args: delete pod actions-runner -n actions-runner
+
+      - uses: kodermax/kubectl-aws-eks@master
+        with:
+          args: wait --for=condition=Ready pod/actions-runner -n actions-runner --timeout=120s
