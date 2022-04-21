@@ -13,4 +13,14 @@ const Providers = ({ children: element }: Props) =>
 const renderWithRouter = (element: ReactElement) => render(element, { wrapper: MemoryRouter });
 const renderWithProviders = (element: ReactElement) => render(element, { wrapper: Providers });
 
-export { renderWithRouter, renderWithProviders };
+const textMatcher = (text: string) => (_content: string, node: Element | null) => {
+  const isTextMatches = ({ textContent }: Element) => textContent === text;
+
+  if (node && isTextMatches(node)) {
+    return Array.from(node.children).every((child) => !isTextMatches(child));
+  }
+
+  return false;
+};
+
+export { renderWithRouter, renderWithProviders, textMatcher };
