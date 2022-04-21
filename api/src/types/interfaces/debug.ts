@@ -10,7 +10,7 @@ export interface ProgramInfo extends Codec {
 
 export interface ProgramState extends Codec {
   isActive: boolean;
-  asActive: ProgramDetails;
+  asActive: ProgramInfo;
   isTerminated: boolean;
   asTerminated: Null;
 }
