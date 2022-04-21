@@ -1,4 +1,4 @@
-import { cpSync, readdirSync, rmSync } from 'fs';
+import { cpSync, readdirSync, rmSync, writeFileSync } from 'fs';
 import { Paths, Target } from './interfaces.js';
 import { join } from 'path';
 
@@ -48,15 +48,15 @@ function pathExt(path: string): string | null {
 }
 
 export function writePackageJson(pathToPkg: string, target: Target) {
-  if (['web', 'bundler'].includes(target)) {
-    cpSync('templates/package.module.json', join(pathToPkg, 'package.json'));
-  } else if (target === 'nodejs') {
-    cpSync('templates/package.commonjs.json', join(pathToPkg, 'package.json'));
+  writeFileSync(
+    join(pathToPkg, 'package.json'),
+    `{
+    "type": "${target === 'nodejs' ? 'commonjs' : 'module'}",
+    "dependencies": {
+      "@polkadot/api": "^8.1.1",
+      "@gear-js/api": "^0.17.6"
+    }
   }
-}
-
-export function rmPackageJson(pathToPkg: string, target: Target) {
-  if (['web', 'nodejs'].includes(target)) {
-    rmSync(join(pathToPkg, 'package.json'));
-  }
+  `,
+  );
 }

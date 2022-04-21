@@ -7,10 +7,10 @@ export function generateConstructor(ts: boolean, target: Target) {
     `  constructor(providerAddress${getType(': string', ts)}, programId${getType(': `0x${string}`', ts)})\n`,
   ];
 
-  const constructor = `  constructor(providerAddressOrApi${getType(': string | GearApi', ts)}, programId${getType(
-    ': `0x${string}`',
+  const constructor = `${target !== 'nodejs' ? '  ' : ''}constructor(providerAddressOrApi${getType(
+    ': string | GearApi',
     ts,
-  )}) {
+  )}, programId${getType(': `0x${string}`', ts)}) {
     this.programId = programId;
     if (typeof providerAddressOrApi === 'string') {
       this.providerAddress = providerAddressOrApi;

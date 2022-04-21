@@ -8,7 +8,7 @@ import { Target } from 'interfaces.js';
 export async function processGenerate(path: string, ts: boolean, target: Target) {
   const { modPath, declarationPath, pkgPath, name } = getPaths(resolve(path));
   replaceEnvImport(modPath, target);
-  writeEnvFile(pkgPath, ts, target);
+  writeEnvFile(pkgPath, target);
   writePackageJson(pkgPath, target);
 
   const mod = await import(modPath);
