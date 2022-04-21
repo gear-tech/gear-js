@@ -1,5 +1,5 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { Pagination } from 'components/Pagination/Pagination';
 import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
@@ -10,7 +10,6 @@ import { URL_PARAMS } from 'consts';
 import './Messages.scss';
 
 export const Messages: VFC = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const pageFromUrl = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
   const queryFromUrl = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
