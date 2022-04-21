@@ -2055,7 +2055,7 @@ __metadata:
     "@nestjs/typeorm": 8.0.3
     "@types/express": 4.17.13
     "@types/jest": 26.0.24
-    "@types/node": 14.18.12
+    "@types/node": 14.18.13
     "@types/supertest": 2.0.12
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
@@ -2077,20 +2077,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.17.2":
-  version: 0.17.2
-  resolution: "@gear-js/api@npm:0.17.2"
-  dependencies:
-    "@types/rollup-plugin-peer-deps-external": ^2.2.1
-    rollup-plugin-peer-deps-external: ^2.2.4
-    rollup-plugin-typescript2: ^0.31.2
-  peerDependencies:
-    "@polkadot/api": ^8.0.2
-    rxjs: ^7.5.5
-  checksum: 074151477440e22a397825eff51767655114ab12cda84574b12e6da9e2b03857d4fae46ca09fa64adc92b20f472ef719b6acf7f6d1b363bfbc3aa65437ccb27e
-  languageName: node
-  linkType: hard
-
 "@gear-js/api@npm:0.17.5":
   version: 0.17.5
   resolution: "@gear-js/api@npm:0.17.5"
@@ -2103,6 +2089,21 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.0.1
     rxjs: ^7.5.5
   checksum: ca123b90b23d0523a1ae62a8923ea28b87cbaf1cfe776317a84cb57e4059d94221b417e4dfea2629ff2c66f3cb517ffde7770713509f2c35afecec606c796c9a
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:0.17.6":
+  version: 0.17.6
+  resolution: "@gear-js/api@npm:0.17.6"
+  dependencies:
+    "@types/rollup-plugin-peer-deps-external": ^2.2.1
+    rollup-plugin-peer-deps-external: ^2.2.4
+    rollup-plugin-typescript2: ^0.31.2
+  peerDependencies:
+    "@polkadot/api": ^8.0.2
+    "@polkadot/wasm-crypto": ^6.0.1
+    rxjs: ^7.5.5
+  checksum: 7eabd7d097a66c577af67857abde1ff1707165ad0bf6bbfc6c8ec39943b38071a459c54729d19ab3d464a52130e448346e88c099b4cddcb43fe71f57cc0c7780
   languageName: node
   linkType: hard
 
@@ -2130,7 +2131,7 @@ __metadata:
     "@babel/plugin-transform-modules-commonjs": 7.17.9
     "@babel/plugin-transform-typescript": 7.16.8
     "@babel/preset-typescript": 7.16.7
-    "@gear-js/api": 0.17.2
+    "@gear-js/api": 0.17.6
     "@gear-js/interfaces": "workspace:^"
     "@gear-js/jsonrpc-errors": "workspace:^"
     "@nestjs/cli": 8.2.5
@@ -2145,7 +2146,7 @@ __metadata:
     "@polkadot/api": 7.15.1
     "@types/express": 4.17.13
     "@types/jest": 27.4.1
-    "@types/node": 14.18.12
+    "@types/node": 14.18.13
     "@types/supertest": 2.0.12
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
@@ -6258,10 +6259,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.18.12":
-  version: 14.18.12
-  resolution: "@types/node@npm:14.18.12"
-  checksum: 8a0273caa0584020adb8802784fc7d4f18f05e6c205335b7f3818a91d6b0c22736b9f51da3428d5bc54076ad47f1a4d6d57990a3ce8489a520ac66b2b3ff24bc
+"@types/node@npm:14.18.13, @types/node@npm:^14.0.10":
+  version: 14.18.13
+  resolution: "@types/node@npm:14.18.13"
+  checksum: 307cd26bd6b8135c4ab87c94182111f057e7e7232fd0ffcb2f5de9d3a0523d171bb9a97addfcc29f3ebed94f2a599af7c3622326eaa85907af265616775f0574
   languageName: node
   linkType: hard
 
@@ -6269,13 +6270,6 @@ __metadata:
   version: 17.0.21
   resolution: "@types/node@npm:17.0.21"
   checksum: 89dcd2fe82f21d3634266f8384e9c865cf8af49685639fbdbd799bdd1040480fb1e8eeda2d3b9fce41edbe704d2a4be9f427118c4ae872e8d9bb7cbeb3c41a94
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^14.0.10":
-  version: 14.18.13
-  resolution: "@types/node@npm:14.18.13"
-  checksum: 307cd26bd6b8135c4ab87c94182111f057e7e7232fd0ffcb2f5de9d3a0523d171bb9a97addfcc29f3ebed94f2a599af7c3622326eaa85907af265616775f0574
   languageName: node
   linkType: hard
 
