@@ -21,7 +21,10 @@ const SearchForm = ({ placeholder }: Props) => {
   };
 
   const getUrl = () => {
-    return `${url}?${URL_PARAMS.PAGE}=1&${URL_PARAMS.QUERY}=${value}`;
+    searchParams.set(URL_PARAMS.PAGE, String(1));
+    searchParams.set(URL_PARAMS.QUERY, value);
+
+    return `${url}?${searchParams.toString()}`;
   };
 
   const resetSearch = () => {

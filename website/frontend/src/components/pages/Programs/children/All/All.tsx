@@ -74,11 +74,9 @@ export const All: VFC = () => {
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
-        <Pagination count={programsCount || 1} />
+        <Pagination currentPage={currentPage} count={programsCount || 1} />
       </div>
-      <div>
-        <SearchForm placeholder="Find program" />
-      </div>
+      <SearchForm placeholder="Find program" />
       <ProgramsLegend />
       <div className={styles.allProgramsList}>
         {(programs &&
@@ -109,7 +107,7 @@ export const All: VFC = () => {
       </div>
       {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination count={programsCount || 1} />
+          <Pagination currentPage={currentPage} count={programsCount || 1} />
         </div>
       )}
     </div>

@@ -7,24 +7,23 @@ import { URL_PARAMS } from 'consts';
 import './Pagination.scss';
 
 type Props = {
+  currentPage: number;
   count: number;
 };
 
-const Pagination = ({ count }: Props) => {
+const Pagination = ({ currentPage, count }: Props) => {
   const [searchParams] = useSearchParams();
   const { pathname: url } = useLocation();
-  const pageFromUrl = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
-  const queryFromUrl = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
+
   const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
-  const isDisabledPrev = pageFromUrl === 1;
-  const isDisabledNext = pageFromUrl === totalPages || totalPages === 0;
+  const isDisabledPrev = currentPage === 1;
+  const isDisabledNext = currentPage === totalPages || totalPages === 0;
 
   const getUrl = (isPrevPage: boolean) => {
-    const newPage = isPrevPage ? pageFromUrl - 1 : pageFromUrl + 1;
-    const pageParam = `${URL_PARAMS.PAGE}=${newPage}`;
-    const queryParam = queryFromUrl && `&${URL_PARAMS.QUERY}=${queryFromUrl}`;
+    const newPage = isPrevPage ? currentPage - 1 : currentPage + 1;
+    searchParams.set(URL_PARAMS.PAGE, String(newPage));
 
-    return `${url}?${pageParam}${queryParam}`;
+    return `${url}?${searchParams.toString()}`;
   };
 
   return (
@@ -39,7 +38,7 @@ const Pagination = ({ count }: Props) => {
         </div>
       )}
       <button type="button" className="pagination--box selected">
-        {pageFromUrl}
+        {currentPage}
       </button>
       <p className="pagination__total">of {totalPages}</p>
       {!isDisabledNext ? (

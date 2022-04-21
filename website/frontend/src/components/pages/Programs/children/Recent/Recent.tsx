@@ -76,11 +76,9 @@ export const Recent: VFC = () => {
     <div className={styles.blockList}>
       <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
-        <Pagination count={programsCount || 1} />
+        <Pagination currentPage={currentPage} count={programsCount || 1} />
       </div>
-      <div>
-        <SearchForm placeholder="Find program" />
-      </div>
+      <SearchForm placeholder="Find program" />
       <ProgramsLegend />
       {(programs && programsCount && (
         <div>
@@ -93,7 +91,7 @@ export const Recent: VFC = () => {
 
       {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination count={programsCount || 1} />
+          <Pagination currentPage={currentPage} count={programsCount || 1} />
         </div>
       )}
     </div>
