@@ -85,13 +85,13 @@ jobs:
       - name: Build image
         run: |
           docker build \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-node:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/gear-node:dev \
           -f k8s/gear-node/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-node:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/gear-node:dev
 
       - name: Docker logout
         run: |
@@ -119,13 +119,13 @@ jobs:
       - name: Build image
         run: |
           docker build \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/data-storage:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/data-storage:dev \
           -f website/data-storage/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/data-storage:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/data-storage:dev
 
       - name: Docker logout
         run: |
@@ -153,13 +153,13 @@ jobs:
       - name: Build image
         run: |
           docker build \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/api-gateway:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/api-gateway:dev \
           -f website/api-gateway/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/api-gateway:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/api-gateway:dev
 
       - name: Docker logout
         run: |
@@ -187,13 +187,13 @@ jobs:
       - name: Build image
         run: |
           docker build \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/events-listener:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/events-listener:dev \
           -f website/events-listener/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/events-listener:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/events-listener:dev
 
       - name: Docker logout
         run: |
@@ -221,19 +221,20 @@ jobs:
       - name: Build image
         run: |
           docker build \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/test-balance:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/test-balance:dev \
           -f website/test-balance/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/test-balance:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ github.event.organization.login }}/test-balance:dev
 
       - name: Docker logout
         run: |
           docker logout
 
   deploy-to-k8s:
+    name: Deploy to k8s
     needs:
       [
         build-and-push-data-storage-image,
@@ -273,6 +274,7 @@ jobs:
           args: rollout status deployment data-storage-testenv -n ${{ env.KUBE_NAMESPACE }} --timeout=120s
 
   e2e-tests:
+    name: e2e test
     needs: [deploy-to-k8s, wait-previous-run]
     runs-on: self-hosted
     environment: dev
@@ -288,5 +290,7 @@ jobs:
           WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
         run: |
           ./download-examples.sh
-          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
-          yarn start
+          export YARN_ENABLE_IMMUTABLE_INSTALLS=false
+          sudo yarn install
+          sudo yarn set version berry
+          sudo yarn start
