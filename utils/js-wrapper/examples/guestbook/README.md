@@ -1,5 +1,7 @@
 # Guestbook wrapper example
 
+0. Run `yarn install` and `yarn build` in `gear-js/utils/js-wrapper` directory
+
 1. Build program and wrapper
 
 ```sh

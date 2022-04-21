@@ -26,7 +26,7 @@ yarn global add @gear-js/gear-js-wrapper
 
 ## Usage
 
-Before using this tool it's neccessary to generate wrapper package using [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen).
+Before using this tool it's neccessary to generate js package using [wasm-bindgen](https://github.com/rustwasm/wasm-bindgen).
 
 Please check out [examples](https://github.com/gear-tech/gear-js/blob/master/utils/js-wrapper/examples) to understand what is neccessary.
 
