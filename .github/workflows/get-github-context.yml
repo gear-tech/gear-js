@@ -1,0 +1,14 @@
+name: 'Get github context'
+
+on:
+  workflow_dispatch:
+ 
+jobs:
+  get-github-context:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Dump github context
+      run: echo "$GITHUB_CONTEXT"
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
