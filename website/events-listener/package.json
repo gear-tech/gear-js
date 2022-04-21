@@ -12,8 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "^0.17.2",
-    "@polkadot/api": "^7.15.1",
+    "@gear-js/api": "^0.17.7",
+    "@polkadot/api": "^8.1.1",
     "avsc": "^5.7.3",
     "chalk": "^4.1.2",
     "dotenv": "^10.0.0",
