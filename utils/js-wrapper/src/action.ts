@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { generate, getFuncSignature, getFunctionsNames } from './generate/index.js';
 import { join, resolve } from 'path';
-import { getPaths, rmPackageJson, writePackageJson } from './utils.js';
+import { getPaths, writePackageJson } from './utils.js';
 import { replaceEnvImport, writeEnvFile } from './replaceEnv.js';
 import { Target } from 'interfaces.js';
 
@@ -27,5 +27,4 @@ export async function processGenerate(path: string, ts: boolean, target: Target)
   );
   const resultFilePath = join(pkgPath, `index.${ts ? 'ts' : 'js'}`);
   fs.writeFileSync(resultFilePath, result);
-  // rmPackageJson(pkgPath, target);
 }

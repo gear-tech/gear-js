@@ -11,7 +11,7 @@ bindgen-node:
 	wasm-bindgen target/wasm32-unknown-unknown/release/wrapper.wasm --out-dir ./pkg_node/ --target nodejs --omit-default-module-path
 
 wrap-web:
-	gear-js-wrapper pkg_web --target web --ts
+	../../bin/app.js pkg_web --target web --ts
 
 wrap-node:
-	gear-js-wrapper pkg_node --target nodejs
+	../../bin/app.js pkg_node --target nodejs
