@@ -10,7 +10,7 @@ import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useAccount, useApi, useLoading } from 'hooks';
-import { MetaItem, MetaFieldsStruct, parseMeta, prepareToSend } from 'components/MetaFields';
+import { MetaItem, MetaFieldsStruct, parseMeta, prepareToSend, PreparedMetaData } from 'components/MetaFields';
 import { Schema } from './Schema';
 import './MessageForm.scss';
 
@@ -58,14 +58,13 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
       enableReinitialize
       onSubmit={(values, { resetForm }) => {
         // TODO: find out how to improve this one
-        if (currentAccount && values.__root) {
-          const prepared = prepareToSend(values.__root);
+        if (currentAccount) {
           const message = {
             replyToId: values.destination,
             destination: values.destination,
             gasLimit: values.gasLimit.toString(),
             value: values.value.toString(),
-            payload: isManualInput ? values.payload : prepared,
+            payload: isManualInput ? values.payload : prepareToSend(values.__root as PreparedMetaData),
           };
 
           if (meta && api) {
