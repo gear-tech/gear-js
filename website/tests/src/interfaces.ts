@@ -28,7 +28,7 @@ export interface IProgramSpec {
 
 export interface IPreparedPrograms {
   [key: Hex]: {
-    spec: any;
+    spec: IUploadedPrograms;
     init: boolean;
     id: Hex;
   };

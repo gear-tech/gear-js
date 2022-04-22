@@ -5,6 +5,7 @@ import { sendMessages, uploadPrograms } from './prepare';
 import { IMessageSpec, IProgramSpec, IPreparedPrograms, IPreparedMessages } from './interfaces';
 import { test } from './e2e';
 import base from './config/base';
+import { expect } from 'chai';
 
 async function processPrepare(api: GearApi): Promise<{
   programs: IPreparedPrograms;
@@ -27,11 +28,13 @@ async function main() {
   await test(genesis, prepared);
 }
 
-main()
-  .catch((reason) => {
-    console.log(reason);
-    process.exit(1);
-  })
-  .then(() => {
-    process.exit(0);
-  });
+// main()
+//   .catch((reason) => {
+//     console.log(reason);
+//     process.exit(1);
+//   })
+//   .then(() => {
+//     process.exit(0);
+//   });
+
+expect(14).to.eq(15);

@@ -2,7 +2,7 @@ import assert from 'assert';
 
 function checkEnv(name: string): string {
   const env = process.env[name];
-  assert.notStrictEqual(env, undefined, `API_ADDRESS not found`);
+  // assert.notStrictEqual(env, undefined, `API_ADDRESS not found`);
   return env as string;
 }
 
