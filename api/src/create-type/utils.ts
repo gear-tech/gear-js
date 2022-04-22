@@ -18,14 +18,24 @@ export function checkTypeAndPayload(type: string, payload: any): string {
   return type || 'Bytes';
 }
 
+function findTypeInNamepaces(type: string, namespaces: Map<string, string>) {
+  for (let [key, value] of namespaces) {
+    if (key.toLowerCase() === type.toLowerCase()) {
+      return value;
+    }
+  }
+  return undefined;
+}
+
 export function setNamespaces(type: string, namespaces: Map<string, string>): string {
   const matches = type.match(REGULAR_EXP.endWord);
+  findTypeInNamepaces(type, namespaces);
   matches.forEach((match, index) => {
     if (namespaces) {
-      if (namespaces.has(match)) {
-        type = type.replace(new RegExp(match, 'g'), namespaces.get(match));
-      } else if (index < matches.length - 1 && namespaces.has(`${match}${matches[index + 1]}`)) {
-        type = type.replace(new RegExp(match, 'g'), namespaces.get(`${match}${matches[index + 1]}`));
+      let foundType =
+        findTypeInNamepaces(match, namespaces) || findTypeInNamepaces(`${match}${matches[index + 1]}`, namespaces);
+      if (foundType !== undefined) {
+        type = type.replace(new RegExp(match, 'g'), foundType);
       }
     }
   });

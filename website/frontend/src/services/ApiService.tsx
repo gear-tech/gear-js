@@ -268,7 +268,7 @@ export const subscribeToEvents = (alert: AlertContainer) => {
     }
   });
 
-  nodeApi.subscribeToLogEvents(async ({ data: { source, dest, reply, payload } }) => {
+  nodeApi.subscribeToLogEvents(async ({ data: { source, destination, reply, payload } }) => {
     let meta = null;
     let decodedPayload: any;
     const programId = source.toHex();
@@ -290,8 +290,8 @@ export const subscribeToEvents = (alert: AlertContainer) => {
     } catch (error) {
       console.error('Decode payload failed');
     }
-    // @ts-ignore
-    if (dest.toHex() === filterKey) {
+
+    if (destination.toHex() === filterKey) {
       // TODO: add payload parsing
       const message = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
       const isSuccess = (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone;

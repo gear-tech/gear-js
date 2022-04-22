@@ -38,8 +38,8 @@ export class LogData extends GearEventData {
   public get source(): H256 {
     return this[0]['source'];
   }
-  public get dest(): H256 {
-    return this[0]['dest'];
+  public get destination(): H256 {
+    return this[0]['destination'];
   }
   public get payload(): Vec<u8> {
     return this[0]['payload'];
