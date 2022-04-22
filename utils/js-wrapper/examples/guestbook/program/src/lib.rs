@@ -33,8 +33,6 @@ pub unsafe extern "C" fn handle() {
     }
 }
 
-#[no_mangle]
-pub unsafe extern "C" fn init() {}
 
 pub unsafe extern "C" fn meta_state() -> *mut [i32; 2] {
     let input: Option<String> = msg::load().expect("Unable to decode input argument");
