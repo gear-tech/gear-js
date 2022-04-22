@@ -67,7 +67,7 @@ const handleEvent = (method: EventType, data: any): { key: Keys; value: any } | 
         value: {
           id: eventData.id.toHex(),
           source: eventData.source.toHex(),
-          destination: eventData.dest.toHex(),
+          destination: eventData.destination.toHex(),
           payload: eventData.payload.toHex(),
           replyTo: eventData.reply.isSome ? eventData.reply.unwrap()[0].toHex() : null,
           replyError: eventData.reply.isSome ? `${eventData.reply.unwrap()[1].toNumber()}` : null,

@@ -2077,9 +2077,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.17.7, @gear-js/api@npm:^0.17.7":
-  version: 0.17.7
-  resolution: "@gear-js/api@npm:0.17.7"
+"@gear-js/api@npm:0.17.8, @gear-js/api@npm:^0.17.8":
+  version: 0.17.8
+  resolution: "@gear-js/api@npm:0.17.8"
   dependencies:
     "@types/rollup-plugin-peer-deps-external": ^2.2.1
     rollup-plugin-peer-deps-external: ^2.2.4
@@ -2088,7 +2088,7 @@ __metadata:
     "@polkadot/api": ^8.1.1
     "@polkadot/wasm-crypto": ^6.0.1
     rxjs: ^7.5.5
-  checksum: 8805e7ee7f86008898fcfc9afda1b49f59dad585a9fd11abbe4751d05b98e501943d2a4c878faf84943bc00efac412394de6b524d45899fa2155bb2faef21acd
+  checksum: 8fafd58b8b3c51372b6da081caa54abd860b18b73016ba3c1d0fc10c747f264984f274cc6e91a5eb6525162af5c9144859f6b1167b94a14e417330184ce0c753
   languageName: node
   linkType: hard
 
@@ -2101,7 +2101,7 @@ __metadata:
     "@babel/plugin-transform-modules-commonjs": 7.17.9
     "@babel/plugin-transform-typescript": 7.16.8
     "@babel/preset-typescript": 7.16.7
-    "@gear-js/api": 0.17.7
+    "@gear-js/api": 0.17.8
     "@gear-js/interfaces": "workspace:^"
     "@gear-js/jsonrpc-errors": "workspace:^"
     "@nestjs/cli": 8.2.5
@@ -2148,7 +2148,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/event-listener@workspace:website/events-listener"
   dependencies:
-    "@gear-js/api": ^0.17.7
+    "@gear-js/api": ^0.17.8
     "@gear-js/interfaces": "workspace:^"
     "@polkadot/api": ^8.1.1
     "@types/node": 17.0.21
@@ -2169,7 +2169,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.17.7
+    "@gear-js/api": ^0.17.8
     "@gear-js/ui": 0.1.2
     "@monaco-editor/react": 4.4.2
     "@polkadot/api": 8.1.1
@@ -2270,7 +2270,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:website/test-balance"
   dependencies:
-    "@gear-js/api": ^0.17.7
+    "@gear-js/api": ^0.17.8
     "@gear-js/jsonrpc-errors": "workspace:^"
     "@polkadot/api": ^8.1.1
     chalk: ^4.1.2
