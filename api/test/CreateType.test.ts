@@ -46,4 +46,8 @@ describe(`Create a type that differs from existing one in the registry`, () => {
       '0x0080000000000000000000000000000000',
     );
   });
+
+  test('Wrong FTAction', () => {
+    expect(() => CreateType.create('FTActionU8', { Mint: 128 }, { types })).toThrow();
+  });
 });
