@@ -105,6 +105,15 @@ export function createPayloadTypeStructure(typeName: string, types: any, raw = f
     typeName = JSON.stringify(typeName);
   }
 
+  const regexp = new RegExp(`\\b${typeName}\\b`, 'gi');
+
+  if (!types[typeName]) {
+    const typeIgnoreCase = Object.keys(types).find((value) => regexp.test(value));
+    if (typeIgnoreCase) {
+      typeName = typeName.replace(regexp, typeIgnoreCase);
+    }
+  }
+
   const tuple = getIfTuple(typeName, types, raw);
   if (tuple) {
     return tuple;

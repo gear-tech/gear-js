@@ -28,7 +28,8 @@ type EventType =
   | 'Log'
   | 'InitSuccess'
   | 'InitFailure'
-  | 'MessageDispatched';
+  | 'MessageDispatched'
+  | 'DatabaseWiped';
 
 const handleEvent = (method: EventType, data: any): { key: Keys; value: any } | null => {
   let eventData:
@@ -67,7 +68,7 @@ const handleEvent = (method: EventType, data: any): { key: Keys; value: any } | 
         value: {
           id: eventData.id.toHex(),
           source: eventData.source.toHex(),
-          destination: eventData.dest.toHex(),
+          destination: eventData.destination.toHex(),
           payload: eventData.payload.toHex(),
           replyTo: eventData.reply.isSome ? eventData.reply.unwrap()[0].toHex() : null,
           replyError: eventData.reply.isSome ? `${eventData.reply.unwrap()[1].toNumber()}` : null,
@@ -102,6 +103,11 @@ const handleEvent = (method: EventType, data: any): { key: Keys; value: any } | 
           outcome: eventData.outcome.isFailure ? eventData.outcome.asFailure.toHuman() : 'success',
         },
       } as AddEventKafkaPayload<Keys.messageDispatched, MessageDispatched>;
+    case 'DatabaseWiped':
+      return {
+        key: Keys.dbWiped,
+        value: {},
+      };
     default:
       return null;
   }
