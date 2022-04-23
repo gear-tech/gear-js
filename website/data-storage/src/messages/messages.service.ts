@@ -144,4 +144,9 @@ export class MessagesService {
       });
     }
   }
+
+  async deleteRecords(genesis: string): Promise<void> {
+    const messages = await this.messageRepo.find({ where: { genesis } });
+    this.messageRepo.remove(messages);
+  }
 }
