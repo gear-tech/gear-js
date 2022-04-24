@@ -259,11 +259,13 @@ export const addMetadata = async (
 
 export const subscribeToEvents = (alert: AlertContainer) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
-  nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
+  nodeApi.subscribeToProgramEvents(({ method, data }) => {
     // @ts-ignore
-    if (info.origin.toHex() === filterKey) {
-      const message = `${method}\n ${info.programId.toHex()}`;
-      const showAlert = reason ? alert.error : alert.success;
+    if (data.info.origin.toHex() === filterKey) {
+      const description = method === 'InitFailure' ? data.reason.asDispatch.toHuman() : data.info.programId.toHex();
+      const message = `${method}: \n ${description}`;
+      const showAlert = data.reason ? alert.error : alert.success;
+
       showAlert(message);
     }
   });
