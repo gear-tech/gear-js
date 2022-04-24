@@ -12,7 +12,7 @@ env:
   DOCKER_REGISTRY: ghcr.io
   DOCKER_USER: ${{ github.actor }}
   DOCKER_PASSWORD: ${{ github.token }}
-  DOCKER_REPOSITORY: ${{ github.repository }}
+  DOCKER_REPOSITORY: ${{ github.event.organization.login }}
   DOCKER_IMAGE_TAG: latest
   DOCKERFILE_PATH: docker/actions-runner/Dockerfile
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
