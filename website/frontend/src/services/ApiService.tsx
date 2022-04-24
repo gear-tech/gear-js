@@ -262,9 +262,9 @@ export const subscribeToEvents = (alert: AlertContainer) => {
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
-      const isInitFailure = method === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE;
-      const description = isInitFailure ? reason.asDispatch.toHuman() : info.programId.toHex();
-      const message = `${method}: \n ${description}`;
+      const isInitFailure = method === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE && reason?.isDispatch;
+      const reasonOfInitFailure = `${reason.asDispatch.toHuman()}`;
+      const message = `${method}: ${isInitFailure && reasonOfInitFailure}\n ${info.programId.toHex()}`;
       const showAlert = reason ? alert.error : alert.success;
 
       showAlert(message);
