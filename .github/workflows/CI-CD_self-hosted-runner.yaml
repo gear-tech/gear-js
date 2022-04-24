@@ -20,8 +20,8 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
   RUNNER_DEPLOYMENT_PATH: k8s/actions-runner/actions-runner.yml
-  RUNNER_TOKEN: ${{ secrets.RUNNER_TOKEN }}
-  RUNNER_ORG: ${{ github.repository_owner}}
+  RUNNER_TOKEN: ${{ github.token }}
+  RUNNER_ORG: ${{ github.repository_owner }}
   RUNNER_VOLUME_ZONE: us-west-1c
   RUNNER_VOLUME_ID: vol-0fe30025db6d67321
 
