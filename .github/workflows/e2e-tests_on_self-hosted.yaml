@@ -281,7 +281,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkoutHEAD
+        uses: actions/checkout@HEAD
 
       - name: e2e tests
         working-directory: website/tests
