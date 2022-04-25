@@ -263,8 +263,14 @@ export const subscribeToEvents = (alert: AlertContainer) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
       const isInitFailure = method === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE;
-      const reasonOfInitFailure = isInitFailure && reason?.isDispatch ? reason?.asDispatch.toHuman() : '';
-      const message = `${method}${reasonOfInitFailure && `: ${reasonOfInitFailure}`}\n ${info.programId.toHex()}`;
+      let message = '';
+
+      if (isInitFailure) {
+        const reasonOfInitFailure = reason?.isDispatch && reason?.asDispatch.toHuman();
+        message = `${method}: ${reasonOfInitFailure}\n ${info.programId.toHex()}`;
+      } else {
+        message = `${method}\n ${info.programId.toHex()}`;
+      }
 
       const showAlert = reason ? alert.error : alert.success;
 
