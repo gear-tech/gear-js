@@ -21,7 +21,7 @@ env:
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
   RUNNER_DEPLOYMENT_PATH: k8s/actions-runner/actions-runner.yml
   RUNNER_TOKEN: ${{ secrets.RUNNER_TOKEN }}
-  RUNNER_ORG: ${{ github.repository_owner }}
+  RUNNER_REPO: ${{ github.repository }}
   RUNNER_VOLUME_ZONE: us-west-1c
   RUNNER_VOLUME_ID: vol-0fe30025db6d67321
 
@@ -87,7 +87,7 @@ jobs:
       - name: Configure deployment
         run: |
           sed s'|RUNNER_IMAGE|${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/actions-runner:${{ env.DOCKER_IMAGE_TAG }}|'g -i ${{ env.RUNNER_DEPLOYMENT_PATH }}
-          sed s'|RUNNER_ORG|${{ env.RUNNER_ORG }}|'g -i ${{ env.RUNNER_DEPLOYMENT_PATH }}
+          sed s'|RUNNER_REPO|${{ env.RUNNER_REPO }}|'g -i ${{ env.RUNNER_DEPLOYMENT_PATH }}
           sed s'|RUNNER_VOLUME_ZONE|${{ env.RUNNER_VOLUME_ZONE }}|'g -i ${{ env.RUNNER_DEPLOYMENT_PATH }}
           sed s'|RUNNER_VOLUME_ID|${{ env.RUNNER_VOLUME_ID }}|'g -i ${{ env.RUNNER_DEPLOYMENT_PATH }}
 
