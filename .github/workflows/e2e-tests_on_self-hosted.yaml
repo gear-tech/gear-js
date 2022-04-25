@@ -279,22 +279,19 @@ jobs:
     runs-on: k8s-runner
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@HEAD
 
-      - name: Install NodeJS 16.x
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: 16.x
-
-      - name: Prepare&Run Tests
+      - name: e2e tests
         working-directory: website/tests
-        env:
-          API_ADDRESS: ${{ secrets.API_ADDRESS_URL_TEST }}
-          WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
         run: |
           export API_ADDRESS=https://test-env.gear-tech.io/api
           export WS_PROVIDER=ws://ec2-54-193-93-95.us-west-1.compute.amazonaws.com:32422
-          ./download-examples.sh
-          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+          export YARN_ENABLE_IMMUTABLE_INSTALLS=false
+          sudo ./download-examples.sh
+          sudo yarn set version berry
+          sudo yarn config set enableGlobalCache true
+          sudo yarn config set globalFolder /mnt/cashes/yarn
+          sudo yarn plugin import @yarnpkg/plugin-workspace-tools
+          sudo yarn install
           yarn start
