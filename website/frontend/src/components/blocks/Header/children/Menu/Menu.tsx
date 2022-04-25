@@ -14,16 +14,26 @@ type ClassNameProps = {
 };
 
 const Menu = ({ openSidebar }: Props) => {
-  const { isApiReady } = useApi();
+  const { api, isApiReady } = useApi();
 
   const getClassName = ({ isActive }: ClassNameProps) => clsx(styles.link, isActive && styles.active);
+
+  const specName = api?.runtimeVersion.specName.toHuman();
+  const specVersion = api?.runtimeVersion.specVersion.toHuman();
 
   return (
     <ul className={styles.menu}>
       <li>
-        <span className={styles.link} onClick={openSidebar}>
-          {isApiReady ? localStorage.chain : 'Loading...'}
-        </span>
+        <button className={clsx(styles.sidebarBtn, !isApiReady && styles.loading)} onClick={openSidebar}>
+          {isApiReady && (
+            <>
+              <span>{localStorage.chain}</span>
+              <span className={styles.small}>
+                {specName}/{specVersion}
+              </span>
+            </>
+          )}
+        </button>
       </li>
       <li>
         <NavLink className={getClassName} to={routes.explorer}>

@@ -18,23 +18,63 @@
   }
 }
 
-.link {
+%menuItem {
+   color: inherit;
+   height: 100%;
+   padding: 28px 10px;
+   transition: all 0.25s;
+   
+   @include sm {
+      padding: 5px;
+   }
+   
+   &:hover {
+      color: $textColorSecondary;
+   }
+}
+
+.link { 
   display: block;
-  padding: 28px 10px;
   text-align: center;
-  color: inherit;
-  transition: all 0.25s;
   cursor: pointer;
-
-  @include sm {
-    padding: 5px;
-  }
-
-  &:hover {
-    color: $textColorSecondary;
-  }
+   
+  @extend %menuItem;
 
   &.active {
     box-shadow: inset 0 -3px 0 $successColor;
   }
+}
+
+.sidebarBtn {
+   display: flex;
+   flex-flow: column nowrap;
+   align-items: flex-end;
+   padding: 18px 10px;
+   
+   @extend %menuItem;
+   
+   @include sm {
+      align-items: center;
+   }
+
+   &.loading {
+      justify-content: center;
+
+     &::before {  
+       content: 'Loading...';
+     }
+   }
+
+   & > span {
+      text-align: left;
+      overflow-wrap: anywhere;
+
+      &.small {
+        font-size: $fontSizeSmall;
+      } 
+
+      &:not(:last-child) {
+         margin-bottom: 2px;
+      }
+   }
 }
