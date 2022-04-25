@@ -19,8 +19,6 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
   KUBE_NAMESPACE: test-env
-  API_ADDRESS: ${{ secrets.API_ADDRESS_URL_TEST }}
-  WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
 
 jobs:
   unit-tests:
@@ -287,10 +285,10 @@ jobs:
       - name: e2e tests
         working-directory: website/tests
         run: |
-          export API_ADDRESS=https://test-env.gear-tech.io/api
-          export WS_PROVIDER=wss://test-env.gear-tech.io/gear-testnet
-          ./download-examples.sh
-          export YARN_ENABLE_IMMUTABLE_INSTALLS=false
+          sudo export API_ADDRESS=https://test-env.gear-tech.io/api
+          sudo export WS_PROVIDER=wss://test-env.gear-tech.io/gear-testnet
+          sudo export YARN_ENABLE_IMMUTABLE_INSTALLS=false
+          sudo ./download-examples.sh
           sudo yarn install
           sudo yarn set version berry
           sudo yarn start
