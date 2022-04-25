@@ -3,7 +3,7 @@ title: guestbook
 programs:
   - name: guestbook
     id: 1
-    gasLimit: 20000000
+    gasLimit: 200000000
     value: 0
     meta: true
     account: alice
@@ -15,7 +15,7 @@ messages:
       AddMessage:
         author: Dmitriy
         msg: Hello World!
-    gasLimit: 50000000
+    gasLimit: 200000000
     account: alice
 
   - id: 2
@@ -24,13 +24,13 @@ messages:
       AddMessage:
         author: Dmitriy
         msg: Goodbye World!
-    gasLimit: 50000000
+    gasLimit: 400000000
     account: alice
     asHex: true
 
   - id: 3
     program: 1
     payload: ViewMessages
-    gasLimit: 50000000
+    gasLimit: 200000000
     account: alice
     log: '0x081c446d69747269793048656c6c6f20576f726c64211c446d697472697938476f6f6462796520576f726c6421'
