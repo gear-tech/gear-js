@@ -285,7 +285,7 @@ jobs:
       - name: e2e tests
         working-directory: website/tests
         run: |
-          export API_ADDRESS=https://test-env.gear-tech.io/api
+          export API_ADDRESS=http://ec2-54-193-93-95.us-west-1.compute.amazonaws.com:32443/api
           export WS_PROVIDER=ws://ec2-54-193-93-95.us-west-1.compute.amazonaws.com:32422
           export YARN_ENABLE_IMMUTABLE_INSTALLS=false
           sudo ./download-examples.sh
