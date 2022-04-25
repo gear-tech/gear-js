@@ -19,6 +19,8 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
   KUBE_NAMESPACE: test-env
+  API_ADDRESS: ${{ secrets.API_ADDRESS_URL_TEST }}
+  WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
 
 jobs:
   unit-tests:
@@ -277,7 +279,6 @@ jobs:
     name: e2e test
     needs: [deploy-to-k8s, wait-previous-run]
     runs-on: k8s-runner
-    environment: dev
 
     steps:
       - name: Checkout
@@ -285,9 +286,6 @@ jobs:
 
       - name: e2e tests
         working-directory: website/tests
-        env:
-          API_ADDRESS: ${{ secrets.API_ADDRESS_URL_TEST }}
-          WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
         run: |
           export API_ADDRESS=https://test-env.gear-tech.io/api
           export WS_PROVIDER=wss://test-env.gear-tech.io/gear-testnet
