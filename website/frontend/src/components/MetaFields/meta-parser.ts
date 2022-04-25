@@ -62,6 +62,7 @@ type MetaEnumType = '_enum' | '_enum_Option' | '_enum_Result' | string;
 enum MetaEnum {
   Enum = '_enum',
   EnumOption = '_enum_Option',
+  EnumOptionNew = '_Option',
   EnumResult = '_enum_Result',
 }
 
@@ -82,7 +83,7 @@ function processFields(data: MetaItem, path?: string[]): StackItem[] {
         path: [...(path || []), key],
         value: value as MetaItem, // TODO: find out why types not infer as expected
       });
-    } else if (key === MetaEnum.EnumOption) {
+    } else if (key === MetaEnum.EnumOption || key === MetaEnum.EnumOptionNew) {
       accum.push({
         kind: 'enum_option',
         path: [...(path || []), key],
@@ -167,12 +168,12 @@ function parseField(data: MetaItem) {
           setWith(
             result,
             [...current.path, '__select'],
-            entries[0].some((i) => i === '_enum' || i === '_enum_Result' || i === '_enum_Option'),
+            entries[0].some((i) => i === '_enum' || i === '_enum_Result' || i === '_enum_Option' || i === '_Option'),
             Object
           );
 
           // eslint-disable-next-line max-depth
-          if (entries[0].some((i) => i === '_enum_Option')) {
+          if (entries[0].some((i) => i === '_enum_Option' || i === '_Option')) {
             setWith(result, [...current.path, '__type'], 'enum_option', Object);
           }
 
@@ -184,7 +185,7 @@ function parseField(data: MetaItem) {
           // Process fieldset fields
           entries.forEach(([vKey, vValue], index) => {
             // Enum option
-            if (vKey === '_enum_Option') {
+            if (vKey === '_enum_Option' || vKey === '_Option') {
               stack.push(
                 ...processFields(
                   {
@@ -235,7 +236,7 @@ function parseField(data: MetaItem) {
           Object.entries(current.value)
             .reverse()
             .forEach(([vKey, vValue]) => {
-              const path = current.path.filter((item) => item !== '_enum_Option');
+              const path = current.path.filter((item) => item !== '_Option');
               // field
               if (isString(vValue)) {
                 stack.push(
