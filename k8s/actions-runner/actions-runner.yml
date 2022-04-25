@@ -11,7 +11,7 @@ metadata:
   namespace: actions-runner
 spec:
   image: RUNNER_IMAGE
-  organization: RUNNER_ORG
+  repository: RUNNER_REPO
   ephemeral: false
   imagePullPolicy: Always
   ephemeral: false
