@@ -272,3 +272,25 @@ jobs:
         uses: kodermax/kubectl-aws-eks@HEAD
         with:
           args: rollout status deployment data-storage-testenv -n ${{ env.KUBE_NAMESPACE }} --timeout=120s
+
+  e2e-tests:
+    name: e2e test
+    needs: [deploy-to-k8s, wait-previous-run]
+    runs-on: k8s-runner
+    environment: dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkoutHEAD
+
+      - name: e2e tests
+        working-directory: website/tests
+        env:
+          API_ADDRESS: ${{ secrets.API_ADDRESS_URL_TEST }}
+          WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
+        run: |
+          ./download-examples.sh
+          export YARN_ENABLE_IMMUTABLE_INSTALLS=false
+          sudo yarn install
+          sudo yarn set version berry
+          sudo yarn start
