@@ -3,7 +3,7 @@ import { UploadProgramModel, Message, Reply, MetaModel, ProgramStatus } from 'ty
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { CreateType, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
-import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE } from 'consts';
+import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE, EVENT_TYPES } from 'consts';
 import { localPrograms } from './LocalDBService';
 import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
@@ -262,8 +262,13 @@ export const subscribeToEvents = (alert: AlertContainer) => {
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
-      const message = `${method}\n ${info.programId.toHex()}`;
+      const isInitFailure = method === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE;
+      const initFailureReason = reason?.isDispatch && reason?.asDispatch.toHuman();
+      const methodString = initFailureReason && isInitFailure ? `${method}: ${initFailureReason}` : `${method}`;
+      const programId = info.programId.toHex();
+      const message = `${methodString}\n${programId}`;
       const showAlert = reason ? alert.error : alert.success;
+
       showAlert(message);
     }
   });
