@@ -25,7 +25,7 @@ jobs:
   wait-previous-run:
     name: Wait previous run
     if: github.event.pull_request.draft == false
-    runs-on: k8s-runner
+    runs-on: ubuntu-latest
     steps:
       - name: Wait previous run
         uses: mktcode/consecutive-workflow-action@HEAD
