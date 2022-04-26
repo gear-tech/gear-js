@@ -259,6 +259,7 @@ export const addMetadata = async (
 
 export const subscribeToEvents = (alert: AlertContainer) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
+
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
@@ -274,29 +275,29 @@ export const subscribeToEvents = (alert: AlertContainer) => {
   });
 
   nodeApi.subscribeToLogEvents(async ({ data: { source, destination, reply, payload } }) => {
-    let meta = null;
-    let decodedPayload: any;
-    const programId = source.toHex();
-    const apiRequest = new ServerRPCRequestService();
-
-    const { result } = isDevChain()
-      ? await getLocalProgramMeta(programId)
-      : await apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId });
-
-    if (result && result.meta) {
-      meta = JSON.parse(result.meta);
-    }
-
-    try {
-      decodedPayload =
-        meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
-          ? CreateType.decode(meta.output, payload, meta).toHuman()
-          : payload.toHuman();
-    } catch (error) {
-      console.error('Decode payload failed');
-    }
-
     if (destination.toHex() === filterKey) {
+      let meta = null;
+      let decodedPayload: any;
+      const programId = source.toHex();
+      const apiRequest = new ServerRPCRequestService();
+
+      const { result } = isDevChain()
+        ? await getLocalProgramMeta(programId)
+        : await apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId });
+
+      if (result && result.meta) {
+        meta = JSON.parse(result.meta);
+      }
+
+      try {
+        decodedPayload =
+          meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
+            ? CreateType.decode(meta.output, payload, meta).toHuman()
+            : payload.toHuman();
+      } catch (error) {
+        console.error('Decode payload failed');
+      }
+
       // TODO: add payload parsing
       const message = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
       const isSuccess = (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone;
