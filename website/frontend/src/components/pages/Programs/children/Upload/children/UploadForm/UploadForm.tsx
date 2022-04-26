@@ -6,10 +6,9 @@ import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Checkbox } from '@gear-js/ui';
 import { Formik, Form, Field } from 'formik';
-import { ParsedShape, parseMeta } from 'utils/meta-parser';
 import { InitialValues } from './types';
 import { SetFieldValue } from 'types/common';
-import { FormItem } from 'components/FormItem';
+import { MetaFieldsStruct, parseMeta, prepareToSend, MetaFields as MetaForm } from 'components/MetaFields';
 
 import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
 import { MetaFile } from './children/MetaFile/MetaFile';
@@ -24,6 +23,14 @@ import { MIN_GAS_LIMIT } from 'consts';
 import { META_FIELDS } from './consts';
 import { DroppedFile } from '../../types';
 import styles from './UploadForm.module.scss';
+
+const INITIAL_VALUES = {
+  gasLimit: MIN_GAS_LIMIT,
+  value: 0,
+  payload: '0x00',
+  __root: null,
+  programName: '',
+};
 
 type Props = {
   setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
@@ -40,16 +47,10 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<string | null>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
-  const [payloadForm, setPayloadForm] = useState<ParsedShape | null>();
+  const [payloadForm, setPayloadForm] = useState<MetaFieldsStruct | null>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
   const [isManualPayload, setIsManualPayload] = useState<boolean>(true);
-  const [initialValues, setInitialValues] = useState<InitialValues>({
-    gasLimit: MIN_GAS_LIMIT,
-    value: 0,
-    payload: '0x00',
-    fields: {},
-    programName: '',
-  });
+  const [initialValues, setInitialValues] = useState<InitialValues>(INITIAL_VALUES);
 
   const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
   const isShowPayloadForm = payloadForm && !isManualPayload;
@@ -104,19 +105,13 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setDroppedMetaFile(null);
     setFieldFromFile(null);
 
-    setInitialValues({
-      gasLimit: MIN_GAS_LIMIT,
-      value: 0,
-      payload: '0x00',
-      fields: {},
-      programName: '',
-    });
+    setInitialValues(INITIAL_VALUES);
   };
 
   const handleSubmitForm = (values: any) => {
     if (currentAccount) {
       if (isMetaFromFile) {
-        const pl = isManualPayload ? values.payload : values.fields;
+        const pl = isManualPayload ? values.payload : prepareToSend(values.__root);
         const updatedValues = { ...values, initPayload: pl };
 
         UploadProgram(
@@ -260,7 +255,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         )}
                         {isShowPayloadForm ? (
                           <div className="message-form--info">
-                            <FormItem data={payloadForm} />
+                            <MetaForm data={payloadForm} />
                           </div>
                         ) : (
                           <>

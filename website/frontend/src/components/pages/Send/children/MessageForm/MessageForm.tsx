@@ -1,4 +1,4 @@
-import React, { useEffect, useState, VFC } from 'react';
+import React, { useEffect, useRef, useState, VFC } from 'react';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Field, Form, Formik } from 'formik';
@@ -10,14 +10,14 @@ import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useAccount, useApi, useLoading } from 'hooks';
-import { MetaParam, ParsedShape, parseMeta } from 'utils/meta-parser';
+import { MetaItem, MetaFieldsStruct, parseMeta, prepareToSend, PreparedMetaData } from 'components/MetaFields';
 import { Schema } from './Schema';
 import './MessageForm.scss';
 
 type Props = {
   id: string;
   meta?: Metadata;
-  types: MetaParam | null;
+  types: MetaItem | null;
   replyErrorCode?: string;
 };
 
@@ -26,15 +26,15 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
   const alert = useAlert();
   const { enableLoading, disableLoading } = useLoading();
   const { account: currentAccount } = useAccount();
-  const [metaForm, setMetaForm] = useState<ParsedShape | null>();
+  const [metaForm, setMetaForm] = useState<MetaFieldsStruct | null>();
   const [isManualInput, setIsManualInput] = useState(Boolean(!types));
 
-  const [initialValues] = useState<InitialValues>({
+  const initialValues = useRef<InitialValues>({
     gasLimit: 20000000,
     value: 0,
     payload: types ? getPreformattedText(types) : '',
     destination: id,
-    fields: {},
+    __root: null,
   });
 
   const isReply = !!replyErrorCode;
@@ -43,28 +43,31 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
     if (types) {
       const parsedMeta = parseMeta(types);
       setMetaForm(parsedMeta);
-      setIsManualInput(false);
+      if (parsedMeta && parsedMeta.__root && parsedMeta.__values) {
+        setIsManualInput(false);
+        initialValues.current.__root = parsedMeta.__values;
+      }
     }
-  }, [types]);
+  }, [types, initialValues]);
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={initialValues.current}
       validationSchema={Schema}
       validateOnBlur
+      enableReinitialize
       onSubmit={(values, { resetForm }) => {
+        // TODO: find out how to improve this one
         if (currentAccount) {
-          const pl = isManualInput ? values.payload : values.fields;
-
           const message = {
             replyToId: values.destination,
             destination: values.destination,
             gasLimit: values.gasLimit.toString(),
             value: values.value.toString(),
-            payload: pl,
+            payload: isManualInput ? values.payload : prepareToSend(values.__root as PreparedMetaData),
           };
 
-          if (api) {
+          if (meta && api) {
             sendMessage(
               isReply ? api.reply : api.message,
               currentAccount,

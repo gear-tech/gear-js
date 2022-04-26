@@ -18,7 +18,7 @@ export class Program extends BaseEntity implements IProgram {
   @Column({ nullable: true })
   uploadedAt: Date;
 
-  @OneToOne(() => Meta, { nullable: true })
+  @OneToOne(() => Meta, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn()
   meta: Meta;
 

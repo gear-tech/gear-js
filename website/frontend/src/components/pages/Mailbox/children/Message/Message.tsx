@@ -26,7 +26,9 @@ const Message = ({ message }: Props) => {
   };
 
   const showSuccessAlert = (data: ISubmittableResult) => {
-    alert.success(`Status: ${data.status}`);
+    if (!data.status.isBroadcast) {
+      alert.success(`Status: ${data.status}`);
+    }
   };
 
   const handleClaimButtonClick = () => {

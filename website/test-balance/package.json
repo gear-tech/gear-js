@@ -11,9 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "^0.17.2",
+    "@gear-js/api": "^0.17.8",
     "@gear-js/jsonrpc-errors": "workspace:^",
-    "@polkadot/api": "^7.15.1",
+    "@polkadot/api": "^8.1.1",
     "chalk": "^4.1.2",
     "kafkajs": "^1.15.0",
     "pg": "^8.7.1",
