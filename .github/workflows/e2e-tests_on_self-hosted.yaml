@@ -25,7 +25,6 @@ jobs:
   wait-previous-run:
     name: Wait previous run
     if: github.event.pull_request.draft == false
-    needs: unit-tests
     runs-on: k8s-runner
     steps:
       - name: Wait previous run
