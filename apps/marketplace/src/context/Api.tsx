@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import { GearApi } from '@gear-js/api';
-import { NODE_ADDRESS } from 'utils/consts';
+import { NODE_ADDRESS } from 'consts';
 import Props from './types';
 
 type Value = {

@@ -1,7 +1,4 @@
-import { useContext } from 'react';
-import { AccountContext, ApiContext } from 'context';
+import { useApi, useAccount } from './context';
+import { useMetadata, useReadState } from './api';
 
-const useAccount = () => useContext(AccountContext);
-const useApi = () => useContext(ApiContext);
-
-export { useApi, useAccount };
+export { useApi, useAccount, useMetadata, useReadState };
