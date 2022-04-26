@@ -70,7 +70,7 @@ jobs:
   build-and-push-gear-node-image:
     name: Build & push 'gear-node'
     if: github.event.pull_request.draft == false
-    needs: wait-previous-run
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -105,7 +105,7 @@ jobs:
   build-and-push-data-storage-image:
     name: Build & push 'data-storage'
     if: github.event.pull_request.draft == false
-    needs: wait-previous-run
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -140,7 +140,7 @@ jobs:
   build-and-push-api-gateway-image:
     name: Build & push 'api-gateway'
     if: github.event.pull_request.draft == false
-    needs: wait-previous-run
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -175,7 +175,7 @@ jobs:
   build-and-push-events-listener-image:
     name: Build & push 'events-listener'
     if: github.event.pull_request.draft == false
-    needs: wait-previous-run
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -210,7 +210,7 @@ jobs:
   build-and-push-test-balance-image:
     name: Build & push 'test-balance'
     if: github.event.pull_request.draft == false
-    needs: wait-previous-run
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
