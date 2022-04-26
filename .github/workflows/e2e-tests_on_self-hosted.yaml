@@ -21,8 +21,21 @@ env:
   KUBE_NAMESPACE: test-env
 
 jobs:
+
+  wait-previous-run:
+    name: Wait previous run
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait previous run
+        uses: mktcode/consecutive-workflow-action@HEAD
+        with:
+          token: ${{ github.token }}
+          
   unit-tests:
     name: Unit tests 'data-storage'
+    needs: wait-previous-run
+    if: github.event.pull_request.draft == false
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -54,19 +67,10 @@ jobs:
         run: sudo yarn test
         working-directory: website/data-storage/
 
-  wait-previous-run:
-    name: Wait previous run
-    needs: unit-tests
-    runs-on: k8s-runner
-    steps:
-      - name: Wait previous run
-        uses: mktcode/consecutive-workflow-action@HEAD
-        with:
-          token: ${{ github.token }}
-
   build-and-push-gear-node-image:
     name: Build & push 'gear-node'
-    needs: wait-previous-run
+    if: github.event.pull_request.draft == false
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -97,9 +101,11 @@ jobs:
       - name: Docker logout
         run: |
           docker logout
+          
   build-and-push-data-storage-image:
     name: Build & push 'data-storage'
-    needs: wait-previous-run
+    if: github.event.pull_request.draft == false
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -133,7 +139,8 @@ jobs:
 
   build-and-push-api-gateway-image:
     name: Build & push 'api-gateway'
-    needs: wait-previous-run
+    if: github.event.pull_request.draft == false
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -167,7 +174,8 @@ jobs:
 
   build-and-push-events-listener-image:
     name: Build & push 'events-listener'
-    needs: wait-previous-run
+    if: github.event.pull_request.draft == false
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -201,7 +209,8 @@ jobs:
 
   build-and-push-test-balance-image:
     name: Build & push 'test-balance'
-    needs: wait-previous-run
+    if: github.event.pull_request.draft == false
+    needs: [wait-previous-run,unit-tests]
     runs-on: k8s-runner
     steps:
       - name: Fix permissions
@@ -235,14 +244,8 @@ jobs:
 
   deploy-to-k8s:
     name: Deploy to k8s
-    needs:
-      [
-        build-and-push-data-storage-image,
-        build-and-push-api-gateway-image,
-        build-and-push-events-listener-image,
-        build-and-push-test-balance-image,
-        wait-previous-run
-      ]
+    if: github.event.pull_request.draft == false
+    needs: [ wait-previous-run, unit-tests, build-and-push-data-storage-image, build-and-push-api-gateway-image, build-and-push-events-listener-image, build-and-push-test-balance-image]
     runs-on: k8s-runner
 
     steps:
@@ -275,7 +278,8 @@ jobs:
 
   e2e-tests:
     name: e2e test
-    needs: [deploy-to-k8s, wait-previous-run]
+    if: github.event.pull_request.draft == false
+    needs: [wait-previous-run, deploy-to-k8s]
     runs-on: k8s-runner
 
     steps:
