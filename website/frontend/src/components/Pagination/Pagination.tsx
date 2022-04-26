@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useSearchParams, useLocation } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import arrow from './images/arrow.svg';
@@ -7,29 +7,26 @@ import { URL_PARAMS } from 'consts';
 import './Pagination.scss';
 
 type Props = {
-  currentPage: number;
-  count: number;
+  page: number;
+  pagesAmount: number;
 };
 
-const Pagination = ({ currentPage, count }: Props) => {
+const Pagination = ({ page, pagesAmount }: Props) => {
   const [searchParams] = useSearchParams();
-  const { pathname: url } = useLocation();
+  const totalPages = Math.ceil(pagesAmount / INITIAL_LIMIT_BY_PAGE);
+  const prevPage = page - 1;
+  const nextPage = page + 1;
 
-  const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
-  const isDisabledPrev = currentPage === 1;
-  const isDisabledNext = currentPage === totalPages || totalPages === 0;
+  const getTo = (pageValue: number) => {
+    searchParams.set(URL_PARAMS.PAGE, String(pageValue));
 
-  const getUrl = (isPrevPage: boolean) => {
-    const newPage = isPrevPage ? currentPage - 1 : currentPage + 1;
-    searchParams.set(URL_PARAMS.PAGE, String(newPage));
-
-    return `${url}?${searchParams.toString()}`;
+    return { search: searchParams.toString() };
   };
 
   return (
     <div className="pagination">
-      {!isDisabledPrev ? (
-        <Link className="pagination--box" to={getUrl(true)}>
+      {prevPage > 0 ? (
+        <Link className="pagination--box" to={getTo(prevPage)}>
           <img className="pagination--img-prev" src={arrow} alt="arrow" />
         </Link>
       ) : (
@@ -38,11 +35,11 @@ const Pagination = ({ currentPage, count }: Props) => {
         </div>
       )}
       <button type="button" className="pagination--box selected">
-        {currentPage}
+        {page}
       </button>
       <p className="pagination__total">of {totalPages}</p>
-      {!isDisabledNext ? (
-        <Link className="pagination--box" to={getUrl(false)}>
+      {nextPage < totalPages ? (
+        <Link className="pagination--box" to={getTo(nextPage)}>
           <img className="pagination--img" src={arrow} alt="arrow" />
         </Link>
       ) : (

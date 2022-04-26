@@ -45,12 +45,12 @@ export const Messages: VFC = () => {
     <div className="messages">
       <div className="pagination__wrapper">
         <span className="pagination__wrapper-caption">Total results: {messagesCount || 0}</span>
-        <Pagination currentPage={currentPage} count={messagesCount || 1} />
+        <Pagination page={currentPage} pagesAmount={messagesCount || 1} />
       </div>
       <SearchForm placeholder="Find message by ID" />
       <MessagesList messages={messages} />
       <div className="pagination_bottom">
-        <Pagination currentPage={currentPage} count={messagesCount || 1} />
+        <Pagination page={currentPage} pagesAmount={messagesCount || 1} />
       </div>
     </div>
   );
