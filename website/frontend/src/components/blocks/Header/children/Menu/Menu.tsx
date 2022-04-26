@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useApi } from 'hooks';
 import { routes } from 'routes';
@@ -24,14 +23,16 @@ const Menu = ({ openSidebar }: Props) => {
   return (
     <ul className={styles.menu}>
       <li>
-        <button className={clsx(styles.sidebarBtn, !isApiReady && styles.loading)} onClick={openSidebar}>
-          {isApiReady && (
+        <button className={styles.sidebarBtn} onClick={openSidebar}>
+          {isApiReady ? (
             <>
               <span>{localStorage.chain}</span>
-              <span className={styles.small}>
+              <span className={styles.runtime}>
                 {specName}/{specVersion}
               </span>
             </>
+          ) : (
+            'Loading...'
           )}
         </button>
       </li>

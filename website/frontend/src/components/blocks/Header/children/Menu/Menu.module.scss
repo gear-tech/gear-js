@@ -34,11 +34,11 @@
 }
 
 .link { 
+  @extend %menuItem;
+
   display: block;
   text-align: center;
   cursor: pointer;
-   
-  @extend %menuItem;
 
   &.active {
     box-shadow: inset 0 -3px 0 $successColor;
@@ -46,35 +46,24 @@
 }
 
 .sidebarBtn {
+   @extend %menuItem;
+
    display: flex;
-   flex-flow: column nowrap;
+   flex-direction: column;
+   justify-content: center;
    align-items: flex-end;
    padding: 18px 10px;
-   
-   @extend %menuItem;
+   text-align: right;
    
    @include sm {
       align-items: center;
    }
-
-   &.loading {
-      justify-content: center;
-
-     &::before {  
-       content: 'Loading...';
-     }
-   }
-
-   & > span {
-      text-align: left;
-      overflow-wrap: anywhere;
-
-      &.small {
-        font-size: $fontSizeSmall;
-      } 
-
-      &:not(:last-child) {
-         margin-bottom: 2px;
-      }
+   
+   & > *:not(:last-child) {
+      margin-bottom: 2px;
    }
 }
+
+.runtime {
+  font-size: $fontSizeSmall;
+} 
