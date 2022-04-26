@@ -245,14 +245,7 @@ jobs:
   deploy-to-k8s:
     name: Deploy to k8s
     if: github.event.pull_request.draft == false
-    needs:
-      [
-        build-and-push-data-storage-image,
-        build-and-push-api-gateway-image,
-        build-and-push-events-listener-image,
-        build-and-push-test-balance-image,
-        wait-previous-run
-      ]
+    needs: [ wait-previous-run, unit-tests, build-and-push-data-storage-image, build-and-push-api-gateway-image, build-and-push-events-listener-image, build-and-push-test-balance-image]
     runs-on: k8s-runner
 
     steps:
@@ -286,7 +279,7 @@ jobs:
   e2e-tests:
     name: e2e test
     if: github.event.pull_request.draft == false
-    needs: [deploy-to-k8s, wait-previous-run]
+    needs: [wait-previous-run, deploy-to-k8s]
     runs-on: k8s-runner
 
     steps:
