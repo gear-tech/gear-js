@@ -1,4 +1,6 @@
-@import '../../../../../assets/scss/variables';
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/breakpoints.scss' as *;
+@use 'assets/scss/common.scss' as *;
 
 .programsListItem {
   align-items: center;
@@ -7,7 +9,8 @@
   justify-content: space-between;
   position: relative;
   border-bottom: 1px solid $separateLineColor;
-  @media (max-width: 768px) {
+
+  @include md {
     * {
       align-items: unset;
     }
@@ -18,7 +21,8 @@
   color: $textColorSecondary;
   font-size: $fontSizeLarge;
   font-weight: 600;
-  @media (max-width: 768px) {
+
+  @include md {
     font-size: 14px;
   }
 }
@@ -27,7 +31,8 @@
   display: flex;
   align-items: center;
   min-width: 270px;
-  @media (max-width: 768px) {
+
+  @include md {
     flex-direction: column;
     padding-right: 0;
     padding-left: 16px;
@@ -39,7 +44,7 @@
   flex-direction: row;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @include md {
     width: 100%;
     padding-bottom: 12px;
     margin-bottom: 12px;
@@ -51,7 +56,8 @@
 
   .programLink {
     text-decoration: none;
-    color: #ffffff;
+    color: $textColor;
+
     &:hover {
       text-decoration: underline;
     }
@@ -90,7 +96,7 @@
   font-size: $fontSizeBase;
   padding: 0 5px;
 
-  @media (max-width: 768px) {
+  @include md {
     font-size: 14px;
     word-break: break-all;
   }
@@ -99,18 +105,20 @@
 .programWrapperData {
   display: flex;
   flex: 0 2 300px;
-  @media (max-width: 768px) {
+
+  @include md {
     width: 100%;
     margin-left: unset;
     flex: unset;
     justify-content: space-between;
+
     div {
       display: flex;
       flex-direction: column;
 
       span {
         padding: 0;
-        color: #858585;
+        color: $textColorSecondary;
       }
     }
   }
@@ -132,39 +140,11 @@
   align-items: center;
   flex: 0 1 260px;
   justify-content: flex-end;
-  button {
-    padding: 0;
-    margin-right: 10px;
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-  @media (max-width: 768px) {
+
+  @include md {
     & {
       top: 30px;
     }
-  }
-
-  .allProgramsItemSendMessage {
-    display: flex;
-    padding: 8px;
-  }
-
-  button {
-    padding: 8px;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    position: relative;
-    @media (max-width: 768px) {
-      & {
-        bottom: 8px;
-      }
-    }
-  }
-
-  button:hover {
-    background: rgba(196, 196, 196, 0.1);
   }
 }
 
@@ -177,9 +157,31 @@
     height: 20px;
   }
 }
+
+%actionItem {
+   border-radius: 50%;
+   width: 34px;
+   height: 34px;
+   font-size: 0;
+
+   &:hover {
+      background: $bkgButtonColor;
+   }
+}
+
+.allProgramsItemSendMessage {
+   @extend %actionItem;
+
+   padding: 8px 6px;
+}
+
 .allProgramsItemUpload {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  outline: none;
+   @extend %actionItem;
+
+   padding: 9px 5px;
+}
+
+.linkInactive {
+   @extend .disabled;
+   pointer-events: none;
 }

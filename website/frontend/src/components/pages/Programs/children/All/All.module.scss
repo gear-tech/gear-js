@@ -1,3 +1,6 @@
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/breakpoints.scss' as *;
+
 .paginationWrapper {
   margin: 26px 0;
   display: flex;
@@ -20,7 +23,7 @@
     font-weight: bold;
     font-size: 16px;
     line-height: 24px;
-    color: #ffffff;
+    color: $textColor;
   }
 
   span {
@@ -29,67 +32,11 @@
     line-height: 130%;
     display: flex;
     align-items: center;
-    color: #858585;
+    color: $textColorSecondary;
   }
 }
+
 .allProgramsList {
   display: flex;
   flex-direction: column;
-}
-.allProgramsItem {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 26px 0;
-  border-top: 1px solid #3e3e3e;
-}
-
-.allProgramsItemHash {
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 21px;
-  color: #858585;
-
-  @media (max-width: 768px) {
-    word-wrap: break-word;
-  }
-}
-.programsListBtns {
-  position: absolute;
-  right: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  .allProgramsItemSendMessage {
-    display: flex;
-    padding: 8px;
-  }
-
-  button {
-    padding: 8px;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    position: relative;
-    @media (max-width: 768px) {
-      & {
-        bottom: 8px;
-      }
-    }
-  }
-
-  button:hover {
-    background: rgba(196, 196, 196, 0.1);
-  }
-}
-.allProgramsItemUpload {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  outline: none;
-}
-.paginationBottom {
-  margin-bottom: 76px;
-  margin-top: 24px;
 }
