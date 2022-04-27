@@ -39,3 +39,4 @@
         KAFKA_BROKERS: "{{ lookup('env', 'KAFKA_BROKERS') }}"
         KAFKA_SASL_USERNAME: "{{ lookup('env', 'KAFKA_SASL_USERNAME') }}"
         KAFKA_SASL_PASSWORD: "{{ lookup('env', 'KAFKA_SASL_PASSWORD') }}"
+        CAPTCH_SECRET: "{{ lookup('env', 'CAPTCH_SECRET') }}"
