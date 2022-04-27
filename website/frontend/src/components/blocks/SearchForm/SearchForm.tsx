@@ -1,6 +1,6 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState, FormEvent } from 'react';
 import { Button, Input, buttonStyles } from '@gear-js/ui';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import searchIcon from 'assets/images/search.svg';
 import { URL_PARAMS } from 'consts';
 import styles from './SearchForm.module.scss';
@@ -11,7 +11,8 @@ type Props = {
 };
 
 const SearchForm = ({ placeholder }: Props) => {
-  const linkClasses = clsx(buttonStyles.button, buttonStyles.secondary, buttonStyles.normal);
+  const navigate = useNavigate();
+  const linkClasses = clsx(buttonStyles.button, buttonStyles.secondary, buttonStyles.small);
   const { pathname: url } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = useState('');
@@ -20,11 +21,15 @@ const SearchForm = ({ placeholder }: Props) => {
     setValue(target.value);
   };
 
-  const getUrl = () => {
+  const setUrlParams = () => {
     searchParams.set(URL_PARAMS.PAGE, String(1));
     searchParams.set(URL_PARAMS.QUERY, value);
+  };
 
-    return `${url}?${searchParams.toString()}`;
+  const getTo = () => {
+    setUrlParams();
+
+    return { search: searchParams.toString() };
   };
 
   const resetSearch = () => {
@@ -33,8 +38,18 @@ const SearchForm = ({ placeholder }: Props) => {
     setSearchParams(searchParams);
   };
 
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+
+    setUrlParams();
+
+    const path = `${url}?${searchParams.toString()}`;
+
+    navigate(path);
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className={styles.searchForm}>
         <Input
           icon={searchIcon}
@@ -46,9 +61,9 @@ const SearchForm = ({ placeholder }: Props) => {
           onChange={handleChange}
         />
         <div className={styles.links}>
-          <Link className={linkClasses} to={getUrl()}>
+          <Link className={linkClasses} to={getTo()}>
             <img className={buttonStyles.icon} src={searchIcon} alt="search icon" />
-            <p>Search</p>
+            Search
           </Link>
           <Button
             className={styles.resetButton}
