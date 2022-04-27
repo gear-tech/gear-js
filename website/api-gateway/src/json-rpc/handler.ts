@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import { getResponse } from 'src/utils';
 import { MethodNotFoundError } from './errors';
 import { IRpcRequest, IRpcResponse } from './interface';
 import errors from '@gear-js/jsonrpc-errors';
@@ -20,19 +21,6 @@ export class RpcMessageHandler {
     } else {
       return this.getMethod(method);
     }
-  }
-
-  getResponse(procedure: IRpcRequest, error?: any, result?: any): IRpcResponse {
-    const response: IRpcResponse = {
-      jsonrpc: '2.0',
-      id: procedure.id,
-    };
-    if (error) {
-      response['error'] = { message: errors[error].message, code: errors[error].code };
-    } else if (result) {
-      response['result'] = result;
-    }
-    return response;
   }
 
   getMethod(methodName: string): (params: any) => Observable<any> {
@@ -72,7 +60,7 @@ export class RpcMessageHandler {
       }
       response = this.executeMethod(method, procedure);
     } catch (error) {
-      response = this.getResponse(procedure, error.toJson());
+      response = getResponse(procedure, error.toJson());
     }
     return response;
   }
@@ -86,13 +74,13 @@ export class RpcMessageHandler {
     return new Promise((resolve) => {
       result.forEach((value) => {
         if (!value) {
-          resolve(this.getResponse(procedure, errors.ServiceIsNotAvaiable.name));
+          resolve(getResponse(procedure, errors.ServiceIsNotAvaiable.name));
         } else if ('error' in value) {
-          resolve(this.getResponse(procedure, value.error));
+          resolve(getResponse(procedure, value.error));
         } else if ('result' in value) {
-          resolve(this.getResponse(procedure, null, value.result));
+          resolve(getResponse(procedure, null, value.result));
         } else {
-          resolve(this.getResponse(procedure, errors.UnableToGetData.name));
+          resolve(getResponse(procedure, errors.UnableToGetData.name));
         }
       });
     });
