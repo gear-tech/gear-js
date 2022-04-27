@@ -21,7 +21,7 @@ jobs:
           KAFKA_BROKERS: ${{ secrets.KAFKA_BROKERS }}
           KAFKA_SASL_USERNAME: ${{ secrets.KAFKA_SASL_USERNAME }}
           KAFKA_SASL_PASSWORD: ${{ secrets.KAFKA_SASL_PASSWORD }}
-          CAPTCH_SECRET: 0xfF8C6A74C8EcD1Db7A7A5772F815255f4B661197
+          CAPTCH_SECRET: ${{ secrets.CAPTCH_SECRET }}
 
         with:
           directory: ./ansible/tasks/api-gateway
