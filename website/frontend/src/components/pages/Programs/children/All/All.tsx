@@ -9,7 +9,7 @@ import MessageIcon from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload-cloud.svg';
 import { UserProgram } from '../UserProgram/UserProgram';
 import styles from './All.module.scss';
-import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
+import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 import { URL_PARAMS } from 'consts';
 import { getPrograms } from 'services';
 
@@ -20,20 +20,18 @@ type ProgramMessageType = {
 
 export const All: VFC = () => {
   const [searchParams] = useSearchParams();
-  const pageFromUrl = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
-  const queryFromUrl = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
+  const page = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
+  const query = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
 
-  const [query, setQuery] = useState(queryFromUrl);
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
 
-  const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
   useEffect(() => {
     const programParams = {
       limit: INITIAL_LIMIT_BY_PAGE,
-      offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE,
+      offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
       term: query,
     };
 
@@ -41,15 +39,7 @@ export const All: VFC = () => {
       setPrograms(result.programs);
       setProgramsCount(result.count);
     });
-  }, [currentPage, query]);
-
-  useEffect(() => {
-    setCurrentPage(pageFromUrl);
-  }, [pageFromUrl, setCurrentPage]);
-
-  useEffect(() => {
-    setQuery(queryFromUrl);
-  }, [queryFromUrl, setQuery]);
+  }, [page, query]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
@@ -74,7 +64,7 @@ export const All: VFC = () => {
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
-        <Pagination page={currentPage} pagesAmount={programsCount || 1} />
+        <Pagination page={page} pagesAmount={programsCount || 1} />
       </div>
       <SearchForm placeholder="Find program" />
       <ProgramsLegend />
@@ -107,7 +97,7 @@ export const All: VFC = () => {
       </div>
       {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} pagesAmount={programsCount || 1} />
+          <Pagination page={page} pagesAmount={programsCount || 1} />
         </div>
       )}
     </div>

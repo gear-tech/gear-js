@@ -11,7 +11,7 @@ import { Pagination } from 'components/Pagination/Pagination';
 import styles from './Recent.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
 
-import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
+import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 import { URL_PARAMS } from 'consts';
 import { getUserPrograms } from 'services';
 
@@ -22,21 +22,19 @@ type ProgramMessageType = {
 
 export const Recent: VFC = () => {
   const [searchParams] = useSearchParams();
-  const pageFromUrl = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
-  const queryFromUrl = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
+  const page = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
+  const query = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
 
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
 
-  const [query, setQuery] = useState(queryFromUrl);
-  const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
   useEffect(() => {
     const programParams = {
       owner: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
       limit: INITIAL_LIMIT_BY_PAGE,
-      offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE,
+      offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
       term: query,
     };
 
@@ -44,15 +42,7 @@ export const Recent: VFC = () => {
       setPrograms(result.programs);
       setProgramsCount(result.count);
     });
-  }, [currentPage, query]);
-
-  useEffect(() => {
-    setCurrentPage(pageFromUrl);
-  }, [pageFromUrl, setCurrentPage]);
-
-  useEffect(() => {
-    setQuery(queryFromUrl);
-  }, [queryFromUrl, setQuery]);
+  }, [page, query]);
 
   const handleOpenForm = (programId: string, programName?: string) => {
     if (programName) {
@@ -76,7 +66,7 @@ export const Recent: VFC = () => {
     <div className={styles.blockList}>
       <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
-        <Pagination page={currentPage} pagesAmount={programsCount || 1} />
+        <Pagination page={page} pagesAmount={programsCount || 1} />
       </div>
       <SearchForm placeholder="Find program" />
       <ProgramsLegend />
@@ -91,7 +81,7 @@ export const Recent: VFC = () => {
 
       {programs && programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} pagesAmount={programsCount || 1} />
+          <Pagination page={page} pagesAmount={programsCount || 1} />
         </div>
       )}
     </div>
