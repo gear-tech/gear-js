@@ -2172,6 +2172,7 @@ __metadata:
     "@craco/craco": 6.4.3
     "@gear-js/api": ^0.17.8
     "@gear-js/ui": 0.1.2
+    "@hcaptcha/react-hcaptcha": ^1.2.0
     "@monaco-editor/react": 4.4.2
     "@polkadot/api": 8.1.1
     "@polkadot/api-augment": 8.1.1
@@ -2194,6 +2195,7 @@ __metadata:
     "@testing-library/react": 13.0.1
     "@testing-library/user-event": 14.1.0
     "@types/file-saver": 2.0.5
+    "@types/hcaptcha__react-hcaptcha": ^0.1.5
     "@types/jest": 27.4.1
     "@types/lodash.get": 4.4.6
     "@types/lodash.isobject": 3.0.6
@@ -2293,6 +2295,16 @@ __metadata:
     react: ">=17.0.2"
     sass: ^1.49.9
   checksum: 9e40a82f3c930a32d6b5e39c3c52ebaaa1f4eae87351132931f0d49f9ee0a15a6af4054b112cf14e0f9f11b8509242cd7876d512db854fa693c5961c4b9a48fa
+  languageName: node
+  linkType: hard
+
+"@hcaptcha/react-hcaptcha@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@hcaptcha/react-hcaptcha@npm:1.2.0"
+  peerDependencies:
+    react: ">= 16.3.0"
+    react-dom: ">= 16.3.0"
+  checksum: 9eb2a26dff9fd3f8a351a7ed4877888a274c5c2cb424875128a5916e2c0deee1541a6f670b8750079bad88782b0b3a6eead707778758298e79074faefba384ff
   languageName: node
   linkType: hard
 
@@ -5731,6 +5743,15 @@ __metadata:
   dependencies:
     "@types/unist": "*"
   checksum: fff47998f4c11e21a7454b58673f70478740ecdafd95aaf50b70a3daa7da9cdc57315545bf9c039613732c40b7b0e9e49d11d03fe9a4304721cdc3b29a88141e
+  languageName: node
+  linkType: hard
+
+"@types/hcaptcha__react-hcaptcha@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "@types/hcaptcha__react-hcaptcha@npm:0.1.5"
+  dependencies:
+    "@types/react": "*"
+  checksum: d36e546bdad097a1e9ae209e22d7ddef2fceb2e9c41ee93d10aa7f0ee03c5cf512b56581518517c20e231333cdc63374e6a8cde7da5398f0e5e747fd34e9157a
   languageName: node
   linkType: hard
 
