@@ -113,10 +113,11 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
       countUnread: () => {},
     },
     testBalance: {
-      get: ({ address, token }: GetTestBalanceParams) => {
+      get: ({ address, token, ip }: GetTestBalanceParams & { ip: string }) => {
         if (verifyCaptcha(token)) {
           return this.client.send('testBalance.get', { address });
         } else {
+          logger.warn(ip);
           return [{ error: errors.Forbidden.name }];
         }
       },
