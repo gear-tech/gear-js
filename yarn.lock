@@ -2062,6 +2062,7 @@ __metadata:
     eslint: 7.32.0
     eslint-config-prettier: 8.5.0
     eslint-plugin-prettier: 3.4.1
+    hcaptcha: ^0.1.1
     kafkajs: 1.16.0
     prettier: 2.6.2
     reflect-metadata: 0.1.13
@@ -13755,6 +13756,13 @@ __metadata:
     property-information: ^5.0.0
     space-separated-tokens: ^1.0.0
   checksum: 5e50b85af0d2cb7c17979cb1ddca75d6b96b53019dd999b39e7833192c9004201c3cee6445065620ea05d0087d9ae147a4844e582d64868be5bc6b0232dfe52d
+  languageName: node
+  linkType: hard
+
+"hcaptcha@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "hcaptcha@npm:0.1.1"
+  checksum: 3dcad365da0b4611ba43f02f898eb343324f607445c21f403a60a7d8f4891501323a6553c24670e2a7dd77dc5184ca656a8b15e5b29bbf494b15cd7e0daae6e8
   languageName: node
   linkType: hard
 
