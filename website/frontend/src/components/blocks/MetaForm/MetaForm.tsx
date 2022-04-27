@@ -17,7 +17,6 @@ import './MetaForm.scss';
 type Props = {
   programId: string;
   programName: string;
-  handleClose: () => void;
 };
 
 export const MetaForm: VFC<Props> = ({ programName, programId }) => {
