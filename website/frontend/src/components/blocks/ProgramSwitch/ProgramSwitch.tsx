@@ -52,7 +52,9 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   }, [captchaToken]);
 
   const handleTestBalanceClick = () => {
-    if (!captchaToken) {
+    if (captchaToken) {
+      handleTransferBalance();
+    } else {
       captchaRef.current?.execute();
     }
   };
