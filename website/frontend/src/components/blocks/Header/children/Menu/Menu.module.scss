@@ -18,23 +18,52 @@
   }
 }
 
-.link {
+%menuItem {
+   color: inherit;
+   height: 100%;
+   padding: 28px 10px;
+   transition: all 0.25s;
+   
+   @include sm {
+      padding: 5px;
+   }
+   
+   &:hover {
+      color: $textColorSecondary;
+   }
+}
+
+.link { 
+  @extend %menuItem;
+
   display: block;
-  padding: 28px 10px;
   text-align: center;
-  color: inherit;
-  transition: all 0.25s;
   cursor: pointer;
-
-  @include sm {
-    padding: 5px;
-  }
-
-  &:hover {
-    color: $textColorSecondary;
-  }
 
   &.active {
     box-shadow: inset 0 -3px 0 $successColor;
   }
 }
+
+.sidebarBtn {
+   @extend %menuItem;
+
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: flex-end;
+   padding: 18px 10px;
+   text-align: right;
+   
+   @include sm {
+      align-items: center;
+   }
+   
+   & > *:not(:last-child) {
+      margin-bottom: 2px;
+   }
+}
+
+.runtime {
+  font-size: $fontSizeSmall;
+} 

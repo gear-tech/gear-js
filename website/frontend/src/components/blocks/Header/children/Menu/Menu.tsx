@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useApi } from 'hooks';
 import { routes } from 'routes';
@@ -14,16 +13,28 @@ type ClassNameProps = {
 };
 
 const Menu = ({ openSidebar }: Props) => {
-  const { isApiReady } = useApi();
+  const { api, isApiReady } = useApi();
 
   const getClassName = ({ isActive }: ClassNameProps) => clsx(styles.link, isActive && styles.active);
+
+  const specName = api?.runtimeVersion.specName.toHuman();
+  const specVersion = api?.runtimeVersion.specVersion.toHuman();
 
   return (
     <ul className={styles.menu}>
       <li>
-        <span className={styles.link} onClick={openSidebar}>
-          {isApiReady ? localStorage.chain : 'Loading...'}
-        </span>
+        <button className={styles.sidebarBtn} onClick={openSidebar}>
+          {isApiReady ? (
+            <>
+              <span>{localStorage.chain}</span>
+              <span className={styles.runtime}>
+                {specName}/{specVersion}
+              </span>
+            </>
+          ) : (
+            'Loading...'
+          )}
+        </button>
       </li>
       <li>
         <NavLink className={getClassName} to={routes.explorer}>
