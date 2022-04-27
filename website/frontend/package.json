@@ -5,6 +5,7 @@
   "dependencies": {
     "@gear-js/api": "^0.17.8",
     "@gear-js/ui": "0.1.2",
+    "@hcaptcha/react-hcaptcha": "^1.2.0",
     "@monaco-editor/react": "4.4.2",
     "@polkadot/api": "8.1.1",
     "@polkadot/api-augment": "8.1.1",
@@ -89,6 +90,7 @@
     "@testing-library/react": "13.0.1",
     "@testing-library/user-event": "14.1.0",
     "@types/file-saver": "2.0.5",
+    "@types/hcaptcha__react-hcaptcha": "^0.1.5",
     "@types/jest": "27.4.1",
     "@types/lodash.get": "4.4.6",
     "@types/lodash.isobject": "3.0.6",

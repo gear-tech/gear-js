@@ -54,6 +54,7 @@ jobs:
             REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
             REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
             REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
        
   build-and-push-data-storage-image:
     runs-on: ubuntu-latest

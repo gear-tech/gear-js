@@ -16,6 +16,8 @@ import {
   GetAllUserProgramsParams,
 } from '@gear-js/interfaces';
 import config from 'src/config/configuration';
+import { verifyCaptcha } from 'src/utils';
+import errors from '@gear-js/jsonrpc-errors';
 
 const logger = new Logger('ApiGatewayService');
 const configKafka = config().kafka;
@@ -111,8 +113,13 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
       countUnread: () => {},
     },
     testBalance: {
-      get: (params: GetTestBalanceParams) => {
-        return this.client.send('testBalance.get', params);
+      get: ({ address, token, ip }: GetTestBalanceParams & { ip: string }) => {
+        if (verifyCaptcha(token)) {
+          return this.client.send('testBalance.get', { address });
+        } else {
+          logger.warn(ip);
+          return [{ error: errors.Forbidden.name }];
+        }
       },
     },
   };
