@@ -28,6 +28,7 @@ import {
   IGenesis,
 } from '@gear-js/interfaces';
 import { FormResponse } from 'src/middleware/formResponse';
+
 @Injectable()
 export class ConsumerService {
   constructor(
