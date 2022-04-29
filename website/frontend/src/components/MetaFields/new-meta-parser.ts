@@ -12,7 +12,8 @@ export type MetaTypes =
   | 'Tuple'
   | 'Array'
   | 'BTreeMap'
-  | 'BTreeSet';
+  | 'BTreeSet'
+  | string;
 
 export type MetaItem = {
   type: MetaTypes;
@@ -242,13 +243,13 @@ function parseField(data: MetaItem) {
         }
         // endregion
         // region Parse if it is Tuple
-        if (current.kind === 'Tuple') {
+        else if (current.kind === 'Tuple') {
           setUpField(result, current.path, current.name);
           processStackItem(stack, current);
         }
         // endregion
         // region Parse if it is Array
-        if (current.kind === 'Array') {
+        else if (current.kind === 'Array') {
           setUpField(result, current.path, current.name);
           processStackItem(stack, current);
         }
@@ -260,8 +261,8 @@ function parseField(data: MetaItem) {
             .reverse()
             .forEach((item) => {
               // fieldset
-              if (isMetaItem(item[0])) {
-                stack.push(processFields(item[0], [...current.path, '__fields']));
+              if (isMetaItem(item[1])) {
+                stack.push(processFields(item[1], [...current.path, '__fields']));
                 return;
               }
             });
