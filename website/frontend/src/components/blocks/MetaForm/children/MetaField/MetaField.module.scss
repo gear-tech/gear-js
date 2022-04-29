@@ -13,10 +13,13 @@
    }
 
    > span {
+      font-size: $fontSizeMedium;
       line-height: 1.3;
 
       @include md {
          margin-bottom: 4px;
+         margin-right: 0;
+         min-width: none;
       }
    }
 }

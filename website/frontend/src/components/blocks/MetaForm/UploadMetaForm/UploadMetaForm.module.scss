@@ -15,13 +15,7 @@
    & > span,
    & > label {
       min-width: 220px;
-      margin-right: 10px;
       font-size: $fontSizeLarge;
-       
-      @include md {
-         margin-right: 0;
-         min-width: none;
-      }
    }
    //TODO delete when textarea update
    & textarea {

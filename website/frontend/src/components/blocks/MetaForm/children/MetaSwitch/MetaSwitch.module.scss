@@ -19,9 +19,12 @@
    color: $textColorSecondary;
    font-weight: 300;
    font-size: $fontSizeMedium;
+   margin-right: 16px;
    
    @include md {
       margin-bottom: 4px;
+      margin-right: 0;
+      min-width: none;
    }
 }
 
