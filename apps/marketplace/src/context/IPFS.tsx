@@ -1,19 +1,16 @@
-import { create, IPFS } from 'ipfs-core';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useRef } from 'react';
+import { create, IPFSHTTPClient } from 'ipfs-http-client';
+import { IPFS_ADDRESS } from 'consts';
 import Props from './types';
 
-const IPFSContext = createContext<IPFS | undefined>({} as IPFS);
+const IPFSContext = createContext<IPFSHTTPClient>({} as IPFSHTTPClient);
 
 function IPFSProvider({ children }: Props) {
-  const [ipfs, setIpfs] = useState<IPFS>();
+  const ipfsRef = useRef(create({ url: IPFS_ADDRESS }));
 
   const { Provider } = IPFSContext;
 
-  useEffect(() => {
-    create().then(setIpfs);
-  }, []);
-
-  return <Provider value={ipfs}>{children}</Provider>;
+  return <Provider value={ipfsRef.current}>{children}</Provider>;
 }
 
 export { IPFSContext, IPFSProvider };

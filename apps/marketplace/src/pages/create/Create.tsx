@@ -1,25 +1,39 @@
 import { Button, Input, Textarea } from '@gear-js/ui';
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { useForm } from 'hooks';
+import { useIPFS } from 'hooks/context';
 import styles from './Create.module.scss';
 
+type Values = { name: string; description: string; attrs?: File | undefined; image?: File | undefined };
+
 function Create() {
-  const { values, handleChange } = useForm({ name: '', description: '', attributes: '', file: '' });
-  const { name, description, attributes, file } = values;
+  const ipfs = useIPFS();
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { values, handleChange, handleFileChange } = useForm<Values>({ name: '', description: '' });
+  const { name, description, attrs } = values;
 
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
+  const [cid, setCid] = useState('');
+
+  const attrsInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUploadAttrsClick = () => {
+    attrsInputRef.current?.click();
+  };
+
+  const handleUploadImageClick = () => {
+    imageInputRef.current?.click();
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const submitValues = { ...values, attributes: `{ "attributes": { ${attributes} } }` };
-
-    console.log(submitValues);
+    if (attrs) {
+      ipfs.add(attrs).then((result) => setCid(result.cid.toString()));
+    }
   };
+
+  console.log(cid);
 
   return (
     <>
@@ -34,23 +48,11 @@ function Create() {
             value={description}
             onChange={handleChange}
           />
-          <Textarea
-            className={styles.input}
-            label="Attributes"
-            name="attributes"
-            value={attributes}
-            onChange={handleChange}
-          />
-          <input
-            className={styles.file}
-            type="file"
-            name="file"
-            value={file}
-            onChange={handleChange}
-            ref={fileInputRef}
-          />
+          <input className={styles.file} type="file" name="attrs" onChange={handleFileChange} ref={attrsInputRef} />
+          <input className={styles.file} type="file" name="image" onChange={handleFileChange} ref={imageInputRef} />
           <div className={styles.buttons}>
-            <Button text="Upload image" color="secondary" onClick={handleUploadClick} />
+            <Button text="Upload attributes" color="secondary" onClick={handleUploadAttrsClick} />
+            <Button text="Upload image" color="secondary" onClick={handleUploadImageClick} />
             <Button type="submit" text="Create" />
           </div>
         </form>
