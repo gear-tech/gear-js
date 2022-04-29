@@ -22,7 +22,7 @@ type Props = {
   programName: string;
 };
 
-export const UploadMetaForm = ({ programId, programName }: Props) => {
+const UploadMetaForm = ({ programId, programName }: Props) => {
   const alert = useAlert();
   const { account } = useAccount();
 
@@ -142,3 +142,5 @@ export const UploadMetaForm = ({ programId, programName }: Props) => {
     </Formik>
   );
 };
+
+export { UploadMetaForm };

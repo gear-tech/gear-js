@@ -12,7 +12,7 @@ type Props = {
   className?: string;
 };
 
-export const MetaField = (props: Props) => {
+const MetaField = (props: Props) => {
   const { name, label, fieldAs = 'input', disabled = false, className } = props;
 
   const [field, meta] = useField(name);
@@ -28,3 +28,5 @@ export const MetaField = (props: Props) => {
     </div>
   );
 };
+
+export { MetaField };

@@ -16,7 +16,7 @@ type Props = {
   onDelete: () => void;
 };
 
-export const MetaFile = (props: Props) => {
+const MetaFile = (props: Props) => {
   const alert = useAlert();
   const metaFieldRef = useRef<HTMLInputElement>(null);
 
@@ -74,3 +74,5 @@ export const MetaFile = (props: Props) => {
     </div>
   );
 };
+
+export { MetaFile };
