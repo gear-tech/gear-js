@@ -1,0 +1,36 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
+
+.switch {
+  display: flex;
+  margin-bottom: 25px;
+
+  .block {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+.caption {
+   display: flex;
+   align-items: center;
+   color: $textColorSecondary;
+   font-weight: 300;
+   font-size: $fontSizeMedium;
+   
+   @include md {
+      margin-bottom: 4px;
+   }
+}
+
+.radioBtn {
+   font-weight: 600;
+   font-size: 12px;
+   line-height: 14px;
+
+   &:not(:last-child) {
+      margin-right: 24px;
+   }
+}

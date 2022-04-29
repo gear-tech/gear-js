@@ -25,16 +25,6 @@ export interface ProgramPaginationModel {
   programs: ProgramModel[];
 }
 
-export interface MetaModel {
-  init_input: string;
-  init_output: string;
-  handle_input: string;
-  handle_output: string;
-  title: string;
-  types: string;
-  name?: string;
-}
-
 export interface UploadProgramModel {
   initPayload: string;
   gasLimit: number;

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import styles from './Meta.module.scss';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
-import { MetaForm } from 'components/blocks/MetaForm/MetaForm';
+import { UploadMetaForm } from 'components/blocks/MetaForm/UploadMetaForm/UploadMetaForm';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 
 import { getProgram } from 'services';
@@ -38,7 +38,7 @@ export const Meta = () => {
     <div className="wrapper">
       <PageHeader title="Upload metadata" fileName={programName} />
       <div className={styles.metaFormWrapper}>
-        <MetaForm programId={program.id} programName={programName} />
+        <UploadMetaForm programId={program.id} programName={programName} />
       </div>
       {/* {statusPanelText && (
       <StatusPanel

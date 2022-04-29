@@ -1,0 +1,29 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
+
+.item {
+   position: relative;
+   margin-bottom: 25px;
+}
+
+.field {
+   @include md {
+     align-items: stretch;
+     flex-direction: column;
+   }
+
+   > span {
+      line-height: 1.3;
+
+      @include md {
+         margin-bottom: 4px;
+      }
+   }
+}
+
+.error {
+   position: absolute;
+   color: $errorColor;
+   font-size: $fontSizeMedium;
+   bottom: -20px;
+}
