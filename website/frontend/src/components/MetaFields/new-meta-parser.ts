@@ -39,12 +39,12 @@ export function isMetaField(value: unknown): value is MetaField {
   );
 }
 
-function isPrimitive(value: MetaItemValue) {
-  return !isString(value) && 'type' in value && value.type === 'Primitive';
-}
-
 function isMetaItem(value: unknown): value is MetaItem {
   return isObject(value) && 'type' in value && 'value' in value && 'name' in value;
+}
+
+function isPrimitive(value: MetaItemValue) {
+  return isMetaItem(value) && value.type === 'Primitive';
 }
 
 export type MetaFieldsItem = MetaField | MetaFieldset;
@@ -90,17 +90,6 @@ const NoneField = { None: { type: 'Primitive', name: 'None', value: 'None' } };
 
 function processFields(data: MetaItem, _path?: string[], isField = false): StackItem | null {
   const path = _path || [];
-  if (isMetaItem(data)) {
-    if (!isField) {
-      path.push(data.name);
-    }
-    return {
-      kind: data.type,
-      path: path,
-      value: data.value,
-      name: data.name,
-    };
-  }
 
   if (data.type === 'Enum') {
     return {
@@ -129,7 +118,27 @@ function processFields(data: MetaItem, _path?: string[], isField = false): Stack
     };
   }
 
+  if (isMetaItem(data)) {
+    if (!isField) {
+      path.push(data.name);
+    }
+    return {
+      kind: data.type,
+      path: path,
+      value: data.value,
+      name: data.name,
+    };
+  }
+
   return null;
+}
+
+function setUpField(targetRef: MetaFieldsStruct, path: string[], key: string, select = false) {
+  setWith(targetRef, [...path, '__fields'], null, Object);
+  setWith(targetRef, [...path, '__name'], key, Object);
+  setWith(targetRef, [...path, '__path'], path.filter((item) => item !== '__fields').join('.'), Object);
+  setWith(targetRef, [...path, '__type'], '__fieldset', Object);
+  setWith(targetRef, [...path, '__select'], select, Object);
 }
 
 function processStruct(resultRef: MetaFieldsStruct, stackRef: StackItem[], current: NonNullable<StackItem>) {
@@ -143,7 +152,7 @@ function processStruct(resultRef: MetaFieldsStruct, stackRef: StackItem[], curre
     stackRef.push(processFields(current.value, [...current.path, '__fields']));
   } else {
     entries.forEach(([name, value]) => {
-      if (isPrimitive(value)) {
+      if (isMetaItem(value) && isPrimitive(value)) {
         stackRef.push(
           processFields(
             {
@@ -172,22 +181,14 @@ function processStackItem(stackRef: StackItem[], payload: NonNullable<StackItem>
   } else {
     Object.entries(payload.value)
       .reverse()
-      .forEach(([vKey, vValue]) => {
+      .forEach((item) => {
         // fieldset
-        if (isMetaItem(vValue)) {
-          stackRef.push(processFields(vValue, [...payload.path, '__fields']));
+        if (isMetaItem(item[1])) {
+          stackRef.push(processFields(item[1], [...payload.path, '__fields']));
           return;
         }
       });
   }
-}
-
-function setUpField(targetRef: MetaFieldsStruct, path: string[], key: string, select = false) {
-  setWith(targetRef, [...path, '__fields'], null, Object);
-  setWith(targetRef, [...path, '__name'], key, Object);
-  setWith(targetRef, [...path, '__path'], path.filter((item) => item !== '__fields').join('.'), Object);
-  setWith(targetRef, [...path, '__type'], '__fieldset', Object);
-  setWith(targetRef, [...path, '__select'], select, Object);
 }
 
 function parseField(data: MetaItem) {
@@ -257,10 +258,10 @@ function parseField(data: MetaItem) {
           setUpField(result, current.path, current.name, true);
           Object.entries(current.value)
             .reverse()
-            .forEach(([vKey, vValue]) => {
+            .forEach((item) => {
               // fieldset
-              if (isMetaItem(vValue)) {
-                stack.push(processFields(vValue, [...current.path, '__fields']));
+              if (isMetaItem(item[0])) {
+                stack.push(processFields(item[0], [...current.path, '__fields']));
                 return;
               }
             });
@@ -280,6 +281,7 @@ function parseField(data: MetaItem) {
         //endregion
         //region Parse if it is Vec
         else if (current.kind === 'Vec') {
+          // eslint-disable-next-line max-depth
           if (isMetaItem(current.value)) {
             processStackItem(stack, current);
           } else {
@@ -305,6 +307,7 @@ function parseField(data: MetaItem) {
         //region Parse if it is Result
         else if (current.kind === 'Result') {
           setUpField(result, current.path, current.name, true);
+          // eslint-disable-next-line max-depth
           if (isMetaItem(current.value)) {
             stack.push(processFields(current.value, [...current.path, '__fields']));
           } else {
