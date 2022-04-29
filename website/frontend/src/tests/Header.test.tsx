@@ -80,11 +80,27 @@ describe('header tests', () => {
     // @ts-ignore
     jest.spyOn(hooks, 'useApi').mockImplementation(() => {
       localStorage.setItem('chain', 'testnet');
-      return { isApiReady: true };
+      return {
+        api: {
+          runtimeVersion: {
+            specName: {
+              toHuman: () => 'test-name',
+            },
+            specVersion: {
+              toHuman: () => '12345',
+            },
+          },
+        },
+        isApiReady: true,
+      };
     });
+
     jest.spyOn(nodeApi, 'address', 'get').mockImplementation(() => 'testnet-address');
 
-    await waitFor(() => expect(sidebarButton).toHaveTextContent('testnet'));
+    await waitFor(() => {
+      expect(sidebarButton).toHaveTextContent('testnet');
+      expect(sidebarButton).toHaveTextContent('test-name/12345');
+    });
 
     fireEvent.click(sidebarButton);
 
