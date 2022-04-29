@@ -47,31 +47,8 @@ export const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData, children, onSub
   );
 };
 
-export const NewMetaFormWrapper: FC<MetaFormWrapper> = ({ metaData, children, onSubmit }) => {
-  const meta = parseMeta(metaData);
-  return (
-    <div style={{ margin: '0 auto', maxWidth: '600px' }}>
-      <Formik
-        initialValues={{
-          __root: null,
-        }}
-        onSubmit={(values) => {
-          onSubmit(values);
-        }}
-      >
-        <Form>
-          {meta && children(meta)}
-          <button role={'button'} type="submit">
-            Submit
-          </button>
-        </Form>
-      </Formik>
-    </div>
-  );
-};
-
 export default {
-  title: 'FORM/Meta form',
+  title: 'FORM/New meta form',
   component: MetaFields,
   parameters: {
     layout: 'fullscreen',
