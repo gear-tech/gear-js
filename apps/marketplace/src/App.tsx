@@ -1,15 +1,15 @@
 import { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { ApiProvider, AccountProvider } from 'context';
+import { ApiProvider, AccountProvider, IPFSProvider } from 'context';
 import { useApi } from 'hooks';
 import Routing from 'pages';
 import { Header, Footer } from 'components';
 import './App.scss';
 
-const providers = [BrowserRouter, ApiProvider, AccountProvider];
+const providers = [BrowserRouter, ApiProvider, AccountProvider, IPFSProvider];
 
 function withProviders(Component: ComponentType) {
-  return () => providers.reduce((children, Provider) => <Provider>{children}</Provider>, <Component />);
+  return () => providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, <Component />);
 }
 
 function App() {
