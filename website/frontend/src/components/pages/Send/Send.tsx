@@ -47,7 +47,7 @@ const Send = () => {
   useEffect(() => {
     if (meta && meta.types && meta.handle_input) {
       const decodedTypes = decodeHexTypes(meta.types);
-      const typeStructure = createPayloadTypeStructure(meta.handle_input, decodedTypes, true);
+      const typeStructure = createPayloadTypeStructure(meta.handle_input, decodedTypes);
 
       setTypes(typeStructure);
     }

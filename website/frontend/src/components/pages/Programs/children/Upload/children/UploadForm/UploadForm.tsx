@@ -62,7 +62,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       if (metaWasm) {
         const bufstr = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
         const decodedTypes = decodeHexTypes(metaWasm?.types);
-        const typeStructure = createPayloadTypeStructure(metaWasm?.init_input, decodedTypes, true);
+        const typeStructure = createPayloadTypeStructure(metaWasm?.init_input, decodedTypes);
         const parsedStructure = parseMeta(typeStructure);
 
         let valuesFromFile = {};

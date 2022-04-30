@@ -66,7 +66,7 @@ const State: VFC = () => {
   const getPayloadForm = useCallback(() => {
     if (stateInput && types) {
       const decodedTypes = decodeHexTypes(types);
-      const typeStruct = createPayloadTypeStructure(stateInput, decodedTypes, true);
+      const typeStruct = createPayloadTypeStructure(stateInput, decodedTypes);
       const parsedStruct = parseMeta(typeStruct);
       setTypeStructure(typeStruct);
       setForm(parsedStruct);

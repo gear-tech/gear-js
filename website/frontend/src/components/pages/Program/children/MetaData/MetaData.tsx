@@ -17,7 +17,7 @@ export const MetaData: FC<Props> = ({ metadata }) => {
 
       for (key in metadata) {
         if (metadata[key] && key !== 'types' && key !== 'title') {
-          const type = createPayloadTypeStructure(metadata[key] as string, decodedTypes, true);
+          const type = createPayloadTypeStructure(metadata[key] as string, decodedTypes);
 
           items.push({
             label: key,
