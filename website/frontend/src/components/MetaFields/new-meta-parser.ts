@@ -13,6 +13,7 @@ export type MetaTypes =
   | 'Array'
   | 'BTreeMap'
   | 'BTreeSet'
+  | 'None'
   | string;
 
 export type MetaItem = {

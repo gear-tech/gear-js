@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { MetaFieldset } from './meta-parser';
+import { MetaFieldset } from './new-meta-parser';
 import { useFormikContext } from 'formik';
 import { MetaFieldsContext } from './MetaFieldsContext';
 import get from 'lodash.get';

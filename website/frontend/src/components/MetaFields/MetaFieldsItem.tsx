@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useMetaFieldsContext } from './useMetaFieldsContext';
-import { isMetaField, isMetaFieldset, MetaFieldset } from './meta-parser';
-import type { MetaFieldsItem as TMetaFieldsItem } from './meta-parser';
+import { isMetaField, isMetaFieldset, MetaFieldset } from './new-meta-parser';
+import type { MetaFieldsItem as TMetaFieldsItem } from './new-meta-parser';
 import { EnumSelect, Fieldset } from './styles';
 import { MetaField } from './MetaField';
 

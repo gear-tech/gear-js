@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { MetaFieldsStruct } from './meta-parser';
+import { MetaFieldsStruct } from './new-meta-parser';
 
 export const MetaFieldsContext = React.createContext<MetaFieldsStruct>({
   __root: null,
