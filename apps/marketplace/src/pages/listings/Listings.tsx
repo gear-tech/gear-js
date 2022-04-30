@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import marketplaceMetaWasm from 'assets/wasm/marketplace.meta.wasm';
-import { CONTRACT_ADDRESS } from 'consts';
+import { MARKETPLACE_CONTRACT_ADDRESS } from 'consts';
 import { useMetadata, useReadState } from 'hooks';
 import Header from './header';
 import List from './list';
@@ -11,7 +11,7 @@ function Listings() {
   const isAnyFilter = filter !== 'All';
 
   const { metaBuffer } = useMetadata(marketplaceMetaWasm);
-  const state = useReadState(CONTRACT_ADDRESS, metaBuffer, { AllItems: null });
+  const state = useReadState(MARKETPLACE_CONTRACT_ADDRESS, metaBuffer, { AllItems: null });
 
   console.log(state);
 
