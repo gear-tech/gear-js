@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import marketplaceMetaWasm from 'assets/wasm/marketplace.meta.wasm';
+import { List } from 'components';
 import { MARKETPLACE_CONTRACT_ADDRESS } from 'consts';
 import { useMetadata, useReadState } from 'hooks';
 import Header from './header';
-import List from './list';
 import * as init from './init';
 
 function Listings() {

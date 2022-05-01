@@ -2,10 +2,9 @@ import { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ApiProvider, AccountProvider, IPFSProvider, AlertProvider, LoadingProvider } from 'context';
 import { useApi, useLoading } from 'hooks';
+import { Header, Footer, Loader } from 'components';
 import Routing from 'pages';
-import { Header, Footer } from 'components';
 import './App.scss';
-import Loader from 'components/loader';
 
 const providers = [BrowserRouter, AlertProvider, ApiProvider, AccountProvider, IPFSProvider, LoadingProvider];
 
