@@ -1,8 +1,12 @@
 import { GearKeyring, Hex } from '@gear-js/api';
 import { nftMetaWasm } from 'assets';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
+import NFT from 'types';
 import { useMetadata, useReadState } from './api';
 import { useAccount } from './context';
+
+type NFTPayload = { Token: { tokenId: number } };
+type OwnersNFTPayload = { TokensForOwner: { owner: Hex } };
 
 function useNftMeta() {
   const { metadata, metaBuffer } = useMetadata(nftMetaWasm);
@@ -10,23 +14,19 @@ function useNftMeta() {
   return { nftMeta: metadata, nftMetaBuffer: metaBuffer };
 }
 
-type Token = { Token: { tokenId: number } };
-type OwnerTokens = { TokensForOwner: { owner: Hex } };
-
-type Payload = Token | OwnerTokens;
-
-function useNftState(payload: Payload) {
+function useNftState(payload: NFTPayload): NFT;
+function useNftState(payload: OwnersNFTPayload): NFT[];
+function useNftState(payload: NFTPayload | OwnersNFTPayload) {
   const { nftMetaBuffer } = useNftMeta();
-  const nftState = useReadState(NFT_CONTRACT_ADDRESS, nftMetaBuffer, payload);
 
-  return nftState;
+  return useReadState(NFT_CONTRACT_ADDRESS, nftMetaBuffer, payload);
 }
 
 function useNft(tokenId: number) {
   return useNftState({ Token: { tokenId } });
 }
 
-function useAccountNfts() {
+function useOwnersNft() {
   const { account } = useAccount();
   // TODO: ! assertion
   const { address } = account!;
@@ -35,4 +35,4 @@ function useAccountNfts() {
   return useNftState({ TokensForOwner: { owner: decodedAddress } });
 }
 
-export { useNft, useAccountNfts };
+export { useNft, useOwnersNft };

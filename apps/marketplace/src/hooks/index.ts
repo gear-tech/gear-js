@@ -1,6 +1,6 @@
 import { useApi, useAccount, useIPFS, useLoading } from './context';
 import { useMetadata, useReadState } from './api';
-import { useNft, useAccountNfts } from './nft';
+import { useNft, useOwnersNft } from './nft';
 import { useMarketplaceMeta, useMarketplaceState } from './marketplace';
 import useForm from './form';
 
@@ -11,7 +11,7 @@ export {
   useMetadata,
   useReadState,
   useNft,
-  useAccountNfts,
+  useOwnersNft,
   useMarketplaceMeta,
   useMarketplaceState,
   useForm,

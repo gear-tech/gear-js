@@ -13,12 +13,10 @@ function LoadingProvider({ children }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const enableLoading = () => {
-    console.log('enable');
     setIsLoading(true);
   };
 
   const disableLoading = () => {
-    console.log('disable');
     setIsLoading(false);
   };
 
