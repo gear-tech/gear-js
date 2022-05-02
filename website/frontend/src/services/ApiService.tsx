@@ -157,12 +157,14 @@ export const sendMessage = async (
   disableLoading: () => void,
   alert: AlertContainer,
   callback: () => void,
-  meta?: Metadata
+  meta?: Metadata,
+  payloadType?: string
 ) => {
   try {
     const { signer } = await web3FromSource(account.meta.source);
 
-    await api.submit(message, meta);
+    api.submit(message, meta, payloadType);
+
     await api.signAndSend(account.address, { signer }, (data: any) => {
       enableLoading();
 
