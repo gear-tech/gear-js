@@ -65,6 +65,7 @@ const Template: ComponentStory<typeof MetaFormWrapper> = (args) => {
       }}
       metaData={args.metaData}
     >
+      {/*@ts-ignore*/}
       {(meta) => <MetaFields data={meta} />}
     </MetaFormWrapper>
   );

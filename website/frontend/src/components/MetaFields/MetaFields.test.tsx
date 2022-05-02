@@ -26,6 +26,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={simpleStruct}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -43,6 +44,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={simpleDeepStruct}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -81,6 +83,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={daoMeta}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -101,6 +104,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={daoMeta}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -135,6 +139,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumSimple}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -158,6 +163,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumSimple}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -182,6 +188,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumComplex}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -215,6 +222,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumComplex}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -246,6 +254,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumSimple}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -267,6 +276,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumSimple}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -288,6 +298,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumComplex}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
@@ -337,6 +348,7 @@ describe('form generated for meta data', () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
       <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumComplex}>
+        {/*@ts-ignore*/}
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );

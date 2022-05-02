@@ -6,8 +6,8 @@ import {
   BTreeMapResult,
   BTreeSet,
   BTreeSetResult,
-  Struct,
-  StructResult,
+  StructSet,
+  StructSetResult,
   Enum,
   EnumResult,
   Option,
@@ -22,6 +22,10 @@ import {
   ArrayResult,
   FungibleTokenAction,
   FungibleTokenActionResult,
+  StructField,
+  StructFieldResult,
+  ComplexResultResult,
+  ComplexResult,
 } from './new-meta-fixtures';
 
 describe('meta parser tests', () => {
@@ -31,16 +35,20 @@ describe('meta parser tests', () => {
     expect(parseMeta(Primitive)).toEqual(PrimitiveResult);
   });
 
+  test('Struct set', () => {
+    expect(parseMeta(StructSet)).toEqual(StructSetResult);
+  });
+
+  test('Struct field', () => {
+    expect(parseMeta(StructField)).toEqual(StructFieldResult);
+  });
+
   test('BTreeMap', () => {
     expect(parseMeta(BTreeMap)).toEqual(BTreeMapResult);
   });
 
   test('BTreeSet', () => {
     expect(parseMeta(BTreeSet)).toEqual(BTreeSetResult);
-  });
-
-  test('Struct', () => {
-    expect(parseMeta(Struct)).toEqual(StructResult);
   });
 
   test('Enum', () => {
@@ -69,5 +77,9 @@ describe('meta parser tests', () => {
 
   test('FungibleTokenAction', () => {
     expect(parseMeta(FungibleTokenAction)).toEqual(FungibleTokenActionResult);
+  });
+
+  test('Complex Result', () => {
+    expect(parseMeta(ComplexResult)).toEqual(ComplexResultResult);
   });
 });

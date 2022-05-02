@@ -5,7 +5,7 @@ import { Form, Formik, FormikValues } from 'formik';
 import { MetaFieldsStruct, MetaFieldsValues, MetaItem, parseMeta } from './new-meta-parser';
 import { prepareToSend } from './prepare-to-send';
 import {
-  Struct as _Struct,
+  StructSet as _Struct,
   Primitive as _Primitive,
   BTreeMap as _BTreeMap,
   BTreeSet as _BTreeSet,
@@ -16,6 +16,7 @@ import {
   Tuple as _Tuple,
   Array as _Array,
   FungibleTokenAction as _FungibleTokenAction,
+  ComplexResult as _ComplexResult,
 } from './new-meta-fixtures';
 
 type MetaFormWrapper = {
@@ -102,3 +103,6 @@ Array.args = { metaData: _Array };
 
 export const FungibleTokenAction = NewTemplate.bind({});
 FungibleTokenAction.args = { metaData: _FungibleTokenAction };
+
+export const ComplexResult = NewTemplate.bind({});
+ComplexResult.args = { metaData: _ComplexResult };

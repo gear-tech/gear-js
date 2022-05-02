@@ -1,26 +1,18 @@
+import { MetaItem } from './new-meta-parser';
+
 export const Primitive = {
   type: 'Primitive',
   name: 'String',
   value: 'String',
-};
+} as MetaItem;
 
 export const PrimitiveResult = {
   __root: {
-    __type: '__fieldset',
-    __name: '__root',
-    __path: '__root',
-    __select: false,
-    __fields: {
-      String: {
-        label: 'String',
-        type: 'String',
-        name: '__root.String',
-      },
-    },
+    label: '__root',
+    name: '__root',
+    type: 'String',
   },
-  __values: {
-    String: '',
-  },
+  __values: {},
 };
 
 export const BTreeMap = {
@@ -38,21 +30,21 @@ export const BTreeMap = {
       value: 'u8',
     },
   },
-};
+} as MetaItem;
 
 export const BTreeMapResult = {
   __root: {
     __fields: {
       'BTreeMap<String, u8>': {
         __fields: {
-          String: {
-            label: 'String',
-            name: '__root.BTreeMap<String, u8>.String',
+          key: {
+            label: 'key',
+            name: '__root.BTreeMap<String, u8>.key',
             type: 'String',
           },
-          u8: {
-            label: 'u8',
-            name: '__root.BTreeMap<String, u8>.u8',
+          value: {
+            label: 'value',
+            name: '__root.BTreeMap<String, u8>.value',
             type: 'u8',
           },
         },
@@ -69,8 +61,8 @@ export const BTreeMapResult = {
   },
   __values: {
     'BTreeMap<String, u8>': {
-      String: '',
-      u8: '',
+      key: '',
+      value: '',
     },
   },
 };
@@ -83,7 +75,7 @@ export const BTreeSet = {
     name: 'u8',
     value: 'u8',
   },
-};
+} as MetaItem;
 
 export const BTreeSetResult = {
   __root: {
@@ -104,16 +96,16 @@ export const BTreeSetResult = {
   },
 };
 
-export const Struct = {
+export const StructSet = {
   type: 'Struct',
   name: 'AStruct',
   value: {
     id: { type: 'Primitive', name: 'Bytes', value: 'Bytes' },
     online: { type: 'Primitive', name: 'bool', value: 'bool' },
   },
-};
+} as MetaItem;
 
-export const StructResult = {
+export const StructSetResult = {
   __root: {
     __type: '__fieldset',
     __name: '__root',
@@ -148,6 +140,31 @@ export const StructResult = {
   },
 };
 
+export const StructField = {
+  type: 'Struct',
+  name: 'AStruct',
+  value: { type: 'Primitive', name: 'Bytes', value: 'Bytes' },
+} as MetaItem;
+
+export const StructFieldResult = {
+  __root: {
+    __type: '__fieldset',
+    __name: '__root',
+    __path: '__root',
+    __select: false,
+    __fields: {
+      AStruct: {
+        type: 'Bytes',
+        name: '__root.AStruct',
+        label: 'AStruct',
+      },
+    },
+  },
+  __values: {
+    AStruct: '',
+  },
+};
+
 export const Enum = {
   type: 'Enum',
   name: 'Action',
@@ -162,7 +179,7 @@ export const Enum = {
     },
     BVar: {
       type: 'Option',
-      name: 'Option<CustomStructU8>',
+      name: 'BVar',
       value: {
         type: 'Struct',
         name: 'CustomStructU8',
@@ -178,7 +195,7 @@ export const Enum = {
       },
     },
   },
-};
+} as MetaItem;
 
 export const EnumResult = {
   __root: {
@@ -193,64 +210,64 @@ export const EnumResult = {
         __path: '__root.Action',
         __select: true,
         __fields: {
-          AStruct: {
-            __type: '__fieldset',
-            __name: 'AStruct',
-            __path: '__root.Action.AStruct',
-            __select: false,
+          AVariant: {
             __fields: {
               id: {
                 label: 'id',
+                name: '__root.Action.AVariant.id',
                 type: 'Bytes',
-                name: '__root.Action.AStruct.id',
               },
               online: {
                 label: 'online',
+                name: '__root.Action.AVariant.online',
                 type: 'bool',
-                name: '__root.Action.AStruct.online',
               },
             },
-          },
-          'Option<CustomStructU8>': {
+            __name: 'AVariant',
+            __path: '__root.Action.AVariant',
+            __select: false,
             __type: '__fieldset',
-            __name: 'Option<CustomStructU8>',
-            __path: '__root.Action.Option<CustomStructU8>',
+          },
+          BVar: {
+            __type: '__fieldset',
+            __name: 'BVar',
+            __path: '__root.Action.BVar',
             __select: true,
             __fields: {
               CustomStructU8: {
                 __type: '__fieldset',
                 __name: 'CustomStructU8',
-                __path: '__root.Action.Option<CustomStructU8>.CustomStructU8',
+                __path: '__root.Action.BVar.CustomStructU8',
                 __select: false,
                 __fields: {
                   field: {
                     label: 'field',
                     type: 'u8',
-                    name: '__root.Action.Option<CustomStructU8>.CustomStructU8.field',
+                    name: '__root.Action.BVar.CustomStructU8.field',
                   },
                 },
               },
               None: {
                 label: 'None',
                 type: 'None',
-                name: '__root.Action.Option<CustomStructU8>.None',
+                name: '__root.Action.BVar.None',
               },
             },
           },
-          'BTreeMap<Text, u8>': {
+          CVariant: {
             __type: '__fieldset',
-            __name: 'BTreeMap<Text, u8>',
-            __path: '__root.Action.BTreeMap<Text, u8>',
+            __name: 'CVariant',
+            __path: '__root.Action.CVariant',
             __select: false,
             __fields: {
-              Text: {
-                label: 'Text',
-                name: '__root.Action.BTreeMap<Text, u8>.Text',
+              key: {
+                label: 'key',
+                name: '__root.Action.CVariant.key',
                 type: 'Text',
               },
-              u8: {
-                label: 'u8',
-                name: '__root.Action.BTreeMap<Text, u8>.u8',
+              value: {
+                label: 'value',
+                name: '__root.Action.CVariant.value',
                 type: 'u8',
               },
             },
@@ -261,19 +278,19 @@ export const EnumResult = {
   },
   __values: {
     Action: {
-      AStruct: {
+      AVariant: {
         id: '',
         online: '',
       },
-      'BTreeMap<Text, u8>': {
-        Text: '',
-        u8: '',
-      },
-      'Option<CustomStructU8>': {
+      BVar: {
         CustomStructU8: {
           field: '',
         },
         None: 'None',
+      },
+      CVariant: {
+        key: '',
+        value: '',
       },
     },
   },
@@ -290,7 +307,7 @@ export const Option = {
       online: { type: 'Primitive', name: 'bool', value: 'bool' },
     },
   },
-};
+} as MetaItem;
 
 export const OptionResult = {
   __root: {
@@ -347,7 +364,7 @@ export const Vec = {
   type: 'Vec',
   name: 'Vec<u8>',
   value: { type: 'Primitive', name: 'u8', value: 'u8' },
-};
+} as MetaItem;
 
 export const VecResult = {
   __root: {
@@ -375,7 +392,7 @@ export const Result = {
     ok: { type: 'Primitive', name: 'String', value: 'String' },
     err: { type: 'Primitive', name: 'i32', value: 'i32' },
   },
-};
+} as MetaItem;
 
 export const ResultResult = {
   __root: {
@@ -427,7 +444,7 @@ export const Tuple = {
       value: 'u8',
     },
   ],
-};
+} as MetaItem;
 
 export const TupleResult = {
   __root: {
@@ -472,7 +489,7 @@ export const Array = {
     name: 'u8',
     value: 'u8',
   },
-};
+} as MetaItem;
 
 export const ArrayResult = {
   __root: {
@@ -523,66 +540,71 @@ export const FungibleTokenAction = {
       value: 'ActorId',
     },
   },
-};
+} as MetaItem;
 
 export const FungibleTokenActionResult = {
   __root: {
     __fields: {
       FungibleTokenAction: {
         __fields: {
-          ActorId: {
-            label: 'ActorId',
-            name: '__root.FungibleTokenAction.ActorId',
-            type: 'ActorId',
-          },
-          Null: {
-            label: 'Null',
-            name: '__root.FungibleTokenAction.Null',
-            type: 'Null',
-          },
-          u128: {
-            label: 'u128',
-            name: '__root.FungibleTokenAction.u128',
-            type: 'u128',
-          },
-          '{"from":"ActorId","to":"ActorId","amount":"u128"}': {
+          Approve: {
             __fields: {
               amount: {
                 label: 'amount',
-                name: '__root.FungibleTokenAction.{"from":"ActorId","to":"ActorId","amount":"u128"}.amount',
+                name: '__root.FungibleTokenAction.Approve.amount',
+                type: 'u128',
+              },
+              to: {
+                label: 'to',
+                name: '__root.FungibleTokenAction.Approve.to',
+                type: 'ActorId',
+              },
+            },
+            __name: 'Approve',
+            __path: '__root.FungibleTokenAction.Approve',
+            __select: false,
+            __type: '__fieldset',
+          },
+          BalanceOf: {
+            label: 'BalanceOf',
+            name: '__root.FungibleTokenAction.BalanceOf',
+            type: 'ActorId',
+          },
+          Burn: {
+            label: 'Burn',
+            name: '__root.FungibleTokenAction.Burn',
+            type: 'u128',
+          },
+          Mint: {
+            label: 'Mint',
+            name: '__root.FungibleTokenAction.Mint',
+            type: 'u128',
+          },
+          TotalSupply: {
+            label: 'TotalSupply',
+            name: '__root.FungibleTokenAction.TotalSupply',
+            type: 'Null',
+          },
+          Transfer: {
+            __fields: {
+              amount: {
+                label: 'amount',
+                name: '__root.FungibleTokenAction.Transfer.amount',
                 type: 'u128',
               },
               from: {
                 label: 'from',
-                name: '__root.FungibleTokenAction.{"from":"ActorId","to":"ActorId","amount":"u128"}.from',
+                name: '__root.FungibleTokenAction.Transfer.from',
                 type: 'ActorId',
               },
               to: {
                 label: 'to',
-                name: '__root.FungibleTokenAction.{"from":"ActorId","to":"ActorId","amount":"u128"}.to',
+                name: '__root.FungibleTokenAction.Transfer.to',
                 type: 'ActorId',
               },
             },
-            __name: '{"from":"ActorId","to":"ActorId","amount":"u128"}',
-            __path: '__root.FungibleTokenAction.{"from":"ActorId","to":"ActorId","amount":"u128"}',
-            __select: false,
-            __type: '__fieldset',
-          },
-          '{"to":"ActorId","amount":"u128"}': {
-            __fields: {
-              amount: {
-                label: 'amount',
-                name: '__root.FungibleTokenAction.{"to":"ActorId","amount":"u128"}.amount',
-                type: 'u128',
-              },
-              to: {
-                label: 'to',
-                name: '__root.FungibleTokenAction.{"to":"ActorId","amount":"u128"}.to',
-                type: 'ActorId',
-              },
-            },
-            __name: '{"to":"ActorId","amount":"u128"}',
-            __path: '__root.FungibleTokenAction.{"to":"ActorId","amount":"u128"}',
+            __name: 'Transfer',
+            __path: '__root.FungibleTokenAction.Transfer',
             __select: false,
             __type: '__fieldset',
           },
@@ -600,17 +622,140 @@ export const FungibleTokenActionResult = {
   },
   __values: {
     FungibleTokenAction: {
-      ActorId: '',
-      Null: '',
-      u128: '',
-      '{"from":"ActorId","to":"ActorId","amount":"u128"}': {
+      Approve: {
+        amount: '',
+        to: '',
+      },
+      BalanceOf: '',
+      Burn: '',
+      Mint: '',
+      TotalSupply: '',
+      Transfer: {
         amount: '',
         from: '',
         to: '',
       },
-      '{"to":"ActorId","amount":"u128"}': {
-        amount: '',
-        to: '',
+    },
+  },
+};
+
+export const ComplexResult = {
+  type: 'Result',
+  name: 'Result<MessageIn, Id>',
+  value: {
+    ok: {
+      type: 'Struct',
+      name: 'MessageIn',
+      value: {
+        id: {
+          type: 'Struct',
+          name: 'Id',
+          value: {
+            decimal: {
+              type: 'Primitive',
+              name: 'u64',
+              value: 'u64',
+            },
+            hex: {
+              type: 'Primitive',
+              name: 'Bytes',
+              value: 'Bytes',
+            },
+          },
+        },
+      },
+    },
+    err: {
+      type: 'Struct',
+      name: 'Id',
+      value: {
+        decimal: {
+          type: 'Primitive',
+          name: 'u64',
+          value: 'u64',
+        },
+        hex: {
+          type: 'Primitive',
+          name: 'Bytes',
+          value: 'Bytes',
+        },
+      },
+    },
+  },
+} as MetaItem;
+
+export const ComplexResultResult = {
+  __root: {
+    __fields: {
+      'Result<MessageIn, Id>': {
+        __fields: {
+          err: {
+            __fields: {
+              decimal: {
+                label: 'decimal',
+                name: '__root.Result<MessageIn, Id>.err.decimal',
+                type: 'u64',
+              },
+              hex: {
+                label: 'hex',
+                name: '__root.Result<MessageIn, Id>.err.hex',
+                type: 'Bytes',
+              },
+            },
+            __name: 'err',
+            __path: '__root.Result<MessageIn, Id>.err',
+            __select: false,
+            __type: '__fieldset',
+          },
+          ok: {
+            __fields: {
+              id: {
+                __fields: {
+                  decimal: {
+                    label: 'decimal',
+                    name: '__root.Result<MessageIn, Id>.ok.id.decimal',
+                    type: 'u64',
+                  },
+                  hex: {
+                    label: 'hex',
+                    name: '__root.Result<MessageIn, Id>.ok.id.hex',
+                    type: 'Bytes',
+                  },
+                },
+                __name: 'id',
+                __path: '__root.Result<MessageIn, Id>.ok.id',
+                __select: false,
+                __type: '__fieldset',
+              },
+            },
+            __name: 'ok',
+            __path: '__root.Result<MessageIn, Id>.ok',
+            __select: false,
+            __type: '__fieldset',
+          },
+        },
+        __name: 'Result<MessageIn, Id>',
+        __path: '__root.Result<MessageIn, Id>',
+        __select: true,
+        __type: '__fieldset',
+      },
+    },
+    __name: '__root',
+    __path: '__root',
+    __select: false,
+    __type: '__fieldset',
+  },
+  __values: {
+    'Result<MessageIn, Id>': {
+      err: {
+        decimal: '',
+        hex: '',
+      },
+      ok: {
+        id: {
+          decimal: '',
+          hex: '',
+        },
       },
     },
   },
