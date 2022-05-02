@@ -18,29 +18,31 @@
   height: auto;
 }
 
-.body {
-  display: flex;
-  justify-content: space-between;
-}
+// .body {
+// display: flex;
+// justify-content: space-between;
+// }
 
 .heading,
 .text {
   font-size: $fontSizeMedium;
+  text-align: center;
 }
 
-.heading,
-.value {
-  text-transform: uppercase;
-}
+// .heading,
+// .value {
+//   text-transform: uppercase;
+// }
 
 .heading {
   font-weight: 700;
+  text-transform: uppercase;
 }
 
 .text {
   color: $textColorSecondary;
 }
 
-.value {
-  text-align: right;
-}
+// .value {
+//   text-align: right;
+// }

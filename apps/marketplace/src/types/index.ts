@@ -1,11 +1,12 @@
 import { Hex } from '@gear-js/api';
 
 type NFT = {
-  ownerId: Hex;
-  title: string;
+  id: string;
+  name: string;
   description: string;
   media: string;
   reference: string;
+  ownerId: Hex;
   approvedAccountIds: Hex[];
 };
 

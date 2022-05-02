@@ -21,6 +21,11 @@ p {
 
 a {
   color: inherit;
+
+  // underline only if link is a part of paragraph
+  &:not(p &) {
+    text-decoration: none;
+  }
 }
 
 img,

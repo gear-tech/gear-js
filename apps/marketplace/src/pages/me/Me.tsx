@@ -1,18 +1,17 @@
-import { Filter } from 'components';
-import { useNft } from 'hooks';
+import { useOwnersNft } from 'hooks';
+import Header from './header';
+import List from './list';
 // import styles from './Me.module.scss';
 
 const filters = ['My NFTs', 'Approved to me'];
 
 function Me() {
-  const nft = useNft(0);
-
-  console.log(nft);
+  const nfts = useOwnersNft() || [];
 
   return (
     <>
-      <Filter list={filters} value="My NFTS" onChange={() => {}} />
-      {/* <List cards={} /> */}
+      <Header text="My collections" filter="My NFTs" filters={filters} onFilterChange={() => {}} />
+      <List nfts={nfts} />
     </>
   );
 }

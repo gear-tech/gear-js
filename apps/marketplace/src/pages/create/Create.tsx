@@ -66,7 +66,7 @@ function Create() {
     const reference = ipfsPath + attrsCid.toString();
     const media = ipfsPath + imgCid.toString();
 
-    const nft = { title: name, description, media, reference };
+    const nft = { name, description, media, reference };
     return { Mint: { tokenMetadata: nft } };
   };
 
