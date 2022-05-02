@@ -29,6 +29,10 @@ const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
 
   const removeNode = () => {
     setLocalNodes((prevNodes) => prevNodes.filter((prevNode) => prevNode.address !== address));
+
+    if (selectedNode === address) {
+      setSelectedNode(nodeApi.address);
+    }
   };
 
   return (
@@ -41,9 +45,15 @@ const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
         onChange={handleChange}
       />
       <div className={styles.buttons}>
-        <Button icon={copy} color="transparent" onClick={handleCopy} />
+        <Button aria-label="Copy node address" icon={copy} color="transparent" onClick={handleCopy} />
         {isCustom && (
-          <Button icon={trash} color="transparent" onClick={removeNode} disabled={address === nodeApi.address} />
+          <Button
+            aria-label="Remove node address"
+            icon={trash}
+            color="transparent"
+            onClick={removeNode}
+            disabled={address === nodeApi.address}
+          />
         )}
       </div>
     </li>

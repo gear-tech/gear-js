@@ -28,7 +28,7 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
   }, [localNodes]);
 
   return (
-    <div className={styles.sidebar} ref={ref}>
+    <div className={styles.sidebar} ref={ref} data-testid="sidebar">
       <Header closeSidebar={closeSidebar} selectedNode={selectedNode} />
       <Nodes
         nodeSections={nodeSections}

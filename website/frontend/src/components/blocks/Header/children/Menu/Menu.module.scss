@@ -1,5 +1,5 @@
-@use 'assets/scss/variables' as *;
-@use 'assets/scss/breakpoints.scss' as *;
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
 
 .menu {
   display: flex;
@@ -19,23 +19,21 @@
 }
 
 %menuItem {
-   color: inherit;
-   height: 100%;
-   padding: 28px 10px;
-   transition: all 0.25s;
-   
-   @include sm {
-      padding: 5px;
-   }
-   
-   &:hover {
-      color: $textColorSecondary;
-   }
+  color: inherit;
+  padding: 28px 10px;
+  transition: all 0.25s;
+
+  @include sm {
+    padding: 5px;
+  }
+
+  &:hover {
+    color: $textColorSecondary;
+  }
 }
 
-.link { 
+.link {
   @extend %menuItem;
-
   display: block;
   text-align: center;
   cursor: pointer;
@@ -46,24 +44,23 @@
 }
 
 .sidebarBtn {
-   @extend %menuItem;
+  @extend %menuItem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 18px 10px;
+  text-align: right;
 
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   align-items: flex-end;
-   padding: 18px 10px;
-   text-align: right;
-   
-   @include sm {
-      align-items: center;
-   }
-   
-   & > *:not(:last-child) {
-      margin-bottom: 2px;
-   }
+  @include sm {
+    align-items: center;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: 2px;
+  }
 }
 
 .runtime {
-  font-size: $fontSizeSmall;
-} 
+  font-size: 12px;
+}

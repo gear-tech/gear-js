@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
@@ -11,10 +11,11 @@ import { AccountList } from './AccountList';
 import { nodeApi } from '../../../api/initApi';
 import { LOCAL_STORAGE } from 'consts';
 import { useAccount } from 'hooks';
+import { useAccounts } from './hooks';
 import styles from './Wallet.module.scss';
 
 export const Wallet = () => {
-  const [injectedAccounts, setInjectedAccounts] = useState<Array<InjectedAccountWithMeta> | null>(null);
+  const injectedAccounts = useAccounts();
   const [accountBalance, setAccountBalance] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,56 +23,19 @@ export const Wallet = () => {
   const { api } = useApi();
   const { account: currentAccount, setAccount } = useAccount();
 
-  const getAllAccounts = useCallback(async () => {
-    if (typeof window !== `undefined`) {
-      const { web3Accounts, web3Enable } = await import('@polkadot/extension-dapp');
-
-      const extensions = await web3Enable('Gear App');
-
-      if (extensions.length === 0) {
-        return null;
-      }
-
-      const accounts = await web3Accounts();
-
-      return accounts;
-    }
-
-    return null;
-  }, []);
-
   useEffect(() => {
-    setTimeout(() => {
-      getAllAccounts()
-        .then((allAccounts) => {
-          if (allAccounts) {
-            allAccounts.forEach((acc) => {
-              if (acc.address === localStorage.getItem(LOCAL_STORAGE.SAVED_ACCOUNT)) {
-                setAccount(acc);
-              }
-            });
-            setInjectedAccounts(allAccounts);
-          }
-        })
-        .catch((err) => console.error(err));
-    }, 300);
-  }, [setAccount, getAllAccounts]);
+    const isLoggedIn = ({ address }: InjectedAccountWithMeta) => address === localStorage[LOCAL_STORAGE.SAVED_ACCOUNT];
 
-  const getBalance = useCallback(
-    async (address: string) => {
-      const freeBalance = await api.balance.findOut(address);
-      return freeBalance;
-    },
-    [api]
-  );
+    if (injectedAccounts) {
+      setAccount(injectedAccounts.find(isLoggedIn));
+    }
+  }, [injectedAccounts, setAccount]);
 
   useEffect(() => {
     if (currentAccount && api) {
-      getBalance(currentAccount.address).then((result) => {
-        setAccountBalance(result.toHuman());
-      });
+      api.balance.findOut(currentAccount.address).then((result) => setAccountBalance(result.toHuman()));
     }
-  }, [currentAccount, api, getBalance]);
+  }, [currentAccount, api]);
 
   const subscriptionRef = useRef<VoidFunction | null>(null);
 
@@ -156,7 +120,7 @@ export const Wallet = () => {
           injectedAccounts ? (
             <>
               <AccountList list={injectedAccounts} toggleAccount={selectAccount} />
-              <button type="button" className={styles.logoutButton} aria-label="menuLink" onClick={handleLogout}>
+              <button aria-label="Logout" type="button" className={styles.logoutButton} onClick={handleLogout}>
                 <LogoutIcon color="#fff" />
               </button>
             </>
