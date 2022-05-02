@@ -1,6 +1,9 @@
 import isObject from 'lodash.isobject';
-import isString from 'lodash.isstring';
 import setWith from 'lodash.setwith';
+
+export type PreparedMetaData = {
+  [key: string]: string | PreparedMetaData;
+};
 
 export type MetaTypes =
   | 'Enum'
@@ -30,14 +33,7 @@ export type MetaField = {
 };
 
 export function isMetaField(value: unknown): value is MetaField {
-  return (
-    !(typeof value == 'boolean') &&
-    !isString(value) &&
-    isObject(value) &&
-    'type' in value &&
-    'name' in value &&
-    'label' in value
-  );
+  return isObject(value) && 'type' in value && 'name' in value && 'label' in value;
 }
 
 function isMetaItem(value: unknown): value is MetaItem {
@@ -60,15 +56,7 @@ export type MetaFieldset = {
 };
 
 export function isMetaFieldset(value: unknown): value is MetaFieldset {
-  return (
-    !(typeof value == 'boolean') &&
-    !isString(value) &&
-    isObject(value) &&
-    '__name' in value &&
-    '__type' in value &&
-    '__select' in value &&
-    '__fields' in value
-  );
+  return isObject(value) && '__name' in value && '__type' in value && '__select' in value && '__fields' in value;
 }
 
 export type MetaFieldsValues = {
@@ -205,43 +193,18 @@ function parseField(data: MetaItem) {
           Object
         );
       } else if (isObject(current.value)) {
-        // region Parse if it is Struct
-        if (current.kind === 'Struct') {
+        if (
+          current.kind === 'Struct' ||
+          current.kind === 'Tuple' ||
+          current.kind === 'Array' ||
+          current.kind === 'Enum' ||
+          current.kind === 'BTreeMap' ||
+          current.kind === 'BTreeSet' ||
+          current.kind === 'Vec' ||
+          current.kind === 'Result'
+        ) {
           processStackItem(result, stack, current);
-        }
-        // endregion
-        // region Parse if it is Tuple
-        else if (current.kind === 'Tuple') {
-          processStackItem(result, stack, current);
-        }
-        // endregion
-        // region Parse if it is Array
-        else if (current.kind === 'Array') {
-          processStackItem(result, stack, current);
-        }
-        // endregion
-        //region Parse if it is enum
-        else if (current.kind === 'Enum') {
-          processStackItem(result, stack, current);
-        }
-        //endregion
-        //region Parse if it is BTreeMap
-        else if (current.kind === 'BTreeMap') {
-          processStackItem(result, stack, current);
-        }
-        //endregion
-        //region Parse if it is BTreeMap
-        else if (current.kind === 'BTreeSet') {
-          processStackItem(result, stack, current);
-        }
-        //endregion
-        //region Parse if it is Vec
-        else if (current.kind === 'Vec') {
-          processStackItem(result, stack, current);
-        }
-        //endregion
-        //region Parse if it is Option
-        else if (current.kind === 'Option') {
+        } else if (current.kind === 'Option') {
           current.value = isMetaItem(current.value)
             ? Object.assign(
                 {
@@ -252,12 +215,6 @@ function parseField(data: MetaItem) {
             : Object.assign(current.value, NoneField); // TODO add deep clone
           processStackItem(result, stack, current);
         }
-        //endregion
-        //region Parse if it is Result
-        else if (current.kind === 'Result') {
-          processStackItem(result, stack, current);
-        }
-        //endregion
       }
     }
   }
@@ -266,16 +223,9 @@ function parseField(data: MetaItem) {
 }
 
 export function parseMeta(data: MetaItem): MetaFieldsStruct | null {
-  if (isObject(data)) {
-    if (Object.keys(data).length === 0) {
-      return null;
-    }
+  if (isObject(data) && Object.keys(data).length !== 0) {
     return parseField(data);
   }
 
   return null;
 }
-
-export type PreparedMetaData = {
-  [key: string]: string | PreparedMetaData;
-};
