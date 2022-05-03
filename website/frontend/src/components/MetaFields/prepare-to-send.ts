@@ -3,7 +3,7 @@ import { PreparedMetaData } from './meta-parser';
 import { cloneDeep } from '../../features/Editor/EditorTree/utils';
 
 export function prepareToSend(data: PreparedMetaData) {
-  const clone: PreparedMetaData = cloneDeep(data.__root as PreparedMetaData);
+  const clone: PreparedMetaData = cloneDeep(data as PreparedMetaData);
   const stack: Record<
     string,
     {

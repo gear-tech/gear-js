@@ -18,6 +18,7 @@ import {
   daoMeta,
   enumNested,
 } from './meta-fixtures';
+import { PreparedMetaData } from './new-meta-parser';
 
 type MetaFormWrapper = {
   metaData: MetaItem;
@@ -61,7 +62,7 @@ const Template: ComponentStory<typeof MetaFormWrapper> = (args) => {
     <MetaFormWrapper
       onSubmit={(values) => {
         const copy: MetaFieldsValues = JSON.parse(JSON.stringify(values));
-        console.log(prepareToSend(copy));
+        console.log(prepareToSend(copy.__root as PreparedMetaData));
       }}
       metaData={args.metaData}
     >
