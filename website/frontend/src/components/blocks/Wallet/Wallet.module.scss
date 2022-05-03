@@ -16,23 +16,6 @@
   }
 }
 
-.button {
-  padding: 10px 25px;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: $textColor;
-  background-color: $bkgButtonColor;
-  transition: all 0.25s;
-  border-radius: 2px;
-
-  &:hover {
-    background-color: $textColor;
-    color: $mainBackground;
-  }
-}
-
 .balance {
   font-size: 17px;
   font-weight: 400;
