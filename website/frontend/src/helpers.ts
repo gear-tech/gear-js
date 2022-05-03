@@ -9,6 +9,7 @@ import { InitialValues as SendMessageInitialValues } from './components/pages/Se
 import { InitialValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { SetFieldValue } from 'types/common';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
+import { PreparedMetaData, prepareToSend } from './components/MetaFields';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
@@ -164,7 +165,7 @@ export const calculateGas = async (
   addressId?: String | null,
   replyCodeError?: string
 ) => {
-  const payload = isManualPayload ? values.payload : values.__root;
+  const payload = isManualPayload ? values.payload : prepareToSend(values.__root as PreparedMetaData);
 
   if (isManualPayload && payload === '') {
     alert.error(`Error: payload can't be empty`);
