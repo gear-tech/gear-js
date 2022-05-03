@@ -31,7 +31,18 @@ jobs:
         uses: mktcode/consecutive-workflow-action@HEAD
         with:
           token: ${{ github.token }}
-          
+
+  rm-tmp-img:
+    name: Remove tmp images
+    needs: wait-previous-run
+    if: github.event.pull_request.draft == false
+    runs-on: k8s-runner
+    steps:
+      - name: Remove tmp images
+        continue-on-error: true
+        run: |
+          docker rmi `docker images|grep '<none>'|awk '{print$3}'`
+  
   unit-tests:
     name: Unit tests 'data-storage'
     needs: wait-previous-run
