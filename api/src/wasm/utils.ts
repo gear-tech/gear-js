@@ -20,6 +20,9 @@ export function ab2str(buf: ArrayBuffer): string {
 }
 
 export function getInitialLength(pages: IGearPages) {
+  if (Object.keys(pages).length === 0) {
+    return null;
+  }
   return (
     parseInt(
       Object.keys(pages).reduce((prev, cur) => {
