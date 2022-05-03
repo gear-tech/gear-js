@@ -12,7 +12,7 @@ import MessageIllustration from 'assets/images/message.svg';
 import { useAccount, useApi, useLoading } from 'hooks';
 import { MetaItem, MetaFieldsStruct, parseMeta, prepareToSend, PreparedMetaData } from 'components/MetaFields';
 import { Schema } from './Schema';
-import { SwitchableField } from './children/SwitchableField';
+import { PayloadType } from './children/PayloadType';
 import './MessageForm.scss';
 
 type Props = {
@@ -129,11 +129,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
                   <label htmlFor="payloadType" className="message-form__field">
                     Payload type:
                   </label>
-                  <SwitchableField
-                    name="payloadType"
-                    label="Enter type"
-                    defaultValue={initialValues.current.payloadType}
-                  />
+                  <PayloadType />
                 </div>
               )}
 
