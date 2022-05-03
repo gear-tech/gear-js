@@ -1,19 +1,29 @@
 import { prepareToSend } from './prepare-to-send';
 
 describe('prepare to send metadata', () => {
-  test('field with null', () => {
+  test('value extract', () => {
     expect(
       prepareToSend({
         __root: {
-          field: {
-            __null: 'Null',
+          NftAction: {
+            Mint: {
+              tokenMetadata: {
+                name: 'value',
+                description: 'value',
+                media: 'value',
+                reference: 'value',
+              },
+            },
           },
         },
       })
     ).toEqual({
-      __root: {
-        field: {
-          __null: null,
+      Mint: {
+        tokenMetadata: {
+          name: 'value',
+          description: 'value',
+          media: 'value',
+          reference: 'value',
         },
       },
     });

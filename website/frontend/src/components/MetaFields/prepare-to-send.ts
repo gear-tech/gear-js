@@ -1,9 +1,9 @@
-import isString from 'lodash.isstring';
-import setWith from 'lodash.setwith';
 import isObject from 'lodash.isobject';
 import { PreparedMetaData } from './meta-parser';
+import { cloneDeep } from '../../features/Editor/EditorTree/utils';
 
 export function prepareToSend(data: PreparedMetaData) {
+  const clone: PreparedMetaData = cloneDeep(data.__root as PreparedMetaData);
   const stack: Record<
     string,
     {
@@ -11,7 +11,7 @@ export function prepareToSend(data: PreparedMetaData) {
       value: string | PreparedMetaData;
     }
   >[] = [];
-  Object.entries(data).forEach(([key, value]) => {
+  Object.entries(clone).forEach(([key, value]) => {
     stack.push({
       [key]: {
         path: [key],
@@ -23,15 +23,12 @@ export function prepareToSend(data: PreparedMetaData) {
   while (stack.length > 0) {
     const current = stack.pop();
     if (current) {
-      Object.entries(current).forEach((item) => {
-        if (isString(item[1].value) && item[1].value === 'Null') {
-          setWith(data, item[1].path, null, Object);
-        }
-        if (isObject(item[1].value)) {
-          Object.entries(item[1].value).forEach(([first, second]) => {
+      Object.values(current).forEach((value) => {
+        if (isObject(value.value)) {
+          Object.entries(value.value).forEach(([first, second]) => {
             stack.push({
               [first]: {
-                path: [...item[1].path, first],
+                path: [...value.path, first],
                 value: second,
               },
             });
@@ -40,5 +37,5 @@ export function prepareToSend(data: PreparedMetaData) {
       });
     }
   }
-  return data;
+  return Object.values(clone)[0];
 }

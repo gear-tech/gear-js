@@ -760,3 +760,212 @@ export const ComplexResultResult = {
     },
   },
 };
+
+export const NFT = {
+  type: 'Enum',
+  name: 'NftAction',
+  value: {
+    Mint: {
+      type: 'Struct',
+      name: '{"tokenMetadata":"TokenMetadata"}',
+      value: {
+        tokenMetadata: {
+          type: 'Struct',
+          name: 'TokenMetadata',
+          value: {
+            name: {
+              type: 'Primitive',
+              name: 'Text',
+              value: 'Text',
+            },
+            description: {
+              type: 'Primitive',
+              name: 'Text',
+              value: 'Text',
+            },
+            media: {
+              type: 'Primitive',
+              name: 'Text',
+              value: 'Text',
+            },
+            reference: {
+              type: 'Primitive',
+              name: 'Text',
+              value: 'Text',
+            },
+          },
+        },
+      },
+    },
+    Burn: {
+      type: 'Struct',
+      name: '{"tokenId":"U256"}',
+      value: {
+        tokenId: {
+          type: 'Primitive',
+          name: 'U256',
+          value: 'U256',
+        },
+      },
+    },
+    Transfer: {
+      type: 'Struct',
+      name: '{"to":"ActorId","tokenId":"U256"}',
+      value: {
+        to: {
+          type: 'Primitive',
+          name: 'ActorId',
+          value: 'ActorId',
+        },
+        tokenId: {
+          type: 'Primitive',
+          name: 'U256',
+          value: 'U256',
+        },
+      },
+    },
+    Approve: {
+      type: 'Struct',
+      name: '{"to":"ActorId","tokenId":"U256"}',
+      value: {
+        to: {
+          type: 'Primitive',
+          name: 'ActorId',
+          value: 'ActorId',
+        },
+        tokenId: {
+          type: 'Primitive',
+          name: 'U256',
+          value: 'U256',
+        },
+      },
+    },
+  },
+} as MetaItem;
+
+export const NFTResult = {
+  __root: {
+    __fields: {
+      NftAction: {
+        __fields: {
+          Approve: {
+            __fields: {
+              to: {
+                label: 'to',
+                name: '__root.NftAction.Approve.to',
+                type: 'ActorId',
+              },
+              tokenId: {
+                label: 'tokenId',
+                name: '__root.NftAction.Approve.tokenId',
+                type: 'U256',
+              },
+            },
+            __name: 'Approve',
+            __path: '__root.NftAction.Approve',
+            __select: false,
+            __type: '__fieldset',
+          },
+          Burn: {
+            __fields: {
+              tokenId: {
+                label: 'tokenId',
+                name: '__root.NftAction.Burn.tokenId',
+                type: 'U256',
+              },
+            },
+            __name: 'Burn',
+            __path: '__root.NftAction.Burn',
+            __select: false,
+            __type: '__fieldset',
+          },
+          Mint: {
+            __fields: {
+              tokenMetadata: {
+                __fields: {
+                  description: {
+                    label: 'description',
+                    name: '__root.NftAction.Mint.tokenMetadata.description',
+                    type: 'Text',
+                  },
+                  media: {
+                    label: 'media',
+                    name: '__root.NftAction.Mint.tokenMetadata.media',
+                    type: 'Text',
+                  },
+                  name: {
+                    label: 'name',
+                    name: '__root.NftAction.Mint.tokenMetadata.name',
+                    type: 'Text',
+                  },
+                  reference: {
+                    label: 'reference',
+                    name: '__root.NftAction.Mint.tokenMetadata.reference',
+                    type: 'Text',
+                  },
+                },
+                __name: 'tokenMetadata',
+                __path: '__root.NftAction.Mint.tokenMetadata',
+                __select: false,
+                __type: '__fieldset',
+              },
+            },
+            __name: 'Mint',
+            __path: '__root.NftAction.Mint',
+            __select: false,
+            __type: '__fieldset',
+          },
+          Transfer: {
+            __fields: {
+              to: {
+                label: 'to',
+                name: '__root.NftAction.Transfer.to',
+                type: 'ActorId',
+              },
+              tokenId: {
+                label: 'tokenId',
+                name: '__root.NftAction.Transfer.tokenId',
+                type: 'U256',
+              },
+            },
+            __name: 'Transfer',
+            __path: '__root.NftAction.Transfer',
+            __select: false,
+            __type: '__fieldset',
+          },
+        },
+        __name: 'NftAction',
+        __path: '__root.NftAction',
+        __select: true,
+        __type: '__fieldset',
+      },
+    },
+    __name: '__root',
+    __path: '__root',
+    __select: false,
+    __type: '__fieldset',
+  },
+  __values: {
+    NftAction: {
+      Approve: {
+        to: '',
+        tokenId: '',
+      },
+      Burn: {
+        tokenId: '',
+      },
+      Mint: {
+        tokenMetadata: {
+          description: '',
+          media: '',
+          name: '',
+          reference: '',
+        },
+      },
+      Transfer: {
+        to: '',
+        tokenId: '',
+      },
+    },
+  },
+};

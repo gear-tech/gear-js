@@ -17,6 +17,7 @@ import {
   Array as _Array,
   FungibleTokenAction as _FungibleTokenAction,
   ComplexResult as _ComplexResult,
+  NFT as _NFT,
 } from './new-meta-fixtures';
 
 type MetaFormWrapper = {
@@ -106,3 +107,6 @@ FungibleTokenAction.args = { metaData: _FungibleTokenAction };
 
 export const ComplexResult = NewTemplate.bind({});
 ComplexResult.args = { metaData: _ComplexResult };
+
+export const NFT = NewTemplate.bind({});
+NFT.args = { metaData: _NFT };

@@ -349,5 +349,5 @@ export function parseMeta(data: MetaItem): MetaFieldsStruct | null {
 }
 
 export type PreparedMetaData = {
-  [key: string]: string | PreparedMetaData;
+  [key: string | '__root']: string | PreparedMetaData;
 };

@@ -26,6 +26,8 @@ import {
   StructFieldResult,
   ComplexResultResult,
   ComplexResult,
+  NFT,
+  NFTResult,
 } from './new-meta-fixtures';
 
 describe('meta parser tests', () => {
@@ -81,5 +83,9 @@ describe('meta parser tests', () => {
 
   test('Complex Result', () => {
     expect(parseMeta(ComplexResult)).toEqual(ComplexResultResult);
+  });
+
+  test('NFT', () => {
+    expect(parseMeta(NFT)).toEqual(NFTResult);
   });
 });
