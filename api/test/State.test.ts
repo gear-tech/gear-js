@@ -51,6 +51,7 @@ describe('Read State', () => {
     const gProg = await api.storage.gProg(demo_meta_test.id);
     expect(gProg).toBeDefined();
     expect(gProg).toHaveProperty('allocations');
+    expect(gProg).toHaveProperty('pages_with_data');
     expect(gProg).toHaveProperty('code_hash');
     expect(gProg).toHaveProperty('state');
   });
