@@ -6,7 +6,7 @@ import Me from './me';
 
 const routes = [
   // { path: '/', Page: Listings },
-  { path: '/listing', Page: Listing },
+  { path: '/listing/:id', Page: Listing },
   { path: '/create', Page: Create },
   { path: '/me', Page: Me },
 ];

@@ -1,22 +1,27 @@
 import Card from '../card';
-import Offer from './offer';
+// import Offer from './offer';
 import styles from './Details.module.scss';
 
-function Details() {
+type Props = {
+  rarity?: string;
+  attrs?: { [key: string]: string };
+};
+
+function Details({ rarity, attrs }: Props) {
+  // TODO: ! assert, lint rule
+  const getAttributes = () =>
+    // eslint-disable-next-line react/no-array-index-key
+    Object.keys(attrs!).map((attr, index) => <p key={index} className={styles.text}>{`${attr}: ${attrs![attr]}`}</p>);
+
   return (
     <div>
-      <Card heading="Rarity" text="Common" />
-      <Card heading="Attributes">
-        <p className={styles.text}>Background: white</p>
-        <p className={styles.text}>Eyes: violet</p>
-        <p className={styles.text}>Color: yellow</p>
-        <p className={styles.text}>Mouth: smile</p>
-      </Card>
-      <Card heading="Offers">
+      {rarity && <Card heading="Rarity" text={rarity} />}
+      {attrs && <Card heading="Attributes">{getAttributes()}</Card>}
+      {/* <Card heading="Offers">
         <Offer bid={100} bidder="Bob 123" time="Expires tomorrow" />
         <Offer bid={100} bidder="Bob 123" time="Expires tomorrow" />
         <Offer bid={100} bidder="Bob 123" time="Expires tomorrow" />
-      </Card>
+      </Card> */}
     </div>
   );
 }

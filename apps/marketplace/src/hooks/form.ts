@@ -31,19 +31,19 @@ const useForm = <Values>(initValues: Values) => {
   return { values, changeValue, handleChange, handleFileChange, resetValues };
 };
 
-// const useInput = <Value>(initValue: Value) => {
-//   const [value, setValue] = useState(initValue);
+const useInput = <Value>(initValue: Value) => {
+  const [value, setValue] = useState(initValue);
 
-//   // TOFIX: any
-//   const handleChange = ({ target }: ChangeEvent<any>) => {
-//     setValue(target.type === 'checkbox' ? target.checked : target.value);
-//   };
+  // TOFIX: any
+  const handleChange = ({ target }: ChangeEvent<any>) => {
+    setValue(target.type === 'checkbox' ? target.checked : target.value);
+  };
 
-//   const resetValue = () => {
-//     setValue(initValue);
-//   };
+  const resetValue = () => {
+    setValue(initValue);
+  };
 
-//   return { value, handleChange, resetValue };
-// };
+  return { value, handleChange, resetValue };
+};
 
-export default useForm;
+export { useForm, useInput };

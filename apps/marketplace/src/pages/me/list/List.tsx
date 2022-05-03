@@ -1,4 +1,4 @@
-import NFT from 'types';
+import { NFT } from 'types';
 import Card from './card';
 import styles from './List.module.scss';
 

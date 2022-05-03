@@ -25,6 +25,11 @@
   font-size: $fontSizeMedium;
 }
 
+.owner {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .text {
   // TODO: replace w. @gear-js/ui
   font-family: Syncopate;

@@ -10,4 +10,10 @@ type NFT = {
   approvedAccountIds: Hex[];
 };
 
-export default NFT;
+type NFTDetails = {
+  royalty: number;
+  rarity: string;
+  attributes: { [key: string]: string };
+};
+
+export type { NFT, NFTDetails };

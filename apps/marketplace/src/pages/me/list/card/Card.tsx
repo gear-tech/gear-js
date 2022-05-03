@@ -1,13 +1,13 @@
 // import { Button } from '@gear-js/ui';
 import { Link } from 'react-router-dom';
-import NFT from 'types';
+import { NFT } from 'types';
 import styles from './Card.module.scss';
 
 function Card({ id, name, media }: Partial<NFT>) {
   // const valueHeading = isAuction ? 'Top bid' : 'Price';
   // const valueText = `${value} Gear`;
   // const buttonText = isAuction ? 'Make bid' : 'Buy now';
-  const to = `/nft/${id}`;
+  const to = `/listing/${id}`;
   const text = `#${id}`;
 
   return (
