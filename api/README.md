@@ -262,6 +262,14 @@ const mailbox = await api.mailbox.read('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcN
 console.log(mailbox);
 ```
 
+#### Claim value
+
+```javascript
+const api = await GearApi.create();
+const submitted = await api.mailbox.claimValue.submit(messageId);
+await api.mailbox.claimValue.signAndSend(...);
+```
+
 ### Subscribe to events
 
 Subscribe to all events
