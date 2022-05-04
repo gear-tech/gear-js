@@ -1,9 +1,4 @@
-import { ReactElement } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import sendMessage from './api';
+import { renderWithRouter, renderWithAccountProvider, textMatcher } from './tests';
 
-function renderWithRouter(element: ReactElement) {
-  return render(element, { wrapper: MemoryRouter });
-}
-
-export default renderWithRouter;
+export { sendMessage, renderWithRouter, renderWithAccountProvider, textMatcher };

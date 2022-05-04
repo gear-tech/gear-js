@@ -1,25 +1,21 @@
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { FormEvent, useRef } from 'react';
-import { useAlert } from 'react-alert';
 import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
-import { useApi, useIPFS, useForm, useMetadata, useAccount, useLoading } from 'hooks';
+import { useApi, useIPFS, useForm, useMetadata, useAccount, useLoading, useStatus } from 'hooks';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
-import { web3FromSource } from '@polkadot/extension-dapp';
-import { GearKeyring } from '@gear-js/api';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { EventRecord } from '@polkadot/types/interfaces';
 import { CID } from 'ipfs-http-client';
+import { sendMessage } from 'utils';
 import styles from './Create.module.scss';
 
 type Values = { name: string; description: string; attrs?: File | undefined; image?: File | undefined };
 
 function Create() {
-  const alert = useAlert();
   const { api } = useApi();
   const { account } = useAccount();
   const ipfs = useIPFS();
-  const { enableLoading, disableLoading } = useLoading();
+  const { enableLoading } = useLoading();
   const { metadata } = useMetadata(nftMetaWasm);
+  const handleStatus = useStatus();
 
   const { values, handleChange, handleFileChange } = useForm<Values>({ name: '', description: '' });
   const { name, description, attrs, image } = values;
@@ -33,32 +29,6 @@ function Create() {
 
   const handleUploadImageClick = () => {
     imageInputRef.current?.click();
-  };
-
-  const handleEventsStatus = (events: EventRecord[]) => {
-    events.forEach(({ event: { method } }) => {
-      if (method === 'DispatchMessageEnqueued') {
-        alert.success('Send message: Finalized');
-        // resetValues();
-      } else if (method === 'ExtrinsicFailed') {
-        alert.info('Extrinsic failed');
-      }
-    });
-  };
-
-  const handleStatus = (result: ISubmittableResult) => {
-    const { status, events } = result;
-    const { isInBlock, isInvalid, isFinalized } = status;
-
-    if (isInvalid) {
-      alert.info('Transaction error. Status: isInvalid');
-      disableLoading();
-    } else if (isInBlock) {
-      alert.success('Send message: In block');
-    } else if (isFinalized) {
-      handleEventsStatus(events);
-      disableLoading();
-    }
   };
 
   const getMintPayload = (attrsCid: CID, imgCid: CID) => {
@@ -77,23 +47,10 @@ function Create() {
       enableLoading();
 
       const attachments = [ipfs.add(attrs), ipfs.add(image)];
+      const [{ cid: attrsCid }, { cid: imgCid }] = await Promise.all(attachments);
 
-      Promise.all(attachments).then(([{ cid: attrsCid }, { cid: imgCid }]) => {
-        const { address } = account;
-        const decodedAddress = GearKeyring.decodeAddress(address);
-
-        const destination = NFT_CONTRACT_ADDRESS;
-        const payload = getMintPayload(attrsCid, imgCid);
-
-        api.program.gasSpent.handle(decodedAddress, destination, payload, 0, metadata).then((gasLimit) => {
-          const message = { destination, payload, gasLimit };
-          api.message.submit(message, metadata);
-
-          web3FromSource(account.meta.source)
-            .then(({ signer }) => ({ signer }))
-            .then((options) => api.message.signAndSend(account.address, options, handleStatus));
-        });
-      });
+      const payload = getMintPayload(attrsCid, imgCid);
+      sendMessage(api, account, NFT_CONTRACT_ADDRESS, payload, metadata, handleStatus);
     }
   };
 

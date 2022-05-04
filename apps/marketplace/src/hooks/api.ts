@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { AnyJson } from '@polkadot/types/types';
+import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
 import { getWasmMetadata, Metadata, ProgramId } from '@gear-js/api';
 import { useApi } from 'hooks';
+import { useAlert } from 'react-alert';
+import { EventRecord } from '@polkadot/types/interfaces';
 import { useLoading } from './context';
 
 function useMetadata(input: RequestInfo) {
@@ -54,4 +56,37 @@ function useReadState(programId: ProgramId, metaBuffer: Buffer | undefined, payl
   return state;
 }
 
-export { useMetadata, useReadState };
+function useStatus() {
+  const alert = useAlert();
+  const { disableLoading } = useLoading();
+
+  const handleEventsStatus = (events: EventRecord[]) => {
+    events.forEach(({ event: { method } }) => {
+      if (method === 'DispatchMessageEnqueued') {
+        alert.success('Send message: Finalized');
+        // resetValues();
+      } else if (method === 'ExtrinsicFailed') {
+        alert.info('Extrinsic failed');
+      }
+    });
+  };
+
+  const handleStatus = (result: ISubmittableResult) => {
+    const { status, events } = result;
+    const { isInBlock, isInvalid, isFinalized } = status;
+
+    if (isInvalid) {
+      alert.info('Transaction error. Status: isInvalid');
+      disableLoading();
+    } else if (isInBlock) {
+      alert.success('Send message: In block');
+    } else if (isFinalized) {
+      handleEventsStatus(events);
+      disableLoading();
+    }
+  };
+
+  return handleStatus;
+}
+
+export { useMetadata, useReadState, useStatus };

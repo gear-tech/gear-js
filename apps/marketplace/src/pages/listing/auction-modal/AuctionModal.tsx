@@ -1,20 +1,65 @@
 import { Button, Input, Modal } from '@gear-js/ui';
-import { useInput } from 'hooks';
+import { marketplaceMetaWasm } from 'assets';
+import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
+import { useAccount, useApi, useForm, useLoading, useMetadata, useStatus } from 'hooks';
+import { FormEvent } from 'react';
+import { useParams } from 'react-router-dom';
+import { sendMessage } from 'utils';
 import styles from '../Listing.module.scss';
 
 type Props = {
   close: () => void;
 };
 
+type Params = {
+  id: string;
+};
+
+const MILLISECONDS_MULTIPLIER = 60000;
+
 function AuctionModal({ close }: Props) {
-  const { value, handleChange } = useInput('');
-  const { value: duration, handleChange: handleDurationChange } = useInput('');
+  const { id } = useParams() as Params;
+
+  const { values, handleChange } = useForm({ minPrice: '', duration: '', bidPeriod: '' });
+  const { minPrice, duration, bidPeriod } = values;
+
+  const { api } = useApi();
+  const { account } = useAccount();
+  const { metadata } = useMetadata(marketplaceMetaWasm);
+  const { enableLoading } = useLoading();
+  const handleStatus = useStatus();
+
+  const getMilliseconds = (value: string) => Number(value) / MILLISECONDS_MULTIPLIER;
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (account && metadata && minPrice && duration) {
+      enableLoading();
+
+      const payload = {
+        CreateAuction: {
+          nftContractId: NFT_CONTRACT_ADDRESS,
+          ftContractId: null,
+          tokenId: id,
+          duration: getMilliseconds(duration),
+          bidPeriod: getMilliseconds(bidPeriod),
+          minPrice,
+        },
+      };
+
+      sendMessage(api, account, MARKETPLACE_CONTRACT_ADDRESS, payload, metadata, handleStatus);
+    }
+  };
 
   return (
-    <Modal heading="Auction" className={styles.modal} close={close}>
-      <Input value={value} onChange={handleChange} />
-      <Input value={duration} onChange={handleDurationChange} />
-      <Button text="Start auction" block />
+    <Modal heading="Auction" close={close}>
+      <form className={styles.modal} onSubmit={handleSubmit}>
+        <Input placeholder="min price" name="minPrice" value={minPrice} onChange={handleChange} />
+        <Input placeholder="duration" name="duration" value={duration} onChange={handleChange} />
+        <Input placeholder="bid period" name="bidPeriod" value={bidPeriod} onChange={handleChange} />
+        <Button text="Start auction" block />
+      </form>
     </Modal>
   );
 }
