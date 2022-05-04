@@ -16,11 +16,19 @@ const app = express();
 app.get('/health/kafka', (req: Request, res: Response) => {
   res.status(status.kafka ? 200 : 500).json({ connected: status.kafka });
 });
+
 app.get('/health/database', (req: Request, res: Response) => {
   res.status(status.database ? 200 : 500).json({ connected: status.database });
 });
+
 app.get('/health/ws', (req: Request, res: Response) => {
   res.status(status.ws ? 200 : 500).json({ connected: status.ws });
+});
+
+app.get('/health', (req: Request, res: Response) => {
+  const { kafka, database, ws } = status;
+  const allTogether = kafka && database && ws;
+  res.status(allTogether ? 200 : 500);
 });
 
 app.listen(config.healthcheck.port);

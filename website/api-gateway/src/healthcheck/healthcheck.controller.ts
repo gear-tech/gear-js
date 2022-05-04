@@ -17,4 +17,9 @@ export class HealthcheckController {
   kafka(@Res() response: Response) {
     return response.status(status.kafka ? 200 : 500).json({ connected: status.kafka });
   }
+
+  @Get('')
+  general(@Res() response: Response) {
+    return response.status(status.kafka ? 200 : 500);
+  }
 }
