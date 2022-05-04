@@ -1,5 +1,6 @@
 import { Controller, Get, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { stat } from 'fs';
 
 const status = {
   kafka: false,
@@ -22,5 +23,12 @@ export class HealthcheckController {
   @Get('database')
   database(@Res() response: Response) {
     return response.status(status.database ? 200 : 500).json({ connected: status.database });
+  }
+
+  @Get('')
+  general(@Res() response: Response) {
+    const { kafka, database } = status;
+    const allTogether = kafka && database;
+    return response.status(allTogether ? 200 : 500);
   }
 }
