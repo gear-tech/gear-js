@@ -31,4 +31,7 @@ export default {
     accountBalance: checkEnv(process.env.TEST_ACCOUNT_BALANCE),
     balanceToTransfer: checkEnv(process.env.TEST_BALANCE_VALUE),
   },
+  healthcheck: {
+    port: parseInt(process.env.PORT || '3000'),
+  },
 };

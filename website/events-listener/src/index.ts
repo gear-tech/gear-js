@@ -5,6 +5,7 @@ import { KafkaProducer } from './producer';
 import { logger } from './logger';
 import config from './config';
 import { restartIfNeeded, setRestartNeeded } from './lifecycle';
+import { changeStatus } from './healthcheck';
 
 const log = logger('Main');
 
@@ -12,6 +13,7 @@ const main = async () => {
   while (true) {
     log.info('Starting...');
     const api = await GearApi.create({ providerAddress: config.api.provider, throwOnConnect: true });
+    changeStatus('ws');
     api.on('error', () => {
       setRestartNeeded();
     });
@@ -24,6 +26,7 @@ const main = async () => {
     const producer = new KafkaProducer();
     await producer.createTopic('events');
     await producer.connect();
+    changeStatus('kafka');
 
     listen(api, genesis, ({ key, value }) => {
       producer.send(key, value, genesis);

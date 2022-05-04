@@ -5,6 +5,8 @@ import { ConsumerModule } from './consumer/consumer.module';
 import { MessagesModule } from './messages/messages.module';
 import { MetadataModule } from './metadata/metadata.module';
 import { ProgramsModule } from './programs/programs.module';
+import { HealthcheckController } from './healthcheck/healthcheck.controller';
+import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import configurations from './config/configuration';
 
 @Module({
@@ -31,6 +33,8 @@ import configurations from './config/configuration';
     ProgramsModule,
     MessagesModule,
     MetadataModule,
+    HealthcheckModule,
   ],
+  controllers: [HealthcheckController],
 })
 export class AppModule {}

@@ -1,11 +1,11 @@
-import { Controller, Logger, Post, Req } from '@nestjs/common';
+import { Controller, Get, Logger, Post, Req } from '@nestjs/common';
 import { getResponse, verifyCaptcha } from 'src/utils';
 import errors from '@gear-js/jsonrpc-errors';
 import { ApiGatewayService } from './api-gateway.service';
 import { IRpcRequest } from 'src/json-rpc/interface';
 
 const logger = new Logger('ApiGatewayController');
-@Controller()
+@Controller('api')
 export class ApiGatewayController {
   constructor(private readonly service: ApiGatewayService) {}
 

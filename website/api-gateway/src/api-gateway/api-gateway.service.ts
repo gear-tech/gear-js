@@ -16,6 +16,7 @@ import {
   GetAllUserProgramsParams,
 } from '@gear-js/interfaces';
 import config from 'src/config/configuration';
+import { changeStatus } from 'src/healthcheck/healthcheck.controller';
 
 const logger = new Logger('ApiGatewayService');
 const configKafka = config().kafka;
@@ -62,8 +63,10 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
     this.patterns.forEach((key) => {
       this.client.subscribeToResponseOf(key);
     });
-    await this.client.connect();
-    logger.log('Connection initialized');
+    this.client.connect().then(() => {
+      logger.log('Connection initialized');
+      changeStatus('kafka');
+    });
   }
 
   methods = {
