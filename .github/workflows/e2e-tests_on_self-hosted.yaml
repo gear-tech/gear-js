@@ -14,6 +14,7 @@ env:
   DOCKER_PASSWORD: ${{ github.token }}
   DOCKER_REPOSITORY: ${{ github.repository_owner }}
   DOCKER_IMAGE_TAG: latest
+  DOCKER_BUILDKIT: 1
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
@@ -101,6 +102,7 @@ jobs:
       - name: Build image
         run: |
           docker build \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-node:dev \
           -f k8s/gear-node/Dockerfile .
 
@@ -136,6 +138,7 @@ jobs:
       - name: Build image
         run: |
           docker build \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/data-storage:dev \
           -f website/data-storage/Dockerfile .
 
@@ -171,6 +174,7 @@ jobs:
       - name: Build image
         run: |
           docker build \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/api-gateway:dev \
           -f website/api-gateway/Dockerfile .
 
@@ -206,6 +210,7 @@ jobs:
       - name: Build image
         run: |
           docker build \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/events-listener:dev \
           -f website/events-listener/Dockerfile .
 
@@ -241,6 +246,7 @@ jobs:
       - name: Build image
         run: |
           docker build \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/test-balance:dev \
           -f website/test-balance/Dockerfile .
 
