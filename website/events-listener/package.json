@@ -17,11 +17,13 @@
     "avsc": "^5.7.3",
     "chalk": "^4.1.2",
     "dotenv": "^10.0.0",
+    "express": "^4.18.1",
     "kafkajs": "^1.15.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
     "@gear-js/interfaces": "workspace:^",
+    "@types/express": "^4.17.13",
     "@types/node": "17.0.21",
     "nodemon": "2.0.15",
     "ts-node": "10.7.0",

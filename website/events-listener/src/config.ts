@@ -2,21 +2,25 @@ import dotenv from 'dotenv';
 import { strict as assert } from 'assert';
 dotenv.config();
 
-const checkEnv = (env: typeof process.env['']): string => {
-  assert.notStrictEqual(env, undefined);
+const checkEnv = (envName: string): string => {
+  const env = process.env[envName];
+  assert.notStrictEqual(env, undefined, `${envName} is not specified`);
   return env as string;
 };
 
 export default {
   kafka: {
-    clientId: checkEnv(process.env.KAFKA_CLIENT_ID),
-    brokers: checkEnv(process.env.KAFKA_BROKERS).split(','),
+    clientId: checkEnv('KAFKA_CLIENT_ID'),
+    brokers: checkEnv('KAFKA_BROKERS').split(','),
     sasl: {
-      username: checkEnv(process.env.KAFKA_SASL_USERNAME),
-      password: checkEnv(process.env.KAFKA_SASL_PASSWORD),
+      username: checkEnv('KAFKA_SASL_USERNAME'),
+      password: checkEnv('KAFKA_SASL_PASSWORD'),
     },
   },
   api: {
     provider: process.env.WS_PROVIDER,
+  },
+  healthcheck: {
+    port: parseInt(process.env.PORT || '3000'),
   },
 };
