@@ -92,6 +92,7 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-node:dev \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-node:dev \
           -f k8s/gear-node/Dockerfile .
 
@@ -128,6 +129,7 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/data-storage:dev \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/data-storage:dev \
           -f website/data-storage/Dockerfile .
 
@@ -164,6 +166,7 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/api-gateway:dev \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/api-gateway:dev \
           -f website/api-gateway/Dockerfile .
 
@@ -200,6 +203,7 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/events-listener:dev \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/events-listener:dev \
           -f website/events-listener/Dockerfile .
 
@@ -236,6 +240,7 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/test-balance:dev \
           -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/test-balance:dev \
           -f website/test-balance/Dockerfile .
 
