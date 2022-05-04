@@ -265,8 +265,19 @@ describe('header tests', () => {
     const getButtons = () => within(getButtonsList()).getAllByRole('button');
     const getButton = (index: number) => getButtons()[index];
 
+    const unsubMock = jest.fn();
+    const subscribeToBalanceChangeMock = jest.fn();
+
     const mockBalance = (useApiSpy: jest.SpyInstance, value: string) => {
-      useApiSpy.mockImplementation(() => ({ api: { balance: { findOut: async () => ({ toHuman: () => value }) } } }));
+      useApiSpy.mockImplementation(() => ({
+        api: {
+          balance: { findOut: async () => ({ toHuman: () => value }) },
+          //it works strangely, you need to study the issue more deeply
+          gearEvents: {
+            subscribeToBalanceChange: subscribeToBalanceChangeMock.mockResolvedValue(unsubMock),
+          },
+        },
+      }));
     };
 
     const getLoginButton = () => screen.getByText('Connect');
@@ -293,7 +304,10 @@ describe('header tests', () => {
       expect(secondButton).toHaveTextContent('456');
 
       mockBalance(useApiSpy, '1000');
+
       fireEvent.click(secondButton);
+
+      expect(subscribeToBalanceChangeMock).toBeCalledTimes(1);
 
       const accountButton = screen.getByText('second acc');
       const balance = screen.getByText('Balance:');
@@ -305,6 +319,8 @@ describe('header tests', () => {
       // switches
 
       fireEvent.click(accountButton);
+
+      expect(unsubMock).toBeCalledTimes(1);
 
       getButtons().forEach((button) =>
         button === getButton(1) ? expect(button).toHaveClass('active') : expect(button).not.toHaveClass('active')
