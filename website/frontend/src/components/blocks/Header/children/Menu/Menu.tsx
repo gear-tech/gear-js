@@ -12,10 +12,23 @@ type ClassNameProps = {
   isActive: boolean;
 };
 
+const links = [
+  { to: routes.explorer, text: 'Explorer' },
+  { to: routes.editor, text: '</> IDE' },
+  { to: routes.mailbox, text: 'Mailbox' },
+];
+
 const Menu = ({ openSidebar }: Props) => {
   const { api, isApiReady } = useApi();
 
   const getClassName = ({ isActive }: ClassNameProps) => clsx(styles.link, isActive && styles.active);
+
+  const getItems = () =>
+    links.map(({ to, text }) => (
+      <li key={text}>
+        <NavLink className={getClassName} to={to} children={text} />
+      </li>
+    ));
 
   const specName = api?.runtimeVersion.specName.toHuman();
   const specVersion = api?.runtimeVersion.specVersion.toHuman();
@@ -36,21 +49,7 @@ const Menu = ({ openSidebar }: Props) => {
           )}
         </button>
       </li>
-      <li>
-        <NavLink className={getClassName} to={routes.explorer}>
-          Explorer
-        </NavLink>
-      </li>
-      <li>
-        <NavLink className={getClassName} to={routes.editor}>
-          &lt;/&gt; IDE
-        </NavLink>
-      </li>
-      <li>
-        <NavLink className={getClassName} to={routes.mailbox}>
-          Mailbox
-        </NavLink>
-      </li>
+      {getItems()}
     </ul>
   );
 };

@@ -31,7 +31,18 @@ jobs:
         uses: mktcode/consecutive-workflow-action@HEAD
         with:
           token: ${{ github.token }}
-          
+
+  rm-tmp-img:
+    name: Remove tmp images
+    needs: wait-previous-run
+    if: github.event.pull_request.draft == false
+    runs-on: k8s-runner
+    steps:
+      - name: Remove tmp images
+        continue-on-error: true
+        run: |
+          docker rmi `docker images|grep '<none>'|awk '{print$3}'`
+  
   unit-tests:
     name: Unit tests 'data-storage'
     needs: wait-previous-run
@@ -257,22 +268,22 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to k8s
-        uses: kodermax/kubectl-aws-eks@HEAD
+        uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment gear-node api-gateway-testenv frontend-nginx-testenv events-listener-rpc-testenv postgres-testenv -n ${{ env.KUBE_NAMESPACE }}
 
       - name: Check k8s deployments
-        uses: kodermax/kubectl-aws-eks@HEAD
+        uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n ${{ env.KUBE_NAMESPACE }} | xargs -n1 -t kubectl rollout status -n ${{ env.KUBE_NAMESPACE }} --timeout=120s
 
       - name: Deploy to k8s data-storage
-        uses: kodermax/kubectl-aws-eks@HEAD
+        uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment data-storage-testenv -n ${{ env.KUBE_NAMESPACE }}
 
       - name: Check k8s deployment data-storage
-        uses: kodermax/kubectl-aws-eks@HEAD
+        uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout status deployment data-storage-testenv -n ${{ env.KUBE_NAMESPACE }} --timeout=120s
 
