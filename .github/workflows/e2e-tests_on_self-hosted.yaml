@@ -6,6 +6,7 @@ on:
     branches: master
     paths:
       - website/**
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
