@@ -45,6 +45,7 @@ export class GearProgramState extends GearStorage {
     }
 
     const pages = await this.gPages(programId, program);
+    const initialSize = program.allocations.size;
     const block = await this.api.blocks.getFinalizedHead();
     const blockTimestamp = await this.api.blocks.getBlockTimestamp(block.toHex());
 
@@ -59,7 +60,7 @@ export class GearProgramState extends GearStorage {
       throw new ReadStateError(`Unable to read state. inputValue not specified`);
     }
     const encodedInput = inputValue === undefined ? undefined : this.encodeInput(metadata, inputValue);
-    const state = await readState(metaWasm, pages, encodedInput, blockTimestamp);
+    const state = await readState(metaWasm, initialSize, pages, encodedInput, blockTimestamp);
 
     return this.decodeState(state, metadata);
   }
