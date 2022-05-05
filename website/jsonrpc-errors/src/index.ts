@@ -44,6 +44,11 @@ export default {
     code: -32403,
     message: 'Signature not verified',
   },
+  Forbidden: {
+    name: 'Forbidden',
+    code: -32403,
+    message: 'Forbidden',
+  },
   TransferLimitReached: {
     name: 'TransferLimitReached',
     code: -32010,

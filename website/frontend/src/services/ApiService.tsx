@@ -3,7 +3,7 @@ import { UploadProgramModel, Message, Reply, MetaModel, ProgramStatus } from 'ty
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { CreateType, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
-import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE } from 'consts';
+import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE, EVENT_TYPES } from 'consts';
 import { localPrograms } from './LocalDBService';
 import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'helpers';
 import ServerRPCRequestService from './ServerRPCRequestService';
@@ -157,12 +157,14 @@ export const sendMessage = async (
   disableLoading: () => void,
   alert: AlertContainer,
   callback: () => void,
-  meta?: Metadata
+  meta?: Metadata,
+  payloadType?: string
 ) => {
   try {
     const { signer } = await web3FromSource(account.meta.source);
 
-    await api.submit(message, meta);
+    api.submit(message, meta, payloadType);
+
     await api.signAndSend(account.address, { signer }, (data: any) => {
       enableLoading();
 
@@ -259,39 +261,45 @@ export const addMetadata = async (
 
 export const subscribeToEvents = (alert: AlertContainer) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
+
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
-      const message = `${method}\n ${info.programId.toHex()}`;
+      const isInitFailure = method === EVENT_TYPES.PROGRAM_INITIALIZATION_FAILURE;
+      const initFailureReason = reason?.isDispatch && reason?.asDispatch.toHuman();
+      const methodString = initFailureReason && isInitFailure ? `${method}: ${initFailureReason}` : `${method}`;
+      const programId = info.programId.toHex();
+      const message = `${methodString}\n${programId}`;
       const showAlert = reason ? alert.error : alert.success;
+
       showAlert(message);
     }
   });
 
   nodeApi.subscribeToLogEvents(async ({ data: { source, destination, reply, payload } }) => {
-    let meta = null;
-    let decodedPayload: any;
-    const programId = source.toHex();
-    const apiRequest = new ServerRPCRequestService();
-
-    const { result } = isDevChain()
-      ? await getLocalProgramMeta(programId)
-      : await apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId });
-
-    if (result && result.meta) {
-      meta = JSON.parse(result.meta);
-    }
-
-    try {
-      decodedPayload =
-        meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
-          ? CreateType.decode(meta.output, payload, meta).toHuman()
-          : payload.toHuman();
-    } catch (error) {
-      console.error('Decode payload failed');
-    }
-
     if (destination.toHex() === filterKey) {
+      let meta = null;
+      let decodedPayload: any;
+      const programId = source.toHex();
+      const apiRequest = new ServerRPCRequestService();
+
+      const { result } = isDevChain()
+        ? await getLocalProgramMeta(programId)
+        : await apiRequest.callRPC<GetMetaResponse>(RPC_METHODS.GET_METADATA, { programId });
+
+      if (result && result.meta) {
+        meta = JSON.parse(result.meta);
+      }
+
+      try {
+        decodedPayload =
+          meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
+            ? CreateType.decode(meta.output, payload, meta).toHuman()
+            : payload.toHuman();
+      } catch (error) {
+        console.error('Decode payload failed');
+      }
+
       // TODO: add payload parsing
       const message = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
       const isSuccess = (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone;

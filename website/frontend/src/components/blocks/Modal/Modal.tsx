@@ -20,9 +20,9 @@ export const Modal: FC<Props> = ({ open, content, handleClose, title }) => {
   };
 
   return open ? (
-    <div className="modal__wrapper" ref={targetRef} onClick={handleOverlayClick} aria-hidden="true">
-      <div className="modal__box">
-        <button className="modal__close" onClick={handleClose} type="button">
+    <div className="modal__wrapper" ref={targetRef} onClick={handleOverlayClick}>
+      <div className="modal__box" data-testid="modal">
+        <button className="modal__close" onClick={handleClose} type="button" aria-label="Close modal">
           <span className="modal__close-x">
             <CloseIcon color="#ffffff" />
           </span>

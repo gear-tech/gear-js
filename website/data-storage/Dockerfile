@@ -14,3 +14,4 @@ RUN yarn build:jsonrpc-errors
 RUN yarn build:data-storage
 
 CMD ["node", "website/data-storage/dist/main"]
+#check

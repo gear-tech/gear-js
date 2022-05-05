@@ -114,7 +114,7 @@ for (let filePath of testFiles) {
       return;
     });
 
-    testif(testFile.messages)('Sending messages', async () => {
+    testif(testFile.messages)('Send messages', async () => {
       for (let message of testFile.messages) {
         let payload = message.payload;
         const meta = programs.get(message.program).meta;

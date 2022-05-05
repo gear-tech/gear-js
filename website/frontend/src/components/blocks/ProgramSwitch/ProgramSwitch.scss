@@ -1,3 +1,4 @@
+@use '@gear-js/ui/breakpoints' as *;
 @import '../../../assets/scss/variables';
 
 .switch-block {
@@ -27,22 +28,13 @@
   margin-left: 32px;
 }
 
-.switch-block--transfer__btn {
-  padding: 12px 24px;
-  background: #2bd071;
-  border-radius: 2px;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 24px;
-  color: #ffffff;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+.test-balance-button {
   margin: 0 32px;
-}
 
-.switch-block--transfer__btn[disabled] {
-  background: #3d3d3d;
+  @include md {
+    // TODO: can't override set gear-js styles
+    display: none !important;
+  }
 }
 
 .switch-block--editor__btn.is-active {
@@ -93,9 +85,6 @@
   }
 
   .switch-block--editor {
-    display: none;
-  }
-  .switch-block--transfer {
     display: none;
   }
 }

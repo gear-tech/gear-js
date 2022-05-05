@@ -22,7 +22,7 @@ beforeAll(async () => {
 
   timestamp_test.id = api.program.submit({
     code: timestamp_test.code,
-    gasLimit: 200_000_000,
+    gasLimit: 2_000_000_000,
   }).programId;
   let initStatus = checkInit(api, timestamp_test.id);
   api.program.signAndSend(alice, () => {});
@@ -32,7 +32,7 @@ beforeAll(async () => {
     {
       code: demo_meta_test.code,
       initPayload: { amount: 8, currency: 'GRT' },
-      gasLimit: 200_000_000,
+      gasLimit: 2_000_000_000,
     },
     await getWasmMetadata(demo_meta_test.meta),
   ).programId;
@@ -47,9 +47,25 @@ afterAll(async () => {
 });
 
 describe('Read State', () => {
+  test('Get program from storage', async () => {
+    const gProg = await api.storage.gProg(demo_meta_test.id);
+    expect(gProg).toBeDefined();
+    expect(gProg).toHaveProperty('allocations');
+    expect(gProg).toHaveProperty('pages_with_data');
+    expect(gProg).toHaveProperty('code_hash');
+    expect(gProg).toHaveProperty('state');
+  });
+
+  test('Get program pages from storage', async () => {
+    const gProg = await api.storage.gProg(demo_meta_test.id);
+    const gPages = await api.storage.gPages(demo_meta_test.id, gProg);
+    expect(gPages).toBeDefined();
+  });
+
   test('Test call timestamp in meta_state', async () => {
     const state = await api.programState.read(timestamp_test.id, timestamp_test.meta);
     expect(state).toBeDefined();
+    expect(parseInt(state.toString())).not.toBe(NaN);
   });
 
   test('Tests read demo_meta state with None input', async () => {
