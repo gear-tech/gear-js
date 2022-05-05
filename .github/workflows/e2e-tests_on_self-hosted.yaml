@@ -1,20 +1,15 @@
-name: e2e tests
+name: 'e2e test'
 
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     branches: master
-    paths: 
+    paths:
       - website/**
-  workflow_dispatch:
 
 env:
-  DOCKER_REGISTRY: ghcr.io
-  DOCKER_USER: ${{ github.actor }}
-  DOCKER_PASSWORD: ${{ github.token }}
-  DOCKER_REPOSITORY: ${{ github.repository_owner }}
-  DOCKER_IMAGE_TAG: latest
-  DOCKER_BUILDKIT: 1
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
@@ -22,291 +17,243 @@ env:
   KUBE_NAMESPACE: test-env
 
 jobs:
+  run-unit-tests:
+    name: Unit Tests for `data-storage`
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Load current commit
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install
+
+      - name: Build interfaces and jsonrpc-errors
+        run: yarn build:interfaces && yarn build:jsonrpc-errors
+
+      - name: Run tests
+        working-directory: 'website/data-storage'
+        run: yarn test
 
   wait-previous-run:
-    name: Wait previous run
+    needs: [run-unit-tests]
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Wait previous run
-        uses: mktcode/consecutive-workflow-action@HEAD
+        uses: mktcode/consecutive-workflow-action@v1 # please read security note
         with:
-          token: ${{ github.token }}
-  
-  unit-tests:
-    name: Unit tests 'data-storage'
-    needs: wait-previous-run
-    if: github.event.pull_request.draft == false
-    runs-on: k8s-runner
-    steps:
-      - name: Fix permissions
-        run: |
-          sudo chown -R runner:runner /runner/_work
-
-      - name: Cancel previous
-        uses: styfle/cancel-workflow-action@HEAD
-        with:
-          access_token: ${{ github.token }}
-
-      - name: Checkout
-        uses: actions/checkout@HEAD
-
-      - name: Yarn install & configure
-        run: |
-          sudo yarn set version berry
-          sudo yarn config set nodeLinker node-modules
-          sudo yarn config set enableGlobalCache true
-          sudo yarn config set globalFolder /mnt/cashes/yarn
-          sudo yarn plugin import @yarnpkg/plugin-workspace-tools
-          sudo yarn install
-
-      - name: Build 'interfaces' & 'jsonrpc-errors'
-        run: sudo yarn build:interfaces && yarn build:jsonrpc-errors
-        working-directory: website/
-
-      - name: Unit tests
-        run: sudo yarn test
-        working-directory: website/data-storage/
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   build-and-push-gear-node-image:
-    name: Build & push 'gear-node'
     if: github.event.pull_request.draft == false
-    needs: [wait-previous-run,unit-tests]
-    runs-on: k8s-runner
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run]
+    environment: dev
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Fix permissions
-        run: |
-          sudo chown -R runner:runner /runner/_work
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Checkout
-        uses: actions/checkout@HEAD
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker login
-        run: |
-          echo ${{ env.DOCKER_PASSWORD }} \
-          | docker login ${{ env.DOCKER_REGISTRY }} \
-          -u ${{ env.DOCKER_USER }} \
-          --password-stdin
+      - name: Build and push Data Storage Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: k8s/gear-node/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-node:dev
 
-      - name: Build image
-        run: |
-          docker build \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-node:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-node:dev \
-          -f k8s/gear-node/Dockerfile .
-
-      - name: Push image
-        run: |
-          docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-node:dev
-
-      - name: Docker logout
-        run: |
-          docker logout
-          
   build-and-push-data-storage-image:
-    name: Build & push 'data-storage'
     if: github.event.pull_request.draft == false
-    needs: [wait-previous-run,unit-tests]
-    runs-on: k8s-runner
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run]
+    environment: dev
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Fix permissions
-        run: |
-          sudo chown -R runner:runner /runner/_work
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Checkout
-        uses: actions/checkout@HEAD
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker login
-        run: |
-          echo ${{ env.DOCKER_PASSWORD }} \
-          | docker login ${{ env.DOCKER_REGISTRY }} \
-          -u ${{ env.DOCKER_USER }} \
-          --password-stdin
-
-      - name: Build image
-        run: |
-          docker build \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-data-storage:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-data-storage:dev \
-          -f website/data-storage/Dockerfile .
-
-      - name: Push image
-        run: |
-          docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-data-storage:dev
-
-      - name: Docker logout
-        run: |
-          docker logout
+      - name: Build and push Data Storage Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: website/data-storage/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:dev
 
   build-and-push-api-gateway-image:
-    name: Build & push 'api-gateway'
     if: github.event.pull_request.draft == false
-    needs: [wait-previous-run,unit-tests]
-    runs-on: k8s-runner
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run]
+    environment: dev
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Fix permissions
-        run: |
-          sudo chown -R runner:runner /runner/_work
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Checkout
-        uses: actions/checkout@HEAD
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker login
-        run: |
-          echo ${{ env.DOCKER_PASSWORD }} \
-          | docker login ${{ env.DOCKER_REGISTRY }} \
-          -u ${{ env.DOCKER_USER }} \
-          --password-stdin
+      - name: Build and push Api Gateway Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: website/api-gateway/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:dev
 
-      - name: Build image
-        run: |
-          docker build \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-api-gateway:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-api-gateway:dev \
-          -f website/api-gateway/Dockerfile .
-
-      - name: Push image
-        run: |
-          docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-api-gateway:dev
-
-      - name: Docker logout
-        run: |
-          docker logout
-
-  build-and-push-events-listener-image:
-    name: Build & push 'events-listener'
+  build-and-push-event-listeners-image:
     if: github.event.pull_request.draft == false
-    needs: [wait-previous-run,unit-tests]
-    runs-on: k8s-runner
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run]
+    environment: dev
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Fix permissions
-        run: |
-          sudo chown -R runner:runner /runner/_work
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Checkout
-        uses: actions/checkout@HEAD
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker login
-        run: |
-          echo ${{ env.DOCKER_PASSWORD }} \
-          | docker login ${{ env.DOCKER_REGISTRY }} \
-          -u ${{ env.DOCKER_USER }} \
-          --password-stdin
-
-      - name: Build image
-        run: |
-          docker build \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-events-listener:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-events-listener:dev \
-          -f website/events-listener/Dockerfile .
-
-      - name: Push image
-        run: |
-          docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-events-listener:dev
-
-      - name: Docker logout
-        run: |
-          docker logout
+      - name: Build and push Events Listener Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: website/events-listener/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:dev
 
   build-and-push-test-balance-image:
-    name: Build & push 'test-balance'
     if: github.event.pull_request.draft == false
-    needs: [wait-previous-run,unit-tests]
-    runs-on: k8s-runner
-    steps:
-      - name: Fix permissions
-        run: |
-          sudo chown -R runner:runner /runner/_work
-
-      - name: Checkout
-        uses: actions/checkout@HEAD
-
-      - name: Docker login
-        run: |
-          echo ${{ env.DOCKER_PASSWORD }} \
-          | docker login ${{ env.DOCKER_REGISTRY }} \
-          -u ${{ env.DOCKER_USER }} \
-          --password-stdin
-
-      - name: Build image
-        run: |
-          docker build \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-test-balance:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-test-balance:dev \
-          -f website/test-balance/Dockerfile .
-
-      - name: Push image
-        run: |
-          docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-test-balance:dev
-
-      - name: Docker logout
-        run: |
-          docker logout
-
-  deploy-to-k8s:
-    name: Deploy to k8s
-    if: github.event.pull_request.draft == false
-    needs: [ wait-previous-run, unit-tests, build-and-push-data-storage-image, build-and-push-api-gateway-image, build-and-push-events-listener-image, build-and-push-test-balance-image]
-    runs-on: k8s-runner
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run]
+    environment: dev
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      - name: AWS login
-        uses: aws-actions/configure-aws-credentials@HEAD
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Test Balance Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: website/test-balance/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:dev
+
+  purge-k8s-test-env:
+    if: github.event.pull_request.draft == false
+    needs:
+      [
+        build-and-push-data-storage-image,
+        build-and-push-api-gateway-image,
+        build-and-push-event-listeners-image,
+        build-and-push-test-balance-image,
+        wait-previous-run,
+      ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to k8s
-        uses: sergeyfilyanin/kubectl-aws-eks@master
+        uses: kodermax/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment gear-node api-gateway-testenv frontend-nginx-testenv events-listener-rpc-testenv postgres-testenv -n ${{ env.KUBE_NAMESPACE }}
+          args: rollout restart deployment gear-node api-gateway-testenv frontend-nginx-testenv events-listener-rpc-testenv postgres-testenv -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
-        uses: sergeyfilyanin/kubectl-aws-eks@master
+        uses: kodermax/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n ${{ env.KUBE_NAMESPACE }} | xargs -n1 -t kubectl rollout status -n ${{ env.KUBE_NAMESPACE }} --timeout=120s
+          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
 
       - name: Deploy to k8s data-storage
-        uses: sergeyfilyanin/kubectl-aws-eks@master
+        uses: kodermax/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment data-storage-testenv -n ${{ env.KUBE_NAMESPACE }}
+          args: rollout restart deployment data-storage-testenv -n $KUBE_NAMESPACE
 
       - name: Check k8s deployment data-storage
-        uses: sergeyfilyanin/kubectl-aws-eks@master
+        uses: kodermax/kubectl-aws-eks@master
         with:
-          args: rollout status deployment data-storage-testenv -n ${{ env.KUBE_NAMESPACE }} --timeout=120s
-                    
-  e2e-tests:
-    name: e2e test
+          args: rollout status deployment data-storage-testenv -n $KUBE_NAMESPACE --timeout=120s
+
+  run-e2e-tests:
     if: github.event.pull_request.draft == false
-    needs: [wait-previous-run, deploy-to-k8s]
-    runs-on: k8s-runner
+    needs: [purge-k8s-test-env, wait-previous-run]
+    runs-on: ubuntu-latest
+    environment: dev
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@HEAD
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: e2e tests
+      - name: Install NodeJS 16.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Prepare&Run Tests
         working-directory: website/tests
+        env:
+          API_ADDRESS: ${{ secrets.API_ADDRESS_URL_TEST }}
+          WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
         run: |
-          export API_ADDRESS=http://ec2-54-193-93-95.us-west-1.compute.amazonaws.com:32443/api
-          export WS_PROVIDER=ws://ec2-54-193-93-95.us-west-1.compute.amazonaws.com:32422
-          export YARN_ENABLE_IMMUTABLE_INSTALLS=false
-          sudo ./download-examples.sh
-          sudo yarn set version berry
-          sudo yarn config set enableGlobalCache true
-          sudo yarn config set globalFolder /mnt/cashes/yarn
-          sudo yarn plugin import @yarnpkg/plugin-workspace-tools
-          sudo yarn install
+          ./download-examples.sh
+          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
           yarn start
