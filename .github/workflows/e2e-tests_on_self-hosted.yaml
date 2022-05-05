@@ -286,7 +286,7 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout status deployment data-storage-testenv -n ${{ env.KUBE_NAMESPACE }} --timeout=120s
-
+                    
   e2e-tests:
     name: e2e test
     if: github.event.pull_request.draft == false

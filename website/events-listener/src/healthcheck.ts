@@ -23,7 +23,9 @@ app.get('/health/ws', (req: Request, res: Response) => {
 app.get('/health', (req: Request, res: Response) => {
   const { kafka, ws } = status;
   const allTogether = kafka && ws;
-  res.status(allTogether ? 200 : 500);
+  res.status(allTogether ? 200 : 500).json({ connected: status });
 });
 
-app.listen(config.healthcheck.port);
+app.listen(config.healthcheck.port, () => {
+  console.log(`Healthckech server is running on port ${config.healthcheck.port} 🚀`);
+});
