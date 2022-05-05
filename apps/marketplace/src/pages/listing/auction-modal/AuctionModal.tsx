@@ -5,7 +5,7 @@ import { useAccount, useApi, useForm, useLoading, useMetadata, useStatus } from 
 import { FormEvent } from 'react';
 import { useParams } from 'react-router-dom';
 import { sendMessage } from 'utils';
-import styles from '../Listing.module.scss';
+import styles from './AuctionModal.module.scss';
 
 type Props = {
   close: () => void;
@@ -29,7 +29,7 @@ function AuctionModal({ close }: Props) {
   const { enableLoading } = useLoading();
   const handleStatus = useStatus();
 
-  const getMilliseconds = (value: string) => Number(value) / MILLISECONDS_MULTIPLIER;
+  const getMilliseconds = (value: string) => Number(value) * MILLISECONDS_MULTIPLIER;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,11 +54,11 @@ function AuctionModal({ close }: Props) {
 
   return (
     <Modal heading="Auction" close={close}>
-      <form className={styles.modal} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <Input placeholder="min price" name="minPrice" value={minPrice} onChange={handleChange} />
         <Input placeholder="duration" name="duration" value={duration} onChange={handleChange} />
         <Input placeholder="bid period" name="bidPeriod" value={bidPeriod} onChange={handleChange} />
-        <Button text="Start auction" block />
+        <Button type="submit" text="Start auction" block />
       </form>
     </Modal>
   );

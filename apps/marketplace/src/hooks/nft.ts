@@ -8,14 +8,17 @@ import { useAccount } from './context';
 type NFTPayload = { Token: { tokenId: string } };
 type OwnersNFTPayload = { TokensForOwner: { owner: Hex } };
 
+type NFTState = { Token: { token: NFT } };
+type OwnersNFTState = { TokensForOwner: { tokens: NFT[] } };
+
 function useNftMeta() {
   const { metadata, metaBuffer } = useMetadata(nftMetaWasm);
 
   return { nftMeta: metadata, nftMetaBuffer: metaBuffer };
 }
 
-function useNftState(payload: NFTPayload): NFT;
-function useNftState(payload: OwnersNFTPayload): NFT[];
+function useNftState(payload: NFTPayload): NFTState | undefined;
+function useNftState(payload: OwnersNFTPayload): OwnersNFTState | undefined;
 function useNftState(payload: NFTPayload | OwnersNFTPayload) {
   const { nftMetaBuffer } = useNftMeta();
 
@@ -23,7 +26,8 @@ function useNftState(payload: NFTPayload | OwnersNFTPayload) {
 }
 
 function useNft(tokenId: string) {
-  return useNftState({ Token: { tokenId } });
+  const state = useNftState({ Token: { tokenId } });
+  return state?.Token.token;
 }
 
 function useOwnersNft() {
@@ -32,7 +36,9 @@ function useOwnersNft() {
   const { address } = account!;
   const decodedAddress = GearKeyring.decodeAddress(address);
 
-  return useNftState({ TokensForOwner: { owner: decodedAddress } });
+  const state = useNftState({ TokensForOwner: { owner: decodedAddress } });
+
+  return state?.TokensForOwner.tokens;
 }
 
 export { useNft, useOwnersNft };

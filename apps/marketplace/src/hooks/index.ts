@@ -1,7 +1,7 @@
 import { useApi, useAccount, useIPFS, useLoading } from './context';
 import { useMetadata, useReadState, useStatus } from './api';
 import { useNft, useOwnersNft } from './nft';
-import { useMarketplaceMeta, useMarketplaceState } from './marketplace';
+import { useMarketplaceMeta, useMarketplaceState, useMarketNft } from './marketplace';
 import { useForm, useInput } from './form';
 
 export {
@@ -16,6 +16,7 @@ export {
   useOwnersNft,
   useMarketplaceMeta,
   useMarketplaceState,
+  useMarketNft,
   useForm,
   useInput,
 };

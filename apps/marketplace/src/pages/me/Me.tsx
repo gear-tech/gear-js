@@ -6,12 +6,12 @@ import List from './list';
 const filters = ['My NFTs', 'Approved to me'];
 
 function Me() {
-  const nfts = useOwnersNft() || [];
+  const nfts = useOwnersNft();
 
   return (
     <>
       <Header text="My collections" filter="My NFTs" filters={filters} onFilterChange={() => {}} />
-      <List nfts={nfts} />
+      {nfts && <List nfts={nfts} />}
     </>
   );
 }

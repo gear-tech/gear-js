@@ -28,16 +28,11 @@ function useMetadata(input: RequestInfo) {
   return { metadata, metaBuffer };
 }
 
-type FormattedState = { [key: string]: { [key: string]: AnyJson } };
-
 // TODO: are payload and state AnyJson? to disable useEffect deps or to memoize payload? should we handle loading on useMetadata?
 function useReadState(programId: ProgramId, metaBuffer: Buffer | undefined, payload?: AnyJson) {
   const [state, setState] = useState<AnyJson>();
   const { api } = useApi();
   const { enableLoading, disableLoading } = useLoading();
-
-  const getValues = <Value>(obj: { [key: string]: Value }) => Object.values(obj)[0];
-  const getUnwrappedState = (formattedState: FormattedState) => getValues(getValues(formattedState));
 
   useEffect(() => {
     if (metaBuffer) {
@@ -45,8 +40,7 @@ function useReadState(programId: ProgramId, metaBuffer: Buffer | undefined, payl
 
       api.programState
         .read(programId, metaBuffer, payload)
-        .then((codecState) => codecState.toHuman() as FormattedState)
-        .then(getUnwrappedState)
+        .then((codecState) => codecState.toHuman())
         .then(setState)
         .finally(() => disableLoading());
     }
