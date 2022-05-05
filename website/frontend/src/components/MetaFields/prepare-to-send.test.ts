@@ -4,15 +4,13 @@ describe('prepare to send metadata', () => {
   test('value extract', () => {
     expect(
       prepareToSend({
-        __root: {
-          NftAction: {
-            Mint: {
-              tokenMetadata: {
-                name: 'value',
-                description: 'value',
-                media: 'value',
-                reference: 'value',
-              },
+        NftAction: {
+          Mint: {
+            tokenMetadata: {
+              name: 'value',
+              description: 'value',
+              media: 'value',
+              reference: 'value',
             },
           },
         },
