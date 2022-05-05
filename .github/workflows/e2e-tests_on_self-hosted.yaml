@@ -287,10 +287,10 @@ jobs:
         with:
           args: rollout status deployment data-storage-testenv -n ${{ env.KUBE_NAMESPACE }} --timeout=120s
           
-      - name: Sleep for 10s before tests
+      - name: Sleep for 15s before tests
         uses: juliangruber/sleep-action@v1
         with:
-          time: 10s
+          time: 15s
           
   e2e-tests:
     name: e2e test
