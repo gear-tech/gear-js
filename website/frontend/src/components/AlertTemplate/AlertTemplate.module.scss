@@ -34,8 +34,8 @@
   }
 
   &.success {
-   color: $textColor;
-
+   color: $successColor;
+   
    &::before {
       content: url('/assets/images/alert/info.svg');
    }
@@ -62,6 +62,11 @@
 .body {
    color: $textColor; 
    font-size: $fontSizeBase;
+}
+
+.body {
+   overflow: hidden;
+   text-overflow: ellipsis;
 }
 
 .footer {
