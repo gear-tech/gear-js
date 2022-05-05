@@ -94,4 +94,10 @@ export class ProgramsService {
     program.initStatus = status;
     return this.programRepo.save(program);
   }
+
+  async deleteRecords(genesis: string): Promise<any> {
+    const programs = await this.programRepo.find({ where: { genesis } });
+    await this.programRepo.remove(programs);
+    return programs;
+  }
 }

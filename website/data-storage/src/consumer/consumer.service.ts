@@ -25,8 +25,10 @@ import {
   InitSuccess,
   InitFailure,
   GetAllUserProgramsParams,
+  IGenesis,
 } from '@gear-js/interfaces';
 import { FormResponse } from 'src/middleware/formResponse';
+
 @Injectable()
 export class ConsumerService {
   constructor(
@@ -80,6 +82,10 @@ export class ConsumerService {
     },
     MessageDispatched: (value: MessageDispatched) => {
       this.messageService.setDispatchedStatus(value);
+    },
+    DatabaseWiped: (value: IGenesis) => {
+      this.messageService.deleteRecords(value.genesis);
+      this.programService.deleteRecords(value.genesis);
     },
   };
 

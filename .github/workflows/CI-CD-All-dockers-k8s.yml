@@ -54,6 +54,7 @@ jobs:
             REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
             REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
             REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
        
   build-and-push-data-storage-image:
     runs-on: ubuntu-latest
@@ -180,7 +181,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to k8s
-        uses: kodermax/kubectl-aws-eks@master
+        uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node events-listener-workshop-node events-listener-rpc-testnet -n $KUBE_NAMESPACE
 
@@ -190,6 +191,6 @@ jobs:
 
     steps:
       - name: Check k8s deployments
-        uses: kodermax/kubectl-aws-eks@master
+        uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s

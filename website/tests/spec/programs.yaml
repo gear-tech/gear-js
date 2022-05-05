@@ -1,12 +1,12 @@
 ping:
   pathToOpt: ./wasm/demo_ping.opt.wasm
-  gasLimit: 50000000
+  gasLimit: 2000000000
   account: alice
   shouldSuccess: true
 
 guestbook:
   pathToOpt: ./wasm/guestbook.opt.wasm
   pathToMeta: ./wasm/guestbook.meta.wasm
-  gasLimit: 50000000
+  gasLimit: 2000000000
   account: alice
   shouldSuccess: true

@@ -10,8 +10,8 @@
     "WasmPageNumber": "u32",
     "PageNumber": "u32",
     "ActiveProgram": {
-      "static_pages": "WasmPageNumber",
-      "persistent_pages": "BTreeSet<PageNumber>",
+      "allocations": "BTreeSet<WasmPageNumber>",
+      "pages_with_data": "BTreeSet<PageNumber>",
       "code_hash": "H256",
       "state": "ProgramState"
     },

@@ -1,8 +1,7 @@
 import '@polkadot/api-augment'; // dot types fix, source: https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#701-dec-20-2021
-import React, { FC, useEffect } from 'react';
-import { BrowserRouter, Route, Routes, useSearchParams } from 'react-router-dom';
-import { positions, Provider as AlertProvider, useAlert } from 'react-alert';
-import { AlertTemplate } from 'components/AlertTemplate';
+import React, { useEffect } from 'react';
+import { Route, Routes, useSearchParams } from 'react-router-dom';
+import { useAlert } from 'react-alert';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
 import { Programs } from 'components/pages/Programs/Programs';
@@ -22,39 +21,20 @@ import { routes } from 'routes';
 import { subscribeToEvents } from 'services/ApiService';
 import { nodeApi } from '../../api/initApi';
 
-import { ApiProvider } from 'context/api';
-import { BlocksProvider } from 'context/blocks';
-import { AccountProvider } from 'context/account';
-import { EditorProvider } from 'context/editor';
-import { LoadingProvider } from 'context/loading';
 import { useApi, useEvents, useLoading } from 'hooks';
 
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
-import { NODE_ADRESS_URL_PARAM, ZIndexes } from '../../consts';
+import { NODE_ADRESS_URL_PARAM } from '../../consts';
 import { globalStyles } from './styles';
 import { Main } from 'layout/Main/Main';
-
-// alert configuration
-const options = {
-  position: positions.BOTTOM_CENTER,
-  timeout: 10000,
-  containerStyle: {
-    zIndex: ZIndexes.alert,
-    width: '100%',
-    maxWidth: '600px',
-    minWidth: '300px',
-    margin: 'auto',
-    left: 0,
-    right: 0,
-  },
-};
+import { withProviders } from 'context';
 
 const mainRoutes = [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages];
 const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
-const AppComponent: FC = () => {
+const Component = () => {
   globalStyles();
   const { isApiReady } = useApi();
   const alert = useAlert();
@@ -136,20 +116,4 @@ const AppComponent: FC = () => {
   );
 };
 
-export const App = () => (
-  <AlertProvider template={AlertTemplate} {...options}>
-    <ApiProvider>
-      <BlocksProvider>
-        <AccountProvider>
-          <EditorProvider>
-            <LoadingProvider>
-              <BrowserRouter>
-                <AppComponent />
-              </BrowserRouter>
-            </LoadingProvider>
-          </EditorProvider>
-        </AccountProvider>
-      </BlocksProvider>
-    </ApiProvider>
-  </AlertProvider>
-);
+export const App = withProviders(Component);
