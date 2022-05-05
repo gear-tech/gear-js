@@ -2169,6 +2169,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/api@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@gear-js/api@npm:0.18.0"
+  dependencies:
+    "@types/rollup-plugin-peer-deps-external": ^2.2.1
+    rollup-plugin-peer-deps-external: ^2.2.4
+    rollup-plugin-typescript2: ^0.31.2
+  peerDependencies:
+    "@polkadot/api": ^8.1.1
+    "@polkadot/wasm-crypto": ^6.0.1
+    rxjs: ^7.5.5
+  checksum: 513ff7985cd86a4f8a507ed23eaff9e676d7757e308b1efce73c8b1988ed07f2915dcb0fda6e065cf642c73aa7389b526d81b93ead61c10ef3b8fe24bfc1167d
+  languageName: node
+  linkType: hard
+
 "@gear-js/data-storage@workspace:website/data-storage":
   version: 0.0.0-use.local
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
@@ -2248,7 +2263,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.17.8
+    "@gear-js/api": 0.18.0
     "@gear-js/ui": 0.1.2
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
