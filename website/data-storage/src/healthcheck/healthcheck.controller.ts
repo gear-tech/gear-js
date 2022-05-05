@@ -25,10 +25,10 @@ export class HealthcheckController {
     return response.status(status.database ? 200 : 500).json({ connected: status.database });
   }
 
-  @Get('')
+  @Get()
   general(@Res() response: Response) {
     const { kafka, database } = status;
     const allTogether = kafka && database;
-    return response.status(allTogether ? 200 : 500);
+    return response.status(allTogether ? 200 : 500).json({ connected: { kafka, database } });
   }
 }

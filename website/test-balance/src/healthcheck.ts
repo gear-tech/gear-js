@@ -28,7 +28,7 @@ app.get('/health/ws', (req: Request, res: Response) => {
 app.get('/health', (req: Request, res: Response) => {
   const { kafka, database, ws } = status;
   const allTogether = kafka && database && ws;
-  res.status(allTogether ? 200 : 500);
+  res.status(allTogether ? 200 : 500).json({ connected: status });
 });
 
 app.listen(config.healthcheck.port);
