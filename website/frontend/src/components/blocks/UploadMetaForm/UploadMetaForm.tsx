@@ -5,13 +5,13 @@ import { Button } from '@gear-js/ui';
 import { getWasmMetadata, Metadata } from '@gear-js/api';
 
 import styles from './UploadMetaForm.module.scss';
-import { FormValues } from './types';
-import { Schema } from './Schema';
-import { META_FIELDS, INITIAL_VALUES } from '../const';
-import { getMetaValues } from '../lib/getMetaValues';
-import { MetaSwitch } from '../children/MetaSwitch/MetaSwitch';
-import { MetaFile } from '../children/MetaFile/MetaFile';
-import { MetaField } from '../children/MetaField/MetaField';
+import { Schema } from './model/Schema';
+import { FormValues } from './model/types';
+import { META_FIELDS, INITIAL_VALUES } from './model/const';
+import { getMetaValues } from 'components/blocks/UploadMetaForm/lib/getMetaValues';
+import { MetaSwitch } from 'components/common/MetaSwitch';
+import { MetaFile } from 'components/common/MetaFile';
+import { MetaField } from 'components/common/MetaField';
 
 import { readFileAsync } from 'helpers';
 import { useAccount } from 'hooks';
@@ -28,10 +28,10 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
 
   const [isFileUpload, setFileUpload] = useState(true);
 
+  const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<File | null>(null);
-  const [metaWasm, setMetaWasm] = useState<Metadata | null>(null);
   const [metaBuffer, setMetaBuffer] = useState<string | null>(null);
-  const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
+  const [fieldsFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [initialValues, setInitialValues] = useState<FormValues>({
     name: programName,
     ...INITIAL_VALUES,
@@ -49,7 +49,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
       const valuesFromFile = getMetaValues(currentMetaWasm);
       const currentMetaBuffer = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
 
-      setMetaWasm(currentMetaWasm);
+      setMeta(currentMetaWasm);
       setMetaBuffer(currentMetaBuffer);
       setFieldFromFile(Object.keys(valuesFromFile));
       setInitialValues({
@@ -66,7 +66,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
 
   const resetForm = () => {
     setMetaFile(null);
-    setMetaWasm(null);
+    setMeta(null);
     setMetaBuffer(null);
     setFieldFromFile(null);
     setInitialValues({
@@ -84,8 +84,8 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
     const { name, ...formMeta } = values;
 
     if (isFileUpload) {
-      if (metaWasm) {
-        addMetadata(metaWasm, metaBuffer, account, programId, name, alert);
+      if (meta) {
+        addMetadata(meta, metaBuffer, account, programId, name, alert);
       } else {
         alert.error(`ERROR: metadata not loaded`);
       }
@@ -97,7 +97,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
     resetForm();
   };
 
-  const showingFields = isFileUpload ? fieldFromFile : META_FIELDS;
+  const fields = isFileUpload ? fieldsFromFile : META_FIELDS;
 
   return (
     <Formik
@@ -108,14 +108,14 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
       onSubmit={handleSubmit}
     >
       {({ isValid, isSubmitting }: FormikProps<FormValues>) => {
-        const emptyFile = isFileUpload && !metaWasm;
+        const emptyFile = isFileUpload && !meta;
         const disabledBtn = emptyFile || !isValid || isSubmitting;
 
         return (
           <Form className={styles.uploadMetaForm}>
             <MetaSwitch isMetaFromFile={isFileUpload} onChange={setFileUpload} className={styles.formField} />
             <MetaField name="name" label="Program name:" className={styles.formField} />
-            {showingFields?.map((field) => (
+            {fields?.map((field) => (
               <MetaField
                 key={field}
                 name={field}

@@ -14,4 +14,4 @@ export const INITIAL_VALUES: Metadata = {
    types: '',
 };
 
-export const META_FIELDS = Object.keys(INITIAL_VALUES) as (keyof Metadata)[]
+export const META_FIELDS = Object.keys(INITIAL_VALUES) as (keyof Metadata)[];

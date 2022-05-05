@@ -14,11 +14,11 @@ import styles from './UploadForm.module.scss';
 import { Schema } from './Schema';
 import { Buttons } from './children/Buttons/Buttons';
 import { DroppedFile } from '../../types';
-import { META_FIELDS } from 'components/blocks/MetaForm/const';
-import { getMetaValues } from 'components/blocks/MetaForm/lib/getMetaValues';
-import { MetaSwitch } from 'components/blocks/MetaForm/children/MetaSwitch/MetaSwitch';
-import { MetaField } from 'components/blocks/MetaForm/children/MetaField/MetaField';
-import { MetaFile } from 'components/blocks/MetaForm/children/MetaFile/MetaFile';
+import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
+import { getMetaValues } from 'components/blocks/UploadMetaForm/lib/getMetaValues';
+import { MetaSwitch } from 'components/common/MetaSwitch';
+import { MetaFile } from 'components/common/MetaFile';
+import { MetaField } from 'components/common/MetaField';
 
 import { MIN_GAS_LIMIT } from 'consts';
 import { UploadProgram } from 'services/ApiService';
@@ -164,7 +164,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     calculateGas('init', api, isManualPayload, values, setFieldValue, alert, meta, code);
   };
 
-  const showingFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
+  const metaFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
 
   return (
     <div className={styles.uploadForm}>
@@ -291,7 +291,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         className={styles.formField}
                       />
                     )}
-                    {showingFields?.map((field) => (
+                    {metaFields?.map((field) => (
                       <MetaField
                         key={field}
                         name={field}

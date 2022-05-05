@@ -2,8 +2,8 @@
 @use '@gear-js/ui/variables' as *;
 
 .uploadMetaForm {
-   display: 'flex';
-   flex-direction: 'column';
+   display: flex;
+   flex-direction: column;
    width: 50%;
 
    @include lg {

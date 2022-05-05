@@ -1,6 +1,6 @@
 import { Metadata, decodeHexTypes } from '@gear-js/api';
 
-import { META_FIELDS } from "../const"
+import { META_FIELDS } from "../model/const"
 
 import { getPreformattedText } from 'helpers';
 

@@ -1,4 +1,3 @@
-import { MouseEvent } from 'react';
 import clsx from 'clsx';
 import { ProgramModel, ProgramStatus } from 'types/program';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
@@ -19,12 +18,6 @@ export const UserProgram = (props: Props) => {
   const alert = useAlert();
 
   const { program, disabledMeta = false } = props;
-
-  const handleMetadataClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (disabledMeta) {
-      event.preventDefault();
-    }
-  };
 
   return (
     <div className={styles.programsListItem} key={program.id}>
@@ -63,7 +56,6 @@ export const UserProgram = (props: Props) => {
         </Link>
         <Link
           to={generatePath(routes.meta, { programId: program.id })}
-          onClick={handleMetadataClick}
           tabIndex={Number(disabledMeta)}
           className={clsx(styles.allProgramsItemUpload, disabledMeta && styles.linkInactive)}
         >
