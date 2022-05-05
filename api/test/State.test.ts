@@ -47,9 +47,25 @@ afterAll(async () => {
 });
 
 describe('Read State', () => {
+  test('Get program from storage', async () => {
+    const gProg = await api.storage.gProg(demo_meta_test.id);
+    expect(gProg).toBeDefined();
+    expect(gProg).toHaveProperty('allocations');
+    expect(gProg).toHaveProperty('pages_with_data');
+    expect(gProg).toHaveProperty('code_hash');
+    expect(gProg).toHaveProperty('state');
+  });
+
+  test('Get program pages from storage', async () => {
+    const gProg = await api.storage.gProg(demo_meta_test.id);
+    const gPages = await api.storage.gPages(demo_meta_test.id, gProg);
+    expect(gPages).toBeDefined();
+  });
+
   test('Test call timestamp in meta_state', async () => {
     const state = await api.programState.read(timestamp_test.id, timestamp_test.meta);
     expect(state).toBeDefined();
+    expect(parseInt(state.toString())).not.toBe(NaN);
   });
 
   test('Tests read demo_meta state with None input', async () => {
