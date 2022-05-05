@@ -8,7 +8,7 @@ import styles from './UploadMetaForm.module.scss';
 import { Schema } from './model/Schema';
 import { FormValues } from './model/types';
 import { META_FIELDS, INITIAL_VALUES } from './model/const';
-import { getMetaValues } from 'components/blocks/UploadMetaForm/lib/getMetaValues';
+import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
 import { MetaSwitch } from 'components/common/MetaSwitch';
 import { MetaFile } from 'components/common/MetaFile';
 import { MetaField } from 'components/common/MetaField';

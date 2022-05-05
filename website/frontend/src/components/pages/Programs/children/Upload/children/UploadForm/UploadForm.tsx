@@ -15,7 +15,7 @@ import { Schema } from './Schema';
 import { Buttons } from './children/Buttons/Buttons';
 import { DroppedFile } from '../../types';
 import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
-import { getMetaValues } from 'components/blocks/UploadMetaForm/lib/getMetaValues';
+import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
 import { MetaSwitch } from 'components/common/MetaSwitch';
 import { MetaFile } from 'components/common/MetaFile';
 import { MetaField } from 'components/common/MetaField';
