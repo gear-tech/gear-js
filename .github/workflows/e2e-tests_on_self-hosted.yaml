@@ -92,14 +92,14 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-node:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-node:dev \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-node:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-node:dev \
           -f k8s/gear-node/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-node:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-node:dev
 
       - name: Docker logout
         run: |
@@ -129,14 +129,14 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/data-storage:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/data-storage:dev \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-data-storage:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-data-storage:dev \
           -f website/data-storage/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/data-storage:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-data-storage:dev
 
       - name: Docker logout
         run: |
@@ -166,14 +166,14 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/api-gateway:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/api-gateway:dev \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-api-gateway:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-api-gateway:dev \
           -f website/api-gateway/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/api-gateway:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-api-gateway:dev
 
       - name: Docker logout
         run: |
@@ -203,14 +203,14 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/events-listener:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/events-listener:dev \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-events-listener:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-events-listener:dev \
           -f website/events-listener/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/events-listener:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-events-listener:dev
 
       - name: Docker logout
         run: |
@@ -240,14 +240,14 @@ jobs:
         run: |
           docker build \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/test-balance:dev \
-          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/test-balance:dev \
+          --cache-from ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-test-balance:dev \
+          -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-test-balance:dev \
           -f website/test-balance/Dockerfile .
 
       - name: Push image
         run: |
           docker push \
-          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/test-balance:dev
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPOSITORY }}/gear-js-test-balance:dev
 
       - name: Docker logout
         run: |
