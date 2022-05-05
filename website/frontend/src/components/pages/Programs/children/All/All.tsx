@@ -53,7 +53,7 @@ export const All = () => {
       <ProgramsLegend />
       <div className={styles.allProgramsList}>
         {programs.map((program: ProgramModel) => (
-          <UserProgram key={program.id} program={program} disabledMeta={publicKeyRaw !== program.owner} />
+          <UserProgram key={program.id} program={program} isMetaLinkActive={publicKeyRaw === program.owner} />
         ))}
       </div>
       {programsCount > 0 && (

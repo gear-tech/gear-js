@@ -11,13 +11,13 @@ import styles from './UserProgram.module.scss';
 
 type Props = {
   program: ProgramModel;
-  disabledMeta?: boolean;
+  isMetaLinkActive?: boolean;
 };
 
 export const UserProgram = (props: Props) => {
   const alert = useAlert();
 
-  const { program, disabledMeta = false } = props;
+  const { program, isMetaLinkActive = true } = props;
 
   return (
     <div className={styles.programsListItem} key={program.id}>
@@ -56,8 +56,8 @@ export const UserProgram = (props: Props) => {
         </Link>
         <Link
           to={generatePath(routes.meta, { programId: program.id })}
-          tabIndex={Number(disabledMeta)}
-          className={clsx(styles.allProgramsItemUpload, disabledMeta && styles.linkInactive)}
+          tabIndex={Number(isMetaLinkActive)}
+          className={clsx(styles.allProgramsItemUpload, !isMetaLinkActive && styles.linkInactive)}
         >
           <img src={UploadIcon} alt="Upload metadata" />
         </Link>
