@@ -12,6 +12,7 @@ export interface ProgramModel {
   blockHash?: string;
   programNumber?: number;
   name?: string;
+  owner: string;
   callCount?: number;
   timestamp: string;
   initStatus: ProgramStatus;
@@ -22,16 +23,6 @@ export interface ProgramModel {
 export interface ProgramPaginationModel {
   count: number;
   programs: ProgramModel[];
-}
-
-export interface MetaModel {
-  init_input: string;
-  init_output: string;
-  handle_input: string;
-  handle_output: string;
-  title: string;
-  types: string;
-  name?: string;
 }
 
 export interface UploadProgramModel {
