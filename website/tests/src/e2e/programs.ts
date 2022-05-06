@@ -41,3 +41,15 @@ export async function uploadMeta(genesis: string, programs: IPreparedPrograms) {
     expect(response).to.eq('Metadata added');
   }
 }
+
+export async function getMeta(genesis: string, programsIds: string[]) {
+  for (let id of programsIds) {
+    const data = {
+      genesis,
+      programId: id,
+    };
+    const response = await request('program.meta.get', data);
+    expect(response).not.to.have.property('result');
+    expect(response).to.have.all.keys('program', 'meta', 'metaFile');
+  }
+}
