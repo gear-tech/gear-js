@@ -29,31 +29,35 @@
   align-items: center;
 
   &::before {
-    font-size: 0;
+    content: '';
+    width: 16px;
+    height: 16px;
     margin-right: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   &.success {
    color: $successColor;
    
    &::before {
-      content: url('/assets/images/alert/info.svg');
+      background-image: url('/assets/images/alert/checkMark.svg');
    }
   }
  
   &.info {
-   color:#F2994A;
-
-   &::before{
-      content: url('/assets/images/alert/warning.svg');
+   color: $textColor;
+ 
+   &::before {
+      background-image: url('/assets/images/alert/info.svg');
    }
   }
 
   &.error {
    color: $errorColor;
 
-   &::before{
-      content: url('/assets/images/alert/error.svg');
+   &::before {
+      background-image: url('/assets/images/alert/error.svg');
    }
   }
 }
