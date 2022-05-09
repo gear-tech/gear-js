@@ -13,6 +13,7 @@ import { Header } from 'components/blocks/Header/Header';
 import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
 import { Send } from 'components/pages/Send/Send';
+import { Meta } from 'components/pages/Meta/Meta';
 import { EditorPage } from 'features/Editor/EditorPage/EditorPage';
 import { Loader } from 'components/blocks/Loader/Loader';
 import State from 'components/pages/State/State';
@@ -103,6 +104,7 @@ const Component = () => {
               <Route path={routes.sendMessage} element={<Send />} />
               <Route path={routes.reply} element={<Send />} />
             </Route>
+            <Route path={routes.meta} element={<Meta />} />
             <Route path={routes.editor} element={<EditorPage />} />
             <Route path={routes.mailbox} element={<Mailbox />} />
             <Route path="*" element={<PageNotFound />} />

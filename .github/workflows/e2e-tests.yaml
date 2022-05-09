@@ -16,6 +16,7 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
   KUBE_NAMESPACE: test-env
+  DOCKER_BUILDKIT: 1
 
 jobs:
   run-unit-tests:
@@ -32,10 +33,13 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      - uses: c-hive/gha-yarn-cache@v2
+
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
           node-version: 16
+          cache: yarn
 
       - name: Install dependencies
         uses: borales/actions-yarn@v2.3.0

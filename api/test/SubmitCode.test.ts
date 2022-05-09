@@ -33,7 +33,7 @@ for (let filePath of submitCodeTestFiles) {
     test('Submit code', async () => {
       for (let program of testFile.programs) {
         const code = readFileSync(join(TEST_WASM_DIR, `${program.name}.opt.wasm`));
-        const codeHash = api.code.submit(code);
+        const { codeHash } = api.code.submit(code);
         expect(codeHash).toBeDefined();
 
         const transactionData = await sendTransaction(api.code, accounts[program.account], 'CodeSaved');

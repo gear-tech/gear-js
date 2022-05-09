@@ -13,6 +13,7 @@ export const routes = {
   send: '/send',
   sendMessage: 'message/:programId',
   reply: 'reply/:messageId',
+  meta: '/meta/:programId',
   mailbox: '/mailbox',
   explorer: '/explorer',
 };

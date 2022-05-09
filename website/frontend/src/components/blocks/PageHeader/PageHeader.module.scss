@@ -1,0 +1,62 @@
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/breakpoints.scss' as *;
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.headerBackBtn {
+   height: 16px;
+   margin-right: 20px;
+}
+
+.headerInfo {
+   display: flex;
+
+   @include sm {
+      flex-direction: column;
+   }
+}
+
+%infoText {
+   font-weight: 600;
+   text-transform: uppercase;
+   font-size: $fontSizeLarge;
+
+   @include sm {
+      font-size: $fontSizeBase;
+   }
+}
+
+.infoTitle {
+   @extend %infoText;
+
+   color: $textColorSecondary;
+}
+
+.infoFile {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+
+  @include sm {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+}
+
+.fileIcon {
+   margin-right: 10px;
+
+   @include sm {
+      display: none;
+   }
+}
+
+.fileName {
+   @extend %infoText;
+
+   color: $textColor;
+}
