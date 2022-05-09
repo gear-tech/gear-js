@@ -385,6 +385,52 @@ export const VecResult = {
   },
 };
 
+export const VecNew = {
+  type: 'Vec',
+  name: 'Vec<MessageIn>',
+  value: {
+    type: 'Struct',
+    name: 'MessageIn',
+    value: {
+      id: {
+        type: 'Struct',
+        name: 'Id',
+        value: {
+          decimal: {
+            type: 'Primitive',
+            name: 'u64',
+            value: 'u64',
+          },
+          hex: {
+            type: 'Primitive',
+            name: 'Bytes',
+            value: 'Bytes',
+          },
+        },
+      },
+    },
+  },
+} as MetaItem;
+
+export const VecNewResult = {
+  __root: {
+    __fields: {
+      'Vec<MessageIn>': {
+        label: 'Vec<MessageIn>',
+        name: '__root.Vec<MessageIn>',
+        type: 'MessageIn',
+      },
+    },
+    __name: '__root',
+    __path: '__root',
+    __select: false,
+    __type: '__fieldset',
+  },
+  __values: {
+    'Vec<MessageIn>': '',
+  },
+};
+
 export const Result = {
   type: 'Result',
   name: 'Result<String, i32>',

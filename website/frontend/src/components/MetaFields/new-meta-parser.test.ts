@@ -28,6 +28,8 @@ import {
   ComplexResult,
   NFT,
   NFTResult,
+  VecNew,
+  VecNewResult,
 } from './new-meta-fixtures';
 
 describe('meta parser tests', () => {
@@ -87,5 +89,9 @@ describe('meta parser tests', () => {
 
   test('NFT', () => {
     expect(parseMeta(NFT)).toEqual(NFTResult);
+  });
+
+  test('New Vec', () => {
+    expect(parseMeta(VecNew)).toEqual(VecNewResult);
   });
 });

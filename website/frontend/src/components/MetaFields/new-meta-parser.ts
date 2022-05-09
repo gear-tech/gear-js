@@ -200,9 +200,17 @@ function parseField(data: MetaItem) {
           current.kind === 'Enum' ||
           current.kind === 'BTreeMap' ||
           current.kind === 'BTreeSet' ||
-          current.kind === 'Vec' ||
           current.kind === 'Result'
         ) {
+          processStackItem(result, stack, current);
+        } else if (current.kind === 'Vec') {
+          current.value = isMetaItem(current.value)
+            ? {
+                type: 'Primitive',
+                name: current.value.name,
+                value: current.value.name,
+              }
+            : { ...current.value };
           processStackItem(result, stack, current);
         } else if (current.kind === 'Option') {
           current.value = isMetaItem(current.value)
