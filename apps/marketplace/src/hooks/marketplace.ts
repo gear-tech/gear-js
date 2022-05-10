@@ -5,8 +5,8 @@ import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMetadata, useReadState } from './api';
 
 type Offer = {
-  from: Hex;
-  value: string;
+  id: Hex;
+  price: string;
 };
 
 type Auction = {

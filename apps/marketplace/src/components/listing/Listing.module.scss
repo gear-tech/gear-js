@@ -1,10 +1,28 @@
 @use '@gear-js/ui/variables' as *;
 
+.heading {
+  margin-bottom: 30px;
+  // TODO: replace w/ @gear-js/ui
+  font-family: Syncopate, sans-serif;
+  font-size: 32px;
+  line-height: 40px;
+  text-align: center;
+}
+
+.listing {
+  display: flex;
+  margin-bottom: 60px;
+
+  & > *:not(:last-child) {
+    margin-right: 30px;
+  }
+}
+
 .main {
   flex: 1;
 }
 
-.card {
+.imgWrapper {
   margin-bottom: 30px;
   padding: 65px 70px;
   background-image: linear-gradient(122.79deg, rgba(255, 255, 255, 0) 18.08%, rgba(255, 255, 255, 0.05) 74.41%);
@@ -22,12 +40,12 @@
 
 .buttons {
   display: flex;
-}
 
-.button {
-  flex: 1;
-
-  &:not(:last-child) {
+  & > *:not(:last-child) {
     margin-right: 30px;
   }
+}
+
+.text {
+  font-size: $fontSizeMedium;
 }

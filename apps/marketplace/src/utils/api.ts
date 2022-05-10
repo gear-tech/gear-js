@@ -10,11 +10,12 @@ async function sendMessage(
   payload: AnyJson,
   metadata: Metadata,
   handleStatus: (result: ISubmittableResult) => void,
+  value = '0',
 ) {
   const { address, meta } = account;
 
   const decodedAddress = GearKeyring.decodeAddress(address);
-  const gasLimit = await api.program.gasSpent.handle(decodedAddress, destination, payload, 0, metadata);
+  const gasLimit = await api.program.gasSpent.handle(decodedAddress, destination, payload, value, metadata);
 
   const message = { destination, payload, gasLimit };
   api.message.submit(message, metadata);
