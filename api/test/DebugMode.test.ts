@@ -2,7 +2,7 @@ import { GearApi, DebugMode, ProgramState } from '../src';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { TEST_WASM_DIR } from './config';
+import { GEAR_EXAMPLES_WASM_DIR } from './config';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 const api = new GearApi();
@@ -35,7 +35,7 @@ describe('DebugMode', () => {
       snapshots.push(event.data);
     });
     const { programId } = api.program.submit({
-      code: readFileSync(join(TEST_WASM_DIR, 'demo_ping.opt.wasm')),
+      code: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_ping.opt.wasm')),
       gasLimit: 50_000_000,
     });
     await sendTransaction(api.program.submitted, alice, 'InitMessageEnqueued');

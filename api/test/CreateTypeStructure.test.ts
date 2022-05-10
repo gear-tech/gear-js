@@ -1,4 +1,7 @@
-import { createPayloadTypeStructure, CreateType, decodeHexTypes } from '../src';
+import { createPayloadTypeStructure, CreateType, decodeHexTypes, getWasmMetadata, Metadata } from '../src';
+import { TEST_WASM_DIR } from './config';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 describe('Create type structure test', () => {
   let types: any;
@@ -408,5 +411,20 @@ describe(`Create a type that differs from existing one in the registry`, () => {
         Transfer: { amount: 'u128', from: 'ActorId', to: 'ActorId' },
       },
     });
+  });
+});
+
+describe.only(`BTreeSet test`, () => {
+  const metaWasm = readFileSync(join(TEST_WASM_DIR, 'btreeset.meta.wasm'));
+  let metadata: Metadata;
+
+  test('getWasmMetadata not failed', async () => {
+    metadata = await getWasmMetadata(metaWasm);
+    expect(metadata).toBeDefined();
+    expect(metadata.handle_input).toBe('TestBTreeSet');
+  });
+
+  test('decodeHexTypes not failed', () => {
+    expect(decodeHexTypes(metadata.types)).not.toThrow();
   });
 });
