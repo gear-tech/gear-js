@@ -41,6 +41,7 @@ export interface GetMetaParams extends IGenesis {
 
 export interface GetTestBalanceParams extends IGenesis {
   address: string;
+  token: string;
 }
 
 export interface SearchParam {

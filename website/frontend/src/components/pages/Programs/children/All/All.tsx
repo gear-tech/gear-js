@@ -1,32 +1,23 @@
-import React, { useEffect, useState, VFC } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Pagination } from 'components/Pagination/Pagination';
-import { Meta } from 'components/Meta/Meta';
 import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
-import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 import { ProgramModel } from 'types/program';
-import MessageIcon from 'assets/images/message.svg';
-import UploadIcon from 'assets/images/upload-cloud.svg';
 import { UserProgram } from '../UserProgram/UserProgram';
-import styles from './All.module.scss';
 import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 import { URL_PARAMS } from 'consts';
 import { getPrograms } from 'services';
+import styles from './All.module.scss';
 
-type ProgramMessageType = {
-  programName: string;
-  programId: string;
-};
-
-export const All: VFC = () => {
+export const All = () => {
   const [searchParams] = useSearchParams();
   const page = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
   const query = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
+  const publicKeyRaw = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
 
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
-
-  const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
   useEffect(() => {
     const programParams = {
@@ -41,25 +32,6 @@ export const All: VFC = () => {
     });
   }, [page, query]);
 
-  const handleOpenForm = (programId: string, programName?: string) => {
-    if (programName) {
-      setProgramMeta({
-        programId,
-        programName,
-      });
-    }
-  };
-
-  const handleCloseMetaForm = () => {
-    setProgramMeta(null);
-  };
-
-  if (programMeta) {
-    return (
-      <Meta programId={programMeta.programId} programName={programMeta.programName} handleClose={handleCloseMetaForm} />
-    );
-  }
-
   return (
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
@@ -69,33 +41,11 @@ export const All: VFC = () => {
       <SearchForm placeholder="Find program" />
       <ProgramsLegend />
       <div className={styles.allProgramsList}>
-        {(programs &&
-          programsCount &&
-          programs.map((item: ProgramModel) => {
-            if (item.name && item.name !== 'name.wasm') {
-              return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.id} />;
-            }
-            return (
-              <div className={styles.allProgramsItem} key={item.id}>
-                <p className={styles.allProgramsItemHash}>{item.id}</p>
-                <div className={styles.programsListBtns}>
-                  <Link to={`/send/message/${item.id}`} className={styles.allProgramsItemSendMessage}>
-                    <img src={MessageIcon} alt="Send message to program" />
-                  </Link>
-                  <button
-                    className={styles.allProgramsItemUpload}
-                    type="button"
-                    onClick={() => handleOpenForm(item.id, item.name)}
-                  >
-                    <img src={UploadIcon} alt="upload-program" />
-                  </button>
-                </div>
-              </div>
-            );
-          })) ||
-          null}
+        {programs.map((program: ProgramModel) => (
+          <UserProgram key={program.id} program={program} isMetaLinkActive={publicKeyRaw === program.owner} />
+        ))}
       </div>
-      {programs && programsCount > 0 && (
+      {programsCount > 0 && (
         <div className={styles.paginationBottom}>
           <Pagination page={page} pagesAmount={programsCount || 1} />
         </div>

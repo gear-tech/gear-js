@@ -3,30 +3,39 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: actions-runner
+# ---
+# apiVersion: actions.summerwind.dev/v1alpha1
+# kind: Runner
+# metadata:
+#   name: actions-runner
+#   namespace: actions-runner
 ---
 apiVersion: actions.summerwind.dev/v1alpha1
-kind: Runner
+kind: RunnerDeployment
 metadata:
   name: actions-runner
   namespace: actions-runner
 spec:
-  image: RUNNER_IMAGE
-  repository: RUNNER_REPO
-  ephemeral: false
-  imagePullPolicy: Always
-  ephemeral: false
-  dockerEnabled: false
-  dockerdWithinRunnerContainer: true
-  labels:
-    - k8s-runner
-    - no-ephemeral
-  volumes:
-    - name: caches
-      awsElasticBlockStore:
-        volumeID: RUNNER_VOLUME_ID
-        fsType: xfs
-  volumeMounts:
-    - mountPath: /mnt
-      name: caches
-  nodeSelector:
-    failure-domain.beta.kubernetes.io/zone: RUNNER_VOLUME_ZONE
+  replicas: 3
+  template:
+    spec:
+      image: RUNNER_IMAGE
+      repository: RUNNER_REPO
+      ephemeral: false
+      imagePullPolicy: Always
+      ephemeral: false
+      dockerEnabled: false
+      dockerdWithinRunnerContainer: true
+      labels:
+        - k8s-runner
+        - no-ephemeral
+      volumes:
+        - name: caches
+          awsElasticBlockStore:
+            volumeID: RUNNER_VOLUME_ID
+            fsType: xfs
+      volumeMounts:
+        - mountPath: /mnt
+          name: caches
+      nodeSelector:
+        failure-domain.beta.kubernetes.io/zone: RUNNER_VOLUME_ZONE

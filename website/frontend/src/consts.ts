@@ -11,6 +11,8 @@ export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 export const MIN_GAS_LIMIT = 20_000_000;
 
+export const HCAPTCHA_SITE_KEY = process.env.REACT_APP_HCAPTCHA_SITE_KEY as string;
+
 export const LOCAL_STORAGE = {
   CHAIN: 'chain',
   GENESIS: 'genesis',

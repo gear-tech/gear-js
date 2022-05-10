@@ -10,19 +10,20 @@ import { InitialValues } from './types';
 import { SetFieldValue } from 'types/common';
 import { MetaFieldsStruct, parseMeta, prepareToSend, MetaFields as MetaForm } from 'components/MetaFields';
 
-import { MetaSwitch } from './children/MetaSwitch/MetaSwitch';
-import { MetaFile } from './children/MetaFile/MetaFile';
-import { MetaFields } from './children/MetaFields/MetaFields';
-import { Buttons } from './children/Buttons/Buttons';
-
-import { Schema } from './Schema';
-import { useAccount, useApi, useLoading } from 'hooks';
-import { UploadProgram } from 'services/ApiService';
-import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
-import { MIN_GAS_LIMIT } from 'consts';
-import { META_FIELDS } from './consts';
-import { DroppedFile } from '../../types';
 import styles from './UploadForm.module.scss';
+import { Schema } from './Schema';
+import { Buttons } from './children/Buttons/Buttons';
+import { DroppedFile } from '../../types';
+import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
+import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
+import { MetaSwitch } from 'components/common/MetaSwitch';
+import { MetaFile } from 'components/common/MetaFile';
+import { MetaField } from 'components/common/MetaField';
+
+import { MIN_GAS_LIMIT } from 'consts';
+import { UploadProgram } from 'services/ApiService';
+import { useAccount, useApi, useLoading } from 'hooks';
+import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
 
 const INITIAL_VALUES = {
   gasLimit: MIN_GAS_LIMIT,
@@ -52,7 +53,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [isManualPayload, setIsManualPayload] = useState<boolean>(true);
   const [initialValues, setInitialValues] = useState<InitialValues>(INITIAL_VALUES);
 
-  const isShowFields = (isMetaFromFile && droppedMetaFile) || !isMetaFromFile;
   const isShowPayloadForm = payloadForm && !isManualPayload;
   const handleUploadMetaFile = async (file: File) => {
     try {
@@ -65,10 +65,10 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         const typeStructure = createPayloadTypeStructure(metaWasm?.init_input, decodedTypes, true);
         const parsedStructure = parseMeta(typeStructure);
 
-        let valuesFromFile = {};
+        let valuesFromFile = getMetaValues(metaWasm);
 
         for (const key in metaWasm) {
-          if (META_FIELDS.includes(key) && metaWasm[key] && key !== 'types') {
+          if (META_FIELDS.includes(key as keyof Metadata) && metaWasm[key] && key !== 'types') {
             valuesFromFile = {
               ...valuesFromFile,
               [key]: JSON.stringify(metaWasm[key]),
@@ -163,6 +163,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
     calculateGas('init', api, isManualPayload, values, setFieldValue, alert, meta, code);
   };
+
+  const metaFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
 
   return (
     <div className={styles.uploadForm}>
@@ -276,17 +278,29 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                   </div>
                   <div className={styles.meta}>
                     <span className={styles.title}>Metadata: </span>
-                    <MetaSwitch isMetaFromFile={isMetaFromFile} setIsMetaFromFile={setIsMetaFromFile} />
+                    <MetaSwitch
+                      isMetaFromFile={isMetaFromFile}
+                      onChange={setIsMetaFromFile}
+                      className={styles.formField}
+                    />
                     {isMetaFromFile && (
                       <MetaFile
-                        droppedMetaFile={droppedMetaFile}
-                        handleUploadMetaFile={handleUploadMetaFile}
-                        resetMetaForm={resetMetaForm}
+                        file={droppedMetaFile}
+                        onUpload={handleUploadMetaFile}
+                        onDelete={resetMetaForm}
+                        className={styles.formField}
                       />
                     )}
-                    {isShowFields && (
-                      <MetaFields fields={isMetaFromFile ? fieldFromFile : META_FIELDS} isDisabled={isMetaFromFile} />
-                    )}
+                    {metaFields?.map((field) => (
+                      <MetaField
+                        key={field}
+                        name={field}
+                        label={`${field}:`}
+                        fieldAs={field === 'types' ? 'textarea' : 'input'}
+                        disabled={isMetaFromFile}
+                        className={styles.formField}
+                      />
+                    ))}
                   </div>
                 </div>
                 <Buttons

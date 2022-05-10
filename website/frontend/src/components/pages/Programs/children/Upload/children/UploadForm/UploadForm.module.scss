@@ -1,4 +1,5 @@
 @use 'assets/scss/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
 
 .uploadForm {
   display: flex;
@@ -7,7 +8,8 @@
   border: 1px dashed #0e0e0e;
   border-radius: 2px;
   margin-bottom: 40px;
-  @media (max-width: 768px) {
+
+  @include md {
     height: 100%;
     width: 100%;
     position: fixed;
@@ -31,7 +33,8 @@
 
   .columnsWrapper {
     padding: 32px;
-    @media (max-width: 768px) {
+
+    @include md {
       .program-details__wrapper {
         display: flex;
         flex-direction: column;
@@ -44,7 +47,8 @@
       flex-wrap: wrap;
       align-items: flex-start;
       justify-content: space-between;
-      @media (max-width: 768px) {
+
+      @include md {
         width: 100%;
         .columnLeft,
         .meta {
@@ -80,11 +84,13 @@
         &:last-child {
           margin-bottom: 0;
         }
-        @media (max-width: 768px) {
+
+        @include md {
           flex-direction: column;
           position: relative;
           margin-bottom: 32px;
         }
+
         .caption {
           display: flex;
           align-items: center;
@@ -97,9 +103,11 @@
           &.top {
             align-items: flex-start;
           }
-          @media (max-width: 768px) {
+
+          @include md {
             margin-bottom: 4px;
           }
+
           @media (min-width: 769px) and (max-width: 1270px) {
             font-size: 16px;
             min-width: 160px;
@@ -130,13 +138,15 @@
               margin-bottom: 20px;
             }
           }
-          @media (max-width: 768px) {
+
+          @include md {
             overflow: unset;
             display: flex;
             justify-content: space-between;
             max-width: unset;
             width: 100%;
           }
+
           .field {
             width: 100%;
             height: 38px;
@@ -185,5 +195,22 @@
         }
       }
     }
+  }
+}
+
+.formField {
+  & > span,
+  & > label {
+    min-width: 200px;
+    margin-right: 0;
+
+    @media (min-width: 769px) and (max-width: 1270px) {
+      min-width: 160px;
+    }
+  }
+  //TODO delete when textarea update
+  & textarea:disabled {
+    box-shadow: none;
+    background-color: #000;
   }
 }

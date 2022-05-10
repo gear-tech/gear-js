@@ -19,7 +19,7 @@ function wait_for_process () {
 
 sudo /bin/bash <<SCRIPT
 mkdir -p /etc/docker
-echo "{ \"data-root\": \"/mnt/docker\" }" > /etc/docker/daemon.json
+#echo "{ \"data-root\": \"/mnt/docker\" }" > /etc/docker/daemon.json
 SCRIPT
 
 dump() {

@@ -109,13 +109,14 @@ const program = {
 };
 
 try {
-  const { programId, salt } = await gearApi.program.submit(uploadProgram, meta);
+  const { programId, salt, submitted } = await gearApi.program.submit(uploadProgram, meta);
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
 
 try {
   await gearApi.program.signAndSend(keyring, (event) => {
+    // or submitted.signAndSend(...)
     console.log(event.toHuman());
   });
 } catch (error) {
@@ -134,7 +135,7 @@ try {
     value: 1000,
   };
   // In that case payload will be encoded using meta.handle_input type
-  await gearApi.message.submit(message, meta);
+  const submitted = await gearApi.message.submit(message, meta);
   // So if you want to use another type you can specify it
   await gearApi.message.submit(message, meta, meta.async_handle_input); // For example
 } catch (error) {
@@ -160,7 +161,7 @@ try {
     value: 1000,
   };
   // In that case payload will be encoded using meta.async_handle_input type if it exsits, if not it will be used meta.async_init_input
-  await gearApi.reply.submit(reply, meta);
+  const submitted = await gearApi.reply.submit(reply, meta);
   // So if you want to use another type you can specify it
   await gearApi.reply.submit(reply, meta, meta.async_init_input);
 } catch (error) {
@@ -179,7 +180,7 @@ try {
 
 ```javascript
 const code = fs.readFileSync('path/to/program.opt.wasm');
-const codeHash = gearApi.code.submit(code);
+const { codeHash } = gearApi.code.submit(code);
 gearApi.code.signAndSend(alice, () => {
   events.forEach(({ event: { method, data } }) => {
     if (method === 'ExtrinsicFailed') {
@@ -200,7 +201,8 @@ const code = fs.readFileSync('demo_ping.opt.wasm');
 const gas = await gearApi.program.gasSpent.init(
   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
   code,
-  '0x00',
+  '0x00', // payload
+  0, //value
 );
 console.log(gas.toHuman());
 ```
@@ -211,14 +213,15 @@ console.log(gas.toHuman());
 const code = fs.readFileSync('demo_meta.opt.wasm');
 const meta = await getWasmMetadata(fs.readFileSync('demo_meta.opt.wasm'));
 const gas = await gearApi.program.gasSpent.handle(
-  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
   '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', //program id
   {
     id: {
       decimal: 64,
       hex: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
     },
-  },
+  }, // payload
+  0, // value
   meta,
 );
 console.log(gas.toHuman());
@@ -230,10 +233,11 @@ console.log(gas.toHuman());
 const code = fs.readFileSync('demo_async.opt.wasm');
 const meta = await getWasmMetadata(fs.readFileSync('demo_async.opt.wasm'));
 const gas = await gearApi.program.gasSpent.reply(
-  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+  '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
   '0x518e6bc03d274aadb3454f566f634bc2b6aef9ae6faeb832c18ae8300fd72635', // message id
   0, // exit code
-  'PONG',
+  'PONG', // payload
+  0, // value
   meta,
 );
 console.log(gas.toHuman());
@@ -243,9 +247,9 @@ console.log(gas.toHuman());
 
 ```javascript
 const metaWasm = fs.readFileSync('path/to/meta.wasm');
-const state = gearApi.programState.read(programId, metaWasm);
+const state = await gearApi.programState.read(programId, metaWasm);
 // If program expects inputValue in meta_state function it's possible to specify it
-const state = gearApi.programState.read(programId, metaWasm, inputValue);
+const state = await gearApi.programState.read(programId, metaWasm, inputValue);
 ```
 
 ### Mailbox
@@ -258,13 +262,21 @@ const mailbox = await api.mailbox.read('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcN
 console.log(mailbox);
 ```
 
+#### Claim value
+
+```javascript
+const api = await GearApi.create();
+const submitted = await api.mailbox.claimValue.submit(messageId);
+await api.mailbox.claimValue.signAndSend(...);
+```
+
 ### Subscribe to events
 
 Subscribe to all events
 
 ```javascript
-const unsub = await gearApi.allEvents((events) => {
-  console.log(event.toHuman());
+const unsub = await gearApi.query.system.events((events) => {
+  console.log(events.toHuman());
 });
 // Unsubscribe
 unsub();
@@ -273,7 +285,7 @@ unsub();
 Check what the event is
 
 ```javascript
-gearApi.allEvents((events) => {
+gearApi.query.system.events((events) => {
   events
     .filter(({ event }) => gearApi.events.gear.InitMessageEnqueued.is(event))
     .forEach(({ event: { data } }) => {
@@ -291,13 +303,15 @@ gearApi.allEvents((events) => {
 Subscribe to Log events
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeLogEvents(({ data: { id, source, dest, payload, reply } }) => {
-  console.log(`
+const unsub = await gearApi.gearEvents.subscribeLogEvents(
+  ({ data: { id, source, destination, payload, value, reply } }) => {
+    console.log(`
   logId: ${id.toHex()}
   source: ${source.toHex()}
   payload: ${payload.toHuman()}
   `);
-});
+  },
+);
 // Unsubscribe
 unsub();
 ```
@@ -308,7 +322,7 @@ Subscribe to Program events
 const unsub = await gearApi.gearEvents.subscribeProgramEvents(({ method, data: { info, reason } }) => {
   console.log(method);
   console.log(`ProgramId: ${info.programId}`);
-  reason && console.log(`Reason: ${reason.toHuman()}`);
+  reason && console.log(`Reason: ${reason.isDispatch ? reason.asDispatch.toHuman() : 'unknown'}`);
 });
 // Unsubscribe
 unsub();

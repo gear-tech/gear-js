@@ -1,10 +1,12 @@
-import React, { useState, VFC } from 'react';
+import React, { useEffect, useRef, useState, VFC } from 'react';
 import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
+import { Button } from '@gear-js/ui';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
-import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS } from 'consts';
+import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS, HCAPTCHA_SITE_KEY } from 'consts';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { useAccount, useApi } from 'hooks';
 import { isDevChain } from 'helpers';
@@ -18,8 +20,9 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const { api } = useApi();
   const alert = useAlert();
   const { account: currentAccount } = useAccount();
-  const apiRequest = new ServerRPCRequestService();
-  const [gasCallCounter, setGasCallCounter] = useState(0);
+
+  const [captchaToken, setCaptchaToken] = useState('');
+  const captchaRef = useRef<HCaptcha>(null);
 
   const handleTransferBalance = async () => {
     try {
@@ -27,18 +30,32 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         throw new Error(`WALLET NOT CONNECTED`);
       }
 
+      const apiRequest = new ServerRPCRequestService();
       const response = await apiRequest.callRPC(RPC_METHODS.GET_TEST_BALANCE, {
         address: `${currentAccount.address}`,
+        token: captchaToken,
       });
 
       if (response.error) {
         alert.error(`${response.error.message}`);
       }
-
-      // count the number of crane calls
-      setGasCallCounter(gasCallCounter + 1);
     } catch (error) {
       alert.error(`${error}`);
+    }
+  };
+
+  useEffect(() => {
+    if (captchaToken) {
+      handleTransferBalance();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [captchaToken]);
+
+  const handleTestBalanceClick = () => {
+    if (captchaToken) {
+      handleTransferBalance();
+    } else {
+      captchaRef.current?.execute();
     }
   };
 
@@ -97,21 +114,23 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
             Messages
           </Link>
         </div>
-        <div className="switch-block--transfer">
-          {gasCallCounter <= 3 ? (
-            <button
-              className="switch-block--transfer__btn"
-              type="button"
-              onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTransferBalance}
-            >
-              Get test balance
-            </button>
-          ) : (
-            <button className="switch-block--transfer__btn" type="button" disabled>
-              Don&apos;t be greedy :)
-            </button>
-          )}
-        </div>
+        {currentAccount && (
+          <>
+            <Button
+              className="test-balance-button"
+              text="Get test balance"
+              onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}
+            />
+            <HCaptcha
+              sitekey={HCAPTCHA_SITE_KEY}
+              onVerify={setCaptchaToken}
+              onExpire={() => setCaptchaToken('')}
+              ref={captchaRef}
+              theme="dark"
+              size="invisible"
+            />
+          </>
+        )}
       </div>
       <BlocksSummary />
     </div>

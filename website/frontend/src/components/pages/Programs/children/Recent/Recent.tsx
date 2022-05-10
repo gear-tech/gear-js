@@ -5,7 +5,6 @@ import { ProgramModel } from 'types/program';
 import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 
 import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
-import { Meta } from 'components/Meta/Meta';
 import { Pagination } from 'components/Pagination/Pagination';
 
 import styles from './Recent.module.scss';
@@ -15,11 +14,6 @@ import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 import { URL_PARAMS } from 'consts';
 import { getUserPrograms } from 'services';
 
-type ProgramMessageType = {
-  programName: string;
-  programId: string;
-};
-
 export const Recent: VFC = () => {
   const [searchParams] = useSearchParams();
   const page = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
@@ -27,8 +21,6 @@ export const Recent: VFC = () => {
 
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
-
-  const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
 
   useEffect(() => {
     const programParams = {
@@ -44,24 +36,6 @@ export const Recent: VFC = () => {
     });
   }, [page, query]);
 
-  const handleOpenForm = (programId: string, programName?: string) => {
-    if (programName) {
-      setProgramMeta({
-        programId,
-        programName,
-      });
-    }
-  };
-
-  const handleCloseMetaForm = () => {
-    setProgramMeta(null);
-  };
-
-  if (programMeta) {
-    return (
-      <Meta programId={programMeta.programId} programName={programMeta.programName} handleClose={handleCloseMetaForm} />
-    );
-  }
   return (
     <div className={styles.blockList}>
       <div className={styles.paginationWrapper}>
@@ -70,16 +44,12 @@ export const Recent: VFC = () => {
       </div>
       <SearchForm placeholder="Find program" />
       <ProgramsLegend />
-      {(programs && programsCount && (
-        <div>
-          {programs.map((program: ProgramModel) => (
-            <UserProgram program={program} handleOpenForm={handleOpenForm} key={program.id} />
-          ))}
-        </div>
-      )) ||
-        null}
-
-      {programs && programsCount > 0 && (
+      <div>
+        {programs.map((program: ProgramModel) => (
+          <UserProgram key={program.id} program={program} />
+        ))}
+      </div>
+      {programsCount > 0 && (
         <div className={styles.paginationBottom}>
           <Pagination page={page} pagesAmount={programsCount || 1} />
         </div>
