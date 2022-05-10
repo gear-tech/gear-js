@@ -7,7 +7,7 @@ import { Metadata } from '@gear-js/api';
 import { sendMessage } from 'services/ApiService';
 import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
-import { getPreformattedText, calculateGas } from 'helpers';
+import { calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
 import { useAccount, useApi, useLoading } from 'hooks';
 import { MetaItem, MetaFieldsStruct, parseMeta, prepareToSend, PreparedMetaData } from 'components/MetaFields';
@@ -19,10 +19,11 @@ type Props = {
   id: string;
   meta?: Metadata;
   types: MetaItem | null;
+  manualStructure: string;
   replyErrorCode?: string;
 };
 
-export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => {
+export const MessageForm: VFC<Props> = ({ id, meta, types, manualStructure, replyErrorCode }) => {
   const { api } = useApi();
   const alert = useAlert();
   const { enableLoading, disableLoading } = useLoading();
@@ -33,7 +34,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
   const initialValues = useRef<InitialValues>({
     gasLimit: 20000000,
     value: 0,
-    payload: types ? getPreformattedText(types) : '',
+    payload: manualStructure,
     payloadType: 'Bytes',
     destination: id,
     __root: null,

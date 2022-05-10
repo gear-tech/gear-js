@@ -88,7 +88,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           ...initialValues,
           ...valuesFromFile,
           programName: metaWasm.title,
-          payload: getPreformattedText(typeStructure),
+          payload: getPreformattedText(createPayloadTypeStructure(metaWasm?.init_input, decodedTypes, true)),
         });
         setFieldFromFile([...Object.keys(valuesFromFile)]);
       }

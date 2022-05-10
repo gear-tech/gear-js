@@ -37,6 +37,7 @@ const State: VFC = () => {
   const [form, setForm] = useState<MetaFieldsStruct | null>(null);
   const [state, setState] = useState('');
   const [isManualInput, setIsManualInput] = useState(false);
+  const [manualStruct, setManualStruct] = useState('');
   const initValues = useRef<{ payload: string; __root: MetaFieldsValues | null }>({
     payload: typeStructure ? getPreformattedText(typeStructure) : '',
     __root: null,
@@ -69,6 +70,7 @@ const State: VFC = () => {
       const typeStruct = createPayloadTypeStructure(stateInput, decodedTypes);
       const parsedStruct = parseMeta(typeStruct);
       setTypeStructure(typeStruct);
+      setManualStruct(getPreformattedText(createPayloadTypeStructure(stateInput, decodedTypes, true)));
       setForm(parsedStruct);
     }
   }, [stateInput, types]);
@@ -122,7 +124,7 @@ const State: VFC = () => {
   const handleManalSwitch = (val: boolean) => {
     setIsManualInput(val);
     initValues.current = {
-      payload: typeStructure ? getPreformattedText(typeStructure) : '',
+      payload: manualStruct,
       __root: form ? form.__values : null,
     };
   };
