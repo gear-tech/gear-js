@@ -18,7 +18,6 @@ const options: AlertOptions = {
     right: '22px',
     bottom: '5px',
     alignItems: 'stretch',
-    pointerEvents: 'auto',
   },
 };
 
