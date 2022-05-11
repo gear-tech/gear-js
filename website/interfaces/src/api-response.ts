@@ -1,4 +1,3 @@
-import { IGenesis } from './general';
 import { IMessage } from './message';
 import { IPaginationResult } from './pagination';
 import { IProgram } from './program';
@@ -19,4 +18,8 @@ export interface GetMetaResult {
   program: string;
   meta: string;
   metaFile: string;
+}
+
+export interface ProgramDataResult extends Omit<IProgram, 'meta'> {
+  meta?: { meta?: string };
 }
