@@ -5,6 +5,7 @@ import {
   GetAllProgramsParams,
   GetAllProgramsResult,
   GetAllUserProgramsParams,
+  ProgramDataResult,
 } from '@gear-js/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -78,10 +79,24 @@ export class ProgramsService {
     };
   }
 
-  async findProgram(params: FindProgramParams): Promise<IProgram> {
+  async findProgram(params: FindProgramParams): Promise<ProgramDataResult> {
     const { id, genesis, owner } = params;
     const where = owner ? { id, genesis, owner } : { id, genesis };
-    const program = await this.programRepo.findOne({ where, relations: ['meta'] });
+    const program = await this.programRepo.findOne({
+      where,
+      select: {
+        id: true,
+        genesis: true,
+        blockHash: true,
+        timestamp: true,
+        owner: true,
+        name: true,
+        initStatus: true,
+        title: true,
+        meta: { meta: true },
+      },
+      relations: ['meta'],
+    });
     if (!program) {
       throw new ProgramNotFound();
     }
