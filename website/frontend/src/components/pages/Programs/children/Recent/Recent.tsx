@@ -37,10 +37,7 @@ export const Recent = () => {
     setPage(1);
   };
 
-  useChangeEffect(() => {
-    setTerm('');
-    setPage(1);
-  }, [account]);
+  useChangeEffect(handleRemoveQuery, [account]);
 
   useEffect(() => {
     if (account) {
