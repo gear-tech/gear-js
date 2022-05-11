@@ -414,17 +414,39 @@ describe(`Create a type that differs from existing one in the registry`, () => {
   });
 });
 
-describe.only(`BTreeSet test`, () => {
+describe(`BTreeSet test`, () => {
   const metaWasm = readFileSync(join(TEST_WASM_DIR, 'btreeset.meta.wasm'));
   let metadata: Metadata;
 
-  test('getWasmMetadata not failed', async () => {
+  test('getWasmMetadata will not fail', async () => {
     metadata = await getWasmMetadata(metaWasm);
     expect(metadata).toBeDefined();
     expect(metadata.handle_input).toBe('TestBTreeSet');
   });
 
-  test('decodeHexTypes not failed', () => {
-    expect(decodeHexTypes(metadata.types)).not.toThrow();
+  test('decodeHexTypes will not fail', () => {
+    expect(decodeHexTypes(metadata.types)).toEqual({
+      ActorId: '[u8;32]',
+      TestBTreeSet: { first: 'BTreeSet<ActorId>', second: 'BTreeSet<u8>' },
+    });
+  });
+
+  test('createType TestBTreeSet', () => {
+    expect(
+      CreateType.create(
+        'TestBTreeSet',
+        {
+          first: new Set([
+            '0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6',
+            '0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6',
+          ]),
+          second: new Set([1, 2, 3, 3]),
+        },
+        metadata,
+      ).toHuman(),
+    ).toEqual({
+      first: ['0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6'],
+      second: ['1', '2', '3'],
+    });
   });
 });
