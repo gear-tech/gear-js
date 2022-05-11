@@ -1,7 +1,9 @@
 import { generateCodeHash, generateProgramId } from '../src';
+import { TEST_WASM_DIR } from './config';
 import { readFileSync } from 'fs';
+import { join } from 'path';
 
-const pingCode = readFileSync('test/demo_ping.opt.wasm');
+const pingCode = readFileSync(join(TEST_WASM_DIR, 'demo_ping.opt.wasm'));
 
 describe('Generate IDs', () => {
   test('codeHash', async () => {

@@ -1,7 +1,7 @@
 import { readFileSync, fstat } from 'fs';
 import { join } from 'path';
 import { GearApi, GearKeyring } from '../src';
-import { TEST_WASM_DIR } from './config';
+import { GEAR_EXAMPLES_WASM_DIR } from './config';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 
 const api = new GearApi();
@@ -14,7 +14,7 @@ beforeAll(async () => {
   await api.isReady;
   [alice] = await getAccount();
   aliceRaw = GearKeyring.decodeAddress(alice.address);
-  const code = readFileSync(join(TEST_WASM_DIR, 'demo_ping.wasm'));
+  const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_ping.wasm'));
   programId = api.program.submit({ code, gasLimit: 200_000_000 }).programId;
   const initStatus = checkInit(api, programId);
   api.program.signAndSend(alice, () => {});
@@ -28,7 +28,12 @@ afterAll(async () => {
 
 test('Get init gas spent', async () => {
   expect(
-    await api.program.gasSpent.init(aliceRaw, readFileSync(join(TEST_WASM_DIR, `demo_ping.opt.wasm`)), '0x50494e47', 0),
+    await api.program.gasSpent.init(
+      aliceRaw,
+      readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `demo_ping.opt.wasm`)),
+      '0x50494e47',
+      0,
+    ),
   ).toBeDefined();
 });
 
