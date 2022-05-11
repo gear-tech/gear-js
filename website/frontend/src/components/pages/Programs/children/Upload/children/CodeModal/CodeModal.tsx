@@ -74,8 +74,8 @@ const CodeModal = ({ file, setDroppedFile }: Props) => {
       const injector = await web3FromSource(meta.source);
       const { signer } = injector;
 
-      const hash = await submit();
-      api.code.signAndSend(address, { signer }, (data) => handleUpload(data, hash));
+      const submittedResult = await submit();
+      api.code.signAndSend(address, { signer }, (data) => handleUpload(data, submittedResult.codeHash));
     } else {
       // TODO: general wrapper for .wasm files upload, since this check also exists on UploadForm submit.
       // we can do this in DropTarget component, but then there'll be need to assert account variable type
