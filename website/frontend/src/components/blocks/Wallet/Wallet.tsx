@@ -14,19 +14,19 @@ import { useAccount, useApi } from 'hooks';
 
 const Wallet = () => {
   const { api } = useApi();
-  const injectedAccounts = useAccounts();
+  const accounts = useAccounts();
   const { account: currentAccount, setAccount } = useAccount();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [accountBalance, setAccountBalance] = useState('');
 
   useEffect(() => {
     const isLoggedIn = ({ address }: InjectedAccountWithMeta) => address === localStorage[LOCAL_STORAGE.SAVED_ACCOUNT];
 
-    if (injectedAccounts) {
-      setAccount(injectedAccounts.find(isLoggedIn));
+    if (accounts) {
+      setAccount(accounts.find(isLoggedIn));
     }
-  }, [injectedAccounts, setAccount]);
+  }, [accounts, setAccount]);
 
   useEffect(() => {
     if (currentAccount && api) {
@@ -51,12 +51,12 @@ const Wallet = () => {
     };
   }, [api, currentAccount]);
 
-  const handleModalOpen = () => {
-    setIsOpen(true);
+  const openModal = () => {
+    setIsModalOpen(true);
   };
 
-  const handleModalClose = () => {
-    setIsOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const balanceSectionClassName = clsx(styles.section, styles.balance);
@@ -78,7 +78,7 @@ const Wallet = () => {
               </p>
             </div>
             <div className={styles.section}>
-              <button type="button" className={accButtonClassName} onClick={handleModalOpen}>
+              <button type="button" className={accButtonClassName} onClick={openModal}>
                 <Identicon value={currentAccount.address} size={28} theme="polkadot" className={styles.avatar} />
                 {currentAccount.meta.name}
               </button>
@@ -86,11 +86,11 @@ const Wallet = () => {
           </>
         ) : (
           <div>
-            <Button text="Connect" color="secondary" className={styles.accountButton} onClick={handleModalOpen} />
+            <Button text="Connect" color="secondary" className={styles.accountButton} onClick={openModal} />
           </div>
         )}
       </div>
-      <SelectAccountModal isOpen={isOpen} onClose={handleModalClose} />
+      <SelectAccountModal isOpen={isModalOpen} accounts={accounts} onClose={closeModal} />
     </>
   );
 };

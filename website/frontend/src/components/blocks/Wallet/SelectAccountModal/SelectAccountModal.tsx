@@ -4,7 +4,6 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Button } from '@gear-js/ui';
 
 import styles from './SelectAccountModal.module.scss';
-import { useAccounts } from '../hooks';
 import { AccountList } from '../AccountList';
 
 import { useAccount } from 'hooks';
@@ -14,17 +13,16 @@ import { Modal } from 'components/blocks/Modal';
 
 type Props = {
   isOpen: boolean;
+  accounts?: InjectedAccountWithMeta[];
   onClose: () => void;
 };
 
 const SelectAccountModal = (props: Props) => {
   const alert = useAlert();
   const { setAccount } = useAccount();
-  const injectedAccounts = useAccounts();
 
-  const { isOpen, onClose } = props;
+  const { isOpen, accounts, onClose } = props;
 
-  // Setting current account and save it into the LocalStage
   const selectAccount = (account: InjectedAccountWithMeta) => {
     setAccount(account);
 
@@ -50,9 +48,9 @@ const SelectAccountModal = (props: Props) => {
       open={isOpen}
       title="Connect"
       content={
-        injectedAccounts ? (
+        accounts ? (
           <>
-            <AccountList list={injectedAccounts} toggleAccount={selectAccount} />
+            <AccountList list={accounts} toggleAccount={selectAccount} />
             <Button
               aria-label="Logout"
               icon={logoutSVG}
