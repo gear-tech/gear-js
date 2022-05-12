@@ -50,9 +50,9 @@ export class ProgramsService {
   }
 
   async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
-    const { genesis, owner, term } = params;
+    const { genesis, owner, query } = params;
     const [result, total] = await this.programRepo.findAndCount({
-      where: getWhere({ genesis, owner }, term, ['id', 'title', 'name']),
+      where: getWhere({ genesis, owner }, query, ['id', 'title', 'name']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
@@ -65,9 +65,9 @@ export class ProgramsService {
   }
 
   async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
-    const { term, genesis } = params;
+    const { query, genesis } = params;
     const [result, total] = await this.programRepo.findAndCount({
-      where: getWhere({ genesis }, term, ['id', 'title', 'name']),
+      where: getWhere({ genesis }, query, ['id', 'title', 'name']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
