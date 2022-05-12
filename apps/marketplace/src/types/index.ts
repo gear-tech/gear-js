@@ -16,4 +16,31 @@ type NFTDetails = {
   attributes: { [key: string]: string };
 };
 
-export type { NFT, NFTDetails };
+type Offer = {
+  hash_: Hex;
+  id: Hex;
+  ftContractId: Hex | null;
+  price: string;
+};
+
+type Bid = Omit<Offer, 'hash_' | 'ftContractId'>;
+
+type Auction = {
+  bidPeriod: string;
+  bids: Bid[];
+  currentPrice: string;
+  endedAt: string;
+  startedAt: string;
+};
+
+type MarketNFT = {
+  ownerId: Hex;
+  nftContractId: Hex | null;
+  ftContractId: Hex | null;
+  tokenId: string;
+  price: string | null;
+  auction: Auction | null;
+  offers: Offer[];
+};
+
+export type { NFT, NFTDetails, MarketNFT };

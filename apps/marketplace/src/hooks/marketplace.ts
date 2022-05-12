@@ -2,33 +2,14 @@ import { Hex } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { marketplaceMetaWasm } from 'assets';
 import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
+import { MarketNFT } from 'types';
 import { useMetadata, useReadState } from './api';
 
-type Offer = {
-  id: Hex;
-  price: string;
-};
-
-type Auction = {
-  bidPeriod: string;
-  bids: Offer[];
-  currentPrice: string;
-  endedAt: string;
-  startedAt: string;
-};
-
-type NFT = {
-  ownerId: Hex;
-  nftContractId: Hex | null;
-  ftContractId: Hex | null;
-  tokenId: string;
-  price: string | null;
-  auction: Auction | null;
-  offers: Offer[];
-};
-
 type NFTPayload = { ItemInfo: { nftContractId: Hex; tokenId: string } };
-type NFTState = { ItemInfo: NFT };
+type NFTState = { ItemInfo: MarketNFT };
+
+type NFTsPayload = { AllItems: null };
+type NFTsState = { AllItems: MarketNFT[] };
 
 function useMarketplaceMeta() {
   const { metadata, metaBuffer } = useMetadata(marketplaceMetaWasm);
@@ -37,6 +18,7 @@ function useMarketplaceMeta() {
 }
 
 function useMarketplaceState(payload: NFTPayload): NFTState | undefined;
+function useMarketplaceState(payload: NFTsPayload): NFTsState | undefined;
 function useMarketplaceState(payload: AnyJson) {
   const { marketplaceMetaBuffer } = useMarketplaceMeta();
   const marketplaceState = useReadState(MARKETPLACE_CONTRACT_ADDRESS, marketplaceMetaBuffer, payload);
@@ -49,4 +31,9 @@ function useMarketNft(tokenId: string) {
   return state?.ItemInfo;
 }
 
-export { useMarketplaceMeta, useMarketplaceState, useMarketNft };
+function useMarketplace() {
+  const state = useMarketplaceState({ AllItems: null });
+  return state?.AllItems;
+}
+
+export { useMarketplaceMeta, useMarketplaceState, useMarketNft, useMarketplace };

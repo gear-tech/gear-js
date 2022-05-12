@@ -1,16 +1,13 @@
 import { useOwnersNft } from 'hooks';
-import Header from './header';
 import List from './list';
-// import styles from './Me.module.scss';
-
-const filters = ['My NFTs', 'Approved to me'];
+import styles from './Me.module.scss';
 
 function Me() {
   const nfts = useOwnersNft();
 
   return (
     <>
-      <Header text="My collections" filter="My NFTs" filters={filters} onFilterChange={() => {}} />
+      <h2 className={styles.heading}>My Collections</h2>
       {nfts && <List nfts={nfts} />}
     </>
   );
