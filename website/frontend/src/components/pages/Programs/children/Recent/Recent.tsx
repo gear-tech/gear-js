@@ -1,40 +1,51 @@
-import React, { useEffect, useState, VFC } from 'react';
+import { useEffect, useState } from 'react';
+import { GearKeyring } from '@gear-js/api';
 import { useSearchParams } from 'react-router-dom';
-import { ProgramModel } from 'types/program';
-
-import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
-
-import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
-import { Pagination } from 'components/Pagination/Pagination';
 
 import styles from './Recent.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
+import { ProgramsLegend } from '../ProgramsLegend/ProgramsLegend';
 
-import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
-import { URL_PARAMS } from 'consts';
+import { useAccount, useChangeEffect } from 'hooks';
+import { ProgramModel } from 'types/program';
 import { getUserPrograms } from 'services';
+import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
+import { Pagination } from 'components/Pagination/Pagination';
+import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 
-export const Recent: VFC = () => {
-  const [searchParams] = useSearchParams();
+export const Recent = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { account } = useAccount();
+
   const page = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
   const query = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
 
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
 
-  useEffect(() => {
-    const programParams = {
-      owner: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
-      limit: INITIAL_LIMIT_BY_PAGE,
-      offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
-      term: query,
-    };
+  const handleRemoveQuery = () => {
+    searchParams.set(URL_PARAMS.PAGE, String(1));
+    searchParams.set(URL_PARAMS.QUERY, '');
+    setSearchParams(searchParams);
+  };
 
-    getUserPrograms(programParams).then(({ result }) => {
-      setPrograms(result.programs);
-      setProgramsCount(result.count);
-    });
-  }, [page, query]);
+  useChangeEffect(handleRemoveQuery, [account]);
+
+  useEffect(() => {
+    if (account) {
+      const params = {
+        term: query,
+        owner: GearKeyring.decodeAddress(account.address),
+        limit: INITIAL_LIMIT_BY_PAGE,
+        offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
+      };
+
+      getUserPrograms(params).then(({ result }) => {
+        setPrograms(result.programs);
+        setProgramsCount(result.count);
+      });
+    }
+  }, [page, query, account]);
 
   return (
     <div className={styles.blockList}>

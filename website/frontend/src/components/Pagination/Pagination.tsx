@@ -25,7 +25,7 @@ const Pagination = ({ page, pagesAmount }: Props) => {
 
   return (
     <div className="pagination">
-      {prevPage > 0 ? (
+      {page > 1 ? (
         <Link className="pagination--box" to={getTo(prevPage)}>
           <img className="pagination--img-prev" src={arrow} alt="arrow" />
         </Link>
@@ -38,7 +38,7 @@ const Pagination = ({ page, pagesAmount }: Props) => {
         {page}
       </button>
       <p className="pagination__total">of {totalPages}</p>
-      {nextPage < totalPages ? (
+      {page < totalPages ? (
         <Link className="pagination--box" to={getTo(nextPage)}>
           <img className="pagination--img" src={arrow} alt="arrow" />
         </Link>
