@@ -22,8 +22,12 @@ export class MetadataService {
       id: params.programId,
       genesis: params.genesis,
     });
-    if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
-      throw new SignatureNotVerified();
+    try {
+      if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
+        throw new SignatureNotVerified();
+      }
+    } catch (err) {
+      throw new SignatureNotVerified(err.message);
     }
     const metadata = this.metaRepo.create({
       owner: program.owner,
