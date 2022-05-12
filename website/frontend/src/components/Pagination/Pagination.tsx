@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import clsx from 'clsx';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import arrow from './images/arrow.svg';
 import { URL_PARAMS } from 'consts';

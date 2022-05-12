@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState, FormEvent } from 'react';
 import { Button, Input, buttonStyles } from '@gear-js/ui';
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import searchIcon from 'assets/images/search.svg';
 import { URL_PARAMS } from 'consts';
 import styles from './SearchForm.module.scss';
@@ -11,9 +11,7 @@ type Props = {
 };
 
 const SearchForm = ({ placeholder }: Props) => {
-  const navigate = useNavigate();
   const linkClasses = clsx(buttonStyles.button, buttonStyles.secondary, buttonStyles.small);
-  const { pathname: url } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [value, setValue] = useState('');
 
