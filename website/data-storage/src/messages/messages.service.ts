@@ -58,9 +58,9 @@ export class MessagesService {
   }
 
   async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
-    const { genesis, destination, term } = params;
+    const { genesis, destination, query } = params;
     const [result, total] = await this.messageRepo.findAndCount({
-      where: getWhere({ genesis, destination }, term, ['id', 'source']),
+      where: getWhere({ genesis, destination }, query, ['id', 'source']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
@@ -73,9 +73,9 @@ export class MessagesService {
   }
 
   async getOutgoing(params: GetMessagesParams): Promise<AllMessagesResult> {
-    const { genesis, source, term } = params;
+    const { genesis, source, query } = params;
     const [result, total] = await this.messageRepo.findAndCount({
-      where: getWhere({ genesis, source }, term, ['id', 'destination']),
+      where: getWhere({ genesis, source }, query, ['id', 'destination']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
@@ -88,7 +88,7 @@ export class MessagesService {
   }
 
   async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
-    const { genesis, source, destination, term } = params;
+    const { genesis, source, destination, query } = params;
     const strictParams = { genesis };
     if (source) {
       strictParams['source'] = source;
@@ -97,7 +97,7 @@ export class MessagesService {
       strictParams['destination'] = destination;
     }
     const [result, total] = await this.messageRepo.findAndCount({
-      where: getWhere(strictParams, term, ['id', 'source', 'destination']),
+      where: getWhere(strictParams, query, ['id', 'source', 'destination']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',

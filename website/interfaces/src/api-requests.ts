@@ -45,5 +45,5 @@ export interface GetTestBalanceParams extends IGenesis {
 }
 
 export interface SearchParam {
-  term?: string;
+  query?: string;
 }
