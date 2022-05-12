@@ -4,10 +4,9 @@ import styles from './Offer.module.scss';
 type Props = {
   bid: number;
   bidder: string;
-  time: string;
 };
 
-function Offer({ bid, bidder, time }: Props) {
+function Offer({ bid, bidder }: Props) {
   const bidText = `${bid} Gear`;
 
   return (
@@ -15,7 +14,6 @@ function Offer({ bid, bidder, time }: Props) {
       <div className={styles.info}>
         <p className={styles.bid}>{bidText}</p>
         <p className={styles.bidder}>{bidder}</p>
-        <p className={styles.time}>{time}</p>
       </div>
       <Button text="Accept" size="small" />
     </div>

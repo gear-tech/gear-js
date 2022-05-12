@@ -17,7 +17,7 @@ async function sendMessage(
   const decodedAddress = GearKeyring.decodeAddress(address);
   const gasLimit = await api.program.gasSpent.handle(decodedAddress, destination, payload, value, metadata);
 
-  const message = { destination, payload, gasLimit };
+  const message = { destination, payload, gasLimit, value };
   api.message.submit(message, metadata);
 
   const { source } = meta;
