@@ -1,4 +1,4 @@
-import { PayloadType } from '@gear-js/api';
+import { Metadata, PayloadType } from '@gear-js/api';
 import { AnyNumber } from '@polkadot/types/types';
 
 export enum ProgramStatus {
@@ -29,12 +29,8 @@ export interface UploadProgramModel {
   initPayload: string;
   gasLimit: number;
   value: number;
-  init_input: string;
-  init_output: string;
-  handle_input: string;
-  handle_output: string;
+  meta: Metadata;
   id?: string;
-  types: string;
   title?: string;
   programName?: string;
 }
