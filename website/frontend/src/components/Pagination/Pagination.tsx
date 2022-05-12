@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { Link, useSearchParams } from 'react-router-dom';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
 import arrow from './images/arrow.svg';
@@ -15,8 +16,8 @@ const Pagination = ({ page, pagesAmount }: Props) => {
   const totalPages = Math.ceil(pagesAmount / INITIAL_LIMIT_BY_PAGE);
   const prevPage = page - 1;
   const nextPage = page + 1;
-  const prevPageClasses = `pagination--box ${page === 1 && 'disabled'}`;
-  const nextPageClasses = `pagination--box ${page === totalPages && 'disabled'}`;
+  const prevPageClasses = clsx(`pagination--box ${page === 1 && 'disabled'}`);
+  const nextPageClasses = clsx(`pagination--box ${page === totalPages && 'disabled'}`);
 
   const getTo = (pageValue: number) => {
     searchParams.set(URL_PARAMS.PAGE, String(pageValue));
