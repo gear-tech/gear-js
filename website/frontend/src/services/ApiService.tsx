@@ -9,7 +9,6 @@ import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'hel
 import ServerRPCRequestService from './ServerRPCRequestService';
 import { nodeApi } from 'api/initApi';
 import { GetMetaResponse } from 'api/responses';
-import { EventRecord } from '@polkadot/types/interfaces';
 
 // TODO: (dispatch) fix it later
 
