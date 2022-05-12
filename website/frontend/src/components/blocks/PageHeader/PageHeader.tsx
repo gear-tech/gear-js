@@ -5,11 +5,11 @@ import { BackButton } from 'components/BackButton/BackButton';
 import ProgramIllustrationSVG from 'assets/images/program_icon.svg';
 
 type Props = {
-  title: string;
+  title?: string;
   fileName: string;
 };
 
-export const PageHeader = ({ title, fileName }: Props) => (
+export const PageHeader = ({ title = '', fileName }: Props) => (
   <div className={styles.pageHeader}>
     <BackButton className={styles.headerBackBtn} />
     <div className={styles.headerInfo}>
