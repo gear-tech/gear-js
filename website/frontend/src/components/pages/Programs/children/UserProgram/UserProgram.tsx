@@ -1,9 +1,9 @@
-import React, { VFC } from 'react';
 import clsx from 'clsx';
 import { ProgramModel, ProgramStatus } from 'types/program';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { useAlert } from 'react-alert';
-import { Link } from 'react-router-dom';
+import { Link, generatePath } from 'react-router-dom';
+import { routes } from 'routes';
 import MessageIllustration from 'assets/images/message.svg';
 import UploadIcon from 'assets/images/upload-cloud.svg';
 import Copy from 'assets/images/copy.svg';
@@ -11,11 +11,13 @@ import styles from './UserProgram.module.scss';
 
 type Props = {
   program: ProgramModel;
-  handleOpenForm: (programId: string, programName?: string) => void;
+  isMetaLinkActive?: boolean;
 };
 
-export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
+export const UserProgram = (props: Props) => {
   const alert = useAlert();
+
+  const { program, isMetaLinkActive = true } = props;
 
   return (
     <div className={styles.programsListItem} key={program.id}>
@@ -52,13 +54,13 @@ export const UserProgram: VFC<Props> = ({ program, handleOpenForm }) => {
         <Link to={`/send/message/${program.id}`} className={styles.allProgramsItemSendMessage}>
           <img src={MessageIllustration} alt="Send message to program" />
         </Link>
-        <button
-          className={styles.allProgramsItemUpload}
-          type="button"
-          onClick={() => handleOpenForm(program.id, program.name)}
+        <Link
+          to={generatePath(routes.meta, { programId: program.id })}
+          tabIndex={Number(isMetaLinkActive)}
+          className={clsx(styles.allProgramsItemUpload, !isMetaLinkActive && styles.linkInactive)}
         >
           <img src={UploadIcon} alt="Upload metadata" />
-        </button>
+        </Link>
       </div>
     </div>
   );

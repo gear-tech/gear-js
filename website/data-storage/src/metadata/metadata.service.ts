@@ -38,10 +38,13 @@ export class MetadataService {
   }
 
   async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
-    const meta = await this.metaRepo.findOne({ where: { program: params.programId } });
+    const meta = await this.metaRepo.findOne({
+      where: { program: params.programId },
+      select: ['program', 'meta', 'metaFile'],
+    });
     if (!meta) {
       throw new MetadataNotFound();
     }
-    return { program: meta.program, meta: meta.meta, metaFile: meta.metaFile };
+    return meta;
   }
 }

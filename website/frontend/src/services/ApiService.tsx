@@ -1,5 +1,5 @@
 import { AlertContainer } from 'react-alert';
-import { UploadProgramModel, Message, Reply, MetaModel, ProgramStatus } from 'types/program';
+import { UploadProgramModel, Message, Reply, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { CreateType, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
@@ -201,7 +201,7 @@ export const sendMessage = async (
 
 // TODO: (dispatch) fix it later
 export const addMetadata = async (
-  meta: MetaModel,
+  meta: Metadata,
   metaFile: any,
   account: InjectedAccountWithMeta,
   programId: string,

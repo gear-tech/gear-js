@@ -1,0 +1,79 @@
+@use 'assets/scss/variables' as *;
+@use 'assets/scss/mixins' as *;
+
+.alert {
+  width: 100%;
+  position: relative;
+  font-size: $fontSizeBase;
+  padding: 15px 40px 15px 15px;
+  background-color: $mainBackground;
+  border-radius: $borderRadiusBase;
+  box-shadow: 0px 5px 5px 0px #00000033, 0px 3px 14px 0px #0000001f, 0px 8px 10px 0px #00000024;
+
+  & > *:not(:last-child) {
+    margin-bottom: 6px;
+  }
+}
+
+.closeBtn {
+   position: absolute;
+   top: 10px;
+   right: 10px;
+
+   & > img {
+      @include square(11px);
+   }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+
+  &::before {
+    @include square(16px);
+
+    content: '';
+    margin-right: 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  &.success {
+   color: $successColor;
+   
+   &::before {
+      background-image: url('/assets/images/alert/checkMark.svg');
+   }
+  }
+ 
+  &.info {
+   color: $textColor;
+ 
+   &::before {
+      background-image: url('/assets/images/alert/info.svg');
+   }
+  }
+
+  &.error {
+   color: $errorColor;
+
+   &::before {
+      background-image: url('/assets/images/alert/error.svg');
+   }
+  }
+}
+
+.header,
+.body {
+   color: $textColor; 
+}
+
+.body {
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.footer {
+  font-size: $fontSizeSmall;
+  color: $textColorSecondary;
+}

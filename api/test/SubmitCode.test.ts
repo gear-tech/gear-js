@@ -3,7 +3,7 @@ import { join } from 'path';
 import yaml from 'js-yaml';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GearApi, GearKeyring } from '../lib';
-import { TEST_WASM_DIR } from './config';
+import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
 const submitCodeTestFiles = readdirSync('test/spec/submit_code');
 const api = new GearApi();
@@ -32,8 +32,8 @@ for (let filePath of submitCodeTestFiles) {
   describe(testFile.title, () => {
     test('Submit code', async () => {
       for (let program of testFile.programs) {
-        const code = readFileSync(join(TEST_WASM_DIR, `${program.name}.opt.wasm`));
-        const codeHash = api.code.submit(code);
+        const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `${program.name}.opt.wasm`));
+        const { codeHash } = api.code.submit(code);
         expect(codeHash).toBeDefined();
 
         const transactionData = await sendTransaction(api.code, accounts[program.account], 'CodeSaved');

@@ -26,6 +26,7 @@ import {
   InitFailure,
   GetAllUserProgramsParams,
   IGenesis,
+  ProgramDataResult,
 } from '@gear-js/interfaces';
 import { FormResponse } from 'src/middleware/formResponse';
 
@@ -90,7 +91,7 @@ export class ConsumerService {
   };
 
   @FormResponse
-  async programData(params: FindProgramParams): Result<IProgram> {
+  async programData(params: FindProgramParams): Result<ProgramDataResult> {
     return await this.programService.findProgram(params);
   }
 

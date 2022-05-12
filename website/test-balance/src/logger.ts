@@ -1,6 +1,6 @@
 import { createLogger, format, transports } from 'winston';
 import { logLevel } from 'kafkajs';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 
 const { printf, combine, colorize, timestamp, label } = format;
 

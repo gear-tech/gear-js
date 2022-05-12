@@ -5,6 +5,6 @@ examples/test-json/
 **/lib/
 **/temp
 api/.rollup.cache
-test/wasm
+test/wasm/examples/
 using-examples/package-lock.json
 using-examples/src/temp.ts

@@ -105,6 +105,7 @@ export const getLocalPrograms = (params: any) => {
 export const getLocalProgram = (id: string) => {
   const result: ProgramModel = {
     id: '',
+    owner: '',
     timestamp: '',
     initStatus: ProgramStatus.Success,
   };

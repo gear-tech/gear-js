@@ -8,8 +8,8 @@ export function getPaginationParams(params: IPaginationParams): { take: number; 
 
 export const escapeSqlLike = (x: string) => x.replace('%', '\\%').replace('_', '\\_');
 
-export function getWhere(strictParams: any, term: string | null | undefined, searchParams: string[]) {
-  const likeTerm = term ? ILike(`%${escapeSqlLike(term)}%`) : void null;
+export function getWhere(strictParams: any, query: string | null | undefined, searchParams: string[]) {
+  const likeTerm = query ? ILike(`%${escapeSqlLike(query)}%`) : void null;
   const where = likeTerm
     ? searchParams.map((param) => {
         const result = { ...strictParams };

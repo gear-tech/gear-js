@@ -1,59 +1,75 @@
-import React, { useEffect, useState, VFC } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
-import { Pagination } from 'components/Pagination/Pagination';
-import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
-import { SearchForm } from '../../blocks/SearchForm/SearchForm';
-import { MessageModel } from 'types/message';
-import { getMessages } from 'services';
-import './Messages.scss';
+import { GearKeyring } from '@gear-js/api';
 
-export const Messages: VFC = () => {
+import './Messages.scss';
+import { SearchForm } from '../../blocks/SearchForm/SearchForm';
+
+import { getMessages } from 'services';
+import { MessageModel } from 'types/message';
+import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { useAccount, useChangeEffect } from 'hooks';
+import { Pagination } from 'components/Pagination/Pagination';
+import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
+
+export const Messages = () => {
   const location = useLocation();
+  const { account } = useAccount();
+
   const searchParams = new URLSearchParams(location.search);
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
-
-  const [term, setTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(pageFromUrl);
 
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [messagesCount, setMessagesCount] = useState(0);
 
-  useEffect(() => {
-    const messageParams = {
-      destination: localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW),
-      limit: INITIAL_LIMIT_BY_PAGE,
-      offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE,
-      term,
-    };
+  const [term, setTerm] = useState('');
+  const [page, setPage] = useState(pageFromUrl);
 
-    getMessages(messageParams).then(({ result }) => {
-      setMessages(result.messages);
-      setMessagesCount(result.count);
-    });
-  }, [currentPage, term]);
+  const handleSearch = (currentTerm: string) => {
+    setTerm(currentTerm);
+    setPage(1);
+  };
+
+  const handleRemoveQuery = () => {
+    setTerm('');
+    setPage(1);
+  };
+
+  useChangeEffect(handleRemoveQuery, [account]);
+
+  useEffect(() => {
+    if (account) {
+      const messageParams = {
+        destination: GearKeyring.decodeAddress(account.address),
+        limit: INITIAL_LIMIT_BY_PAGE,
+        offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
+        term,
+      };
+
+      getMessages(messageParams).then(({ result }) => {
+        setMessages(result.messages);
+        setMessagesCount(result.count);
+      });
+    }
+  }, [page, term, account]);
 
   return (
     <div className="messages">
       <div className="pagination__wrapper">
         <span className="pagination__wrapper-caption">Total results: {messagesCount || 0}</span>
-        <Pagination page={currentPage} count={messagesCount || 1} onPageChange={setCurrentPage} />
+        <Pagination page={page} count={messagesCount || 1} onPageChange={setPage} />
       </div>
       <div>
         <SearchForm
-          handleRemoveQuery={() => {
-            setTerm('');
-          }}
-          handleSearch={(val: string) => {
-            setTerm(val);
-          }}
           placeholder="Find message by ID"
+          handleSearch={handleSearch}
+          handleRemoveQuery={handleRemoveQuery}
         />
         <br />
       </div>
       <MessagesList messages={messages} />
       <div className="pagination_bottom">
-        <Pagination page={currentPage} count={messagesCount || 1} onPageChange={setCurrentPage} />
+        <Pagination page={page} count={messagesCount || 1} onPageChange={setPage} />
       </div>
     </div>
   );

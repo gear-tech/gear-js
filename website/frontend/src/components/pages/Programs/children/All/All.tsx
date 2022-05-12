@@ -1,113 +1,71 @@
-import React, { useEffect, useState, VFC } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { Pagination } from 'components/Pagination/Pagination';
-import { Meta } from 'components/Meta/Meta';
-import { ProgramsLegend } from 'components/pages/Programs/children/ProgramsLegend/ProgramsLegend';
-import { INITIAL_LIMIT_BY_PAGE } from 'consts';
-import { ProgramModel } from 'types/program';
-import MessageIcon from 'assets/images/message.svg';
-import UploadIcon from 'assets/images/upload-cloud.svg';
-import { UserProgram } from '../UserProgram/UserProgram';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { GearKeyring } from '@gear-js/api';
+
 import styles from './All.module.scss';
-import { SearchForm } from '../../../../blocks/SearchForm/SearchForm';
+import { UserProgram } from '../UserProgram/UserProgram';
+import { ProgramsLegend } from '../ProgramsLegend/ProgramsLegend';
+
+import { useAccount } from 'hooks';
 import { getPrograms } from 'services';
+import { ProgramModel } from 'types/program';
+import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { Pagination } from 'components/Pagination/Pagination';
+import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 
-type ProgramMessageType = {
-  programName: string;
-  programId: string;
-};
-
-export const All: VFC = () => {
+export const All = () => {
   const location = useLocation();
+  const { account } = useAccount();
+
   const searchParams = new URLSearchParams(location.search);
   const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
 
   const [term, setTerm] = useState('');
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
+
+  const [page, setPage] = useState(pageFromUrl);
   const [programsCount, setProgramsCount] = useState(0);
 
-  const [currentPage, setCurrentPage] = useState(pageFromUrl);
-  const [programMeta, setProgramMeta] = useState<ProgramMessageType | null>(null);
+  const accountDecodedAddress = GearKeyring.decodeAddress(account?.address || '');
 
-  const onPageChange = (page: number) => setCurrentPage(page);
+  const handleSearch = (currentTerm: string) => {
+    setTerm(currentTerm);
+    setPage(1);
+  };
+
+  const handleRemoveQuery = () => {
+    setTerm('');
+    setPage(1);
+  };
 
   useEffect(() => {
-    const programParams = { limit: INITIAL_LIMIT_BY_PAGE, offset: (currentPage - 1) * INITIAL_LIMIT_BY_PAGE, term };
+    const programParams = { limit: INITIAL_LIMIT_BY_PAGE, offset: (page - 1) * INITIAL_LIMIT_BY_PAGE, term };
 
     getPrograms(programParams).then(({ result }) => {
       setPrograms(result.programs);
       setProgramsCount(result.count);
     });
-  }, [currentPage, term]);
-
-  const handleOpenForm = (programId: string, programName?: string) => {
-    if (programName) {
-      setProgramMeta({
-        programId,
-        programName,
-      });
-    }
-  };
-
-  const handleCloseMetaForm = () => {
-    setProgramMeta(null);
-  };
-
-  if (programMeta) {
-    return (
-      <Meta programId={programMeta.programId} programName={programMeta.programName} handleClose={handleCloseMetaForm} />
-    );
-  }
+  }, [page, term]);
 
   return (
     <div className="all-programs">
       <div className={styles.paginationWrapper}>
         <span>Total results: {programsCount || 0}</span>
-        <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
+        <Pagination page={page} count={programsCount || 1} onPageChange={setPage} />
       </div>
       <div>
-        <SearchForm
-          handleRemoveQuery={() => {
-            setTerm('');
-          }}
-          handleSearch={(val: string) => {
-            setTerm(val);
-          }}
-          placeholder="Find program"
-        />
+        <SearchForm placeholder="Find program" handleSearch={handleSearch} handleRemoveQuery={handleRemoveQuery} />
         <br />
       </div>
       <ProgramsLegend />
       <div className={styles.allProgramsList}>
-        {(programs &&
-          programsCount &&
-          programs.map((item: ProgramModel) => {
-            if (item.name && item.name !== 'name.wasm') {
-              return <UserProgram program={item} handleOpenForm={handleOpenForm} key={item.id} />;
-            }
-            return (
-              <div className={styles.allProgramsItem} key={item.id}>
-                <p className={styles.allProgramsItemHash}>{item.id}</p>
-                <div className={styles.programsListBtns}>
-                  <Link to={`/send/message/${item.id}`} className={styles.allProgramsItemSendMessage}>
-                    <img src={MessageIcon} alt="Send message to program" />
-                  </Link>
-                  <button
-                    className={styles.allProgramsItemUpload}
-                    type="button"
-                    onClick={() => handleOpenForm(item.id, item.name)}
-                  >
-                    <img src={UploadIcon} alt="upload-program" />
-                  </button>
-                </div>
-              </div>
-            );
-          })) ||
-          null}
+        {programs.map((program: ProgramModel) => (
+          <UserProgram key={program.id} program={program} isMetaLinkActive={accountDecodedAddress === program.owner} />
+        ))}
       </div>
-      {programs && programsCount > 0 && (
+      {programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={currentPage} count={programsCount || 1} onPageChange={onPageChange} />
+          <Pagination page={page} count={programsCount} onPageChange={setPage} />
         </div>
       )}
     </div>

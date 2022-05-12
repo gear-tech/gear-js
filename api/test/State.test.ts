@@ -2,12 +2,12 @@ import { GearApi, getWasmMetadata } from '../src';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
-import { TEST_WASM_DIR } from './config';
+import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
 const api = new GearApi();
 const demo_meta_test = {
-  code: readFileSync(join(TEST_WASM_DIR, 'demo_meta.opt.wasm')),
-  meta: readFileSync(join(TEST_WASM_DIR, 'demo_meta.meta.wasm')),
+  code: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_meta.opt.wasm')),
+  meta: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_meta.meta.wasm')),
   id: undefined,
 };
 const timestamp_test = {
