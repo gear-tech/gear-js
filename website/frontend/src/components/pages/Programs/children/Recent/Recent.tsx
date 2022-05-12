@@ -23,13 +23,11 @@ export const Recent = () => {
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
 
-  const handleRemoveQuery = () => {
+  useChangeEffect(() => {
     searchParams.set(URL_PARAMS.PAGE, String(1));
     searchParams.set(URL_PARAMS.QUERY, '');
     setSearchParams(searchParams);
-  };
-
-  useChangeEffect(handleRemoveQuery, [account]);
+  }, [account]);
 
   useEffect(() => {
     if (account) {

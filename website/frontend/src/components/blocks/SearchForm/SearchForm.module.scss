@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 40px;
+  gap: 30px;
   margin-bottom: 20px;
 
   @include lg {
@@ -28,5 +28,5 @@
 }
 
 .resetButton {
-  width: 150px;
+  white-space: nowrap;
 }

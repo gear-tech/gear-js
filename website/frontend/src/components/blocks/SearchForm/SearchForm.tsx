@@ -42,10 +42,7 @@ const SearchForm = ({ placeholder }: Props) => {
     event.preventDefault();
 
     setUrlParams();
-
-    const path = `${url}?${searchParams.toString()}`;
-
-    navigate(path);
+    setSearchParams(searchParams);
   };
 
   return (
@@ -60,19 +57,17 @@ const SearchForm = ({ placeholder }: Props) => {
           value={value}
           onChange={handleChange}
         />
-        <div className={styles.links}>
-          <Link className={linkClasses} to={getTo()}>
-            <img className={buttonStyles.icon} src={searchIcon} alt="search icon" />
-            Search
-          </Link>
-          <Button
-            className={styles.resetButton}
-            text="Reset search"
-            type="reset"
-            color="transparent"
-            onClick={resetSearch}
-          />
-        </div>
+        <Link className={linkClasses} to={getTo()}>
+          <img className={buttonStyles.icon} src={searchIcon} alt="search icon" />
+          Search
+        </Link>
+        <Button
+          className={styles.resetButton}
+          text="Reset search"
+          type="reset"
+          color="transparent"
+          onClick={resetSearch}
+        />
       </div>
     </form>
   );

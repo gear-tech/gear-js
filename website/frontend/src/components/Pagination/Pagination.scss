@@ -39,11 +39,6 @@
   background: #000000;
 }
 
-.pagination--box.disabled {
-  opacity: 0.2;
-  cursor: default;
-}
-
 .pagination--box:first-child svg {
   transform: rotate(180deg);
 }

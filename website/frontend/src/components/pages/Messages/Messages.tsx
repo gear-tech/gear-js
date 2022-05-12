@@ -22,13 +22,11 @@ export const Messages = () => {
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [messagesCount, setMessagesCount] = useState(0);
 
-  const handleRemoveQuery = () => {
+  useChangeEffect(() => {
     searchParams.set(URL_PARAMS.PAGE, String(1));
     searchParams.set(URL_PARAMS.QUERY, '');
     setSearchParams(searchParams);
-  };
-
-  useChangeEffect(handleRemoveQuery, [account]);
+  }, [account]);
 
   useEffect(() => {
     if (account) {
