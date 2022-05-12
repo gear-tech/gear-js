@@ -25,7 +25,7 @@ export const All = () => {
   const [programsCount, setProgramsCount] = useState(0);
 
   useEffect(() => {
-    const programParams = { limit: INITIAL_LIMIT_BY_PAGE, offset: (page - 1) * INITIAL_LIMIT_BY_PAGE, term: query };
+    const programParams = { limit: INITIAL_LIMIT_BY_PAGE, offset: (page - 1) * INITIAL_LIMIT_BY_PAGE, query };
 
     getPrograms(programParams).then(({ result }) => {
       setPrograms(result.programs);

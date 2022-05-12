@@ -36,7 +36,7 @@ export const Messages = () => {
         destination: GearKeyring.decodeAddress(account.address),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
-        term: query,
+        query,
       };
 
       getMessages(messageParams).then(({ result }) => {

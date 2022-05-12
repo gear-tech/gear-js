@@ -34,7 +34,7 @@ export const Recent = () => {
   useEffect(() => {
     if (account) {
       const params = {
-        term: query,
+        query,
         owner: GearKeyring.decodeAddress(account.address),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
