@@ -35,11 +35,6 @@
     "build": "craco build",
     "test": "craco test"
   },
-  "jest": {
-    "transformIgnorePatterns": [
-      "node_modules/(?!@polkadot)/"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",

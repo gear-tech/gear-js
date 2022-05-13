@@ -1,6 +1,6 @@
 import { Hex } from '@gear-js/api';
 
-const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS;
+const NODE_ADDRESS = process.env.REACT_APP_NODE_ADDRESS as string;
 const IPFS_ADDRESS = process.env.REACT_APP_IPFS_ADDRESS as string;
 const NFT_CONTRACT_ADDRESS = process.env.REACT_APP_NFT_CONTRACT_ADDRESS as Hex;
 const MARKETPLACE_CONTRACT_ADDRESS = process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS as Hex;

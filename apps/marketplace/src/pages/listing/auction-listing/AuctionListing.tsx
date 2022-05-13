@@ -4,7 +4,7 @@ import { Listing, PriceModal } from 'components';
 import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
 import { useAccount, useApi, useLoading, useMarketplaceMeta, useStatus } from 'hooks';
 import { useState } from 'react';
-import { sendMessage } from 'utils';
+import sendMessage from 'utils';
 
 type Props = {
   isOwner: boolean;

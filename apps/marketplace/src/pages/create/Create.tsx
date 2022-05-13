@@ -4,7 +4,7 @@ import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
 import { useApi, useIPFS, useForm, useMetadata, useAccount, useLoading, useStatus } from 'hooks';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { CID } from 'ipfs-http-client';
-import { sendMessage } from 'utils';
+import sendMessage from 'utils';
 import styles from './Create.module.scss';
 
 type Values = { name: string; description: string; attrs?: File | undefined; image?: File | undefined };

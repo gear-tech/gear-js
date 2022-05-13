@@ -15,25 +15,9 @@
 main {
   flex: 1;
   padding: 30px 0;
-
-  // temp solution for api loader
-  // display: flex;
-  // align-items: center;
-  // justify-content: center;
-
-  .loader {
-    font-size: $fontSizeLarge;
-  }
+  position: relative; // for api loader
 }
 
 body {
   background: $bgColor url('assets/images/bg.svg');
-}
-
-a {
-  @include transition();
-
-  &:hover {
-    opacity: 0.5;
-  }
 }

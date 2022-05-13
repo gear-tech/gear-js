@@ -5,7 +5,7 @@ import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
 import { useAccount, useApi, useMarketplaceMeta, useStatus } from 'hooks';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { sendMessage } from 'utils';
+import sendMessage from 'utils';
 import styles from './Offer.module.scss';
 
 type Props = {

@@ -4,7 +4,7 @@ import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
 import { useAccount, useApi, useForm, useLoading, useMetadata, useStatus } from 'hooks';
 import { FormEvent } from 'react';
 import { useParams } from 'react-router-dom';
-import { sendMessage } from 'utils';
+import sendMessage from 'utils';
 import styles from './AuctionModal.module.scss';
 
 type Props = {
