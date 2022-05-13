@@ -2,7 +2,7 @@
 @use '@gear-js/ui/mixins' as *;
 
 .loader {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   right: 0;
   padding: 32px;

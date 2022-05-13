@@ -1,16 +1,20 @@
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
 import { AlertTemplateProps, AlertType } from 'react-alert';
+import xSVG from 'assets/images/alert/x.svg';
 import styles from './Alert.module.scss';
 
 function Alert({ message, options, style, close }: AlertTemplateProps) {
   const { type } = options;
-  const className = clsx(styles.alert, styles[type as AlertType]);
+  const headerClassName = clsx(styles.header, styles[type as AlertType]);
 
   return (
-    <div style={style} className={className}>
-      <span className={styles.text}>{message}</span>
-      <Button text="x" color="transparent" size="small" onClick={close} />
+    <div className={styles.alert} style={style}>
+      <header className={headerClassName}>
+        {type}
+        <Button icon={xSVG} color="transparent" className={styles.button} onClick={close} />
+      </header>
+      <div className={styles.body}>{message}</div>
     </div>
   );
 }
