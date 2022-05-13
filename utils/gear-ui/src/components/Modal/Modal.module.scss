@@ -22,6 +22,8 @@ $border: url("data:image/svg+xml,%3Csvg width='430' height='431' fill='none' xml
   width: 100%;
   max-width: 430px;
   padding: 30px 30px 70px;
+  display: flex;
+  flex-direction: column;
   background: $bgColor $border center / 100% 100% no-repeat;
   border-radius: $borderRadius;
 }
