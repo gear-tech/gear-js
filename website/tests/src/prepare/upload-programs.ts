@@ -43,7 +43,11 @@ export async function uploadPrograms(api: GearApi, programs: { [program: string]
 
   for (let program of Object.keys(programs)) {
     const uploadedProgram = await uploadProgram(api, programs[program]);
-    uploadedPrograms[uploadedProgram.programId] = { ...programs[program], name: program };
+    uploadedPrograms[uploadedProgram.programId] = {
+      ...programs[program],
+      name: program,
+      messageId: uploadedProgram.messageId,
+    };
   }
   await sleep();
   unsubInit();

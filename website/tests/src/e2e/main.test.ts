@@ -5,6 +5,7 @@ import base from '../config/base';
 import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram } from '../interfaces';
 import { sleep } from '../utils';
+import { getAllMessages, getMessageData } from './messages';
 
 let genesis: Hex;
 let prepared: IPrepared;
@@ -24,7 +25,7 @@ afterAll(async () => {
   await sleep();
 });
 
-describe('Main', () => {
+describe('program methods', () => {
   test('program.all request', async () => {
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
   });
@@ -45,6 +46,24 @@ describe('Main', () => {
   test('program.data method', async () => {
     for (let id_ of Object.keys(prepared.programs)) {
       expect(await getProgramData(genesis, id_)).toBeTruthy();
+    }
+  });
+
+  test.todo('test init status');
+});
+
+describe.only('message methods', () => {
+  test('message.all request', async () => {
+    const messages = Array.from(prepared.messages.log.keys()).concat(
+      Array.from(prepared.messages.sent.values()).map(({ messageId }) => messageId),
+    ) as Hex[];
+    Object.values(prepared.programs).forEach(({ messageId }) => messages.push(messageId));
+    expect(await getAllMessages(genesis, messages)).toBeTruthy();
+  });
+
+  test('message.data request', async () => {
+    for (let message of prepared.messages.log) {
+      expect(await getMessageData(genesis, message[0])).toBeTruthy();
     }
   });
 });

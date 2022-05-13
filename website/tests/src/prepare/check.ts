@@ -33,7 +33,7 @@ export function checkMessages(sentMessages: Map<number, any>, specMessages: { [p
   return sentMessages;
 }
 
-export function checkLogs(specMessages: { [program: string]: IMessageSpec[] }, logMessages: Map<string, any>) {
+export function checkLogs(specMessages: { [program: string]: IMessageSpec[] }, logMessages: Map<Hex, any>) {
   assert(
     Object.keys(specMessages).reduce((counter, key) => {
       counter += specMessages[key].reduce((count, value) => {
