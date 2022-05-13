@@ -50,7 +50,9 @@ function SaleListing(props: Props) {
       enableLoading();
 
       const payload = { BuyItem: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id } };
-      sendMessage(api, account, MARKETPLACE_CONTRACT_ADDRESS, payload, marketplaceMeta, handleStatus);
+      const value = price?.replaceAll(',', '');
+
+      sendMessage(api, account, MARKETPLACE_CONTRACT_ADDRESS, payload, marketplaceMeta, handleStatus, value);
     }
   };
 
