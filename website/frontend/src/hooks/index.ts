@@ -4,7 +4,7 @@ import { useEvents } from './useEvents';
 import { useOutsideClick } from './useOutsideClick';
 import { useBodyScrollLock } from './useBodyScrollLock';
 import { useSubscription } from './useSubscription';
-import { useChangeEffect } from "./useChangeEffect"
+import { useChangeEffect } from './useChangeEffect';
 
 const useApi = () => useContext(ApiContext);
 const useBlocks = () => useContext(BlocksContext);

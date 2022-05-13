@@ -1,1 +1,1 @@
-export * from "./MetaField";
+export * from './MetaField';

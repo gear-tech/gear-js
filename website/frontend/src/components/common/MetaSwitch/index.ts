@@ -1,1 +1,1 @@
-export * from "./MetaSwitch";
+export * from './MetaSwitch';

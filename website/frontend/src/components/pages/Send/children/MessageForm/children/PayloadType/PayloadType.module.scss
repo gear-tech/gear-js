@@ -1,14 +1,14 @@
 .switchableFieldWrapper {
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
 }
 
 .field {
-   margin-bottom: 24px;
- 
-   & > div {
-      padding: 0;
-   }
+  margin-bottom: 24px;
+
+  & > div {
+    padding: 0;
+  }
 }

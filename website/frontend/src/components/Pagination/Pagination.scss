@@ -22,6 +22,10 @@
   height: 32px;
 }
 
+.pagination--img-prev {
+  transform: rotate(180deg);
+}
+
 .pagination__total {
   font-weight: normal;
   font-size: 14px;
@@ -33,11 +37,6 @@
 .pagination--box.selected {
   border: none;
   background: #000000;
-}
-
-.pagination--box.disabled {
-  opacity: 0.2;
-  cursor: default;
 }
 
 .pagination--box:first-child svg {

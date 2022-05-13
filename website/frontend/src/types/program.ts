@@ -66,7 +66,7 @@ export interface BalanceModel {
 }
 
 export interface SearchModel {
-  searchQuery: string;
+  query: string;
 }
 
 export interface ProgramState {

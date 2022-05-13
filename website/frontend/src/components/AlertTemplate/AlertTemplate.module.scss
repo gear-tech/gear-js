@@ -16,13 +16,13 @@
 }
 
 .closeBtn {
-   position: absolute;
-   top: 10px;
-   right: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 
-   & > img {
-      @include square(11px);
-   }
+  & > img {
+    @include square(11px);
+  }
 }
 
 .header {
@@ -39,38 +39,38 @@
   }
 
   &.success {
-   color: $successColor;
-   
-   &::before {
+    color: $successColor;
+
+    &::before {
       background-image: url('/assets/images/alert/checkMark.svg');
-   }
+    }
   }
- 
+
   &.info {
-   color: $textColor;
- 
-   &::before {
+    color: $textColor;
+
+    &::before {
       background-image: url('/assets/images/alert/info.svg');
-   }
+    }
   }
 
   &.error {
-   color: $errorColor;
+    color: $errorColor;
 
-   &::before {
+    &::before {
       background-image: url('/assets/images/alert/error.svg');
-   }
+    }
   }
 }
 
 .header,
 .body {
-   color: $textColor; 
+  color: $textColor;
 }
 
 .body {
-   overflow: hidden;
-   text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .footer {

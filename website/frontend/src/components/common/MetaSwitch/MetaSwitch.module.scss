@@ -14,26 +14,26 @@
 }
 
 .caption {
-   display: flex;
-   align-items: center;
-   color: $textColorSecondary;
-   font-weight: 300;
-   font-size: $fontSizeMedium;
-   margin-right: 16px;
-   
-   @include md {
-      margin-bottom: 4px;
-      margin-right: 0;
-      min-width: none;
-   }
+  display: flex;
+  align-items: center;
+  color: $textColorSecondary;
+  font-weight: 300;
+  font-size: $fontSizeMedium;
+  margin-right: 16px;
+
+  @include md {
+    margin-bottom: 4px;
+    margin-right: 0;
+    min-width: none;
+  }
 }
 
 .radioBtn {
-   font-weight: 600;
-   font-size: 12px;
-   line-height: 14px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 14px;
 
-   &:not(:last-child) {
-      margin-right: 24px;
-   }
+  &:not(:last-child) {
+    margin-right: 24px;
+  }
 }

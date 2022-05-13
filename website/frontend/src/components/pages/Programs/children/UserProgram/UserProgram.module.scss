@@ -159,29 +159,29 @@
 }
 
 %actionItem {
-   border-radius: 50%;
-   width: 34px;
-   height: 34px;
-   font-size: 0;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 0;
 
-   &:hover {
-      background: $bkgButtonColor;
-   }
+  &:hover {
+    background: $bkgButtonColor;
+  }
 }
 
 .allProgramsItemSendMessage {
-   @extend %actionItem;
+  @extend %actionItem;
 
-   padding: 8px 6px;
+  padding: 8px 6px;
 }
 
 .allProgramsItemUpload {
-   @extend %actionItem;
+  @extend %actionItem;
 
-   padding: 9px 5px;
+  padding: 9px 5px;
 }
 
 .linkInactive {
-   @extend .disabled;
-   pointer-events: none;
+  @extend .disabled;
+  pointer-events: none;
 }

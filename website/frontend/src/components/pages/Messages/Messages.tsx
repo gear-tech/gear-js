@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { GearKeyring } from '@gear-js/api';
 
 import './Messages.scss';
@@ -7,35 +7,26 @@ import { SearchForm } from '../../blocks/SearchForm/SearchForm';
 
 import { getMessages } from 'services';
 import { MessageModel } from 'types/message';
-import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
 import { useAccount, useChangeEffect } from 'hooks';
 import { Pagination } from 'components/Pagination/Pagination';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 
 export const Messages = () => {
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { account } = useAccount();
 
-  const searchParams = new URLSearchParams(location.search);
-  const pageFromUrl = searchParams.has('page') ? Number(searchParams.get('page')) : 1;
+  const page = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
+  const query = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
 
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [messagesCount, setMessagesCount] = useState(0);
 
-  const [term, setTerm] = useState('');
-  const [page, setPage] = useState(pageFromUrl);
-
-  const handleSearch = (currentTerm: string) => {
-    setTerm(currentTerm);
-    setPage(1);
-  };
-
-  const handleRemoveQuery = () => {
-    setTerm('');
-    setPage(1);
-  };
-
-  useChangeEffect(handleRemoveQuery, [account]);
+  useChangeEffect(() => {
+    searchParams.set(URL_PARAMS.PAGE, String(1));
+    searchParams.set(URL_PARAMS.QUERY, '');
+    setSearchParams(searchParams);
+  }, [account]);
 
   useEffect(() => {
     if (account) {
@@ -43,7 +34,7 @@ export const Messages = () => {
         destination: GearKeyring.decodeAddress(account.address),
         limit: INITIAL_LIMIT_BY_PAGE,
         offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
-        term,
+        query,
       };
 
       getMessages(messageParams).then(({ result }) => {
@@ -51,26 +42,21 @@ export const Messages = () => {
         setMessagesCount(result.count);
       });
     }
-  }, [page, term, account]);
+  }, [page, query, account]);
 
   return (
     <div className="messages">
       <div className="pagination__wrapper">
         <span className="pagination__wrapper-caption">Total results: {messagesCount || 0}</span>
-        <Pagination page={page} count={messagesCount || 1} onPageChange={setPage} />
+        <Pagination page={page} pagesAmount={messagesCount || 1} />
       </div>
-      <div>
-        <SearchForm
-          placeholder="Find message by ID"
-          handleSearch={handleSearch}
-          handleRemoveQuery={handleRemoveQuery}
-        />
-        <br />
-      </div>
+      <SearchForm placeholder="Find message by ID" />
       <MessagesList messages={messages} />
-      <div className="pagination_bottom">
-        <Pagination page={page} count={messagesCount || 1} onPageChange={setPage} />
-      </div>
+      {messagesCount > 0 && (
+        <div className="pagination_bottom">
+          <Pagination page={page} pagesAmount={messagesCount || 1} />
+        </div>
+      )}
     </div>
   );
 };

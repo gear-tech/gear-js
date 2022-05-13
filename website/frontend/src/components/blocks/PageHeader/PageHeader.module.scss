@@ -8,32 +8,32 @@
 }
 
 .headerBackBtn {
-   height: 16px;
-   margin-right: 20px;
+  height: 16px;
+  margin-right: 20px;
 }
 
 .headerInfo {
-   display: flex;
+  display: flex;
 
-   @include sm {
-      flex-direction: column;
-   }
+  @include sm {
+    flex-direction: column;
+  }
 }
 
 %infoText {
-   font-weight: 600;
-   text-transform: uppercase;
-   font-size: $fontSizeLarge;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: $fontSizeLarge;
 
-   @include sm {
-      font-size: $fontSizeBase;
-   }
+  @include sm {
+    font-size: $fontSizeBase;
+  }
 }
 
 .infoTitle {
-   @extend %infoText;
+  @extend %infoText;
 
-   color: $textColorSecondary;
+  color: $textColorSecondary;
 }
 
 .infoFile {
@@ -48,15 +48,15 @@
 }
 
 .fileIcon {
-   margin-right: 10px;
+  margin-right: 10px;
 
-   @include sm {
-      display: none;
-   }
+  @include sm {
+    display: none;
+  }
 }
 
 .fileName {
-   @extend %infoText;
+  @extend %infoText;
 
-   color: $textColor;
+  color: $textColor;
 }
