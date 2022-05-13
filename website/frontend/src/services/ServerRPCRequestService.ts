@@ -69,10 +69,6 @@ export default class ServerRPCRequestService {
     return ServerRPCRequestService.generateRandomId();
   }
 
-  private static getChain() {
-    return localStorage.getItem(LOCAL_STORAGE.CHAIN) as string;
-  }
-
   private static getGenesis() {
     return localStorage.getItem(LOCAL_STORAGE.GENESIS) as string;
   }
@@ -84,7 +80,6 @@ export default class ServerRPCRequestService {
       method,
       params: {
         ...postParams,
-        chain: ServerRPCRequestService.getChain(),
         genesis: ServerRPCRequestService.getGenesis(),
       },
     };
