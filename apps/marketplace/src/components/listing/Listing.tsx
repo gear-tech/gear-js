@@ -1,5 +1,6 @@
 import { Hex } from '@gear-js/api';
 import { ReactNode } from 'react';
+import { Offer as OfferType } from 'types';
 import Card from './card';
 import Offer from './offer';
 import styles from './Listing.module.scss';
@@ -10,7 +11,7 @@ type Props = {
   description: string;
   owner: Hex;
   image: string;
-  offers: any[];
+  offers: OfferType[];
   price?: string;
   royalty?: number;
   rarity?: string;
@@ -27,9 +28,9 @@ function Listing({ children, heading, description, owner, price, royalty, image,
 
   const getOffers = () =>
     offers
-      ?.map((offer, index) => (
+      ?.map(({ price: offerPrice, id, hash_: hash }, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        <Offer key={index} bid={offer.price} bidder={offer.id} />
+        <Offer key={index} bid={offerPrice} bidder={id} hash={hash} listingOwner={owner} />
       ))
       .reverse();
 

@@ -17,17 +17,15 @@ type NFTDetails = {
 };
 
 type Offer = {
-  hash_: Hex;
   id: Hex;
-  ftContractId: Hex | null;
   price: string;
+  hash_?: Hex;
+  ftContractId?: Hex | null;
 };
-
-type Bid = Omit<Offer, 'hash_' | 'ftContractId'>;
 
 type Auction = {
   bidPeriod: string;
-  bids: Bid[];
+  bids: Offer[];
   currentPrice: string;
   endedAt: string;
   startedAt: string;
@@ -43,4 +41,4 @@ type MarketNFT = {
   offers: Offer[];
 };
 
-export type { NFT, NFTDetails, MarketNFT };
+export type { NFT, NFTDetails, Offer, MarketNFT };
