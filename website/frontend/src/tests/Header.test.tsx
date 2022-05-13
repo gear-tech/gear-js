@@ -265,8 +265,17 @@ describe('header tests', () => {
     const getButtons = () => within(getButtonsList()).getAllByRole('button');
     const getButton = (index: number) => getButtons()[index];
 
-    const mockBalance = (useApiSpy: jest.SpyInstance, value: string) => {
-      useApiSpy.mockImplementation(() => ({ api: { balance: { findOut: async () => ({ toHuman: () => value }) } } }));
+    const unsubMock = jest.fn();
+    const subscribeToBalanceChangeMock = jest.fn();
+    const findOutBalanceMock = jest.fn();
+
+    const apiMock = {
+      api: {
+        balance: { findOut: findOutBalanceMock },
+        gearEvents: {
+          subscribeToBalanceChange: subscribeToBalanceChangeMock,
+        },
+      },
     };
 
     const getLoginButton = () => screen.getByText('Connect');
@@ -276,7 +285,11 @@ describe('header tests', () => {
       renderWithProviders(<Header />);
 
       const useApiSpy = jest.spyOn(hooks, 'useApi');
+      //@ts-ignore
+      useApiSpy.mockReturnValue(apiMock);
       mockedUseAccounts.mockImplementation(() => accounts);
+      apiMock.api.gearEvents.subscribeToBalanceChange.mockResolvedValue(unsubMock);
+
       // mocking raw public key get since it gets saved in localstorage on account switch
       jest.spyOn(GearKeyring, 'decodeAddress').mockImplementation(() => '0x00');
 
@@ -292,7 +305,8 @@ describe('header tests', () => {
       expect(secondButton).toHaveTextContent('second acc');
       expect(secondButton).toHaveTextContent('456');
 
-      mockBalance(useApiSpy, '1000');
+      apiMock.api.balance.findOut.mockResolvedValue({ toHuman: () => '1000' });
+
       fireEvent.click(secondButton);
 
       const accountButton = screen.getByText('second acc');
@@ -310,7 +324,8 @@ describe('header tests', () => {
         button === getButton(1) ? expect(button).toHaveClass('active') : expect(button).not.toHaveClass('active')
       );
 
-      mockBalance(useApiSpy, '2000');
+      apiMock.api.balance.findOut.mockResolvedValue({ toHuman: () => '2000' });
+
       fireEvent.click(getButton(2));
 
       await waitFor(() => expect(balance).toHaveTextContent('Balance: 2000'));
@@ -343,6 +358,11 @@ describe('header tests', () => {
 
       fireEvent.click(closeModalButton);
       expect(getModalQuery()).not.toBeInTheDocument();
+
+      // balance subscription
+
+      expect(subscribeToBalanceChangeMock).toBeCalledTimes(2);
+      await waitFor(() => expect(unsubMock).toBeCalledTimes(2));
     });
 
     it('logins without extension', () => {

@@ -1,35 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { GearKeyring } from '@gear-js/api';
-import { useAlert } from 'react-alert';
-import { LogoutIcon } from 'assets/Icons';
-import { useApi } from 'hooks';
-import { Modal } from '../Modal';
-import { AccountList } from './AccountList';
-import { nodeApi } from '../../../api/initApi';
-import { LOCAL_STORAGE } from 'consts';
-import { useAccount } from 'hooks';
-import { useAccounts } from './hooks';
+import { UnsubscribePromise } from '@polkadot/api/types';
+import { Button, buttonStyles } from '@gear-js/ui';
+
 import styles from './Wallet.module.scss';
+import { useAccounts } from './hooks';
+import { SelectAccountModal } from './SelectAccountModal';
 
-export const Wallet = () => {
-  const injectedAccounts = useAccounts();
-  const [accountBalance, setAccountBalance] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
+import { LOCAL_STORAGE } from 'consts';
+import { useAccount, useApi } from 'hooks';
 
-  const alert = useAlert();
+const Wallet = () => {
   const { api } = useApi();
+  const accounts = useAccounts();
   const { account: currentAccount, setAccount } = useAccount();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [accountBalance, setAccountBalance] = useState('');
 
   useEffect(() => {
     const isLoggedIn = ({ address }: InjectedAccountWithMeta) => address === localStorage[LOCAL_STORAGE.SAVED_ACCOUNT];
 
-    if (injectedAccounts) {
-      setAccount(injectedAccounts.find(isLoggedIn));
+    if (accounts) {
+      setAccount(accounts.find(isLoggedIn));
     }
-  }, [injectedAccounts, setAccount]);
+  }, [accounts, setAccount]);
 
   useEffect(() => {
     if (currentAccount && api) {
@@ -37,56 +34,38 @@ export const Wallet = () => {
     }
   }, [currentAccount, api]);
 
-  const subscriptionRef = useRef<VoidFunction | null>(null);
-
   useEffect(() => {
     // TODO: think how to wrap it hook
-    if (currentAccount) {
-      nodeApi.api?.gearEvents
-        .subscribeToBalanceChange(currentAccount.address, (balance) => {
-          setAccountBalance(balance.toHuman());
-        })
-        .then((sub) => {
-          subscriptionRef.current = sub;
-        })
-        .catch((err) => console.error(err));
+    let unsub: UnsubscribePromise | undefined;
+
+    if (currentAccount && api) {
+      unsub = api.gearEvents.subscribeToBalanceChange(currentAccount.address, (balance) => {
+        setAccountBalance(balance.toHuman());
+      });
     }
 
     return () => {
-      if (subscriptionRef.current) {
-        subscriptionRef.current();
+      if (unsub) {
+        unsub.then((callback) => callback());
       }
     };
-  }, [currentAccount]);
+  }, [api, currentAccount]);
 
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
+  const openModal = () => {
+    setIsModalOpen(true);
   };
 
-  // Setting current account and save it into the LocalStage
-  const selectAccount = (index: number) => {
-    if (injectedAccounts) {
-      injectedAccounts.forEach((acc, i) => {
-        if (i === index) {
-          localStorage.setItem(LOCAL_STORAGE.SAVED_ACCOUNT, acc.address);
-          localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, GearKeyring.decodeAddress(acc.address));
-        }
-      });
-      setAccount(injectedAccounts[index]);
-      toggleModal();
-      alert.success('Account successfully changed');
-    }
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
-  const handleLogout = () => {
-    setAccount(undefined);
-    localStorage.removeItem(LOCAL_STORAGE.SAVED_ACCOUNT);
-    localStorage.removeItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
-    toggleModal();
-  };
-
-  const accButtonClassName = clsx(styles.button, styles.accountButton);
   const balanceSectionClassName = clsx(styles.section, styles.balance);
+  const accButtonClassName = clsx(
+    buttonStyles.button,
+    buttonStyles.normal,
+    buttonStyles.secondary,
+    styles.accountButton
+  );
 
   return (
     <>
@@ -99,7 +78,7 @@ export const Wallet = () => {
               </p>
             </div>
             <div className={styles.section}>
-              <button type="button" className={accButtonClassName} onClick={toggleModal}>
+              <button type="button" className={accButtonClassName} onClick={openModal}>
                 <Identicon value={currentAccount.address} size={28} theme="polkadot" className={styles.avatar} />
                 {currentAccount.meta.name}
               </button>
@@ -107,34 +86,13 @@ export const Wallet = () => {
           </>
         ) : (
           <div>
-            <button className={styles.button} type="button" onClick={toggleModal}>
-              Connect
-            </button>
+            <Button text="Connect" color="secondary" className={styles.accountButton} onClick={openModal} />
           </div>
         )}
       </div>
-      <Modal
-        open={isOpen}
-        title="Connect"
-        content={
-          injectedAccounts ? (
-            <>
-              <AccountList list={injectedAccounts} toggleAccount={selectAccount} />
-              <button aria-label="Logout" type="button" className={styles.logoutButton} onClick={handleLogout}>
-                <LogoutIcon color="#fff" />
-              </button>
-            </>
-          ) : (
-            <p className={styles.message}>
-              Polkadot extension was not found or disabled. Please{' '}
-              <a href="https://polkadot.js.org/extension/" target="_blank" rel="noreferrer">
-                install it
-              </a>
-            </p>
-          )
-        }
-        handleClose={toggleModal}
-      />
+      <SelectAccountModal isOpen={isModalOpen} accounts={accounts} onClose={closeModal} />
     </>
   );
 };
+
+export { Wallet };
