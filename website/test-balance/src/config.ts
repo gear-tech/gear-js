@@ -4,7 +4,7 @@ config();
 
 const checkEnv = (envName: string) => {
   const env = process.env[envName];
-  assert.notStrictEqual(env, undefined);
+  assert.notStrictEqual(env, undefined, `${envName} is not specified`);
   return env;
 };
 

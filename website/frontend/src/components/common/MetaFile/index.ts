@@ -1,1 +1,1 @@
-export * from "./MetaFile";
+export * from './MetaFile';

@@ -8,12 +8,12 @@ import { LOCAL_STORAGE } from 'consts';
 
 type Props = {
   list: Array<InjectedAccountWithMeta>;
-  toggleAccount: (index: number) => void;
+  toggleAccount: (account: InjectedAccountWithMeta) => void;
 };
 
 export const AccountList: FC<Props> = ({ list, toggleAccount }: Props) => {
   const getAccounts = () =>
-    list.map((account, index) => (
+    list.map((account) => (
       <li key={account.address}>
         <button
           type="button"
@@ -22,7 +22,7 @@ export const AccountList: FC<Props> = ({ list, toggleAccount }: Props) => {
             localStorage.getItem(LOCAL_STORAGE.SAVED_ACCOUNT) === account.address && 'active'
           )}
           onClick={() => {
-            toggleAccount(index);
+            toggleAccount(account);
           }}
         >
           <span className="account-list__icon">

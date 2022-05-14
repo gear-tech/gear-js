@@ -1,65 +1,44 @@
-import React, { VFC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
 import clsx from 'clsx';
+import { Link, useSearchParams } from 'react-router-dom';
 import { INITIAL_LIMIT_BY_PAGE } from 'consts';
-import { PaginationArrow } from 'assets/Icons';
+import arrow from './images/arrow.svg';
+import { URL_PARAMS } from 'consts';
 import './Pagination.scss';
 
 type Props = {
   page: number;
-  count: number;
-  onPageChange: (count: number) => void;
-  setShouldReload?: (value: boolean) => void;
+  pagesAmount: number;
 };
 
-export const Pagination: VFC<Props> = ({ page, count, onPageChange, setShouldReload }) => {
-  const totalPages = Math.ceil(count / INITIAL_LIMIT_BY_PAGE);
-  const isDisabledPrev = page === 1;
-  const isDisabledNext = page === totalPages || totalPages === 0;
-  const { pathname: url } = useLocation();
+const Pagination = ({ page, pagesAmount }: Props) => {
+  const [searchParams] = useSearchParams();
+  const totalPages = Math.ceil(pagesAmount / INITIAL_LIMIT_BY_PAGE);
+  const prevPage = page - 1;
+  const nextPage = page + 1;
+  const prevPageClasses = clsx('pagination--box', page === 1 && 'disabled');
+  const nextPageClasses = clsx('pagination--box', page === totalPages && 'disabled');
 
-  const onPreviousClickHandler = () => {
-    if (setShouldReload) {
-      setShouldReload(true);
-    }
-    onPageChange(page - 1);
-  };
+  const getTo = (pageValue: number) => {
+    searchParams.set(URL_PARAMS.PAGE, String(pageValue));
 
-  const onNextClickHandler = () => {
-    if (setShouldReload) {
-      setShouldReload(true);
-    }
-    onPageChange(page + 1);
+    return { search: searchParams.toString() };
   };
 
   return (
     <div className="pagination">
-      {!isDisabledPrev ? (
-        <Link className="pagination--box" to={`${url}?page=${page - 1}`} onClick={onPreviousClickHandler}>
-          <PaginationArrow color="#C4CDD5" />
-        </Link>
-      ) : (
-        <div className={clsx('pagination--box', 'disabled')}>
-          <PaginationArrow color="#C4CDD5" />
-        </div>
-      )}
+      <Link className={prevPageClasses} to={getTo(prevPage)}>
+        <img className="pagination--img-prev" src={arrow} alt="arrow" />
+      </Link>
       <button type="button" className="pagination--box selected">
         {page}
       </button>
       <p className="pagination__total">of {totalPages}</p>
-      {!isDisabledNext ? (
-        <Link className="pagination--box" to={`${url}?page=${page + 1}`} onClick={onNextClickHandler}>
-          <PaginationArrow color="#C4CDD5" />
-        </Link>
-      ) : (
-        <div className={clsx('pagination--box', 'disabled')}>
-          <PaginationArrow color="#C4CDD5" />
-        </div>
-      )}
+      <Link className={nextPageClasses} to={getTo(nextPage)}>
+        <img className="pagination--img" src={arrow} alt="arrow" />
+      </Link>
     </div>
   );
 };
 
-Pagination.defaultProps = {
-  setShouldReload: undefined,
-};
+export { Pagination };

@@ -34,7 +34,7 @@
   .columnsWrapper {
     padding: 32px;
 
-     @include md {
+    @include md {
       .program-details__wrapper {
         display: flex;
         flex-direction: column;
@@ -138,7 +138,7 @@
               margin-bottom: 20px;
             }
           }
-          
+
           @include md {
             overflow: unset;
             display: flex;
@@ -199,18 +199,18 @@
 }
 
 .formField {
-   & > span,
-   & > label {
-      min-width: 200px;
-      margin-right: 0;
+  & > span,
+  & > label {
+    min-width: 200px;
+    margin-right: 0;
 
-      @media (min-width: 769px) and (max-width: 1270px) {
-         min-width: 160px;
-      }
-   }
-   //TODO delete when textarea update
-   & textarea:disabled{
-      box-shadow: none;
-      background-color: #000;
-   }
+    @media (min-width: 769px) and (max-width: 1270px) {
+      min-width: 160px;
+    }
+  }
+  //TODO delete when textarea update
+  & textarea:disabled {
+    box-shadow: none;
+    background-color: #000;
+  }
 }

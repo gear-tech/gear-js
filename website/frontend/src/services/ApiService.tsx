@@ -2,7 +2,7 @@ import { AlertContainer } from 'react-alert';
 import { UploadProgramModel, Message, Reply, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { CreateType, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
+import { CreateType, GearApi, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
 import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE, EVENT_TYPES } from 'consts';
 import { localPrograms } from './LocalDBService';
 import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'helpers';
@@ -13,31 +13,19 @@ import { GetMetaResponse } from 'api/responses';
 // TODO: (dispatch) fix it later
 
 export const UploadProgram = async (
-  api: any,
+  api: GearApi,
   account: InjectedAccountWithMeta,
   file: File,
-  opts: UploadProgramModel,
+  { gasLimit, value, initPayload, meta, title, programName }: UploadProgramModel,
   metaFile: any,
   enableLoading: () => void,
   disableLoading: () => void,
   alert: AlertContainer,
-  callback: () => void
+  callback: () => void,
 ) => {
   const apiRequest = new ServerRPCRequestService();
 
   /* eslint-disable @typescript-eslint/naming-convention */
-  const {
-    gasLimit,
-    value,
-    initPayload,
-    init_input,
-    init_output,
-    handle_input,
-    handle_output,
-    types,
-    title,
-    programName,
-  } = opts;
   let name = '';
 
   if (programName) {
@@ -50,35 +38,24 @@ export const UploadProgram = async (
 
   const fileBuffer: any = await readFileAsync(file);
 
-  const program = {
-    code: new Uint8Array(fileBuffer),
-    gasLimit: gasLimit.toString(),
-    value: value.toString(),
-    initPayload,
-  };
-
-  const meta = {
-    init_input,
-    init_output,
-    handle_input,
-    handle_output,
-    types,
-  };
+  const program: any /* `any` should be removed when it becomes possible to specify type of the code as Uint8Array (next update of @gear-js/api)*/ =
+    {
+      code: new Uint8Array(fileBuffer),
+      gasLimit: gasLimit.toString(),
+      value: value.toString(),
+      initPayload,
+    };
 
   try {
-    const { programId } = await api.program.submit(program, meta);
+    const { programId } = api.program.submit(program, meta);
 
-    await api.program.signAndSend(account.address, { signer: injector.signer }, (data: any) => {
+    await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
       enableLoading();
 
       if (data.status.isInBlock) {
         alert.success('Upload program: In block');
-      }
-
-      if (data.status.isFinalized) {
-        data.events.forEach((event: any) => {
-          const { method } = event.event;
-
+      } else if (data.status.isFinalized) {
+        data.events.forEach(({ event: { method } }) => {
           if (method === 'InitMessageEnqueued') {
             alert.success('Upload program: Finalized');
             disableLoading();
@@ -86,7 +63,7 @@ export const UploadProgram = async (
 
             if (isDevChain()) {
               localPrograms
-                .setItem(programId, {
+                .setItem(programId as string /* the same */, {
                   id: programId,
                   name,
                   title,
@@ -129,15 +106,11 @@ export const UploadProgram = async (
                 }
               });
             }
-          }
-
-          if (method === 'ExtrinsicFailed') {
+          } else if (method === 'ExtrinsicFailed') {
             alert.error('Upload program: Extrinsic Failed');
           }
         });
-      }
-
-      if (data.status.isInvalid) {
+      } else if (data.status.isInvalid) {
         disableLoading();
         alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
       }
@@ -158,7 +131,7 @@ export const sendMessage = async (
   alert: AlertContainer,
   callback: () => void,
   meta?: Metadata,
-  payloadType?: string
+  payloadType?: string,
 ) => {
   try {
     const { signer } = await web3FromSource(account.meta.source);
@@ -206,7 +179,7 @@ export const addMetadata = async (
   account: InjectedAccountWithMeta,
   programId: string,
   name: any,
-  alert: AlertContainer
+  alert: AlertContainer,
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);

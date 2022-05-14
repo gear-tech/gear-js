@@ -1,1 +1,1 @@
-export * from "./UploadMetaForm";
+export * from './UploadMetaForm';

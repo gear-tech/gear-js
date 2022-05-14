@@ -25,8 +25,8 @@ jobs:
       - name: Prepare
         run: |
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
-          mkdir api/test/wasm
-          wget -O api/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
+          mkdir api/test/wasm/examples
+          wget -O api/test/wasm/examples/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           chmod +x gear-node
           ./gear-node --dev --tmp --pruning archive & sleep 10
 
@@ -37,9 +37,9 @@ jobs:
 
       - name: Run tests
         run: |
-          cd api/test/wasm
+          cd api/test/wasm/examples
           tar -xvf examples.tar.gz
-          cd ../..
+          cd ../../..
           npm test
 
   publish-to-npm:

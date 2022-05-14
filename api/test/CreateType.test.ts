@@ -2,7 +2,7 @@ import { CreateType, getWasmMetadata, decodeHexTypes } from '../src';
 import yaml from 'js-yaml';
 import fs from 'fs';
 import { join } from 'path';
-import { TEST_WASM_DIR } from './config';
+import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
 const testFiles = fs.readdirSync('test/spec/meta');
 
@@ -10,7 +10,7 @@ describe('Create type test', () => {
   for (let filePath of testFiles) {
     const testFile = yaml.load(fs.readFileSync(join('./test/spec/meta', filePath), 'utf8'));
     test(testFile.title, async () => {
-      const metaFile = fs.readFileSync(join(TEST_WASM_DIR, testFile.file));
+      const metaFile = fs.readFileSync(join(GEAR_EXAMPLES_WASM_DIR, testFile.file));
       const meta = await getWasmMetadata(metaFile);
       for (let type in testFile.types) {
         expect(meta[type]).toBe(testFile.types[type]);
