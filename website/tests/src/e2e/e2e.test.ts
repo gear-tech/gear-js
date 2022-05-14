@@ -52,7 +52,7 @@ describe('program methods', () => {
   test.todo('test init status');
 });
 
-describe.only('message methods', () => {
+describe('message methods', () => {
   test('message.all request', async () => {
     const messages = Array.from(prepared.messages.log.keys()).concat(
       Array.from(prepared.messages.sent.values()).map(({ messageId }) => messageId),
