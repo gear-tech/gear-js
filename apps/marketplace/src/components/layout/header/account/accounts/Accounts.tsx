@@ -1,6 +1,6 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useAccount } from 'hooks';
-import isLoggedIn from '../utils';
+import isLoggedIn from 'utils';
 import AccountButton from '../account-button';
 import styles from './Accounts.module.scss';
 
@@ -10,11 +10,11 @@ type Props = {
 };
 
 function Accounts({ list, onChange }: Props) {
-  const { setAccount } = useAccount();
+  const { switchAccount } = useAccount();
   const isAnyAccount = list.length > 0;
 
-  const switchAccount = (account: InjectedAccountWithMeta) => {
-    setAccount(account);
+  const handleAccountButtonClick = (account: InjectedAccountWithMeta) => {
+    switchAccount(account);
     // TODO: 'account' to consts
     localStorage.setItem('account', account.address);
     onChange();
@@ -27,7 +27,7 @@ function Accounts({ list, onChange }: Props) {
           address={account.address}
           name={account.meta.name}
           isActive={isLoggedIn(account)}
-          onClick={() => switchAccount(account)}
+          onClick={() => handleAccountButtonClick(account)}
           block
         />
       </li>

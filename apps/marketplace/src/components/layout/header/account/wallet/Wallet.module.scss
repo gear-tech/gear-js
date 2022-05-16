@@ -1,0 +1,10 @@
+@use '@gear-js/ui/variables' as *;
+
+.balance {
+  margin-right: 25px;
+  font-size: $fontSizeMedium;
+}
+
+.currency {
+  color: $textColorSecondary;
+}

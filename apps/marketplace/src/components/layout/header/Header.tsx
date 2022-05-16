@@ -1,7 +1,7 @@
 import { useAccount } from 'hooks';
 import Logo from './logo';
 import Menu from './menu';
-import AccountSwitch from './account-switch';
+import Account from './account';
 import styles from './Header.module.scss';
 
 function Header() {
@@ -11,7 +11,7 @@ function Header() {
     <header className={styles.header}>
       <Logo />
       {account && <Menu />}
-      <AccountSwitch />
+      <Account />
     </header>
   );
 }

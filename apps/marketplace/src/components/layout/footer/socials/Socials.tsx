@@ -1,7 +1,7 @@
-import { ReactComponent as Twitter } from './assets/twitter.svg';
-import { ReactComponent as Github } from './assets/github.svg';
-import { ReactComponent as Discord } from './assets/discord.svg';
-import { ReactComponent as Medium } from './assets/medium.svg';
+import { ReactComponent as Twitter } from 'assets/images/socials/twitter.svg';
+import { ReactComponent as Github } from 'assets/images/socials/github.svg';
+import { ReactComponent as Discord } from 'assets/images/socials/discord.svg';
+import { ReactComponent as Medium } from 'assets/images/socials/medium.svg';
 import styles from './Socials.module.scss';
 
 const socials = [
@@ -16,7 +16,7 @@ function Socials() {
     socials.map(({ href, icon: Icon }) => (
       <li key={href}>
         <a href={href} target="_blank" rel="noreferrer">
-          <Icon data-testid="svg" />
+          <Icon />
         </a>
       </li>
     ));

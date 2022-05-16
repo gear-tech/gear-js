@@ -1,4 +1,5 @@
 import { Hex } from '@gear-js/api';
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 type NFT = {
   id: string;
@@ -41,4 +42,9 @@ type MarketNFT = {
   offers: Offer[];
 };
 
-export type { NFT, NFTDetails, Offer, MarketNFT };
+interface Account extends InjectedAccountWithMeta {
+  decodedAddress: Hex;
+  balance: string;
+}
+
+export type { NFT, NFTDetails, Offer, MarketNFT, Account };
