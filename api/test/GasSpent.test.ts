@@ -15,7 +15,7 @@ beforeAll(async () => {
   [alice] = await getAccount();
   aliceRaw = GearKeyring.decodeAddress(alice.address);
   const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_ping.wasm'));
-  programId = api.program.submit({ code, gasLimit: 200_000_000 }).programId;
+  programId = api.program.submit({ code, gasLimit: 2_000_000_000 }).programId;
   const initStatus = checkInit(api, programId);
   api.program.signAndSend(alice, () => {});
   expect(await initStatus).toBe('success');
