@@ -1,4 +1,4 @@
-import { GearKeyring, Hex } from '@gear-js/api';
+import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ConfirmationModal } from 'components/modals';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
@@ -25,8 +25,7 @@ function Offer({ bid, bidder, listingOwner, hash }: Props) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const decodedAddress = account ? GearKeyring.decodeAddress(account.address) : '';
-  const isOwner = decodedAddress === listingOwner;
+  const isOwner = account?.decodedAddress === listingOwner;
   const isSale = !!hash;
 
   const openModal = () => {

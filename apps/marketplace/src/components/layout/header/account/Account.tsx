@@ -20,7 +20,12 @@ function Account() {
   return (
     <>
       {account ? (
-        <Wallet balance={account.balance} address={account.address} name={account.meta.name} onClick={openModal} />
+        <Wallet
+          balance={account.balance}
+          address={account.address}
+          name={account.meta.name}
+          onSwitchAccountClick={openModal}
+        />
       ) : (
         <Button icon={userSVG} text="Sign in" onClick={openModal} />
       )}

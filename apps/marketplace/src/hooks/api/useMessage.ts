@@ -2,7 +2,7 @@ import { useAlert } from 'react-alert';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { useLoading, useAccount, useApi } from 'hooks';
-import { GearKeyring, Hex, Metadata } from '@gear-js/api';
+import { Hex, Metadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 
 function useMessage(destination: Hex, metadata: Metadata | undefined) {
@@ -41,9 +41,7 @@ function useMessage(destination: Hex, metadata: Metadata | undefined) {
     if (account && metadata) {
       enableLoading();
 
-      const { address, meta } = account;
-
-      const decodedAddress = GearKeyring.decodeAddress(address);
+      const { address, decodedAddress, meta } = account;
       const gasLimit = await api.program.gasSpent.handle(decodedAddress, destination, payload, value, metadata);
 
       const message = { destination, payload, gasLimit, value };

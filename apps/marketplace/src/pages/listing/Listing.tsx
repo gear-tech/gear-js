@@ -1,4 +1,3 @@
-import { GearKeyring } from '@gear-js/api';
 import { useAccount, useMarketNft, useNft } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -25,7 +24,7 @@ function Listing() {
 
   const isSale = !!price;
   const isAuction = !!auction;
-  const isOwner = account ? GearKeyring.decodeAddress(account.address) === nft?.ownerId : false;
+  const isOwner = account?.decodedAddress === nft?.ownerId;
 
   useEffect(() => {
     const { reference } = nft || {};

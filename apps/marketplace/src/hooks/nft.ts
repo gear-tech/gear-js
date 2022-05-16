@@ -1,4 +1,4 @@
-import { GearKeyring, Hex } from '@gear-js/api';
+import { Hex } from '@gear-js/api';
 import { nftMetaWasm } from 'assets';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { NFT } from 'types';
@@ -32,11 +32,10 @@ function useNft(tokenId: string) {
 
 function useOwnersNft() {
   const { account } = useAccount();
-  // TODO: ! assertion
-  const { address } = account!;
-  const decodedAddress = GearKeyring.decodeAddress(address);
 
-  const state = useNftState({ TokensForOwner: { owner: decodedAddress } });
+  // TODO: ! assertion
+  // @ts-ignore
+  const state = useNftState({ TokensForOwner: { owner: account?.decodedAddress } });
 
   return state?.TokensForOwner.tokens;
 }
