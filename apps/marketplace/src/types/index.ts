@@ -44,7 +44,7 @@ type MarketNFT = {
 
 interface Account extends InjectedAccountWithMeta {
   decodedAddress: Hex;
-  balance: string;
+  balance: { value: string; unit: string };
 }
 
 export type { NFT, NFTDetails, Offer, MarketNFT, Account };

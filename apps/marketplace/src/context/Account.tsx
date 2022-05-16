@@ -5,6 +5,8 @@ import isLoggedIn from 'utils';
 import { useApi } from 'hooks';
 import { Account } from 'types';
 import { GearKeyring } from '@gear-js/api';
+import { Balance } from '@polkadot/types/interfaces';
+import { UnsubscribePromise } from '@polkadot/api/types';
 import Props from './types';
 
 type Value = {
@@ -30,16 +32,21 @@ function AccountProvider({ children }: Props) {
     }, 300);
   }, []);
 
-  const switchAccount = (acc: InjectedAccountWithMeta) => {
-    const { address } = acc;
+  const getBalance = (balance: Balance) => {
+    const [value, unit] = balance.toHuman().split(' ');
+    return { value, unit };
+  };
 
+  const getAccount = (_account: InjectedAccountWithMeta, balance: Balance) => ({
+    ..._account,
+    balance: getBalance(balance),
+    decodedAddress: GearKeyring.decodeAddress(_account.address),
+  });
+
+  const switchAccount = (_account: InjectedAccountWithMeta) => {
     api?.balance
-      .findOut(address)
-      .then((result) => ({
-        ...acc,
-        balance: result.toHuman(),
-        decodedAddress: GearKeyring.decodeAddress(address),
-      }))
+      .findOut(_account.address)
+      .then((balance) => getAccount(_account, balance))
       .then(setAccount);
   };
 
@@ -52,6 +59,23 @@ function AccountProvider({ children }: Props) {
     if (loggedInAccount) switchAccount(loggedInAccount);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, accounts]);
+
+  const updateBalance = (balance: Balance) => {
+    setAccount((prevAccount) => ({ ...prevAccount!, balance: getBalance(balance) }));
+  };
+
+  useEffect(() => {
+    let unsub: UnsubscribePromise | undefined;
+
+    if (account) {
+      unsub = api?.gearEvents.subscribeToBalanceChange(account.address, updateBalance);
+    }
+
+    return () => {
+      if (unsub) unsub.then((callback) => callback());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, account]);
 
   const { Provider } = AccountContext;
   const value = { accounts, account, switchAccount, logout };

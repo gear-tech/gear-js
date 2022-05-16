@@ -1,20 +1,19 @@
+import { Account } from 'types';
 import AccountButton from '../account-button';
 import styles from './Wallet.module.scss';
 
 type Props = {
-  balance: string;
+  balance: Account['balance'];
   address: string;
   name: string | undefined;
   onClick: () => void;
 };
 
 function Wallet({ balance, address, name, onClick }: Props) {
-  const [balanceValue, currency] = balance.split(' ');
-
   return (
     <>
       <p className={styles.balance}>
-        {balanceValue} <span className={styles.currency}>{currency}</span>
+        {balance.value} <span className={styles.currency}>{balance.unit}</span>
       </p>
       <AccountButton address={address} name={name} onClick={onClick} />
     </>
