@@ -12,7 +12,7 @@ const useProgram = (id?: string): [ProgramModel?, Metadata?] => {
   const [program, setProgram] = useState<ProgramModel>();
 
   const metadata = useMemo(() => {
-    const meta: string = program?.meta?.meta;
+    const meta = program?.meta?.meta;
 
     if (meta) {
       return JSON.parse(meta) as Metadata;

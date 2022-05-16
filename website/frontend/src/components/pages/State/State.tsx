@@ -8,7 +8,7 @@ import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/a
 import styles from './State.module.scss';
 
 import { useApi } from 'hooks';
-import { getProgramMeta } from 'services';
+import { getMetadata } from 'services';
 import { getPreformattedText } from 'helpers';
 import { cloneDeep } from 'features/Editor/EditorTree/utils';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
@@ -78,7 +78,7 @@ const State: VFC = () => {
   );
 
   useEffect(() => {
-    getProgramMeta(programId).then(({ result }) => {
+    getMetadata(programId).then(({ result }) => {
       const parsedMeta = JSON.parse(result.meta) as Metadata;
 
       metaBuffer.current = Buffer.from(result.metaFile, 'base64');

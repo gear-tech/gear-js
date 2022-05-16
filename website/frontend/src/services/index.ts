@@ -14,7 +14,7 @@ export const getUserPrograms = (params: UserPrograms) =>
 
 export const getProgram = (id: string) => (isDevChain() ? getLocalProgram(id) : fetchProgram(id));
 
-export const getProgramMeta = (programId: string) => (isDevChain() ? getLocalProgramMeta(programId) : fetchMeta(programId));
+export const getMetadata = (programId: string) => (isDevChain() ? getLocalProgramMeta(programId) : fetchMeta(programId));
 
 export const getMessages = (params: PaginationModel) => fetchMessages(params);
 export const getMessage = (id: string) => fetchMessage(id);

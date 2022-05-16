@@ -13,12 +13,10 @@ import './Send.scss';
 const Send = () => {
   const { programId = '', messageId = '' } = useParams();
 
+  const id = programId || messageId;
+
   const [message, setMessage] = useState<MessageModel>();
-
-  const paramId = programId || messageId;
-  const sourceId = programId ? programId : message?.source;
-
-  const [program, metadata] = useProgram(sourceId);
+  const [program, metadata] = useProgram(programId || message?.source);
 
   const types = useMemo(() => {
     if (metadata && metadata.types && metadata.handle_input) {
@@ -42,9 +40,9 @@ const Send = () => {
     <div className="wrapper">
       {program ? (
         <>
-          <PageHeader title={programId ? 'New message' : 'Send reply'} fileName={program?.name || paramId} />
+          <PageHeader title={programId ? 'New message' : 'Send reply'} fileName={program?.name || id} />
           <div className="send-message__block">
-            <MessageForm id={paramId} replyErrorCode={message?.replyError} meta={metadata} types={types} />
+            <MessageForm id={id} replyErrorCode={message?.replyError} meta={metadata} types={types} />
           </div>
         </>
       ) : (
