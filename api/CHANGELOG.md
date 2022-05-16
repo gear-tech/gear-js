@@ -1,3 +1,15 @@
+## 0.18.3
+
+_16/11/2022_
+
+https://github.com/gear-tech/gear-js/pull/648
+
+### Changes
+
+- Add ability to specify code in `submitProgram` and `submitCode` as Uint8Array
+
+---
+
 ## 0.18.2
 
 _16/11/2022_

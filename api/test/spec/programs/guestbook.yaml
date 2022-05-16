@@ -1,12 +1,13 @@
 title: guestbook
 
-programs:
-  - name: guestbook
-    id: 1
-    gasLimit: 2000000000
-    value: 0
-    meta: true
-    account: alice
+program:
+  name: guestbook
+  id: 1
+  gasLimit: 2000000000
+  value: 0
+  meta: true
+  account: alice
+  asU8a: true
 
 messages:
   - id: 1
