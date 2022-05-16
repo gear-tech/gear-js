@@ -1,11 +1,10 @@
 import { GearKeyring, Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ConfirmationModal } from 'components/modals';
-import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
-import { useAccount, useApi, useMarketplaceMeta, useStatus } from 'hooks';
+import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { useAccount, useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import sendMessage from 'utils';
 import styles from './Offer.module.scss';
 
 type Props = {
@@ -21,10 +20,8 @@ type Params = {
 
 function Offer({ bid, bidder, listingOwner, hash }: Props) {
   const { id } = useParams() as Params;
-  const { api } = useApi();
+  const sendMessage = useMarketplaceMessage();
   const { account } = useAccount();
-  const { marketplaceMeta } = useMarketplaceMeta();
-  const handleStatus = useStatus();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -41,13 +38,11 @@ function Offer({ bid, bidder, listingOwner, hash }: Props) {
   };
 
   const accept = () => {
-    if (account && marketplaceMeta) {
-      const payload = {
-        AcceptOffer: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, offerHash: hash },
-      };
+    const payload = {
+      AcceptOffer: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, offerHash: hash },
+    };
 
-      sendMessage(api, account, MARKETPLACE_CONTRACT_ADDRESS, payload, marketplaceMeta, handleStatus);
-    }
+    sendMessage(payload);
   };
 
   return (

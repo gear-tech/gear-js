@@ -1,10 +1,9 @@
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ConfirmationModal, Listing, PriceModal } from 'components';
-import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
-import { useAccount, useApi, useLoading, useMarketplaceMeta, useStatus } from 'hooks';
+import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
-import sendMessage from 'utils';
 
 type Props = {
   isOwner: boolean;
@@ -23,11 +22,7 @@ type Props = {
 function SaleListing(props: Props) {
   const { isOwner, id, heading, description, owner, image, offers, price, royalty, rarity, attrs } = props;
 
-  const { api } = useApi();
-  const { account } = useAccount();
-  const { enableLoading } = useLoading();
-  const { marketplaceMeta } = useMarketplaceMeta();
-  const handleStatus = useStatus();
+  const sendMessage = useMarketplaceMessage();
 
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
@@ -46,31 +41,23 @@ function SaleListing(props: Props) {
   };
 
   const buy = () => {
-    if (account && marketplaceMeta) {
-      enableLoading();
+    const payload = { BuyItem: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id } };
+    const value = price?.replaceAll(',', '');
 
-      const payload = { BuyItem: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id } };
-      const value = price?.replaceAll(',', '');
-
-      sendMessage(api, account, MARKETPLACE_CONTRACT_ADDRESS, payload, marketplaceMeta, handleStatus, value);
-    }
+    sendMessage(payload, value);
   };
 
   const offer = (priceValue: string) => {
-    if (account && marketplaceMeta) {
-      enableLoading();
+    const payload = {
+      AddOffer: {
+        nftContractId: NFT_CONTRACT_ADDRESS,
+        ftContractId: null,
+        tokenId: id,
+        price: priceValue,
+      },
+    };
 
-      const payload = {
-        AddOffer: {
-          nftContractId: NFT_CONTRACT_ADDRESS,
-          ftContractId: null,
-          tokenId: id,
-          price: priceValue,
-        },
-      };
-
-      sendMessage(api, account, MARKETPLACE_CONTRACT_ADDRESS, payload, marketplaceMeta, handleStatus, priceValue);
-    }
+    sendMessage(payload, priceValue);
   };
 
   return (

@@ -3,7 +3,7 @@ import { AnyJson } from '@polkadot/types/types';
 import { marketplaceMetaWasm } from 'assets';
 import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
 import { MarketNFT } from 'types';
-import { useMetadata, useReadState } from './api';
+import { useMessage, useMetadata, useReadState } from './api';
 
 type NFTPayload = { ItemInfo: { nftContractId: Hex; tokenId: string } };
 type NFTState = { ItemInfo: MarketNFT };
@@ -36,4 +36,9 @@ function useMarketplace() {
   return state?.AllItems;
 }
 
-export { useMarketplaceMeta, useMarketplaceState, useMarketNft, useMarketplace };
+function useMarketplaceMessage() {
+  const { marketplaceMeta } = useMarketplaceMeta();
+  return useMessage(MARKETPLACE_CONTRACT_ADDRESS, marketplaceMeta);
+}
+
+export { useMarketplaceMeta, useMarketplaceState, useMarketNft, useMarketplace, useMarketplaceMessage };

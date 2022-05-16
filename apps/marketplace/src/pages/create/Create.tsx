@@ -1,21 +1,14 @@
 import { Button, Input, Textarea } from '@gear-js/ui';
 import { FormEvent, useRef } from 'react';
-import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
-import { useApi, useIPFS, useForm, useMetadata, useAccount, useLoading, useStatus } from 'hooks';
-import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { useIPFS, useForm, useNftMessage } from 'hooks';
 import { CID } from 'ipfs-http-client';
-import sendMessage from 'utils';
 import styles from './Create.module.scss';
 
 type Values = { name: string; description: string; attrs?: File | undefined; image?: File | undefined };
 
 function Create() {
-  const { api } = useApi();
-  const { account } = useAccount();
   const ipfs = useIPFS();
-  const { enableLoading } = useLoading();
-  const { metadata } = useMetadata(nftMetaWasm);
-  const handleStatus = useStatus();
+  const sendMessage = useNftMessage();
 
   const { values, handleChange, handleFileChange } = useForm<Values>({ name: '', description: '' });
   const { name, description, attrs, image } = values;
@@ -43,14 +36,12 @@ function Create() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (account && metadata && attrs && image) {
-      enableLoading();
-
+    if (attrs && image) {
       const attachments = [ipfs.add(attrs), ipfs.add(image)];
       const [{ cid: attrsCid }, { cid: imgCid }] = await Promise.all(attachments);
 
       const payload = getMintPayload(attrsCid, imgCid);
-      sendMessage(api, account, NFT_CONTRACT_ADDRESS, payload, metadata, handleStatus);
+      sendMessage(payload);
     }
   };
 

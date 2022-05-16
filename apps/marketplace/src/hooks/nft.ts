@@ -2,7 +2,7 @@ import { GearKeyring, Hex } from '@gear-js/api';
 import { nftMetaWasm } from 'assets';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { NFT } from 'types';
-import { useMetadata, useReadState } from './api';
+import { useMessage, useMetadata, useReadState } from './api';
 import { useAccount } from './context';
 
 type NFTPayload = { Token: { tokenId: string } };
@@ -41,4 +41,9 @@ function useOwnersNft() {
   return state?.TokensForOwner.tokens;
 }
 
-export { useNft, useOwnersNft };
+function useNftMessage() {
+  const { nftMeta } = useNftMeta();
+  return useMessage(NFT_CONTRACT_ADDRESS, nftMeta);
+}
+
+export { useNft, useOwnersNft, useNftMessage };

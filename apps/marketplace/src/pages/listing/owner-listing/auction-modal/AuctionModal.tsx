@@ -1,10 +1,8 @@
 import { Button, Input, Modal } from '@gear-js/ui';
-import { marketplaceMetaWasm } from 'assets';
-import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
-import { useAccount, useApi, useForm, useLoading, useMetadata, useStatus } from 'hooks';
+import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { useForm, useMarketplaceMessage } from 'hooks';
 import { FormEvent } from 'react';
 import { useParams } from 'react-router-dom';
-import sendMessage from 'utils';
 import styles from './AuctionModal.module.scss';
 
 type Props = {
@@ -23,20 +21,14 @@ function AuctionModal({ close }: Props) {
   const { values, handleChange } = useForm({ minPrice: '', duration: '', bidPeriod: '' });
   const { minPrice, duration, bidPeriod } = values;
 
-  const { api } = useApi();
-  const { account } = useAccount();
-  const { metadata } = useMetadata(marketplaceMetaWasm);
-  const { enableLoading } = useLoading();
-  const handleStatus = useStatus();
+  const sendMessage = useMarketplaceMessage();
 
   const getMilliseconds = (value: string) => Number(value) * MILLISECONDS_MULTIPLIER;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (account && metadata && minPrice && duration) {
-      enableLoading();
-
+    if (minPrice && duration) {
       const payload = {
         CreateAuction: {
           nftContractId: NFT_CONTRACT_ADDRESS,
@@ -48,7 +40,7 @@ function AuctionModal({ close }: Props) {
         },
       };
 
-      sendMessage(api, account, MARKETPLACE_CONTRACT_ADDRESS, payload, metadata, handleStatus);
+      sendMessage(payload);
     }
   };
 

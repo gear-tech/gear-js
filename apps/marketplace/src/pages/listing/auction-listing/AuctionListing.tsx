@@ -1,10 +1,10 @@
+import { useState } from 'react';
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { Listing, PriceModal } from 'components';
-import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
-import { useAccount, useApi, useLoading, useMarketplaceMeta, useStatus } from 'hooks';
-import { useState } from 'react';
-import sendMessage from 'utils';
+import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { useMarketplaceMessage } from 'hooks';
+import { Offer as OfferType } from 'types';
 
 type Props = {
   isOwner: boolean;
@@ -13,7 +13,7 @@ type Props = {
   description: string;
   owner: Hex;
   image: string;
-  offers: any[];
+  offers: OfferType[];
   price?: string;
   royalty?: number;
   rarity?: string;
@@ -22,12 +22,7 @@ type Props = {
 
 function AuctionListing(props: Props) {
   const { isOwner, id, heading, description, owner, image, offers, price, royalty, rarity, attrs } = props;
-
-  const { api } = useApi();
-  const { account } = useAccount();
-  const { enableLoading } = useLoading();
-  const { marketplaceMeta } = useMarketplaceMeta();
-  const handleStatus = useStatus();
+  const sendMessage = useMarketplaceMessage();
 
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
 
@@ -40,12 +35,8 @@ function AuctionListing(props: Props) {
   };
 
   const bid = (priceValue: string) => {
-    if (account && marketplaceMeta) {
-      enableLoading();
-
-      const payload = { AddBid: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, price: priceValue } };
-      sendMessage(api, account, MARKETPLACE_CONTRACT_ADDRESS, payload, marketplaceMeta, handleStatus, priceValue);
-    }
+    const payload = { AddBid: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, price: priceValue } };
+    sendMessage(payload, priceValue);
   };
 
   return (
