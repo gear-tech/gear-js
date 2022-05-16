@@ -20,5 +20,4 @@ export default {
     password: process.env.DB_PASSWORD,
     name: process.env.DB_NAME,
   },
-  isLocal: process.env.E2E_IS_LOCAL || false,
 };
