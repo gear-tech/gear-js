@@ -26,6 +26,7 @@ let testFiles: {
     meta: boolean;
     initPayload: any;
     log: boolean;
+    asU8a: boolean;
   };
   messages: {
     id: number;
@@ -57,12 +58,12 @@ describe('Upload program', () => {
   for (let testFile of testFiles) {
     testif(!testFile.skip)(testFile.title, async () => {
       const program = testFile.program;
-      const code = new Uint8Array(readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `${program.name}.opt.wasm`)));
+      const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `${program.name}.opt.wasm`));
       const metaFile = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `${program.name}.meta.wasm`));
       const meta = program.meta ? await getWasmMetadata(metaFile) : {};
       const { programId, salt } = api.program.submit(
         {
-          code,
+          code: program.asU8a ? new Uint8Array(code) : code,
           initPayload: program.initPayload,
           salt: program.salt || undefined,
           gasLimit: program.gasLimit,
