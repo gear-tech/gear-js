@@ -96,7 +96,12 @@ export const getLocalPrograms = (params: any) => {
       }
     })
     .then(() => {
-      data.result.programs.sort((prev, next) => (prev.timestamp > next.timestamp ? -1 : 1));
+      data.result.programs.sort((prev, next) => {
+        const prevDateVal = new Date(prev.timestamp).valueOf();
+        const nextDateVal = new Date(next.timestamp).valueOf();
+
+        return prevDateVal > nextDateVal ? -1 : 1;
+      });
 
       return data;
     });
