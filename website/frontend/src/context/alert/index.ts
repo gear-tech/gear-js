@@ -1,3 +1,2 @@
-import { AlertProvider } from './Provider';
-
-export { AlertProvider };
+export * from "./Provider";
+export * from "./Context"

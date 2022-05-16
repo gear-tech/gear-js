@@ -1,0 +1,10 @@
+.alertWrapper {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 999;
+  width: 390px;
+  right: 22px;
+  bottom: 5px;
+}
