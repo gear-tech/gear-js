@@ -16,7 +16,7 @@ import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 export const All = () => {
   const [searchParams] = useSearchParams();
   const { account } = useAccount();
-  const accountDecodedAddress = GearKeyring.decodeAddress(account?.address || '');
+  const accountDecodedAddress = GearKeyring.decodeAddress(account?.address || '0x00');
 
   const page = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
   const query = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
