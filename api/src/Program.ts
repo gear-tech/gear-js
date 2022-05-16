@@ -39,7 +39,7 @@ export class GearProgram extends GearTransaction {
    */
   submit(
     program: {
-      code: Buffer;
+      code: Buffer | Uint8Array;
       salt?: `0x${string}`;
       initPayload?: string | any;
       gasLimit: u64 | AnyNumber;
@@ -47,7 +47,7 @@ export class GearProgram extends GearTransaction {
     },
     meta?: Metadata,
     messageType?: string,
-  ): { programId: ProgramId; salt: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> } {
+  ): { programId: Hex; salt: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> } {
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
     let payload = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);

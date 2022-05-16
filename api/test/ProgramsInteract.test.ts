@@ -61,7 +61,7 @@ for (let filePath of testFiles) {
   describe(testFile.title, () => {
     test('Upload programs', async () => {
       for (let program of testFile.programs) {
-        const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `${program.name}.opt.wasm`));
+        const code = new Uint8Array(readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `${program.name}.opt.wasm`)));
         const metaFile = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `${program.name}.meta.wasm`));
         const meta = program.meta ? await getWasmMetadata(metaFile) : {};
         const { programId, salt } = api.program.submit(
