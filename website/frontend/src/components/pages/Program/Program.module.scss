@@ -5,26 +5,7 @@
   @media (max-width: 768px) {
     margin: 0 20px;
   }
-  .goBack {
-    margin-bottom: 30px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    .goBackIcon {
-      margin: 0 10px 0 28px;
-      @media (max-width: 768px) {
-        margin: 0 10px 0 15px;
-      }
-    }
-    .goBackText {
-      font-size: 21px;
-      color: $textColor;
-      text-transform: uppercase;
-      @media (max-width: 768px) {
-        font-size: 16px;
-      }
-    }
-  }
+  
   .container {
     background-color: $bkgActiveButtonColor;
     border-radius: 2px;

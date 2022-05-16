@@ -1,10 +1,9 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { CreateType, getWasmMetadata, Metadata, LogData } from '@gear-js/api';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { CreateType, LogData } from '@gear-js/api';
 import { Checkbox } from '@gear-js/ui';
 import { Codec } from '@polkadot/types/types';
-import { ProgramModel } from 'types/program';
-import { programService } from 'services/ProgramsRequestService';
-import { getLocalProgram, isDevChain, isHex } from 'helpers';
+import { isHex } from 'helpers';
+import { useProgram } from 'hooks';
 import { Pre } from '../../../Pre/Pre';
 import styles from './LogContent.module.scss';
 
@@ -18,18 +17,17 @@ const LogContent = ({ data }: Props) => {
   const { payload, source } = data;
   const formattedData = data.toHuman();
 
-  const [program, setProgram] = useState<ProgramModel>();
-  const [metadata, setMetadata] = useState<Metadata>();
-  const [isDecodedPayload, setIsDecodedPayload] = useState(false);
-  const [decodedPayload, setDecodedPayload] = useState<Codec>();
-
   const [error, setError] = useState('');
-  const isError = !!error;
+  const [decodedPayload, setDecodedPayload] = useState<Codec>();
+  const [isDecodedPayload, setIsDecodedPayload] = useState(false);
 
+  const isError = !!error;
   // check if manual decoding needed,
   // cuz data.toHuman() decodes payload without metadata by itself
   const formattedPayload = payload.toHuman();
   const isFormattedPayloadHex = isHex(formattedPayload);
+
+  const [program, metadata] = useProgram(isFormattedPayloadHex ? source.toString() : void 0);
 
   const handlePayloadDecoding = (typeKey: TypeKey, errorCallback: () => void) => {
     if (metadata) {
@@ -60,41 +58,15 @@ const LogContent = ({ data }: Props) => {
   };
 
   useEffect(() => {
-    if (isFormattedPayloadHex) {
-      const { fetchProgram } = programService;
-      const getProgram = isDevChain() ? getLocalProgram : fetchProgram;
-      const id = source.toString();
-
-      getProgram(id).then(({ result }) => {
-        // there's a warning if the component is unmounted before program is fetched,
-        // but there's nothing wrong and warn no longer be present in the next React version
-        // source: https://github.com/facebook/react/pull/22114
-        setProgram(result);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (program) {
-      const { metaFile } = program.meta || {};
-
-      if (metaFile) {
-        const metaBuffer = Buffer.from(metaFile, 'base64');
-        getWasmMetadata(metaBuffer).then(setMetadata);
-      } else {
-        handleInitPayloadDecoding();
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [program]);
-
-  useEffect(() => {
     if (metadata) {
       handleOutputPayloadDecoding();
     }
+
+    if (program && !metadata) {
+      handleInitPayloadDecoding();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metadata]);
+  }, [metadata, program]);
 
   const handleCheckboxChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
     setIsDecodedPayload(checked);
