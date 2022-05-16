@@ -58,5 +58,6 @@ export default (
     gr_debug: (msg: string) => {
       showDebug && console.log('GR_DEBUG: ', msg);
     },
+    gr_error: () => {},
   },
 });

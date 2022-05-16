@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 import { useParams } from 'react-router-dom';
 
 import { UploadMetaForm } from 'components/blocks/UploadMetaForm';
@@ -8,8 +6,7 @@ import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 
-import { getProgram } from 'services';
-import { ProgramModel } from 'types/program';
+import { useProgram } from 'hooks';
 
 type Params = {
   programId: string;
@@ -18,13 +15,9 @@ type Params = {
 export const Meta = () => {
   const { programId } = useParams() as Params;
 
-  const [program, setProgram] = useState<ProgramModel | null>(null);
+  const [program] = useProgram(programId);
 
   const programName = program?.name || programId;
-
-  useEffect(() => {
-    getProgram(programId).then(({ result }) => setProgram(result));
-  }, [programId]);
 
   return (
     <div className="wrapper">

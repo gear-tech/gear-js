@@ -1,34 +1,35 @@
-import React, { useCallback, useEffect, useRef, useState, VFC } from 'react';
-import { useAlert } from 'react-alert';
-import clsx from 'clsx';
-import { MetaFieldsStruct, MetaFieldsValues, parseMeta, prepareToSend } from 'components/MetaFields';
-import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
-import { Formik, Form } from 'formik';
-import { Spinner } from 'components/blocks/Spinner/Spinner';
-import BackArrow from 'assets/images/arrow_back_thick.svg';
+import { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import clsx from 'clsx';
+import { useAlert } from 'react-alert';
+import { Formik, Form } from 'formik';
+import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
+
+import styles from './State.module.scss';
+
 import { useApi } from 'hooks';
+import { getMetadata } from 'services';
+import { getPreformattedText } from 'helpers';
+import { cloneDeep } from 'features/Editor/EditorTree/utils';
+import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { BackButton } from 'components/BackButton/BackButton';
-import { getPreformattedText } from 'helpers';
-import { ProgramModel } from 'types/program';
-import { getProgram } from 'services';
-import styles from './State.module.scss';
-import { cloneDeep } from '../../../features/Editor/EditorTree/utils';
+import { MetaFieldsStruct, MetaFieldsValues, parseMeta, prepareToSend } from 'components/MetaFields';
+import BackArrow from 'assets/images/arrow_back_thick.svg';
 
 type FormValues = { __root: MetaFieldsValues | null; payload: string };
 
 const State: VFC = () => {
   const { api } = useApi();
   const alert = useAlert();
-  const routeParams = useParams();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
+  const routeParams = useParams();
 
   const programId = routeParams.id as string;
-  const [program, setProgram] = useState<ProgramModel>();
 
   const [metadata, setMetadata] = useState<Metadata | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const metaBuffer = useRef<Buffer | null>(null);
   const types = metadata?.types;
   const stateInput = metadata?.meta_state_input;
@@ -45,23 +46,6 @@ const State: VFC = () => {
   const disableLoading = () => {
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    getProgram(programId).then(({ result }) => setProgram(result));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const metaFile = program?.meta?.metaFile;
-
-    if (metaFile) {
-      metaBuffer.current = Buffer.from(metaFile, 'base64');
-      getWasmMetadata(metaBuffer.current).then((result) => {
-        setMetadata(result);
-        disableLoading();
-      });
-    }
-  }, [program]);
 
   const getPayloadForm = useCallback(() => {
     if (stateInput && types) {
@@ -92,6 +76,16 @@ const State: VFC = () => {
     },
     [api, programId]
   );
+
+  useEffect(() => {
+    getMetadata(programId).then(({ result }) => {
+      const parsedMeta = JSON.parse(result.meta) as Metadata;
+
+      metaBuffer.current = Buffer.from(result.metaFile, 'base64');
+      setMetadata(parsedMeta);
+      disableLoading();
+    });
+  }, [programId]);
 
   useEffect(() => {
     if (metadata) {
