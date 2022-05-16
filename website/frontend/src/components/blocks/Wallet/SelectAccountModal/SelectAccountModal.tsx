@@ -1,4 +1,4 @@
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import { GearKeyring } from '@gear-js/api';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Button } from '@gear-js/ui';

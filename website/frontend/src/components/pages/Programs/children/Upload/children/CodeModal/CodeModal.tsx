@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ISubmittableResult } from '@polkadot/types/types';

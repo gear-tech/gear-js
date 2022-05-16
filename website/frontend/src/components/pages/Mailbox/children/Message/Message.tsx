@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import { HumanedMessage } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ISubmittableResult } from '@polkadot/types/types';

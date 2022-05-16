@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo, VFC } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import clsx from 'clsx';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import NumberFormat from 'react-number-format';

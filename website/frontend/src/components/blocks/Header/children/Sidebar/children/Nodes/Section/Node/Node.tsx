@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import copy from 'assets/images/copy.svg';
 import trash from 'assets/images/trash.svg';
 import { Button, Radio } from '@gear-js/ui';

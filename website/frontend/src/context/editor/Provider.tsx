@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import JSZip from 'jszip';
 import saveAs from 'file-saver';
 import { EditorContext } from './Context';

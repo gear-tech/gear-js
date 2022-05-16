@@ -2461,7 +2461,6 @@ __metadata:
     prettier: 2.6.2
     prop-types: 15.8.1
     react: 17.0.2
-    react-alert: 7.0.3
     react-dnd: 16.0.0
     react-dnd-html5-backend: 16.0.0
     react-dom: 17.0.2
@@ -21242,19 +21241,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-alert@npm:7.0.3":
-  version: 7.0.3
-  resolution: "react-alert@npm:7.0.3"
-  dependencies:
-    prop-types: ^15.7.2
-    react-transition-group: ^4.4.1
-  peerDependencies:
-    react: ^16.8.1 || ^17
-    react-dom: ^16.8.1 || ^17
-  checksum: e38918db9ec2dcea093ba6eaf5f125254ff2b43bb3b399aaf2a5ab5c28a476cb55352ea9efb1e6433705c35f6c33830a962e07f094764adf54419a5019cddbb1
-  languageName: node
-  linkType: hard
-
 "react-app-polyfill@npm:^3.0.0":
   version: 3.0.0
   resolution: "react-app-polyfill@npm:3.0.0"
@@ -21697,7 +21683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-transition-group@npm:^4.4.1, react-transition-group@npm:^4.4.2":
+"react-transition-group@npm:^4.4.2":
   version: 4.4.2
   resolution: "react-transition-group@npm:4.4.2"
   dependencies:

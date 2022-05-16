@@ -1,4 +1,4 @@
-import { AlertContainer } from 'react-alert';
+import { AlertContainerFactory } from 'context/alert/types';
 import { UploadProgramModel, Message, Reply, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
@@ -20,7 +20,7 @@ export const UploadProgram = async (
   metaFile: any,
   enableLoading: () => void,
   disableLoading: () => void,
-  alert: AlertContainer,
+  alert: AlertContainerFactory,
   callback: () => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
@@ -129,7 +129,7 @@ export const sendMessage = async (
   message: Message & Reply,
   enableLoading: () => void,
   disableLoading: () => void,
-  alert: AlertContainer,
+  alert: AlertContainerFactory,
   callback: () => void,
   meta?: Metadata,
   payloadType?: string
@@ -180,7 +180,7 @@ export const addMetadata = async (
   account: InjectedAccountWithMeta,
   programId: string,
   name: any,
-  alert: AlertContainer
+  alert: AlertContainerFactory
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);
@@ -233,7 +233,7 @@ export const addMetadata = async (
   });
 };
 
-export const subscribeToEvents = (alert: AlertContainer) => {
+export const subscribeToEvents = (alert: AlertContainerFactory) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
 
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {

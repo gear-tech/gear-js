@@ -1,6 +1,6 @@
 import { Hex } from '@gear-js/api';
 import { Metadata } from '@polkadot/types';
-import { AlertContainer } from 'react-alert';
+import { AlertContainerFactory } from "context/alert/types"
 import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
@@ -159,7 +159,7 @@ export const calculateGas = async (
   isManualPayload: boolean,
   values: UploadInitialValues | SendMessageInitialValues,
   setFieldValue: SetFieldValue,
-  alert: AlertContainer,
+  alert: AlertContainerFactory,
   meta: any,
   code?: Uint8Array | null,
   addressId?: String | null,

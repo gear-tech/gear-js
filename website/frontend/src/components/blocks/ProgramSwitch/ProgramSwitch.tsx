@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, VFC } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { Button } from '@gear-js/ui';

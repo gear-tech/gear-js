@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState, VFC } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import { NativeTypes } from 'react-dnd-html5-backend';

@@ -1,7 +1,6 @@
 import '@polkadot/api-augment'; // dot types fix, source: https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#701-dec-20-2021
 import React, { useEffect } from 'react';
 import { Route, Routes, useSearchParams } from 'react-router-dom';
-import { useAlert } from 'react-alert';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
 import { Programs } from 'components/pages/Programs/Programs';
@@ -22,7 +21,7 @@ import { routes } from 'routes';
 import { subscribeToEvents } from 'services/ApiService';
 import { nodeApi } from '../../api/initApi';
 
-import { useApi, useEvents, useLoading } from 'hooks';
+import { useApi, useAlert, useEvents, useLoading } from 'hooks';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -53,6 +52,12 @@ const Component = () => {
 
   useEffect(() => {
     if (isApiReady) {
+      alert.info('1');
+      const alertLoad = alert.success('2');
+      alert.loading('3');
+
+      setTimeout(() => alertLoad.update('HELLLOOO'), 1000);
+      //@ts-ignore
       subscribeToEvents(alert);
     }
   }, [isApiReady, alert]);

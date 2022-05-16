@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import { Formik, Form, FormikHelpers, FormikProps } from 'formik';
 import { Button } from '@gear-js/ui';
 import { getWasmMetadata, Metadata } from '@gear-js/api';
