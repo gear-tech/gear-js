@@ -32,7 +32,7 @@ beforeAll(async () => {
     {
       code: demo_meta_test.code,
       initPayload: { amount: 8, currency: 'GRT' },
-      gasLimit: 2_000_000_000,
+      gasLimit: 20_000_000_000,
     },
     await getWasmMetadata(demo_meta_test.meta),
   ).programId;

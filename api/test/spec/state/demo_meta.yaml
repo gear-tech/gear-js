@@ -3,7 +3,7 @@ title: demo_meta
 programs:
   - name: demo_meta
     id: 1
-    gasLimit: 100000000
+    gasLimit: 2000000000
     value: 0
     meta: true
     account: alice
