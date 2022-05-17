@@ -17,9 +17,10 @@ export interface AlertOptions {
 
 export interface AlertInstance {
    id: number;
+   style?: CSSProperties,
    options: AlertOptions;
    message: string;
-   style?: CSSProperties,
+   show: () => void;
    close: () => void;
    update: (message: string, options?: AlertOptions) => void;
 }
@@ -30,10 +31,9 @@ export interface AlertTimer {
 }
 
 export interface AlertContainerFactory {
-   show(message?: ReactNode, options?: AlertOptions): AlertInstance;
+   create(message: string, options?: AlertOptions): AlertInstance
    info(message?: ReactNode, options?: AlertOptions): AlertInstance;
    error(message?: ReactNode, options?: AlertOptions): AlertInstance;
    success(message?: ReactNode, options?: AlertOptions): AlertInstance;
    loading(message?: ReactNode, options?: AlertOptions): AlertInstance;
-   remove(id: number): void;
 }
