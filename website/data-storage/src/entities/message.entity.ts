@@ -26,7 +26,4 @@ export class Message extends BaseEntity implements IMessage {
 
   @Column({ nullable: true })
   replyError: string;
-
-  @Column({ nullable: true })
-  date: Date;
 }

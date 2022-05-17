@@ -111,7 +111,6 @@ export class ApiGatewayService extends RpcMessageHandler implements OnModuleInit
       savePayload: (params: AddPayloadParams) => {
         return this.client.send('message.add.payload', params);
       },
-      countUnread: () => {},
     },
     testBalance: {
       get: (params: GetTestBalanceParams) => {
