@@ -1,17 +1,18 @@
 title: demo_ping
 
-programs:
-  - name: demo_ping
-    id: 1
-    gasLimit: 200000000
-    value: 0
-    meta: false
-    account: alice
+program:
+  name: demo_ping
+  id: 1
+  gasLimit: 2000000000
+  value: 0
+  meta: false
+  account: alice
+
 messages:
   - id: 1
     program: 1
     payload: PING
-    gasLimit: 500000000
+    gasLimit: 2000000000
     account: alice
     meta: false
     log: '0x504f4e47'

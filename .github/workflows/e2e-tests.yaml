@@ -8,6 +8,10 @@ on:
       - website/**
   workflow_dispatch:
 
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -256,9 +260,8 @@ jobs:
       - name: Prepare&Run Tests
         working-directory: website/tests
         env:
-          API_ADDRESS: ${{ secrets.API_ADDRESS_URL_TEST }}
+          API_ENDPOINT: ${{ secrets.API_ADDRESS_URL_TEST }}
           WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
         run: |
-          ./download-examples.sh
           YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
-          yarn start
+          yarn test

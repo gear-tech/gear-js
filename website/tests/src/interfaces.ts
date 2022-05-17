@@ -2,6 +2,7 @@ import { Hex } from '@gear-js/api';
 
 export interface IUploadedPrograms extends IProgramSpec {
   name: string;
+  messageId: Hex;
 }
 
 export interface IMessageSpec {
@@ -27,14 +28,23 @@ export interface IProgramSpec {
 }
 
 export interface IPreparedPrograms {
-  [key: Hex]: {
-    spec: any;
-    init: boolean;
-    id: Hex;
-  };
+  [key: Hex]: IPreparedProgram;
+}
+
+export interface IPreparedProgram {
+  spec: IUploadedPrograms;
+  init: boolean;
+  id: Hex;
 }
 
 export interface IPreparedMessages {
   sent: Map<number, any>;
-  log: Map<string, any>;
+  log: Map<Hex, any>;
 }
+
+export interface IPrepared {
+  programs: IPreparedPrograms;
+  messages: IPreparedMessages;
+}
+
+export type Passed = boolean;

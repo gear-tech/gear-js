@@ -11,6 +11,7 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "pretty": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true
   }
 }

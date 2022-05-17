@@ -10,7 +10,7 @@ export class GearCode extends GearTransaction {
    * @param code
    * @returns Code hash
    */
-  submit(code: Buffer): { codeHash: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> } {
+  submit(code: Buffer | Uint8Array): { codeHash: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> } {
     const codeBytes = this.createType.create('bytes', Array.from(code)) as Bytes;
     this.submitted = this.api.tx.gear.submitCode(codeBytes);
     const codeHash = generateCodeHash(code);

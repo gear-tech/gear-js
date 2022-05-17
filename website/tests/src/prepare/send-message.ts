@@ -34,7 +34,7 @@ export async function sendMessages(
   uploadedPrograms: IPreparedPrograms,
 ) {
   const sentMessages = new Map<number, any>();
-  const logs = new Map<string, any>();
+  const logs = new Map<Hex, any>();
   const unsub = await listenLog(api, (data) => {
     logs.set(data.id.toHex(), data.toHuman());
   });

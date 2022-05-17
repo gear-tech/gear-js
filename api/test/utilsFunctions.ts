@@ -2,11 +2,11 @@ import { GearApi, GearKeyring, ProgramId } from '../src';
 
 export const checkLog = (event: any, programId: ProgramId, messageId: string) => {
   if (event.data[0].source.toHex() === programId) {
-    if (event.data[0].reply.unwrap()[1].toNumber() === 0 && event.data[0].reply.unwrap()[0].toHex() === messageId) {
-      return true;
+    if (event.data[0].reply.unwrap()[0].toHex() === messageId) {
+      return event.data[0].reply.unwrap()[1].toNumber();
     }
   }
-  return false;
+  return undefined;
 };
 
 export const checkInit = (api: GearApi, programId: string) => {
@@ -42,3 +42,6 @@ export const getAccount = () => {
 };
 
 export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
+
+export const describeif = (condition: boolean) => (condition ? describe : describe.skip);
+export const testif = (condition: boolean) => (condition ? test : test.skip);
