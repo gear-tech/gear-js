@@ -6,3 +6,4 @@ export * from './components/Radio/RadioGroup';
 export * from './components/Select/Select';
 export * from './components/Textarea/Textarea';
 export * from './components/Modal/Modal';
+export * from './components/FileInput/FileInput';
