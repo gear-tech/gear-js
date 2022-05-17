@@ -28,10 +28,10 @@ function FileInput({ label, className, file, ...attrs }: Props) {
       {label && <span className={styles.text}>{label}</span>}
       <input type="file" className={styles.input} ref={ref} {...attrs} />
       {file ? (
-        <div className={styles.file}>
+        <span className={styles.file}>
           <Button text={file.name} color="transparent" size="small" className={styles.name} />
           <Button icon={trashSVG} color="transparent" onClick={handleRemoveButtonClick} />
-        </div>
+        </span>
       ) : (
         <Button text="Select file" color="secondary" />
       )}
@@ -39,4 +39,4 @@ function FileInput({ label, className, file, ...attrs }: Props) {
   );
 }
 
-export { FileInput };
+export { FileInput, Props as FileInputProps, styles as fileInputStyles };
