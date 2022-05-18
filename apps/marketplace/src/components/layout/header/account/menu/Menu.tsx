@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { buttonStyles } from '@gear-js/ui';
 import clsx from 'clsx';
 import styles from './Menu.module.scss';
@@ -8,28 +8,33 @@ type Props = {
   onSwitchAccountClick: () => void;
 };
 
-function Menu({ close, onSwitchAccountClick }: Props) {
-  const linkClassName = clsx(buttonStyles.button, buttonStyles.secondary, styles.link);
+type LinkProps = {
+  isActive: boolean;
+};
 
+function Menu({ close, onSwitchAccountClick }: Props) {
   const handleAccountSwitchClick = () => {
     onSwitchAccountClick();
     close();
   };
 
+  const getClassName = (linkProps?: LinkProps) =>
+    clsx(buttonStyles.button, buttonStyles.secondary, styles.link, linkProps?.isActive && styles.active);
+
   return (
     <ul className={styles.menu}>
       <li>
-        <Link to="/me" className={linkClassName} onClick={close}>
+        <NavLink to="/me" className={getClassName} onClick={close}>
           My NFTs
-        </Link>
+        </NavLink>
       </li>
       <li>
-        <Link to="/create" className={linkClassName} onClick={close}>
+        <NavLink to="/create" className={getClassName} onClick={close}>
           Create NFT
-        </Link>
+        </NavLink>
       </li>
       <li>
-        <button type="button" className={linkClassName} onClick={handleAccountSwitchClick}>
+        <button type="button" className={getClassName()} onClick={handleAccountSwitchClick}>
           Switch account
         </button>
       </li>
