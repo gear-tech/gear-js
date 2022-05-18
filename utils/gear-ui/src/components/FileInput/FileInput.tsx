@@ -1,7 +1,7 @@
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
 import { InputHTMLAttributes, useRef, MouseEvent } from 'react';
-import trashSVG from 'assets/images/trash.svg';
+import trashSVG from './images/trash.svg';
 import styles from './FileInput.module.scss';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
