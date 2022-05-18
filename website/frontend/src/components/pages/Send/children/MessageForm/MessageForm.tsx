@@ -9,7 +9,7 @@ import { InitialValues } from './types';
 import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { getPreformattedText, calculateGas } from 'helpers';
 import MessageIllustration from 'assets/images/message.svg';
-import { useAccount, useApi, useLoading } from 'hooks';
+import { useAccount, useApi } from 'hooks';
 import { MetaItem, MetaFieldsStruct, parseMeta, prepareToSend, PreparedMetaData } from 'components/MetaFields';
 import { Schema } from './Schema';
 import { PayloadType } from './children/PayloadType';
@@ -25,7 +25,6 @@ type Props = {
 export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => {
   const { api } = useApi();
   const alert = useAlert();
-  const { enableLoading, disableLoading } = useLoading();
   const { account: currentAccount } = useAccount();
   const [metaForm, setMetaForm] = useState<MetaFieldsStruct | null>();
   const [isManualInput, setIsManualInput] = useState(Boolean(!types));
@@ -56,17 +55,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
         payload: isManualInput ? values.payload : prepareToSend(values.__root as PreparedMetaData),
       };
 
-      sendMessage(
-        isReply ? api.reply : api.message,
-        currentAccount,
-        message,
-        enableLoading,
-        disableLoading,
-        alert,
-        resetForm,
-        meta,
-        payloadType
-      );
+      sendMessage(isReply ? api.reply : api.message, currentAccount, message, alert, resetForm, meta, payloadType);
     } else {
       alert.error(`WALLET NOT CONNECTED`);
     }

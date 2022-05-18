@@ -22,7 +22,7 @@ import { MetaFile } from 'components/common/MetaFile';
 import { MetaField } from 'components/common/MetaField';
 
 import { UploadProgram } from 'services/ApiService';
-import { useAccount, useApi, useLoading } from 'hooks';
+import { useAccount, useApi, useAlert } from 'hooks';
 import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
 import { UploadProgramModel } from 'types/program';
 
@@ -35,7 +35,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const { api } = useApi();
   const alert = useAlert();
   const { account: currentAccount } = useAccount();
-  const { enableLoading, disableLoading } = useLoading();
 
   const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);

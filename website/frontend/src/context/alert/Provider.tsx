@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { nanoid } from 'nanoid/non-secure';
 import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
 
 import { Props } from '../types';
 import { DEFAULT_OPTIONS } from './const';
-import { AlertInstance, AlertTimer, AlertContainerFactory, AlertType, AlertOptions } from './types';
+import { AlertInstance, AlertTimer, AlertContainerFactory, AlertTypes, AlertOptions, AlertType } from './types';
 import { AlertContext } from './Context';
 
 import { AlertTemplate } from 'components/AlertTemplate';
@@ -16,113 +17,118 @@ const AlertProvider = ({ children }: Props) => {
   const timers = useRef<AlertTimer[]>([]);
   const [alerts, setAlerts] = useState<AlertInstance[]>([]);
 
-  const createTimer = (alertId: number, callback: () => void, timeout = DEFAULT_OPTIONS.timeout) => {
-    if (timeout > 0) {
-      const timerId = setTimeout(callback, timeout);
+  const createTimer = useCallback(
+    (alertId: string, callback: (alertId: string) => void, timeout = DEFAULT_OPTIONS.timeout) => {
+      if (timeout > 0) {
+        const timerId = setTimeout(() => callback(alertId), timeout);
 
-      timers.current.push({
-        id: timerId,
-        alertId,
-      });
-    }
-  };
+        timers.current.push({
+          id: timerId,
+          alertId,
+        });
+      }
+    },
+    []
+  );
 
-  const removeTimer = (alertId: number) => {
+  const removeTimer = useCallback((alertId: string) => {
     const timerIndex = timers.current.findIndex((timer) => timer.alertId == alertId);
 
     if (timerIndex !== -1) {
       clearTimeout(timers.current[timerIndex].id);
       timers.current.splice(timerIndex, 1);
     }
-  };
-
-  const show = useCallback((alert: AlertInstance) => {
-    setAlerts((prevState) => [...prevState, alert]);
-    createTimer(alert.id, alert.close, alert.options.timeout);
   }, []);
 
-  const remove = useCallback((id: number) => {
-    removeTimer(id);
-    setAlerts((prevState) => prevState.filter((alert) => alert.id !== id));
-  }, []);
+  const remove = useCallback(
+    (id: string) => {
+      removeTimer(id);
+      setAlerts((prevState) => prevState.filter((alert) => alert.id !== id));
+    },
+    [removeTimer]
+  );
 
-  const update = useCallback((id: number, message: string, options: AlertOptions = {}) => {
-    let updatedAlert: AlertInstance;
+  const update = useCallback(
+    (id: string, message: string, options?: Omit<AlertOptions, 'castomId'>) => {
+      let updatedAlert: AlertInstance;
 
-    removeTimer(id);
-    setAlerts((prevState) =>
-      prevState.map((alert) => {
-        if (alert.id !== id) {
-          return alert;
+      removeTimer(id);
+
+      setAlerts((prevState) =>
+        prevState.map((alert) => {
+          if (alert.id !== id) {
+            return alert;
+          }
+
+          return (updatedAlert = {
+            ...alert,
+            message,
+            options: {
+              ...alert.options,
+              ...options,
+            },
+          });
+        })
+      );
+
+      if (updatedAlert!) {
+        createTimer(updatedAlert.id, remove, updatedAlert.options.timeout);
+      }
+    },
+    [removeTimer, createTimer, remove]
+  );
+
+  const show = useCallback(
+    (message: string, options?: AlertOptions): string => {
+      const alertId = options?.customId;
+
+      if (alertId) {
+        //@ts-ignore
+        const isCreated = alerts.includes((alert) => alert.id === alertId);
+
+        if (isCreated) {
+          return alertId;
         }
-
-        updatedAlert = {
-          ...alert,
-          message,
-          options: {
-            ...alert.options,
-            ...options,
-          },
-        };
-
-        return updatedAlert;
-      })
-    );
-
-    if (updatedAlert!) {
-      createTimer(updatedAlert.id, updatedAlert.close, updatedAlert.options.timeout);
-    }
-  }, []);
-
-  const create = useCallback(
-    (message: string, options: AlertOptions = {}): AlertInstance => {
-      const id = Math.random();
+      }
 
       const alert: AlertInstance = {
-        id,
+        id: alertId || nanoid(8),
         message,
         options: {
           ...DEFAULT_OPTIONS,
           ...options,
         },
-        show: () => show(alert),
-        close: () => remove(id),
-        update: (updatedMessage: string, updatedOptions?: AlertOptions) => update(id, updatedMessage, updatedOptions),
       };
 
-      return alert;
+      createTimer(alert.id, remove, alert.options.timeout);
+      setAlerts((prevState) => [...prevState, alert]);
+
+      return alert.id;
     },
-    [remove, update, show]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [createTimer, remove]
   );
 
-  const createAndShow = useCallback(
-    (defaultOptions: AlertOptions) =>
-      (message = '', options: AlertOptions = {}) => {
-        const alert = create(message, {
-          ...defaultOptions,
-          ...options,
-        });
-
-        alert.show();
-
-        return alert;
-      },
-    [create]
+  const сreateTemplateAlert = useCallback(
+    (type: AlertTypes) => (message: string, options?: AlertOptions) =>
+      show(message, {
+        ...options,
+        type,
+      }),
+    [show]
   );
 
   const alertContext: AlertContainerFactory = useMemo(
     () => ({
-      create,
-      info: createAndShow({ type: AlertType.INFO }),
-      error: createAndShow({ type: AlertType.ERROR }),
-      success: createAndShow({ type: AlertType.SUCCESS }),
-      loading: createAndShow({
-        type: AlertType.LOADING,
-        closed: false,
-        timeout: 0,
-      }),
+      show,
+      update,
+      remove,
+      info: сreateTemplateAlert(AlertType.INFO),
+      error: сreateTemplateAlert(AlertType.ERROR),
+      success: сreateTemplateAlert(AlertType.SUCCESS),
+      loading: сreateTemplateAlert(AlertType.LOADING),
     }),
-    [create, createAndShow]
+    [show, update, remove, сreateTemplateAlert]
   );
 
   useEffect(() => {
@@ -148,8 +154,7 @@ const AlertProvider = ({ children }: Props) => {
           <TransitionGroup appear component={Wrapper}>
             {alerts.map((alert) => (
               <Transition key={alert.id}>
-                {/*@ts-ignore*/}
-                <AlertTemplate style={{ marginBottom: '10px' }} {...alert} />
+                <AlertTemplate alert={alert} onClose={() => remove(alert.id)} />
               </Transition>
             ))}
           </TransitionGroup>,

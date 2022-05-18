@@ -18,8 +18,6 @@ export const UploadProgram = async (
   file: File,
   programModel: UploadProgramModel,
   metaFile: any,
-  enableLoading: () => void,
-  disableLoading: () => void,
   alert: AlertContainerFactory,
   callback: () => void
 ) => {
@@ -47,19 +45,27 @@ export const UploadProgram = async (
       initPayload,
     };
 
+  const customId = 'uploadProgramAlert';
+
   try {
     const { programId } = api.program.submit(program, meta);
 
     await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
-      enableLoading();
+      //doesn't create alerts with the same id
+      alert.loading('Sending', { title: 'Upload program', timeout: 0, isClosed: false, customId });
+
+      if (data.status.isReady) {
+        alert.update(customId, 'Ready');
+      }
 
       if (data.status.isInBlock) {
-        alert.success('Upload program: In block');
-      } else if (data.status.isFinalized) {
+        alert.update(customId, 'InBlock');
+      }
+
+      if (data.status.isFinalized) {
         data.events.forEach(({ event: { method } }) => {
           if (method === 'InitMessageEnqueued') {
-            alert.success('Upload program: Finalized');
-            disableLoading();
+            alert.update(customId, 'Finalized', { type: 'success', isClosed: true, timeout: 10000 });
             callback();
 
             if (isDevChain()) {
@@ -107,18 +113,26 @@ export const UploadProgram = async (
                 }
               });
             }
-          } else if (method === 'ExtrinsicFailed') {
-            alert.error('Upload program: Extrinsic Failed');
+          }
+
+          if (method === 'ExtrinsicFailed') {
+            alert.error('Extrinsic Failed', {
+              title: 'Upload program',
+            });
           }
         });
-      } else if (data.status.isInvalid) {
-        disableLoading();
-        alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
+      }
+
+      if (data.status.isInvalid) {
+        alert.update(customId, PROGRAM_ERRORS.INVALID_TRANSACTION, {
+          type: 'error',
+          timeout: 10000,
+          isClosed: true,
+        });
       }
     });
   } catch (error) {
-    disableLoading();
-    alert.error(`Upload program: ${error}`);
+    alert.error(`${error}`, { title: 'Upload program' });
   }
 };
 
@@ -127,8 +141,6 @@ export const sendMessage = async (
   api: GearMessage | GearMessageReply,
   account: InjectedAccountWithMeta,
   message: Message & Reply,
-  enableLoading: () => void,
-  disableLoading: () => void,
   alert: AlertContainerFactory,
   callback: () => void,
   meta?: Metadata,
@@ -139,11 +151,18 @@ export const sendMessage = async (
 
     api.submit(message, meta, payloadType);
 
+    const customId = 'sendMessageAlert';
+
     await api.signAndSend(account.address, { signer }, (data: any) => {
-      enableLoading();
+      //doesn't create alerts with the same id
+      alert.loading('Sending', { title: 'Send message', timeout: 0, isClosed: false, customId });
+
+      if (data.status.isReady) {
+        alert.update(customId, 'Ready');
+      }
 
       if (data.status.isInBlock) {
-        alert.success('Send message: In block');
+        alert.update(customId, 'InBlock');
       }
 
       if (data.status.isFinalized) {
@@ -151,25 +170,22 @@ export const sendMessage = async (
           const { method } = event.event;
 
           if (method === 'DispatchMessageEnqueued') {
-            alert.success('Send message: Finalized');
-            disableLoading();
+            alert.update(customId, 'Finalized', { type: 'success', timeout: 10000, isClosed: true });
             callback();
           }
 
           if (method === 'ExtrinsicFailed') {
-            alert.error('Extrinsic Failed');
+            alert.error('Extrinsic Failed', { title: 'Send message' });
           }
         });
       }
 
       if (data.status.isInvalid) {
-        disableLoading();
-        alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
+        alert.update(customId, PROGRAM_ERRORS.INVALID_TRANSACTION, { type: 'error', timeout: 10000, isClosed: true });
       }
     });
   } catch (error) {
-    alert.error(`Send message: ${error}`);
-    disableLoading();
+    alert.error(`${error}`, { title: 'Send message' });
   }
 };
 

@@ -1,10 +1,8 @@
-import React from 'react';
-import { useAlert } from 'hooks';
 import { HumanedMessage } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { useApi, useAccount } from 'hooks';
+import { useApi, useAccount, useAlert } from 'hooks';
 import { getPreformattedText } from 'helpers';
 import claimIcon from './images/claim.svg';
 import { ReplyLink } from './children';

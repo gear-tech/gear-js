@@ -1,4 +1,4 @@
-import { useRef, PropsWithChildren } from 'react';
+import { useRef, ReactNode } from 'react';
 import { Transition as AlertTransition } from 'react-transition-group';
 
 const duration = 250;
@@ -13,7 +13,11 @@ const transitionStyles = {
   entered: { opacity: 1 },
 };
 
-const Transition = ({ children, ...props }: PropsWithChildren<HTMLElement>) => {
+type Props = {
+  children: ReactNode;
+};
+
+const Transition = ({ children, ...props }: Props) => {
   const ref = useRef(null);
 
   return (

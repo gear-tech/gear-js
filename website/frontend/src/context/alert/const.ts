@@ -1,7 +1,8 @@
-import { AlertType, AlertOptions } from "./types"
+import { AlertOptions, AlertType } from './types';
 
-export const DEFAULT_OPTIONS: Required<AlertOptions> = {
-   type: AlertType.INFO,
-   timeout: 10000,
-   closed: true,
-}
+export const DEFAULT_OPTIONS: Required<Omit<AlertOptions, 'customId' | 'title'>> = {
+  type: AlertType.INFO,
+  style: { marginBottom: '10px' },
+  isClosed: true,
+  timeout: 10000,
+};

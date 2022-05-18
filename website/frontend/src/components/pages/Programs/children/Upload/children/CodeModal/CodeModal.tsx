@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useAlert } from 'hooks';
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ISubmittableResult } from '@polkadot/types/types';
@@ -7,7 +6,7 @@ import { Event } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import copy from 'assets/images/copy.svg';
 import { copyToClipboard, readFileAsync } from 'helpers';
-import { useApi, useAccount } from 'hooks';
+import { useApi, useAccount, useAlert } from 'hooks';
 import { Modal } from 'components/blocks/Modal';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { DroppedFile } from '../../types';
