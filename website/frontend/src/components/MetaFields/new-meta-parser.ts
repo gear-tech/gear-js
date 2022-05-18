@@ -64,7 +64,7 @@ export type MetaFieldsValues = {
 };
 
 export type MetaFieldsStruct = {
-  __root: MetaFieldset | null;
+  __root: MetaFieldset | MetaField | null;
   __values: MetaFieldsValues | null;
 };
 
