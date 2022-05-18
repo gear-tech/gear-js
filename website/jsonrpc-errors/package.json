@@ -2,7 +2,7 @@
   "name": "@gear-js/jsonrpc-errors",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@3.2.1",
   "scripts": {
     "build": "tsc"
   },
