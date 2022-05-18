@@ -1,0 +1,27 @@
+@use 'src/assets/styles/variables' as *;
+
+.label {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.text {
+  margin-right: 16px;
+  color: $textColorSecondary;
+  font-weight: 300;
+}
+
+.input {
+  display: none;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  margin-right: 10px;
+  cursor: pointer;
+}
