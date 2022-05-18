@@ -19,20 +19,15 @@
 
 .form {
   @include verticalGap(32px);
-  max-width: 900px;
+  max-width: 540px;
 }
 
 .input {
   display: grid;
-  grid-template-columns: 1fr 5fr;
+  grid-template-columns: 4fr 6fr;
 }
 
-.file {
-  display: none;
-}
-
-.buttons {
-  @include verticalGap(32px);
-  display: flex;
-  flex-direction: column;
+.error {
+  text-align: right;
+  color: $errorColor;
 }

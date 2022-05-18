@@ -15,7 +15,7 @@ function useMessage(destination: Hex, metadata: Metadata | undefined) {
     events.forEach(({ event: { method } }) => {
       if (method === 'DispatchMessageEnqueued') {
         alert.success('Send message: Finalized');
-        // resetValues();
+        // onSucessCallback();
       } else if (method === 'ExtrinsicFailed') {
         alert.error('Extrinsic failed');
       }
