@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { MarketNFT } from 'types';
 import Header from './header';
 import List from './list';
+import styles from './Listings.module.scss';
 
 const filters = ['All', 'Buy now', 'On auction', 'New', 'Has offers'];
 
@@ -22,7 +23,6 @@ function Listings() {
   const [filter, setFilter] = useState('All');
   const nfts = useMarketplace();
 
-  // TODO:
   const conditionCallback = conditions[filter];
   const filteredNfts = nfts?.map((nft) =>
     conditionCallback(nft) ? { ...nft, isVisible: true } : { ...nft, isVisible: false },
@@ -31,7 +31,7 @@ function Listings() {
   return (
     <>
       <Header text="NFT Marketplace" filter={filter} filters={filters} onFilterChange={setFilter} />
-      {filteredNfts && <List nfts={filteredNfts} />}
+      <div className={styles.main}>{filteredNfts && <List nfts={filteredNfts} />}</div>
     </>
   );
 }

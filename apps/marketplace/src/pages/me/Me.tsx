@@ -7,8 +7,8 @@ function Me() {
 
   return (
     <>
-      <h2 className={styles.heading}>My Collections</h2>
-      {nfts && <List nfts={nfts} />}
+      <h2 className={styles.heading}>My NFTs</h2>
+      <div className={styles.main}>{nfts && <List nfts={nfts} />}</div>
     </>
   );
 }

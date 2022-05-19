@@ -11,6 +11,8 @@ type Props = {
 };
 
 function List({ nfts }: Props) {
+  const isAnyNft = nfts.length > 0;
+
   const getCards = () =>
     nfts.map((nft) => {
       const { tokenId, auction, price } = nft;
@@ -27,7 +29,11 @@ function List({ nfts }: Props) {
       );
     });
 
-  return <ul className={styles.list}>{getCards()}</ul>;
+  return isAnyNft ? (
+    <ul className={styles.list}>{getCards()}</ul>
+  ) : (
+    <p className={styles.text}>There are no listings at the moment.</p>
+  );
 }
 
 export default List;
