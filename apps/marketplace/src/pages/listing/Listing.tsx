@@ -20,7 +20,7 @@ function Listing() {
 
   const marketNft = useMarketNft(id);
   const { price, auction, offers } = marketNft || {};
-  const { currentPrice, bids } = auction || {};
+  const { startedAt, endedAt, currentPrice, bids } = auction || {};
 
   const isSale = !!price;
   const isAuction = !!auction;
@@ -66,6 +66,8 @@ function Listing() {
         rarity={rarity}
         royalty={royalty}
         attrs={attributes}
+        startedAt={startedAt || ''}
+        endedAt={endedAt || ''}
       />
     ) : (
       <OwnerListing

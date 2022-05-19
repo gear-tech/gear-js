@@ -10,7 +10,7 @@ function useReadState(programId: ProgramId, metaBuffer: Buffer | undefined, payl
   const { enableLoading, disableLoading } = useLoading();
 
   useEffect(() => {
-    if (metaBuffer) {
+    if (metaBuffer && payload) {
       enableLoading();
 
       api.programState

@@ -51,7 +51,7 @@ function OwnerListing(props: Props) {
       },
     };
 
-    sendMessage(payload, priceValue);
+    sendMessage(payload, priceValue).then(closeModal);
   };
 
   return (

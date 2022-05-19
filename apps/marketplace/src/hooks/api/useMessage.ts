@@ -37,6 +37,8 @@ function useMessage(destination: Hex, metadata: Metadata | undefined) {
     }
   };
 
+  // TODO: eslint
+  // eslint-disable-next-line consistent-return
   const sendMessage = async (payload: AnyJson, value: string | number = 0) => {
     if (account && metadata) {
       enableLoading();
@@ -49,7 +51,7 @@ function useMessage(destination: Hex, metadata: Metadata | undefined) {
 
       const { source } = meta;
       const { signer } = await web3FromSource(source);
-      api.message.signAndSend(address, { signer }, handleStatus);
+      return api.message.signAndSend(address, { signer }, handleStatus);
     }
   };
 

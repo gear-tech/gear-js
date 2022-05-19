@@ -19,6 +19,7 @@ type Props = {
 };
 
 function Listing({ children, heading, description, owner, price, royalty, image, rarity, attrs, offers }: Props) {
+  const isAnyOffer = offers.length > 0;
   const royaltyText = `${royalty}%`;
 
   // TODO: ! assert, lint rule
@@ -53,7 +54,7 @@ function Listing({ children, heading, description, owner, price, royalty, image,
         <div>
           {rarity && <Card heading="Rarity" text={rarity} />}
           {attrs && <Card heading="Attributes">{getAttributes()}</Card>}
-          {offers && <Card heading="Offers">{getOffers()}</Card>}
+          <Card heading={isAnyOffer ? 'Offers' : 'No offers'}>{getOffers()}</Card>
         </div>
       </div>
     </>

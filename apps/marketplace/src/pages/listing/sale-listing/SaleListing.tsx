@@ -4,6 +4,7 @@ import { ConfirmationModal, Listing, PriceModal } from 'components';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
+import { Offer } from 'types';
 
 type Props = {
   isOwner: boolean;
@@ -12,7 +13,7 @@ type Props = {
   description: string;
   owner: Hex;
   image: string;
-  offers: any[];
+  offers: Offer[];
   price?: string;
   royalty?: number;
   rarity?: string;
@@ -44,7 +45,7 @@ function SaleListing(props: Props) {
     const payload = { BuyItem: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id } };
     const value = price?.replaceAll(',', '');
 
-    sendMessage(payload, value);
+    sendMessage(payload, value).then(closeModal);
   };
 
   const offer = (priceValue: string) => {
@@ -57,7 +58,7 @@ function SaleListing(props: Props) {
       },
     };
 
-    sendMessage(payload, priceValue);
+    sendMessage(payload, priceValue).then(closeModal);
   };
 
   return (

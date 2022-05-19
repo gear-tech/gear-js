@@ -40,7 +40,7 @@ function AuctionModal({ close }: Props) {
         },
       };
 
-      sendMessage(payload);
+      sendMessage(payload).then(close);
     }
   };
 
@@ -48,8 +48,8 @@ function AuctionModal({ close }: Props) {
     <Modal heading="Auction" close={close}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <Input placeholder="min price" name="minPrice" value={minPrice} onChange={handleChange} />
-        <Input placeholder="duration" name="duration" value={duration} onChange={handleChange} />
-        <Input placeholder="bid period" name="bidPeriod" value={bidPeriod} onChange={handleChange} />
+        <Input placeholder="duration (min)" name="duration" value={duration} onChange={handleChange} />
+        <Input placeholder="bid period (min)" name="bidPeriod" value={bidPeriod} onChange={handleChange} />
         <Button type="submit" text="Start auction" block />
       </form>
     </Modal>

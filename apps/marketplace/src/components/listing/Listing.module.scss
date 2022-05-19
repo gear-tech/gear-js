@@ -10,12 +10,10 @@
 }
 
 .listing {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2.5fr 5fr 2.5fr;
+  gap: 30px;
   margin-bottom: 60px;
-
-  & > *:not(:last-child) {
-    margin-right: 30px;
-  }
 }
 
 .main {
@@ -36,6 +34,7 @@
 
   display: block;
   margin: 0 auto;
+  border-radius: $borderRadius;
 }
 
 .buttons {
