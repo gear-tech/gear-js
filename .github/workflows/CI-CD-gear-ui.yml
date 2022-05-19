@@ -5,6 +5,10 @@ on:
     branches: [master]
     paths:
       - utils/gear-ui/**
+  push:
+    branches: [master]
+    paths:
+      - utils/gear-ui/**
 
 jobs:
   test:
