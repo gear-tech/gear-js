@@ -14,6 +14,7 @@ import { GearMailbox } from './Mailbox';
 import { GearClaimValue } from './Claim';
 import { GearCode } from './Code';
 import { RegistryError } from '@polkadot/types-codec/types';
+import { GearWaitlist } from 'Waitlist';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -28,6 +29,7 @@ export class GearApi extends ApiPromise {
   public mailbox: GearMailbox;
   public claimValueFromMailbox: GearClaimValue;
   public code: GearCode;
+  public waitlist: GearWaitlist;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
@@ -59,6 +61,7 @@ export class GearApi extends ApiPromise {
       this.claimValueFromMailbox = new GearClaimValue(this);
       this.mailbox = new GearMailbox(this);
       this.code = new GearCode(this);
+      this.waitlist = new GearWaitlist(this);
     });
   }
 
