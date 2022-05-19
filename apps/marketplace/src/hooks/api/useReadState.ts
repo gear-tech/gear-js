@@ -20,7 +20,7 @@ function useReadState(programId: ProgramId, metaBuffer: Buffer | undefined, payl
         .finally(() => disableLoading());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metaBuffer]);
+  }, [metaBuffer, payload]);
 
   return state;
 }

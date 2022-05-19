@@ -1,5 +1,12 @@
+@use '@gear-js/ui/variables' as *;
+
 .list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
+}
+
+.text {
+  font-size: $fontSizeMedium;
+  color: $textColorSecondary;
 }

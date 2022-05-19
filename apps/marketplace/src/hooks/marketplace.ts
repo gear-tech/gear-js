@@ -2,6 +2,7 @@ import { Hex } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { marketplaceMetaWasm } from 'assets';
 import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
+import { useMemo } from 'react';
 import { MarketNFT } from 'types';
 import { useMessage, useMetadata, useReadState } from './api';
 
@@ -27,12 +28,14 @@ function useMarketplaceState(payload: AnyJson) {
 }
 
 function useMarketNft(tokenId: string) {
-  const state = useMarketplaceState({ ItemInfo: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId } });
+  const payload = useMemo(() => ({ ItemInfo: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId } }), [tokenId]);
+  const state = useMarketplaceState(payload);
   return state?.ItemInfo;
 }
 
 function useMarketplace() {
-  const state = useMarketplaceState({ AllItems: null });
+  const payload = useMemo(() => ({ AllItems: null }), []);
+  const state = useMarketplaceState(payload);
   return state?.AllItems;
 }
 

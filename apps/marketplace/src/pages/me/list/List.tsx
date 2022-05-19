@@ -11,7 +11,11 @@ function List({ nfts }: Props) {
 
   const getCards = () => nfts.map(({ id, name, media }) => <Card key={id} id={id} name={name} media={media} />);
 
-  return isAnyNft ? <ul className={styles.list}>{getCards()}</ul> : <p>You don&apos;t have any tokens yet</p>;
+  return isAnyNft ? (
+    <ul className={styles.list}>{getCards()}</ul>
+  ) : (
+    <p className={styles.text}>You don&apos;t have any tokens yet</p>
+  );
 }
 
 export default List;
