@@ -1,9 +1,11 @@
+import { Metadata } from '@gear-js/api';
+
 import { MetaFieldsValues } from 'components/MetaFields';
 
-export type InitialValues = {
-  gasLimit: number;
+export type FormValues = Metadata & {
   value: number;
   payload: string;
-  __root: MetaFieldsValues | null;
+  gasLimit: number;
   programName: string;
+  __root: MetaFieldsValues | null;
 };
