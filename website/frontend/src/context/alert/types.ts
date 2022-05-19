@@ -9,37 +9,38 @@ export enum AlertType {
 
 export type AlertTypes = 'info' | 'error' | 'loading' | 'success';
 
-export interface AlertOptions {
+export type AlertOptions = {
   type?: AlertTypes;
   style?: CSSProperties;
   title?: string;
   timeout?: number;
   customId?: string;
   isClosed?: boolean;
-}
+};
 
-export interface AlertInstance {
+export type TemplateAlertOptions = Omit<AlertOptions, 'type'>;
+
+export type AlertInstance = {
   readonly id: string;
   readonly message: string;
   readonly options: AlertOptions;
-}
+};
 
-export interface AlertTimer {
+export type AlertTimer = {
   id: NodeJS.Timeout;
   alertId: string;
-}
+};
 
-export interface AlertTemplateProps {
+export type AlertTemplateProps = {
   alert: AlertInstance;
   onClose: () => void;
-}
+};
 
-export interface AlertContainerFactory {
-  show(message: string, options?: AlertOptions): string;
+export type AlertContainerFactory = {
   update(id: string, message: string, options?: AlertOptions): void;
   remove(id: string): void;
-  info(message?: ReactNode, options?: AlertOptions): string;
-  error(message?: ReactNode, options?: AlertOptions): string;
-  success(message?: ReactNode, options?: AlertOptions): string;
-  loading(message?: ReactNode, options?: AlertOptions): string;
-}
+  info(message?: ReactNode, options?: TemplateAlertOptions): string;
+  error(message?: ReactNode, options?: TemplateAlertOptions): string;
+  success(message?: ReactNode, options?: TemplateAlertOptions): string;
+  loading(message?: ReactNode, options?: TemplateAlertOptions): string;
+};

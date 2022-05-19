@@ -9,6 +9,7 @@ import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'hel
 import ServerRPCRequestService from './ServerRPCRequestService';
 import { nodeApi } from 'api/initApi';
 import { GetMetaResponse } from 'api/responses';
+import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 
 // TODO: (dispatch) fix it later
 
@@ -45,27 +46,27 @@ export const UploadProgram = async (
       initPayload,
     };
 
-  const customId = 'uploadProgramAlert';
+  const alertId = 'uploadProgramAlert';
 
   try {
     const { programId } = api.program.submit(program, meta);
 
     await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
       //doesn't create alerts with the same id
-      alert.loading('Sending', { title: 'Upload program', timeout: 0, isClosed: false, customId });
+      alert.loading('Sending', { title: 'Upload program', customId: alertId });
 
       if (data.status.isReady) {
-        alert.update(customId, 'Ready');
+        alert.update(alertId, 'Ready');
       }
 
       if (data.status.isInBlock) {
-        alert.update(customId, 'InBlock');
+        alert.update(alertId, 'InBlock');
       }
 
       if (data.status.isFinalized) {
         data.events.forEach(({ event: { method } }) => {
           if (method === 'InitMessageEnqueued') {
-            alert.update(customId, 'Finalized', { type: 'success', isClosed: true, timeout: 10000 });
+            alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
             callback();
 
             if (isDevChain()) {
@@ -124,14 +125,11 @@ export const UploadProgram = async (
       }
 
       if (data.status.isInvalid) {
-        alert.update(customId, PROGRAM_ERRORS.INVALID_TRANSACTION, {
-          type: 'error',
-          timeout: 10000,
-          isClosed: true,
-        });
+        alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
       }
     });
   } catch (error) {
+    alert.remove(alertId);
     alert.error(`${error}`, { title: 'Upload program' });
   }
 };
@@ -146,23 +144,23 @@ export const sendMessage = async (
   meta?: Metadata,
   payloadType?: string
 ) => {
+  const alertId = 'sendMessageAlert';
+
   try {
     const { signer } = await web3FromSource(account.meta.source);
 
     api.submit(message, meta, payloadType);
 
-    const customId = 'sendMessageAlert';
-
     await api.signAndSend(account.address, { signer }, (data: any) => {
       //doesn't create alerts with the same id
-      alert.loading('Sending', { title: 'Send message', timeout: 0, isClosed: false, customId });
+      alert.loading('Sending', { title: 'Send message', customId: alertId });
 
       if (data.status.isReady) {
-        alert.update(customId, 'Ready');
+        alert.update(alertId, 'Ready');
       }
 
       if (data.status.isInBlock) {
-        alert.update(customId, 'InBlock');
+        alert.update(alertId, 'InBlock');
       }
 
       if (data.status.isFinalized) {
@@ -170,7 +168,7 @@ export const sendMessage = async (
           const { method } = event.event;
 
           if (method === 'DispatchMessageEnqueued') {
-            alert.update(customId, 'Finalized', { type: 'success', timeout: 10000, isClosed: true });
+            alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
             callback();
           }
 
@@ -181,10 +179,11 @@ export const sendMessage = async (
       }
 
       if (data.status.isInvalid) {
-        alert.update(customId, PROGRAM_ERRORS.INVALID_TRANSACTION, { type: 'error', timeout: 10000, isClosed: true });
+        alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
       }
     });
   } catch (error) {
+    alert.remove(alertId);
     alert.error(`${error}`, { title: 'Send message' });
   }
 };

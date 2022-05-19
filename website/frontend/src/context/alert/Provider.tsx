@@ -4,8 +4,8 @@ import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
 
 import { Props } from '../types';
-import { DEFAULT_OPTIONS } from './const';
-import { AlertInstance, AlertTimer, AlertContainerFactory, AlertTypes, AlertOptions, AlertType } from './types';
+import { DEFAULT_INFO_OPTIONS, DEFAULT_ERROR_OPTIONS, DEFAULT_LOADING_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from './const';
+import { AlertTimer, AlertInstance, AlertOptions, TemplateAlertOptions, AlertContainerFactory } from './types';
 import { AlertContext } from './Context';
 
 import { AlertTemplate } from 'components/AlertTemplate';
@@ -17,19 +17,16 @@ const AlertProvider = ({ children }: Props) => {
   const timers = useRef<AlertTimer[]>([]);
   const [alerts, setAlerts] = useState<AlertInstance[]>([]);
 
-  const createTimer = useCallback(
-    (alertId: string, callback: (alertId: string) => void, timeout = DEFAULT_OPTIONS.timeout) => {
-      if (timeout > 0) {
-        const timerId = setTimeout(() => callback(alertId), timeout);
+  const createTimer = useCallback((alertId: string, callback: (alertId: string) => void, timeout) => {
+    if (timeout > 0) {
+      const timerId = setTimeout(() => callback(alertId), timeout);
 
-        timers.current.push({
-          id: timerId,
-          alertId,
-        });
-      }
-    },
-    []
-  );
+      timers.current.push({
+        id: timerId,
+        alertId,
+      });
+    }
+  }, []);
 
   const removeTimer = useCallback((alertId: string) => {
     const timerIndex = timers.current.findIndex((timer) => timer.alertId == alertId);
@@ -48,6 +45,36 @@ const AlertProvider = ({ children }: Props) => {
     [removeTimer]
   );
 
+  const show = useCallback(
+    (message: string, options: AlertOptions): string => {
+      const { timeout, customId } = options;
+
+      if (customId) {
+        const isCreated = alerts.some((alert) => alert.id === customId);
+
+        if (isCreated) {
+          return customId;
+        }
+      }
+
+      const id = customId || nanoid(8);
+
+      createTimer(id, remove, timeout);
+      setAlerts((prevState) => [
+        ...prevState,
+        {
+          id,
+          message,
+          options,
+        },
+      ]);
+
+      return id;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [createTimer, remove]
+  );
+
   const update = useCallback(
     (id: string, message: string, options?: Omit<AlertOptions, 'castomId'>) => {
       let updatedAlert: AlertInstance;
@@ -61,7 +88,7 @@ const AlertProvider = ({ children }: Props) => {
           }
 
           return (updatedAlert = {
-            ...alert,
+            id,
             message,
             options: {
               ...alert.options,
@@ -78,57 +105,25 @@ const AlertProvider = ({ children }: Props) => {
     [removeTimer, createTimer, remove]
   );
 
-  const show = useCallback(
-    (message: string, options?: AlertOptions): string => {
-      const alertId = options?.customId;
-
-      if (alertId) {
-        //@ts-ignore
-        const isCreated = alerts.includes((alert) => alert.id === alertId);
-
-        if (isCreated) {
-          return alertId;
-        }
-      }
-
-      const alert: AlertInstance = {
-        id: alertId || nanoid(8),
-        message,
-        options: {
-          ...DEFAULT_OPTIONS,
-          ...options,
-        },
-      };
-
-      createTimer(alert.id, remove, alert.options.timeout);
-      setAlerts((prevState) => [...prevState, alert]);
-
-      return alert.id;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [createTimer, remove]
-  );
-
   const сreateTemplateAlert = useCallback(
-    (type: AlertTypes) => (message: string, options?: AlertOptions) =>
+    (templateOptions: AlertOptions) => (message: string, options?: TemplateAlertOptions) =>
       show(message, {
+        ...templateOptions,
         ...options,
-        type,
       }),
     [show]
   );
 
   const alertContext: AlertContainerFactory = useMemo(
     () => ({
-      show,
       update,
       remove,
-      info: сreateTemplateAlert(AlertType.INFO),
-      error: сreateTemplateAlert(AlertType.ERROR),
-      success: сreateTemplateAlert(AlertType.SUCCESS),
-      loading: сreateTemplateAlert(AlertType.LOADING),
+      info: сreateTemplateAlert(DEFAULT_INFO_OPTIONS),
+      error: сreateTemplateAlert(DEFAULT_ERROR_OPTIONS),
+      success: сreateTemplateAlert(DEFAULT_SUCCESS_OPTIONS),
+      loading: сreateTemplateAlert(DEFAULT_LOADING_OPTIONS),
     }),
-    [show, update, remove, сreateTemplateAlert]
+    [update, remove, сreateTemplateAlert]
   );
 
   useEffect(() => {
