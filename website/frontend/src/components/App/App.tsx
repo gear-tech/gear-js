@@ -68,12 +68,6 @@ const Component = () => {
 
   return (
     <div className="app">
-      {/*{isLoading && (
-        <>
-          <div className="overlay" />
-          <LoadingPopup />
-        </>
-      )}*/}
       <Header />
       <Main>
         {isApiReady ? (
