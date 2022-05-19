@@ -8,11 +8,17 @@ export const Primitive = {
 
 export const PrimitiveResult = {
   __root: {
-    label: '__root',
-    name: '__root',
-    type: 'String',
+    __fields: {
+      label: 'String',
+      name: '__root',
+      type: 'String',
+    },
+    __name: '__root',
+    __path: '__root',
+    __select: false,
+    __type: '__fieldset',
   },
-  __values: {},
+  __values: '',
 };
 
 export const BTreeMap = {

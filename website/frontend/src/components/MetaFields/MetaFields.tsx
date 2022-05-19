@@ -4,9 +4,8 @@ import { useFormikContext } from 'formik';
 import type { MetaFieldsStruct, MetaFieldsValues } from './new-meta-parser';
 import { MetaFieldsContext, MetaFieldsContextProvider } from './MetaFieldsContext';
 import { Fieldset, EnumSelect } from './styles';
+import { isMetaField, isMetaFieldset, isMetaFieldsStruct, isMetaValuesStruct } from './new-meta-parser';
 import isObject from 'lodash.isobject';
-import { isMetaField, isMetaFieldset } from './new-meta-parser';
-import { MetaField } from './MetaField';
 
 const MetaFieldsComponent = () => {
   const formikContext = useFormikContext();
@@ -15,31 +14,67 @@ const MetaFieldsComponent = () => {
 
   const changeValues = useCallback(
     (key: string | undefined) => {
-      if (isMetaFieldset(metaFieldsContext.__root) && metaFieldsContext.__root && metaFieldsContext.__values) {
-        let values: MetaFieldsValues | string = metaFieldsContext.__values;
-        if (metaFieldsContext.__root.__select && key) {
-          values = {
-            [key]: metaFieldsContext.__values[key],
-          };
+      if (isMetaFieldset(metaFieldsContext.__root) && metaFieldsContext.__root) {
+        console.log(metaFieldsContext.__root.__fields);
+
+        if (isMetaField(metaFieldsContext.__root.__fields)) {
+          formikContext.resetForm({
+            values: {
+              ...(formikContext.values as object),
+              __root: '',
+            },
+          });
+        } else if (isObject(metaFieldsContext.__values) && metaFieldsContext.__values) {
+          let values: MetaFieldsValues | string = metaFieldsContext.__values;
+          if (metaFieldsContext.__root.__select && key) {
+            values = {
+              [key]: metaFieldsContext.__values[key],
+            };
+          }
+          formikContext.resetForm({
+            values: {
+              ...(formikContext.values as object),
+              __root: values,
+            },
+          });
         }
-        formikContext.resetForm({
-          values: {
-            ...(formikContext.values as object),
-            __root: values,
-          },
-        });
       }
     },
     [metaFieldsContext.__root, metaFieldsContext.__values, formikContext]
   );
 
   useEffect(() => {
-    console.log(metaFieldsContext);
     changeValues(firstKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (metaFieldsContext.__root && isObject(formikContext.values) && '__root' in formikContext.values) {
+  const renderFields = (fields: MetaFieldsStruct) => {
+    if (!isMetaFieldset(fields.__root) || !fields.__root?.__fields) {
+      return null;
+    }
+
+    if (isMetaField(fields.__root.__fields)) {
+      return <MetaFieldsItem data={fields.__root.__fields} />;
+    }
+
+    return (
+      <>
+        {fields.__root.__select && firstKey ? (
+          <MetaFieldsItem data={fields.__root.__fields[firstKey]} />
+        ) : (
+          Object.entries(fields.__root.__fields).map(([key, value]) => {
+            return <MetaFieldsItem data={value} key={key} />;
+          })
+        )}
+      </>
+    );
+  };
+
+  if (
+    isMetaFieldsStruct(metaFieldsContext) &&
+    isMetaValuesStruct(formikContext.values) &&
+    formikContext.values.__root !== null
+  ) {
     return (
       <Fieldset className="first-item">
         {isMetaFieldset(metaFieldsContext.__root) &&
@@ -67,19 +102,7 @@ const MetaFieldsComponent = () => {
             </EnumSelect>
           )}
 
-        {isMetaFieldset(metaFieldsContext.__root) && metaFieldsContext.__root?.__fields ? (
-          <>
-            {metaFieldsContext.__root.__select && firstKey ? (
-              <MetaFieldsItem data={metaFieldsContext.__root.__fields[firstKey]} />
-            ) : (
-              Object.entries(metaFieldsContext.__root.__fields).map(([key, value]) => {
-                return <MetaFieldsItem data={value} key={key} />;
-              })
-            )}
-          </>
-        ) : (
-          isMetaField(metaFieldsContext.__root) && <MetaField value={metaFieldsContext.__root} />
-        )}
+        {renderFields(metaFieldsContext)}
       </Fieldset>
     );
   }

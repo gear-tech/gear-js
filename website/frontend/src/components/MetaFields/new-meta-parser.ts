@@ -1,5 +1,6 @@
 import isObject from 'lodash.isobject';
 import setWith from 'lodash.setwith';
+import isString from 'lodash.isstring';
 
 export type PreparedMetaData = {
   [key: string]: string | PreparedMetaData;
@@ -16,7 +17,8 @@ export type MetaTypes =
   | 'Array'
   | 'BTreeMap'
   | 'BTreeSet'
-  | 'None';
+  | 'None'
+  | 'RootPrimitive'; // This type not available in meta;
 
 export type MetaItem = {
   type: MetaTypes;
@@ -65,8 +67,16 @@ export type MetaFieldsValues = {
 
 export type MetaFieldsStruct = {
   __root: MetaFieldset | MetaField | null;
-  __values: MetaFieldsValues | null;
+  __values: MetaFieldsValues | string | null;
 };
+
+export function isMetaFieldsStruct(value: unknown): value is MetaFieldsStruct {
+  return isObject(value) && '__root' in value && '__values' in value;
+}
+
+export function isMetaValuesStruct(value: unknown): value is MetaFieldsStruct {
+  return isObject(value) && '__root' in value;
+}
 
 type StackItem = {
   kind: MetaTypes;
@@ -114,15 +124,15 @@ function processStackItem(resultRef: MetaFieldsStruct, stackRef: StackItem[], cu
     });
   } else if (isObject(current.value)) {
     if (isMetaItem(current.value)) {
+      setUpField(resultRef, current.path, current.key, isSelect(current.kind));
       if (isPrimitive(current.value)) {
         stackRef.push({
-          kind: current.value.type,
-          path: current.path,
+          kind: current.key === '__root' ? 'RootPrimitive' : current.value.type,
+          path: current.key === '__root' ? [current.key, '__fields'] : current.path,
           value: current.value.value,
-          key: current.key,
+          key: current.key === '__root' ? current.value.name : current.key,
         });
       } else {
-        setUpField(resultRef, current.path, current.key, isSelect(current.kind));
         stackRef.push({
           kind: current.value.type,
           path: [...current.path, '__fields', current.value.name],
@@ -168,30 +178,45 @@ function parseField(data: MetaItem) {
     const current = stack.pop();
 
     if (current) {
-      if (!result.__values) {
-        result.__values = {};
-      }
-
       // Check if this primitive
-      if (current.kind === 'Primitive') {
-        const key = current.path.at(-1);
+      if (current.kind === 'RootPrimitive') {
         setWith(
           result,
           current.path,
           {
-            label: key,
+            label: current.key,
             name: current.path.filter((i) => i !== '__fields').join('.'),
             type: isMetaItem(current.value) ? current.value.value : current.value,
           },
           Object
         );
 
+        result.__values = '';
+      }
+      if (current.kind === 'Primitive') {
         setWith(
-          result.__values,
-          current.path.filter((i) => !['__root', '__fields'].includes(i)),
-          current.value === 'None' ? 'None' : '',
+          result,
+          current.path,
+          {
+            label: current.key,
+            name: current.path.filter((i) => i !== '__fields').join('.'),
+            type: isMetaItem(current.value) ? current.value.value : current.value,
+          },
           Object
         );
+
+        if (!result.__values) {
+          result.__values = {};
+        }
+
+        if (!isString(result.__values)) {
+          setWith(
+            result.__values,
+            current.path.filter((i) => !['__root', '__fields'].includes(i)),
+            current.value === 'None' ? 'None' : '',
+            Object
+          );
+        }
       } else if (isObject(current.value)) {
         if (
           current.kind === 'Struct' ||
