@@ -5,6 +5,10 @@ on:
     branches: [master]
     paths:
       - utils/meta-cli/**
+  push:
+    branches: [master]
+    paths:
+      - utils/meta-cli/**
 
 jobs:
   test:
