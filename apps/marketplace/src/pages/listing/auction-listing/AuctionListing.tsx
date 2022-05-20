@@ -5,6 +5,7 @@ import { Listing, PriceModal, ConfirmationModal } from 'components';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { Offer as OfferType } from 'types';
+import OnLogin from 'components/on-login';
 import styles from './AuctionListing.module.scss';
 
 type Props = {
@@ -82,11 +83,13 @@ function AuctionListing(props: Props) {
             <span>Start time: {startDate}</span>
             <span>End time: {endDate}</span>
           </p>
-          {isOwner ? (
-            isAuctionOver && <Button text="Settle auction" onClick={openConfirmationModal} block />
-          ) : (
-            <Button text="Make bid" onClick={openPriceModal} block />
-          )}
+          <OnLogin>
+            {isOwner ? (
+              isAuctionOver && <Button text="Settle auction" onClick={openConfirmationModal} block />
+            ) : (
+              <Button text="Make bid" onClick={openPriceModal} block />
+            )}
+          </OnLogin>
         </div>
       </Listing>
       {isPriceModalOpen && <PriceModal heading="Enter your bid" close={closeModal} onSubmit={bid} />}

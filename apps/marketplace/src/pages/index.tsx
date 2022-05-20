@@ -1,4 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
+import OnLogin from 'components/on-login';
+import InfoText from 'components/info-text';
 import Listing from './listing';
 import Listings from './listings';
 import Create from './create';
@@ -7,12 +9,27 @@ import Me from './me';
 const routes = [
   { path: '/', Page: Listings },
   { path: '/listing/:id', Page: Listing },
-  { path: '/create', Page: Create },
-  { path: '/me', Page: Me },
+  { path: '/create', Page: Create, isPrivate: true },
+  { path: '/me', Page: Me, isPrivate: true },
 ];
 
 function Routing() {
-  const getRoutes = () => routes.map(({ path, Page }) => <Route key={path} path={path} element={<Page />} />);
+  const getRoutes = () =>
+    routes.map(({ path, Page, isPrivate }) => (
+      <Route
+        key={path}
+        path={path}
+        element={
+          isPrivate ? (
+            <OnLogin fallback={<InfoText text="In order to use all marketplace features, please login" />}>
+              <Page />
+            </OnLogin>
+          ) : (
+            <Page />
+          )
+        }
+      />
+    ));
 
   return <Routes>{getRoutes()}</Routes>;
 }

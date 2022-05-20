@@ -1,3 +1,4 @@
+import InfoText from 'components/info-text';
 import { MarketNFT } from 'types';
 import Card from './card';
 import styles from './List.module.scss';
@@ -32,7 +33,7 @@ function List({ nfts }: Props) {
   return isAnyNft ? (
     <ul className={styles.list}>{getCards()}</ul>
   ) : (
-    <p className={styles.text}>There are no listings at the moment.</p>
+    <InfoText text="There are no listings at the moment." />
   );
 }
 

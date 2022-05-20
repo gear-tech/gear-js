@@ -1,6 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { Listing, PriceModal } from 'components';
+import OnLogin from 'components/on-login';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
@@ -66,12 +67,14 @@ function OwnerListing(props: Props) {
         royalty={royalty}
         rarity={rarity}
         attrs={attrs}>
-        {isOwner && (
-          <>
-            <Button text="Start auction" onClick={openAuctionModal} block />
-            <Button text="Start sale" onClick={openPriceModal} block />
-          </>
-        )}
+        <OnLogin>
+          {isOwner && (
+            <>
+              <Button text="Start auction" onClick={openAuctionModal} block />
+              <Button text="Start sale" onClick={openPriceModal} block />
+            </>
+          )}
+        </OnLogin>
       </Listing>
       {isAuctionModalOpen && <AuctionModal close={closeModal} />}
       {isPriceModalOpen && <PriceModal heading="Enter price to start sale" close={closeModal} onSubmit={startSale} />}
