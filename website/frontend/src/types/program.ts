@@ -26,12 +26,12 @@ export interface ProgramPaginationModel {
 }
 
 export interface UploadProgramModel {
-  initPayload: string;
-  gasLimit: number;
-  value: number;
-  meta: Metadata;
   id?: string;
+  meta?: Metadata;
+  value: number;
   title?: string;
+  gasLimit: number;
+  initPayload: string;
   programName?: string;
 }
 
