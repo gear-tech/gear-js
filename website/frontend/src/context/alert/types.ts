@@ -25,10 +25,7 @@ export type AlertInstance = {
   readonly options: AlertOptions;
 };
 
-export type AlertTimer = {
-  id: NodeJS.Timeout;
-  alertId: string;
-};
+export type AlertTimer = Map<string, NodeJS.Timeout>;
 
 export type AlertTemplateProps = {
   alert: AlertInstance;

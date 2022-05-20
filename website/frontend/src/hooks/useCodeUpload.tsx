@@ -54,7 +54,7 @@ const useCodeUpload = () => {
 
           events.forEach(({ event }) => {
             const { method, section } = event;
-            console.log(method);
+
             if (method === 'CodeSaved') {
               alert.success(<CopiedInfo title="Code hash" info={codeHash} />, {
                 title: `${section}.CodeSaved`,

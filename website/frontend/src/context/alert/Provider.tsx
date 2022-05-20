@@ -15,26 +15,23 @@ import { Wrapper, Transition } from 'components/Alert';
 const AlertProvider = ({ children }: Props) => {
   const root = useRef<HTMLDivElement | null>(null);
 
-  const timers = useRef<AlertTimer[]>([]);
+  const timers = useRef<AlertTimer>(new Map());
   const [alerts, setAlerts] = useState<AlertInstance[]>([]);
 
   const createTimer = useCallback((alertId: string, callback: (alertId: string) => void, timeout) => {
     if (timeout > 0) {
       const timerId = setTimeout(() => callback(alertId), timeout);
 
-      timers.current.push({
-        id: timerId,
-        alertId,
-      });
+      timers.current.set(alertId, timerId);
     }
   }, []);
 
   const removeTimer = useCallback((alertId: string) => {
-    const timerIndex = timers.current.findIndex((timer) => timer.alertId == alertId);
+    const timer = timers.current.get(alertId);
 
-    if (timerIndex !== -1) {
-      clearTimeout(timers.current[timerIndex].id);
-      timers.current.splice(timerIndex, 1);
+    if (timer) {
+      clearTimeout(timer);
+      timers.current.delete(alertId);
     }
   }, []);
 
@@ -124,7 +121,7 @@ const AlertProvider = ({ children }: Props) => {
     const timersRef = timers.current;
 
     return () => {
-      timersRef.forEach((timer) => clearTimeout(timer.id));
+      timersRef.forEach(clearTimeout);
 
       if (root.current) {
         document.body.removeChild(root.current);
