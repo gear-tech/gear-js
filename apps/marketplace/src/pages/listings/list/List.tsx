@@ -23,7 +23,7 @@ function List({ nfts }: Props) {
         <Card
           key={tokenId}
           id={tokenId}
-          price={price || (currentPrice as string)}
+          price={price || currentPrice}
           isAuction={!!auction}
           isVisible={nft.isVisible}
         />

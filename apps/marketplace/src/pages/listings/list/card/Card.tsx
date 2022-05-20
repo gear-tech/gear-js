@@ -6,7 +6,7 @@ import styles from './Card.module.scss';
 
 type Props = {
   id: string;
-  price: string;
+  price: string | null | undefined;
   isAuction: boolean;
   isVisible: boolean;
 };
@@ -31,11 +31,11 @@ function Card({ id, price, isAuction, isVisible }: Props) {
           </div>
           <div className={styles.value}>
             <h3 className={styles.heading}>{priceText}</h3>
-            <p className={styles.text}>{price}</p>
+            <p className={styles.text}>{price || 'None'}</p>
           </div>
         </div>
       </div>
-      <Button text={buttonText} block />
+      {price && <Button text={buttonText} block />}
     </Link>
   ) : null;
 }
