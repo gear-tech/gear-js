@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import { Listing, PriceModal } from 'components';
+import { Listing, PriceModal, ConfirmationModal } from 'components';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { Offer as OfferType } from 'types';
@@ -29,21 +29,40 @@ function AuctionListing(props: Props) {
 
   const sendMessage = useMarketplaceMessage();
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 
-  const startDate = new Date(+startedAt.replaceAll(',', '')).toLocaleString();
-  const endDate = new Date(+endedAt.replaceAll(',', '')).toLocaleString();
+  const getTimestamp = (value: string) => +value.replaceAll(',', '');
+
+  const startTimestamp = getTimestamp(startedAt);
+  const endTimestamp = getTimestamp(endedAt);
+
+  const startDate = new Date(startTimestamp).toLocaleString();
+  const endDate = new Date(endTimestamp).toLocaleString();
+
+  const currentTimestamp = new Date().getTime();
+  const isAuctionOver = currentTimestamp > endTimestamp;
 
   const openPriceModal = () => {
     setIsPriceModalOpen(true);
   };
 
+  const openConfirmationModal = () => {
+    setIsConfirmationModalOpen(true);
+  };
+
   const closeModal = () => {
     setIsPriceModalOpen(false);
+    setIsConfirmationModalOpen(false);
   };
 
   const bid = (priceValue: string) => {
     const payload = { AddBid: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, price: priceValue } };
     sendMessage(payload, priceValue).then(closeModal);
+  };
+
+  const settle = () => {
+    const payload = { SettleAuction: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id } };
+    sendMessage(payload).then(closeModal);
   };
 
   return (
@@ -58,17 +77,20 @@ function AuctionListing(props: Props) {
         royalty={royalty}
         rarity={rarity}
         attrs={attrs}>
-        {!isOwner && (
-          <div className={styles.body}>
-            <p className={styles.time}>
-              <span>Start time: {startDate}</span>
-              <span>End time: {endDate}</span>
-            </p>
+        <div className={styles.body}>
+          <p className={styles.time}>
+            <span>Start time: {startDate}</span>
+            <span>End time: {endDate}</span>
+          </p>
+          {isOwner ? (
+            isAuctionOver && <Button text="Settle auction" onClick={openConfirmationModal} block />
+          ) : (
             <Button text="Make bid" onClick={openPriceModal} block />
-          </div>
-        )}
+          )}
+        </div>
       </Listing>
       {isPriceModalOpen && <PriceModal heading="Enter your bid" close={closeModal} onSubmit={bid} />}
+      {isConfirmationModalOpen && <ConfirmationModal heading="Settle auction?" close={closeModal} onSubmit={settle} />}
     </>
   );
 }
