@@ -46,27 +46,31 @@ export const UploadProgram = async (
       initPayload,
     };
 
-  const alertId = 'uploadProgramAlert';
+  const alertTitle = 'gear.submitProgram';
+
+  const alertId = alert.loading('SignIn', { title: alertTitle });
 
   try {
     const { programId } = api.program.submit(program, meta);
 
     await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
-      //doesn't create alerts with the same id
-      alert.loading('Sending', { title: 'Upload program', customId: alertId });
-
       if (data.status.isReady) {
         alert.update(alertId, 'Ready');
+
+        return;
       }
 
       if (data.status.isInBlock) {
         alert.update(alertId, 'InBlock');
+
+        return;
       }
 
       if (data.status.isFinalized) {
+        alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
         data.events.forEach(({ event: { method } }) => {
           if (method === 'InitMessageEnqueued') {
-            alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
             callback();
 
             if (isDevChain()) {
@@ -118,10 +122,12 @@ export const UploadProgram = async (
 
           if (method === 'ExtrinsicFailed') {
             alert.error('Extrinsic Failed', {
-              title: 'Upload program',
+              title: alertTitle,
             });
           }
         });
+
+        return;
       }
 
       if (data.status.isInvalid) {
@@ -129,8 +135,7 @@ export const UploadProgram = async (
       }
     });
   } catch (error) {
-    alert.remove(alertId);
-    alert.error(`${error}`, { title: 'Upload program' });
+    alert.update(alertId, `${error}`, DEFAULT_ERROR_OPTIONS);
   }
 };
 
@@ -144,38 +149,47 @@ export const sendMessage = async (
   meta?: Metadata,
   payloadType?: string
 ) => {
-  const alertId = 'sendMessageAlert';
+  const alertTitle = 'gear.sendMessage';
+
+  const alertId = alert.loading('SignIn', { title: alertTitle });
 
   try {
     const { signer } = await web3FromSource(account.meta.source);
 
     api.submit(message, meta, payloadType);
 
-    await api.signAndSend(account.address, { signer }, (data: any) => {
-      //doesn't create alerts with the same id
-      alert.loading('Sending', { title: 'Send message', customId: alertId });
-
+    await api.signAndSend(account.address, { signer }, (data) => {
       if (data.status.isReady) {
         alert.update(alertId, 'Ready');
+
+        return;
       }
 
       if (data.status.isInBlock) {
         alert.update(alertId, 'InBlock');
+
+        return;
       }
 
       if (data.status.isFinalized) {
-        data.events.forEach((event: any) => {
-          const { method } = event.event;
+        alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
+        data.events.forEach(({ event }) => {
+          const { method, section } = event;
 
           if (method === 'DispatchMessageEnqueued') {
-            alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+            alert.success('Success', { title: `${section}.DispatchMessageEnqueued` });
             callback();
+
+            return;
           }
 
           if (method === 'ExtrinsicFailed') {
-            alert.error('Extrinsic Failed', { title: 'Send message' });
+            alert.error('Extrinsic Failed', { title: alertTitle });
           }
         });
+
+        return;
       }
 
       if (data.status.isInvalid) {
@@ -183,8 +197,7 @@ export const sendMessage = async (
       }
     });
   } catch (error) {
-    alert.remove(alertId);
-    alert.error(`${error}`, { title: 'Send message' });
+    alert.update(alertId, `${error}`, DEFAULT_ERROR_OPTIONS);
   }
 };
 

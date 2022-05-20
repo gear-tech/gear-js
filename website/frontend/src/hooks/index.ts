@@ -6,6 +6,7 @@ import { useBodyScrollLock } from './useBodyScrollLock';
 import { useSubscription } from './useSubscription';
 import { useChangeEffect } from './useChangeEffect';
 import { useProgram } from './useProgram';
+import { useCodeUpload } from './useCodeUpload';
 
 const useApi = () => useContext(ApiContext);
 const useAlert = () => useContext(AlertContext);
@@ -21,6 +22,7 @@ export {
   useEditor,
   useEvents,
   useProgram,
+  useCodeUpload,
   useOutsideClick,
   useChangeEffect,
   useBodyScrollLock,

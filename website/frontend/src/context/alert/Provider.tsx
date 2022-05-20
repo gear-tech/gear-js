@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { nanoid } from 'nanoid/non-secure';
 import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
@@ -11,6 +11,7 @@ import { AlertContext } from './Context';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Wrapper, Transition } from 'components/Alert';
 
+//Consider integrating react-toastify
 const AlertProvider = ({ children }: Props) => {
   const root = useRef<HTMLDivElement | null>(null);
 
@@ -46,25 +47,15 @@ const AlertProvider = ({ children }: Props) => {
   );
 
   const show = useCallback(
-    (message: string, options: AlertOptions): string => {
-      const { timeout, customId } = options;
+    (content: ReactNode, options: AlertOptions): string => {
+      const id = nanoid(8);
 
-      if (customId) {
-        const isCreated = alerts.some((alert) => alert.id === customId);
-
-        if (isCreated) {
-          return customId;
-        }
-      }
-
-      const id = customId || nanoid(8);
-
-      createTimer(id, remove, timeout);
+      createTimer(id, remove, options.timeout);
       setAlerts((prevState) => [
         ...prevState,
         {
           id,
-          message,
+          content,
           options,
         },
       ]);
@@ -76,7 +67,7 @@ const AlertProvider = ({ children }: Props) => {
   );
 
   const update = useCallback(
-    (id: string, message: string, options?: Omit<AlertOptions, 'castomId'>) => {
+    (id: string, content: ReactNode, options?: Omit<AlertOptions, 'castomId'>) => {
       let updatedAlert: AlertInstance;
 
       removeTimer(id);
@@ -89,7 +80,7 @@ const AlertProvider = ({ children }: Props) => {
 
           return (updatedAlert = {
             id,
-            message,
+            content,
             options: {
               ...alert.options,
               ...options,
@@ -106,8 +97,8 @@ const AlertProvider = ({ children }: Props) => {
   );
 
   const сreateTemplateAlert = useCallback(
-    (templateOptions: AlertOptions) => (message: string, options?: TemplateAlertOptions) =>
-      show(message, {
+    (templateOptions: AlertOptions) => (content: ReactNode, options?: TemplateAlertOptions) =>
+      show(content, {
         ...templateOptions,
         ...options,
       }),

@@ -15,7 +15,7 @@ const AlertTemplate = ({ alert, onClose }: AlertTemplateProps) => {
     <div className={styles.alert} style={style}>
       {isClosed && <Button icon={closeSVG} color="transparent" className={styles.closeBtn} onClick={onClose} />}
       <header className={clsx(styles.header, styles[type || ''])}>{title || type}</header>
-      <div className={styles.body}>{alert.message}</div>
+      <div className={styles.body}>{alert.content}</div>
       <footer className={styles.footer}>
         {currentDate.toLocaleDateString()} / {currentDate.toLocaleTimeString()}
       </footer>

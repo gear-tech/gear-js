@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState, VFC } from 'react';
-import { useAlert } from 'hooks';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
@@ -112,19 +111,9 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       programOptions.initPayload = isManualPayload ? payload : prepareToSend(values.__root);
     }
 
-    UploadProgram(
-      api,
-      currentAccount,
-      droppedFile,
-      programOptions,
-      metaFile,
-      enableLoading,
-      disableLoading,
-      alert,
-      () => {
-        setDroppedFile(null);
-      }
-    ).catch(() => {
+    UploadProgram(api, currentAccount, droppedFile, programOptions, metaFile, alert, () => {
+      setDroppedFile(null);
+    }).catch(() => {
       alert.error(`Invalid JSON format`);
     });
   };

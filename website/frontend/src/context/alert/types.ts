@@ -14,7 +14,6 @@ export type AlertOptions = {
   style?: CSSProperties;
   title?: string;
   timeout?: number;
-  customId?: string;
   isClosed?: boolean;
 };
 
@@ -22,7 +21,7 @@ export type TemplateAlertOptions = Omit<AlertOptions, 'type'>;
 
 export type AlertInstance = {
   readonly id: string;
-  readonly message: string;
+  readonly content: ReactNode;
   readonly options: AlertOptions;
 };
 
@@ -37,10 +36,10 @@ export type AlertTemplateProps = {
 };
 
 export type AlertContainerFactory = {
-  update(id: string, message: string, options?: AlertOptions): void;
+  update(id: string, content: ReactNode, options?: AlertOptions): void;
   remove(id: string): void;
-  info(message?: ReactNode, options?: TemplateAlertOptions): string;
-  error(message?: ReactNode, options?: TemplateAlertOptions): string;
-  success(message?: ReactNode, options?: TemplateAlertOptions): string;
-  loading(message?: ReactNode, options?: TemplateAlertOptions): string;
+  info(content?: ReactNode, options?: TemplateAlertOptions): string;
+  error(content?: ReactNode, options?: TemplateAlertOptions): string;
+  success(content?: ReactNode, options?: TemplateAlertOptions): string;
+  loading(content?: ReactNode, options?: TemplateAlertOptions): string;
 };
