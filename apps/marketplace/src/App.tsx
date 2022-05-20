@@ -1,19 +1,18 @@
-import { Header, Footer, Loader, ApiLoader } from 'components';
+import { Header, Footer, ApiLoader, RefreshButton } from 'components';
 import { withProviders } from 'context';
-import { useApi, useLoading } from 'hooks';
+import { useApi } from 'hooks';
 import Routing from 'pages';
 import './App.scss';
 
 function App() {
   const { isApiReady } = useApi();
-  const { isLoading } = useLoading();
 
   return (
     <>
       <Header />
       <main>
         {isApiReady ? <Routing /> : <ApiLoader />}
-        {isLoading && <Loader />}
+        <RefreshButton />
       </main>
       <Footer />
     </>

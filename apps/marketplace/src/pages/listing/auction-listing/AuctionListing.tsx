@@ -84,15 +84,15 @@ function AuctionListing(props: Props) {
             <span>End time: {endDate}</span>
           </p>
           <OnLogin>
-            {isOwner ? (
-              isAuctionOver && <Button text="Settle auction" onClick={openConfirmationModal} block />
-            ) : (
-              <Button text="Make bid" onClick={openPriceModal} block />
-            )}
+            {isOwner
+              ? isAuctionOver && <Button text="Settle auction" onClick={openConfirmationModal} block />
+              : !isAuctionOver && <Button text="Make bid" onClick={openPriceModal} block />}
           </OnLogin>
         </div>
       </Listing>
-      {isPriceModalOpen && <PriceModal heading="Enter your bid" close={closeModal} onSubmit={bid} />}
+      {isPriceModalOpen && (
+        <PriceModal heading={`Enter your bid. Min price is ${price}`} close={closeModal} onSubmit={bid} />
+      )}
       {isConfirmationModalOpen && <ConfirmationModal heading="Settle auction?" close={closeModal} onSubmit={settle} />}
     </>
   );

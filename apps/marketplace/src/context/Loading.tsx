@@ -3,14 +3,17 @@ import Props from './types';
 
 type Value = {
   isLoading: boolean;
+  refresh: boolean;
   enableLoading: () => void;
   disableLoading: () => void;
+  triggerRefresh: () => void;
 };
 
 const LoadingContext = createContext<Value>({} as Value);
 
 function LoadingProvider({ children }: Props) {
   const [isLoading, setIsLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const enableLoading = () => {
     setIsLoading(true);
@@ -20,8 +23,12 @@ function LoadingProvider({ children }: Props) {
     setIsLoading(false);
   };
 
+  const triggerRefresh = () => {
+    setRefresh((prevValue) => !prevValue);
+  };
+
   const { Provider } = LoadingContext;
-  const value = { isLoading, enableLoading, disableLoading };
+  const value = { isLoading, refresh, enableLoading, disableLoading, triggerRefresh };
 
   return <Provider value={value}>{children}</Provider>;
 }

@@ -1,11 +1,7 @@
 import styles from './Loader.module.scss';
 
 function Loader() {
-  return (
-    <div className={styles.loader}>
-      <span />
-    </div>
-  );
+  return <span className={styles.loader} />;
 }
 
 export default Loader;

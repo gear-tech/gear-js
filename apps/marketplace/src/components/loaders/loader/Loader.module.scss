@@ -3,18 +3,15 @@
 
 .loader {
   position: absolute;
+  top: 0;
   bottom: 0;
-  right: 0;
-  padding: 32px;
-  transform: translateZ(1px);
-
-  > span {
-    @include square(32px);
-    display: inline-block;
-    background-color: $textColorSecondary;
-    border-radius: 50%;
-    animation: flip 5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-  }
+  right: calc(100% + 32px);
+  margin: auto;
+  @include square(32px);
+  display: inline-block;
+  background-color: $textColorSecondary;
+  border-radius: 50%;
+  animation: flip 5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
 
 @keyframes flip {
