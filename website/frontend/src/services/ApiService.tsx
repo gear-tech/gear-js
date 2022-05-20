@@ -12,15 +12,11 @@ import { GetMetaResponse } from 'api/responses';
 
 // TODO: (dispatch) fix it later
 
-type ProgramModel = Omit<UploadProgramModel, 'meta'> & {
-  meta?: Metadata;
-};
-
 export const UploadProgram = async (
   api: GearApi,
   account: InjectedAccountWithMeta,
   file: File,
-  programModel: ProgramModel,
+  programModel: UploadProgramModel,
   metaFile: any,
   enableLoading: () => void,
   disableLoading: () => void,
@@ -30,8 +26,6 @@ export const UploadProgram = async (
   const apiRequest = new ServerRPCRequestService();
   const { gasLimit, value, initPayload, meta, title, programName } = programModel;
 
-  console.log(meta, 'meta');
-  console.log(metaFile, 'file');
   /* eslint-disable @typescript-eslint/naming-convention */
   let name = '';
 

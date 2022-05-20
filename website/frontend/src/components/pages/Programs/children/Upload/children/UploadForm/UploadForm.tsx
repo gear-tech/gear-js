@@ -49,28 +49,28 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const handleUploadMetaFile = async (file: File) => {
     try {
       const fileBuffer = (await readFileAsync(file)) as Buffer;
-      const metaWasm: Metadata = await getWasmMetadata(fileBuffer);
+      const metadata: Metadata = await getWasmMetadata(fileBuffer);
 
-      if (!metaWasm) {
+      if (!metadata) {
         return;
       }
 
       const currentMetaBuffer = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
 
-      const decodedTypes = decodeHexTypes(metaWasm?.types || '');
-      const typeStructure = createPayloadTypeStructure(metaWasm?.init_input || '', decodedTypes, true);
+      const decodedTypes = decodeHexTypes(metadata?.types || '');
+      const typeStructure = createPayloadTypeStructure(metadata?.init_input || '', decodedTypes, true);
       const parsedStructure = parseMeta(typeStructure);
 
-      const valuesFromFile = getMetaValues(metaWasm);
+      const valuesFromFile = getMetaValues(metadata);
 
-      setMeta(metaWasm);
+      setMeta(metadata);
       setMetaFile(currentMetaBuffer);
       setPayloadForm(parsedStructure);
       setFieldFromFile(Object.keys(valuesFromFile));
       setInitialValues((prevState) => ({
         ...prevState,
         ...valuesFromFile,
-        programName: metaWasm.title || '',
+        programName: metadata.title || '',
         payload: getPreformattedText(typeStructure),
       }));
     } catch (error) {
