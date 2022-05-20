@@ -5,7 +5,7 @@ import Header from './header';
 import List from './list';
 import styles from './Listings.module.scss';
 
-const filters = ['All', 'Buy now', 'On auction', 'New', 'Has offers'];
+const filters = ['All', 'Buy now', 'On auction', 'Has offers'];
 
 type Conditions = {
   [key: string]: (nft: MarketNFT) => boolean | MarketNFT;
@@ -15,7 +15,6 @@ const conditions: Conditions = {
   All: (nft) => nft,
   'Buy now': ({ price }) => !!price,
   'On auction': ({ auction }) => !!auction,
-  New: (nft) => nft,
   'Has offers': ({ offers, auction }) => (auction ? auction.bids.length > 0 : offers.length > 0),
 };
 

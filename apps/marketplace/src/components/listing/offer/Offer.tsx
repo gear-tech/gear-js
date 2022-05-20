@@ -41,7 +41,7 @@ function Offer({ bid, bidder, listingOwner, hash }: Props) {
       AcceptOffer: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, offerHash: hash },
     };
 
-    sendMessage(payload);
+    sendMessage(payload).then(closeModal);
   };
 
   return (
