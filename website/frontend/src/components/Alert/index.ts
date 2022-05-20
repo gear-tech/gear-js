@@ -1,2 +1,2 @@
-export * from "./Wrapper"
-export * from "./Transition"
+export * from './Wrapper';
+export * from './Transition';
