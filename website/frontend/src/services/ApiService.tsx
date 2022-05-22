@@ -16,14 +16,15 @@ export const UploadProgram = async (
   api: GearApi,
   account: InjectedAccountWithMeta,
   file: File,
-  { gasLimit, value, initPayload, meta, title, programName }: UploadProgramModel,
+  programModel: UploadProgramModel,
   metaFile: any,
   enableLoading: () => void,
   disableLoading: () => void,
   alert: AlertContainer,
-  callback: () => void,
+  callback: () => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
+  const { gasLimit, value, initPayload, meta, title, programName } = programModel;
 
   /* eslint-disable @typescript-eslint/naming-convention */
   let name = '';
@@ -131,7 +132,7 @@ export const sendMessage = async (
   alert: AlertContainer,
   callback: () => void,
   meta?: Metadata,
-  payloadType?: string,
+  payloadType?: string
 ) => {
   try {
     const { signer } = await web3FromSource(account.meta.source);
@@ -179,7 +180,7 @@ export const addMetadata = async (
   account: InjectedAccountWithMeta,
   programId: string,
   name: any,
-  alert: AlertContainer,
+  alert: AlertContainer
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);

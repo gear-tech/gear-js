@@ -6,7 +6,7 @@ import { GetMetaResponse } from 'api/responses';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
 import { InitialValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
-import { InitialValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
+import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { SetFieldValue } from 'types/common';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 import { PreparedMetaData, prepareToSend } from './components/MetaFields';
