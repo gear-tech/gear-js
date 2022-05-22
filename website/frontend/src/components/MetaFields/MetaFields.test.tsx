@@ -21,8 +21,8 @@ import {
   ResultResult,
   Tuple,
   TupleResult,
-  // Array,
-  // ArrayResult,
+  Array,
+  ArrayResult,
   Enum,
   EnumResult,
   Option,
@@ -177,22 +177,21 @@ describe('meta fields', () => {
     });
   });
 
-  // FIXME add special symbol handling
-  // test('Array', async () => {
-  //   const handleSubmit = jest.fn();
-  //   const { getByTestId, getByRole } = render(
-  //     <MetaFormWrapper onSubmit={handleSubmit} metaData={Array}>
-  //       {(meta) => <MetaFields data={meta} />}
-  //     </MetaFormWrapper>
-  //   );
-  //   await userEvent.type(getByTestId(ArrayResult.__root.__fields['[u8;4]'].name), 'Array');
-  //   const submit = getByRole('button');
-  //   await userEvent.click(submit);
-  //
-  //   await waitFor(() => {
-  //     expect(handleSubmit).toHaveBeenCalledWith('Array');
-  //   });
-  // });
+  test('Array', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={Array}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+    await userEvent.type(getByTestId(ArrayResult.__root.__fields['__u8;4__'].name), 'Array');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+  
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith('Array');
+    });
+  });
 
   test('Result', async () => {
     const handleSubmit = jest.fn();

@@ -34,9 +34,7 @@ export const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData, children, onSub
         initialValues={{
           __root: null,
         }}
-        onSubmit={(values) => {
-          onSubmit(values);
-        }}
+        onSubmit={onSubmit}
       >
         <Form>
           {meta && children(meta)}
@@ -61,6 +59,7 @@ const Template: ComponentStory<typeof MetaFormWrapper> = (args) => {
   return (
     <MetaFormWrapper
       onSubmit={(values) => {
+        console.log(values);
         console.log(prepareToSend(values.__root as PreparedMetaData));
       }}
       metaData={args.metaData}

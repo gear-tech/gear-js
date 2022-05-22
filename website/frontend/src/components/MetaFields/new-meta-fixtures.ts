@@ -668,9 +668,9 @@ export const Array = {
 export const ArrayResult = {
   __root: {
     __fields: {
-      '[u8;4]': {
+      '__u8;4__': {
         label: '[u8;4]',
-        name: '__root.[u8;4]',
+        name: '__root.__u8;4__',
         type: 'u8',
       },
     },
@@ -680,7 +680,7 @@ export const ArrayResult = {
     __type: '__fieldset',
   },
   __values: {
-    '[u8;4]': '',
+    '__u8;4__': '',
   },
 };
 

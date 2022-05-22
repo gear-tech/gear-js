@@ -1,6 +1,7 @@
 import isObject from 'lodash.isobject';
 import setWith from 'lodash.setwith';
 import isString from 'lodash.isstring';
+import { bracketToDoubleUnderscore, doubleUnderscoreToBracket } from './utils';
 
 export type PreparedMetaData = {
   [key: string]: string | PreparedMetaData;
@@ -123,8 +124,12 @@ function processStackItem(resultRef: MetaFieldsStruct, stackRef: StackItem[], cu
       }
     });
   } else if (isObject(current.value)) {
+    setUpField(resultRef, current.path, current.key, isSelect(current.kind));
+
     if (isMetaItem(current.value)) {
-      setUpField(resultRef, current.path, current.key, isSelect(current.kind));
+      if (current.value.type === 'Array') {
+        current.value.name = bracketToDoubleUnderscore(current.value.name);
+      }
       if (isPrimitive(current.value)) {
         stackRef.push({
           kind: current.key === '__root' ? 'RootPrimitive' : current.value.type,
@@ -141,7 +146,6 @@ function processStackItem(resultRef: MetaFieldsStruct, stackRef: StackItem[], cu
         });
       }
     } else {
-      setUpField(resultRef, current.path, current.key, isSelect(current.kind));
       Object.entries(current.value)
         .reverse()
         .forEach(([key, value]) => {
@@ -178,7 +182,7 @@ function parseField(data: MetaItem) {
     const current = stack.pop();
 
     if (current) {
-      // Check if this primitive
+      // this necessary for handling only primitive meta
       if (current.kind === 'RootPrimitive') {
         setWith(
           result,
@@ -198,7 +202,7 @@ function parseField(data: MetaItem) {
           result,
           current.path,
           {
-            label: current.key,
+            label: doubleUnderscoreToBracket(current.key),
             name: current.path.filter((i) => i !== '__fields').join('.'),
             type: isMetaItem(current.value) ? current.value.value : current.value,
           },
