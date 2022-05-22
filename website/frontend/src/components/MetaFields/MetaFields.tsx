@@ -15,8 +15,6 @@ const MetaFieldsComponent = () => {
   const changeValues = useCallback(
     (key: string | undefined) => {
       if (isMetaFieldset(metaFieldsContext.__root) && metaFieldsContext.__root) {
-        console.log(metaFieldsContext.__root.__fields);
-
         if (isMetaField(metaFieldsContext.__root.__fields)) {
           formikContext.resetForm({
             values: {

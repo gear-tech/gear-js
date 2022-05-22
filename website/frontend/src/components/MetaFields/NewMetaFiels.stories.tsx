@@ -1,30 +1,31 @@
 import React, { FC } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { MetaFields } from './MetaFields';
-import { Form, Formik, FormikValues } from 'formik';
-import { MetaFieldsStruct, MetaFieldsValues, MetaItem, parseMeta } from './new-meta-parser';
+import { Form, Formik } from 'formik';
+import { MetaFieldsStruct, MetaItem, parseMeta, PreparedMetaData } from './new-meta-parser';
 import { prepareToSend } from './prepare-to-send';
 import {
-  StructSet as _Struct,
+  StructSet as _StructSet,
+  StructField as _StructField,
   Primitive as _Primitive,
   BTreeMap as _BTreeMap,
   BTreeSet as _BTreeSet,
   Enum as _Enum,
   Option as _Option,
-  Vec as _Vec,
+  VecField as _Vec,
   Result as _Result,
   Tuple as _Tuple,
   Array as _Array,
   FungibleTokenAction as _FungibleTokenAction,
-  ComplexResult as _ComplexResult,
+  ResultComplex as _ComplexResult,
   NFT as _NFT,
-  VecNew as _VecNew,
+  VecSet as _VecNew,
 } from './new-meta-fixtures';
 
 type MetaFormWrapper = {
   metaData: MetaItem;
   children: (meta: MetaFieldsStruct) => React.ReactNode;
-  onSubmit: (values: FormikValues) => void;
+  onSubmit: (values: PreparedMetaData) => void;
 };
 
 export const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData, children, onSubmit }) => {
@@ -36,7 +37,8 @@ export const MetaFormWrapper: FC<MetaFormWrapper> = ({ metaData, children, onSub
           __root: null,
         }}
         onSubmit={(values) => {
-          onSubmit(values);
+          const prepared = prepareToSend(values.__root!) as PreparedMetaData;
+          onSubmit(prepared);
         }}
       >
         <Form>
@@ -60,21 +62,17 @@ export default {
 
 const NewTemplate: ComponentStory<typeof MetaFormWrapper> = (args) => {
   return (
-    <MetaFormWrapper
-      onSubmit={(values) => {
-        const copy: MetaFieldsValues = JSON.parse(JSON.stringify(values));
-        console.log(prepareToSend(copy));
-      }}
-      metaData={args.metaData}
-    >
-      {/* @ts-ignore */}
+    <MetaFormWrapper onSubmit={console.log} metaData={args.metaData}>
       {(meta) => <MetaFields data={meta} />}
     </MetaFormWrapper>
   );
 };
 
-export const Struct = NewTemplate.bind({});
-Struct.args = { metaData: _Struct };
+export const StructSet = NewTemplate.bind({});
+StructSet.args = { metaData: _StructSet };
+
+export const StructField = NewTemplate.bind({});
+StructField.args = { metaData: _StructField };
 
 export const Primitive = NewTemplate.bind({});
 Primitive.args = { metaData: _Primitive };

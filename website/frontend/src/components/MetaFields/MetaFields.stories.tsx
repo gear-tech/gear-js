@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { MetaFields } from './MetaFields';
 import { Form, Formik, FormikValues } from 'formik';
-import { MetaFieldsStruct, MetaFieldsValues, MetaItem, parseMeta } from './meta-parser';
+import { MetaFieldsStruct, MetaItem, parseMeta } from './meta-parser';
 import { prepareToSend } from './prepare-to-send';
 import {
   simpleStruct,
@@ -61,8 +61,7 @@ const Template: ComponentStory<typeof MetaFormWrapper> = (args) => {
   return (
     <MetaFormWrapper
       onSubmit={(values) => {
-        const copy: MetaFieldsValues = JSON.parse(JSON.stringify(values));
-        console.log(prepareToSend(copy.__root as PreparedMetaData));
+        console.log(prepareToSend(values.__root as PreparedMetaData));
       }}
       metaData={args.metaData}
     >

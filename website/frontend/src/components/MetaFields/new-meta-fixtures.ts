@@ -366,13 +366,13 @@ export const OptionResult = {
   },
 };
 
-export const Vec = {
+export const VecField = {
   type: 'Vec',
   name: 'Vec<u8>',
   value: { type: 'Primitive', name: 'u8', value: 'u8' },
 } as MetaItem;
 
-export const VecResult = {
+export const VecFieldResult = {
   __root: {
     __type: '__fieldset',
     __name: '__root',
@@ -391,7 +391,7 @@ export const VecResult = {
   },
 };
 
-export const VecNew = {
+export const VecSet = {
   type: 'Vec',
   name: 'Vec<MessageIn>',
   value: {
@@ -418,7 +418,7 @@ export const VecNew = {
   },
 } as MetaItem;
 
-export const VecNewResult = {
+export const VecSetResult = {
   __root: {
     __fields: {
       'Vec<MessageIn>': {
@@ -477,6 +477,128 @@ export const ResultResult = {
     'Result<String, i32>': {
       ok: '',
       err: '',
+    },
+  },
+};
+
+export const ResultComplex = {
+  type: 'Result',
+  name: 'Result<MessageIn, Id>',
+  value: {
+    ok: {
+      type: 'Struct',
+      name: 'MessageIn',
+      value: {
+        id: {
+          type: 'Struct',
+          name: 'Id',
+          value: {
+            decimal: {
+              type: 'Primitive',
+              name: 'u64',
+              value: 'u64',
+            },
+            hex: {
+              type: 'Primitive',
+              name: 'Bytes',
+              value: 'Bytes',
+            },
+          },
+        },
+      },
+    },
+    err: {
+      type: 'Struct',
+      name: 'Id',
+      value: {
+        decimal: {
+          type: 'Primitive',
+          name: 'u64',
+          value: 'u64',
+        },
+        hex: {
+          type: 'Primitive',
+          name: 'Bytes',
+          value: 'Bytes',
+        },
+      },
+    },
+  },
+} as MetaItem;
+
+export const ResultComplexResult = {
+  __root: {
+    __fields: {
+      'Result<MessageIn, Id>': {
+        __fields: {
+          err: {
+            __fields: {
+              decimal: {
+                label: 'decimal',
+                name: '__root.Result<MessageIn, Id>.err.decimal',
+                type: 'u64',
+              },
+              hex: {
+                label: 'hex',
+                name: '__root.Result<MessageIn, Id>.err.hex',
+                type: 'Bytes',
+              },
+            },
+            __name: 'err',
+            __path: '__root.Result<MessageIn, Id>.err',
+            __select: false,
+            __type: '__fieldset',
+          },
+          ok: {
+            __fields: {
+              id: {
+                __fields: {
+                  decimal: {
+                    label: 'decimal',
+                    name: '__root.Result<MessageIn, Id>.ok.id.decimal',
+                    type: 'u64',
+                  },
+                  hex: {
+                    label: 'hex',
+                    name: '__root.Result<MessageIn, Id>.ok.id.hex',
+                    type: 'Bytes',
+                  },
+                },
+                __name: 'id',
+                __path: '__root.Result<MessageIn, Id>.ok.id',
+                __select: false,
+                __type: '__fieldset',
+              },
+            },
+            __name: 'ok',
+            __path: '__root.Result<MessageIn, Id>.ok',
+            __select: false,
+            __type: '__fieldset',
+          },
+        },
+        __name: 'Result<MessageIn, Id>',
+        __path: '__root.Result<MessageIn, Id>',
+        __select: true,
+        __type: '__fieldset',
+      },
+    },
+    __name: '__root',
+    __path: '__root',
+    __select: false,
+    __type: '__fieldset',
+  },
+  __values: {
+    'Result<MessageIn, Id>': {
+      err: {
+        decimal: '',
+        hex: '',
+      },
+      ok: {
+        id: {
+          decimal: '',
+          hex: '',
+        },
+      },
     },
   },
 };
@@ -686,128 +808,6 @@ export const FungibleTokenActionResult = {
         amount: '',
         from: '',
         to: '',
-      },
-    },
-  },
-};
-
-export const ComplexResult = {
-  type: 'Result',
-  name: 'Result<MessageIn, Id>',
-  value: {
-    ok: {
-      type: 'Struct',
-      name: 'MessageIn',
-      value: {
-        id: {
-          type: 'Struct',
-          name: 'Id',
-          value: {
-            decimal: {
-              type: 'Primitive',
-              name: 'u64',
-              value: 'u64',
-            },
-            hex: {
-              type: 'Primitive',
-              name: 'Bytes',
-              value: 'Bytes',
-            },
-          },
-        },
-      },
-    },
-    err: {
-      type: 'Struct',
-      name: 'Id',
-      value: {
-        decimal: {
-          type: 'Primitive',
-          name: 'u64',
-          value: 'u64',
-        },
-        hex: {
-          type: 'Primitive',
-          name: 'Bytes',
-          value: 'Bytes',
-        },
-      },
-    },
-  },
-} as MetaItem;
-
-export const ComplexResultResult = {
-  __root: {
-    __fields: {
-      'Result<MessageIn, Id>': {
-        __fields: {
-          err: {
-            __fields: {
-              decimal: {
-                label: 'decimal',
-                name: '__root.Result<MessageIn, Id>.err.decimal',
-                type: 'u64',
-              },
-              hex: {
-                label: 'hex',
-                name: '__root.Result<MessageIn, Id>.err.hex',
-                type: 'Bytes',
-              },
-            },
-            __name: 'err',
-            __path: '__root.Result<MessageIn, Id>.err',
-            __select: false,
-            __type: '__fieldset',
-          },
-          ok: {
-            __fields: {
-              id: {
-                __fields: {
-                  decimal: {
-                    label: 'decimal',
-                    name: '__root.Result<MessageIn, Id>.ok.id.decimal',
-                    type: 'u64',
-                  },
-                  hex: {
-                    label: 'hex',
-                    name: '__root.Result<MessageIn, Id>.ok.id.hex',
-                    type: 'Bytes',
-                  },
-                },
-                __name: 'id',
-                __path: '__root.Result<MessageIn, Id>.ok.id',
-                __select: false,
-                __type: '__fieldset',
-              },
-            },
-            __name: 'ok',
-            __path: '__root.Result<MessageIn, Id>.ok',
-            __select: false,
-            __type: '__fieldset',
-          },
-        },
-        __name: 'Result<MessageIn, Id>',
-        __path: '__root.Result<MessageIn, Id>',
-        __select: true,
-        __type: '__fieldset',
-      },
-    },
-    __name: '__root',
-    __path: '__root',
-    __select: false,
-    __type: '__fieldset',
-  },
-  __values: {
-    'Result<MessageIn, Id>': {
-      err: {
-        decimal: '',
-        hex: '',
-      },
-      ok: {
-        id: {
-          decimal: '',
-          hex: '',
-        },
       },
     },
   },

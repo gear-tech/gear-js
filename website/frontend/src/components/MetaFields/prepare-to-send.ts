@@ -1,8 +1,12 @@
 import isObject from 'lodash.isobject';
 import { PreparedMetaData } from './meta-parser';
 import { cloneDeep } from '../../features/Editor/EditorTree/utils';
+import isString from 'lodash.isstring';
 
-export function prepareToSend(data: PreparedMetaData) {
+export function prepareToSend(data: PreparedMetaData | string) {
+  if (isString(data)) {
+    return data;
+  }
   const clone: PreparedMetaData = cloneDeep(data as PreparedMetaData);
   const stack: Record<
     string,

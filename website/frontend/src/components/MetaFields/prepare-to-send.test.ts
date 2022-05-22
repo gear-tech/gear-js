@@ -26,4 +26,8 @@ describe('prepare to send metadata', () => {
       },
     });
   });
+
+  test('string processing', () => {
+    expect(prepareToSend('String')).toEqual('String');
+  });
 });

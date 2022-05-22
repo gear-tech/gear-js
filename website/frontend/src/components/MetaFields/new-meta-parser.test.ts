@@ -12,8 +12,8 @@ import {
   EnumResult,
   Option,
   OptionResult,
-  Vec,
-  VecResult,
+  VecField,
+  VecFieldResult,
   Result,
   ResultResult,
   Tuple,
@@ -24,12 +24,12 @@ import {
   FungibleTokenActionResult,
   StructField,
   StructFieldResult,
-  ComplexResultResult,
-  ComplexResult,
+  ResultComplexResult,
+  ResultComplex,
   NFT,
   NFTResult,
-  VecNew,
-  VecNewResult,
+  VecSet,
+  VecSetResult,
 } from './new-meta-fixtures';
 
 describe('meta parser tests', () => {
@@ -64,7 +64,7 @@ describe('meta parser tests', () => {
   });
 
   test('Vec', () => {
-    expect(parseMeta(Vec)).toEqual(VecResult);
+    expect(parseMeta(VecField)).toEqual(VecFieldResult);
   });
 
   test('Result', () => {
@@ -84,7 +84,7 @@ describe('meta parser tests', () => {
   });
 
   test('Complex Result', () => {
-    expect(parseMeta(ComplexResult)).toEqual(ComplexResultResult);
+    expect(parseMeta(ResultComplex)).toEqual(ResultComplexResult);
   });
 
   test('NFT', () => {
@@ -92,6 +92,6 @@ describe('meta parser tests', () => {
   });
 
   test('New Vec', () => {
-    expect(parseMeta(VecNew)).toEqual(VecNewResult);
+    expect(parseMeta(VecSet)).toEqual(VecSetResult);
   });
 });

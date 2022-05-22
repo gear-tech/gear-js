@@ -3,369 +3,485 @@ import userEvent from '@testing-library/user-event';
 
 import { MetaFields } from './MetaFields';
 import {
-  simpleStruct,
-  simpleStructResult,
-  simpleDeepStruct,
-  simpleDeepStructResult,
-  daoMeta,
-  daoMetaResult,
-  resultEnumSimple,
-  resultEnumSimpleResult,
-  resultEnumComplex,
-  resultEnumComplexResult,
-  optionEnumSimple,
-  optionEnumSimpleResult,
-  optionEnumComplex,
-  optionEnumComplexResult,
-} from './meta-fixtures';
-import { MetaFormWrapper } from './MetaFields.stories';
+  BTreeMap,
+  BTreeMapResult,
+  BTreeSet,
+  BTreeSetResult,
+  Primitive,
+  PrimitiveResult,
+  StructField,
+  StructFieldResult,
+  StructSet,
+  StructSetResult,
+  VecField,
+  VecFieldResult,
+  VecSet,
+  VecSetResult,
+  Result,
+  ResultResult,
+  Tuple,
+  TupleResult,
+  // Array,
+  // ArrayResult,
+  Enum,
+  EnumResult,
+  Option,
+  OptionResult,
+  FungibleTokenAction,
+  FungibleTokenActionResult,
+  ResultComplex,
+  ResultComplexResult,
+  NFT,
+  NFTResult,
+} from './new-meta-fixtures';
+import { MetaFormWrapper } from './NewMetaFiels.stories';
 
-describe('form generated for meta data', () => {
-  // region Fields struct
-  test('simple struct submit', async () => {
+describe('meta fields', () => {
+  test('Primitive', async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={simpleStruct}>
-        {/*@ts-ignore*/}
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={Primitive}>
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
-    await userEvent.type(getByTestId(simpleStructResult.__root.__fields.amount.name), 'amount');
-    await userEvent.type(getByTestId(simpleStructResult.__root.__fields.currency.name), 'currency');
+    await userEvent.type(getByTestId(PrimitiveResult.__root.__fields.name), 'String');
     const submit = getByRole('button');
     await userEvent.click(submit);
 
     await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({ __root: { amount: 'amount', currency: 'currency' } });
+      expect(handleSubmit).toHaveBeenCalledWith('String');
     });
   });
 
-  test('deep struct submit', async () => {
+  test('BTreeMap', async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={simpleDeepStruct}>
-        {/*@ts-ignore*/}
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={BTreeMap}>
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
-    );
-    await userEvent.type(getByTestId(simpleDeepStructResult.__root.__fields.AddMessage.__fields.msg.name), 'msg');
-    await userEvent.type(getByTestId(simpleDeepStructResult.__root.__fields.AddMessage.__fields.author.name), 'author');
-    await userEvent.type(
-      getByTestId(simpleDeepStructResult.__root.__fields.AddMessage.__fields.To.__fields.name.name),
-      'name'
-    );
-    await userEvent.type(
-      getByTestId(simpleDeepStructResult.__root.__fields.AddMessage.__fields.To.__fields.from.name),
-      'from'
-    );
-    const submit = getByRole('button');
-    await userEvent.click(submit);
-
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          AddMessage: {
-            author: 'author',
-            msg: 'msg',
-            To: {
-              from: 'from',
-              name: 'name',
-            },
-          },
-        },
-      });
-    });
-  });
-  // endregion
-
-  // region Enum
-  test('dao enum submit', async () => {
-    const handleSubmit = jest.fn();
-    const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={daoMeta}>
-        {/*@ts-ignore*/}
-        {(meta) => <MetaFields data={meta} />}
-      </MetaFormWrapper>
-    );
-    await userEvent.type(getByTestId(daoMetaResult.__root.__fields.RequestForMembership.name), 'RequestForMembership');
-    const submit = getByRole('button');
-    await userEvent.click(submit);
-
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          RequestForMembership: 'RequestForMembership',
-        },
-      });
-    });
-  });
-
-  test('dao enum select and submit', async () => {
-    const handleSubmit = jest.fn();
-    const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={daoMeta}>
-        {/*@ts-ignore*/}
-        {(meta) => <MetaFields data={meta} />}
-      </MetaFormWrapper>
-    );
-    await userEvent.selectOptions(
-      getByTestId(daoMetaResult.__root.__path),
-      daoMetaResult.__root.__fields.SubmitVote.__name
-    );
-
-    await userEvent.selectOptions(getByTestId(daoMetaResult.__root.__fields.SubmitVote.__fields.vote.__path), '1');
-    await userEvent.type(getByTestId(daoMetaResult.__root.__fields.SubmitVote.__fields.vote.__fields['1'].name), 'No');
-
-    const submit = getByRole('button');
-    await userEvent.click(submit);
-
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          SubmitVote: {
-            proposalId: '',
-            vote: {
-              '1': 'No',
-            },
-          },
-        },
-      });
-    });
-  });
-  // endregion
-
-  // region enum Result
-  test('simple enum result submit', async () => {
-    const handleSubmit = jest.fn();
-    const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumSimple}>
-        {/*@ts-ignore*/}
-        {(meta) => <MetaFields data={meta} />}
-      </MetaFormWrapper>
-    );
-
-    await userEvent.type(getByTestId(resultEnumSimpleResult.__root.__fields.exchangeRate.__fields.ok.name), 'ok');
-    const submit = getByRole('button');
-    await userEvent.click(submit);
-
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          exchangeRate: {
-            ok: 'ok',
-          },
-        },
-      });
-    });
-  });
-
-  test('simple enum result select and submit', async () => {
-    const handleSubmit = jest.fn();
-    const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumSimple}>
-        {/*@ts-ignore*/}
-        {(meta) => <MetaFields data={meta} />}
-      </MetaFormWrapper>
-    );
-
-    await userEvent.selectOptions(getByTestId(resultEnumSimpleResult.__root.__fields.exchangeRate.__path), 'err');
-    await userEvent.type(getByTestId(resultEnumSimpleResult.__root.__fields.exchangeRate.__fields.err.name), 'err');
-    const submit = getByRole('button');
-    await userEvent.click(submit);
-
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          exchangeRate: {
-            err: 'err',
-          },
-        },
-      });
-    });
-  });
-
-  test('complex enum result submit', async () => {
-    const handleSubmit = jest.fn();
-    const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumComplex}>
-        {/*@ts-ignore*/}
-        {(meta) => <MetaFields data={meta} />}
-      </MetaFormWrapper>
-    );
-
-    await userEvent.type(
-      getByTestId(resultEnumComplexResult.__root.__fields.exchangeRate.__fields.ok.__fields.firstName.name),
-      'firstName'
     );
     await userEvent.type(
-      getByTestId(resultEnumComplexResult.__root.__fields.exchangeRate.__fields.ok.__fields.secondName.name),
-      'secondName'
+      getByTestId(BTreeMapResult.__root.__fields['BTreeMap<String, u8>'].__fields.value.name),
+      'Value'
     );
+    await userEvent.type(getByTestId(BTreeMapResult.__root.__fields['BTreeMap<String, u8>'].__fields.key.name), 'Key');
     const submit = getByRole('button');
     await userEvent.click(submit);
 
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          exchangeRate: {
-            ok: {
-              firstName: 'firstName',
-              secondName: 'secondName',
-            },
-          },
-        },
+        key: 'Key',
+        value: 'Value',
       });
     });
   });
 
-  test('complex enum result select and submit', async () => {
+  test('BTreeSet', async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={resultEnumComplex}>
-        {/*@ts-ignore*/}
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={BTreeSet}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+    await userEvent.type(getByTestId(BTreeSetResult.__root.__fields['BTreeSet<u8>'].name), 'Value');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith('Value');
+    });
+  });
+
+  test('StructSet', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={StructSet}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+    await userEvent.type(getByTestId(StructSetResult.__root.__fields.AStruct.__fields.id.name), 'id');
+    await userEvent.type(getByTestId(StructSetResult.__root.__fields.AStruct.__fields.online.name), 'online');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        id: 'id',
+        online: 'online',
+      });
+    });
+  });
+
+  test('StructField', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={StructField}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+    await userEvent.type(getByTestId(StructFieldResult.__root.__fields.AStruct.name), 'AStruct');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith('AStruct');
+    });
+  });
+
+  test('Vec', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={VecField}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+    await userEvent.type(getByTestId(VecFieldResult.__root.__fields['Vec<u8>'].name), 'Vec');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith('Vec');
+    });
+  });
+
+  test('Vec Set', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={VecSet}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+    await userEvent.type(getByTestId(VecSetResult.__root.__fields['Vec<MessageIn>'].name), 'Vec');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith('Vec');
+    });
+  });
+
+  test('Tuple', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={Tuple}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+    await userEvent.type(getByTestId(TupleResult.__root.__fields['(String, u8)'].__fields.String.name), 'String');
+    await userEvent.type(getByTestId(TupleResult.__root.__fields['(String, u8)'].__fields.u8.name), 'u8');
+    const submit = getByRole('button');
+    await userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({ u8: 'u8', String: 'String' });
+    });
+  });
+
+  // FIXME add special symbol handling
+  // test('Array', async () => {
+  //   const handleSubmit = jest.fn();
+  //   const { getByTestId, getByRole } = render(
+  //     <MetaFormWrapper onSubmit={handleSubmit} metaData={Array}>
+  //       {(meta) => <MetaFields data={meta} />}
+  //     </MetaFormWrapper>
+  //   );
+  //   await userEvent.type(getByTestId(ArrayResult.__root.__fields['[u8;4]'].name), 'Array');
+  //   const submit = getByRole('button');
+  //   await userEvent.click(submit);
+  //
+  //   await waitFor(() => {
+  //     expect(handleSubmit).toHaveBeenCalledWith('Array');
+  //   });
+  // });
+
+  test('Result', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={Result}>
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
 
-    await userEvent.selectOptions(getByTestId(resultEnumComplexResult.__root.__fields.exchangeRate.__path), 'err');
+    const submit = getByRole('button');
+
+    // Default state
+    await userEvent.type(getByTestId(ResultResult.__root.__fields['Result<String, i32>'].__fields.ok.name), 'ok');
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        ok: 'ok',
+      });
+    });
+
+    // Change state
+    await userEvent.selectOptions(getByTestId(ResultResult.__root.__fields['Result<String, i32>'].__path), 'err');
+    await userEvent.type(getByTestId(ResultResult.__root.__fields['Result<String, i32>'].__fields.err.name), 'err');
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        err: 'err',
+      });
+    });
+  });
+
+  test('Result Complex', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={ResultComplex}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    const submit = getByRole('button');
+
+    // Default state
     await userEvent.type(
-      getByTestId(resultEnumComplexResult.__root.__fields.exchangeRate.__fields.err.__fields['__field-0'].name),
-      '__field-0'
-    );
-    const submit = getByRole('button');
-    await userEvent.click(submit);
-
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          exchangeRate: {
-            err: {
-              '__field-0': '__field-0',
-            },
-          },
-        },
-      });
-    });
-  });
-  // endregion
-
-  // region enum Option
-  test('simple enum option submit', async () => {
-    const handleSubmit = jest.fn();
-    const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumSimple}>
-        {/*@ts-ignore*/}
-        {(meta) => <MetaFields data={meta} />}
-      </MetaFormWrapper>
-    );
-
-    await userEvent.type(getByTestId(optionEnumSimpleResult.__root.__fields['__field-0'].name), '__field-0');
-    const submit = getByRole('button');
-    await userEvent.click(submit);
-
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          '__field-0': '__field-0',
-        },
-      });
-    });
-  });
-
-  test('simple enum option select and submit', async () => {
-    const handleSubmit = jest.fn();
-    const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumSimple}>
-        {/*@ts-ignore*/}
-        {(meta) => <MetaFields data={meta} />}
-      </MetaFormWrapper>
-    );
-
-    await userEvent.selectOptions(getByTestId(optionEnumSimpleResult.__root.__path), '__null');
-    const submit = getByRole('button');
-    await userEvent.click(submit);
-
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          __null: 'Null',
-        },
-      });
-    });
-  });
-
-  test('complex enum option submit', async () => {
-    const handleSubmit = jest.fn();
-    const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumComplex}>
-        {/*@ts-ignore*/}
-        {(meta) => <MetaFields data={meta} />}
-      </MetaFormWrapper>
-    );
-
-    await userEvent.type(
-      getByTestId(optionEnumComplexResult.__root.__fields.res.__fields['__field-0'].__fields.id.__fields.hex.name),
-      'hex'
-    );
-    await userEvent.type(
-      getByTestId(optionEnumComplexResult.__root.__fields.res.__fields['__field-0'].__fields.id.__fields.decimal.name),
+      getByTestId(
+        ResultComplexResult.__root.__fields['Result<MessageIn, Id>'].__fields.ok.__fields.id.__fields.decimal.name
+      ),
       'decimal'
     );
     await userEvent.type(
-      getByTestId(optionEnumComplexResult.__root.__fields.res.__fields['__field-0'].__fields.person.__fields.name.name),
-      'name'
-    );
-    await userEvent.type(
       getByTestId(
-        optionEnumComplexResult.__root.__fields.res.__fields['__field-0'].__fields.person.__fields.surname.name
+        ResultComplexResult.__root.__fields['Result<MessageIn, Id>'].__fields.ok.__fields.id.__fields.hex.name
       ),
-      'surname'
+      'hex'
     );
-    const submit = getByRole('button');
     await userEvent.click(submit);
-
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          res: {
-            '__field-0': {
-              id: {
-                decimal: 'decimal',
-                hex: 'hex',
-              },
-              person: {
-                surname: 'surname',
-                name: 'name',
-              },
-            },
+        ok: {
+          id: {
+            decimal: 'decimal',
+            hex: 'hex',
           },
+        },
+      });
+    });
+
+    // Change state
+    await userEvent.selectOptions(
+      getByTestId(ResultComplexResult.__root.__fields['Result<MessageIn, Id>'].__path),
+      'err'
+    );
+    await userEvent.type(
+      getByTestId(ResultComplexResult.__root.__fields['Result<MessageIn, Id>'].__fields.err.__fields.decimal.name),
+      'decimal'
+    );
+    await userEvent.type(
+      getByTestId(ResultComplexResult.__root.__fields['Result<MessageIn, Id>'].__fields.err.__fields.hex.name),
+      'hex'
+    );
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        err: {
+          decimal: 'decimal',
+          hex: 'hex',
         },
       });
     });
   });
 
-  test('complex enum option select and submit', async () => {
+  test('Option', async () => {
     const handleSubmit = jest.fn();
     const { getByTestId, getByRole } = render(
-      <MetaFormWrapper onSubmit={handleSubmit} metaData={optionEnumComplex}>
-        {/*@ts-ignore*/}
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={Option}>
         {(meta) => <MetaFields data={meta} />}
       </MetaFormWrapper>
     );
 
-    await userEvent.selectOptions(getByTestId(optionEnumComplexResult.__root.__fields.res.__path), '__null');
     const submit = getByRole('button');
-    await userEvent.click(submit);
 
+    // Default state
+    await userEvent.type(
+      getByTestId(OptionResult.__root.__fields['Option<AStruct>'].__fields.AStruct.__fields.id.name),
+      'id'
+    );
+    await userEvent.type(
+      getByTestId(OptionResult.__root.__fields['Option<AStruct>'].__fields.AStruct.__fields.online.name),
+      'online'
+    );
+    await userEvent.click(submit);
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
-        __root: {
-          res: {
-            __null: 'Null',
+        AStruct: {
+          id: 'id',
+          online: 'online',
+        },
+      });
+    });
+
+    // Change state
+    await userEvent.selectOptions(getByTestId(OptionResult.__root.__fields['Option<AStruct>'].__path), 'None');
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        None: 'None',
+      });
+    });
+  });
+
+  test('Enum', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={Enum}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    const submit = getByRole('button');
+
+    // Default state
+    await userEvent.type(getByTestId(EnumResult.__root.__fields.Action.__fields.AVariant.__fields.id.name), 'id');
+    await userEvent.type(getByTestId(EnumResult.__root.__fields.Action.__fields.AVariant.__fields.online.name), 'name');
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        AVariant: {
+          id: 'id',
+          online: 'name',
+        },
+      });
+    });
+
+    // Change state
+    await userEvent.selectOptions(getByTestId(EnumResult.__root.__fields.Action.__path), 'BVar');
+    await userEvent.type(
+      getByTestId(EnumResult.__root.__fields.Action.__fields.BVar.__fields.CustomStructU8.__fields.field.name),
+      'field'
+    );
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        BVar: {
+          CustomStructU8: {
+            field: 'field',
           },
         },
       });
     });
+
+    // Changed Enum Option Field
+    await userEvent.selectOptions(getByTestId(EnumResult.__root.__fields.Action.__fields.BVar.__path), 'None');
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        BVar: {
+          None: 'None',
+        },
+      });
+    });
   });
-  // endregion
+
+  test('Fungible Token', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={FungibleTokenAction}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    const submit = getByRole('button');
+
+    // Default state
+    await userEvent.type(
+      getByTestId(FungibleTokenActionResult.__root.__fields.FungibleTokenAction.__fields.Mint.name),
+      'Mint'
+    );
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        Mint: 'Mint',
+      });
+    });
+
+    // Change state
+    await userEvent.selectOptions(
+      getByTestId(FungibleTokenActionResult.__root.__fields.FungibleTokenAction.__path),
+      'Approve'
+    );
+    await userEvent.type(
+      getByTestId(FungibleTokenActionResult.__root.__fields.FungibleTokenAction.__fields.Approve.__fields.amount.name),
+      'amount'
+    );
+    await userEvent.type(
+      getByTestId(FungibleTokenActionResult.__root.__fields.FungibleTokenAction.__fields.Approve.__fields.to.name),
+      'to'
+    );
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        Approve: {
+          to: 'to',
+          amount: 'amount',
+        },
+      });
+    });
+  });
+
+  test('NFT', async () => {
+    const handleSubmit = jest.fn();
+    const { getByTestId, getByRole } = render(
+      <MetaFormWrapper onSubmit={handleSubmit} metaData={NFT}>
+        {(meta) => <MetaFields data={meta} />}
+      </MetaFormWrapper>
+    );
+
+    const submit = getByRole('button');
+
+    // Default state
+    await userEvent.type(
+      getByTestId(NFTResult.__root.__fields.NftAction.__fields.Mint.__fields.tokenMetadata.__fields.name.name),
+      'name'
+    );
+    await userEvent.type(
+      getByTestId(NFTResult.__root.__fields.NftAction.__fields.Mint.__fields.tokenMetadata.__fields.description.name),
+      'description'
+    );
+    await userEvent.type(
+      getByTestId(NFTResult.__root.__fields.NftAction.__fields.Mint.__fields.tokenMetadata.__fields.media.name),
+      'media'
+    );
+    await userEvent.type(
+      getByTestId(NFTResult.__root.__fields.NftAction.__fields.Mint.__fields.tokenMetadata.__fields.reference.name),
+      'reference'
+    );
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        Mint: {
+          tokenMetadata: {
+            name: 'name',
+            description: 'description',
+            media: 'media',
+            reference: 'reference',
+          },
+        },
+      });
+    });
+
+    // Change state
+    await userEvent.selectOptions(
+      getByTestId(NFTResult.__root.__fields.NftAction.__path),
+      'Approve'
+    );
+    await userEvent.type(
+      getByTestId(NFTResult.__root.__fields.NftAction.__fields.Approve.__fields.to.name),
+      'to'
+    );
+    await userEvent.type(
+      getByTestId(NFTResult.__root.__fields.NftAction.__fields.Approve.__fields.tokenId.name),
+      'tokenId'
+    );
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith({
+        Approve: {
+          to: 'to',
+          tokenId: 'tokenId',
+        },
+      });
+    });
+  });
 });
