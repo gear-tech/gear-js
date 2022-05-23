@@ -13,7 +13,7 @@ const MetaFieldsComponent = () => {
   const [firstKey, setFirstKey] = useState<string | undefined>();
 
   const changeValues = useCallback(
-    (key: string | undefined) => {
+    (key?: string) => {
       if (isMetaFieldset(metaFieldsContext.__root) && metaFieldsContext.__root) {
         if (isMetaField(metaFieldsContext.__root.__fields)) {
           formikContext.resetForm({

@@ -11,7 +11,7 @@ export function useMetaFieldsContext(fieldset: MetaFieldset | null) {
   const ctx = useContext(MetaFieldsContext);
 
   const changeFormikValues = (key: string) => {
-    if (key && fieldset) {
+    if (key && fieldset && isObject(ctx.__values)) {
       const values = JSON.parse(JSON.stringify(formikContext.values));
       const rootlessPath = fieldset.__path.replace('__root.', '');
       const val = get(ctx.__values, rootlessPath);

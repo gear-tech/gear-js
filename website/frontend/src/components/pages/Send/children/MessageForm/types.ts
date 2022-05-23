@@ -6,5 +6,5 @@ export type InitialValues = {
   payload: string;
   payloadType: string;
   destination: string;
-  __root: MetaFieldsValues | null;
+  __root: MetaFieldsValues | string | null;
 };

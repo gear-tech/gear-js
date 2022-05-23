@@ -43,7 +43,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
   const [payloadForm, setPayloadForm] = useState<MetaFieldsStruct | null>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
-  const [isManualPayload, setIsManualPayload] = useState<boolean>(true);
+  const [isManualPayload, setIsManualPayload] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState<FormValues>(INITIAL_VALUES);
 
   const handleUploadMetaFile = async (file: File) => {
@@ -58,7 +58,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       const currentMetaBuffer = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
 
       const decodedTypes = decodeHexTypes(metadata?.types || '');
-      const typeStructure = createPayloadTypeStructure(metadata?.init_input || '', decodedTypes, true);
+      const typeStructure = createPayloadTypeStructure(metadata?.init_input || '', decodedTypes);
       const parsedStructure = parseMeta(typeStructure);
 
       const valuesFromFile = getMetaValues(metadata);
@@ -70,8 +70,9 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       setInitialValues((prevState) => ({
         ...prevState,
         ...valuesFromFile,
+        __root: parsedStructure ? parsedStructure.__values : null,
         programName: metadata.title || '',
-        payload: getPreformattedText(typeStructure),
+        payload: getPreformattedText(createPayloadTypeStructure(metadata?.init_input || '', decodedTypes, true)),
       }));
     } catch (error) {
       alert.error(`${error}`);

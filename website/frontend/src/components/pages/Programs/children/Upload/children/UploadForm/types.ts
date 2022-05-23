@@ -7,5 +7,5 @@ export type FormValues = Metadata & {
   payload: string;
   gasLimit: number;
   programName: string;
-  __root: MetaFieldsValues | null;
+  __root: MetaFieldsValues | string | null;
 };

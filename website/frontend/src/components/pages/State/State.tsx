@@ -16,8 +16,9 @@ import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
 import { BackButton } from 'components/BackButton/BackButton';
 import { MetaFieldsStruct, MetaFieldsValues, parseMeta, prepareToSend } from 'components/MetaFields';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
+import isObject from 'lodash.isobject';
 
-type FormValues = { __root: MetaFieldsValues | null; payload: string };
+type FormValues = { __root: MetaFieldsValues | string | null; payload: string };
 
 const State: VFC = () => {
   const { api } = useApi();
@@ -39,7 +40,7 @@ const State: VFC = () => {
   const [state, setState] = useState('');
   const [isManualInput, setIsManualInput] = useState(false);
   const [manualStruct, setManualStruct] = useState('');
-  const initValues = useRef<{ payload: string; __root: MetaFieldsValues | null }>({
+  const initValues = useRef<{ payload: string; __root: MetaFieldsValues | string | null }>({
     payload: typeStructure ? getPreformattedText(typeStructure) : '',
     __root: null,
   });
@@ -104,7 +105,7 @@ const State: VFC = () => {
   };
 
   const handleSubmit = ({ __root, payload }: FormValues) => {
-    if (__root) {
+    if (__root && isObject(__root)) {
       const options = isManualInput ? payload : prepareToSend(cloneDeep(__root));
 
       if (options) {
