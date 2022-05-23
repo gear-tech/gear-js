@@ -51,7 +51,7 @@ function FileInput({ label, className, value, ...attrs }: Props) {
           <Button icon={trashSVG} color="transparent" onClick={handleRemoveButtonClick} />
         </span>
       ) : (
-        <Button text="Select file" color="secondary" onClick={handleButtonClick} />
+        <Button text="Select file" color="secondary" size="small" onClick={handleButtonClick} />
       )}
     </label>
   );
