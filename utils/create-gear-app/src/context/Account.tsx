@@ -18,19 +18,24 @@ type Value = {
 
 const AccountContext = createContext({} as Value);
 
-function AccountProvider({ children }: Props) {
-  const { api } = useApi();
-
+const useAccounts = () => {
+  const { isApiReady } = useApi();
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>();
-  const [account, setAccount] = useState<Account>();
 
   const getAccounts = (extensions: InjectedExtension[]) => (extensions.length > 0 ? web3Accounts() : undefined);
 
   useEffect(() => {
-    setTimeout(() => {
-      web3Enable('Gear App').then(getAccounts).then(setAccounts);
-    }, 300);
-  }, []);
+    if (isApiReady) web3Enable('Gear App').then(getAccounts).then(setAccounts);
+  }, [isApiReady]);
+
+  return accounts;
+};
+
+function AccountProvider({ children }: Props) {
+  const { api } = useApi();
+  const accounts = useAccounts();
+
+  const [account, setAccount] = useState<Account>();
 
   const getBalance = (balance: Balance) => {
     const [value, unit] = balance.toHuman().split(' ');
@@ -61,7 +66,7 @@ function AccountProvider({ children }: Props) {
   }, [api, accounts]);
 
   const updateBalance = (balance: Balance) => {
-    setAccount((prevAccount) => ({ ...prevAccount!, balance: getBalance(balance) }));
+    setAccount((prevAccount) => (prevAccount ? { ...prevAccount, balance: getBalance(balance) } : prevAccount));
   };
 
   useEffect(() => {

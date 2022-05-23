@@ -1,0 +1,27 @@
+@use '@gear-js/ui/variables' as *;
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%);
+  font-size: $fontSizeLarge;
+
+  &::after {
+    content: '.';
+    width: 1em;
+    display: inline-block;
+    text-align: left;
+    animation: ellipsis 1.25s infinite;
+  }
+}
+
+@keyframes ellipsis {
+  33% {
+    content: '..';
+  }
+
+  66% {
+    content: '...';
+  }
+}

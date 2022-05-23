@@ -1,14 +1,19 @@
-import { Header, Footer } from 'components';
+import { Header, Footer, ApiLoader } from 'components';
+import { Routing } from 'pages';
+import { withProviders } from 'context';
+import { useApi } from 'hooks';
 import 'App.scss';
 
-function App() {
+function Component() {
+  const { isApiReady } = useApi();
+
   return (
     <>
       <Header />
-      <main>create-gear-app</main>
+      <main>{isApiReady ? <Routing /> : <ApiLoader />}</main>
       <Footer />
     </>
   );
 }
 
-export { App };
+export const App = withProviders(Component);
