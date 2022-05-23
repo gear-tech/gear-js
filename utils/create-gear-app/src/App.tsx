@@ -1,7 +1,14 @@
+import { Header, Footer } from 'components';
 import 'App.scss';
 
 function App() {
-  return <div>create-gear-app</div>;
+  return (
+    <>
+      <Header />
+      <main>create-gear-app</main>
+      <Footer />
+    </>
+  );
 }
 
-export default App;
+export { App };

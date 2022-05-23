@@ -22,5 +22,8 @@ module.exports = {
   plugins: ['react', '@typescript-eslint'],
   rules: {
     'react/require-default-props': 'off', // we don't use prop-types
+
+    'import/prefer-default-export': 'off', // force named exports
+    'import/no-default-export': 'error',
   },
 };
