@@ -1,39 +1,22 @@
-import { useState, createContext, useEffect } from 'react';
-import type { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
-import { isLoggedIn } from 'utils';
+import { useState, createContext } from 'react';
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useApi } from 'hooks';
 import { Account } from 'types';
 import { GearKeyring } from '@gear-js/api';
 import { Balance } from '@polkadot/types/interfaces';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { Props } from './types';
 
 type Value = {
-  accounts: InjectedAccountWithMeta[] | undefined;
   account: Account | undefined;
   switchAccount: (account: InjectedAccountWithMeta) => void;
+  updateBalance: (balance: Balance) => void;
   logout: () => void;
 };
 
 const AccountContext = createContext({} as Value);
 
-const useAccounts = () => {
-  const { isApiReady } = useApi();
-  const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>();
-
-  const getAccounts = (extensions: InjectedExtension[]) => (extensions.length > 0 ? web3Accounts() : undefined);
-
-  useEffect(() => {
-    if (isApiReady) web3Enable('Gear App').then(getAccounts).then(setAccounts);
-  }, [isApiReady]);
-
-  return accounts;
-};
-
 function AccountProvider({ children }: Props) {
   const { api } = useApi();
-  const accounts = useAccounts();
 
   const [account, setAccount] = useState<Account>();
 
@@ -55,35 +38,16 @@ function AccountProvider({ children }: Props) {
       .then(setAccount);
   };
 
-  const logout = () => {
-    setAccount(undefined);
-  };
-
-  useEffect(() => {
-    const loggedInAccount = accounts?.find(isLoggedIn);
-    if (loggedInAccount) switchAccount(loggedInAccount);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, accounts]);
-
   const updateBalance = (balance: Balance) => {
     setAccount((prevAccount) => (prevAccount ? { ...prevAccount, balance: getBalance(balance) } : prevAccount));
   };
 
-  useEffect(() => {
-    let unsub: UnsubscribePromise | undefined;
-
-    if (account) {
-      unsub = api?.gearEvents.subscribeToBalanceChange(account.address, updateBalance);
-    }
-
-    return () => {
-      if (unsub) unsub.then((callback) => callback());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, account]);
+  const logout = () => {
+    setAccount(undefined);
+  };
 
   const { Provider } = AccountContext;
-  const value = { accounts, account, switchAccount, logout };
+  const value = { account, switchAccount, updateBalance, logout };
 
   return <Provider value={value}>{children}</Provider>;
 }

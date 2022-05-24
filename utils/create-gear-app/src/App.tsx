@@ -1,11 +1,14 @@
 import { Header, Footer, ApiLoader } from 'components';
 import { Routing } from 'pages';
 import { withProviders } from 'context';
-import { useApi } from 'hooks';
+import { useApi, useBalanceSubscription, useLoggedInAccount } from 'hooks';
 import 'App.scss';
 
 function Component() {
   const { isApiReady } = useApi();
+
+  useBalanceSubscription();
+  useLoggedInAccount();
 
   return (
     <>
