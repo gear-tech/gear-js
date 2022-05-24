@@ -2288,21 +2288,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.18.1":
-  version: 0.18.1
-  resolution: "@gear-js/api@npm:0.18.1"
-  dependencies:
-    "@types/rollup-plugin-peer-deps-external": ^2.2.1
-    rollup-plugin-peer-deps-external: ^2.2.4
-    rollup-plugin-typescript2: ^0.31.2
-  peerDependencies:
-    "@polkadot/api": ^8.3.2
-    "@polkadot/wasm-crypto": ^6.0.1
-    rxjs: ^7.5.5
-  checksum: 91439b6d00a821074d4bb27bf229e34623f198f5a240a66e69a72ca2a8bc62d16673fceb1b6b22d89874b3776b719328ba2c3d7d0a1ae67fd260875b5f013e0a
-  languageName: node
-  linkType: hard
-
 "@gear-js/api@npm:0.18.3, @gear-js/api@npm:^0.18.0":
   version: 0.18.3
   resolution: "@gear-js/api@npm:0.18.3"
@@ -2315,6 +2300,21 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.0.1
     rxjs: ^7.5.5
   checksum: b7343138ddbad27b6427c048024c59f11fa2140e7d61cfad6142eb54c1cb6c939f45d6ee8f3363486967d65317f6acf93d0d8061485d339d09e452b3cb282a79
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:0.19.0":
+  version: 0.19.0
+  resolution: "@gear-js/api@npm:0.19.0"
+  dependencies:
+    "@types/rollup-plugin-peer-deps-external": ^2.2.1
+    rollup-plugin-peer-deps-external: ^2.2.4
+    rollup-plugin-typescript2: ^0.31.2
+  peerDependencies:
+    "@polkadot/api": ^8.4.2
+    "@polkadot/wasm-crypto": ^6.0.1
+    rxjs: ^7.5.5
+  checksum: b732eac30422c6b080b75e451931435931db722bff118cec034278866ea000e4248b628b2477dca6ee23825e7cddbc085a2a07eacd956be7d1f9fa617794fe90
   languageName: node
   linkType: hard
 
@@ -2397,7 +2397,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.18.1
+    "@gear-js/api": 0.19.0
     "@gear-js/ui": 0.1.2
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
