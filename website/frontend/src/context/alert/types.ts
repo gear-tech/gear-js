@@ -7,10 +7,8 @@ export enum AlertType {
   SUCCESS = 'success',
 }
 
-export type AlertTypes = 'info' | 'error' | 'loading' | 'success';
-
 export type AlertOptions = {
-  type?: AlertTypes;
+  type?: 'info' | 'error' | 'loading' | 'success';
   style?: CSSProperties;
   title?: string;
   timeout?: number;

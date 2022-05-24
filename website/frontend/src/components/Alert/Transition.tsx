@@ -1,34 +1,24 @@
 import { useRef, ReactNode } from 'react';
 import { Transition as AlertTransition } from 'react-transition-group';
+import { TransitionProps } from 'react-transition-group/Transition';
 
-const duration = 250;
+import { DURATION, DEFAULT_STYLE, TRANSITION_STYLES } from './const';
 
-const defaultStyle = {
-  opacity: 0,
-  transition: `opacity ${duration}ms ease`,
-};
-
-const transitionStyles = {
-  entering: { opacity: 0 },
-  entered: { opacity: 1 },
-};
-
-type Props = {
+type Props = Partial<TransitionProps> & {
   children: ReactNode;
 };
 
 const Transition = ({ children, ...props }: Props) => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <AlertTransition nodeRef={ref} {...props} timeout={duration}>
+    <AlertTransition nodeRef={ref} timeout={DURATION} {...props}>
       {(state) => (
         <div
           ref={ref}
           style={{
-            ...defaultStyle,
-            //@ts-ignore
-            ...transitionStyles[state],
+            ...DEFAULT_STYLE,
+            ...TRANSITION_STYLES[state],
           }}
         >
           {children}

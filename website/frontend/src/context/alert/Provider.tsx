@@ -5,7 +5,7 @@ import { TransitionGroup } from 'react-transition-group';
 
 import { Props } from '../types';
 import { DEFAULT_INFO_OPTIONS, DEFAULT_ERROR_OPTIONS, DEFAULT_LOADING_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from './const';
-import { AlertTimer, AlertInstance, AlertOptions, TemplateAlertOptions, AlertContainerFactory } from './types';
+import { AlertTimer, AlertInstance, AlertOptions, TemplateAlertOptions } from './types';
 import { AlertContext } from './Context';
 
 import { AlertTemplate } from 'components/AlertTemplate';
@@ -18,36 +18,39 @@ const AlertProvider = ({ children }: Props) => {
   const timers = useRef<AlertTimer>(new Map());
   const [alerts, setAlerts] = useState<AlertInstance[]>([]);
 
-  const createTimer = useCallback((alertId: string, callback: (alertId: string) => void, timeout) => {
-    if (timeout > 0) {
-      const timerId = setTimeout(() => callback(alertId), timeout);
-
-      timers.current.set(alertId, timerId);
-    }
-  }, []);
-
   const removeTimer = useCallback((alertId: string) => {
-    const timer = timers.current.get(alertId);
+    const timerId = timers.current.get(alertId);
 
-    if (timer) {
-      clearTimeout(timer);
+    if (timerId) {
+      clearTimeout(timerId);
       timers.current.delete(alertId);
     }
   }, []);
 
   const remove = useCallback(
-    (id: string) => {
-      removeTimer(id);
-      setAlerts((prevState) => prevState.filter((alert) => alert.id !== id));
+    (alertId: string) => {
+      removeTimer(alertId);
+      setAlerts((prevState) => prevState.filter((alert) => alert.id !== alertId));
     },
     [removeTimer]
   );
 
+  const createTimer = useCallback(
+    (alertId: string, timeout) => {
+      if (timeout > 0) {
+        const timerId = setTimeout(() => remove(alertId), timeout);
+
+        timers.current.set(alertId, timerId);
+      }
+    },
+    [remove]
+  );
+
   const show = useCallback(
     (content: ReactNode, options: AlertOptions): string => {
-      const id = nanoid(8);
+      const id = nanoid(6);
 
-      createTimer(id, remove, options.timeout);
+      createTimer(id, options.timeout);
       setAlerts((prevState) => [
         ...prevState,
         {
@@ -59,24 +62,23 @@ const AlertProvider = ({ children }: Props) => {
 
       return id;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [createTimer, remove]
+    [createTimer]
   );
 
   const update = useCallback(
-    (id: string, content: ReactNode, options?: Omit<AlertOptions, 'castomId'>) => {
+    (alertId: string, content: ReactNode, options?: AlertOptions) => {
       let updatedAlert: AlertInstance;
 
-      removeTimer(id);
+      removeTimer(alertId);
 
       setAlerts((prevState) =>
         prevState.map((alert) => {
-          if (alert.id !== id) {
+          if (alert.id !== alertId) {
             return alert;
           }
 
           return (updatedAlert = {
-            id,
+            id: alert.id,
             content,
             options: {
               ...alert.options,
@@ -87,13 +89,13 @@ const AlertProvider = ({ children }: Props) => {
       );
 
       if (updatedAlert!) {
-        createTimer(updatedAlert.id, remove, updatedAlert.options.timeout);
+        createTimer(updatedAlert.id, updatedAlert.options.timeout);
       }
     },
-    [removeTimer, createTimer, remove]
+    [removeTimer, createTimer]
   );
 
-  const сreateTemplateAlert = useCallback(
+  const getAlertTemplate = useCallback(
     (templateOptions: AlertOptions) => (content: ReactNode, options?: TemplateAlertOptions) =>
       show(content, {
         ...templateOptions,
@@ -102,31 +104,22 @@ const AlertProvider = ({ children }: Props) => {
     [show]
   );
 
-  const alertContext: AlertContainerFactory = useMemo(
+  const alertContext = useMemo(
     () => ({
       update,
       remove,
-      info: сreateTemplateAlert(DEFAULT_INFO_OPTIONS),
-      error: сreateTemplateAlert(DEFAULT_ERROR_OPTIONS),
-      success: сreateTemplateAlert(DEFAULT_SUCCESS_OPTIONS),
-      loading: сreateTemplateAlert(DEFAULT_LOADING_OPTIONS),
+      info: getAlertTemplate(DEFAULT_INFO_OPTIONS),
+      error: getAlertTemplate(DEFAULT_ERROR_OPTIONS),
+      success: getAlertTemplate(DEFAULT_SUCCESS_OPTIONS),
+      loading: getAlertTemplate(DEFAULT_LOADING_OPTIONS),
     }),
-    [update, remove, сreateTemplateAlert]
+    [update, remove, getAlertTemplate]
   );
 
   useEffect(() => {
     root.current = document.createElement('div');
     root.current.id = '__alert__';
     document.body.appendChild(root.current);
-    const timersRef = timers.current;
-
-    return () => {
-      timersRef.forEach(clearTimeout);
-
-      if (root.current) {
-        document.body.removeChild(root.current);
-      }
-    };
   }, []);
 
   return (
