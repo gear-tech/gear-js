@@ -1,0 +1,58 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/mixins' as *;
+
+.alert {
+  width: 390px;
+  padding: 15px;
+  background-color: $bgColor;
+  border-radius: $borderRadius;
+  box-shadow: 0px 5px 5px 0px #00000033, 0px 3px 14px 0px #0000001f, 0px 8px 10px 0px #00000024;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 500;
+  text-transform: capitalize;
+
+  &::before {
+    @include square(16px);
+    content: '';
+    display: inline-block;
+    margin-right: 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+}
+
+.success {
+  color: $successColor;
+
+  &::before {
+    background-image: url(/assets/images/alert/success.svg);
+  }
+}
+
+.error {
+  color: $errorColor;
+
+  &::before {
+    background-image: url(/assets/images/alert/error.svg);
+  }
+}
+
+.info {
+  &::before {
+    background-image: url(/assets/images/alert/info.svg);
+  }
+}
+
+.button {
+  margin-left: auto;
+}
+
+.body {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

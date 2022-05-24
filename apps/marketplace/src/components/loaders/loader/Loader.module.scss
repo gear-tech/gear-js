@@ -1,0 +1,35 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/mixins' as *;
+
+.loader {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: calc(100% + 32px);
+  margin: auto;
+  @include square(32px);
+  display: inline-block;
+  background-color: $textColorSecondary;
+  border-radius: 50%;
+  animation: flip 5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+@keyframes flip {
+  0%,
+  100% {
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+  }
+
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  50% {
+    transform: rotateY(1800deg);
+    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+  }
+
+  100% {
+    transform: rotateY(3600deg);
+  }
+}
