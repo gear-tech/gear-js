@@ -47,7 +47,7 @@ jobs:
         with:
           context: apps/marketplace
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:qa
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-marketplace:qa
           build-args: |
             REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             REACT_APP_IPFS_ADDRESS=${{ secrets.REACT_APP_IPFS_ADDRESS }}
