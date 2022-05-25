@@ -1,3 +1,4 @@
+import packageJson from './package.json';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
@@ -6,8 +7,22 @@ import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import image from '@rollup/plugin-image';
+import fs from 'fs';
 
-const packageJson = require('./package.json');
+// importing built css manually, cuz postcss with 'extract: true' somehow doesn't do it
+const writeCssImport = () => ({
+  name: 'write-css-import',
+  writeBundle: (bundle) => {
+    const { file, format } = bundle;
+    const string = format === 'es' ? "import './index.css';" : "require('./index.css');";
+
+    const data = fs.readFileSync(file).toString().split('\n');
+    data[0] = data[0] + string;
+
+    const text = data.join('\n');
+    fs.writeFile(file, text, (err) => err && console.log(err));
+  },
+});
 
 export default [
   {
@@ -18,10 +33,11 @@ export default [
     ],
     plugins: [
       peerDepsExternal(),
+      postcss({ extract: true, minimize: true }),
+      writeCssImport(),
       resolve(),
       commonjs(),
       typescript({ tsconfig: './tsconfig.json' }),
-      postcss(),
       image(),
       terser(),
     ],

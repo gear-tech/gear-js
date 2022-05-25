@@ -1,4 +1,4 @@
-import { Button } from '@gear-js/ui';
+import { Button } from '../Button/Button';
 import clsx from 'clsx';
 import { InputHTMLAttributes, useRef, MouseEvent, useEffect } from 'react';
 import trashSVG from './images/trash.svg';
