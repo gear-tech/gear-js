@@ -2432,6 +2432,7 @@ __metadata:
     "@types/react": 17.0.44
     "@types/react-alert": 7.0.2
     "@types/react-dom": 17.0.15
+    "@types/react-transition-group": ^4.4.4
     "@typescript-eslint/eslint-plugin": 5.21.0
     "@typescript-eslint/parser": 5.21.0
     buffer: 6.0.3
@@ -2460,7 +2461,6 @@ __metadata:
     prettier: 2.6.2
     prop-types: 15.8.1
     react: 17.0.2
-    react-alert: 7.0.3
     react-dnd: 16.0.0
     react-dnd-html5-backend: 16.0.0
     react-dom: 17.0.2
@@ -2469,6 +2469,7 @@ __metadata:
     react-number-format: 4.9.1
     react-router-dom: 6.3.0
     react-scripts: 5.0.1
+    react-transition-group: ^4.4.2
     sass: 1.50.0
     stream-browserify: 3.0.0
     tua-body-scroll-lock: 1.2.1
@@ -6977,6 +6978,15 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 8f4dce3eb5c70178c5ec2f7434983d632d02a0371a80c31ea012e37a2b8b2174bee482c3b85764333cbe3bcba9132b95307e23ac56d05d490e485e371bdcea46
+  languageName: node
+  linkType: hard
+
+"@types/react-transition-group@npm:^4.4.4":
+  version: 4.4.4
+  resolution: "@types/react-transition-group@npm:4.4.4"
+  dependencies:
+    "@types/react": "*"
+  checksum: 86e9ff9731798e12bc2afe0304678918769633b531dcf6397f86af81718fb7930ef8648e894eeb3718fc6eab6eb885cfb9b82a44d1d74e10951ee11ebc4643ae
   languageName: node
   linkType: hard
 
@@ -21231,19 +21241,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-alert@npm:7.0.3":
-  version: 7.0.3
-  resolution: "react-alert@npm:7.0.3"
-  dependencies:
-    prop-types: ^15.7.2
-    react-transition-group: ^4.4.1
-  peerDependencies:
-    react: ^16.8.1 || ^17
-    react-dom: ^16.8.1 || ^17
-  checksum: e38918db9ec2dcea093ba6eaf5f125254ff2b43bb3b399aaf2a5ab5c28a476cb55352ea9efb1e6433705c35f6c33830a962e07f094764adf54419a5019cddbb1
-  languageName: node
-  linkType: hard
-
 "react-app-polyfill@npm:^3.0.0":
   version: 3.0.0
   resolution: "react-app-polyfill@npm:3.0.0"
@@ -21686,7 +21683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-transition-group@npm:^4.4.1":
+"react-transition-group@npm:^4.4.2":
   version: 4.4.2
   resolution: "react-transition-group@npm:4.4.2"
   dependencies:

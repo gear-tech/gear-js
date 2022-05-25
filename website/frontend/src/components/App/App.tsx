@@ -1,7 +1,6 @@
 import '@polkadot/api-augment'; // dot types fix, source: https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#701-dec-20-2021
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Route, Routes, useSearchParams } from 'react-router-dom';
-import { useAlert } from 'react-alert';
 import { Footer } from 'components/blocks/Footer/Footer';
 import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
 import { Programs } from 'components/pages/Programs/Programs';
@@ -10,7 +9,6 @@ import { Mailbox } from 'components/pages/Mailbox/Mailbox';
 import { Message } from 'components/pages/Message/Message';
 import Explorer from 'components/pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
-import { LoadingPopup } from 'components/LoadingPopup/LoadingPopup';
 import { Document } from 'components/pages/Document/Document';
 import { Send } from 'components/pages/Send/Send';
 import { Meta } from 'components/pages/Meta/Meta';
@@ -22,7 +20,7 @@ import { routes } from 'routes';
 import { subscribeToEvents } from 'services/ApiService';
 import { nodeApi } from '../../api/initApi';
 
-import { useApi, useEvents, useLoading } from 'hooks';
+import { useApi, useAlert, useEvents } from 'hooks';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -37,19 +35,10 @@ const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
 const Component = () => {
   globalStyles();
-  const { isApiReady } = useApi();
   const alert = useAlert();
-  const { isLoading } = useLoading();
-  const [searchParams, setSearchParams] = useSearchParams();
   const events = useEvents();
-
-  useEffect(() => {
-    if (isLoading && document.body.style.overflowY !== 'hidden') {
-      document.body.style.overflowY = 'hidden';
-    } else if (!isLoading && document.body.style.overflowY !== 'unset') {
-      document.body.style.overflowY = 'unset';
-    }
-  }, [isLoading]);
+  const { isApiReady } = useApi();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (isApiReady) {
@@ -79,12 +68,6 @@ const Component = () => {
 
   return (
     <div className="app">
-      {isLoading && (
-        <>
-          <div className="overlay" />
-          <LoadingPopup />
-        </>
-      )}
       <Header />
       <Main>
         {isApiReady ? (

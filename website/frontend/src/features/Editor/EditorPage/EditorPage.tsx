@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useReducer, useEffect, useState } from 'react';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';

@@ -1,6 +1,6 @@
 import React, { VFC } from 'react';
 import clsx from 'clsx';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import { Link } from 'react-router-dom';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import copyIcon from 'assets/images/copy.svg';

@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useAlert } from 'react-alert';
 import { Metadata } from '@gear-js/api';
 
+import { useAlert } from 'hooks';
 import { getProgram } from 'services';
 import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { ProgramModel } from 'types/program';

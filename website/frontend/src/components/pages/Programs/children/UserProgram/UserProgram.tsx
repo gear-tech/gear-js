@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { ProgramModel, ProgramStatus } from 'types/program';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
-import { useAlert } from 'react-alert';
+import { useAlert } from 'hooks';
 import { Link, generatePath } from 'react-router-dom';
 import { routes } from 'routes';
 import MessageIllustration from 'assets/images/message.svg';

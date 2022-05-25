@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import clsx from 'clsx';
-import { useAlert } from 'react-alert';
 import { Field } from 'formik';
 import { Trash2 } from 'react-feather';
 import { Button } from '@gear-js/ui';
 
 import styles from './MetaFile.module.scss';
 
+import { useAlert } from 'hooks';
 import { checkFileFormat } from 'helpers';
 
 type Props = {

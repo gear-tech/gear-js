@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useRef, useState, VFC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
-import { useAlert } from 'react-alert';
 import { Formik, Form } from 'formik';
 import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 
 import styles from './State.module.scss';
 
-import { useApi } from 'hooks';
+import { useApi, useAlert } from 'hooks';
 import { getMetadata } from 'services';
 import { getPreformattedText } from 'helpers';
 import { cloneDeep } from 'features/Editor/EditorTree/utils';

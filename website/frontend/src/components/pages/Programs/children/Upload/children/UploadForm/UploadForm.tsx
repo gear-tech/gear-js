@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState, VFC } from 'react';
-import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
 import NumberFormat from 'react-number-format';
@@ -22,7 +21,7 @@ import { MetaFile } from 'components/common/MetaFile';
 import { MetaField } from 'components/common/MetaField';
 
 import { UploadProgram } from 'services/ApiService';
-import { useAccount, useApi, useLoading } from 'hooks';
+import { useAccount, useApi, useAlert } from 'hooks';
 import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
 import { UploadProgramModel } from 'types/program';
 
@@ -35,7 +34,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const { api } = useApi();
   const alert = useAlert();
   const { account: currentAccount } = useAccount();
-  const { enableLoading, disableLoading } = useLoading();
 
   const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);
@@ -113,19 +111,9 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       programOptions.initPayload = isManualPayload ? payload : prepareToSend(values.__root);
     }
 
-    UploadProgram(
-      api,
-      currentAccount,
-      droppedFile,
-      programOptions,
-      metaFile,
-      enableLoading,
-      disableLoading,
-      alert,
-      () => {
-        setDroppedFile(null);
-      }
-    ).catch(() => {
+    UploadProgram(api, currentAccount, droppedFile, programOptions, metaFile, alert, () => {
+      setDroppedFile(null);
+    }).catch(() => {
       alert.error(`Invalid JSON format`);
     });
   };

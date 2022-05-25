@@ -1,6 +1,15 @@
 @use 'assets/scss/variables' as *;
 @use 'assets/scss/mixins' as *;
 
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .alert {
   width: 100%;
   position: relative;
@@ -51,6 +60,15 @@
 
     &::before {
       background-image: url('/assets/images/alert/info.svg');
+    }
+  }
+
+  &.loading {
+    color: #3975E9;
+
+    &::before {
+      background-image: url('/assets/images/alert/reset.svg');
+      animation: 800ms linear infinite rotating;
     }
   }
 
