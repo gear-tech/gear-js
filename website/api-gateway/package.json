@@ -28,13 +28,13 @@
     "@nestjs/core": "8.4.5",
     "@nestjs/microservices": "8.4.5",
     "@nestjs/platform-express": "8.4.5",
-    "@nestjs/typeorm": "8.0.3",
+    "@nestjs/typeorm": "8.0.4",
     "hcaptcha": "0.1.1",
     "kafkajs": "1.16.0",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.5.5",
-    "zod": "3.16.0"
+    "zod": "3.17.3"
   },
   "devDependencies": {
     "@nestjs/cli": "8.2.6",
@@ -55,7 +55,7 @@
     "ts-loader": "8.4.0",
     "ts-node": "9.1.1",
     "tsconfig-paths": "3.14.1",
-    "typescript": "4.6.4"
+    "typescript": "4.7.2"
   },
   "jest": {
     "moduleFileExtensions": [
