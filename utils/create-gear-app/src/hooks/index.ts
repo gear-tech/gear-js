@@ -1,5 +1,5 @@
 import { useAccounts, useLoggedInAccount } from './accounts';
-import { useBalanceSubscription } from './api';
+import { useBalanceSubscription, useMetadata } from './api';
 import { useAccount, useApi } from './context';
 
-export { useAccounts, useLoggedInAccount, useBalanceSubscription, useAccount, useApi };
+export { useAccounts, useLoggedInAccount, useBalanceSubscription, useMetadata, useAccount, useApi };
