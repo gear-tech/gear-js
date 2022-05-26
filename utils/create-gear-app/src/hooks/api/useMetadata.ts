@@ -20,4 +20,16 @@ function useMetadata(source: string | undefined) {
   return { metadata, metaBuffer };
 }
 
-export { useMetadata };
+function useConditionalMeta(metaSourceOrData: string | Metadata | undefined) {
+  const isSource = typeof metaSourceOrData === 'string';
+  const meta = useMetadata(isSource ? metaSourceOrData : undefined);
+  return isSource ? meta.metadata : metaSourceOrData;
+}
+
+function useConditionalMetaBuffer(metaSourceOrBuffer: string | Buffer | undefined) {
+  const isSource = typeof metaSourceOrBuffer === 'string';
+  const meta = useMetadata(isSource ? metaSourceOrBuffer : undefined);
+  return isSource ? meta.metaBuffer : metaSourceOrBuffer;
+}
+
+export { useMetadata, useConditionalMeta, useConditionalMetaBuffer };

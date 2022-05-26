@@ -27,5 +27,7 @@ module.exports = {
     'import/no-default-export': 'error',
 
     '@typescript-eslint/no-unused-vars': 'warn', // 'error' is not convinient in development
+
+    'consistent-return': 'off', // we want functions to have different return behavior
   },
 };
