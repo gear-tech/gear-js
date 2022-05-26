@@ -2,7 +2,6 @@ import { Button, Input, Textarea, FileInput } from '@gear-js/ui';
 import { FormEvent, useState, useMemo } from 'react';
 import { useIPFS, useForm, useNftMessage } from 'hooks';
 import { CID } from 'ipfs-http-client';
-import { IPFS_ADDRESS } from 'consts';
 import styles from './Create.module.scss';
 
 type Values = { name: string; description: string; json?: File | undefined; image?: File | undefined };
@@ -20,7 +19,7 @@ function Create() {
 
   const [error, setError] = useState('');
 
-  const getIpfsPath = (cid: CID) => `${IPFS_ADDRESS}/${cid.toString()}`;
+  const getIpfsPath = (cid: CID) => `https://ipfs.io/ipfs/${cid.toString()}`;
 
   const getMintPayload = (jsonCid: CID, imgCid: CID) => {
     const tokenMetadata = {
