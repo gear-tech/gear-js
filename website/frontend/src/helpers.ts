@@ -9,7 +9,6 @@ import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
 import { FormValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
 import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
-import { SetFieldValue } from 'types/common';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 
 export const fileNameHandler = (filename: string) => {
@@ -159,26 +158,23 @@ export const calculateGas = async (
   method: string,
   api: any,
   values: UploadInitialValues['programValues'] | SendMessageInitialValues,
-  setFieldValue: SetFieldValue,
   alert: AlertContainerFactory,
   meta: any,
   code?: Uint8Array | null,
   addressId?: String | null,
   replyCodeError?: string
-) => {
+): Promise<number> => {
   const payload = values.payload;
 
-  if (isString(payload) && payload === '') {
-    alert.error(`Error: payload can't be empty`);
-    return;
-  }
-
-  if (isPlainObject(payload) && Object.keys(payload as object).length === 0) {
-    alert.error(`Error: form can't be empty`);
-    return;
-  }
-
   try {
+    if (isString(payload) && payload === '') {
+      throw new Error("payload can't be empty");
+    }
+
+    if (isPlainObject(payload) && Object.keys(payload as object).length === 0) {
+      throw new Error(`form can't be empty`);
+    }
+
     const { value } = values;
     const metaOrTypeOfPayload: Metadata | string = meta || 'String';
 
@@ -216,9 +212,12 @@ export const calculateGas = async (
     }
 
     alert.info(`Estimated gas ${estimatedGas.toHuman()}`);
-    setFieldValue('gasLimit', estimatedGas.toNumber());
+
+    return estimatedGas.toNumber();
   } catch (error) {
     alert.error(`${error}`);
+
+    return Promise.reject(error);
   }
 };
 

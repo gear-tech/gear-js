@@ -5,7 +5,7 @@ import NumberFormat from 'react-number-format';
 import { createPayloadTypeStructure, decodeHexTypes, Metadata } from '@gear-js/api';
 
 import { Schema } from './Schema';
-import { FormValues } from './types';
+import { FormValues, SetFieldValue } from './types';
 import { PayloadType } from './children/PayloadType';
 
 import { calculateGas } from 'helpers';
@@ -57,6 +57,14 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
     };
 
     sendMessage(apiMethod, currentAccount, message, alert, resetForm, metadata, payloadType);
+  };
+
+  const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () => {
+    const method = isReply ? 'reply' : 'handle';
+
+    calculateGas(method, api, values, alert, metadata, null, id, replyErrorCode).then((gasLimit) =>
+      setFieldValue('gasLimit', gasLimit)
+    );
   };
 
   const typeStructures = useMemo(() => {
@@ -151,19 +159,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
                 <button
                   className="message-form__button"
                   type="button"
-                  onClick={() => {
-                    calculateGas(
-                      isReply ? 'reply' : 'handle',
-                      api,
-                      values,
-                      setFieldValue,
-                      alert,
-                      metadata,
-                      null,
-                      id,
-                      replyErrorCode
-                    );
-                  }}
+                  onClick={handleCalculateGas(values, setFieldValue)}
                 >
                   Calculate Gas
                 </button>

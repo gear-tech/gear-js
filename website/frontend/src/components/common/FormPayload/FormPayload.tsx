@@ -51,7 +51,7 @@ const FormPayload = (props: Props) => {
         </div>
       )}
       {isManualView || !payload ? (
-        <FormTextarea rows={15} name={name} placeholder="// Enter your payload here" />
+        <FormTextarea id={name} rows={15} name={name} placeholder="// Enter your payload here" />
       ) : (
         <PayloadStructure levelName={name} typeStructure={payload} />
       )}

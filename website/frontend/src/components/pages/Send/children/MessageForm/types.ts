@@ -1,3 +1,5 @@
+import { FormikHelpers } from 'formik/dist/types';
+
 import { ParsedTypeStructure } from 'components/common/FormPayload/types';
 
 export type FormValues = {
@@ -7,3 +9,5 @@ export type FormValues = {
   payloadType: string;
   destination: string;
 };
+
+export type SetFieldValue = FormikHelpers<FormValues>['setFieldValue'];

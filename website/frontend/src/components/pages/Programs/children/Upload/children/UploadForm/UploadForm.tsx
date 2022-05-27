@@ -1,17 +1,16 @@
 import { ChangeEvent, Dispatch, SetStateAction, useState, VFC, useMemo } from 'react';
-import { Formik, Form, FormikHelpers } from 'formik';
+import { Formik, Form } from 'formik';
 import clsx from 'clsx';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Button, FileInput } from '@gear-js/ui';
 
 import styles from './UploadForm.module.scss';
-import { FormValues, ProgramValues } from './types';
-import { INITIAL_VALUES } from './const';
 import { Schema } from './Schema';
+import { INITIAL_VALUES } from './const';
+import { FormValues, ProgramValues, SetFieldValue, SetValues } from './types';
 import { DroppedFile } from '../../types';
 
 import { Box } from 'layout/Box/Box';
-import { SetFieldValue } from 'types/common';
 import { UploadProgramModel } from 'types/program';
 import { UploadProgram } from 'services/ApiService';
 import { useAccount, useApi, useAlert } from 'hooks';
@@ -38,26 +37,25 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [metaFile, setMetaFile] = useState<string | null>(null);
   const [droppedMetaFile, setDroppedMetaFile] = useState<File>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
-  const [initialValues, setInitialValues] = useState<FormValues>(INITIAL_VALUES);
 
   const handleResetForm = () => {
     setDroppedFile(null);
   };
 
-  const handleResetMetaForm = () => {
+  const handleResetMetaForm = (setValues: SetValues) => {
     setMeta(null);
     setMetaFile(null);
     setDroppedMetaFile(void 0);
     setFieldFromFile(null);
-    setInitialValues(INITIAL_VALUES);
+    setValues(INITIAL_VALUES);
   };
 
   const handleUploadMetaFile =
-    (setFieldValue: FormikHelpers<FormValues>['setFieldValue']) => async (event: ChangeEvent<HTMLInputElement>) => {
+    (setValues: SetValues, setFieldValue: SetFieldValue) => async (event: ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
 
       if (!file) {
-        return handleResetMetaForm();
+        return handleResetMetaForm(setValues);
       }
 
       try {
@@ -81,7 +79,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
         setMetaFile(metaBufferString);
         setFieldFromFile(Object.keys(valuesFromFile));
         setFieldValue('metaValues', valuesFromFile, false);
-        setFieldValue('programValues.programName', valuesFromFile, false);
+        setFieldValue('programValues.programName', metadata?.title || '', false);
       } catch (error) {
         alert.error(`${error}`);
       }
@@ -106,7 +104,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
     if (meta) {
       programOptions.meta = isMetaFromFile ? meta : values.metaValues;
-      programOptions.initPayload = preparePaylaod(payload);
     }
 
     UploadProgram(api, currentAccount, droppedFile, programOptions, metaFile, alert, handleResetForm).catch(() => {
@@ -118,7 +115,9 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, values, setFieldValue, alert, meta, code);
+    calculateGas('init', api, values, alert, meta, code).then((gasLimit) =>
+      setFieldValue('programValues.gasLimit', gasLimit)
+    );
   };
 
   const typeStructures = useMemo(() => {
@@ -140,14 +139,8 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   return (
     <Box className={styles.uploadFormWrapper}>
       <h3 className={styles.heading}>UPLOAD NEW PROGRAM</h3>
-      <Formik
-        initialValues={initialValues}
-        validateOnBlur
-        enableReinitialize
-        validationSchema={Schema}
-        onSubmit={handleSubmitForm}
-      >
-        {({ values, setFieldValue }) => (
+      <Formik initialValues={INITIAL_VALUES} validateOnBlur validationSchema={Schema} onSubmit={handleSubmitForm}>
+        {({ values, setFieldValue, setValues }) => (
           <Form className={styles.uploadForm}>
             <div className={styles.formContent}>
               <div className={styles.program}>
@@ -193,7 +186,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       label="Metadata file:"
                       value={droppedMetaFile}
                       className={clsx(styles.formField, styles.fileInput)}
-                      onChange={handleUploadMetaFile(setFieldValue)}
+                      onChange={handleUploadMetaFile(setValues, setFieldValue)}
                     />
                   </div>
                 )}
