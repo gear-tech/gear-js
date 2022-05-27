@@ -217,7 +217,7 @@ function parseField(data: MetaItem) {
           setWith(
             result.__values,
             current.path.filter((i) => !['__root', '__fields'].includes(i)),
-            current.value === 'None' ? 'None' : '',
+            current.value === 'None' ? null : '',
             Object
           );
         }

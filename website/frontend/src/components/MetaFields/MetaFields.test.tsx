@@ -187,7 +187,7 @@ describe('meta fields', () => {
     await userEvent.type(getByTestId(ArrayResult.__root.__fields['__u8;4__'].name), 'Array');
     const submit = getByRole('button');
     await userEvent.click(submit);
-  
+
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith('Array');
     });
@@ -316,7 +316,7 @@ describe('meta fields', () => {
     await userEvent.click(submit);
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
-        None: 'None',
+        None: null,
       });
     });
   });
@@ -367,7 +367,7 @@ describe('meta fields', () => {
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
         BVar: {
-          None: 'None',
+          None: null,
         },
       });
     });
@@ -461,14 +461,8 @@ describe('meta fields', () => {
     });
 
     // Change state
-    await userEvent.selectOptions(
-      getByTestId(NFTResult.__root.__fields.NftAction.__path),
-      'Approve'
-    );
-    await userEvent.type(
-      getByTestId(NFTResult.__root.__fields.NftAction.__fields.Approve.__fields.to.name),
-      'to'
-    );
+    await userEvent.selectOptions(getByTestId(NFTResult.__root.__fields.NftAction.__path), 'Approve');
+    await userEvent.type(getByTestId(NFTResult.__root.__fields.NftAction.__fields.Approve.__fields.to.name), 'to');
     await userEvent.type(
       getByTestId(NFTResult.__root.__fields.NftAction.__fields.Approve.__fields.tokenId.name),
       'tokenId'
