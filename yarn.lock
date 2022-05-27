@@ -2513,6 +2513,7 @@ __metadata:
     "@types/jest": 27.4.1
     "@types/lodash.get": 4.4.6
     "@types/lodash.isobject": 3.0.6
+    "@types/lodash.isplainobject": ^4.0.7
     "@types/lodash.isstring": 4.0.6
     "@types/lodash.setwith": 4.3.6
     "@types/node": 17.0.21
@@ -2540,6 +2541,7 @@ __metadata:
     localforage: 1.10.0
     lodash.get: 4.4.2
     lodash.isobject: 3.0.2
+    lodash.isplainobject: ^4.0.6
     lodash.isstring: 4.0.1
     lodash.setwith: 4.3.2
     monaco-editor: 0.33.0
@@ -6888,6 +6890,15 @@ __metadata:
   dependencies:
     "@types/lodash": "*"
   checksum: 191de105a4f850d4f54edc8f282d18e0de58bd20fc2d1a3bcdc1b5cd04d8a57248cda3a80871cb8a4bae3038015fbb2ff75ca2e7ff71f102bc7507c56630ac9b
+  languageName: node
+  linkType: hard
+
+"@types/lodash.isplainobject@npm:^4.0.7":
+  version: 4.0.7
+  resolution: "@types/lodash.isplainobject@npm:4.0.7"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: a3946dbcef66c5931073c0c8a0ecc2bd38a6bf808daa018d1af7db5e980fdb4bc03664ffe3c583c6a8e0a082bbcfba8328b32b96a5a955569ee5704e92bf0b3a
   languageName: node
   linkType: hard
 
@@ -17677,6 +17688,13 @@ __metadata:
   version: 3.0.2
   resolution: "lodash.isobject@npm:3.0.2"
   checksum: 6c1667cbc4494d0a13a3617a4b23278d6d02dac520311f2bbb43f16f2cf71d2e6eb9dec8057315b77459df4890c756a256a087d3f4baa44a79ab5d6c968b060e
+  languageName: node
+  linkType: hard
+
+"lodash.isplainobject@npm:^4.0.6":
+  version: 4.0.6
+  resolution: "lodash.isplainobject@npm:4.0.6"
+  checksum: 29c6351f281e0d9a1d58f1a4c8f4400924b4c79f18dfc4613624d7d54784df07efaff97c1ff2659f3e085ecf4fff493300adc4837553104cef2634110b0d5337
   languageName: node
   linkType: hard
 

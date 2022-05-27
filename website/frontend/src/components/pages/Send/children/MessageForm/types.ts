@@ -1,10 +1,9 @@
-import { MetaFieldsValues } from 'components/MetaFields';
+import { ParsedTypeStructure } from 'components/common/FormPayload/types';
 
-export type InitialValues = {
-  gasLimit: number;
+export type FormValues = {
   value: number;
-  payload: string;
+  gasLimit: number;
+  payload: ParsedTypeStructure;
   payloadType: string;
   destination: string;
-  __root: MetaFieldsValues | null;
 };

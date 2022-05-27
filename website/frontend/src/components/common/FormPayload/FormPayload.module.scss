@@ -1,0 +1,32 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
+
+.formPayload {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.manualCheckboxWrapper {
+  margin-bottom: 16px;
+}
+
+.emptyPayloadMessage {
+  color: $textColor;
+}
+
+.selectWrapper {
+  margin-bottom: 16px;
+}
+
+.field,
+.select {
+  flex-direction: column;
+}
+
+.select{
+  align-items: flex-start;
+}
+
+.field{
+  align-items: stretch;
+}

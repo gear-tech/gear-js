@@ -1,29 +1,30 @@
 import { Dispatch, SetStateAction, useState, VFC } from 'react';
 import clsx from 'clsx';
 import { Trash2 } from 'react-feather';
+import { Formik, Form, Field } from 'formik';
 import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { Checkbox } from '@gear-js/ui';
-import { Formik, Form, Field } from 'formik';
-import { FormValues } from './types';
-import { INITIAL_VALUES } from './const';
-import { SetFieldValue } from 'types/common';
-import { MetaFieldsStruct, parseMeta, prepareToSend, MetaFields as MetaForm } from 'components/MetaFields';
 
 import styles from './UploadForm.module.scss';
+import { FormValues } from './types';
+import { INITIAL_VALUES } from './const';
 import { Schema } from './Schema';
 import { Buttons } from './children/Buttons/Buttons';
 import { DroppedFile } from '../../types';
-import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
-import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
-import { MetaSwitch } from 'components/common/MetaSwitch';
-import { MetaFile } from 'components/common/MetaFile';
-import { MetaField } from 'components/common/MetaField';
 
 import { UploadProgram } from 'services/ApiService';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
+import { SetFieldValue } from 'types/common';
 import { UploadProgramModel } from 'types/program';
+import { MetaFieldsStruct, parseMeta, prepareToSend, MetaFields as MetaForm } from 'components/MetaFields';
+import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
+import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
+import { MetaSwitch } from 'components/common/MetaSwitch';
+import { MetaFile } from 'components/common/MetaFile';
+import { FormInput } from 'components/common/FormFields/FormInput';
+import { FormTextarea } from 'components/common/FormFields/FormTextarea';
 
 type Props = {
   setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
@@ -259,16 +260,19 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                         className={styles.formField}
                       />
                     )}
-                    {metaFields?.map((field) => (
-                      <MetaField
-                        key={field}
-                        name={field}
-                        label={`${field}:`}
-                        fieldAs={field === 'types' ? 'textarea' : 'input'}
-                        disabled={isMetaFromFile}
-                        className={styles.formField}
-                      />
-                    ))}
+                    {metaFields?.map((field) => {
+                      const MetaField = field === 'types' ? FormTextarea : FormInput;
+
+                      return (
+                        <MetaField
+                          key={field}
+                          name={field}
+                          label={`${field}:`}
+                          disabled={isMetaFromFile}
+                          className={styles.formField}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
                 <Buttons

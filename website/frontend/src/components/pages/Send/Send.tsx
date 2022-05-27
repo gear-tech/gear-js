@@ -1,7 +1,5 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
-import { MetaItem } from 'components/MetaFields';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import { messagesService } from 'services/MessagesRequestServices';
 import { MessageModel } from 'types/message';
@@ -16,18 +14,8 @@ const Send = () => {
   const id = programId || messageId;
 
   const [message, setMessage] = useState<MessageModel>();
+
   const [program, metadata] = useProgram(programId || message?.source);
-
-  const types = useMemo(() => {
-    if (metadata && metadata.types && metadata.handle_input) {
-      const decodedTypes = decodeHexTypes(metadata.types);
-      const typeStructure: MetaItem = createPayloadTypeStructure(metadata.handle_input, decodedTypes, true);
-
-      return typeStructure;
-    }
-
-    return null;
-  }, [metadata]);
 
   useEffect(() => {
     if (messageId) {
@@ -42,7 +30,7 @@ const Send = () => {
         <>
           <PageHeader title={programId ? 'New message' : 'Send reply'} fileName={program?.name || id} />
           <div className="send-message__block">
-            <MessageForm id={id} replyErrorCode={message?.replyError} meta={metadata} types={types} />
+            <MessageForm id={id} replyErrorCode={message?.replyError} metadata={metadata} />
           </div>
         </>
       ) : (
