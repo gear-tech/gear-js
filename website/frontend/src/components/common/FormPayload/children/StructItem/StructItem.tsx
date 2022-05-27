@@ -1,10 +1,11 @@
+import styles from '../../FormPayload.module.scss';
 import { PayloadItemProps } from '../../types';
 import { getNextLevelName } from '../../helpers';
 
 import { Fieldset } from 'components/common/Fieldset';
 
 const StructItem = ({ levelName, typeStructure, renderNextItem }: PayloadItemProps) => (
-  <Fieldset legend={typeStructure.name}>
+  <Fieldset legend={typeStructure.name} className={styles.fieldset}>
     {Object.entries(typeStructure.value).map((item) =>
       renderNextItem({
         title: item[0],

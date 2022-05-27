@@ -30,10 +30,8 @@ const EnumItem = ({ levelName, typeStructure, renderNextItem }: PayloadItemProps
   }, [selected]);
 
   return (
-    <Fieldset legend={name}>
-      <div className={styles.selectWrapper}>
-        <Select options={options} className={styles.select} onChange={handleChange} />
-      </div>
+    <Fieldset legend={name} className={styles.fieldset}>
+      <Select options={options} className={styles.select} onChange={handleChange} />
       {renderNextItem({
         levelName: nextLevelName,
         //@ts-ignore

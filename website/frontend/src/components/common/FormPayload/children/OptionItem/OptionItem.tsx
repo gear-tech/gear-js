@@ -30,10 +30,8 @@ const OptionItem = ({ levelName, typeStructure, renderNextItem }: PayloadItemPro
   }, [isNone]);
 
   return (
-    <Fieldset legend={name}>
-      <div className={styles.selectWrapper}>
-        <Select options={OPTION_OPTIONS} className={styles.select} onChange={handleChange} />
-      </div>
+    <Fieldset legend={name} className={styles.fieldset}>
+      <Select options={OPTION_OPTIONS} className={styles.select} onChange={handleChange} />
       {renderNextItem({
         levelName,
         //@ts-ignore

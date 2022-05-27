@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+
+import styles from '../../FormPayload.module.scss';
 import { PayloadItemProps } from '../../types';
 import { getNextLevelName } from '../../helpers';
 
@@ -12,7 +14,7 @@ const ArrayItem = ({ levelName, typeStructure, renderNextItem }: PayloadItemProp
   }, [typeStructure]);
 
   return (
-    <Fieldset legend={typeStructure.name}>
+    <Fieldset legend={typeStructure.name} className={styles.fieldset}>
       {arrayItems.map((item, index) =>
         renderNextItem({
           levelName: getNextLevelName(levelName, index),

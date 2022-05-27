@@ -7,8 +7,10 @@
   margin-bottom: 16px;
 }
 
-.selectWrapper + * {
-  margin-top: 16px;
+.fieldset {
+  & > *:not(:last-child):not(legend) {
+    margin-bottom: 16px;
+  }
 }
 
 .field,
@@ -22,8 +24,4 @@
 
 .field{
   align-items: stretch;
-
-  &:not(:last-child){
-    margin-bottom: 16px;
-  }
 }
