@@ -1,5 +1,5 @@
 {
-  "name": "@gear-js/hooks",
+  "name": "@gear-js/react-hooks",
   "version": "0.0.1",
   "description": "React hooks used across Gear applications",
   "author": "Gear Technologies",
