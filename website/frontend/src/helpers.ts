@@ -1,5 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { Metadata } from '@polkadot/types';
+import isString from 'lodash.isstring';
+import isPlainObject from 'lodash.isplainobject';
 import { AlertContainerFactory } from 'context/alert/types';
 import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
@@ -156,8 +158,7 @@ export const getPreformattedText = (data: unknown) => JSON.stringify(data, null,
 export const calculateGas = async (
   method: string,
   api: any,
-  isManualPayload: boolean,
-  values: UploadInitialValues | SendMessageInitialValues,
+  values: UploadInitialValues['programValues'] | SendMessageInitialValues,
   setFieldValue: SetFieldValue,
   alert: AlertContainerFactory,
   meta: any,
@@ -167,12 +168,12 @@ export const calculateGas = async (
 ) => {
   const payload = values.payload;
 
-  if (isManualPayload && payload === '') {
+  if (isString(payload) && payload === '') {
     alert.error(`Error: payload can't be empty`);
     return;
   }
 
-  if (!isManualPayload && payload && Object.keys(payload).length === 0) {
+  if (isPlainObject(payload) && Object.keys(payload as object).length === 0) {
     alert.error(`Error: form can't be empty`);
     return;
   }
@@ -222,7 +223,7 @@ export const calculateGas = async (
 };
 
 export const isHex = (value: unknown) => {
-  const isString = typeof value === 'string';
   const hexRegex = /^0x[\da-fA-F]+/;
-  return isString && hexRegex.test(value);
+
+  return isString(value) && hexRegex.test(value);
 };

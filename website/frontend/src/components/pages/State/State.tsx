@@ -1,22 +1,23 @@
-import { useCallback, useEffect, useMemo, useRef, useState, VFC } from 'react';
+import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Formik, Form } from 'formik';
 import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 
 import styles from './State.module.scss';
-import { FormValues, TypeStructures } from './types';
+import { FormValues } from './types';
+import { INITIAL_VALUES } from './const';
 
 import { useApi, useAlert } from 'hooks';
 import { getMetadata } from 'services';
 import { getPreformattedText } from 'helpers';
 import { FormPayload } from 'components/common/FormPayload';
-import { preparePaylaod, parseTypeStructure } from 'components/common/FormPayload/helpers';
+import { preparePaylaod } from 'components/common/FormPayload/helpers';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { BackButton } from 'components/BackButton/BackButton';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 
-const State: VFC = () => {
+const State = () => {
   const { api } = useApi();
   const alert = useAlert();
   const navigate = useNavigate();
@@ -29,8 +30,6 @@ const State: VFC = () => {
   const [state, setState] = useState('');
   const [metadata, setMetadata] = useState<Metadata | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [typeStructures, setTypeStructures] = useState<TypeStructures>();
-  const [isManualView, setIsManualView] = useState(false);
 
   const types = metadata?.types;
   const stateInput = metadata?.meta_state_input;
@@ -38,17 +37,6 @@ const State: VFC = () => {
   const disableLoading = () => {
     setIsLoading(false);
   };
-
-  const getPayloadForm = useCallback(() => {
-    if (stateInput && types) {
-      const decodedTypes = decodeHexTypes(types);
-
-      setTypeStructures({
-        manual: createPayloadTypeStructure(stateInput, decodedTypes, true),
-        payload: createPayloadTypeStructure(stateInput, decodedTypes),
-      });
-    }
-  }, [stateInput, types]);
 
   const resetState = () => {
     setIsLoading(true);
@@ -84,31 +72,16 @@ const State: VFC = () => {
     }
   };
 
-  const parsedPayload = useMemo(() => {
-    if (typeStructures?.payload) {
-      return parseTypeStructure(typeStructures.payload);
+  const typeStructures = useMemo(() => {
+    if (types && stateInput) {
+      const decodedTypes = decodeHexTypes(types);
+
+      return {
+        manual: createPayloadTypeStructure(stateInput, decodedTypes, true),
+        payload: createPayloadTypeStructure(stateInput, decodedTypes),
+      };
     }
-
-    return '';
-  }, [typeStructures]);
-
-  const preformattedManual = useMemo(() => {
-    if (typeStructures?.manual) {
-      return getPreformattedText(typeStructures.manual);
-    }
-
-    return '';
-  }, [typeStructures]);
-
-  const initValues = useMemo<FormValues>(
-    () => ({
-      payload: isManualView ? preformattedManual : parsedPayload,
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isManualView]
-  );
-
-  const handleViewChange = () => setIsManualView((prevState) => !prevState);
+  }, [types, stateInput]);
 
   useEffect(() => {
     getMetadata(programId).then(({ result }) => {
@@ -121,12 +94,8 @@ const State: VFC = () => {
   }, [programId]);
 
   useEffect(() => {
-    if (metadata) {
-      if (stateInput) {
-        getPayloadForm();
-      } else {
-        readState();
-      }
+    if (metadata && !stateInput) {
+      readState();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metadata, stateInput]);
@@ -137,7 +106,7 @@ const State: VFC = () => {
         <BackButton />
         <h2 className={styles.heading}>Read state</h2>
       </header>
-      <Formik initialValues={initValues} onSubmit={handleSubmit} enableReinitialize>
+      <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
         <Form className={styles.form}>
           <div className={styles.block}>
             <div className={styles.item}>
@@ -147,12 +116,7 @@ const State: VFC = () => {
             {typeStructures?.payload && (
               <div className={styles.item}>
                 <p className={clsx(styles.itemCaption, styles.top)}>Input Parameters:</p>
-                <FormPayload
-                  name="payload"
-                  payload={typeStructures.payload}
-                  isManualView={isManualView}
-                  onViewChange={handleViewChange}
-                />
+                <FormPayload name="payload" typeStructures={typeStructures} />
               </div>
             )}
             {state && (

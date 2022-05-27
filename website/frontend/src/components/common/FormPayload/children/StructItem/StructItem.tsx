@@ -9,7 +9,6 @@ const StructItem = ({ levelName, typeStructure, renderNextItem }: PayloadItemPro
       renderNextItem({
         title: item[0],
         levelName: getNextLevelName(levelName, item[0]),
-        //@ts-ignore
         typeStructure: item[1],
       })
     )}

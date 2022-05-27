@@ -1,30 +1,27 @@
-import { Dispatch, SetStateAction, useState, VFC } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useState, VFC, useMemo } from 'react';
+import { Formik, Form, FormikHelpers } from 'formik';
 import clsx from 'clsx';
-import { Trash2 } from 'react-feather';
-import { Formik, Form, Field } from 'formik';
-import NumberFormat from 'react-number-format';
 import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
-import { Checkbox } from '@gear-js/ui';
+import { Button, FileInput } from '@gear-js/ui';
 
 import styles from './UploadForm.module.scss';
-import { FormValues } from './types';
+import { FormValues, ProgramValues } from './types';
 import { INITIAL_VALUES } from './const';
 import { Schema } from './Schema';
-import { Buttons } from './children/Buttons/Buttons';
 import { DroppedFile } from '../../types';
 
-import { UploadProgram } from 'services/ApiService';
-import { useAccount, useApi, useAlert } from 'hooks';
-import { readFileAsync, getPreformattedText, calculateGas } from 'helpers';
+import { Box } from 'layout/Box/Box';
 import { SetFieldValue } from 'types/common';
 import { UploadProgramModel } from 'types/program';
-import { MetaFieldsStruct, parseMeta, prepareToSend, MetaFields as MetaForm } from 'components/MetaFields';
-import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
-import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
+import { UploadProgram } from 'services/ApiService';
+import { useAccount, useApi, useAlert } from 'hooks';
+import { readFileAsync, calculateGas, checkFileFormat } from 'helpers';
+import { preparePaylaod } from 'components/common/FormPayload/helpers';
 import { MetaSwitch } from 'components/common/MetaSwitch';
-import { MetaFile } from 'components/common/MetaFile';
-import { FormInput } from 'components/common/FormFields/FormInput';
-import { FormTextarea } from 'components/common/FormFields/FormTextarea';
+import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
+import { FormInput, FormTextarea, FormNumberFormat } from 'components/common/FormFields';
+import { FormPayload } from 'components/common/FormPayload';
+import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
 
 type Props = {
   setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
@@ -39,253 +36,202 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<string | null>(null);
-  const [droppedMetaFile, setDroppedMetaFile] = useState<File | null>(null);
-  const [payloadForm, setPayloadForm] = useState<MetaFieldsStruct | null>();
+  const [droppedMetaFile, setDroppedMetaFile] = useState<File>();
   const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
-  const [isManualPayload, setIsManualPayload] = useState<boolean>(true);
   const [initialValues, setInitialValues] = useState<FormValues>(INITIAL_VALUES);
 
-  const handleUploadMetaFile = async (file: File) => {
-    try {
-      const fileBuffer = (await readFileAsync(file)) as Buffer;
-      const metadata: Metadata = await getWasmMetadata(fileBuffer);
-
-      if (!metadata) {
-        return;
-      }
-
-      const currentMetaBuffer = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
-
-      const decodedTypes = decodeHexTypes(metadata?.types || '');
-      const typeStructure = createPayloadTypeStructure(metadata?.init_input || '', decodedTypes, true);
-      const parsedStructure = parseMeta(typeStructure);
-
-      const valuesFromFile = getMetaValues(metadata);
-
-      setMeta(metadata);
-      setMetaFile(currentMetaBuffer);
-      setPayloadForm(parsedStructure);
-      setFieldFromFile(Object.keys(valuesFromFile));
-      setInitialValues((prevState) => ({
-        ...prevState,
-        ...valuesFromFile,
-        programName: metadata.title || '',
-        payload: getPreformattedText(typeStructure),
-      }));
-    } catch (error) {
-      alert.error(`${error}`);
-    } finally {
-      setDroppedMetaFile(file);
-    }
+  const handleResetForm = () => {
+    setDroppedFile(null);
   };
 
-  const resetMetaForm = () => {
+  const handleResetMetaForm = () => {
     setMeta(null);
     setMetaFile(null);
-    setPayloadForm(null);
-    setDroppedMetaFile(null);
+    setDroppedMetaFile(void 0);
     setFieldFromFile(null);
-
     setInitialValues(INITIAL_VALUES);
   };
-  //TODO: We need to rewrite the form, urgently!
-  const handleSubmitForm = (values: any) => {
+
+  const handleUploadMetaFile =
+    (setFieldValue: FormikHelpers<FormValues>['setFieldValue']) => async (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+
+      if (!file) {
+        return handleResetMetaForm();
+      }
+
+      try {
+        if (!checkFileFormat(file)) {
+          throw new Error('Wrong file format');
+        }
+
+        setDroppedMetaFile(file);
+
+        const readedFile = (await readFileAsync(file)) as Buffer;
+        const metadata: Metadata = await getWasmMetadata(readedFile);
+
+        if (!metadata) {
+          throw new Error('Failed to load metadata');
+        }
+
+        const metaBufferString = Buffer.from(new Uint8Array(readedFile)).toString('base64');
+        const valuesFromFile = getMetaValues(metadata);
+
+        setMeta(metadata);
+        setMetaFile(metaBufferString);
+        setFieldFromFile(Object.keys(valuesFromFile));
+        setFieldValue('metaValues', valuesFromFile, false);
+        setFieldValue('programValues.programName', valuesFromFile, false);
+      } catch (error) {
+        alert.error(`${error}`);
+      }
+    };
+
+  const handleSubmitForm = (values: FormValues) => {
     if (!currentAccount) {
       alert.error(`Wallet not connected`);
       return;
     }
 
-    const { value, title, gasLimit, payload, programName, initPayload, __root: root, ...other } = values;
+    const { value, payload, gasLimit, programName } = values.programValues;
 
     const programOptions: UploadProgramModel = {
       meta: void 0,
       value,
-      title,
+      title: '',
       gasLimit,
       programName,
-      initPayload,
+      initPayload: meta ? preparePaylaod(payload) : payload,
     };
 
     if (meta) {
-      programOptions.meta = isMetaFromFile ? meta : other;
-      //@ts-ignore
-      programOptions.initPayload = isManualPayload ? payload : prepareToSend(values.__root);
+      programOptions.meta = isMetaFromFile ? meta : values.metaValues;
+      programOptions.initPayload = preparePaylaod(payload);
     }
 
-    UploadProgram(api, currentAccount, droppedFile, programOptions, metaFile, alert, () => {
-      setDroppedFile(null);
-    }).catch(() => {
+    UploadProgram(api, currentAccount, droppedFile, programOptions, metaFile, alert, handleResetForm).catch(() => {
       alert.error(`Invalid JSON format`);
     });
   };
 
-  const handleResetForm = () => {
-    setDroppedFile(null);
-    setDroppedMetaFile(null);
-  };
-
-  const handleCalculateGas = async (values: FormValues, setFieldValue: SetFieldValue) => {
+  const handleCalculateGas = async (values: ProgramValues, setFieldValue: SetFieldValue) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, isManualPayload, values, setFieldValue, alert, meta, code);
+    calculateGas('init', api, values, setFieldValue, alert, meta, code);
   };
+
+  const typeStructures = useMemo(() => {
+    const types = meta?.types;
+    const initInput = meta?.init_input;
+
+    if (types && initInput) {
+      const decodedTypes = decodeHexTypes(types);
+
+      return {
+        manual: createPayloadTypeStructure(initInput, decodedTypes, true),
+        payload: createPayloadTypeStructure(initInput, decodedTypes),
+      };
+    }
+  }, [meta]);
 
   const metaFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
 
-  const isShowPayloadForm = payloadForm && !isManualPayload;
-
   return (
-    <div className={styles.uploadForm}>
+    <Box className={styles.uploadFormWrapper}>
       <h3 className={styles.heading}>UPLOAD NEW PROGRAM</h3>
-
       <Formik
         initialValues={initialValues}
-        validationSchema={Schema}
         validateOnBlur
         enableReinitialize
+        validationSchema={Schema}
         onSubmit={handleSubmitForm}
       >
-        {({ errors, touched, values, setFieldValue }) => {
-          return (
-            <Form>
-              <div className={styles.columnsWrapper}>
-                <div className={styles.columns}>
-                  <div className={styles.columnLeft}>
-                    <div className={styles.block}>
-                      <span className={styles.caption}>File:</span>
-                      <div className={clsx(styles.value, styles.filename)}>
-                        {droppedFile.name}
-                        <button type="button" onClick={handleResetForm}>
-                          <Trash2 color="#ffffff" size="20" strokeWidth="1" />
-                        </button>
-                      </div>
-                    </div>
-                    <div className={styles.block}>
-                      <label htmlFor="value" className={styles.caption}>
-                        Name:
-                      </label>
-                      <div className={styles.value}>
-                        <Field
-                          id="programName"
-                          name="programName"
-                          placeholder="Name"
-                          className={styles.field}
-                          type="text"
-                        />
-                        {errors.programName && touched.programName ? (
-                          <div className={styles.error}>{errors.programName}</div>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div className={styles.block}>
-                      <label htmlFor="gasLimit" className={styles.caption}>
-                        Gas limit:
-                      </label>
-                      <div className={styles.value}>
-                        <NumberFormat
-                          name="gasLimit"
-                          placeholder="20,000,000"
-                          value={values.gasLimit}
-                          thousandSeparator
-                          allowNegative={false}
-                          className={styles.field}
-                          onValueChange={(val) => {
-                            const { floatValue } = val;
-                            setFieldValue('gasLimit', floatValue);
-                          }}
-                        />
-                        {errors.gasLimit && touched.gasLimit ? (
-                          <div className={styles.error}>{errors.gasLimit}</div>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div className={styles.block}>
-                      <label htmlFor="value" className={styles.caption}>
-                        Initial value:
-                      </label>
-                      <div className={styles.value}>
-                        <Field id="value" name="value" placeholder="0" className={styles.field} type="number" />
-                        {errors.value && touched.value ? <div className={styles.error}>{errors.value}</div> : null}
-                      </div>
-                    </div>
-                    <div className={styles.block}>
-                      <label htmlFor="payload" className={clsx(styles.caption, styles.top)}>
-                        Initial payload:
-                      </label>
-                      <div className={clsx(styles.value, styles.payload)}>
-                        {payloadForm && (
-                          <div className={styles.switch}>
-                            <Checkbox
-                              type="switch"
-                              onChange={() => setIsManualPayload(!isManualPayload)}
-                              label="Manual input"
-                              checked={isManualPayload}
-                            />
-                          </div>
-                        )}
-                        {isShowPayloadForm ? (
-                          <div className="message-form--info">
-                            <MetaForm data={payloadForm} />
-                          </div>
-                        ) : (
-                          <>
-                            <Field
-                              as="textarea"
-                              id="payload"
-                              name="payload"
-                              placeholder="// Enter your payload here"
-                              className={clsx(styles.field, styles.textarea)}
-                            />
-                            {errors.payload && touched.payload ? (
-                              <div className={styles.error}>{errors.payload}</div>
-                            ) : null}
-                          </>
-                        )}
-                      </div>
-                    </div>
+        {({ values, setFieldValue }) => (
+          <Form className={styles.uploadForm}>
+            <div className={styles.formContent}>
+              <div className={styles.program}>
+                <div className={styles.fieldWrapper}>
+                  <span className={styles.caption}>File:</span>
+                  <span className={styles.fileName}>{droppedFile.name}</span>
+                </div>
+                <FormInput
+                  name="programValues.programName"
+                  label="Name:"
+                  placeholder="Name"
+                  className={styles.formField}
+                />
+                <FormNumberFormat
+                  name="programValues.gasLimit"
+                  label="Gas limit:"
+                  placeholder="20,000,000"
+                  thousandSeparator
+                  allowNegative={false}
+                  className={styles.formField}
+                />
+                <FormInput
+                  type="number"
+                  name="programValues.value"
+                  label="Initial value:"
+                  placeholder="0"
+                  className={styles.formField}
+                />
+                <div className={styles.fieldWrapper}>
+                  <label htmlFor="programValues.payload" className={clsx(styles.caption, styles.top)}>
+                    Initial payload:
+                  </label>
+                  <FormPayload name="programValues.payload" typeStructures={typeStructures} />
+                </div>
+              </div>
+
+              <fieldset className={styles.meta}>
+                <legend className={styles.metaLegend}>Metadata:</legend>
+                <MetaSwitch isMetaFromFile={isMetaFromFile} onChange={setIsMetaFromFile} className={styles.formField} />
+                {isMetaFromFile && (
+                  <div className={styles.fieldWrapper}>
+                    <FileInput
+                      label="Metadata file:"
+                      value={droppedMetaFile}
+                      className={clsx(styles.formField, styles.fileInput)}
+                      onChange={handleUploadMetaFile(setFieldValue)}
+                    />
                   </div>
-                  <div className={styles.meta}>
-                    <span className={styles.title}>Metadata: </span>
-                    <MetaSwitch
-                      isMetaFromFile={isMetaFromFile}
-                      onChange={setIsMetaFromFile}
+                )}
+                {metaFields?.map((field) => {
+                  const FormField = field === 'types' ? FormTextarea : FormInput;
+
+                  return (
+                    <FormField
+                      key={field}
+                      name={`metaValues.${field}`}
+                      label={`${field}:`}
+                      disabled={isMetaFromFile}
                       className={styles.formField}
                     />
-                    {isMetaFromFile && (
-                      <MetaFile
-                        file={droppedMetaFile}
-                        onUpload={handleUploadMetaFile}
-                        onDelete={resetMetaForm}
-                        className={styles.formField}
-                      />
-                    )}
-                    {metaFields?.map((field) => {
-                      const MetaField = field === 'types' ? FormTextarea : FormInput;
+                  );
+                })}
+              </fieldset>
+            </div>
 
-                      return (
-                        <MetaField
-                          key={field}
-                          name={field}
-                          label={`${field}:`}
-                          disabled={isMetaFromFile}
-                          className={styles.formField}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-                <Buttons
-                  handleCalculateGas={() => {
-                    handleCalculateGas(values, setFieldValue);
-                  }}
-                  handleResetForm={handleResetForm}
-                />
-              </div>
-            </Form>
-          );
-        }}
+            <div className={styles.buttons}>
+              <Button type="submit" text="Upload program" />
+              <Button
+                text="Calculate Gas"
+                onClick={() => {
+                  handleCalculateGas(values.programValues, setFieldValue);
+                }}
+              />
+              <Button
+                type="submit"
+                text="Cancel upload"
+                color="transparent"
+                aria-label="closeUploadForm"
+                onClick={handleResetForm}
+              />
+            </div>
+          </Form>
+        )}
       </Formik>
-    </div>
+    </Box>
   );
 };

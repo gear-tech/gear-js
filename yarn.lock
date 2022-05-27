@@ -2485,7 +2485,7 @@ __metadata:
   dependencies:
     "@craco/craco": 6.4.3
     "@gear-js/api": 0.19.0
-    "@gear-js/ui": 0.1.2
+    "@gear-js/ui": 0.2.4
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
     "@polkadot/api": 8.3.2
@@ -2606,13 +2606,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/ui@npm:0.1.2":
-  version: 0.1.2
-  resolution: "@gear-js/ui@npm:0.1.2"
+"@gear-js/ui@npm:0.2.4":
+  version: 0.2.4
+  resolution: "@gear-js/ui@npm:0.2.4"
   peerDependencies:
     react: ">=17.0.2"
     sass: ^1.49.9
-  checksum: 9e40a82f3c930a32d6b5e39c3c52ebaaa1f4eae87351132931f0d49f9ee0a15a6af4054b112cf14e0f9f11b8509242cd7876d512db854fa693c5961c4b9a48fa
+  checksum: 4477721ce36078b8e7e66751510a6a2e0b924d0ba6c662d304c0f2ff3776f2ac20f8551c5c3c6e007befddbe3a026c4b82ea690e8a3539edfe43e0d969ad1e6a
   languageName: node
   linkType: hard
 

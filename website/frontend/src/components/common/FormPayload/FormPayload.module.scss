@@ -1,6 +1,3 @@
-@use '@gear-js/ui/variables' as *;
-@use '@gear-js/ui/breakpoints' as *;
-
 .formPayload {
   width: 100%;
   margin-bottom: 20px;
@@ -10,12 +7,8 @@
   margin-bottom: 16px;
 }
 
-.emptyPayloadMessage {
-  color: $textColor;
-}
-
-.selectWrapper {
-  margin-bottom: 16px;
+.selectWrapper + * {
+  margin-top: 16px;
 }
 
 .field,
@@ -29,4 +22,8 @@
 
 .field{
   align-items: stretch;
+
+  &:not(:last-child){
+    margin-bottom: 16px;
+  }
 }

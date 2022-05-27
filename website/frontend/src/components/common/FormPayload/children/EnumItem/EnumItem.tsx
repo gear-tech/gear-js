@@ -25,6 +25,7 @@ const EnumItem = ({ levelName, typeStructure, renderNextItem }: PayloadItemProps
   useChangeEffect(() => {
     //@ts-ignore
     const parsedStructure = parseTypeStructure(value[selected]);
+
     helpers.setValue({ [selected]: parsedStructure });
   }, [selected]);
 

@@ -1,11 +1,15 @@
 import { Metadata } from '@gear-js/api';
 
-import { MetaFieldsValues } from 'components/MetaFields';
+import { ParsedTypeStructure } from 'components/common/FormPayload/types';
 
-export type FormValues = Metadata & {
+export type ProgramValues = {
   value: number;
-  payload: string;
+  payload: ParsedTypeStructure;
   gasLimit: number;
   programName: string;
-  __root: MetaFieldsValues | null;
+};
+
+export type FormValues = {
+  metaValues: Metadata;
+  programValues: ProgramValues;
 };
