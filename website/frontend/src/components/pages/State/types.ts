@@ -1,8 +1,5 @@
-export type FormValues = {
-  payload: any;
-};
+import { ParsedTypeStructure } from 'components/common/FormPayload/types';
 
-export type TypeStructures = {
-  manual: any;
-  payload: any;
+export type FormValues = {
+  payload: ParsedTypeStructure;
 };
