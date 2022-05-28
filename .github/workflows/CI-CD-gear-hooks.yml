@@ -1,0 +1,39 @@
+name: 'CI-CD @gear-js/react-hooks'
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - utils/gear-hooks/**
+
+jobs:
+  publish-to-npm:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use node 17.x
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 17.x
+
+      - name: Check package version
+        uses: EndBug/version-check@v1
+        id: check
+        with:
+          file-name: utils/gear-ui/package.json
+          file-url: https://unpkg.com/@gear-js/react-hooks@latest/package.json
+          static-checking: localIsNew
+
+      - name: Publish
+        if: steps.check.outputs.changed == 'true'
+        working-directory: utils/gear-hooks
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
+          npm ci
+          npm config set //registry.npmjs.org/:_authToken=$token
+          npm publish
+        env:
+          osipov-mit: ${{ secrets.OSIPOV_NPM_TOKEN }}
+          nikitayutanov: ${{ secrets.YUTANOV_NPM_TOKEN }}
