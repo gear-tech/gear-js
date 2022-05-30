@@ -1,7 +1,7 @@
-import { Header, Footer, ApiLoader } from 'components';
+import { useApi, useBalanceSubscription, useLoggedInAccount } from '@gear-js/react-hooks';
 import { Routing } from 'pages';
-import { withProviders } from 'context';
-import { useApi, useBalanceSubscription, useLoggedInAccount } from 'hooks';
+import { Header, Footer, ApiLoader } from 'components';
+import { withProviders } from 'hocs';
 import 'App.scss';
 
 function Component() {

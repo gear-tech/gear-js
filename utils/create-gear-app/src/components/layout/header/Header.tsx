@@ -1,4 +1,4 @@
-import { useApi } from 'hooks';
+import { useApi } from '@gear-js/react-hooks';
 import { Logo } from './logo';
 import { Account } from './account';
 import styles from './Header.module.scss';

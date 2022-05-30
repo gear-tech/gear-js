@@ -1,9 +1,8 @@
-import { Account } from 'types';
 import { AccountButton } from '../account-button';
 import styles from './Wallet.module.scss';
 
 type Props = {
-  balance: Account['balance'];
+  balance: { value: string; unit: string };
   address: string;
   name: string | undefined;
   onClick: () => void;

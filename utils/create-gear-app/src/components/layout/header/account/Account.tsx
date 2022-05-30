@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAccount, useAccounts } from 'hooks';
+import { useAccount, useAccounts } from '@gear-js/react-hooks';
 import userSVG from 'assets/images/icons/login.svg';
 import { Button } from '@gear-js/ui';
 import { AccountsModal } from './accounts-modal';
