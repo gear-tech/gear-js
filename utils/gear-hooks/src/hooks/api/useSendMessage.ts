@@ -2,12 +2,13 @@ import { Hex, Metadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
-import { useAccount, useApi } from 'hooks';
+import { useContext } from 'react';
+import { AccountContext, ApiContext } from 'context';
 import { useConditionalMeta } from './useMetadata';
 
 function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | undefined) {
-  const { api } = useApi();
-  const { account } = useAccount();
+  const { api } = useContext(ApiContext); // сircular dependency fix
+  const { account } = useContext(AccountContext);
   const metadata = useConditionalMeta(metaSourceOrData);
 
   const handleEventsStatus = (events: EventRecord[]) => {
