@@ -1,6 +1,6 @@
 import { GearApi } from './GearApi';
-import { HumanedMessage, StoredMessage } from './types/interfaces';
-import { MailboxType, AccountId, Hex } from './types';
+import { StoredMessage } from './types/interfaces';
+import { MailboxType, AccountId, Hex, MessageId } from './types';
 import { Option } from '@polkadot/types';
 import { AccountId32, H256 } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
@@ -41,12 +41,10 @@ export class GearMailbox {
       const mailbox = (await this.api.rpc.state.queryStorageAt(keysPaged)) as Option<StoredMessage>[];
       return mailbox.map((option, index) => {
         return [
-          keys[index].toHuman() as [AccountId, Hex],
-          this.api
-            .createType('GearCoreMessageStoredStoredMessage', option.unwrap())
-            .toHuman() as unknown as HumanedMessage,
+          keys[index].toHuman() as [AccountId, MessageId],
+          this.api.createType('GearCoreMessageStoredStoredMessage', option.unwrap()).toHuman() as unknown,
         ];
-      });
+      }) as MailboxType;
     }
   }
 }

@@ -18,4 +18,5 @@ module.exports = {
   verbose: true,
   testSequencer: './test/testSequencer.js',
   preset: 'ts-jest/presets/js-with-babel',
+  testTimeout: 15000,
 };

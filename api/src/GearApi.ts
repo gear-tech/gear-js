@@ -4,6 +4,7 @@ import { GearBalance } from './Balance';
 import { GearEvents } from './Events';
 import { GearProgramState } from './State';
 import { GearMessageReply } from './MessageReply';
+import { GearWaitlist } from './Waitlist';
 import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './types/interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';
@@ -14,7 +15,6 @@ import { GearMailbox } from './Mailbox';
 import { GearClaimValue } from './Claim';
 import { GearCode } from './Code';
 import { RegistryError } from '@polkadot/types-codec/types';
-import { GearWaitlist } from 'Waitlist';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;

@@ -54,5 +54,5 @@ export interface HumanedMessage {
   destination: Hex;
   payload: Hex | string;
   value: string;
-  reply: [Hex, number];
+  reply: [Hex, number] | null;
 }

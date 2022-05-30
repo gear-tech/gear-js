@@ -8,8 +8,6 @@ import { KeyringPair } from '@polkadot/keyring/types';
 const api = new GearApi();
 let alice: KeyringPair;
 
-jest.setTimeout(15000);
-
 beforeAll(async () => {
   await api.isReady;
   [alice] = await getAccount();
