@@ -10,7 +10,18 @@ export class GearWaitlist {
   constructor(gearApi: GearApi) {
     this.api = gearApi;
   }
-
+  /**
+   *
+   * @param programId
+   * @param messageId
+   * @returns Waitlist of particular program if messageId was not specified
+   * @example
+   * ```javascript
+   * const api = await GearApi.create();
+   * const waitlist = await api.waitlist.read('0xe0c6997d0bd83269ec108474494e2bd6ed156b30de599b9f2c91e82bb6ad04e8');
+   * console.log(waitlist);
+   * ```
+   */
   async read(programId: Hex, messageId?: Hex): Promise<WaitlistType> {
     if (messageId) {
       const waitlist = await this.api.query.gearMessenger.waitlist(programId, messageId);

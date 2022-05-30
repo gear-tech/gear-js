@@ -1,4 +1,4 @@
-import { GearApi, Hex } from '../src';
+import { CreateType, GearApi, Hex } from '../src';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
 import { TEST_WASM_DIR } from './config';
@@ -27,16 +27,20 @@ afterAll(async () => {
 });
 
 describe('GearWaitlist', () => {
-  test('test', async () => {
+  test(`read program's waitlist`, async () => {
     api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
     const { messageId } = await sendTransaction(api.message, alice, 'DispatchMessageEnqueued');
     const waitlist = await api.waitlist.read(programId);
-    console.log(JSON.stringify(waitlist, undefined, 4));
     expect(waitlist).toHaveLength(1);
     expect(waitlist[0][0][0]).toBe(programId);
     expect(waitlist[0][0][1]).toBe(messageId);
     expect(waitlist[0][1]).toHaveProperty('kind');
     expect(waitlist[0][1]).toHaveProperty('message');
     expect(waitlist[0][1]).toHaveProperty('context');
+  });
+
+  test(`read waitlist of non-program address`, async () => {
+    const waitlist = await api.waitlist.read(CreateType.create('[u8;32]', 0).toHex());
+    expect(waitlist).toHaveLength(0);
   });
 });
