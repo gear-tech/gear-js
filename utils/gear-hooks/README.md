@@ -15,13 +15,13 @@ A React library that provides hooks that are used across Gear applications.
 ## Installation
 
 ```sh
-npm install @gear-js/hooks
+npm install @gear-js/react-hooks
 ```
 
 or
 
 ```sh
-yarn add @gear-js/hooks
+yarn add @gear-js/react-hooks
 ```
 
 ## Getting started
@@ -29,7 +29,7 @@ yarn add @gear-js/hooks
 Simple as it is, here's quick example:
 
 ```jsx
-import { useReadState } from '@gear-js/hooks';
+import { useReadState } from '@gear-js/react-hooks';
 import metaWasm from 'assets/wasm/meta.wasm';
 
 function State() {

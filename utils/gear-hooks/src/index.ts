@@ -7,8 +7,8 @@ import {
   useSendMessage,
   useAccount,
   useApi,
-} from 'hooks';
-import { AccountProvider, ApiProvider, AlertProvider } from 'context';
+} from './hooks';
+import { AccountProvider, ApiProvider, AlertProvider } from './context';
 
 export {
   useAccounts,

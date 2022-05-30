@@ -1,8 +1,8 @@
-import { useState, createContext } from 'react';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { useApi } from 'hooks';
-import { GearKeyring, Hex } from '@gear-js/api';
 import { Balance } from '@polkadot/types/interfaces';
+import { GearKeyring, Hex } from '@gear-js/api';
+import { useState, createContext, useContext } from 'react';
+import { ApiContext } from './Api';
 import { Props } from './types';
 
 export interface Account extends InjectedAccountWithMeta {
@@ -20,7 +20,7 @@ type Value = {
 const AccountContext = createContext({} as Value);
 
 function AccountProvider({ children }: Props) {
-  const { api } = useApi();
+  const { api } = useContext(ApiContext); // сircular dependency fix
 
   const [account, setAccount] = useState<Account>();
 

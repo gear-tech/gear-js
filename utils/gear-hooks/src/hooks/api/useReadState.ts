@@ -1,12 +1,12 @@
 import { ProgramId } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
-import { useEffect, useState } from 'react';
-import { useApi } from 'hooks';
+import { useEffect, useState, useContext } from 'react';
+import { ApiContext } from 'context';
 import { useConditionalMetaBuffer } from './useMetadata';
 
 function useReadState(programId: ProgramId, metaSourceOrBuffer: string | Buffer | undefined, payload?: AnyJson) {
   const [state, setState] = useState<AnyJson>();
-  const { api } = useApi();
+  const { api } = useContext(ApiContext); // сircular dependency fix
   const metaBuffer = useConditionalMetaBuffer(metaSourceOrBuffer);
 
   useEffect(() => {
