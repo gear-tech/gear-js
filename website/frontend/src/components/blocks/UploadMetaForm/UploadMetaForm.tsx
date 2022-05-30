@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useAlert } from 'react-alert';
 import { Formik, Form, FormikHelpers, FormikProps } from 'formik';
 import { Button } from '@gear-js/ui';
 import { getWasmMetadata, Metadata } from '@gear-js/api';
@@ -14,7 +13,7 @@ import { MetaFile } from 'components/common/MetaFile';
 import { MetaField } from 'components/common/MetaField';
 
 import { readFileAsync } from 'helpers';
-import { useAccount } from 'hooks';
+import { useAccount, useAlert } from 'hooks';
 import { addMetadata } from 'services/ApiService';
 
 type Props = {

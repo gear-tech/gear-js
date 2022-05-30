@@ -1,0 +1,12 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text {
+  // TODO: replace w/ @gear-js/ui heading styles
+  font-family: 'Syncopate', sans-serif;
+  font-size: 22px;
+  line-height: 30px;
+}

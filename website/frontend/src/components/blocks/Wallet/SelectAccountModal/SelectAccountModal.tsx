@@ -1,4 +1,3 @@
-import { useAlert } from 'react-alert';
 import { GearKeyring } from '@gear-js/api';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Button } from '@gear-js/ui';
@@ -6,7 +5,7 @@ import { Button } from '@gear-js/ui';
 import styles from './SelectAccountModal.module.scss';
 import { AccountList } from '../AccountList';
 
-import { useAccount } from 'hooks';
+import { useAccount, useAlert } from 'hooks';
 import { LOCAL_STORAGE } from 'consts';
 import logoutSVG from 'assets/images/logout.svg';
 import { Modal } from 'components/blocks/Modal';

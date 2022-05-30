@@ -1,0 +1,33 @@
+@use '@gear-js/ui/variables' as *;
+
+@mixin verticalGap($gap) {
+  & > *:not(:last-child) {
+    margin-bottom: $gap;
+  }
+}
+
+.heading {
+  margin-bottom: 32px;
+}
+
+.main {
+  padding: 25px 40px;
+  background-color: #212121;
+  border: 1px dashed #0e0e0e;
+  border-radius: $borderRadius;
+}
+
+.form {
+  @include verticalGap(32px);
+  max-width: 540px;
+}
+
+.input {
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+}
+
+.error {
+  text-align: right;
+  color: $errorColor;
+}

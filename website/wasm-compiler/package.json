@@ -26,11 +26,11 @@
     "@nestjs/core": "8.4.5",
     "@nestjs/microservices": "8.4.5",
     "@nestjs/platform-express": "8.4.5",
-    "@nestjs/typeorm": "8.0.3",
+    "@nestjs/typeorm": "8.0.4",
     "@nestjs/websockets": "8.4.5",
     "adm-zip": "0.5.9",
     "dockerode": "3.3.1",
-    "nats": "2.6.1",
+    "nats": "2.7.1",
     "pg": "8.7.3",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
@@ -55,7 +55,7 @@
     "ts-loader": "8.4.0",
     "ts-node": "9.1.1",
     "tsconfig-paths": "3.14.1",
-    "typescript": "4.6.4"
+    "typescript": "4.7.2"
   },
   "jest": {
     "moduleFileExtensions": [

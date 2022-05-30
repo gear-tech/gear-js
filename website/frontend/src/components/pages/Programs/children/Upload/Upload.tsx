@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
-import { UploadForm } from './children/UploadForm/UploadForm';
-import { DropTarget } from './children/DropTarget/DropTarget';
-import { CodeModal } from './children/CodeModal/CodeModal';
-import { DroppedFile, UploadTypes } from './types';
+import { useState, useEffect } from 'react';
+
 import styles from './Upload.module.scss';
+import { DroppedFile, UploadTypes } from './types';
+import { DropTarget } from './children/DropTarget/DropTarget';
+import { UploadForm } from './children/UploadForm/UploadForm';
+
+import { useCodeUpload } from 'hooks';
 
 export const Upload = () => {
   const [droppedFile, setDroppedFile] = useState<DroppedFile | null>(null);
+
+  const uploadCode = useCodeUpload();
+
   const isProgramUpload = droppedFile?.type === UploadTypes.PROGRAM;
-  const isCodeUpload = droppedFile?.type === UploadTypes.CODE;
+
+  useEffect(() => {
+    if (droppedFile?.type === UploadTypes.CODE) {
+      uploadCode(droppedFile.file);
+      setDroppedFile(null);
+    }
+  }, [droppedFile, uploadCode]);
 
   return (
     <>
@@ -20,7 +31,6 @@ export const Upload = () => {
           <DropTarget type={UploadTypes.CODE} setDroppedFile={setDroppedFile} />
         </div>
       )}
-      {isCodeUpload && <CodeModal file={droppedFile.file} setDroppedFile={setDroppedFile} />}
     </>
   );
 };

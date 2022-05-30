@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, VFC } from 'react';
-import { useAlert } from 'react-alert';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { Button } from '@gear-js/ui';
@@ -8,7 +7,7 @@ import './ProgramSwitch.scss';
 import { routes } from 'routes';
 import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS, HCAPTCHA_SITE_KEY } from 'consts';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { useAccount, useApi } from 'hooks';
+import { useAccount, useApi, useAlert } from 'hooks';
 import { isDevChain } from 'helpers';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 

@@ -21,15 +21,15 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@gear-js/api": "0.18.3",
+    "@gear-js/api": "0.19.0",
     "@gear-js/jsonrpc-errors": "workspace:^",
     "@nestjs/common": "8.4.5",
     "@nestjs/config": "1.2.1",
     "@nestjs/core": "8.4.5",
     "@nestjs/microservices": "8.4.5",
     "@nestjs/platform-express": "8.4.5",
-    "@nestjs/typeorm": "8.0.3",
-    "@polkadot/api": "8.4.2",
+    "@nestjs/typeorm": "8.0.4",
+    "@polkadot/api": "8.5.1",
     "kafkajs": "1.16.0",
     "pg": "8.7.3",
     "reflect-metadata": "0.1.13",
@@ -38,10 +38,10 @@
     "typeorm": "0.3.6"
   },
   "devDependencies": {
-    "@babel/core": "7.17.12",
-    "@babel/plugin-proposal-decorators": "7.17.12",
-    "@babel/plugin-transform-modules-commonjs": "7.17.12",
-    "@babel/plugin-transform-typescript": "7.17.12",
+    "@babel/core": "7.18.2",
+    "@babel/plugin-proposal-decorators": "7.18.2",
+    "@babel/plugin-transform-modules-commonjs": "7.18.2",
+    "@babel/plugin-transform-typescript": "7.18.1",
     "@babel/preset-typescript": "7.17.12",
     "@gear-js/interfaces": "workspace:^",
     "@nestjs/cli": "8.2.6",
@@ -63,11 +63,11 @@
     "jest": "27.5.1",
     "prettier": "2.6.2",
     "supertest": "6.2.3",
-    "ts-jest": "27.1.4",
+    "ts-jest": "27.1.5",
     "ts-loader": "8.4.0",
     "ts-node": "9.1.1",
     "tsconfig-paths": "3.14.1",
-    "typescript": "4.6.4"
+    "typescript": "4.7.2"
   },
   "jest": {
     "preset": "ts-jest/presets/js-with-babel",

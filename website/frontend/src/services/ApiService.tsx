@@ -1,4 +1,4 @@
-import { AlertContainer } from 'react-alert';
+import { AlertContainerFactory } from 'context/alert/types';
 import { UploadProgramModel, Message, Reply, ProgramStatus } from 'types/program';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
@@ -9,6 +9,7 @@ import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'hel
 import ServerRPCRequestService from './ServerRPCRequestService';
 import { nodeApi } from 'api/initApi';
 import { GetMetaResponse } from 'api/responses';
+import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 
 // TODO: (dispatch) fix it later
 
@@ -16,14 +17,13 @@ export const UploadProgram = async (
   api: GearApi,
   account: InjectedAccountWithMeta,
   file: File,
-  { gasLimit, value, initPayload, meta, title, programName }: UploadProgramModel,
+  programModel: UploadProgramModel,
   metaFile: any,
-  enableLoading: () => void,
-  disableLoading: () => void,
-  alert: AlertContainer,
-  callback: () => void,
+  alert: AlertContainerFactory,
+  callback: () => void
 ) => {
   const apiRequest = new ServerRPCRequestService();
+  const { gasLimit, value, initPayload, meta, title, programName } = programModel;
 
   /* eslint-disable @typescript-eslint/naming-convention */
   let name = '';
@@ -46,19 +46,31 @@ export const UploadProgram = async (
       initPayload,
     };
 
+  const alertTitle = 'gear.submitProgram';
+
+  const alertId = alert.loading('SignIn', { title: alertTitle });
+
   try {
     const { programId } = api.program.submit(program, meta);
 
     await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
-      enableLoading();
+      if (data.status.isReady) {
+        alert.update(alertId, 'Ready');
+
+        return;
+      }
 
       if (data.status.isInBlock) {
-        alert.success('Upload program: In block');
-      } else if (data.status.isFinalized) {
+        alert.update(alertId, 'InBlock');
+
+        return;
+      }
+
+      if (data.status.isFinalized) {
+        alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
         data.events.forEach(({ event: { method } }) => {
           if (method === 'InitMessageEnqueued') {
-            alert.success('Upload program: Finalized');
-            disableLoading();
             callback();
 
             if (isDevChain()) {
@@ -106,18 +118,24 @@ export const UploadProgram = async (
                 }
               });
             }
-          } else if (method === 'ExtrinsicFailed') {
-            alert.error('Upload program: Extrinsic Failed');
+          }
+
+          if (method === 'ExtrinsicFailed') {
+            alert.error('Extrinsic Failed', {
+              title: alertTitle,
+            });
           }
         });
-      } else if (data.status.isInvalid) {
-        disableLoading();
-        alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
+
+        return;
+      }
+
+      if (data.status.isInvalid) {
+        alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
       }
     });
   } catch (error) {
-    disableLoading();
-    alert.error(`Upload program: ${error}`);
+    alert.update(alertId, `${error}`, DEFAULT_ERROR_OPTIONS);
   }
 };
 
@@ -126,49 +144,60 @@ export const sendMessage = async (
   api: GearMessage | GearMessageReply,
   account: InjectedAccountWithMeta,
   message: Message & Reply,
-  enableLoading: () => void,
-  disableLoading: () => void,
-  alert: AlertContainer,
+  alert: AlertContainerFactory,
   callback: () => void,
   meta?: Metadata,
-  payloadType?: string,
+  payloadType?: string
 ) => {
+  const alertTitle = 'gear.sendMessage';
+
+  const alertId = alert.loading('SignIn', { title: alertTitle });
+
   try {
     const { signer } = await web3FromSource(account.meta.source);
 
     api.submit(message, meta, payloadType);
 
-    await api.signAndSend(account.address, { signer }, (data: any) => {
-      enableLoading();
+    await api.signAndSend(account.address, { signer }, (data) => {
+      if (data.status.isReady) {
+        alert.update(alertId, 'Ready');
+
+        return;
+      }
 
       if (data.status.isInBlock) {
-        alert.success('Send message: In block');
+        alert.update(alertId, 'InBlock');
+
+        return;
       }
 
       if (data.status.isFinalized) {
-        data.events.forEach((event: any) => {
-          const { method } = event.event;
+        alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
+        data.events.forEach(({ event }) => {
+          const { method, section } = event;
 
           if (method === 'DispatchMessageEnqueued') {
-            alert.success('Send message: Finalized');
-            disableLoading();
+            alert.success('Success', { title: `${section}.DispatchMessageEnqueued` });
             callback();
+
+            return;
           }
 
           if (method === 'ExtrinsicFailed') {
-            alert.error('Extrinsic Failed');
+            alert.error('Extrinsic Failed', { title: alertTitle });
           }
         });
+
+        return;
       }
 
       if (data.status.isInvalid) {
-        disableLoading();
-        alert.error(PROGRAM_ERRORS.INVALID_TRANSACTION);
+        alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
       }
     });
   } catch (error) {
-    alert.error(`Send message: ${error}`);
-    disableLoading();
+    alert.update(alertId, `${error}`, DEFAULT_ERROR_OPTIONS);
   }
 };
 
@@ -179,7 +208,7 @@ export const addMetadata = async (
   account: InjectedAccountWithMeta,
   programId: string,
   name: any,
-  alert: AlertContainer,
+  alert: AlertContainerFactory
 ) => {
   const apiRequest = new ServerRPCRequestService();
   const injector = await web3FromSource(account.meta.source);
@@ -232,7 +261,7 @@ export const addMetadata = async (
   });
 };
 
-export const subscribeToEvents = (alert: AlertContainer) => {
+export const subscribeToEvents = (alert: AlertContainerFactory) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
 
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
