@@ -1,7 +1,8 @@
 import { useContext } from 'react';
-import { AccountContext, ApiContext } from 'context';
+import { AccountContext, AlertContext, ApiContext } from 'context';
 
 const useAccount = () => useContext(AccountContext);
+const useAlert = () => useContext(AlertContext);
 const useApi = () => useContext(ApiContext);
 
-export { useAccount, useApi };
+export { useAccount, useAlert, useApi };
