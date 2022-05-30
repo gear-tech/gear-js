@@ -8,18 +8,17 @@ import styles from './State.module.scss';
 import { FormValues } from './types';
 import { INITIAL_VALUES } from './const';
 
-import { useApi, useAlert } from 'hooks';
+import { useApi } from 'hooks';
 import { getMetadata } from 'services';
 import { getPreformattedText } from 'helpers';
 import { FormPayload } from 'components/common/FormPayload';
-import { preparePaylaod } from 'components/common/FormPayload/helpers';
+import { preparePayload } from 'components/common/FormPayload/helpers';
 import { Spinner } from 'components/blocks/Spinner/Spinner';
 import { BackButton } from 'components/BackButton/BackButton';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 
 const State = () => {
   const { api } = useApi();
-  const alert = useAlert();
   const navigate = useNavigate();
   const routeParams = useParams();
 
@@ -62,14 +61,10 @@ const State = () => {
     navigate(-1);
   };
 
-  const handleSubmit = ({ payload }: FormValues) => {
-    const options = preparePaylaod(payload);
+  const handleSubmit = (values: FormValues) => {
+    const payload = preparePayload(values.payload);
 
-    if (options) {
-      readState(options);
-    } else {
-      alert.error('Form is empty');
-    }
+    readState(payload);
   };
 
   const typeStructures = useMemo(() => {
@@ -125,7 +120,7 @@ const State = () => {
                 <pre className={styles.itemTextarea}>{state}</pre>
               </div>
             )}
-            {isLoading && <Spinner />}
+            {isLoading && <Spinner over={false} />}
             <div className={styles.item}>
               <div className={styles.buttons}>
                 <button className={styles.button} type="button" onClick={handleBackButtonClick}>

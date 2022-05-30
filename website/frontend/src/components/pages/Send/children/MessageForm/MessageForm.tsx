@@ -13,7 +13,7 @@ import { useAccount, useApi, useAlert } from 'hooks';
 import { sendMessage } from 'services/ApiService';
 import MessageIllustration from 'assets/images/message.svg';
 import { FormPayload } from 'components/common/FormPayload';
-import { preparePaylaod } from 'components/common/FormPayload/helpers';
+import { preparePayload } from 'components/common/FormPayload/helpers';
 import './MessageForm.scss';
 
 type Props = {
@@ -44,7 +44,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
       return;
     }
 
-    const payload = preparePaylaod(values.payload);
+    const payload = preparePayload(values.payload);
     const apiMethod = isReply ? api.reply : api.message;
     const payloadType = isMeta ? void 0 : values.payloadType;
 

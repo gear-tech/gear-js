@@ -1,11 +1,15 @@
-import React, { FC } from 'react';
+import clsx from 'clsx';
 import { Loader } from 'react-feather';
+
 import styles from './Spinner.module.scss';
 
 type Props = {
+  over?: boolean;
   color?: string;
 };
 
-export const Spinner: FC<Props> = ({ color = '#fff' }) => {
-  return <Loader color={color} className={styles.loader} />;
-};
+const Spinner = ({ color = '#fff', over = true }: Props) => (
+  <Loader color={color} className={clsx(styles.loader, over && styles.over)} />
+);
+
+export { Spinner };

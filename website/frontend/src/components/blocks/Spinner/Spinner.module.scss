@@ -1,9 +1,12 @@
 .loader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%);
   animation: rotating 5s linear infinite;
+
+  &.over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%);
+  }
 }
 
 @keyframes rotating {

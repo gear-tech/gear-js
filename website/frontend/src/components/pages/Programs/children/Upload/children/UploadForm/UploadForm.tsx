@@ -15,7 +15,7 @@ import { UploadProgramModel } from 'types/program';
 import { UploadProgram } from 'services/ApiService';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { readFileAsync, calculateGas, checkFileFormat } from 'helpers';
-import { preparePaylaod } from 'components/common/FormPayload/helpers';
+import { preparePayload } from 'components/common/FormPayload/helpers';
 import { MetaSwitch } from 'components/common/MetaSwitch';
 import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
 import { FormInput, FormTextarea, FormNumberFormat } from 'components/common/FormFields';
@@ -47,43 +47,50 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     setMetaFile(null);
     setDroppedMetaFile(void 0);
     setFieldFromFile(null);
-    setValues(INITIAL_VALUES);
+    setValues(INITIAL_VALUES, false);
   };
 
-  const handleUploadMetaFile =
-    (setValues: SetValues, setFieldValue: SetFieldValue) => async (event: ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
+  const handleUploadMetaFile = (setValues: SetValues) => async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
-      if (!file) {
-        return handleResetMetaForm(setValues);
+    if (!file) {
+      return handleResetMetaForm(setValues);
+    }
+
+    try {
+      if (!checkFileFormat(file)) {
+        throw new Error('Wrong file format');
       }
 
-      try {
-        if (!checkFileFormat(file)) {
-          throw new Error('Wrong file format');
-        }
+      setDroppedMetaFile(file);
 
-        setDroppedMetaFile(file);
+      const readedFile = (await readFileAsync(file)) as Buffer;
+      const metadata: Metadata = await getWasmMetadata(readedFile);
 
-        const readedFile = (await readFileAsync(file)) as Buffer;
-        const metadata: Metadata = await getWasmMetadata(readedFile);
-
-        if (!metadata) {
-          throw new Error('Failed to load metadata');
-        }
-
-        const metaBufferString = Buffer.from(new Uint8Array(readedFile)).toString('base64');
-        const valuesFromFile = getMetaValues(metadata);
-
-        setMeta(metadata);
-        setMetaFile(metaBufferString);
-        setFieldFromFile(Object.keys(valuesFromFile));
-        setFieldValue('metaValues', valuesFromFile, false);
-        setFieldValue('programValues.programName', metadata?.title || '', false);
-      } catch (error) {
-        alert.error(`${error}`);
+      if (!metadata) {
+        throw new Error('Failed to load metadata');
       }
-    };
+
+      const metaBufferString = Buffer.from(new Uint8Array(readedFile)).toString('base64');
+      const valuesFromFile = getMetaValues(metadata);
+
+      setMeta(metadata);
+      setMetaFile(metaBufferString);
+      setFieldFromFile(Object.keys(valuesFromFile));
+      setValues(
+        ({ programValues }) => ({
+          metaValues: valuesFromFile,
+          programValues: {
+            ...programValues,
+            programName: metadata?.title || '',
+          },
+        }),
+        false
+      );
+    } catch (error) {
+      alert.error(`${error}`);
+    }
+  };
 
   const handleSubmitForm = (values: FormValues) => {
     if (!currentAccount) {
@@ -99,7 +106,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       title: '',
       gasLimit,
       programName,
-      initPayload: meta ? preparePaylaod(payload) : payload,
+      initPayload: meta ? preparePayload(payload) : payload,
     };
 
     if (meta) {
@@ -186,7 +193,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                       label="Metadata file:"
                       value={droppedMetaFile}
                       className={clsx(styles.formField, styles.fileInput)}
-                      onChange={handleUploadMetaFile(setValues, setFieldValue)}
+                      onChange={handleUploadMetaFile(setValues)}
                     />
                   </div>
                 )}

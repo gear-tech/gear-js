@@ -9,13 +9,13 @@ import { getPreformattedText } from 'helpers';
 export const getNextLevelName = (currentLevelName: string, nextLevelName: string | number) =>
   `${currentLevelName}.${nextLevelName}`;
 
-export const preparePaylaod = (payload: ParsedTypeStructure): any => {
+export const preparePayload = (payload: ParsedTypeStructure): any => {
   if (isString(payload)) {
     return toJSON(payload);
   }
 
   if (isPlainObject(payload)) {
-    const preparedValues = Object.entries(payload!).map((item) => [item[0], preparePaylaod(item[1])]);
+    const preparedValues = Object.entries(payload!).map((item) => [item[0], preparePayload(item[1])]);
 
     return Object.fromEntries(preparedValues);
   }
