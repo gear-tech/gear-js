@@ -1,4 +1,4 @@
-import { CreateType, GearApi, Hex } from '../src';
+import { CreateType, GearApi, Hex, WaitlistItem } from '../src';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
 import { TEST_WASM_DIR } from './config';
@@ -10,6 +10,7 @@ const api = new GearApi();
 const CODE_PATH = join(TEST_WASM_DIR, 'test_waitlist.opt.wasm');
 let alice: KeyringPair = undefined;
 let programId: Hex = undefined;
+let messageId: Hex = undefined;
 
 beforeAll(async () => {
   await api.isReady;
@@ -29,14 +30,24 @@ afterAll(async () => {
 describe('GearWaitlist', () => {
   test(`read program's waitlist`, async () => {
     api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
-    const { messageId } = await sendTransaction(api.message, alice, 'DispatchMessageEnqueued');
+    messageId = (await sendTransaction(api.message, alice, 'DispatchMessageEnqueued')).messageId;
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(1);
-    expect(waitlist[0][0][0]).toBe(programId);
-    expect(waitlist[0][0][1]).toBe(messageId);
-    expect(waitlist[0][1]).toHaveProperty('kind');
-    expect(waitlist[0][1]).toHaveProperty('message');
-    expect(waitlist[0][1]).toHaveProperty('context');
+    expect(waitlist[0].programId).toBe(programId);
+    expect(waitlist[0].messageId).toBe(messageId);
+    expect(waitlist[0].blockNumber).toBeDefined();
+    expect(waitlist[0].storedDispatch).toHaveProperty('kind');
+    expect(waitlist[0].storedDispatch).toHaveProperty('message');
+    expect(waitlist[0].storedDispatch).toHaveProperty('context');
+  });
+
+  test(`read program's waitlist with messageId`, async () => {
+    const waitlist = await api.waitlist.read(programId, messageId);
+    expect(waitlist).toHaveProperty('blockNumber');
+    expect(waitlist).toHaveProperty('storedDispatch');
+    expect(waitlist.storedDispatch).toHaveProperty('kind');
+    expect(waitlist.storedDispatch).toHaveProperty('message');
+    expect(waitlist.storedDispatch).toHaveProperty('context');
   });
 
   test(`read waitlist of non-program address`, async () => {
