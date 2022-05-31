@@ -16,11 +16,12 @@ import {
 
 type Props = ProviderProps & {
   template: ComponentType<AlertTemplateProps>;
+  containerClassName?: string;
 };
 
 const AlertContext = createContext({} as AlertContainerFactory);
 
-const AlertProvider = ({ children, template: Template }: Props) => {
+const AlertProvider = ({ children, template: Template, containerClassName }: Props) => {
   const root = useRef<HTMLDivElement | null>(null);
 
   const timers = useRef<AlertTimer>(new Map());
@@ -126,7 +127,8 @@ const AlertProvider = ({ children, template: Template }: Props) => {
 
   useEffect(() => {
     root.current = document.createElement('div');
-    root.current.id = '__alert__';
+    root.current.id = 'alert-root';
+    containerClassName && root.current.classList.add(containerClassName);
     document.body.appendChild(root.current);
   }, []);
 
