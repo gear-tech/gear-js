@@ -1,5 +1,5 @@
 build-waitlist:
-	cargo build --manifest-path ./test-waitlist/Cargo.toml
+	cargo build --release --manifest-path ./test-waitlist/Cargo.toml
 
 wasm-proc-waitlist:
 	wasm-proc -p test-waitlist/target/wasm32-unknown-unknown/release/test_waitlist.wasm

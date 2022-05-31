@@ -10,3 +10,4 @@ using-examples/package-lock.json
 using-examples/src/temp.ts
 **/target/
 **/Cargo.lock
+**/.binpath
