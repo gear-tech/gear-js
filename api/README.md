@@ -192,6 +192,17 @@ gearApi.code.signAndSend(alice, () => {
 });
 ```
 
+### Get transaction fee
+
+```javascript
+const api = await GearApi.create();
+api.program.submit({ code, gasLimit });
+// same for api.message, api.reply and others
+const paymentInfo = await api.program.paymentInfo(alice);
+const transactionFee = paymentInfo.partialFee.toNumber();
+consolg.log(transactionFee);
+```
+
 ### Get gasSpent
 
 #### For init message
