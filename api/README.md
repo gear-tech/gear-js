@@ -270,6 +270,17 @@ const submitted = await api.mailbox.claimValue.submit(messageId);
 await api.mailbox.claimValue.signAndSend(...);
 ```
 
+### Waitlist
+
+#### Read
+
+```javascript
+const gearApi = await GearApi.create();
+const programId = '0x1234...';
+const waitlist = await api.waitlist.read(programId);
+console.log(waitlist);
+```
+
 ### Subscribe to events
 
 Subscribe to all events

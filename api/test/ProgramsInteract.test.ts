@@ -42,7 +42,6 @@ let testFiles: {
 }[] = readdirSync('test/spec/programs').map((filePath: string) =>
   yaml.load(readFileSync(join('./test/spec/programs', filePath), 'utf8')),
 );
-jest.setTimeout(15000);
 
 beforeAll(async () => {
   await api.isReady;

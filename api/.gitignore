@@ -8,3 +8,6 @@ api/.rollup.cache
 test/wasm/examples/
 using-examples/package-lock.json
 using-examples/src/temp.ts
+**/target/
+**/Cargo.lock
+**/.binpath

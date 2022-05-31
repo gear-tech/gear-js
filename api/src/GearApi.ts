@@ -4,6 +4,7 @@ import { GearBalance } from './Balance';
 import { GearEvents } from './Events';
 import { GearProgramState } from './State';
 import { GearMessageReply } from './MessageReply';
+import { GearWaitlist } from './Waitlist';
 import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './types/interfaces';
 import { ApiPromise, WsProvider } from '@polkadot/api';
@@ -28,6 +29,7 @@ export class GearApi extends ApiPromise {
   public mailbox: GearMailbox;
   public claimValueFromMailbox: GearClaimValue;
   public code: GearCode;
+  public waitlist: GearWaitlist;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
@@ -59,6 +61,7 @@ export class GearApi extends ApiPromise {
       this.claimValueFromMailbox = new GearClaimValue(this);
       this.mailbox = new GearMailbox(this);
       this.code = new GearCode(this);
+      this.waitlist = new GearWaitlist(this);
     });
   }
 

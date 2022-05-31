@@ -12,8 +12,6 @@ const accounts = {
   bob: undefined,
 };
 
-jest.setTimeout(15000);
-
 beforeAll(async () => {
   await api.isReady;
   [accounts.alice, accounts.bob] = await getAccount();

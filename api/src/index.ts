@@ -13,6 +13,7 @@ export { GearBlock } from './Blocks';
 export { GearGasSpent } from './GasSpent';
 export { GearStorage } from './Storage';
 export { GearClaimValue } from './Claim';
+export { GearWaitlist } from './Waitlist';
 export * from './Transaction';
 export * from './wasm';
 export * from './CreateType';
