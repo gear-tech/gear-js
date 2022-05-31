@@ -1,17 +1,24 @@
-import { useState, useRef, useEffect, useCallback, useMemo, ReactNode } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, ReactNode, ComponentType, createContext } from 'react';
 import { nanoid } from 'nanoid/non-secure';
 import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
 import { Transition } from 'components';
-import { Props as BaseProps } from '../types';
-import { DEFAULT_INFO_OPTIONS, DEFAULT_ERROR_OPTIONS, DEFAULT_LOADING_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from './const';
-import { AlertTimer, AlertInstance, AlertOptions, TemplateAlertOptions, AlertTemplateProps } from './types';
-import { AlertContext } from './Context';
-import { ComponentType } from 'react';
+import { DEFAULT_INFO_OPTIONS, DEFAULT_ERROR_OPTIONS, DEFAULT_LOADING_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
+import {
+  ProviderProps,
+  AlertTimer,
+  AlertInstance,
+  AlertOptions,
+  TemplateAlertOptions,
+  AlertTemplateProps,
+  AlertContainerFactory,
+} from 'types';
 
-type Props = BaseProps & {
+type Props = ProviderProps & {
   template: ComponentType<AlertTemplateProps>;
 };
+
+const AlertContext = createContext({} as AlertContainerFactory);
 
 const AlertProvider = ({ children, template: Template }: Props) => {
   const root = useRef<HTMLDivElement | null>(null);
@@ -141,4 +148,4 @@ const AlertProvider = ({ children, template: Template }: Props) => {
   );
 };
 
-export { AlertProvider };
+export { AlertContext, AlertProvider };
