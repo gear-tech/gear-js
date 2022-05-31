@@ -3,6 +3,7 @@ import { Balance } from '@polkadot/types/interfaces';
 import { GearKeyring } from '@gear-js/api';
 import { useState, createContext, useContext } from 'react';
 import { Account, ProviderProps } from 'types';
+import { LOCAL_STORAGE } from 'consts';
 import { ApiContext } from './Api';
 
 type Value = {
@@ -30,11 +31,16 @@ function AccountProvider({ children }: ProviderProps) {
     decodedAddress: GearKeyring.decodeAddress(_account.address),
   });
 
+  const login = (_account: Account) => {
+    localStorage.setItem(LOCAL_STORAGE.ACCOUNT, _account.address);
+    setAccount(_account);
+  };
+
   const switchAccount = (_account: InjectedAccountWithMeta) => {
     api?.balance
       .findOut(_account.address)
       .then((balance) => getAccount(_account, balance))
-      .then(setAccount);
+      .then(login);
   };
 
   const updateBalance = (balance: Balance) => {
@@ -42,6 +48,7 @@ function AccountProvider({ children }: ProviderProps) {
   };
 
   const logout = () => {
+    localStorage.removeItem(LOCAL_STORAGE.ACCOUNT);
     setAccount(undefined);
   };
 
