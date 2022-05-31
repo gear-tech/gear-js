@@ -1,3 +1,15 @@
+## 0.19.2
+
+_05/31/2022_
+
+https://github.com/gear-tech/gear-js/pull/681
+
+### Changes
+
+- Add method to get transaction fee
+
+---
+
 ## 0.19.1
 
 _05/30/2022_
