@@ -9,6 +9,8 @@ import { getPreformattedText } from 'helpers';
 export const getNextLevelName = (currentLevelName: string, nextLevelName: string | number) =>
   `${currentLevelName}.${nextLevelName}`;
 
+export const getItemLabel = (name: string, title?: string) => (title ? `${title} (${name})` : name);
+
 export const preparePayload = (payload: ParsedTypeStructure): any => {
   if (isString(payload)) {
     return toJSON(payload);

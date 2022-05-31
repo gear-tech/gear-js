@@ -37,10 +37,14 @@ export type TypeStructure = {
       };
 };
 
-export type PayloadNode = {
-  name: string;
-  typeStructure: TypeStructure | null;
-};
+export type ParsedTypeStructure =
+  | string
+  | string[]
+  | ParsedTypeStructure[]
+  | null
+  | {
+      [key: string]: ParsedTypeStructure;
+    };
 
 export type PayloadStructureProps = {
   title?: string;
@@ -51,12 +55,3 @@ export type PayloadStructureProps = {
 export type PayloadItemProps = PayloadStructureProps & {
   renderNextItem: (props: PayloadStructureProps) => ReactNode;
 };
-
-export type ParsedTypeStructure =
-  | string
-  | string[]
-  | ParsedTypeStructure[]
-  | null
-  | {
-      [key: string]: ParsedTypeStructure;
-    };

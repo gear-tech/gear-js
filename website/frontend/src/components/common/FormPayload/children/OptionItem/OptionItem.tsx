@@ -5,23 +5,23 @@ import { Select } from '@gear-js/ui';
 import styles from '../../FormPayload.module.scss';
 import { OPTION_OPTIONS, DEFAULT_VALUE } from './const';
 import { PayloadItemProps } from '../../types';
-import { parseTypeStructure } from '../../helpers';
+import { getItemLabel, parseTypeStructure } from '../../helpers';
 
 import { useChangeEffect } from 'hooks';
 import { Fieldset } from 'components/common/Fieldset';
 
-const OptionItem = ({ levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
+const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
   const { name, value } = typeStructure;
 
   const [, , helpers] = useField(levelName);
-
   const [selected, setSelected] = useState(DEFAULT_VALUE);
+
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => setSelected(event.target.value);
   //@ts-ignore
   const parsedPayload = useMemo(() => parseTypeStructure(value), [value]);
 
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => setSelected(event.target.value);
-
   const isNone = selected === DEFAULT_VALUE;
+  const itemLabel = getItemLabel(name, title);
 
   useChangeEffect(() => {
     const fieldValue = isNone ? null : parsedPayload;
@@ -30,7 +30,7 @@ const OptionItem = ({ levelName, typeStructure, renderNextItem }: PayloadItemPro
   }, [isNone]);
 
   return (
-    <Fieldset legend={name} className={styles.fieldset}>
+    <Fieldset legend={itemLabel} className={styles.fieldset}>
       <Select options={OPTION_OPTIONS} className={styles.select} onChange={handleChange} />
       {renderNextItem({
         levelName,

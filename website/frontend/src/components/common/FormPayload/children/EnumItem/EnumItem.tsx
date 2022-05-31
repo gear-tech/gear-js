@@ -4,33 +4,33 @@ import { Select } from '@gear-js/ui';
 
 import styles from '../../FormPayload.module.scss';
 import { PayloadItemProps } from '../../types';
-import { getNextLevelName, parseTypeStructure } from '../../helpers';
+import { getItemLabel, getNextLevelName, parseTypeStructure } from '../../helpers';
 
 import { useChangeEffect } from 'hooks';
 import { Fieldset } from 'components/common/Fieldset';
 
-const EnumItem = ({ levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
+const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
   const { name, value } = typeStructure;
 
   const options = useMemo(() => Object.keys(value).map((key) => ({ value: key, label: key })), [value]);
 
   const [, , helpers] = useField(levelName);
-
   const [selected, setSelected] = useState(options[0].value);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => setSelected(event.target.value);
 
+  const itemLabel = getItemLabel(name, title);
   const nextLevelName = getNextLevelName(levelName, selected);
 
   useChangeEffect(() => {
     //@ts-ignore
     const parsedStructure = parseTypeStructure(value[selected]);
 
-    helpers.setValue({ [selected]: parsedStructure });
+    helpers.setValue({ [selected]: parsedStructure }, false);
   }, [selected]);
 
   return (
-    <Fieldset legend={name} className={styles.fieldset}>
+    <Fieldset legend={itemLabel} className={styles.fieldset}>
       <Select options={options} className={styles.select} onChange={handleChange} />
       {renderNextItem({
         levelName: nextLevelName,
