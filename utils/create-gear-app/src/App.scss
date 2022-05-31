@@ -12,6 +12,12 @@
   box-sizing: content-box;
 }
 
+#__alert__ {
+  position: fixed;
+  right: 22px;
+  bottom: 5px;
+}
+
 main {
   flex: 1;
   padding: 30px 0;
@@ -19,5 +25,5 @@ main {
 }
 
 body {
-  background: $bgColor url('assets/images/bg.svg');
+  background: $bgColor url(assets/images/bg.svg);
 }
