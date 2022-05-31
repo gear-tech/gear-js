@@ -30,7 +30,7 @@ export class GearWaitlist {
   async read(programId: Hex, messageId?: Hex): Promise<WaitlistItem[] | WaitlistItem> {
     if (messageId) {
       const waitlist = (await this.api.query.gearMessenger.waitlist(programId, messageId)) as Option<StoredMessage>;
-      return this.transformWaitlist(waitlist.unwrap());
+      return this.transformWaitlist(waitlist.unwrapOr(null));
     } else {
       const keys = await this.api.query.gearMessenger.waitlist.keys(programId);
       if (keys.length === 0) {
@@ -44,6 +44,9 @@ export class GearWaitlist {
   }
 
   private transformWaitlist(option: StoredMessage, keys?: StorageKey<AnyTuple>): WaitlistItem {
+    if (option === null) {
+      return null;
+    }
     const [storedDispatched, blockNumber] = this.api.createType('(GearCoreMessageStoredStoredDispatch, u32)', option);
     let result = {
       blockNumber: blockNumber.toNumber(),

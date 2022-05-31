@@ -50,8 +50,20 @@ describe('GearWaitlist', () => {
     expect(waitlist.storedDispatch).toHaveProperty('context');
   });
 
+  test(`send one more message and read program's waitlist`, async () => {
+    api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
+    messageId = (await sendTransaction(api.message, alice, 'DispatchMessageEnqueued')).messageId;
+    const waitlist = await api.waitlist.read(programId);
+    expect(waitlist).toHaveLength(2);
+  });
+
   test(`read waitlist of non-program address`, async () => {
     const waitlist = await api.waitlist.read(CreateType.create('[u8;32]', 0).toHex());
     expect(waitlist).toHaveLength(0);
+  });
+
+  test(`read program's waitlist with incorrect messageId`, async () => {
+    const waitlist = await api.waitlist.read(programId, CreateType.create('[u8;32]', 0).toHex());
+    expect(waitlist).toBeNull();
   });
 });

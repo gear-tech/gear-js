@@ -1,5 +1,5 @@
 build-waitlist:
-	cd test-waitlist && RUSTFLAGS="-C link-args=--import-memory" cargo +nightly build --target wasm32-unknown-unknown --release 
+	cargo build --manifest-path ./test-waitlist/Cargo.toml
 
 wasm-proc-waitlist:
 	wasm-proc -p test-waitlist/target/wasm32-unknown-unknown/release/test_waitlist.wasm
@@ -9,7 +9,7 @@ cp-waitlist:
 
 all: build-waitlist wasm-proc-waitlist cp-waitlist
 
-clear:
+clean:
 	rm -rf ./**/target
 
 .PHONY: all clean
