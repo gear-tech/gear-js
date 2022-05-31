@@ -6,6 +6,7 @@ import {
   useReadState,
   useSendMessage,
   useAccount,
+  useAlert,
   useApi,
 } from './hooks';
 import { AccountProvider, ApiProvider, AlertProvider } from './context';
@@ -18,6 +19,7 @@ export {
   useReadState,
   useSendMessage,
   useAccount,
+  useAlert,
   useApi,
   AccountProvider,
   ApiProvider,

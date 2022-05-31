@@ -10,10 +10,10 @@ import { AlertContext } from './Context';
 import { ComponentType } from 'react';
 
 type Props = BaseProps & {
-  Template: ComponentType<AlertTemplateProps>;
+  template: ComponentType<AlertTemplateProps>;
 };
 
-const AlertProvider = ({ children, Template }: Props) => {
+const AlertProvider = ({ children, template: Template }: Props) => {
   const root = useRef<HTMLDivElement | null>(null);
 
   const timers = useRef<AlertTimer>(new Map());
