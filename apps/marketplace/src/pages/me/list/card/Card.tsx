@@ -1,6 +1,7 @@
 // import { Button } from '@gear-js/ui';
 import { Link } from 'react-router-dom';
 import { NFT } from 'types';
+import { IPFS_GATEWAY_ADDRESS } from 'consts';
 import styles from './Card.module.scss';
 
 function Card({ id, name, media }: Partial<NFT>) {
@@ -8,11 +9,12 @@ function Card({ id, name, media }: Partial<NFT>) {
   // const valueText = `${value} Gear`;
   // const buttonText = isAuction ? 'Make bid' : 'Buy now';
   const to = `/listing/${id}`;
+  const src = `${IPFS_GATEWAY_ADDRESS}/${media}`;
   const text = `#${id}`;
 
   return (
     <Link to={to} className={styles.card}>
-      <img src={media} alt={name} className={styles.image} />
+      <img src={src} alt={name} className={styles.image} />
       <div>
         {/* <div> */}
         {/* <div> */}
