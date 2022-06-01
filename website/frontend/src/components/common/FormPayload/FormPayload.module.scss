@@ -1,6 +1,5 @@
 .formPayload {
   width: 100%;
-  margin-bottom: 20px;
 }
 
 .manualCheckboxWrapper {
@@ -22,6 +21,7 @@
   align-items: flex-start;
 }
 
-.field{
-  align-items: stretch;
+.field {
+  //for prod
+  align-items: stretch !important;
 }

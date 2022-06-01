@@ -84,7 +84,10 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
                     id="destination"
                     name="destination"
                     type="text"
-                    className={clsx('', errors.destination && touched.destination && 'message-form__input-error')}
+                    className={clsx(
+                      'inputField',
+                      errors.destination && touched.destination && 'message-form__input-error'
+                    )}
                   />
                   {errors.destination && touched.destination && (
                     <div className="message-form__error">{errors.destination}</div>
@@ -119,7 +122,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
                     value={values.gasLimit}
                     thousandSeparator
                     allowNegative={false}
-                    className={clsx('', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
+                    className={clsx('inputField', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
                     onValueChange={(val) => {
                       const { floatValue } = val;
                       setFieldValue('gasLimit', floatValue);
@@ -141,7 +144,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
                     name="value"
                     placeholder="20000"
                     type="number"
-                    className={clsx('', errors.value && touched.value && 'message-form__input-error')}
+                    className={clsx('inputField', errors.value && touched.value && 'message-form__input-error')}
                   />
                   {errors.value && touched.value ? <div className="message-form__error">{errors.value}</div> : null}
                 </div>
