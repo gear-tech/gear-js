@@ -1,14 +1,10 @@
-import { useState, createContext } from 'react';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { useApi } from 'hooks';
-import { GearKeyring, Hex } from '@gear-js/api';
 import { Balance } from '@polkadot/types/interfaces';
-import { Props } from './types';
-
-export interface Account extends InjectedAccountWithMeta {
-  decodedAddress: Hex;
-  balance: { value: string; unit: string };
-}
+import { useState, createContext, useContext } from 'react';
+import { Account, ProviderProps } from 'types';
+import { LOCAL_STORAGE } from 'consts';
+import { ApiContext } from './Api';
+import { getBalance, getAccount } from 'utils';
 
 type Value = {
   account: Account | undefined;
@@ -19,27 +15,21 @@ type Value = {
 
 const AccountContext = createContext({} as Value);
 
-function AccountProvider({ children }: Props) {
-  const { api } = useApi();
+function AccountProvider({ children }: ProviderProps) {
+  const { api } = useContext(ApiContext); // сircular dependency fix
 
   const [account, setAccount] = useState<Account>();
 
-  const getBalance = (balance: Balance) => {
-    const [value, unit] = balance.toHuman().split(' ');
-    return { value, unit };
+  const login = (_account: Account) => {
+    localStorage.setItem(LOCAL_STORAGE.ACCOUNT, _account.address);
+    setAccount(_account);
   };
-
-  const getAccount = (_account: InjectedAccountWithMeta, balance: Balance) => ({
-    ..._account,
-    balance: getBalance(balance),
-    decodedAddress: GearKeyring.decodeAddress(_account.address),
-  });
 
   const switchAccount = (_account: InjectedAccountWithMeta) => {
     api?.balance
       .findOut(_account.address)
       .then((balance) => getAccount(_account, balance))
-      .then(setAccount);
+      .then(login);
   };
 
   const updateBalance = (balance: Balance) => {
@@ -47,6 +37,7 @@ function AccountProvider({ children }: Props) {
   };
 
   const logout = () => {
+    localStorage.removeItem(LOCAL_STORAGE.ACCOUNT);
     setAccount(undefined);
   };
 

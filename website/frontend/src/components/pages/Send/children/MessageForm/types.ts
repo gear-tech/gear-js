@@ -1,10 +1,13 @@
-import { MetaFieldsValues } from 'components/MetaFields';
+import { FormikHelpers } from 'formik/dist/types';
 
-export type InitialValues = {
-  gasLimit: number;
+import { FormPayloadValues } from 'components/common/FormPayload/types';
+
+export type FormValues = {
   value: number;
-  payload: string;
+  gasLimit: number;
+  payload: FormPayloadValues;
   payloadType: string;
   destination: string;
-  __root: MetaFieldsValues | null;
 };
+
+export type SetFieldValue = FormikHelpers<FormValues>['setFieldValue'];

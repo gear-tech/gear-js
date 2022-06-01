@@ -4,7 +4,7 @@ import { TransactionStatusCb } from './types';
 import { isFunction } from '@polkadot/util';
 import { AddressOrPair, SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { Hash } from '@polkadot/types/interfaces';
+import { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { TransactionError } from './errors';
 
 export class GearTransaction {
@@ -46,5 +46,23 @@ export class GearTransaction {
         throw new TransactionError(error.message);
       }
     }
+  }
+
+  /**
+   *
+   * @param account
+   * @param options
+   * @example
+   * ```javascript
+   * const api = await GearApi.create();
+   * api.program.submit({code, gasLimit});
+   * // same for api.message, api.reply and others
+   * const paymentInfo = await api.program.paymentInfo(alice);
+   * const transactionFee = paymentInfo.partialFee.toNumber();
+   * consolg.log(transactionFee);
+   * ```
+   */
+  paymentInfo(account: AddressOrPair, options?: SignerOptions): Promise<RuntimeDispatchInfo> {
+    return this.submitted.paymentInfo(account, options);
   }
 }

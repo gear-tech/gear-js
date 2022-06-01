@@ -192,6 +192,17 @@ gearApi.code.signAndSend(alice, () => {
 });
 ```
 
+### Get transaction fee
+
+```javascript
+const api = await GearApi.create();
+api.program.submit({ code, gasLimit });
+// same for api.message, api.reply and others
+const paymentInfo = await api.program.paymentInfo(alice);
+const transactionFee = paymentInfo.partialFee.toNumber();
+consolg.log(transactionFee);
+```
+
 ### Get gasSpent
 
 #### For init message
@@ -268,6 +279,17 @@ console.log(mailbox);
 const api = await GearApi.create();
 const submitted = await api.mailbox.claimValue.submit(messageId);
 await api.mailbox.claimValue.signAndSend(...);
+```
+
+### Waitlist
+
+#### Read
+
+```javascript
+const gearApi = await GearApi.create();
+const programId = '0x1234...';
+const waitlist = await api.waitlist.read(programId);
+console.log(waitlist);
 ```
 
 ### Subscribe to events

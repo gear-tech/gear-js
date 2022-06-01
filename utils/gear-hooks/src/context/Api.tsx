@@ -1,13 +1,13 @@
 import { createContext, useEffect, useState } from 'react';
 import { GearApi } from '@gear-js/api';
-import { Props as BaseProps } from './types';
+import { ProviderProps } from 'types';
 
 type Value = {
   api: GearApi;
   isApiReady: boolean;
 };
 
-type Props = BaseProps & {
+type Props = ProviderProps & {
   providerAddress: string;
 };
 

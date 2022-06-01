@@ -8,7 +8,6 @@ const api = new GearApi();
 let alice = undefined;
 let aliceRaw = undefined;
 let programId = undefined;
-jest.setTimeout(15000);
 
 beforeAll(async () => {
   await api.isReady;

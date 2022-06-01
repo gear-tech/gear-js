@@ -19,7 +19,7 @@ function Create() {
 
   const [error, setError] = useState('');
 
-  const getIpfsPath = (cid: CID) => `https://ipfs.io/ipfs/${cid.toString()}`;
+  const getIpfsPath = (cid: CID) => `https://workshop.gear-tech.io/ipfs/${cid.toString()}`;
 
   const getMintPayload = (jsonCid: CID, imgCid: CID) => {
     const tokenMetadata = {

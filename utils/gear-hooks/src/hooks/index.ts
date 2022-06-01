@@ -1,6 +1,6 @@
 import { useAccounts, useLoggedInAccount } from './accounts';
 import { useBalanceSubscription, useMetadata, useReadState, useSendMessage } from './api';
-import { useAccount, useApi } from './context';
+import { useAccount, useAlert, useApi } from './context';
 
 export {
   useAccounts,
@@ -10,5 +10,6 @@ export {
   useReadState,
   useSendMessage,
   useAccount,
+  useAlert,
   useApi,
 };

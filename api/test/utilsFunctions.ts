@@ -25,15 +25,20 @@ export const checkInit = (api: GearApi, programId: string) => {
 
 export const sendTransaction = async (submitted: any, account: any, methodName: string): Promise<any> => {
   return new Promise((resolve, reject) => {
-    submitted.signAndSend(account, ({ events = [] }) => {
-      events.forEach(({ event: { method, data } }) => {
-        if (method === 'ExtrinsicFailed') {
-          reject(data.toString());
-        } else if (method === methodName) {
-          resolve(data[0].toHuman());
-        }
+    submitted
+      .signAndSend(account, ({ events = [] }) => {
+        events.forEach(({ event: { method, data } }) => {
+          if (method === 'ExtrinsicFailed') {
+            reject(data.toString());
+          } else if (method === methodName) {
+            resolve(data[0].toHuman());
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        reject(err.message);
       });
-    });
   });
 };
 

@@ -1,0 +1,27 @@
+.formPayload {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.manualCheckboxWrapper {
+  margin-bottom: 16px;
+}
+
+.fieldset {
+  & > *:not(:last-child):not(legend) {
+    margin-bottom: 16px;
+  }
+}
+
+.field,
+.select {
+  flex-direction: column;
+}
+
+.select{
+  align-items: flex-start;
+}
+
+.field{
+  align-items: stretch;
+}

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { UploadMetaForm } from 'components/blocks/UploadMetaForm';
 
 import { Box } from 'layout/Box/Box';
-import { Spinner } from 'components/blocks/Spinner/Spinner';
+import { Spinner } from 'components/common/Spinner/Spinner';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 
 import { useProgram } from 'hooks';
@@ -29,7 +29,7 @@ export const Meta = () => {
           </Box>
         </>
       ) : (
-        <Spinner />
+        <Spinner absolute />
       )}
     </div>
   );
