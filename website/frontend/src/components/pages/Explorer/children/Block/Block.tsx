@@ -3,7 +3,7 @@ import { Block as DotBlock } from '@polkadot/types/interfaces';
 import { EventRecords } from 'types/explorer';
 import { useApi } from 'hooks';
 import { isHex } from 'helpers';
-import { Spinner } from 'components/blocks/Spinner/Spinner';
+import { Spinner } from 'components/common/Spinner/Spinner';
 import { Summary } from './children/Summary/Summary';
 import { MainTable } from './children/MainTable/MainTable';
 import { System } from './children/System/System';

@@ -37,14 +37,19 @@ export type TypeStructure = {
       };
 };
 
-export type ParsedTypeStructure =
+export type FormPayloadValues =
   | string
   | string[]
-  | ParsedTypeStructure[]
+  | FormPayloadValues[]
   | null
   | {
-      [key: string]: ParsedTypeStructure;
+      [key: string]: FormPayloadValues;
     };
+
+export type PayloadTypeStructures = {
+  payload: TypeStructure;
+  manualPayload: any;
+};
 
 export type PayloadStructureProps = {
   title?: string;

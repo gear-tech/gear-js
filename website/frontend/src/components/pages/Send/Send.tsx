@@ -5,7 +5,7 @@ import { messagesService } from 'services/MessagesRequestServices';
 import { MessageModel } from 'types/message';
 import { useProgram } from 'hooks';
 import { MessageForm } from './children/MessageForm/MessageForm';
-import { Spinner } from 'components/blocks/Spinner/Spinner';
+import { Spinner } from 'components/common/Spinner/Spinner';
 import './Send.scss';
 
 const Send = () => {
@@ -34,7 +34,7 @@ const Send = () => {
           </div>
         </>
       ) : (
-        <Spinner />
+        <Spinner absolute />
       )}
     </div>
   );

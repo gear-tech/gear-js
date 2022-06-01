@@ -17,6 +17,6 @@ export const Schema = yup.object().shape({
   programValues: yup.object().shape({
     programName: yup.string().max(50, 'Name value should be less than 50'),
     gasLimit: yup.number().min(0, 'Initial value should be more than 0'),
-    value: yup.number().required('This field is required').min(0, 'Initial value should be more than 0'),
+    value: yup.number().required('This field is required').min(0, 'Initial value should be more or equal than 0'),
   }),
 });

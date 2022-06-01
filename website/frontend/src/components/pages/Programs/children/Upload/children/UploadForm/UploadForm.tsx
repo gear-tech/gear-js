@@ -1,7 +1,7 @@
 import { ChangeEvent, Dispatch, SetStateAction, useState, VFC, useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import clsx from 'clsx';
-import { Metadata, getWasmMetadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
+import { Metadata, getWasmMetadata } from '@gear-js/api';
 import { Button, FileInput } from '@gear-js/ui';
 
 import styles from './UploadForm.module.scss';
@@ -15,7 +15,7 @@ import { UploadProgramModel } from 'types/program';
 import { UploadProgram } from 'services/ApiService';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { readFileAsync, calculateGas, checkFileFormat } from 'helpers';
-import { preparePayload } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload, getPayloadTypeStructures } from 'components/common/FormPayload/helpers';
 import { MetaSwitch } from 'components/common/MetaSwitch';
 import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
 import { FormInput, FormTextarea, FormNumberFormat } from 'components/common/FormFields';
@@ -106,7 +106,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       title: '',
       gasLimit,
       programName,
-      initPayload: meta ? preparePayload(payload) : payload,
+      initPayload: meta ? getSubmitPayload(payload) : payload,
     };
 
     if (meta) {
@@ -127,19 +127,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     );
   };
 
-  const typeStructures = useMemo(() => {
-    const types = meta?.types;
-    const initInput = meta?.init_input;
-
-    if (types && initInput) {
-      const decodedTypes = decodeHexTypes(types);
-
-      return {
-        manual: createPayloadTypeStructure(initInput, decodedTypes, true),
-        payload: createPayloadTypeStructure(initInput, decodedTypes),
-      };
-    }
-  }, [meta]);
+  const typeStructures = useMemo(() => getPayloadTypeStructures(meta?.types, meta?.init_input), [meta]);
 
   const metaFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
 

@@ -2,7 +2,7 @@ import { useMemo, VFC, useRef } from 'react';
 import clsx from 'clsx';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import NumberFormat from 'react-number-format';
-import { createPayloadTypeStructure, decodeHexTypes, Metadata } from '@gear-js/api';
+import { Metadata } from '@gear-js/api';
 
 import { Schema } from './Schema';
 import { FormValues, SetFieldValue } from './types';
@@ -13,7 +13,7 @@ import { useAccount, useApi, useAlert } from 'hooks';
 import { sendMessage } from 'services/ApiService';
 import MessageIllustration from 'assets/images/message.svg';
 import { FormPayload } from 'components/common/FormPayload';
-import { preparePayload } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload, getPayloadTypeStructures } from 'components/common/FormPayload/helpers';
 import './MessageForm.scss';
 
 type Props = {
@@ -44,7 +44,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
       return;
     }
 
-    const payload = preparePayload(values.payload);
+    const payload = getSubmitPayload(values.payload);
     const apiMethod = isReply ? api.reply : api.message;
     const payloadType = isMeta ? void 0 : values.payloadType;
 
@@ -67,16 +67,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
     );
   };
 
-  const typeStructures = useMemo(() => {
-    if (metadata?.types && metadata?.handle_input) {
-      const decodedTypes = decodeHexTypes(metadata.types);
-
-      return {
-        manual: createPayloadTypeStructure(metadata.handle_input, decodedTypes, true),
-        payload: createPayloadTypeStructure(metadata.handle_input, decodedTypes),
-      };
-    }
-  }, [metadata]);
+  const typeStructures = useMemo(() => getPayloadTypeStructures(metadata?.types, metadata?.handle_input), [metadata]);
 
   return (
     <Formik initialValues={initialValues.current} validateOnBlur validationSchema={Schema} onSubmit={handleSubmit}>

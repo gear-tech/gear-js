@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Formik, Form } from 'formik';
-import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
+import { Metadata } from '@gear-js/api';
 
 import styles from './State.module.scss';
 import { FormValues } from './types';
@@ -12,8 +12,8 @@ import { useApi } from 'hooks';
 import { getMetadata } from 'services';
 import { getPreformattedText } from 'helpers';
 import { FormPayload } from 'components/common/FormPayload';
-import { preparePayload } from 'components/common/FormPayload/helpers';
-import { Spinner } from 'components/blocks/Spinner/Spinner';
+import { getSubmitPayload, getPayloadTypeStructures } from 'components/common/FormPayload/helpers';
+import { Spinner } from 'components/common/Spinner/Spinner';
 import { BackButton } from 'components/BackButton/BackButton';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 
@@ -62,21 +62,12 @@ const State = () => {
   };
 
   const handleSubmit = (values: FormValues) => {
-    const payload = preparePayload(values.payload);
+    const payload = getSubmitPayload(values.payload);
 
     readState(payload);
   };
 
-  const typeStructures = useMemo(() => {
-    if (types && stateInput) {
-      const decodedTypes = decodeHexTypes(types);
-
-      return {
-        manual: createPayloadTypeStructure(stateInput, decodedTypes, true),
-        payload: createPayloadTypeStructure(stateInput, decodedTypes),
-      };
-    }
-  }, [types, stateInput]);
+  const typeStructures = useMemo(() => getPayloadTypeStructures(types, stateInput), [types, stateInput]);
 
   useEffect(() => {
     getMetadata(programId).then(({ result }) => {
@@ -120,7 +111,7 @@ const State = () => {
                 <pre className={styles.itemTextarea}>{state}</pre>
               </div>
             )}
-            {isLoading && <Spinner over={false} />}
+            {isLoading && <Spinner />}
             <div className={styles.item}>
               <div className={styles.buttons}>
                 <button className={styles.button} type="button" onClick={handleBackButtonClick}>

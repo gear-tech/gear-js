@@ -1,8 +1,8 @@
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
-import { toJSON } from '@gear-js/api';
+import { decodeHexTypes, createPayloadTypeStructure, toJSON } from '@gear-js/api';
 
-import { ValueType, TypeStructure, ParsedTypeStructure } from './types';
+import { ValueType, TypeStructure, FormPayloadValues, PayloadTypeStructures } from './types';
 
 import { getPreformattedText } from 'helpers';
 
@@ -11,13 +11,24 @@ export const getNextLevelName = (currentLevelName: string, nextLevelName: string
 
 export const getItemLabel = (name: string, title?: string) => (title ? `${title} (${name})` : name);
 
-export const preparePayload = (payload: ParsedTypeStructure): any => {
+export const getPayloadTypeStructures = (types?: string, typeName?: string): PayloadTypeStructures | undefined => {
+  if (types && typeName) {
+    const decodedTypes = decodeHexTypes(types);
+
+    return {
+      payload: createPayloadTypeStructure(typeName, decodedTypes),
+      manualPayload: createPayloadTypeStructure(typeName, decodedTypes, true),
+    };
+  }
+};
+
+export const getSubmitPayload = (payload: FormPayloadValues): any => {
   if (isString(payload)) {
     return toJSON(payload);
   }
 
   if (isPlainObject(payload)) {
-    const preparedValues = Object.entries(payload!).map((item) => [item[0], preparePayload(item[1])]);
+    const preparedValues = Object.entries(payload!).map((item) => [item[0], getSubmitPayload(item[1])]);
 
     return Object.fromEntries(preparedValues);
   }
@@ -25,7 +36,7 @@ export const preparePayload = (payload: ParsedTypeStructure): any => {
   return payload;
 };
 
-export const parseTypeStructure = (typeStructure: TypeStructure): ParsedTypeStructure => {
+export const getPayloadFormValues = (typeStructure: TypeStructure): FormPayloadValues => {
   const { type, value, count } = typeStructure;
 
   switch (type) {
@@ -36,7 +47,7 @@ export const parseTypeStructure = (typeStructure: TypeStructure): ParsedTypeStru
         return '[ ]';
       }
       //@ts-ignore
-      return getPreformattedText([parseTypeStructure(value)]);
+      return getPreformattedText([getPayloadFormValues(value)]);
     }
     case ValueType.Array: {
       const arrayLength = count || 0;
@@ -47,7 +58,7 @@ export const parseTypeStructure = (typeStructure: TypeStructure): ParsedTypeStru
         return [];
       }
       //@ts-ignore
-      return new Array(arrayLength).fill(parseTypeStructure(value));
+      return new Array(arrayLength).fill(getPayloadFormValues(value));
     }
     case ValueType.Tuple: {
       if (!Array.isArray(value)) {
@@ -56,7 +67,7 @@ export const parseTypeStructure = (typeStructure: TypeStructure): ParsedTypeStru
         return [];
       }
 
-      return value.map(parseTypeStructure);
+      return value.map(getPayloadFormValues);
     }
     case ValueType.Enum:
     case ValueType.Result: {
@@ -69,7 +80,7 @@ export const parseTypeStructure = (typeStructure: TypeStructure): ParsedTypeStru
       const [firstKey, firstValue] = Object.entries(value)[0];
 
       return {
-        [firstKey]: parseTypeStructure(firstValue),
+        [firstKey]: getPayloadFormValues(firstValue),
       };
     }
     case ValueType.Struct: {
@@ -80,7 +91,7 @@ export const parseTypeStructure = (typeStructure: TypeStructure): ParsedTypeStru
       }
 
       const structure = Object.entries(value).map((item) => {
-        return [item[0], parseTypeStructure(item[1])];
+        return [item[0], getPayloadFormValues(item[1])];
       });
 
       return Object.fromEntries(structure);

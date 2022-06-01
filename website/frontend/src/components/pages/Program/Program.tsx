@@ -11,7 +11,7 @@ import { getMessages } from 'services';
 import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 import { MessageModel } from 'types/message';
 import MessageIcon from 'assets/images/message.svg';
-import { Spinner } from 'components/blocks/Spinner/Spinner';
+import { Spinner } from 'components/common/Spinner/Spinner';
 import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 
@@ -83,7 +83,7 @@ const Program = () => {
           </div>
         </>
       ) : (
-        <Spinner />
+        <Spinner absolute />
       )}
     </div>
   );

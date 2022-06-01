@@ -10,7 +10,7 @@ import { NODE_ADDRESS_REGEX } from 'regexes';
 import { FormValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
 import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
-import { preparePayload } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload } from 'components/common/FormPayload/helpers';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
@@ -165,7 +165,7 @@ export const calculateGas = async (
   addressId?: String | null,
   replyCodeError?: string
 ): Promise<number> => {
-  const payload = preparePayload(values.payload);
+  const payload = getSubmitPayload(values.payload);
 
   try {
     if (isString(payload) && payload === '') {

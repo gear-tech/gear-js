@@ -1,11 +1,11 @@
 import { FormikHelpers } from 'formik/dist/types';
 
-import { ParsedTypeStructure } from 'components/common/FormPayload/types';
+import { FormPayloadValues } from 'components/common/FormPayload/types';
 
 export type FormValues = {
   value: number;
   gasLimit: number;
-  payload: ParsedTypeStructure;
+  payload: FormPayloadValues;
   payloadType: string;
   destination: string;
 };

@@ -9,13 +9,15 @@ const StructItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
 
   return (
     <Fieldset legend={itemLabel} className={styles.fieldset}>
-      {Object.entries(typeStructure.value).map((item) =>
-        renderNextItem({
-          title: item[0],
-          levelName: getNextLevelName(levelName, item[0]),
-          typeStructure: item[1],
-        })
-      )}
+      {Object.entries(typeStructure.value).map((item) => {
+        const [key, value] = item;
+
+        return renderNextItem({
+          title: key,
+          levelName: getNextLevelName(levelName, key),
+          typeStructure: value,
+        });
+      })}
     </Fieldset>
   );
 };
