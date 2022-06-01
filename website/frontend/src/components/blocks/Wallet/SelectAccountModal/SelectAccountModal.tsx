@@ -18,14 +18,14 @@ type Props = {
 
 const SelectAccountModal = (props: Props) => {
   const alert = useAlert();
-  const { setAccount } = useAccount();
+  const { logout, switchAccount } = useAccount();
 
   const { isOpen, accounts, onClose } = props;
 
   const selectAccount = (account: InjectedAccountWithMeta) => {
-    setAccount(account);
+    switchAccount(account);
 
-    localStorage.setItem(LOCAL_STORAGE.SAVED_ACCOUNT, account.address);
+    localStorage.setItem(LOCAL_STORAGE.ACCOUNT, account.address);
     localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, GearKeyring.decodeAddress(account.address));
 
     onClose();
@@ -33,10 +33,10 @@ const SelectAccountModal = (props: Props) => {
     alert.success('Account successfully changed');
   };
 
-  const logout = () => {
-    setAccount(undefined);
+  const handleLogout = () => {
+    logout()
 
-    localStorage.removeItem(LOCAL_STORAGE.SAVED_ACCOUNT);
+    localStorage.removeItem(LOCAL_STORAGE.ACCOUNT);
     localStorage.removeItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
 
     onClose();
@@ -55,7 +55,7 @@ const SelectAccountModal = (props: Props) => {
               icon={logoutSVG}
               color="transparent"
               className={styles.logoutButton}
-              onClick={logout}
+              onClick={handleLogout}
             />
           </>
         ) : (

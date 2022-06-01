@@ -20,8 +20,8 @@ export const LOCAL_STORAGE = {
   NODE_ADDRESS: 'node_address',
   PUBLIC_KEY_RAW: 'public_key_raw',
   PROGRAM_COMPILE_ID: 'program_compile_id',
-  SAVED_ACCOUNT: 'saved_account',
   EVENT_FILTERS: 'eventFilters',
+  ACCOUNT: 'account',
 };
 
 export const PROGRAM_ERRORS = {

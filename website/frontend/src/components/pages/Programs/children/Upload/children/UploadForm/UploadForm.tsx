@@ -33,7 +33,7 @@ type Props = {
 export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const { api } = useApi();
   const alert = useAlert();
-  const { account: currentAccount } = useAccount();
+  const { account } = useAccount();
 
   const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);
@@ -89,7 +89,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   };
   //TODO: We need to rewrite the form, urgently!
   const handleSubmitForm = (values: any) => {
-    if (!currentAccount) {
+    if (!account) {
       alert.error(`Wallet not connected`);
       return;
     }
@@ -111,7 +111,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       programOptions.initPayload = isManualPayload ? payload : prepareToSend(values.__root);
     }
 
-    UploadProgram(api, currentAccount, droppedFile, programOptions, metaFile, alert, () => {
+    UploadProgram(api, account, droppedFile, programOptions, metaFile, alert, () => {
       setDroppedFile(null);
     }).catch(() => {
       alert.error(`Invalid JSON format`);
@@ -133,6 +133,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const metaFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
 
   const isShowPayloadForm = payloadForm && !isManualPayload;
+  const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
 
   return (
     <div className={styles.uploadForm}>
@@ -276,6 +277,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     handleCalculateGas(values, setFieldValue);
                   }}
                   handleResetForm={handleResetForm}
+                  isUploadAvailable={isUploadAvailable}
                 />
               </div>
             </Form>
