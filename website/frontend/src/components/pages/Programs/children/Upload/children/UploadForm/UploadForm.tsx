@@ -130,6 +130,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const typeStructures = useMemo(() => getPayloadTypeStructures(meta?.types, meta?.init_input), [meta]);
 
   const metaFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
+  const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
 
   return (
     <Box className={styles.uploadFormWrapper}>
@@ -202,7 +203,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
             </div>
 
             <div className={styles.buttons}>
-              <Button type="submit" text="Upload program" />
+              <Button type="submit" text="Upload program" disabled={isUploadAvailable} />
               <Button
                 text="Calculate Gas"
                 onClick={() => {
