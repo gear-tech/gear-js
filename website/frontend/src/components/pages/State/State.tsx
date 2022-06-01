@@ -1,60 +1,41 @@
-import { useCallback, useEffect, useRef, useState, VFC } from 'react';
+import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Formik, Form } from 'formik';
-import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
+import { Metadata } from '@gear-js/api';
 
 import styles from './State.module.scss';
+import { FormValues } from './types';
+import { INITIAL_VALUES } from './const';
 
-import { useApi, useAlert } from 'hooks';
+import { useApi } from 'hooks';
 import { getMetadata } from 'services';
 import { getPreformattedText } from 'helpers';
-import { cloneDeep } from 'features/Editor/EditorTree/utils';
-import { Spinner } from 'components/blocks/Spinner/Spinner';
-import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
+import { FormPayload } from 'components/common/FormPayload';
+import { getSubmitPayload, getPayloadTypeStructures } from 'components/common/FormPayload/helpers';
+import { Spinner } from 'components/common/Spinner/Spinner';
 import { BackButton } from 'components/BackButton/BackButton';
-import { MetaFieldsStruct, MetaFieldsValues, parseMeta, prepareToSend } from 'components/MetaFields';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
 
-type FormValues = { __root: MetaFieldsValues | null; payload: string };
-
-const State: VFC = () => {
+const State = () => {
   const { api } = useApi();
-  const alert = useAlert();
   const navigate = useNavigate();
   const routeParams = useParams();
 
   const programId = routeParams.id as string;
 
+  const metaBuffer = useRef<Buffer | null>(null);
+
+  const [state, setState] = useState('');
   const [metadata, setMetadata] = useState<Metadata | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const metaBuffer = useRef<Buffer | null>(null);
   const types = metadata?.types;
   const stateInput = metadata?.meta_state_input;
-
-  const [typeStructure, setTypeStructure] = useState({});
-  const [form, setForm] = useState<MetaFieldsStruct | null>(null);
-  const [state, setState] = useState('');
-  const [isManualInput, setIsManualInput] = useState(false);
-  const initValues = useRef<{ payload: string; __root: MetaFieldsValues | null }>({
-    payload: typeStructure ? getPreformattedText(typeStructure) : '',
-    __root: null,
-  });
 
   const disableLoading = () => {
     setIsLoading(false);
   };
-
-  const getPayloadForm = useCallback(() => {
-    if (stateInput && types) {
-      const decodedTypes = decodeHexTypes(types);
-      const typeStruct = createPayloadTypeStructure(stateInput, decodedTypes, true);
-      const parsedStruct = parseMeta(typeStruct);
-      setTypeStructure(typeStruct);
-      setForm(parsedStruct);
-    }
-  }, [stateInput, types]);
 
   const resetState = () => {
     setIsLoading(true);
@@ -76,6 +57,18 @@ const State: VFC = () => {
     [api, programId]
   );
 
+  const handleBackButtonClick = () => {
+    navigate(-1);
+  };
+
+  const handleSubmit = (values: FormValues) => {
+    const payload = getSubmitPayload(values.payload);
+
+    readState(payload);
+  };
+
+  const typeStructures = useMemo(() => getPayloadTypeStructures(types, stateInput), [types, stateInput]);
+
   useEffect(() => {
     getMetadata(programId).then(({ result }) => {
       const parsedMeta = JSON.parse(result.meta) as Metadata;
@@ -87,38 +80,11 @@ const State: VFC = () => {
   }, [programId]);
 
   useEffect(() => {
-    if (metadata) {
-      if (stateInput) {
-        getPayloadForm();
-      } else {
-        readState();
-      }
+    if (metadata && !stateInput) {
+      readState();
     }
-  }, [metadata, stateInput, getPayloadForm, readState]);
-
-  const handleBackButtonClick = () => {
-    navigate(-1);
-  };
-
-  const handleSubmit = ({ __root, payload }: FormValues) => {
-    if (__root) {
-      const options = isManualInput ? payload : prepareToSend(cloneDeep(__root));
-
-      if (options) {
-        readState(options);
-      } else {
-        alert.error('Form is empty');
-      }
-    }
-  };
-
-  const handleManalSwitch = (val: boolean) => {
-    setIsManualInput(val);
-    initValues.current = {
-      payload: typeStructure ? getPreformattedText(typeStructure) : '',
-      __root: form ? form.__values : null,
-    };
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metadata, stateInput]);
 
   return (
     <div className="wrapper">
@@ -126,22 +92,17 @@ const State: VFC = () => {
         <BackButton />
         <h2 className={styles.heading}>Read state</h2>
       </header>
-      <Formik initialValues={initValues.current} onSubmit={handleSubmit} enableReinitialize>
+      <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
         <Form className={styles.form}>
           <div className={styles.block}>
             <div className={styles.item}>
               <p className={styles.itemCaption}>Program Id:</p>
               <p className={styles.itemValue}>{programId}</p>
             </div>
-            {form && (
+            {typeStructures?.payload && (
               <div className={styles.item}>
                 <p className={clsx(styles.itemCaption, styles.top)}>Input Parameters:</p>
-                <FormPayload
-                  className={styles.formWrapper}
-                  isManualInput={isManualInput}
-                  setIsManualInput={handleManalSwitch}
-                  formData={form}
-                />
+                <FormPayload name="payload" typeStructures={typeStructures} />
               </div>
             )}
             {state && (

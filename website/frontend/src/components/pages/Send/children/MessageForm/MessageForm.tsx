@@ -1,85 +1,76 @@
-import { useEffect, useRef, useState, useMemo, VFC } from 'react';
-import { useAlert } from 'hooks';
+import { useMemo, VFC, useRef } from 'react';
 import clsx from 'clsx';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import NumberFormat from 'react-number-format';
 import { Metadata } from '@gear-js/api';
-import { sendMessage } from 'services/ApiService';
-import { InitialValues } from './types';
-import { FormPayload } from 'components/blocks/FormPayload/FormPayload';
-import { getPreformattedText, calculateGas } from 'helpers';
-import MessageIllustration from 'assets/images/message.svg';
-import { useAccount, useApi } from 'hooks';
-import { MetaItem, MetaFieldsStruct, parseMeta, prepareToSend, PreparedMetaData } from 'components/MetaFields';
+
 import { Schema } from './Schema';
+import { FormValues, SetFieldValue } from './types';
 import { PayloadType } from './children/PayloadType';
+
+import { calculateGas } from 'helpers';
+import { useAccount, useApi, useAlert } from 'hooks';
+import { sendMessage } from 'services/ApiService';
+import MessageIllustration from 'assets/images/message.svg';
+import { FormPayload } from 'components/common/FormPayload';
+import { getSubmitPayload, getPayloadTypeStructures } from 'components/common/FormPayload/helpers';
 import './MessageForm.scss';
 
 type Props = {
   id: string;
-  meta?: Metadata;
-  types: MetaItem | null;
+  metadata?: Metadata;
   replyErrorCode?: string;
 };
 
-export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => {
+export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
   const { api } = useApi();
   const alert = useAlert();
   const { account: currentAccount } = useAccount();
-  const [metaForm, setMetaForm] = useState<MetaFieldsStruct | null>();
-  const [isManualInput, setIsManualInput] = useState(Boolean(!types));
 
-  const initialValues = useRef<InitialValues>({
-    gasLimit: 20000000,
+  const initialValues = useRef<FormValues>({
     value: 0,
-    payload: types ? getPreformattedText(types) : '',
+    payload: '',
+    gasLimit: 20000000,
     payloadType: 'Bytes',
     destination: id,
-    __root: null,
   });
 
   const isReply = !!replyErrorCode;
+  const isMeta = useMemo(() => metadata && Object.keys(metadata).length > 0, [metadata]);
 
-  const isMeta = useMemo(() => meta && Object.keys(meta).length > 0, [meta]);
-
-  const handleSubmit = (values: InitialValues, { resetForm }: FormikHelpers<InitialValues>) => {
-    // TODO: find out how to improve this one
-    if (currentAccount) {
-      const payloadType = isMeta ? void 0 : values.payloadType;
-
-      const message = {
-        replyToId: values.destination,
-        destination: values.destination,
-        gasLimit: values.gasLimit.toString(),
-        value: values.value.toString(),
-        payload: isManualInput ? values.payload : prepareToSend(values.__root as PreparedMetaData),
-      };
-
-      sendMessage(isReply ? api.reply : api.message, currentAccount, message, alert, resetForm, meta, payloadType);
-    } else {
+  const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
+    if (!currentAccount) {
       alert.error(`WALLET NOT CONNECTED`);
+      return;
     }
+
+    const payload = getSubmitPayload(values.payload);
+    const apiMethod = isReply ? api.reply : api.message;
+    const payloadType = isMeta ? void 0 : values.payloadType;
+
+    const message = {
+      value: values.value.toString(),
+      payload,
+      gasLimit: values.gasLimit.toString(),
+      replyToId: values.destination,
+      destination: values.destination,
+    };
+
+    sendMessage(apiMethod, currentAccount, message, alert, resetForm, metadata, payloadType);
   };
 
-  useEffect(() => {
-    if (types) {
-      const parsedMeta = parseMeta(types);
-      setMetaForm(parsedMeta);
-      if (parsedMeta && parsedMeta.__root && parsedMeta.__values) {
-        setIsManualInput(false);
-        initialValues.current.__root = parsedMeta.__values;
-      }
-    }
-  }, [types, initialValues]);
+  const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () => {
+    const method = isReply ? 'reply' : 'handle';
+
+    calculateGas(method, api, values, alert, metadata, null, id, replyErrorCode).then((gasLimit) =>
+      setFieldValue('gasLimit', gasLimit)
+    );
+  };
+
+  const typeStructures = useMemo(() => getPayloadTypeStructures(metadata?.types, metadata?.handle_input), [metadata]);
 
   return (
-    <Formik
-      initialValues={initialValues.current}
-      validationSchema={Schema}
-      validateOnBlur
-      enableReinitialize
-      onSubmit={handleSubmit}
-    >
+    <Formik initialValues={initialValues.current} validateOnBlur validationSchema={Schema} onSubmit={handleSubmit}>
       {({ errors, touched, values, setFieldValue }) => (
         <Form id="message-form">
           <div className="message-form--wrapper">
@@ -95,9 +86,9 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
                     type="text"
                     className={clsx('', errors.destination && touched.destination && 'message-form__input-error')}
                   />
-                  {errors.destination && touched.destination ? (
+                  {errors.destination && touched.destination && (
                     <div className="message-form__error">{errors.destination}</div>
-                  ) : null}
+                  )}
                 </div>
               </div>
 
@@ -105,12 +96,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
                 <label htmlFor="payload" className="message-form__field">
                   Payload:
                 </label>
-                <FormPayload
-                  className="message-form__field-wrapper"
-                  isManualInput={isManualInput}
-                  setIsManualInput={setIsManualInput}
-                  formData={metaForm}
-                />
+                <FormPayload name="payload" typeStructures={typeStructures} />
               </div>
 
               {!isMeta && (
@@ -164,20 +150,7 @@ export const MessageForm: VFC<Props> = ({ id, meta, types, replyErrorCode }) => 
                 <button
                   className="message-form__button"
                   type="button"
-                  onClick={() => {
-                    calculateGas(
-                      isReply ? 'reply' : 'handle',
-                      api,
-                      isManualInput,
-                      values,
-                      setFieldValue,
-                      alert,
-                      meta,
-                      null,
-                      id,
-                      replyErrorCode
-                    );
-                  }}
+                  onClick={handleCalculateGas(values, setFieldValue)}
                 >
                   Calculate Gas
                 </button>

@@ -5,7 +5,7 @@ import { Metadata } from '@gear-js/api';
 import clsx from 'clsx';
 import { formatDate } from 'helpers';
 import backIcon from 'assets/images/arrow_back_thick.svg';
-import { Spinner } from 'components/blocks/Spinner/Spinner';
+import { Spinner } from 'components/common/Spinner/Spinner';
 import { Hint } from 'components/blocks/Hint/Hint';
 import { getPreformattedText } from 'helpers';
 import { getMessage, getProgram } from 'services';

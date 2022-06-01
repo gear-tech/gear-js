@@ -17,7 +17,7 @@ const MetaSwitch = (props: Props) => {
 
   return (
     <div className={clsx(styles.switch, className)}>
-      <label className={styles.caption}>Metadata: </label>
+      <span className={styles.caption}>Metadata: </span>
       <div className={styles.block}>
         <Radio
           name="upload"

@@ -1,11 +1,19 @@
+import { FormikHelpers } from 'formik/dist/types';
 import { Metadata } from '@gear-js/api';
 
-import { MetaFieldsValues } from 'components/MetaFields';
+import { FormPayloadValues } from 'components/common/FormPayload/types';
 
-export type FormValues = Metadata & {
+export type ProgramValues = {
   value: number;
-  payload: string;
+  payload: FormPayloadValues;
   gasLimit: number;
   programName: string;
-  __root: MetaFieldsValues | null;
 };
+
+export type FormValues = {
+  metaValues: Metadata;
+  programValues: ProgramValues;
+};
+
+export type SetValues = FormikHelpers<FormValues>['setValues'];
+export type SetFieldValue = FormikHelpers<FormValues>['setFieldValue'];
