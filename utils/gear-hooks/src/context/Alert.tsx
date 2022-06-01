@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo, ReactNode, ComponentType, createContext } from 'react';
-import { nanoid } from 'nanoid/non-secure';
 import { createPortal } from 'react-dom';
 import { TransitionGroup } from 'react-transition-group';
+import { nanoid } from 'nanoid/non-secure';
 import { Transition } from 'components';
 import { DEFAULT_INFO_OPTIONS, DEFAULT_ERROR_OPTIONS, DEFAULT_LOADING_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import {
@@ -76,30 +76,26 @@ const AlertProvider = ({ children, template: Template, containerClassName }: Pro
 
   const update = useCallback(
     (alertId: string, content: ReactNode, options?: AlertOptions) => {
-      let updatedAlert: AlertInstance;
-
       removeTimer(alertId);
 
       setAlerts((prevState) =>
         prevState.map((alert) => {
-          if (alert.id !== alertId) {
-            return alert;
-          }
+          if (alert.id !== alertId) return alert;
 
-          return (updatedAlert = {
+          const updatedAlert = {
             id: alert.id,
             content,
             options: {
               ...alert.options,
               ...options,
             },
-          });
+          };
+
+          createTimer(updatedAlert.id, updatedAlert.options.timeout);
+
+          return updatedAlert;
         }),
       );
-
-      if (updatedAlert!) {
-        createTimer(updatedAlert.id, updatedAlert.options.timeout);
-      }
     },
     [removeTimer, createTimer],
   );
