@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@gear-js/api": "0.19.0",
-    "@gear-js/ui": "0.2.4",
+    "@gear-js/ui": "0.2.5",
     "@hcaptcha/react-hcaptcha": "1.2.0",
     "@monaco-editor/react": "4.4.2",
     "@polkadot/api": "8.3.2",
