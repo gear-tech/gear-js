@@ -18,7 +18,7 @@ on:
           - prod
       prod_password:
         description: "Password for restore on prod cluster:"
-        required: true
+        required: false
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
