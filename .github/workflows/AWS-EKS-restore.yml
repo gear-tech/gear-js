@@ -79,22 +79,22 @@ jobs:
         if: ${{ github.event.inputs.destination_cluster == 'stg' }}
 
       - run: |
-          ./velero restore describe ${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
+          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
         working-directory: ./velero-v1.8.1-linux-amd64
         if: ${{ github.event.inputs.destination_cluster == 'prod' }}
 
       - run: |
-          ./velero restore describe ${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
+          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
         working-directory: ./velero-v1.8.1-linux-amd64
         if: ${{ github.event.inputs.destination_cluster == 'stg' }}
 
       - run: |
-          ./velero restore logs ${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
+          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
         working-directory: ./velero-v1.8.1-linux-amd64
         if: ${{ github.event.inputs.destination_cluster == 'prod' }}
 
       - run: |
-          ./velero restore logs ${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
+          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
         working-directory: ./velero-v1.8.1-linux-amd64
         if: ${{ github.event.inputs.destination_cluster == 'stg' }}
 
@@ -153,21 +153,21 @@ jobs:
         if: ${{ github.event.inputs.destination_cluster == 'stg' }}
 
       - run: |
-          ./velero restore describe ${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
+          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
         working-directory: ./velero-v1.8.1-linux-amd64
         if: ${{ github.event.inputs.destination_cluster == 'prod' }}
 
       - run: |
-          ./velero restore describe ${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
+          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
         working-directory: ./velero-v1.8.1-linux-amd64
         if: ${{ github.event.inputs.destination_cluster == 'stg' }}
 
       - run: |
-          ./velero restore logs ${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
+          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
         working-directory: ./velero-v1.8.1-linux-amd64
         if: ${{ github.event.inputs.destination_cluster == 'prod' }}
 
       - run: |
-          ./velero restore logs ${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
+          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
         working-directory: ./velero-v1.8.1-linux-amd64
         if: ${{ github.event.inputs.destination_cluster == 'stg' }}
