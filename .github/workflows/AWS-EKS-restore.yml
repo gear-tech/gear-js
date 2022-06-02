@@ -62,7 +62,7 @@ jobs:
 
       - run: |
           ./velero restore create \
-          ${{ github.event.inputs.backup_name }} \
+          ${{ github.run_number }}-${{ github.event.inputs.backup_name }} \
           --from-backup ${{ github.event.inputs.backup_name }} \
           --kubeconfig $HOME/.kube/config_prod \
           --wait
@@ -71,7 +71,7 @@ jobs:
 
       - run: |
           ./velero restore create \
-          ${{ github.event.inputs.backup_name }} \
+          ${{ github.run_number }}-${{ github.event.inputs.backup_name }} \
           --from-backup ${{ github.event.inputs.backup_name }} \
           --kubeconfig $HOME/.kube/config_stg \
           --wait
@@ -134,7 +134,7 @@ jobs:
 
       - run: |
           ./velero restore create \
-          ${{ github.event.inputs.backup_name }} \
+          ${{ github.run_number }}-${{ github.event.inputs.backup_name }} \
           --from-backup ${{ github.event.inputs.backup_name }} \
           --include-namespaces ${{ github.event.inputs.namespaces }} \
           --kubeconfig $HOME/.kube/config_prod \
@@ -144,7 +144,7 @@ jobs:
 
       - run: |
           ./velero restore create \
-          ${{ github.event.inputs.backup_name }} \
+          ${{ github.run_number }}-${{ github.event.inputs.backup_name }} \
           --from-backup ${{ github.event.inputs.backup_name }} \
           --include-namespaces ${{ github.event.inputs.namespaces }} \
           --kubeconfig $HOME/.kube/config_stg \
