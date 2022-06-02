@@ -19,12 +19,12 @@ jobs:
     steps:
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.VELERO_ID_STG }}
+          aws-secret-access-key: ${{ secrets.VELERO_KEY_STG }}
+          aws-region: ${{ secrets.VELERO_REGION_STG }}
       
       - run: |
-          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name k8s-gear-stg
+          aws eks --region ${{ secrets.VELERO_REGION_STG }} update-kubeconfig --name k8s-gear-stg
 
       - run: |
           wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
@@ -52,12 +52,12 @@ jobs:
     steps:
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.VELERO_ID_STG }}
+          aws-secret-access-key: ${{ secrets.VELERO_KEY_STG }}
+          aws-region: ${{ secrets.VELERO_REGION_STG }}
       
       - run: |
-          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name k8s-gear-stg
+          aws eks --region ${{ secrets.VELERO_REGION_STG }} update-kubeconfig --name k8s-gear-stg
 
       - run: |
           wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
