@@ -11,11 +11,11 @@ function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | 
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
   const alert = useContext(AlertContext);
+
   const metadata = useConditionalMeta(metaSourceOrData);
 
   const title = 'gear.sendMessage';
-  const loadingAlertIdRef = useRef('');
-  const loadingAlertId = loadingAlertIdRef.current;
+  const loadingAlertId = useRef('');
 
   const handleEventsStatus = (events: EventRecord[]) => {
     events.forEach(({ event: { method, section } }) => {
@@ -33,20 +33,20 @@ function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | 
     const { isReady, isInBlock, isInvalid, isFinalized } = status;
 
     if (isInvalid) {
-      alert.update(loadingAlertId, 'Transaction error. Status: isInvalid', DEFAULT_ERROR_OPTIONS);
+      alert.update(loadingAlertId.current, 'Transaction error. Status: isInvalid', DEFAULT_ERROR_OPTIONS);
     } else if (isReady) {
-      alert.update(loadingAlertId, 'Ready');
+      alert.update(loadingAlertId.current, 'Ready');
     } else if (isInBlock) {
-      alert.update(loadingAlertId, 'In Block');
+      alert.update(loadingAlertId.current, 'In Block');
     } else if (isFinalized) {
-      alert.update(loadingAlertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+      alert.update(loadingAlertId.current, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
       handleEventsStatus(events);
     }
   };
 
   const sendMessage = async (payload: AnyJson, value: string | number = 0) => {
     if (account && metadata) {
-      loadingAlertIdRef.current = alert.loading('Sign In', { title });
+      loadingAlertId.current = alert.loading('Sign In', { title });
 
       const { address, decodedAddress, meta } = account;
       const gasLimit = await api.program.gasSpent.handle(decodedAddress, destination, payload, value, metadata);
@@ -56,7 +56,10 @@ function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | 
 
       const { source } = meta;
       const { signer } = await web3FromSource(source);
-      return api.message.signAndSend(address, { signer }, handleStatus);
+
+      return api.message
+        .signAndSend(address, { signer }, handleStatus)
+        .catch(({ message }: Error) => alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS));
     }
   };
 
