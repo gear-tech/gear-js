@@ -6,7 +6,7 @@ on:
       namespaces:
         description: "List namespaces separated by , :"   
         required: true
-        default: All
+        default: Null
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
