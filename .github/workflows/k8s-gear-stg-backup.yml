@@ -46,7 +46,7 @@ jobs:
 
 
   backup_specific_namsepace:
-    name: "Backup namespaces: ${{ github.event.inputs.namespaces || Null }}"
+    name: "Backup namespaces: ${{ github.event.inputs.namespaces }}"
     if: ${{ github.event.inputs.namespaces != 'All' }}
     runs-on: ubuntu-latest
     steps:
