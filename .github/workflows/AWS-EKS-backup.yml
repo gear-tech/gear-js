@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       custom_backup_name:
-        description: "NOT REQUIRED. Custom name backup. Use separator - :"   
+        description: "Custom name backup. Use separator - :"   
         required: false
       namespaces:
         description: "List namespaces. Use separator , :"   
@@ -101,18 +101,22 @@ jobs:
           aws-access-key-id: ${{ secrets.VELERO_ID_PROD }}
           aws-secret-access-key: ${{ secrets.VELERO_KEY_PROD }}
           aws-region: ${{ secrets.VELERO_REGION_PROD }}
+        if: ${{ github.event.inputs.source_cluster == 'prod' }}
 
       - run: |
           aws eks --region ${{ secrets.VELERO_REGION_PROD }} update-kubeconfig --kubeconfig $HOME/.kube/config_prod --name k8s-gear
+        if: ${{ github.event.inputs.source_cluster == 'prod' }}
 
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.VELERO_ID_STG }}
           aws-secret-access-key: ${{ secrets.VELERO_KEY_STG }}
           aws-region: ${{ secrets.VELERO_REGION_STG }}
+        if: ${{ github.event.inputs.source_cluster == 'stg' }}
 
       - run: |
           aws eks --region ${{ secrets.VELERO_REGION_STG }} update-kubeconfig --kubeconfig $HOME/.kube/config_stg --name k8s-gear-stg
+        if: ${{ github.event.inputs.source_cluster == 'stg' }}
 
       - run: |
           wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
