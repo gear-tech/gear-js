@@ -23,6 +23,9 @@ on:
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
 
+env:
+  EKS_RESTORE_PASSWORD_PROD: ${{ secrets.EKS_RESTORE_PASSWORD_PROD }}
+
 jobs:
   restore_all_namespaces:
     name: "Restore all namespaces to k8s-gear-${{ github.event.inputs.destination_cluster }}"
@@ -64,7 +67,7 @@ jobs:
           --kubeconfig $HOME/.kube/config_prod \
           --wait
         working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'prod' && github.event.inputs.prod_password == secrets.EKS_RESTORE_PASSWORD_PROD }}
+        if: ${{ github.event.inputs.destination_cluster == 'prod' && github.event.inputs.prod_password == env.EKS_RESTORE_PASSWORD_PROD }}
 
       - run: |
           ./velero restore create \
@@ -137,7 +140,7 @@ jobs:
           --kubeconfig $HOME/.kube/config_prod \
           --wait
         working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'prod' && github.event.inputs.prod_password == secrets.EKS_RESTORE_PASSWORD_PROD }}
+        if: ${{ github.event.inputs.destination_cluster == 'prod' && github.event.inputs.prod_password == env.EKS_RESTORE_PASSWORD_PROD }}
 
       - run: |
           ./velero restore create \
