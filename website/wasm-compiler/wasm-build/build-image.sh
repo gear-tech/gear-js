@@ -1,4 +1,4 @@
 #!/bin/bash
 
 
-docker build wasm-build/ -t wasm-build
+docker build ./wasm-build -t wasm-build

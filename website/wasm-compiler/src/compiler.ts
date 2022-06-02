@@ -1,25 +1,41 @@
-import { Injectable, Logger } from '@nestjs/common';
-
-import * as Docker from 'dockerode';
-import { join } from 'path';
-import * as fs from 'fs';
+import Docker from 'dockerode';
 import { exec } from 'child_process';
-import { StorageService } from './storage/storage.service';
+import { readdirSync, readFileSync, rmdir } from 'fs';
 import { isWasm, packZip } from './util';
+import { DBService } from './db';
+import { join } from 'path';
+import Dockerode from 'dockerode';
 
-@Injectable()
-export class AppService {
-  private docker: Docker;
+const PATH_TO_BUILD_IMAGE_SCRIPT = './wasm-build/build-image.sh';
 
-  constructor(private readonly storage: StorageService) {
-    this.docker = new Docker({ socketPath: '/var/run/docker.sock' });
-    exec('./wasm-build/build-image.sh', (error, stdout, stderr) => {
-      console.log(stderr);
+export class CompilerService {
+  docker: Docker;
+  dbService: DBService;
+
+  constructor(dbService: DBService) {
+    this.dbService = dbService;
+    this.docker = new Dockerode();
+  }
+
+  async buildImage(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      exec(PATH_TO_BUILD_IMAGE_SCRIPT, (error, stdout, stderr) => {
+        if (stderr) {
+          console.log(stderr);
+        }
+        if (error) {
+          console.log(error);
+          reject(error);
+        }
+        console.log(stdout);
+        return resolve('ok');
+      });
     });
   }
 
   async runContainer(pathToFolder: string, id: string) {
     return new Promise((resolve, reject) => {
+      exec('PROJECT_PATH=test ./wasm-build/run-container.sh');
       this.docker.run(
         'wasm-build',
         ['sh', '-c', './build.sh'],
@@ -34,7 +50,7 @@ export class AppService {
           WorkingDir: '/wasm-build',
         },
         {},
-        (err, _, container) => {
+        (err, container) => {
           if (err) {
             container.remove();
             reject(err);
@@ -62,27 +78,27 @@ export class AppService {
     try {
       await this.runContainer(pathToFolder, id);
     } catch (error) {
-      return { error: error.message ? error.message : error };
+      return this.dbService.update(id, null, error.message);
     }
     const dirWithWasm = pathToFolder;
 
     const resultFiles = [];
 
-    fs.readdirSync(dirWithWasm)
+    readdirSync(dirWithWasm)
       .filter(isWasm)
       .map((fileName) => {
         resultFiles.push({
-          content: fs.readFileSync(join(dirWithWasm, fileName)),
+          content: readFileSync(join(dirWithWasm, fileName)),
           fileName: fileName,
         });
       });
     if (resultFiles.length === 0) {
-      await this.storage.save(null, id);
+      this.dbService.update(id, null, null);
     } else {
       const file = packZip(resultFiles);
-      await this.storage.save(file, id);
+      this.dbService.update(id, file);
     }
-    fs.rmdir(pathToFolder, { recursive: true }, () => {});
+    rmdir(pathToFolder, { recursive: true }, () => {});
     return 0;
   }
 

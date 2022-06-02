@@ -1,7 +1,7 @@
 const AdmZip = require('adm-zip');
 import { mkdirSync } from 'fs';
 import { join } from 'path';
-import config from './config/configuration';
+import config from './configuration';
 
 export function isWasm(fileName: string): boolean {
   let ext = fileName.split('.');
@@ -14,7 +14,7 @@ export function generateId(): string {
 
 export function unpackZip(file: Buffer, id: string): string {
   const zip = new AdmZip(file);
-  const path = join(config().wasmBuild.rootFolder, id);
+  const path = join(config.compiler.rootFolder, id);
   mkdirSync(path, { recursive: true });
   zip.extractAllTo(path);
   return path;

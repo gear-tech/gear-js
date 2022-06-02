@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo '******************************* Cargo build *******************************'
-cargo +nightly build --release --manifest-path ./build/Cargo.toml --target wasm32-unknown-unknown
+cargo build --release --manifest-path ./build/Cargo.toml
 echo '******************************* Wasm proc *********************************'
 wasm-proc -p ./build/target/wasm32-unknown-unknown/release/*.wasm
 echo '******************************* Copy **************************************'

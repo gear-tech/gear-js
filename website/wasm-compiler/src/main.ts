@@ -1,15 +1,18 @@
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
+import { CompilerService } from './compiler';
+import { DBService } from './db';
+import { Server } from './server';
 
-const logger = new Logger('IdeMicroservice');
+const main = async () => {
+  const dbService = new DBService();
+  await dbService.connect();
+  const compiler = new CompilerService(dbService);
+  await compiler.buildImage();
+  const server = new Server(dbService, compiler);
+  server.setRoutes();
+  server.run();
+};
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
-  const configService = app.get(ConfigService);
-  const port = configService.get('server.port');
-  logger.log(`App succesfully run on the ${port} 🚀`);
-  await app.listen(port);
-}
-bootstrap();
+main().catch((error) => {
+  console.log(error);
+  process.exit(1);
+});
