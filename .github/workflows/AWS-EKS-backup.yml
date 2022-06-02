@@ -1,13 +1,13 @@
-name: AWS-EKS-backup
+name: AWS EKS Backup
 
 on:
   workflow_dispatch:
     inputs:
       custom_backup_name:
-        description: "Custom name backup. Use separator - :"   
+        description: "Custom name backup. Use separator - :"
         required: false
       namespaces:
-        description: "List namespaces. Use separator , :"   
+        description: "List namespaces. Use separator , :"
         required: true
       source_cluster:
         description: 'Select source cluster:'
@@ -17,7 +17,7 @@ on:
           - stg
           - prod
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 env:
@@ -25,7 +25,7 @@ env:
   BACKUP_NAME_SPECIFIC: ${{ github.run_number }}-${{ github.event.inputs.source_cluster }}---specific-backup-`date +"%d-%m-%Y"`
     
 jobs:
-  backup_all_namsepaces:
+  backup_all_namespaces:
     name: "Backup all namespaces on ${{ github.event.inputs.source_cluster }}"
     if: ${{ github.event.inputs.namespaces == 'All' }}
     runs-on: ubuntu-latest
@@ -35,18 +35,22 @@ jobs:
           aws-access-key-id: ${{ secrets.VELERO_ID_PROD }}
           aws-secret-access-key: ${{ secrets.VELERO_KEY_PROD }}
           aws-region: ${{ secrets.VELERO_REGION_PROD }}
+        if: ${{ github.event.inputs.source_cluster == 'prod' }}
 
       - run: |
           aws eks --region ${{ secrets.VELERO_REGION_PROD }} update-kubeconfig --kubeconfig $HOME/.kube/config_prod --name k8s-gear
+        if: ${{ github.event.inputs.source_cluster == 'prod' }}
 
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.VELERO_ID_STG }}
           aws-secret-access-key: ${{ secrets.VELERO_KEY_STG }}
           aws-region: ${{ secrets.VELERO_REGION_STG }}
+        if: ${{ github.event.inputs.source_cluster == 'stg' }}
 
       - run: |
           aws eks --region ${{ secrets.VELERO_REGION_STG }} update-kubeconfig --kubeconfig $HOME/.kube/config_stg --name k8s-gear-stg
+        if: ${{ github.event.inputs.source_cluster == 'stg' }}
 
       - run: |
           wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
@@ -91,7 +95,7 @@ jobs:
         if: ${{ github.event.inputs.source_cluster == 'stg' }}
 
 
-  backup_specific_namsepace:
+  backup_specific_namespaces:
     name: "Backup namespaces: ${{ github.event.inputs.namespaces }} on ${{ github.event.inputs.source_cluster }}"
     if: ${{ github.event.inputs.namespaces != 'All' }}
     runs-on: ubuntu-latest
