@@ -20,7 +20,7 @@ import { routes } from 'routes';
 import { subscribeToEvents } from 'services/ApiService';
 import { nodeApi } from '../../api/initApi';
 
-import { useApi, useAlert, useEvents } from 'hooks';
+import { useApi, useAlert, useEvents, useLoggedInAccount } from 'hooks';
 
 import './App.scss';
 import 'assets/scss/common.scss';
@@ -39,6 +39,7 @@ const Component = () => {
   const events = useEvents();
   const { isApiReady } = useApi();
   const [searchParams, setSearchParams] = useSearchParams();
+  useLoggedInAccount();
 
   useEffect(() => {
     if (isApiReady) {

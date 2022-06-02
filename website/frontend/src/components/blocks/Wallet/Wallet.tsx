@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { Button, buttonStyles } from '@gear-js/ui';
 
@@ -9,37 +8,28 @@ import styles from './Wallet.module.scss';
 import { useAccounts } from './hooks';
 import { SelectAccountModal } from './SelectAccountModal';
 
-import { LOCAL_STORAGE } from 'consts';
 import { useAccount, useApi } from 'hooks';
 
 const Wallet = () => {
   const { api } = useApi();
   const accounts = useAccounts();
-  const { account: currentAccount, setAccount } = useAccount();
+  const { account } = useAccount();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [accountBalance, setAccountBalance] = useState('');
 
   useEffect(() => {
-    const isLoggedIn = ({ address }: InjectedAccountWithMeta) => address === localStorage[LOCAL_STORAGE.SAVED_ACCOUNT];
-
-    if (accounts) {
-      setAccount(accounts.find(isLoggedIn));
+    if (account && api) {
+      api.balance.findOut(account.address).then((result) => setAccountBalance(result.toHuman()));
     }
-  }, [accounts, setAccount]);
-
-  useEffect(() => {
-    if (currentAccount && api) {
-      api.balance.findOut(currentAccount.address).then((result) => setAccountBalance(result.toHuman()));
-    }
-  }, [currentAccount, api]);
+  }, [account, api]);
 
   useEffect(() => {
     // TODO: think how to wrap it hook
     let unsub: UnsubscribePromise | undefined;
 
-    if (currentAccount && api) {
-      unsub = api.gearEvents.subscribeToBalanceChange(currentAccount.address, (balance) => {
+    if (account && api) {
+      unsub = api.gearEvents.subscribeToBalanceChange(account.address, (balance) => {
         setAccountBalance(balance.toHuman());
       });
     }
@@ -49,7 +39,7 @@ const Wallet = () => {
         unsub.then((callback) => callback());
       }
     };
-  }, [api, currentAccount]);
+  }, [api, account]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -70,7 +60,7 @@ const Wallet = () => {
   return (
     <>
       <div className={styles.wallet}>
-        {currentAccount ? (
+        {account ? (
           <>
             <div className={balanceSectionClassName}>
               <p>
@@ -79,8 +69,8 @@ const Wallet = () => {
             </div>
             <div className={styles.section}>
               <button type="button" className={accButtonClassName} onClick={openModal}>
-                <Identicon value={currentAccount.address} size={28} theme="polkadot" className={styles.avatar} />
-                {currentAccount.meta.name}
+                <Identicon value={account.address} size={28} theme="polkadot" className={styles.avatar} />
+                {account.meta.name}
               </button>
             </div>
           </>

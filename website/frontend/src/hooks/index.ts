@@ -7,6 +7,7 @@ import { useSubscription } from './useSubscription';
 import { useChangeEffect } from './useChangeEffect';
 import { useProgram } from './useProgram';
 import { useCodeUpload } from './useCodeUpload';
+import { useLoggedInAccount } from './useLoggedInAccount';
 
 const useApi = () => useContext(ApiContext);
 const useAlert = () => useContext(AlertContext);
@@ -27,4 +28,5 @@ export {
   useChangeEffect,
   useBodyScrollLock,
   useSubscription,
+  useLoggedInAccount,
 };
