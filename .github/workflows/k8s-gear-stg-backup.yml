@@ -1,0 +1,78 @@
+name: k8s-gear-stg-backup
+
+on:
+  workflow_dispatch:
+    inputs:
+      namespaces:
+        description: "List namespaces separated by , :"   
+        required: true
+        default: All
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  backup_all_namsepaces:
+    name: "Backup all namespaces"
+    if: ${{ github.event.inputs.namespaces == 'All' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name k8s-gear-stg
+
+      - run: |
+          wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
+          tar -xvf velero*.tar.gz
+          cd ./velero-v1.8.1-linux-amd64
+          chmod +x ./velero
+
+      - run: |
+          ./velero backup create ${{ github.run_number }}-full-backup-`date +"%d-%m-%Y"` --kubeconfig $HOME/.kube/config --wait
+        working-directory: ./velero-v1.8.1-linux-amd64
+      
+      - run: |
+          ./velero backup describe ${{ github.run_number }}-full-backup-`date +"%d-%m-%Y"` --kubeconfig $HOME/.kube/config
+        working-directory: ./velero-v1.8.1-linux-amd64
+
+      - run: |
+          ./velero backup logs ${{ github.run_number }}-full-backup-`date +"%d-%m-%Y"` --kubeconfig $HOME/.kube/config
+        working-directory: ./velero-v1.8.1-linux-amd64
+
+
+  backup_specific_namsepace:
+    name: "Backup namespaces: ${{ github.event.inputs.namespaces || Null }}"
+    if: ${{ github.event.inputs.namespaces != 'All' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name k8s-gear-stg
+
+      - run: |
+          wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
+          tar -xvf velero*.tar.gz
+          cd ./velero-v1.8.1-linux-amd64
+          chmod +x ./velero
+
+      - run: |
+          ./velero backup create ${{ github.run_number }}-specific-backup-`date +"%d-%m-%Y"` --kubeconfig $HOME/.kube/config --wait --include-namespaces ${{ github.event.inputs.namespaces }} 
+        working-directory: ./velero-v1.8.1-linux-amd64
+      
+      - run: |
+          ./velero backup describe ${{ github.run_number }}-specific-backup-`date +"%d-%m-%Y"` --kubeconfig $HOME/.kube/config
+        working-directory: ./velero-v1.8.1-linux-amd64
+
+      - run: |
+          ./velero backup logs ${{ github.run_number }}-specific-backup-`date +"%d-%m-%Y"` --kubeconfig $HOME/.kube/config
+        working-directory: ./velero-v1.8.1-linux-amd64
