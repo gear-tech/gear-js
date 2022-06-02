@@ -162,7 +162,7 @@ export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DE
 
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
 
-export const checkFileFormat = (file: File, types: string | string[] = FILE_TYPES.WASN) => {
+export const checkFileFormat = (file: File, types: string | string[] = FILE_TYPES.WASM) => {
   if (Array.isArray(types)) {
     return types.some((type) => type === file.type);
   }

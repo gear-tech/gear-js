@@ -114,6 +114,6 @@ export enum ZIndexes {
 }
 
 export const FILE_TYPES = {
-  WASN: 'application/wasm',
+  WASM: 'application/wasm',
   JSON: 'application/json',
 };
