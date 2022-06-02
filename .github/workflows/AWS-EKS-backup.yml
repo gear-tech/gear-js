@@ -16,6 +16,8 @@ on:
         options:
           - stg
           - prod
+  schedule:
+    - cron: 0 0 * * *
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,7 +29,7 @@ env:
 jobs:
   backup_all_namespaces:
     name: "Backup all namespaces on ${{ github.event.inputs.source_cluster }}"
-    if: ${{ github.event.inputs.namespaces == 'All' }}
+    if: ${{ github.event.inputs.namespaces == 'All' || github.event.schedule == '0 0 * * *' }}
     runs-on: ubuntu-latest
     steps:
       - uses: aws-actions/configure-aws-credentials@v1
@@ -35,11 +37,11 @@ jobs:
           aws-access-key-id: ${{ secrets.VELERO_ID_PROD }}
           aws-secret-access-key: ${{ secrets.VELERO_KEY_PROD }}
           aws-region: ${{ secrets.VELERO_REGION_PROD }}
-        if: ${{ github.event.inputs.source_cluster == 'prod' }}
+        if: ${{ github.event.inputs.source_cluster == 'prod' || github.event.schedule == '0 0 * * *' }}
 
       - run: |
           aws eks --region ${{ secrets.VELERO_REGION_PROD }} update-kubeconfig --kubeconfig $HOME/.kube/config_prod --name k8s-gear
-        if: ${{ github.event.inputs.source_cluster == 'prod' }}
+        if: ${{ github.event.inputs.source_cluster == 'prod' || github.event.schedule == '0 0 * * *' }}
 
       - uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -64,7 +66,7 @@ jobs:
           --kubeconfig $HOME/.kube/config_prod \
           --wait
         working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.source_cluster == 'prod' }}
+        if: ${{ github.event.inputs.source_cluster == 'prod' || github.event.schedule == '0 0 * * *'}}
 
       - run: |
           ./velero backup create \
@@ -77,7 +79,7 @@ jobs:
       - run: |
           ./velero backup describe  ${{ github.event.inputs.custom_backup_name || env.BACKUP_NAME_FULL }} --kubeconfig $HOME/.kube/config_prod
         working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.source_cluster == 'prod' }}
+        if: ${{ github.event.inputs.source_cluster == 'prod' || github.event.schedule == '0 0 * * *'}}
 
       - run: |
           ./velero backup describe  ${{ github.event.inputs.custom_backup_name || env.BACKUP_NAME_FULL }} --kubeconfig $HOME/.kube/config_stg
@@ -87,7 +89,7 @@ jobs:
       - run: |
           ./velero backup logs  ${{ github.event.inputs.custom_backup_name || env.BACKUP_NAME_FULL }} --kubeconfig $HOME/.kube/config_prod
         working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.source_cluster == 'prod' }}
+        if: ${{ github.event.inputs.source_cluster == 'prod' || github.event.schedule == '0 0 * * *' }}
 
       - run: |
           ./velero backup logs  ${{ github.event.inputs.custom_backup_name || env.BACKUP_NAME_FULL }} --kubeconfig $HOME/.kube/config_stg
