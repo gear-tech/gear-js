@@ -28,7 +28,7 @@ env:
 
 jobs:
   restore_all_namespaces:
-    name: "Restore all namespaces to k8s-gear-${{ github.event.inputs.destination_cluster }}"
+    name: "Restore all namespaces to ${{ github.event.inputs.destination_cluster }}"
     if: ${{ github.event.inputs.namespaces == 'All' }}
     runs-on: ubuntu-latest
     steps:
@@ -100,7 +100,7 @@ jobs:
 
 
   restore_specific_namespaces:
-    name: "Restore namespaces: ${{ github.event.inputs.namespaces }} to k8s-gear-${{ github.event.inputs.destination_cluster }}"
+    name: "Restore namespaces: ${{ github.event.inputs.namespaces }} to ${{ github.event.inputs.destination_cluster }}"
     if: ${{ github.event.inputs.namespaces != 'All' }}
     runs-on: ubuntu-latest
     steps:
