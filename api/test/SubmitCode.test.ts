@@ -2,10 +2,9 @@ import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import yaml from 'js-yaml';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { GearApi, GearKeyring } from '../lib';
+import { GearApi } from '../lib';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
-const submitCodeTestFiles = readdirSync('test/spec/submit_code');
 const api = new GearApi();
 const accounts = {
   alice: undefined,
@@ -14,7 +13,7 @@ const accounts = {
 
 beforeAll(async () => {
   await api.isReady;
-  [accounts.alice, accounts.bob] = await getAccount();
+  [accounts.alice] = await getAccount();
 });
 
 afterAll(async () => {
@@ -22,23 +21,15 @@ afterAll(async () => {
   await sleep(2000);
 });
 
-for (let filePath of submitCodeTestFiles) {
-  const testFile = yaml.load(readFileSync(join('./test/spec/submit_code', filePath), 'utf8'));
-  if (testFile.skip) {
-    continue;
-  }
-  describe(testFile.title, () => {
-    test('Submit code', async () => {
-      for (let program of testFile.programs) {
-        const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `${program.name}.opt.wasm`));
-        const { codeHash } = api.code.submit(code);
-        expect(codeHash).toBeDefined();
+describe('Submit code', () => {
+  test('demo_sum', async () => {
+    const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `demo_sum.opt.wasm`));
+    const { codeHash } = api.code.submit(code);
+    expect(codeHash).toBeDefined();
 
-        const transactionData = await sendTransaction(api.code, accounts[program.account], 'CodeSaved');
-
-        expect(transactionData).toBe(codeHash);
-      }
-      return;
-    });
+    const transactionData = await sendTransaction(api.code, accounts.alice, 'CodeChanged');
+    expect(transactionData[0]).toBe(codeHash);
+    expect(transactionData[1]).toHaveProperty('Active');
+    expect(transactionData[1].Active).toHaveProperty('expiration');
   });
-}
+});

@@ -2,7 +2,15 @@ import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import yaml from 'js-yaml';
 import { CreateType, GearApi, GearKeyring, getWasmMetadata } from '../src';
-import { checkLog, checkInit, sendTransaction, getAccount, sleep, describeif, testif } from './utilsFunctions';
+import {
+  checkInit,
+  sendTransaction,
+  getAccount,
+  sleep,
+  describeif,
+  testif,
+  listenToUserMessageSent,
+} from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
 const programs = new Map();
@@ -77,32 +85,16 @@ describe('Upload program', () => {
         meta,
         metaFile,
       });
-      let log, messageId;
       const unsubs = [];
-
-      if (program.log) {
-        log = new Promise((resolve) => {
-          unsubs.push(
-            api.gearEvents.subscribeToLogEvents((event) => {
-              if (checkLog(event, programId, messageId)) {
-                resolve(event.data.payload.toHex());
-              }
-            }),
-          );
-        });
-      }
 
       // Check program initialization
       const status = checkInit(api, programs.get(`${testFile.title}.${program.id}`).id);
-      const transactionData = await sendTransaction(api.program, accounts[program.account], 'InitMessageEnqueued');
-      messageId = transactionData.messageId;
+      const transactionData = await sendTransaction(api.program, accounts[program.account], 'MessageEnqueued');
 
-      expect(transactionData.programId).toBe(programs.get(`${testFile.title}.${program.id}`).id);
+      expect(transactionData[2]).toBe(programs.get(`${testFile.title}.${program.id}`).id);
 
-      expect(await status).toBe('success');
-      if (program.log) {
-        expect(await log).toBe(program.log);
-      }
+      expect(await status()).toBe('success');
+
       unsubs.forEach(async (unsub) => {
         (await unsub)();
       });
@@ -134,38 +126,22 @@ describe('Send Message', () => {
             },
             !message.asHex ? program.meta : undefined,
           );
-          let messageId, log, unsub;
+          let waitForReply;
           if (message.log) {
-            log = new Promise((resolve) => {
-              unsub = api.gearEvents.subscribeToLogEvents((event) => {
-                const found = checkLog(event, program.id, messageId);
-                if (found === 0) {
-                  messages.set(`${testFile.title}.${message.id}`, {
-                    logId: event.data.id.toHex(),
-                    source: event.data.source.toHex(),
-                  });
-                  resolve({ payload: event.data.payload.toHex(), withError: false });
-                } else if (found === 1) {
-                  resolve({ withError: true });
-                }
-              });
-            });
+            waitForReply = listenToUserMessageSent(api, program.id);
           }
 
-          const transactionData = await sendTransaction(
-            api.message,
-            accounts[message.account],
-            'DispatchMessageEnqueued',
-          );
-          messageId = transactionData.messageId;
-
+          const transactionData = await sendTransaction(api.message, accounts[message.account], 'MessageEnqueued');
           expect(transactionData).toBeDefined();
 
           if (message.log) {
-            const logResult = await log;
-            expect(logResult.withError).toBeFalsy();
-            expect(logResult.payload).toBe(message.log);
-            (await unsub)();
+            const reply = await waitForReply(transactionData[0]);
+            messages.set(`${testFile.title}.${message.id}`, {
+              logId: reply.id.toHex(),
+              source: reply.source.toHex(),
+            });
+            expect(reply?.reply.unwrap()[1].toNumber()).toBe(0);
+            expect(reply?.payload.toHex()).toBe(message.log);
           }
         });
       }
@@ -184,8 +160,8 @@ describe('Read Mailbox', () => {
         expect(mailbox.filter((value) => value[0][1] === messageId).length).not.toBe(0);
         if (claim) {
           const submitted = api.claimValueFromMailbox.submit(messageId);
-          const transactionData = await sendTransaction(submitted, accounts[account], 'ClaimedValueFromMailbox');
-          expect(transactionData).toBe(messageId);
+          const transactionData = await sendTransaction(submitted, accounts[account], 'UserMessageRead');
+          expect(transactionData[0]).toBe(messageId);
           mailbox = await api.mailbox.read(GearKeyring.decodeAddress(accounts[account].address));
           expect(mailbox.filter((value) => value[0][1] === messageId).length).toBe(0);
         }

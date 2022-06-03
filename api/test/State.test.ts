@@ -2,7 +2,7 @@ import { GearApi, getWasmMetadata } from '../src';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
-import { GEAR_EXAMPLES_WASM_DIR } from './config';
+import { GEAR_EXAMPLES_WASM_DIR, TEST_WASM_DIR } from './config';
 
 const api = new GearApi();
 const demo_meta_test = {
@@ -11,8 +11,8 @@ const demo_meta_test = {
   id: undefined,
 };
 const timestamp_test = {
-  code: readFileSync('test/spec/state/timestamp.opt.wasm'),
-  meta: readFileSync('test/spec/state/timestamp.meta.wasm'),
+  code: readFileSync(join(TEST_WASM_DIR, 'timestamp.opt.wasm')),
+  meta: readFileSync(join(TEST_WASM_DIR, 'timestamp.meta.wasm')),
   id: undefined,
 };
 
@@ -26,7 +26,7 @@ beforeAll(async () => {
   }).programId;
   let initStatus = checkInit(api, timestamp_test.id);
   api.program.signAndSend(alice, () => {});
-  expect(await initStatus).toBe('success');
+  expect(await initStatus()).toBe('success');
 
   demo_meta_test.id = api.program.submit(
     {
@@ -38,7 +38,7 @@ beforeAll(async () => {
   ).programId;
   initStatus = checkInit(api, demo_meta_test.id);
   api.program.signAndSend(alice, () => {});
-  expect(await initStatus).toBe('success');
+  expect(await initStatus()).toBe('success');
 });
 
 afterAll(async () => {
