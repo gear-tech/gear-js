@@ -1,25 +1,21 @@
-import {
-  createEventClass,
-  GearApi,
-  GearKeyring,
-  Hex,
-  IGearEvent,
-  MessageWaitedData,
-  UserMessageSent,
-  UserMessageSentData,
-} from '../src';
+import { GearApi, GearKeyring, Hex, IGearEvent, MessageWaitedData, UserMessageSent, UserMessageSentData } from '../src';
 
 export const checkInit = (api: GearApi, programId: string) => {
   let unsubs = [];
   let messageId = undefined;
+  unsubs.push(
+    api.gearEvents.subscribeToGearEvent('MessageEnqueued', (event) => {
+      if (event.data.destination.eq(programId) && event.data.entry.isInit) {
+        messageId = event.data.id.toHex();
+      }
+    }),
+  );
   const resultPromise = Promise.race([
     new Promise((resolve) => {
       unsubs.push(
         api.gearEvents.subscribeToGearEvent('ProgramChanged', (event) => {
-          if (event.data.id.toHex() === programId) {
-            if (event.data.change.isActive) {
-              resolve('success');
-            }
+          if (event.data.id.eq(programId) && event.data.change.isActive) {
+            resolve('success');
           }
         }),
       );
@@ -27,22 +23,18 @@ export const checkInit = (api: GearApi, programId: string) => {
     new Promise((resolve) => {
       unsubs.push(
         api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
-          if (event.data.source.toHex() === programId) {
-            if (event.data.reply.unwrap()[0].toHex() === messageId && event.data.reply.unwrap()[1].toNumber() !== 0) {
-              resolve('failed');
-            }
+          if (
+            event.data.source.eq(programId) &&
+            event.data.reply.unwrap()[0].eq(messageId) &&
+            !event.data.reply.unwrap()[1].eq(0)
+          ) {
+            resolve('failed');
           }
         }),
       );
     }),
   ]);
-  unsubs.push(
-    api.gearEvents.subscribeToGearEvent('MessageEnqueued', (event) => {
-      if (event.data.destination.toHex() === programId && event.data.entry.isInit) {
-        messageId = event.data.id.toHex();
-      }
-    }),
-  );
+
   return async () => {
     const result = await resultPromise;
     for (let unsubPromise of unsubs) {
@@ -56,12 +48,12 @@ export const checkInit = (api: GearApi, programId: string) => {
 export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
   const messages: UserMessageSent[] = [];
   const unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
-    if (event.data.source.toHex() === programId) {
+    if (event.data.source.eq(programId)) {
       messages.push(event);
     }
   });
   return async (messageId: Hex): Promise<UserMessageSentData> => {
-    const message = messages.find(({ data: { reply } }) => reply.isSome && reply.unwrap()[0].toHex() === messageId);
+    const message = messages.find(({ data: { reply } }) => reply.isSome && reply.unwrap()[0].eq(messageId));
     (await unsub)();
     return message?.data;
   };
@@ -102,7 +94,7 @@ export const listenToMessageWaited = (api: GearApi) => {
     messages.push(event.data);
   });
   return (messageId: Hex) => {
-    const message = messages.find(({ id }) => id.toHex() === messageId);
+    const message = messages.find(({ id }) => id.eq(messageId));
     return message;
   };
 };

@@ -24,7 +24,7 @@ describe('DebugMode', () => {
   test('enable debug mode', async () => {
     debug.enable();
     const transactionData = await sendTransaction(debug.enabled, alice, 'DebugMode');
-    expect(transactionData[0]).toBe(true);
+    expect(transactionData[0]).toBeTruthy();
   });
 
   test('get snapshots', async () => {
@@ -56,6 +56,6 @@ describe('DebugMode', () => {
   test('disable debug mode', async () => {
     debug.disable();
     const transactionData = await sendTransaction(debug.enabled, alice, 'DebugMode');
-    expect(transactionData[0]).toBe(false);
+    expect(transactionData[0]).toBeFalsy();
   });
 });
