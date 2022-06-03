@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 export enum CompileStatus {
-  InProcess,
-  Failed,
-  Done,
+  InProgress = 'InProgress',
+  Failed = 'Failed',
+  Done = 'Done',
 }
 
 @Entity()
@@ -17,7 +17,7 @@ export class Wasm {
   @Column({
     type: 'enum',
     enum: CompileStatus,
-    default: CompileStatus.InProcess,
+    default: CompileStatus.InProgress,
   })
   status: CompileStatus;
 

@@ -1,73 +1,50 @@
-import Docker from 'dockerode';
 import { exec } from 'child_process';
-import { readdirSync, readFileSync, rmdir } from 'fs';
+import { readdirSync, readFileSync, rmSync } from 'fs';
 import { isWasm, packZip } from './util';
 import { DBService } from './db';
 import { join } from 'path';
-import Dockerode from 'dockerode';
+import {
+  PATH_TO_BUILD_IMAGE_SCRIPT,
+  PATH_TO_RUN_CONTAINER_SCRIPT,
+} from './configuration';
 
-const PATH_TO_BUILD_IMAGE_SCRIPT = './wasm-build/build-image.sh';
+function findErr(error: string) {
+  return error
+    .slice(error.indexOf('error['), error.indexOf('Failed'))
+    .replace(
+      /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+      '',
+    );
+}
 
 export class CompilerService {
-  docker: Docker;
   dbService: DBService;
 
   constructor(dbService: DBService) {
     this.dbService = dbService;
-    this.docker = new Dockerode();
   }
 
   async buildImage(): Promise<string> {
     return new Promise((resolve, reject) => {
-      exec(PATH_TO_BUILD_IMAGE_SCRIPT, (error, stdout, stderr) => {
-        if (stderr) {
-          console.log(stderr);
-        }
+      exec(PATH_TO_BUILD_IMAGE_SCRIPT, (error) => {
         if (error) {
           console.log(error);
           reject(error);
         }
-        console.log(stdout);
         return resolve('ok');
       });
     });
   }
 
-  async runContainer(pathToFolder: string, id: string) {
+  runContainer(pathToFolder: string) {
     return new Promise((resolve, reject) => {
-      exec('PROJECT_PATH=test ./wasm-build/run-container.sh');
-      this.docker.run(
-        'wasm-build',
-        ['sh', '-c', './build.sh'],
-        process.stdout,
-        {
-          Tty: false,
-          name: id,
-          HostConfig: {
-            Binds: [`${pathToFolder}:/wasm-build/build`],
-          },
-          AttachStderr: true,
-          WorkingDir: '/wasm-build',
-        },
-        {},
-        (err, container) => {
-          if (err) {
-            container.remove();
-            reject(err);
+      exec(
+        `PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`,
+        (error) => {
+          if (error) {
+            reject(error);
           } else {
-            container.logs(
-              { stderr: true, stdout: true },
-              (_, data: Buffer) => {
-                const error = this.findErr(data.toString());
-                if (error) {
-                  container.remove();
-                  reject(error);
-                } else {
-                  container.remove();
-                  resolve(0);
-                }
-              },
-            );
+            resolve('ok');
           }
         },
       );
@@ -76,39 +53,32 @@ export class CompilerService {
 
   async processBuild(pathToFolder: string, id: string) {
     try {
-      await this.runContainer(pathToFolder, id);
+      await this.runContainer(pathToFolder);
     } catch (error) {
-      return this.dbService.update(id, null, error.message);
+      return this.dbService.update(id, null, findErr(error.message));
     }
-    const dirWithWasm = pathToFolder;
 
     const resultFiles = [];
 
-    readdirSync(dirWithWasm)
+    readdirSync(pathToFolder)
       .filter(isWasm)
       .map((fileName) => {
+        console.log(fileName);
         resultFiles.push({
-          content: readFileSync(join(dirWithWasm, fileName)),
+          content: readFileSync(join(pathToFolder, fileName)),
           fileName: fileName,
         });
       });
     if (resultFiles.length === 0) {
-      this.dbService.update(id, null, null);
+      this.dbService.update(id, null, `Compilation failed`);
     } else {
       const file = packZip(resultFiles);
       this.dbService.update(id, file);
     }
-    rmdir(pathToFolder, { recursive: true }, () => {});
-    return 0;
-  }
-
-  private findErr(stdout: string) {
-    const splited: Array<string> = stdout.split('error: ');
-    if (splited.length > 1) {
-      if (splited[0].match('error')) {
-        return splited[0].split('error')[1].split('\n')[0];
-      }
-      return splited[1].split('\n')[0];
-    } else return null;
+    try {
+      rmSync(pathToFolder, { recursive: true });
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

@@ -37,6 +37,12 @@ export class DBService {
 
   async getFile(id: string): Promise<Wasm> {
     const wasm = await this.repo.findOneBy({ id });
-    return this.repo.remove(wasm);
+    if (
+      wasm.status === CompileStatus.Done ||
+      wasm.status === CompileStatus.Failed
+    ) {
+      return this.repo.remove(wasm);
+    }
+    return wasm;
   }
 }

@@ -4,6 +4,7 @@ import { generateId, unpackZip } from './util';
 import { DBService } from './db';
 import { CompilerService } from './compiler';
 import config from './configuration';
+import { resolve } from 'path';
 
 const upload = multer();
 
@@ -30,8 +31,8 @@ export class Server {
         }
         const id = generateId();
         const path = unpackZip(file.buffer, id);
-        this.compiler.processBuild(path, id);
-        return res.json({ id });
+        this.compiler.processBuild(resolve(path), id);
+        return res.json(await this.dbService.newBuild(id));
       },
     );
 
