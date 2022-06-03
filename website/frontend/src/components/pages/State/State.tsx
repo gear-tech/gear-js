@@ -12,7 +12,7 @@ import { useApi } from 'hooks';
 import { getMetadata } from 'services';
 import { getPreformattedText } from 'helpers';
 import { FormPayload } from 'components/common/FormPayload';
-import { getSubmitPayload, getPayloadTypeStructures } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
 import { Spinner } from 'components/common/Spinner/Spinner';
 import { BackButton } from 'components/BackButton/BackButton';
 import BackArrow from 'assets/images/arrow_back_thick.svg';
@@ -67,7 +67,7 @@ const State = () => {
     readState(payload);
   };
 
-  const typeStructures = useMemo(() => getPayloadTypeStructures(types, stateInput), [types, stateInput]);
+  const payloadFormValues = useMemo(() => getPayloadFormValues(types, stateInput), [types, stateInput]);
 
   useEffect(() => {
     getMetadata(programId).then(({ result }) => {
@@ -99,10 +99,10 @@ const State = () => {
               <p className={styles.itemCaption}>Program Id:</p>
               <p className={styles.itemValue}>{programId}</p>
             </div>
-            {typeStructures?.payload && (
+            {payloadFormValues && (
               <div className={styles.item}>
                 <p className={clsx(styles.itemCaption, styles.top)}>Input Parameters:</p>
-                <FormPayload name="payload" typeStructures={typeStructures} />
+                <FormPayload name="payload" values={payloadFormValues} />
               </div>
             )}
             {state && (

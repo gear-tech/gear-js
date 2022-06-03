@@ -15,7 +15,7 @@ import { UploadProgramModel } from 'types/program';
 import { UploadProgram } from 'services/ApiService';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { readFileAsync, calculateGas, checkFileFormat } from 'helpers';
-import { getSubmitPayload, getPayloadTypeStructures } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
 import { MetaSwitch } from 'components/common/MetaSwitch';
 import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
 import { FormInput, FormTextarea, FormNumberFormat } from 'components/common/FormFields';
@@ -127,7 +127,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     );
   };
 
-  const typeStructures = useMemo(() => getPayloadTypeStructures(meta?.types, meta?.init_input), [meta]);
+  const payloadFormValues = useMemo(() => getPayloadFormValues(meta?.types, meta?.init_input), [meta]);
 
   const metaFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
   const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
@@ -169,7 +169,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                   <label htmlFor="programValues.payload" className={clsx(styles.caption, styles.top)}>
                     Initial payload:
                   </label>
-                  <FormPayload name="programValues.payload" typeStructures={typeStructures} />
+                  <FormPayload name="programValues.payload" values={payloadFormValues} />
                 </div>
               </div>
 

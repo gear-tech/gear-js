@@ -13,7 +13,7 @@ import { useAccount, useApi, useAlert } from 'hooks';
 import { sendMessage } from 'services/ApiService';
 import MessageIllustration from 'assets/images/message.svg';
 import { FormPayload } from 'components/common/FormPayload';
-import { getSubmitPayload, getPayloadTypeStructures } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
 import './MessageForm.scss';
 
 type Props = {
@@ -67,7 +67,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
     );
   };
 
-  const typeStructures = useMemo(() => getPayloadTypeStructures(metadata?.types, metadata?.handle_input), [metadata]);
+  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, metadata?.handle_input), [metadata]);
 
   return (
     <Formik initialValues={initialValues.current} validateOnBlur validationSchema={Schema} onSubmit={handleSubmit}>
@@ -99,7 +99,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
                 <label htmlFor="payload" className="message-form__field">
                   Payload:
                 </label>
-                <FormPayload name="payload" typeStructures={typeStructures} />
+                <FormPayload name="payload" values={payloadFormValues} />
               </div>
 
               {!isMeta && (

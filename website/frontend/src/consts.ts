@@ -112,3 +112,8 @@ export const URL_PARAMS = {
 export enum ZIndexes {
   'alert' = 999,
 }
+
+export const FILE_TYPES = {
+  WASM: 'application/wasm',
+  JSON: 'application/json',
+};

@@ -1,11 +1,11 @@
 import { FormikHelpers } from 'formik/dist/types';
 
-import { FormPayloadValues } from 'components/common/FormPayload/types';
+import { PayloadValue } from 'components/common/FormPayload/types';
 
 export type FormValues = {
   value: number;
   gasLimit: number;
-  payload: FormPayloadValues;
+  payload: PayloadValue;
   payloadType: string;
   destination: string;
 };

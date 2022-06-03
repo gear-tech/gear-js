@@ -5,7 +5,7 @@ import isPlainObject from 'lodash.isplainobject';
 import { AlertContainerFactory } from 'context/alert/types';
 import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
-import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
+import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
 import { FormValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
 import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
@@ -28,6 +28,21 @@ export const formatDate = (rawDate: string) => {
 };
 
 export const generateRandomId = () => Math.floor(Math.random() * 1000000000);
+
+export const readTextFileAsync = (file: File): Promise<string | null> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result as string | null;
+
+      resolve(result);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsText(file);
+  });
 
 export function readFileAsync(file: File) {
   return new Promise((resolve, reject) => {
@@ -147,10 +162,12 @@ export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DE
 
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
 
-export const checkFileFormat = (file: File) => {
-  const fileExt = file.name.split('.').pop()?.toLowerCase();
+export const checkFileFormat = (file: File, types: string | string[] = FILE_TYPES.WASM) => {
+  if (Array.isArray(types)) {
+    return types.some((type) => type === file.type);
+  }
 
-  return fileExt === 'wasm';
+  return types === file.type;
 };
 
 export const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
