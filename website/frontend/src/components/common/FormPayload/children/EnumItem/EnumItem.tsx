@@ -4,7 +4,7 @@ import { Select } from '@gear-js/ui';
 
 import styles from '../../FormPayload.module.scss';
 import { PayloadItemProps } from '../../types';
-import { getItemLabel, getNextLevelName, getPayloadFormValues } from '../../helpers';
+import { getItemLabel, getNextLevelName, getPayloadValue } from '../../helpers';
 
 import { useChangeEffect } from 'hooks';
 import { Fieldset } from 'components/common/Fieldset';
@@ -24,7 +24,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
 
   useChangeEffect(() => {
     //@ts-ignore
-    const parsedStructure = getPayloadFormValues(value[selected]);
+    const parsedStructure = getPayloadValue(value[selected]);
 
     helpers.setValue({ [selected]: parsedStructure }, false);
   }, [selected]);
