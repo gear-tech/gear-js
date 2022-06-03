@@ -1,7 +1,8 @@
-import { useAccount, useMarketNft, useNft } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { NFTDetails } from 'types';
+import { IPFS_GATEWAY_ADDRESS } from 'consts';
+import { useAccount, useMarketNft, useNft } from 'hooks';
 import AuctionListing from './auction-listing';
 import OwnerListing from './owner-listing';
 import SaleListing from './sale-listing';
@@ -30,7 +31,9 @@ function Listing() {
     const { reference } = nft || {};
 
     if (reference) {
-      fetch(reference)
+      const path = `${IPFS_GATEWAY_ADDRESS}/${reference}`;
+
+      fetch(path)
         .then((response) => response.json())
         .then(setDetails);
     }

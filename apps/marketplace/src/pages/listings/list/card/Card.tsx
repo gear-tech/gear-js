@@ -1,5 +1,6 @@
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
+import { IPFS_GATEWAY_ADDRESS } from 'consts';
 import { useNft } from 'hooks';
 import { Link } from 'react-router-dom';
 import styles from './Card.module.scss';
@@ -22,7 +23,7 @@ function Card({ id, price, isAuction, isVisible }: Props) {
 
   return nft ? (
     <Link to={to} className={className}>
-      <img src={nft.media} alt={nft.name} className={styles.image} />
+      <img src={`${IPFS_GATEWAY_ADDRESS}/${nft.media}`} alt={nft.name} className={styles.image} />
       <div>
         <div className={styles.body}>
           <div>
