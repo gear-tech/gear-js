@@ -26,12 +26,22 @@
   flex-direction: column;
 }
 
+.textarea {
+  & > span {
+    padding-top: 0;
+  }
+}
+
 .select{
   align-items: flex-start;
 }
 
 .field {
   align-items: stretch;
+
+  & > span {
+    margin-right: 0;
+  }
 }
 
 .fileInput {
