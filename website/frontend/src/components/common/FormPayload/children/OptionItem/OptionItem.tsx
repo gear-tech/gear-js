@@ -5,7 +5,7 @@ import { Select } from '@gear-js/ui';
 import styles from '../../FormPayload.module.scss';
 import { OPTION_OPTIONS, DEFAULT_VALUE } from './const';
 import { PayloadItemProps } from '../../types';
-import { getItemLabel, getPayloadFormValues } from '../../helpers';
+import { getItemLabel, getPayloadValue } from '../../helpers';
 
 import { useChangeEffect } from 'hooks';
 import { Fieldset } from 'components/common/Fieldset';
@@ -17,8 +17,8 @@ const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
   const [selected, setSelected] = useState(DEFAULT_VALUE);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => setSelected(event.target.value);
-  //@ts-ignore
-  const parsedPayload = useMemo(() => getPayloadFormValues(value), [value]);
+
+  const parsedPayload = useMemo(() => getPayloadValue(value as any), [value]);
 
   const isNone = selected === DEFAULT_VALUE;
   const itemLabel = getItemLabel(name, title);
