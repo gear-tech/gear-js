@@ -53,7 +53,8 @@ jobs:
             REACT_APP_IPFS_ADDRESS=${{ secrets.REACT_APP_IPFS_ADDRESS }}
             REACT_APP_NFT_CONTRACT_ADDRESS=${{ secrets.REACT_APP_NFT_CONTRACT_ADDRESS }}
             REACT_APP_MARKETPLACE_CONTRACT_ADDRESS=${{ secrets.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS }}
-        
+            REACT_APP_IPFS_GATEWAY_ADDRESS=${{ secrets.REACT_APP_IPFS_GATEWAY_ADDRESS }}
+      
        
   deploy-to-k8s:
     needs: [ build-and-push-marketplace-image, wait-previous-run]
