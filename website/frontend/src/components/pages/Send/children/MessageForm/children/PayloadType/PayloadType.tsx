@@ -25,8 +25,14 @@ const PayloadType = () => {
 
   return (
     <div className={styles.switchableFieldWrapper}>
-      <Checkbox type="switch" label="Enter type" checked={isChecked} className={styles.field} onChange={toggleSwitch} />
-      <Input {...field} id={field.name} className={styles.field} disabled={!isChecked} />
+      <Checkbox
+        type="switch"
+        label="Enter type"
+        checked={isChecked}
+        className={styles.checkbox}
+        onChange={toggleSwitch}
+      />
+      <Input {...field} id={field.name} disabled={!isChecked} />
     </div>
   );
 };

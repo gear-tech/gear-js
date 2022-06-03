@@ -1,0 +1,39 @@
+@use '@gear-js/ui/variables' as *;
+
+.formPayload {
+  width: 100%;
+}
+
+.viewCheckbox {
+  margin-bottom: 16px;
+}
+
+.error {
+  position: absolute;
+  color: $errorColor;
+  font-size: $fontSizeMedium;
+  bottom: -20px;
+}
+
+.fieldset {
+  & > *:not(:last-child):not(legend) {
+    margin-bottom: 16px;
+  }
+}
+
+.field,
+.select {
+  flex-direction: column;
+}
+
+.select{
+  align-items: flex-start;
+}
+
+.field {
+  align-items: stretch;
+}
+
+.fileInput {
+  margin-top: 25px;
+}

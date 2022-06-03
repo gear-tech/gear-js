@@ -19,14 +19,12 @@ function Create() {
 
   const [error, setError] = useState('');
 
-  const getIpfsPath = (cid: CID) => `https://ipfs.io/ipfs/${cid.toString()}`;
-
   const getMintPayload = (jsonCid: CID, imgCid: CID) => {
     const tokenMetadata = {
       name: trimmedName,
       description: trimmedDescription,
-      media: getIpfsPath(imgCid),
-      reference: getIpfsPath(jsonCid),
+      media: imgCid.toString(),
+      reference: jsonCid.toString(),
     };
 
     return { Mint: { tokenMetadata } };

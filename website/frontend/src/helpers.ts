@@ -1,14 +1,16 @@
 import { Hex } from '@gear-js/api';
 import { Metadata } from '@polkadot/types';
-import { AlertContainerFactory } from "context/alert/types"
+import isString from 'lodash.isstring';
+import isPlainObject from 'lodash.isplainobject';
+import { AlertContainerFactory } from 'context/alert/types';
 import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'api/responses';
-import { DEVELOPMENT_CHAIN, LOCAL_STORAGE } from 'consts';
+import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
 import { NODE_ADDRESS_REGEX } from 'regexes';
-import { InitialValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
+import { FormValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
 import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
-import { SetFieldValue } from 'types/common';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
+import { getSubmitPayload } from 'components/common/FormPayload/helpers';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
@@ -26,6 +28,21 @@ export const formatDate = (rawDate: string) => {
 };
 
 export const generateRandomId = () => Math.floor(Math.random() * 1000000000);
+
+export const readTextFileAsync = (file: File): Promise<string | null> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result as string | null;
+
+      resolve(result);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsText(file);
+  });
 
 export function readFileAsync(file: File) {
   return new Promise((resolve, reject) => {
@@ -145,10 +162,12 @@ export const isDevChain = () => localStorage.getItem(LOCAL_STORAGE.CHAIN) === DE
 
 export const isNodeAddressValid = (address: string) => NODE_ADDRESS_REGEX.test(address);
 
-export const checkFileFormat = (file: File) => {
-  const fileExt = file.name.split('.').pop()?.toLowerCase();
+export const checkFileFormat = (file: File, types: string | string[] = FILE_TYPES.WASM) => {
+  if (Array.isArray(types)) {
+    return types.some((type) => type === file.type);
+  }
 
-  return fileExt === 'wasm';
+  return types === file.type;
 };
 
 export const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
@@ -156,28 +175,24 @@ export const getPreformattedText = (data: unknown) => JSON.stringify(data, null,
 export const calculateGas = async (
   method: string,
   api: any,
-  isManualPayload: boolean,
-  values: UploadInitialValues | SendMessageInitialValues,
-  setFieldValue: SetFieldValue,
+  values: UploadInitialValues['programValues'] | SendMessageInitialValues,
   alert: AlertContainerFactory,
   meta: any,
   code?: Uint8Array | null,
   addressId?: String | null,
   replyCodeError?: string
-) => {
-  const payload = isManualPayload ? values.payload : values.__root;
-
-  if (isManualPayload && payload === '') {
-    alert.error(`Error: payload can't be empty`);
-    return;
-  }
-
-  if (!isManualPayload && payload && Object.keys(payload).length === 0) {
-    alert.error(`Error: form can't be empty`);
-    return;
-  }
+): Promise<number> => {
+  const payload = getSubmitPayload(values.payload);
 
   try {
+    if (isString(payload) && payload === '') {
+      throw new Error("payload can't be empty");
+    }
+
+    if (isPlainObject(payload) && Object.keys(payload as object).length === 0) {
+      throw new Error(`form can't be empty`);
+    }
+
     const { value } = values;
     const metaOrTypeOfPayload: Metadata | string = meta || 'String';
 
@@ -215,14 +230,17 @@ export const calculateGas = async (
     }
 
     alert.info(`Estimated gas ${estimatedGas.toHuman()}`);
-    setFieldValue('gasLimit', estimatedGas.toNumber());
+
+    return estimatedGas.toNumber();
   } catch (error) {
     alert.error(`${error}`);
+
+    return Promise.reject(error);
   }
 };
 
 export const isHex = (value: unknown) => {
-  const isString = typeof value === 'string';
   const hexRegex = /^0x[\da-fA-F]+/;
-  return isString && hexRegex.test(value);
+
+  return isString(value) && hexRegex.test(value);
 };
