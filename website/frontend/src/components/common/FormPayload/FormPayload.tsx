@@ -1,58 +1,126 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { useField } from 'formik';
-import { Checkbox } from '@gear-js/ui';
+import { Checkbox, FileInput, Textarea } from '@gear-js/ui';
 
 import styles from './FormPayload.module.scss';
-import { FormPayloadValues, PayloadTypeStructures } from './types';
-import { getPayloadFormValues } from './helpers';
+import { FormPayloadValues, PayloadValue } from './types';
 import { PayloadStructure } from './PayloadStructure';
 
-import { getPreformattedText } from 'helpers';
-import { FormTextarea } from 'components/common/FormFields/FormTextarea';
+import { useAlert, useChangeEffect } from 'hooks';
+import { FILE_TYPES } from 'consts';
+import { checkFileFormat, readTextFileAsync } from 'helpers';
 
 type Props = {
   name: string;
-  typeStructures?: PayloadTypeStructures;
+  values?: FormPayloadValues;
 };
 
 const FormPayload = (props: Props) => {
-  const { name, typeStructures } = props;
+  const { name, values } = props;
 
-  const payload = typeStructures?.payload;
-  const manualPayload = typeStructures?.manualPayload;
+  const alert = useAlert();
 
-  const [, , helpers] = useField<FormPayloadValues>(name);
+  const [field, meta, { setValue }] = useField<PayloadValue>(name);
 
-  const [isManualView, setIsManualView] = useState(!payload);
+  const jsonManualPayload = useRef<string>();
+
+  const [isManualView, setIsManualView] = useState(!values);
+  const [manualPayloadFile, setManualPayloadFile] = useState<File>();
 
   const handleViewChange = () => setIsManualView((prevState) => !prevState);
 
-  const parsedPayload = useMemo(() => (payload ? getPayloadFormValues(payload) : ''), [payload]);
+  const resetFileData = () => {
+    setManualPayloadFile(void 0);
+    jsonManualPayload.current = void 0;
+  };
 
-  const preformattedManual = useMemo(() => (manualPayload ? getPreformattedText(manualPayload) : ''), [manualPayload]);
+  const dropManualPayloadFile = () => {
+    resetFileData();
+
+    if (values) {
+      setValue(values.manualPayload, false);
+    }
+  };
+
+  const handleUploadManualPayload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return dropManualPayloadFile();
+    }
+
+    try {
+      if (!checkFileFormat(file, FILE_TYPES.JSON)) {
+        throw new Error('Wrong file format');
+      }
+
+      setManualPayloadFile(file);
+
+      const fileText = (await readTextFileAsync(file)) ?? '';
+
+      setValue(fileText);
+      jsonManualPayload.current = fileText;
+    } catch (error: unknown) {
+      alert.error((error as Error).message);
+    }
+  };
 
   useEffect(() => {
-    if (!typeStructures) {
+    if (!values) {
       return;
     }
 
-    helpers.setValue(isManualView ? preformattedManual : parsedPayload, false);
+    const payloadValue = isManualView ? jsonManualPayload.current ?? values.manualPayload : values.payload;
+
+    setValue(payloadValue, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [typeStructures, isManualView]);
+  }, [isManualView]);
+
+  useChangeEffect(() => {
+    if (!values && manualPayloadFile) {
+      resetFileData();
+    }
+
+    setIsManualView(!values);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values]);
 
   return (
-    <div className={styles.formPayload}>
-      {payload && (
-        <div className={styles.manualCheckboxWrapper}>
-          <Checkbox type="switch" label="Manual input" checked={isManualView} onChange={handleViewChange} />
-        </div>
-      )}
-      {isManualView || !payload ? (
-        <FormTextarea id={name} rows={15} name={name} placeholder="// Enter your payload here" />
-      ) : (
-        <PayloadStructure levelName={name} typeStructure={payload} />
-      )}
-    </div>
+    <>
+      <div className={styles.formPayload}>
+        {values && (
+          <Checkbox
+            type="switch"
+            label="Manual input"
+            checked={isManualView}
+            className={styles.viewCheckbox}
+            onChange={handleViewChange}
+          />
+        )}
+        {!isManualView && values ? (
+          <PayloadStructure levelName={name} typeStructure={values.typeStructure} />
+        ) : (
+          <>
+            <Textarea
+              {...field}
+              id={name}
+              rows={15}
+              value={field.value as string}
+              placeholder="// Enter your payload here"
+            />
+            {values && (
+              <FileInput
+                value={manualPayloadFile}
+                accept={FILE_TYPES.JSON}
+                className={styles.fileInput}
+                onChange={handleUploadManualPayload}
+              />
+            )}
+          </>
+        )}
+      </div>
+      {meta.error && <div className={styles.error}>{meta.error}</div>}
+    </>
   );
 };
 

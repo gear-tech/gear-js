@@ -72,6 +72,7 @@
 
 .fieldWrapper {
   display: flex;
+  position: relative;
   margin-bottom: 25px;
 
   @include md {

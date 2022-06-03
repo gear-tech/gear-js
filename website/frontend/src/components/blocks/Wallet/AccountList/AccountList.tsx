@@ -19,7 +19,7 @@ export const AccountList: FC<Props> = ({ list, toggleAccount }: Props) => {
           type="button"
           className={clsx(
             'account-list__item',
-            localStorage.getItem(LOCAL_STORAGE.SAVED_ACCOUNT) === account.address && 'active'
+            localStorage.getItem(LOCAL_STORAGE.ACCOUNT) === account.address && 'active'
           )}
           onClick={() => {
             toggleAccount(account);

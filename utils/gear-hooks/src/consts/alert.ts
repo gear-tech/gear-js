@@ -3,7 +3,7 @@ import { AlertType, DefaultTemplateOptions } from 'types';
 const DEFAULT_OPTIONS = {
   style: { marginBottom: '10px' },
   isClosed: true,
-  timeout: 10000,
+  timeout: 5000,
 };
 
 const DEFAULT_INFO_OPTIONS: DefaultTemplateOptions = {

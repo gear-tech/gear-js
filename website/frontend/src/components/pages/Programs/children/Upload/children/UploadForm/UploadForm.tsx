@@ -15,7 +15,7 @@ import { UploadProgramModel } from 'types/program';
 import { UploadProgram } from 'services/ApiService';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { readFileAsync, calculateGas, checkFileFormat } from 'helpers';
-import { getSubmitPayload, getPayloadTypeStructures } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
 import { MetaSwitch } from 'components/common/MetaSwitch';
 import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
 import { FormInput, FormTextarea, FormNumberFormat } from 'components/common/FormFields';
@@ -30,7 +30,7 @@ type Props = {
 export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   const { api } = useApi();
   const alert = useAlert();
-  const { account: currentAccount } = useAccount();
+  const { account } = useAccount();
 
   const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);
@@ -93,7 +93,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
   };
 
   const handleSubmitForm = (values: FormValues) => {
-    if (!currentAccount) {
+    if (!account) {
       alert.error(`Wallet not connected`);
       return;
     }
@@ -113,7 +113,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       programOptions.meta = isMetaFromFile ? meta : values.metaValues;
     }
 
-    UploadProgram(api, currentAccount, droppedFile, programOptions, metaFile, alert, handleResetForm).catch(() => {
+    UploadProgram(api, account, droppedFile, programOptions, metaFile, alert, handleResetForm).catch(() => {
       alert.error(`Invalid JSON format`);
     });
   };
@@ -127,9 +127,10 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     );
   };
 
-  const typeStructures = useMemo(() => getPayloadTypeStructures(meta?.types, meta?.init_input), [meta]);
+  const payloadFormValues = useMemo(() => getPayloadFormValues(meta?.types, meta?.init_input), [meta]);
 
   const metaFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
+  const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
 
   return (
     <Box className={styles.uploadFormWrapper}>
@@ -168,7 +169,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                   <label htmlFor="programValues.payload" className={clsx(styles.caption, styles.top)}>
                     Initial payload:
                   </label>
-                  <FormPayload name="programValues.payload" typeStructures={typeStructures} />
+                  <FormPayload name="programValues.payload" values={payloadFormValues} />
                 </div>
               </div>
 
@@ -202,7 +203,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
             </div>
 
             <div className={styles.buttons}>
-              <Button type="submit" text="Upload program" />
+              <Button type="submit" text="Upload program" disabled={isUploadAvailable} />
               <Button
                 text="Calculate Gas"
                 onClick={() => {

@@ -1,22 +1,25 @@
-import * as yup from 'yup';
+import { string, number, object } from 'yup';
 
-export const Schema = yup.object().shape({
-  metaValues: yup.object().shape({
-    init_input: yup.string(),
-    init_output: yup.string(),
-    async_init_input: yup.string(),
-    async_init_output: yup.string(),
-    handle_input: yup.string(),
-    handle_output: yup.string(),
-    async_handle_input: yup.string(),
-    async_handle_output: yup.string(),
-    meta_state_input: yup.string(),
-    meta_state_output: yup.string(),
-    types: yup.string(),
+import { payloadSchema } from 'components/common/FormPayload/Schema';
+
+export const Schema = object().shape({
+  metaValues: object().shape({
+    init_input: string(),
+    init_output: string(),
+    async_init_input: string(),
+    async_init_output: string(),
+    handle_input: string(),
+    handle_output: string(),
+    async_handle_input: string(),
+    async_handle_output: string(),
+    meta_state_input: string(),
+    meta_state_output: string(),
+    types: string(),
   }),
-  programValues: yup.object().shape({
-    programName: yup.string().max(50, 'Name value should be less than 50'),
-    gasLimit: yup.number().min(0, 'Initial value should be more than 0'),
-    value: yup.number().required('This field is required').min(0, 'Initial value should be more or equal than 0'),
+  programValues: object().shape({
+    value: number().required('This field is required').min(0, 'Initial value should be more or equal than 0'),
+    payload: payloadSchema,
+    gasLimit: number().min(0, 'Initial value should be more than 0'),
+    programName: string().max(50, 'Name value should be less than 50'),
   }),
 });
