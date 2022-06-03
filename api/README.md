@@ -116,7 +116,6 @@ try {
 
 try {
   await gearApi.program.signAndSend(keyring, (event) => {
-    // or submitted.signAndSend(...)
     console.log(event.toHuman());
   });
 } catch (error) {
@@ -294,7 +293,7 @@ console.log(waitlist);
 
 ### Subscribe to events
 
-Subscribe to all events
+#### Subscribe to all events
 
 ```javascript
 const unsub = await gearApi.query.system.events((events) => {
@@ -304,12 +303,12 @@ const unsub = await gearApi.query.system.events((events) => {
 unsub();
 ```
 
-Check what the event is
+#### Check what the event is
 
 ```javascript
 gearApi.query.system.events((events) => {
   events
-    .filter(({ event }) => gearApi.events.gear.InitMessageEnqueued.is(event))
+    .filter(({ event }) => gearApi.events.gear.MessageEnqueued.is(event))
     .forEach(({ event: { data } }) => {
       console.log(data.toHuman());
     });
@@ -322,13 +321,16 @@ gearApi.query.system.events((events) => {
 });
 ```
 
-Subscribe to Log events
+#### Subscribe to specific gear events
+
+- Subscribe to messages from program
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeLogEvents(
+const unsub = api.gearEvents.subscribeToGearEvent(
+  'UserMessageSent',
   ({ data: { id, source, destination, payload, value, reply } }) => {
     console.log(`
-  logId: ${id.toHex()}
+  messageId: ${id.toHex()}
   source: ${source.toHex()}
   payload: ${payload.toHuman()}
   `);
@@ -338,13 +340,16 @@ const unsub = await gearApi.gearEvents.subscribeLogEvents(
 unsub();
 ```
 
-Subscribe to Program events
+- Subscribe to messages to program
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeProgramEvents(({ method, data: { info, reason } }) => {
-  console.log(method);
-  console.log(`ProgramId: ${info.programId}`);
-  reason && console.log(`Reason: ${reason.isDispatch ? reason.asDispatch.toHuman() : 'unknown'}`);
+const unsub = api.gearEvents.subscribeToGearEvent('MessageEnqueued', ({ data: { id, source, destination, entry } }) => {
+  console.log({
+    messageId: id.toHex(),
+    programId: destination.toHex(),
+    userId: source.toHex(),
+    entry: entry.isInit ? entry.asInit : entry.isHandle ? entry.asHandle : entry.asReply,
+  });
 });
 // Unsubscribe
 unsub();
@@ -353,7 +358,7 @@ unsub();
 Subscribe to Transfer events
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeTransferEvents(({ data: { from, to, value } }) => {
+const unsub = await gearApi.gearEvents.subscribeToTransferEvents(({ data: { from, to, value } }) => {
   console.log(`
     Transfer balance:
     from: ${from.toHex()}

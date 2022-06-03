@@ -5,7 +5,6 @@ import {
   Hex,
   IGearEvent,
   MessageWaitedData,
-  ProgramId,
   UserMessageSent,
   UserMessageSentData,
 } from '../src';
@@ -58,7 +57,7 @@ export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
   const messages: UserMessageSent[] = [];
   const unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
     if (event.data.source.toHex() === programId) {
-      messages.push(createEventClass('UserMessageSent', event));
+      messages.push(event);
     }
   });
   return async (messageId: Hex): Promise<UserMessageSentData> => {
