@@ -1,12 +1,14 @@
 import { FormValues } from './types';
 
-import { TypeStructure } from 'components/common/FormPayload/types';
+import { getPreformattedText } from 'helpers';
+import { getPayloadValue } from 'components/common/FormPayload/helpers';
+import { TypeStructure, FormPayloadValues } from 'components/common/FormPayload/types';
 
 export const INIT_FORM_VALUES: FormValues = {
   payload: '',
 };
 
-export const INPUT_PAYLOAD: TypeStructure = {
+export const INPUT_TYPE_STRUCTURE: TypeStructure = {
   type: 'Enum',
   name: 'Action',
   //@ts-ignore
@@ -208,7 +210,18 @@ export const INPUT_MANUAL_PAYLOAD = {
   },
 };
 
-export const INPUT_TYPE_STRUCTURES = {
-  payload: INPUT_PAYLOAD,
-  manualPayload: INPUT_MANUAL_PAYLOAD,
+export const INPUT_FILE_CONTENT = JSON.stringify({
+  name: 'NAME',
+  symbol: 'S',
+  baseUri: 'URL',
+  royalties: {
+    accounts: ['10', '200'],
+    percent: '200',
+  },
+});
+
+export const INPUT_PAYLOAD_VALUES: FormPayloadValues = {
+  payload: getPayloadValue(INPUT_TYPE_STRUCTURE),
+  manualPayload: getPreformattedText(INPUT_MANUAL_PAYLOAD),
+  typeStructure: INPUT_TYPE_STRUCTURE,
 };

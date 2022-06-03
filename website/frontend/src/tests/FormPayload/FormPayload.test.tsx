@@ -1,25 +1,29 @@
 import { Formik, Form } from 'formik';
-import { render, screen, within, cleanup, fireEvent, act, waitFor } from '@testing-library/react';
+import { render, screen, within, fireEvent, act, waitFor, cleanup } from '@testing-library/react';
 
 import { FormValues, TestFormProps } from './types';
-import { INPUT_TYPE_STRUCTURES, INPUT_MANUAL_PAYLOAD, INIT_FORM_VALUES } from './inputData';
+import { INPUT_PAYLOAD_VALUES, INPUT_MANUAL_PAYLOAD, INIT_FORM_VALUES, INPUT_FILE_CONTENT } from './inputData';
 
+import { FILE_TYPES } from 'consts';
 import { getPreformattedText } from 'helpers';
+import { AlertProvider } from 'context/alert';
 import { FormPayload } from 'components/common/FormPayload';
 
-const TestFromPayload = ({ typeStructures, onSubmit }: TestFormProps) => (
-  <Formik initialValues={INIT_FORM_VALUES} onSubmit={onSubmit}>
-    <Form data-testid="test-form">
-      <FormPayload name="payload" typeStructures={typeStructures} />
-    </Form>
-  </Formik>
+const TestFromPayload = ({ values, onSubmit }: TestFormProps) => (
+  <AlertProvider>
+    <Formik initialValues={INIT_FORM_VALUES} onSubmit={onSubmit}>
+      <Form data-testid="test-form">
+        <FormPayload name="payload" values={values} />
+      </Form>
+    </Formik>
+  </AlertProvider>
 );
 
 describe('from payload tests', () => {
   const submitCallbackMock = jest.fn();
 
   const submit = () => {
-    submitCallbackMock.mockClear();
+    submitCallbackMock.mockReset();
     fireEvent.submit(screen.getByTestId('test-form'));
   };
 
@@ -28,11 +32,16 @@ describe('from payload tests', () => {
       fireEvent.change(element, { target: { value } });
     });
 
+  const toggleView = () =>
+    act(() => {
+      fireEvent.click(screen.getByRole('checkbox'));
+    });
+
   const verifyValues = (formValues: FormValues) => waitFor(() => expect(submitCallbackMock).toBeCalledWith(formValues));
 
   afterEach(() => {
     cleanup();
-    jest.restoreAllMocks();
+    jest.resetAllMocks();
   });
 
   it('should displayed manual textarea', () => {
@@ -43,17 +52,109 @@ describe('from payload tests', () => {
     expect(screen.queryByLabelText('Manual input')).toBeNull();
     expect(manualTextarea).toBeInTheDocument();
     expect(manualTextarea).toHaveTextContent('');
+    expect(screen.queryByText('Select file')).toBeNull();
 
-    rerender(<TestFromPayload typeStructures={INPUT_TYPE_STRUCTURES} onSubmit={jest.fn()} />);
+    rerender(<TestFromPayload values={INPUT_PAYLOAD_VALUES} onSubmit={jest.fn()} />);
 
-    expect(manualTextarea).toBeInTheDocument();
-    expect(screen.getByRole('checkbox')).toBeChecked();
     expect(screen.getByLabelText('Manual input')).toBeInTheDocument();
-    expect(JSON.parse(manualTextarea.textContent as string)).toEqual(INPUT_MANUAL_PAYLOAD);
+
+    expect(manualTextarea).not.toBeInTheDocument();
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
+    expect(screen.queryByText('Select file')).toBeNull();
+
+    expect(screen.getAllByRole('group')).toHaveLength(2);
+    expect(screen.getAllByRole('combobox')).toHaveLength(2);
+
+    toggleView();
+
+    expect(screen.getByText('Select file')).toBeInTheDocument();
+  });
+
+  it('should submit correct manual', async () => {
+    render(
+      <TestFromPayload
+        values={INPUT_PAYLOAD_VALUES}
+        onSubmit={jest.fn((values: FormValues) => submitCallbackMock(values))}
+      />
+    );
+
+    toggleView();
+
+    const manualTextbox = screen.getByRole('textbox');
+
+    expect(manualTextbox).toHaveValue(getPreformattedText(INPUT_MANUAL_PAYLOAD));
+
+    const manualText = `
+    {
+      "Test1": {
+          "firstName": "first",
+          "secondName": "second",
+          "age": null,
+      }
+    }`;
+
+    changeFieldValue(manualTextbox, manualText);
+
+    expect(manualTextbox).toHaveValue(manualText);
+
+    submit();
+    await verifyValues({ payload: manualText });
+  });
+
+  it('should set form value from json', async () => {
+    const { container } = render(
+      <TestFromPayload
+        values={INPUT_PAYLOAD_VALUES}
+        onSubmit={jest.fn((values: FormValues) => submitCallbackMock(values))}
+      />
+    );
+
+    toggleView();
+
+    const textbox = screen.getByRole('textbox');
+
+    const fileInput = container.getElementsByTagName('input')[1];
+
+    expect(fileInput).toBeInTheDocument();
+    expect(screen.getByText('Select file')).toBeInTheDocument();
+
+    //upload file
+
+    const testFile = new File([INPUT_FILE_CONTENT], 'test.json', { type: FILE_TYPES.JSON });
+
+    act(() => {
+      fireEvent.change(fileInput, {
+        target: { files: [testFile] },
+      });
+    });
+
+    await waitFor(() => expect(screen.queryByText('Select file')).toBeNull());
+
+    expect(screen.getByText('test.json')).toBeInTheDocument();
+
+    await waitFor(() => expect(textbox).toHaveValue(INPUT_FILE_CONTENT));
+
+    submit();
+    await verifyValues({ payload: INPUT_FILE_CONTENT });
+
+    //drop file
+
+    act(() => {
+      fireEvent.change(fileInput, {
+        target: { files: null },
+      });
+    });
+
+    await waitFor(() => expect(screen.getByText('Select file')).toBeInTheDocument());
+
+    await waitFor(() => expect(textbox).toHaveValue(getPreformattedText(INPUT_MANUAL_PAYLOAD)));
+
+    submit();
+    await verifyValues({ payload: getPreformattedText(INPUT_MANUAL_PAYLOAD) });
   });
 
   it('should displayed payload', () => {
-    render(<TestFromPayload typeStructures={INPUT_TYPE_STRUCTURES} onSubmit={jest.fn()} />);
+    render(<TestFromPayload values={INPUT_PAYLOAD_VALUES} onSubmit={jest.fn()} />);
 
     let fieldsets = screen.getAllByRole('group');
     let selectors: HTMLSelectElement[] = screen.getAllByRole('combobox');
@@ -219,7 +320,7 @@ describe('from payload tests', () => {
   it('should submit correct payload', async () => {
     render(
       <TestFromPayload
-        typeStructures={INPUT_TYPE_STRUCTURES}
+        values={INPUT_PAYLOAD_VALUES}
         onSubmit={jest.fn((values: FormValues) => submitCallbackMock(values))}
       />
     );
@@ -395,38 +496,5 @@ describe('from payload tests', () => {
 
     submit();
     await verifyValues({ payload: { Test8: '[ 1 ]' } });
-  });
-
-  it('should submit correct manual', async () => {
-    render(
-      <TestFromPayload
-        typeStructures={INPUT_TYPE_STRUCTURES}
-        onSubmit={jest.fn((values: FormValues) => submitCallbackMock(values))}
-      />
-    );
-
-    act(() => {
-      fireEvent.click(screen.getByRole('checkbox'));
-    });
-
-    const manualTextbox = screen.getByRole('textbox');
-
-    expect(manualTextbox).toHaveValue(getPreformattedText(INPUT_MANUAL_PAYLOAD));
-
-    const manualText = `
-    {
-      "Test1": {
-          "firstName": "first",
-          "secondName": "second",
-          "age": null,
-      }
-    }`;
-
-    changeFieldValue(manualTextbox, manualText);
-
-    expect(manualTextbox).toHaveValue(manualText);
-
-    submit();
-    await verifyValues({ payload: manualText });
   });
 });

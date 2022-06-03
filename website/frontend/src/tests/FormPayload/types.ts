@@ -1,10 +1,10 @@
-import { FormPayloadValues, PayloadTypeStructures } from 'components/common/FormPayload/types';
+import { FormPayloadValues, PayloadValue } from 'components/common/FormPayload/types';
 
 export type FormValues = {
-  payload: FormPayloadValues;
+  payload: PayloadValue;
 };
 
 export type TestFormProps = {
-  typeStructures?: PayloadTypeStructures;
+  values?: FormPayloadValues;
   onSubmit: (values: FormValues) => void;
 };
