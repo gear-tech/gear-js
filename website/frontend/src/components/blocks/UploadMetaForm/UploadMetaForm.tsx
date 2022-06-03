@@ -10,8 +10,7 @@ import { META_FIELDS, INITIAL_VALUES } from './model/const';
 import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
 import { MetaSwitch } from 'components/common/MetaSwitch';
 import { MetaFile } from 'components/common/MetaFile';
-import { FormInput } from 'components/common/FormFields/FormInput';
-import { FormTextarea } from 'components/common/FormFields/FormTextarea';
+import { FormInput, FormTextarea } from 'components/common/Form';
 
 import { readFileAsync } from 'helpers';
 import { useAccount, useAlert } from 'hooks';
@@ -114,7 +113,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
         return (
           <Form className={styles.uploadMetaForm}>
             <MetaSwitch isMetaFromFile={isFileUpload} onChange={setFileUpload} className={styles.formField} />
-            <FormInput name="name" label="Program name:" className={styles.formField} />
+            <FormInput name="name" label="Program name" className={styles.formField} />
             {fields?.map((field) => {
               const MetaField = field === 'types' ? FormTextarea : FormInput;
 
@@ -122,7 +121,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
                 <MetaField
                   key={field}
                   name={field}
-                  label={`${field}:`}
+                  label={field}
                   disabled={isFileUpload}
                   className={styles.formField}
                 />
