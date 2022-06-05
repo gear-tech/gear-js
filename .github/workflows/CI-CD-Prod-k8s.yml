@@ -17,13 +17,10 @@ env:
 
 
 jobs:
-  on-success:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
 
   wait-previous-run:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: mktcode/consecutive-workflow-action@v1 # please read security note
         with:
@@ -57,4 +54,3 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
-         
