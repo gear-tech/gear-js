@@ -196,7 +196,7 @@ jobs:
         with:
           args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
           
- deploy-to-k8s-prod-namespace:
+  deploy-to-k8s-prod-namespace:
     needs:
       [ check-k8s-deployments, wait-previous-run]
     runs-on: ubuntu-latest
