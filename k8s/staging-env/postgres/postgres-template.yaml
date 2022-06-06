@@ -55,7 +55,7 @@ metadata:
   name: pg-secrets
 type: Opaque
 data:
-  db: #put here base64 db name
+  db: #put here encode base64 db name
   user: #put here username
   password: #put here password
 
