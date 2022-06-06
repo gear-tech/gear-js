@@ -59,4 +59,3 @@ spec:
     name: api-gateway-testenv
   selector:
     app: api-gateway-testenv
-
