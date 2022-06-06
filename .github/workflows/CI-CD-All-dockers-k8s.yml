@@ -358,7 +358,7 @@ jobs:
       [
         build-frontend-image-prod,
         build-data-storage-image-prod,
-        build--api-gateway-image-prod,
+        build-api-gateway-image-prod,
         build-event-listeners-image-prod,
         build-test-balance-image-prod
       ]
