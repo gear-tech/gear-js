@@ -189,7 +189,7 @@ jobs:
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s
+          args: get deployment -o name -n dev-1 | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s
 
   build-k8s-prod-images:
     needs:
@@ -210,7 +210,7 @@ jobs:
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n prod-gear-js --timeout=120s
+          args: get deployment -o name -n prod-gear-js | xargs -n1 -t kubectl rollout status -n prod-gear-js --timeout=120s
 
   build-frontend-image-prod:
     runs-on: ubuntu-latest
@@ -381,4 +381,4 @@ jobs:
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n prod-gear-js --timeout=120s
+          args: get deployment -o name -n prod-gear-js | xargs -n1 -t kubectl rollout status -n prod-gear-js --timeout=120s
