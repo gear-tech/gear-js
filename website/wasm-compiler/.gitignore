@@ -35,3 +35,7 @@ lerna-debug.log*
 
 # ENV
 .env
+
+.yarn/
+
+wasm/
