@@ -15,7 +15,7 @@
     "run:event-listener": "yarn workspace @gear-js/event-listener start:dev",
     "run:api-gateway": "yarn workspace @gear-js/api-gateway start:dev",
     "run:data-storage": "yarn workspace @gear-js/data-storage start:dev",
-    "prepare": "husky install"
+    "postinstall": "husky install"
   },
   "devDependencies": {
     "husky": "7.0.4",
