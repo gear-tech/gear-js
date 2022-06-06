@@ -63,7 +63,6 @@ export class CompilerService {
     readdirSync(pathToFolder)
       .filter(isWasm)
       .map((fileName) => {
-        console.log(fileName);
         resultFiles.push({
           content: readFileSync(join(pathToFolder, fileName)),
           fileName: fileName,
