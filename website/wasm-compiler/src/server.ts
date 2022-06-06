@@ -29,10 +29,17 @@ export class Server {
         if (!file) {
           return res.sendStatus(400);
         }
-        const id = generateId();
-        const path = unpackZip(file.buffer, id);
-        this.compiler.processBuild(resolve(path), id);
-        return res.json(await this.dbService.newBuild(id));
+        try {
+          const id = generateId();
+          const path = unpackZip(file.buffer, id);
+          this.compiler.processBuild(resolve(path), id).catch((error) => {
+            console.log(error);
+          });
+          return res.json(await this.dbService.newBuild(id));
+        } catch (error) {
+          console.log(error);
+          res.sendStatus(500);
+        }
       },
     );
 
