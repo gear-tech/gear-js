@@ -215,7 +215,7 @@ jobs:
   build-frontend-image-prod:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [deploy-to-k8s-prod]
+    needs: [build-k8s-prod-images]
     environment: production
     permissions:
       contents: read
@@ -248,7 +248,7 @@ jobs:
   build-data-storage-image-prod:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [deploy-to-k8s-prod]
+    needs: [build-k8s-prod-images]
     environment: production
     permissions:
       contents: read
@@ -275,7 +275,7 @@ jobs:
   build-api-gateway-image-prod:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [deploy-to-k8s-prod]
+    needs: [build-k8s-prod-images]
     environment: production
     permissions:
       contents: read
@@ -302,7 +302,7 @@ jobs:
   build-event-listeners-image-prod:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [deploy-to-k8s-prod]
+    needs: [build-k8s-prod-images]
     environment: production
     permissions:
       contents: read
@@ -329,7 +329,7 @@ jobs:
   build-test-balance-image-prod:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
-    needs: [deploy-to-k8s-prod]
+    needs: [build-k8s-prod-images]
     environment: production
     permissions:
       contents: read
