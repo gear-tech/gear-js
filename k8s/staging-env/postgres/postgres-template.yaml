@@ -57,7 +57,7 @@ type: Opaque
 data:
   db: #put here base64 db name
   user: #put here username
-  password: #put here password
+  password: #put here passwd
 
 ---
 kind: Service
