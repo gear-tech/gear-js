@@ -166,7 +166,7 @@ jobs:
       [
         build-frontend-image-staging,
         build-data-storage-image-staging,
-        build--api-gateway-image-staging,
+        build-api-gateway-image-staging,
         build-event-listeners-image-staging,
         build-test-balance-image-staging,
         wait-previous-run
