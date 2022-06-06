@@ -195,3 +195,23 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
+
+  deploy-to-k8s-prod-namespace:
+    needs:
+      [ check-k8s-deployments, wait-previous-run]
+    runs-on: ubuntu-latest
+    if: ${{ github.event.label.name == 'prod-deploy' }}
+    environment: production
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment data-storage -n prod-gear-js
