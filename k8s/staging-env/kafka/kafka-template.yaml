@@ -92,6 +92,5 @@ metadata:
   name: kafka-secrets
 type: Opaque
 data:
-  username: --> specify user
+  username: --> specify username
   password: --> specify password
-
