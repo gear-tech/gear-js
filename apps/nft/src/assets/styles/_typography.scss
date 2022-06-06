@@ -1,0 +1,8 @@
+@use '@gear-js/ui/fonts';
+@use '@gear-js/ui/variables' as *;
+
+body {
+  font-family: 'Prompt', sans-serif;
+  font-size: $fontSize;
+  color: $textColor;
+}
