@@ -1,4 +1,4 @@
-name: Build and Deploy All containers to k8s
+name: CI-CD stage/prod k8s
 
 on:
   push:
