@@ -190,10 +190,29 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n dev-1 | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s
+          
+          
+  tag-prod-version:
+    needs:
+      [ deploy-to-k8s-staging ]
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'idea-release')
+    environment: production
+    
+    steps:
+        
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@1.36.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        INITIAL_VERSION: '1.0.0'
 
   build-k8s-prod-images:
     needs:
-      [ deploy-to-k8s-staging, wait-previous-run]
+      [ tag-prod-version ]
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
     environment: production
