@@ -58,16 +58,13 @@ export class CompilerService {
       return this.dbService.update(id, null, findErr(error.message));
     }
 
-    const resultFiles = [];
-
-    readdirSync(pathToFolder)
+    const resultFiles = readdirSync(pathToFolder)
       .filter(isWasm)
-      .map((fileName) => {
-        resultFiles.push({
-          content: readFileSync(join(pathToFolder, fileName)),
-          fileName: fileName,
-        });
-      });
+      .map((fileName) => ({
+        content: readFileSync(join(pathToFolder, fileName)),
+        fileName,
+      }));
+
     if (resultFiles.length === 0) {
       this.dbService.update(id, null, `Compilation failed`);
     } else {
