@@ -1,5 +1,5 @@
 import { Formik, Form } from 'formik';
-import { render, screen, within, fireEvent, act, waitFor, cleanup } from '@testing-library/react';
+import { render, screen, within, fireEvent, waitFor } from '@testing-library/react';
 
 import { FormValues, TestFormProps } from './types';
 import { INPUT_PAYLOAD_VALUES, INPUT_MANUAL_PAYLOAD, INIT_FORM_VALUES, INPUT_FILE_CONTENT } from './inputData';
@@ -9,7 +9,7 @@ import { getPreformattedText } from 'helpers';
 import { AlertProvider } from 'context/alert';
 import { FormPayload } from 'components/common/FormPayload';
 
-const TestFromPayload = ({ values, onSubmit }: TestFormProps) => (
+const TestFormPayload = ({ values, onSubmit }: TestFormProps) => (
   <AlertProvider>
     <Formik initialValues={INIT_FORM_VALUES} onSubmit={onSubmit}>
       <Form data-testid="test-form">
@@ -19,7 +19,7 @@ const TestFromPayload = ({ values, onSubmit }: TestFormProps) => (
   </AlertProvider>
 );
 
-describe('from payload tests', () => {
+describe('form payload tests', () => {
   const submitCallbackMock = jest.fn();
 
   const submit = () => {
@@ -27,25 +27,18 @@ describe('from payload tests', () => {
     fireEvent.submit(screen.getByTestId('test-form'));
   };
 
-  const changeFieldValue = (element: Element | Node, value: string) =>
-    act(() => {
-      fireEvent.change(element, { target: { value } });
-    });
+  const changeFieldValue = (element: Element | Node, value: string) => {
+    fireEvent.change(element, { target: { value } });
+  };
 
-  const toggleView = () =>
-    act(() => {
-      fireEvent.click(screen.getByRole('checkbox'));
-    });
+  const toggleView = () => {
+    fireEvent.click(screen.getByRole('checkbox'));
+  };
 
   const verifyValues = (formValues: FormValues) => waitFor(() => expect(submitCallbackMock).toBeCalledWith(formValues));
 
-  afterEach(() => {
-    cleanup();
-    jest.resetAllMocks();
-  });
-
-  it('should displayed manual textarea', () => {
-    const { rerender } = render(<TestFromPayload onSubmit={jest.fn()} />);
+  it('renders form without metadata', () => {
+    const { rerender } = render(<TestFormPayload onSubmit={jest.fn()} />);
 
     const manualTextarea = screen.getByPlaceholderText('// Enter your payload here');
 
@@ -54,7 +47,7 @@ describe('from payload tests', () => {
     expect(manualTextarea).toHaveTextContent('');
     expect(screen.queryByText('Select file')).toBeNull();
 
-    rerender(<TestFromPayload values={INPUT_PAYLOAD_VALUES} onSubmit={jest.fn()} />);
+    rerender(<TestFormPayload values={INPUT_PAYLOAD_VALUES} onSubmit={jest.fn()} />);
 
     expect(screen.getByLabelText('Manual input')).toBeInTheDocument();
 
@@ -70,9 +63,9 @@ describe('from payload tests', () => {
     expect(screen.getByText('Select file')).toBeInTheDocument();
   });
 
-  it('should submit correct manual', async () => {
+  it('submits manual payload', async () => {
     render(
-      <TestFromPayload
+      <TestFormPayload
         values={INPUT_PAYLOAD_VALUES}
         onSubmit={jest.fn((values: FormValues) => submitCallbackMock(values))}
       />
@@ -86,7 +79,7 @@ describe('from payload tests', () => {
 
     const manualText = `
     {
-      "Test1": {
+      "Option": {
           "firstName": "first",
           "secondName": "second",
           "age": null,
@@ -103,7 +96,7 @@ describe('from payload tests', () => {
 
   it('should set form value from json', async () => {
     const { container } = render(
-      <TestFromPayload
+      <TestFormPayload
         values={INPUT_PAYLOAD_VALUES}
         onSubmit={jest.fn((values: FormValues) => submitCallbackMock(values))}
       />
@@ -122,10 +115,8 @@ describe('from payload tests', () => {
 
     const testFile = new File([INPUT_FILE_CONTENT], 'test.json', { type: FILE_TYPES.JSON });
 
-    act(() => {
-      fireEvent.change(fileInput, {
-        target: { files: [testFile] },
-      });
+    fireEvent.change(fileInput, {
+      target: { files: [testFile] },
     });
 
     await waitFor(() => expect(screen.queryByText('Select file')).toBeNull());
@@ -137,12 +128,10 @@ describe('from payload tests', () => {
     submit();
     await verifyValues({ payload: INPUT_FILE_CONTENT });
 
-    //drop file
+    //remove file
 
-    act(() => {
-      fireEvent.change(fileInput, {
-        target: { files: null },
-      });
+    fireEvent.change(fileInput, {
+      target: { files: null },
     });
 
     await waitFor(() => expect(screen.getByText('Select file')).toBeInTheDocument());
@@ -153,8 +142,8 @@ describe('from payload tests', () => {
     await verifyValues({ payload: getPreformattedText(INPUT_MANUAL_PAYLOAD) });
   });
 
-  it('should displayed payload', () => {
-    render(<TestFromPayload values={INPUT_PAYLOAD_VALUES} onSubmit={jest.fn()} />);
+  it('renders form with metadata', () => {
+    render(<TestFormPayload values={INPUT_PAYLOAD_VALUES} onSubmit={jest.fn()} />);
 
     let fieldsets = screen.getAllByRole('group');
     let selectors: HTMLSelectElement[] = screen.getAllByRole('combobox');
@@ -170,9 +159,9 @@ describe('from payload tests', () => {
     expect(screen.queryByPlaceholderText('// Enter your payload here')).toBeNull();
 
     expect(within(fieldsets[0]).getByText('Action')).toBeInTheDocument();
-    expect(selectors[0]).toHaveValue('Test1');
+    expect(selectors[0]).toHaveValue('Option');
 
-    // Test1
+    // Option
     expect(fieldsets).toHaveLength(2);
     expect(selectors).toHaveLength(2);
 
@@ -203,10 +192,10 @@ describe('from payload tests', () => {
     expect(within(fieldsets[3]).getByLabelText('i8')).toHaveValue('');
     expect(within(fieldsets[3]).getByLabelText('i8')).toBeInTheDocument();
 
-    // Test2
-    changeSelectValue(selectors[0], 'Test2');
+    // Result
+    changeSelectValue(selectors[0], 'Result');
 
-    expect(selectors[0]).toHaveValue('Test2');
+    expect(selectors[0]).toHaveValue('Result');
 
     expect(selectors).toHaveLength(2);
     expect(fieldsets).toHaveLength(2);
@@ -226,10 +215,10 @@ describe('from payload tests', () => {
     expect(within(fieldsets[1]).getByLabelText('i32')).toBeInTheDocument();
     expect(within(fieldsets[1]).getByLabelText('i32')).toHaveValue('');
 
-    // Test3
-    changeSelectValue(selectors[0], 'Test3');
+    // Vec
+    changeSelectValue(selectors[0], 'Vec');
 
-    expect(selectors[0]).toHaveValue('Test3');
+    expect(selectors[0]).toHaveValue('Vec');
 
     expect(selectors).toHaveLength(1);
     expect(fieldsets).toHaveLength(1);
@@ -239,10 +228,10 @@ describe('from payload tests', () => {
       getPreformattedText([{ firstName: '', secondName: '', age: null }])
     );
 
-    // Test4
-    changeSelectValue(selectors[0], 'Test4');
+    // Struct
+    changeSelectValue(selectors[0], 'Struct');
 
-    expect(selectors[0]).toHaveValue('Test4');
+    expect(selectors[0]).toHaveValue('Struct');
 
     expect(selectors).toHaveLength(2);
     expect(fieldsets).toHaveLength(3);
@@ -265,10 +254,10 @@ describe('from payload tests', () => {
     expect(within(fieldsets[2]).getByLabelText('i8')).toBeInTheDocument();
     expect(within(fieldsets[2]).getByLabelText('i8')).toHaveValue('');
 
-    // Test5
-    changeSelectValue(selectors[0], 'Test5');
+    // Tuple
+    changeSelectValue(selectors[0], 'Tuple');
 
-    expect(selectors[0]).toHaveValue('Test5');
+    expect(selectors[0]).toHaveValue('Tuple');
 
     expect(selectors).toHaveLength(1);
     expect(fieldsets).toHaveLength(2);
@@ -279,10 +268,10 @@ describe('from payload tests', () => {
     expect(within(fieldsets[1]).getByLabelText('Text')).toBeInTheDocument();
     expect(within(fieldsets[1]).getByLabelText('Text')).toHaveValue('');
 
-    // Test6
-    changeSelectValue(selectors[0], 'Test6');
+    // Array
+    changeSelectValue(selectors[0], 'Array');
 
-    expect(selectors[0]).toHaveValue('Test6');
+    expect(selectors[0]).toHaveValue('Array');
 
     expect(selectors).toHaveLength(1);
     expect(fieldsets).toHaveLength(2);
@@ -294,10 +283,10 @@ describe('from payload tests', () => {
     expect(arrayFields).toHaveLength(4);
     arrayFields.forEach((field) => expect(field).toHaveValue(''));
 
-    // Test7
-    changeSelectValue(selectors[0], 'Test7');
+    // BTreeMap
+    changeSelectValue(selectors[0], 'BTreeMap');
 
-    expect(selectors[0]).toHaveValue('Test7');
+    expect(selectors[0]).toHaveValue('BTreeMap');
 
     expect(selectors).toHaveLength(1);
     expect(fieldsets).toHaveLength(1);
@@ -305,10 +294,10 @@ describe('from payload tests', () => {
     expect(within(fieldsets[0]).getByText('BTreeMap<Text, u128>')).toBeInTheDocument();
     expect(within(fieldsets[0]).getByRole('textbox')).toHaveValue('{ }');
 
-    // Test8
-    changeSelectValue(selectors[0], 'Test8');
+    // BTreeSet
+    changeSelectValue(selectors[0], 'BTreeSet');
 
-    expect(selectors[0]).toHaveValue('Test8');
+    expect(selectors[0]).toHaveValue('BTreeSet');
 
     expect(selectors).toHaveLength(1);
     expect(fieldsets).toHaveLength(1);
@@ -317,9 +306,9 @@ describe('from payload tests', () => {
     expect(within(fieldsets[0]).getByRole('textbox')).toHaveValue('[ ]');
   });
 
-  it('should submit correct payload', async () => {
+  it('submits payload', async () => {
     render(
-      <TestFromPayload
+      <TestFormPayload
         values={INPUT_PAYLOAD_VALUES}
         onSubmit={jest.fn((values: FormValues) => submitCallbackMock(values))}
       />
@@ -335,9 +324,9 @@ describe('from payload tests', () => {
       selectors = screen.getAllByRole('combobox');
     };
 
-    // Test1
+    // Option
     submit();
-    await verifyValues({ payload: { Test1: null } });
+    await verifyValues({ payload: { Option: null } });
 
     changeValue(selectors[1], 'some');
 
@@ -350,7 +339,7 @@ describe('from payload tests', () => {
     submit();
     await verifyValues({
       payload: {
-        Test1: {
+        Option: {
           age: null,
           firstName: 'First name',
           secondName: 'Second name',
@@ -366,7 +355,7 @@ describe('from payload tests', () => {
     submit();
     await verifyValues({
       payload: {
-        Test1: {
+        Option: {
           age: '1',
           firstName: 'First name',
           secondName: 'Second name',
@@ -374,46 +363,46 @@ describe('from payload tests', () => {
       },
     });
 
-    // Test2
-    changeValue(selectors[0], 'Test2');
+    // Result
+    changeValue(selectors[0], 'Result');
 
     submit();
-    await verifyValues({ payload: { Test2: { ok: '' } } });
+    await verifyValues({ payload: { Result: { ok: '' } } });
 
     changeValue(within(fieldsets[1]).getByLabelText('Text'), 'test');
 
     expect(within(fieldsets[1]).getByLabelText('Text')).toHaveValue('test');
 
     submit();
-    await verifyValues({ payload: { Test2: { ok: 'test' } } });
+    await verifyValues({ payload: { Result: { ok: 'test' } } });
 
     changeValue(selectors[1], 'err');
 
     submit();
-    await verifyValues({ payload: { Test2: { err: '' } } });
+    await verifyValues({ payload: { Result: { err: '' } } });
 
     changeValue(within(fieldsets[1]).getByLabelText('i32'), '1');
 
     expect(within(fieldsets[1]).getByLabelText('i32')).toHaveValue('1');
 
     submit();
-    await verifyValues({ payload: { Test2: { err: '1' } } });
+    await verifyValues({ payload: { Result: { err: '1' } } });
 
-    // Test3
-    changeValue(selectors[0], 'Test3');
+    // Vec
+    changeValue(selectors[0], 'Vec');
 
     submit();
     await verifyValues({
       payload: {
-        Test3: getPreformattedText([{ firstName: '', secondName: '', age: null }]),
+        Vec: getPreformattedText([{ firstName: '', secondName: '', age: null }]),
       },
     });
 
-    // Test4
-    changeValue(selectors[0], 'Test4');
+    // Struct
+    changeValue(selectors[0], 'Struct');
 
     submit();
-    await verifyValues({ payload: { Test4: { firstName: '', secondName: '', age: null } } });
+    await verifyValues({ payload: { Struct: { firstName: '', secondName: '', age: null } } });
 
     changeValue(within(fieldsets[1]).getByLabelText('firstName (Text)'), 'first');
     changeValue(within(fieldsets[1]).getByLabelText('secondName (Text)'), 'second');
@@ -422,25 +411,25 @@ describe('from payload tests', () => {
     expect(within(fieldsets[1]).getByLabelText('secondName (Text)')).toHaveValue('second');
 
     submit();
-    await verifyValues({ payload: { Test4: { firstName: 'first', secondName: 'second', age: null } } });
+    await verifyValues({ payload: { Struct: { firstName: 'first', secondName: 'second', age: null } } });
 
     changeValue(selectors[1], 'some');
 
     submit();
-    await verifyValues({ payload: { Test4: { firstName: 'first', secondName: 'second', age: '' } } });
+    await verifyValues({ payload: { Struct: { firstName: 'first', secondName: 'second', age: '' } } });
 
     changeValue(within(fieldsets[2]).getByLabelText('i8'), 'i8');
 
     expect(within(fieldsets[2]).getByLabelText('i8')).toHaveValue('i8');
 
     submit();
-    await verifyValues({ payload: { Test4: { firstName: 'first', secondName: 'second', age: 'i8' } } });
+    await verifyValues({ payload: { Struct: { firstName: 'first', secondName: 'second', age: 'i8' } } });
 
-    // Test5
-    changeValue(selectors[0], 'Test5');
+    // Tuple
+    changeValue(selectors[0], 'Tuple');
 
     submit();
-    await verifyValues({ payload: { Test5: ['', ''] } });
+    await verifyValues({ payload: { Tuple: ['', ''] } });
 
     changeValue(within(fieldsets[1]).getByLabelText('ActorId'), '1');
     changeValue(within(fieldsets[1]).getByLabelText('Text'), 'text');
@@ -449,13 +438,13 @@ describe('from payload tests', () => {
     expect(within(fieldsets[1]).getByLabelText('Text')).toHaveValue('text');
 
     submit();
-    await verifyValues({ payload: { Test5: ['1', 'text'] } });
+    await verifyValues({ payload: { Tuple: ['1', 'text'] } });
 
-    // Test6
-    changeValue(selectors[0], 'Test6');
+    // Array
+    changeValue(selectors[0], 'Array');
 
     submit();
-    await verifyValues({ payload: { Test6: ['', '', '', ''] } });
+    await verifyValues({ payload: { Array: ['', '', '', ''] } });
 
     const fields = within(fieldsets[1]).getAllByLabelText('u16');
 
@@ -469,32 +458,32 @@ describe('from payload tests', () => {
     expect(fields[3]).toHaveValue('4');
 
     submit();
-    await verifyValues({ payload: { Test6: ['1', '2', '3', '4'] } });
+    await verifyValues({ payload: { Array: ['1', '2', '3', '4'] } });
 
-    // Test7
-    changeValue(selectors[0], 'Test7');
+    // BTreeMap
+    changeValue(selectors[0], 'BTreeMap');
 
     submit();
-    await verifyValues({ payload: { Test7: '{ }' } });
+    await verifyValues({ payload: { BTreeMap: '{ }' } });
 
     changeValue(within(fieldsets[0]).getByRole('textbox'), '{ "text": "2" }');
 
     expect(within(fieldsets[0]).getByRole('textbox')).toHaveValue('{ "text": "2" }');
 
     submit();
-    await verifyValues({ payload: { Test7: '{ "text": "2" }' } });
+    await verifyValues({ payload: { BTreeMap: '{ "text": "2" }' } });
 
-    // Test8
-    changeValue(selectors[0], 'Test8');
+    // BTreeSet
+    changeValue(selectors[0], 'BTreeSet');
 
     submit();
-    await verifyValues({ payload: { Test8: '[ ]' } });
+    await verifyValues({ payload: { BTreeSet: '[ ]' } });
 
     changeValue(within(fieldsets[0]).getByRole('textbox'), '[ 1 ]');
 
     expect(within(fieldsets[0]).getByRole('textbox')).toHaveValue('[ 1 ]');
 
     submit();
-    await verifyValues({ payload: { Test8: '[ 1 ]' } });
+    await verifyValues({ payload: { BTreeSet: '[ 1 ]' } });
   });
 });

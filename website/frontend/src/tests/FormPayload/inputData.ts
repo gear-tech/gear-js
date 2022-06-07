@@ -13,7 +13,7 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
   name: 'Action',
   //@ts-ignore
   value: {
-    Test1: {
+    Option: {
       type: 'Option',
       name: 'Option<Person>',
       value: {
@@ -42,7 +42,7 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
         },
       },
     },
-    Test2: {
+    Result: {
       type: 'Result',
       name: 'Result<Text, i32>',
       value: {
@@ -58,7 +58,7 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
         },
       },
     },
-    Test3: {
+    Vec: {
       type: 'Vec',
       name: 'Vec<Person>',
       value: {
@@ -87,7 +87,7 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
         },
       },
     },
-    Test4: {
+    Struct: {
       type: 'Struct',
       name: 'Person',
       value: {
@@ -112,7 +112,7 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
         },
       },
     },
-    Test5: {
+    Tuple: {
       type: 'Tuple',
       name: '(ActorId,Text)',
       value: [
@@ -128,7 +128,7 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
         },
       ],
     },
-    Test6: {
+    Array: {
       type: 'Array',
       name: '[u16;4]',
       value: {
@@ -138,7 +138,7 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
       },
       count: 4,
     },
-    Test7: {
+    BTreeMap: {
       type: 'BTreeMap',
       name: 'BTreeMap<Text, u128>',
       value: {
@@ -154,7 +154,7 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
         },
       },
     },
-    Test8: {
+    BTreeSet: {
       type: 'BTreeSet',
       name: 'BTreeSet<u8>',
       value: {
@@ -168,7 +168,7 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
 
 export const INPUT_MANUAL_PAYLOAD = {
   _enum: {
-    Test1: {
+    Option: {
       _Option: {
         firstName: 'Text',
         secondName: 'Text',
@@ -177,13 +177,13 @@ export const INPUT_MANUAL_PAYLOAD = {
         },
       },
     },
-    Test2: {
+    Result: {
       _Result: {
         ok: 'Text',
         err: 'i32',
       },
     },
-    Test3: {
+    Vec: {
       _Vec: {
         firstName: 'Text',
         secondName: 'Text',
@@ -192,19 +192,19 @@ export const INPUT_MANUAL_PAYLOAD = {
         },
       },
     },
-    Test4: {
+    Struct: {
       firstName: 'Text',
       secondName: 'Text',
       age: {
         _Option: 'i8',
       },
     },
-    Test5: ['ActorId', 'Text'],
-    Test6: ['u16', 4],
-    Test7: {
+    Tuple: ['ActorId', 'Text'],
+    Array: ['u16', 4],
+    BTreeMap: {
       _BTreeMap: ['Text', 'u128'],
     },
-    Test8: {
+    BTreeSet: {
       _BTreeSet: 'u8',
     },
   },
