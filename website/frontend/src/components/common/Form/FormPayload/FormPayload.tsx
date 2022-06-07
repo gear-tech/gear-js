@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { useField } from 'formik';
+import clsx from 'clsx';
 import { Checkbox, FileInput, Textarea } from '@gear-js/ui';
 
 import styles from './FormPayload.module.scss';
+import formStyles from '../Form.module.scss';
 import { FormPayloadValues, PayloadValue } from './types';
 import { PayloadStructure } from './PayloadStructure';
 
@@ -12,11 +14,12 @@ import { checkFileFormat, readTextFileAsync } from 'helpers';
 
 type Props = {
   name: string;
+  label: string;
   values?: FormPayloadValues;
 };
 
 const FormPayload = (props: Props) => {
-  const { name, values } = props;
+  const { name, label, values } = props;
 
   const alert = useAlert();
 
@@ -86,8 +89,11 @@ const FormPayload = (props: Props) => {
   }, [values]);
 
   return (
-    <>
-      <div className={styles.formPayload}>
+    <div className={clsx(formStyles.formItem, formStyles.field)}>
+      <label htmlFor={name} className={formStyles.fieldLabel}>
+        {label}
+      </label>
+      <div className={formStyles.fieldContent}>
         {values && (
           <Checkbox
             type="switch"
@@ -120,8 +126,8 @@ const FormPayload = (props: Props) => {
           </>
         )}
       </div>
-      {meta.error && <div className={styles.error}>{meta.error}</div>}
-    </>
+      {meta.error && <div className={formStyles.error}>{meta.error}</div>}
+    </div>
   );
 };
 

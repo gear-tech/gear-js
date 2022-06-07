@@ -1,6 +1,5 @@
 import { useMemo, VFC, useRef } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
-import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 
@@ -13,8 +12,8 @@ import { useAccount, useApi, useAlert } from 'hooks';
 import { sendMessage } from 'services/ApiService';
 import sendMessageSVG from 'assets/images/message.svg';
 import { FormInput, FormNumberFormat, formStyles } from 'components/common/Form';
-import { FormPayload } from 'components/common/FormPayload';
-import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
+import { FormPayload } from 'components/common/Form/FormPayload';
+import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 
 type Props = {
   id: string;
@@ -74,14 +73,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
         <Form className={formStyles.largeForm}>
           <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />
 
-          <div className={clsx(formStyles.formItem, formStyles.field)}>
-            <label htmlFor="payload" className={formStyles.fieldLabel}>
-              Payload
-            </label>
-            <div className={formStyles.fieldContent}>
-              <FormPayload name="payload" values={payloadFormValues} />
-            </div>
-          </div>
+          <FormPayload name="payload" label="Payload" values={payloadFormValues} />
 
           {!isMeta && <PayloadType />}
 

@@ -14,7 +14,7 @@ import { Send } from 'components/pages/Send/Send';
 import { Meta } from 'components/pages/Meta/Meta';
 import { EditorPage } from 'features/Editor/EditorPage/EditorPage';
 import { Loader } from 'components/blocks/Loader/Loader';
-import State from 'components/pages/State/State';
+import { State } from 'components/pages/State/State';
 
 import { routes } from 'routes';
 import { subscribeToEvents } from 'services/ApiService';

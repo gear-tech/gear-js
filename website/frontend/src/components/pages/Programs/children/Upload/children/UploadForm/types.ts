@@ -1,7 +1,7 @@
 import { FormikHelpers } from 'formik/dist/types';
 import { Metadata } from '@gear-js/api';
 
-import { PayloadValue } from 'components/common/FormPayload/types';
+import { PayloadValue } from 'components/common/Form/FormPayload/types';
 
 export type ProgramValues = {
   value: number;
