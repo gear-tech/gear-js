@@ -19,7 +19,6 @@ export interface ProgramChangedKind extends Enum {
   isActive: boolean;
   isInactive: boolean;
   isPaused: boolean;
-  isStateChanged: boolean;
   asActive: { expiration: BlockNumber };
   asInactive: Null;
   asPaused: {
@@ -27,7 +26,6 @@ export interface ProgramChangedKind extends Enum {
     memory_hash: H256;
     waitlist_hash: H256;
   };
-  asStateChanged: Null;
 }
 
 export interface CodeChangeKind extends Enum {

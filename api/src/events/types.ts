@@ -1,15 +1,4 @@
 import {
-  CodeChangedData,
-  DebugData,
-  MessageEnqueuedData,
-  MessagesDispatchedData,
-  MessageWaitedData,
-  MessageWakenData,
-  ProgramChangedData,
-  UserMessageReadData,
-  UserMessageSentData,
-} from './GearEventData';
-import {
   CodeChanged,
   DebugDataSnapshot,
   DebugMode,

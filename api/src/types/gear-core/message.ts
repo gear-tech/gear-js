@@ -14,10 +14,10 @@ export interface DispatchStatus extends Enum {
 }
 
 export interface UserMessageReadRuntimeReason extends Enum {
-  isReplied: boolean;
-  isClaimed: boolean;
-  asReplied: Null;
-  asClaimed: Null;
+  isMessageReplied: boolean;
+  isMessageClaimed: boolean;
+  asMessageReplied: Null;
+  asMessageClaimed: Null;
 }
 
 export interface UserMessageReadSystemReason extends Enum {
@@ -33,24 +33,24 @@ export interface MessageWaitedRuntimeReason extends Enum {
 }
 
 export interface MessageWaitedSystemReason extends Enum {
-  isDidNotFinishInit: boolean;
-  asDidNotFinishInit: Null;
+  isProgramIsNotInitialized: boolean;
+  asProgramIsNotInitialized: Null;
 }
 
 export interface MessageWaitedReason extends Reason<MessageWaitedRuntimeReason, MessageWaitedSystemReason> {}
 
-export interface MessageWakenRuntimeReason extends Enum {
+export interface MessageWokenRuntimeReason extends Enum {
   isWakeCalled: boolean;
-  isTimeoutBecome: boolean;
   asWakeCalled: Null;
-  asTimeoutBecome: Null;
 }
 
-export interface MessageWakenSystemReason extends Enum {
-  isFailedInit: boolean;
+export interface MessageWokenSystemReason extends Enum {
+  isProgramGotInitialized: boolean;
+  isTimeoutHasCome: boolean;
   isOutOfRent: boolean;
-  asFailedInit: Null;
+  asProgramGotInitialized: Null;
+  asTimeoutHasCome: Null;
   asOutOfRent: Null;
 }
 
-export interface MessageWakenReason extends Reason<MessageWakenRuntimeReason, MessageWakenSystemReason> {}
+export interface MessageWokenReason extends Reason<MessageWokenRuntimeReason, MessageWokenSystemReason> {}

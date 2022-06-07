@@ -1,4 +1,4 @@
-import { u8, u32, u128, Vec, Option, BTreeMap, GenericEventData, Bool } from '@polkadot/types';
+import { u8, u32, u128, Vec, Option, BTreeMap, BTreeSet, GenericEventData, Bool } from '@polkadot/types';
 import { BlockNumber, AccountId32 } from '@polkadot/types/interfaces';
 import { Reply, QueuedDispatch, ProgramDetails } from '../types/interfaces';
 import {
@@ -10,7 +10,7 @@ import {
   DispatchStatus,
   UserMessageReadReason,
   MessageWaitedReason,
-  MessageWakenReason,
+  MessageWokenReason,
   CodeId,
   CodeChangeKind,
 } from '../types/gear-core';
@@ -81,6 +81,10 @@ export class MessagesDispatchedData extends GearEventData {
   public get statuses(): BTreeMap<MessageId, DispatchStatus> {
     return this[1] as BTreeMap<MessageId, DispatchStatus>;
   }
+
+  public get stateChanged(): BTreeSet<ProgramId> {
+    return this[2] as BTreeSet<ProgramId>;
+  }
 }
 
 export class MessageWaitedData extends GearEventData {
@@ -101,13 +105,13 @@ export class MessageWaitedData extends GearEventData {
   }
 }
 
-export class MessageWakenData extends GearEventData {
+export class MessageWokenData extends GearEventData {
   public get id(): MessageId {
     return this[0] as MessageId;
   }
 
-  public get reason(): MessageWakenReason {
-    return this[1] as MessageWakenReason;
+  public get reason(): MessageWokenReason {
+    return this[1] as MessageWokenReason;
   }
 }
 

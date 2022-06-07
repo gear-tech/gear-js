@@ -6,7 +6,7 @@ import {
   MessageEnqueuedData,
   MessagesDispatchedData,
   MessageWaitedData,
-  MessageWakenData,
+  MessageWokenData,
   ProgramChangedData,
   TransferData,
   UserMessageReadData,
@@ -52,8 +52,8 @@ export class MessageWaited extends GearGenericEvent {
 }
 
 export class MessageWaken extends GearGenericEvent {
-  public get data(): MessageWakenData {
-    return new MessageWakenData(this.getT('data'));
+  public get data(): MessageWokenData {
+    return new MessageWokenData(this.getT('data'));
   }
 }
 
