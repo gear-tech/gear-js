@@ -62,7 +62,7 @@ const State = () => {
     readState(payload);
   };
 
-  const typeStructures = useMemo(() => getPayloadFormValues(types, stateInput), [types, stateInput]);
+  const payloadFormValues = useMemo(() => getPayloadFormValues(types, stateInput), [types, stateInput]);
 
   const formItemClasses = clsx(formStyles.formItem, formStyles.field);
 
@@ -94,7 +94,7 @@ const State = () => {
               <p className={clsx(styles.programId, formStyles.fieldContent)}>{programId}</p>
             </div>
 
-            {typeStructures?.payload && <FormPayload name="payload" label="Input Parameters" values={typeStructures} />}
+            {payloadFormValues && <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} />}
 
             {state && (
               <div className={formItemClasses}>
