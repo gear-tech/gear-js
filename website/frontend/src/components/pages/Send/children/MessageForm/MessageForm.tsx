@@ -1,5 +1,6 @@
 import { useMemo, VFC, useRef } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
+import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 
@@ -73,21 +74,16 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
         <Form className={formStyles.largeForm}>
           <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />
 
-          <div className={formStyles.formItem}>
-            <label className={formStyles.field}>
-              <span>Payload</span>
-              <FormPayload name="payload" values={payloadFormValues} />
+          <div className={clsx(formStyles.formItem, formStyles.field)}>
+            <label htmlFor="payload" className={formStyles.fieldLabel}>
+              Payload
             </label>
+            <div className={formStyles.fieldContent}>
+              <FormPayload name="payload" values={payloadFormValues} />
+            </div>
           </div>
 
-          {!isMeta && (
-            <div className={formStyles.formItem}>
-              <label className={formStyles.field}>
-                <span>Payload type</span>
-                <PayloadType />
-              </label>
-            </div>
-          )}
+          {!isMeta && <PayloadType />}
 
           <FormNumberFormat
             name="gasLimit"

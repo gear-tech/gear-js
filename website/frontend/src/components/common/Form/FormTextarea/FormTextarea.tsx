@@ -13,11 +13,12 @@ const FormTextarea = (props: Props) => {
 
   const [field, meta] = useField(name);
 
+  const classes = clsx(styles.field, styles.uiField, className);
   const showError = meta.error && meta.touched;
 
   return (
     <div className={styles.formItem}>
-      <Textarea {...other} {...field} label={label} className={clsx(styles.field, className)} />
+      <Textarea {...other} {...field} label={label} className={classes} />
       {showError && <div className={styles.error}>{meta.error}</div>}
     </div>
   );

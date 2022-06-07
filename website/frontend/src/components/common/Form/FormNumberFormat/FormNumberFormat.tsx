@@ -17,11 +17,12 @@ const FormNumberFormat = (props: Props) => {
 
   const handleChange = ({ floatValue }: NumberFormatValues) => helpers.setValue(floatValue);
 
+  const classes = clsx(inputStyles.label, styles.field, styles.uiField, className);
   const showError = meta.error && meta.touched;
 
   return (
     <div className={styles.formItem}>
-      <label className={clsx(inputStyles.label, styles.field, className)}>
+      <label className={classes}>
         <span className={inputStyles.text}>{label}</span>
         <div className={inputStyles.wrapper}>
           <NumberFormat
