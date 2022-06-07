@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { getIpfsAddress } from 'utils';
-import placeholder from 'assets/images/placeholder.png';
 import styles from './NFT.module.scss';
 
 type Props = {
@@ -16,7 +15,7 @@ function NFT({ id, name, media }: Props) {
 
   return (
     <Link to={to} className={styles.nft}>
-      <img src={placeholder} alt={name} className={styles.image} />
+      <img src={src} alt={name} className={styles.image} />
       <h3 className={styles.heading}>{name}</h3>
       <p className={styles.text}>{text}</p>
     </Link>

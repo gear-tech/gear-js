@@ -1,0 +1,35 @@
+@use '@gear-js/ui/variables' as *;
+
+.card {
+  padding: 15px 20px;
+  font-size: $fontSizeMedium;
+  border: 1px solid;
+  border-image: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0) 85px) 1;
+  border-radius: $borderRadius;
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+}
+
+.heading {
+  // TODO: replace w/ @gear-js/ui. it's not h5, so prolly h6 (?)
+  font-family: Syncopate, sans-serif;
+  font-size: 16px;
+  line-height: 30px;
+  text-align: center;
+  color: $textColorSecondary;
+}
+
+.text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bold {
+  // TODO: replace w. @gear-js/ui
+  font-family: Syncopate;
+  font-size: 22px;
+  line-height: 30px;
+  text-align: center;
+}

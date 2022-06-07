@@ -58,7 +58,7 @@ function Home() {
   return (
     <>
       <header className={styles.header}>
-        <h2 className={styles.heading}>My NFTs</h2>
+        <h2 className={styles.heading}>NFTs</h2>
         <Filter list={filters} value={filter} onChange={setFilter} />
       </header>
       <ul className={styles.list}>{getNFTs()}</ul>

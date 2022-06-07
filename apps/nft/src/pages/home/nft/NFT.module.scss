@@ -1,10 +1,9 @@
 @use '@gear-js/ui/variables' as *;
+@use 'assets/styles/shared' as *;
 
 .nft {
+  @include card();
   display: block;
-  padding: 30px;
-  background-image: linear-gradient(122.79deg, rgba(255, 255, 255, 0) 18.08%, rgba(255, 255, 255, 0.05) 74.41%);
-  border-radius: $borderRadius;
 }
 
 .image {

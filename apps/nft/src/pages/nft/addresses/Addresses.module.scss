@@ -1,0 +1,26 @@
+@use '@gear-js/ui/variables' as *;
+
+.list {
+  margin-top: 20px;
+  overflow-y: hidden;
+}
+
+.address {
+  $x: 20px;
+  padding-right: $x;
+  padding-left: $x;
+  font-size: $fontSizeMedium;
+
+  &:nth-child(odd) {
+    $y: 5px;
+    padding-top: $y;
+    padding-bottom: $y;
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+
+  &:nth-child(even) {
+    $y: 15px;
+    padding-top: $y;
+    padding-bottom: $y;
+  }
+}

@@ -10,4 +10,9 @@ type Token = {
   reference: string;
 };
 
-export type { Token };
+type TokenDetails = {
+  rarity?: string;
+  attributes?: { [key: string]: string };
+};
+
+export type { Token, TokenDetails };
