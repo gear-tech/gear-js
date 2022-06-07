@@ -95,7 +95,7 @@ describe('form payload tests', () => {
   });
 
   it('should set form value from json', async () => {
-    const { container } = render(
+    render(
       <TestFormPayload
         values={INPUT_PAYLOAD_VALUES}
         onSubmit={jest.fn((values: FormValues) => submitCallbackMock(values))}
@@ -106,7 +106,7 @@ describe('form payload tests', () => {
 
     const textbox = screen.getByRole('textbox');
 
-    const fileInput = container.getElementsByTagName('input')[1];
+    const fileInput = screen.getByTestId('payloadFileInput');
 
     expect(fileInput).toBeInTheDocument();
     expect(screen.getByText('Select file')).toBeInTheDocument();
