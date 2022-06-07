@@ -1,8 +1,8 @@
 import { useMemo, VFC, useRef } from 'react';
+import { Form, Formik, FormikHelpers } from 'formik';
 import clsx from 'clsx';
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import NumberFormat from 'react-number-format';
 import { Metadata } from '@gear-js/api';
+import { Button } from '@gear-js/ui';
 
 import { Schema } from './Schema';
 import { FormValues, SetFieldValue } from './types';
@@ -11,10 +11,10 @@ import { PayloadType } from './children/PayloadType';
 import { calculateGas } from 'helpers';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { sendMessage } from 'services/ApiService';
-import MessageIllustration from 'assets/images/message.svg';
+import sendMessageSVG from 'assets/images/message.svg';
+import { FormInput, FormNumberFormat, formStyles } from 'components/common/Form';
 import { FormPayload } from 'components/common/FormPayload';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
-import './MessageForm.scss';
 
 type Props = {
   id: string;
@@ -44,13 +44,12 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
       return;
     }
 
-    const payload = getSubmitPayload(values.payload);
     const apiMethod = isReply ? api.reply : api.message;
     const payloadType = isMeta ? void 0 : values.payloadType;
 
     const message = {
       value: values.value.toString(),
-      payload,
+      payload: getSubmitPayload(values.payload),
       gasLimit: values.gasLimit.toString(),
       replyToId: values.destination,
       destination: values.destination,
@@ -71,98 +70,34 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
 
   return (
     <Formik initialValues={initialValues.current} validateOnBlur validationSchema={Schema} onSubmit={handleSubmit}>
-      {({ errors, touched, values, setFieldValue }) => (
-        <Form id="message-form">
-          <div className="message-form--wrapper">
-            <div className="message-form--col">
-              <div className="message-form--info">
-                <label htmlFor="destination" className="message-form__field">
-                  {isReply ? 'Message Id:' : 'Destination:'}
-                </label>
-                <div className="message-form__field-wrapper">
-                  <Field
-                    id="destination"
-                    name="destination"
-                    type="text"
-                    className={clsx(
-                      'inputField',
-                      errors.destination && touched.destination && 'message-form__input-error'
-                    )}
-                  />
-                  {errors.destination && touched.destination && (
-                    <div className="message-form__error">{errors.destination}</div>
-                  )}
-                </div>
-              </div>
+      {({ values, setFieldValue }) => (
+        <Form className={formStyles.largeForm}>
+          <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />
 
-              <div className="message-form--info">
-                <label htmlFor="payload" className="message-form__field">
-                  Payload:
-                </label>
-                <FormPayload name="payload" values={payloadFormValues} />
-              </div>
-
-              {!isMeta && (
-                <div className="message-form--info">
-                  <label htmlFor="payloadType" className="message-form__field">
-                    Payload type:
-                  </label>
-                  <PayloadType />
-                </div>
-              )}
-
-              <div className="message-form--info">
-                <label htmlFor="gasLimit" className="message-form__field">
-                  Gas limit:
-                </label>
-                <div className="message-form__field-wrapper">
-                  <NumberFormat
-                    name="gasLimit"
-                    placeholder="20,000,000"
-                    value={values.gasLimit}
-                    thousandSeparator
-                    allowNegative={false}
-                    className={clsx('inputField', errors.gasLimit && touched.gasLimit && 'message-form__input-error')}
-                    onValueChange={(val) => {
-                      const { floatValue } = val;
-                      setFieldValue('gasLimit', floatValue);
-                    }}
-                  />
-                  {errors.gasLimit && touched.gasLimit ? (
-                    <div className="message-form__error">{errors.gasLimit}</div>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="message-form--info">
-                <label htmlFor="value" className="message-form__field">
-                  Value:
-                </label>
-                <div className="message-form__field-wrapper">
-                  <Field
-                    id="value"
-                    name="value"
-                    placeholder="20000"
-                    type="number"
-                    className={clsx('inputField', errors.value && touched.value && 'message-form__input-error')}
-                  />
-                  {errors.value && touched.value ? <div className="message-form__error">{errors.value}</div> : null}
-                </div>
-              </div>
-              <div className="message-form--btns">
-                <button
-                  className="message-form__button"
-                  type="button"
-                  onClick={handleCalculateGas(values, setFieldValue)}
-                >
-                  Calculate Gas
-                </button>
-                <button className="message-form__button" type="submit">
-                  <img src={MessageIllustration} alt="message" />
-                  {isReply ? 'Send reply' : 'Send message'}
-                </button>
-              </div>
+          <div className={clsx(formStyles.formItem, formStyles.field)}>
+            <label htmlFor="payload" className={formStyles.fieldLabel}>
+              Payload
+            </label>
+            <div className={formStyles.fieldContent}>
+              <FormPayload name="payload" values={payloadFormValues} />
             </div>
+          </div>
+
+          {!isMeta && <PayloadType />}
+
+          <FormNumberFormat
+            name="gasLimit"
+            label="Gas limit"
+            placeholder="20,000,000"
+            thousandSeparator
+            allowNegative={false}
+          />
+
+          <FormInput type="number" name="value" label="Value" placeholder="20000" />
+
+          <div className={formStyles.formButtons}>
+            <Button text="Calculate Gas" onClick={handleCalculateGas(values, setFieldValue)} />
+            <Button type="submit" icon={sendMessageSVG} text={isReply ? 'Send reply' : 'Send message'} />
           </div>
         </Form>
       )}

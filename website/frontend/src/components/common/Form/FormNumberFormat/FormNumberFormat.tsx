@@ -3,7 +3,7 @@ import { useField } from 'formik';
 import { inputStyles } from '@gear-js/ui';
 import NumberFormat, { NumberFormatProps, NumberFormatValues } from 'react-number-format';
 
-import styles from '../FormFields.module.scss';
+import styles from '../Form.module.scss';
 
 type Props = Omit<NumberFormatProps, 'name' | 'value' | 'onValueChange'> & {
   name: string;
@@ -17,11 +17,12 @@ const FormNumberFormat = (props: Props) => {
 
   const handleChange = ({ floatValue }: NumberFormatValues) => helpers.setValue(floatValue);
 
+  const classes = clsx(inputStyles.label, styles.field, styles.uiField, className);
   const showError = meta.error && meta.touched;
 
   return (
-    <div className={styles.item}>
-      <label className={clsx(inputStyles.label, styles.field, className)}>
+    <div className={styles.formItem}>
+      <label className={classes}>
         <span className={inputStyles.text}>{label}</span>
         <div className={inputStyles.wrapper}>
           <NumberFormat

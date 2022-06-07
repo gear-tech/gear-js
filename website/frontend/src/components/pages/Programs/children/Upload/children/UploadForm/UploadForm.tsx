@@ -18,7 +18,7 @@ import { readFileAsync, calculateGas, checkFileFormat } from 'helpers';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
 import { MetaSwitch } from 'components/common/MetaSwitch';
 import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
-import { FormInput, FormTextarea, FormNumberFormat } from 'components/common/FormFields';
+import { FormInput, FormTextarea, FormNumberFormat } from 'components/common/Form';
 import { FormPayload } from 'components/common/FormPayload';
 import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
 
@@ -146,13 +146,13 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                 </div>
                 <FormInput
                   name="programValues.programName"
-                  label="Name:"
+                  label="Name"
                   placeholder="Name"
                   className={styles.formField}
                 />
                 <FormNumberFormat
                   name="programValues.gasLimit"
-                  label="Gas limit:"
+                  label="Gas limit"
                   placeholder="20,000,000"
                   thousandSeparator
                   allowNegative={false}
@@ -161,7 +161,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                 <FormInput
                   type="number"
                   name="programValues.value"
-                  label="Initial value:"
+                  label="Initial value"
                   placeholder="0"
                   className={styles.formField}
                 />
@@ -193,7 +193,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                     <FormField
                       key={field}
                       name={`metaValues.${field}`}
-                      label={`${field}:`}
+                      label={field}
                       disabled={isMetaFromFile}
                       className={styles.formField}
                     />

@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
-import { messagesService } from 'services/MessagesRequestServices';
-import { MessageModel } from 'types/message';
-import { useProgram } from 'hooks';
+
 import { MessageForm } from './children/MessageForm/MessageForm';
+
+import { useProgram } from 'hooks';
+import { MessageModel } from 'types/message';
+import { messagesService } from 'services/MessagesRequestServices';
+import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
-import './Send.scss';
+import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 
 const Send = () => {
   const { programId = '', messageId = '' } = useParams();
@@ -29,9 +31,9 @@ const Send = () => {
       {program ? (
         <>
           <PageHeader title={programId ? 'New message' : 'Send reply'} fileName={program?.name || id} />
-          <div className="send-message__block">
+          <Box>
             <MessageForm id={id} replyErrorCode={message?.replyError} metadata={metadata} />
-          </div>
+          </Box>
         </>
       ) : (
         <Spinner absolute />

@@ -1,8 +1,11 @@
 import { ChangeEvent, useState, useEffect } from 'react';
 import { useField } from 'formik';
+import clsx from 'clsx';
 import { Input, Checkbox } from '@gear-js/ui';
 
 import styles from './PayloadType.module.scss';
+
+import { formStyles } from 'components/common/Form';
 
 const PayloadType = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -24,15 +27,20 @@ const PayloadType = () => {
   }, [isChecked, touched]);
 
   return (
-    <div className={styles.switchableFieldWrapper}>
-      <Checkbox
-        type="switch"
-        label="Enter type"
-        checked={isChecked}
-        className={styles.checkbox}
-        onChange={toggleSwitch}
-      />
-      <Input {...field} id={field.name} disabled={!isChecked} />
+    <div className={clsx(formStyles.formItem, formStyles.field)}>
+      <label htmlFor={field.name} className={formStyles.fieldLabel}>
+        Payload type
+      </label>
+      <div className={clsx(styles.switchableField, formStyles.fieldContent)}>
+        <Checkbox
+          type="switch"
+          label="Enter type"
+          checked={isChecked}
+          className={styles.checkbox}
+          onChange={toggleSwitch}
+        />
+        <Input {...field} id={field.name} disabled={!isChecked} />
+      </div>
     </div>
   );
 };
