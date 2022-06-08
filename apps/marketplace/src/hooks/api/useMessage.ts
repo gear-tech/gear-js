@@ -13,7 +13,7 @@ function useMessage(destination: Hex, metadata: Metadata | undefined) {
 
   const handleEventsStatus = (events: EventRecord[]) => {
     events.forEach(({ event: { method } }) => {
-      if (method === 'DispatchMessageEnqueued') {
+      if (method === 'MessageEnqueued') {
         alert.success('Send message: Finalized');
         // onSucessCallback();
       } else if (method === 'ExtrinsicFailed') {
