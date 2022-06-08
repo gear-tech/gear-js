@@ -24,6 +24,7 @@ describe('input tests', () => {
     const icon = screen.getByRole('img');
 
     expect(label).toContainElement(icon);
+    expect(icon).toHaveAttribute('src', arrowIcon);
   });
 
   it('applies className to label wrapper', () => {
