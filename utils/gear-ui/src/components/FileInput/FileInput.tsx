@@ -1,6 +1,14 @@
 import { Button } from '../Button/Button';
 import clsx from 'clsx';
-import { InputHTMLAttributes, useRef, MouseEvent, useEffect } from 'react';
+import {
+  InputHTMLAttributes,
+  useRef,
+  MouseEvent,
+  useEffect,
+  forwardRef,
+  ForwardedRef,
+  useImperativeHandle,
+} from 'react';
 import trashSVG from './images/trash.svg';
 import styles from './FileInput.module.scss';
 
@@ -9,9 +17,15 @@ interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value'> {
   label?: string;
 }
 
-function FileInput({ label, className, value, ...attrs }: Props) {
+type Ref = ForwardedRef<HTMLInputElement>;
+
+const FileInput = forwardRef(({ label, className, value, ...attrs }: Props, forwardedRef: Ref) => {
   const ref = useRef<HTMLInputElement>(null);
   const labelClassName = clsx(styles.label, className);
+
+  // TODO: figure out what's wrong
+  // @ts-ignore
+  useImperativeHandle(forwardedRef, () => ref.current);
 
   const handleButtonClick = () => {
     ref.current?.click();
@@ -55,6 +69,6 @@ function FileInput({ label, className, value, ...attrs }: Props) {
       )}
     </label>
   );
-}
+});
 
 export { FileInput, Props as FileInputProps, styles as fileInputStyles };

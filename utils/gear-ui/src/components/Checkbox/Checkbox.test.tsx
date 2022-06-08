@@ -34,4 +34,13 @@ describe('checkbox tests', () => {
     expect(checkbox).toBeDisabled();
     expect(label).toHaveClass('disabled');
   });
+
+  it('passes ref', () => {
+    const ref = { current: null };
+    render(<Checkbox label="test label" ref={ref} />);
+
+    const checkbox = screen.getByLabelText('test label');
+
+    expect(ref.current).toBe(checkbox);
+  });
 });

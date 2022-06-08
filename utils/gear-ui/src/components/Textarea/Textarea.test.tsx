@@ -39,4 +39,13 @@ describe('textarea tests', () => {
     const textarea = screen.getByRole('textbox');
     expect(textarea).toHaveAttribute('rows', '10');
   });
+
+  it('passes ref', () => {
+    const ref = { current: null };
+    render(<Textarea rows={10} ref={ref} />);
+
+    const textarea = screen.getByRole('textbox');
+
+    expect(ref.current).toBe(textarea);
+  });
 });
