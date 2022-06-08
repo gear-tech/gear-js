@@ -7,6 +7,7 @@ import {
 import { ComponentType, ReactNode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Alert } from 'components';
+import { IPFSProvider } from 'context';
 import { ADDRESS } from 'consts';
 
 type Props = {
@@ -21,7 +22,7 @@ function AlertProvider({ children }: Props) {
   return <GearAlertProvider template={Alert}>{children}</GearAlertProvider>;
 }
 
-const providers = [BrowserRouter, AlertProvider, ApiProvider, AccountProvider];
+const providers = [BrowserRouter, AlertProvider, IPFSProvider, ApiProvider, AccountProvider];
 
 function withProviders(Component: ComponentType) {
   return () => providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, <Component />);
