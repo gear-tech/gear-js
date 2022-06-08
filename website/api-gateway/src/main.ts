@@ -1,17 +1,27 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
 import * as express from 'express';
-import configuration from './config/configuration';
-import { changeStatus } from './healthcheck/healthcheck.controller';
-const logger = new Logger('Main');
 
-async function bootstrap() {
-  const port = configuration().server.port;
-  const app = await NestFactory.create(AppModule, { cors: true });
-  app.use(express.json({ limit: '5mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '5mb' }));
-  await app.listen(port);
-  logger.log(`App successfully run on the ${port} 🚀`);
-}
-bootstrap();
+import { apiGatewayRouter } from './routes/api-gateway/api-gateway.router';
+import { healthcheckRouter } from './routes/healthcheck/healthcheck.router';
+import configuration from './config/configuration';
+import { connectKafka } from './kafka/kafka';
+import { logger } from './helpers/logger';
+
+const app = express();
+app.use(express.json());
+
+const port = configuration().server.port;
+
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+
+//Routes
+app.use('/api', apiGatewayRouter);
+app.use('/health', healthcheckRouter);
+
+const startApp = async () => {
+  await connectKafka();
+  app.listen(port, () => {
+    logger.info(`App successfully run on the ${port} 🚀`);
+  });
+};
+startApp();
