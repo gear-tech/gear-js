@@ -1,3 +1,15 @@
+## 0.20.0
+
+_06/03/2022_
+
+https://github.com/gear-tech/gear-js/pull/692
+
+### Breaking Changes
+
+- Update all events follow https://github.com/gear-tech/gear/pull/1000
+
+---
+
 ## 0.19.2
 
 _05/31/2022_

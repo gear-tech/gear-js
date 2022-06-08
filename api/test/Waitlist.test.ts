@@ -1,5 +1,5 @@
-import { CreateType, GearApi, Hex, WaitlistItem } from '../src';
-import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
+import { CreateType, GearApi, Hex, MessageWaitedData } from '../src';
+import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
 import { TEST_WASM_DIR } from './config';
 import { join } from 'path';
@@ -11,6 +11,7 @@ const CODE_PATH = join(TEST_WASM_DIR, 'test_waitlist.opt.wasm');
 let alice: KeyringPair = undefined;
 let programId: Hex = undefined;
 let messageId: Hex = undefined;
+let messageWaited: (messageId: Hex) => MessageWaitedData;
 
 beforeAll(async () => {
   await api.isReady;
@@ -18,8 +19,9 @@ beforeAll(async () => {
   alice = (await getAccount())[0];
   programId = api.program.submit({ code, gasLimit: 2_000_000_000 }).programId;
   const init = checkInit(api, programId);
-  await sendTransaction(api.program, alice, 'InitMessageEnqueued');
-  expect(await init).toBe('success');
+  await sendTransaction(api.program, alice, 'MessageEnqueued');
+  expect(await init()).toBe('success');
+  messageWaited = listenToMessageWaited(api);
 });
 
 afterAll(async () => {
@@ -30,7 +32,14 @@ afterAll(async () => {
 describe('GearWaitlist', () => {
   test(`read program's waitlist`, async () => {
     api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
-    messageId = (await sendTransaction(api.message, alice, 'DispatchMessageEnqueued')).messageId;
+    messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued'))[0];
+    const event = messageWaited(messageId);
+    expect(event).toBeDefined();
+    expect(event).toHaveProperty('reason');
+    expect(event.reason.isRuntime).toBeTruthy();
+    expect(event.reason.asRuntime.isWaitCalled).toBeTruthy();
+    expect(event).toHaveProperty('expiration');
+    expect(event).toHaveProperty('origin');
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(1);
     expect(waitlist[0].programId).toBe(programId);
@@ -52,7 +61,7 @@ describe('GearWaitlist', () => {
 
   test(`send one more message and read program's waitlist`, async () => {
     api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
-    messageId = (await sendTransaction(api.message, alice, 'DispatchMessageEnqueued')).messageId;
+    messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued'))[0];
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(2);
   });

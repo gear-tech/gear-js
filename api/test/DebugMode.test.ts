@@ -24,7 +24,7 @@ describe('DebugMode', () => {
   test('enable debug mode', async () => {
     debug.enable();
     const transactionData = await sendTransaction(debug.enabled, alice, 'DebugMode');
-    expect(transactionData).toBe(true);
+    expect(transactionData[0]).toBeTruthy();
   });
 
   test('get snapshots', async () => {
@@ -36,9 +36,9 @@ describe('DebugMode', () => {
       code: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_ping.opt.wasm')),
       gasLimit: 2_000_000_000,
     });
-    await sendTransaction(api.program.submitted, alice, 'InitMessageEnqueued');
+    await sendTransaction(api.program.submitted, alice, 'MessageEnqueued');
     api.message.submit({ destination: programId, payload: 'PING', gasLimit: 2_000_000_000 });
-    await sendTransaction(api.message.submitted, alice, 'DispatchMessageEnqueued');
+    await sendTransaction(api.message.submitted, alice, 'MessageEnqueued');
     (await unsub)();
     expect(snapshots).toHaveLength(2);
     for (let snapshot of snapshots) {
@@ -56,6 +56,6 @@ describe('DebugMode', () => {
   test('disable debug mode', async () => {
     debug.disable();
     const transactionData = await sendTransaction(debug.enabled, alice, 'DebugMode');
-    expect(transactionData).toBe(false);
+    expect(transactionData[0]).toBeFalsy();
   });
 });

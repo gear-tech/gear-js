@@ -17,7 +17,7 @@ beforeAll(async () => {
   programId = api.program.submit({ code, gasLimit: 2_000_000_000 }).programId;
   const initStatus = checkInit(api, programId);
   api.program.signAndSend(alice, () => {});
-  expect(await initStatus).toBe('success');
+  expect(await initStatus()).toBe('success');
 });
 
 afterAll(async () => {

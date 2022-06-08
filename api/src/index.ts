@@ -1,7 +1,6 @@
 import '@polkadot/api-augment';
 export { GearApi } from './GearApi';
 export { GearKeyring } from './Keyring';
-export { GearEvents } from './Events';
 export { GearProgram } from './Program';
 export { GearMessage } from './Message';
 export { GearMessageReply } from './MessageReply';
@@ -20,6 +19,6 @@ export * from './CreateType';
 export * from './create-type';
 export * from './types/interfaces';
 export * from './types';
-export * from './events-types';
+export * from './events';
 export * from './utils';
-export * from './events-types';
+export * from './events';

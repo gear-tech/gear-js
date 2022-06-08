@@ -1,7 +1,7 @@
 import { GearProgram } from './Program';
 import { GearMessage } from './Message';
 import { GearBalance } from './Balance';
-import { GearEvents } from './Events';
+import { GearEvents } from './events';
 import { GearProgramState } from './State';
 import { GearMessageReply } from './MessageReply';
 import { GearWaitlist } from './Waitlist';

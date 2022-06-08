@@ -1,8 +1,9 @@
-import { GearApi } from './GearApi';
-import { IBalanceCallback, IBlocksCallback, IEventCallback } from './types/interfaces';
-import { LogEvent, ProgramEvent, TransferEvent } from './events-types';
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { ISystemAccountInfo } from './types/interfaces';
+import { GearApi } from '../GearApi';
+import { ISystemAccountInfo, IBalanceCallback, IBlocksCallback } from '../types/interfaces';
+import { createEventClass } from './GearEvents';
+import { Transfer } from './GearEvents';
+import { IGearEvent } from './types';
 
 export class GearEvents {
   private api: GearApi;
@@ -11,36 +12,25 @@ export class GearEvents {
     this.api = gearApi;
   }
 
-  subscribeToLogEvents(callback: IEventCallback<LogEvent>): UnsubscribePromise {
+  subscribeToGearEvent<M extends keyof IGearEvent>(
+    method: M,
+    callback: (event: IGearEvent[M]) => void | Promise<void>,
+  ) {
     return this.api.query.system.events((events) => {
       events
-        .filter(({ event }) => this.api.events.gear.Log.is(event))
+        .filter(({ event }) => event.method === method)
         .forEach(({ event }) => {
-          setTimeout(() => {
-            callback(new LogEvent(event));
-          }, 100);
+          callback(createEventClass(method, event));
         });
     });
   }
 
-  subscribeToProgramEvents(callback: IEventCallback<ProgramEvent>): UnsubscribePromise {
-    return this.api.query.system.events((events) => {
-      events
-        .filter(({ event }) => this.api.events.gear.InitSuccess.is(event) || this.api.events.gear.InitFailure.is(event))
-        .forEach(({ event }) => {
-          setTimeout(() => {
-            callback(new ProgramEvent(event));
-          }, 100);
-        });
-    });
-  }
-
-  subscribeToTransferEvents(callback: IEventCallback<TransferEvent>): UnsubscribePromise {
+  subscribeToTransferEvents(callback: (event: Transfer) => void | Promise<void>): UnsubscribePromise {
     return this.api.query.system.events((events) => {
       events
         .filter(({ event }) => this.api.events.balances.Transfer.is(event))
         .forEach(({ event }) => {
-          callback(new TransferEvent(event));
+          callback(new Transfer(event));
         });
     });
   }

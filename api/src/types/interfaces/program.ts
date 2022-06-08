@@ -1,15 +1,6 @@
 import { Vec, Bytes, u8, u32, u64, Null, Map, Type, BTreeSet } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 
-export declare interface Reason extends Bytes {
-  isError: Boolean;
-  asError: Null;
-  isValueTransfer: Boolean;
-  asValueTransfer: Null;
-  isDispatch: Boolean;
-  asDispatch: Vec<u8>;
-}
-
 export declare interface IGearPages {
   [key: string]: Uint8Array;
 }
