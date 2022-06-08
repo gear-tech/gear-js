@@ -45,4 +45,13 @@ describe('select tests', () => {
     expect(select).toBeDisabled();
     expect(label).toHaveClass('disabled');
   });
+
+  it('passes ref', () => {
+    const ref = { current: null };
+    render(<Select options={initOptions} ref={ref} />);
+
+    const select = screen.getByRole('combobox');
+
+    expect(ref.current).toBe(select);
+  });
 });

@@ -60,4 +60,13 @@ describe('button tests', () => {
     const button = screen.getByRole('button');
     expect(button).toHaveClass(styles.block);
   });
+
+  it('passes ref', () => {
+    const ref = { current: null };
+    render(<Button text="button text" ref={ref} />);
+
+    const button = screen.getByRole('button');
+
+    expect(ref.current).toBe(button);
+  });
 });

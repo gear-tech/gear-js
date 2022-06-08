@@ -1,6 +1,5 @@
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, forwardRef, ForwardedRef } from 'react';
 import clsx from 'clsx';
-import { Icon, Text } from './children';
 import styles from './Input.module.scss';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
@@ -8,20 +7,20 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   icon?: string;
 }
 
-const Input = ({ label, icon, className, ...attrs }: Props) => {
+const Input = forwardRef(({ label, icon, className, ...attrs }: Props, ref: ForwardedRef<HTMLInputElement>) => {
   const { readOnly, disabled } = attrs;
   const labelClassName = clsx(styles.label, disabled && 'disabled', className);
   const wrapperClassName = clsx(styles.wrapper, readOnly && styles.readOnly);
 
   return (
     <label className={labelClassName} data-testid="label">
-      {label && <Text txt={label} />}
+      {label && <span className={styles.text}>{label}</span>}
       <div className={wrapperClassName} data-testid="wrapper">
-        {icon && <Icon src={icon} />}
-        <input className={styles.input} {...attrs} />
+        {icon && <img src={icon} alt="input icon" className={styles.icon} />}
+        <input className={styles.input} ref={ref} {...attrs} />
       </div>
     </label>
   );
-};
+});
 
 export { Input, Props as InputProps, styles as inputStyles };

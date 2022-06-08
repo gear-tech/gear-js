@@ -24,6 +24,7 @@ describe('input tests', () => {
     const icon = screen.getByRole('img');
 
     expect(label).toContainElement(icon);
+    expect(icon).toHaveAttribute('src', arrowIcon);
   });
 
   it('applies className to label wrapper', () => {
@@ -54,5 +55,14 @@ describe('input tests', () => {
 
     expect(input).toBeDisabled();
     expect(label).toHaveClass('disabled');
+  });
+
+  it('passes ref', () => {
+    const ref = { current: null };
+    render(<Input label="label" ref={ref} />);
+
+    const input = screen.getByLabelText('label');
+
+    expect(ref.current).toBe(input);
   });
 });

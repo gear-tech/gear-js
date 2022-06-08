@@ -35,6 +35,15 @@ describe('radio button tests', () => {
     expect(button).toBeDisabled();
     expect(label).toHaveClass('disabled');
   });
+
+  it('passes ref', () => {
+    const ref = { current: null };
+    render(<Radio label="test radio" ref={ref} />);
+
+    const button = screen.getByLabelText('test radio');
+
+    expect(ref.current).toBe(button);
+  });
 });
 
 describe('radio group tests', () => {
