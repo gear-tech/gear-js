@@ -1,6 +1,7 @@
 import { IMessage } from './message';
 import { IPaginationResult } from './pagination';
 import { IProgram } from './program';
+import { IRpcError } from '@gear-js/api-gateway/src/json-rpc/interface';
 
 export interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];
@@ -22,4 +23,18 @@ export interface GetMetaResult {
 
 export interface ProgramDataResult extends Omit<IProgram, 'meta'> {
   meta?: { meta?: string };
+}
+export interface IRpcResponse {
+  jsonrpc: '2.0';
+  id: number;
+  result?:
+    | AllMessagesResult
+    | GetAllProgramsResult
+    | IProgram
+    | IMessage
+    | IProgram[]
+    | IMessage[]
+    | GetMetaResult
+    | AddMetaResult;
+  error?: IRpcError;
 }

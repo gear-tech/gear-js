@@ -47,3 +47,16 @@ export interface GetTestBalanceParams extends IGenesis {
 export interface SearchParam {
   query?: string;
 }
+
+export interface IRpcRequest {
+  jsonrpc: '2.0';
+  id: number;
+  method: string;
+  params?:
+    | FindProgramParams
+    | GetAllProgramsParams
+    | AddMetaParams
+    | GetMetaParams
+    | AddPayloadParams
+    | GetMessagesParams;
+}
