@@ -17,9 +17,12 @@ const Event = ({ value, className }: Props) => {
   const { method, caption, description, blockNumber } = event;
 
   const counter = isGroup ? value.length : undefined;
+
+  //  TODOEVENTS:  log поменять на userMessageSent
   const isLog = method === Methods.LOG;
 
   const getContent = ({ id, data }: IdeaEvent = event) =>
+    // //  TODOEVENTS:  new userMessageSentData
     isLog ? <LogContent key={id} data={new LogData(data)} /> : <Content key={id} data={data} />;
 
   const getBody = () => (isGroup ? value.map(getContent) : getContent());

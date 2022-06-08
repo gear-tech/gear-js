@@ -48,6 +48,10 @@ class NodeApi {
     return this._api;
   }
 
+  // TODOEVENTS: 'programChanged'
+  // если внутри isActive -> program init success
+  // если нет
+  // api/test/utilFunctions - не надо держать подписку, смотреть только до отправки
   public subscribeToProgramEvents(cb: (event: ProgramEvent) => void) {
     if (this._api && !('programEvents' in this.subscriptions)) {
       this.subscriptions.programEvents = this._api.gearEvents.subscribeToProgramEvents((event: ProgramEvent) => {
@@ -64,6 +68,7 @@ class NodeApi {
     }
   }
 
+  // TODOEVENTS:  'userMessageSent'
   public subscribeToLogEvents(cb: (event: LogEvent) => void) {
     if (this._api && !('logEvents' in this.subscriptions)) {
       this.subscriptions.logEvents = this._api.gearEvents.subscribeToLogEvents((event: LogEvent) => {
@@ -80,6 +85,7 @@ class NodeApi {
     }
   }
 
+  //  TODOEVENTS: без изменений
   public subscribeToTransferEvents(cb: (event: TransferEvent) => void) {
     if (this._api && !('subscribeTransferEvents' in this.subscriptions)) {
       this.subscriptions.subscribeTransferEvents = this._api.gearEvents.subscribeToTransferEvents(

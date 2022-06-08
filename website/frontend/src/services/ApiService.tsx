@@ -54,22 +54,35 @@ export const UploadProgram = async (
     const { programId } = api.program.submit(program, meta);
 
     await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
+      //  TODOEVENTS:
+      // оставить
       if (data.status.isReady) {
         alert.update(alertId, 'Ready');
 
         return;
       }
 
+      //  TODOEVENTS:
+      // оставить
       if (data.status.isInBlock) {
         alert.update(alertId, 'InBlock');
 
         return;
       }
 
+      //  TODOEVENTS:
+      // оставить
       if (data.status.isFinalized) {
         alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
 
         data.events.forEach(({ event: { method } }) => {
+          //  TODOEVENTS:
+          // 'messageEnqueued'
+          // получить messageId инит сообщения (в лог евенте)
+
+          //  TODOEVENTS:
+          // ждем результат инита (после signAndSend), затем отправлять мету или нет
+
           if (method === 'InitMessageEnqueued') {
             callback();
 
@@ -119,7 +132,8 @@ export const UploadProgram = async (
               });
             }
           }
-
+          //  TODOEVENTS:
+          // оставить
           if (method === 'ExtrinsicFailed') {
             alert.error('Extrinsic Failed', {
               title: alertTitle,
@@ -129,7 +143,8 @@ export const UploadProgram = async (
 
         return;
       }
-
+      //  TODOEVENTS:
+      // оставить
       if (data.status.isInvalid) {
         alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
       }
@@ -159,24 +174,32 @@ export const sendMessage = async (
     api.submit(message, meta, payloadType);
 
     await api.signAndSend(account.address, { signer }, (data) => {
+      //  TODOEVENTS:
+      // оставить
       if (data.status.isReady) {
         alert.update(alertId, 'Ready');
 
         return;
       }
 
+      //  TODOEVENTS:
+      // оставить
       if (data.status.isInBlock) {
         alert.update(alertId, 'InBlock');
 
         return;
       }
 
+      //  TODOEVENTS:
+      // оставить
       if (data.status.isFinalized) {
         alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
 
         data.events.forEach(({ event }) => {
           const { method, section } = event;
 
+          //  TODOEVENTS:
+          // 'MessageEnqueued'
           if (method === 'DispatchMessageEnqueued') {
             alert.success('Success', { title: `${section}.DispatchMessageEnqueued` });
             callback();
@@ -192,6 +215,8 @@ export const sendMessage = async (
         return;
       }
 
+      //  TODOEVENTS:
+      // оставить
       if (data.status.isInvalid) {
         alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
       }
@@ -264,6 +289,9 @@ export const addMetadata = async (
 export const subscribeToEvents = (alert: AlertContainerFactory) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
 
+  //  TODOEVENTS:
+  // убрать, остается только перед отправкой программы
+
   nodeApi.subscribeToProgramEvents(({ method, data: { info, reason } }) => {
     // @ts-ignore
     if (info.origin.toHex() === filterKey) {
@@ -278,6 +306,8 @@ export const subscribeToEvents = (alert: AlertContainerFactory) => {
     }
   });
 
+  //  TODOEVENTS:
+  // все так же
   nodeApi.subscribeToLogEvents(async ({ data: { source, destination, reply, payload } }) => {
     if (destination.toHex() === filterKey) {
       let meta = null;
@@ -293,6 +323,8 @@ export const subscribeToEvents = (alert: AlertContainerFactory) => {
         meta = JSON.parse(result.meta);
       }
 
+      //  TODOEVENTS:
+      // CreateType.decode поменять на create
       try {
         decodedPayload =
           meta.output && !(reply.isSome && reply.unwrap()[1].toNumber() !== 0)
@@ -311,6 +343,8 @@ export const subscribeToEvents = (alert: AlertContainerFactory) => {
     }
   });
 
+  //  TODOEVENTS:
+  // остается
   nodeApi.subscribeToTransferEvents(({ data: { from, to, value } }) => {
     if (to.toHex() === filterKey) {
       const message = `TRANSFER BALANCE\n FROM:${GearKeyring.encodeAddress(from.toHex())}\n VALUE:${value.toString()}`;

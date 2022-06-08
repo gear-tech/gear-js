@@ -35,6 +35,7 @@ const LogContent = ({ data }: Props) => {
 
       if (type) {
         try {
+          //  TODOEVENTS:    // decode на create
           setDecodedPayload(CreateType.decode(type, payload, metadata));
         } catch {
           errorCallback();
@@ -74,7 +75,16 @@ const LogContent = ({ data }: Props) => {
 
   const getDecodedPayloadData = () => {
     // is there a better way to get logData with replaced payload?
+
+    //  TODOEVENTS:
+    // dataObject поменять на
+    // массив из двух элементов - [message, expiration]
+    // expiration выводить тоже
+
     const [dataObject] = formattedData as [{}];
+
+    //  TODOEVENTS:
+    // будет [{ ... }, expiration]
     return [{ ...dataObject, payload: decodedPayload?.toHuman() }];
   };
 

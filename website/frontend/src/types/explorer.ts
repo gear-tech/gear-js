@@ -55,6 +55,8 @@ export enum Sections {
   SYSTEM = 'system',
 }
 
+//  TODOEVENTS:
+// использовать Methods из @gear-js/api
 export enum Methods {
   TRANSFER = 'Transfer',
   LOG = 'Log',
