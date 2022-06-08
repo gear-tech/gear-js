@@ -19,8 +19,8 @@ function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | 
 
   const handleEventsStatus = (events: EventRecord[]) => {
     events.forEach(({ event: { method, section } }) => {
-      if (method === 'DispatchMessageEnqueued') {
-        alert.success(`${section}.DispatchMessageEnqueued`);
+      if (method === 'MessageEnqueued') {
+        alert.success(`${section}.MessageEnqueued`);
         // onSucessCallback();
       } else if (method === 'ExtrinsicFailed') {
         alert.error('Extrinsic Failed', { title });
