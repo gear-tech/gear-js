@@ -16,13 +16,6 @@ const Wallet = () => {
   const { account, updateBalance } = useAccount();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [accountBalance, setAccountBalance] = useState('');
-
-  useEffect(() => {
-    if (account && api) {
-      api.balance.findOut(account.address).then((result) => setAccountBalance(result.toHuman()));
-    }
-  }, [account, api]);
 
   useEffect(() => {
     // TODO: think how to wrap it hook
@@ -31,7 +24,6 @@ const Wallet = () => {
     if (account && api) {
       unsub = api.gearEvents.subscribeToBalanceChange(account.address, (balance) => {
         updateBalance(balance);
-        setAccountBalance(balance.toHuman());
       });
     }
 
@@ -65,7 +57,7 @@ const Wallet = () => {
           <>
             <div className={balanceSectionClassName}>
               <p>
-                Balance: <span className={styles.balanceAmount}>{accountBalance}</span>
+                Balance: <span className={styles.balanceAmount}>{account.balance.value}</span>
               </p>
             </div>
             <div className={styles.section}>
