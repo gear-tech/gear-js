@@ -39,26 +39,34 @@ export class ConsumerService {
     UserMessageSent: (value: IUserMessageSentKafkaValue) => {
       this.messageService.save(value);
     },
-    MessageEnqueued: async (value: IMessageEnqueuedKafkaValue) => {
-      if (value.entry === 'Init') {
+    MessageEnqueued: async ({
+      id,
+      destination,
+      source,
+      entry,
+      genesis,
+      timestamp,
+      blockHash,
+    }: IMessageEnqueuedKafkaValue) => {
+      if (entry === 'Init') {
         await this.programService.save({
-          id: value.destination,
-          owner: value.source,
-          genesis: value.genesis,
-          timestamp: value.timestamp,
-          blockHash: value.blockHash,
+          id: destination,
+          owner: source,
+          genesis: genesis,
+          timestamp: timestamp,
+          blockHash: blockHash,
         });
       }
       this.messageService.save({
-        id: value.id,
-        destination: value.destination,
-        source: value.source,
+        id: id,
+        destination: destination,
+        source: source,
         payload: null,
         replyTo: null,
         replyError: null,
-        genesis: value.genesis,
-        blockHash: value.blockHash,
-        timestamp: value.timestamp,
+        genesis: genesis,
+        blockHash: blockHash,
+        timestamp: timestamp,
       });
     },
     ProgramChanged: (value: IProgramChangedKafkaValue) => {
