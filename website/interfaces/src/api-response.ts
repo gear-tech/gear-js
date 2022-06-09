@@ -1,7 +1,6 @@
 import { IMessage } from './message';
 import { IPaginationResult } from './pagination';
 import { IProgram } from './program';
-import { IRpcError } from '@gear-js/api-gateway/src/json-rpc/interface';
 
 export interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];
@@ -37,4 +36,16 @@ export interface IRpcResponse {
     | GetMetaResult
     | AddMetaResult;
   error?: IRpcError;
+}
+
+export interface IRpcError {
+  code: RpcErrorCode;
+  message: string;
+}
+
+export enum RpcErrorCode {
+  GearError = -32602,
+  MethodNotFoundError = -32601,
+  InternalServerError = -32500,
+  UnathorizedError = -32401,
 }
