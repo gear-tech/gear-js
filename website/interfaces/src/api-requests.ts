@@ -1,4 +1,4 @@
-import { IGenesis, ISignature } from './general';
+import { IGenesis, ISignature } from './common';
 import { IMessage } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';

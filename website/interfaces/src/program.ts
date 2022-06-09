@@ -1,5 +1,5 @@
 import { IMeta } from './meta';
-import { IBaseDBRecord } from './general';
+import { IBaseDBRecord } from './common';
 
 export enum InitStatus {
   SUCCESS = 'success',
@@ -14,4 +14,9 @@ export interface IProgram extends IBaseDBRecord<number | Date> {
   meta?: IMeta;
   title?: string;
   initStatus: InitStatus;
+}
+
+export interface IProgramChangedData {
+  id: string;
+  isActive: boolean;
 }

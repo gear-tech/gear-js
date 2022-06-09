@@ -1,111 +1,92 @@
 import {
-  DispatchMessageEnqueuedData,
   GearApi,
-  InitFailureData,
-  InitMessageEnqueuedData,
-  InitSuccessData,
-  LogData,
-  MessageDispatchedData,
+  IGearEvent,
+  MessageEnqueuedData,
+  MessagesDispatchedData,
+  ProgramChangedData,
+  UserMessageSentData,
 } from '@gear-js/api';
 import {
-  AddEventKafkaPayload,
-  DispatchMessageEnqueud,
-  InitFailure,
-  InitMessageEnqueued,
-  InitSuccess,
+  NewEventData,
+  IMessageEnqueuedData,
   Keys,
-  Log,
-  MessageDispatched,
+  IMessage,
+  IProgramChangedData,
+  IMessagesDispatchedData,
 } from '@gear-js/interfaces';
+import { GenericEventData } from '@polkadot/types';
 
 import { logger } from './logger';
 
 const log = logger('EventListener');
 
-type EventType =
-  | 'InitMessageEnqueued'
-  | 'DispatchMessageEnqueued'
-  | 'Log'
-  | 'InitSuccess'
-  | 'InitFailure'
-  | 'MessageDispatched'
-  | 'DatabaseWiped';
+function messageEnqueuedHandler(data: GenericEventData): NewEventData<Keys.MessageEnqueued, IMessageEnqueuedData> {
+  const { id, destination, source, entry } = new MessageEnqueuedData(data);
+  return {
+    key: Keys.MessageEnqueued,
+    value: {
+      id: id.toHex(),
+      destination: destination.toHex(),
+      source: source.toHex(),
+      entry: entry.isInit ? 'Init' : entry.isHandle ? 'Handle' : 'Reply',
+    },
+  };
+}
 
-const handleEvent = (method: EventType, data: any): { key: Keys; value: any } | null => {
-  let eventData:
-    | InitMessageEnqueuedData
-    | DispatchMessageEnqueuedData
-    | LogData
-    | InitSuccessData
-    | InitFailureData
-    | MessageDispatchedData;
+function userMessageSentHandler(data: GenericEventData): NewEventData<Keys.UserMessageSent, IMessage> {
+  const { id, source, destination, payload, reply } = new UserMessageSentData(data);
+  return {
+    key: Keys.UserMessageSent,
+    value: {
+      id: id.toHex(),
+      source: source.toHex(),
+      destination: destination.toHex(),
+      payload: payload.toHex(),
+      replyTo: reply.isSome ? reply.unwrap()[0].toHex() : null,
+      replyError: reply.isSome ? reply.unwrap()[1].toString() : null,
+    },
+  };
+}
+function programChangedHandler(data: GenericEventData): NewEventData<Keys.ProgramChanged, IProgramChangedData> | null {
+  const { id, change } = new ProgramChangedData(data);
+  if (change.isActive || change.isInactive) {
+    return {
+      key: Keys.ProgramChanged,
+      value: {
+        id: id.toHex(),
+        isActive: change.isActive ? true : false,
+      },
+    };
+  }
+  return null;
+}
 
+function messagesDispatchedHandler(
+  data: GenericEventData,
+): NewEventData<Keys.MessagesDispatched, IMessagesDispatchedData> | null {
+  const { statuses } = new MessagesDispatchedData(data);
+  if (statuses.size > 0) {
+    return { key: Keys.MessagesDispatched, value: { statuses: statuses.toHuman() } as IMessagesDispatchedData };
+  }
+  return null;
+}
+
+const handleEvent = (
+  method: keyof IGearEvent | 'DatabaseWiped',
+  data: GenericEventData,
+): { key: Keys; value: any } | null => {
   switch (method) {
-    case 'InitMessageEnqueued':
-      eventData = new InitMessageEnqueuedData(data);
-      return {
-        key: Keys.initMessage,
-        value: {
-          programId: eventData.programId.toHex(),
-          messageId: eventData.messageId.toHex(),
-          origin: eventData.origin.toHex(),
-        },
-      } as AddEventKafkaPayload<Keys.initMessage, InitMessageEnqueued>;
-    case 'DispatchMessageEnqueued':
-      eventData = new DispatchMessageEnqueuedData(data);
-      return {
-        key: Keys.dispatchMessage,
-        value: {
-          programId: eventData.programId.toHex(),
-          messageId: eventData.messageId.toHex(),
-          origin: eventData.origin.toHex(),
-        },
-      } as AddEventKafkaPayload<Keys.dispatchMessage, DispatchMessageEnqueud>;
-    case 'Log':
-      eventData = new LogData(data);
-      return {
-        key: Keys.log,
-        value: {
-          id: eventData.id.toHex(),
-          source: eventData.source.toHex(),
-          destination: eventData.destination.toHex(),
-          payload: eventData.payload.toHex(),
-          replyTo: eventData.reply.isSome ? eventData.reply.unwrap()[0].toHex() : null,
-          replyError: eventData.reply.isSome ? `${eventData.reply.unwrap()[1].toNumber()}` : null,
-        },
-      } as AddEventKafkaPayload<Keys.log, Log>;
-    case 'InitSuccess':
-      eventData = new InitSuccessData(data);
-      return {
-        key: Keys.initSuccess,
-        value: {
-          programId: eventData.programId.toHex(),
-          messageId: eventData.messageId.toHex(),
-          origin: eventData.origin.toHex(),
-        },
-      } as AddEventKafkaPayload<Keys.initSuccess, InitSuccess>;
-    case 'InitFailure':
-      eventData = new InitFailureData(data);
-      return {
-        key: Keys.initFailure,
-        value: {
-          programId: eventData.info.programId.toHex(),
-          messageId: eventData.info.messageId.toHex(),
-          origin: eventData.info.origin.toHex(),
-        },
-      } as AddEventKafkaPayload<Keys.initFailure, InitFailure>;
-    case 'MessageDispatched':
-      eventData = new MessageDispatchedData(data);
-      return {
-        key: Keys.messageDispatched,
-        value: {
-          messageId: eventData.messageId.toHex(),
-          outcome: eventData.outcome.isFailure ? eventData.outcome.asFailure.toHuman() : 'success',
-        },
-      } as AddEventKafkaPayload<Keys.messageDispatched, MessageDispatched>;
+    case 'MessageEnqueued':
+      return messageEnqueuedHandler(data);
+    case 'UserMessageSent':
+      return userMessageSentHandler(data);
+    case 'ProgramChanged':
+      return programChangedHandler(data);
+    case 'MessagesDispatched':
+      return messagesDispatchedHandler(data);
     case 'DatabaseWiped':
       return {
-        key: Keys.dbWiped,
+        key: Keys.DatabaseWiped,
         value: {},
       };
     default:
@@ -114,19 +95,19 @@ const handleEvent = (method: EventType, data: any): { key: Keys; value: any } | 
 };
 
 export const listen = (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) =>
-  api.query.system.events(async (events: any) => {
-    const blockHash = events.createdAtHash.toHex();
-    const timestamp = await api.blocks.getBlockTimestamp(blockHash);
+  api.query.system.events(async (events) => {
+    const blockHash = events.createdAtHash!.toHex();
+    const timestamp = await api.blocks.getBlockTimestamp(blockHash!);
     const base = {
       genesis,
       blockHash,
       timestamp: timestamp.toNumber(),
     };
 
-    events.forEach(async ({ event: { data, method } }: any) => {
+    events.forEach(async ({ event: { data, method } }) => {
       try {
-        const addEvent = handleEvent(method, data);
-        addEvent !== null && callback({ key: addEvent.key, value: { ...addEvent.value, ...base } });
+        const eventData = handleEvent(method as keyof IGearEvent, data);
+        eventData !== null && callback({ key: eventData.key, value: { ...eventData.value, ...base } });
       } catch (error) {
         log.error({ method, data: data.toHuman() });
         log.error(error);

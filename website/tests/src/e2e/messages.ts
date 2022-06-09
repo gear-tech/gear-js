@@ -28,6 +28,7 @@ export async function getMessageData(genesis: string, messageId: Hex) {
     'error',
     'replyTo',
     'replyError',
+    'processedWithPanic',
   ]);
   return true;
 }
