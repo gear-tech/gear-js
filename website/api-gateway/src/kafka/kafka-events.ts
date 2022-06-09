@@ -26,9 +26,9 @@ async function programData(params: FindProgramParams) {
   return res;
 }
 
-async function addMeta(params: AddMetaParams) {
+async function programMetaAdd(params: AddMetaParams) {
   const correlationId: string = nanoid(6);
-  await kafkaSendByTopic(KAFKA_TOPICS.META_ADD, correlationId, params);
+  await kafkaSendByTopic(KAFKA_TOPICS.PROGRAM_META_ADD, correlationId, params);
 
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
@@ -36,9 +36,9 @@ async function addMeta(params: AddMetaParams) {
   return res;
 }
 
-async function getMeta(params: GetMetaParams) {
+async function programMetaGet(params: GetMetaParams) {
   const correlationId: string = nanoid(6);
-  await kafkaSendByTopic(KAFKA_TOPICS.META_GET, correlationId, params);
+  await kafkaSendByTopic(KAFKA_TOPICS.PROGRAM_META_GET, correlationId, params);
 
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
@@ -118,8 +118,8 @@ async function testBalance(params: GetTestBalanceParams) {
 
 export {
   programData,
-  addMeta,
-  getMeta,
+  programMetaAdd,
+  programMetaGet,
   programAll,
   programAllUsers,
   messageAll,

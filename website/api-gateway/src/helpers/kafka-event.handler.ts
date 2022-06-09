@@ -1,12 +1,12 @@
 import { KAFKA_TOPICS } from '../common/kafka-producer-topics';
 import {
-  addMeta,
-  getMeta,
   messageAll,
   messageData,
   programAll,
   programAllUsers,
   programData,
+  programMetaAdd,
+  programMetaGet,
 } from '../kafka/kafka-events';
 
 export function kafkaEventHandler(event: string, params: any): Promise<any> {
@@ -15,10 +15,10 @@ export function kafkaEventHandler(event: string, params: any): Promise<any> {
       return programData(params);
     case KAFKA_TOPICS.PROGRAM_ALL:
       return programAll(params);
-    case KAFKA_TOPICS.META_ADD:
-      return addMeta(params);
-    case KAFKA_TOPICS.META_GET:
-      return getMeta(params);
+    case KAFKA_TOPICS.PROGRAM_META_ADD:
+      return programMetaAdd(params);
+    case KAFKA_TOPICS.PROGRAM_META_GET:
+      return programMetaGet(params);
     case KAFKA_TOPICS.PROGRAM_ALL_USER:
       return programAllUsers(params);
     case KAFKA_TOPICS.MESSAGE_ALL:
