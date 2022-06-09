@@ -2,8 +2,8 @@ import { readFileSync } from 'fs';
 import { GearApi, getWasmMetadata, Hex } from '@gear-js/api';
 import accounts from '../config/accounts';
 import { IMessageSpec, IPreparedPrograms } from '../interfaces';
-import { listenLog } from './subscriptions';
-import { checkLogs, checkMessages } from './check';
+import { listenToUserMessageSent } from './subscriptions';
+import { checkUserMessageSent, checkMessages } from './check';
 import { sleep } from '../utils';
 
 async function sendMessage(api: GearApi, destination: Hex, spec: IMessageSpec) {
@@ -20,8 +20,8 @@ async function sendMessage(api: GearApi, destination: Hex, spec: IMessageSpec) {
       events.forEach(({ event: { method, data } }) => {
         if (method === 'ExtrinsicFailed') {
           throw new Error(`Unable to send message. ExtrinsicFailed. ${data.toString()}`);
-        } else if (method === 'DispatchMessageEnqueued') {
-          resolve(data[0].toHuman());
+        } else if (method === 'MessageEnqueued') {
+          resolve(data.toHuman());
         }
       });
     });
@@ -35,7 +35,7 @@ export async function sendMessages(
 ) {
   const sentMessages = new Map<number, any>();
   const logs = new Map<Hex, any>();
-  const unsub = await listenLog(api, (data) => {
+  const unsub = await listenToUserMessageSent(api, (data) => {
     logs.set(data.id.toHex(), data.toHuman());
   });
   for (let program of Object.keys(messages)) {
@@ -53,5 +53,5 @@ export async function sendMessages(
 
   await sleep();
   unsub();
-  return { sent: checkMessages(sentMessages, messages), log: checkLogs(messages, logs) };
+  return { sent: checkMessages(sentMessages, messages), log: checkUserMessageSent(messages, logs) };
 }

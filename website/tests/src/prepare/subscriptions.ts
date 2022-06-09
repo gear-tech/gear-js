@@ -1,17 +1,20 @@
-import { GearApi, LogData, MessageInfo, Reason } from '@gear-js/api';
+import { GearApi, Hex, UserMessageSentData } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-export async function listenLog(api: GearApi, callback: (logData: LogData) => void): UnsubscribePromise {
-  return await api.gearEvents.subscribeToLogEvents((event) => {
+export async function listenToUserMessageSent(
+  api: GearApi,
+  callback: (logData: UserMessageSentData) => void,
+): UnsubscribePromise {
+  return await api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
     callback(event.data);
   });
 }
 
-export async function listenInit(
+export async function listenToProgramChanged(
   api: GearApi,
-  callback: (info: MessageInfo, reason?: Reason) => void,
+  callback: (id: Hex, isActive: boolean) => void,
 ): UnsubscribePromise {
-  return api.gearEvents.subscribeToProgramEvents((event) => {
-    callback(event.data.info, event.data.reason);
+  return api.gearEvents.subscribeToGearEvent('ProgramChanged', (event) => {
+    callback(event.data.id.toHex(), event.data.change.isActive);
   });
 }
