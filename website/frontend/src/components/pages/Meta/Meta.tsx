@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { Hex } from '@gear-js/api';
 
 import { UploadMetaForm } from 'components/blocks/UploadMetaForm';
 
@@ -9,7 +10,7 @@ import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 import { useProgram } from 'hooks';
 
 type Params = {
-  programId: string;
+  programId: Hex;
 };
 
 export const Meta = () => {
@@ -25,7 +26,7 @@ export const Meta = () => {
         <>
           <PageHeader title="Upload metadata" fileName={programName} />
           <Box>
-            <UploadMetaForm programId={program.id} programName={programName} />
+            <UploadMetaForm programId={program.id as Hex} programName={programName} />
           </Box>
         </>
       ) : (

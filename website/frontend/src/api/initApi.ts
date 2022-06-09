@@ -1,5 +1,4 @@
-import { GearApi } from '@gear-js/api';
-import { LogEvent, ProgramEvent, TransferEvent } from '@gear-js/api';
+import { GearApi, Transfer, UserMessageSent } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { isNodeAddressValid } from 'helpers';
 import { NODE_ADDRESS, NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
@@ -48,59 +47,19 @@ class NodeApi {
     return this._api;
   }
 
-  // TODOEVENTS: 'programChanged'
-  // если внутри isActive -> program init success
-  // если нет
-  // api/test/utilFunctions - не надо держать подписку, смотреть только до отправки
-  public subscribeToProgramEvents(cb: (event: ProgramEvent) => void) {
-    if (this._api && !('programEvents' in this.subscriptions)) {
-      this.subscriptions.programEvents = this._api.gearEvents.subscribeToProgramEvents((event: ProgramEvent) => {
+  public subscribeToUserMessageSentEvents(cb: (event: UserMessageSent) => void) {
+    if (this._api && !('UserMessageSent' in this.subscriptions)) {
+      this.subscriptions.userMessageSent = this._api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
         cb(event);
       });
     }
   }
 
-  public unsubscribeFromProgramEvents() {
-    if ('programEvents' in this.subscriptions) {
-      (async () => {
-        (await this.subscriptions.programEvents)();
-      })();
-    }
-  }
-
-  // TODOEVENTS:  'userMessageSent'
-  public subscribeToLogEvents(cb: (event: LogEvent) => void) {
-    if (this._api && !('logEvents' in this.subscriptions)) {
-      this.subscriptions.logEvents = this._api.gearEvents.subscribeToLogEvents((event: LogEvent) => {
-        cb(event);
-      });
-    }
-  }
-
-  public unsubscribeFromLogEvents() {
-    if ('logEvents' in this.subscriptions) {
-      (async () => {
-        (await this.subscriptions.logEvents)();
-      })();
-    }
-  }
-
-  //  TODOEVENTS: без изменений
-  public subscribeToTransferEvents(cb: (event: TransferEvent) => void) {
+  public subscribeToTransferEvents(cb: (event: Transfer) => void) {
     if (this._api && !('subscribeTransferEvents' in this.subscriptions)) {
-      this.subscriptions.subscribeTransferEvents = this._api.gearEvents.subscribeToTransferEvents(
-        (event: TransferEvent) => {
-          cb(event);
-        }
-      );
-    }
-  }
-
-  public unsubscribeFromTransferEvents() {
-    if ('subscribeTransferEvents' in this.subscriptions) {
-      (async () => {
-        (await this.subscriptions.subscribeTransferEvents)();
-      })();
+      this.subscriptions.subscribeTransferEvents = this._api.gearEvents.subscribeToTransferEvents((event) => {
+        cb(event);
+      });
     }
   }
 }

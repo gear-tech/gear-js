@@ -40,12 +40,6 @@ export const PROGRESS_BAR_STATUSES = {
   COMPLETED: 'COMPLETED',
 };
 
-export const EVENT_TYPES = {
-  PROGRAM_INITIALIZED: 'ProgramInitialized',
-  PROGRAM_INITIALIZATION_FAILURE: 'InitFailure',
-  LOG: 'log',
-};
-
 export const SOCKET_RESULT_STATUSES = {
   IN_BLOCK: 'InBlock',
   FINALIZED: 'Finalized',

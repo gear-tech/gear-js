@@ -45,7 +45,8 @@ const Component = () => {
     if (isApiReady) {
       subscribeToEvents(alert);
     }
-  }, [isApiReady, alert]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isApiReady]);
 
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);

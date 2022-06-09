@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Formik, Form, FormikHelpers, FormikProps } from 'formik';
 import { Button } from '@gear-js/ui';
-import { getWasmMetadata, Metadata } from '@gear-js/api';
+import { getWasmMetadata, Hex, Metadata } from '@gear-js/api';
 
 import styles from './UploadMetaForm.module.scss';
 import { Schema } from './model/Schema';
@@ -17,7 +17,7 @@ import { useAccount, useAlert } from 'hooks';
 import { addMetadata } from 'services/ApiService';
 
 type Props = {
-  programId: string;
+  programId: Hex;
   programName: string;
 };
 

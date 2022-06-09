@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { CreateType, LogData } from '@gear-js/api';
+import { CreateType, UserMessageSentData } from '@gear-js/api';
 import { Checkbox } from '@gear-js/ui';
 import { Codec } from '@polkadot/types/types';
 import { isHex } from 'helpers';
@@ -10,7 +10,7 @@ import styles from './LogContent.module.scss';
 type TypeKey = 'handle_output' | 'init_output';
 
 type Props = {
-  data: LogData;
+  data: UserMessageSentData;
 };
 
 const LogContent = ({ data }: Props) => {
@@ -35,8 +35,7 @@ const LogContent = ({ data }: Props) => {
 
       if (type) {
         try {
-          //  TODOEVENTS:    // decode на create
-          setDecodedPayload(CreateType.decode(type, payload, metadata));
+          setDecodedPayload(CreateType.create(type, payload, metadata));
         } catch {
           errorCallback();
         }
@@ -75,17 +74,9 @@ const LogContent = ({ data }: Props) => {
 
   const getDecodedPayloadData = () => {
     // is there a better way to get logData with replaced payload?
+    const [message, expiration] = formattedData as [{}, string];
 
-    //  TODOEVENTS:
-    // dataObject поменять на
-    // массив из двух элементов - [message, expiration]
-    // expiration выводить тоже
-
-    const [dataObject] = formattedData as [{}];
-
-    //  TODOEVENTS:
-    // будет [{ ... }, expiration]
-    return [{ ...dataObject, payload: decodedPayload?.toHuman() }];
+    return [{ ...message, payload: decodedPayload?.toHuman() }, expiration];
   };
 
   return (

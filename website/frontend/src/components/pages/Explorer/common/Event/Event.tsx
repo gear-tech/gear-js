@@ -1,5 +1,4 @@
-import React from 'react';
-import { LogData } from '@gear-js/api';
+import { UserMessageSentData } from '@gear-js/api';
 import { IdeaEvent, IdeaEvents, Methods } from 'types/explorer';
 import { ExpansionPanel } from 'components/pages/Explorer/common/ExpansionPanel/ExpansionPanel';
 import { Content } from './children/Content/Content';
@@ -18,12 +17,10 @@ const Event = ({ value, className }: Props) => {
 
   const counter = isGroup ? value.length : undefined;
 
-  //  TODOEVENTS:  log поменять на userMessageSent
-  const isLog = method === Methods.LOG;
+  const isLog = method === Methods.USER_MESSAGE_SENT;
 
   const getContent = ({ id, data }: IdeaEvent = event) =>
-    // //  TODOEVENTS:  new userMessageSentData
-    isLog ? <LogContent key={id} data={new LogData(data)} /> : <Content key={id} data={data} />;
+    isLog ? <LogContent key={id} data={new UserMessageSentData(data)} /> : <Content key={id} data={data} />;
 
   const getBody = () => (isGroup ? value.map(getContent) : getContent());
 
