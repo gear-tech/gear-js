@@ -26,4 +26,7 @@ export class Message extends BaseEntity implements IMessage {
 
   @Column({ nullable: true })
   replyError: string;
+
+  @Column({ default: false })
+  processedWithPanic: boolean;
 }

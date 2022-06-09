@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@gear-js/api": "0.19.0",
+    "@gear-js/api": "0.20.0",
     "@gear-js/jsonrpc-errors": "workspace:^",
     "@nestjs/common": "8.4.5",
     "@nestjs/config": "1.2.1",

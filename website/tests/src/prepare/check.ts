@@ -11,12 +11,12 @@ export function checkPrograms(
 
   Object.keys(programs).forEach((id) => {
     assert(initSuccess.has(id), `InitStatus of ${id} program not found`);
-    assert(programs[id as Hex].shouldSuccess === initSuccess.get(id), `InitStatus of ${id} doesn't match`);
+    assert(programs[id].shouldSuccess === initSuccess.get(id), `InitStatus of ${id} doesn't match`);
 
-    result[id as Hex] = {
-      spec: programs[id as Hex],
-      init: initSuccess.get(id) as boolean,
-      id: id as Hex,
+    result[id] = {
+      spec: programs[id],
+      init: initSuccess.get(id),
+      id: id,
     };
   });
   return result;
@@ -33,7 +33,10 @@ export function checkMessages(sentMessages: Map<number, any>, specMessages: { [p
   return sentMessages;
 }
 
-export function checkLogs(specMessages: { [program: string]: IMessageSpec[] }, logMessages: Map<Hex, any>) {
+export function checkUserMessageSent(
+  specMessages: { [program: string]: IMessageSpec[] },
+  checkUserMessageSentMessages: Map<Hex, any>,
+) {
   assert(
     Object.keys(specMessages).reduce((counter, key) => {
       counter += specMessages[key].reduce((count, value) => {
@@ -43,8 +46,8 @@ export function checkLogs(specMessages: { [program: string]: IMessageSpec[] }, l
         return count;
       }, 0);
       return counter;
-    }, 0) === logMessages.size,
+    }, 0) === checkUserMessageSentMessages.size,
     `Some logs wasn't received`,
   );
-  return logMessages;
+  return checkUserMessageSentMessages;
 }

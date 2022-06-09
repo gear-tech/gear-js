@@ -1,5 +1,4 @@
 import {
-  AddEventKafkaPayload,
   AddMetaParams,
   AddPayloadParams,
   FindMessageParams,
@@ -10,6 +9,7 @@ import {
   GetMetaParams,
   KafkaPayload,
   Keys,
+  NewEventData,
 } from '@gear-js/interfaces';
 import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
@@ -22,7 +22,7 @@ export class ConsumerController {
   constructor(private readonly consumerService: ConsumerService) {}
 
   @MessagePattern('events')
-  async addEvent(@Payload() payload: AddEventKafkaPayload<Keys, any>) {
+  async addEvent(@Payload() payload: NewEventData<Keys, any>) {
     const key = payload.key;
     const value = payload.value;
     try {

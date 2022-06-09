@@ -16,17 +16,14 @@ import {
   GetMetaParams,
   GetMetaResult,
   IMessage,
-  IProgram,
-  MessageDispatched,
   InitStatus,
-  Log,
-  InitMessageEnqueued,
-  DispatchMessageEnqueud,
-  InitSuccess,
-  InitFailure,
   GetAllUserProgramsParams,
   IGenesis,
   ProgramDataResult,
+  IUserMessageSentKafkaValue,
+  IMessageEnqueuedKafkaValue,
+  IProgramChangedKafkaValue,
+  IMessagesDispatchedKafkaValue,
 } from '@gear-js/interfaces';
 import { FormResponse } from 'src/middleware/formResponse';
 
@@ -39,49 +36,43 @@ export class ConsumerService {
   ) {}
 
   events = {
-    Log: (value: Log) => {
+    UserMessageSent: (value: IUserMessageSentKafkaValue) => {
       this.messageService.save(value);
     },
-    InitMessageEnqueued: async (value: InitMessageEnqueued) => {
-      await this.programService.save({
-        id: value.programId,
-        owner: value.origin,
-        genesis: value.genesis,
-        timestamp: value.timestamp,
-        blockHash: value.blockHash,
-      });
+    MessageEnqueued: async ({
+      id,
+      destination,
+      source,
+      entry,
+      genesis,
+      timestamp,
+      blockHash,
+    }: IMessageEnqueuedKafkaValue) => {
+      if (entry === 'Init') {
+        await this.programService.save({
+          id: destination,
+          owner: source,
+          genesis: genesis,
+          timestamp: timestamp,
+          blockHash: blockHash,
+        });
+      }
       this.messageService.save({
-        id: value.messageId,
-        destination: value.programId,
-        source: value.origin,
+        id: id,
+        destination: destination,
+        source: source,
         payload: null,
         replyTo: null,
         replyError: null,
-        genesis: value.genesis,
-        blockHash: value.blockHash,
-        timestamp: value.timestamp,
+        genesis: genesis,
+        blockHash: blockHash,
+        timestamp: timestamp,
       });
     },
-    DispatchMessageEnqueued: (value: DispatchMessageEnqueud) => {
-      this.messageService.save({
-        genesis: value.genesis,
-        id: value.messageId,
-        destination: value.programId,
-        source: value.origin,
-        blockHash: value.blockHash,
-        timestamp: value.timestamp,
-        payload: null,
-        replyTo: null,
-        replyError: null,
-      });
+    ProgramChanged: (value: IProgramChangedKafkaValue) => {
+      this.programService.setStatus(value.id, value.genesis, value.isActive ? InitStatus.SUCCESS : InitStatus.FAILED);
     },
-    InitSuccess: (value: InitSuccess) => {
-      this.programService.setStatus(value.programId, value.genesis, InitStatus.SUCCESS);
-    },
-    InitFailure: (value: InitFailure) => {
-      this.programService.setStatus(value.programId, value.genesis, InitStatus.FAILED);
-    },
-    MessageDispatched: (value: MessageDispatched) => {
+    MessageDispatched: (value: IMessagesDispatchedKafkaValue) => {
       this.messageService.setDispatchedStatus(value);
     },
     DatabaseWiped: (value: IGenesis) => {
