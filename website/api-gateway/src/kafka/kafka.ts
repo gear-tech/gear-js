@@ -4,7 +4,7 @@ import config from '../config/configuration';
 import { KAFKA_TOPICS, kafkaProducerTopics } from '../common/kafka-producer-topics';
 import { changeStatus } from '../routes/healthcheck/healthcheck.router';
 import { logger } from '../helpers/logger';
-import { kafkaEventMap } from './kafka-event-map';
+import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
 import { transformToSting } from '../utils';
 import { KafkaParams } from './types';
 
@@ -29,8 +29,10 @@ async function connectKafka() {
     await Promise.all([kafkaProducer.connect(), kafkaConsumer.connect(), subscribeConsumerTopics(topics)]);
     await kafkaConsumer.run({
       eachMessage: async ({ message }) => {
-        const resultFromService = kafkaEventMap.get(message?.headers?.kafka_correlationId.toString());
+        const correlationId = message?.headers?.kafka_correlationId.toString();
+        const resultFromService = kafkaEventMap.get(correlationId);
         if (resultFromService) await resultFromService(JSON.parse(message.value.toString()));
+        deleteKafkaEvent(correlationId);
       },
     });
     changeStatus('kafka');

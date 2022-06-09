@@ -12,9 +12,9 @@ import {
 } from '@gear-js/interfaces';
 import { nanoid } from 'nanoid';
 
-import { kafkaProducer, kafkaSendByTopic } from './kafka';
-import { KAFKA_TOPICS, kafkaProducerTopics } from '../common/kafka-producer-topics';
-import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
+import { kafkaSendByTopic } from './kafka';
+import { KAFKA_TOPICS } from '../common/kafka-producer-topics';
+import { kafkaEventMap } from './kafka-event-map';
 
 async function programData(params: FindProgramParams) {
   const correlationId: string = nanoid(6);
@@ -23,7 +23,6 @@ async function programData(params: FindProgramParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 
@@ -34,7 +33,6 @@ async function addMeta(params: AddMetaParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 
@@ -45,7 +43,6 @@ async function getMeta(params: GetMetaParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 
@@ -56,7 +53,6 @@ async function programAll(params: GetAllProgramsParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 
@@ -67,7 +63,6 @@ async function programAllUsers(params: GetAllUserProgramsParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 
@@ -78,7 +73,6 @@ async function messageAll(params: GetMessagesParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 
@@ -89,7 +83,6 @@ async function messageData(params: FindMessageParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 
@@ -100,7 +93,6 @@ async function messageIncoming(params: GetIncomingMessagesParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 
@@ -111,7 +103,6 @@ async function messageOutGoing(params: GetOutgoingMessagesParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 
@@ -122,7 +113,6 @@ async function testBalance(params: GetTestBalanceParams) {
   let topicEvent;
   const res = new Promise((resolve) => (topicEvent = resolve));
   kafkaEventMap.set(correlationId, topicEvent);
-  deleteKafkaEvent(correlationId);
   return res;
 }
 

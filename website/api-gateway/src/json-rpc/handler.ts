@@ -21,7 +21,7 @@ async function requestMessageHandler(message: IRpcRequest | IRpcRequest[]): Prom
 async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
   if (!isExistMethod(procedure.method)) {
     logger.error(JSON.stringify(errors.MethodNotFound));
-    return getResponse(procedure, 'MethodNotFound');
+    return getResponse(procedure, errors.MethodNotFound.name);
   }
   const { method, params } = procedure;
   const { error, result } = await kafkaEventHandler(method, params);
