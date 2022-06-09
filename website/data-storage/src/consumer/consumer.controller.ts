@@ -50,13 +50,13 @@ export class ConsumerController {
     return JSON.stringify(result);
   }
 
-  @MessagePattern('meta.add')
+  @MessagePattern('program.meta.add')
   async addMeta(@Payload() payload: KafkaPayload<AddMetaParams>) {
     const result = await this.consumerService.addMeta(payload.value);
     return JSON.stringify(result);
   }
 
-  @MessagePattern('meta.get')
+  @MessagePattern('program.meta.get')
   async getMeta(@Payload() payload: KafkaPayload<GetMetaParams>) {
     const result = await this.consumerService.getMeta(payload.value);
     return JSON.stringify(result);
