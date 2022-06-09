@@ -16,16 +16,26 @@
   column-gap: 30px;
 }
 
+.details {
+  margin-bottom: 30px;
+}
+
 .imgCard {
   @include card(65px 70px);
 }
 
 .image {
-  // TODO: prolly img-fluid
-  width: 100%;
-  max-width: 450px;
-
   display: block;
+  max-height: 350px;
   margin: 0 auto;
   border-radius: $borderRadius;
+}
+
+.buttons {
+  display: flex;
+  margin-top: 30px;
+
+  & > *:not(:last-child) {
+    margin-right: 30px;
+  }
 }

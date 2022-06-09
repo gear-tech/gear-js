@@ -17,4 +17,10 @@ const getMintPayload = (name: string, description: string, jsonCid: CID, imgCid:
   return { Mint: { tokenMetadata } };
 };
 
-export { isLoggedIn, getIpfsAddress, getMintPayload };
+const isHex = (value: unknown) => {
+  const hexRegex = /^0x[\da-fA-F]+/;
+
+  return typeof value === 'string' && hexRegex.test(value);
+};
+
+export { isLoggedIn, getIpfsAddress, getMintPayload, isHex };
