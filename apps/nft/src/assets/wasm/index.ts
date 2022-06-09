@@ -1,3 +1,3 @@
-import NftMetaWasm from './nft.meta.wasm';
+import nftMetaWasm from './nft.meta.wasm';
 
-export { NftMetaWasm };
+export { nftMetaWasm };

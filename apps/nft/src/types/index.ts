@@ -1,5 +1,9 @@
 import { Hex } from '@gear-js/api';
 
+type Params = {
+  id: string;
+};
+
 type Token = {
   approvedAccountIds: Hex[];
   description: string;
@@ -15,4 +19,4 @@ type TokenDetails = {
   attributes?: { [key: string]: string };
 };
 
-export type { Token, TokenDetails };
+export type { Params, Token, TokenDetails };

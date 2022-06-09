@@ -1,41 +1,29 @@
-import { useAccount, useReadState, useSendMessage } from '@gear-js/react-hooks';
-import { NftMetaWasm } from 'assets';
-import { ADDRESS } from 'consts';
-import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Token, TokenDetails } from 'types';
+import { useAccount } from '@gear-js/react-hooks';
+import { useEffect, useState } from 'react';
+import { TokenDetails } from 'types';
 import { getIpfsAddress } from 'utils';
 import { Button } from '@gear-js/ui';
 import { ConfirmationModal, AddressModal } from 'components';
 import clsx from 'clsx';
 import { Hex } from '@gear-js/api';
+import { useNFT, useSendNFTMessage } from 'hooks';
 import { Card } from './card';
 import { Addresses } from './addresses';
 import { Attributes } from './attributes';
 import styles from './NFT.module.scss';
 
-type Params = {
-  id: string;
-};
-
-type TokenState = { Token: { token: Token } };
-
 function NFT() {
-  const { id } = useParams() as Params;
-
   const { account } = useAccount();
 
-  const statePayload = useMemo(() => ({ Token: { tokenId: id } }), [id]);
-  const nft = useReadState(ADDRESS.NFT_CONTRACT, NftMetaWasm, statePayload) as TokenState | undefined;
-
-  const { name, ownerId, description, media, reference, approvedAccountIds } = nft?.Token.token || {};
+  const nft = useNFT();
+  const { id, name, ownerId, description, media, reference, approvedAccountIds } = nft || {};
 
   const heading = `${name} #${id}`;
   const src = media ? getIpfsAddress(media) : '';
   const isAnyApprovedAccount = !!approvedAccountIds?.length;
   const isOwner = account?.decodedAddress === ownerId;
 
-  const sendMessage = useSendMessage(ADDRESS.NFT_CONTRACT, NftMetaWasm);
+  const sendMessage = useSendNFTMessage();
 
   const [details, setDetails] = useState<TokenDetails>();
   const { attributes, rarity } = details || {};

@@ -1,8 +1,5 @@
 import { Button, FileInput, Input, Textarea } from '@gear-js/ui';
-import { useIPFS } from 'hooks';
-import { useSendMessage } from '@gear-js/react-hooks';
-import { ADDRESS } from 'consts';
-import { NftMetaWasm } from 'assets';
+import { useIPFS, useSendNFTMessage } from 'hooks';
 import { getMintPayload } from 'utils';
 import { useForm } from 'react-hook-form';
 import styles from './Create.module.scss';
@@ -18,7 +15,7 @@ function Create() {
   const { errors } = formState;
 
   const ipfs = useIPFS();
-  const sendMessage = useSendMessage(ADDRESS.NFT_CONTRACT, NftMetaWasm);
+  const sendMessage = useSendNFTMessage();
 
   const onSubmit = (data: Values) => {
     const { name, description } = data;
