@@ -2110,21 +2110,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.19.0, @gear-js/api@npm:^0.19.0":
-  version: 0.19.0
-  resolution: "@gear-js/api@npm:0.19.0"
-  dependencies:
-    "@types/rollup-plugin-peer-deps-external": ^2.2.1
-    rollup-plugin-peer-deps-external: ^2.2.4
-    rollup-plugin-typescript2: ^0.31.2
-  peerDependencies:
-    "@polkadot/api": ^8.4.2
-    "@polkadot/wasm-crypto": ^6.0.1
-    rxjs: ^7.5.5
-  checksum: b732eac30422c6b080b75e451931435931db722bff118cec034278866ea000e4248b628b2477dca6ee23825e7cddbc085a2a07eacd956be7d1f9fa617794fe90
-  languageName: node
-  linkType: hard
-
 "@gear-js/api@npm:0.20.0, @gear-js/api@npm:^0.20.0":
   version: 0.20.0
   resolution: "@gear-js/api@npm:0.20.0"
@@ -2136,14 +2121,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@gear-js/api@npm:0.20.0"
+"@gear-js/api@npm:^0.19.0":
+  version: 0.19.0
+  resolution: "@gear-js/api@npm:0.19.0"
+  dependencies:
+    "@types/rollup-plugin-peer-deps-external": ^2.2.1
+    rollup-plugin-peer-deps-external: ^2.2.4
+    rollup-plugin-typescript2: ^0.31.2
   peerDependencies:
-    "@polkadot/api": ^8.6.1
-    "@polkadot/wasm-crypto": ^6.1.1
+    "@polkadot/api": ^8.4.2
+    "@polkadot/wasm-crypto": ^6.0.1
     rxjs: ^7.5.5
-  checksum: bf10be2adf72f012ee2c7f17b673f68a614ba7e9c26ef6e3c9b895766e780ff11663fd502c3841628f9232475aeafc39ebb5da443699c4e680646472cc72195c
+  checksum: b732eac30422c6b080b75e451931435931db722bff118cec034278866ea000e4248b628b2477dca6ee23825e7cddbc085a2a07eacd956be7d1f9fa617794fe90
   languageName: node
   linkType: hard
 
