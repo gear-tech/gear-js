@@ -50,8 +50,6 @@ const Wallet = () => {
     styles.accountButton
   );
 
-  const formatedBalance = `${account?.balance.value} ${account?.balance.unit ?? ''}`;
-
   return (
     <>
       <div className={styles.wallet}>
@@ -59,7 +57,10 @@ const Wallet = () => {
           <>
             <div className={balanceSectionClassName}>
               <p>
-                Balance: <span className={styles.balanceAmount}>{account.balance.value} {account.balance.unit}</span>
+                Balance:{' '}
+                <span className={styles.balanceAmount}>
+                  {account.balance.value} {account.balance.unit}
+                </span>
               </p>
             </div>
             <div className={styles.section}>
