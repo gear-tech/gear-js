@@ -7,6 +7,5 @@
   "bin": "index.js",
   "dependencies": {
     "cross-spawn": "^7.0.3"
-  },
-  "preferGlobal": true
+  }
 }
