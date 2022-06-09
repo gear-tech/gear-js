@@ -11,7 +11,8 @@ import {
   FindMessageParams,
   GetMessagesParams,
   IMessage,
-  MessageDispatched,
+  IMessagesDispatchedKafkaValue,
+  IUserMessageSentKafkaValue,
 } from '@gear-js/interfaces';
 
 const logger = new Logger('MessageService');
@@ -23,7 +24,7 @@ export class MessagesService {
     private readonly messageRepo: Repository<Message>,
   ) {}
 
-  async save(params: IMessage): Promise<IMessage> {
+  async save(params: IUserMessageSentKafkaValue): Promise<IMessage> {
     const { id, genesis, destination, payload, source, replyError, replyTo, timestamp, blockHash } = params;
     try {
       const message = this.messageRepo.create({
@@ -121,27 +122,12 @@ export class MessagesService {
     return result;
   }
 
-  async setDispatchedStatus(params: MessageDispatched): Promise<void> {
-    const error = params.outcome !== 'success' ? params.outcome : null;
-    if (error === null) {
-      return;
-    }
-    await sleep(1000);
-    const message = await this.messageRepo.findOne({
-      where: { genesis: params.genesis, id: params.messageId },
-    });
-    if (message) {
-      message.error = error;
-      this.messageRepo.save(message);
-    }
-    const logMessages = await this.messageRepo.find({
-      where: { genesis: params.genesis, replyTo: params.messageId, replyError: '1' },
-    });
-    if (logMessages.length > 0) {
-      logMessages.forEach((log) => {
-        log.replyError = error;
-        this.messageRepo.save(log);
-      });
+  async setDispatchedStatus({ statuses, genesis }: IMessagesDispatchedKafkaValue): Promise<void> {
+    for (let messageId of Object.keys(statuses)) {
+      if (statuses[messageId] === 'Success') continue;
+
+      await sleep(100);
+      await this.messageRepo.update({ genesis, id: messageId }, { processedWithPanic: true });
     }
   }
 

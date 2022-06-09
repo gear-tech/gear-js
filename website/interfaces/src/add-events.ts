@@ -1,31 +1,25 @@
-import { IMessage } from './message';
-import { IMessageInfo, IBaseDBRecord } from './general';
-import { IGenesis } from './general';
+import { IBaseDBRecord, IGenesis } from './common';
+import { IMessage, IMessageEnqueuedData, IMessagesDispatchedData } from './message';
+import { IProgram, IProgramChangedData } from './program';
 
 export enum Keys {
-  initMessage = 'InitMessageEnqueued',
-  dispatchMessage = 'DispatchMessageEnqueued',
-  log = 'Log',
-  initSuccess = 'InitSuccess',
-  initFailure = 'InitFailure',
-  messageDispatched = 'MessageDispatched',
-  dbWiped = 'DatabaseWiped',
+  MessageEnqueued = 'MessageEnqueued',
+  UserMessageSent = 'UserMessageSent',
+  MessagesDispatched = 'MessagesDispatched',
+  ProgramChanged = 'ProgramChanged',
+  CodeChanged = 'CodeChanged',
+  DatabaseWiped = 'DatabaseWiped',
 }
 
-export interface AddEventKafkaPayload<K extends Keys, V> {
+export interface NewEventData<K extends Keys, V> {
   key: K;
   value: V;
 }
 
-export interface Log extends IMessage {}
+export interface IMessageEnqueuedKafkaValue extends IMessageEnqueuedData, IBaseDBRecord<number> {}
 
-export interface DispatchMessageEnqueud extends IBaseDBRecord<number>, IMessageInfo {}
+export interface IUserMessageSentKafkaValue extends IMessage, IBaseDBRecord<number> {}
 
-export interface InitMessageEnqueued extends IBaseDBRecord<number>, IMessageInfo {}
+export interface IProgramChangedKafkaValue extends IProgramChangedData, IBaseDBRecord<number> {}
 
-export interface MessageDispatched extends IBaseDBRecord<number>, Pick<IMessageInfo, 'messageId'> {
-  outcome: string;
-}
-
-export interface InitSuccess extends IBaseDBRecord<number>, IMessageInfo {}
-export interface InitFailure extends IBaseDBRecord<number>, IMessageInfo {}
+export interface IMessagesDispatchedKafkaValue extends IMessagesDispatchedData, IBaseDBRecord<number> {}
