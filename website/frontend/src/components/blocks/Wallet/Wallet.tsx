@@ -59,7 +59,7 @@ const Wallet = () => {
           <>
             <div className={balanceSectionClassName}>
               <p>
-                Balance: <span className={styles.balanceAmount}>{formatedBalance}</span>
+                Balance: <span className={styles.balanceAmount}>{account.balance.value} {account.balance.unit}</span>
               </p>
             </div>
             <div className={styles.section}>
