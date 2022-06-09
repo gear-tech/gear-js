@@ -13,7 +13,7 @@ import { useAccount, useApi } from 'hooks';
 const Wallet = () => {
   const { api } = useApi();
   const accounts = useAccounts();
-  const { account } = useAccount();
+  const { account, updateBalance } = useAccount();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [accountBalance, setAccountBalance] = useState('');
@@ -30,6 +30,7 @@ const Wallet = () => {
 
     if (account && api) {
       unsub = api.gearEvents.subscribeToBalanceChange(account.address, (balance) => {
+        updateBalance(balance);
         setAccountBalance(balance.toHuman());
       });
     }
@@ -39,7 +40,7 @@ const Wallet = () => {
         unsub.then((callback) => callback());
       }
     };
-  }, [api, account]);
+  }, [api, account, updateBalance]);
 
   const openModal = () => {
     setIsModalOpen(true);
