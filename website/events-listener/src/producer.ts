@@ -1,9 +1,8 @@
+import { logger } from '@gear-js/common';
+
 import { Kafka, Producer } from 'kafkajs';
-
-import { logger } from './logger';
 import config from './config';
-
-const log = logger('KafkaProducer');
+import { EVENTS_LISTENER } from './index';
 
 export class KafkaProducer {
   readonly kafka: Kafka;
@@ -26,10 +25,11 @@ export class KafkaProducer {
     const admin = this.kafka.admin();
     try {
       await admin.connect();
-      log.info('Admin is connected');
+      logger.info(`${EVENTS_LISTENER} Kafka producer: Admin is connected`);
     } catch (error) {
-      log.error(error);
-      log.error('Admin is not connected');
+      logger.info(`${EVENTS_LISTENER} Kafka producer: Admin is connected`);
+      logger.error(`${EVENTS_LISTENER}: ${error}`);
+      logger.error(`${EVENTS_LISTENER}: Admin is not connected`);
       throw error;
     }
     try {
@@ -43,23 +43,23 @@ export class KafkaProducer {
             },
           ],
         });
-        log.info(`Topic <${topic}> created`);
+        logger.info(`${EVENTS_LISTENER} Kafka producer: Topic ${topic} created`);
       } else {
-        log.warn(`Topic <${topic}> already existed`);
+        logger.warn(`${EVENTS_LISTENER} Kafka producer: Topic ${topic} already existed`);
       }
     } catch (error) {
-      log.error(error);
+      logger.error(`${EVENTS_LISTENER} Kafka producer: ${error}`);
       await admin.disconnect();
-      log.info('Admin is disconnected');
+      logger.error(`${EVENTS_LISTENER}: Admin is not connected`);
       throw error;
     }
     await admin.disconnect();
-    log.info('Admin is disconnected');
+    logger.error(`${EVENTS_LISTENER}: Admin is not connected`);
   }
 
   async connect() {
     await this.producer.connect();
-    log.info('Producer is connected');
+    logger.info(`${EVENTS_LISTENER}: Producer is connected`);
   }
 
   async send(key: string, value: string, genesis: string) {

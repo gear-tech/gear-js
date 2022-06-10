@@ -6,19 +6,18 @@ import {
   ProgramChangedData,
   UserMessageSentData,
 } from '@gear-js/api';
-import {
-  NewEventData,
-  IMessageEnqueuedData,
-  Keys,
-  IMessage,
-  IProgramChangedData,
-  IMessagesDispatchedData,
-} from '@gear-js/interfaces';
 import { GenericEventData } from '@polkadot/types';
+import {
+  IMessage,
+  IMessageEnqueuedData,
+  IMessagesDispatchedData,
+  IProgramChangedData,
+  Keys,
+  loggerWithLabel,
+  NewEventData,
+} from '@gear-js/common';
 
-import { logger } from './logger';
-
-const log = logger('EventListener');
+const log = loggerWithLabel('EventListener');
 
 function messageEnqueuedHandler(data: GenericEventData): NewEventData<Keys.MessageEnqueued, IMessageEnqueuedData> {
   const { id, destination, source, entry } = new MessageEnqueuedData(data);

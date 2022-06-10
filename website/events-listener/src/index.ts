@@ -1,17 +1,17 @@
 import { GearApi } from '@gear-js/api';
+import { logger } from '@gear-js/common';
 
 import { listen } from './events';
 import { KafkaProducer } from './producer';
-import { logger } from './logger';
 import config from './config';
 import { restartIfNeeded, setRestartNeeded } from './lifecycle';
 import { changeStatus } from './healthcheck';
 
-const log = logger('Main');
+export const EVENTS_LISTENER = 'EVENTS_LISTENER';
 
 const main = async () => {
   while (true) {
-    log.info('Starting...');
+    logger.info(`${EVENTS_LISTENER} Starting...`);
     const api = await GearApi.create({ providerAddress: config.api.provider, throwOnConnect: true });
     changeStatus('ws');
     api.on('error', () => {
@@ -21,7 +21,7 @@ const main = async () => {
     const chain = await api.chain();
     const genesis = api.genesisHash.toHex();
 
-    log.info(`Connected to ${chain} with genesis ${genesis}`);
+    logger.info(`${EVENTS_LISTENER} Connected to ${chain} with genesis ${genesis}`);
 
     const producer = new KafkaProducer();
     await producer.createTopic('events');
@@ -32,13 +32,13 @@ const main = async () => {
       producer.send(key, value, genesis);
     });
 
-    log.info('Started.');
+    logger.info(`${EVENTS_LISTENER} Started`);
 
     await restartIfNeeded;
   }
 };
 
 main().catch((error) => {
-  console.error(error);
+  logger.error(error);
   process.exit(1);
 });
