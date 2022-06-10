@@ -1,9 +1,10 @@
+import { JSONRPC_ERRORS } from '@gear-js/common';
+
 import { Consumer, Kafka, KafkaMessage, Producer } from 'kafkajs';
 import config from './config';
 import { DbService } from './db';
 import { GearService } from './gear';
 import { KafkaLogger, Logger } from './logger';
-import errors from '@gear-js/jsonrpc-errors';
 
 const log = Logger('KafkaConsumer');
 
@@ -58,7 +59,7 @@ export class KafkaConsumer {
       payload = JSON.parse(message.value.toString());
     } catch (error) {
       log.error(error.message, error.stack);
-      return { error: errors.InternalError.name };
+      return { error: JSONRPC_ERRORS.InternalError.name };
     }
 
     if (payload.genesis === this.gearService.genesisHash) {
@@ -66,11 +67,11 @@ export class KafkaConsumer {
         if (await this.dbService.possibleToTransfer(payload.address, payload.genesis)) {
           result = { result: await this.gearService.transferBalance(payload.address) };
         } else {
-          result = { error: errors.TransferLimitReached.name };
+          result = { error: JSONRPC_ERRORS.TransferLimitReached.name };
         }
       } catch (error) {
         log.error(error.message, error.stack);
-        result = { error: errors.InternalError.name };
+        result = { error: JSONRPC_ERRORS.InternalError.name };
       }
       this.sendReply(message, JSON.stringify(result));
     }
