@@ -1,13 +1,13 @@
-import { Logger } from '@nestjs/common';
+import { logger } from '@gear-js/common';
+import { DATA_STORAGE } from '../main';
 
-const logger = new Logger('Middleware');
 export function FormResponse(target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
   const originalMethod = descriptor.value;
   descriptor.value = async function SafeWrapper() {
     try {
       return { result: await originalMethod.apply(this, arguments) };
     } catch (ex) {
-      logger.warn(ex);
+      logger.warn(`${DATA_STORAGE} Middleware: ${JSON.stringify(ex)}`);
       return { error: ex.name };
     }
   };

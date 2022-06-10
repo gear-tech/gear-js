@@ -2,9 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GearKeyring } from '@gear-js/api';
-import { Message } from '../entities/message.entity';
-import { MessageNotFound, SignatureNotVerified } from '../errors';
-import { getPaginationParams, getWhere, sleep } from '../utils';
 import {
   AddPayloadParams,
   AllMessagesResult,
@@ -13,7 +10,11 @@ import {
   IMessage,
   IMessagesDispatchedKafkaValue,
   IUserMessageSentKafkaValue,
-} from '@gear-js/interfaces';
+} from '@gear-js/common';
+
+import { Message } from '../entities/message.entity';
+import { MessageNotFound, SignatureNotVerified } from '../errors';
+import { getPaginationParams, getWhere, sleep } from '../utils';
 
 const logger = new Logger('MessageService');
 
@@ -123,7 +124,7 @@ export class MessagesService {
   }
 
   async setDispatchedStatus({ statuses, genesis }: IMessagesDispatchedKafkaValue): Promise<void> {
-    for (let messageId of Object.keys(statuses)) {
+    for (const messageId of Object.keys(statuses)) {
       if (statuses[messageId] === 'Success') continue;
 
       await sleep(100);

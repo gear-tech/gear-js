@@ -1,6 +1,7 @@
-import { PAGINATION_LIMIT } from './config/configuration';
-import { IPaginationParams } from '@gear-js/interfaces';
 import { ILike } from 'typeorm';
+import { IPaginationParams } from '@gear-js/common';
+
+import { PAGINATION_LIMIT } from './config/configuration';
 
 export function getPaginationParams(params: IPaginationParams): { take: number; skip: number } {
   return { take: params.limit || PAGINATION_LIMIT, skip: params.offset || 0 };

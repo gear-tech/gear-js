@@ -1,5 +1,5 @@
-import { IMeta } from '@gear-js/interfaces';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { IMeta } from '@gear-js/common';
 
 @Entity()
 export class Meta implements IMeta {

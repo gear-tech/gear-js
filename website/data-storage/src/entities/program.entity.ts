@@ -1,5 +1,6 @@
-import { IProgram, InitStatus } from '@gear-js/interfaces';
 import { Column, Entity, JoinColumn, Index, OneToOne, PrimaryColumn } from 'typeorm';
+import { InitStatus, IProgram } from '@gear-js/common';
+
 import { BaseEntity } from './base.entity';
 import { Meta } from './meta.entity';
 

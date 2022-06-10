@@ -1,5 +1,6 @@
-import { IMessage } from '@gear-js/interfaces';
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
+import { IMessage } from '@gear-js/common';
+
 import { BaseEntity } from './base.entity';
 
 @Entity()
