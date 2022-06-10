@@ -23,3 +23,29 @@ export interface GetMetaResult {
 export interface ProgramDataResult extends Omit<IProgram, 'meta'> {
   meta?: { meta?: string };
 }
+export interface IRpcResponse {
+  jsonrpc: '2.0';
+  id: number;
+  result?:
+    | AllMessagesResult
+    | GetAllProgramsResult
+    | IProgram
+    | IMessage
+    | IProgram[]
+    | IMessage[]
+    | GetMetaResult
+    | AddMetaResult;
+  error?: IRpcError;
+}
+
+export interface IRpcError {
+  code: RpcErrorCode;
+  message: string;
+}
+
+export enum RpcErrorCode {
+  GearError = -32602,
+  MethodNotFoundError = -32601,
+  InternalServerError = -32500,
+  UnathorizedError = -32401,
+}
