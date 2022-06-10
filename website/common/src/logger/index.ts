@@ -1,4 +1,5 @@
 import { createLogger, format, transports } from 'winston';
+import chalk from 'chalk';
 
 const customFormat = format.combine(
   format.timestamp(),
@@ -12,9 +13,29 @@ const customFormat = format.combine(
   }),
 );
 
+const customFormat2 = format.printf(({ level, message, label, timestamp }) => {
+  return `${chalk.cyan(timestamp)} ${level} ${chalk.magenta(`[${label}]`)} ${message}`;
+});
+
+const loggerWithLabel = (labelName: string) =>
+  createLogger({
+    level: 'debug',
+    format: format.combine(
+      format((info) => {
+        info.level = info.level.toUpperCase();
+        return info;
+      })(),
+      format.colorize(),
+      format.label({ label: labelName }),
+      format.timestamp({ format: 'HH:mm:ss' }),
+      customFormat2,
+    ),
+    transports: [new transports.Console()],
+  });
+
 const logger = createLogger({
   format: customFormat,
   transports: [new transports.Console({ level: 'silly' })],
 });
 
-export { logger };
+export { logger, loggerWithLabel };
