@@ -2080,6 +2080,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/api-gateway@workspace:website/api-gateway"
   dependencies:
+    "@gear-js/common": "workspace:^"
     "@gear-js/interfaces": "workspace:^"
     "@gear-js/jsonrpc-errors": "workspace:^"
     "@types/express": 4.17.13
@@ -2135,6 +2136,15 @@ __metadata:
   checksum: bf10be2adf72f012ee2c7f17b673f68a614ba7e9c26ef6e3c9b895766e780ff11663fd502c3841628f9232475aeafc39ebb5da443699c4e680646472cc72195c
   languageName: node
   linkType: hard
+
+"@gear-js/common@workspace:^, @gear-js/common@workspace:website/common":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/common@workspace:website/common"
+  dependencies:
+    typescript: 4.6.4
+    winston: ^3.7.2
+  languageName: unknown
+  linkType: soft
 
 "@gear-js/data-storage@workspace:website/data-storage":
   version: 0.0.0-use.local
