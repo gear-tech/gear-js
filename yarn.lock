@@ -2081,8 +2081,6 @@ __metadata:
   resolution: "@gear-js/api-gateway@workspace:website/api-gateway"
   dependencies:
     "@gear-js/common": "workspace:^"
-    "@gear-js/interfaces": "workspace:^"
-    "@gear-js/jsonrpc-errors": "workspace:^"
     "@types/express": 4.17.13
     "@types/jest": 26.0.24
     "@types/node": 14.18.18
@@ -2296,22 +2294,6 @@ __metadata:
     vercel: 24.1.0
     web-vitals: 2.1.4
     yup: 0.32.11
-  languageName: unknown
-  linkType: soft
-
-"@gear-js/interfaces@workspace:^, @gear-js/interfaces@workspace:website/interfaces":
-  version: 0.0.0-use.local
-  resolution: "@gear-js/interfaces@workspace:website/interfaces"
-  dependencies:
-    typescript: 4.6.4
-  languageName: unknown
-  linkType: soft
-
-"@gear-js/jsonrpc-errors@workspace:^, @gear-js/jsonrpc-errors@workspace:website/jsonrpc-errors":
-  version: 0.0.0-use.local
-  resolution: "@gear-js/jsonrpc-errors@workspace:website/jsonrpc-errors"
-  dependencies:
-    typescript: 4.6.4
   languageName: unknown
   linkType: soft
 
