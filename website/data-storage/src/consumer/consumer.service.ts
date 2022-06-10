@@ -72,7 +72,7 @@ export class ConsumerService {
     ProgramChanged: (value: IProgramChangedKafkaValue) => {
       this.programService.setStatus(value.id, value.genesis, value.isActive ? InitStatus.SUCCESS : InitStatus.FAILED);
     },
-    MessageDispatched: (value: IMessagesDispatchedKafkaValue) => {
+    MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
       this.messageService.setDispatchedStatus(value);
     },
     DatabaseWiped: (value: IGenesis) => {
