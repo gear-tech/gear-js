@@ -58,10 +58,7 @@ export enum Sections {
 export enum Methods {
   TRANSFER = 'Transfer',
   USER_MESSAGE_SENT = 'UserMessageSent',
-  INIT_SUCCESS = 'InitSuccess',
-  INIT_FAILURE = 'InitFailure',
-  DISPATCH_MESSAGE_ENQUEUED = 'DispatchMessageEnqueued',
-  MESSAGE_DISPATCHED = 'MessageDispatched',
+  MESSAGES_DISPATCHED = 'MessagesDispatched',
   EXTRINSIC_FAILED = 'ExtrinsicFailed',
   EXTRINSIC_SUCCESS = 'ExtrinsicSuccess',
 }

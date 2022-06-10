@@ -1,10 +1,10 @@
-import { Hex, CreateType, GearApi, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
+import { CreateType, GearApi, GearKeyring, GearMessage, GearMessageReply, Metadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedExtension } from '@polkadot/extension-inject/types';
 
 import { localPrograms } from './LocalDBService';
 import ServerRPCRequestService from './ServerRPCRequestService';
-import { subscribeToProgramUpload } from './helpers';
+import { waitForProgramInit } from './helpers';
 
 import { nodeApi } from 'api/initApi';
 
@@ -17,7 +17,7 @@ import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/co
 import { UploadProgramModel, Message, Reply, ProgramStatus } from 'types/program';
 
 export const uploadMetadata = (
-  programId: Hex,
+  programId: string,
   account: Account,
   name: string,
   injector: InjectedExtension,
@@ -109,7 +109,7 @@ export const UploadProgram = async (
   try {
     const { programId } = api.program.submit(program, meta);
 
-    const getProgramUploadStatus = subscribeToProgramUpload(api, programId);
+    const getProgramUploadStatus = waitForProgramInit(api, programId);
 
     await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
       if (data.status.isReady) {
@@ -154,7 +154,7 @@ export const UploadProgram = async (
       return;
     }
 
-    alert.success('Program initialization successfully');
+    alert.success('Program initializated successfully');
 
     uploadMetadata(programId, account, name, injector, alert, metaFile, meta, title);
   } catch (error) {
@@ -228,7 +228,7 @@ export const addMetadata = async (
   meta: Metadata,
   metaFile: any,
   account: Account,
-  programId: Hex,
+  programId: string,
   name: any,
   alert: AlertContainerFactory
 ) => {

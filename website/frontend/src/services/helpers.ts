@@ -1,7 +1,7 @@
 import { GearApi, Hex } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-export const subscribeToProgramUpload = (api: GearApi, programId: string) => {
+export const waitForProgramInit = (api: GearApi, programId: string) => {
   let messageId: Hex;
   const unsubscribes: UnsubscribePromise[] = [];
 
