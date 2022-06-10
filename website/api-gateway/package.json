@@ -13,6 +13,7 @@
     "dev": "nodemon src/main.ts"
   },
   "dependencies": {
+    "@gear-js/common": "workspace:^",
     "@gear-js/interfaces": "workspace:^",
     "@gear-js/jsonrpc-errors": "workspace:^",
     "dotenv": "^16.0.1",

@@ -1,19 +1,19 @@
+import { nanoid } from 'nanoid';
 import {
   AddMetaParams,
   FindMessageParams,
   FindProgramParams,
   GetAllProgramsParams,
+  GetAllUserProgramsParams,
   GetIncomingMessagesParams,
   GetMessagesParams,
   GetMetaParams,
   GetOutgoingMessagesParams,
   GetTestBalanceParams,
-  GetAllUserProgramsParams,
-} from '@gear-js/interfaces';
-import { nanoid } from 'nanoid';
+  KAFKA_TOPICS,
+} from '@gear-js/common';
 
 import { kafkaSendByTopic } from './kafka';
-import { KAFKA_TOPICS } from '../common/kafka-producer-topics';
 import { kafkaEventMap } from './kafka-event-map';
 
 async function programData(params: FindProgramParams) {

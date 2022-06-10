@@ -1,10 +1,8 @@
-import { IRpcRequest, IRpcResponse } from '@gear-js/interfaces';
-import errors from '@gear-js/jsonrpc-errors';
+import { IRpcRequest, IRpcResponse, logger, KAFKA_TOPICS, JSONRPC_ERRORS } from '@gear-js/common';
 
 import { getResponse } from '../utils';
-import { kafkaProducerTopics } from '../common/kafka-producer-topics';
 import { kafkaEventHandler } from '../helpers/kafka-event.handler';
-import { logger } from '../helpers/logger';
+import { API_GATEWAY } from '../common/constant';
 
 async function requestMessageHandler(message: IRpcRequest | IRpcRequest[]): Promise<IRpcResponse | IRpcResponse[]> {
   if (Array.isArray(message)) {
@@ -20,8 +18,8 @@ async function requestMessageHandler(message: IRpcRequest | IRpcRequest[]): Prom
 
 async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
   if (!isExistMethod(procedure.method)) {
-    logger.error(JSON.stringify(errors.MethodNotFound));
-    return getResponse(procedure, errors.MethodNotFound.name);
+    logger.error(`${API_GATEWAY}:${JSON.stringify(JSONRPC_ERRORS.MethodNotFound)}`);
+    return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
   }
   const { method, params } = procedure;
   const { error, result } = await kafkaEventHandler(method, params);
@@ -29,7 +27,7 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
 }
 
 function isExistMethod(kafkaTopic: string): boolean {
-  const topics = Object.values(kafkaProducerTopics);
+  const topics: string[] = Object.values(KAFKA_TOPICS);
   return topics.includes(kafkaTopic);
 }
 

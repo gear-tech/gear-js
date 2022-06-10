@@ -1,15 +1,15 @@
 import { Kafka } from 'kafkajs';
+import { KAFKA_TOPICS, logger } from '@gear-js/common';
 
 import config from '../config/configuration';
-import { KAFKA_TOPICS, kafkaProducerTopics } from '../common/kafka-producer-topics';
 import { changeStatus } from '../routes/healthcheck/healthcheck.router';
-import { logger } from '../helpers/logger';
 import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
 import { transformToSting } from '../utils';
 import { KafkaParams } from './types';
+import { API_GATEWAY } from '../common/constant';
 
 const configKafka = config().kafka;
-const topics = Object.values(kafkaProducerTopics);
+const topics = Object.values(KAFKA_TOPICS);
 
 const kafka = new Kafka({
   clientId: configKafka.clientId,
@@ -36,9 +36,9 @@ async function connectKafka() {
       },
     });
     changeStatus('kafka');
-    logger.info('Kafka------------>Connection initialized');
+    logger.info(`${API_GATEWAY}:Kafka connection initialized`);
   } catch (err) {
-    logger.error(`connectKafka:${err}`);
+    logger.error(`${API_GATEWAY} Kafka err:${err}`);
   }
 }
 

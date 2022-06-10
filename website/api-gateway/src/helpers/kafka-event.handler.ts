@@ -1,4 +1,5 @@
-import { KAFKA_TOPICS } from '../common/kafka-producer-topics';
+import { KAFKA_TOPICS } from '@gear-js/common';
+
 import {
   messageAll,
   messageData,
