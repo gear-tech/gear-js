@@ -29,6 +29,10 @@ export class ConsumerController {
       await this.consumerService.events[key](value);
     } catch (error) {
       logger.error(error.message, error.stack);
+      logger.error({
+        key,
+        value,
+      });
     }
   }
 
