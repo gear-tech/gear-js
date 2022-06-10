@@ -33,8 +33,9 @@ function Home() {
       </li>
     ));
 
-  // <p className={styles.text}>There are no NFTs at the moment.</p>
-  // <Loader />
+  const NFTs = getNFTs();
+  const isEachNftLoaded = nfts && ownerNfts && approvedNfts;
+  const isAnyNft = !!NFTs?.length;
 
   return (
     <>
@@ -42,7 +43,14 @@ function Home() {
         <h2 className={styles.heading}>NFTs</h2>
         {account && <Filter list={FILTERS} value={filter} onChange={setFilter} />}
       </header>
-      <ul className={styles.list}>{getNFTs()}</ul>
+      {isEachNftLoaded ? (
+        <>
+          {isAnyNft && <ul className={styles.list}>{NFTs}</ul>}
+          {!isAnyNft && <p className={styles.text}>There are no NFTs at the moment.</p>}
+        </>
+      ) : (
+        <Loader />
+      )}
     </>
   );
 }

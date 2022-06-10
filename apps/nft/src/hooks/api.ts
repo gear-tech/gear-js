@@ -55,7 +55,8 @@ function useOwnerNFTs() {
 
   const nfts = useNFTState(payload);
 
-  return nfts?.TokensForOwner.tokens;
+  // escaping infinite loading without login, mb it's worth to return read status from useReadState hook for this purpose
+  return account ? nfts?.TokensForOwner.tokens : [];
 }
 
 function useApprovedNFTs() {
@@ -67,7 +68,8 @@ function useApprovedNFTs() {
 
   const nfts = useNFTState(payload);
 
-  return nfts?.ApprovedTokens.tokens;
+  // escaping infinite loading without login
+  return account ? nfts?.ApprovedTokens.tokens : [];
 }
 
 function useSendNFTMessage() {
