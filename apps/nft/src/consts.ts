@@ -11,4 +11,6 @@ const LOCAL_STORAGE = {
   ACCOUNT: 'account',
 };
 
-export { ADDRESS, LOCAL_STORAGE };
+const FILTERS = ['All', 'My', 'Approved'];
+
+export { ADDRESS, LOCAL_STORAGE, FILTERS };

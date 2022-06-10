@@ -9,12 +9,12 @@ import { Hex } from '@gear-js/api';
 type TokenPayload = { Token: { tokenId: string } };
 type TokensPayload = { AllTokens: null };
 type OwnerTokensPayload = { TokensForOwner: { owner: Hex } };
-type ApprovedTokensPayload = { SupplyForOwner: { owner: Hex } };
+type ApprovedTokensPayload = { ApprovedTokens: { account: Hex } };
 
 type TokenState = { Token: { token: Token } };
 type TokensState = { AllTokens: { tokens: Token[] } };
 type OwnerTokensState = { TokensForOwner: { tokens: Token[] } };
-type ApprovedTokensState = { SupplyForOwner: { supply: Token[] } };
+type ApprovedTokensState = { ApprovedTokens: { tokens: Token[] } };
 
 type Payload = TokenPayload | TokensPayload | OwnerTokensPayload | ApprovedTokensPayload;
 type State<T> = T extends TokenPayload
@@ -60,13 +60,14 @@ function useOwnerNFTs() {
 
 function useApprovedNFTs() {
   const { account } = useAccount();
+  const decodedAddress = account?.decodedAddress;
 
-  const owner = account?.decodedAddress;
-  const payload = useMemo(() => (owner ? { SupplyForOwner: { owner } } : undefined), [owner]);
+  const getPayload = () => (decodedAddress ? { ApprovedTokens: { account: decodedAddress } } : undefined);
+  const payload = useMemo(getPayload, [decodedAddress]);
 
   const nfts = useNFTState(payload);
 
-  return nfts?.SupplyForOwner.supply;
+  return nfts?.ApprovedTokens.tokens;
 }
 
 function useSendNFTMessage() {

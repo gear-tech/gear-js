@@ -30,7 +30,7 @@ function NFT() {
 
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
-  const [revokeAddress, setRevokeAddress] = useState('' as Hex);
+  const [revokedAddress, setRevokedAddress] = useState('' as Hex);
 
   useEffect(() => {
     if (reference) {
@@ -42,17 +42,17 @@ function NFT() {
 
   const openTransferModal = () => setIsTransferModalOpen(true);
   const openApproveModal = () => setIsApproveModalOpen(true);
-  const openRevokeModal = (address: Hex) => setRevokeAddress(address);
+  const openRevokeModal = (address: Hex) => setRevokedAddress(address);
 
   const closeModal = () => {
     setIsTransferModalOpen(false);
     setIsApproveModalOpen(false);
-    setRevokeAddress('' as Hex);
+    setRevokedAddress('' as Hex);
   };
 
   const transfer = (address: Hex) => sendMessage({ Transfer: { to: address, tokenId: id } });
   const approve = (address: Hex) => sendMessage({ Approve: { to: address, tokenId: id } });
-  const revoke = () => sendMessage({ Revoke: { from: revokeAddress, tokenId: id } });
+  const revoke = () => sendMessage({ RevokeApproval: { approvedAccount: revokedAddress, tokenId: id } });
 
   return (
     <>
@@ -83,7 +83,7 @@ function NFT() {
       </div>
       {isTransferModalOpen && <AddressModal heading="Transfer token" close={closeModal} onSubmit={transfer} />}
       {isApproveModalOpen && <AddressModal heading="Approve token" close={closeModal} onSubmit={approve} />}
-      {revokeAddress && <ConfirmationModal heading="Revoke approval?" close={closeModal} onSubmit={revoke} />}
+      {revokedAddress && <ConfirmationModal heading="Revoke approval?" close={closeModal} onSubmit={revoke} />}
     </>
   );
 }

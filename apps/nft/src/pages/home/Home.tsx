@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { useApprovedNFTs, useNFTs, useOwnerNFTs } from 'hooks';
+import { Loader } from 'components';
+import { FILTERS } from 'consts';
+import { useAccount } from '@gear-js/react-hooks';
 import { NFT } from './nft';
 import { Filter } from './filter';
 import styles from './Home.module.scss';
 
-const filters = ['All', 'My', 'Approved'];
-
 function Home() {
+  const [filter, setFilter] = useState('All');
+  const { account } = useAccount();
+
   const nfts = useNFTs();
   const ownerNfts = useOwnerNFTs();
   const approvedNfts = useApprovedNFTs();
-
-  const [filter, setFilter] = useState('All');
 
   const getList = () => {
     switch (filter) {
@@ -31,11 +33,14 @@ function Home() {
       </li>
     ));
 
+  // <p className={styles.text}>There are no NFTs at the moment.</p>
+  // <Loader />
+
   return (
     <>
       <header className={styles.header}>
         <h2 className={styles.heading}>NFTs</h2>
-        <Filter list={filters} value={filter} onChange={setFilter} />
+        {account && <Filter list={FILTERS} value={filter} onChange={setFilter} />}
       </header>
       <ul className={styles.list}>{getNFTs()}</ul>
     </>
