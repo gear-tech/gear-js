@@ -1,6 +1,7 @@
 import { KAFKA_TOPICS } from '@gear-js/common';
 
 import {
+  messageAddPayload,
   messageAll,
   messageData,
   programAll,
@@ -26,6 +27,8 @@ export function kafkaEventHandler(event: string, params: any): Promise<any> {
       return messageAll(params);
     case KAFKA_TOPICS.MESSAGE_DATA:
       return messageData(params);
+    case KAFKA_TOPICS.MESSAGE_ADD_PAYLOAD:
+      return messageAddPayload(params);
     default:
       break;
   }
