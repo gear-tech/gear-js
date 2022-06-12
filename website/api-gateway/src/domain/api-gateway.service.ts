@@ -1,7 +1,7 @@
 import { IRpcRequest, IRpcResponse, JSONRPC_ERRORS, KAFKA_TOPICS } from '@gear-js/common';
 
-import { requestMessageHandler } from '../json-rpc/handler';
 import { getResponse, verifyCaptcha } from '../utils';
+import { jsonRpcRequestHandler } from '../json-rpc/json-rpc-request.handler';
 
 export const apiGatewayService = {
   async rpc(body: IRpcRequest): Promise<IRpcResponse | IRpcResponse[]> {
@@ -15,7 +15,7 @@ export const apiGatewayService = {
         return getResponse(body, JSONRPC_ERRORS.Forbidden.name);
       }
     }
-    const response = await requestMessageHandler(body);
+    const response = await jsonRpcRequestHandler(body);
     return response;
   },
 };
