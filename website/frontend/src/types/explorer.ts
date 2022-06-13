@@ -1,10 +1,10 @@
-import { GearEvent } from '@gear-js/api';
+import { GearGenericEvent } from '@gear-js/api';
 import { Compact, Vec } from '@polkadot/types';
 import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { generateRandomId } from 'helpers';
 
-export class IdeaEvent extends GearEvent {
+export class IdeaEvent extends GearGenericEvent {
   constructor(event: DotEvent, blockNumber?: Compact<BlockNumber>) {
     const { section, method, meta, hash } = event;
     const { docs } = meta;
@@ -57,11 +57,8 @@ export enum Sections {
 
 export enum Methods {
   TRANSFER = 'Transfer',
-  LOG = 'Log',
-  INIT_SUCCESS = 'InitSuccess',
-  INIT_FAILURE = 'InitFailure',
-  DISPATCH_MESSAGE_ENQUEUED = 'DispatchMessageEnqueued',
-  MESSAGE_DISPATCHED = 'MessageDispatched',
+  USER_MESSAGE_SENT = 'UserMessageSent',
+  MESSAGES_DISPATCHED = 'MessagesDispatched',
   EXTRINSIC_FAILED = 'ExtrinsicFailed',
   EXTRINSIC_SUCCESS = 'ExtrinsicSuccess',
 }
