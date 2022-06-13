@@ -22,12 +22,11 @@ import {
   ProgramDataResult,
 } from '@gear-js/common';
 
-import { MessagesService } from 'src/messages/messages.service';
-import { MetadataService } from 'src/metadata/metadata.service';
-import { ProgramsService } from 'src/programs/programs.service';
 import { Result } from './types';
-
-import { FormResponse } from 'src/middleware/formResponse';
+import { ProgramsService } from '../programs/programs.service';
+import { MessagesService } from '../messages/messages.service';
+import { MetadataService } from '../metadata/metadata.service';
+import { FormResponse } from '../middleware/formResponse';
 
 @Injectable()
 export class ConsumerService {
