@@ -407,13 +407,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.16.3":
-  version: 0.16.3
-  resolution: "@gear-js/api@npm:0.16.3"
+"@gear-js/api@npm:0.20.0":
+  version: 0.20.0
+  resolution: "@gear-js/api@npm:0.20.0"
   peerDependencies:
-    "@polkadot/api": ^7.15.1
+    "@polkadot/api": ^8.6.1
+    "@polkadot/wasm-crypto": ^6.1.1
     rxjs: ^7.5.5
-  checksum: 6867b6fa3359e86cc3661c67ffd46ae3a4c5c116b93c7d4c107ea5ec08623966ade1b910683b4f37c0fb92dfa388bd5882588a1d88e6c9ba79723f5d1af2f7d9
+  checksum: bf10be2adf72f012ee2c7f17b673f68a614ba7e9c26ef6e3c9b895766e780ff11663fd502c3841628f9232475aeafc39ebb5da443699c4e680646472cc72195c
   languageName: node
   linkType: hard
 
@@ -421,11 +422,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/gear-meta@workspace:."
   dependencies:
-    "@gear-js/api": 0.16.3
+    "@gear-js/api": 0.20.0
     "@polkadot/api": 7.15.1
     chalk: 5.0.1
-    commander: 9.1.0
-    inquirer: 8.2.1
+    commander: 9.3.0
+    inquirer: 8.2.4
     jest: 27.5.1
   bin:
     gear-meta: src/app.js
@@ -1846,10 +1847,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:9.1.0":
-  version: 9.1.0
-  resolution: "commander@npm:9.1.0"
-  checksum: 1428319b6b90600a813c28fe1e413996d1be99bf01afe9ebc4a9fc6f8077ff3e75f11809b2d2f85bd9b13d7cb592154278e9bbfdb16dc5843cef97bcba6a9cfd
+"commander@npm:9.3.0":
+  version: 9.3.0
+  resolution: "commander@npm:9.3.0"
+  checksum: d421ce66fee25792a1470c69aa8d1b86434bf873a96483aa92c8267f81a6f20c6f7c426f5e82f88ac50a8ec4855d3f2787aebcdef8aa559e1080a2337a95a217
   languageName: node
   linkType: hard
 
@@ -2596,9 +2597,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:8.2.1":
-  version: 8.2.1
-  resolution: "inquirer@npm:8.2.1"
+"inquirer@npm:8.2.4":
+  version: 8.2.4
+  resolution: "inquirer@npm:8.2.4"
   dependencies:
     ansi-escapes: ^4.2.1
     chalk: ^4.1.1
@@ -2614,7 +2615,8 @@ __metadata:
     string-width: ^4.1.0
     strip-ansi: ^6.0.0
     through: ^2.3.6
-  checksum: 423bbc54cd6324c8f43bb433eebc3d6ea01c38caeb609a151c2d63d8f8b417feffc5678c08ea13642a8ff8a9c17e82cea1bcf45f8db5a3e71f089c0cbe8f32b6
+    wrap-ansi: ^7.0.0
+  checksum: dfcb6529d3af443dfea2241cb471508091b51f5121a088fdb8728b23ec9b349ef0a5e13a0ef2c8e19457b0bed22f7cbbcd561f7a4529d084c562a58c605e2655
   languageName: node
   linkType: hard
 
