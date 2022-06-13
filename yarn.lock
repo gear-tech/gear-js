@@ -2109,7 +2109,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.19.0, @gear-js/api@npm:^0.19.0":
+"@gear-js/api@npm:0.20.0, @gear-js/api@npm:^0.20.0":
+  version: 0.20.0
+  resolution: "@gear-js/api@npm:0.20.0"
+  peerDependencies:
+    "@polkadot/api": ^8.6.1
+    "@polkadot/wasm-crypto": ^6.1.1
+    rxjs: ^7.5.5
+  checksum: bf10be2adf72f012ee2c7f17b673f68a614ba7e9c26ef6e3c9b895766e780ff11663fd502c3841628f9232475aeafc39ebb5da443699c4e680646472cc72195c
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:^0.19.0":
   version: 0.19.0
   resolution: "@gear-js/api@npm:0.19.0"
   dependencies:
@@ -2124,6 +2135,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@gear-js/api@npm:0.20.0, @gear-js/api@npm:^0.20.0":
   version: 0.20.0
   resolution: "@gear-js/api@npm:0.20.0"
@@ -2145,6 +2157,8 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+=======
+>>>>>>> master
 "@gear-js/data-storage@workspace:website/data-storage":
   version: 0.0.0-use.local
   resolution: "@gear-js/data-storage@workspace:website/data-storage"
@@ -2223,7 +2237,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.19.0
+    "@gear-js/api": 0.20.0
     "@gear-js/ui": 0.2.5
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
@@ -11196,7 +11210,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gear-js@workspace:."
   dependencies:
-    husky: 7.0.4
+    husky: 8.0.1
     lint-staged: 12.5.0
     prettier: 2.6.0
   languageName: unknown
@@ -11841,12 +11855,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:7.0.4":
-  version: 7.0.4
-  resolution: "husky@npm:7.0.4"
+"husky@npm:8.0.1":
+  version: 8.0.1
+  resolution: "husky@npm:8.0.1"
   bin:
     husky: lib/bin.js
-  checksum: c6ec4af63da2c9522da8674a20ad9b48362cc92704896cc8a58c6a2a39d797feb2b806f93fbd83a6d653fbdceb2c3b6e0b602c6b2e8565206ffc2882ef7db9e9
+  checksum: 943a73a13d0201318fd30e83d299bb81d866bd245b69e6277804c3b462638dc1921694cb94c2b8c920a4a187060f7d6058d3365152865406352e934c5fff70dc
   languageName: node
   linkType: hard
 

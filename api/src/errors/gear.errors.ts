@@ -4,7 +4,7 @@ export class GearError extends Error {
 
 export class CreateTypeError extends GearError {
   name = 'CreateTypeError';
-  message = `Can't create type.`;
+  message = `Unable to create type.`;
 
   constructor(message?: string) {
     super();

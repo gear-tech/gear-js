@@ -5,6 +5,7 @@ import { Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { u8aToHex } from '@polkadot/util';
 import { CreateType } from './create-type';
+import { ReadStateError } from './errors';
 
 const PREFIXES = {
   prog: Buffer.from('g::prog::').toString('hex'),
@@ -28,6 +29,9 @@ export class GearStorage {
    */
   async gProg(programId: ProgramId): Promise<IActiveProgram> {
     const storage = (await this.api.rpc.state.getStorage(`0x${PREFIXES.prog}${programId.slice(2)}`)) as Option<Raw>;
+    if (storage.isNone) {
+      throw new ReadStateError(`Program with id ${programId} was not found in the storage`);
+    }
     const program = this.api.createType('Program', storage.unwrap()) as IProgram;
     return program.isActive ? program.asActive : program.asTerminated;
   }
@@ -35,7 +39,7 @@ export class GearStorage {
   /**
    * Get list of pages for program
    * @param programId
-   * @param pagesList - list with pages numbers
+   * @param gProg
    * @returns
    */
   async gPages(programId: ProgramId, gProg: IActiveProgram): Promise<IGearPages> {
