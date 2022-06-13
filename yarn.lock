@@ -2139,6 +2139,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/common@workspace:website/common"
   dependencies:
+    kafkajs: ^2.0.2
     typescript: 4.6.4
     winston: ^3.7.2
   languageName: unknown
@@ -13445,6 +13446,13 @@ __metadata:
   version: 1.16.0
   resolution: "kafkajs@npm:1.16.0"
   checksum: 78dbb8705bb231aa1d7767554e40acfde19cae97daf43a893fd7b0c286445a0c02d7b67ce04fa10029d341dfc81b698cb1071106eaf1c3439d721332f6a96964
+  languageName: node
+  linkType: hard
+
+"kafkajs@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "kafkajs@npm:2.0.2"
+  checksum: 22bea42d747da74d21afdb8625b932c19f52c0c1c598e82510c24414c5ebd536e17250dfd6228e78fbae730034d61d28cf04c42f66d5e6e41b1388078f64ce80
   languageName: node
   linkType: hard
 

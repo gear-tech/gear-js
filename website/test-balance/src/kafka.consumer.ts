@@ -1,12 +1,11 @@
-import { JSONRPC_ERRORS } from '@gear-js/common';
+import { initLogger, JSONRPC_ERRORS, kafkaLogger } from '@gear-js/common';
 
 import { Consumer, Kafka, KafkaMessage, Producer } from 'kafkajs';
 import config from './config';
 import { DbService } from './db';
 import { GearService } from './gear';
-import { KafkaLogger, Logger } from './logger';
 
-const log = Logger('KafkaConsumer');
+const log = initLogger('KafkaConsumer');
 
 export class KafkaConsumer {
   kafka: Kafka;
@@ -21,7 +20,7 @@ export class KafkaConsumer {
     this.kafka = new Kafka({
       clientId: config.kafka.clientId,
       brokers: config.kafka.brokers,
-      logCreator: KafkaLogger,
+      logCreator: kafkaLogger,
       sasl: {
         mechanism: 'plain',
         username: config.kafka.sasl.username,

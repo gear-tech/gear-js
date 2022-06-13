@@ -13,11 +13,9 @@ import {
   IMessagesDispatchedData,
   IProgramChangedData,
   Keys,
-  loggerWithLabel,
   NewEventData,
 } from '@gear-js/common';
-
-const log = loggerWithLabel('EventListener');
+import { eventListenerLogger } from './common/event-listener.logger';
 
 function messageEnqueuedHandler(data: GenericEventData): NewEventData<Keys.MessageEnqueued, IMessageEnqueuedData> {
   const { id, destination, source, entry } = new MessageEnqueuedData(data);
@@ -108,8 +106,8 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
         const eventData = handleEvent(method as keyof IGearEvent, data);
         eventData !== null && callback({ key: eventData.key, value: { ...eventData.value, ...base } });
       } catch (error) {
-        log.error({ method, data: data.toHuman() });
-        log.error(error);
+        eventListenerLogger.error({ method, data: data.toHuman() });
+        eventListenerLogger.error(error);
       }
     });
   });
