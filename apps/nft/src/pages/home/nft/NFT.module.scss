@@ -4,6 +4,7 @@
 .nft {
   @include card();
   display: block;
+  height: 100%;
 }
 
 .image {
