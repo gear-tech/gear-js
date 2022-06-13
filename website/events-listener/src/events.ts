@@ -103,7 +103,7 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
 
     events.forEach(async ({ event: { data, method } }) => {
       try {
-        const eventData = handleEvent(method as keyof IGearEvent, data);
+        const eventData = handleEvent(method as keyof IGearEvent, data as GenericEventData);
         eventData !== null && callback({ key: eventData.key, value: { ...eventData.value, ...base } });
       } catch (error) {
         eventListenerLogger.error({ method, data: data.toHuman() });
