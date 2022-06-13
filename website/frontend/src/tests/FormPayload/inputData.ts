@@ -1,8 +1,8 @@
 import { FormValues } from './types';
 
 import { getPreformattedText } from 'helpers';
-import { getPayloadValue } from 'components/common/FormPayload/helpers';
-import { TypeStructure, FormPayloadValues } from 'components/common/FormPayload/types';
+import { getPayloadValue } from 'components/common/Form/FormPayload/helpers';
+import { TypeStructure, FormPayloadValues } from 'components/common/Form/FormPayload/types';
 
 export const INIT_FORM_VALUES: FormValues = {
   payload: '',
