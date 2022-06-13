@@ -2,10 +2,10 @@ import { GearApi, GearKeyring } from '@gear-js/api';
 import config from './config';
 import { BN } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { Logger } from './logger';
 import { DbService } from './db';
+import { initLogger } from '@gear-js/common';
 
-const log = Logger('GearService');
+const log = initLogger('GearService');
 
 export class GearService {
   api: GearApi;
