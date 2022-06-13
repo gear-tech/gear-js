@@ -110,6 +110,7 @@ const FormPayload = (props: Props) => {
             />
             {values && (
               <FileInput
+                data-testid="payloadFileInput"
                 value={manualPayloadFile}
                 accept={FILE_TYPES.JSON}
                 className={styles.fileInput}
