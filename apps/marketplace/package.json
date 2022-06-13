@@ -10,7 +10,7 @@
     "@polkadot/extension-dapp": "^0.42.10",
     "@polkadot/react-identicon": "^1.4.1",
     "@polkadot/types": "^8.2.1",
-    "@testing-library/jest-dom": "^5.16.3",
+    "@testing-library/jest-dom": "5.16.4",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^14.0.4",
     "@types/jest": "^27.4.1",
