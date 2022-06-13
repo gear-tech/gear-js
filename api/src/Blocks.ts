@@ -1,5 +1,5 @@
 import { GearApi } from './GearApi';
-import { GetBlockError } from './errors/blocks.errors';
+import { GetBlockError } from './errors';
 import { AnyTuple, AnyNumber } from '@polkadot/types/types';
 import { u64, Compact, GenericExtrinsic, Vec } from '@polkadot/types';
 import { SignedBlock, BlockNumber, BlockHash } from '@polkadot/types/interfaces';

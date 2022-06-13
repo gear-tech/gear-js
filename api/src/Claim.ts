@@ -1,6 +1,6 @@
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { ClaimValueError } from './errors/claim.errors';
+import { ClaimValueError } from './errors';
 import { Hex } from './types';
 import { GearTransaction } from './Transaction';
 
