@@ -1,3 +1,15 @@
+## 0.20.1
+
+_06/13/2022_
+
+https://github.com/gear-tech/gear-js/pull/725
+
+### Changes
+
+- Throw error while reading the state in case if program does not exist in the storage
+
+---
+
 ## 0.20.0
 
 _06/03/2022_
