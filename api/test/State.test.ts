@@ -62,6 +62,14 @@ describe('Read State', () => {
     expect(gPages).toBeDefined();
   });
 
+  test('Get nonexistent program from storage', async () => {
+    await expect(
+      api.storage.gProg('0x0000000000000000000000000000000000000000000000000000000000000000'),
+    ).rejects.toThrow(
+      'Program with id 0x0000000000000000000000000000000000000000000000000000000000000000 was not found in the storage',
+    );
+  });
+
   test('Test call timestamp in meta_state', async () => {
     const state = await api.programState.read(timestamp_test.id, timestamp_test.meta);
     expect(state).toBeDefined();
