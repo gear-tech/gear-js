@@ -1,6 +1,5 @@
 import { Controller, Get, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { stat } from 'fs';
 
 const status = {
   kafka: false,

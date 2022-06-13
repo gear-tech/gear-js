@@ -13,8 +13,7 @@
     "dev": "nodemon src/main.ts"
   },
   "dependencies": {
-    "@gear-js/interfaces": "workspace:^",
-    "@gear-js/jsonrpc-errors": "workspace:^",
+    "@gear-js/common": "workspace:^",
     "dotenv": "^16.0.1",
     "express": "4.18.1",
     "hcaptcha": "0.1.1",

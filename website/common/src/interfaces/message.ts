@@ -1,4 +1,4 @@
-export interface IMessage {
+interface IMessage {
   id: string;
   destination: string;
   source: string;
@@ -8,13 +8,15 @@ export interface IMessage {
   replyError?: string | null;
 }
 
-export interface IMessageEnqueuedData {
+interface IMessageEnqueuedData {
   id: string;
   destination: string;
   source: string;
   entry: 'Init' | 'Handle' | 'Reply';
 }
 
-export interface IMessagesDispatchedData {
+interface IMessagesDispatchedData {
   statuses: { [key: string]: 'Success' | 'Failure' };
 }
+
+export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData };

@@ -1,9 +1,9 @@
 import { Connection, createConnection, getRepository, Repository } from 'typeorm';
 import config from './config';
 import { TransferBalance } from './transfer.entity';
-import { Logger } from './logger';
+import { initLogger } from '@gear-js/common';
 
-const log = Logger('DbService');
+const log = initLogger('DbService');
 
 export class DbService {
   connection: Connection;

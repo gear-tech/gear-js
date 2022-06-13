@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 
 import { apiGatewayService } from '../../domain/api-gateway.service';
-import { logger } from '../../helpers/logger';
+import { apiGatewayLogger } from '../../common/event-listener.logger';
 
 export const apiGatewayRouter = Router({});
 
@@ -10,6 +10,6 @@ apiGatewayRouter.post('', async (req: Request, res: Response) => {
     const result = await apiGatewayService.rpc(req.body);
     res.json(result);
   } catch (err) {
-    logger.error(`apiGatewayRouter:${err}`);
+    apiGatewayLogger.error(`ApiGatewayRouter:${err}`);
   }
 });

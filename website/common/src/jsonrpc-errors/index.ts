@@ -1,4 +1,4 @@
-export default {
+export const JSONRPC_ERRORS = {
   MethodNotFound: {
     name: 'MethodNotFound',
     code: -32601,

@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@gear-js/api": "^0.19.0",
-    "@gear-js/jsonrpc-errors": "workspace:^",
+    "@gear-js/common": "workspace:^",
     "@polkadot/api": "^8.1.1",
     "chalk": "4.1.2",
     "express": "^4.18.1",

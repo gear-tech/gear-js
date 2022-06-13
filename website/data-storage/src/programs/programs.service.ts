@@ -1,15 +1,16 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import {
-  IProgram,
-  InitStatus,
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
   GetAllUserProgramsParams,
+  InitStatus,
+  IProgram,
   ProgramDataResult,
-} from '@gear-js/interfaces';
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+} from '@gear-js/common';
+
 import { Meta } from '../entities/meta.entity';
 import { getPaginationParams, getWhere, sleep } from '../utils';
 import { ProgramNotFound } from '../errors';

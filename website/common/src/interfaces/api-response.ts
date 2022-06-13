@@ -2,28 +2,28 @@ import { IMessage } from './message';
 import { IPaginationResult } from './pagination';
 import { IProgram } from './program';
 
-export interface AllMessagesResult extends IPaginationResult {
+interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];
 }
 
-export interface GetAllProgramsResult extends IPaginationResult {
+interface GetAllProgramsResult extends IPaginationResult {
   programs: IProgram[];
 }
 
-export interface AddMetaResult {
+interface AddMetaResult {
   status: 'Metadata added';
 }
 
-export interface GetMetaResult {
+interface GetMetaResult {
   program: string;
   meta: string;
   metaFile: string;
 }
 
-export interface ProgramDataResult extends Omit<IProgram, 'meta'> {
+interface ProgramDataResult extends Omit<IProgram, 'meta'> {
   meta?: { meta?: string };
 }
-export interface IRpcResponse {
+interface IRpcResponse {
   jsonrpc: '2.0';
   id: number;
   result?:
@@ -38,14 +38,25 @@ export interface IRpcResponse {
   error?: IRpcError;
 }
 
-export interface IRpcError {
+interface IRpcError {
   code: RpcErrorCode;
   message: string;
 }
 
-export enum RpcErrorCode {
+enum RpcErrorCode {
   GearError = -32602,
   MethodNotFoundError = -32601,
   InternalServerError = -32500,
   UnathorizedError = -32401,
 }
+
+export {
+  AllMessagesResult,
+  GetAllProgramsResult,
+  AddMetaResult,
+  GetMetaResult,
+  ProgramDataResult,
+  IRpcResponse,
+  IRpcError,
+  RpcErrorCode,
+};

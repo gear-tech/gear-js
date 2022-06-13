@@ -1,13 +1,16 @@
 {
-  "name": "@gear-js/interfaces",
+  "name": "@gear-js/common",
+  "author": "",
   "version": "1.0.0",
-  "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
-  "author": "",
+  "dependencies": {
+    "kafkajs": "^2.0.2",
+    "winston": "^3.7.2"
+  },
   "license": "ISC",
   "devDependencies": {
     "typescript": "4.6.4"

@@ -8,7 +8,7 @@ on:
       - website/**
   workflow_dispatch:
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
@@ -37,21 +37,21 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-#- uses: c-hive/gha-yarn-cache@v2.1.0
+      #      - uses: c-hive/gha-yarn-cache@v2.1.0
 
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
           node-version: 16
-#          cache: yarn
+      #          cache: yarn
 
       - name: Install dependencies
         uses: borales/actions-yarn@v3.0.0
         with:
           cmd: install
 
-      - name: Build interfaces and jsonrpc-errors
-        run: yarn build:interfaces && yarn build:jsonrpc-errors
+      - name: Build common package
+        run: yarn build:common
 
       - name: Run tests
         working-directory: 'website/data-storage'
