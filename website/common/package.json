@@ -8,6 +8,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "kafkajs": "^2.0.2",
     "winston": "^3.7.2"
   },
   "license": "ISC",
