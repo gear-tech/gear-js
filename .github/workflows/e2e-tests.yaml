@@ -37,7 +37,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-#      - uses: c-hive/gha-yarn-cache@v2.1.0
+      #      - uses: c-hive/gha-yarn-cache@v2.1.0
 
       - name: Setup NodeJS
         uses: actions/setup-node@v2
@@ -49,6 +49,9 @@ jobs:
         uses: borales/actions-yarn@v3.0.0
         with:
           cmd: install
+
+      - name: Build common package
+        run: yarn build:common
 
       - name: Run tests
         working-directory: 'website/data-storage'
