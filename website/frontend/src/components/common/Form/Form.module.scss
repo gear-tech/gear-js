@@ -13,7 +13,10 @@
 
 .formItem {
   position: relative;
-  margin-bottom: 25px;
+
+  &:not(:last-child) {
+    margin-bottom: 25px;
+  }
 }
 
 .fieldLabel {

@@ -30,25 +30,19 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
   const alert = useAlert();
   const { account } = useAccount();
 
-  const [meta, setMeta] = useState<Metadata | null>(null);
+  const [meta, setMeta] = useState<Metadata>();
   const [metaFile, setMetaFile] = useState<string | null>(null);
 
-  const handleUploadMetaFile = (setValues: SetValues) => async (data: UploadData) => {
+  const handleUploadMetaFile = (setFiledValue: SetFieldValue) => (data: UploadData) => {
     const metadata = data.meta;
 
     setMeta(metadata);
     setMetaFile(data.metaBufferString);
-    setValues(
-      (prevState) => ({
-        ...prevState,
-        programName: metadata?.title || '',
-      }),
-      false
-    );
+    setFiledValue('programName', metadata?.title || '', false);
   };
 
   const handleResetMeta = (setValues: SetValues) => () => {
-    setMeta(null);
+    setMeta(void 0);
     setMetaFile(null);
     setValues(INITIAL_VALUES, false);
   };
@@ -66,7 +60,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
     const { value, payload, gasLimit, programName } = values;
 
     const programOptions: UploadProgramModel = {
-      meta: meta ?? void 0,
+      meta,
       value,
       title: '',
       gasLimit,
@@ -121,7 +115,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
               </div>
 
               <Fieldset legend="Metadata:" className={styles.meta}>
-                <UploadMeta onReset={handleResetMeta(setValues)} onUpload={handleUploadMetaFile(setValues)} />
+                <UploadMeta onReset={handleResetMeta(setValues)} onUpload={handleUploadMetaFile(setFieldValue)} />
               </Fieldset>
             </div>
 

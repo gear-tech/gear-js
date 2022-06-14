@@ -27,7 +27,6 @@ const UploadMeta = (props: Props) => {
   const handleResetMetaForm = () => {
     setMetaProperties(void 0);
     setDroppedMetaFile(void 0);
-
     onReset();
   };
 

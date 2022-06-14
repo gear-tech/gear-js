@@ -3,7 +3,6 @@ import { Formik, Form, FormikHelpers, FormikProps } from 'formik';
 import { Button } from '@gear-js/ui';
 import { Metadata } from '@gear-js/api';
 
-import styles from './UploadMetaForm.module.scss';
 import { Schema } from './Shema';
 import { FormValues } from './types';
 import { FormInput } from 'components/common/Form';
@@ -73,13 +72,13 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
         const disabledBtn = !meta || !isValid || isSubmitting;
 
         return (
-          <Form className={styles.uploadMetaForm}>
-            <FormInput name="name" label="Program name" className={styles.formField} />
+          <Form className={formStyles.largeForm}>
+            <FormInput name="name" label="Program name" />
 
             <UploadMeta onReset={resetForm} onUpload={handleUploadMetaFile} />
 
-            <div className={styles.formBtnWrapper}>
-              <Button type="submit" text="Upload metadata" className={styles.formSubmitBtn} disabled={disabledBtn} />
+            <div className={formStyles.formButtons}>
+              <Button type="submit" text="Upload metadata" disabled={disabledBtn} />
             </div>
           </Form>
         );

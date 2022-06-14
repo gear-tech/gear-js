@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { UploadMetaForm } from 'components/blocks/UploadMetaForm';
+import { UploadMetaForm } from './children/UploadMetaForm';
 
 import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
