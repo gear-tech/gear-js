@@ -66,6 +66,18 @@
   }
 }
 
+.text {
+  color: $textColor;
+  font-size: $fontSize;
+  white-space: pre-wrap;
+}
+
+.textarea {
+  overflow: auto;
+  min-height: 100px;
+  max-height: 400px;
+}
+
 .formButtons {
   display: flex;
   margin-top: 5px;

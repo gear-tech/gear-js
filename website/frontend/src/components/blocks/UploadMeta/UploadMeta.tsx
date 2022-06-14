@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from 'react';
-import clsx from 'clsx';
 import { Metadata, getWasmMetadata } from '@gear-js/api';
-import { FileInput, Input, Textarea } from '@gear-js/ui';
+import { FileInput } from '@gear-js/ui';
 
 import styles from './UploadMeta.module.scss';
 import { UploadData } from './types';
@@ -9,7 +8,7 @@ import { getMetaProperties } from './helpers';
 
 import { useAlert } from 'hooks';
 import { readFileAsync, checkFileFormat } from 'helpers';
-import { formStyles } from 'components/common/Form';
+import { formStyles, FormText } from 'components/common/Form';
 
 type Props = {
   onReset: () => void;
@@ -76,13 +75,7 @@ const UploadMeta = (props: Props) => {
       {metaProperties?.map((property) => {
         const [name, value] = property;
 
-        const MetaField = name === 'types' ? Textarea : Input;
-
-        return (
-          <div className={formStyles.formItem}>
-            <MetaField label={name} value={value} disabled className={clsx(formStyles.field, formStyles.uiField)} />
-          </div>
-        );
+        return <FormText text={value} label={name} isTextarea={name === 'types'} />;
       })}
     </>
   );

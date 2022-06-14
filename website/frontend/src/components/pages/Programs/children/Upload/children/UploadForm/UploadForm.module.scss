@@ -42,7 +42,7 @@
   .program {
     flex-basis: calc(50% - 30px);
 
-    @include md {
+    @include lg {
       flex-basis: 100%;
     }
   }
@@ -50,7 +50,7 @@
   .program {
     margin-right: 60px;
 
-    @include md {
+    @include lg {
       margin-right: 0;
     }
   }
