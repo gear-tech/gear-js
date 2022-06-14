@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { Formik, Form, FormikHelpers, FormikProps } from 'formik';
 import { Button } from '@gear-js/ui';
-import { getWasmMetadata, Metadata } from '@gear-js/api';
+import { Metadata } from '@gear-js/api';
 
 import styles from './UploadMetaForm.module.scss';
-import { Schema } from './model/Schema';
-import { FormValues } from './model/types';
-import { META_FIELDS, INITIAL_VALUES } from './model/const';
-import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
-import { MetaSwitch } from 'components/common/MetaSwitch';
-import { MetaFile } from 'components/common/MetaFile';
-import { FormInput, FormTextarea } from 'components/common/Form';
+import { Schema } from './Shema';
+import { FormValues } from './types';
+import { FormInput } from 'components/common/Form';
+import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
+import { formStyles } from 'components/common/Form';
 
-import { readFileAsync } from 'helpers';
 import { useAccount, useAlert } from 'hooks';
 import { addMetadata } from 'services/ApiService';
 
@@ -25,52 +22,25 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
   const alert = useAlert();
   const { account } = useAccount();
 
-  const [isFileUpload, setFileUpload] = useState(true);
-
   const [meta, setMeta] = useState<Metadata | null>(null);
-  const [metaFile, setMetaFile] = useState<File | null>(null);
   const [metaBuffer, setMetaBuffer] = useState<string | null>(null);
-  const [fieldsFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [initialValues, setInitialValues] = useState<FormValues>({
     name: programName,
-    ...INITIAL_VALUES,
   });
 
-  const handleUploadMetaFile = async (file: File) => {
-    try {
-      const fileBuffer = (await readFileAsync(file)) as Buffer;
-      const currentMetaWasm = await getWasmMetadata(fileBuffer);
-
-      if (!currentMetaWasm) {
-        return;
-      }
-
-      const valuesFromFile = getMetaValues(currentMetaWasm);
-      const currentMetaBuffer = Buffer.from(new Uint8Array(fileBuffer)).toString('base64');
-
-      setMeta(currentMetaWasm);
-      setMetaBuffer(currentMetaBuffer);
-      setFieldFromFile(Object.keys(valuesFromFile));
-      setInitialValues({
-        ...INITIAL_VALUES,
-        ...valuesFromFile,
-        name: currentMetaWasm.title ?? programName,
-      });
-    } catch (error) {
-      alert.error(`${error}`);
-    } finally {
-      setMetaFile(file);
-    }
+  const handleUploadMetaFile = (data: UploadData) => {
+    setMeta(data.meta);
+    setMetaBuffer(data.metaBufferString);
+    setInitialValues({
+      name: data.meta.title ?? programName,
+    });
   };
 
   const resetForm = () => {
-    setMetaFile(null);
     setMeta(null);
     setMetaBuffer(null);
-    setFieldFromFile(null);
     setInitialValues({
       name: programName,
-      ...INITIAL_VALUES,
     });
   };
 
@@ -80,23 +50,16 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
       return;
     }
 
-    const { name, ...formMeta } = values;
-
-    if (isFileUpload) {
-      if (meta) {
-        addMetadata(meta, metaBuffer, account, programId, name, alert);
-      } else {
-        alert.error(`ERROR: metadata not loaded`);
-      }
-    } else {
-      addMetadata(formMeta, null, account, programId, name, alert);
+    if (!meta) {
+      alert.error(`ERROR: metadata not loaded`);
+      return;
     }
+
+    addMetadata(meta, metaBuffer, account, programId, values.name, alert);
 
     actions.setSubmitting(false);
     resetForm();
   };
-
-  const fields = isFileUpload ? fieldsFromFile : META_FIELDS;
 
   return (
     <Formik
@@ -107,34 +70,14 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
       onSubmit={handleSubmit}
     >
       {({ isValid, isSubmitting }: FormikProps<FormValues>) => {
-        const emptyFile = isFileUpload && !meta;
-        const disabledBtn = emptyFile || !isValid || isSubmitting;
+        const disabledBtn = !meta || !isValid || isSubmitting;
 
         return (
           <Form className={styles.uploadMetaForm}>
-            <MetaSwitch isMetaFromFile={isFileUpload} onChange={setFileUpload} className={styles.formField} />
             <FormInput name="name" label="Program name" className={styles.formField} />
-            {fields?.map((field) => {
-              const MetaField = field === 'types' ? FormTextarea : FormInput;
 
-              return (
-                <MetaField
-                  key={field}
-                  name={field}
-                  label={field}
-                  disabled={isFileUpload}
-                  className={styles.formField}
-                />
-              );
-            })}
-            {isFileUpload && (
-              <MetaFile
-                file={metaFile}
-                className={styles.formField}
-                onUpload={handleUploadMetaFile}
-                onDelete={resetForm}
-              />
-            )}
+            <UploadMeta onReset={resetForm} onUpload={handleUploadMetaFile} />
+
             <div className={styles.formBtnWrapper}>
               <Button type="submit" text="Upload metadata" className={styles.formSubmitBtn} disabled={disabledBtn} />
             </div>

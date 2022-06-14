@@ -175,7 +175,7 @@ export const getPreformattedText = (data: unknown) => JSON.stringify(data, null,
 export const calculateGas = async (
   method: string,
   api: any,
-  values: UploadInitialValues['programValues'] | SendMessageInitialValues,
+  values: UploadInitialValues | SendMessageInitialValues,
   alert: AlertContainerFactory,
   meta: any,
   code?: Uint8Array | null,

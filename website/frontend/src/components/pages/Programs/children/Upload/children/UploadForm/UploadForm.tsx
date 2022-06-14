@@ -1,94 +1,60 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState, VFC, useMemo } from 'react';
+import { Dispatch, SetStateAction, useState, useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import clsx from 'clsx';
-import { Metadata, getWasmMetadata } from '@gear-js/api';
-import { Button, FileInput } from '@gear-js/ui';
+import { Metadata } from '@gear-js/api';
+import { Button } from '@gear-js/ui';
 
 import styles from './UploadForm.module.scss';
 import { Schema } from './Schema';
 import { INITIAL_VALUES } from './const';
-import { FormValues, ProgramValues, SetFieldValue, SetValues } from './types';
+import { FormValues, SetFieldValue, SetValues } from './types';
 import { DroppedFile } from '../../types';
 
 import { Box } from 'layout/Box/Box';
 import { UploadProgramModel } from 'types/program';
 import { UploadProgram } from 'services/ApiService';
 import { useAccount, useApi, useAlert } from 'hooks';
-import { readFileAsync, calculateGas, checkFileFormat } from 'helpers';
+import { readFileAsync, calculateGas } from 'helpers';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
-import { MetaSwitch } from 'components/common/MetaSwitch';
-import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
-import { FormInput, FormPayload, FormTextarea, FormNumberFormat } from 'components/common/Form';
-import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
+import { Fieldset } from 'components/common/Fieldset';
+import { FormInput, FormPayload, FormNumberFormat, formStyles } from 'components/common/Form';
+import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
 
 type Props = {
   setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
   droppedFile: File;
 };
 
-export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
+const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
   const { api } = useApi();
   const alert = useAlert();
   const { account } = useAccount();
 
-  const [fieldFromFile, setFieldFromFile] = useState<string[] | null>(null);
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaFile, setMetaFile] = useState<string | null>(null);
-  const [droppedMetaFile, setDroppedMetaFile] = useState<File>();
-  const [isMetaFromFile, setIsMetaFromFile] = useState<boolean>(true);
 
-  const handleResetForm = () => {
-    setDroppedFile(null);
+  const handleUploadMetaFile = (setValues: SetValues) => async (data: UploadData) => {
+    const metadata = data.meta;
+
+    setMeta(metadata);
+    setMetaFile(data.metaBufferString);
+    setValues(
+      (prevState) => ({
+        ...prevState,
+        programName: metadata?.title || '',
+      }),
+      false
+    );
   };
 
-  const handleResetMetaForm = (setValues: SetValues) => {
+  const handleResetMeta = (setValues: SetValues) => () => {
     setMeta(null);
     setMetaFile(null);
-    setDroppedMetaFile(void 0);
-    setFieldFromFile(null);
     setValues(INITIAL_VALUES, false);
   };
 
-  const handleUploadMetaFile = (setValues: SetValues) => async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-
-    if (!file) {
-      return handleResetMetaForm(setValues);
-    }
-
-    try {
-      if (!checkFileFormat(file)) {
-        throw new Error('Wrong file format');
-      }
-
-      setDroppedMetaFile(file);
-
-      const readedFile = (await readFileAsync(file)) as Buffer;
-      const metadata: Metadata = await getWasmMetadata(readedFile);
-
-      if (!metadata) {
-        throw new Error('Failed to load metadata');
-      }
-
-      const metaBufferString = Buffer.from(new Uint8Array(readedFile)).toString('base64');
-      const valuesFromFile = getMetaValues(metadata);
-
-      setMeta(metadata);
-      setMetaFile(metaBufferString);
-      setFieldFromFile(Object.keys(valuesFromFile));
-      setValues(
-        ({ programValues }) => ({
-          metaValues: valuesFromFile,
-          programValues: {
-            ...programValues,
-            programName: metadata?.title || '',
-          },
-        }),
-        false
-      );
-    } catch (error) {
-      alert.error(`${error}`);
-    }
+  const handleResetForm = () => {
+    setDroppedFile(null);
   };
 
   const handleSubmitForm = (values: FormValues) => {
@@ -97,10 +63,10 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       return;
     }
 
-    const { value, payload, gasLimit, programName } = values.programValues;
+    const { value, payload, gasLimit, programName } = values;
 
     const programOptions: UploadProgramModel = {
-      meta: void 0,
+      meta: meta ?? void 0,
       value,
       title: '',
       gasLimit,
@@ -108,16 +74,12 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
       initPayload: meta ? getSubmitPayload(payload) : payload,
     };
 
-    if (meta) {
-      programOptions.meta = isMetaFromFile ? meta : values.metaValues;
-    }
-
     UploadProgram(api, account, droppedFile, programOptions, metaFile, alert, handleResetForm).catch(() => {
       alert.error(`Invalid JSON format`);
     });
   };
 
-  const handleCalculateGas = async (values: ProgramValues, setFieldValue: SetFieldValue) => {
+  const handleCalculateGas = async (values: FormValues, setFieldValue: SetFieldValue) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
@@ -128,7 +90,6 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(meta?.types, meta?.init_input), [meta]);
 
-  const metaFields = isMetaFromFile ? fieldFromFile : META_FIELDS;
   const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
 
   return (
@@ -139,61 +100,29 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
           <Form className={styles.uploadForm}>
             <div className={styles.formContent}>
               <div className={styles.program}>
-                <div className={styles.fieldWrapper}>
-                  <span className={styles.caption}>File:</span>
-                  <span className={styles.fileName}>{droppedFile.name}</span>
+                <div className={clsx(formStyles.formItem, styles.file)}>
+                  <span className={formStyles.fieldLabel}>File</span>
+                  <span className={clsx(formStyles.fieldContent, styles.fileName)}>{droppedFile.name}</span>
                 </div>
-                <FormInput
-                  name="programValues.programName"
-                  label="Name"
-                  placeholder="Name"
-                  className={styles.formField}
-                />
+
+                <FormInput name="programName" label="Name" placeholder="Name" />
+
                 <FormNumberFormat
-                  name="programValues.gasLimit"
+                  name="gasLimit"
                   label="Gas limit"
                   placeholder="20,000,000"
                   thousandSeparator
                   allowNegative={false}
-                  className={styles.formField}
                 />
-                <FormInput
-                  type="number"
-                  name="programValues.value"
-                  label="Initial value"
-                  placeholder="0"
-                  className={styles.formField}
-                />
+
+                <FormInput type="number" name="value" label="Initial value" placeholder="0" />
+
                 <FormPayload name="programValues.payload" label="Initial payload" values={payloadFormValues} />
               </div>
 
-              <fieldset className={styles.meta}>
-                <legend className={styles.metaLegend}>Metadata:</legend>
-                <MetaSwitch isMetaFromFile={isMetaFromFile} onChange={setIsMetaFromFile} className={styles.formField} />
-                {isMetaFromFile && (
-                  <div className={styles.fieldWrapper}>
-                    <FileInput
-                      label="Metadata file:"
-                      value={droppedMetaFile}
-                      className={clsx(styles.formField, styles.fileInput)}
-                      onChange={handleUploadMetaFile(setValues)}
-                    />
-                  </div>
-                )}
-                {metaFields?.map((field) => {
-                  const FormField = field === 'types' ? FormTextarea : FormInput;
-
-                  return (
-                    <FormField
-                      key={field}
-                      name={`metaValues.${field}`}
-                      label={field}
-                      disabled={isMetaFromFile}
-                      className={styles.formField}
-                    />
-                  );
-                })}
-              </fieldset>
+              <Fieldset legend="Metadata:" className={styles.meta}>
+                <UploadMeta onReset={handleResetMeta(setValues)} onUpload={handleUploadMetaFile(setValues)} />
+              </Fieldset>
             </div>
 
             <div className={styles.buttons}>
@@ -201,7 +130,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
               <Button
                 text="Calculate Gas"
                 onClick={() => {
-                  handleCalculateGas(values.programValues, setFieldValue);
+                  handleCalculateGas(values, setFieldValue);
                 }}
               />
               <Button
@@ -218,3 +147,5 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
     </Box>
   );
 };
+
+export { UploadForm };
