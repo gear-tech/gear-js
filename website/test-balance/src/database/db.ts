@@ -1,6 +1,6 @@
 import { Connection, createConnection, getRepository, Repository } from 'typeorm';
-import config from './config';
-import { TransferBalance } from './transfer.entity';
+import config from '../config/config';
+import { TransferBalance } from './entities/transfer.entity';
 import { initLogger } from '@gear-js/common';
 
 const log = initLogger('DbService');

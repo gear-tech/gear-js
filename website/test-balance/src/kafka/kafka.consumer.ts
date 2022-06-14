@@ -1,9 +1,9 @@
 import { initLogger, JSONRPC_ERRORS, kafkaLogger } from '@gear-js/common';
 
 import { Consumer, Kafka, KafkaMessage, Producer } from 'kafkajs';
-import config from './config';
-import { DbService } from './db';
-import { GearService } from './gear';
+import config from '../config/config';
+import { DbService } from '../database/db';
+import { GearService } from '../domain/gear.service';
 
 const log = initLogger('KafkaConsumer');
 

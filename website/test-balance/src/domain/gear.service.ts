@@ -1,9 +1,11 @@
 import { GearApi, GearKeyring } from '@gear-js/api';
-import config from './config';
+import { initLogger } from '@gear-js/common';
+
+import config from '../config/config';
+
 import { BN } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { DbService } from './db';
-import { initLogger } from '@gear-js/common';
+import { DbService } from '../database/db';
 
 const log = initLogger('GearService');
 
