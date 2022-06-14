@@ -11,19 +11,23 @@ function useReadState(programId: ProgramId, metaSourceOrBuffer: string | Buffer 
   const metaBuffer = useConditionalMetaBuffer(metaSourceOrBuffer);
 
   const [state, setState] = useState<AnyJson>();
+  const [isStateRead, setIsStateRead] = useState(false);
 
   useEffect(() => {
     if (metaBuffer && payload) {
+      setIsStateRead(false);
+
       api.programState
         .read(programId, metaBuffer, payload)
         .then((codecState) => codecState.toHuman())
         .then(setState)
-        .catch(({ message }: Error) => alert.error(message));
+        .catch(({ message }: Error) => alert.error(message))
+        .finally(() => setIsStateRead(true));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metaBuffer, payload]);
 
-  return state;
+  return { state, isStateRead };
 }
 
 export { useReadState };
