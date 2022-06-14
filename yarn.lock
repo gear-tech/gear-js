@@ -2101,11 +2101,12 @@ __metadata:
     dotenv: 10.0.0
     express: ^4.18.1
     kafkajs: ^1.15.0
+    nodemon: ^2.0.16
     pg: ^8.7.1
     postgres: ^1.0.2
-    ts-node-dev: 1.1.8
-    typeorm: ^0.3.0
-    typescript: 4.7.2
+    ts-node-dev: ^2.0.0
+    typeorm: ^0.3.6
+    typescript: 4.7.3
     winston: ^3.3.3
   languageName: unknown
   linkType: soft
@@ -13885,7 +13886,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemon@npm:2.0.16":
+"nodemon@npm:2.0.16, nodemon@npm:^2.0.16":
   version: 2.0.16
   resolution: "nodemon@npm:2.0.16"
   dependencies:
@@ -18618,7 +18619,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typeorm@npm:0.3.6, typeorm@npm:^0.3.0":
+"typeorm@npm:0.3.6, typeorm@npm:^0.3.6":
   version: 0.3.6
   resolution: "typeorm@npm:0.3.6"
   dependencies:
@@ -18740,7 +18741,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.7.3":
+"typescript@npm:4.7.3, typescript@npm:^4.7.3":
   version: 4.7.3
   resolution: "typescript@npm:4.7.3"
   bin:
@@ -18790,7 +18791,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.7.3#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.7.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.3#~builtin<compat/typescript>":
   version: 4.7.3
   resolution: "typescript@patch:typescript@npm%3A4.7.3#~builtin<compat/typescript>::version=4.7.3&hash=bda367"
   bin:
