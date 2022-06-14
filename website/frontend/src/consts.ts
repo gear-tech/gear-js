@@ -49,21 +49,9 @@ export const SOCKET_RESULT_STATUSES = {
 };
 
 export const RPC_METHODS = {
-  PROGRAM_UPLOAD: 'program.upload',
   PROGRAM_DATA: 'program.data',
   PROGRAMS_ALL: 'program.all',
-  PROGRAMS_USER: 'program.allUser',
-  TOTAL_ISSUANCE: 'system.totalIssuance',
-  SUBSCRIBE_BLOCKS: 'blocks.newBlocks',
-  UNSUBSCRIBE_BLOCKS: 'blocks.unsubscribe',
-  SUBSCRIBE_EVENTS: 'events.subscribe',
-  BALANCE_TRANSFER: 'balance.topUp',
-  SEND_MESSAGE: 'message.send',
-  SEND_META: 'program.addMeta',
-  GET_GAS_SPENT: 'message.gasSpent',
-  GET_PAYLOAD_TYPE: 'message.payloadType',
-  READ_EVENTS: 'events.subscribe',
-  ADD_PUBLIC: 'user.addPublicKey',
+  PROGRAMS_USER: 'program.all.user',
   ADD_METADATA: 'program.meta.add',
   GET_METADATA: 'program.meta.get',
   GET_TEST_BALANCE: 'testBalance.get',
