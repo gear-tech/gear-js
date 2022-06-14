@@ -14,9 +14,13 @@ type Token = {
   reference: string;
 };
 
-type TokenDetails = {
-  rarity?: string;
-  attributes?: { [key: string]: string };
+type Attributes = {
+  [key: string]: string;
 };
 
-export type { Params, Token, TokenDetails };
+type TokenDetails = {
+  rarity?: string;
+  attributes?: Attributes;
+};
+
+export type { Params, Token, Attributes, TokenDetails };

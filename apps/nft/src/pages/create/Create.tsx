@@ -1,31 +1,60 @@
-import { Button, FileInput, Input, Textarea } from '@gear-js/ui';
+import { Button, Checkbox, FileInput, Input, Textarea } from '@gear-js/ui';
+import plus from 'assets/images/form/plus.svg';
 import { useIPFS, useSendNFTMessage } from 'hooks';
-import { getMintPayload } from 'utils';
-import { useForm } from 'react-hook-form';
+import { getMintDetails, getMintPayload } from 'utils';
+import { useForm, useFieldArray } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import clsx from 'clsx';
+import { Attributes } from './attributes';
 import styles from './Create.module.scss';
 
-type Values = { name: string; description: string; json?: FileList | undefined; image?: FileList | undefined };
-const defaultValues = { name: '', description: '' };
+type AttributesValue = { key: string; value: string };
+type Values = { name: string; description: string; image: FileList; attributes: AttributesValue[]; rarity: string };
 
-const JSON_FILE_TYPE = 'application/json';
-const IMAGE_FILE_TYPE = 'image/png, image/gif, image/jpeg';
+const defaultAttributes = [{ key: '', value: '' }];
+const defaultValues = { name: '', description: '', attributes: defaultAttributes, rarity: '' };
+
+const IMAGE_FILE_TYPES = ['image/png', 'image/gif', 'image/jpeg'];
+
+const validateImage = {
+  required: (files: FileList) => !!files.length || 'Attach image',
+  size: (files: FileList) => files[0].size / 1024 ** 2 < 10 || 'Image size should not exceed 10MB',
+  extension: (files: FileList) => IMAGE_FILE_TYPES.includes(files[0].type) || 'Image should be .jpg, .png or .gif',
+};
 
 function Create() {
-  const { register, handleSubmit, formState } = useForm<Values>({ defaultValues });
+  const { formState, control, register, handleSubmit, resetField } = useForm<Values>({ defaultValues });
+  const { fields, append, remove } = useFieldArray({ control, name: 'attributes' });
   const { errors } = formState;
 
   const ipfs = useIPFS();
   const sendMessage = useSendNFTMessage();
 
-  const onSubmit = (data: Values) => {
-    const { name, description } = data;
-    const json = data.json![0];
-    const image = data.image![0];
+  const [isAnyAttribute, setIsAnyAttribute] = useState(false);
+  const [isRarity, setIsRarity] = useState(false);
 
-    const attachments = [ipfs.add(json), ipfs.add(image)];
+  const toggleAttributes = () => setIsAnyAttribute((prevValue) => !prevValue);
+  const toggleRarity = () => setIsRarity((prevValue) => !prevValue);
 
-    Promise.all(attachments)
-      .then(([jsonResult, imgResult]) => getMintPayload(name, description, jsonResult.cid, imgResult.cid))
+  useEffect(() => {
+    resetField('attributes');
+  }, [isAnyAttribute, resetField]);
+
+  useEffect(() => {
+    resetField('rarity');
+  }, [isRarity, resetField]);
+
+  const onSubmit = async (data: Values) => {
+    const { name, description, attributes, rarity } = data;
+    const image = data.image[0];
+
+    const details = isAnyAttribute || isRarity ? getMintDetails(isAnyAttribute ? attributes : undefined, rarity) : '';
+
+    ipfs
+      .add(image)
+      .then(({ cid }) => cid)
+      .then(async (imageCid) => (details ? { detailsCid: (await ipfs.add(details)).cid, imageCid } : { imageCid }))
+      .then(({ imageCid, detailsCid }) => getMintPayload(name, description, imageCid, detailsCid))
       .then((payload) => sendMessage(payload));
   };
 
@@ -48,36 +77,35 @@ function Create() {
             <p className={styles.error}>{errors.description?.message}</p>
           </div>
 
-          <div className={styles.item}>
-            <FileInput
-              label="JSON"
-              className={styles.input}
-              accept={JSON_FILE_TYPE}
-              {...register('json', {
-                validate: {
-                  required: (files: FileList | undefined) =>
-                    !!files?.length || 'Attach JSON with rarity or/and attributes',
-                },
-              })}
-            />
-            <p className={styles.error}>{errors.json?.message}</p>
+          <div className={clsx(styles.input, styles.checkboxWrapper)}>
+            <div className={styles.item}>
+              <Checkbox label="Attributes" checked={isAnyAttribute} onChange={toggleAttributes} />
+              {isAnyAttribute && <Button icon={plus} color="transparent" onClick={() => append(defaultAttributes)} />}
+              <p className={clsx(styles.error, styles.checkboxError)}>
+                {(errors.attributes?.[0].key || errors.attributes?.[0].value) && 'Enter attributes'}
+              </p>
+            </div>
           </div>
+          {isAnyAttribute && <Attributes register={register} fields={fields} onRemoveButtonClick={remove} />}
+
+          <div className={clsx(styles.input, styles.checkboxWrapper)}>
+            <div className={styles.item}>
+              <Checkbox label="Rarity" checked={isRarity} onChange={toggleRarity} />
+              <p className={clsx(styles.error, styles.checkboxError)}>{errors.rarity?.message}</p>
+            </div>
+          </div>
+          {isRarity && (
+            <div className={styles.item}>
+              <Input label="Rarity" className={styles.input} {...register('rarity', { required: 'Enter rarity' })} />
+            </div>
+          )}
 
           <div className={styles.item}>
             <FileInput
               label="Image"
               className={styles.input}
-              accept={IMAGE_FILE_TYPE}
-              {...register('image', {
-                validate: {
-                  required: (files: FileList | undefined) => !!files?.length || 'Attach image',
-                  size: (files: FileList | undefined) =>
-                    files![0].size / 1024 ** 2 < 10 || 'Image size should not exceed 10MB',
-                  extension: (files: FileList | undefined) =>
-                    ['image/png', 'image/gif', 'image/jpeg'].includes(files![0].type) ||
-                    'Image should be .jpg, .png or .gif',
-                },
-              })}
+              accept={IMAGE_FILE_TYPES.join(', ')}
+              {...register('image', { validate: validateImage })}
             />
             <p className={styles.error}>{errors.image?.message}</p>
           </div>

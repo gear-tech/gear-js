@@ -51,3 +51,15 @@
 .error {
   color: $errorColor;
 }
+
+.checkbox {
+  &Wrapper {
+    &::before {
+      content: '';
+    }
+  }
+
+  &Error {
+    margin-left: auto;
+  }
+}
