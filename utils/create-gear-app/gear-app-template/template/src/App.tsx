@@ -1,7 +1,7 @@
 import { useApi, useBalanceSubscription, useLoggedInAccount } from '@gear-js/react-hooks';
 import { Routing } from 'pages';
 import { Header, Footer, ApiLoader } from 'components';
-import { withProviders } from 'hofs';
+import { withProviders } from 'hocs';
 import 'App.scss';
 
 function Component() {
