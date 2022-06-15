@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 import { MetaField } from './children/MetaField/MetaField';
 import styles from './MetaData.module.scss';
@@ -9,7 +9,7 @@ type Props = {
 
 export const MetaData: FC<Props> = ({ metadata }) => {
   const getMetaFields = () => {
-    let items = [];
+    const items = [];
 
     if (metadata && metadata.types) {
       const decodedTypes = decodeHexTypes(metadata.types);

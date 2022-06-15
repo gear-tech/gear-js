@@ -1,4 +1,3 @@
-import React from 'react';
 import { EditorItemRecord, EditorTypes } from '../../../types/editor';
 import { EditorTreeFileItem } from './EditorTreeFileItem';
 import { EditorTreeFolderItem } from './EditorTreeFolderItem';

@@ -1,13 +1,12 @@
-import React, { FC, useEffect, useState } from 'react';
-import { CreateType } from '@gear-js/api';
+import { FC, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Metadata } from '@gear-js/api';
+import { CreateType, Metadata } from '@gear-js/api';
 import clsx from 'clsx';
-import { formatDate } from 'helpers';
+
 import backIcon from 'assets/images/arrow_back_thick.svg';
 import { Spinner } from 'components/common/Spinner/Spinner';
 import { Hint } from 'components/blocks/Hint/Hint';
-import { getPreformattedText } from 'helpers';
+import { formatDate, getPreformattedText } from 'helpers';
 import { getMessage, getProgram } from 'services';
 import { MessageModel } from 'types/message';
 import { ProgramModel } from 'types/program';

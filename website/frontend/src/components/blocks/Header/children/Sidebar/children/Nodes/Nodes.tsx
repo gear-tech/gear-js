@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { Nodes as NodesType, NodeSections } from '../../../../types';
 import { Section } from './Section/Section';
 import styles from './Nodes.module.scss';
@@ -15,6 +15,7 @@ const Nodes = ({ nodeSections, localNodes, setLocalNodes, selectedNode, setSelec
   const getSections = () =>
     nodeSections.map((section, index) => (
       <Section
+        // eslint-disable-next-line react/no-array-index-key
         key={index}
         section={section}
         localNodes={localNodes}

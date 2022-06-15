@@ -285,7 +285,7 @@ describe('header tests', () => {
       renderWithProviders(<Header />);
 
       const useApiSpy = jest.spyOn(hooks, 'useApi');
-      //@ts-ignore
+      // @ts-ignore
       useApiSpy.mockReturnValue(apiMock);
       mockedUseAccounts.mockImplementation(() => accounts);
       apiMock.api.gearEvents.subscribeToBalanceChange.mockResolvedValue(unsubMock);

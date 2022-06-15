@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { useOutsideClick } from 'hooks';
 import { getPreformattedText } from 'helpers';
 import styles from './MetaField.module.scss';
@@ -25,6 +25,7 @@ export const MetaField: FC<Props> = ({ label, value, type }) => {
   return (
     <div className={styles.item}>
       <span className={styles.label}>{label}:</span>
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div ref={ref} className={styles.type} onClick={toggleAlert}>
         <span className={styles.typeText}>{value}</span>
         {isVisible && <pre className={styles.typeAlert}>{getPreformattedText(type)}</pre>}

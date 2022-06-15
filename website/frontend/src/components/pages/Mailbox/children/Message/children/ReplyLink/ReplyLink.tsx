@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Hex } from '@gear-js/api';
 import messageIcon from 'assets/images/message.svg';

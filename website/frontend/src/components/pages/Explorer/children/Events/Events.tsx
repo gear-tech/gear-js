@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Event } from '../../common/Event/Event';
 import { Filters } from './Filters/Filters';
 import { FilterValues, IdeaEventsProps, IdeaEvent, GroupedEvents } from 'types/explorer';

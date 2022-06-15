@@ -1,4 +1,3 @@
-import React from 'react';
 import pageNotFoundImg from 'assets/images/404.png';
 import styles from './PageNotFound.module.scss';
 
@@ -12,9 +11,9 @@ export const PageNotFound = () => {
     <div className={styles.PageNotFound}>
       <div className={styles.container}>
         <figure>
-          <img className={styles.img} src={pageNotFoundImg} />
-          <img className={styles.img} src={pageNotFoundImg} />
-          <img className={styles.img} src={pageNotFoundImg} />
+          <img className={styles.img} src={pageNotFoundImg} alt="Page not found" />
+          <img className={styles.img} src={pageNotFoundImg} alt="Page not found" />
+          <img className={styles.img} src={pageNotFoundImg} alt="Page not found" />
         </figure>
         <div className={styles.block}>
           <div className={styles.stack} style={styleAmount}>

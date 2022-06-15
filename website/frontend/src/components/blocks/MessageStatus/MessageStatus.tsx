@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import './MessageStatus.scss';
 
 type Props = {

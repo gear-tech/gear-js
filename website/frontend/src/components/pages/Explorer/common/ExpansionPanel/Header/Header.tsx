@@ -1,4 +1,3 @@
-import React from 'react';
 import clsx from 'clsx';
 import styles from './Header.module.scss';
 import commonStyles from '../ExpansionPanel.module.scss';
@@ -17,6 +16,7 @@ const Header = ({ caption, description, blockNumber, counter, isOpen, onClick }:
   const arrowClassName = clsx(styles.arrow, isOpen ? styles.up : styles.down);
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <header className={styles.header} onClick={onClick}>
       <div className={styles.main}>
         <span className={styles.caption}>{caption}</span>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
 import { AnyJson } from '@polkadot/types/types';
 import { ExpansionPanel } from 'components/pages/Explorer/common/ExpansionPanel/ExpansionPanel';
@@ -21,6 +20,7 @@ const Extrinsic = ({ extrinsic, className }: Props) => {
     const formattedName = name.toHuman();
     const formattedValue = args[index].toHuman();
 
+    // eslint-disable-next-line no-param-reassign
     dataObject[formattedName] = formattedValue;
 
     return dataObject;
