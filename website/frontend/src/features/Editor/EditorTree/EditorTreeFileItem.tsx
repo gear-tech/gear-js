@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Edit, File, Trash } from 'react-feather';
 import clsx from 'clsx';
 
@@ -40,7 +40,7 @@ export const EditorTreeFileItem = ({ item, isActive }: ItemProps) => {
     }
   };
 
-  const handleNodeClick = React.useCallback(() => {
+  const handleNodeClick = useCallback(() => {
     onNodeClick(item);
   }, [item, onNodeClick]);
 
