@@ -35,7 +35,7 @@ export const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
 
         return '[ ]';
       }
-      //@ts-ignore
+      // @ts-ignore
       return getPreformattedText([getPayloadValue(value)]);
     }
     case ValueType.Array: {
@@ -46,7 +46,7 @@ export const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
 
         return [];
       }
-      //@ts-ignore
+      // @ts-ignore
       return new Array(arrayLength).fill(getPayloadValue(value));
     }
     case ValueType.Tuple: {
@@ -101,9 +101,9 @@ export const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
     case ValueType.Primitive: {
       return '';
     }
+    default:
+      return null;
   }
-
-  return null;
 };
 
 export const getPayloadFormValues = (types?: string, typeName?: string): FormPayloadValues | undefined => {

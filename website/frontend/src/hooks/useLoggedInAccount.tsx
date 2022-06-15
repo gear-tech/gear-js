@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAccount, useApi } from './';
+import { useAccount, useApi } from '.';
 import { isLoggedIn } from 'utils';
 import { useAccounts } from 'components/blocks/Wallet/hooks';
 

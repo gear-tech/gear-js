@@ -1,9 +1,8 @@
-import React from 'react';
 import clsx from 'clsx';
 import { Link, useSearchParams } from 'react-router-dom';
-import { INITIAL_LIMIT_BY_PAGE } from 'consts';
+import { URL_PARAMS, INITIAL_LIMIT_BY_PAGE } from 'consts';
 import arrow from './images/arrow.svg';
-import { URL_PARAMS } from 'consts';
+
 import './Pagination.scss';
 
 type Props = {

@@ -25,6 +25,7 @@ export const MetaField: FC<Props> = ({ label, value, type }) => {
   return (
     <div className={styles.item}>
       <span className={styles.label}>{label}:</span>
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div ref={ref} className={styles.type} onClick={toggleAlert}>
         <span className={styles.typeText}>{value}</span>
         {isVisible && <pre className={styles.typeAlert}>{getPreformattedText(type)}</pre>}

@@ -106,9 +106,7 @@ export const EditorTreeFolderItem = ({ item, children }: ItemProps) => {
               value={item.name}
             />
           ) : (
-            <>
-              <span>{item.name}</span>
-            </>
+            <span>{item.name}</span>
           )}
         </div>
         <div className="tree-actions">

@@ -113,7 +113,7 @@ describe('form payload tests', () => {
     expect(fileInput).toBeInTheDocument();
     expect(screen.getByText('Select file')).toBeInTheDocument();
 
-    //upload file
+    // upload file
 
     const testFile = new File([INPUT_FILE_CONTENT], 'test.json', { type: FILE_TYPES.JSON });
 
@@ -130,7 +130,7 @@ describe('form payload tests', () => {
     submit();
     await verifyValues({ payload: INPUT_FILE_CONTENT });
 
-    //remove file
+    // remove file
 
     fireEvent.change(fileInput, {
       target: { files: null },

@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { renderWithRouter } from 'tests/utils';
 import arrow from 'assets/images/arrow_back.svg';
-import { BackButton } from './BackButton';
+import { BackButton } from 'components/BackButton/BackButton';
 
 const mockNavigate = jest.fn();
 

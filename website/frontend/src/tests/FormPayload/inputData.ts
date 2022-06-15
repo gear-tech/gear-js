@@ -1,8 +1,7 @@
-import { FormValues } from './types';
-
 import { getPreformattedText } from 'helpers';
 import { getPayloadValue } from 'components/common/Form/FormPayload/helpers';
 import { TypeStructure, FormPayloadValues } from 'components/common/Form/FormPayload/types';
+import { FormValues } from './types';
 
 export const INIT_FORM_VALUES: FormValues = {
   payload: '',
@@ -11,7 +10,7 @@ export const INIT_FORM_VALUES: FormValues = {
 export const INPUT_TYPE_STRUCTURE: TypeStructure = {
   type: 'Enum',
   name: 'Action',
-  //@ts-ignore
+  // @ts-ignore
   value: {
     Option: {
       type: 'Option',

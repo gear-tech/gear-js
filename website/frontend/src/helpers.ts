@@ -227,6 +227,8 @@ export const calculateGas = async (
           metaOrTypeOfPayload
         );
         break;
+      default:
+        throw new Error('Unknow method');
     }
 
     alert.info(`Estimated gas ${estimatedGas.toHuman()}`);

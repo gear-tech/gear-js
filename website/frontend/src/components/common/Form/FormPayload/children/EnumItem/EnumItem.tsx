@@ -23,7 +23,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
   const nextLevelName = getNextLevelName(levelName, selected);
 
   useChangeEffect(() => {
-    //@ts-ignore
+    // @ts-ignore
     const parsedStructure = getPayloadValue(value[selected]);
 
     helpers.setValue({ [selected]: parsedStructure }, false);
@@ -34,7 +34,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
       <Select options={options} className={styles.select} onChange={handleChange} />
       {renderNextItem({
         levelName: nextLevelName,
-        //@ts-ignore
+        // @ts-ignore
         typeStructure: value[selected],
       })}
     </Fieldset>

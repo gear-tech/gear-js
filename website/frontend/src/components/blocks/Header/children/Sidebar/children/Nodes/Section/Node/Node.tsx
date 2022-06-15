@@ -16,7 +16,7 @@ type Props = {
   setSelectedNode: Dispatch<SetStateAction<string>>;
 };
 
-const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode }: Props) => {
+function Node({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode }: Props) {
   const alert = useAlert();
 
   const handleChange = () => {
@@ -58,6 +58,6 @@ const Node = ({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
       </div>
     </li>
   );
-};
+}
 
 export { Node };

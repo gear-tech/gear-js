@@ -34,7 +34,7 @@ const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
       <Select options={OPTION_OPTIONS} className={styles.select} onChange={handleChange} />
       {renderNextItem({
         levelName,
-        //@ts-ignore
+        // @ts-ignore
         typeStructure: isNone ? null : value,
       })}
     </Fieldset>

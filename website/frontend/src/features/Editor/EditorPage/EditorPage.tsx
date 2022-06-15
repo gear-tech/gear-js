@@ -1,5 +1,4 @@
-import React, { ChangeEvent, useReducer, useEffect, useState } from 'react';
-import { useAlert } from 'hooks';
+import { ChangeEvent, useReducer, useEffect, useState } from 'react';
 import { saveAs } from 'file-saver';
 import Editor from '@monaco-editor/react';
 import JSZip from 'jszip';
@@ -8,7 +7,7 @@ import clsx from 'clsx';
 import get from 'lodash.get';
 
 import { PageHeader } from 'components/blocks/legacy/PageHeader/PageHeader';
-import { useEditor } from 'hooks';
+import { useAlert, useEditor } from 'hooks';
 import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, LOCAL_STORAGE } from 'consts';
 
 import EditorDownload from 'assets/images/editor-download.svg';
@@ -225,15 +224,13 @@ export const EditorPage = () => {
             <EditorTree />
             <div className="editor-container__editor">
               {currentFile ? (
-                <>
-                  <Editor
-                    theme="vs-dark"
-                    options={options}
-                    value={getCurrFileName()}
-                    language={getCurrFileLang()}
-                    onChange={handleEditorChange}
-                  />
-                </>
+                <Editor
+                  theme="vs-dark"
+                  options={options}
+                  value={getCurrFileName()}
+                  language={getCurrFileLang()}
+                  onChange={handleEditorChange}
+                />
               ) : (
                 <div className="editor-empty">Please select at least one file</div>
               )}

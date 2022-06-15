@@ -52,7 +52,7 @@ export const EditorTreeFileItem = ({ item, isActive }: ItemProps) => {
         {isEditing ? (
           <EditorTreeInput onCancel={handleCancel} onSubmit={handleSubmit} value={item.name} type={EditorTypes.file} />
         ) : (
-          <>{`${item.name}`}</>
+          item.name
         )}
       </div>
       <div className="tree-actions">
