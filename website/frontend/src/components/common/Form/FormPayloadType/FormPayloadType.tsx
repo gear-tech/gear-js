@@ -3,14 +3,17 @@ import { useField } from 'formik';
 import clsx from 'clsx';
 import { Input, Checkbox } from '@gear-js/ui';
 
-import styles from './PayloadType.module.scss';
+import styles from '../Form.module.scss';
 
-import { formStyles } from 'components/common/Form';
+type Props = {
+  name: string;
+  label: string;
+};
 
-const PayloadType = () => {
+const FormPayloadType = ({ name, label }: Props) => {
   const [isChecked, setIsChecked] = useState(false);
 
-  const [field, { touched, initialValue }, helpers] = useField('payloadType');
+  const [field, { touched, initialValue }, helpers] = useField(name);
 
   const toggleSwitch = (event: ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked;
@@ -27,11 +30,11 @@ const PayloadType = () => {
   }, [isChecked, touched]);
 
   return (
-    <div className={clsx(formStyles.formItem, formStyles.field)}>
-      <label htmlFor={field.name} className={formStyles.fieldLabel}>
-        Payload type
+    <div className={clsx(styles.formItem, styles.field)}>
+      <label htmlFor={field.name} className={styles.fieldLabel}>
+        {label}
       </label>
-      <div className={clsx(styles.switchableField, formStyles.fieldContent)}>
+      <div className={clsx(styles.switchableField, styles.fieldContent)}>
         <Checkbox
           type="switch"
           label="Enter type"
@@ -45,4 +48,4 @@ const PayloadType = () => {
   );
 };
 
-export { PayloadType };
+export { FormPayloadType };

@@ -17,7 +17,7 @@ import { useAccount, useApi, useAlert } from 'hooks';
 import { readFileAsync, calculateGas } from 'helpers';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import { Fieldset } from 'components/common/Fieldset';
-import { FormInput, FormPayload, FormNumberFormat, formStyles } from 'components/common/Form';
+import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
 import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
 
 type Props = {
@@ -57,7 +57,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
       return;
     }
 
-    const { value, payload, gasLimit, programName } = values;
+    const { value, payload, gasLimit, programName, payloadType } = values;
 
     const programOptions: UploadProgramModel = {
       meta,
@@ -65,6 +65,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
       title: '',
       gasLimit,
       programName,
+      payloadType: meta ? void 0 : payloadType,
       initPayload: meta ? getSubmitPayload(payload) : payload,
     };
 
@@ -112,6 +113,8 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
                 <FormInput type="number" name="value" label="Initial value" placeholder="0" />
 
                 <FormPayload name="programValues.payload" label="Initial payload" values={payloadFormValues} />
+
+                {!meta && <FormPayloadType name="payloadType" label="Initial payload type" />}
               </div>
 
               <Fieldset legend="Metadata:" className={styles.meta}>

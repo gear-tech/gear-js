@@ -7,6 +7,7 @@ export type FormValues = {
   payload: PayloadValue;
   gasLimit: number;
   programName: string;
+  payloadType: string;
 };
 
 export type SetValues = FormikHelpers<FormValues>['setValues'];

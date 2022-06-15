@@ -7,4 +7,5 @@ export const INITIAL_VALUES: FormValues = {
   payload: '0x00',
   gasLimit: MIN_GAS_LIMIT,
   programName: '',
+  payloadType: 'Bytes',
 };
