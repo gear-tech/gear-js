@@ -7,7 +7,6 @@ import { connectKafka } from './kafka/kafka';
 import { apiGatewayLogger } from './common/event-listener.logger';
 
 const app = express();
-app.use(express.json());
 
 const port = configuration().server.port;
 
