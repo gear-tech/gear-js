@@ -23,7 +23,7 @@ const validateImage = {
 };
 
 function Create() {
-  const { formState, control, register, handleSubmit, resetField } = useForm<Values>({ defaultValues });
+  const { formState, control, register, handleSubmit, resetField, reset } = useForm<Values>({ defaultValues });
   const { fields, append, remove } = useFieldArray({ control, name: 'attributes' });
   const { errors } = formState;
 
@@ -44,6 +44,19 @@ function Create() {
     resetField('rarity');
   }, [isRarity, resetField]);
 
+  const triggerImageChange = () => {
+    // hacky fix cuz reset() doesn't trigger file input's onChange
+    const changeEvent = new Event('change', { bubbles: true });
+    document.querySelector('[name="image"]')?.dispatchEvent(changeEvent);
+  };
+
+  const resetForm = () => {
+    reset();
+    triggerImageChange();
+    setIsAnyAttribute(false);
+    setIsRarity(false);
+  };
+
   const onSubmit = async (data: Values) => {
     const { name, description, attributes, rarity } = data;
     const image = data.image[0];
@@ -55,7 +68,7 @@ function Create() {
       .then(({ cid }) => cid)
       .then(async (imageCid) => (details ? { detailsCid: (await ipfs.add(details)).cid, imageCid } : { imageCid }))
       .then(({ imageCid, detailsCid }) => getMintPayload(name, description, imageCid, detailsCid))
-      .then((payload) => sendMessage(payload));
+      .then((payload) => sendMessage(payload, { onSuccess: resetForm }));
   };
 
   return (

@@ -37,9 +37,11 @@ function NFT() {
     setRevokedAddress('' as Hex);
   };
 
-  const transfer = (address: Hex) => sendMessage({ Transfer: { to: address, tokenId: id } });
-  const approve = (address: Hex) => sendMessage({ Approve: { to: address, tokenId: id } });
-  const revoke = () => sendMessage({ RevokeApproval: { approvedAccount: revokedAddress, tokenId: id } });
+  const onSuccess = closeModal;
+
+  const transfer = (address: Hex) => sendMessage({ Transfer: { to: address, tokenId: id } }, { onSuccess });
+  const approve = (address: Hex) => sendMessage({ Approve: { to: address, tokenId: id } }, { onSuccess });
+  const revoke = () => sendMessage({ RevokeApproval: { approvedAccount: revokedAddress, tokenId: id } }, { onSuccess });
 
   return (
     <>
