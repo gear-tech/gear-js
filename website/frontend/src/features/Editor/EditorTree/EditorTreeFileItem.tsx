@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Edit, File, Trash } from 'react-feather';
 import clsx from 'clsx';
 

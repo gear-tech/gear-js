@@ -1,4 +1,3 @@
-import React from 'react';
 import clsx from 'clsx';
 import { AnyJson } from '@polkadot/types/types';
 import { getPreformattedText } from 'helpers';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ReactNode } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
 import clsx from 'clsx';
 import { Edit, FilePlus, Folder, FolderPlus, Trash } from 'react-feather';
 import { EditorFolder, EditorTypes } from '../../../types/editor';

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { Button } from '@gear-js/ui';
 import { isNodeAddressValid } from 'helpers';
 import { nodeApi } from 'api/initApi';

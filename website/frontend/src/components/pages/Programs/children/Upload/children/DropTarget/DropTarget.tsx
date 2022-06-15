@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
 import { useAlert } from 'hooks';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import clsx from 'clsx';
@@ -54,6 +54,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
         handleFilesUpload(files[0]);
         // since type='file' input can't be controlled,
         // reset it's value to trigger onChange again in case the same file selected twice
+        // eslint-disable-next-line no-param-reassign
         event.target.value = '';
       } else {
         alert.error('Wrong file format');

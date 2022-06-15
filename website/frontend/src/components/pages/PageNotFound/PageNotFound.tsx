@@ -1,4 +1,3 @@
-import React from 'react';
 import pageNotFoundImg from 'assets/images/404.png';
 import styles from './PageNotFound.module.scss';
 

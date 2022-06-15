@@ -1,4 +1,3 @@
-import React from 'react';
 import { DotButton } from './children/DotButton/DotButton';
 import { Copyright } from './children/Copyright/Copyright';
 import { Socials } from './children/Socials/Socials';

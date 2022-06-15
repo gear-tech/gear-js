@@ -179,6 +179,7 @@ export const EditorPage = () => {
   /* eslint-disable react/jsx-no-bind */
   return (
     <EditorTreeContext.Provider
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         state,
         dispatch,

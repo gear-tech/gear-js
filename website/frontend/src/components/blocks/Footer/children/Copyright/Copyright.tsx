@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Copyright = () => {
   const year = new Date().getFullYear();
 

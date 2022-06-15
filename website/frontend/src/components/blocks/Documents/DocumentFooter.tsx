@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import Logo from 'assets/images/logo_gray.svg';
 import './Document.scss';
 

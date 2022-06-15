@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { useOutsideClick } from 'hooks';
 import { getPreformattedText } from 'helpers';
 import styles from './MetaField.module.scss';

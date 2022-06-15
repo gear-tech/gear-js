@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+// eslint-disable-next-line import/no-cycle
 import { useAccount, useApi } from '.';
 import { isLoggedIn } from 'utils';
 import { useAccounts } from 'components/blocks/Wallet/hooks';

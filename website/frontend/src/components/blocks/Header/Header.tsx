@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Wallet } from '../Wallet/Wallet';
 import { Logo } from './children/Logo/Logo';
 import { Menu } from './children/Menu/Menu';

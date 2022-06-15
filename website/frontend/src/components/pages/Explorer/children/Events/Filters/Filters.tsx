@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import clsx from 'clsx';
 import { Sliders, X } from 'react-feather';
 import { Checkbox } from '@gear-js/ui';

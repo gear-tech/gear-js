@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import { useMatch } from 'react-router-dom';
 import { routes } from 'routes';
 import { PrivacyPolicy } from '../../blocks/Documents/PrivacyPolicy';

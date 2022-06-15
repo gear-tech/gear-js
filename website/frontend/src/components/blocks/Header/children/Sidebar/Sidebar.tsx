@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { nodeApi } from 'api/initApi';
 import { useOutsideClick } from 'hooks';
 import { LOCAL_STORAGE } from 'consts';

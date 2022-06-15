@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { useAlert } from 'hooks';
 import copy from 'assets/images/copy.svg';
 import trash from 'assets/images/trash.svg';

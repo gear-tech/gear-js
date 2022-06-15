@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApi, useBlocks } from 'hooks';
 import styles from './BlocksSummary.module.scss';
 
