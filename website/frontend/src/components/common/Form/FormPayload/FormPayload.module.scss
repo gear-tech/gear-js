@@ -1,18 +1,7 @@
 @use '@gear-js/ui/variables' as *;
 
-.formPayload {
-  width: 100%;
-}
-
 .viewCheckbox {
   margin-bottom: 16px;
-}
-
-.error {
-  position: absolute;
-  color: $errorColor;
-  font-size: $fontSizeMedium;
-  bottom: -20px;
 }
 
 .fieldset {

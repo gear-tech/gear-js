@@ -1,28 +1,27 @@
 import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Formik, Form } from 'formik';
 import { Metadata } from '@gear-js/api';
+import { Button } from '@gear-js/ui';
 
 import styles from './State.module.scss';
-import { FormValues } from './types';
+import { FormValues, PageParams } from './types';
 import { INITIAL_VALUES } from './const';
 
 import { useApi } from 'hooks';
 import { getMetadata } from 'services';
 import { getPreformattedText } from 'helpers';
-import { FormPayload } from 'components/common/FormPayload';
-import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
+import { Box } from 'layout/Box/Box';
+import { FormPayload } from 'components/common/Form/FormPayload';
 import { Spinner } from 'components/common/Spinner/Spinner';
-import { BackButton } from 'components/BackButton/BackButton';
-import BackArrow from 'assets/images/arrow_back_thick.svg';
+import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
+import { formStyles } from 'components/common/Form';
 
 const State = () => {
   const { api } = useApi();
-  const navigate = useNavigate();
-  const routeParams = useParams();
-
-  const programId = routeParams.id as string;
+  const { programId } = useParams() as PageParams;
 
   const metaBuffer = useRef<Buffer | null>(null);
 
@@ -38,8 +37,8 @@ const State = () => {
   };
 
   const resetState = () => {
-    setIsLoading(true);
     setState('');
+    setIsLoading(true);
   };
 
   const readState = useCallback(
@@ -47,7 +46,7 @@ const State = () => {
       if (metaBuffer.current) {
         resetState();
 
-        api?.programState.read(programId as `0x${string}`, metaBuffer.current, options).then((result) => {
+        api?.programState.read(programId, metaBuffer.current, options).then((result) => {
           const formattedState = result.toHuman();
           setState(getPreformattedText(formattedState));
           disableLoading();
@@ -57,10 +56,6 @@ const State = () => {
     [api, programId]
   );
 
-  const handleBackButtonClick = () => {
-    navigate(-1);
-  };
-
   const handleSubmit = (values: FormValues) => {
     const payload = getSubmitPayload(values.payload);
 
@@ -68,6 +63,8 @@ const State = () => {
   };
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(types, stateInput), [types, stateInput]);
+
+  const formItemClasses = clsx(formStyles.formItem, formStyles.field);
 
   useEffect(() => {
     getMetadata(programId).then(({ result }) => {
@@ -88,48 +85,36 @@ const State = () => {
 
   return (
     <div className="wrapper">
-      <header className={styles.header}>
-        <BackButton />
-        <h2 className={styles.heading}>Read state</h2>
-      </header>
-      <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
-        <Form className={styles.form}>
-          <div className={styles.block}>
-            <div className={styles.item}>
-              <p className={styles.itemCaption}>Program Id:</p>
-              <p className={styles.itemValue}>{programId}</p>
+      <PageHeader title="Read state" />
+      <Box>
+        <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
+          <Form className={formStyles.largeForm}>
+            <div className={formItemClasses}>
+              <label className={clsx(styles.programIdTitle, formStyles.fieldLabel)}>Program Id</label>
+              <p className={clsx(styles.programId, formStyles.fieldContent)}>{programId}</p>
             </div>
-            {payloadFormValues && (
-              <div className={styles.item}>
-                <p className={clsx(styles.itemCaption, styles.top)}>Input Parameters:</p>
-                <FormPayload name="payload" values={payloadFormValues} />
-              </div>
-            )}
+
+            {payloadFormValues && <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} />}
+
             {state && (
-              <div className={styles.item}>
-                <p className={clsx(styles.itemCaption, styles.top)}>Statedata:</p>
-                <pre className={styles.itemTextarea}>{state}</pre>
+              <div className={formItemClasses}>
+                <label className={clsx(styles.stateTitle, formStyles.fieldLabel)}>Statedata</label>
+                <pre className={clsx(styles.stateValue, formStyles.fieldContent)}>{state}</pre>
               </div>
             )}
+
             {isLoading && <Spinner />}
-            <div className={styles.item}>
-              <div className={styles.buttons}>
-                <button className={styles.button} type="button" onClick={handleBackButtonClick}>
-                  <img className={styles.buttonIcon} src={BackArrow} alt="Back arrow" />
-                  <span className={styles.buttonText}>Back</span>
-                </button>
-                {stateInput && (
-                  <button className={styles.button} type="submit">
-                    <span className={styles.buttonText}>Read state</span>
-                  </button>
-                )}
+
+            {stateInput && (
+              <div className={formStyles.formButtons}>
+                <Button type="submit" text="Read state" />
               </div>
-            </div>
-          </div>
-        </Form>
-      </Formik>
+            )}
+          </Form>
+        </Formik>
+      </Box>
     </div>
   );
 };
 
-export default State;
+export { State };

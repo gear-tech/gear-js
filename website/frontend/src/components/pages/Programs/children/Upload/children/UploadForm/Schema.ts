@@ -1,6 +1,6 @@
 import { string, number, object } from 'yup';
 
-import { payloadSchema } from 'components/common/FormPayload/Schema';
+import { payloadSchema } from 'components/common/Form/FormPayload/Schema';
 
 export const Schema = object().shape({
   metaValues: object().shape({
