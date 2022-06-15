@@ -38,6 +38,8 @@ const FileInput = forwardRef(
     };
 
     const handleRemoveButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+
       if (ref.current) {
         resetValue();
         const changeEvent = new Event('change', { bubbles: true });
