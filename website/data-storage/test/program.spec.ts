@@ -3,10 +3,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { Program } from '../src/entities/program.entity';
 import { Meta } from '../src/entities/meta.entity';
-import { ProgramsService } from '../src/programs/programs.service';
+import { ProgramService } from '../src/program/programs.service';
 
 describe('Programs Service', () => {
-  let programsService!: ProgramsService;
+  let programsService!: ProgramService;
 
   const Meta_create = jest.fn(() => ({ id: '0x7357' }));
   const Meta_save = jest.fn(async () => ({ id: '0x7357' }));
@@ -41,11 +41,11 @@ describe('Programs Service', () => {
           },
         },
         // And use the default Programs service as it is:
-        ProgramsService,
+        ProgramService,
       ],
     }).compile();
 
-    programsService = moduleRef.get(ProgramsService);
+    programsService = moduleRef.get(ProgramService);
   });
 
   afterEach(() => {

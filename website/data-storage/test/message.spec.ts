@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { Message } from '../src/entities/message.entity';
-import { MessagesService } from '../src/messages/messages.service';
+import { MessageService } from '../src/message/message.service';
 
 jest.mock('@gear-js/api', () => ({
   GearKeyring: {
@@ -11,7 +11,7 @@ jest.mock('@gear-js/api', () => ({
 }));
 
 describe('Messages Service', () => {
-  let messagesService!: MessagesService;
+  let messagesService!: MessageService;
 
   const Message_create = jest.fn(() => ({ id: '0x7357' }));
   const Message_save = jest.fn(async () => ({ id: '0x7357' }));
@@ -30,11 +30,11 @@ describe('Messages Service', () => {
             findOne: Message_findOne,
           },
         },
-        MessagesService,
+        MessageService,
       ],
     }).compile();
 
-    messagesService = moduleRef.get(MessagesService);
+    messagesService = moduleRef.get(MessageService);
   });
 
   afterEach(() => {
@@ -46,7 +46,7 @@ describe('Messages Service', () => {
   it('should record a sent message', async () => {
     // Given an initialized Messages Service,
     // when:
-    await messagesService.save({
+    await messagesService.createMessage({
       id: '0x7357',
       genesis: '0x07357',
       timestamp: 0,

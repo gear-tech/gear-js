@@ -1,14 +1,14 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ProgramsService } from '../src/programs/programs.service';
-import { MessagesService } from '../src/messages/messages.service';
+import { ProgramService } from '../src/program/program.service';
+import { MessageService } from '../src/message/message.service';
 import { MetadataService } from '../src/metadata/metadata.service';
 import { ConsumerService } from '../src/consumer/consumer.service';
 import { Message, Meta, Program } from '../src/entities';
 
 describe('Consumer service', () => {
-  let programService: ProgramsService;
-  let messageService: MessagesService;
+  let programService: ProgramService;
+  let messageService: MessageService;
   let metadataService: MetadataService;
   let consumerService: ConsumerService;
 
@@ -35,13 +35,13 @@ describe('Consumer service', () => {
             findOne: find_one,
           },
         },
-        ProgramsService,
-        MessagesService,
+        ProgramService,
+        MessageService,
         MetadataService,
       ],
     }).compile();
-    programService = moduleRef.get(ProgramsService);
-    messageService = moduleRef.get(MessagesService);
+    programService = moduleRef.get(ProgramService);
+    messageService = moduleRef.get(MessageService);
     metadataService = moduleRef.get(MetadataService);
 
     consumerService = new ConsumerService(programService, messageService, metadataService);
