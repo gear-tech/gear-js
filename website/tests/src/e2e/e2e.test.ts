@@ -6,6 +6,7 @@ import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram } from '../interfaces';
 import { sleep } from '../utils';
 import { getAllMessages, getMessageData } from './messages';
+import { getTestBalance } from './testBalance';
 
 let genesis: Hex;
 let prepared: IPrepared;
@@ -65,5 +66,11 @@ describe('message methods', () => {
     for (let message of prepared.messages.log) {
       expect(await getMessageData(genesis, message[0])).toBeTruthy();
     }
+  });
+});
+
+describe('testBalance', () => {
+  test('testBalance.get request', async () => {
+    expect(await getTestBalance(genesis)).toBeTruthy();
   });
 });
