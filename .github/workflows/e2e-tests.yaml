@@ -23,9 +23,35 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
+
+  conditional_job_check_files:
+    runs-on: ubuntu-latest
+    # Declare outputs for next jobs
+    outputs:
+      storage_changed: ${{ steps.check_file_changed.outputs.storage_changed }}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Checkout as many commits as needed for the diff
+        fetch-depth: 2
+    - shell: pwsh
+      id: check_file_changed
+      run: |
+        # Diff HEAD with the previous commit
+        $diff = git diff --name-only HEAD^ HEAD
+
+        # Check if a file under data-storage/ has changed (added, modified, deleted)
+        $SourceDiffStorage = $diff | Where-Object { $_ -match '^website/data-storage/' }
+        $HasDiffStorage = $SourceDiffStorage.Length -gt 0
+
+        # Set the output named "storage_changed"
+        Write-Host "::set-output name=nft_changed::$HasDiffStorage"
+
+
   run-unit-tests:
     name: Unit Tests for `data-storage`
     runs-on: ubuntu-latest
+    if: needs.conditional_job_check_files.outputs.storage_changed == 'True'
     steps:
       - name: Cancel previous workflow runs
         uses: styfle/cancel-workflow-action@0.4.0
