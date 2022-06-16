@@ -237,11 +237,16 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment test-balance-testenv data-storage-testenv -n $KUBE_NAMESPACE
+          
+      - name: Check k8s deployment test-balance-testenv
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout status deployment test-balance-testenv -n $KUBE_NAMESPACE --timeout=120s
 
       - name: Check k8s deployment data-storage
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout status deployment test-balance-testenv data-storage-testenv -n $KUBE_NAMESPACE --timeout=120s
+          args: rollout status deployment data-storage-testenv -n $KUBE_NAMESPACE --timeout=120s
 
   run-e2e-tests:
     if: github.event.pull_request.draft == false
