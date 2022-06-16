@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { useContext } from 'react';
 import { ApiContext, AccountContext, AlertContext, BlocksContext, EditorContext } from 'context';
 import { useEvents } from './useEvents';

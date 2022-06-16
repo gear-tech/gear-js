@@ -9,7 +9,7 @@ import { EditorProvider } from './editor';
 const providers = [BrowserRouter, AlertProvider, ApiProvider, BlocksProvider, AccountProvider, EditorProvider];
 
 const withProviders = (Component: ComponentType) => () =>
-  providers.reduceRight((children, Provider) => <Provider children={children} />, <Component />);
+  providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, <Component />);
 
 export * from './account';
 export * from './alert';

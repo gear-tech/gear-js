@@ -66,6 +66,7 @@
 .formButtons {
   display: flex;
   margin-top: 5px;
+  margin-left: 200px;
   
   & > *:not(:last-child){
     margin-right: 24px;
@@ -77,6 +78,7 @@
   }
 
   @include md {
+    margin-left: 0;
     flex-direction: column;
   }
 }

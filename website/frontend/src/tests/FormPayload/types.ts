@@ -1,4 +1,4 @@
-import { FormPayloadValues, PayloadValue } from 'components/common/FormPayload/types';
+import { FormPayloadValues, PayloadValue } from 'components/common/Form/FormPayload/types';
 
 export type FormValues = {
   payload: PayloadValue;

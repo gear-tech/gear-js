@@ -11,6 +11,7 @@ export const getMetaValues = (metaWasm: Metadata): Metadata => {
     const metaValue = metaWasm[metaKey];
 
     if (metaKey !== 'types' && metaValue) {
+      // eslint-disable-next-line no-param-reassign
       result[metaKey] = metaValue;
     }
 

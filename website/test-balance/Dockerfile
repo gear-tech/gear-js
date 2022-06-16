@@ -9,4 +9,4 @@ COPY ./website/test-balance/ website/test-balance
 RUN yarn install
 RUN yarn build:common
 RUN yarn build:test-balance
-CMD ["node", "website/test-balance/build/index.js"]
+CMD ["node", "website/test-balance/dist/main.js"]

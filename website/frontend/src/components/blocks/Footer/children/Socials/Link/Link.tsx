@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './Link.module.scss';
 
 type Props = {
@@ -8,7 +7,7 @@ type Props = {
 
 const Link = ({ name, href }: Props) => (
   <li className={styles.link}>
-    <a href={href} target="_blank" rel="noreferrer" className={styles[name]} />
+    <a href={href} target="_blank" rel="noreferrer" className={styles[name]} aria-label={name} />
   </li>
 );
 

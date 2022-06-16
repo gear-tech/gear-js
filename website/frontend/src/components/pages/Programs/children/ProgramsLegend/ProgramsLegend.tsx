@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import codeIcon from 'assets/images/code_icon.svg';
 import timestampIcon from 'assets/images/timestamp_icon.svg';
 import menuIcon from 'assets/images/menu_icon.svg';

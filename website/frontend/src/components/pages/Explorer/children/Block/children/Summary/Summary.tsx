@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Block } from '@polkadot/types/interfaces';
@@ -24,7 +23,7 @@ const Summary = ({ block }: Props) => {
       <div className={commonStyles.header}>Parent</div>
       <div className={commonStyles.header}>Extrinsics</div>
       <div className={commonStyles.header}>State</div>
-      <div className={commonStyles.cell}></div>
+      <div className={commonStyles.cell} />
       <div className={commonStyles.cell}>{hash.toHuman()}</div>
       <Link to={parentPath} className={linkClassName}>
         {parentHash.toHuman()}

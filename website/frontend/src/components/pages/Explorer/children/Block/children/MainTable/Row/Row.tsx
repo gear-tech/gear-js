@@ -1,4 +1,3 @@
-import React from 'react';
 import clsx from 'clsx';
 import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
 import { IdeaEvents, Methods, Sections } from 'types/explorer';
@@ -12,6 +11,7 @@ type Props = {
 };
 
 const Row = ({ extrinsic, events }: Props) => {
+  // eslint-disable-next-line react/no-array-index-key
   const getEvents = () => events.map((event, index) => <Event key={index} value={event} className={styles.event} />);
 
   const getInfoEvent = () =>

@@ -1,7 +1,10 @@
 import { getWasmMetadata, Metadata } from '@gear-js/api';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { AlertContext } from 'context';
 
 function useMetadata(source: string | undefined) {
+  const alert = useContext(AlertContext); // сircular dependency fix
+
   const [metadata, setMetadata] = useState<Metadata>();
   const [metaBuffer, setMetaBuffer] = useState<Buffer>();
 
@@ -14,7 +17,8 @@ function useMetadata(source: string | undefined) {
         .then(({ meta, buffer }) => {
           setMetadata(meta);
           setMetaBuffer(buffer);
-        });
+        })
+        .catch(({ message }: Error) => alert.error(message));
   }, [source]);
 
   return { metadata, metaBuffer };

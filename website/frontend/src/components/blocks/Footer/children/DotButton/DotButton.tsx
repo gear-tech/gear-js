@@ -1,4 +1,3 @@
-import React from 'react';
 import dot from 'assets/images/dot-logo.svg';
 import { nodeApi } from 'api/initApi';
 import styles from './DotButton.module.scss';

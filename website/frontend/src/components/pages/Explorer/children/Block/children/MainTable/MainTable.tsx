@@ -1,4 +1,3 @@
-import React from 'react';
 import { Extrinsic } from '@polkadot/types/interfaces';
 import { EventRecords, IdeaEvent } from 'types/explorer';
 import { Row } from './Row/Row';
@@ -19,6 +18,7 @@ const MainTable = ({ extrinsics, eventRecords }: Props) => {
       .map(({ event }) => new IdeaEvent(event));
 
   const getRows = () =>
+    // eslint-disable-next-line react/no-array-index-key
     extrinsics.map((extrinsic, index) => <Row key={index} extrinsic={extrinsic} events={getExtrinsicEvents(index)} />);
 
   return (

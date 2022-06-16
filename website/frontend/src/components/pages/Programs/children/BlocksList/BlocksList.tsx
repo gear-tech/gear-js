@@ -1,4 +1,3 @@
-import React from 'react';
 import { useBlocks } from 'hooks';
 import './BlocksList.scss';
 

@@ -7,6 +7,11 @@ import { AccountContext, AlertContext, ApiContext } from 'context';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'consts';
 import { useConditionalMeta } from './useMetadata';
 
+type SendMessageOptions = {
+  value?: string | number;
+  onSuccess?: () => void;
+};
+
 function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | undefined) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
@@ -17,18 +22,18 @@ function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | 
   const title = 'gear.sendMessage';
   const loadingAlertId = useRef('');
 
-  const handleEventsStatus = (events: EventRecord[]) => {
+  const handleEventsStatus = (events: EventRecord[], onSuccess?: () => void) => {
     events.forEach(({ event: { method, section } }) => {
       if (method === 'MessageEnqueued') {
         alert.success(`${section}.MessageEnqueued`);
-        // onSucessCallback();
+        onSuccess && onSuccess();
       } else if (method === 'ExtrinsicFailed') {
         alert.error('Extrinsic Failed', { title });
       }
     });
   };
 
-  const handleStatus = (result: ISubmittableResult) => {
+  const handleStatus = (result: ISubmittableResult, onSuccess?: () => void) => {
     const { status, events } = result;
     const { isReady, isInBlock, isInvalid, isFinalized } = status;
 
@@ -40,25 +45,22 @@ function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | 
       alert.update(loadingAlertId.current, 'In Block');
     } else if (isFinalized) {
       alert.update(loadingAlertId.current, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
-      handleEventsStatus(events);
+      handleEventsStatus(events, onSuccess);
     }
   };
 
-  const sendMessage = async (payload: AnyJson, value: string | number = 0) => {
+  const sendMessage = (payload: AnyJson, { value = 0, onSuccess }: SendMessageOptions) => {
     if (account && metadata) {
       loadingAlertId.current = alert.loading('Sign In', { title });
 
       const { address, decodedAddress, meta } = account;
-      const gasLimit = await api.program.gasSpent.handle(decodedAddress, destination, payload, value, metadata);
-
-      const message = { destination, payload, gasLimit, value };
-      api.message.submit(message, metadata);
-
       const { source } = meta;
-      const { signer } = await web3FromSource(source);
 
-      return api.message
-        .signAndSend(address, { signer }, handleStatus)
+      api.program.gasSpent
+        .handle(decodedAddress, destination, payload, value, metadata)
+        .then((gasLimit) => ({ destination, payload, gasLimit, value }))
+        .then((message) => api.message.submit(message, metadata) && web3FromSource(source))
+        .then(({ signer }) => api.message.signAndSend(address, { signer }, (result) => handleStatus(result, onSuccess)))
         .catch(({ message }: Error) => alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS));
     }
   };

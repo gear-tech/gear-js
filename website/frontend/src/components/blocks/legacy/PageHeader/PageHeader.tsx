@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import { PAGE_TYPES } from 'consts';
 import { fileNameHandler } from 'helpers';
 import ArrowBack from 'assets/images/arrow_back.svg';

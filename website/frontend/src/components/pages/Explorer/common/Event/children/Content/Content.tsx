@@ -1,4 +1,3 @@
-import React from 'react';
 import { GenericEventData } from '@polkadot/types';
 import { Pre } from '../../../Pre/Pre';
 
