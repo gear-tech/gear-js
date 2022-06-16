@@ -23,7 +23,7 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
- run-unit-tests:
+  run-unit-tests:
     name: Unit Tests for `data-storage`
     runs-on: ubuntu-latest
     steps:
