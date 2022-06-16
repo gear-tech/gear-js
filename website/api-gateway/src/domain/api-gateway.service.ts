@@ -15,6 +15,9 @@ export const apiGatewayService = {
         return getResponse(body, JSONRPC_ERRORS.Forbidden.name);
       }
     }
+    if (body.method === 'testBalance.get') {
+      console.log(body);
+    }
     const response = await jsonRpcRequestHandler(body);
     return response;
   },

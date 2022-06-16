@@ -56,6 +56,7 @@ export class KafkaConsumer {
     let payload: any;
     try {
       payload = JSON.parse(message.value.toString());
+      console.log(payload);
     } catch (error) {
       log.error(error.message, error.stack);
       return { error: JSONRPC_ERRORS.InternalError.name };

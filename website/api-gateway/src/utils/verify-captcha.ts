@@ -7,6 +7,7 @@ const config = configuration();
 const SECRET = config.server.captchaSecret;
 
 export async function verifyCaptcha(token: string) {
+  console.log(process.env.TEST_ENV);
   if (process.env.TEST_ENV) {
     return true;
   }
