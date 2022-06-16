@@ -58,7 +58,6 @@ jobs:
   #       run: yarn test
 
   wait-previous-run:
-    needs: [run-unit-tests]
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
