@@ -23,40 +23,39 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
+  # run-unit-tests:
+  #   name: Unit Tests for `data-storage`
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Cancel previous workflow runs
+  #       uses: styfle/cancel-workflow-action@0.4.0
+  #       with:
+  #         access_token: ${{ github.token }}
 
-  run-unit-tests:
-    name: Unit Tests for `data-storage`
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel previous workflow runs
-        uses: styfle/cancel-workflow-action@0.4.0
-        with:
-          access_token: ${{ github.token }}
+  #     - name: Load current commit
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: ${{ github.ref }}
 
-      - name: Load current commit
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref }}
+  #     - uses: c-hive/gha-yarn-cache@v2.1.0
 
-      - uses: c-hive/gha-yarn-cache@v2.1.0
+  #     - name: Setup NodeJS
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 16
+  #         cache: yarn
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          cache: yarn
+  #     - name: Install dependencies
+  #       uses: borales/actions-yarn@v3.0.0
+  #       with:
+  #         cmd: install
 
-      - name: Install dependencies
-        uses: borales/actions-yarn@v3.0.0
-        with:
-          cmd: install
+  #     - name: Build common package
+  #       run: yarn build:common
 
-      - name: Build common package
-        run: yarn build:common
-
-      - name: Run tests
-        working-directory: 'website/data-storage'
-        run: yarn test
+  #     - name: Run tests
+  #       working-directory: 'website/data-storage'
+  #       run: yarn test
 
   wait-previous-run:
     needs: [run-unit-tests]
@@ -237,7 +236,7 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment test-balance-testenv data-storage-testenv -n $KUBE_NAMESPACE
-          
+
       - name: Check k8s deployment test-balance-testenv
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
