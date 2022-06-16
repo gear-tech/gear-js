@@ -34,7 +34,7 @@ const FormPayloadType = ({ name, label }: Props) => {
       <label htmlFor={field.name} className={styles.fieldLabel}>
         {label}
       </label>
-      <div className={clsx(styles.switchableField, styles.fieldContent)}>
+      <div className={clsx(styles.payloadType, styles.fieldContent)}>
         <Checkbox
           type="switch"
           label="Enter type"
