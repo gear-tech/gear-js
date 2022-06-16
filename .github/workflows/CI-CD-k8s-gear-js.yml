@@ -1,4 +1,4 @@
-name: CI-CD stage/prod k8s
+name: Deploy Gear-js to k8s stage/prod
 
 on:
   push:
