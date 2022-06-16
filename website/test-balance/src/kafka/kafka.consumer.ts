@@ -44,7 +44,6 @@ export class KafkaConsumer {
       messages: [
         {
           value,
-          // partition: parseInt(message.headers.kafka_replyPartition.toString()),
           headers: { kafka_correlationId: message.headers.kafka_correlationId.toString() },
         },
       ],
@@ -84,7 +83,7 @@ export class KafkaConsumer {
     await this.consumer.run({
       eachMessage: async ({ message }) => {
         console.log(message);
-        this.messageProcessing(message);
+        await this.messageProcessing(message);
       },
     });
   }
