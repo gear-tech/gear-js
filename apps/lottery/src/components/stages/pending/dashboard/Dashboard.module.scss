@@ -1,0 +1,25 @@
+@use '@gear-js/ui/variables' as *;
+@use 'assets/styles/shared' as *;
+
+.dashboard {
+  @extend %box;
+  text-align: left;
+
+  & > *:not(:last-child) {
+    margin-bottom: 8px;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  p {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+  }
+}
+
+.key {
+  color: $textColorSecondary;
+}

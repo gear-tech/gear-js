@@ -1,0 +1,36 @@
+@use '@gear-js/ui/variables' as *;
+
+.heading {
+  margin-bottom: 16px;
+  // TODO: replace w/ @gear-js/ui heading styles
+  font-family: 'Syncopate', sans-serif;
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.header {
+  font-weight: 600;
+  color: $textColorSecondary;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  &:nth-child(even) {
+    background-color: $bgColor;
+  }
+
+  &:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.cell {
+  padding: 10px 20px;
+}
+
+.text {
+  color: $textColorSecondary;
+  background-color: rgba(255, 255, 255, 0.1);
+}

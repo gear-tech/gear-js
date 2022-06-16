@@ -1,5 +1,9 @@
+import { Button, Input } from '@gear-js/ui';
+import { Pending } from 'components/stages';
+import styles from './Home.module.scss';
+
 function Home() {
-  return <div>Home page</div>;
+  return <Pending />;
 }
 
 export { Home };

@@ -1,0 +1,15 @@
+@use 'assets/styles/shared' as *;
+
+.form {
+  @extend %box;
+
+  & > *:not(:last-child) {
+    margin-bottom: 30px;
+  }
+}
+
+.input {
+  display: grid;
+  text-align: left;
+  grid-template-columns: 1fr 2fr;
+}

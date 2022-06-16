@@ -1,0 +1,23 @@
+@use '@gear-js/ui/variables' as *;
+
+.container {
+  max-width: 675px;
+  text-align: center;
+
+  & > *:not(:last-child) {
+    margin-bottom: 48px;
+  }
+}
+
+.heading {
+  margin-bottom: 8px;
+  // TODO: replace w/ @gear-js/ui heading styles
+  font-family: 'Syncopate', sans-serif;
+  font-size: 36px;
+  line-height: 48px;
+}
+
+.subheading {
+  font-size: $fontSizeMedium;
+  color: $textColorSecondary;
+}
