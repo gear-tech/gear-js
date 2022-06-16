@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import styles from './Upload.module.scss';
 import { DroppedFile, UploadTypes } from './types';
+import { BlockList } from '../BlocksList/BlocksList';
 import { DropTarget } from './children/DropTarget/DropTarget';
 import { UploadForm } from './children/UploadForm/UploadForm';
 
@@ -23,14 +26,17 @@ export const Upload = () => {
 
   return (
     <>
-      {isProgramUpload ? (
-        <UploadForm setDroppedFile={setDroppedFile} droppedFile={droppedFile.file} />
-      ) : (
-        <div className={styles.upload}>
-          <DropTarget type={UploadTypes.PROGRAM} setDroppedFile={setDroppedFile} />
-          <DropTarget type={UploadTypes.CODE} setDroppedFile={setDroppedFile} />
-        </div>
-      )}
+      <DndProvider backend={HTML5Backend}>
+        {isProgramUpload ? (
+          <UploadForm setDroppedFile={setDroppedFile} droppedFile={droppedFile.file} />
+        ) : (
+          <div className={styles.upload}>
+            <DropTarget type={UploadTypes.PROGRAM} setDroppedFile={setDroppedFile} />
+            <DropTarget type={UploadTypes.CODE} setDroppedFile={setDroppedFile} />
+          </div>
+        )}
+      </DndProvider>
+      <BlockList />
     </>
   );
 };
