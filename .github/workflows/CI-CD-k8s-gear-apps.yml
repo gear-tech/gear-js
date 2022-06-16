@@ -1,4 +1,4 @@
-name: Build and Deploy Gear Apps to k8s
+name: Deploy Gear-apps to k8s stage/prod
 
 on:
   push:
