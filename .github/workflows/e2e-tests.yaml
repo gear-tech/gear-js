@@ -45,7 +45,7 @@ jobs:
         $HasDiffStorage = $SourceDiffStorage.Length -gt 0
 
         # Set the output named "storage_changed"
-        Write-Host "::set-output name=nft_changed::$HasDiffStorage"
+        Write-Host "::set-output name=storage_changed::$HasDiffStorage"
 
 
   run-unit-tests:
