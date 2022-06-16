@@ -44,7 +44,7 @@ export class KafkaConsumer {
       messages: [
         {
           value,
-          partition: parseInt(message.headers.kafka_replyPartition.toString()),
+          // partition: parseInt(message.headers.kafka_replyPartition.toString()),
           headers: { kafka_correlationId: message.headers.kafka_correlationId.toString() },
         },
       ],
