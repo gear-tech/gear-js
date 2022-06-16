@@ -12,30 +12,32 @@ import {
 } from '@gear-js/common';
 
 import { Meta } from '../entities/meta.entity';
-import { getPaginationParams, getWhere, sleep } from '../utils';
+import { getPaginationParams, sqlWhereWithILike, sleep } from '../utils';
 import { ProgramNotFound } from '../errors';
 import { Program } from '../entities/program.entity';
+import { CreateProgramInput } from './types';
+import { plainToClass } from 'class-transformer';
+import { ProgramRepo } from './program.repo';
 
 const logger = new Logger('ProgramDb');
 
 @Injectable()
-export class ProgramsService {
+export class ProgramService {
   constructor(
     @InjectRepository(Program)
     private readonly programRepo: Repository<Program>,
+    private programRepository: ProgramRepo,
   ) {}
 
-  async save({ id, genesis, owner, timestamp, blockHash }): Promise<IProgram> {
-    const program = this.programRepo.create({
-      id,
-      owner,
-      name: id,
-      genesis,
-      blockHash,
-      timestamp: new Date(timestamp),
+  async createProgram(createProgramInput: CreateProgramInput): Promise<IProgram | void> {
+    const programTypeDB = plainToClass(Program, {
+      ...createProgramInput,
+      name: createProgramInput.id,
+      timestamp: new Date(createProgramInput.timestamp),
     });
+
     try {
-      return await this.programRepo.save(program);
+      return await this.programRepository.save(programTypeDB);
     } catch (error) {
       logger.error(error, error.stack);
       return;
@@ -51,16 +53,9 @@ export class ProgramsService {
   }
 
   async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
-    const { genesis, owner, query } = params;
-    const [result, total] = await this.programRepo.findAndCount({
-      where: getWhere({ genesis, owner }, query, ['id', 'title', 'name']),
-      ...getPaginationParams(params),
-      order: {
-        timestamp: 'DESC',
-      },
-    });
+    const [programs, total] = await this.programRepository.listByOwnerAndGenesis(params);
     return {
-      programs: result,
+      programs,
       count: total,
     };
   }
@@ -68,7 +63,7 @@ export class ProgramsService {
   async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
     const { query, genesis } = params;
     const [result, total] = await this.programRepo.findAndCount({
-      where: getWhere({ genesis }, query, ['id', 'title', 'name']),
+      where: sqlWhereWithILike({ genesis }, query, ['id', 'title', 'name']),
       ...getPaginationParams(params),
       order: {
         timestamp: 'DESC',
