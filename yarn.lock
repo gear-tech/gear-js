@@ -1967,6 +1967,7 @@ __metadata:
     babel-plugin-transform-typescript-metadata: 0.3.2
     babel-preset-env: 1.7.0
     babel-preset-jest: 27.5.1
+    class-transformer: ^0.5.1
     eslint: 7.32.0
     eslint-config-prettier: 8.5.0
     eslint-plugin-prettier: 3.4.1
@@ -7514,6 +7515,13 @@ __metadata:
   version: 1.2.2
   resolution: "cjs-module-lexer@npm:1.2.2"
   checksum: 977f3f042bd4f08e368c890d91eecfbc4f91da0bc009a3c557bc4dfbf32022ad1141244ac1178d44de70fc9f3dea7add7cd9a658a34b9fae98a55d8f92331ce5
+  languageName: node
+  linkType: hard
+
+"class-transformer@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "class-transformer@npm:0.5.1"
+  checksum: f191c8b4cc4239990f5efdd790cabdd852c243ed66248e39f6616a349c910c6eed2d9fd1fbf7ee6ea89f69b4f1d0b493b27347fe0cd0ae26b47c3745a805b6d3
   languageName: node
   linkType: hard
 
