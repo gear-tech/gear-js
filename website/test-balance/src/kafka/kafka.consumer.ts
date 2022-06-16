@@ -83,6 +83,7 @@ export class KafkaConsumer {
     log.info(`Subscribe to ${topic} topic`);
     await this.consumer.run({
       eachMessage: async ({ message }) => {
+        console.log(message);
         this.messageProcessing(message);
       },
     });

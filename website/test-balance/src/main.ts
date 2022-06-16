@@ -6,6 +6,7 @@ import { GearService } from './domain/gear.service';
 import { KafkaConsumer } from './kafka/kafka.consumer';
 import { DbService } from './database/db';
 import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthcheck.router';
+import { KAFKA_TOPICS } from '@gear-js/common';
 
 const app = express();
 
@@ -22,7 +23,7 @@ const startApp = async () => {
   changeStatus('ws');
   const kafka = new KafkaConsumer(gear, db);
   await kafka.connect();
-  await kafka.subscribe(`testBalance.get`);
+  await kafka.subscribe(KAFKA_TOPICS.TEST_BALANCE_GET);
   changeStatus('kafka');
   app.listen(port, () => {
     console.log(`Healthckech server is running on port ${port} 🚀`);
