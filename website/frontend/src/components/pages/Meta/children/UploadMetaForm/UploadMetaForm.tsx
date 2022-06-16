@@ -5,9 +5,8 @@ import { Metadata } from '@gear-js/api';
 
 import { Schema } from './Shema';
 import { FormValues } from './types';
-import { FormInput } from 'components/common/Form';
+import { FormInput, formStyles } from 'components/common/Form';
 import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
-import { formStyles } from 'components/common/Form';
 
 import { useAccount, useAlert } from 'hooks';
 import { addMetadata } from 'services/ApiService';

@@ -70,6 +70,7 @@
   color: $textColor;
   font-size: $fontSize;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .textarea {
@@ -92,8 +93,8 @@
   display: flex;
   margin-top: 5px;
   margin-left: 200px;
-  
-  & > *:not(:last-child){
+
+  & > *:not(:last-child) {
     margin-right: 24px;
 
     @include md {

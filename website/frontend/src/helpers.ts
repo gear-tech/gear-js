@@ -1,5 +1,4 @@
-import { Hex } from '@gear-js/api';
-import { Metadata } from '@polkadot/types';
+import { Hex, Metadata } from '@gear-js/api';
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
 import { AlertContainerFactory } from 'context/alert/types';
@@ -177,7 +176,7 @@ export const calculateGas = async (
   api: any,
   values: UploadInitialValues | SendMessageInitialValues,
   alert: AlertContainerFactory,
-  meta: any,
+  meta?: Metadata,
   code?: Uint8Array | null,
   addressId?: String | null,
   replyCodeError?: string
@@ -194,7 +193,7 @@ export const calculateGas = async (
     }
 
     const { value } = values;
-    const metaOrTypeOfPayload: Metadata | string = meta || 'String';
+    const metaOrTypeOfPayload = meta || values.payloadType;
 
     let estimatedGas;
 
