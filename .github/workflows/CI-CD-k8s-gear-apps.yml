@@ -1,4 +1,4 @@
-name: Build and Deploy MarketPlace to k8s
+name: Build and Deploy Gear Apps to k8s
 
 on:
   push:
