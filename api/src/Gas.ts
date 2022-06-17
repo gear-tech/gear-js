@@ -41,7 +41,7 @@ export class GearGas {
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
-   * @param allowOtherPanics
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -77,7 +77,7 @@ export class GearGas {
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
-   * @param allowOtherPanics
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -108,7 +108,7 @@ export class GearGas {
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
-   * @param allowOtherPanics
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -144,7 +144,7 @@ export class GearGas {
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
-   * @param allowOtherPanics
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -182,7 +182,7 @@ export class GearGas {
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
-   * @param allowOtherPanics
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -214,7 +214,7 @@ export class GearGas {
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
-   * @param allowOtherPanics
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -251,7 +251,7 @@ export class GearGas {
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
    * @param value Value of message
-   * @param allowOtherPanics
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -287,7 +287,7 @@ export class GearGas {
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
    * @param value Value of message
-   * @param allowOtherPanics
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -323,7 +323,7 @@ export class GearGas {
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
    * @param value Value of message
-   * @param allowOtherPanics
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
