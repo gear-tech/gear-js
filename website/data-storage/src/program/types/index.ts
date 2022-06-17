@@ -1,3 +1,5 @@
+import { Meta } from '../../entities';
+
 interface CreateProgramInput {
   id: string;
   owner: string;
@@ -6,4 +8,12 @@ interface CreateProgramInput {
   blockHash: string;
 }
 
-export { CreateProgramInput };
+interface UpdateProgramDataInput {
+  id: string;
+  genesis: string;
+  name?: string;
+  title?: string;
+  meta?: Meta;
+}
+
+export { CreateProgramInput, UpdateProgramDataInput };
