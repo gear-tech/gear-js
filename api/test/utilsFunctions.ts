@@ -1,7 +1,8 @@
+import { UnsubscribePromise } from '@polkadot/api/types';
 import { GearApi, GearKeyring, Hex, IGearEvent, MessageWaitedData, UserMessageSent, UserMessageSentData } from '../src';
 
 export const checkInit = (api: GearApi, programId: string) => {
-  let unsubs = [];
+  let unsubs: UnsubscribePromise[] = [];
   let messageId = undefined;
   unsubs.push(
     api.gearEvents.subscribeToGearEvent('MessageEnqueued', (event) => {
@@ -52,8 +53,10 @@ export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
       messages.push(event);
     }
   });
-  return async (messageId: Hex): Promise<UserMessageSentData> => {
-    const message = messages.find(({ data: { reply } }) => reply.isSome && reply.unwrap()[0].eq(messageId));
+  return async (messageId: Hex | null): Promise<UserMessageSentData> => {
+    const message = messages.find(({ data: { reply } }) =>
+      messageId === null ? reply.isNone : reply.isSome && reply.unwrap()[0].eq(messageId),
+    );
     (await unsub)();
     return message?.data;
   };
@@ -62,9 +65,9 @@ export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
 export const sendTransaction = async (submitted: any, account: any, methodName: keyof IGearEvent): Promise<any> => {
   return new Promise((resolve, reject) => {
     submitted
-      .signAndSend(account, ({ events = [] }) => {
+      .signAndSend(account, ({ events = [], status }) => {
         events.forEach(({ event: { method, data } }) => {
-          if (method === methodName) {
+          if (method === methodName && status.isFinalized) {
             resolve(data.toHuman());
           } else if (method === 'ExtrinsicFailed') {
             reject(data.toString());

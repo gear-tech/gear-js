@@ -6,8 +6,9 @@ import { Hex, PayloadType } from './types';
 import { GearApi } from './GearApi';
 import { createPayload } from './utils';
 import { GetGasSpentError } from './errors/program.errors';
+import { GasInfo } from 'types/gear-core';
 
-export class GearGasSpent {
+export class GearGas {
   api: GearApi;
   createType: CreateType;
   constructor(api: GearApi) {
@@ -63,9 +64,10 @@ export class GearGasSpent {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     meta?: Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of init message
@@ -91,9 +93,10 @@ export class GearGasSpent {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     typeOfPayload?: string,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of init message
@@ -108,22 +111,25 @@ export class GearGasSpent {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   async init(
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64> {
-    return await this.api.rpc['gear'].getInitGasSpent(
+  ): Promise<GasInfo> {
+    return await this.api.rpc['gear'].calculateInitGas(
       sourceId,
       isHex(code) ? code : this.createType.create('bytes', Array.from(code)).toHex(),
       this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
       value || 0,
+      allowOtherPanics || true,
     );
   }
 
@@ -158,9 +164,10 @@ export class GearGasSpent {
     sourceId: Hex,
     destinationId: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     meta?: Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of hanle message
@@ -187,9 +194,10 @@ export class GearGasSpent {
     sourceId: Hex,
     destinationId: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     typeOfPayload?: string,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of hanle message
@@ -204,22 +212,25 @@ export class GearGasSpent {
     sourceId: Hex,
     destinationId: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   async handle(
     sourceId: Hex,
     destinationId: Hex,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64> {
-    return await this.api.rpc['gear'].getHandleGasSpent(
+  ): Promise<GasInfo> {
+    return await this.api.rpc['gear'].calculateHandleGas(
       sourceId,
       destinationId,
       this.getPayload(payload, metaOrTypeOfPayload, 'handle_input'),
       value || 0,
+      allowOtherPanics || true,
     );
   }
 
@@ -252,9 +263,10 @@ export class GearGasSpent {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     meta?: Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of reply message
@@ -285,9 +297,10 @@ export class GearGasSpent {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     typeOfPayload?: string,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of reply message
@@ -304,24 +317,27 @@ export class GearGasSpent {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   async reply(
     sourceId: Hex,
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64> {
-    return await this.api.rpc['gear'].getReplyGasSpent(
+  ): Promise<GasInfo> {
+    return await this.api.rpc['gear'].calculateReplyGas(
       sourceId,
       messageId,
       exitCode,
       this.getPayload(payload, metaOrTypeOfPayload, 'async_handle_input'),
       value || 0,
+      allowOtherPanics || true,
     );
   }
 }
