@@ -1,6 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { GearKeyring } from '@gear-js/api';
 import { plainToClass } from 'class-transformer';
 import {
@@ -22,11 +20,7 @@ const logger = new Logger('MessageService');
 
 @Injectable()
 export class MessageService {
-  constructor(
-    @InjectRepository(Message)
-    private readonly messageRepo: Repository<Message>,
-    private messageRepository: MessageRepo,
-  ) {}
+  constructor(private messageRepository: MessageRepo) {}
 
   public async createMessage(params: IUserMessageSentKafkaValue): Promise<IMessage | void> {
     try {
@@ -95,7 +89,7 @@ export class MessageService {
       await sleep(100);
       const message = await this.messageRepository.getByIdAndGenesis(messageId, genesis);
       message.processedWithPanic = true;
-      await this.messageRepo.save(message);
+      await this.messageRepository.save(message);
     }
   }
 
