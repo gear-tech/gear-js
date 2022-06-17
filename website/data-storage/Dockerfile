@@ -12,3 +12,4 @@ RUN yarn build:common
 RUN yarn build:data-storage
 
 CMD ["node", "website/data-storage/dist/main"]
+#example

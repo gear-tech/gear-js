@@ -44,7 +44,6 @@ export class KafkaConsumer {
       messages: [
         {
           value,
-          partition: parseInt(message.headers.kafka_replyPartition.toString()),
           headers: { kafka_correlationId: message.headers.kafka_correlationId.toString() },
         },
       ],
@@ -54,6 +53,7 @@ export class KafkaConsumer {
   async messageProcessing(message: KafkaMessage) {
     let result: any;
     let payload: any;
+
     try {
       payload = JSON.parse(message.value.toString());
     } catch (error) {
@@ -81,7 +81,7 @@ export class KafkaConsumer {
     log.info(`Subscribe to ${topic} topic`);
     await this.consumer.run({
       eachMessage: async ({ message }) => {
-        this.messageProcessing(message);
+        await this.messageProcessing(message);
       },
     });
   }
