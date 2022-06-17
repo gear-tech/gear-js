@@ -56,7 +56,6 @@ export class KafkaConsumer {
 
     try {
       payload = JSON.parse(message.value.toString());
-      console.log(payload);
     } catch (error) {
       log.error(error.message, error.stack);
       return { error: JSONRPC_ERRORS.InternalError.name };
@@ -82,7 +81,6 @@ export class KafkaConsumer {
     log.info(`Subscribe to ${topic} topic`);
     await this.consumer.run({
       eachMessage: async ({ message }) => {
-        console.log(message);
         await this.messageProcessing(message);
       },
     });
