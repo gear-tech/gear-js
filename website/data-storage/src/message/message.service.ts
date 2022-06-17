@@ -16,13 +16,11 @@ import { MessageNotFound, SignatureNotVerified } from '../errors';
 import { sleep } from '../utils';
 import { MessageRepo } from './message.repo';
 
-const logger = new Logger('MessageService');
-
 @Injectable()
 export class MessageService {
+  private logger: Logger = new Logger('MessageService');
   constructor(private messageRepository: MessageRepo) {}
-
-  public async createMessage(params: IUserMessageSentKafkaValue): Promise<IMessage | void> {
+  public async createMessage(params: IUserMessageSentKafkaValue): Promise<IMessage> {
     try {
       const messageTypeDB = plainToClass(Message, {
         ...params,
@@ -31,8 +29,7 @@ export class MessageService {
 
       return this.messageRepository.save(messageTypeDB);
     } catch (error) {
-      logger.error(error, error.stack);
-      return;
+      this.logger.error(error, error.stack);
     }
   }
 

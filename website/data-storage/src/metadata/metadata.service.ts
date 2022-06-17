@@ -11,6 +11,7 @@ import { sleep } from '../utils';
 import { MetadataRepo } from './metadata.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { plainToClass } from 'class-transformer';
+import { UpdateProgramDataInput } from '../program/types';
 
 @Injectable()
 export class MetadataService {
@@ -21,7 +22,7 @@ export class MetadataService {
   ) {}
 
   async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
-    const { programId, genesis, signature, meta } = params;
+    const { programId, genesis, signature, meta, title, name } = params;
     const [_, program] = await Promise.all([sleep(1000), this.programRepository.getByIdAndGenesis(programId, genesis)]);
 
     try {
@@ -39,7 +40,15 @@ export class MetadataService {
     });
 
     const metadata = await this.metadataRepository.save(metadataTypeDB);
-    await this.programService.addProgramInfo(params.programId, params.genesis, params.name, params.title, metadata);
+
+    const updateProgramDataInput: UpdateProgramDataInput = {
+      id: params.programId,
+      genesis,
+      name,
+      title,
+      meta: metadata,
+    };
+    await this.programService.updateProgramData(updateProgramDataInput);
 
     return { status: 'Metadata added' };
   }

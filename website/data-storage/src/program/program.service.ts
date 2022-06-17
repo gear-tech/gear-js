@@ -15,21 +15,16 @@ import { Meta } from '../entities/meta.entity';
 import { getPaginationParams, sqlWhereWithILike, sleep } from '../utils';
 import { ProgramNotFound } from '../errors';
 import { Program } from '../entities/program.entity';
-import { CreateProgramInput } from './types';
+import { CreateProgramInput, UpdateProgramDataInput } from './types';
 import { plainToClass } from 'class-transformer';
 import { ProgramRepo } from './program.repo';
 
-const logger = new Logger('ProgramDb');
-
 @Injectable()
 export class ProgramService {
-  constructor(
-    @InjectRepository(Program)
-    private readonly programRepo: Repository<Program>,
-    private programRepository: ProgramRepo,
-  ) {}
+  private logger: Logger = new Logger('ProgramService');
+  constructor(private programRepository: ProgramRepo) {}
 
-  async createProgram(createProgramInput: CreateProgramInput): Promise<IProgram | void> {
+  public async createProgram(createProgramInput: CreateProgramInput): Promise<IProgram> {
     const programTypeDB = plainToClass(Program, {
       ...createProgramInput,
       name: createProgramInput.id,
@@ -39,20 +34,21 @@ export class ProgramService {
     try {
       return await this.programRepository.save(programTypeDB);
     } catch (error) {
-      logger.error(error, error.stack);
+      this.logger.error(error, error.stack);
       return;
     }
   }
 
-  async addProgramInfo(id: string, genesis: string, name?: string, title?: string, meta?: Meta): Promise<IProgram> {
-    const program = await this.findProgram({ id, genesis });
+  public async updateProgramData(updateProgramDataInput: UpdateProgramDataInput): Promise<IProgram> {
+    const { meta, id, genesis, name, title } = updateProgramDataInput;
+    const program = await this.programRepository.getByIdAndGenesis(id, genesis);
     program.name = name;
     program.title = title;
     program.meta = meta;
-    return this.programRepo.save(program);
+    return this.programRepository.save(program);
   }
 
-  async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
+  public async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
     const [programs, total] = await this.programRepository.listByOwnerAndGenesis(params);
     return {
       programs,
@@ -60,39 +56,24 @@ export class ProgramService {
     };
   }
 
-  async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
-    const { query, genesis } = params;
-    const [result, total] = await this.programRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis }, query, ['id', 'title', 'name']),
-      ...getPaginationParams(params),
-      order: {
-        timestamp: 'DESC',
-      },
-    });
+  public async getAllPrograms(params: GetAllProgramsParams): Promise<GetAllProgramsResult> {
+    const [programs, total] = await this.programRepository.listPaginationByGenesis(params);
     return {
-      programs: result,
+      programs,
       count: total,
     };
   }
 
-  async findProgram(params: FindProgramParams): Promise<ProgramDataResult> {
+  public async findProgram(params: FindProgramParams): Promise<Program> {
     const { id, genesis, owner } = params;
-    const where = owner ? { id, genesis, owner } : { id, genesis };
-    const program = await this.programRepo.findOne({
-      where,
-      select: {
-        id: true,
-        genesis: true,
-        blockHash: true,
-        timestamp: true,
-        owner: true,
-        name: true,
-        initStatus: true,
-        title: true,
-        meta: { meta: true },
-      },
-      relations: ['meta'],
-    });
+    let program: Program;
+
+    if (this.isExistOwnerInParams(params)) {
+      program = await this.programRepository.getByIdAndGenesisAndOwner(id, genesis, owner);
+    } else {
+      program = await this.programRepository.getByIdAndGenesis(id, genesis);
+    }
+
     if (!program) {
       throw new ProgramNotFound();
     }
@@ -101,14 +82,18 @@ export class ProgramService {
 
   async setStatus(id: string, genesis: string, status: InitStatus): Promise<IProgram> {
     await sleep(2000);
-    const program = await this.findProgram({ id, genesis });
+    const program = await this.programRepository.getByIdAndGenesis(id, genesis);
     program.initStatus = status;
-    return this.programRepo.save(program);
+    return this.programRepository.save(program);
   }
 
-  async deleteRecords(genesis: string): Promise<any> {
-    const programs = await this.programRepo.find({ where: { genesis } });
-    await this.programRepo.remove(programs);
+  public async deleteRecords(genesis: string): Promise<any> {
+    const programs = await this.programRepository.listByGenesis(genesis);
+    await this.programRepository.remove(programs);
     return programs;
+  }
+
+  private isExistOwnerInParams(findProgramParamInput: FindProgramParams): boolean {
+    return findProgramParamInput.owner ? true : false;
   }
 }
