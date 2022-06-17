@@ -6,15 +6,22 @@ function Home() {
   const { account } = useAccount();
 
   const { lottery, isLotteryRead } = useLottery();
-  const { lotteryOwner } = lottery || {};
+  const { lotteryOwner, lotteryStartTime, lotteryDuration } = lottery || {};
 
   const isLotteryStarted = lottery?.lotteryStarted;
   const isOwner = account?.decodedAddress === lotteryOwner;
 
+  const getNumber = (value: string) => +value.replaceAll(',', '');
+  const getDate = (value: number) => new Date(value).toLocaleString();
+
+  const startTime = getNumber(lotteryStartTime || '');
+  const duration = getNumber(lotteryDuration || '');
+  const endTime = startTime + duration;
+
   return isLotteryRead ? (
     <>
       {!isLotteryStarted && <Start />}
-      {isLotteryStarted && <Pending />}
+      {isLotteryStarted && <Pending startTime={getDate(startTime)} endTime={getDate(endTime)} />}
     </>
   ) : (
     <Loader />

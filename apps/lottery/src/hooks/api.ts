@@ -1,9 +1,10 @@
 import { useReadState, useSendMessage } from '@gear-js/react-hooks';
-import { useMemo } from 'react';
+import { Hex } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
+import { useMemo } from 'react';
 import lotteryMetaWasm from 'assets/wasm/lottery.meta.wasm';
 import { ADDRESS } from 'consts';
-import { Hex } from '@gear-js/api';
+import { Player } from 'types';
 
 type LotteryState = {
   LotteryState: {
@@ -16,6 +17,8 @@ type LotteryState = {
   };
 };
 
+type PlayersState = { Players: { [key: number]: Player } };
+
 function useLotteryState<T>(payload: AnyJson) {
   return useReadState<T>(ADDRESS.LOTTERY_CONTRACT, lotteryMetaWasm, payload);
 }
@@ -27,8 +30,15 @@ function useLottery() {
   return { lottery: state?.LotteryState, isLotteryRead: isStateRead };
 }
 
+function usePlayers() {
+  const payload = useMemo(() => ({ GetPlayers: null }), []);
+  const { state, isStateRead } = useLotteryState<PlayersState>(payload);
+
+  return { players: state ? Object.values(state.Players) : [], isPlayersStateRead: isStateRead };
+}
+
 function useLotteryMessage() {
   return useSendMessage(ADDRESS.LOTTERY_CONTRACT, lotteryMetaWasm);
 }
 
-export { useLottery, useLotteryMessage };
+export { useLottery, usePlayers, useLotteryMessage };
