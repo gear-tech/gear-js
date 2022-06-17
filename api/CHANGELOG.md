@@ -1,3 +1,15 @@
+## 0.21.0
+
+_06/17/2022_
+
+https://github.com/gear-tech/gear-js/pull/743
+
+### Changes
+
+- Update calculation gas logic follow https://github.com/gear-tech/gear/pull/1051
+
+---
+
 ## 0.20.1
 
 _06/13/2022_

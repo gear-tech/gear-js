@@ -41,6 +41,7 @@ export class GearGas {
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
+   * @param allowOtherPanics
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -55,6 +56,7 @@ export class GearGas {
    *     currency: 'GRT',
    *   },
    *   0,
+   *   true,
    *   meta
    * );
    * console.log(gas.toHuman());
@@ -75,6 +77,7 @@ export class GearGas {
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
+   * @param allowOtherPanics
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -85,6 +88,7 @@ export class GearGas {
    *   code,
    *   '0x00',
    *   0
+   *   false,
    * );
    * console.log(gas.toHuman());
    * ```
@@ -104,6 +108,7 @@ export class GearGas {
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
+   * @param allowOtherPanics
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -139,6 +144,7 @@ export class GearGas {
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -155,6 +161,7 @@ export class GearGas {
    *       },
    *    },
    *   0,
+   *   true,
    *   meta
    * );
    * console.log(gas.toHuman());
@@ -175,6 +182,7 @@ export class GearGas {
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -185,6 +193,7 @@ export class GearGas {
    *   '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   'PING',
    *   0,
+   *   false,
    *   'String'
    * );
    * console.log(gas.toHuman());
@@ -205,6 +214,7 @@ export class GearGas {
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -241,6 +251,7 @@ export class GearGas {
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -253,6 +264,7 @@ export class GearGas {
    *   0,
    *   'PONG',
    *   1000,
+   *   true,
    *   meta,
    * );
    * console.log(gas.toHuman());
@@ -275,6 +287,7 @@ export class GearGas {
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -287,6 +300,7 @@ export class GearGas {
    *   0,
    *   'PONG',
    *   1000,
+   *   false,
    *   'String',
    * );
    * console.log(gas.toHuman());
@@ -309,6 +323,7 @@ export class GearGas {
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
