@@ -26,7 +26,8 @@
 - name: Install dependencies
   shell: >
     cd /home/ec2-user/wasm-compiler;
-    npm install --force;
+    npm install --force; npm run build;
+    cp -r build/ dist;
 
 - name: Give permissions to build-image script
   ansible.builtin.file:
