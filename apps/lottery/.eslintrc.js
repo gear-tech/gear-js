@@ -29,5 +29,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn', // 'error' is not convinient in development
 
     'consistent-return': 'off', // we want functions to have different return behavior
+
+    'react/jsx-props-no-spreading': ['error', { exceptions: ['Input', 'FileInput', 'Textarea'] }], // disable for form elements, cuz @mantine/form input props needs to be desctructured
   },
 };

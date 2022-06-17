@@ -9,4 +9,11 @@ const LOCAL_STORAGE = {
   ACCOUNT: 'account',
 };
 
-export { ADDRESS, LOCAL_STORAGE };
+const SUBHEADING = {
+  START: "Press 'Start' to set the lottery options.",
+  FORM: "Specify lottery duration and, if necessary, the address of the token contract and click the 'Submit and start' button to launch the lottery.",
+  PENDING:
+    "You can see here the lottery status. Click the 'Pick random winner' button to start the winner selection process.",
+};
+
+export { ADDRESS, LOCAL_STORAGE, SUBHEADING };
