@@ -87,7 +87,7 @@ export class ProgramService {
     return this.programRepository.save(program);
   }
 
-  public async deleteRecords(genesis: string): Promise<any> {
+  public async deleteRecords(genesis: string): Promise<Program[]> {
     const programs = await this.programRepository.listByGenesis(genesis);
     await this.programRepository.remove(programs);
     return programs;

@@ -1,128 +1,134 @@
 import { Test } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { Program } from '../src/entities/program.entity';
-import { Meta } from '../src/entities/meta.entity';
-import { ProgramService } from '../src/program/programs.service';
+import { ProgramService } from '../src/program/program.service';
+import { ProgramRepo } from '../src/program/program.repo';
+import { UpdateProgramDataInput } from '../src/program/types';
+import { Meta } from '../dist/entities';
+import { GetAllProgramsParams, GetAllUserProgramsParams, InitStatus } from '@gear-js/common';
+
+const PROGRAM_ENTITY_ID = '0x7357';
+const PROGRAM_GENESIS_ID = '0x73_57';
+const PROGRAM_NAME = '0x73_58';
+const PROGRAM_TITLE = '0x73_59';
 
 describe('Programs Service', () => {
   let programsService!: ProgramService;
+  const programs = [{ id: PROGRAM_ENTITY_ID, genesis: PROGRAM_GENESIS_ID }];
 
-  const Meta_create = jest.fn(() => ({ id: '0x7357' }));
-  const Meta_save = jest.fn(async () => ({ id: '0x7357' }));
-  const Meta_findAndCount = jest.fn(async () => [[{ id: '0x7357' }], 1]);
-  const Meta_findOne = jest.fn(async () => ({ id: '0x7357' }));
-
-  const Program_create = jest.fn(() => ({ id: '0x7357' }));
-  const Program_save = jest.fn(async () => ({ id: '0x7357' }));
-  const Program_findAndCount = jest.fn(async () => [[{ id: '0x7357' }], 1]);
-  const Program_findOne = jest.fn(async () => ({ id: '0x7357' }));
+  const mockProgramRepository = {
+    save: jest.fn().mockImplementation((program: Program): Promise<Program> => {
+      return new Promise((resolve) => resolve(program));
+    }),
+    getByIdAndGenesis: jest.fn(() => ({ id: PROGRAM_ENTITY_ID })),
+    getByIdAndGenesisAndOwner: jest.fn((params: GetAllUserProgramsParams) => {
+      return [programs, params.limit];
+    }),
+    listByOwnerAndGenesis: jest.fn((params: GetAllUserProgramsParams) => {
+      return [programs, params.limit];
+    }),
+    listPaginationByGenesis: jest.fn((params: GetAllProgramsParams) => {
+      return [programs, params.limit];
+    }),
+    listByGenesis: jest.fn(() => {
+      return programs;
+    }),
+    remove: jest.fn().mockImplementation((programsToDelete: Program[]): Promise<Program[]> => {
+      return new Promise((resolve) => resolve(programsToDelete));
+    }),
+  };
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
-        // Stub upstream repos:
         {
-          provide: getRepositoryToken(Program),
-          useValue: {
-            create: Program_create,
-            save: Program_save,
-            findAndCount: Program_findAndCount,
-            findOne: Program_findOne,
-          },
+          provide: ProgramRepo,
+          useFactory: () => mockProgramRepository,
         },
-        {
-          provide: getRepositoryToken(Meta),
-          useValue: {
-            create: Meta_create,
-            save: Meta_save,
-            findAndCount: Meta_findAndCount,
-            findOne: Meta_findOne,
-          },
-        },
-        // And use the default Programs service as it is:
         ProgramService,
       ],
     }).compile();
 
-    programsService = moduleRef.get(ProgramService);
+    programsService = moduleRef.get<ProgramService>(ProgramService);
   });
 
-  afterEach(() => {
-    for (const { mockReset } of [
-      Meta_create,
-      Meta_save,
-      Meta_findAndCount,
-      Meta_findOne,
-      Program_create,
-      Program_save,
-      Program_findAndCount,
-      Program_findOne,
-    ]) {
-      mockReset();
-    }
-  });
-
-  it('should record uploaded program', async () => {
-    // Given an initialized Programs Service,
-    // when:
-    programsService.save({
-      id: '0x7357',
+  it('should be successfully create new program', async () => {
+    const program = await programsService.createProgram({
+      id: PROGRAM_ENTITY_ID,
       genesis: '0x07357',
       owner: '0x7357',
       blockHash: '0x1234',
       timestamp: 0,
     });
 
-    // then:
-    expect(Program_create).toHaveBeenCalled();
-    expect(Program_save).toHaveBeenCalled();
+    expect(program.id).toEqual(PROGRAM_ENTITY_ID);
+    expect(mockProgramRepository.save).toHaveBeenCalled();
   });
 
-  it('should extend an existing program with its name and title', async () => {
-    // Given:
-    Program_findAndCount.mockReturnValue(Promise.resolve([[{ id: '0x7357' }], 1]));
-    Program_findOne.mockReturnValue(Promise.resolve({ id: '0x7357' }));
+  it('should be successfully update program', async () => {
+    const meta: Meta = { id: 'meta', owner: 'owner' } as Meta;
+    const updateProgramDataInput: UpdateProgramDataInput = {
+      id: PROGRAM_ENTITY_ID,
+      genesis: PROGRAM_GENESIS_ID,
+      meta,
+      name: PROGRAM_NAME,
+      title: PROGRAM_TITLE,
+    };
+    const program = await programsService.updateProgramData(updateProgramDataInput);
 
-    const id = '0x7357';
-    const genesis = '0x07357';
-    await programsService.save({
-      id,
-      genesis: '0x07357',
-      owner: '0x7357',
-      timestamp: 0,
-      blockHash: '0x0000000000000000',
-    });
-
-    // when:
-    await programsService.addProgramInfo(`${id}`, genesis, 'guestbook', 'guestbook');
-
-    // then:
-    expect(Program_save).toHaveBeenLastCalledWith({ id, meta: void null, name: 'guestbook', title: 'guestbook' });
+    expect(program.id).toEqual(updateProgramDataInput.id);
+    expect(program.name).toEqual(updateProgramDataInput.name);
+    expect(program.title).toEqual(updateProgramDataInput.title);
+    expect(program.meta).toEqual(updateProgramDataInput.meta);
   });
 
-  it('should set status of an existing program', async () => {
-    // Given an initialized Programs Service,
-    // when:
-    await programsService.save({
-      id: 7357,
-      genesis: '0x07357',
-      owner: '0x7357',
-      timestamp: 0,
-      blockHash: '0x0000000000000000',
-    });
-
-    // then:
-    expect(Program_create).toHaveBeenCalled();
-    expect(Program_save).toHaveBeenCalled();
+  it('should successfully get programs and called getAllUserProgram method', async () => {
+    const getAllUserProgramParamsInput: GetAllUserProgramsParams = {
+      genesis: PROGRAM_GENESIS_ID,
+      offset: 1,
+      limit: 1,
+      owner: 'owner',
+    };
+    const result = await programsService.getAllUserPrograms(getAllUserProgramParamsInput);
+    expect.arrayContaining(result.programs);
+    expect(mockProgramRepository.listByOwnerAndGenesis).toHaveBeenCalled();
   });
 
-  it('should throw on an attempt to update an inexistent program', () => {
-    // Given:
-    Program_findAndCount.mockReturnValueOnce(null);
-    Program_findOne.mockReturnValueOnce(null);
+  it('should successfully get programs and called listPaginationByGenesis method', async () => {
+    const getAllProgramParamsInput: GetAllProgramsParams = {
+      genesis: PROGRAM_GENESIS_ID,
+      offset: 1,
+      limit: 1,
+      owner: 'owner',
+    };
+    const result = await programsService.getAllPrograms(getAllProgramParamsInput);
+    expect.arrayContaining(result.programs);
+    expect(mockProgramRepository.listPaginationByGenesis).toHaveBeenCalled();
+  });
 
-    // when:
-    expect(programsService.addProgramInfo('0x7357', '0x07357', 'guestbook', 'guestbook')).rejects.toBeDefined();
+  it('should successfully update program status to PROGRESS', async () => {
+    const updateProgramStatusInput = {
+      id: PROGRAM_ENTITY_ID,
+      genesis: PROGRAM_GENESIS_ID,
+      status: InitStatus.PROGRESS,
+    };
+    const program = await programsService.setStatus(
+      updateProgramStatusInput.id,
+      updateProgramStatusInput.genesis,
+      updateProgramStatusInput.status,
+    );
+    expect(program.initStatus).toEqual(updateProgramStatusInput.status);
+    expect(program.initStatus).not.toEqual(InitStatus.SUCCESS);
+    expect(program.initStatus).not.toEqual(InitStatus.FAILED);
+    expect(mockProgramRepository.save).toHaveBeenCalled();
+  });
+
+  it('should successfully deleted programs', async () => {
+    const program_1 = new Program();
+    program_1.id = PROGRAM_ENTITY_ID;
+    program_1.genesis = PROGRAM_GENESIS_ID;
+    const deleteProgram = await programsService.deleteRecords(program_1.genesis);
+    expect(deleteProgram[0].genesis).toEqual(program_1.genesis);
+    expect(mockProgramRepository.remove).toHaveBeenCalled();
   });
 });
