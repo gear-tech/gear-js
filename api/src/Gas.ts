@@ -129,7 +129,7 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
-    return await this.api.rpc['gear'].calculateInitGas(
+    return this.api.rpc['gear'].calculateInitGas(
       sourceId,
       isHex(code) ? code : this.createType.create('bytes', Array.from(code)).toHex(),
       this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
@@ -235,7 +235,7 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
-    return await this.api.rpc['gear'].calculateHandleGas(
+    return this.api.rpc['gear'].calculateHandleGas(
       sourceId,
       destinationId,
       this.getPayload(payload, metaOrTypeOfPayload, 'handle_input'),
@@ -346,7 +346,7 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
-    return await this.api.rpc['gear'].calculateReplyGas(
+    return this.api.rpc['gear'].calculateReplyGas(
       sourceId,
       messageId,
       exitCode,
