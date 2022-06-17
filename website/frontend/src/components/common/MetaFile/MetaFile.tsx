@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import clsx from 'clsx';
 import { Field } from 'formik';
 import { Trash2 } from 'react-feather';
@@ -36,6 +36,7 @@ const MetaFile = (props: Props) => {
         alert.error('Wrong file format');
       }
 
+      // eslint-disable-next-line no-param-reassign
       event.target.value = '';
     }
   };

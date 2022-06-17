@@ -1,4 +1,3 @@
-import React from 'react';
 import { EventRecords, IdeaEvent } from 'types/explorer';
 import { Event } from 'components/pages/Explorer/common/Event/Event';
 import commonStyles from '../../Block.module.scss';
@@ -15,6 +14,7 @@ const System = ({ eventRecords }: Props) => {
 
   const isAnyEvent = systemEvents.length > 0;
 
+  // eslint-disable-next-line react/no-array-index-key
   const getEvents = () => systemEvents.map((event, index) => <Event key={index} value={event} />);
 
   return (

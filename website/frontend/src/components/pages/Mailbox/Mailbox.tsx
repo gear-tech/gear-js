@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MailboxType } from '@gear-js/api';
 import { useApi, useAccount } from 'hooks';
 import { Box } from 'layout/Box/Box';
@@ -19,6 +19,7 @@ const Mailbox = () => {
     }
   }, [account, api.mailbox]);
 
+  // eslint-disable-next-line react/no-array-index-key
   const getMessages = () => mailbox.map(([, message], index) => <Message key={index} message={message} />);
 
   return (

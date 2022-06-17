@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, ReactNode } from 'react';
+import { FC, MouseEvent, ReactNode } from 'react';
 import { CloseIcon } from '../../../assets/Icons';
 import { useBodyScrollLock } from 'hooks';
 import './Modal.scss';
@@ -20,6 +20,7 @@ export const Modal: FC<Props> = ({ open, content, handleClose, title }) => {
   };
 
   return open ? (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className="modal__wrapper" ref={targetRef} onClick={handleOverlayClick}>
       <div className="modal__box" data-testid="modal">
         <button className="modal__close" onClick={handleClose} type="button" aria-label="Close modal">

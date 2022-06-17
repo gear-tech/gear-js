@@ -1,18 +1,14 @@
 import { createLogger, format, transports } from 'winston';
 
-const LOGGER_TIMESTAMP_FORMAT = 'DD/mm/YY HH:mm:ss';
+const LOGGER_TIMESTAMP_FORMAT = 'DD/MM/YY HH:mm:ss';
 
 function customFormat(serviceLabel: string) {
   return format.combine(
-    format.timestamp({ format: LOGGER_TIMESTAMP_FORMAT }),
+    format.label({ label: serviceLabel ? serviceLabel : 'LOGGER', message: true }),
     format.colorize(),
-    format.label({ label: serviceLabel }),
-    format.align(),
-    format.printf((info) => {
-      const { timestamp, level, message, ...args } = info;
-
-      const ts = timestamp.slice(0, 19).replace('T', ' ');
-      return `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ''}`;
+    format.timestamp({ format: LOGGER_TIMESTAMP_FORMAT }),
+    format.printf(({ level, message, timestamp }) => {
+      return `${timestamp} ${level}: ${message}`;
     }),
   );
 }

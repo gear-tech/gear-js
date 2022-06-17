@@ -7,6 +7,7 @@ import {
   GetAllUserProgramsParams,
   GetMessagesParams,
   GetMetaParams,
+  GetTestBalanceParams,
   KAFKA_TOPICS,
 } from '@gear-js/common';
 
@@ -19,6 +20,7 @@ import {
   programData,
   programMetaAdd,
   programMetaGet,
+  testBalance,
 } from '../kafka/kafka-events';
 import { KafkaParams } from '../kafka/types';
 
@@ -40,6 +42,8 @@ export function jsonRpcMethodHandler(method: string, params: KafkaParams): Promi
       return messageData(params as FindMessageParams);
     case KAFKA_TOPICS.MESSAGE_ADD_PAYLOAD:
       return messageAddPayload(params as AddPayloadParams);
+    case KAFKA_TOPICS.TEST_BALANCE_GET:
+      return testBalance(params as GetTestBalanceParams);
     default:
       break;
   }

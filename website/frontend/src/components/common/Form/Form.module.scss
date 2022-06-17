@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   width: 80%;
-  
+
   @include lg {
     width: 100%;
   }
@@ -26,7 +26,7 @@
   &::after {
     content: ':';
   }
-  
+
   @include md {
     flex: none;
     margin-right: 0;
@@ -66,8 +66,9 @@
 .formButtons {
   display: flex;
   margin-top: 5px;
-  
-  & > *:not(:last-child){
+  margin-left: 200px;
+
+  & > *:not(:last-child) {
     margin-right: 24px;
 
     @include md {
@@ -77,6 +78,7 @@
   }
 
   @include md {
+    margin-left: 0;
     flex-direction: column;
   }
 }

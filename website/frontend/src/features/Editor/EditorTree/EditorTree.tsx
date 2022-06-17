@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { EditorTypes } from 'types/editor';
 import { File, FilePlus, Folder, FolderPlus } from 'react-feather';
 

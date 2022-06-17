@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, ButtonProps } from '@gear-js/ui';
 import arrow from 'assets/images/arrow_back.svg';

@@ -7,13 +7,13 @@ import { INPUT_PAYLOAD_VALUES, INPUT_MANUAL_PAYLOAD, INIT_FORM_VALUES, INPUT_FIL
 import { FILE_TYPES } from 'consts';
 import { getPreformattedText } from 'helpers';
 import { AlertProvider } from 'context/alert';
-import { FormPayload } from 'components/common/FormPayload';
+import { FormPayload } from 'components/common/Form/FormPayload';
 
 const TestFormPayload = ({ values, onSubmit }: TestFormProps) => (
   <AlertProvider>
     <Formik initialValues={INIT_FORM_VALUES} onSubmit={onSubmit}>
       <Form data-testid="test-form">
-        <FormPayload name="payload" values={values} />
+        <FormPayload name="payload" label="Test payload" values={values} />
       </Form>
     </Formik>
   </AlertProvider>
@@ -42,6 +42,7 @@ describe('form payload tests', () => {
 
     const manualTextarea = screen.getByPlaceholderText('// Enter your payload here');
 
+    expect(screen.getByLabelText('Test payload')).toBeInTheDocument();
     expect(screen.queryByLabelText('Manual input')).toBeNull();
     expect(manualTextarea).toBeInTheDocument();
     expect(manualTextarea).toHaveTextContent('');
@@ -75,6 +76,7 @@ describe('form payload tests', () => {
 
     const manualTextbox = screen.getByRole('textbox');
 
+    expect(screen.getByLabelText('Test payload')).toBeInTheDocument();
     expect(manualTextbox).toHaveValue(getPreformattedText(INPUT_MANUAL_PAYLOAD));
 
     const manualText = `
@@ -111,7 +113,7 @@ describe('form payload tests', () => {
     expect(fileInput).toBeInTheDocument();
     expect(screen.getByText('Select file')).toBeInTheDocument();
 
-    //upload file
+    // upload file
 
     const testFile = new File([INPUT_FILE_CONTENT], 'test.json', { type: FILE_TYPES.JSON });
 
@@ -128,7 +130,7 @@ describe('form payload tests', () => {
     submit();
     await verifyValues({ payload: INPUT_FILE_CONTENT });
 
-    //remove file
+    // remove file
 
     fireEvent.change(fileInput, {
       target: { files: null },
@@ -160,6 +162,8 @@ describe('form payload tests', () => {
 
     expect(within(fieldsets[0]).getByText('Action')).toBeInTheDocument();
     expect(selectors[0]).toHaveValue('Option');
+
+    expect(screen.getByText('Test payload')).toBeInTheDocument();
 
     // Option
     expect(fieldsets).toHaveLength(2);

@@ -1,0 +1,34 @@
+@use '@gear-js/ui/variables' as *;
+@use 'assets/styles/shared' as *;
+
+.nft {
+  @include card();
+  display: block;
+  height: 100%;
+}
+
+.image {
+  display: block;
+  margin: 0 auto 30px;
+  // TODO: replace w/ shared img-fluid class/mixin
+  max-width: 100%;
+  height: auto;
+  max-height: 200px;
+  border-radius: $borderRadius;
+}
+
+.heading,
+.text {
+  font-size: $fontSizeMedium;
+  text-align: center;
+}
+
+.heading {
+  margin-bottom: 5px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.text {
+  color: $textColorSecondary;
+}

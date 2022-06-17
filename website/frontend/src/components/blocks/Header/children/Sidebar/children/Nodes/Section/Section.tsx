@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { Nodes, NodeSection } from '../../../../../types';
 import { Node } from './Node/Node';
 import styles from './Section.module.scss';
@@ -18,6 +18,7 @@ const Section = ({ section, localNodes, setLocalNodes, selectedNode, setSelected
   const getNodes = () =>
     concatedNodes.map((node, index) => (
       <Node
+        // eslint-disable-next-line react/no-array-index-key
         key={index}
         address={node.address}
         isCustom={node.isCustom}

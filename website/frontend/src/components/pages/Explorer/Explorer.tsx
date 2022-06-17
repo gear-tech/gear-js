@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import { IdeaEventsProps } from 'types/explorer';
 import { BackButton } from 'components/BackButton/BackButton';

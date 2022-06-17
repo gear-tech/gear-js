@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 
 export const TermsOfUse: VFC = () => (
   <div className="document">

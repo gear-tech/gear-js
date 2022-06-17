@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, FormEvent } from 'react';
+import { ChangeEvent, useState, FormEvent } from 'react';
 import { Button, Input, buttonStyles } from '@gear-js/ui';
 import { Link, useSearchParams } from 'react-router-dom';
 import searchIcon from 'assets/images/search.svg';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Button } from '@gear-js/ui';
 import refresh from 'assets/images/refresh2.svg';

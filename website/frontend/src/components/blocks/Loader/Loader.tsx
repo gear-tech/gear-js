@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { ProgressBar } from 'components/ProgressBar/ProgressBar';
 import UpGear from 'assets/images/gear_up.svg';
 import DownGear from 'assets/images/gear_down.svg';

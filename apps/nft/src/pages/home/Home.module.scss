@@ -1,0 +1,25 @@
+@use '@gear-js/ui/variables' as *;
+
+.header {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.heading {
+  // TODO: replace w/ @gear-js/ui heading styles
+  font-family: 'Syncopate', sans-serif;
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.text {
+  font-size: $fontSizeMedium;
+  color: $textColorSecondary;
+}

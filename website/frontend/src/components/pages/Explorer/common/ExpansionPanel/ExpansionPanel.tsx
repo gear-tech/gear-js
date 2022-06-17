@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import clsx from 'clsx';
 import { Header } from './Header/Header';
 import styles from './ExpansionPanel.module.scss';

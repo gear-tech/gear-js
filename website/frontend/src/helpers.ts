@@ -10,7 +10,7 @@ import { NODE_ADDRESS_REGEX } from 'regexes';
 import { FormValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
 import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
-import { getSubmitPayload } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
@@ -227,6 +227,8 @@ export const calculateGas = async (
           metaOrTypeOfPayload
         );
         break;
+      default:
+        throw new Error('Unknow method');
     }
 
     alert.info(`Estimated gas ${estimatedGas.toHuman()}`);

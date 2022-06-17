@@ -1,5 +1,6 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect } from 'react';
+// eslint-disable-next-line import/no-cycle
 import { useApi } from '.';
 
 export function useSubscription(callback: () => UnsubscribePromise) {

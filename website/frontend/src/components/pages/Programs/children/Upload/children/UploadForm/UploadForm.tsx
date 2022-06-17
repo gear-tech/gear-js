@@ -15,11 +15,10 @@ import { UploadProgramModel } from 'types/program';
 import { UploadProgram } from 'services/ApiService';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { readFileAsync, calculateGas, checkFileFormat } from 'helpers';
-import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import { MetaSwitch } from 'components/common/MetaSwitch';
 import { META_FIELDS } from 'components/blocks/UploadMetaForm/model/const';
-import { FormInput, FormTextarea, FormNumberFormat } from 'components/common/Form';
-import { FormPayload } from 'components/common/FormPayload';
+import { FormInput, FormPayload, FormTextarea, FormNumberFormat } from 'components/common/Form';
 import { getMetaValues } from 'components/blocks/UploadMetaForm/helpers/getMetaValues';
 
 type Props = {
@@ -165,12 +164,7 @@ export const UploadForm: VFC<Props> = ({ setDroppedFile, droppedFile }) => {
                   placeholder="0"
                   className={styles.formField}
                 />
-                <div className={styles.fieldWrapper}>
-                  <label htmlFor="programValues.payload" className={clsx(styles.caption, styles.top)}>
-                    Initial payload:
-                  </label>
-                  <FormPayload name="programValues.payload" values={payloadFormValues} />
-                </div>
+                <FormPayload name="programValues.payload" label="Initial payload" values={payloadFormValues} />
               </div>
 
               <fieldset className={styles.meta}>

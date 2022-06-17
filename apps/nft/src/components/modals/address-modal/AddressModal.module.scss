@@ -1,0 +1,13 @@
+@use '@gear-js/ui/variables' as *;
+
+// TODO: styles are the same with auction modal
+.form {
+  & > *:not(:last-child) {
+    margin-bottom: 20px;
+  }
+}
+
+.error {
+  margin-top: 5px;
+  color: $errorColor;
+}
