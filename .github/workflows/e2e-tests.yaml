@@ -37,13 +37,13 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      #      - uses: c-hive/gha-yarn-cache@v2.1.0
+      - uses: c-hive/gha-yarn-cache@v2.1.0
 
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
           node-version: 16
-      #          cache: yarn
+          cache: yarn
 
       - name: Install dependencies
         uses: borales/actions-yarn@v3.0.0
@@ -225,7 +225,7 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment gear-node api-gateway-testenv frontend-nginx-testenv events-listener-rpc-testenv postgres-testenv -n $KUBE_NAMESPACE
+          args: rollout restart deployment gear-node api-gateway-testenv frontend-nginx-testenv events-listener-rpc-testenv postgres-testenv postgres-testbalance-testenv -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
@@ -235,7 +235,12 @@ jobs:
       - name: Deploy to k8s data-storage
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment data-storage-testenv -n $KUBE_NAMESPACE
+          args: rollout restart deployment test-balance-testenv data-storage-testenv -n $KUBE_NAMESPACE
+
+      - name: Check k8s deployment test-balance-testenv
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout status deployment test-balance-testenv -n $KUBE_NAMESPACE --timeout=120s
 
       - name: Check k8s deployment data-storage
         uses: sergeyfilyanin/kubectl-aws-eks@master
