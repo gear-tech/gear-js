@@ -24,8 +24,9 @@
     dest: /home/ec2-user/wasm-compiler
 
 - name: Install dependencies
-  community.general.npm:
-    path: /home/ec2-user/wasm-compiler
+  shell: >
+    cd /home/ec2-user/wasm-compiler;
+    npm install --force;
 
 - name: Give permissions to build-image script
   ansible.builtin.file:
