@@ -2,17 +2,16 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import styles from '../../Programs.module.scss';
-import { UserProgram } from '../UserProgram/UserProgram';
-import { ProgramsLegend } from '../ProgramsLegend/ProgramsLegend';
 
+import { getMessages } from 'services';
+import { MessageModel } from 'types/message';
 import { useAccount } from 'hooks';
-import { ProgramModel } from 'types/program';
-import { getUserPrograms } from 'services';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
 import { Pagination } from 'components/Pagination/Pagination';
 import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
+import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
 
-const Recent = () => {
+const Messages = () => {
   const { account } = useAccount();
   const isAccountLoaded = useRef(false);
 
@@ -21,16 +20,16 @@ const Recent = () => {
   const page = Number(searchParams.get(URL_PARAMS.PAGE) ?? 1);
   const query = searchParams.get(URL_PARAMS.QUERY) ?? '';
 
-  const [programs, setPrograms] = useState<ProgramModel[]>([]);
-  const [programsCount, setProgramsCount] = useState(0);
+  const [messages, setMessages] = useState<MessageModel[]>([]);
+  const [messagesCount, setMessagesCount] = useState(0);
 
   useEffect(() => {
     if (isAccountLoaded.current) {
       searchParams.set(URL_PARAMS.PAGE, String(1));
       searchParams.set(URL_PARAMS.QUERY, '');
       setSearchParams(searchParams);
-      setPrograms([]);
-      setProgramsCount(0);
+      setMessages([]);
+      setMessagesCount(0);
     }
 
     return () => {
@@ -41,16 +40,16 @@ const Recent = () => {
 
   useEffect(() => {
     if (account) {
-      const params = {
-        query,
-        owner: account.decodedAddress,
+      const messageParams = {
+        destination: account.decodedAddress,
         limit: INITIAL_LIMIT_BY_PAGE,
         offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
+        query,
       };
 
-      getUserPrograms(params).then(({ result }) => {
-        setPrograms(result.programs);
-        setProgramsCount(result.count);
+      getMessages(messageParams).then(({ result }) => {
+        setMessages(result.messages);
+        setMessagesCount(result.count);
       });
     }
   }, [page, query, account]);
@@ -58,23 +57,18 @@ const Recent = () => {
   return (
     <div>
       <div className={styles.topPagination}>
-        <span className={styles.caption}>Total results: {programsCount}</span>
-        <Pagination page={page} pagesAmount={programsCount || 1} />
+        <span className={styles.caption}>Total results: {messagesCount}</span>
+        <Pagination page={page} pagesAmount={messagesCount || 1} />
       </div>
-      <SearchForm placeholder="Find program" />
-      <ProgramsLegend />
-      <div>
-        {programs.map((program) => (
-          <UserProgram key={program.id} program={program} />
-        ))}
-      </div>
-      {programsCount > 0 && (
+      <SearchForm placeholder="Find message by ID" />
+      <MessagesList messages={messages} />
+      {messagesCount > 0 && (
         <div className={styles.bottomPagination}>
-          <Pagination page={page} pagesAmount={programsCount} />
+          <Pagination page={page} pagesAmount={messagesCount} />
         </div>
       )}
     </div>
   );
 };
 
-export { Recent };
+export { Messages };

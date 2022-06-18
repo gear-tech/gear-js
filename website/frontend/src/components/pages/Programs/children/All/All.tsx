@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import styles from './All.module.scss';
+import styles from '../../Programs.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
 import { ProgramsLegend } from '../ProgramsLegend/ProgramsLegend';
 
@@ -33,13 +33,13 @@ export const All = () => {
 
   return (
     <div>
-      <div className={styles.paginationWrapper}>
-        <span>Total results: {programsCount}</span>
+      <div className={styles.topPagination}>
+        <span className={styles.caption}>Total results: {programsCount}</span>
         <Pagination page={page} pagesAmount={programsCount || 1} />
       </div>
       <SearchForm placeholder="Find program" />
       <ProgramsLegend />
-      <div className={styles.allProgramsList}>
+      <div>
         {programs.map((program) => (
           <UserProgram
             key={program.id}
@@ -49,7 +49,7 @@ export const All = () => {
         ))}
       </div>
       {programsCount > 0 && (
-        <div className={styles.paginationBottom}>
+        <div className={styles.bottomPagination}>
           <Pagination page={page} pagesAmount={programsCount} />
         </div>
       )}

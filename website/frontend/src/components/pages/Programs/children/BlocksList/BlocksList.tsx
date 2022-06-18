@@ -6,7 +6,7 @@ import styles from './BlocksList.module.scss';
 
 import { useBlocks } from 'hooks';
 
-export const BlockList = () => {
+const BlockList = () => {
   const blocks = useBlocks();
 
   const [isShortView, setIsShortView] = useState(true);
@@ -43,3 +43,5 @@ export const BlockList = () => {
     </div>
   );
 };
+
+export { BlockList };

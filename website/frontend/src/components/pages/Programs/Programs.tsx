@@ -1,12 +1,12 @@
 import { useLocation } from 'react-router-dom';
 
 import styles from './Programs.module.scss';
-import { Upload } from './children/Upload/Upload';
-import { Recent } from './children/Recent/Recent';
+import { All } from './children/All';
+import { Upload } from './children/Upload';
+import { Recent } from './children/Recent';
+import { Messages } from './children/Messages';
 
 import { routes } from 'routes';
-import { All } from 'components/pages/Programs/children/All/All';
-import { Messages } from 'components/pages/Messages/Messages';
 import { ProgramSwitch } from 'components/blocks/ProgramSwitch/ProgramSwitch';
 
 const Programs = () => {
@@ -16,7 +16,7 @@ const Programs = () => {
     switch (pathname) {
       case routes.main:
         return <Upload />;
-      case routes.message:
+      case routes.messages:
         return <Messages />;
       case routes.allPrograms:
         return <All />;
