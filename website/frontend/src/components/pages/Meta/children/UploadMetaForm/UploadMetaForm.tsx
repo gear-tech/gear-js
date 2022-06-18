@@ -22,24 +22,20 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
 
   const [meta, setMeta] = useState<Metadata | null>(null);
   const [metaBuffer, setMetaBuffer] = useState<string | null>(null);
-  const [initialValues, setInitialValues] = useState<FormValues>({
-    name: programName,
-  });
+  const [initialValues, setInitialValues] = useState<FormValues>({ programName });
 
   const handleUploadMetaFile = (data: UploadData) => {
     setMeta(data.meta);
     setMetaBuffer(data.metaBufferString);
     setInitialValues({
-      name: data.meta.title ?? programName,
+      programName: data.meta.title ?? programName,
     });
   };
 
   const resetForm = () => {
     setMeta(null);
     setMetaBuffer(null);
-    setInitialValues({
-      name: programName,
-    });
+    setInitialValues({ programName });
   };
 
   const handleSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
@@ -53,7 +49,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
       return;
     }
 
-    addMetadata(meta, metaBuffer, account, programId, values.name, alert);
+    addMetadata(meta, metaBuffer, account, programId, values.programName, alert);
 
     actions.setSubmitting(false);
     resetForm();

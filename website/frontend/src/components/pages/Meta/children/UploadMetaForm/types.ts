@@ -1,3 +1,3 @@
 export type FormValues = {
-  name: string;
+  programName: string;
 };

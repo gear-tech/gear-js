@@ -15,10 +15,8 @@ type Props = {
   onUpload: (data: UploadData) => void;
 };
 
-const UploadMeta = (props: Props) => {
+const UploadMeta = ({ onReset, onUpload }: Props) => {
   const alert = useAlert();
-
-  const { onReset, onUpload } = props;
 
   const [metaProperties, setMetaProperties] = useState<[string, string][]>();
   const [droppedMetaFile, setDroppedMetaFile] = useState<File>();
