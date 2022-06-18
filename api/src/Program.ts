@@ -7,16 +7,16 @@ import { BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { GearTransaction } from './Transaction';
 import { createPayload, generateProgramId } from './utils';
-import { GearGasSpent } from './GasSpent';
+import { GearGas } from './Gas';
 import { GearApi } from './GearApi';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 export class GearProgram extends GearTransaction {
-  gasSpent: GearGasSpent;
+  calculateGas: GearGas;
 
   constructor(gearApi: GearApi) {
     super(gearApi);
-    this.gasSpent = new GearGasSpent(gearApi);
+    this.calculateGas = new GearGas(gearApi);
   }
   /**
    * @param program Upload program data

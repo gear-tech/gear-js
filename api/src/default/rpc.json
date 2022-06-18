@@ -1,8 +1,8 @@
 {
   "rpc": {
     "gear": {
-      "getInitGasSpent": {
-        "description": "Get GasSpent for Init message",
+      "calculateInitGas": {
+        "description": "Calculate gas for Init message",
         "params": [
           {
             "name": "source",
@@ -19,12 +19,16 @@
           {
             "name": "value",
             "type": "u128"
+          },
+          {
+            "name": "allow_other_panics",
+            "type": "bool"
           }
         ],
-        "type": "u64"
+        "type": "GasInfo"
       },
-      "getHandleGasSpent": {
-        "description": "Get GasSpent for Handle message",
+      "calculateHandleGas": {
+        "description": "Calculate gas for Handle message",
         "params": [
           {
             "name": "source",
@@ -41,12 +45,16 @@
           {
             "name": "value",
             "type": "u128"
+          },
+          {
+            "name": "allow_other_panics",
+            "type": "bool"
           }
         ],
-        "type": "u64"
+        "type": "GasInfo"
       },
-      "getReplyGasSpent": {
-        "description": "Get GasSpent for Handle message",
+      "calculateReplyGas": {
+        "description": "Calculate gas for Reply message",
         "params": [
           {
             "name": "source",
@@ -67,9 +75,13 @@
           {
             "name": "value",
             "type": "u128"
+          },
+          {
+            "name": "allow_other_panics",
+            "type": "bool"
           }
         ],
-        "type": "u64"
+        "type": "GasInfo"
       }
     }
   }
