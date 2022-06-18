@@ -1,39 +1,48 @@
-import { useEffect, useState } from 'react';
-import { GearKeyring } from '@gear-js/api';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import styles from './Recent.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
 import { ProgramsLegend } from '../ProgramsLegend/ProgramsLegend';
 
-import { useAccount, useChangeEffect } from 'hooks';
+import { useAccount } from 'hooks';
 import { ProgramModel } from 'types/program';
 import { getUserPrograms } from 'services';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
 import { Pagination } from 'components/Pagination/Pagination';
 import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 
-export const Recent = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+const Recent = () => {
   const { account } = useAccount();
+  const isAccountLoaded = useRef(false);
 
-  const page = searchParams.has(URL_PARAMS.PAGE) ? Number(searchParams.get(URL_PARAMS.PAGE)) : 1;
-  const query = searchParams.has(URL_PARAMS.QUERY) ? String(searchParams.get(URL_PARAMS.QUERY)) : '';
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = Number(searchParams.get(URL_PARAMS.PAGE) ?? 1);
+  const query = searchParams.get(URL_PARAMS.QUERY) ?? '';
 
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
 
-  useChangeEffect(() => {
-    searchParams.set(URL_PARAMS.PAGE, String(1));
-    searchParams.set(URL_PARAMS.QUERY, '');
-    setSearchParams(searchParams);
+  useEffect(() => {
+    if (isAccountLoaded.current) {
+      searchParams.set(URL_PARAMS.PAGE, String(1));
+      searchParams.set(URL_PARAMS.QUERY, '');
+      setSearchParams(searchParams);
+      setPrograms([]);
+    }
+
+    return () => {
+      isAccountLoaded.current = Boolean(account);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
   useEffect(() => {
     if (account) {
       const params = {
         query,
-        owner: GearKeyring.decodeAddress(account.address),
+        owner: account.decodedAddress,
         limit: INITIAL_LIMIT_BY_PAGE,
         offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
       };
@@ -46,23 +55,25 @@ export const Recent = () => {
   }, [page, query, account]);
 
   return (
-    <div className={styles.blockList}>
+    <div>
       <div className={styles.paginationWrapper}>
-        <span>Total results: {programsCount || 0}</span>
+        <span>Total results: {programsCount}</span>
         <Pagination page={page} pagesAmount={programsCount || 1} />
       </div>
       <SearchForm placeholder="Find program" />
       <ProgramsLegend />
       <div>
-        {programs.map((program: ProgramModel) => (
+        {programs.map((program) => (
           <UserProgram key={program.id} program={program} />
         ))}
       </div>
       {programsCount > 0 && (
         <div className={styles.paginationBottom}>
-          <Pagination page={page} pagesAmount={programsCount || 1} />
+          <Pagination page={page} pagesAmount={programsCount} />
         </div>
       )}
     </div>
   );
 };
+
+export { Recent };

@@ -1,8 +1,4 @@
-@import '../../../../../assets/scss/variables';
-
-.blockList {
-  padding-bottom: 4px;
-}
+@use 'assets/scss/variables' as *;
 
 .noMessage {
   color: $textColorSecondary;

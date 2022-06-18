@@ -1,39 +1,45 @@
+import { useState } from 'react';
+import clsx from 'clsx';
+import { Button } from '@gear-js/ui';
+
+import styles from './BlocksList.module.scss';
+
 import { useBlocks } from 'hooks';
-import './BlocksList.scss';
 
 export const BlockList = () => {
   const blocks = useBlocks();
 
-  const showMoreClick = () => {
-    const list = document.querySelector('.programs-list--short-list');
-    list?.classList.remove('programs-list--short-list');
-    const showMoreBtn = document.querySelector('.block-list__button');
-    if (showMoreBtn !== null) {
-      showMoreBtn.classList.add('block-list__button--hidden');
-    }
-  };
+  const [isShortView, setIsShortView] = useState(true);
+
+  const handleClick = () => setIsShortView(false);
 
   return (
-    <div className="block-list">
-      <h3 className="block-list__header">Recent blocks: {blocks.length && blocks[0].number}</h3>
-      {(blocks && blocks.length && (
+    <div className={styles.blockList}>
+      <h3 className={styles.blockListHeader}>Recent blocks: {blocks.length && blocks[0].number}</h3>
+      {blocks.length > 0 ? (
         <>
-          <ul className="programs-list programs-list--short-list">
-            {blocks &&
-              blocks.length &&
-              blocks.map((block) => (
-                <li className="programs-list__item" key={block.number}>
-                  <span className="programs-list__number">{block.number}</span>
-                  <span className="programs-list__name">{block.hash}</span>
-                  <span className="programs-list__time">{block.time}</span>
-                </li>
-              ))}
+          <ul className={clsx(isShortView && styles.shortList)}>
+            {blocks.map((block) => (
+              <li key={block.number} className={styles.programsListItem}>
+                <span className={styles.programsListNumber}>{block.number}</span>
+                <span className={styles.programsListName}>{block.hash}</span>
+                <span className={styles.programsListTime}>{block.time}</span>
+              </li>
+            ))}
           </ul>
-          <button className="block-list__button" type="button" onClick={showMoreClick}>
-            Show more
-          </button>
+          {isShortView && (
+            <Button
+              size="small"
+              text="Show more"
+              color="secondary"
+              className={styles.blockListButton}
+              onClick={handleClick}
+            />
+          )}
         </>
-      )) || <div className="no-message">There are no blocks</div>}
+      ) : (
+        <div className={styles.noMessage}>There are no blocks</div>
+      )}
     </div>
   );
 };
