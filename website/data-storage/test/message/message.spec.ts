@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-import { Message } from '../src/entities/message.entity';
-import { MessageService } from '../src/message/message.service';
+import { Message } from '../../src/entities/message.entity';
+import { MessageService } from '../../src/message/message.service';
 
 jest.mock('@gear-js/api', () => ({
   GearKeyring: {
