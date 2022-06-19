@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Message, Program } from '../entities';
+import { Program } from '../entities';
 import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common';
 import { sqlWhereWithILike } from '../utils';
 import { PAGINATION_LIMIT } from '../config/configuration';
