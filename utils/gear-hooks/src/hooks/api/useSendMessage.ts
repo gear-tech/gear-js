@@ -60,7 +60,7 @@ function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | 
 
       api.program.calculateGas
         .handle(decodedAddress, destination, payload, value, isOtherPanicsAllowed, metadata)
-        .then((gasLimit) => ({ destination, payload, gasLimit, value }))
+        .then((gas) => ({ destination, payload, gasLimit: gas.min_limit.toNumber(), value }))
         .then((message) => api.message.submit(message, metadata) && web3FromSource(source))
         .then(({ signer }) => api.message.signAndSend(address, { signer }, (result) => handleStatus(result, onSuccess)))
         .catch(({ message }: Error) => alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS));
