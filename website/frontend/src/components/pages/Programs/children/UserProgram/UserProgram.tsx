@@ -8,7 +8,7 @@ import { routes } from 'routes';
 import { useAlert } from 'hooks';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { ProgramModel, ProgramStatus } from 'types/program';
-import copySGV from 'assets/images/copy.svg';
+import copySVG from 'assets/images/copy.svg';
 import messageSVG from 'assets/images/message.svg';
 import uploadMetaSVG from 'assets/images/upload-cloud.svg';
 
@@ -36,21 +36,17 @@ const UserProgram = ({ program, isMetaLinkActive = true }: Props) => {
           )}
         />
         <div className={styles.programWrapperName}>
-          <div className={styles.programsListName}>
-            <Link className={styles.programLink} to={generatePath(routes.program, { id })}>
-              {fileNameHandler(name || id)}
-            </Link>
-          </div>
+          <Link className={styles.programLink} to={generatePath(routes.program, { id })}>
+            {fileNameHandler(name || id)}
+          </Link>
         </div>
         <div className={styles.programsCopyId}>
-          <Button icon={copySGV} color="transparent" onClick={handleCopy} />
+          <Button icon={copySVG} color="transparent" onClick={handleCopy} />
         </div>
       </div>
       <div className={styles.programWrapperData}>
-        <div className={styles.programsListInfo}>
-          Timestamp:
-          {timestamp && <span className={styles.programsListInfoData}>{formatDate(timestamp)}</span>}
-        </div>
+        Timestamp:
+        {timestamp && <span className={styles.programsListInfoData}>{formatDate(timestamp)}</span>}
       </div>
 
       <div className={styles.programsListBtns}>

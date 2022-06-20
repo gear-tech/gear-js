@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/breakpoints' as *;
 
 .programSwitch {
@@ -16,12 +16,16 @@
 .switchWrapper {
   display: flex;
   align-items: center;
+
+  @include md {
+    flex-direction: column;
+  }
 }
 
 .switchButtons {
   padding: 4px 5px;
   border-radius: 40px;
-  background-color: $bkgButtonColor;
+  background-color: #3d3d3d;
 
   @include md {
     display: flex;
@@ -33,13 +37,13 @@
   border-radius: 40px;
   color: $textColorSecondary;
   display: inline-block;
-  font-size: $fontSizeSmall;
+  font-size: 12px;
   padding: 12px 18px;
   text-decoration: none;
 
   &:global(.active) {
     color: $textColor;
-    background-color: $bkgActiveButtonColor;
+    background-color: #212121;
   }
 
   @include md {
@@ -54,7 +58,7 @@
   margin: 0 32px;
 
   @include md {
-    // TODO: can't override set gear-js styles
-    display: none !important;
+    width: 100%;
+    margin: 26px 0;
   }
 }

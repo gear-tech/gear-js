@@ -1,7 +1,7 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 
 .main {
-  margin: $desktopSidesMargin;
+  margin: 0 40px;
 }
 
 .topPagination {

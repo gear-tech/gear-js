@@ -1,12 +1,12 @@
-@use 'assets/scss/variables' as *;
-@use 'assets/scss/breakpoints' as *;
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
 
 .drop {
   flex: 1;
   align-items: center;
   background: rgba(0, 0, 0, 0.05);
   border: 1px dotted #0e0e0e;
-  border-radius: $borderRadiusBase;
+  border-radius: $borderRadius;
   display: flex;
   height: 345px;
   justify-content: center;
@@ -16,6 +16,8 @@
     align-items: unset;
     margin-bottom: 26px;
     height: fit-content;
+    border: none;
+    background: none;
   }
 
   &.active {
