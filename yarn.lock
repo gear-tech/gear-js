@@ -1857,17 +1857,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@gear-js/api@npm:0.20.0"
-  peerDependencies:
-    "@polkadot/api": ^8.6.1
-    "@polkadot/wasm-crypto": ^6.1.1
-    rxjs: ^7.5.5
-  checksum: bf10be2adf72f012ee2c7f17b673f68a614ba7e9c26ef6e3c9b895766e780ff11663fd502c3841628f9232475aeafc39ebb5da443699c4e680646472cc72195c
-  languageName: node
-  linkType: hard
-
 "@gear-js/api@npm:0.20.1, @gear-js/api@npm:^0.20.0":
   version: 0.20.1
   resolution: "@gear-js/api@npm:0.20.1"
@@ -1876,6 +1865,17 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.1.1
     rxjs: ^7.5.5
   checksum: 418132963e7f0aad5c98d3e3d295dd7a1496fb2deb47596453b532c93235228f7f11853a582a2b11dfa1ace65d92e7500a141a6f768abdc75be16657387c77ce
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@gear-js/api@npm:0.21.0"
+  peerDependencies:
+    "@polkadot/api": ^8.6.1
+    "@polkadot/wasm-crypto": ^6.1.1
+    rxjs: ^7.5.5
+  checksum: 74c5e36d044bc8c79a3e394115e29821c77df347398c7e16089acdc6c9c6a5ad828e4bd2a74ee3fa8ee47812d6b4d0797fa5453f2909cc967125798ad9a67321
   languageName: node
   linkType: hard
 
@@ -1967,7 +1967,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.20.0
+    "@gear-js/api": 0.21.0
     "@gear-js/ui": 0.2.5
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
