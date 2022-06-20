@@ -11,7 +11,7 @@ import { PROGRAM_DB_MOCK } from '../../src/common/mock/program/program-db.mock';
 const PROGRAM_ENTITY_ID = '0x7357';
 
 describe('Program service', () => {
-  let programsService!: ProgramService;
+  let programService!: ProgramService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -24,11 +24,11 @@ describe('Program service', () => {
       ],
     }).compile();
 
-    programsService = moduleRef.get<ProgramService>(ProgramService);
+    programService = moduleRef.get<ProgramService>(ProgramService);
   });
 
-  it('should be successfully create new program', async () => {
-    const program = await programsService.createProgram({
+  it('should be successfully created new program', async () => {
+    const program = await programService.createProgram({
       id: PROGRAM_ENTITY_ID,
       genesis: '0x07357',
       owner: '0x7357',
@@ -40,7 +40,7 @@ describe('Program service', () => {
     expect(mockProgramRepository.save).toHaveBeenCalled();
   });
 
-  it('should be successfully update program', async () => {
+  it('should be successfully updated program', async () => {
     const { id, genesis } = PROGRAM_DB_MOCK[0];
     const updateProgramDataInput: UpdateProgramDataInput = {
       id,
@@ -48,7 +48,7 @@ describe('Program service', () => {
       name: 'newName',
       title: 'newTitle',
     };
-    const program = await programsService.updateProgramData(updateProgramDataInput);
+    const program = await programService.updateProgramData(updateProgramDataInput);
 
     expect(program.id).toEqual(updateProgramDataInput.id);
     expect(program.name).toEqual(updateProgramDataInput.name);
@@ -64,7 +64,7 @@ describe('Program service', () => {
       title: 'newTitle',
     };
 
-    await expect(programsService.updateProgramData(updateProgramDataInput)).rejects.toThrowError();
+    await expect(programService.updateProgramData(updateProgramDataInput)).rejects.toThrowError();
     expect(mockProgramRepository.getByIdAndGenesis).toHaveBeenCalled();
   });
 
@@ -76,21 +76,21 @@ describe('Program service', () => {
       limit: 1,
       owner,
     };
-    const result = await programsService.getAllUserPrograms(getAllUserProgramParamsInput);
+    const result = await programService.getAllUserPrograms(getAllUserProgramParamsInput);
     expect.arrayContaining(result.programs);
     expect(result.programs[0].owner).toEqual(owner);
     expect(result.programs[0].genesis).toEqual(genesis);
     expect(mockProgramRepository.listByOwnerAndGenesis).toHaveBeenCalled();
   });
 
-  it('should successfully get programs and called listPaginationByGenesis method', async () => {
+  it('should successfully get programs and called getAllPrograms method', async () => {
     const { genesis } = PROGRAM_DB_MOCK[2];
     const getAllProgramParamsInput: GetAllProgramsParams = {
       genesis,
       offset: 1,
       limit: 1,
     };
-    const result = await programsService.getAllPrograms(getAllProgramParamsInput);
+    const result = await programService.getAllPrograms(getAllProgramParamsInput);
     expect.arrayContaining(result.programs);
     expect(result.programs[0].genesis).toEqual(genesis);
     expect(mockProgramRepository.listPaginationByGenesis).toHaveBeenCalled();
@@ -103,7 +103,7 @@ describe('Program service', () => {
       genesis,
       status: InitStatus.PROGRESS,
     };
-    const program = await programsService.setStatus(
+    const program = await programService.setStatus(
       updateProgramStatusInput.id,
       updateProgramStatusInput.genesis,
       updateProgramStatusInput.status,
@@ -116,7 +116,7 @@ describe('Program service', () => {
 
   it('should successfully deleted programs', async () => {
     const programToDelete = PROGRAM_DB_MOCK[0];
-    const deleteProgram = await programsService.deleteRecords(programToDelete.genesis);
+    const deleteProgram = await programService.deleteRecords(programToDelete.genesis);
     expect(deleteProgram[0].genesis).toEqual(programToDelete.genesis);
     expect(mockProgramRepository.remove).toHaveBeenCalled();
   });

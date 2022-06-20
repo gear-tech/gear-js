@@ -3,6 +3,8 @@ import { Test } from '@nestjs/testing';
 import { MessageService } from '../../src/message/message.service';
 import { mockMessageRepository } from '../../src/common/mock/message/message-repository.mock';
 import { MessageRepo } from '../../src/message/message.repo';
+import { AddPayloadParams, FindMessageParams, GetMessagesParams } from '@gear-js/common';
+import { MESSAGE_DB_MOCK } from '../../src/common/mock/message/message-db.mock';
 
 const MESSAGE_ENTITY_ID = '0x7357';
 
@@ -39,62 +41,132 @@ describe('Message service', () => {
     expect(mockMessageRepository.save).toHaveBeenCalled();
   });
 
-  // it('should fail to add payload to an inexistent message', async () => {
-  //   // Given an initialized Messages Service,
-  //   // when:
-  //   expect(
-  //     messagesService.addPayload({
-  //       id: 'no such id',
-  //       genesis: '0x07357',
-  //       signature: '0x7357',
-  //     }),
-  //   )
-  //     // then it should throw.
-  //     .rejects.toBeDefined();
-  //
-  //   expect(Message_save).not.toHaveBeenCalled();
-  // });
-  //
-  // it.only('should add payload to an existing message', async () => {
-  //   // Given:
-  //   Message_findOne.mockReturnValueOnce(Promise.resolve({ id: '0x7357', source: '0x0000' }));
-  //
-  //   // when:
-  //   await messagesService.addPayload({
-  //     id: '0x7357',
-  //     genesis: '0x07357',
-  //     signature: '0x00',
-  //   });
-  //
-  //   // then:
-  //   expect(Message_save).toHaveBeenCalled();
-  // });
-  //
-  // it('should select incoming messages', async () => {
-  //   // Given:
-  //   Message_findAndCount.mockReturnValueOnce(
-  //     Promise.resolve([[{ id: '0x7357', destination: '0xFFFF', genesis: '0x07357' }], 1]),
-  //   );
-  //
-  //   // when:
-  //   expect(messagesService.getIncoming({ destination: '0xFFFF', genesis: '0x07357' }))
-  //     // then:
-  //     .resolves.toEqual({ count: 1, messages: [{ destination: '0xFFFF', genesis: '0x07357', id: '0x7357' }] });
-  //
-  //   expect(Message_findAndCount).toHaveBeenCalled();
-  // });
-  //
-  // it('should select outgoing messages', async () => {
-  //   // Given:
-  //   Message_findAndCount.mockReturnValueOnce(
-  //     Promise.resolve([[{ id: '0x7357', destination: '0xFFFF', genesis: '0x07357' }], 1]),
-  //   );
-  //
-  //   // when:
-  //   expect(messagesService.getOutgoing({ destination: '0xFFFF', genesis: '0x07357' }))
-  //     // then:
-  //     .resolves.toEqual({ count: 1, messages: [{ destination: '0xFFFF', genesis: '0x07357', id: '0x7357' }] });
-  //
-  //   expect(Message_findAndCount).toHaveBeenCalled();
-  // });
+  it('should fail if message not found', async () => {
+    const addPayloadInput: AddPayloadParams = {
+      id: 'not_exist_message_id',
+      genesis: 'not_exist_message_genesis',
+      payload: 'payload',
+      signature: 'signature',
+    };
+
+    await expect(messageService.addPayload(addPayloadInput)).rejects.toThrowError();
+    expect(mockMessageRepository.getByIdAndGenesis).toHaveBeenCalled();
+  });
+
+  it('should be successfully update message payload', async () => {
+    const messageToUpdate = MESSAGE_DB_MOCK[0];
+
+    const addPayloadInput: AddPayloadParams = {
+      id: messageToUpdate.id,
+      genesis: messageToUpdate.genesis,
+      payload: 'payload',
+      signature: 'signature',
+    };
+
+    const message = await messageService.addPayload(addPayloadInput);
+
+    expect(message.payload).toEqual(addPayloadInput.payload);
+    expect(mockMessageRepository.getByIdAndGenesis).toHaveBeenCalled();
+  });
+
+  it('should be successfully get messages and called listByIdAndSource method', async () => {
+    const messageMock = MESSAGE_DB_MOCK[1];
+
+    const params: GetMessagesParams = {
+      genesis: messageMock.genesis,
+      destination: messageMock.destination,
+      source: messageMock.source,
+      limit: 1,
+    };
+
+    const result = await messageService.getIncoming(params);
+
+    expect(result.messages[0].destination).toEqual(messageMock.destination);
+    expect(result.messages[0].source).toEqual(messageMock.source);
+    expect(mockMessageRepository.listByIdAndSource).toHaveBeenCalled();
+  });
+
+  it('should be get empty array and called listByIdAndSource method', async () => {
+    const params: GetMessagesParams = {
+      genesis: 'not_exist_genesis',
+      destination: 'not_exist_destination',
+      source: 'source',
+      limit: 1,
+    };
+
+    const result = await messageService.getIncoming(params);
+
+    expect(result.messages.length).toEqual(0);
+    expect(mockMessageRepository.listByIdAndSource).toHaveBeenCalled();
+  });
+
+  it('should be successfully get messages and called listByIdAndDestination method', async () => {
+    const messageMock = MESSAGE_DB_MOCK[2];
+
+    const params: GetMessagesParams = {
+      genesis: messageMock.genesis,
+      destination: messageMock.destination,
+      source: messageMock.source,
+      limit: 1,
+    };
+
+    const result = await messageService.getOutgoing(params);
+
+    expect(result.messages.length).toEqual(1);
+    expect(result.messages[0].id).toEqual(messageMock.id);
+    expect(result.messages[0].source).toEqual(messageMock.source);
+    expect(result.messages[0].destination).toEqual(messageMock.destination);
+    expect(mockMessageRepository.listByIdAndDestination).toHaveBeenCalled();
+  });
+
+  it('should be successfully get messages and called listByIdAndSourceAndDestination method', async () => {
+    const messageMock = MESSAGE_DB_MOCK[0];
+
+    const params: GetMessagesParams = {
+      genesis: messageMock.genesis,
+      destination: messageMock.destination,
+      source: messageMock.source,
+      limit: 1,
+    };
+
+    const result = await messageService.getAllMessages(params);
+
+    expect(result.messages[0].id).toEqual(messageMock.id);
+    expect(result.messages[0].source).toEqual(messageMock.source);
+    expect(result.messages[0].destination).toEqual(messageMock.destination);
+    expect(mockMessageRepository.listByIdAndSourceAndDestination).toHaveBeenCalled();
+  });
+
+  it('should be successfully get message and called getByIdAndGenesis method', async () => {
+    const messageMock = MESSAGE_DB_MOCK[0];
+
+    const params: FindMessageParams = {
+      id: messageMock.id,
+      genesis: messageMock.genesis,
+    };
+
+    const message = await messageService.getMessage(params);
+
+    expect(message.id).toEqual(messageMock.id);
+    expect(message.source).toEqual(messageMock.source);
+    expect(message.destination).toEqual(messageMock.destination);
+    expect(mockMessageRepository.getByIdAndGenesis).toHaveBeenCalled();
+  });
+
+  it('should fail if message not found and called getByIdAndGenesis method', async () => {
+    const params: FindMessageParams = {
+      id: 'not_exist_id',
+      genesis: 'not_exist_genesis',
+    };
+
+    await expect(messageService.getMessage(params)).rejects.toThrowError();
+    expect(mockMessageRepository.getByIdAndGenesis).toHaveBeenCalled();
+  });
+
+  it('should be successfully deleted message and called remove method', async () => {
+    const messageMock = MESSAGE_DB_MOCK[0];
+
+    await messageService.deleteRecords(messageMock.genesis);
+    expect(mockMessageRepository.remove).toHaveBeenCalled();
+  });
 });
