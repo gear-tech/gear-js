@@ -9,11 +9,9 @@ import { mockProgramRepository } from '../../src/common/mock/program/program-rep
 import { PROGRAM_DB_MOCK } from '../../src/common/mock/program/program-db.mock';
 
 const PROGRAM_ENTITY_ID = '0x7357';
-const PROGRAM_GENESIS_ID = '0x73_57';
 
 describe('Program service', () => {
   let programsService!: ProgramService;
-  const programs = [{ id: PROGRAM_ENTITY_ID, genesis: PROGRAM_GENESIS_ID }];
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -66,7 +64,7 @@ describe('Program service', () => {
       title: 'newTitle',
     };
 
-    await expect(programsService.updateProgramData(updateProgramDataInput)).rejects.toThrowError('');
+    await expect(programsService.updateProgramData(updateProgramDataInput)).rejects.toThrowError();
     expect(mockProgramRepository.getByIdAndGenesis).toHaveBeenCalled();
   });
 
