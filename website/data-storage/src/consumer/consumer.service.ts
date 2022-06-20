@@ -111,8 +111,8 @@ export class ConsumerService {
   }
 
   @FormResponse
-  async addPayload(params: AddPayloadParams): Result<IMessage> {
-    return await this.messageService.addPayload(params);
+  async addPayload(params: AddPayloadParams): Result<void> {
+    return;
   }
 
   @FormResponse

@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { GearKeyring } from '@gear-js/api';
 import { plainToClass } from 'class-transformer';
 import {
   AddPayloadParams,
@@ -12,7 +11,7 @@ import {
 } from '@gear-js/common';
 
 import { Message } from '../entities/message.entity';
-import { MessageNotFound, SignatureNotVerified } from '../errors';
+import { MessageNotFound } from '../errors';
 import { sleep } from '../utils';
 import { MessageRepo } from './message.repo';
 
@@ -31,22 +30,6 @@ export class MessageService {
     } catch (error) {
       this.logger.error(error, error.stack);
     }
-  }
-
-  public async addPayload(params: AddPayloadParams): Promise<IMessage> {
-    const { id, genesis, signature, payload } = params;
-    const message = await this.messageRepository.getByIdAndGenesis(id, genesis);
-    if (!message) {
-      throw new MessageNotFound();
-    }
-    if (!this.isTestMode()) {
-      if (!GearKeyring.checkSign(message.source, signature, payload)) {
-        throw new SignatureNotVerified();
-      }
-    }
-
-    message.payload = payload;
-    return this.messageRepository.save(message);
   }
 
   public async getIncoming(params: GetMessagesParams): Promise<AllMessagesResult> {
@@ -96,9 +79,5 @@ export class MessageService {
   public async deleteRecords(genesis: string): Promise<void> {
     const messages = await this.messageRepository.listByGenesis(genesis);
     await this.messageRepository.remove(messages);
-  }
-
-  private isTestMode(): boolean {
-    return process.env.TEST_ENV ? true : false;
   }
 }

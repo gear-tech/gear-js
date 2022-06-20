@@ -41,34 +41,6 @@ describe('Message service', () => {
     expect(mockMessageRepository.save).toHaveBeenCalled();
   });
 
-  it('should fail if message not found', async () => {
-    const addPayloadInput: AddPayloadParams = {
-      id: 'not_exist_message_id',
-      genesis: 'not_exist_message_genesis',
-      payload: 'payload',
-      signature: 'signature',
-    };
-
-    await expect(messageService.addPayload(addPayloadInput)).rejects.toThrowError();
-    expect(mockMessageRepository.getByIdAndGenesis).toHaveBeenCalled();
-  });
-
-  it('should be successfully update message payload', async () => {
-    const messageToUpdate = MESSAGE_DB_MOCK[0];
-
-    const addPayloadInput: AddPayloadParams = {
-      id: messageToUpdate.id,
-      genesis: messageToUpdate.genesis,
-      payload: 'payload',
-      signature: 'signature',
-    };
-
-    const message = await messageService.addPayload(addPayloadInput);
-
-    expect(message.payload).toEqual(addPayloadInput.payload);
-    expect(mockMessageRepository.getByIdAndGenesis).toHaveBeenCalled();
-  });
-
   it('should be successfully get messages and called listByIdAndSource method', async () => {
     const messageMock = MESSAGE_DB_MOCK[1];
 
