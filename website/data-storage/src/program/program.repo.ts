@@ -21,6 +21,18 @@ export class ProgramRepo {
   public async getByIdAndGenesis(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
       where: { id, genesis },
+      select: {
+        id: true,
+        genesis: true,
+        blockHash: true,
+        timestamp: true,
+        owner: true,
+        name: true,
+        initStatus: true,
+        title: true,
+        meta: { meta: true },
+      },
+      relations: ['meta'],
     });
   }
 
