@@ -6,7 +6,7 @@ import { ProgramService } from './program.service';
 import { ProgramRepo } from './program.repo';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Program]), Program],
+  imports: [TypeOrmModule.forFeature([Program])],
   providers: [ProgramService, ProgramRepo],
   exports: [ProgramService, ProgramRepo],
 })
