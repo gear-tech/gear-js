@@ -7,29 +7,33 @@ type Props = {
   endTime: string;
   status: string;
   winner: string | undefined;
+  countdown: string;
 };
 
-function Dashboard({ startTime, endTime, status, winner }: Props) {
+function Dashboard({ startTime, endTime, status, winner, countdown }: Props) {
   const statusClassName = clsx(styles.status, isPending(status) && styles.pending);
 
   return (
-    <div className={styles.dashboard}>
-      <div className={styles.row}>
-        <p>
-          <span className={styles.key}>Start time:</span> {startTime}
-        </p>
-        <p>
-          <span className={styles.key}>End time:</span> {endTime}
-        </p>
+    <div>
+      <div className={styles.dashboard}>
+        <div className={styles.row}>
+          <p>
+            <span className={styles.key}>Start time:</span> {startTime}
+          </p>
+          <p>
+            <span className={styles.key}>End time:</span> {endTime}
+          </p>
+        </div>
+        <div className={styles.row}>
+          <p>
+            <span className={styles.key}>Status:</span> <span className={statusClassName}>{status}</span>
+          </p>
+          <p>
+            <span className={styles.key}>Winner:</span> {winner || 'Unknown'}
+          </p>
+        </div>
       </div>
-      <div className={styles.row}>
-        <p>
-          <span className={styles.key}>Status:</span> <span className={statusClassName}>{status}</span>
-        </p>
-        <p>
-          <span className={styles.key}>Winner:</span> {winner || 'Unknown'}
-        </p>
-      </div>
+      <p className={styles.countdown}>{countdown}</p>
     </div>
   );
 }

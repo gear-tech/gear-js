@@ -15,7 +15,7 @@ const getValidation = (isFungibleToken: boolean) => ({
   tokenAddress: (value: string) => (isFungibleToken && !isHex(value) ? 'Address should be hex' : null),
 });
 
-const S_MULTIPLIER = 3600;
+const S_MULTIPLIER = 60;
 const MS_MULTIPLIER = 1000;
 
 function Form() {
@@ -53,7 +53,7 @@ function Form() {
           <Input
             type="number"
             className={styles.input}
-            label="Lottery duration (hours)"
+            label="Lottery duration (minutes)"
             {...getInputProps('duration')}
           />
           <p className={styles.error}>{errors.duration}</p>

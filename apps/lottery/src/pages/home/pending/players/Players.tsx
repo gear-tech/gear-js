@@ -10,13 +10,14 @@ function Players({ list }: Props) {
   const isAnyPlayer = list.length > 0;
 
   const headerClassName = clsx(styles.row, styles.header);
+  const addressClassName = clsx(styles.cell, styles.address);
   const textClassName = clsx(styles.cell, styles.text);
 
   const getPlayers = () =>
     list.map(({ playerId, balance }, index) => (
       <li key={playerId} className={styles.row}>
         <span className={styles.cell}>{index}</span>
-        <span className={styles.cell}>{playerId}</span>
+        <span className={addressClassName}>{playerId}</span>
         <span className={styles.cell}>{balance}</span>
       </li>
     ));

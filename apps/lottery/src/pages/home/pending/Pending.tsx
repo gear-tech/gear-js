@@ -10,15 +10,16 @@ type Props = {
   startTime: string;
   endTime: string;
   status: string;
+  countdown: string;
 };
 
-function Pending({ startTime, endTime, status }: Props) {
+function Pending({ startTime, endTime, status, countdown }: Props) {
   const { players } = usePlayers();
 
   return (
     <Content subheading={SUBHEADING.PENDING}>
       <Button text="Pick random winner" color="secondary" disabled={isPending(status)} />
-      <Dashboard startTime={startTime} endTime={endTime} status={status} winner={undefined} />
+      <Dashboard startTime={startTime} endTime={endTime} status={status} winner={undefined} countdown={countdown} />
       <Players list={players} />
     </Content>
   );
