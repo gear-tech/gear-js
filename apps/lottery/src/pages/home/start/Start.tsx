@@ -1,7 +1,7 @@
 import { Button } from '@gear-js/ui';
 import { useState } from 'react';
 import { SUBHEADING } from 'consts';
-import { Content } from '../../content';
+import { Content } from 'components';
 import { Form } from './form';
 
 function Start() {

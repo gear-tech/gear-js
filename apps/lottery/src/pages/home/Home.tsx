@@ -1,6 +1,8 @@
 import { useAccount } from '@gear-js/react-hooks';
-import { Loader, Pending, Start } from 'components';
+import { Loader } from 'components';
 import { useLottery } from 'hooks';
+import { Start } from './start';
+import { Pending } from './pending';
 
 function Home() {
   const { account } = useAccount();

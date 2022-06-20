@@ -1,7 +1,7 @@
 import { Button } from '@gear-js/ui';
 import { SUBHEADING } from 'consts';
 import { usePlayers } from 'hooks/api';
-import { Content } from '../../content';
+import { Content } from 'components';
 import { Dashboard } from './dashboard';
 import { Players } from './players';
 
