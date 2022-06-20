@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+import { isPending } from 'utils';
 import styles from './Dashboard.module.scss';
 
 type Props = {
@@ -8,6 +10,8 @@ type Props = {
 };
 
 function Dashboard({ startTime, endTime, status, winner }: Props) {
+  const statusClassName = clsx(styles.status, isPending(status) && styles.pending);
+
   return (
     <div className={styles.dashboard}>
       <div className={styles.row}>
@@ -20,7 +24,7 @@ function Dashboard({ startTime, endTime, status, winner }: Props) {
       </div>
       <div className={styles.row}>
         <p>
-          <span className={styles.key}>Status:</span> {status}
+          <span className={styles.key}>Status:</span> <span className={statusClassName}>{status}</span>
         </p>
         <p>
           <span className={styles.key}>Winner:</span> {winner || 'Unknown'}

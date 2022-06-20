@@ -16,4 +16,9 @@ const SUBHEADING = {
     "You can see here the lottery status. Click the 'Pick random winner' button to start the winner selection process.",
 };
 
-export { ADDRESS, LOCAL_STORAGE, SUBHEADING };
+const STATUS = {
+  PENDING: 'In progress',
+  FINISHED: 'Finished',
+};
+
+export { ADDRESS, LOCAL_STORAGE, SUBHEADING, STATUS };

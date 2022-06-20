@@ -1,4 +1,5 @@
 @use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/mixins' as *;
 @use 'assets/styles/shared' as *;
 
 .dashboard {
@@ -22,4 +23,21 @@
 
 .key {
   color: $textColorSecondary;
+}
+
+.status {
+  &::before {
+    @include square(8px);
+    content: '';
+    display: inline-block;
+    margin-right: 8px;
+    border-radius: 50%;
+    background-color: #adadad;
+  }
+}
+
+.pending {
+  &::before {
+    background-color: $successColor;
+  }
 }
