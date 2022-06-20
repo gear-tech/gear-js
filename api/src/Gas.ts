@@ -6,8 +6,9 @@ import { Hex, PayloadType } from './types';
 import { GearApi } from './GearApi';
 import { createPayload } from './utils';
 import { GetGasSpentError } from './errors/program.errors';
+import { GasInfo } from 'types/gear-core';
 
-export class GearGasSpent {
+export class GearGas {
   api: GearApi;
   createType: CreateType;
   constructor(api: GearApi) {
@@ -40,6 +41,7 @@ export class GearGasSpent {
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -54,6 +56,7 @@ export class GearGasSpent {
    *     currency: 'GRT',
    *   },
    *   0,
+   *   true,
    *   meta
    * );
    * console.log(gas.toHuman());
@@ -63,9 +66,10 @@ export class GearGasSpent {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     meta?: Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of init message
@@ -73,6 +77,7 @@ export class GearGasSpent {
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -83,6 +88,7 @@ export class GearGasSpent {
    *   code,
    *   '0x00',
    *   0
+   *   false,
    * );
    * console.log(gas.toHuman());
    * ```
@@ -91,9 +97,10 @@ export class GearGasSpent {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     typeOfPayload?: string,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of init message
@@ -101,6 +108,7 @@ export class GearGasSpent {
    * @param code Program code
    * @param payload Payload of init message
    * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -108,22 +116,25 @@ export class GearGasSpent {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   async init(
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64> {
-    return await this.api.rpc['gear'].getInitGasSpent(
+  ): Promise<GasInfo> {
+    return this.api.rpc['gear'].calculateInitGas(
       sourceId,
       isHex(code) ? code : this.createType.create('bytes', Array.from(code)).toHex(),
       this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
       value || 0,
+      allowOtherPanics || true,
     );
   }
 
@@ -133,6 +144,7 @@ export class GearGasSpent {
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -149,6 +161,7 @@ export class GearGasSpent {
    *       },
    *    },
    *   0,
+   *   true,
    *   meta
    * );
    * console.log(gas.toHuman());
@@ -158,9 +171,10 @@ export class GearGasSpent {
     sourceId: Hex,
     destinationId: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     meta?: Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of hanle message
@@ -168,6 +182,7 @@ export class GearGasSpent {
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -178,6 +193,7 @@ export class GearGasSpent {
    *   '0xa178362715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
    *   'PING',
    *   0,
+   *   false,
    *   'String'
    * );
    * console.log(gas.toHuman());
@@ -187,9 +203,10 @@ export class GearGasSpent {
     sourceId: Hex,
     destinationId: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     typeOfPayload?: string,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of hanle message
@@ -197,6 +214,7 @@ export class GearGasSpent {
    * @param destinationId Program id
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -204,22 +222,25 @@ export class GearGasSpent {
     sourceId: Hex,
     destinationId: Hex | Buffer,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   async handle(
     sourceId: Hex,
     destinationId: Hex,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64> {
-    return await this.api.rpc['gear'].getHandleGasSpent(
+  ): Promise<GasInfo> {
+    return this.api.rpc['gear'].calculateHandleGas(
       sourceId,
       destinationId,
       this.getPayload(payload, metaOrTypeOfPayload, 'handle_input'),
       value || 0,
+      allowOtherPanics || true,
     );
   }
 
@@ -230,6 +251,7 @@ export class GearGasSpent {
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param meta Metadata
    * @returns number in U64 format
    * @example
@@ -242,6 +264,7 @@ export class GearGasSpent {
    *   0,
    *   'PONG',
    *   1000,
+   *   true,
    *   meta,
    * );
    * console.log(gas.toHuman());
@@ -252,9 +275,10 @@ export class GearGasSpent {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     meta?: Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of reply message
@@ -263,6 +287,7 @@ export class GearGasSpent {
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param typeOfPayload One of the primitives types
    * @returns number in U64 format
    * @example
@@ -275,6 +300,7 @@ export class GearGasSpent {
    *   0,
    *   'PONG',
    *   1000,
+   *   false,
    *   'String',
    * );
    * console.log(gas.toHuman());
@@ -285,9 +311,10 @@ export class GearGasSpent {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     typeOfPayload?: string,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   /**
    * Get gas spent of reply message
@@ -296,6 +323,7 @@ export class GearGasSpent {
    * @param exitCode Exit code of a message waiting for response
    * @param payload Payload of message
    * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
@@ -304,24 +332,27 @@ export class GearGasSpent {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64>;
+  ): Promise<GasInfo>;
 
   async reply(
     sourceId: Hex,
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value: number | string,
+    value?: number | string,
+    allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
-  ): Promise<u64> {
-    return await this.api.rpc['gear'].getReplyGasSpent(
+  ): Promise<GasInfo> {
+    return this.api.rpc['gear'].calculateReplyGas(
       sourceId,
       messageId,
       exitCode,
       this.getPayload(payload, metaOrTypeOfPayload, 'async_handle_input'),
       value || 0,
+      allowOtherPanics || true,
     );
   }
 }

@@ -91,7 +91,7 @@ export const UploadProgram = async (
   const injector = await web3FromSource(account.meta.source);
   const fileBuffer = (await readFileAsync(file)) as ArrayBufferLike;
 
-  const { gasLimit, value, initPayload, meta, title, programName } = programModel;
+  const { gasLimit, value, initPayload, meta, title, programName, payloadType } = programModel;
 
   const program = {
     code: new Uint8Array(fileBuffer),
@@ -107,7 +107,7 @@ export const UploadProgram = async (
   const alertId = alert.loading('SignIn', { title: alertTitle });
 
   try {
-    const { programId } = api.program.submit(program, meta);
+    const { programId } = api.program.submit(program, meta, payloadType);
 
     const getProgramUploadStatus = waitForProgramInit(api, programId);
 

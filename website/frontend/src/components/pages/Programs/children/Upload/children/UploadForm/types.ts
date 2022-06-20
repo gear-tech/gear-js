@@ -1,18 +1,13 @@
 import { FormikHelpers } from 'formik/dist/types';
-import { Metadata } from '@gear-js/api';
 
 import { PayloadValue } from 'components/common/Form/FormPayload/types';
 
-export type ProgramValues = {
+export type FormValues = {
   value: number;
   payload: PayloadValue;
   gasLimit: number;
   programName: string;
-};
-
-export type FormValues = {
-  metaValues: Metadata;
-  programValues: ProgramValues;
+  payloadType: string;
 };
 
 export type SetValues = FormikHelpers<FormValues>['setValues'];
