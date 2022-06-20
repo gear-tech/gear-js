@@ -73,7 +73,7 @@ const UploadMeta = ({ onReset, onUpload }: Props) => {
       {metaProperties?.map((property) => {
         const [name, value] = property;
 
-        return <FormText text={value} label={name} isTextarea={name === 'types'} />;
+        return <FormText key={name} text={value} label={name} isTextarea={name === 'types'} />;
       })}
     </>
   );
