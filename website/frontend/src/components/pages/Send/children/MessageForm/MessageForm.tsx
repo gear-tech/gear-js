@@ -5,14 +5,12 @@ import { Button } from '@gear-js/ui';
 
 import { Schema } from './Schema';
 import { FormValues, SetFieldValue } from './types';
-import { PayloadType } from './children/PayloadType';
 
 import { calculateGas } from 'helpers';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { sendMessage } from 'services/ApiService';
 import sendMessageSVG from 'assets/images/message.svg';
-import { FormInput, FormNumberFormat, formStyles } from 'components/common/Form';
-import { FormPayload } from 'components/common/Form/FormPayload';
+import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 
 type Props = {
@@ -75,7 +73,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
 
           <FormPayload name="payload" label="Payload" values={payloadFormValues} />
 
-          {!isMeta && <PayloadType />}
+          {!isMeta && <FormPayloadType name="payloadType" label="Payload type" />}
 
           <FormNumberFormat
             name="gasLimit"

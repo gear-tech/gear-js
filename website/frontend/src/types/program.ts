@@ -33,6 +33,7 @@ export interface UploadProgramModel {
   gasLimit: number;
   initPayload: string;
   programName?: string;
+  payloadType?: string;
 }
 
 interface MessageModel {
