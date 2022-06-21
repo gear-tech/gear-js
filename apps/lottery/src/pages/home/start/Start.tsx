@@ -9,7 +9,7 @@ function Start() {
   const openForm = () => setIsFormOpen(true);
 
   return (
-    <Content subheading={isFormOpen ? SUBHEADING.FORM : SUBHEADING.START}>
+    <Content subheading={isFormOpen ? SUBHEADING.FORM : SUBHEADING.START.OWNER}>
       {isFormOpen ? <Form /> : <Button text="Start" onClick={openForm} />}
     </Content>
   );

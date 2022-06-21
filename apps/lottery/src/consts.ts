@@ -10,10 +10,12 @@ const LOCAL_STORAGE = {
 };
 
 const SUBHEADING = {
-  START: "Press 'Start' to set the lottery options.",
+  START: {
+    OWNER: "Press 'Start' to set the lottery options.",
+    PLAYER: 'Waiting for owner to start the lottery.',
+  },
   FORM: "Specify lottery duration and, if necessary, the address of the token contract and click the 'Submit and start' button to launch the lottery.",
-  PENDING:
-    "You can see here the lottery status. Click the 'Pick random winner' button to start the winner selection process.",
+  PENDING: 'You can see here the lottery status.',
 };
 
 const STATUS = {

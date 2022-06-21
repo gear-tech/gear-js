@@ -3,7 +3,7 @@ import styles from './Content.module.scss';
 
 type Props = {
   subheading: string;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 function Content({ subheading, children }: Props) {
