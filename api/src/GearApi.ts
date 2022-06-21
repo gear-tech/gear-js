@@ -1,3 +1,9 @@
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { Event } from '@polkadot/types/interfaces';
+import { Codec } from '@polkadot/types/types';
+import { Bytes } from '@polkadot/types';
+import { SpRuntimeDispatchError } from '@polkadot/types/lookup';
+import { RegistryError } from '@polkadot/types-codec/types';
 import { GearProgram } from './Program';
 import { GearMessage } from './Message';
 import { GearBalance } from './Balance';
@@ -7,15 +13,12 @@ import { GearMessageReply } from './MessageReply';
 import { GearWaitlist } from './Waitlist';
 import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './types/interfaces';
-import { ApiPromise, WsProvider } from '@polkadot/api';
-import { Event } from '@polkadot/types/interfaces';
-import { SpRuntimeDispatchError } from '@polkadot/types/lookup';
 import { GearBlock } from './Blocks';
 import { GearStorage } from './Storage';
 import { GearMailbox } from './Mailbox';
 import { GearClaimValue } from './Claim';
 import { GearCode } from './Code';
-import { RegistryError } from '@polkadot/types-codec/types';
+import { Hex } from './types';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -98,5 +101,9 @@ export class GearApi extends ApiPromise {
 
     const { isModule, asModule } = error;
     return isModule ? this.registry.findMetaError(asModule) : null;
+  }
+
+  getExecutionError(errorPayload: Hex | Bytes | Codec | Uint8Array) {
+    return this.createType('GearCoreProcessorCommonExecutionErrorReason', errorPayload);
   }
 }

@@ -25,20 +25,7 @@ describe('Get Execution Error', () => {
 
   test('InsufficientValue', async () => {
     expect(
-      api
-        .createType('GearCoreProcessorCommonExecutionErrorReason', {
-          Ext: { Core: { Message: { InsufficientValue: { messageValue: '128', existentialDeposit: '128' } } } },
-        })
-        .toHex(),
-    ).toBe('0x020002078000000000000000000000000000000080000000000000000000000000000000');
-
-    expect(
-      api
-        .createType(
-          'GearCoreProcessorCommonExecutionErrorReason',
-          '0x020002078000000000000000000000000000000080000000000000000000000000000000',
-        )
-        .toHuman(),
+      api.getExecutionError('0x020002078000000000000000000000000000000080000000000000000000000000000000').toHuman(),
     ).toEqual({
       Ext: { Core: { Message: { InsufficientValue: { messageValue: '128', existentialDeposit: '128' } } } },
     });
