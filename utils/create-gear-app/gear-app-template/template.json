@@ -10,8 +10,8 @@
       "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
     },
     "dependencies": {
-      "@gear-js/api": "^0.20.0",
-      "@gear-js/react-hooks": "^0.1.0",
+      "@gear-js/api": "^0.21.0",
+      "@gear-js/react-hooks": "^0.1.1",
       "@gear-js/ui": "^0.3.2",
       "@polkadot/api": "^8.5.1",
       "@polkadot/extension-dapp": "^0.43.2",

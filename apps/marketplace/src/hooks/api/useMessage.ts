@@ -44,7 +44,14 @@ function useMessage(destination: Hex, metadata: Metadata | undefined) {
       enableLoading();
 
       const { address, decodedAddress, meta } = account;
-      const gasLimit = await api.program.gasSpent.handle(decodedAddress, destination, payload, value, metadata);
+      const gasLimit = await api.program.calculateGas.handle(
+        decodedAddress,
+        destination,
+        payload,
+        value,
+        false,
+        metadata,
+      );
 
       const message = { destination, payload, gasLimit, value };
       api.message.submit(message, metadata);
