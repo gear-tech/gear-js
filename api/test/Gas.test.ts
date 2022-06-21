@@ -68,11 +68,11 @@ describe('Calculate gas', () => {
     });
     const waitForReply = listenToUserMessageSent(api, programId);
     await sendTransaction(api.message, alice, 'MessageEnqueued');
-    const umsData = await waitForReply(null); //transactionData[0]);
-    expect(umsData.id).toBeDefined();
-    messageId = umsData.id.toHex();
-    expect(umsData.reply).toBeDefined();
-    expect(umsData.reply.isNone).toBeTruthy();
+    const { message } = await waitForReply(null); //transactionData[0]);
+    expect(message.id).toBeDefined();
+    messageId = message.id.toHex();
+    expect(message.reply).toBeDefined();
+    expect(message.reply.isNone).toBeTruthy();
     exitCode = 0; //umsData.reply.unwrap()[1].toNumber();
     expect(exitCode).toBeDefined();
   });

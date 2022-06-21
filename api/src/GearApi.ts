@@ -1,3 +1,7 @@
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { Event } from '@polkadot/types/interfaces';
+import { SpRuntimeDispatchError } from '@polkadot/types/lookup';
+import { RegistryError } from '@polkadot/types-codec/types';
 import { GearProgram } from './Program';
 import { GearMessage } from './Message';
 import { GearBalance } from './Balance';
@@ -7,14 +11,11 @@ import { GearMessageReply } from './MessageReply';
 import { GearWaitlist } from './Waitlist';
 import { gearRpc, gearTypes } from './default';
 import { GearApiOptions } from './types/interfaces';
-import { ApiPromise, WsProvider } from '@polkadot/api';
-import { ContractExecResultErr, Event } from '@polkadot/types/interfaces';
 import { GearBlock } from './Blocks';
 import { GearStorage } from './Storage';
 import { GearMailbox } from './Mailbox';
 import { GearClaimValue } from './Claim';
 import { GearCode } from './Code';
-import { RegistryError } from '@polkadot/types-codec/types';
 
 export class GearApi extends ApiPromise {
   public program: GearProgram;
@@ -93,7 +94,7 @@ export class GearApi extends ApiPromise {
    * @returns
    */
   getExtrinsicFailedError(event: Event): RegistryError {
-    const error = event.data[0] as ContractExecResultErr;
+    const error = event.data[0] as SpRuntimeDispatchError;
 
     const { isModule, asModule } = error;
     return isModule ? this.registry.findMetaError(asModule) : null;

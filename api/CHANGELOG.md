@@ -1,3 +1,16 @@
+## 0.22.0
+
+_06/17/2022_
+
+https://github.com/gear-tech/gear-js/pull/753
+
+### Breaking Changes
+
+- Event data sturcture have been updated
+- Events and event data classes have been removed, and interfaces have been added instead
+
+---
+
 ## 0.21.0
 
 _06/17/2022_
