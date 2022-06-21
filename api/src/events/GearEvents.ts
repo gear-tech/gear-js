@@ -1,5 +1,4 @@
 import { GenericEventData, GenericEvent } from '@polkadot/types';
-import { Event } from '@polkadot/types/interfaces';
 import {
   CodeChangedData,
   DebugData,
@@ -38,12 +37,4 @@ export interface DebugDataSnapshot extends GearEvent<DebugData> {}
 
 export interface DebugMode extends GearEvent<DebugModeData> {}
 
-export class Transfer extends GenericEvent {
-  constructor(event: Event) {
-    super(event.registry, event.toU8a());
-  }
-
-  public get data(): TransferData {
-    return new TransferData(this.get('data') as GenericEventData);
-  }
-}
+export interface Transfer extends GearEvent<TransferData> {}

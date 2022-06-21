@@ -371,12 +371,12 @@ unsub();
 Subscribe to Transfer events
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeToTransferEvents(({ data: { from, to, value } }) => {
+const unsub = await gearApi.gearEvents.subscribeToTransferEvents(({ data: { from, to, amount } }) => {
   console.log(`
     Transfer balance:
     from: ${from.toHex()}
     to: ${to.toHex()}
-    value: ${+value.toString()}
+    amount: ${+amount.toString()}
     `);
 });
 // Unsubscribe
