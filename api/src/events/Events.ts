@@ -29,7 +29,7 @@ export class GearEvents {
       events
         .filter(({ event }) => this.api.events.balances.Transfer.is(event))
         .forEach(({ event }) => {
-          callback(new Transfer(event));
+          callback(event as Transfer);
         });
     });
   }

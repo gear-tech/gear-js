@@ -76,15 +76,8 @@ export interface DebugModeData extends GenericEventData {
   enabled: Bool;
 }
 
-export class TransferData extends GearEventData {
-  public get from(): AccountId32 {
-    return this[0] as AccountId32;
-  }
-
-  public get to(): AccountId32 {
-    return this[1] as AccountId32;
-  }
-  public get value(): u128 {
-    return this[2] as u128;
-  }
+export interface TransferData extends GenericEventData {
+  from: AccountId32;
+  to: AccountId32;
+  amount: u128;
 }
