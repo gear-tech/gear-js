@@ -9,7 +9,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await api.disconnect();
-  await sleep(2000);
+  await sleep(1000);
 });
 
 describe('GearApi', () => {
