@@ -1,11 +1,10 @@
-import { GearApi, getTypesFromTypeDef, getWasmMetadata, Hex } from '../src';
-import { sendTransaction, sleep } from './utilsFunctions';
+import { GearApi } from '../src';
+import { sleep } from './utilsFunctions';
 import { join } from 'path';
 import { readFileSync } from 'fs';
-import { GEAR_EXAMPLES_WASM_DIR } from './config';
+import { CURRENT_ERRORS_REGISTRY, GEAR_ERRORS_REGISTRY } from './config';
 
 const api = new GearApi();
-const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_gui_test.opt.wasm'));
 
 beforeAll(async () => {
   await api.isReady;
@@ -18,11 +17,13 @@ afterAll(async () => {
 });
 
 describe('Get Execution Error', () => {
-  test('LoadMemoryGasExceeded', async () => {
-    expect(api.createType('ExecutionErrorReason', '0x05').toHuman()).toBe('LoadMemoryGasExceeded');
+  test('Compare registry', () => {
+    const currentReg = '0x' + readFileSync(CURRENT_ERRORS_REGISTRY).toString();
+    const gearReg = '0x' + readFileSync(GEAR_ERRORS_REGISTRY).toString();
+    expect(currentReg).toEqual(gearReg);
   });
 
-  test.only('InsufficientValue', async () => {
+  test('InsufficientValue', async () => {
     expect(
       api
         .createType('GearCoreProcessorCommonExecutionErrorReason', {
