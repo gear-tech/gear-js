@@ -78,9 +78,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, values, alert, meta, code).then((gasLimit) =>
-      setFieldValue('programValues.gasLimit', gasLimit)
-    );
+    calculateGas('init', api, values, alert, meta, code).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
   };
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(meta?.types, meta?.init_input), [meta]);
@@ -112,7 +110,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
 
                 <FormInput type="number" name="value" label="Initial value" placeholder="0" />
 
-                <FormPayload name="programValues.payload" label="Initial payload" values={payloadFormValues} />
+                <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
 
                 {!meta && <FormPayloadType name="payloadType" label="Initial payload type" />}
               </div>

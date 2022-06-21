@@ -17,7 +17,7 @@ export class DebugMode extends GearTransaction {
     return this.api.query.system.events((events) => {
       events
         .filter(({ event }) => this.api.events.gearDebug.DebugDataSnapshot.is(event))
-        .forEach(({ event }) => callback(new DebugDataSnapshot(event)));
+        .forEach(({ event }) => callback(event as DebugDataSnapshot));
     });
   }
 }

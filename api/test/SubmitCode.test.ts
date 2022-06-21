@@ -1,24 +1,20 @@
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
-import yaml from 'js-yaml';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GearApi } from '../lib';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
 const api = new GearApi();
-const accounts = {
-  alice: undefined,
-  bob: undefined,
-};
+const accounts = {};
 
 beforeAll(async () => {
   await api.isReady;
-  [accounts.alice] = await getAccount();
+  [accounts['alice']] = await getAccount();
 });
 
 afterAll(async () => {
   await api.disconnect();
-  await sleep(2000);
+  await sleep(1000);
 });
 
 describe('Submit code', () => {
@@ -27,9 +23,9 @@ describe('Submit code', () => {
     const { codeHash } = api.code.submit(code);
     expect(codeHash).toBeDefined();
 
-    const transactionData = await sendTransaction(api.code, accounts.alice, 'CodeChanged');
-    expect(transactionData[0]).toBe(codeHash);
-    expect(transactionData[1]).toHaveProperty('Active');
-    expect(transactionData[1].Active).toHaveProperty('expiration');
+    const transactionData = await sendTransaction(api.code, accounts['alice'], 'CodeChanged');
+    expect(transactionData.id).toBe(codeHash);
+    expect(transactionData.change).toHaveProperty('Active');
+    expect(transactionData.change.Active).toHaveProperty('expiration');
   });
 });
