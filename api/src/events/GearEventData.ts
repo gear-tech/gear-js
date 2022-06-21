@@ -13,6 +13,7 @@ import {
   MessageWokenReason,
   CodeId,
   CodeChangeKind,
+  UserMessageSentMessage,
 } from '../types/gear-core';
 
 export class GearEventData extends GenericEventData {
@@ -29,14 +30,7 @@ export interface MessageEnqueuedData extends GenericEventData {
 }
 
 export interface UserMessageSentData extends GenericEventData {
-  message: {
-    id: MessageId;
-    source: ProgramId;
-    destination: UserId;
-    payload: Vec<u8>;
-    value: u128;
-    reply: Option<Reply>;
-  };
+  message: UserMessageSentMessage;
   expiration: BlockNumber;
 }
 
