@@ -1,0 +1,24 @@
+[package]
+name = "error_registry"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.codec]
+package = "parity-scale-codec"
+version = "3.1.2"
+default-features = false
+
+[dependencies.core-processor]
+package = "gear-core-processor"
+git = "https://github.com/gear-tech/gear"
+branch = "dn-error-replies-payload"
+default-features = false
+
+[dependencies.hex]
+version = "0.4.3"
+default-features = false
+features = ["alloc"]
+
+[dependencies.scale-info]
+version = "2.1.1"
+default-features = false

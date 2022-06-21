@@ -17,7 +17,16 @@ jobs:
         uses: styfle/cancel-workflow-action@0.4.0
         with:
           access_token: ${{ github.token }}
-      - uses: actions/checkout@v2
+
+      - name: Actions checkout
+        uses: actions/checkout@v2
+
+      - name: 'Install: Set cargo path'
+        run: echo "/tmp/cargo/bin" >> $GITHUB_PATH
+
+      - name: Get errors registry
+        working-directory: 'api/dev/error_registry'
+        run: cargo run
 
       - name: Install NodeJS 16.x
         uses: actions/setup-node@v2.1.5
