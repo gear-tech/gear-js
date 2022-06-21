@@ -21,132 +21,65 @@ export class GearEventData extends GenericEventData {
   }
 }
 
-export class MessageEnqueuedData extends GearEventData {
-  public get id(): MessageId {
-    return this[0] as MessageId;
-  }
-
-  public get source(): UserId {
-    return this[1] as UserId;
-  }
-
-  public get destination(): ProgramId {
-    return this[2] as ProgramId;
-  }
-
-  public get entry(): Entry {
-    return this[3] as Entry;
-  }
+export interface MessageEnqueuedData extends GenericEventData {
+  id: MessageId;
+  source: UserId;
+  destination: ProgramId;
+  entry: Entry;
 }
 
-export class UserMessageSentData extends GearEventData {
-  public get id(): MessageId {
-    return this[0]['id'];
-  }
-  public get source(): ProgramId {
-    return this[0]['source'];
-  }
-  public get destination(): UserId {
-    return this[0]['destination'];
-  }
-  public get payload(): Vec<u8> {
-    return this[0]['payload'];
-  }
-  public get value(): u128 {
-    return this[0]['value'];
-  }
-  public get reply(): Option<Reply> {
-    return this[0]['reply'];
-  }
-  public get expiration(): BlockNumber {
-    return this[1] as BlockNumber;
-  }
+export interface UserMessageSentData extends GenericEventData {
+  message: {
+    id: MessageId;
+    source: ProgramId;
+    destination: UserId;
+    payload: Vec<u8>;
+    value: u128;
+    reply: Option<Reply>;
+  };
+  expiration: BlockNumber;
 }
 
-export class UserMessageReadData extends GearEventData {
-  public get id(): MessageId {
-    return this[0] as MessageId;
-  }
-
-  public get reason(): UserMessageReadReason {
-    return this[1] as UserMessageReadReason;
-  }
+export interface UserMessageReadData extends GenericEventData {
+  id: MessageId;
+  reason: UserMessageReadReason;
 }
 
-export class MessagesDispatchedData extends GearEventData {
-  public get total(): u32 {
-    return this[0] as u32;
-  }
-
-  public get statuses(): BTreeMap<MessageId, DispatchStatus> {
-    return this[1] as BTreeMap<MessageId, DispatchStatus>;
-  }
-
-  public get stateChanged(): BTreeSet<ProgramId> {
-    return this[2] as BTreeSet<ProgramId>;
-  }
+export interface MessagesDispatchedData extends GenericEventData {
+  total: u32;
+  statuses: BTreeMap<MessageId, DispatchStatus>;
+  stateChanged: BTreeSet<ProgramId>;
 }
 
-export class MessageWaitedData extends GearEventData {
-  public get id(): MessageId {
-    return this[0] as MessageId;
-  }
-
-  public get origin(): Option<MessageId> {
-    return this[1] as Option<MessageId>;
-  }
-
-  public get reason(): MessageWaitedReason {
-    return this[2] as MessageWaitedReason;
-  }
-
-  public get expiration(): BlockNumber {
-    return this[3] as BlockNumber;
-  }
+export interface MessageWaitedData extends GenericEventData {
+  id: MessageId;
+  origin: Option<MessageId>;
+  reason: MessageWaitedReason;
+  expiration: BlockNumber;
 }
 
-export class MessageWokenData extends GearEventData {
-  public get id(): MessageId {
-    return this[0] as MessageId;
-  }
-
-  public get reason(): MessageWokenReason {
-    return this[1] as MessageWokenReason;
-  }
+export interface MessageWakenData extends GenericEventData {
+  id: MessageId;
+  reason: MessageWokenReason;
 }
 
-export class CodeChangedData extends GearEventData {
-  public get id(): CodeId {
-    return this[0] as CodeId;
-  }
-  public get change(): CodeChangeKind {
-    return this[1] as CodeChangeKind;
-  }
+export interface CodeChangedData extends GenericEventData {
+  id: CodeId;
+  change: CodeChangeKind;
 }
 
-export class ProgramChangedData extends GearEventData {
-  public get id(): ProgramId {
-    return this[0] as ProgramId;
-  }
-  public get change(): ProgramChangedKind {
-    return this[1] as ProgramChangedKind;
-  }
+export interface ProgramChangedData extends GenericEventData {
+  id: ProgramId;
+  change: ProgramChangedKind;
 }
 
-export class DebugData extends GearEventData {
-  public get dispatchQueue(): Vec<QueuedDispatch> {
-    return this[0]['dispatchQueue'];
-  }
-
-  public get programs(): Vec<ProgramDetails> {
-    return this[0]['programs'];
-  }
+export interface DebugData extends GenericEventData {
+  dispatchQueue: Vec<QueuedDispatch>;
+  programs: Vec<ProgramDetails>;
 }
 
-export class DebugModeData extends GearEventData {
-  public get enabled(): Bool {
-    return this[0] as Bool;
-  }
+export interface DebugModeData extends GenericEventData {
+  enabled: Bool;
 }
 
 export class TransferData extends GearEventData {
