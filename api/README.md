@@ -337,7 +337,11 @@ gearApi.query.system.events((events) => {
 ```javascript
 const unsub = api.gearEvents.subscribeToGearEvent(
   'UserMessageSent',
-  ({ data: { id, source, destination, payload, value, reply } }) => {
+  ({
+    data: {
+      message: { id, source, destination, payload, value, reply },
+    },
+  }) => {
     console.log(`
   messageId: ${id.toHex()}
   source: ${source.toHex()}
