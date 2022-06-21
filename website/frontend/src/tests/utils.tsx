@@ -8,7 +8,7 @@ type Props = {
 };
 
 const Providers = ({ children: element }: Props) =>
-  providers.reduceRight((children, Provider) => <Provider children={children} />, element);
+  providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, element);
 
 const renderWithRouter = (element: ReactElement) => render(element, { wrapper: MemoryRouter });
 const renderWithProviders = (element: ReactElement) => render(element, { wrapper: Providers });

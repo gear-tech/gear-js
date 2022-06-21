@@ -1,16 +1,17 @@
-import { Hex } from '@gear-js/api';
-import { Metadata } from '@polkadot/types';
+import { Hex, GearApi, Metadata } from '@gear-js/api';
+import { GasInfo } from '@gear-js/api/lib/types/gear-core';
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
-import { AlertContainerFactory } from 'context/alert/types';
-import { localPrograms } from 'services/LocalDBService';
-import { GetMetaResponse } from 'api/responses';
-import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
+
 import { NODE_ADDRESS_REGEX } from 'regexes';
-import { FormValues as SendMessageInitialValues } from './components/pages/Send/children/MessageForm/types';
-import { FormValues as UploadInitialValues } from './components/pages/Programs/children/Upload/children/UploadForm/types';
+import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
+import { GetMetaResponse } from 'api/responses';
+import { localPrograms } from 'services/LocalDBService';
+import { AlertContainerFactory } from 'context/alert/types';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
-import { getSubmitPayload } from 'components/common/FormPayload/helpers';
+import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
+import { FormValues as SendMessageInitialValues } from 'components/pages/Send/children/MessageForm/types';
+import { FormValues as UploadInitialValues } from 'components/pages/Programs/children/Upload/children/UploadForm/types';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;
@@ -174,12 +175,12 @@ export const getPreformattedText = (data: unknown) => JSON.stringify(data, null,
 
 export const calculateGas = async (
   method: string,
-  api: any,
-  values: UploadInitialValues['programValues'] | SendMessageInitialValues,
+  api: GearApi,
+  values: UploadInitialValues | SendMessageInitialValues,
   alert: AlertContainerFactory,
-  meta: any,
+  meta?: Metadata,
   code?: Uint8Array | null,
-  addressId?: String | null,
+  addressId?: string,
   replyCodeError?: string
 ): Promise<number> => {
   const payload = getSubmitPayload(values.payload);
@@ -194,46 +195,53 @@ export const calculateGas = async (
     }
 
     const { value } = values;
-    const metaOrTypeOfPayload: Metadata | string = meta || 'String';
+    const metaOrTypeOfPayload = meta || values.payloadType;
 
-    let estimatedGas;
+    let estimatedGas: GasInfo;
 
     switch (method) {
       case 'init':
-        estimatedGas = await api.program.gasSpent.init(
+        estimatedGas = await api.program.calculateGas.init(
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          code,
+          code as Buffer,
           payload,
           value,
+          true,
           metaOrTypeOfPayload
         );
         break;
       case 'handle':
-        estimatedGas = await api.program.gasSpent.handle(
+        estimatedGas = await api.program.calculateGas.handle(
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          addressId,
+          addressId as Hex,
           payload,
           value,
+          true,
           metaOrTypeOfPayload
         );
         break;
       case 'reply':
-        estimatedGas = await api.program.gasSpent.reply(
+        estimatedGas = await api.program.calculateGas.reply(
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          addressId,
+          addressId as Hex,
           Number(replyCodeError),
           payload,
           value,
+          true,
           metaOrTypeOfPayload
         );
         break;
+      default:
+        throw new Error('Unknown method');
     }
 
-    alert.info(`Estimated gas ${estimatedGas.toHuman()}`);
+    const minLimit = estimatedGas.min_limit.toNumber();
 
-    return estimatedGas.toNumber();
+    alert.info(`Estimated gas ${minLimit}`);
+
+    return minLimit;
   } catch (error) {
-    alert.error(`${error}`);
+    alert.error(String(error));
 
     return Promise.reject(error);
   }

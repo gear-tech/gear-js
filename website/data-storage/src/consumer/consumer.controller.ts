@@ -1,3 +1,4 @@
+import { Controller, Logger } from '@nestjs/common';
 import {
   AddMetaParams,
   AddPayloadParams,
@@ -7,11 +8,12 @@ import {
   GetAllUserProgramsParams,
   GetMessagesParams,
   GetMetaParams,
+  KAFKA_TOPICS,
   KafkaPayload,
   Keys,
   NewEventData,
-} from '@gear-js/interfaces';
-import { Controller, Logger } from '@nestjs/common';
+} from '@gear-js/common';
+
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ConsumerService } from './consumer.service';
 
@@ -36,49 +38,49 @@ export class ConsumerController {
     }
   }
 
-  @MessagePattern('program.data')
+  @MessagePattern(KAFKA_TOPICS.PROGRAM_DATA)
   async programData(@Payload() payload: KafkaPayload<FindProgramParams>) {
     const result = await this.consumerService.programData(payload.value);
     return JSON.stringify(result);
   }
 
-  @MessagePattern('program.all')
+  @MessagePattern(KAFKA_TOPICS.PROGRAM_ALL)
   async allPrograms(@Payload() payload: KafkaPayload<GetAllProgramsParams>) {
     const result = await this.consumerService.allPrograms(payload.value);
     return JSON.stringify(result);
   }
 
-  @MessagePattern('program.all.user')
+  @MessagePattern(KAFKA_TOPICS.PROGRAM_ALL_USER)
   async allUserPrograms(@Payload() payload: KafkaPayload<GetAllUserProgramsParams>) {
     const result = await this.consumerService.allUserPrograms(payload.value);
     return JSON.stringify(result);
   }
 
-  @MessagePattern('program.meta.add')
+  @MessagePattern(KAFKA_TOPICS.PROGRAM_META_ADD)
   async addMeta(@Payload() payload: KafkaPayload<AddMetaParams>) {
     const result = await this.consumerService.addMeta(payload.value);
     return JSON.stringify(result);
   }
 
-  @MessagePattern('program.meta.get')
+  @MessagePattern(KAFKA_TOPICS.PROGRAM_META_GET)
   async getMeta(@Payload() payload: KafkaPayload<GetMetaParams>) {
     const result = await this.consumerService.getMeta(payload.value);
     return JSON.stringify(result);
   }
 
-  @MessagePattern('message.all')
+  @MessagePattern(KAFKA_TOPICS.MESSAGE_ALL)
   async allMessages(@Payload() payload: KafkaPayload<GetMessagesParams>) {
     const result = await this.consumerService.allMessages(payload.value);
     return JSON.stringify(result);
   }
 
-  @MessagePattern('message.data')
+  @MessagePattern(KAFKA_TOPICS.MESSAGE_DATA)
   async messageData(@Payload() payload: KafkaPayload<FindMessageParams>) {
     const result = await this.consumerService.message(payload.value);
     return JSON.stringify(result);
   }
 
-  @MessagePattern('message.add.payload')
+  @MessagePattern(KAFKA_TOPICS.MESSAGE_ADD_PAYLOAD)
   async savePayload(@Payload() payload: KafkaPayload<AddPayloadParams>) {
     const result = await this.consumerService.addPayload(payload.value);
     return JSON.stringify(result);

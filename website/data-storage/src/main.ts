@@ -1,19 +1,19 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import configuration from './config/configuration';
 import { waitReady } from '@polkadot/wasm-crypto';
-import { HealthcheckModule } from './healthcheck/healthcheck.module';
-import { Logger } from '@nestjs/common';
-import { changeStatus } from './healthcheck/healthcheck.controller';
 
-const logger = new Logger('Main');
+import { AppModule } from './app.module';
+import configuration from './config/configuration';
+import { HealthcheckModule } from './healthcheck/healthcheck.module';
+import { changeStatus } from './healthcheck/healthcheck.controller';
+import { dataStorageLogger } from './common/data-storage.logger';
+import { kafkaLogger } from '@gear-js/common';
 
 async function bootstrap() {
   const { kafka, healthcheck } = configuration();
 
   const healthCheckApp = await NestFactory.create(HealthcheckModule, { cors: true });
-  logger.log(`HelathCheckApp successfully run on the ${healthcheck.port} 🚀`);
+  dataStorageLogger.info(`HelathCheckApp successfully run on the ${healthcheck.port} 🚀`);
   await healthCheckApp.listen(healthcheck.port);
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
@@ -22,6 +22,7 @@ async function bootstrap() {
       client: {
         clientId: kafka.clientId,
         brokers: kafka.brokers,
+        logCreator: kafkaLogger,
         sasl: {
           mechanism: 'plain',
           username: kafka.sasl.username,

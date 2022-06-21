@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { IdeaEvent, IdeaEvents, Sections } from 'types/explorer';
+// eslint-disable-next-line import/no-cycle
 import { useApi, useSubscription } from '.';
 
 export function useEvents() {

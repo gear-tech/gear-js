@@ -28,6 +28,11 @@
         "Success": "Null",
         "Failure": "Vec<u8>"
       }
+    },
+    "GasInfo": {
+      "min_limit": "u64",
+      "reserved": "u64",
+      "burned": "u64"
     }
   }
 }

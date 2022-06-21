@@ -4,9 +4,9 @@ COPY package.json .
 COPY yarn.lock .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
-COPY ./website/jsonrpc-errors website/jsonrpc-errors
+COPY ./website/common website/common
 COPY ./website/test-balance/ website/test-balance
 RUN yarn install
-RUN yarn build:jsonrpc-errors
+RUN yarn build:common
 RUN yarn build:test-balance
-CMD ["node", "website/test-balance/build/index.js"]
+CMD ["node", "website/test-balance/dist/main.js"]

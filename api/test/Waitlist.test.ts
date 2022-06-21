@@ -8,10 +8,10 @@ import { KeyringPair } from '@polkadot/keyring/types';
 const api = new GearApi();
 
 const CODE_PATH = join(TEST_WASM_DIR, 'test_waitlist.opt.wasm');
-let alice: KeyringPair = undefined;
-let programId: Hex = undefined;
-let messageId: Hex = undefined;
-let messageWaited: (messageId: Hex) => MessageWaitedData;
+let alice: KeyringPair;
+let programId: Hex;
+let messageId: Hex;
+let messageWaited: (messageId: Hex) => Promise<MessageWaitedData>;
 
 beforeAll(async () => {
   await api.isReady;
@@ -32,14 +32,14 @@ afterAll(async () => {
 describe('GearWaitlist', () => {
   test(`read program's waitlist`, async () => {
     api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
-    messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued'))[0];
-    const event = messageWaited(messageId);
-    expect(event).toBeDefined();
-    expect(event).toHaveProperty('reason');
-    expect(event.reason.isRuntime).toBeTruthy();
-    expect(event.reason.asRuntime.isWaitCalled).toBeTruthy();
-    expect(event).toHaveProperty('expiration');
-    expect(event).toHaveProperty('origin');
+    messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued')).id;
+    const eventData = await messageWaited(messageId);
+    expect(eventData).toBeDefined();
+    expect(eventData).toHaveProperty('reason');
+    expect(eventData.reason.isRuntime).toBeTruthy();
+    expect(eventData.reason.asRuntime.isWaitCalled).toBeTruthy();
+    expect(eventData).toHaveProperty('expiration');
+    expect(eventData).toHaveProperty('origin');
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(1);
     expect(waitlist[0].programId).toBe(programId);

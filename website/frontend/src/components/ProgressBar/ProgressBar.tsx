@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import { PROGRESS_BAR_STATUSES } from 'consts';
 import './ProgressBar.scss';
 

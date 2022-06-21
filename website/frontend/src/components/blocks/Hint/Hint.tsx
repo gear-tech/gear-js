@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { useAlert } from 'hooks';
 import { HelpCircle } from 'react-feather';
 import styles from './Hint.module.scss';

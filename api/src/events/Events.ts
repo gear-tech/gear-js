@@ -1,9 +1,8 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { GearApi } from '../GearApi';
 import { ISystemAccountInfo, IBalanceCallback, IBlocksCallback } from '../types/interfaces';
-import { createEventClass } from './GearEvents';
-import { Transfer } from './GearEvents';
 import { IGearEvent } from './types';
+import { Transfer } from './GearEvents';
 
 export class GearEvents {
   private api: GearApi;
@@ -20,7 +19,7 @@ export class GearEvents {
       events
         .filter(({ event }) => event.method === method)
         .forEach(({ event }) => {
-          callback(createEventClass(method, event));
+          callback(event as IGearEvent[M]);
         });
     });
   }

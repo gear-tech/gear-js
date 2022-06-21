@@ -1,8 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { MessagesService } from 'src/messages/messages.service';
-import { MetadataService } from 'src/metadata/metadata.service';
-import { ProgramsService } from 'src/programs/programs.service';
-import { Result } from './types';
 import {
   AddMetaParams,
   AddMetaResult,
@@ -12,20 +8,25 @@ import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
+  GetAllUserProgramsParams,
   GetMessagesParams,
   GetMetaParams,
   GetMetaResult,
-  IMessage,
-  InitStatus,
-  GetAllUserProgramsParams,
   IGenesis,
-  ProgramDataResult,
-  IUserMessageSentKafkaValue,
+  IMessage,
   IMessageEnqueuedKafkaValue,
-  IProgramChangedKafkaValue,
   IMessagesDispatchedKafkaValue,
-} from '@gear-js/interfaces';
-import { FormResponse } from 'src/middleware/formResponse';
+  InitStatus,
+  IProgramChangedKafkaValue,
+  IUserMessageSentKafkaValue,
+  ProgramDataResult,
+} from '@gear-js/common';
+
+import { Result } from './types';
+import { ProgramsService } from '../programs/programs.service';
+import { MessagesService } from '../messages/messages.service';
+import { MetadataService } from '../metadata/metadata.service';
+import { FormResponse } from '../middleware/formResponse';
 
 @Injectable()
 export class ConsumerService {

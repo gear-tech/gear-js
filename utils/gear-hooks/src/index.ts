@@ -29,6 +29,7 @@ import {
   AlertTemplateProps,
   AlertContainerFactory,
   DefaultTemplateOptions,
+  ProviderProps,
   Account,
 } from 'types';
 
@@ -58,5 +59,6 @@ export {
   AlertTemplateProps,
   AlertContainerFactory,
   DefaultTemplateOptions,
+  ProviderProps,
   Account,
 };

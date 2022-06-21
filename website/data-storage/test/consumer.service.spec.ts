@@ -1,12 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Message } from 'src/entities/message.entity';
-import { Meta } from 'src/entities/meta.entity';
-import { Program } from 'src/entities/program.entity';
-import { MessagesService } from 'src/messages/messages.service';
-import { MetadataService } from 'src/metadata/metadata.service';
-import { ProgramsService } from 'src/programs/programs.service';
+import { ProgramsService } from '../src/programs/programs.service';
+import { MessagesService } from '../src/messages/messages.service';
+import { MetadataService } from '../src/metadata/metadata.service';
 import { ConsumerService } from '../src/consumer/consumer.service';
+import { Message, Meta, Program } from '../src/entities';
 
 describe('Consumer service', () => {
   let programService: ProgramsService;

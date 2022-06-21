@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import Identicon from '@polkadot/react-identicon';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';

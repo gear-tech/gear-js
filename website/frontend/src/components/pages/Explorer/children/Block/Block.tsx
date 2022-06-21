@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Block as DotBlock } from '@polkadot/types/interfaces';
 import { EventRecords } from 'types/explorer';
 import { useApi } from 'hooks';

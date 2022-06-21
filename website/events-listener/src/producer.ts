@@ -1,9 +1,8 @@
+import { kafkaLogger } from '@gear-js/common';
+
 import { Kafka, Producer } from 'kafkajs';
-
-import { logger } from './logger';
 import config from './config';
-
-const log = logger('KafkaProducer');
+import { eventListenerLogger } from './common/event-listener.logger';
 
 export class KafkaProducer {
   readonly kafka: Kafka;
@@ -13,6 +12,7 @@ export class KafkaProducer {
     this.kafka = new Kafka({
       clientId: config.kafka.clientId,
       brokers: config.kafka.brokers,
+      logCreator: kafkaLogger,
       sasl: {
         mechanism: 'plain',
         username: config.kafka.sasl.username,
@@ -26,10 +26,11 @@ export class KafkaProducer {
     const admin = this.kafka.admin();
     try {
       await admin.connect();
-      log.info('Admin is connected');
+      eventListenerLogger.info('Kafka producer: Admin is connected');
     } catch (error) {
-      log.error(error);
-      log.error('Admin is not connected');
+      eventListenerLogger.info('Kafka producer: Admin is connected');
+      eventListenerLogger.error(error);
+      eventListenerLogger.error('Admin is not connected');
       throw error;
     }
     try {
@@ -43,27 +44,27 @@ export class KafkaProducer {
             },
           ],
         });
-        log.info(`Topic <${topic}> created`);
+        eventListenerLogger.info(`Kafka producer: Topic ${topic} created`);
       } else {
-        log.warn(`Topic <${topic}> already existed`);
+        eventListenerLogger.warn(`Kafka producer: Topic ${topic} already existed`);
       }
     } catch (error) {
-      log.error(error);
+      eventListenerLogger.error(`Kafka producer: ${error}`);
       await admin.disconnect();
-      log.info('Admin is disconnected');
+      eventListenerLogger.error(`Admin is not connected`);
       throw error;
     }
     await admin.disconnect();
-    log.info('Admin is disconnected');
+    eventListenerLogger.error(`Admin is not connected`);
   }
 
   async connect() {
     await this.producer.connect();
-    log.info('Producer is connected');
+    eventListenerLogger.info('Producer is connected');
   }
 
   async send(key: string, value: string, genesis: string) {
-    this.producer.send({
+    await this.producer.send({
       topic: 'events',
       messages: [{ key, value: JSON.stringify(value), headers: { genesis } }],
     });

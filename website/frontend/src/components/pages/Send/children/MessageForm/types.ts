@@ -1,6 +1,6 @@
 import { FormikHelpers } from 'formik/dist/types';
 
-import { PayloadValue } from 'components/common/FormPayload/types';
+import { PayloadValue } from 'components/common/Form/FormPayload/types';
 
 export type FormValues = {
   value: number;

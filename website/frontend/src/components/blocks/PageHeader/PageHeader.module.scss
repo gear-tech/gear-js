@@ -33,11 +33,8 @@
 .infoTitle {
   @extend %infoText;
 
-   color: $textColorSecondary;
-
-   &:not(:empty) {
-      margin-right: 20px;
-   }
+  color: $textColorSecondary;
+  margin-right: 20px;
 }
 
 .infoFile {

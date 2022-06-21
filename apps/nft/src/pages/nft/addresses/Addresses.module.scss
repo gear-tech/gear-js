@@ -1,0 +1,38 @@
+@use '@gear-js/ui/variables' as *;
+
+.list {
+  margin-top: 20px;
+  overflow-y: hidden;
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  font-size: $fontSizeMedium;
+
+  &:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+
+  &:nth-child(even) {
+    $y: 15px;
+    padding-top: $y;
+    padding-bottom: $y;
+  }
+}
+
+.text {
+  padding: 5px 32px 5px 20px;
+  padding-right: 32px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.button {
+  white-space: nowrap;
+  background-color: #3975e9;
+
+  &:hover {
+    background-color: #2955ab;
+  }
+}

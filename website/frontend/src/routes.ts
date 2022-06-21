@@ -9,7 +9,7 @@ export const routes = {
   program: '/program/:id',
   messages: '/messages',
   message: '/message/:id',
-  state: '/state/:id',
+  state: '/state/:programId',
   send: '/send',
   sendMessage: 'message/:programId',
   reply: 'reply/:messageId',

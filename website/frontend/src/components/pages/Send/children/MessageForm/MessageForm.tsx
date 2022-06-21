@@ -1,20 +1,17 @@
 import { useMemo, VFC, useRef } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
-import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 
 import { Schema } from './Schema';
 import { FormValues, SetFieldValue } from './types';
-import { PayloadType } from './children/PayloadType';
 
 import { calculateGas } from 'helpers';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { sendMessage } from 'services/ApiService';
 import sendMessageSVG from 'assets/images/message.svg';
-import { FormInput, FormNumberFormat, formStyles } from 'components/common/Form';
-import { FormPayload } from 'components/common/FormPayload';
-import { getSubmitPayload, getPayloadFormValues } from 'components/common/FormPayload/helpers';
+import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
+import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 
 type Props = {
   id: string;
@@ -74,16 +71,9 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
         <Form className={formStyles.largeForm}>
           <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />
 
-          <div className={clsx(formStyles.formItem, formStyles.field)}>
-            <label htmlFor="payload" className={formStyles.fieldLabel}>
-              Payload
-            </label>
-            <div className={formStyles.fieldContent}>
-              <FormPayload name="payload" values={payloadFormValues} />
-            </div>
-          </div>
+          <FormPayload name="payload" label="Payload" values={payloadFormValues} />
 
-          {!isMeta && <PayloadType />}
+          {!isMeta && <FormPayloadType name="payloadType" label="Payload type" />}
 
           <FormNumberFormat
             name="gasLimit"

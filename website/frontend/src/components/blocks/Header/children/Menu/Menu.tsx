@@ -26,7 +26,9 @@ const Menu = ({ openSidebar }: Props) => {
   const getItems = () =>
     links.map(({ to, text }) => (
       <li key={text}>
-        <NavLink className={getClassName} to={to} children={text} />
+        <NavLink className={getClassName} to={to}>
+          {text}
+        </NavLink>
       </li>
     ));
 

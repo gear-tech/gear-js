@@ -1,0 +1,32 @@
+@use '@gear-js/ui/variables' as *;
+
+.field {
+  display: flex;
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-bottom: 32px;
+  }
+
+  & > *:not(:last-child) {
+    margin-right: 16px;
+  }
+}
+
+.inputs {
+  flex: 1;
+  max-width: 540px;
+
+  & > *:not(:last-child) {
+    margin-bottom: 4px;
+  }
+}
+
+.input {
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+}
+
+.error {
+  color: $errorColor;
+}

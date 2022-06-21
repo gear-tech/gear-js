@@ -11,7 +11,7 @@ import { AlertContext } from './Context';
 import { AlertTemplate } from 'components/AlertTemplate';
 import { Wrapper, Transition } from 'components/Alert';
 
-//Consider integrating react-toastify
+// Consider integrating react-toastify
 const AlertProvider = ({ children }: Props) => {
   const root = useRef<HTMLDivElement | null>(null);
 

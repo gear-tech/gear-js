@@ -16,10 +16,7 @@ import { GEAR_EXAMPLES_WASM_DIR } from './config';
 const programs = new Map();
 const messages = new Map();
 const api = new GearApi();
-const accounts = {
-  alice: undefined,
-  bob: undefined,
-};
+let accounts = {};
 
 let testFiles: {
   title: string;
@@ -53,7 +50,7 @@ let testFiles: {
 
 beforeAll(async () => {
   await api.isReady;
-  [accounts.alice, accounts.bob] = await getAccount();
+  [accounts['alice'], accounts['bob']] = await getAccount();
 });
 
 afterAll(async () => {
@@ -85,20 +82,14 @@ describe('Upload program', () => {
         meta,
         metaFile,
       });
-      const unsubs = [];
 
       // Check program initialization
-      const status = checkInit(api, programs.get(`${testFile.title}.${program.id}`).id);
+      const status = checkInit(api, programId);
       const transactionData = await sendTransaction(api.program, accounts[program.account], 'MessageEnqueued');
 
-      expect(transactionData[2]).toBe(programs.get(`${testFile.title}.${program.id}`).id);
+      expect(transactionData.destination).toBe(programId);
 
       expect(await status()).toBe('success');
-
-      unsubs.forEach(async (unsub) => {
-        (await unsub)();
-      });
-      return;
     });
   }
 });
@@ -116,7 +107,6 @@ describe('Send Message', () => {
           if (message.asHex) {
             payload = CreateType.create(meta.handle_input, payload, meta).toHex();
           }
-
           api.message.submit(
             {
               destination: program.id,
@@ -135,13 +125,13 @@ describe('Send Message', () => {
           expect(transactionData).toBeDefined();
 
           if (message.log) {
-            const reply = await waitForReply(transactionData[0]);
+            const reply = await waitForReply(transactionData.id);
             messages.set(`${testFile.title}.${message.id}`, {
-              logId: reply.id.toHex(),
-              source: reply.source.toHex(),
+              logId: reply.message.id.toHex(),
+              source: reply.message.source.toHex(),
             });
-            expect(reply?.reply.unwrap()[1].toNumber()).toBe(0);
-            expect(reply?.payload.toHex()).toBe(message.log);
+            expect(reply?.message.reply.unwrap()[1].toNumber()).toBe(0);
+            expect(reply?.message.payload.toHex()).toBe(message.log);
           }
         });
       }
@@ -161,7 +151,7 @@ describe('Read Mailbox', () => {
         if (claim) {
           const submitted = api.claimValueFromMailbox.submit(messageId);
           const transactionData = await sendTransaction(submitted, accounts[account], 'UserMessageRead');
-          expect(transactionData[0]).toBe(messageId);
+          expect(transactionData.id).toBe(messageId);
           mailbox = await api.mailbox.read(GearKeyring.decodeAddress(accounts[account].address));
           expect(mailbox.filter((value) => value[0][1] === messageId).length).toBe(0);
         }
