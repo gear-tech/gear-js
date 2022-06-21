@@ -12,6 +12,7 @@ function Home() {
   const { lotteryOwner, lotteryStartTime, lotteryDuration } = lottery || {};
 
   const isLotteryStarted = lottery?.lotteryStarted;
+  const players = lottery ? Object.values(lottery.players) : [];
   const isOwner = account?.decodedAddress === lotteryOwner;
 
   const startTime = getUnix(lotteryStartTime || '');
@@ -24,7 +25,13 @@ function Home() {
     <>
       {!isLotteryStarted && <Start />}
       {isLotteryStarted && (
-        <Pending startTime={getDate(startTime)} endTime={getDate(endTime)} status={status} countdown={countdown} />
+        <Pending
+          startTime={getDate(startTime)}
+          endTime={getDate(endTime)}
+          status={status}
+          countdown={countdown}
+          players={players}
+        />
       )}
     </>
   ) : (

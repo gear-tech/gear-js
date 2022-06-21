@@ -5,4 +5,14 @@ type Player = {
   balance: string;
 };
 
-export type { Player };
+type Lottery = {
+  lotteryOwner: Hex;
+  lotteryStarted: boolean;
+  lotteryStartTime: string;
+  lotteryDuration: string;
+  participationCost: string;
+  prizeFund: string;
+  players: { [index: number]: Player };
+};
+
+export type { Player, Lottery };
