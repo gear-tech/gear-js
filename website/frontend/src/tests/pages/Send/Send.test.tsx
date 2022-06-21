@@ -1,12 +1,19 @@
-import { Router, MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, within, render, fireEvent, waitFor } from '@testing-library/react';
+import { decodeHexTypes, createPayloadTypeStructure } from '@gear-js/api';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 
-import { PROGRAM, PROGRAM_ID } from './inputData';
-import { useProgramMock } from '../../mocks/hooks';
+import { PROGRAM, PROGRAM_ID, MESSAGE_ID, PROGRAM_WITH_META } from './inputData';
+import { TEST_ACCOUNT, TEST_API } from '../../const';
+import { useProgramMock, useAccountMock, useApiMock } from '../../mocks/hooks';
 
-import { AlertProvider } from 'context';
+import * as helpers from 'helpers';
 import * as ApiService from 'services/ApiService';
+import * as MessagesServices from 'services/MessagesRequestServices';
+import { AlertProvider, ApiProvider, AccountProvider } from 'context';
 import { Send } from 'components/pages/Send/Send';
+import { FormValues } from 'components/pages/Send/children/MessageForm/types';
+import { TypeStructure } from 'components/common/Form/FormPayload/types';
+import { getSubmitPayload, getPayloadValue } from 'components/common/Form/FormPayload/helpers';
 
 type Props = {
   path: string;
@@ -14,18 +21,20 @@ type Props = {
 };
 
 const SendMessagePage = ({ path, initialEntries }: Props) => (
-  <AlertProvider>
-    <MemoryRouter initialEntries={initialEntries}>
-      <Routes>
-        <Route path={path} element={<Send />} />
-      </Routes>
-    </MemoryRouter>
-  </AlertProvider>
+  <ApiProvider>
+    <AccountProvider>
+      <AlertProvider>
+        <MemoryRouter initialEntries={initialEntries}>
+          <Routes>
+            <Route path={path} element={<Send />} />
+          </Routes>
+        </MemoryRouter>
+      </AlertProvider>
+    </AccountProvider>
+  </ApiProvider>
 );
 
 describe('send message page tests', () => {
-  const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
-
   const submit = () => {
     fireEvent.submit(screen.getByText('Send message'));
   };
@@ -44,15 +53,28 @@ describe('send message page tests', () => {
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
-  it('test form without meta', () => {
-    useProgramMock(PROGRAM);
+  it('test send message form without meta', async () => {
+    useApiMock(TEST_API);
+    const mockProgram = useProgramMock(PROGRAM);
 
-    render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID}`]} />);
+    const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
+    const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
+
+    const { rerender } = render(
+      <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID}`]} />
+    );
+
+    expect(mockProgram).toBeCalledWith(PROGRAM_ID);
+
+    // header test
 
     expect(screen.getByText('NFT')).toBeInTheDocument();
     expect(screen.getByText('New message')).toBeInTheDocument();
 
+    // checking if fields are present in a form
+
     const valueField = screen.getByLabelText('Value');
+    const payloadField = screen.getByLabelText('Payload');
     const gasLimitField = screen.getByLabelText('Gas limit');
     const destinationField = screen.getByLabelText('Destination');
     const payloadTypeField = screen.getByLabelText('Payload type');
@@ -62,6 +84,7 @@ describe('send message page tests', () => {
     const calculateGasBtn = screen.getByText('Calculate Gas');
 
     expect(valueField).toBeInTheDocument();
+    expect(payloadField).toBeInTheDocument();
     expect(gasLimitField).toBeInTheDocument();
     expect(destinationField).toBeInTheDocument();
 
@@ -74,8 +97,23 @@ describe('send message page tests', () => {
     expect(sendMessageBtn).toBeInTheDocument();
     expect(calculateGasBtn).toBeInTheDocument();
 
+    // unauthorized submit
+
+    submit();
+
+    await waitFor(() => expect(screen.getByText('WALLET NOT CONNECTED')).toBeInTheDocument());
+
+    useAccountMock(TEST_ACCOUNT);
+
+    rerender(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID}`]} />);
+
+    // form validation
+
     changeFieldValue(valueField, '1000');
     expect(valueField).toHaveValue(1000);
+
+    changeFieldValue(payloadField, '0x00');
+    expect(payloadField).toHaveValue('0x00');
 
     changeFieldValue(gasLimitField, '30000000');
     expect(gasLimitField).toHaveValue('30,000,000');
@@ -90,6 +128,175 @@ describe('send message page tests', () => {
     changeFieldValue(payloadTypeField, 'u32');
     expect(payloadTypeField).toHaveValue('u32');
 
+    const formValues: FormValues = {
+      value: 1000,
+      payload: '0x00',
+      gasLimit: 30000000,
+      payloadType: 'u32',
+      destination: 'program',
+    };
+
+    // calculate gas
+
+    fireEvent.click(calculateGasBtn);
+
+    expect(calculateGas).toBeCalledTimes(1);
+    expect(calculateGas).toBeCalledWith(
+      'handle',
+      TEST_API,
+      formValues,
+      expect.any(Object),
+      undefined,
+      null,
+      PROGRAM_ID,
+      undefined
+    );
+
+    // authorized submit
+
     submit();
+
+    const message = {
+      value: formValues.value.toString(),
+      payload: getSubmitPayload(formValues.payload),
+      gasLimit: '2400000',
+      replyToId: formValues.destination,
+      destination: formValues.destination,
+    };
+
+    await waitFor(() => {
+      expect(sendMessageMock).toBeCalledTimes(1);
+      expect(sendMessageMock).toBeCalledWith(
+        TEST_API.message,
+        TEST_ACCOUNT,
+        message,
+        expect.any(Object),
+        expect.any(Function),
+        undefined,
+        'u32'
+      );
+    });
+  });
+
+  it('test send message form with meta', async () => {
+    useApiMock(TEST_API);
+    useAccountMock(TEST_ACCOUNT);
+    const mockProgram = useProgramMock(PROGRAM_WITH_META);
+
+    const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
+    const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
+
+    render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID}`]} />);
+
+    expect(mockProgram).toBeCalledWith(PROGRAM_ID);
+
+    // header test
+
+    expect(screen.getByText('NFT')).toBeInTheDocument();
+    expect(screen.getByText('New message')).toBeInTheDocument();
+
+    // checking if fields are present in a form
+
+    const valueField = screen.getByLabelText('Value');
+    const gasLimitField = screen.getByLabelText('Gas limit');
+    const destinationField = screen.getByLabelText('Destination');
+    const payloadTypeField = screen.queryByLabelText('Payload type');
+    const payloadTypeSwitch = screen.queryByLabelText('Enter type');
+
+    const sendMessageBtn = screen.getByText('Send message');
+    const calculateGasBtn = screen.getByText('Calculate Gas');
+
+    expect(valueField).toBeInTheDocument();
+    expect(gasLimitField).toBeInTheDocument();
+    expect(destinationField).toBeInTheDocument();
+
+    expect(payloadTypeField).toBeNull();
+    expect(payloadTypeSwitch).toBeNull();
+
+    expect(sendMessageBtn).toBeInTheDocument();
+    expect(calculateGasBtn).toBeInTheDocument();
+
+    // form validation
+
+    changeFieldValue(valueField, '1000');
+    expect(valueField).toHaveValue(1000);
+
+    changeFieldValue(gasLimitField, '30000000');
+    expect(gasLimitField).toHaveValue('30,000,000');
+
+    changeFieldValue(destinationField, 'program');
+    expect(destinationField).toHaveValue('program');
+
+    const [, meta] = mockProgram.mock.results[0].value;
+    const decodedTypes = decodeHexTypes(meta?.types);
+    const typeStructure = createPayloadTypeStructure(meta?.handle_input, decodedTypes) as TypeStructure;
+
+    const formValues: FormValues = {
+      value: 1000,
+      payload: getPayloadValue(typeStructure),
+      gasLimit: 30000000,
+      payloadType: 'Bytes',
+      destination: 'program',
+    };
+
+    // calculate gas
+
+    fireEvent.click(calculateGasBtn);
+
+    expect(calculateGas).toBeCalledTimes(1);
+    expect(calculateGas).toBeCalledWith(
+      'handle',
+      TEST_API,
+      formValues,
+      expect.any(Object),
+      meta,
+      null,
+      PROGRAM_ID,
+      undefined
+    );
+
+    // authorized submit
+
+    submit();
+
+    const message = {
+      value: formValues.value.toString(),
+      payload: getSubmitPayload(formValues.payload),
+      gasLimit: '2400000',
+      replyToId: formValues.destination,
+      destination: formValues.destination,
+    };
+
+    await waitFor(() => {
+      expect(sendMessageMock).toBeCalledTimes(1);
+      expect(sendMessageMock).toBeCalledWith(
+        TEST_API.message,
+        TEST_ACCOUNT,
+        message,
+        expect.any(Object),
+        expect.any(Function),
+        meta,
+        undefined
+      );
+    });
+  });
+
+  it('test send reply form without meta', async () => {
+    useApiMock(TEST_API);
+    useAccountMock(TEST_ACCOUNT);
+    const mockProgram = useProgramMock(PROGRAM);
+
+    const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
+
+    render(<SendMessagePage path="/send/reply/:messageId" initialEntries={[`/send/reply/${MESSAGE_ID}`]} />);
+
+    expect(mockProgram).toBeCalledWith();
+
+    // header test
+
+    expect(screen.getByText('NFT')).toBeInTheDocument();
+    expect(screen.getByText('New message')).toBeInTheDocument();
+
+    // checking if fields are present in a form
   });
 });

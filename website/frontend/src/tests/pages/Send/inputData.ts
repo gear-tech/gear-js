@@ -4,6 +4,8 @@ const META = `{"types":"0x5c0008186e66745f696f1c496e69744e465400001001106e616d65
 
 export const PROGRAM_ID = '0x52970eb8531778ac816303e806c694caf65579dfad5fafa31c2b7b0f61dfd6f2';
 
+export const MESSAGE_ID = '0x0d0d71c81a07009d08ed05ef0b0b0568a0dffd688d3d608ce3076a7b23788b62';
+
 export const PROGRAM: ProgramModel = {
   id: PROGRAM_ID,
   blockHash: '0x77b645ace89291fe7a26ec8574740612c1cc3db8448906ba192c4a0efed3bcad',
@@ -17,5 +19,7 @@ export const PROGRAM: ProgramModel = {
 
 export const PROGRAM_WITH_META: ProgramModel = {
   ...PROGRAM,
-  meta: META,
+  meta: {
+    meta: META,
+  },
 };
