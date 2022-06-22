@@ -47,8 +47,8 @@ jobs:
         $SourceDiffFrontend = $diff | Where-Object { $_ -match '^website/frontend/' }
         $HasDiffFrontend = $SourceDiffFrontend.Length -gt 0
         # Set the output
-        Write-Host "::set-output name=dataStorage_changed::$HasDiffdataStorage"
-        Write-Host "::set-output name=frontend_changed::$HasDiffMarketplace"
+        Write-Host "::set-output name=dataStorage_changed::$HasDiffDataStorage"
+        Write-Host "::set-output name=frontend_changed::$HasDiffFrontend"
         
     - name: Cancel previous workflow runs
       uses: styfle/cancel-workflow-action@0.4.0
