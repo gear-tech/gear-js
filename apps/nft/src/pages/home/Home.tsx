@@ -34,7 +34,7 @@ function Home() {
     ));
 
   const NFTs = getNFTs();
-  const isEachNftLoaded = nfts && isOwnerNFTsRead && isApprovedNFTsRead;
+  const isEachNftLoaded = nfts && (account ? isOwnerNFTsRead && isApprovedNFTsRead : true);
   const isAnyNft = !!NFTs?.length;
 
   return (

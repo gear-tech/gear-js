@@ -1,3 +1,31 @@
+## 0.22.1
+
+_06/21/2022_
+
+https://github.com/gear-tech/gear-js/pull/754
+
+### Breaking Changes
+
+- Subscription to Transfer balance events has been updated
+- GearBalance class has been updated.
+
+_From now on, it's necessary to use 2 separate methods (`transfer` and `singAndSend`) to send transaction_
+
+---
+
+## 0.22.0
+
+_06/21/2022_
+
+https://github.com/gear-tech/gear-js/pull/753
+
+### Breaking Changes
+
+- Event data sturcture have been updated
+- Events and event data classes have been removed, and interfaces have been added instead
+
+---
+
 ## 0.21.0
 
 _06/17/2022_
@@ -7,6 +35,7 @@ https://github.com/gear-tech/gear-js/pull/743
 ### Breaking Changes
 
 - Update calculation gas logic follow https://github.com/gear-tech/gear/pull/1051
+
   _From now on, gas calculation returns the object GasInfo instead of the u64 value_
 
 ---

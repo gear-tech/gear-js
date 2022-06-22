@@ -8,10 +8,10 @@ import {
 import { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Alert } from 'components';
-import { NODE_ADDRESS } from 'consts';
+import { ADDRESS } from 'consts';
 
 function ApiProvider({ children }: ProviderProps) {
-  return <GearApiProvider providerAddress={NODE_ADDRESS}>{children}</GearApiProvider>;
+  return <GearApiProvider providerAddress={ADDRESS.NODE}>{children}</GearApiProvider>;
 }
 
 function AlertProvider({ children }: ProviderProps) {

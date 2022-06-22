@@ -337,7 +337,11 @@ gearApi.query.system.events((events) => {
 ```javascript
 const unsub = api.gearEvents.subscribeToGearEvent(
   'UserMessageSent',
-  ({ data: { id, source, destination, payload, value, reply } }) => {
+  ({
+    data: {
+      message: { id, source, destination, payload, value, reply },
+    },
+  }) => {
     console.log(`
   messageId: ${id.toHex()}
   source: ${source.toHex()}
@@ -367,12 +371,12 @@ unsub();
 Subscribe to Transfer events
 
 ```javascript
-const unsub = await gearApi.gearEvents.subscribeToTransferEvents(({ data: { from, to, value } }) => {
+const unsub = await gearApi.gearEvents.subscribeToTransferEvents(({ data: { from, to, amount } }) => {
   console.log(`
     Transfer balance:
     from: ${from.toHex()}
     to: ${to.toHex()}
-    value: ${+value.toString()}
+    amount: ${+amount.toString()}
     `);
 });
 // Unsubscribe

@@ -9,6 +9,7 @@ import { useConditionalMeta } from './useMetadata';
 
 type SendMessageOptions = {
   value?: string | number;
+  isOtherPanicsAllowed?: boolean;
   onSuccess?: () => void;
 };
 
@@ -49,16 +50,17 @@ function useSendMessage(destination: Hex, metaSourceOrData: string | Metadata | 
     }
   };
 
-  const sendMessage = (payload: AnyJson, { value = 0, onSuccess }: SendMessageOptions) => {
+  const sendMessage = (payload: AnyJson, options?: SendMessageOptions) => {
     if (account && metadata) {
       loadingAlertId.current = alert.loading('Sign In', { title });
 
+      const { value = 0, isOtherPanicsAllowed = false, onSuccess } = options || {};
       const { address, decodedAddress, meta } = account;
       const { source } = meta;
 
-      api.program.gasSpent
-        .handle(decodedAddress, destination, payload, value, metadata)
-        .then((gasLimit) => ({ destination, payload, gasLimit, value }))
+      api.program.calculateGas
+        .handle(decodedAddress, destination, payload, value, isOtherPanicsAllowed, metadata)
+        .then((gas) => ({ destination, payload, gasLimit: gas.min_limit.toNumber(), value }))
         .then((message) => api.message.submit(message, metadata) && web3FromSource(source))
         .then(({ signer }) => api.message.signAndSend(address, { signer }, (result) => handleStatus(result, onSuccess)))
         .catch(({ message }: Error) => alert.update(loadingAlertId.current, message, DEFAULT_ERROR_OPTIONS));
