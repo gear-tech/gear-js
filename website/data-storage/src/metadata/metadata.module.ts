@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ProgramModule } from 'src/program/program.module';
 import { MetadataService } from './metadata.service';
 import { MetadataRepo } from './metadata.repo';
 import { Meta } from '../entities';
+import { ProgramModule } from '../program/program.module';
 
 @Module({
   imports: [ProgramModule, TypeOrmModule.forFeature([Meta])],

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConsumerController } from './consumer.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import configuration from 'src/config/configuration';
+import configuration from '../config/configuration';
 import { MetadataModule } from '../metadata/metadata.module';
 import { ProgramModule } from '../program/program.module';
 import { MessageModule } from '../message/message.module';
