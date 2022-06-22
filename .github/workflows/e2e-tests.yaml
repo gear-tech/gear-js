@@ -77,7 +77,7 @@ jobs:
 #      run: yarn test
 #        
     - name: Run frontend tests
-#      if: steps.check_file_changed.outputs.frontend_changed == 'True'
+      if: steps.check_file_changed.outputs.frontend_changed == 'True'
 #      working-directory: 'website/frontend'
       uses: borales/actions-yarn@v3.0.0
       with:
