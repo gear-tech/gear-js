@@ -68,19 +68,19 @@ jobs:
       with:
         cmd: install
 
-    - name: Build common package
-      run: yarn build:common
+#    - name: Build common package
+#      run: yarn build:common
 
-    - name: Run data-storage tests
-      if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
-      working-directory: 'website/data-storage'
-      run: yarn test
+#    - name: Run data-storage tests
+#      if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
+#      working-directory: 'website/data-storage'
+#      run: yarn test
         
     - name: Run frontend tests
       if: steps.check_file_changed.outputs.frontend_changed == 'True'
       working-directory: 'website/frontend'
       run: | 
-        npm install
+        yarn install
         yarn test
 
   wait-previous-run:
