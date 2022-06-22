@@ -3,7 +3,7 @@ import { initLogger, JSONRPC_ERRORS, kafkaLogger } from '@gear-js/common';
 import { Consumer, Kafka, KafkaMessage, Producer } from 'kafkajs';
 import config from '../config/config';
 import { DbService } from '../database/db';
-import { GearService } from '../domain/gear.service';
+import { GearService } from '../domain/gear/gear.service';
 
 const log = initLogger('KafkaConsumer');
 
@@ -62,7 +62,7 @@ export class KafkaConsumer {
     if (payload.genesis === this.gearService.getGenesisHash) {
       try {
         if (await this.dbService.possibleToTransfer(payload.address, payload.genesis)) {
-          result = { result: await this.gearService.transferBalance(payload.address, this.gearService.rootAccount) };
+          result = { result: await this.gearService.transferBalance(this.account, payload.address) };
         } else {
           result = { error: JSONRPC_ERRORS.TransferLimitReached.name };
         }

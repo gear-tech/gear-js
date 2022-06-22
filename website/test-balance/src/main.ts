@@ -2,7 +2,7 @@ import express from 'express';
 
 import config from './config/config';
 
-import { GearService } from './domain/gear.service';
+import { GearService } from './domain/gear/gear.service';
 import { KafkaConsumer } from './kafka/kafka.consumer';
 import { DbService } from './database/db';
 import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthcheck.router';
