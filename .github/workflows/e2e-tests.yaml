@@ -23,39 +23,63 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
+
   run-unit-tests:
-    name: Unit Tests for `data-storage`
     runs-on: ubuntu-latest
+    # Declare outputs for next steps
+    outputs:
+      dataStorage_changed: ${{ steps.check_file_changed.outputs.dataStorage_changed }}
+      frontend_changed: ${{ steps.check_file_changed.outputs.frontend_changed }}
     steps:
-      - name: Cancel previous workflow runs
-        uses: styfle/cancel-workflow-action@0.4.0
-        with:
-          access_token: ${{ github.token }}
+    - uses: actions/checkout@v2
+      with:
+        # Checkout as many commits as needed for the diff
+        fetch-depth: 2
+    - shell: pwsh
+      id: check_file_changed
+      run: |
+        # Diff HEAD with the previous commit
+        $diff = git diff --name-only HEAD^ HEAD
+        # Check if a file under dataStorage/ has changed (added, modified, deleted)
+        $SourceDiffDataStorage = $diff | Where-Object { $_ -match '^website/data-storage/' }
+        $HasDiffDataStorage = $SourceDiffDataStorage.Length -gt 0
+        # Check if a file under marketplace/ has changed (added, modified, deleted)
+        $SourceDiffFrontend = $diff | Where-Object { $_ -match '^website/frontend/' }
+        $HasDiffFrontend = $SourceDiffFrontend.Length -gt 0
+        # Set the output
+        Write-Host "::set-output name=dataStorage_changed::$HasDiffdataStorage"
+        Write-Host "::set-output name=frontend_changed::$HasDiffMarketplace"
+        
+    - name: Cancel previous workflow runs
+      uses: styfle/cancel-workflow-action@0.4.0
+      with:
+        access_token: ${{ github.token }}
 
-      - name: Load current commit
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref }}
+    - uses: c-hive/gha-yarn-cache@v2.1.0
 
-      - uses: c-hive/gha-yarn-cache@v2.1.0
+    - name: Setup NodeJS
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16
+        cache: yarn
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          cache: yarn
+    - name: Install dependencies
+      uses: borales/actions-yarn@v3.0.0
+      with:
+        cmd: install
 
-      - name: Install dependencies
-        uses: borales/actions-yarn@v3.0.0
-        with:
-          cmd: install
+    - name: Build common package
+      run: yarn build:common
 
-      - name: Build common package
-        run: yarn build:common
-
-      - name: Run tests
-        working-directory: 'website/data-storage'
-        run: yarn test
+    - name: Run data-storage tests
+      if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
+      working-directory: 'website/data-storage'
+      run: yarn test
+        
+    - name: Run frontend tests
+      if: steps.check_file_changed.outputs.frontend_changed == 'True'
+      working-directory: 'website/frontend'
+      run: yarn test
 
   wait-previous-run:
     needs: [run-unit-tests]
