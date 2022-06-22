@@ -1,0 +1,64 @@
+import { GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
+import { readFileSync } from 'fs';
+import { waitForInit } from './waitForInit';
+
+const pathToProgram = `./wasm/demo_meta.opt.wasm`;
+const pathToMeta = `./wasm/demo_meta.meta.wasm`;
+
+const main = async () => {
+  const api = await GearApi.create();
+
+  const alice = await GearKeyring.fromSuri('//Alice');
+
+  const code = readFileSync(pathToProgram);
+  const metaFile = readFileSync(pathToMeta);
+
+  const meta = await getWasmMetadata(metaFile);
+
+  const initPayload = {
+    amount: 255,
+    currency: 'GRT',
+  };
+
+  const gas = await api.program.calculateGas.init(
+    GearKeyring.decodeAddress(alice.address),
+    code,
+    initPayload,
+    0,
+    true,
+    meta,
+  );
+
+  const { programId } = api.program.submit({ code, initPayload, gasLimit: 10000 }, meta);
+
+  console.log(`ProgramID: ${programId}\n`);
+
+  waitForInit(api, programId)
+    .then(() => console.log('Program initialization was successful'))
+    .catch((error) => {
+      console.log(`Program initialization failed due to next error: ${error}\n`);
+    });
+
+  try {
+    return await new Promise((resolve, reject) => {
+      api.program.signAndSend(alice, ({ events, status }) => {
+        console.log(status.toHuman());
+        if (status.isFinalized) resolve(status.asFinalized);
+        events.forEach(({ event }) => {
+          if (event.method === 'ExtrinsicFailed') {
+            reject(api.getExtrinsicFailedError(event).docs.join('/n'));
+          }
+        });
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.log(error);
+    process.exit(1);
+  });
