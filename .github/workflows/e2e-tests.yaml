@@ -79,7 +79,9 @@ jobs:
     - name: Run frontend tests
       if: steps.check_file_changed.outputs.frontend_changed == 'True'
       working-directory: 'website/frontend'
-      run: yarn test
+      run: | 
+        yarn build
+        yarn test
 
   wait-previous-run:
     needs: [run-unit-tests]
