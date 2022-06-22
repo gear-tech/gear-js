@@ -12,3 +12,4 @@ RUN yarn build:common
 RUN yarn build:api-gateway
 
 CMD ["node", "website/api-gateway/dist/main"]
+#example
