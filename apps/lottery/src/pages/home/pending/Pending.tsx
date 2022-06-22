@@ -1,6 +1,5 @@
 import { Button } from '@gear-js/ui';
 import { Hex } from '@gear-js/api';
-import { SUBHEADING } from 'consts';
 import { Content } from 'components';
 import { isPending } from 'utils';
 import { Player } from 'types';
@@ -12,21 +11,22 @@ import { PlayerStatus } from './player-status';
 
 type Props = {
   isOwner: boolean;
-  startTime: string;
-  endTime: string;
-  status: string;
-  winner: Hex;
+  dashboard: { startTime: string; endTime: string; status: string; winner: Hex };
   countdown: string;
   players: Player[];
 };
 
-function Pending({ isOwner, startTime, endTime, status, winner, countdown, players }: Props) {
+const PENDING_SUBHEADING = 'You can see here the lottery status.';
+
+function Pending({ isOwner, dashboard, countdown, players }: Props) {
+  const { startTime, endTime, status, winner } = dashboard;
+
   const { account } = useAccount();
 
   const sendMessage = useLotteryMessage();
   const pickWinner = () => sendMessage({ PickWinner: null });
 
-  const subheading = winner ? `Uhhu! ${winner} is the winner!` : SUBHEADING.PENDING;
+  const subheading = winner ? `Uhhu! ${winner} is the winner!` : PENDING_SUBHEADING;
 
   const isPlayerStatus = !isPending(status) && !isOwner;
   const isWinner = winner === account?.address;

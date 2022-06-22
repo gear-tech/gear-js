@@ -10,7 +10,7 @@ const isHex = (value: unknown) => {
   return typeof value === 'string' && hexRegex.test(value);
 };
 
-const getUnix = (value: string) => +value.replaceAll(',', '');
+const getNumber = (value: string) => +value.replaceAll(',', '');
 const getDate = (value: number) => new Date(value).toLocaleString();
 
-export { isLoggedIn, isPending, isHex, getUnix, getDate };
+export { isLoggedIn, isPending, isHex, getNumber, getDate };
