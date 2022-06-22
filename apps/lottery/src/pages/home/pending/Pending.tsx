@@ -14,30 +14,35 @@ type Props = {
   dashboard: { startTime: string; endTime: string; status: string; winner: Hex };
   countdown: string;
   players: Player[];
+  setIsLotteryStarted: (value: boolean) => void;
 };
 
 const PENDING_SUBHEADING = 'You can see here the lottery status.';
 
-function Pending({ isOwner, dashboard, countdown, players }: Props) {
+function Pending({ isOwner, dashboard, countdown, players, setIsLotteryStarted }: Props) {
   const { startTime, endTime, status, winner } = dashboard;
 
   const { account } = useAccount();
 
   const sendMessage = useLotteryMessage();
   const pickWinner = () => sendMessage({ PickWinner: null });
+  const startLottery = () => setIsLotteryStarted(false);
 
   const subheading = winner ? `Uhhu! ${winner} is the winner!` : PENDING_SUBHEADING;
 
   const isPlayerStatus = !isPending(status) && !isOwner;
-  const isWinner = winner === account?.address;
+  const isPlayerWinner = winner === account?.address;
 
   return (
     <Content subheading={subheading}>
-      {isOwner && (
-        <Button text="Pick random winner" color="secondary" disabled={isPending(status)} onClick={pickWinner} />
-      )}
+      {isOwner &&
+        (winner ? (
+          <Button text="Start new lottery" onClick={startLottery} />
+        ) : (
+          <Button text="Pick random winner" color="secondary" disabled={isPending(status)} onClick={pickWinner} />
+        ))}
       <Dashboard startTime={startTime} endTime={endTime} status={status} winner={winner} countdown={countdown} />
-      {isPlayerStatus && <PlayerStatus isWinner={isWinner} />}
+      {isPlayerStatus && <PlayerStatus isWinner={isPlayerWinner} />}
       <Players list={players} />
     </Content>
   );

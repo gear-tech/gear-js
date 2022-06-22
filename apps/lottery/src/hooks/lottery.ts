@@ -7,13 +7,6 @@ function useLotteryStatus(endTime: number) {
   const [countdown, setCountdown] = useState('');
   const currentTime = Date.now();
 
-  const getStatus = () => {
-    if (endTime)
-      if (currentTime > endTime) {
-        return STATUS.FINISHED;
-      }
-    return STATUS.PENDING;
-  };
   const status = currentTime > endTime ? STATUS.FINISHED : STATUS.PENDING;
 
   useEffect(() => {
