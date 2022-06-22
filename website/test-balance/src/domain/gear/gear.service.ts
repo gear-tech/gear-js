@@ -2,9 +2,10 @@ import { GearApi, GearKeyring, TransferData } from '@gear-js/api';
 import { initLogger } from '@gear-js/common';
 import { BN } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { DbService } from '../database/db';
+import { DbService } from '../../database/db';
 
-import config from '../config/config';
+import config from '../../config/config';
+import { ResponseTransferBalance } from './types';
 
 const log = initLogger('GearService');
 
@@ -45,14 +46,21 @@ export class GearService {
     this.accountBalance = new BN(config.gear.accountBalance);
     this.balanceToTransfer = new BN(config.gear.balanceToTransfer);
     if (await this.isSmallAccountBalance()) {
-      await this.transferBalance(this.account.address, this.rootAccount, this.accountBalance);
+      await this.transferBalance(this.rootAccount, this.account.address, this.accountBalance);
     }
   }
 
-  public async transferBalance(to: string, from: KeyringPair = this.account, balance: BN = this.accountBalance) {
-    this.api.balance.transfer(to, balance);
-    await this.sendTransaction(from).catch((err) => log.error(err));
-
+  public async transferBalance(
+    from: KeyringPair = this.account,
+    to: string,
+    balance: BN = this.accountBalance,
+  ): Promise<ResponseTransferBalance> {
+    try {
+      await this.transfer(from, to, balance);
+    } catch (error) {
+      log.error(error);
+      return { error: `Transfer balance from ${from} to ${to} failed` };
+    }
     if (to !== this.account.address) {
       await this.dbService.setTransferDate(to, this.getGenesisHash);
     }
@@ -63,7 +71,12 @@ export class GearService {
     return this.api.genesisHash.toHex();
   }
 
-  private async sendTransaction(from: KeyringPair): Promise<TransferData> {
+  private async transfer(
+    from: KeyringPair = this.account,
+    to: string,
+    balance: BN = this.accountBalance,
+  ): Promise<TransferData> {
+    this.api.balance.transfer(to, balance);
     return new Promise((resolve, reject) => {
       this.api.balance.signAndSend(from, ({ events }) => {
         events.forEach(({ event: { method, data } }) => {
