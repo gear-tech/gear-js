@@ -2,14 +2,11 @@ import { Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { Content, Loader } from 'components';
 import { useLottery, useLotteryStatus } from 'hooks';
-import { getDate, getNumber, isPending } from 'utils';
-import { useEffect, useState } from 'react';
+import { getDate, getNumber } from 'utils';
+import { STATUS, SUBHEADING } from 'consts';
 import { OwnerStart } from './owner-start';
 import { PlayerStart } from './player-start';
 import { Pending } from './pending';
-
-const WAIT_SUBHEADING = 'Waiting for owner to start the lottery.';
-const FINISH_SUBHEADING = 'Lottery is finished. Waiting for owner to pick the winner.';
 
 function Home() {
   const { account } = useAccount();
@@ -17,42 +14,29 @@ function Home() {
   const { lottery, isLotteryRead } = useLottery();
   const { lotteryOwner, lotteryStartTime, lotteryDuration } = lottery || {};
 
-  const [isLotteryStarted, setIsLotteryStarted] = useState(false);
-
-  useEffect(() => {
-    setIsLotteryStarted(!!lottery?.lotteryStarted);
-  }, [lottery]);
-
   const cost = lottery?.participationCost || '';
   const players = lottery ? Object.values(lottery.players) : [];
   const isOwner = account?.decodedAddress === lotteryOwner;
   const isPlayer = players.some(({ playerId }) => playerId === account?.address);
+  const isParticipant = isPlayer || isOwner;
 
   const startTime = getNumber(lotteryStartTime || '');
   const duration = getNumber(lotteryDuration || '');
   const endTime = startTime + duration;
 
-  const { status, countdown } = useLotteryStatus(endTime);
-  const dashboard = { startTime: getDate(startTime), endTime: getDate(endTime), status, winner: '0x00' as Hex };
+  const { status, countdown, resetStatus } = useLotteryStatus(endTime);
+  const isLotteryStarted = status !== STATUS.AWAIT;
+  const isLotteryActive = status === STATUS.PENDING;
+  const dashboard = { startTime: getDate(startTime), endTime: getDate(endTime), status, winner: '' as Hex, countdown };
 
   return isLotteryRead ? (
     <>
-      {!isLotteryStarted && (isOwner ? <OwnerStart /> : <Content subheading={WAIT_SUBHEADING} />)}
-      {isLotteryStarted &&
-        (isPlayer || isOwner ? (
-          <Pending
-            isOwner={isOwner}
-            dashboard={dashboard}
-            countdown={countdown}
-            players={players}
-            setIsLotteryStarted={setIsLotteryStarted}
-          />
-        ) : (
-          <>
-            {isPending(status) && <PlayerStart cost={cost} />}
-            {!isPending(status) && <Content subheading={FINISH_SUBHEADING} />}
-          </>
-        ))}
+      {isLotteryStarted && isParticipant && (
+        <Pending isOwner={isOwner} dashboard={dashboard} players={players} onResetButtonClick={resetStatus} />
+      )}
+      {!isLotteryStarted && isOwner && <OwnerStart />}
+      {isLotteryActive && !isParticipant && <PlayerStart cost={cost} />}
+      {!isLotteryActive && !isOwner && <Content subheading={SUBHEADING.AWAIT} />}
     </>
   ) : (
     <Loader />

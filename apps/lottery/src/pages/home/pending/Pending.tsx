@@ -1,45 +1,39 @@
 import { Button } from '@gear-js/ui';
-import { Hex } from '@gear-js/api';
-import { Content } from 'components';
-import { isPending } from 'utils';
-import { Player } from 'types';
-import { useLotteryMessage } from 'hooks';
 import { useAccount } from '@gear-js/react-hooks';
+import { Content } from 'components';
+import { Player, DashboardProps } from 'types';
+import { useLotteryMessage } from 'hooks';
+import { STATUS, SUBHEADING } from 'consts';
 import { Dashboard } from './dashboard';
 import { Players } from './players';
 import { PlayerStatus } from './player-status';
 
 type Props = {
   isOwner: boolean;
-  dashboard: { startTime: string; endTime: string; status: string; winner: Hex };
-  countdown: string;
+  dashboard: DashboardProps;
   players: Player[];
-  setIsLotteryStarted: (value: boolean) => void;
+  onResetButtonClick: () => void;
 };
 
-const PENDING_SUBHEADING = 'You can see here the lottery status.';
-
-function Pending({ isOwner, dashboard, countdown, players, setIsLotteryStarted }: Props) {
-  const { startTime, endTime, status, winner } = dashboard;
-
+function Pending({ isOwner, dashboard, players, onResetButtonClick }: Props) {
   const { account } = useAccount();
 
   const sendMessage = useLotteryMessage();
   const pickWinner = () => sendMessage({ PickWinner: null });
-  const startLottery = () => setIsLotteryStarted(false);
 
-  const subheading = winner ? `Uhhu! ${winner} is the winner!` : PENDING_SUBHEADING;
-
-  const isPlayerStatus = !isPending(status) && !isOwner;
+  const { startTime, endTime, status, winner, countdown } = dashboard;
+  const subheading = winner ? `Uhhu! ${winner} is the winner!` : SUBHEADING.PENDING;
+  const isLotteryActive = status === STATUS.PENDING;
+  const isPlayerStatus = !isLotteryActive && !isOwner;
   const isPlayerWinner = winner === account?.address;
 
   return (
     <Content subheading={subheading}>
       {isOwner &&
         (winner ? (
-          <Button text="Start new lottery" onClick={startLottery} />
+          <Button text="Start new lottery" onClick={onResetButtonClick} />
         ) : (
-          <Button text="Pick random winner" color="secondary" disabled={isPending(status)} onClick={pickWinner} />
+          <Button text="Pick random winner" color="secondary" disabled={isLotteryActive} onClick={pickWinner} />
         ))}
       <Dashboard startTime={startTime} endTime={endTime} status={status} winner={winner} countdown={countdown} />
       {isPlayerStatus && <PlayerStatus isWinner={isPlayerWinner} />}

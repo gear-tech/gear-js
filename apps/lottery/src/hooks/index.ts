@@ -1,4 +1,4 @@
 import { useLottery, useLotteryMessage } from './api';
-import { useLotteryStatus } from './lottery';
+import { useLotteryStatus } from './status';
 
 export { useLottery, useLotteryMessage, useLotteryStatus };

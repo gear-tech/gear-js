@@ -1,17 +1,10 @@
 import clsx from 'clsx';
-import { isPending } from 'utils';
+import { STATUS } from 'consts';
+import { DashboardProps } from 'types';
 import styles from './Dashboard.module.scss';
 
-type Props = {
-  startTime: string;
-  endTime: string;
-  status: string;
-  winner: string | undefined;
-  countdown: string;
-};
-
-function Dashboard({ startTime, endTime, status, winner, countdown }: Props) {
-  const statusClassName = clsx(styles.status, isPending(status) && styles.pending);
+function Dashboard({ startTime, endTime, status, winner, countdown }: DashboardProps) {
+  const statusClassName = clsx(styles.status, status === STATUS.PENDING && styles.pending);
 
   return (
     <div>

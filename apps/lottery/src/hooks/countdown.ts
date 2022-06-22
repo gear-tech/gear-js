@@ -1,18 +1,14 @@
 import { STATUS } from 'consts';
 import { useEffect, useState } from 'react';
-import { isPending } from 'utils';
-import { getCountdown } from 'utils/countdown';
+import { getCountdown } from 'utils';
 
-function useLotteryStatus(endTime: number) {
+function useCountdown(status: string, endTime: number) {
   const [countdown, setCountdown] = useState('');
-  const currentTime = Date.now();
-
-  const status = currentTime > endTime ? STATUS.FINISHED : STATUS.PENDING;
 
   useEffect(() => {
     let intervalId: NodeJS.Timer | undefined;
 
-    if (isPending(status)) {
+    if (status === STATUS.PENDING) {
       intervalId = setInterval(() => setCountdown(getCountdown(endTime)), 1000);
     } else {
       setCountdown('');
@@ -24,7 +20,7 @@ function useLotteryStatus(endTime: number) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  return { countdown, status };
+  return countdown;
 }
 
-export { useLotteryStatus };
+export { useCountdown };

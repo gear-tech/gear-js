@@ -7,12 +7,18 @@ type Player = {
 
 type Lottery = {
   lotteryOwner: Hex;
-  lotteryStarted: boolean;
   lotteryStartTime: string;
   lotteryDuration: string;
   participationCost: string;
-  prizeFund: string;
   players: { [index: number]: Player };
 };
 
-export type { Player, Lottery };
+type DashboardProps = {
+  startTime: string;
+  endTime: string;
+  status: string;
+  winner: Hex;
+  countdown: string;
+};
+
+export type { Player, Lottery, DashboardProps };

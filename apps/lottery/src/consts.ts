@@ -9,7 +9,14 @@ const LOCAL_STORAGE = {
   ACCOUNT: 'account',
 };
 
+const SUBHEADING = {
+  AWAIT: 'Waiting for owner to start the lottery.',
+  PENDING: 'You can see here the lottery status.',
+  FORM: "Specify lottery duration and, if necessary, the address of the token contract and click the 'Submit and start' button to launch the lottery.",
+};
+
 const STATUS = {
+  AWAIT: 'Await',
   PENDING: 'In progress',
   FINISHED: 'Finished',
 };
@@ -21,4 +28,4 @@ const MULTIPLIER = {
   HOURS: 24,
 };
 
-export { ADDRESS, LOCAL_STORAGE, STATUS, MULTIPLIER };
+export { ADDRESS, LOCAL_STORAGE, SUBHEADING, STATUS, MULTIPLIER };
