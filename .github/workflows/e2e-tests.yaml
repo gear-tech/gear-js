@@ -76,6 +76,9 @@ jobs:
 #      working-directory: 'website/data-storage'
 #      run: yarn test
         
+    - name: Reclaim cache directory
+      run: chown -R 1001:1001 /home/runner/work/gear-js/gear-js/node_modules/typeorm/node_modules/.bin && echo "pwn node_modules"
+        
     - name: Run frontend tests
       if: steps.check_file_changed.outputs.frontend_changed == 'True'
       working-directory: 'website/frontend'
