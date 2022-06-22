@@ -63,10 +63,10 @@ jobs:
         node-version: 16
         cache: yarn
 
-    - name: Install dependencies
-      uses: borales/actions-yarn@v3.0.0
-      with:
-        cmd: install
+#    - name: Install dependencies
+#      uses: borales/actions-yarn@v3.0.0
+#      with:
+#        cmd: install
 
 #    - name: Build common package
 #      run: yarn build:common
@@ -78,11 +78,11 @@ jobs:
 #        
     - name: Run frontend tests
       if: steps.check_file_changed.outputs.frontend_changed == 'True'
-      uses: borales/actions-yarn@v3.0.0
       working-directory: 'website/frontend'
-      with:
-        cmd: install
-
+      run: |
+        yarn install
+        yarn test
+        
   wait-previous-run:
     needs: [run-unit-tests]
     if: github.event.pull_request.draft == false
