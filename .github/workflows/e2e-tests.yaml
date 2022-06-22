@@ -55,27 +55,27 @@ jobs:
       with:
         access_token: ${{ github.token }}
 
-#    - uses: c-hive/gha-yarn-cache@v2.1.0
+    - uses: c-hive/gha-yarn-cache@v2.1.0
 
     - name: Setup NodeJS
       uses: actions/setup-node@v2
       with:
         node-version: 16
-#        cache: yarn
+        cache: yarn
 
-#    - name: Install dependencies
-#      uses: borales/actions-yarn@v3.0.0
-#      with:
-#        cmd: install
+    - name: Install dependencies
+      uses: borales/actions-yarn@v3.0.0
+      with:
+        cmd: install
 
-#    - name: Build common package
-#      run: yarn build:common
+    - name: Build common package
+      run: yarn build:common
 
-#    - name: Run data-storage tests
-#      if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
-#      working-directory: 'website/data-storage'
-#      run: yarn test
-#        
+    - name: Run data-storage tests
+      if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
+      working-directory: 'website/data-storage'
+      run: yarn test
+       
     - name: Run frontend tests
       if: steps.check_file_changed.outputs.frontend_changed == 'True'
       working-directory: 'website/frontend'
