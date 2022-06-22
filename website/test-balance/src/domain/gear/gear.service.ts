@@ -49,9 +49,9 @@ export class GearService {
     }
   }
 
-  public async transferBalance(to: string, from: KeyringPair, balance = this.accountBalance) {
-    await this.api.balance.transfer(to, balance);
-    await this.transferData(from).catch((err) => log.error(err));
+  public async transferBalance(to: string, from: KeyringPair = this.account, balance: BN = this.accountBalance) {
+    this.api.balance.transfer(to, balance);
+    await this.sendTransaction(from).catch((err) => log.error(err));
 
     if (to !== this.account.address) {
       await this.dbService.setTransferDate(to, this.getGenesisHash);
@@ -63,7 +63,7 @@ export class GearService {
     return this.api.genesisHash.toHex();
   }
 
-  private async transferData(from: KeyringPair): Promise<TransferData> {
+  private async sendTransaction(from: KeyringPair): Promise<TransferData> {
     return new Promise((resolve, reject) => {
       this.api.balance.signAndSend(from, ({ events }) => {
         events.forEach(({ event: { method, data } }) => {
