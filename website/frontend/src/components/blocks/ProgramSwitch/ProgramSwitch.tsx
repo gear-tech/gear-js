@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState, VFC } from 'react';
+import { GearKeyring } from '@gear-js/api';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { Button } from '@gear-js/ui';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import './ProgramSwitch.scss';
 import { routes } from 'routes';
-import { GEAR_BALANCE_TRANSFER_VALUE, SWITCH_PAGE_TYPES, RPC_METHODS, HCAPTCHA_SITE_KEY } from 'consts';
+import { SWITCH_PAGE_TYPES, RPC_METHODS, HCAPTCHA_SITE_KEY } from 'consts';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { isDevChain } from 'helpers';
+import { transferBalance } from 'services/ApiService';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 
 type Props = {
@@ -18,20 +20,20 @@ type Props = {
 export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const { api } = useApi();
   const alert = useAlert();
-  const { account: currentAccount } = useAccount();
+  const { account } = useAccount();
 
   const [captchaToken, setCaptchaToken] = useState('');
   const captchaRef = useRef<HCaptcha>(null);
 
   const handleTransferBalance = async () => {
     try {
-      if (!currentAccount) {
+      if (!account) {
         throw new Error(`WALLET NOT CONNECTED`);
       }
 
       const apiRequest = new ServerRPCRequestService();
       const response = await apiRequest.callRPC(RPC_METHODS.GET_TEST_BALANCE, {
-        address: `${currentAccount.address}`,
+        address: `${account.address}`,
         token: captchaToken,
       });
 
@@ -58,17 +60,19 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
     }
   };
 
-  const handleTransferBalanceFromAlice = () => {
+  const handleTransferBalanceFromAlice = async () => {
     try {
-      if (!currentAccount) {
-        throw new Error(`WALLET NOT CONNECTED`);
+      if (!account) {
+        throw new Error('WALLET NOT CONNECTED');
       }
 
       if (api) {
-        api.balance.transferFromAlice(currentAccount.address, GEAR_BALANCE_TRANSFER_VALUE);
+        const alice = await GearKeyring.fromSuri('//Alice');
+
+        transferBalance(api, account.address, alice, alert);
       }
     } catch (error) {
-      alert.error(`${error}`);
+      alert.error(String(error));
     }
   };
 
@@ -113,7 +117,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
             Messages
           </Link>
         </div>
-        {currentAccount && (
+        {account && (
           <>
             <Button
               className="test-balance-button"
