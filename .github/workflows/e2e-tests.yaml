@@ -80,7 +80,7 @@ jobs:
       if: steps.check_file_changed.outputs.frontend_changed == 'True'
       working-directory: 'website/frontend'
       run: | 
-        yarn install
+        npm install
         yarn test
 
   wait-previous-run:
