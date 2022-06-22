@@ -50,9 +50,8 @@ export class GearService {
   }
 
   public async transferBalance(to: string, from: KeyringPair, balance = this.accountBalance) {
-    await Promise.all([this.api.balance.transfer(to, balance), this.transferData(from)]).catch((error) =>
-      log.error(error),
-    );
+    await this.api.balance.transfer(to, balance);
+    await this.transferData(from).catch((err) => log.error(err));
 
     if (to !== this.account.address) {
       await this.dbService.setTransferDate(to, this.getGenesisHash);
