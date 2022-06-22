@@ -240,7 +240,9 @@ export const addMetadata = async (
 export const subscribeToEvents = (alert: AlertContainerFactory) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
 
-  nodeApi.subscribeToUserMessageSentEvents(async ({ data: { source, destination, reply, payload } }) => {
+  nodeApi.subscribeToUserMessageSentEvents(async ({ data: { message } }) => {
+    const { source, destination, reply, payload } = message;
+
     if (destination.toHex() === filterKey) {
       let meta = null;
       let decodedPayload: any;
@@ -265,17 +267,22 @@ export const subscribeToEvents = (alert: AlertContainerFactory) => {
       }
 
       // TODO: add payload parsing
-      const message = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
+      const alertMessage = `LOG from program\n ${source.toHex()}\n ${
+        decodedPayload ? `Response: ${decodedPayload}` : ''
+      }`;
+
       const isSuccess = (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone;
+
       const showAlert = isSuccess ? alert.success : alert.error;
 
-      showAlert(message);
+      showAlert(alertMessage);
     }
   });
 
   nodeApi.subscribeToTransferEvents(({ data: { from, to, value } }) => {
     if (to.toHex() === filterKey) {
       const message = `TRANSFER BALANCE\n FROM:${GearKeyring.encodeAddress(from.toHex())}\n VALUE:${value.toString()}`;
+
       alert.info(message);
     }
   });
