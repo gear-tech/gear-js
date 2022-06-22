@@ -81,9 +81,7 @@ jobs:
       working-directory: 'website/frontend'
       uses: borales/actions-yarn@v3.0.0
       with:
-        cmd: |
-          install
-          test
+        cmd: install
 
   wait-previous-run:
     needs: [run-unit-tests]
