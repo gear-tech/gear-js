@@ -46,13 +46,13 @@ export class GearService {
     this.accountBalance = new BN(config.gear.accountBalance);
     this.balanceToTransfer = new BN(config.gear.balanceToTransfer);
     if (await this.isSmallAccountBalance()) {
-      await this.transferBalance(this.rootAccount, this.account.address, this.accountBalance);
+      await this.transferBalance(this.account.address, this.rootAccount, this.accountBalance);
     }
   }
 
   public async transferBalance(
-    from: KeyringPair = this.account,
     to: string,
+    from: KeyringPair = this.account,
     balance: BN = this.accountBalance,
   ): Promise<ResponseTransferBalance> {
     try {

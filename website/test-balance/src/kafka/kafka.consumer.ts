@@ -62,7 +62,7 @@ export class KafkaConsumer {
     if (payload.genesis === this.gearService.getGenesisHash) {
       try {
         if (await this.dbService.possibleToTransfer(payload.address, payload.genesis)) {
-          result = { result: await this.gearService.transferBalance(this.account, payload.address) };
+          result = { result: await this.gearService.transferBalance(payload.address) };
         } else {
           result = { error: JSONRPC_ERRORS.TransferLimitReached.name };
         }
