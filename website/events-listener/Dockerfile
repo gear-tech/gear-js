@@ -10,4 +10,4 @@ COPY ./website/events-listener website/events-listener
 RUN yarn install
 RUN yarn build:common
 RUN yarn build:events-listener
-CMD ["node", "--experimental-specifier-resolution=node", "website/events-listener/dist/index.js"]
+CMD ["node", "--experimental-specifier-resolution=node", "website/events-listener/dist/main.ts"]
