@@ -21,11 +21,7 @@ const MetaData = ({ metadata }: Props) => {
         if (value && key !== 'types' && key !== 'title') {
           const type = createPayloadTypeStructure(value, decodedTypes, true);
 
-          items.push({
-            label: key,
-            value,
-            type,
-          });
+          items.push(<MetaField key={key} type={type} label={key} value={value} />);
         }
       }
     }
@@ -33,13 +29,7 @@ const MetaData = ({ metadata }: Props) => {
     return items;
   }, [metadata]);
 
-  return (
-    <div className={styles.fields}>
-      {metaFields.map((item) => (
-        <MetaField key={item.label} {...item} />
-      ))}
-    </div>
-  );
+  return <div className={styles.fields}>{metaFields}</div>;
 };
 
 export { MetaData };
