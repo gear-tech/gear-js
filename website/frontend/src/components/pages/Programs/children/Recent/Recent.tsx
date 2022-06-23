@@ -18,11 +18,13 @@ const Recent = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const page = Number(searchParams.get(URL_PARAMS.PAGE) ?? 1);
-  const query = searchParams.get(URL_PARAMS.QUERY) ?? '';
-
   const [programs, setPrograms] = useState<ProgramModel[]>([]);
   const [programsCount, setProgramsCount] = useState(0);
+
+  const page = Number(searchParams.get(URL_PARAMS.PAGE) ?? 1);
+  const query = searchParams.get(URL_PARAMS.QUERY) ?? '';
+  const address = account?.address;
+  const decodedAddress = account?.decodedAddress;
 
   useEffect(() => {
     if (isAccountLoaded.current) {
@@ -34,16 +36,16 @@ const Recent = () => {
     }
 
     return () => {
-      isAccountLoaded.current = Boolean(account);
+      isAccountLoaded.current = Boolean(address);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account]);
+  }, [address]);
 
   useEffect(() => {
-    if (account) {
+    if (decodedAddress) {
       const params = {
         query,
-        owner: account.decodedAddress,
+        owner: decodedAddress,
         limit: INITIAL_LIMIT_BY_PAGE,
         offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
       };
@@ -53,7 +55,7 @@ const Recent = () => {
         setProgramsCount(result.count);
       });
     }
-  }, [page, query, account]);
+  }, [page, query, decodedAddress]);
 
   return (
     <div>

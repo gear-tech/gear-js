@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import clsx from 'clsx';
 import { Link, generatePath } from 'react-router-dom';
 import { Button } from '@gear-js/ui';
@@ -17,7 +18,7 @@ type Props = {
   isMetaLinkActive?: boolean;
 };
 
-const UserProgram = ({ program, isMetaLinkActive = true }: Props) => {
+const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
   const alert = useAlert();
 
   const { id, name, initStatus, timestamp } = program;
@@ -63,6 +64,6 @@ const UserProgram = ({ program, isMetaLinkActive = true }: Props) => {
       </div>
     </div>
   );
-};
+});
 
 export { UserProgram };

@@ -17,11 +17,13 @@ const Messages = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const page = Number(searchParams.get(URL_PARAMS.PAGE) ?? 1);
-  const query = searchParams.get(URL_PARAMS.QUERY) ?? '';
-
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [messagesCount, setMessagesCount] = useState(0);
+
+  const page = Number(searchParams.get(URL_PARAMS.PAGE) ?? 1);
+  const query = searchParams.get(URL_PARAMS.QUERY) ?? '';
+  const address = account?.address;
+  const decodedAddress = account?.decodedAddress;
 
   useEffect(() => {
     if (isAccountLoaded.current) {
@@ -33,15 +35,15 @@ const Messages = () => {
     }
 
     return () => {
-      isAccountLoaded.current = Boolean(account);
+      isAccountLoaded.current = Boolean(address);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account]);
+  }, [address]);
 
   useEffect(() => {
-    if (account) {
+    if (decodedAddress) {
       const messageParams = {
-        destination: account.decodedAddress,
+        destination: decodedAddress,
         limit: INITIAL_LIMIT_BY_PAGE,
         offset: (page - 1) * INITIAL_LIMIT_BY_PAGE,
         query,
@@ -52,7 +54,7 @@ const Messages = () => {
         setMessagesCount(result.count);
       });
     }
-  }, [page, query, account]);
+  }, [page, query, decodedAddress]);
 
   return (
     <div>
