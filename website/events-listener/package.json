@@ -2,25 +2,23 @@
   "name": "@gear-js/event-listener",
   "version": "0.1.2",
   "description": "",
-  "main": "src/index.ts",
-  "type": "module",
+  "main": "main.js",
   "scripts": {
-    "start": "node --experimental-specifier-resolution=node dist/index.js",
-    "start:dev": "clear && ts-node-dev src/index.ts",
-    "build": "tsc"
+    "start": "node --experimental-specifier-resolution=node dist/main.js",
+    "dev": "nodemon src/main.ts",
+    "build": "tsc -p tsconfig.json"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "^0.20.0",
+    "@gear-js/api": "^0.22.1",
     "@gear-js/common": "workspace:^",
-    "@polkadot/api": "^8.7.1",
+    "@polkadot/api": "^8.9.1",
     "avsc": "^5.7.3",
     "chalk": "^4.1.2",
     "dotenv": "^10.0.0",
     "express": "^4.18.1",
-    "kafkajs": "^1.15.0",
-    "winston": "^3.3.3"
+    "kafkajs": "^1.15.0"
   },
   "devDependencies": {
     "@types/express": "4.17.13",
@@ -28,6 +26,12 @@
     "nodemon": "2.0.16",
     "ts-node": "10.8.1",
     "ts-node-dev": "1.1.8",
-    "typescript": "4.7.3"
+    "typescript": "4.7.3",
+    "@types/nodemon": "1.19.1",
+    "@typescript-eslint/eslint-plugin": "4.33.0",
+    "@typescript-eslint/parser": "4.33.0",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "3.4.1"
   }
 }

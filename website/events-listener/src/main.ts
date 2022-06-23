@@ -2,7 +2,7 @@ import { GearApi } from '@gear-js/api';
 
 import { listen } from './events';
 import { KafkaProducer } from './producer';
-import config from './config';
+import config from './config/configuration';
 import { restartIfNeeded, setRestartNeeded } from './lifecycle';
 import { changeStatus } from './healthcheck';
 import { eventListenerLogger } from './common/event-listener.logger';

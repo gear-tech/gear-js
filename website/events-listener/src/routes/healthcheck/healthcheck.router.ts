@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import config from './config';
+import config from './config/configuration';
 
 const status = {
   kafka: false,
