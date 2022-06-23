@@ -19,4 +19,9 @@ interface IMessagesDispatchedData {
   statuses: { [key: string]: 'Success' | 'Failure' };
 }
 
-export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData };
+interface ICodeChangedData {
+  id: string;
+  change: string;
+}
+
+export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData, ICodeChangedData };
