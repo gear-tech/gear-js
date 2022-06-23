@@ -9,9 +9,13 @@ type Props = {
 
 function PlayerStart({ cost }: Props) {
   const sendMessage = useLotteryMessage();
-  const enter = () => sendMessage({ Enter: getNumber(cost) });
 
   const subheading = `Cost of participation is ${cost}. This amount will be withdrawn from your balance. Click "Enter" if you want to proceed.`;
+
+  const enter = () => {
+    const costNumber = getNumber(cost);
+    sendMessage({ Enter: costNumber }, { value: costNumber });
+  };
 
   return (
     <Content subheading={subheading}>

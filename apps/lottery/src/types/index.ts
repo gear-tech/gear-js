@@ -10,6 +10,7 @@ type Lottery = {
   lotteryStartTime: string;
   lotteryDuration: string;
   participationCost: string;
+  prizeFund: string;
   players: { [index: number]: Player };
 };
 

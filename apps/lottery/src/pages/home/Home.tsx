@@ -1,7 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { Content, Loader } from 'components';
-import { useLottery, useLotteryStatus } from 'hooks';
+import { useFormOpen, useLottery, useLotteryStatus } from 'hooks';
 import { getDate, getNumber } from 'utils';
 import { STATUS, SUBHEADING } from 'consts';
 import { OwnerStart } from './owner-start';
@@ -15,29 +15,42 @@ function Home() {
   const { lotteryOwner, lotteryStartTime, lotteryDuration } = lottery || {};
 
   const cost = lottery?.participationCost || '';
+  const prizeFund = lottery?.prizeFund || '';
   const players = lottery ? Object.values(lottery.players) : [];
   const isOwner = account?.decodedAddress === lotteryOwner;
-  const isPlayer = players.some(({ playerId }) => playerId === account?.address);
+  const isPlayer = players.some(({ playerId }) => playerId === account?.decodedAddress);
   const isParticipant = isPlayer || isOwner;
 
   const startTime = getNumber(lotteryStartTime || '');
   const duration = getNumber(lotteryDuration || '');
   const endTime = startTime + duration;
 
-  const { status, countdown, resetStatus } = useLotteryStatus(endTime);
+  const { status, countdown } = useLotteryStatus(endTime);
   const isLotteryStarted = status !== STATUS.AWAIT;
   const isLotteryActive = status === STATUS.PENDING;
   const dashboard = { startTime: getDate(startTime), endTime: getDate(endTime), status, winner: '' as Hex, countdown };
 
+  const { isFormOpen, openForm } = useFormOpen(isLotteryStarted, isOwner);
+
+  // eslint-disable-next-line no-nested-ternary
   return isLotteryRead ? (
-    <>
-      {isLotteryStarted && isParticipant && (
-        <Pending isOwner={isOwner} dashboard={dashboard} players={players} onResetButtonClick={resetStatus} />
-      )}
-      {!isLotteryStarted && isOwner && <OwnerStart />}
-      {isLotteryActive && !isParticipant && <PlayerStart cost={cost} />}
-      {!isLotteryActive && !isOwner && <Content subheading={SUBHEADING.AWAIT} />}
-    </>
+    isFormOpen ? (
+      <OwnerStart />
+    ) : (
+      <>
+        {isLotteryStarted && isParticipant && (
+          <Pending
+            isOwner={isOwner}
+            dashboard={dashboard}
+            prizeFund={prizeFund}
+            players={players}
+            onResetButtonClick={openForm}
+          />
+        )}
+        {isLotteryActive && !isParticipant && <PlayerStart cost={cost} />}
+        {!isLotteryActive && !isOwner && <Content subheading={SUBHEADING.AWAIT} />}
+      </>
+    )
   ) : (
     <Loader />
   );
