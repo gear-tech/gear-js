@@ -29,7 +29,7 @@ const main = async () => {
     meta,
   );
 
-  const { programId } = api.program.submit({ code, initPayload, gasLimit: 10000 }, meta);
+  const { programId } = api.program.submit({ code, initPayload, gasLimit: gas.min_limit }, meta);
 
   console.log(`ProgramID: ${programId}\n`);
 

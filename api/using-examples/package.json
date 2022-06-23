@@ -4,7 +4,8 @@
   "description": "To run examples run",
   "main": "meta.js",
   "scripts": {
-    "upload": "ts-node src/upload-program/uploadProgram.ts"
+    "upload": "ts-node src/upload-program/uploadProgram.ts",
+    "sendMessage": "ts-node src/send-message/sendMessage.ts"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +13,7 @@
     "@gear-js/api": "0.22.1",
     "@polkadot/api": "8.9.1",
     "dotenv": "^16.0.0",
+    "rxjs": "^7.5.5",
     "ts-node": "^10.4.0"
   }
 }
