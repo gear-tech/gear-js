@@ -1,12 +1,12 @@
 import {
   CodeChangedData,
-  IGearEvent,
   MessageEnqueuedData,
   MessagesDispatchedData,
   ProgramChangedData,
   UserMessageSentData,
 } from '@gear-js/api';
 import {
+  GEAR_EVENT,
   ICodeChangedData,
   IMessage,
   IMessageEnqueuedData,
@@ -81,19 +81,19 @@ function dataBaseWipedHandler(): NewEventData<Keys.DatabaseWiped, unknown> {
 }
 
 const handleEvent = (
-  method: keyof IGearEvent | 'DatabaseWiped',
+  method: GEAR_EVENT | 'DatabaseWiped',
   data: GenericEventData,
 ): { key: Keys; value: any } | null => {
   switch (method) {
-    case 'MessageEnqueued':
+    case GEAR_EVENT.MESSAGE_ENQUEUED:
       return messageEnqueuedHandler(data as MessageEnqueuedData);
-    case 'UserMessageSent':
+    case GEAR_EVENT.USER_MESSAGE_SENT:
       return userMessageSentHandler(data as UserMessageSentData);
-    case 'ProgramChanged':
+    case GEAR_EVENT.PROGRAM_CHANGED:
       return programChangedHandler(data as ProgramChangedData);
-    case 'MessagesDispatched':
+    case GEAR_EVENT.MESSAGES_DISPATCHED:
       return messagesDispatchedHandler(data as MessagesDispatchedData);
-    case 'CodeChanged':
+    case GEAR_EVENT.CODE_CHANGED:
       return codeChangedHandler(data as CodeChangedData);
     case 'DatabaseWiped':
       return dataBaseWipedHandler();

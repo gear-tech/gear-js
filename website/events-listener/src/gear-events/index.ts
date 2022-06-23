@@ -3,6 +3,7 @@ import { GenericEventData } from '@polkadot/types';
 
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { handleEvent } from './event-handlers';
+import { GEAR_EVENT } from '@gear-js/common';
 
 export const listen = (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) =>
   api.query.system.events(async (events) => {
@@ -16,7 +17,7 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
 
     events.forEach(async ({ event: { data, method } }) => {
       try {
-        const eventData = handleEvent(method as keyof IGearEvent, data as GenericEventData);
+        const eventData = handleEvent(method as GEAR_EVENT | 'DatabaseWiped', data as GenericEventData);
         eventData !== null && callback({ key: eventData.key, value: { ...eventData.value, ...base } });
       } catch (error) {
         eventListenerLogger.error({ method, data: data.toHuman() });
