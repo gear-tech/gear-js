@@ -1,14 +1,19 @@
 import { GearApi } from '@gear-js/api';
+import express from 'express';
 
-import { listen } from './events';
-import { KafkaProducer } from './producer';
+import { KafkaProducer } from './kafka/producer';
 import config from './config/configuration';
 import { restartIfNeeded, setRestartNeeded } from './lifecycle';
-import { changeStatus } from './healthcheck';
 import { eventListenerLogger } from './common/event-listener.logger';
+import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthcheck.router';
+import { listen } from './gear-events';
 
 const main = async () => {
   while (true) {
+    const app = express();
+
+    app.use('/health', healthcheckRouter);
+
     eventListenerLogger.info(`Starting...`);
     const api = await GearApi.create({ providerAddress: config.api.provider, throwOnConnect: true });
     changeStatus('ws');
@@ -31,6 +36,9 @@ const main = async () => {
     });
 
     eventListenerLogger.info(`Started`);
+    app.listen(config.healthcheck.port, () => {
+      eventListenerLogger.info(`Healthckech server is running on port ${config.healthcheck.port} 🚀`);
+    });
 
     await restartIfNeeded;
   }

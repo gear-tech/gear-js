@@ -1,5 +1,4 @@
-import express, { Request, Response } from 'express';
-import config from './config/configuration';
+import express, { Request, Response, Router } from 'express';
 
 const status = {
   kafka: false,
@@ -10,22 +9,17 @@ export const changeStatus = (service: 'kafka' | 'ws') => {
   status[service] = !status[service];
 };
 
-const app = express();
+export const healthcheckRouter = Router({});
 
-app.get('/health/kafka', (req: Request, res: Response) => {
-  res.status(status.kafka ? 200 : 500).json({ connected: status.kafka });
-});
-
-app.get('/health/ws', (req: Request, res: Response) => {
-  res.status(status.ws ? 200 : 500).json({ connected: status.ws });
-});
-
-app.get('/health', (req: Request, res: Response) => {
-  const { kafka, ws } = status;
-  const allTogether = kafka && ws;
-  res.status(allTogether ? 200 : 500).json({ connected: status });
-});
-
-app.listen(config.healthcheck.port, () => {
-  console.log(`Healthckech server is running on port ${config.healthcheck.port} 🚀`);
-});
+healthcheckRouter
+  .get('/kafka', (req: Request, res: Response) => {
+    res.status(status.kafka ? 200 : 500).json({ connected: status.kafka });
+  })
+  .get('/ws', (req: Request, res: Response) => {
+    res.status(status.ws ? 200 : 500).json({ connected: status.ws });
+  })
+  .get('', (req: Request, res: Response) => {
+    const { kafka, ws } = status;
+    const allTogether = kafka && ws;
+    res.status(allTogether ? 200 : 500).json({ connected: status });
+  });
