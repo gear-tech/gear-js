@@ -11,9 +11,9 @@ pub struct SomeEvent {
 
 #[derive(TypeInfo, Decode, Encode, Clone)]
 pub struct Participant {
-    pub id: i32,
+    pub id: u32,
     pub name: String,
-    pub age: i8,
+    pub age: u8,
     pub public_key: ActorId,
 }
 
@@ -25,8 +25,8 @@ pub struct State {
 
 #[derive(TypeInfo, Decode)]
 pub enum Action {
-    AddParticipant { name: String, age: i8 },
-    RemoveParticipant(i32),
+    AddParticipant { name: String, age: u8 },
+    RemoveParticipant(u32),
 }
 
 static mut STATE: State = State {
@@ -53,7 +53,7 @@ unsafe extern "C" fn handle() {
         Action::AddParticipant { name, age } => {
             let number_of_participant = STATE.participants.len();
             STATE.participants.push(Participant {
-                id: number_of_participant as i32,
+                id: number_of_participant as u32,
                 name,
                 age,
                 public_key: msg::source(),
@@ -75,7 +75,7 @@ pub enum ReadStateAction {
     AllParticipants,
     NumberOfParticipants,
     AllState,
-    ParticipantById(i32),
+    ParticipantById(u32),
     ParticipantByPubKey(ActorId),
 }
 
@@ -83,7 +83,7 @@ pub enum ReadStateAction {
 pub enum StateOutput {
     AllParticipants(Vec<Participant>),
     AllState(State),
-    NumberOfParticipants(i32),
+    NumberOfParticipants(u32),
     Participant(Option<Participant>),
 }
 
@@ -96,7 +96,7 @@ unsafe extern "C" fn meta_state() -> *mut [i32; 2] {
         }
         ReadStateAction::AllState => StateOutput::AllState(STATE.clone()),
         ReadStateAction::NumberOfParticipants => {
-            StateOutput::NumberOfParticipants(STATE.participants.len() as i32)
+            StateOutput::NumberOfParticipants(STATE.participants.len() as u32)
         }
         ReadStateAction::ParticipantById(id) => {
             let index = &STATE.participants.iter().position(|p| p.id == id);

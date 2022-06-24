@@ -9,14 +9,11 @@ const main = async () => {
 
   const metaFile = readFileSync(PATH_TO_META);
 
-  const payload = {
-    decimal: 1,
-    hex: [1],
-  };
+  const payload = 'AllParticipants';
 
   const state = await api.programState.read(programId, metaFile, payload);
 
-  console.log(state.toHuman());
+  console.log(JSON.stringify(state.toHuman(), undefined, 2));
 };
 
 main()

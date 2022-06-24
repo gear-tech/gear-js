@@ -16,8 +16,8 @@ const main = async () => {
 
   const payload = {
     AddParticipant: {
-      name: 'mithriy',
-      age: 28,
+      name: 'alice',
+      age: 50,
     },
   };
 
