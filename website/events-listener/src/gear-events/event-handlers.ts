@@ -80,10 +80,7 @@ function dataBaseWipedHandler(): NewEventData<Keys.DatabaseWiped, unknown> {
   return { key: Keys.DatabaseWiped, value: {} };
 }
 
-const handleEvent = (
-  method: GEAR_EVENT | 'DatabaseWiped',
-  data: GenericEventData,
-): { key: Keys; value: any } | null => {
+const handleEvent = (method: GEAR_EVENT, data: GenericEventData): { key: Keys; value: any } | null => {
   switch (method) {
     case GEAR_EVENT.MESSAGE_ENQUEUED:
       return messageEnqueuedHandler(data as MessageEnqueuedData);
@@ -95,7 +92,7 @@ const handleEvent = (
       return messagesDispatchedHandler(data as MessagesDispatchedData);
     case GEAR_EVENT.CODE_CHANGED:
       return codeChangedHandler(data as CodeChangedData);
-    case 'DatabaseWiped':
+    case GEAR_EVENT.DATABASE_WIPED:
       return dataBaseWipedHandler();
     default:
       return null;
