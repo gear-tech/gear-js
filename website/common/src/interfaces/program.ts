@@ -21,4 +21,9 @@ interface IProgramChangedData {
   isActive: boolean;
 }
 
-export { InitStatus, IProgram, IProgramChangedData };
+interface ICodeChangedData {
+  id: string;
+  change: string;
+}
+
+export { InitStatus, IProgram, IProgramChangedData, ICodeChangedData };
