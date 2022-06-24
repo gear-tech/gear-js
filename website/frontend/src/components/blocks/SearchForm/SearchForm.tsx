@@ -1,72 +1,53 @@
-import { ChangeEvent, useState, FormEvent } from 'react';
-import { Button, Input, buttonStyles } from '@gear-js/ui';
-import { Link, useSearchParams } from 'react-router-dom';
-import searchIcon from 'assets/images/search.svg';
-import { URL_PARAMS } from 'consts';
-import styles from './SearchForm.module.scss';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import clsx from 'clsx';
+import { Button, Input, buttonStyles } from '@gear-js/ui';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+
+import styles from './SearchForm.module.scss';
+
+import { URL_PARAMS } from 'consts';
+import searchIcon from 'assets/images/search.svg';
 
 type Props = {
   placeholder: string;
 };
 
 const SearchForm = ({ placeholder }: Props) => {
-  const linkClasses = clsx(buttonStyles.button, buttonStyles.secondary, buttonStyles.small);
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [value, setValue] = useState('');
 
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setValue(target.value);
-  };
-
-  const setUrlParams = () => {
-    searchParams.set(URL_PARAMS.PAGE, String(1));
-    searchParams.set(URL_PARAMS.QUERY, value);
-  };
-
-  const getTo = () => {
-    setUrlParams();
-
-    return { search: searchParams.toString() };
-  };
-
-  const resetSearch = () => {
-    setValue('');
-    searchParams.delete(URL_PARAMS.QUERY);
-    setSearchParams(searchParams);
-  };
+  const [searchValue, setSearchValue] = useState(searchParams.get(URL_PARAMS.QUERY) ?? '');
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    setUrlParams();
+    navigate({ search: searchParams.toString() });
+  };
+
+  const handleReset = () => {
+    setSearchValue('');
+    searchParams.delete(URL_PARAMS.QUERY);
     setSearchParams(searchParams);
   };
 
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const currentValue = event.target.value;
+
+    setSearchValue(currentValue);
+    searchParams.set(URL_PARAMS.PAGE, String(1));
+    searchParams.set(URL_PARAMS.QUERY, currentValue);
+  };
+
+  const linkClasses = clsx(buttonStyles.button, buttonStyles.secondary, buttonStyles.small);
+
   return (
-    <form onSubmit={handleSubmit}>
-      <div className={styles.searchForm}>
-        <Input
-          icon={searchIcon}
-          className={styles.inputWrapper}
-          type="text"
-          placeholder={placeholder}
-          name={URL_PARAMS.QUERY}
-          value={value}
-          onChange={handleChange}
-        />
-        <Link className={linkClasses} to={getTo()}>
-          <img className={buttonStyles.icon} src={searchIcon} alt="search icon" />
-          Search
-        </Link>
-        <Button
-          className={styles.resetButton}
-          text="Reset search"
-          type="reset"
-          color="transparent"
-          onClick={resetSearch}
-        />
-      </div>
+    <form className={styles.searchForm} onReset={handleReset} onSubmit={handleSubmit}>
+      <Input icon={searchIcon} value={searchValue} placeholder={placeholder} onChange={handleChange} />
+      <Link to={{ search: searchParams.toString() }} className={linkClasses}>
+        <img className={buttonStyles.icon} src={searchIcon} alt="search icon" />
+        Search
+      </Link>
+      <Button type="reset" text="Reset search" color="transparent" className={styles.resetButton} />
     </form>
   );
 };
