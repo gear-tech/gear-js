@@ -1,8 +1,8 @@
 import { GearApi, GearKeyring, getWasmMetadata, Hex, MessageEnqueued } from '@gear-js/api';
 import { readFileSync } from 'fs';
+import { PATH_TO_META } from '../config';
 import { waitForReply } from './waitForReply';
 
-const pathToMeta = `./wasm/demo_meta.meta.wasm`;
 const [programId] = process.argv.slice(2);
 
 const main = async () => {
@@ -10,14 +10,14 @@ const main = async () => {
 
   const alice = await GearKeyring.fromSuri('//Alice');
 
-  const metaFile = readFileSync(pathToMeta);
+  const metaFile = readFileSync(PATH_TO_META);
 
   const meta = await getWasmMetadata(metaFile);
 
   const payload = {
-    id: {
-      decimal: 64,
-      hex: 0x0123456789abcdf,
+    AddParticipant: {
+      name: 'mithriy',
+      age: 28,
     },
   };
 
@@ -25,12 +25,12 @@ const main = async () => {
     GearKeyring.decodeAddress(alice.address),
     programId as Hex,
     payload,
-    0,
+    20000,
     true,
     meta,
   );
 
-  api.message.submit({ destination: programId, payload, gasLimit: gas.min_limit, value: 0 }, meta);
+  api.message.submit({ destination: programId, payload, gasLimit: gas.min_limit, value: 20000 }, meta);
 
   const reply = waitForReply(api, programId);
   let messageId: Hex;

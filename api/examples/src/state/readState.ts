@@ -1,13 +1,13 @@
 import { GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
 import { readFileSync } from 'fs';
+import { PATH_TO_META } from '../config';
 
-const pathToMeta = `./wasm/demo_meta.meta.wasm`;
 const [programId] = process.argv.slice(2);
 
 const main = async () => {
   const api = await GearApi.create();
 
-  const metaFile = readFileSync(pathToMeta);
+  const metaFile = readFileSync(PATH_TO_META);
 
   const payload = {
     decimal: 1,

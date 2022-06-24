@@ -6,7 +6,9 @@
   "scripts": {
     "program:upload": "ts-node src/program/uploadProgram.ts",
     "message:send": "ts-node src/message/sendMessage.ts",
-    "state:read": "ts-node src/state/readState.ts"
+    "state:read": "ts-node src/state/readState.ts",
+    "mailbox:read": "ts-node src/message/readMailbox.ts",
+    "mailbox:claimValue": "ts-node src/message/claimValue.ts"
   },
   "author": "",
   "license": "ISC",

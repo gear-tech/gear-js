@@ -1,23 +1,20 @@
 import { GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
 import { readFileSync } from 'fs';
+import { PATH_TO_META, PATH_TO_OPT } from '../config';
 import { waitForInit } from './waitForInit';
-
-const pathToProgram = `./wasm/demo_meta.opt.wasm`;
-const pathToMeta = `./wasm/demo_meta.meta.wasm`;
 
 const main = async () => {
   const api = await GearApi.create();
 
   const alice = await GearKeyring.fromSuri('//Alice');
 
-  const code = readFileSync(pathToProgram);
-  const metaFile = readFileSync(pathToMeta);
+  const code = readFileSync(PATH_TO_OPT);
+  const metaFile = readFileSync(PATH_TO_META);
 
   const meta = await getWasmMetadata(metaFile);
 
   const initPayload = {
-    amount: 255,
-    currency: 'GRT',
+    name_of_event: 'GEAR JS EXAMPLE',
   };
 
   const gas = await api.program.calculateGas.init(
