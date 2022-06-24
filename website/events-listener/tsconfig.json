@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
+    "module": "commonjs",
     "moduleResolution": "node",
     "strict": true,
     "target": "esNext",
     "outDir": "dist",
-    "skipLibCheck": true // TODO
+    "skipLibCheck": true
   },
   "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

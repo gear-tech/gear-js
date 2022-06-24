@@ -1,8 +1,8 @@
 import { kafkaLogger } from '@gear-js/common';
 
 import { Kafka, Producer } from 'kafkajs';
-import config from './config';
-import { eventListenerLogger } from './common/event-listener.logger';
+import config from '../config/configuration';
+import { eventListenerLogger } from '../common/event-listener.logger';
 
 export class KafkaProducer {
   readonly kafka: Kafka;
