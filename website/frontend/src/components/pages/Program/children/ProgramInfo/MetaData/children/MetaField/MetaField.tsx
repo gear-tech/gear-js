@@ -1,35 +1,33 @@
-import { FC, useState } from 'react';
+import { useState } from 'react';
+
+import styles from './MetaField.module.scss';
+
 import { useOutsideClick } from 'hooks';
 import { getPreformattedText } from 'helpers';
-import styles from './MetaField.module.scss';
 
 type Props = {
   label: string;
-  value: any;
+  value: string;
   type: any;
 };
 
-export const MetaField: FC<Props> = ({ label, value, type }) => {
+const MetaField = ({ label, value, type }: Props) => {
   const [isVisible, setIsVisible] = useState(false);
 
-  const toggleAlert = () => {
-    setIsVisible((prevValue) => !prevValue);
-  };
+  const toggleAlert = () => setIsVisible((prevState) => !prevState);
 
-  const hideAlert = () => {
-    setIsVisible(false);
-  };
-
-  const ref = useOutsideClick(hideAlert);
+  const fieldRef = useOutsideClick(() => setIsVisible(false));
 
   return (
     <div className={styles.item}>
       <span className={styles.label}>{label}:</span>
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-      <div ref={ref} className={styles.type} onClick={toggleAlert}>
+      <div ref={fieldRef} className={styles.type} onClick={toggleAlert}>
         <span className={styles.typeText}>{value}</span>
         {isVisible && <pre className={styles.typeAlert}>{getPreformattedText(type)}</pre>}
       </div>
     </div>
   );
 };
+
+export { MetaField };
