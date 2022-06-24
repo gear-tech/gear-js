@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import styles from './Programs.module.scss';
@@ -12,7 +13,7 @@ import { ProgramSwitch } from 'components/blocks/ProgramSwitch/ProgramSwitch';
 const Programs = () => {
   const { pathname } = useLocation();
 
-  const getCurrentPage = () => {
+  const currentPage = useMemo(() => {
     switch (pathname) {
       case routes.main:
         return <Upload />;
@@ -25,12 +26,12 @@ const Programs = () => {
       default:
         return null;
     }
-  };
+  }, [pathname]);
 
   return (
     <div className={styles.main}>
       <ProgramSwitch />
-      {getCurrentPage()}
+      {currentPage}
     </div>
   );
 };

@@ -25,7 +25,7 @@ const ProgramSwitch = () => {
   const handleTransferBalance = async () => {
     try {
       if (!account) {
-        throw new Error(`WALLET NOT CONNECTED`);
+        throw new Error('Wallet not connected');
       }
 
       const apiRequest = new ServerRPCRequestService();
@@ -38,7 +38,9 @@ const ProgramSwitch = () => {
         throw new Error(response.error.message);
       }
     } catch (error) {
-      alert.error(String(error));
+      const message = (error as Error).message;
+
+      alert.error(message);
     }
   };
 
@@ -53,7 +55,7 @@ const ProgramSwitch = () => {
   const handleTransferBalanceFromAlice = async () => {
     try {
       if (!account) {
-        throw new Error('WALLET NOT CONNECTED');
+        throw new Error('Wallet not connected');
       }
 
       if (api) {
@@ -62,7 +64,9 @@ const ProgramSwitch = () => {
         transferBalance(api, account.address, alice, alert);
       }
     } catch (error) {
-      alert.error(String(error));
+      const message = (error as Error).message;
+
+      alert.error(message);
     }
   };
 

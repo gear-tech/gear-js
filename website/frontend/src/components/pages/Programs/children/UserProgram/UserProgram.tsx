@@ -21,9 +21,9 @@ type Props = {
 const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
   const alert = useAlert();
 
-  const { id, name, initStatus, timestamp } = program;
+  const { id: programId, name, initStatus, timestamp } = program;
 
-  const handleCopy = () => copyToClipboard(id, alert, 'Program ID copied');
+  const handleCopy = () => copyToClipboard(programId, alert, 'Program ID copied');
 
   return (
     <div className={styles.programsListItem}>
@@ -37,8 +37,8 @@ const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
           )}
         />
         <div className={styles.programWrapperName}>
-          <Link className={styles.programLink} to={generatePath(routes.program, { id })}>
-            {fileNameHandler(name || id)}
+          <Link className={styles.programLink} to={generatePath(routes.program, { programId })}>
+            {fileNameHandler(name || programId)}
           </Link>
         </div>
         <div className={styles.programsCopyId}>
@@ -51,11 +51,11 @@ const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
       </div>
 
       <div className={styles.programsListBtns}>
-        <Link to={`/send/message/${id}`} className={styles.allProgramsItemSendMessage}>
+        <Link to={`/send/message/${programId}`} className={styles.allProgramsItemSendMessage}>
           <img src={messageSVG} alt="Send message to program" />
         </Link>
         <Link
-          to={generatePath(routes.meta, { programId: id })}
+          to={generatePath(routes.meta, { programId })}
           tabIndex={Number(isMetaLinkActive)}
           className={clsx(styles.allProgramsItemUpload, !isMetaLinkActive && styles.linkInactive)}
         >
