@@ -1,49 +1,57 @@
-import { GearApi, Hex } from '@gear-js/api';
+import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
 export const waitForProgramInit = (api: GearApi, programId: string) => {
+  let unsub: UnsubscribePromise;
   let messageId: Hex;
-  const unsubscribes: UnsubscribePromise[] = [];
 
-  unsubscribes.push(
-    api.gearEvents.subscribeToGearEvent('MessageEnqueued', (event) => {
-      if (event.data.destination.eq(programId) && event.data.entry.isInit) {
-        messageId = event.data.id.toHex();
-      }
-    })
-  );
+  const initPromise = new Promise<string>((resolve, reject) => {
+    unsub = api.query.system.events((events: any) => {
+      events.forEach(({ event }: any) => {
+        switch (event.method) {
+          case 'MessageEnqueued': {
+            const meEvent = event as MessageEnqueued;
 
-  const resultPromise = Promise.race([
-    new Promise<string>((resolve) => {
-      unsubscribes.push(
-        api.gearEvents.subscribeToGearEvent('ProgramChanged', (event) => {
-          if (event.data.id.eq(programId) && event.data.change.isActive) {
-            resolve('success');
+            if (meEvent.data.destination.eq(programId) && meEvent.data.entry.isInit) {
+              messageId = meEvent.data.id.toHex();
+            }
+
+            break;
           }
-        })
-      );
-    }),
-    new Promise<string>((resolve) => {
-      unsubscribes.push(
-        api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
-          if (
-            event.data.source.eq(programId) &&
-            event.data.reply.unwrap()[0].eq(messageId) &&
-            !event.data.reply.unwrap()[1].eq(0)
-          ) {
-            resolve('failed');
+          case 'MessagesDispatched': {
+            const mdEvent = event as MessagesDispatched;
+
+            for (const [id, status] of mdEvent.data.statuses) {
+              if (id.eq(messageId) && status.isFailed) {
+                // eslint-disable-next-line prefer-promise-reject-errors
+                reject('failed');
+
+                break;
+              }
+            }
+
+            break;
           }
-        })
-      );
-    }),
-  ]);
+          case 'ProgramChanged': {
+            const pcEvent = event as ProgramChanged;
+
+            if (pcEvent.data.id.eq(programId) && pcEvent.data.change.isActive) {
+              resolve('success');
+            }
+
+            break;
+          }
+          default:
+            break;
+        }
+      });
+    });
+  });
 
   return async () => {
-    const result = await resultPromise;
+    const result = await initPromise;
 
-    for await (const unsubscribe of unsubscribes) {
-      unsubscribe();
-    }
+    (await unsub)();
 
     return result;
   };

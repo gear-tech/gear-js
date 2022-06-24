@@ -1,15 +1,16 @@
-import { GearGenericEvent } from '@gear-js/api';
-import { Compact, Vec } from '@polkadot/types';
-import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
+import { Compact, Vec, GenericEvent } from '@polkadot/types';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
+import { BlockNumber, Event as DotEvent } from '@polkadot/types/interfaces';
+
 import { generateRandomId } from 'helpers';
 
-export class IdeaEvent extends GearGenericEvent {
+export class IdeaEvent extends GenericEvent {
   constructor(event: DotEvent, blockNumber?: Compact<BlockNumber>) {
     const { section, method, meta, hash } = event;
     const { docs } = meta;
 
-    super(event);
+    super(event.registry, event.toU8a());
+
     this._id = `${hash}-${generateRandomId()}`;
     this._caption = `${section}.${method}`;
     this._description = String(docs.toHuman());
