@@ -1,26 +1,43 @@
 ## Examples
 
-To run examples run
+### [Program that used in examples](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/gear-program/src/lib.rs)
+
+### [Upload program](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/program/uploadProgram.ts)
+
+Example of uploading program to chain
 
 ```bash
-npm run build
-
+yarn program:upload
 ```
 
-To run events subscription example
+### [Send message](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/message/sendMessage.ts)
+
+Example of sending message to uploaded program
 
 ```bash
-npm run events
+yarn message:send <programId>
 ```
 
-To run your own tests, move it under `examples` path
+### [Read mailbox](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/message/readMailbox.ts)
+
+Example of reading user's mailbox
 
 ```bash
-npm run examples <testname.json>
+yarn mailbox:read
 ```
 
-Example guestbook:
+### [Claim value sent from program](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/message/claimValue.ts)
+
+Example of claiming value
 
 ```bash
-npm run examples guestbook
+yarn mailbox:claimValue
+```
+
+### [Read state of the program](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/state/readState.ts)
+
+Example of reading state of some program
+
+```bash
+yarn state:read <programId>
 ```
