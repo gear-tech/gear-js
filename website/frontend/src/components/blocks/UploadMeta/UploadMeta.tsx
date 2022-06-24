@@ -62,6 +62,7 @@ const UploadMeta = ({ onReset, onUpload }: Props) => {
     <>
       <div className={formStyles.formItem}>
         <FileInput
+          data-testid="metaFileInput"
           label="Metadata file"
           value={droppedMetaFile}
           className={styles.fileInput}
