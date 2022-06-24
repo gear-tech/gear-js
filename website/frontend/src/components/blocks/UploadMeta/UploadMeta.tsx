@@ -39,6 +39,8 @@ const UploadMeta = ({ onReset, onUpload }: Props) => {
         throw new Error('Wrong file format');
       }
 
+      setDroppedMetaFile(file);
+
       const readedFile = (await readFileAsync(file)) as Buffer;
       const meta: Metadata = await getWasmMetadata(readedFile);
 
@@ -49,7 +51,6 @@ const UploadMeta = ({ onReset, onUpload }: Props) => {
       const metaBufferString = Buffer.from(new Uint8Array(readedFile)).toString('base64');
       const propertiesFromFile = getMetaProperties(meta);
 
-      setDroppedMetaFile(file);
       setMetaProperties(Object.entries(propertiesFromFile));
 
       onUpload({ meta, metaBufferString });
