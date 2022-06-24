@@ -39,7 +39,7 @@ const main = async () => {
   try {
     return await new Promise((resolve, reject) => {
       api.program.signAndSend(alice, ({ events, status }) => {
-        console.log(status.toHuman());
+        console.log(`STATUS: ${status.toString()}`);
         if (status.isFinalized) resolve(status.asFinalized);
         events.forEach(({ event }) => {
           if (event.method === 'ExtrinsicFailed') {

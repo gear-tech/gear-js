@@ -37,7 +37,7 @@ const main = async () => {
   try {
     await new Promise((resolve, reject) => {
       api.message.signAndSend(alice, ({ events, status }) => {
-        console.log(status.toHuman());
+        console.log(`STATUS: ${status.toString()}`);
         if (status.isFinalized) resolve(status.asFinalized);
         events.forEach(({ event }) => {
           if (event.method === 'MessageEnqueued') {

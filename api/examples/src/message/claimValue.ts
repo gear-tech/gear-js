@@ -15,14 +15,11 @@ const main = async () => {
   try {
     await new Promise((resolve, reject) => {
       api.mailbox.claimValue.signAndSend(alice, ({ events, status }) => {
-        console.log(status.toHuman());
+        console.log(`STATUS: ${status.toString()}`);
         if (status.isFinalized) resolve(status.asFinalized);
         events.forEach(({ event }) => {
           if (event.method === 'UserMessageRead') {
-            const {
-              data: { reason },
-            } = event as UserMessageRead;
-            console.log(reason.toHuman());
+            console.log(event.toHuman());
           } else if (event.method === 'ExtrinsicFailed') {
             reject(api.getExtrinsicFailedError(event).docs.join('/n'));
           }
