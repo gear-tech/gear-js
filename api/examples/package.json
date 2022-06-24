@@ -4,8 +4,9 @@
   "description": "To run examples run",
   "main": "meta.js",
   "scripts": {
-    "upload": "ts-node src/upload-program/uploadProgram.ts",
-    "sendMessage": "ts-node src/send-message/sendMessage.ts"
+    "program:upload": "ts-node src/program/uploadProgram.ts",
+    "message:send": "ts-node src/message/sendMessage.ts",
+    "state:read": "ts-node src/state/readState.ts"
   },
   "author": "",
   "license": "ISC",
