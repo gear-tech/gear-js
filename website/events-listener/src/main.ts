@@ -8,43 +8,38 @@ import { eventListenerLogger } from './common/event-listener.logger';
 import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthcheck.router';
 import { listen } from './gear-events';
 
-const main = async () => {
-  while (true) {
-    const app = express();
+const app = express();
 
-    app.use('/health', healthcheckRouter);
+const port = config.healthcheck.port;
 
-    eventListenerLogger.info(`Starting...`);
-    const api = await GearApi.create({ providerAddress: config.api.provider, throwOnConnect: true });
-    changeStatus('ws');
-    api.on('error', () => {
-      setRestartNeeded();
-    });
+app.use('/health', healthcheckRouter);
 
-    const chain = await api.chain();
-    const genesis = api.genesisHash.toHex();
+const startApp = async () => {
+  const api = await GearApi.create({ providerAddress: config.api.provider, throwOnConnect: true });
+  changeStatus('ws');
+  api.on('error', () => {
+    setRestartNeeded();
+  });
 
-    eventListenerLogger.info(`Connected to ${chain} with genesis ${genesis}`);
+  const chain = await api.chain();
+  const genesis = api.genesisHash.toHex();
 
-    const producer = new KafkaProducer();
-    await producer.createTopic('events');
-    await producer.connect();
-    changeStatus('kafka');
+  eventListenerLogger.info(`Connected to ${chain} with genesis ${genesis}`);
 
-    listen(api, genesis, ({ key, value }) => {
-      producer.send(key, value, genesis);
-    });
+  const producer = new KafkaProducer();
+  await producer.createTopic('events');
+  await producer.connect();
+  changeStatus('kafka');
 
-    eventListenerLogger.info(`Started`);
-    app.listen(config.healthcheck.port, () => {
-      eventListenerLogger.info(`Healthckech server is running on port ${config.healthcheck.port} 🚀`);
-    });
+  listen(api, genesis, ({ key, value }) => {
+    producer.send(key, value, genesis);
+  });
 
-    await restartIfNeeded;
-  }
+  app.listen(port, () => {
+    eventListenerLogger.info(`Healthckech server is running on port ${port} 🚀`);
+  });
+
+  await restartIfNeeded;
 };
 
-main().catch((error) => {
-  eventListenerLogger.error(error);
-  process.exit(1);
-});
+startApp();
