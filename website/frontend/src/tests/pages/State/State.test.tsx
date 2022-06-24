@@ -1,5 +1,6 @@
+import { decodeHexTypes } from '@gear-js/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, render, fireEvent, waitFor } from '@testing-library/react';
+import { screen, render, fireEvent, waitFor, getDefaultNormalizer } from '@testing-library/react';
 
 import { PROGRAM_ID, META, META_FILE, READED_STATE } from './inputData';
 import { useApiMock } from '../../mocks/hooks';
@@ -91,11 +92,12 @@ describe('test state page', () => {
     expect(screen.queryByTestId('spinner')).toBeNull();
 
     expect(screen.getByText('Statedata')).toBeInTheDocument();
-    // can't find getPreformattedText(READED_STATE)
-    const stateField = screen.getByText(/NFTInfo/);
 
-    expect(stateField).toBeInTheDocument();
-    expect(stateField.innerHTML).toBe(getPreformattedText(READED_STATE));
+    expect(
+      screen.getByText(getPreformattedText(READED_STATE), {
+        normalizer: getDefaultNormalizer({ collapseWhitespace: false }),
+      })
+    ).toBeInTheDocument();
 
     expect(readStateBtn).toBeInTheDocument();
 
