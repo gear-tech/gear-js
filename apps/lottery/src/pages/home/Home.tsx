@@ -1,7 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { Content, Loader } from 'components';
-import { useFormOpen, useLottery, useLotteryStatus } from 'hooks';
+import { useLottery, useLotteryStatus } from 'hooks';
 import { getDate, getNumber } from 'utils';
 import { STATUS, SUBHEADING } from 'consts';
 import { OwnerStart } from './owner-start';
@@ -25,32 +25,26 @@ function Home() {
   const duration = getNumber(lotteryDuration || '');
   const endTime = startTime + duration;
 
-  const { status, countdown } = useLotteryStatus(endTime);
+  const { status, countdown, resetStatus } = useLotteryStatus(endTime);
   const isLotteryStarted = status !== STATUS.AWAIT;
   const isLotteryActive = status === STATUS.PENDING;
   const dashboard = { startTime: getDate(startTime), endTime: getDate(endTime), status, winner: '' as Hex, countdown };
 
-  const { isFormOpen, openForm } = useFormOpen(isLotteryStarted, isOwner);
-
-  // eslint-disable-next-line no-nested-ternary
   return isLotteryRead ? (
-    isFormOpen ? (
-      <OwnerStart />
-    ) : (
-      <>
-        {isLotteryStarted && isParticipant && (
-          <Pending
-            isOwner={isOwner}
-            dashboard={dashboard}
-            prizeFund={prizeFund}
-            players={players}
-            onResetButtonClick={openForm}
-          />
-        )}
-        {isLotteryActive && !isParticipant && <PlayerStart cost={cost} />}
-        {!isLotteryActive && !isOwner && <Content subheading={SUBHEADING.AWAIT} />}
-      </>
-    )
+    <>
+      {isLotteryStarted && isParticipant && (
+        <Pending
+          isOwner={isOwner}
+          dashboard={dashboard}
+          prizeFund={prizeFund}
+          players={players}
+          onResetButtonClick={resetStatus}
+        />
+      )}
+      {!isLotteryStarted && isOwner && <OwnerStart />}
+      {isLotteryActive && !isParticipant && <PlayerStart cost={cost} />}
+      {!isLotteryActive && !isOwner && <Content subheading={SUBHEADING.AWAIT} />}
+    </>
   ) : (
     <Loader />
   );

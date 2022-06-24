@@ -1,7 +1,6 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { LOCAL_STORAGE } from 'consts';
-import { getCountdown } from './countdown';
-import { getStatus } from './status';
+import { getStatus, getCountdown } from './status';
 
 const isLoggedIn = ({ address }: InjectedAccountWithMeta) => localStorage[LOCAL_STORAGE.ACCOUNT] === address;
 
@@ -14,4 +13,4 @@ const isHex = (value: unknown) => {
 const getNumber = (value: string) => +value.replaceAll(',', '');
 const getDate = (value: number) => new Date(value).toLocaleString();
 
-export { isLoggedIn, isHex, getNumber, getDate, getCountdown, getStatus };
+export { isLoggedIn, isHex, getNumber, getDate, getStatus, getCountdown };
