@@ -4,7 +4,7 @@ import { BN } from '@polkadot/util';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { DbService } from '../../database/db';
 
-import config from '../../config/config';
+import config from '../../config/configuration';
 import { ResponseTransferBalance } from './types';
 
 const log = initLogger('GearService');
