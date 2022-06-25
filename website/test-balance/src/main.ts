@@ -1,12 +1,12 @@
 import express from 'express';
-
-import config from './config/config';
-
-import { GearService } from './domain/gear/gear.service';
-import { KafkaConsumer } from './kafka/kafka.consumer';
-import { DbService } from './database/db';
-import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthcheck.router';
 import { KAFKA_TOPICS } from '@gear-js/common';
+
+import config from './config/configuration';
+
+import { KafkaConsumer } from './kafka/kafka.consumer';
+import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthcheck.router';
+import { dbCreateConnection } from './database/db-create-connection';
+import { gearApi } from './gear';
 
 const app = express();
 
@@ -15,13 +15,11 @@ const port = config.healthcheck.port;
 app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
-  const db = new DbService();
-  await db.connect();
+  await dbCreateConnection();
   changeStatus('database');
-  const gear = new GearService(db);
-  await gear.connect();
+  await gearApi.connect();
   changeStatus('ws');
-  const kafka = new KafkaConsumer(gear, db);
+  const kafka = new KafkaConsumer();
   await kafka.connect();
   await kafka.subscribe(KAFKA_TOPICS.TEST_BALANCE_GET);
   changeStatus('kafka');

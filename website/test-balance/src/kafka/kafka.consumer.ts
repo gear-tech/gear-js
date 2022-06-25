@@ -1,22 +1,18 @@
 import { initLogger, JSONRPC_ERRORS, kafkaLogger } from '@gear-js/common';
 
 import { Consumer, Kafka, KafkaMessage, Producer } from 'kafkajs';
-import config from '../config/config';
-import { DbService } from '../database/db';
-import { GearService } from '../domain/gear/gear.service';
+import config from '../config/configuration';
+import { transferService } from '../domain/transfer/transfer.service';
+import { gearApi } from '../gear';
 
 const log = initLogger('KafkaConsumer');
 
 export class KafkaConsumer {
   kafka: Kafka;
   consumer: Consumer;
-  gearService: GearService;
-  dbService: DbService;
   producer: Producer;
 
-  constructor(gearService: GearService, dbService: DbService) {
-    this.gearService = gearService;
-    this.dbService = dbService;
+  constructor() {
     this.kafka = new Kafka({
       clientId: config.kafka.clientId,
       brokers: config.kafka.brokers,
@@ -59,10 +55,10 @@ export class KafkaConsumer {
       return { error: JSONRPC_ERRORS.InternalError.name };
     }
 
-    if (payload.genesis === this.gearService.getGenesisHash) {
+    if (payload.genesis === gearApi.getGenesisHash()) {
       try {
-        if (await this.dbService.possibleToTransfer(payload.address, payload.genesis)) {
-          result = { result: await this.gearService.transferBalance(payload.address) };
+        if (await transferService.isPossibleToTransfer(payload.address, payload.genesis)) {
+          result = { result: await gearApi.transferBalance(payload.address) };
         } else {
           result = { error: JSONRPC_ERRORS.TransferLimitReached.name };
         }
