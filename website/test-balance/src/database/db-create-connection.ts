@@ -1,14 +1,37 @@
-import { Connection, createConnection, getConnectionManager } from 'typeorm';
+import {
+  Connection,
+  ConnectionOptions,
+  createConnection,
+  getConnectionManager,
+  getRepository,
+  Repository,
+} from 'typeorm';
 import { initLogger } from '@gear-js/common';
 
-import { ormConfig } from '../config/orm.config';
+import config from '../config/configuration';
+import { TransferBalance } from './entities/transfer.entity';
 
 const logger = initLogger('DB_TEST_BALANCE');
 
-export async function dbCreateConnection(): Promise<Connection | null> {
+const entities = [TransferBalance];
+
+const ormConfig: ConnectionOptions = {
+  type: 'postgres',
+  host: config.db.host,
+  port: config.db.port,
+  database: config.db.name,
+  username: config.db.user,
+  password: config.db.password,
+  entities,
+  synchronize: true,
+};
+
+let transferRepo: Repository<TransferBalance>;
+
+async function dbCreateConnection(): Promise<Connection | null> {
   try {
     const conn = await createConnection(ormConfig);
-
+    transferRepo = getRepository(TransferBalance);
     logger.info(`Database connection success. Connection name: '${conn.name}' Database: '${conn.options.database}'`);
   } catch (err) {
     if (err.name === 'AlreadyHasActiveConnectionError') {
@@ -19,3 +42,5 @@ export async function dbCreateConnection(): Promise<Connection | null> {
   }
   return null;
 }
+
+export { dbCreateConnection, transferRepo };

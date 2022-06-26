@@ -1,8 +1,5 @@
-import { getRepository, Repository } from 'typeorm';
-
 import { TransferBalance } from '../database/entities/transfer.entity';
-
-const transferRepo: Repository<TransferBalance> = getRepository(TransferBalance);
+import { transferRepo } from '../database/db-create-connection';
 
 const transferRepository = {
   async save(transferBalance: TransferBalance): Promise<TransferBalance> {
