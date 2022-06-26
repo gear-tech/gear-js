@@ -18,7 +18,7 @@ type Props = {
 };
 
 const ProgramInfo = ({ program, metadata }: Props) => {
-  const { id, title, name } = program;
+  const { id: programId, title, name } = program;
 
   const isState = Boolean(metadata?.meta_state_output);
 
@@ -26,7 +26,7 @@ const ProgramInfo = ({ program, metadata }: Props) => {
 
   return (
     <div className={formStyles.largeForm}>
-      <FormText label="Id" text={id} />
+      <FormText label="Id" text={programId} />
 
       <FormText label="Name" text={name || ''} />
 
@@ -40,13 +40,13 @@ const ProgramInfo = ({ program, metadata }: Props) => {
       </div>
 
       <div className={formStyles.formButtons}>
-        <Link to={generatePath(routes.send + routes.message, { id })} className={linkClasses}>
+        <Link to={generatePath(`${routes.send}/${routes.sendMessage}`, { programId })} className={linkClasses}>
           <img src={messageSVG} alt="message" className={buttonStyles.icon} />
           Send Message
         </Link>
 
         {isState && (
-          <Link to={generatePath(routes.state, { programId: id })} className={linkClasses}>
+          <Link to={generatePath(routes.state, { programId })} className={linkClasses}>
             Read State
           </Link>
         )}

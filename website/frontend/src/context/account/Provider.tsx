@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { Balance } from '@polkadot/types/interfaces';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+
+import { getAccount, getBalance } from './helpers';
 import { AccountContext } from './Context';
 import { Props, Account } from '../types';
-import { Balance } from '@polkadot/types/interfaces';
-import { GearKeyring } from '@gear-js/api';
+
 import { useApi } from 'hooks';
 
 function AccountProvider({ children }: Props) {
@@ -11,36 +13,42 @@ function AccountProvider({ children }: Props) {
 
   const [account, setAccount] = useState<Account>();
 
-  const getBalance = (balance: Balance) => {
-    const [value, unit] = balance.toHuman().split(' ');
-    return { value, unit };
-  };
+  const switchAccount = useCallback(
+    (_account: InjectedAccountWithMeta) => {
+      api?.balance
+        .findOut(_account.address)
+        .then((balance: Balance) => getAccount(_account, balance))
+        .then(setAccount);
+    },
+    [api]
+  );
 
-  const getAccount = (_account: InjectedAccountWithMeta, balance: Balance) => ({
-    ..._account,
-    balance: getBalance(balance),
-    decodedAddress: GearKeyring.decodeAddress(_account.address),
-  });
+  const updateBalance = useCallback((balance: Balance) => {
+    const newBalance = getBalance(balance);
 
-  const switchAccount = (_account: InjectedAccountWithMeta) => {
-    api?.balance
-      .findOut(_account.address)
-      .then((balance) => getAccount(_account, balance))
-      .then(setAccount);
-  };
+    setAccount((prevAccount) => {
+      const prevBalance = prevAccount?.balance;
+      const isBalanceChanged = newBalance.unit !== prevBalance?.unit || newBalance.value !== prevBalance.value;
 
-  const updateBalance = (balance: Balance) => {
-    setAccount((prevAccount) => (prevAccount ? { ...prevAccount, balance: getBalance(balance) } : prevAccount));
-  };
+      if (prevAccount && isBalanceChanged) {
+        return {
+          ...prevAccount,
+          balance: newBalance,
+        };
+      }
 
-  const logout = () => {
-    setAccount(undefined);
-  };
+      return prevAccount;
+    });
+  }, []);
 
-  const { Provider } = AccountContext;
-  const value = { account, switchAccount, updateBalance, logout };
+  const logout = useCallback(() => setAccount(undefined), []);
 
-  return <Provider value={value}>{children}</Provider>;
+  const value = useMemo(
+    () => ({ account, switchAccount, updateBalance, logout }),
+    [account, switchAccount, updateBalance, logout]
+  );
+
+  return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;
 }
 
 export { AccountProvider };

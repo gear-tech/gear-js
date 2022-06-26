@@ -1,56 +1,48 @@
-import { useEffect, useRef, useState, VFC } from 'react';
-import { GearKeyring } from '@gear-js/api';
-import clsx from 'clsx';
-import { Link } from 'react-router-dom';
-import { Button } from '@gear-js/ui';
+import { useEffect, useRef, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import './ProgramSwitch.scss';
+import { GearKeyring } from '@gear-js/api';
+import { Button } from '@gear-js/ui';
+
+import styles from './ProgramSwitch.module.scss';
+
 import { routes } from 'routes';
-import { SWITCH_PAGE_TYPES, RPC_METHODS, HCAPTCHA_SITE_KEY } from 'consts';
-import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { useAccount, useApi, useAlert } from 'hooks';
 import { isDevChain } from 'helpers';
 import { transferBalance } from 'services/ApiService';
+import { RPC_METHODS, HCAPTCHA_SITE_KEY } from 'consts';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
+import ServerRPCRequestService from 'services/ServerRPCRequestService';
 
-type Props = {
-  pageType: string;
-};
-
-export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
-  const { api } = useApi();
+const ProgramSwitch = () => {
   const alert = useAlert();
+  const { api } = useApi();
   const { account } = useAccount();
 
-  const [captchaToken, setCaptchaToken] = useState('');
   const captchaRef = useRef<HCaptcha>(null);
+  const [captchaToken, setCaptchaToken] = useState('');
 
   const handleTransferBalance = async () => {
     try {
       if (!account) {
-        throw new Error(`WALLET NOT CONNECTED`);
+        throw new Error('Wallet not connected');
       }
 
       const apiRequest = new ServerRPCRequestService();
       const response = await apiRequest.callRPC(RPC_METHODS.GET_TEST_BALANCE, {
-        address: `${account.address}`,
         token: captchaToken,
+        address: account.address,
       });
 
       if (response.error) {
-        alert.error(`${response.error.message}`);
+        throw new Error(response.error.message);
       }
     } catch (error) {
-      alert.error(`${error}`);
+      const message = (error as Error).message;
+
+      alert.error(message);
     }
   };
-
-  useEffect(() => {
-    if (captchaToken) {
-      handleTransferBalance();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [captchaToken]);
 
   const handleTestBalanceClick = () => {
     if (captchaToken) {
@@ -63,7 +55,7 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
   const handleTransferBalanceFromAlice = async () => {
     try {
       if (!account) {
-        throw new Error('WALLET NOT CONNECTED');
+        throw new Error('Wallet not connected');
       }
 
       if (api) {
@@ -72,56 +64,41 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
         transferBalance(api, account.address, alice, alert);
       }
     } catch (error) {
-      alert.error(String(error));
+      const message = (error as Error).message;
+
+      alert.error(message);
     }
   };
 
+  useEffect(() => {
+    if (captchaToken) {
+      handleTransferBalance();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [captchaToken]);
+
   return (
-    <div className="switch-block">
-      <div className="switch-block--wrapper">
-        <div className="switch-buttons">
-          <Link
-            to={routes.main}
-            className={clsx(
-              'switch-buttons__item',
-              pageType === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && 'switch-buttons__item--active'
-            )}
-          >
+    <div className={styles.programSwitch}>
+      <div className={styles.switchWrapper}>
+        <div className={styles.switchButtons}>
+          <NavLink to={routes.main} className={styles.switchButton}>
             Upload program
-          </Link>
-          <Link
-            to={routes.uploadedPrograms}
-            className={clsx(
-              'switch-buttons__item',
-              pageType === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && 'switch-buttons__item--active'
-            )}
-          >
+          </NavLink>
+          <NavLink to={routes.uploadedPrograms} className={styles.switchButton}>
             My programs
-          </Link>
-          <Link
-            to={routes.allPrograms}
-            className={clsx(
-              'switch-buttons__item',
-              pageType === SWITCH_PAGE_TYPES.ALL_PROGRAMS && 'switch-buttons__item--active'
-            )}
-          >
+          </NavLink>
+          <NavLink to={routes.allPrograms} className={styles.switchButton}>
             All programs
-          </Link>
-          <Link
-            to={routes.messages}
-            className={clsx(
-              'switch-buttons__item',
-              pageType === SWITCH_PAGE_TYPES.ALL_MESSAGES && 'switch-buttons__item--active'
-            )}
-          >
+          </NavLink>
+          <NavLink to={routes.messages} className={styles.switchButton}>
             Messages
-          </Link>
+          </NavLink>
         </div>
         {account && (
           <>
             <Button
-              className="test-balance-button"
               text="Get test balance"
+              className={styles.testBalanceButton}
               onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}
             />
             <HCaptcha
@@ -139,3 +116,5 @@ export const ProgramSwitch: VFC<Props> = ({ pageType }) => {
     </div>
   );
 };
+
+export { ProgramSwitch };
