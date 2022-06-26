@@ -6,7 +6,7 @@ import config from './config/configuration';
 import { KafkaConsumer } from './kafka/kafka.consumer';
 import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthcheck.router';
 import { dbCreateConnection } from './database/db-create-connection';
-import { gearApi } from './gear';
+import { gearService } from './gear';
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.use('/health', healthcheckRouter);
 const startApp = async () => {
   await dbCreateConnection();
   changeStatus('database');
-  await gearApi.connect();
+  await gearService.connect();
   changeStatus('ws');
   const kafka = new KafkaConsumer();
   await kafka.connect();
