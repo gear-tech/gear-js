@@ -22,7 +22,7 @@ function Dashboard({ startTime, endTime, status, winner, countdown }: DashboardP
             <span className={styles.key}>Status:</span> <span className={statusClassName}>{status}</span>
           </p>
           <p>
-            <span className={styles.key}>Winner:</span> {winner || 'Unknown'}
+            <span className={styles.key}>Winner:</span> <span className={styles.winner}>{winner || 'Unknown'}</span>
           </p>
         </div>
       </div>

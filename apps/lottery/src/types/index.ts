@@ -12,6 +12,7 @@ type Lottery = {
   participationCost: string;
   prizeFund: string;
   players: { [index: number]: Player };
+  winner: Hex;
 };
 
 type DashboardProps = {

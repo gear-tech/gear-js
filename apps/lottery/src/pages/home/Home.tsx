@@ -2,7 +2,7 @@ import { Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { Content, Loader } from 'components';
 import { useLottery, useLotteryStatus } from 'hooks';
-import { getDate, getNumber } from 'utils';
+import { getDate, getNumber, isWinner } from 'utils';
 import { STATUS, SUBHEADING } from 'consts';
 import { OwnerStart } from './owner-start';
 import { PlayerStart } from './player-start';
@@ -17,6 +17,7 @@ function Home() {
   const cost = lottery?.participationCost || '';
   const prizeFund = lottery?.prizeFund || '';
   const players = lottery ? Object.values(lottery.players) : [];
+  const winner = lottery && isWinner(lottery.winner) ? lottery.winner : ('' as Hex);
   const isOwner = account?.decodedAddress === lotteryOwner;
   const isPlayer = players.some(({ playerId }) => playerId === account?.decodedAddress);
   const isParticipant = isPlayer || isOwner;
@@ -28,7 +29,7 @@ function Home() {
   const { status, countdown, resetStatus } = useLotteryStatus(endTime);
   const isLotteryStarted = status !== STATUS.AWAIT;
   const isLotteryActive = status === STATUS.PENDING;
-  const dashboard = { startTime: getDate(startTime), endTime: getDate(endTime), status, winner: '' as Hex, countdown };
+  const dashboard = { startTime: getDate(startTime), endTime: getDate(endTime), status, winner, countdown };
 
   return isLotteryRead ? (
     <>
@@ -43,7 +44,7 @@ function Home() {
       )}
       {!isLotteryStarted && isOwner && <OwnerStart />}
       {isLotteryActive && !isParticipant && <PlayerStart cost={cost} />}
-      {!isLotteryActive && !isOwner && <Content subheading={SUBHEADING.AWAIT} />}
+      {!isLotteryActive && !isParticipant && <Content subheading={SUBHEADING.AWAIT} />}
     </>
   ) : (
     <Loader />

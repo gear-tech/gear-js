@@ -43,6 +43,11 @@
   }
 }
 
+.winner {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .countdown {
   font-size: 12px;
   color: $textColorSecondary;
