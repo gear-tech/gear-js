@@ -51,7 +51,7 @@ describe('Calculate gas', () => {
 
   test('Get handle gas spent', async () => {
     expect(programId).toBeDefined();
-    const gas = await api.program.calculateGas.handle(aliceRaw, programId, '0x50494e47', 0, true);
+    const gas = await api.program.calculateGas.handle(aliceRaw, programId, '0x50494e47', 1000, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     gasLimits.handle = gas.min_limit;
@@ -60,10 +60,13 @@ describe('Calculate gas', () => {
   });
 
   test('Send message', async () => {
+    expect(gasLimits.handle).toBeDefined();
+    console.log((gasLimits.handle as u64).toNumber());
+    console.log((gasLimits.handle as u64).muln(2).toNumber());
     api.message.submit({
       destination: programId,
       payload: '0x50494e47',
-      gasLimit: (gasLimits.handle as u64).toNumber() * 1.5, // TODO remove * 1.5 when expiration_block will work
+      gasLimit: (gasLimits.handle as u64).muln(2), // TODO remove `* 1.5` when expiration_block will work
       value: 1000,
     });
     const waitForReply = listenToUserMessageSent(api, programId);
@@ -98,8 +101,8 @@ describe('Calculate gas', () => {
   });
 
   test('Send reply', async () => {
-    expect(gasLimits.handle).toBeDefined();
-    api.reply.submit({ replyToId: messageId, payload: '0x50494e47', gasLimit: 2_000_000_000 });
+    expect(gasLimits.reply).toBeDefined();
+    api.reply.submit({ replyToId: messageId, payload: '0x50494e47', gasLimit: gasLimits.reply as u64 });
     const data = await sendTransaction(api.reply, alice, 'MessageEnqueued');
     expect(data).toBeDefined();
   });
