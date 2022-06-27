@@ -61,8 +61,6 @@ describe('Calculate gas', () => {
 
   test('Send message', async () => {
     expect(gasLimits.handle).toBeDefined();
-    console.log((gasLimits.handle as u64).toNumber());
-    console.log((gasLimits.handle as u64).muln(2).toNumber());
     api.message.submit({
       destination: programId,
       payload: '0x50494e47',
