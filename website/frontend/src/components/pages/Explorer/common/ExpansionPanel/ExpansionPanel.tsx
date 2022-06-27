@@ -14,14 +14,13 @@ type Props = {
 
 const ExpansionPanel = ({ caption, description, blockNumber, counter, className, children }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const panelClassName = clsx('programs-list__item', styles.item, className);
 
   const toggle = () => {
     setIsOpen((prevValue) => !prevValue);
   };
 
   return (
-    <div className={panelClassName}>
+    <div className={clsx(styles.item, className)}>
       <Header
         caption={caption}
         description={description}
