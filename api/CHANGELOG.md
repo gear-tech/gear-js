@@ -1,3 +1,16 @@
+## 0.22.2
+
+_06/27/2022_
+
+https://github.com/gear-tech/gear-js/pull/770
+
+### Changes
+
+- Change GasInfo interface (_Replace `to_send` with `reserved`_)
+- Fix gas tests
+
+---
+
 ## 0.22.1
 
 _06/21/2022_
@@ -6,8 +19,8 @@ https://github.com/gear-tech/gear-js/pull/754
 
 ### Breaking Changes
 
-- Subscription to Transfer balance events has been updated
-- GearBalance class has been updated.
+- Update subscription to Transfer balance events
+- Update GearBalance class.
 
 _From now on, it's necessary to use 2 separate methods (`transfer` and `singAndSend`) to send transaction_
 
@@ -21,8 +34,8 @@ https://github.com/gear-tech/gear-js/pull/753
 
 ### Breaking Changes
 
-- Event data sturcture have been updated
-- Events and event data classes have been removed, and interfaces have been added instead
+- Updated event data sturcture.
+- Remove events and event data classes, and add interfaces instead
 
 ---
 
