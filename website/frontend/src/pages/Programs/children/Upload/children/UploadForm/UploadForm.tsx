@@ -47,13 +47,12 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
     setValues(INITIAL_VALUES, false);
   };
 
-  const handleResetForm = () => {
-    setDroppedFile(null);
-  };
+  const handleResetForm = () => setDroppedFile(null);
 
   const handleSubmitForm = (values: FormValues) => {
     if (!account) {
       alert.error(`Wallet not connected`);
+
       return;
     }
 
@@ -69,9 +68,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
       initPayload: meta ? getSubmitPayload(payload) : payload,
     };
 
-    UploadProgram(api, account, droppedFile, programOptions, metaFile, alert, handleResetForm).catch(() => {
-      alert.error(`Invalid JSON format`);
-    });
+    UploadProgram(api, account, droppedFile, programOptions, metaFile, alert, handleResetForm);
   };
 
   const handleCalculateGas = async (values: FormValues, setFieldValue: SetFieldValue) => {

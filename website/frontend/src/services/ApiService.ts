@@ -17,7 +17,7 @@ import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/co
 import { UploadProgramModel, Message, Reply, ProgramStatus } from 'types/program';
 import { AddressOrPair } from '@polkadot/api/types';
 
-export const uploadMetadata = (
+export const uploadMetadata = async (
   programId: string,
   account: Account,
   name: string,
@@ -56,7 +56,7 @@ export const uploadMetadata = (
 
   const apiRequest = new ServerRPCRequestService();
 
-  signPayload(injector, account.address, jsonMeta, async (signature: string) => {
+  await signPayload(injector, account.address, jsonMeta, async (signature: string) => {
     try {
       const response = await apiRequest.callRPC(RPC_METHODS.ADD_METADATA, {
         name,
@@ -68,13 +68,14 @@ export const uploadMetadata = (
       });
 
       if (response.error) {
-        // FIXME 'throw' of exception caught locally
         throw new Error(response.error.message);
-      } else {
-        alert.success('Metadata saved successfully');
       }
+
+      alert.success('Metadata saved successfully');
     } catch (error) {
-      alert.error(String(error));
+      const message = (error as Error).message;
+
+      alert.error(message);
       console.error(error);
     }
   });
@@ -128,14 +129,17 @@ export const UploadProgram = async (
       if (data.status.isFinalized) {
         alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
 
-        data.events.forEach(({ event: { method } }) => {
+        data.events.forEach(({ event: { method, section } }) => {
+          const eventTitle = `${section}.${method}`;
+
           if (method === 'MessageEnqueued') {
+            alert.success('Success', { title: eventTitle });
             callback();
           }
 
           if (method === 'ExtrinsicFailed') {
             alert.error('Extrinsic Failed', {
-              title: alertTitle,
+              title: eventTitle,
             });
           }
         });
@@ -149,21 +153,21 @@ export const UploadProgram = async (
     });
 
     const programUploadStatus = await getProgramUploadStatus();
-
+    // link to program
     if (programUploadStatus === 'failed') {
       alert.error(PROGRAM_ERRORS.PROGRAM_INIT_FAILED);
+
       return;
     }
 
+    await uploadMetadata(programId, account, name, injector, alert, metaFile, meta, title);
+    // maybe add timeout 100ms
     alert.success('Program initializated successfully');
-
-    uploadMetadata(programId, account, name, injector, alert, metaFile, meta, title);
   } catch (error) {
     alert.update(alertId, String(error), DEFAULT_ERROR_OPTIONS);
   }
 };
 
-// TODO: (dispatch) fix it later
 export const sendMessage = async (
   api: GearMessage | GearMessageReply,
   account: Account,
@@ -201,15 +205,17 @@ export const sendMessage = async (
         data.events.forEach(({ event }) => {
           const { method, section } = event;
 
+          const eventTitle = `${section}.${method}`;
+
           if (method === 'MessageEnqueued') {
-            alert.success('Success', { title: `${section}.MessageEnqueued` });
+            alert.success('Success', { title: eventTitle });
             callback();
 
             return;
           }
 
           if (method === 'ExtrinsicFailed') {
-            alert.error('Extrinsic Failed', { title: alertTitle });
+            alert.error('Extrinsic Failed', { title: eventTitle });
           }
         });
 
@@ -235,7 +241,7 @@ export const addMetadata = async (
 ) => {
   const injector = await web3FromSource(account.meta.source);
 
-  uploadMetadata(programId, account, name, injector, alert, metaFile, meta, meta.title);
+  await uploadMetadata(programId, account, name, injector, alert, metaFile, meta, meta.title);
 };
 
 export const transferBalance = (
@@ -247,15 +253,17 @@ export const transferBalance = (
   api.balance.transfer(addressTo, GEAR_BALANCE_TRANSFER_VALUE);
 
   api.balance.signAndSend(addressFrom, ({ events }) => {
-    events.forEach(({ event: { method } }) => {
+    events.forEach(({ event: { method, section } }) => {
+      const eventTitle = `${section}.${method}`;
+
       if (method === 'Transfer') {
-        alert.success('Balance received successfully');
+        alert.success('Balance received successfully', { title: eventTitle });
 
         return;
       }
 
       if (method === 'ExtrinsicFailed') {
-        alert.error('Error when receiving balance');
+        alert.error('Error when receiving balance', { title: eventTitle });
       }
     });
   });

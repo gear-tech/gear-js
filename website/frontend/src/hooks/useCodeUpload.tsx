@@ -55,9 +55,11 @@ const useCodeUpload = () => {
           events.forEach(({ event }) => {
             const { method, section } = event;
 
+            const eventTitle = `${section}.${method}`;
+
             if (method === 'CodeSaved') {
               alert.success(<CopiedInfo title="Code hash" info={codeHash} />, {
-                title: `${section}.CodeSaved`,
+                title: eventTitle,
                 timeout: 0,
               });
 
@@ -65,7 +67,7 @@ const useCodeUpload = () => {
             }
 
             if (method === 'ExtrinsicFailed') {
-              alert.error(getErrorMessage(event), { title: `${section}.ExtrinsicFailed` });
+              alert.error(getErrorMessage(event), { title: eventTitle });
 
               return;
             }
