@@ -6,7 +6,7 @@ import { KafkaProducer } from '../kafka/producer';
 import { listen } from './listener';
 
 export async function connectToGearNode(producer: KafkaProducer) {
-  let api: GearApi = new GearApi({
+  const api: GearApi = new GearApi({
     providerAddress: config.api.provider,
     throwOnConnect: true,
   });
@@ -23,7 +23,7 @@ export async function connectToGearNode(producer: KafkaProducer) {
 
   eventListenerLogger.info(`Connected to ${chain} with genesis ${genesis}`);
 
-  let unsub = await listen(api, genesis, ({ key, value }) => {
+  const unsub = await listen(api, genesis, ({ key, value }) => {
     producer.send(key, value, genesis);
   });
 
