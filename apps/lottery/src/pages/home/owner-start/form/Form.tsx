@@ -36,7 +36,8 @@ function Form() {
 
   const handleSubmit = (data: typeof initialValues) => {
     const duration = +data.duration * S_MULTIPLIER * MS_MULTIPLIER;
-    const payload = { StartLottery: { ...data, duration } };
+    const tokenAddress = data.tokenAddress || null;
+    const payload = { StartLottery: { ...data, duration, tokenAddress } };
 
     sendMessage(payload, { onSuccess: resetForm });
   };

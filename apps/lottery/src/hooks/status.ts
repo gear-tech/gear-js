@@ -37,7 +37,7 @@ function useCountdown(endTime: number, status: string, updateStatus: () => void)
       if (intervalId) clearInterval(intervalId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+  }, [status, endTime]);
 
   return countdown;
 }
