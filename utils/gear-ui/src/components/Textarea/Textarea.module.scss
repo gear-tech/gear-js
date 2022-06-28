@@ -12,15 +12,19 @@
   padding-top: 10px;
 }
 
+.resets {
+  border: none;
+  outline: none;
+  resize: none;
+}
+
 .textarea {
+  @extend .resets;
   flex: 1;
   padding: 10px 20px;
   color: $textColor;
   background-color: #000;
   border-radius: $borderRadius;
-  border: none;
-  outline: none;
-  resize: none;
 
   &::placeholder {
     color: $textColorSecondary;

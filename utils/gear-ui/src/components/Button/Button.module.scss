@@ -1,16 +1,20 @@
 @use 'src/assets/styles/variables' as *;
 @use 'src/assets/styles/mixins' as *;
 
+.resets {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
 .button {
+  @extend .resets;
   @include transition();
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: inherit;
   color: $textColor;
-  border: none;
   border-radius: $borderRadius;
-  cursor: pointer;
 
   &:disabled {
     pointer-events: none;
