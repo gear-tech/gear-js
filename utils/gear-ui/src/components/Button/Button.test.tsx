@@ -43,10 +43,14 @@ describe('button tests', () => {
     expect(button).toHaveClass(styles.normal);
   });
 
-  it('renders small button with secondary color', () => {
-    render(<Button text="button text" color="secondary" size="small" />);
+  it('renders small button with secondary and tertiary color', () => {
+    const { rerender } = render(<Button text="button text" color="secondary" size="small" />);
+
     const button = screen.getByRole('button');
     expect(button).toHaveClass(styles.secondary, styles.small);
+
+    rerender(<Button text="button text" color="tertiary" size="small" />);
+    expect(button).toHaveClass(styles.tertiary, styles.small);
   });
 
   it('renders button with transparent background', () => {
@@ -55,10 +59,10 @@ describe('button tests', () => {
     expect(button).toHaveClass(styles.transparent);
   });
 
-  it('renders block button', () => {
-    render(<Button text="button text" block />);
+  it('renders no wrap block button', () => {
+    render(<Button text="button text" block noWrap />);
     const button = screen.getByRole('button');
-    expect(button).toHaveClass(styles.block);
+    expect(button).toHaveClass(styles.block, styles.noWrap);
   });
 
   it('passes ref', () => {

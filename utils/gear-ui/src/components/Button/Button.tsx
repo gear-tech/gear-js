@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 import { ForwardedRef } from 'react';
 
 const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) => {
-  const { text, icon, className, block, type = 'button', color = 'primary', size = 'normal', ...attrs } = props;
+  const { text, icon, className, block, noWrap, type = 'button', color = 'primary', size = 'normal', ...attrs } = props;
 
   const buttonClassName = clsx(
     styles.button,
@@ -13,6 +13,7 @@ const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) =
     styles[color],
     styles[text ? size : 'noText'],
     block && styles.block,
+    noWrap && styles.noWrap,
   );
 
   return (
