@@ -9,6 +9,9 @@ import { ProgramModule } from './program/program.module';
 import { HealthcheckController } from './healthcheck/healthcheck.controller';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import configurations from './config/configuration';
+import { Message, Meta, Program } from './entities';
+
+const entities = [Meta, Message, Program];
 
 @Module({
   imports: [
@@ -24,9 +27,15 @@ import configurations from './config/configuration';
         username: configService.get('database.user'),
         password: configService.get('database.password'),
         database: configService.get('database.name'),
-        autoLoadEntities: true,
-        synchronize: true,
-        entities: ['dist/**/*.entity.js'],
+        logging: true,
+        synchronize: false,
+        // Run migrations automatically,
+        migrations: ['database/migrations/*{.ts,.js}'],
+        migrationsRun: true,
+        entities,
+        cli: {
+          migrationsDir: 'src/database/migrations',
+        },
       }),
       inject: [ConfigService],
     }),
