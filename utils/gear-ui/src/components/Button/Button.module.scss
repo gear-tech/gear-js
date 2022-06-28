@@ -46,18 +46,26 @@
 }
 
 .primary {
-  background-color: $successColor;
+  background-color: $buttonColor;
 
   &:hover {
-    background-color: #12582f;
+    background-color: $buttonColorHover;
   }
 }
 
 .secondary {
-  background-color: #373737;
+  background-color: $buttonColorSecondary;
 
   &:hover {
-    background-color: $textColorSecondary;
+    background-color: $buttonColorSecondaryHover;
+  }
+}
+
+.tertiary {
+  background-color: $tertiaryColor;
+
+  &:hover {
+    background-color: $buttonColorTertiaryHover;
   }
 }
 
