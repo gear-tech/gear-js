@@ -69,9 +69,9 @@
     "supertest": "6.2.3",
     "ts-jest": "27.1.5",
     "ts-loader": "8.4.0",
-    "ts-node": "latest",
+    "ts-node": "^10.8.1",
     "tsconfig-paths": "3.14.1",
-    "typescript": "latest"
+    "typescript": "^4.7.4"
   },
   "jest": {
     "preset": "ts-jest/presets/js-with-babel",
