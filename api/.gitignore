@@ -11,3 +11,4 @@ using-examples/src/temp.ts
 **/target/
 **/Cargo.lock
 **/.binpath
+**/.yarn/

@@ -1,0 +1,17 @@
+[package]
+name = "gear-js-api-example"
+version = "0.1.0"
+authors = ["Gear Technologies"]
+edition = "2021"
+
+[dependencies]
+gstd = { git = "https://github.com/gear-tech/gear.git", features = ["debug"] }
+scale-info = { version = "2.1.2", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.1.5", default-features = false, features = ["derive", "full"] }
+
+[build-dependencies]
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git" }
+
+[profile.release]
+lto = true
+opt-level = 's'
