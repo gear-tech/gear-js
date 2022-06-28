@@ -23,7 +23,6 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
-
   run-unit-tests:
     runs-on: ubuntu-latest
     # Declare outputs for next steps
@@ -31,57 +30,57 @@ jobs:
       dataStorage_changed: ${{ steps.check_file_changed.outputs.dataStorage_changed }}
       frontend_changed: ${{ steps.check_file_changed.outputs.frontend_changed }}
     steps:
-    - uses: actions/checkout@v2
-      with:
-        # Checkout as many commits as needed for the diff
-        fetch-depth: 2
-    - shell: pwsh
-      id: check_file_changed
-      run: |
-        # Diff HEAD with the previous commit
-        $diff = git diff --name-only HEAD^ HEAD
-        # Check if a file under dataStorage/ has changed (added, modified, deleted)
-        $SourceDiffDataStorage = $diff | Where-Object { $_ -match '^website/data-storage/' }
-        $HasDiffDataStorage = $SourceDiffDataStorage.Length -gt 0
-        # Check if a file under marketplace/ has changed (added, modified, deleted)
-        $SourceDiffFrontend = $diff | Where-Object { $_ -match '^website/frontend/' }
-        $HasDiffFrontend = $SourceDiffFrontend.Length -gt 0
-        # Set the output
-        Write-Host "::set-output name=dataStorage_changed::$HasDiffDataStorage"
-        Write-Host "::set-output name=frontend_changed::$HasDiffFrontend"
-        
-    - name: Cancel previous workflow runs
-      uses: styfle/cancel-workflow-action@0.4.0
-      with:
-        access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+        with:
+          # Checkout as many commits as needed for the diff
+          fetch-depth: 2
+      - shell: pwsh
+        id: check_file_changed
+        run: |
+          # Diff HEAD with the previous commit
+          $diff = git diff --name-only HEAD^ HEAD
+          # Check if a file under dataStorage/ has changed (added, modified, deleted)
+          $SourceDiffDataStorage = $diff | Where-Object { $_ -match '^website/data-storage/' }
+          $HasDiffDataStorage = $SourceDiffDataStorage.Length -gt 0
+          # Check if a file under frontend/ has changed (added, modified, deleted)
+          $SourceDiffFrontend = $diff | Where-Object { $_ -match '^website/frontend/' }
+          $HasDiffFrontend = $SourceDiffFrontend.Length -gt 0
+          # Set the output
+          Write-Host "::set-output name=dataStorage_changed::$HasDiffDataStorage"
+          Write-Host "::set-output name=frontend_changed::$HasDiffFrontend"
 
-    - uses: c-hive/gha-yarn-cache@v2.1.0
+      - name: Cancel previous workflow runs
+        uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
 
-    - name: Setup NodeJS
-      uses: actions/setup-node@v2
-      with:
-        node-version: 16
-        cache: yarn
+      - uses: c-hive/gha-yarn-cache@v2.1.0
 
-    - name: Install dependencies
-      uses: borales/actions-yarn@v3.0.0
-      with:
-        cmd: install
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: yarn
 
-    - name: Build common package
-      run: yarn build:common
+      - name: Install dependencies
+        uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: install
 
-    - name: Run data-storage tests
-      if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
-      working-directory: 'website/data-storage'
-      run: yarn test
-       
-    - name: Run frontend tests
-      if: steps.check_file_changed.outputs.frontend_changed == 'True'
-      working-directory: 'website/frontend'
-      run: |
-        yarn test
-        
+      - name: Build common package
+        run: yarn build:common
+
+      - name: Run data-storage tests
+        if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
+        working-directory: 'website/data-storage'
+        run: yarn test
+
+      - name: Run frontend tests
+        if: steps.check_file_changed.outputs.frontend_changed == 'True'
+        working-directory: 'website/frontend'
+        run: |
+          yarn test
+
   wait-previous-run:
     needs: [run-unit-tests]
     if: github.event.pull_request.draft == false
