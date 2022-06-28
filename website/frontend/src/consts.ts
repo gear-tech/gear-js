@@ -40,13 +40,12 @@ export const PROGRESS_BAR_STATUSES = {
   COMPLETED: 'COMPLETED',
 };
 
-export const SOCKET_RESULT_STATUSES = {
-  IN_BLOCK: 'InBlock',
-  FINALIZED: 'Finalized',
-  PROGRAM_INITIALIZED: 'ProgramInitialized',
-  SUCCESS: 'Success',
-  LOG: 'Log',
-};
+export enum TransactionStatus {
+  Ready = 'Ready',
+  InBlock = 'InBlock',
+  IsInvalid = 'IsInvalid',
+  Finalized = 'Finalized',
+}
 
 export const RPC_METHODS = {
   PROGRAM_DATA: 'program.data',
@@ -70,11 +69,6 @@ export const EDITOR_BTNS = {
   DOWNLOAD: 'DOWNLOAD',
   RUN: 'RUN',
   BUILD_RUN: 'BUILD_RUN',
-};
-
-export const KEY_TYPES = {
-  MNEMOINIC: 'mnemonic',
-  RAW: 'raw',
 };
 
 export const DEVELOPMENT_CHAIN = 'Development';

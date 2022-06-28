@@ -1,9 +1,10 @@
 import { Event } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 
-import { PROGRAM_ERRORS } from 'consts';
+import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
 import { useApi, useAccount, useAlert } from 'hooks';
 import { readFileAsync } from 'helpers';
+import { Method } from 'types/explorer';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 import { CopiedInfo } from 'components/common/CopiedInfo';
 
@@ -27,68 +28,67 @@ const useCodeUpload = () => {
   };
 
   const uploadCode = async (file: File) => {
-    if (!account) {
-      alert.error('Wallet not connected');
-
-      return;
-    }
-
-    const { address, meta } = account;
-
-    const alertTitle = 'gear.submitCode';
-    const alertId = alert.loading('SignIn', { title: alertTitle });
-
     try {
+      if (!account) {
+        throw new Error('Wallet not connected');
+      }
+
+      const { address, meta } = account;
+
+      const alertId = alert.loading('SignIn', { title: 'gear.submitCode' });
+
       const { signer } = await web3FromSource(meta.source);
       const { codeHash } = await submit(file);
 
-      await api.code.signAndSend(address, { signer }, ({ events, status }) => {
-        if (status.isReady) {
-          alert.update(alertId, 'Ready');
+      await api.code
+        .signAndSend(address, { signer }, ({ events, status }) => {
+          if (status.isReady) {
+            alert.update(alertId, TransactionStatus.Ready);
 
-          return;
-        }
+            return;
+          }
 
-        if (status.isInBlock) {
-          alert.update(alertId, 'InBlock');
+          if (status.isInBlock) {
+            alert.update(alertId, TransactionStatus.InBlock);
 
-          events.forEach(({ event }) => {
-            const { method, section } = event;
+            events.forEach(({ event }) => {
+              const { method, section } = event;
 
-            const eventTitle = `${section}.${method}`;
+              const eventTitle = `${section}.${method}`;
 
-            if (method === 'CodeSaved') {
-              alert.success(<CopiedInfo title="Code hash" info={codeHash} />, {
-                title: eventTitle,
-                timeout: 0,
-              });
+              if (method === Method.CodeSaved) {
+                alert.success(<CopiedInfo title="Code hash" info={codeHash} />, {
+                  title: eventTitle,
+                });
 
-              return;
-            }
+                return;
+              }
 
-            if (method === 'ExtrinsicFailed') {
-              alert.error(getErrorMessage(event), { title: eventTitle });
+              if (method === Method.ExtrinsicFailed) {
+                alert.error(getErrorMessage(event), { title: eventTitle });
 
-              return;
-            }
-          });
+                return;
+              }
+            });
 
-          return;
-        }
+            return;
+          }
 
-        if (status.isFinalized) {
-          alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+          if (status.isFinalized) {
+            alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
 
-          return;
-        }
+            return;
+          }
 
-        if (status.isInvalid) {
-          alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-        }
-      });
+          if (status.isInvalid) {
+            alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
+          }
+        })
+        .catch((error) => {
+          alert.update(alertId, error.message, DEFAULT_ERROR_OPTIONS);
+        });
     } catch (error) {
-      alert.update(alertId, `${error}`, DEFAULT_ERROR_OPTIONS);
-      console.error(error);
+      alert.error((error as Error).message);
     }
   };
 

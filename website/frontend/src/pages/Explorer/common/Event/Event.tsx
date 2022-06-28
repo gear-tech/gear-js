@@ -5,7 +5,7 @@ import { Content } from './children/Content/Content';
 import { LogContent } from './children/LogContent/LogContent';
 import { ExpansionPanel } from '../ExpansionPanel/ExpansionPanel';
 
-import { IdeaEvent, IdeaEvents, Methods } from 'types/explorer';
+import { IdeaEvent, IdeaEvents, Method } from 'types/explorer';
 
 type Props = {
   value: IdeaEvent | IdeaEvents;
@@ -20,7 +20,7 @@ const Event = ({ value, className }: Props) => {
 
   const counter = isGroup ? value.length : undefined;
 
-  const isLog = method === Methods.USER_MESSAGE_SENT;
+  const isLog = method === Method.UserMessageSent;
 
   const getContent = ({ id, data }: IdeaEvent = event) =>
     isLog ? (

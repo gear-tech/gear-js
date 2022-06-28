@@ -1,13 +1,17 @@
 import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-export const waitForProgramInit = (api: GearApi, programId: string) => {
-  let unsub: UnsubscribePromise;
-  let messageId: Hex;
+import { ProgramStatus } from 'types/program';
 
-  const initPromise = new Promise<string>((resolve, reject) => {
-    unsub = api.query.system.events((events: any) => {
-      events.forEach(({ event }: any) => {
+export const waitForProgramInit = (api: GearApi, programId: string) => {
+  let messageId: Hex;
+  let unsubPromise: UnsubscribePromise;
+
+  const unsubscribe = async () => (await unsubPromise)();
+
+  return new Promise<string>((resolve) => {
+    unsubPromise = api.query.system.events((events) => {
+      events.forEach(({ event }) => {
         switch (event.method) {
           case 'MessageEnqueued': {
             const meEvent = event as MessageEnqueued;
@@ -23,10 +27,7 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
 
             for (const [id, status] of mdEvent.data.statuses) {
               if (id.eq(messageId) && status.isFailed) {
-                // eslint-disable-next-line prefer-promise-reject-errors
-                reject('failed');
-
-                break;
+                resolve(ProgramStatus.Failed);
               }
             }
 
@@ -36,7 +37,7 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
             const pcEvent = event as ProgramChanged;
 
             if (pcEvent.data.id.eq(programId) && pcEvent.data.change.isActive) {
-              resolve('success');
+              resolve(ProgramStatus.Success);
             }
 
             break;
@@ -46,13 +47,5 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
         }
       });
     });
-  });
-
-  return async () => {
-    const result = await initPromise;
-
-    (await unsub)();
-
-    return result;
-  };
+  }).finally(unsubscribe);
 };

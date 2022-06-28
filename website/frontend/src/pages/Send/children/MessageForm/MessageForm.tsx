@@ -1,4 +1,4 @@
-import { useMemo, VFC, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { Metadata } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
@@ -7,11 +7,10 @@ import { Schema } from './Schema';
 import { FormValues, SetFieldValue } from './types';
 
 import { calculateGas } from 'helpers';
-import { useAccount, useApi, useAlert } from 'hooks';
-import { sendMessage } from 'services/ApiService';
-import sendMessageSVG from 'assets/images/message.svg';
+import { useApi, useAlert, useSendMessage } from 'hooks';
 import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
+import sendMessageSVG from 'assets/images/message.svg';
 
 type Props = {
   id: string;
@@ -23,7 +22,7 @@ type Props = {
 export const MessageForm: VFC<Props> = ({ id, isReply, metadata, replyErrorCode }) => {
   const { api } = useApi();
   const alert = useAlert();
-  const { account: currentAccount } = useAccount();
+  const sendMessage = useSendMessage();
 
   const initialValues = useRef<FormValues>({
     value: 0,
@@ -34,14 +33,11 @@ export const MessageForm: VFC<Props> = ({ id, isReply, metadata, replyErrorCode 
   });
 
   const isMeta = useMemo(() => metadata && Object.keys(metadata).length > 0, [metadata]);
+  const isReply = !!replyErrorCode;
+
+  const method = isReply ? 'reply' : 'handle';
 
   const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
-    if (!currentAccount) {
-      alert.error(`WALLET NOT CONNECTED`);
-      return;
-    }
-
-    const apiMethod = isReply ? api.reply : api.message;
     const payloadType = isMeta ? void 0 : values.payloadType;
 
     const message = {
@@ -52,16 +48,13 @@ export const MessageForm: VFC<Props> = ({ id, isReply, metadata, replyErrorCode 
       destination: values.destination,
     };
 
-    sendMessage(apiMethod, currentAccount, message, alert, resetForm, metadata, payloadType);
+    sendMessage(method, message, resetForm, metadata, payloadType);
   };
 
-  const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () => {
-    const method = isReply ? 'reply' : 'handle';
-
+  const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>
     calculateGas(method, api, values, alert, metadata, null, id, replyErrorCode).then((gasLimit) =>
       setFieldValue('gasLimit', gasLimit)
     );
-  };
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, metadata?.handle_input), [metadata]);
 
@@ -94,3 +87,5 @@ export const MessageForm: VFC<Props> = ({ id, isReply, metadata, replyErrorCode 
     </Formik>
   );
 };
+
+export { MessageForm };
