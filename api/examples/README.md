@@ -1,8 +1,8 @@
 ## Examples
 
-### [Program that used in examples](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/gear-program/src/lib.rs)
+### [Program that used in examples](https://github.com/gear-tech/gear-js/blob/master/api/examples/gear-program/src/lib.rs)
 
-### [Upload program](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/program/uploadProgram.ts)
+### [Upload program](https://github.com/gear-tech/gear-js/blob/master/api/examples/src/program/uploadProgram.ts)
 
 Example of uploading program to chain
 
@@ -10,7 +10,7 @@ Example of uploading program to chain
 yarn program:upload
 ```
 
-### [Send message](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/message/sendMessage.ts)
+### [Send message](https://github.com/gear-tech/gear-js/blob/master/api/examples/src/message/sendMessage.ts)
 
 Example of sending message to uploaded program
 
@@ -18,7 +18,7 @@ Example of sending message to uploaded program
 yarn message:send <programId>
 ```
 
-### [Read mailbox](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/message/readMailbox.ts)
+### [Read mailbox](https://github.com/gear-tech/gear-js/blob/master/api/examples/src/message/readMailbox.ts)
 
 Example of reading user's mailbox
 
@@ -26,7 +26,7 @@ Example of reading user's mailbox
 yarn mailbox:read
 ```
 
-### [Claim value sent from program](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/message/claimValue.ts)
+### [Claim value sent from program](https://github.com/gear-tech/gear-js/blob/master/api/examples/src/message/claimValue.ts)
 
 Example of claiming value
 
@@ -34,10 +34,18 @@ Example of claiming value
 yarn mailbox:claimValue
 ```
 
-### [Read state of the program](https://github.com/gear-tech/gear-js/blob/do-update-api-examples/api/examples/src/state/readState.ts)
+### [Read state of the program](https://github.com/gear-tech/gear-js/blob/master/api/examples/src/state/readState.ts)
 
 Example of reading state of some program
 
 ```bash
 yarn state:read <programId>
+```
+
+### [Submit code](https://github.com/gear-tech/gear-js/blob/master/api/examples/src/program/submitCode.ts)
+
+Example of code submitting
+
+```bash
+yarn code:submit
 ```
