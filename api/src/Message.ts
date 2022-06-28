@@ -36,7 +36,7 @@ export class GearMessage extends GearTransaction {
       this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);
       return this.submitted;
     } catch (error) {
-      throw new SendMessageError();
+      throw new SendMessageError(error.message);
     }
   }
 }

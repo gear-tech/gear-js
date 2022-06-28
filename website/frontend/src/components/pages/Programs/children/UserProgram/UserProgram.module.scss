@@ -1,14 +1,14 @@
-@use 'assets/scss/variables' as *;
-@use 'assets/scss/breakpoints.scss' as *;
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
 @use 'assets/scss/common.scss' as *;
 
 .programsListItem {
-  align-items: center;
   display: flex;
   padding: 20px;
+  align-items: center;
   justify-content: space-between;
   position: relative;
-  border-bottom: 1px solid $separateLineColor;
+  border-bottom: 1px solid $lineColor;
 
   @include md {
     * {
@@ -23,7 +23,7 @@
   font-weight: 600;
 
   @include md {
-    font-size: 14px;
+    font-size: $fontSize;
   }
 }
 
@@ -34,29 +34,23 @@
 
   @include md {
     flex-direction: column;
-    padding-right: 0;
-    padding-left: 16px;
   }
 }
 
 .programWrapperName {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  padding: 0 5px;
 
   @include md {
     width: 100%;
-    padding-bottom: 12px;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #3e3e3e;
-    span {
-      margin-left: 0;
-    }
+    padding: 0;
+    margin: 12px 0;
+    text-align: center;
   }
 
   .programLink {
-    text-decoration: none;
     color: $textColor;
+    font-size: $fontSize;
+    text-decoration: none;
 
     &:hover {
       text-decoration: underline;
@@ -70,92 +64,62 @@
 }
 
 .programsListIndicator {
-  background-color: #fff;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   margin-right: 15px;
-}
-
-.program-item-success {
-  background-color: $successColor;
-  box-shadow: 0px 0px 10px $successColor;
-}
-
-.program-item-failure {
-  background-color: $errorColor;
-  box-shadow: 0px 0px 10px $errorColor;
-}
-
-.program-item--loading {
-  background-color: blue;
-}
-
-.programsListName {
-  color: $textColor;
-  font-size: $fontSizeBase;
-  padding: 0 5px;
+  background-color: $textColor;
 
   @include md {
-    font-size: 14px;
-    word-break: break-all;
+    margin-right: 0;
+  }
+
+  &.success {
+    background-color: $successColor;
+    box-shadow: 0px 0px 10px $successColor;
+  }
+
+  &.failure {
+    background-color: $errorColor;
+    box-shadow: 0px 0px 10px $errorColor;
+  }
+
+  &.loading {
+    background-color: #3975e9;
+    box-shadow: 0px 0px 10px #3975e9;
   }
 }
 
 .programWrapperData {
   display: flex;
   flex: 0 2 300px;
+  color: $textColorSecondary;
 
   @include md {
     width: 100%;
-    margin-left: unset;
     flex: unset;
     justify-content: space-between;
-
-    div {
-      display: flex;
-      flex-direction: column;
-
-      span {
-        padding: 0;
-        color: $textColorSecondary;
-      }
-    }
+    flex-direction: column;
   }
-}
-
-.programsListInfo {
-  color: $textColorSecondary;
 }
 
 .programsListInfoData {
   color: $textColor;
   display: inline-block;
   min-width: 56px;
-  padding-left: 16px;
+  margin-left: 16px;
+
+  @include md {
+    color: $textColorSecondary;
+    margin-left: 0;
+  }
 }
 
 .programsListBtns {
   display: flex;
-  align-items: center;
   flex: 0 1 260px;
+  align-items: center;
   justify-content: flex-end;
-
-  @include md {
-    & {
-      top: 30px;
-    }
-  }
-}
-
-.programsListRefreshBtn {
-  img {
-    position: absolute;
-    top: 7px;
-    left: 10px;
-    width: 16px;
-    height: 20px;
-  }
 }
 
 %actionItem {
@@ -165,7 +129,7 @@
   font-size: 0;
 
   &:hover {
-    background: $bkgButtonColor;
+    background: #3d3d3d;
   }
 }
 

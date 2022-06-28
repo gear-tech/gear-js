@@ -14,7 +14,7 @@ type Props = {
 };
 
 const LogContent = ({ data }: Props) => {
-  const { payload, source } = data;
+  const { payload, source } = data.message;
   const formattedData = data.toHuman();
 
   const [error, setError] = useState('');

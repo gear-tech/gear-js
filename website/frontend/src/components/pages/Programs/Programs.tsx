@@ -1,45 +1,39 @@
-import { VFC } from 'react';
-import { useMatch } from 'react-router-dom';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
+
+import styles from './Programs.module.scss';
+import { All } from './children/All';
+import { Upload } from './children/Upload';
+import { Recent } from './children/Recent';
+import { Messages } from './children/Messages';
+
 import { routes } from 'routes';
-import { SWITCH_PAGE_TYPES } from 'consts';
-import { Messages } from 'components/pages/Messages/Messages';
-import { All } from 'components/pages/Programs/children/All/All';
-import { ProgramSwitch } from '../../blocks/ProgramSwitch/ProgramSwitch';
-import { Upload } from './children/Upload/Upload';
-import { BlockList } from './children/BlocksList/BlocksList';
-import { Recent } from './children/Recent/Recent';
-import './Programs.scss';
+import { ProgramSwitch } from 'components/blocks/ProgramSwitch/ProgramSwitch';
 
-export const Programs: VFC = () => {
-  const isUploadedProgramsPage = useMatch(routes.uploadedPrograms);
-  const isAllProgramsPage = useMatch(routes.allPrograms);
-  const isAllMessagesPage = useMatch(routes.messages);
-  let currentPage = SWITCH_PAGE_TYPES.UPLOAD_PROGRAM;
+const Programs = () => {
+  const { pathname } = useLocation();
 
-  if (isUploadedProgramsPage) {
-    currentPage = SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS;
-  } else if (isAllProgramsPage) {
-    currentPage = SWITCH_PAGE_TYPES.ALL_PROGRAMS;
-  } else if (isAllMessagesPage) {
-    currentPage = SWITCH_PAGE_TYPES.ALL_MESSAGES;
-  }
+  const currentPage = useMemo(() => {
+    switch (pathname) {
+      case routes.main:
+        return <Upload />;
+      case routes.messages:
+        return <Messages />;
+      case routes.allPrograms:
+        return <All />;
+      case routes.uploadedPrograms:
+        return <Recent />;
+      default:
+        return null;
+    }
+  }, [pathname]);
 
   return (
-    <div className="main-content-wrapper">
-      <ProgramSwitch pageType={currentPage} />
-      {currentPage === SWITCH_PAGE_TYPES.UPLOAD_PROGRAM && (
-        <>
-          <DndProvider backend={HTML5Backend}>
-            <Upload />
-          </DndProvider>
-          <BlockList />
-        </>
-      )}
-      {currentPage === SWITCH_PAGE_TYPES.UPLOADED_PROGRAMS && <Recent />}
-      {currentPage === SWITCH_PAGE_TYPES.ALL_PROGRAMS && <All />}
-      {currentPage === SWITCH_PAGE_TYPES.ALL_MESSAGES && <Messages />}
+    <div className={styles.main}>
+      <ProgramSwitch />
+      {currentPage}
     </div>
   );
 };
+
+export { Programs };

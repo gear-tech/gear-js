@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConsumerController } from './consumer.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import configuration from 'src/config/configuration';
+import configuration from '../config/configuration';
 import { MetadataModule } from '../metadata/metadata.module';
-import { ProgramsModule } from '../programs/programs.module';
-import { MessagesModule } from '../messages/messages.module';
+import { ProgramModule } from '../program/program.module';
+import { MessageModule } from '../message/message.module';
 import { ConsumerService } from './consumer.service';
 
 const configKafka = configuration().kafka;
@@ -32,8 +32,8 @@ const configKafka = configuration().kafka;
       },
     ]),
     MetadataModule,
-    ProgramsModule,
-    MessagesModule,
+    ProgramModule,
+    MessageModule,
   ],
   controllers: [ConsumerController],
   providers: [ConsumerService],

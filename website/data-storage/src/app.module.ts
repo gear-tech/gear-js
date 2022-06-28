@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
 import { ConsumerModule } from './consumer/consumer.module';
-import { MessagesModule } from './messages/messages.module';
+import { MessageModule } from './message/message.module';
 import { MetadataModule } from './metadata/metadata.module';
-import { ProgramsModule } from './programs/programs.module';
+import { ProgramModule } from './program/program.module';
 import { HealthcheckController } from './healthcheck/healthcheck.controller';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import configurations from './config/configuration';
@@ -30,8 +31,8 @@ import configurations from './config/configuration';
       inject: [ConfigService],
     }),
     ConsumerModule,
-    ProgramsModule,
-    MessagesModule,
+    ProgramModule,
+    MessageModule,
     MetadataModule,
     HealthcheckModule,
   ],

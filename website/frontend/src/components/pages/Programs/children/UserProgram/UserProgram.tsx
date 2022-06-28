@@ -1,67 +1,69 @@
+import { memo } from 'react';
 import clsx from 'clsx';
-import { ProgramModel, ProgramStatus } from 'types/program';
-import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
-import { useAlert } from 'hooks';
 import { Link, generatePath } from 'react-router-dom';
-import { routes } from 'routes';
-import MessageIllustration from 'assets/images/message.svg';
-import UploadIcon from 'assets/images/upload-cloud.svg';
-import Copy from 'assets/images/copy.svg';
+import { Button } from '@gear-js/ui';
+
 import styles from './UserProgram.module.scss';
+
+import { routes } from 'routes';
+import { useAlert } from 'hooks';
+import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
+import { ProgramModel, ProgramStatus } from 'types/program';
+import copySVG from 'assets/images/copy.svg';
+import messageSVG from 'assets/images/message.svg';
+import uploadMetaSVG from 'assets/images/upload-cloud.svg';
 
 type Props = {
   program: ProgramModel;
   isMetaLinkActive?: boolean;
 };
 
-export const UserProgram = (props: Props) => {
+const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
   const alert = useAlert();
 
-  const { program, isMetaLinkActive = true } = props;
+  const { id: programId, name, initStatus, timestamp } = program;
+
+  const handleCopy = () => copyToClipboard(programId, alert, 'Program ID copied');
 
   return (
-    <div className={styles.programsListItem} key={program.id}>
+    <div className={styles.programsListItem}>
       <div className={styles.programWrapper}>
         <span
           className={clsx(
             styles.programsListIndicator,
-            program.initStatus === ProgramStatus.Success && styles['program-item-success'],
-            program.initStatus === ProgramStatus.Failed && styles['program-item-failure'],
-            program.initStatus === ProgramStatus.InProgress && styles['program-item-loading']
+            initStatus === ProgramStatus.Success && styles.success,
+            initStatus === ProgramStatus.Failed && styles.failure,
+            initStatus === ProgramStatus.InProgress && styles.loading
           )}
         />
         <div className={styles.programWrapperName}>
-          <div className={styles.programsListName}>
-            <Link className={styles.programLink} to={`/program/${program.id}`}>
-              {program.name && fileNameHandler(program.name)}
-            </Link>
-          </div>
+          <Link className={styles.programLink} to={generatePath(routes.program, { programId })}>
+            {fileNameHandler(name || programId)}
+          </Link>
         </div>
         <div className={styles.programsCopyId}>
-          <button type="button" onClick={() => copyToClipboard(program.id, alert, 'Program ID copied')}>
-            <img src={Copy} alt="copy program ID" />
-          </button>
+          <Button icon={copySVG} color="transparent" onClick={handleCopy} />
         </div>
       </div>
       <div className={styles.programWrapperData}>
-        <div className={styles.programsListInfo}>
-          Timestamp:
-          <span className={styles.programsListInfoData}>{program.timestamp && formatDate(program.timestamp)}</span>
-        </div>
+        Timestamp:
+        {timestamp && <span className={styles.programsListInfoData}>{formatDate(timestamp)}</span>}
       </div>
 
       <div className={styles.programsListBtns}>
-        <Link to={`/send/message/${program.id}`} className={styles.allProgramsItemSendMessage}>
-          <img src={MessageIllustration} alt="Send message to program" />
+        <Link to={`/send/message/${programId}`} className={styles.allProgramsItemSendMessage}>
+          <img src={messageSVG} alt="Send message to program" />
         </Link>
         <Link
-          to={generatePath(routes.meta, { programId: program.id })}
+          to={generatePath(routes.meta, { programId })}
           tabIndex={Number(isMetaLinkActive)}
           className={clsx(styles.allProgramsItemUpload, !isMetaLinkActive && styles.linkInactive)}
         >
-          <img src={UploadIcon} alt="Upload metadata" />
+          <img src={uploadMetaSVG} alt="Upload metadata" />
         </Link>
       </div>
     </div>
   );
-};
+});
+
+export { UserProgram };

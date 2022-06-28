@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { inputStyles, textareaStyles } from '@gear-js/ui';
+import { inputStyles } from '@gear-js/ui';
 
 import styles from '../Form.module.scss';
 
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const FormText = ({ text, label, isTextarea = false }: Props) => {
-  const labelClass = isTextarea ? textareaStyles.label : inputStyles.label;
+  const labelClass = isTextarea ? styles.topPadding : styles.center;
 
   return (
     <div className={clsx(styles.formItem, styles.field)}>
