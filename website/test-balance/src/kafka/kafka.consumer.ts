@@ -3,7 +3,7 @@ import { initLogger, JSONRPC_ERRORS, kafkaLogger } from '@gear-js/common';
 import { Consumer, Kafka, KafkaMessage, Producer } from 'kafkajs';
 import config from '../config/config';
 import { DbService } from '../database/db';
-import { GearService } from '../domain/gear.service';
+import { GearService } from '../domain/gear/gear.service';
 
 const log = initLogger('KafkaConsumer');
 
@@ -31,26 +31,24 @@ export class KafkaConsumer {
     this.producer = this.kafka.producer();
   }
 
-  async connect() {
+  public async connect() {
     await this.consumer.connect();
     log.info(`Connected consumer to kafka`);
     await this.producer.connect();
     log.info(`Connected producer to kafka`);
   }
 
-  sendReply(message: any, value: string) {
-    this.producer.send({
-      topic: message.headers.kafka_replyTopic.toString(),
-      messages: [
-        {
-          value,
-          headers: { kafka_correlationId: message.headers.kafka_correlationId.toString() },
-        },
-      ],
+  public async subscribe(topic: string) {
+    await this.consumer.subscribe({ topic });
+    log.info(`Subscribe to ${topic} topic`);
+    await this.consumer.run({
+      eachMessage: async ({ message }) => {
+        await this.messageProcessing(message);
+      },
     });
   }
 
-  async messageProcessing(message: KafkaMessage) {
+  private async messageProcessing(message: KafkaMessage) {
     let result: any;
     let payload: any;
 
@@ -61,7 +59,7 @@ export class KafkaConsumer {
       return { error: JSONRPC_ERRORS.InternalError.name };
     }
 
-    if (payload.genesis === this.gearService.genesisHash) {
+    if (payload.genesis === this.gearService.getGenesisHash) {
       try {
         if (await this.dbService.possibleToTransfer(payload.address, payload.genesis)) {
           result = { result: await this.gearService.transferBalance(payload.address) };
@@ -76,13 +74,15 @@ export class KafkaConsumer {
     }
   }
 
-  async subscribe(topic: string) {
-    await this.consumer.subscribe({ topic });
-    log.info(`Subscribe to ${topic} topic`);
-    await this.consumer.run({
-      eachMessage: async ({ message }) => {
-        await this.messageProcessing(message);
-      },
+  private sendReply(message: any, value: string) {
+    this.producer.send({
+      topic: message.headers.kafka_replyTopic.toString(),
+      messages: [
+        {
+          value,
+          headers: { kafka_correlationId: message.headers.kafka_correlationId.toString() },
+        },
+      ],
     });
   }
 }

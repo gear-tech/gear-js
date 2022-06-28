@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \\\\\\\\\\\\\\\"src/**/*.ts\\\\\\\\\\\\\\\" \\\\\\\\\\\\\\\"tests/**/*.ts\\\\\\\\\\\\\\\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -18,7 +18,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config tests/jest-e2e.json"
   },
   "dependencies": {
     "@gear-js/api": "0.20.1",
@@ -29,7 +29,7 @@
     "@nestjs/microservices": "8.4.7",
     "@nestjs/platform-express": "8.4.7",
     "@nestjs/typeorm": "8.1.4",
-    "@polkadot/api": "8.8.2",
+    "@polkadot/api": "8.9.1",
     "kafkajs": "1.16.0",
     "pg": "8.7.3",
     "reflect-metadata": "0.1.13",
@@ -56,6 +56,7 @@
     "babel-plugin-transform-typescript-metadata": "0.3.2",
     "babel-preset-env": "1.7.0",
     "babel-preset-jest": "27.5.1",
+    "class-transformer": "^0.5.1",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "3.4.1",

@@ -1,5 +1,4 @@
-@use 'assets/scss/variables' as *;
-@use 'assets/scss/breakpoints.scss' as *;
+@use '@gear-js/ui/breakpoints' as *;
 
 .searchForm {
   display: flex;
@@ -11,19 +10,6 @@
   @include lg {
     flex-direction: column;
     gap: 16px;
-  }
-}
-
-.links {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 0;
-
-  @include lg {
-    width: 100%;
-    justify-content: center;
   }
 }
 

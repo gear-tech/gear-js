@@ -1,4 +1,5 @@
 import { UserMessageSentData } from '@gear-js/api';
+import { GenericEventData } from '@polkadot/types';
 import { IdeaEvent, IdeaEvents, Methods } from 'types/explorer';
 import { ExpansionPanel } from 'components/pages/Explorer/common/ExpansionPanel/ExpansionPanel';
 import { Content } from './children/Content/Content';
@@ -20,7 +21,11 @@ const Event = ({ value, className }: Props) => {
   const isLog = method === Methods.USER_MESSAGE_SENT;
 
   const getContent = ({ id, data }: IdeaEvent = event) =>
-    isLog ? <LogContent key={id} data={new UserMessageSentData(data)} /> : <Content key={id} data={data} />;
+    isLog ? (
+      <LogContent key={id} data={data as UserMessageSentData} />
+    ) : (
+      <Content key={id} data={data as GenericEventData} />
+    );
 
   const getBody = () => (isGroup ? value.map(getContent) : getContent());
 

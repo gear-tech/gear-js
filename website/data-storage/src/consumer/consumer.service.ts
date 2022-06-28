@@ -23,22 +23,22 @@ import {
 } from '@gear-js/common';
 
 import { Result } from './types';
-import { ProgramsService } from '../programs/programs.service';
-import { MessagesService } from '../messages/messages.service';
+import { ProgramService } from '../program/program.service';
+import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
 import { FormResponse } from '../middleware/formResponse';
 
 @Injectable()
 export class ConsumerService {
   constructor(
-    private readonly programService: ProgramsService,
-    private readonly messageService: MessagesService,
+    private readonly programService: ProgramService,
+    private readonly messageService: MessageService,
     private readonly metaService: MetadataService,
   ) {}
 
   events = {
     UserMessageSent: (value: IUserMessageSentKafkaValue) => {
-      this.messageService.save(value);
+      this.messageService.createMessage(value);
     },
     MessageEnqueued: async ({
       id,
@@ -50,7 +50,7 @@ export class ConsumerService {
       blockHash,
     }: IMessageEnqueuedKafkaValue) => {
       if (entry === 'Init') {
-        await this.programService.save({
+        await this.programService.createProgram({
           id: destination,
           owner: source,
           genesis: genesis,
@@ -58,7 +58,7 @@ export class ConsumerService {
           blockHash: blockHash,
         });
       }
-      this.messageService.save({
+      await this.messageService.createMessage({
         id: id,
         destination: destination,
         source: source,
@@ -72,6 +72,9 @@ export class ConsumerService {
     },
     ProgramChanged: (value: IProgramChangedKafkaValue) => {
       this.programService.setStatus(value.id, value.genesis, value.isActive ? InitStatus.SUCCESS : InitStatus.FAILED);
+    },
+    CodeChanged: () => {
+      console.log('TODO: CodeChanged');
     },
     MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
       this.messageService.setDispatchedStatus(value);
@@ -111,8 +114,8 @@ export class ConsumerService {
   }
 
   @FormResponse
-  async addPayload(params: AddPayloadParams): Result<IMessage> {
-    return await this.messageService.addPayload(params);
+  async addPayload(params: AddPayloadParams): Result<void> {
+    return;
   }
 
   @FormResponse

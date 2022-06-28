@@ -17,14 +17,14 @@ const Wallet = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const accountAddress = account?.address;
+
   useEffect(() => {
     // TODO: think how to wrap it hook
     let unsub: UnsubscribePromise | undefined;
 
-    if (account && api) {
-      unsub = api.gearEvents.subscribeToBalanceChange(account.address, (balance) => {
-        updateBalance(balance);
-      });
+    if (accountAddress && api) {
+      unsub = api.gearEvents.subscribeToBalanceChange(accountAddress, updateBalance);
     }
 
     return () => {
@@ -32,7 +32,8 @@ const Wallet = () => {
         unsub.then((callback) => callback());
       }
     };
-  }, [api, account, updateBalance]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, accountAddress]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -65,7 +66,7 @@ const Wallet = () => {
             </div>
             <div className={styles.section}>
               <button type="button" className={accButtonClassName} onClick={openModal}>
-                <Identicon value={account.address} size={28} theme="polkadot" className={styles.avatar} />
+                <Identicon value={accountAddress} size={28} theme="polkadot" className={styles.avatar} />
                 {account.meta.name}
               </button>
             </div>

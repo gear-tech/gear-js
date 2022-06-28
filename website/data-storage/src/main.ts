@@ -1,22 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { waitReady } from '@polkadot/wasm-crypto';
+import { kafkaLogger } from '@gear-js/common';
 
 import { AppModule } from './app.module';
 import configuration from './config/configuration';
-import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import { changeStatus } from './healthcheck/healthcheck.controller';
 import { dataStorageLogger } from './common/data-storage.logger';
-import { kafkaLogger } from '@gear-js/common';
 
 async function bootstrap() {
   const { kafka, healthcheck } = configuration();
 
-  const healthCheckApp = await NestFactory.create(HealthcheckModule, { cors: true });
-  dataStorageLogger.info(`HelathCheckApp successfully run on the ${healthcheck.port} 🚀`);
-  await healthCheckApp.listen(healthcheck.port);
+  const app = await NestFactory.create(AppModule, { cors: true });
+  await app.listen(healthcheck.port);
+  dataStorageLogger.info(`HelathCheck app is running on ${healthcheck.port} 🚀`);
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+  app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
     options: {
       client: {
@@ -34,9 +33,10 @@ async function bootstrap() {
       },
     },
   });
+
+  await app.startAllMicroservices();
+  changeStatus('kafka');
   await waitReady();
   changeStatus('database');
-  await app.listen();
-  changeStatus('kafka');
 }
 bootstrap();

@@ -6,7 +6,7 @@ export const routes = {
   termsOfUse: '/terms-of-use',
   editor: '/editor',
   allPrograms: '/all-programs',
-  program: '/program/:id',
+  program: '/program/:programId',
   messages: '/messages',
   message: '/message/:id',
   state: '/state/:programId',

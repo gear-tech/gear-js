@@ -39,20 +39,24 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
   };
 
   const handleSubmit = (values: FormValues, actions: FormikHelpers<FormValues>) => {
-    if (!account) {
-      alert.error(`WALLET NOT CONNECTED`);
-      return;
+    try {
+      if (!account) {
+        throw new Error('Wallet not connected');
+      }
+
+      if (!meta) {
+        throw new Error('Metadata not loaded');
+      }
+
+      addMetadata(meta, metaBuffer, account, programId, values.programName, alert);
+      resetForm();
+    } catch (error) {
+      const message = (error as Error).message;
+
+      alert.error(message);
+    } finally {
+      actions.setSubmitting(false);
     }
-
-    if (!meta) {
-      alert.error(`ERROR: metadata not loaded`);
-      return;
-    }
-
-    addMetadata(meta, metaBuffer, account, programId, values.programName, alert);
-
-    actions.setSubmitting(false);
-    resetForm();
   };
 
   return (
@@ -68,7 +72,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
 
         return (
           <Form className={formStyles.largeForm}>
-            <FormInput name="name" label="Program name" />
+            <FormInput name="programName" label="Program name" />
 
             <UploadMeta onReset={resetForm} onUpload={handleUploadMetaFile} />
 
