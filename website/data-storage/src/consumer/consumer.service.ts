@@ -73,6 +73,9 @@ export class ConsumerService {
     ProgramChanged: (value: IProgramChangedKafkaValue) => {
       this.programService.setStatus(value.id, value.genesis, value.isActive ? InitStatus.SUCCESS : InitStatus.FAILED);
     },
+    CodeChanged: () => {
+      console.log('TODO: CodeChanged');
+    },
     MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
       this.messageService.setDispatchedStatus(value);
     },

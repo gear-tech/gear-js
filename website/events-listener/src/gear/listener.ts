@@ -1,12 +1,11 @@
-import { GearApi, IGearEvent } from '@gear-js/api';
+import { GearApi } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
-
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { handleEvent } from './event-handlers';
 import { GEAR_EVENT } from '@gear-js/common';
 
-export const listen = (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) =>
-  api.query.system.events(async (events) => {
+export const listen = (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) => {
+  return api.query.system.events(async (events) => {
     const blockHash = events.createdAtHash!.toHex();
     const timestamp = await api.blocks.getBlockTimestamp(blockHash!);
     const base = {
@@ -25,3 +24,4 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
       }
     });
   });
+};

@@ -28,7 +28,6 @@ export class KafkaProducer {
       await admin.connect();
       eventListenerLogger.info('Kafka producer: Admin is connected');
     } catch (error) {
-      eventListenerLogger.info('Kafka producer: Admin is connected');
       eventListenerLogger.error(error);
       eventListenerLogger.error('Admin is not connected');
       throw error;
@@ -51,11 +50,11 @@ export class KafkaProducer {
     } catch (error) {
       eventListenerLogger.error(`Kafka producer: ${error}`);
       await admin.disconnect();
-      eventListenerLogger.error(`Admin is not connected`);
+      eventListenerLogger.info(`Admin is disconnected`);
       throw error;
     }
     await admin.disconnect();
-    eventListenerLogger.error(`Admin is not connected`);
+    eventListenerLogger.info(`Admin is disconnected`);
   }
 
   async connect() {

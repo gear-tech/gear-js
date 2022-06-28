@@ -12,7 +12,7 @@
     "@polkadot/extension-dapp": "0.43.1",
     "@polkadot/react-identicon": "2.0.1",
     "@polkadot/types": "8.9.1",
-    "@polkadot/wasm-crypto": "6.0.1",
+    "@polkadot/wasm-crypto": "6.1.5",
     "@stitches/react": "1.2.7",
     "clsx": "1.1.1",
     "file-saver": "2.0.5",
