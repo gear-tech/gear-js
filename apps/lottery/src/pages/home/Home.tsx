@@ -12,7 +12,7 @@ function Home() {
   const { account } = useAccount();
 
   const { lottery, isLotteryRead } = useLottery();
-  const { lotteryOwner, lotteryStartTime, lotteryDuration } = lottery || {};
+  const { lotteryOwner, lotteryStartTime, lotteryDuration, tokenAddress } = lottery || {};
 
   const cost = lottery?.participationCost || '';
   const prizeFund = lottery?.prizeFund || '';
@@ -43,7 +43,7 @@ function Home() {
         />
       )}
       {!isLotteryStarted && isOwner && <OwnerStart />}
-      {isLotteryActive && !isParticipant && <PlayerStart cost={cost} />}
+      {isLotteryActive && !isParticipant && <PlayerStart cost={cost} isToken={!!tokenAddress} />}
       {!isLotteryActive && !isParticipant && <Content subheading={SUBHEADING.AWAIT} />}
     </>
   ) : (
