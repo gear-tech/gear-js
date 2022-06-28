@@ -1,7 +1,6 @@
-import { GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
+import { GearApi, GearKeyring } from '@gear-js/api';
 import { readFileSync } from 'fs';
 import { PATH_TO_OPT } from '../config';
-import { waitForInit } from './waitForInit';
 
 const main = async () => {
   const api = await GearApi.create();

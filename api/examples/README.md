@@ -1,6 +1,8 @@
 ## Examples
 
-### [Program that used in examples](https://github.com/gear-tech/gear-js/blob/master/api/examples/gear-program/src/lib.rs)
+**[Program that used in examples](https://github.com/gear-tech/gear-js/blob/master/api/examples/gear-program/src/lib.rs)**
+
+**Run `yarn install` before running examples.**
 
 ### [Upload program](https://github.com/gear-tech/gear-js/blob/master/api/examples/src/program/uploadProgram.ts)
 

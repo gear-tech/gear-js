@@ -1,4 +1,4 @@
-import { GearApi, GearKeyring, UserMessageRead } from '@gear-js/api';
+import { GearApi, GearKeyring } from '@gear-js/api';
 
 const main = async () => {
   const api = await GearApi.create();
