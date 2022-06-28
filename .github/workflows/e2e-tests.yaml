@@ -21,6 +21,12 @@ env:
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
   KUBE_NAMESPACE: test-env
   DOCKER_BUILDKIT: 1
+  REACT_APP_NODE_ADDRESS: ${{ secrets.REACT_APP_NODE_ADDRESS }}
+  REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+  REACT_APP_WASM_COMPILER_URL: ${{ secrets.REACT_APP_WASM_COMPILER_URL }}
+  REACT_APP_DEFAULT_NODES_URL: ${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+  REACT_APP_RRT: ''
+  REACT_APP_HCAPTCHA_SITE_KEY: ${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
 
 jobs:
   run-unit-tests:
@@ -81,13 +87,6 @@ jobs:
         working-directory: 'website/frontend'
         run: |
           yarn test
-        env: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
-            REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
-            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
-            REACT_APP_RRT=''
-            REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
 
   wait-previous-run:
     needs: [run-unit-tests]
