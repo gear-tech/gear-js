@@ -29,13 +29,7 @@ const entities = [Meta, Message, Program];
         database: configService.get('database.name'),
         logging: true,
         synchronize: false,
-        migrations: ['database/migrations/*{.ts,.js}'],
-        // Run migrations automatically,
-        migrationsRun: true,
         entities,
-        cli: {
-          migrationsDir: 'src/database/migrations',
-        },
       }),
       inject: [ConfigService],
     }),
