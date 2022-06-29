@@ -10,5 +10,6 @@ COPY ./website/data-storage website/data-storage
 RUN yarn install
 RUN yarn build:common
 RUN yarn build:data-storage
+WORKDIR /src/website/data-storage
 
-CMD ["node", "website/data-storage/dist/main", "./website/data-storage/dist/database/migrations"]
+CMD ["node", "dist/main"]

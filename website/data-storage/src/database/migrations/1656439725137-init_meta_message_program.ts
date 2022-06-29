@@ -29,9 +29,6 @@ export class initMetaMessageProgram1656439725137 implements MigrationInterface {
         "meta" character varying, 
         "metaFile" character varying, CONSTRAINT "PK_c4c17a6c2bd7651338b60fc590b" PRIMARY KEY ("id"))`,
     );
-    await queryRunner.query(`
-        CREATE TYPE "public.program_initstatus_enum" AS ENUM('in progress', 'failed', 'success');
-    `);
     await queryRunner.query(
       `CREATE TABLE "program" (
         "genesis" character varying NOT NULL, 
