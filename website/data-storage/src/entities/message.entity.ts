@@ -3,7 +3,7 @@ import { IMessage } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
 
-@Entity('messages')
+@Entity()
 export class Message extends BaseEntity implements IMessage {
   @PrimaryColumn()
   id: string;
