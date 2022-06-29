@@ -33,4 +33,4 @@ function Card({ id, name, media }: Partial<NFT>) {
   );
 }
 
-export default Card;
+export { Card };

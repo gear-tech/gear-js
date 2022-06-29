@@ -1,6 +1,6 @@
-import InfoText from 'components/info-text';
+import { InfoText } from 'components';
 import { MarketNFT } from 'types';
-import Card from './card';
+import { Card } from './card';
 import styles from './List.module.scss';
 
 interface ExtendedMarketNFT extends MarketNFT {
@@ -37,4 +37,4 @@ function List({ nfts }: Props) {
   );
 }
 
-export default List;
+export { List };

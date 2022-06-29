@@ -2,8 +2,8 @@ import { Hex } from '@gear-js/api';
 import { ReactNode } from 'react';
 import { Offer as OfferType } from 'types';
 import { IPFS_GATEWAY_ADDRESS } from 'consts';
-import Card from './card';
-import Offer from './offer';
+import { Card } from './card';
+import { Offer } from './offer';
 import styles from './Listing.module.scss';
 
 type Props = {
@@ -63,4 +63,4 @@ function Listing({ children, heading, description, owner, price, royalty, image,
   );
 }
 
-export default Listing;
+export { Listing };

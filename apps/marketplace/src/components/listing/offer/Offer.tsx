@@ -1,8 +1,9 @@
 import { Hex } from '@gear-js/api';
+import { useAccount } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { ConfirmationModal } from 'components/modals';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
-import { useAccount, useMarketplaceMessage } from 'hooks';
+import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './Offer.module.scss';
@@ -37,11 +38,8 @@ function Offer({ bid, bidder, listingOwner, hash }: Props) {
   };
 
   const accept = () => {
-    const payload = {
-      AcceptOffer: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, offerHash: hash },
-    };
-
-    sendMessage(payload).then(closeModal);
+    const payload = { AcceptOffer: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, offerHash: hash } };
+    sendMessage(payload, { onSuccess: closeModal });
   };
 
   return (
@@ -60,4 +58,4 @@ function Offer({ bid, bidder, listingOwner, hash }: Props) {
   );
 }
 
-export default Offer;
+export { Offer };

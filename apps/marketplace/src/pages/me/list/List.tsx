@@ -1,6 +1,6 @@
-import InfoText from 'components/info-text';
+import { InfoText } from 'components';
 import { NFT } from 'types';
-import Card from './card';
+import { Card } from './card';
 import styles from './List.module.scss';
 
 type Props = {
@@ -15,4 +15,4 @@ function List({ nfts }: Props) {
   return isAnyNft ? <ul className={styles.list}>{getCards()}</ul> : <InfoText text="You don't have any tokens yet" />;
 }
 
-export default List;
+export { List };

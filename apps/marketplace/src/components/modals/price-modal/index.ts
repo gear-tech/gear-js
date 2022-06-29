@@ -1,3 +1,3 @@
-import PriceModal from './PriceModal';
+import { PriceModal } from './PriceModal';
 
-export default PriceModal;
+export { PriceModal };

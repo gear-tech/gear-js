@@ -6,8 +6,18 @@
   }
 }
 
+@mixin horizontalGap($gap) {
+  & > *:not(:last-child) {
+    margin-right: $gap;
+  }
+}
+
 .heading {
   margin-bottom: 32px;
+  // TODO: replace w/ @gear-js/ui heading styles
+  font-family: 'Syncopate', sans-serif;
+  font-size: 22px;
+  line-height: 30px;
 }
 
 .main {
@@ -19,15 +29,37 @@
 
 .form {
   @include verticalGap(32px);
+}
+
+.item {
+  @include horizontalGap(32px);
+  display: flex;
+  align-items: center;
+}
+
+.input,
+.button {
   max-width: 540px;
 }
 
 .input {
+  flex: 1;
   display: grid;
   grid-template-columns: 4fr 6fr;
 }
 
 .error {
-  text-align: right;
   color: $errorColor;
+}
+
+.checkbox {
+  &Wrapper {
+    &::before {
+      content: '';
+    }
+  }
+
+  &Error {
+    margin-left: auto;
+  }
 }

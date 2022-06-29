@@ -1,11 +1,10 @@
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import { Listing, PriceModal } from 'components';
-import OnLogin from 'components/on-login';
+import { Listing, PriceModal, OnLogin } from 'components';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
-import AuctionModal from './auction-modal';
+import { AuctionModal } from './auction-modal';
 
 type Props = {
   isOwner: boolean;
@@ -52,7 +51,7 @@ function OwnerListing(props: Props) {
       },
     };
 
-    sendMessage(payload, priceValue).then(closeModal);
+    sendMessage(payload, { value: priceValue, onSuccess: closeModal });
   };
 
   return (
@@ -82,4 +81,4 @@ function OwnerListing(props: Props) {
   );
 }
 
-export default OwnerListing;
+export { OwnerListing };

@@ -1,3 +1,3 @@
-import AuctionModal from './AuctionModal';
+import { AuctionModal } from './AuctionModal';
 
-export default AuctionModal;
+export { AuctionModal };

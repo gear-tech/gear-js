@@ -1,6 +1,6 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Modal } from '@gear-js/ui';
-import Accounts from '../accounts';
+import { Accounts } from '../accounts';
 
 type Props = {
   accounts: InjectedAccountWithMeta[] | undefined;
@@ -25,4 +25,4 @@ function AccountsModal({ accounts, close }: Props) {
   );
 }
 
-export default AccountsModal;
+export { AccountsModal };

@@ -1,3 +1,3 @@
-import AccountsModal from './AccountsModal';
+import { AccountsModal } from './AccountsModal';
 
-export default AccountsModal;
+export { AccountsModal };

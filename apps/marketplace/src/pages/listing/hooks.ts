@@ -1,5 +1,6 @@
 import { GearKeyring } from '@gear-js/api';
-import { useAccount, useMarketNft, useNft } from 'hooks';
+import { useAccount } from '@gear-js/react-hooks';
+import { useMarketNft, useNft } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { NFTDetails } from 'types';
@@ -57,4 +58,4 @@ function useListing() {
   };
 }
 
-export default useListing;
+export { useListing };

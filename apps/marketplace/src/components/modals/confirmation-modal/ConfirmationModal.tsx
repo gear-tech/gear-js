@@ -16,4 +16,4 @@ function ConfirmationModal({ heading, close, onSubmit }: Props) {
   );
 }
 
-export default ConfirmationModal;
+export { ConfirmationModal };

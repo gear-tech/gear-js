@@ -1,6 +1,5 @@
 import { Button, Input, Modal } from '@gear-js/ui';
-import { useInput } from 'hooks';
-import { FormEvent } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import styles from './PriceModal.module.scss';
 
 type Props = {
@@ -10,7 +9,8 @@ type Props = {
 };
 
 function PriceModal({ heading, close, onSubmit }: Props) {
-  const { value: price, handleChange: handlePriceChange } = useInput('');
+  const [price, setPrice] = useState('');
+  const handlePriceChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => setPrice(value);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,4 +28,4 @@ function PriceModal({ heading, close, onSubmit }: Props) {
   );
 }
 
-export default PriceModal;
+export { PriceModal };

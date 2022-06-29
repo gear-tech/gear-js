@@ -4,3 +4,9 @@
   align-items: center;
   padding: 30px 0;
 }
+
+.nav {
+  & > *:not(:last-child) {
+    margin-right: 64px;
+  }
+}

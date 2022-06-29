@@ -1,5 +1,5 @@
 import { useOwnersNft } from 'hooks';
-import List from './list';
+import { List } from './list';
 import styles from './Me.module.scss';
 
 function Me() {
@@ -13,4 +13,4 @@ function Me() {
   );
 }
 
-export default Me;
+export { Me };

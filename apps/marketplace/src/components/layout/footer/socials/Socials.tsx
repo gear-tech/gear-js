@@ -24,4 +24,4 @@ function Socials() {
   return <ul className={styles.socials}>{getItems()}</ul>;
 }
 
-export default Socials;
+export { Socials };

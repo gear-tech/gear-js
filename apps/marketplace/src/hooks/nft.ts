@@ -1,34 +1,20 @@
-import { Hex } from '@gear-js/api';
-import { nftMetaWasm } from 'assets';
+import { useAccount, useReadState, useSendMessage } from '@gear-js/react-hooks';
+import { AnyJson } from '@polkadot/types/types';
+import marketplaceMetaWasm from 'assets/wasm/marketplace.meta.wasm';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMemo } from 'react';
 import { NFT } from 'types';
-import { useMessage, useMetadata, useReadState } from './api';
-import { useAccount } from './context';
-
-type NFTPayload = { Token: { tokenId: string } };
-type OwnersNFTPayload = { TokensForOwner: { owner: Hex } };
 
 type NFTState = { Token: { token: NFT } };
 type OwnersNFTState = { TokensForOwner: { tokens: NFT[] } };
 
-function useNftMeta() {
-  const { metadata, metaBuffer } = useMetadata(nftMetaWasm);
-
-  return { nftMeta: metadata, nftMetaBuffer: metaBuffer };
-}
-
-function useNftState(payload: NFTPayload): NFTState | undefined;
-function useNftState(payload: OwnersNFTPayload | undefined): OwnersNFTState | undefined;
-function useNftState(payload: NFTPayload | OwnersNFTPayload | undefined) {
-  const { nftMetaBuffer } = useNftMeta();
-
-  return useReadState(NFT_CONTRACT_ADDRESS, nftMetaBuffer, payload);
+function useNftState<T>(payload: AnyJson) {
+  return useReadState<T>(NFT_CONTRACT_ADDRESS, marketplaceMetaWasm, payload);
 }
 
 function useNft(tokenId: string) {
   const payload = useMemo(() => ({ Token: { tokenId } }), [tokenId]);
-  const state = useNftState(payload);
+  const { state } = useNftState<NFTState>(payload);
 
   return state?.Token.token;
 }
@@ -36,19 +22,16 @@ function useNft(tokenId: string) {
 function useOwnersNft() {
   const { account } = useAccount();
 
-  const payload = useMemo(
-    () => (account ? { TokensForOwner: { owner: account?.decodedAddress } } : undefined),
-    [account],
-  );
+  const getPayload = () => (account ? { TokensForOwner: { owner: account?.decodedAddress } } : undefined);
+  const payload = useMemo(getPayload, [account]);
 
-  const state = useNftState(payload);
+  const { state } = useNftState<OwnersNFTState>(payload);
 
   return state?.TokensForOwner.tokens;
 }
 
 function useNftMessage() {
-  const { nftMeta } = useNftMeta();
-  return useMessage(NFT_CONTRACT_ADDRESS, nftMeta);
+  return useSendMessage(NFT_CONTRACT_ADDRESS, marketplaceMetaWasm);
 }
 
 export { useNft, useOwnersNft, useNftMessage };

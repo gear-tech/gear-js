@@ -1,3 +1,3 @@
-import InfoText from './InfoText';
+import { InfoText } from './InfoText';
 
-export default InfoText;
+export { InfoText };

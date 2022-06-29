@@ -4,4 +4,4 @@ function ApiLoader() {
   return <p className={styles.loader}>Initializing API</p>;
 }
 
-export default ApiLoader;
+export { ApiLoader };

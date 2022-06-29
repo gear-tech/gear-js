@@ -1,3 +1,3 @@
-import ApiLoader from './ApiLoader';
+import { ApiLoader } from './ApiLoader';
 
-export default ApiLoader;
+export { ApiLoader };

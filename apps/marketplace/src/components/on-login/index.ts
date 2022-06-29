@@ -1,3 +1,3 @@
-import OnLogin from './OnLogin';
+import { OnLogin } from './OnLogin';
 
-export default OnLogin;
+export { OnLogin };

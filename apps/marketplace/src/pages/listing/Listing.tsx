@@ -1,11 +1,12 @@
+import { useAccount } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { NFTDetails } from 'types';
 import { IPFS_GATEWAY_ADDRESS } from 'consts';
-import { useAccount, useMarketNft, useNft } from 'hooks';
-import AuctionListing from './auction-listing';
-import OwnerListing from './owner-listing';
-import SaleListing from './sale-listing';
+import { useMarketNft, useNft } from 'hooks';
+import { AuctionListing } from './auction-listing';
+import { OwnerListing } from './owner-listing';
+import { SaleListing } from './sale-listing';
 
 type Params = {
   id: string;
@@ -89,4 +90,4 @@ function Listing() {
   ) : null;
 }
 
-export default Listing;
+export { Listing };

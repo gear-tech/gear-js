@@ -1,3 +1,3 @@
-import Offer from './Offer';
+import { Offer } from './Offer';
 
-export default Offer;
+export { Offer };

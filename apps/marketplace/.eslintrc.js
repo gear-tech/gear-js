@@ -22,5 +22,14 @@ module.exports = {
   plugins: ['react', '@typescript-eslint'],
   rules: {
     'react/require-default-props': 'off', // we don't use prop-types
+
+    'import/prefer-default-export': 'off', // force named exports
+    'import/no-default-export': 'error',
+
+    '@typescript-eslint/no-unused-vars': 'warn', // 'error' is not convinient in development
+
+    'consistent-return': 'off', // we want functions to have different return behavior
+
+    'react/jsx-props-no-spreading': ['error', { exceptions: ['Input', 'FileInput', 'Textarea'] }], // disable for form elements, cuz react-hook-form input props needs to be desctructured
   },
 };

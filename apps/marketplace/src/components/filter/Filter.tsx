@@ -1,4 +1,4 @@
-import Button from './button';
+import { Button } from './button';
 import styles from './Filter.module.scss';
 
 type Props = {
@@ -20,4 +20,4 @@ function Filter({ list, value, onChange }: Props) {
   );
 }
 
-export default Filter;
+export { Filter };

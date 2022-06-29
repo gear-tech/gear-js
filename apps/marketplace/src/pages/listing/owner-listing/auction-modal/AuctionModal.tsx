@@ -1,7 +1,7 @@
 import { Button, Input, Modal } from '@gear-js/ui';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
-import { useForm, useMarketplaceMessage } from 'hooks';
-import { FormEvent } from 'react';
+import { useMarketplaceMessage } from 'hooks';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './AuctionModal.module.scss';
 
@@ -18,8 +18,12 @@ const MILLISECONDS_MULTIPLIER = 60000;
 function AuctionModal({ close }: Props) {
   const { id } = useParams() as Params;
 
-  const { values, handleChange } = useForm({ minPrice: '', duration: '', bidPeriod: '' });
+  const [values, setValues] = useState({ minPrice: '', duration: '', bidPeriod: '' });
   const { minPrice, duration, bidPeriod } = values;
+
+  const handleChange = ({ target: { value, name } }: ChangeEvent<HTMLInputElement>) => {
+    setValues((prevValues) => ({ ...prevValues, [name]: value }));
+  };
 
   const sendMessage = useMarketplaceMessage();
 
@@ -40,7 +44,7 @@ function AuctionModal({ close }: Props) {
         },
       };
 
-      sendMessage(payload).then(close);
+      sendMessage(payload, { onSuccess: close });
     }
   };
 
@@ -56,4 +60,4 @@ function AuctionModal({ close }: Props) {
   );
 }
 
-export default AuctionModal;
+export { AuctionModal };

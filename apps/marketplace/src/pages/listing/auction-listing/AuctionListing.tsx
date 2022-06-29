@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import { Listing, PriceModal, ConfirmationModal } from 'components';
+import { Listing, PriceModal, ConfirmationModal, OnLogin } from 'components';
 import { NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { Offer as OfferType } from 'types';
-import OnLogin from 'components/on-login';
 import styles from './AuctionListing.module.scss';
 
 type Props = {
@@ -58,12 +57,12 @@ function AuctionListing(props: Props) {
 
   const bid = (priceValue: string) => {
     const payload = { AddBid: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, price: priceValue } };
-    sendMessage(payload, priceValue).then(closeModal);
+    sendMessage(payload, { value: priceValue, onSuccess: closeModal });
   };
 
   const settle = () => {
     const payload = { SettleAuction: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id } };
-    sendMessage(payload).then(closeModal);
+    sendMessage(payload, { onSuccess: closeModal });
   };
 
   return (
@@ -98,4 +97,4 @@ function AuctionListing(props: Props) {
   );
 }
 
-export default AuctionListing;
+export { AuctionListing };

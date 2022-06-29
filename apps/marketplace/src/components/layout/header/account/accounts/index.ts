@@ -1,3 +1,3 @@
-import Accounts from './Accounts';
+import { Accounts } from './Accounts';
 
-export default Accounts;
+export { Accounts };

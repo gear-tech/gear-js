@@ -1,22 +1,22 @@
-import { Header, Footer, ApiLoader, RefreshButton } from 'components';
-import { withProviders } from 'context';
-import { useApi } from 'hooks';
-import Routing from 'pages';
-import './App.scss';
+import { useApi, useBalanceSubscription, useLoggedInAccount } from '@gear-js/react-hooks';
+import { Routing } from 'pages';
+import { Header, Footer, ApiLoader } from 'components';
+import { withProviders } from 'hocs';
+import 'App.scss';
 
-function App() {
+function Component() {
   const { isApiReady } = useApi();
+
+  useBalanceSubscription();
+  useLoggedInAccount();
 
   return (
     <>
       <Header />
-      <main>
-        {isApiReady ? <Routing /> : <ApiLoader />}
-        <RefreshButton />
-      </main>
+      <main>{isApiReady ? <Routing /> : <ApiLoader />}</main>
       <Footer />
     </>
   );
 }
 
-export default withProviders(App);
+export const App = withProviders(Component);

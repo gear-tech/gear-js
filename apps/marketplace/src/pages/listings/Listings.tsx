@@ -1,8 +1,8 @@
 import { useMarketplace } from 'hooks';
 import { useState } from 'react';
 import { MarketNFT } from 'types';
-import Header from './header';
-import List from './list';
+import { Header } from './header';
+import { List } from './list';
 import styles from './Listings.module.scss';
 
 const filters = ['All', 'Buy now', 'On auction', 'Has offers'];
@@ -35,4 +35,4 @@ function Listings() {
   );
 }
 
-export default Listings;
+export { Listings };

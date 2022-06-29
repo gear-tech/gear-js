@@ -41,4 +41,4 @@ function Card({ id, price, isAuction, isVisible }: Props) {
   ) : null;
 }
 
-export default Card;
+export { Card };

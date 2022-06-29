@@ -26,4 +26,4 @@ function AccountButton({ address, name, onClick, isActive, block }: Props) {
   );
 }
 
-export default AccountButton;
+export { AccountButton };

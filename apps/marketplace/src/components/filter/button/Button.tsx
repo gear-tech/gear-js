@@ -14,4 +14,4 @@ function Button({ text, isActive, onClick }: Props) {
   return <GearButton text={text} size="small" className={className} onClick={onClick} />;
 }
 
-export default Button;
+export { Button };

@@ -6,4 +6,4 @@ function Copyright() {
   return <small className={styles.copyright}>{year}. All rights reserved.</small>;
 }
 
-export default Copyright;
+export { Copyright };

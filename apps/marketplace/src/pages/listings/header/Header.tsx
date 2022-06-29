@@ -17,4 +17,4 @@ function Header({ text, filters, filter, onFilterChange }: Props) {
   );
 }
 
-export default Header;
+export { Header };
