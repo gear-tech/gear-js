@@ -35,7 +35,7 @@ const Send = () => {
         <Spinner absolute />
       ) : (
         <>
-          <PageHeader title={programId ? 'New message' : 'Send reply'} fileName={program?.name || id} />
+          <PageHeader title={isReply ? 'Send reply' : 'New message'} fileName={program?.name || id} />
           <Box>
             <MessageForm id={id} isReply={isReply} replyErrorCode={message?.replyError} metadata={metadata} />
           </Box>

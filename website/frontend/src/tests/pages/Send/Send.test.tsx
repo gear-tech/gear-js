@@ -59,7 +59,7 @@ describe('send message page tests', () => {
     });
   };
 
-  it('test send message form without meta', async () => {
+  it('sends message to program without meta', async () => {
     useApiMock(TEST_API);
 
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
@@ -187,7 +187,7 @@ describe('send message page tests', () => {
     });
   });
 
-  it('test send message form with meta', async () => {
+  it('sends message to program with meta', async () => {
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT);
 
