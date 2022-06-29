@@ -4,7 +4,7 @@ import { InitStatus, IProgram } from '@gear-js/common';
 import { BaseEntity } from './base.entity';
 import { Meta } from './meta.entity';
 
-@Entity()
+@Entity('programs')
 export class Program extends BaseEntity implements IProgram {
   @PrimaryColumn()
   id: string;

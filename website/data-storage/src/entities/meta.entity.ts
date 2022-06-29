@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { IMeta } from '@gear-js/common';
 
-@Entity()
+@Entity('meta')
 export class Meta implements IMeta {
   @PrimaryGeneratedColumn('rowid')
   id: string;
