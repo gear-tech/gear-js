@@ -159,6 +159,8 @@ describe('send message page tests', () => {
       undefined
     );
 
+    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
+
     // authorized submit
 
     submit(sendMessageBtn);
@@ -261,6 +263,8 @@ describe('send message page tests', () => {
       PROGRAM_ID_WITH_META,
       undefined
     );
+
+    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     // authorized submit
 
@@ -373,8 +377,10 @@ describe('send message page tests', () => {
       undefined,
       null,
       MESSAGE_ID_FOR_PROGRAM_WITHOUT_META,
-      'replyError'
+      '1'
     );
+
+    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     // authorized submit
 
@@ -475,8 +481,10 @@ describe('send message page tests', () => {
       META,
       null,
       MESSAGE_ID_FOR_PROGRAM_WITH_META,
-      'replyError'
+      '1'
     );
+
+    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     // authorized submit
 
