@@ -12,16 +12,16 @@ import { AppDataSource } from './data-source';
 async function bootstrap() {
   const { kafka, healthcheck } = configuration();
 
+  try {
+    await AppDataSource.initialize();
+    dataStorageLogger.info('Data Source has been initialized!');
+  } catch (error) {
+    dataStorageLogger.error(`Error during Data Source initialization: ${error}`);
+  }
+
   const app = await NestFactory.create(AppModule, { cors: true });
   await app.listen(healthcheck.port);
   dataStorageLogger.info(`HelathCheck app is running on ${healthcheck.port} 🚀`);
-  AppDataSource.initialize()
-    .then(() => {
-      dataStorageLogger.info('Data Source has been initialized!');
-    })
-    .catch((err) => {
-      dataStorageLogger.error(`Error during Data Source initialization: ${err}`);
-    });
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
@@ -46,5 +46,7 @@ async function bootstrap() {
   changeStatus('kafka');
   await waitReady();
   changeStatus('database');
+
+  await AppDataSource.destroy();
 }
 bootstrap();
