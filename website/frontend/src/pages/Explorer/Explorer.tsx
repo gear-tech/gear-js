@@ -24,4 +24,4 @@ const Explorer = ({ events }: IdeaEventsProps) => {
   );
 };
 
-export default Explorer;
+export { Explorer };

@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
 import { IdeaEvents, Methods, Sections } from 'types/explorer';
-import { Event } from 'components/pages/Explorer/common/Event/Event';
-import { Extrinsic } from 'components/pages/Explorer/common/Extrinsic/Extrinsic';
+import { Event } from 'pages/Explorer/common/Event/Event';
+import { Extrinsic } from 'pages/Explorer/common/Extrinsic/Extrinsic';
 import styles from './Row.module.scss';
 
 type Props = {

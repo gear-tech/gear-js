@@ -1,9 +1,10 @@
 import { VFC } from 'react';
 import { useMatch } from 'react-router-dom';
+
 import { routes } from 'routes';
-import { PrivacyPolicy } from '../../blocks/Documents/PrivacyPolicy';
-import { DocumentFooter } from '../../blocks/Documents/DocumentFooter';
-import { TermsOfUse } from '../../blocks/Documents/TermsOfUse';
+import { PrivacyPolicy } from 'components/blocks/Documents/PrivacyPolicy';
+import { DocumentFooter } from 'components/blocks/Documents/DocumentFooter';
+import { TermsOfUse } from 'components/blocks/Documents/TermsOfUse';
 
 export const Document: VFC = () => {
   const isPrivacyPolicyPage = useMatch(routes.privacyPolicy);

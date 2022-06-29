@@ -1,9 +1,11 @@
 import { UserMessageSentData } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
-import { IdeaEvent, IdeaEvents, Methods } from 'types/explorer';
-import { ExpansionPanel } from 'components/pages/Explorer/common/ExpansionPanel/ExpansionPanel';
+
 import { Content } from './children/Content/Content';
 import { LogContent } from './children/LogContent/LogContent';
+import { ExpansionPanel } from '../ExpansionPanel/ExpansionPanel';
+
+import { IdeaEvent, IdeaEvents, Methods } from 'types/explorer';
 
 type Props = {
   value: IdeaEvent | IdeaEvents;

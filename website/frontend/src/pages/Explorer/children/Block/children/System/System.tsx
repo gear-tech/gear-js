@@ -1,5 +1,5 @@
 import { EventRecords, IdeaEvent } from 'types/explorer';
-import { Event } from 'components/pages/Explorer/common/Event/Event';
+import { Event } from 'pages/Explorer/common/Event/Event';
 import commonStyles from '../../Block.module.scss';
 import styles from './System.module.scss';
 

@@ -1,6 +1,6 @@
 import { Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
 import { AnyJson } from '@polkadot/types/types';
-import { ExpansionPanel } from 'components/pages/Explorer/common/ExpansionPanel/ExpansionPanel';
+import { ExpansionPanel } from 'pages/Explorer/common/ExpansionPanel/ExpansionPanel';
 import { Pre } from '../Pre/Pre';
 
 type Props = {

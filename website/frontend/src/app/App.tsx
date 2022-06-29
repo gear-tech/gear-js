@@ -2,31 +2,30 @@ import '@polkadot/api-augment'; // dot types fix, source: https://github.com/pol
 import { useEffect } from 'react';
 import { Route, Routes, useSearchParams } from 'react-router-dom';
 import { Footer } from 'components/blocks/Footer/Footer';
-import { PageNotFound } from 'components/pages/PageNotFound/PageNotFound';
-import { Programs } from 'components/pages/Programs/Programs';
-import { Program } from 'components/pages/Program/Program';
-import { Mailbox } from 'components/pages/Mailbox/Mailbox';
-import { Message } from 'components/pages/Message/Message';
-import Explorer from 'components/pages/Explorer/Explorer';
+import { PageNotFound } from 'pages/PageNotFound/PageNotFound';
+import { Programs } from 'pages/Programs/Programs';
+import { Program } from 'pages/Program/Program';
+import { Mailbox } from 'pages/Mailbox/Mailbox';
+import { Message } from 'pages/Message/Message';
+import { Explorer } from 'pages/Explorer/Explorer';
 import { Header } from 'components/blocks/Header/Header';
-import { Document } from 'components/pages/Document/Document';
-import { Send } from 'components/pages/Send/Send';
-import { Meta } from 'components/pages/Meta/Meta';
-import { EditorPage } from 'features/Editor/EditorPage/EditorPage';
+import { Document } from 'pages/Document/Document';
+import { Send } from 'pages/Send/Send';
+import { Meta } from 'pages/Meta/Meta';
+import { EditorPage } from 'pages/Editor/EditorPage/EditorPage';
 import { Loader } from 'components/blocks/Loader/Loader';
-import { State } from 'components/pages/State/State';
+import { State } from 'pages/State/State';
 
 import { routes } from 'routes';
 import { subscribeToEvents } from 'services/ApiService';
-import { nodeApi } from '../../api/initApi';
+import { nodeApi } from 'api/initApi';
 
 import { useApi, useAlert, useEvents, useLoggedInAccount } from 'hooks';
 
 import './App.scss';
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
-import { NODE_ADRESS_URL_PARAM } from '../../consts';
-import { globalStyles } from './styles';
+import { NODE_ADRESS_URL_PARAM } from 'consts';
 import { Main } from 'layout/Main/Main';
 import { withProviders } from 'context';
 
@@ -34,10 +33,10 @@ const mainRoutes = [routes.main, routes.uploadedPrograms, routes.allPrograms, ro
 const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
 const Component = () => {
-  globalStyles();
   const alert = useAlert();
   const events = useEvents();
   const { isApiReady } = useApi();
+
   const [searchParams, setSearchParams] = useSearchParams();
   useLoggedInAccount();
 
