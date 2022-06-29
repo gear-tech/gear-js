@@ -18,13 +18,13 @@ const transferService = {
       return true;
     }
 
-    if (isLastTransferLowerThanNow(transfer)) {
+    if (isLastTransferEarlierThanToday(transfer)) {
       return true;
     }
   },
 };
 
-function isLastTransferLowerThanNow(transfer: TransferBalance): boolean {
+function isLastTransferEarlierThanToday(transfer: TransferBalance): boolean {
   const HOURS = 0;
   const MIN = 0;
   const SEC = 0;
