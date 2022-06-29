@@ -18,6 +18,25 @@ jest.mock('components/blocks/Wallet/hooks');
 const mockedUseAccounts = useAccounts as jest.MockedFunction<any>;
 
 describe('header tests', () => {
+  const apiMock = {
+    api: {
+      balance: { findOut: jest.fn() },
+      gearEvents: {
+        subscribeToNewBlocks: jest.fn(),
+        subscribeToBalanceChange: jest.fn(),
+      },
+      runtimeVersion: {
+        specName: {
+          toHuman: jest.fn(),
+        },
+        specVersion: {
+          toHuman: jest.fn(),
+        },
+      },
+    },
+    isApiReady: true,
+  };
+
   it('renders logo and menu', () => {
     renderWithProviders(<Header />);
 
@@ -66,6 +85,9 @@ describe('header tests', () => {
   });
 
   it('renders sidebar button, opens/closes sidebar, adds/copies/removes/switches node', async () => {
+    apiMock.api.runtimeVersion.specName.toHuman.mockReturnValue('test-name');
+    apiMock.api.runtimeVersion.specVersion.toHuman.mockReturnValue('12345');
+
     renderWithProviders(<Header />);
 
     // sidebar button
@@ -80,19 +102,7 @@ describe('header tests', () => {
     // @ts-ignore
     jest.spyOn(hooks, 'useApi').mockImplementation(() => {
       localStorage.setItem('chain', 'testnet');
-      return {
-        api: {
-          runtimeVersion: {
-            specName: {
-              toHuman: () => 'test-name',
-            },
-            specVersion: {
-              toHuman: () => '12345',
-            },
-          },
-        },
-        isApiReady: true,
-      };
+      return apiMock;
     });
 
     jest.spyOn(nodeApi, 'address', 'get').mockImplementation(() => 'testnet-address');
@@ -266,27 +276,17 @@ describe('header tests', () => {
     const getButton = (index: number) => getButtons()[index];
 
     const unsubMock = jest.fn();
-    const subscribeToBalanceChangeMock = jest.fn();
-    const findOutBalanceMock = jest.fn();
-
-    const apiMock = {
-      api: {
-        balance: { findOut: findOutBalanceMock },
-        gearEvents: {
-          subscribeToBalanceChange: subscribeToBalanceChangeMock,
-        },
-      },
-    };
 
     const getLoginButton = () => screen.getByText('Connect');
     const getLoginButtonQuery = () => screen.queryByText('Connect');
 
     it('logins/logouts, switches account and closes modal', async () => {
+      // @ts-ignore
+      jest.spyOn(hooks, 'useApi').mockReturnValue(apiMock);
+
       renderWithProviders(<Header />);
 
-      const useApiSpy = jest.spyOn(hooks, 'useApi');
       // @ts-ignore
-      useApiSpy.mockReturnValue(apiMock);
       mockedUseAccounts.mockImplementation(() => accounts);
       apiMock.api.gearEvents.subscribeToBalanceChange.mockResolvedValue(unsubMock);
 
@@ -305,9 +305,11 @@ describe('header tests', () => {
       expect(secondButton).toHaveTextContent('second acc');
       expect(secondButton).toHaveTextContent('456');
 
-      apiMock.api.balance.findOut.mockResolvedValue({ toHuman: () => '1000' });
+      apiMock.api.balance.findOut.mockResolvedValue({ toHuman: () => '1000 mUnit' });
 
       fireEvent.click(secondButton);
+
+      await waitFor(() => true);
 
       const accountButton = screen.getByText('second acc');
       const balance = screen.getByText('Balance:');
@@ -324,7 +326,7 @@ describe('header tests', () => {
         button === getButton(1) ? expect(button).toHaveClass('active') : expect(button).not.toHaveClass('active')
       );
 
-      apiMock.api.balance.findOut.mockResolvedValue({ toHuman: () => '2000' });
+      apiMock.api.balance.findOut.mockResolvedValue({ toHuman: () => '2000 mUnit' });
 
       fireEvent.click(getButton(2));
 
@@ -361,7 +363,7 @@ describe('header tests', () => {
 
       // balance subscription
 
-      expect(subscribeToBalanceChangeMock).toBeCalledTimes(2);
+      expect(apiMock.api.gearEvents.subscribeToBalanceChange).toBeCalledTimes(2);
       await waitFor(() => expect(unsubMock).toBeCalledTimes(2));
     });
 
