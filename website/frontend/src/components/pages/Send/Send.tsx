@@ -26,17 +26,19 @@ const Send = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isLoading = !(programId ? program : program && message);
+
   return (
     <div className="wrapper">
-      {program ? (
+      {isLoading ? (
+        <Spinner absolute />
+      ) : (
         <>
           <PageHeader title={programId ? 'New message' : 'Send reply'} fileName={program?.name || id} />
           <Box>
             <MessageForm id={id} replyErrorCode={message?.replyError} metadata={metadata} />
           </Box>
         </>
-      ) : (
-        <Spinner absolute />
       )}
     </div>
   );

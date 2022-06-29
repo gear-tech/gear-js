@@ -68,7 +68,7 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
   return (
     <Formik initialValues={initialValues.current} validateOnBlur validationSchema={Schema} onSubmit={handleSubmit}>
       {({ values, setFieldValue }) => (
-        <Form className={formStyles.largeForm}>
+        <Form data-testid="sendMessageForm" className={formStyles.largeForm}>
           <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />
 
           <FormPayload name="payload" label="Payload" values={payloadFormValues} />

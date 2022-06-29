@@ -17,7 +17,7 @@ export enum JSONRPCErrorCode {
   InternalError = -32603,
 }
 
-type RPCRequest = {
+export type RPCRequest = {
   jsonrpc: JsonRpcVersion;
   method: string;
   id?: JsonRpcId;
