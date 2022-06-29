@@ -14,9 +14,11 @@ async function bootstrap() {
 
   try {
     await AppDataSource.initialize();
+
     dataStorageLogger.info('Data Source has been initialized!');
   } catch (error) {
-    dataStorageLogger.error(`Error during Data Source initialization: ${error}`);
+    dataStorageLogger.error(`Error during Data Source initialization`);
+    throw error;
   }
 
   const app = await NestFactory.create(AppModule, { cors: true });
