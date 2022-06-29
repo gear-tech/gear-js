@@ -4,6 +4,9 @@ export class initMetaMessageProgram1656439725137 implements MigrationInterface {
   name = 'initMetaMessageProgram1656439725137';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
+      CREATE TYPE program_initstatus_enum as ENUM ('success', 'failed', 'in progress');
+    `);
     await queryRunner.query(
       `CREATE TABLE "message" (
         "genesis" character varying NOT NULL, 
