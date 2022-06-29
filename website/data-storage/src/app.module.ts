@@ -29,8 +29,8 @@ const entities = [Meta, Message, Program];
         database: configService.get('database.name'),
         logging: true,
         synchronize: false,
-        // Run migrations automatically,
         migrations: ['database/migrations/*{.ts,.js}'],
+        // Run migrations automatically,
         migrationsRun: true,
         entities,
         cli: {
