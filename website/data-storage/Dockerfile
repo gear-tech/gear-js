@@ -11,5 +11,5 @@ RUN yarn install
 RUN yarn build:common
 RUN yarn build:data-storage
 
-CMD ["yarn", "start"]
+CMD ["node", "website/data-storage/dist/main"]
 #example
