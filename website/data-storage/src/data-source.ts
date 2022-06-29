@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { join } from 'path';
 
 import { Message, Meta, Program } from './entities';
 import config from './config/configuration';
@@ -16,7 +17,7 @@ export const AppDataSource = new DataSource({
   password: config().database.password,
   database: config().database.name,
   entities,
-  migrations: ['dist/database/migrations/*.js'],
+  migrations: [join(__dirname, 'database/migrations/*.js')],
   synchronize: false,
   logging: true,
   // Run migrations automatically,
