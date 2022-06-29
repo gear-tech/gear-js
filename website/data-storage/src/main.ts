@@ -15,7 +15,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   await app.listen(healthcheck.port);
   dataStorageLogger.info(`HelathCheck app is running on ${healthcheck.port} 🚀`);
-  await AppDataSource.initialize()
+  AppDataSource.initialize()
     .then(() => {
       dataStorageLogger.info('Data Source has been initialized!');
     })
