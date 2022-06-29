@@ -36,5 +36,5 @@
     "@types/react": "17.0.44"
   },
   "packageManager": "yarn@3.2.0",
-  "version": "0.1.0"
+  "version": "1.2.0"
 }

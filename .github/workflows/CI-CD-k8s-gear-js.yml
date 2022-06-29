@@ -7,6 +7,7 @@ on:
       - website/**
       - k8s/**
       - release-version
+      - package.json
   workflow_dispatch:
 
 env:
@@ -56,7 +57,7 @@ jobs:
             REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
             REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
             REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
-       
+
   build-data-storage-image-staging:
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
@@ -169,7 +170,7 @@ jobs:
         build-api-gateway-image-staging,
         build-event-listeners-image-staging,
         build-test-balance-image-staging,
-        wait-previous-run
+        wait-previous-run,
       ]
     runs-on: ubuntu-latest
 
@@ -190,26 +191,23 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: get deployment -o name -n dev-1 | xargs -n1 -t kubectl rollout status -n dev-1 --timeout=120s
-          
-          
+
   tag-prod-version:
-    needs:
-      [ deploy-to-k8s-staging ]
+    needs: [deploy-to-k8s-staging]
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
     environment: production
-    
+
     steps:
-        
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: '0'
-    - name: Bump version and push tag
-      uses: sergeyfilyanin/github-tag-action@main
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        INITIAL_VERSION: '1.0.0'
-        WITH_IDEA: true
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: Bump version and push tag
+        uses: sergeyfilyanin/github-tag-action@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INITIAL_VERSION: '1.0.0'
+          WITH_IDEA: true
 
   build-frontend-image-prod:
     runs-on: ubuntu-latest
@@ -243,7 +241,7 @@ jobs:
             REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
             REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
             REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
-       
+
   build-data-storage-image-prod:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
@@ -347,7 +345,7 @@ jobs:
           file: website/test-balance/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:prod
-   
+
   deploy-to-k8s-prod:
     needs:
       [
@@ -355,7 +353,7 @@ jobs:
         build-data-storage-image-prod,
         build-api-gateway-image-prod,
         build-event-listeners-image-prod,
-        build-test-balance-image-prod
+        build-test-balance-image-prod,
       ]
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
