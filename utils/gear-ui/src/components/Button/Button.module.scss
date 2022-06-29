@@ -1,16 +1,20 @@
 @use 'src/assets/styles/variables' as *;
 @use 'src/assets/styles/mixins' as *;
 
+.resets {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
 .button {
+  @extend .resets;
   @include transition();
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: inherit;
   color: $textColor;
-  border: none;
   border-radius: $borderRadius;
-  cursor: pointer;
 
   &:disabled {
     pointer-events: none;
@@ -20,6 +24,10 @@
 
 .block {
   width: 100%;
+}
+
+.noWrap {
+  white-space: nowrap;
 }
 
 .normal {
@@ -46,18 +54,26 @@
 }
 
 .primary {
-  background-color: $successColor;
+  background-color: $buttonColor;
 
   &:hover {
-    background-color: #12582f;
+    background-color: $buttonColorHover;
   }
 }
 
 .secondary {
-  background-color: #373737;
+  background-color: $buttonColorSecondary;
 
   &:hover {
-    background-color: $textColorSecondary;
+    background-color: $buttonColorSecondaryHover;
+  }
+}
+
+.tertiary {
+  background-color: $tertiaryColor;
+
+  &:hover {
+    background-color: $buttonColorTertiaryHover;
   }
 }
 

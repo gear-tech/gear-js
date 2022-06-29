@@ -1,3 +1,5 @@
+@use './variables' as *;
+
 @font-face {
   font-family: 'Prompt';
   font-weight: 300;
@@ -32,4 +34,10 @@
   font-family: 'Syncopate';
   font-weight: 700;
   src: url('./fonts/syncopate-700.woff2') format('woff2');
+}
+
+body {
+  font-family: 'Prompt', sans-serif;
+  font-size: $fontSize;
+  color: $textColor;
 }
