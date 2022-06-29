@@ -4,6 +4,7 @@ import { join } from 'path';
 import { Message, Meta, Program } from './entities';
 import config from './config/configuration';
 
+const migrationsPath = process.argv[2] || './dist/database/migrations';
 const entities = [Meta, Message, Program];
 
 // Do not delete DataSource
@@ -17,7 +18,7 @@ export const AppDataSource = new DataSource({
   password: config().database.password,
   database: config().database.name,
   entities,
-  migrations: [join(__dirname, 'database/migrations/*.js')],
+  migrations: [join(migrationsPath, '*.js')],
   synchronize: false,
   logging: true,
   // Run migrations automatically,
