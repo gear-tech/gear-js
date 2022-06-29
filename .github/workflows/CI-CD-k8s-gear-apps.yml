@@ -80,7 +80,7 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-marketplace:prod
           build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS_TMP }}
             REACT_APP_IPFS_ADDRESS=${{ secrets.REACT_APP_IPFS_ADDRESS }}
             REACT_APP_MARKETPLACE_NFT_CONTRACT_ADDRESS=${{ secrets.REACT_APP_MARKETPLACE_NFT_CONTRACT_ADDRESS }}
             REACT_APP_MARKETPLACE_CONTRACT_ADDRESS=${{ secrets.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS }}
@@ -105,14 +105,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push MarketPlace Docker image
+      - name: Build and push Nft Docker image
         uses: docker/build-push-action@master
         with:
           context: apps/nft
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-nft:prod
           build-args: |
-            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS_TMP }}
             REACT_APP_IPFS_ADDRESS=${{ secrets.REACT_APP_IPFS_ADDRESS }}
             REACT_APP_NFT_CONTRACT_ADDRESS=${{ secrets.REACT_APP_NFT_CONTRACT_ADDRESS }}
             REACT_APP_IPFS_GATEWAY_ADDRESS=${{ secrets.REACT_APP_IPFS_GATEWAY_ADDRESS }}
