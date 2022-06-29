@@ -15,11 +15,12 @@ import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/F
 
 type Props = {
   id: string;
+  isReply: boolean;
   metadata?: Metadata;
   replyErrorCode?: string;
 };
 
-export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
+export const MessageForm: VFC<Props> = ({ id, isReply, metadata, replyErrorCode }) => {
   const { api } = useApi();
   const alert = useAlert();
   const { account: currentAccount } = useAccount();
@@ -32,7 +33,6 @@ export const MessageForm: VFC<Props> = ({ id, metadata, replyErrorCode }) => {
     destination: id,
   });
 
-  const isReply = !!replyErrorCode;
   const isMeta = useMemo(() => metadata && Object.keys(metadata).length > 0, [metadata]);
 
   const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {

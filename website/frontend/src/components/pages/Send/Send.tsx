@@ -26,6 +26,7 @@ const Send = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isReply = Boolean(messageId);
   const isLoading = !(programId ? program : program && message);
 
   return (
@@ -36,7 +37,7 @@ const Send = () => {
         <>
           <PageHeader title={programId ? 'New message' : 'Send reply'} fileName={program?.name || id} />
           <Box>
-            <MessageForm id={id} replyErrorCode={message?.replyError} metadata={metadata} />
+            <MessageForm id={id} isReply={isReply} replyErrorCode={message?.replyError} metadata={metadata} />
           </Box>
         </>
       )}
