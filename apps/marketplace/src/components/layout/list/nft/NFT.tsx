@@ -1,4 +1,4 @@
-import { Button } from '@gear-js/ui';
+import { Button, ButtonProps } from '@gear-js/ui';
 import { Link } from 'react-router-dom';
 import styles from './NFT.module.scss';
 
@@ -7,12 +7,11 @@ type Props = {
   src: string;
   name: string;
   text: string;
-  priceHeading: string;
-  priceText: string;
-  buttonText?: string;
+  price: { heading: string; text: string };
+  button?: { text: string; color: ButtonProps['color'] };
 };
 
-function NFT({ path, src, name, text, priceHeading, priceText, buttonText }: Props) {
+function NFT({ path, src, name, text, price, button }: Props) {
   return (
     <li>
       <Link to={path} className={styles.nft}>
@@ -24,12 +23,12 @@ function NFT({ path, src, name, text, priceHeading, priceText, buttonText }: Pro
               <p className={styles.text}>{text}</p>
             </div>
             <div className={styles.value}>
-              <h3 className={styles.heading}>{priceHeading}</h3>
-              <p className={styles.text}>{priceText}</p>
+              <h3 className={styles.heading}>{price.heading}</h3>
+              <p className={styles.text}>{price.text}</p>
             </div>
           </div>
         </div>
-        {buttonText && <Button text={buttonText} block />}
+        {button && <Button text={button.text} color={button.color} block />}
       </Link>
     </li>
   );

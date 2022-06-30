@@ -53,12 +53,13 @@ function useMergedOwnerNFTs() {
 
   useEffect(() => {
     if (ownerNFTs && marketMetaBuffer) {
-      const combinedNFTs = ownerNFTs.map((baseNft) =>
-        api.programState
-          .read(ADDRESS.MARKETPLACE_CONTRACT, marketMetaBuffer, getMarketNFTPayload(baseNft.id))
-          .then((state) => state.toHuman() as MarketNFTState)
-          .then((state) => state.ItemInfo)
-          .then((marketNft) => ({ ...baseNft, ...marketNft })),
+      const combinedNFTs = ownerNFTs.map(
+        (baseNft) =>
+          api.programState
+            .read(ADDRESS.MARKETPLACE_CONTRACT, marketMetaBuffer, getMarketNFTPayload(baseNft.id))
+            .then((state) => state.toHuman() as MarketNFTState)
+            .then((state) => state.ItemInfo)
+            .then((marketNft) => ({ ...marketNft, ...baseNft })), // order is important
       );
 
       Promise.all(combinedNFTs)

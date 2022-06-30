@@ -1,6 +1,7 @@
 import { InfoText, Loader } from 'components';
 import { Filter, NFT as NFTType } from 'types';
-import { getIpfsAddress } from 'utils';
+import { getNFTProps } from 'utils';
+import { useAccount } from '@gear-js/react-hooks';
 import { Header } from './header';
 import { NFT } from './nft';
 import styles from './List.module.scss';
@@ -21,32 +22,15 @@ function List({ heading, filter, NFTs }: Props) {
   const { list, isRead, fallback } = NFTs;
   const isAnyNft = !!list?.length;
 
+  const { account } = useAccount();
+
   const getNFTs = () =>
     list?.map((nft) => {
-      const { id, auction, price, media, name } = nft;
+      const { id, ownerId } = nft;
+      const isOwner = account?.decodedAddress === ownerId;
+      const { name, path, src, text, price, button } = getNFTProps(nft, isOwner);
 
-      const { currentPrice } = auction || {};
-      const isAuction = !!auction;
-
-      const path = `/listing/${id}`;
-      const src = getIpfsAddress(media);
-      const text = `#${id}`;
-      const priceHeading = isAuction ? 'Top bid' : 'Price';
-      const priceText = price || currentPrice || 'None';
-      const buttonText = isAuction ? 'Make bid' : 'Buy now';
-
-      return (
-        <NFT
-          key={id}
-          path={path}
-          src={src}
-          name={name}
-          text={text}
-          priceHeading={priceHeading}
-          priceText={priceText}
-          buttonText={buttonText}
-        />
-      );
+      return <NFT key={id} path={path} src={src} name={name} text={text} price={price} button={button} />;
     });
 
   return (
