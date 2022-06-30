@@ -9,7 +9,7 @@ type Props = {
 };
 
 const Spinner = ({ color = '#fff', absolute = false }: Props) => (
-  <Loader color={color} className={clsx(styles.loader, absolute && styles.absolute)} />
+  <Loader color={color} data-testid="spinner" className={clsx(styles.loader, absolute && styles.absolute)} />
 );
 
 export { Spinner };

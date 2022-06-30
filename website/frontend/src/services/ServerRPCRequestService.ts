@@ -17,7 +17,7 @@ export enum JSONRPCErrorCode {
   InternalError = -32603,
 }
 
-type RPCRequest = {
+export type RPCRequest = {
   jsonrpc: JsonRpcVersion;
   method: string;
   id?: JsonRpcId;
@@ -41,8 +41,7 @@ type _RPCResponse<Result> = {
 type RPCSuccessResponse<Result> = PartialBy<_RPCResponse<Result>, 'error'>;
 type RPCErrorResponse = PartialBy<_RPCResponse<undefined>, 'result'>;
 
-type RPCResponse<Result> = RPCSuccessResponse<Result> | RPCErrorResponse;
-
+export type RPCResponse<Result> = RPCSuccessResponse<Result> | RPCErrorResponse;
 export class RPCResponseError extends Error {
   code;
 

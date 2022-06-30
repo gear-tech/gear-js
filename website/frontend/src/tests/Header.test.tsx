@@ -1,11 +1,13 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { GearKeyring } from '@gear-js/api';
+
+import { renderWithProviders, textMatcher } from './utils';
+import { useApiMock, TEST_API } from './mocks/hooks';
+
 import { nodeApi } from 'api/initApi';
-import { renderWithProviders, textMatcher } from 'tests/utils';
-import * as hooks from 'hooks';
 import { Header } from 'components/blocks/Header';
-import menuStyles from 'components/blocks/Header/children/Menu/Menu.module.scss';
 import { useAccounts } from 'components/blocks/Wallet/hooks';
+import menuStyles from 'components/blocks/Header/children/Menu/Menu.module.scss';
 
 const accounts = [
   { address: '123', meta: { name: 'first acc' } },
@@ -18,25 +20,6 @@ jest.mock('components/blocks/Wallet/hooks');
 const mockedUseAccounts = useAccounts as jest.MockedFunction<any>;
 
 describe('header tests', () => {
-  const apiMock = {
-    api: {
-      balance: { findOut: jest.fn() },
-      gearEvents: {
-        subscribeToNewBlocks: jest.fn(),
-        subscribeToBalanceChange: jest.fn(),
-      },
-      runtimeVersion: {
-        specName: {
-          toHuman: jest.fn(),
-        },
-        specVersion: {
-          toHuman: jest.fn(),
-        },
-      },
-    },
-    isApiReady: true,
-  };
-
   it('renders logo and menu', () => {
     renderWithProviders(<Header />);
 
@@ -85,8 +68,8 @@ describe('header tests', () => {
   });
 
   it('renders sidebar button, opens/closes sidebar, adds/copies/removes/switches node', async () => {
-    apiMock.api.runtimeVersion.specName.toHuman.mockReturnValue('test-name');
-    apiMock.api.runtimeVersion.specVersion.toHuman.mockReturnValue('12345');
+    TEST_API.runtimeVersion.specName.toHuman.mockReturnValue('test-name');
+    TEST_API.runtimeVersion.specVersion.toHuman.mockReturnValue('12345');
 
     renderWithProviders(<Header />);
 
@@ -98,19 +81,11 @@ describe('header tests', () => {
     expect(queriedSidebar).not.toBeInTheDocument();
     expect(sidebarButton).toHaveTextContent('Loading...');
 
-    // TODO: is there a better way to mock?
-    // @ts-ignore
-    jest.spyOn(hooks, 'useApi').mockImplementation(() => {
-      localStorage.setItem('chain', 'testnet');
-      return apiMock;
-    });
-
     jest.spyOn(nodeApi, 'address', 'get').mockImplementation(() => 'testnet-address');
 
-    await waitFor(() => {
-      expect(sidebarButton).toHaveTextContent('testnet');
-      expect(sidebarButton).toHaveTextContent('test-name/12345');
-    });
+    useApiMock(TEST_API);
+
+    await waitFor(() => expect(sidebarButton).toHaveTextContent('test-name/12345'));
 
     fireEvent.click(sidebarButton);
 
@@ -281,14 +256,14 @@ describe('header tests', () => {
     const getLoginButtonQuery = () => screen.queryByText('Connect');
 
     it('logins/logouts, switches account and closes modal', async () => {
-      // @ts-ignore
-      jest.spyOn(hooks, 'useApi').mockReturnValue(apiMock);
+      TEST_API.gearEvents.subscribeToBalanceChange.mockResolvedValue(unsubMock);
+
+      useApiMock(TEST_API);
 
       renderWithProviders(<Header />);
 
       // @ts-ignore
       mockedUseAccounts.mockImplementation(() => accounts);
-      apiMock.api.gearEvents.subscribeToBalanceChange.mockResolvedValue(unsubMock);
 
       // mocking raw public key get since it gets saved in localstorage on account switch
       jest.spyOn(GearKeyring, 'decodeAddress').mockImplementation(() => '0x00');
@@ -305,7 +280,7 @@ describe('header tests', () => {
       expect(secondButton).toHaveTextContent('second acc');
       expect(secondButton).toHaveTextContent('456');
 
-      apiMock.api.balance.findOut.mockResolvedValue({ toHuman: () => '1000 mUnit' });
+      TEST_API.balance.findOut.mockResolvedValue({ toHuman: () => '1000 mUnit' });
 
       fireEvent.click(secondButton);
 
@@ -326,7 +301,7 @@ describe('header tests', () => {
         button === getButton(1) ? expect(button).toHaveClass('active') : expect(button).not.toHaveClass('active')
       );
 
-      apiMock.api.balance.findOut.mockResolvedValue({ toHuman: () => '2000 mUnit' });
+      TEST_API.balance.findOut.mockResolvedValue({ toHuman: () => '2000 mUnit' });
 
       fireEvent.click(getButton(2));
 
@@ -363,7 +338,7 @@ describe('header tests', () => {
 
       // balance subscription
 
-      expect(apiMock.api.gearEvents.subscribeToBalanceChange).toBeCalledTimes(2);
+      expect(TEST_API.gearEvents.subscribeToBalanceChange).toBeCalledTimes(2);
       await waitFor(() => expect(unsubMock).toBeCalledTimes(2));
     });
 
