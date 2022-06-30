@@ -1,21 +1,31 @@
-import { decodeHexTypes } from '@gear-js/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, render, fireEvent, waitFor, getDefaultNormalizer } from '@testing-library/react';
+import {
+  screen,
+  render,
+  fireEvent,
+  waitFor,
+  getDefaultNormalizer,
+  SelectorMatcherOptions,
+} from '@testing-library/react';
 
-import { PROGRAM_ID, META, META_FILE, READED_STATE } from './inputData';
-import { useApiMock } from '../../mocks/hooks';
+import { READED_STATE } from './inputData';
+import { useApiMock, TEST_API } from '../../mocks/hooks';
+import { PROGRAM_ID_1, PROGRAM_ID_2, META_FILE } from '../../const';
 
 import { routes } from 'routes';
 import { ApiProvider } from 'context';
-import * as services from 'services/index';
 import { getPreformattedText } from 'helpers';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
 import { State } from 'components/pages/State';
 import { FormValues } from 'components/pages/State/children/StateForm/types';
 
-const StatePage = () => (
+type Props = {
+  programId: string;
+};
+
+const StatePage = ({ programId }: Props) => (
   <ApiProvider>
-    <MemoryRouter initialEntries={[`/state/${PROGRAM_ID}`]}>
+    <MemoryRouter initialEntries={[`/state/${programId}`]}>
       <Routes>
         <Route path={routes.state} element={<State />} />
       </Routes>
@@ -24,35 +34,22 @@ const StatePage = () => (
 );
 
 describe('test state page', () => {
-  const readMock = jest.fn();
+  const preformattedState = getPreformattedText(READED_STATE);
 
-  const testApi = {
-    programState: {
-      read: readMock,
-    },
+  const selectorOptions: SelectorMatcherOptions = {
+    normalizer: getDefaultNormalizer({ collapseWhitespace: false }),
   };
 
-  it('test form with meta_state_input prop', async () => {
-    const getMetadataMock = jest.spyOn(services, 'getMetadata').mockResolvedValue({
-      result: {
-        meta: JSON.stringify(META),
-        program: '',
-        metaFile: META_FILE,
-      },
-    });
+  it('reads program state with meta_state_input metadata prop', async () => {
+    useApiMock(TEST_API);
 
-    useApiMock(testApi);
-
-    readMock.mockResolvedValue({
+    TEST_API.programState.read.mockResolvedValue({
       toHuman: () => READED_STATE,
     });
 
-    render(<StatePage />);
+    render(<StatePage programId={PROGRAM_ID_1} />);
 
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
-
-    expect(getMetadataMock).toBeCalledTimes(1);
-    expect(getMetadataMock).toBeCalledWith(PROGRAM_ID);
 
     const elements = await screen.findAllByText('Read state');
 
@@ -62,7 +59,7 @@ describe('test state page', () => {
 
     expect(readStateBtn).toBeEnabled();
 
-    expect(screen.getByText(PROGRAM_ID)).toBeInTheDocument();
+    expect(screen.getByText(PROGRAM_ID_1)).toBeInTheDocument();
     expect(screen.getByText('Program Id')).toBeInTheDocument();
     expect(screen.getByText('Input Parameters')).toBeInTheDocument();
     expect(screen.getByText('NftQuery')).toBeInTheDocument();
@@ -86,18 +83,18 @@ describe('test state page', () => {
       },
     };
 
-    expect(readMock).toBeCalledTimes(1);
-    expect(readMock).toBeCalledWith(PROGRAM_ID, Buffer.from(META_FILE, 'base64'), getSubmitPayload(formValues.payload));
+    expect(TEST_API.programState.read).toBeCalledTimes(1);
+    expect(TEST_API.programState.read).toBeCalledWith(
+      PROGRAM_ID_1,
+      Buffer.from(META_FILE, 'base64'),
+      getSubmitPayload(formValues.payload)
+    );
 
-    expect(screen.queryByTestId('spinner')).toBeNull();
+    expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
 
     expect(screen.getByText('Statedata')).toBeInTheDocument();
 
-    expect(
-      screen.getByText(getPreformattedText(READED_STATE), {
-        normalizer: getDefaultNormalizer({ collapseWhitespace: false }),
-      })
-    ).toBeInTheDocument();
+    expect(screen.getByText(getPreformattedText(READED_STATE), selectorOptions)).toBeInTheDocument();
 
     expect(readStateBtn).toBeInTheDocument();
 
@@ -106,57 +103,43 @@ describe('test state page', () => {
     fireEvent.click(readStateBtn);
 
     await waitFor(() => {
-      expect(screen.queryByText(/NFTInfo/)).toBeNull();
-      expect(screen.queryByText('Statedata')).toBeNull();
+      expect(screen.queryByText(preformattedState, selectorOptions)).not.toBeInTheDocument();
+      expect(screen.queryByText('Statedata')).not.toBeInTheDocument();
       expect(screen.getByTestId('spinner')).toBeInTheDocument();
     });
 
     expect(screen.getByText('Statedata')).toBeInTheDocument();
-    expect(screen.getByText(/NFTInfo/).innerHTML).toBe(getPreformattedText(READED_STATE));
+    expect(screen.getByText(preformattedState, selectorOptions)).toBeInTheDocument();
   });
 
-  it('test form without meta_state_input prop', async () => {
-    const getMetadataMock = jest.spyOn(services, 'getMetadata').mockResolvedValue({
-      result: {
-        program: '',
-        metaFile: META_FILE,
-        meta: JSON.stringify({
-          ...META,
-          meta_state_input: '',
-        }),
-      },
-    });
+  it('reads program state without meta_state_input metadata prop', async () => {
+    useApiMock(TEST_API);
 
-    useApiMock(testApi);
-
-    readMock.mockReset();
-    readMock.mockResolvedValue({
+    TEST_API.programState.read.mockReset();
+    TEST_API.programState.read.mockResolvedValue({
       toHuman: () => READED_STATE,
     });
 
-    render(<StatePage />);
+    render(<StatePage programId={PROGRAM_ID_2} />);
 
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
-
-    expect(getMetadataMock).toBeCalledTimes(1);
-    expect(getMetadataMock).toBeCalledWith(PROGRAM_ID);
 
     const header = await screen.findByText('Read state');
 
     expect(header).toBeInTheDocument();
     expect(header.tagName).toBe('H2');
 
-    expect(readMock).toBeCalledTimes(1);
-    expect(readMock).toBeCalledWith(PROGRAM_ID, Buffer.from(META_FILE, 'base64'), undefined);
+    expect(TEST_API.programState.read).toBeCalledTimes(1);
+    expect(TEST_API.programState.read).toBeCalledWith(PROGRAM_ID_2, Buffer.from(META_FILE, 'base64'), undefined);
 
-    expect(screen.getByText(PROGRAM_ID)).toBeInTheDocument();
+    expect(screen.getByText(PROGRAM_ID_2)).toBeInTheDocument();
     expect(screen.getByText('Program Id')).toBeInTheDocument();
 
-    expect(screen.queryByText('NftQuery')).toBeNull();
-    expect(screen.queryByRole('combobox')).toBeNull();
-    expect(screen.queryByText('Input Parameters')).toBeNull();
+    expect(screen.queryByText('NftQuery')).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(screen.queryByText('Input Parameters')).not.toBeInTheDocument();
 
     expect(screen.getByText('Statedata')).toBeInTheDocument();
-    expect(screen.getByText(/NFTInfo/).innerHTML).toBe(getPreformattedText(READED_STATE));
+    expect(screen.getByText(preformattedState, selectorOptions)).toBeInTheDocument();
   });
 });

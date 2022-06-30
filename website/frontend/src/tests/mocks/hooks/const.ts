@@ -31,4 +31,7 @@ export const TEST_API = {
       toHuman: jest.fn(),
     },
   },
+  programState: {
+    read: jest.fn(),
+  },
 };
