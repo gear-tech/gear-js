@@ -48,7 +48,7 @@ async function connect() {
 async function transferBalance(
   to: string,
   from: KeyringPair = accountGR,
-  balance: BN = accountBalanceGR,
+  balance: BN = balanceToTransferGR,
 ): Promise<ResponseTransferBalance> {
   try {
     await transfer(from, to, balance);
@@ -62,11 +62,7 @@ async function transferBalance(
   return { status: 'ok', transferredBalance: balance.toString() };
 }
 
-async function transfer(
-  from: KeyringPair = accountGR,
-  to: string,
-  balance: BN = accountBalanceGR,
-): Promise<TransferData> {
+async function transfer(from: KeyringPair = accountGR, to: string, balance: BN): Promise<TransferData> {
   gearApi.balance.transfer(to, balance);
   return new Promise((resolve, reject) => {
     gearApi.balance.signAndSend(from, ({ events }) => {
