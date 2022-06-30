@@ -1,4 +1,5 @@
 @use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
 
 @mixin verticalGap($gap) {
   & > *:not(:last-child) {
@@ -13,11 +14,8 @@
 }
 
 .heading {
+  @extend %h5;
   margin-bottom: 32px;
-  // TODO: replace w/ @gear-js/ui heading styles
-  font-family: 'Syncopate', sans-serif;
-  font-size: 22px;
-  line-height: 30px;
 }
 
 .main {

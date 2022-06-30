@@ -1,11 +1,9 @@
 @use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
 
 .heading {
+  @extend %h2;
   margin-bottom: 30px;
-  // TODO: replace w/ @gear-js/ui
-  font-family: Syncopate, sans-serif;
-  font-size: 32px;
-  line-height: 40px;
   text-align: center;
 }
 

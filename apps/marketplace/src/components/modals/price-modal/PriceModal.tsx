@@ -1,6 +1,6 @@
 import { Button, Input, Modal } from '@gear-js/ui';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import styles from './PriceModal.module.scss';
+import styles from '../index.module.scss';
 
 type Props = {
   heading: string;

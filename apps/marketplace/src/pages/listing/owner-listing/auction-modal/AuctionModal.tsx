@@ -3,7 +3,7 @@ import { ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import styles from './AuctionModal.module.scss';
+import { modalStyles } from 'components/modals';
 
 type Props = {
   close: () => void;
@@ -50,7 +50,7 @@ function AuctionModal({ close }: Props) {
 
   return (
     <Modal heading="Auction" close={close}>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={modalStyles.form} onSubmit={handleSubmit}>
         <Input type="number" placeholder="min price" name="minPrice" value={minPrice} onChange={handleChange} />
         <Input type="number" placeholder="duration (min)" name="duration" value={duration} onChange={handleChange} />
         <Input
