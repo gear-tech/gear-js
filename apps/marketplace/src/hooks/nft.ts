@@ -1,15 +1,12 @@
 import { useAccount, useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { AnyJson } from '@polkadot/types/types';
 import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
-import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { ADDRESS } from 'consts';
 import { useMemo } from 'react';
-import { NFT } from 'types';
-
-type NFTState = { Token: { token: NFT } };
-type OwnersNFTState = { TokensForOwner: { tokens: NFT[] } };
+import { NFTState, OwnersNFTState } from 'types';
 
 function useNftState<T>(payload: AnyJson) {
-  return useReadState<T>(NFT_CONTRACT_ADDRESS, nftMetaWasm, payload);
+  return useReadState<T>(ADDRESS.NFT_CONTRACT, nftMetaWasm, payload);
 }
 
 function useNft(tokenId: string) {
@@ -25,13 +22,12 @@ function useOwnersNft() {
   const getPayload = () => (account ? { TokensForOwner: { owner: account?.decodedAddress } } : undefined);
   const payload = useMemo(getPayload, [account]);
 
-  const { state } = useNftState<OwnersNFTState>(payload);
-
-  return state?.TokensForOwner.tokens;
+  const { state, isStateRead } = useNftState<OwnersNFTState>(payload);
+  return { NFTs: state?.TokensForOwner.tokens, isEachNFTRead: isStateRead };
 }
 
 function useNftMessage() {
-  return useSendMessage(NFT_CONTRACT_ADDRESS, nftMetaWasm);
+  return useSendMessage(ADDRESS.NFT_CONTRACT, nftMetaWasm);
 }
 
 export { useNft, useOwnersNft, useNftMessage };

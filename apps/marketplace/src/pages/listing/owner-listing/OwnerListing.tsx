@@ -1,7 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { Listing, PriceModal, OnLogin } from 'components';
-import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
 import { AuctionModal } from './auction-modal';
@@ -44,7 +44,7 @@ function OwnerListing(props: Props) {
   const startSale = (priceValue: string) => {
     const payload = {
       AddMarketData: {
-        nftContractId: NFT_CONTRACT_ADDRESS,
+        nftContractId: ADDRESS.NFT_CONTRACT,
         ftContractId: null,
         tokenId: id,
         price: priceValue,

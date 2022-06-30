@@ -1,18 +1,17 @@
 import { Filter } from 'components';
+import { Filter as FilterType } from 'types';
 import styles from './Header.module.scss';
 
 type Props = {
   text: string;
-  filters: string[];
-  filter: string;
-  onFilterChange: (value: string) => void;
+  filter?: FilterType;
 };
 
-function Header({ text, filters, filter, onFilterChange }: Props) {
+function Header({ text, filter }: Props) {
   return (
     <header className={styles.header}>
       <h2 className={styles.text}>{text}</h2>
-      <Filter list={filters} value={filter} onChange={onFilterChange} />
+      {filter && <Filter value={filter.value} list={filter.list} onChange={filter.onChange} />}
     </header>
   );
 }

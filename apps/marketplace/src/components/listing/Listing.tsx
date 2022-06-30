@@ -1,7 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { ReactNode } from 'react';
 import { Offer as OfferType } from 'types';
-import { IPFS_GATEWAY_ADDRESS } from 'consts';
+import { ADDRESS } from 'consts';
 import { Card } from './card';
 import { Offer } from './offer';
 import styles from './Listing.module.scss';
@@ -22,7 +22,7 @@ type Props = {
 function Listing({ children, heading, description, owner, price, royalty, image, rarity, attrs, offers }: Props) {
   const isAnyOffer = offers.length > 0;
   const royaltyText = `${royalty}%`;
-  const src = `${IPFS_GATEWAY_ADDRESS}/${image}`;
+  const src = `${ADDRESS.IPFS_GATEWAY}/${image}`;
 
   // TODO: ! assert, lint rule
   const getAttributes = () =>

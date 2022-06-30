@@ -1,7 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ConfirmationModal, Listing, PriceModal, OnLogin } from 'components';
-import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
 import { Offer } from 'types';
@@ -42,7 +42,7 @@ function SaleListing(props: Props) {
   };
 
   const buy = () => {
-    const payload = { BuyItem: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id } };
+    const payload = { BuyItem: { nftContractId: ADDRESS.NFT_CONTRACT, tokenId: id } };
     const value = price?.replaceAll(',', '');
 
     sendMessage(payload, { value, onSuccess: closeModal });
@@ -51,7 +51,7 @@ function SaleListing(props: Props) {
   const offer = (priceValue: string) => {
     const payload = {
       AddOffer: {
-        nftContractId: NFT_CONTRACT_ADDRESS,
+        nftContractId: ADDRESS.NFT_CONTRACT,
         ftContractId: null,
         tokenId: id,
         price: priceValue,

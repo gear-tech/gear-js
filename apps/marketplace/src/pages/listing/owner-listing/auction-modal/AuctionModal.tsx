@@ -1,5 +1,5 @@
 import { Button, Input, Modal } from '@gear-js/ui';
-import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -35,7 +35,7 @@ function AuctionModal({ close }: Props) {
     if (minPrice && duration) {
       const payload = {
         CreateAuction: {
-          nftContractId: NFT_CONTRACT_ADDRESS,
+          nftContractId: ADDRESS.NFT_CONTRACT,
           ftContractId: null,
           tokenId: id,
           duration: getMilliseconds(duration),

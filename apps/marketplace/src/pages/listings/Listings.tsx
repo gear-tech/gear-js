@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import { InfoText, Loader } from 'components';
-import { useMarketplace } from 'hooks';
+import { List } from 'components';
+import { useMergedNFTs } from 'hooks';
 import { MarketNFT } from 'types';
-import { Header } from './header';
-import { NFT } from './nft';
-import styles from './Listings.module.scss';
 
 const filters = ['All', 'Buy now', 'On auction', 'Has offers'];
 
 function Listings() {
-  const { NFTs, isEachNFTRead } = useMarketplace();
+  const { NFTs, isEachNFTRead } = useMergedNFTs();
   const [filter, setFilter] = useState('All');
 
   const getFilteredNft = (nft: MarketNFT) => {
@@ -28,28 +25,13 @@ function Listings() {
   };
 
   const filteredNfts = NFTs?.filter(getFilteredNft);
-  const isAnyNft = !!filteredNfts?.length;
-
-  const getNFTs = () =>
-    filteredNfts?.map((nft) => {
-      const { tokenId, auction, price } = nft;
-      const { currentPrice } = auction || {};
-
-      return <NFT key={tokenId} id={tokenId} price={price || currentPrice} isAuction={!!auction} />;
-    });
 
   return (
-    <>
-      <Header text="NFT Marketplace" filter={filter} filters={filters} onFilterChange={setFilter} />
-      {isEachNFTRead ? (
-        <>
-          {isAnyNft && <ul className={styles.list}>{getNFTs()}</ul>}
-          {!isAnyNft && <InfoText text="There are no listings at the moment." />}
-        </>
-      ) : (
-        <Loader />
-      )}
-    </>
+    <List
+      heading="NFT Marketplace"
+      filter={{ value: filter, list: filters, onChange: setFilter }}
+      NFTs={{ list: filteredNfts, isRead: isEachNFTRead, fallback: 'There are no listings at the moment.' }}
+    />
   );
 }
 

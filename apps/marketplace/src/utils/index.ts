@@ -1,6 +1,7 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { LOCAL_STORAGE } from 'consts';
+import { ADDRESS, LOCAL_STORAGE } from 'consts';
 import { getMintDetails, getMintPayload } from './form';
+import { getMarketNFTPayload } from './payload';
 
 const isLoggedIn = ({ address }: InjectedAccountWithMeta) => localStorage[LOCAL_STORAGE.ACCOUNT] === address;
 
@@ -10,4 +11,6 @@ const isHex = (value: unknown) => {
   return typeof value === 'string' && hexRegex.test(value);
 };
 
-export { isLoggedIn, isHex, getMintDetails, getMintPayload };
+const getIpfsAddress = (cid: string) => `${ADDRESS.IPFS_GATEWAY}/${cid}`;
+
+export { isLoggedIn, isHex, getMintDetails, getMintPayload, getIpfsAddress, getMarketNFTPayload };

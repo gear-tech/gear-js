@@ -2,7 +2,7 @@ import { Hex } from '@gear-js/api';
 import { useAccount } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { ConfirmationModal } from 'components/modals';
-import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -38,7 +38,7 @@ function Offer({ bid, bidder, listingOwner, hash }: Props) {
   };
 
   const accept = () => {
-    const payload = { AcceptOffer: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, offerHash: hash } };
+    const payload = { AcceptOffer: { nftContractId: ADDRESS.NFT_CONTRACT, tokenId: id, offerHash: hash } };
     sendMessage(payload, { onSuccess: closeModal });
   };
 

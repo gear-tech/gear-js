@@ -1,15 +1,13 @@
 import { useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { AnyJson } from '@polkadot/types/types';
-import marketplaceMetaWasm from 'assets/wasm/marketplace.meta.wasm';
-import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMemo } from 'react';
-import { MarketNFT } from 'types';
-
-type MarketplaceState = { AllItems: MarketNFT[] };
-type NFTState = { ItemInfo: MarketNFT };
+import marketplaceMetaWasm from 'assets/wasm/marketplace.meta.wasm';
+import { ADDRESS } from 'consts';
+import { MarketNFTState, MarketplaceState } from 'types';
+import { getMarketNFTPayload } from 'utils';
 
 function useMarketplaceState<T>(payload: AnyJson) {
-  return useReadState<T>(MARKETPLACE_CONTRACT_ADDRESS, marketplaceMetaWasm, payload);
+  return useReadState<T>(ADDRESS.MARKETPLACE_CONTRACT, marketplaceMetaWasm, payload);
 }
 
 function useMarketplace() {
@@ -20,14 +18,14 @@ function useMarketplace() {
 }
 
 function useMarketNft(tokenId: string) {
-  const payload = useMemo(() => ({ ItemInfo: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId } }), [tokenId]);
-  const { state } = useMarketplaceState<NFTState>(payload);
+  const payload = useMemo(() => getMarketNFTPayload(tokenId), [tokenId]);
+  const { state } = useMarketplaceState<MarketNFTState>(payload);
 
   return state?.ItemInfo;
 }
 
 function useMarketplaceMessage() {
-  return useSendMessage(MARKETPLACE_CONTRACT_ADDRESS, marketplaceMetaWasm);
+  return useSendMessage(ADDRESS.MARKETPLACE_CONTRACT, marketplaceMetaWasm);
 }
 
 export { useMarketplaceState, useMarketNft, useMarketplace, useMarketplaceMessage };

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { Listing, PriceModal, ConfirmationModal, OnLogin } from 'components';
-import { NFT_CONTRACT_ADDRESS } from 'consts';
+import { ADDRESS } from 'consts';
 import { useMarketplaceMessage } from 'hooks';
 import { Offer as OfferType } from 'types';
 import styles from './AuctionListing.module.scss';
@@ -56,12 +56,12 @@ function AuctionListing(props: Props) {
   };
 
   const bid = (priceValue: string) => {
-    const payload = { AddBid: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id, price: priceValue } };
+    const payload = { AddBid: { nftContractId: ADDRESS.NFT_CONTRACT, tokenId: id, price: priceValue } };
     sendMessage(payload, { value: priceValue, onSuccess: closeModal });
   };
 
   const settle = () => {
-    const payload = { SettleAuction: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId: id } };
+    const payload = { SettleAuction: { nftContractId: ADDRESS.NFT_CONTRACT, tokenId: id } };
     sendMessage(payload, { onSuccess: closeModal });
   };
 

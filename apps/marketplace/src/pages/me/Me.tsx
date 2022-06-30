@@ -1,15 +1,11 @@
-import { useOwnersNft } from 'hooks';
-import { List } from './list';
-import styles from './Me.module.scss';
+import { List } from 'components';
+import { useMergedOwnerNFTs } from 'hooks';
 
 function Me() {
-  const nfts = useOwnersNft();
+  const { NFTs, isEachNFTRead } = useMergedOwnerNFTs();
 
   return (
-    <>
-      <h2 className={styles.heading}>My NFTs</h2>
-      <div className={styles.main}>{nfts && <List nfts={nfts} />}</div>
-    </>
+    <List heading="My NFTs" NFTs={{ list: NFTs, isRead: isEachNFTRead, fallback: "You don't have any tokens yet." }} />
   );
 }
 
