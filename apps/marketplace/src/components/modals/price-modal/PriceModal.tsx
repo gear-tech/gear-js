@@ -21,7 +21,7 @@ function PriceModal({ heading, close, onSubmit }: Props) {
   return (
     <Modal heading={heading} close={close}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <Input value={price} onChange={handlePriceChange} />
+        <Input type="number" value={price} onChange={handlePriceChange} />
         <Button type="submit" text="OK" block />
       </form>
     </Modal>
