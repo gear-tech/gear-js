@@ -3,6 +3,11 @@
   height: $size;
 }
 
+@mixin circle($size) {
+  @include square($size);
+  border-radius: 50%;
+}
+
 @mixin transition($prop: all) {
   transition: 0.25s $prop;
 }

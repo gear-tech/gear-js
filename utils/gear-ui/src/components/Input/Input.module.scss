@@ -26,12 +26,17 @@
   }
 }
 
-.input {
+.resets {
+  @extend .resets;
   padding: 0;
-  color: $textColor;
   background: none;
   border: none;
   outline: none;
+}
+
+.input {
+  @extend .resets;
+  color: $textColor;
 
   &::placeholder {
     color: $textColorSecondary;

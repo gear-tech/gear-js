@@ -15,14 +15,19 @@ $arrow: "data:image/svg+xml,%3Csvg width='12' height='8' fill='none' xmlns='http
   margin-right: 16px;
 }
 
+.resets {
+  appearance: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
 .select {
+  @extend .resets;
   flex: 1;
   padding: 10px 45px 10px 20px;
   color: $textColor;
   background: #282828 url($arrow) center right 16px no-repeat;
   border-radius: $borderRadius;
   box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
-  appearance: none;
-  border: none;
-  outline: none;
 }
