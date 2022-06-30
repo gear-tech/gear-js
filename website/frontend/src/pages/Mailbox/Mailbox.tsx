@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { MailboxType } from '@gear-js/api';
+import { useCallback, useEffect, useState } from 'react';
+import { Hex, MailboxType } from '@gear-js/api';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import styles from './Mailbox.module.scss';
 import { Message } from './children/Message/Message';
@@ -14,7 +15,17 @@ const Mailbox = () => {
 
   const [mailbox, setMailbox] = useState<MailboxType | null>(null);
 
-  const handleClaim = useClaimMessage();
+  const claimMessage = useClaimMessage();
+
+  const handleClaim = useCallback(
+    (messageId: Hex) => {
+      const removeMail = () =>
+        setMailbox((prevState) => prevState && prevState.filter(([, message]) => message.id !== messageId));
+
+      return claimMessage(messageId, removeMail);
+    },
+    [claimMessage]
+  );
 
   const address = account?.address;
 
@@ -32,11 +43,14 @@ const Mailbox = () => {
         <Box className={styles.box}>
           <h2 className={styles.heading}>Mailbox:</h2>
           <div className={styles.messages}>
-            {mailbox.map(([, message]) => (
-              <Message key={message.id} message={message} onClaim={handleClaim} />
-            ))}
-
-            {!mailbox.length && <p>No messages</p>}
+            <TransitionGroup component={null}>
+              {mailbox.map(([, message]) => (
+                <CSSTransition key={message.id} timeout={300}>
+                  <Message message={message} onClaim={handleClaim} />
+                </CSSTransition>
+              ))}
+            </TransitionGroup>
+            {!mailbox.length && <p className={styles.noMessages}>No messages</p>}
           </div>
         </Box>
       ) : (

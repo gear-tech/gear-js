@@ -1,5 +1,6 @@
 @use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/breakpoints' as *;
+@use 'assets/scss/animations' as *;
 
 .message {
   display: flex;
@@ -11,6 +12,8 @@
   @include md {
     flex-direction: column;
   }
+
+  @include fade(300ms);
 }
 
 .actions {

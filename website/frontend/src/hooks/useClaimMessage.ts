@@ -12,7 +12,7 @@ const useClaimMessage = () => {
   const { account } = useAccount();
 
   const claimMessage = useCallback(
-    async (messageId: Hex) => {
+    async (messageId: Hex, callback: () => void) => {
       if (!account) {
         alert.error('Wallet no connected');
 
@@ -49,12 +49,16 @@ const useClaimMessage = () => {
 
           if (status.isFinalized) {
             alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+
+            callback();
           }
         });
       } catch (error) {
         const message = (error as Error).message;
 
         alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+
+        return Promise.reject(error);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

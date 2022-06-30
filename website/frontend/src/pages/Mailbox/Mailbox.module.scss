@@ -16,4 +16,16 @@
   flex: 1;
   // fix not shrinking past the content size
   min-width: 0;
+
+  .noMessages {
+    display: none;
+
+    &:only-child {
+      display: block;
+    }
+  }
+}
+
+.message {
+  background-color: $errorColor;
 }

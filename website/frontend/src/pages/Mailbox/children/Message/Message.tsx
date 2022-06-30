@@ -23,7 +23,8 @@ const Message = ({ message, onClaim }: Props) => {
 
   const handleClaim = () => {
     setIsLoading(true);
-    onClaim(messageId).finally(() => setIsLoading(false));
+
+    onClaim(messageId).catch(() => setIsLoading(false));
   };
 
   const pathTo = generatePath(`${routes.send}/${routes.reply}`, { messageId });
