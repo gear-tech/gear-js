@@ -1,51 +1,50 @@
-import { HumanedMessage } from '@gear-js/api';
-import { Button } from '@gear-js/ui';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { web3FromSource } from '@polkadot/extension-dapp';
-import { useApi, useAccount, useAlert } from 'hooks';
-import { getPreformattedText } from 'helpers';
-import claimIcon from './images/claim.svg';
-import { ReplyLink } from './children';
+import { Link, generatePath } from 'react-router-dom';
+import { Hex, HumanedMessage } from '@gear-js/api';
+import { Button, buttonStyles } from '@gear-js/ui';
+import clsx from 'clsx';
+
 import styles from './Message.module.scss';
+
+import { routes } from 'routes';
+import { getPreformattedText } from 'helpers';
+import claimSVG from 'assets/images/claim.svg';
+import messageSVG from 'assets/images/message.svg';
+import { useState } from 'react';
 
 type Props = {
   message: HumanedMessage;
+  onClaim: (messageId: Hex) => Promise<void>;
 };
 
-const Message = ({ message }: Props) => {
-  const { id } = message;
+const Message = ({ message, onClaim }: Props) => {
+  const { id: messageId } = message;
 
-  const { api } = useApi();
-  const { account } = useAccount();
-  const alert = useAlert();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const showErrorAlert = (error: string) => {
-    alert.error(error);
+  const handleClaim = () => {
+    setIsLoading(true);
+    onClaim(messageId).finally(() => setIsLoading(false));
   };
 
-  const showSuccessAlert = (data: ISubmittableResult) => {
-    if (!data.status.isBroadcast) {
-      alert.success(`Status: ${data.status}`);
-    }
-  };
-
-  const handleClaimButtonClick = () => {
-    if (account) {
-      const { address, meta } = account;
-
-      api.claimValueFromMailbox.submit(id);
-      web3FromSource(meta.source)
-        .then(({ signer }) => api.claimValueFromMailbox.signAndSend(address, { signer }, showSuccessAlert))
-        .catch((error: Error) => showErrorAlert(error.message));
-    }
-  };
+  const pathTo = generatePath(`${routes.send}/${routes.reply}`, { messageId });
+  const linkClasses = clsx(buttonStyles.button, buttonStyles.primary, buttonStyles.small);
 
   return (
     <div className={styles.message}>
       <pre className={styles.pre}>{getPreformattedText(message)}</pre>
-      <div>
-        <ReplyLink to={id} />
-        <Button text="Claim value" icon={claimIcon} color="secondary" size="small" onClick={handleClaimButtonClick} />
+      <div className={styles.actions}>
+        <Link to={pathTo} className={linkClasses}>
+          <img className={clsx(buttonStyles.icon, styles.replyLinkIcon)} src={messageSVG} alt="send reply icon" />
+          Send reply
+        </Link>
+        <Button
+          size="small"
+          icon={claimSVG}
+          text="Claim value"
+          color="secondary"
+          disabled={isLoading}
+          onClick={handleClaim}
+        />
       </div>
     </div>
   );

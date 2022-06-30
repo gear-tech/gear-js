@@ -1,33 +1,47 @@
 import { useEffect, useState } from 'react';
 import { MailboxType } from '@gear-js/api';
-import { useApi, useAccount } from 'hooks';
-import { Box } from 'layout/Box/Box';
-import { Message } from './children/Message/Message';
+
 import styles from './Mailbox.module.scss';
+import { Message } from './children/Message/Message';
+
+import { useApi, useAccount, useClaimMessage } from 'hooks';
+import { Box } from 'layout/Box/Box';
+import { Spinner } from 'components/common/Spinner/Spinner';
 
 const Mailbox = () => {
   const { api } = useApi();
   const { account } = useAccount();
-  const [mailbox, setMailbox] = useState<MailboxType>([]);
-  const isAnyMessage = mailbox.length > 0;
+
+  const [mailbox, setMailbox] = useState<MailboxType | null>(null);
+
+  const handleClaim = useClaimMessage();
+
+  const address = account?.address;
 
   useEffect(() => {
-    if (account) {
-      api.mailbox.read(account.address).then(setMailbox);
+    if (address) {
+      api.mailbox.read(address).then(setMailbox);
     } else {
-      setMailbox([]);
+      setMailbox(null);
     }
-  }, [account, api.mailbox]);
-
-  // eslint-disable-next-line react/no-array-index-key
-  const getMessages = () => mailbox.map(([, message], index) => <Message key={index} message={message} />);
+  }, [api, address]);
 
   return (
     <div className="wrapper">
-      <Box className={styles.box}>
-        <h2 className={styles.heading}>Mailbox:</h2>
-        <div className={styles.messages}>{isAnyMessage ? getMessages() : <p>No messages</p>}</div>
-      </Box>
+      {mailbox ? (
+        <Box className={styles.box}>
+          <h2 className={styles.heading}>Mailbox:</h2>
+          <div className={styles.messages}>
+            {mailbox.map(([, message]) => (
+              <Message key={message.id} message={message} onClaim={handleClaim} />
+            ))}
+
+            {!mailbox.length && <p>No messages</p>}
+          </div>
+        </Box>
+      ) : (
+        <Spinner absolute />
+      )}
     </div>
   );
 };

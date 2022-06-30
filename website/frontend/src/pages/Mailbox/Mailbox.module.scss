@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 
 .box {
   display: flex;
@@ -7,7 +7,7 @@
 
 .heading {
   color: $textColorSecondary;
-  font-size: 16px;
+  font-size: $fontSizeMedium;
   font-weight: 400;
   margin-right: 100px;
 }
