@@ -13,8 +13,6 @@ import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 const Send = () => {
   const { programId = '', messageId = '' } = useParams();
 
-  const id = programId || messageId;
-
   const [message, setMessage] = useState<MessageModel>();
 
   const [program, metadata] = useProgram(programId || message?.source);
@@ -26,20 +24,20 @@ const Send = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const id = programId || messageId;
   const isReply = Boolean(messageId);
-  const isLoading = !(programId ? program : program && message);
 
   return (
     <div className="wrapper">
-      {isLoading ? (
-        <Spinner absolute />
-      ) : (
+      {program ? (
         <>
-          <PageHeader title={isReply ? 'Send reply' : 'New message'} fileName={program?.name || id} />
+          <PageHeader title={isReply ? 'Send reply' : 'New message'} fileName={program.name || id} />
           <Box>
             <MessageForm id={id} isReply={isReply} replyErrorCode={message?.replyError} metadata={metadata} />
           </Box>
         </>
+      ) : (
+        <Spinner absolute />
       )}
     </div>
   );
