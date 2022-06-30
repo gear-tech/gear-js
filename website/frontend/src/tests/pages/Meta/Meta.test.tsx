@@ -4,9 +4,9 @@ import { decodeHexTypes } from '@gear-js/api';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { TEST_ACCOUNT } from '../../const';
-import { PROGRAM_ID, PROGRAM, META } from './inputData';
-import { useAccountMock, useProgramMock } from '../../mocks/hooks';
+import { PROGRAM_ID_WITH_META, META } from '../../const';
+
+import { useAccountMock, TEST_ACCOUNT } from '../../mocks/hooks';
 
 import { routes } from 'routes';
 import { FILE_TYPES } from 'consts';
@@ -18,7 +18,7 @@ import { Meta } from 'components/pages/Meta/Meta';
 const UploadMetaPage = () => (
   <AccountProvider>
     <AlertProvider>
-      <MemoryRouter initialEntries={[`/meta/${PROGRAM_ID}`]}>
+      <MemoryRouter initialEntries={[`/meta/${PROGRAM_ID_WITH_META}`]}>
         <Routes>
           <Route path={routes.meta} element={<Meta />} />
         </Routes>
@@ -28,28 +28,15 @@ const UploadMetaPage = () => (
 );
 
 describe('test uplaod meta page', () => {
-  it('should show loader', () => {
-    const mockProgram = useProgramMock();
-
-    render(<UploadMetaPage />);
-
-    expect(screen.getByTestId('spinner')).toBeInTheDocument();
-
-    expect(mockProgram).toBeCalledTimes(1);
-    expect(mockProgram).toBeCalledWith(PROGRAM_ID);
-  });
-
-  it('should show loader', async () => {
-    const mockProgram = useProgramMock(PROGRAM);
-
+  it('test upload metadata logic', async () => {
     const addMetadataMock = jest.spyOn(ApiServiceModule, 'addMetadata').mockResolvedValue();
 
     const { rerender } = render(<UploadMetaPage />);
 
-    expect(mockProgram).toBeCalledTimes(1);
-    expect(mockProgram).toBeCalledWith(PROGRAM_ID);
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
 
-    const elements = screen.getAllByText('Upload metadata');
+    const elements = await screen.findAllByText('Upload metadata');
+
     const header = elements[0];
     const uploadMetaBtn = elements[1];
 
@@ -130,7 +117,7 @@ describe('test uplaod meta page', () => {
         META,
         Buffer.from(new Uint8Array(fileBuffer)).toString('base64'),
         TEST_ACCOUNT,
-        PROGRAM_ID,
+        PROGRAM_ID_WITH_META,
         'TEST',
         expect.any(Object)
       );
