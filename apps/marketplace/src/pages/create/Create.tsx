@@ -1,6 +1,6 @@
 import { Button, Checkbox, FileInput, Input, Textarea } from '@gear-js/ui';
 import plus from 'assets/images/form/plus.svg';
-import { useIPFS, useMarketplaceMessage } from 'hooks';
+import { useIPFS, useNftMessage } from 'hooks';
 import { getMintDetails, getMintPayload } from 'utils';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useEffect, useState } from 'react';
@@ -28,7 +28,7 @@ function Create() {
   const { errors } = formState;
 
   const ipfs = useIPFS();
-  const sendMessage = useMarketplaceMessage();
+  const sendMessage = useNftMessage();
 
   const [isAnyAttribute, setIsAnyAttribute] = useState(false);
   const [isRarity, setIsRarity] = useState(false);

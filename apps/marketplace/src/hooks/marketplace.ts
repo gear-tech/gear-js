@@ -5,11 +5,18 @@ import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMemo } from 'react';
 import { MarketNFT } from 'types';
 
-type NFTState = { ItemInfo: MarketNFT };
 type MarketplaceState = { AllItems: MarketNFT[] };
+type NFTState = { ItemInfo: MarketNFT };
 
 function useMarketplaceState<T>(payload: AnyJson) {
   return useReadState<T>(MARKETPLACE_CONTRACT_ADDRESS, marketplaceMetaWasm, payload);
+}
+
+function useMarketplace() {
+  const payload = useMemo(() => ({ AllItems: null }), []);
+  const { state, isStateRead } = useMarketplaceState<MarketplaceState>(payload);
+
+  return { NFTs: state?.AllItems, isEachNFTRead: isStateRead };
 }
 
 function useMarketNft(tokenId: string) {
@@ -17,13 +24,6 @@ function useMarketNft(tokenId: string) {
   const { state } = useMarketplaceState<NFTState>(payload);
 
   return state?.ItemInfo;
-}
-
-function useMarketplace() {
-  const payload = useMemo(() => ({ AllItems: null }), []);
-  const { state } = useMarketplaceState<MarketplaceState>(payload);
-
-  return state?.AllItems;
 }
 
 function useMarketplaceMessage() {
