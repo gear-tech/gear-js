@@ -4,7 +4,7 @@ import { decodeHexTypes } from '@gear-js/api';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { PROGRAM_ID_WITH_META, META } from '../../const';
+import { PROGRAM_ID_1, META } from '../../const';
 
 import { useAccountMock, TEST_ACCOUNT } from '../../mocks/hooks';
 
@@ -18,7 +18,7 @@ import { Meta } from 'components/pages/Meta/Meta';
 const UploadMetaPage = () => (
   <AccountProvider>
     <AlertProvider>
-      <MemoryRouter initialEntries={[`/meta/${PROGRAM_ID_WITH_META}`]}>
+      <MemoryRouter initialEntries={[`/meta/${PROGRAM_ID_1}`]}>
         <Routes>
           <Route path={routes.meta} element={<Meta />} />
         </Routes>
@@ -117,7 +117,7 @@ describe('test uplaod meta page', () => {
         META,
         Buffer.from(new Uint8Array(fileBuffer)).toString('base64'),
         TEST_ACCOUNT,
-        PROGRAM_ID_WITH_META,
+        PROGRAM_ID_1,
         'TEST',
         expect.any(Object)
       );
