@@ -54,10 +54,28 @@ type Filter = {
   onChange: (filter: string) => void;
 };
 
+type Listing = {
+  heading: string;
+  description: string;
+  owner: Hex;
+  src: string;
+  offers: Offer[];
+  price: MarketNFT['price'];
+  rarity?: string;
+  attrs?: NFTDetails['attributes'];
+};
+
+type AuctionFormValues = {
+  duration: string;
+  bidPeriod: string;
+  minPrice: string;
+};
+
 export type {
   BaseNFT,
   NFTDetails,
   Offer,
+  Auction,
   MarketNFT,
   NFT,
   MarketplaceState,
@@ -65,4 +83,6 @@ export type {
   NFTState,
   OwnersNFTState,
   Filter,
+  Listing,
+  AuctionFormValues,
 };

@@ -1,78 +1,30 @@
-import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { ConfirmationModal, Listing, PriceModal, OnLogin } from 'components';
-import { ADDRESS } from 'consts';
-import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
-import { Offer } from 'types';
+import { Listing as ListingType } from 'types';
 
 type Props = {
   isOwner: boolean;
-  id: string;
-  heading: string;
-  description: string;
-  owner: Hex;
-  image: string;
-  offers: Offer[];
-  price?: string;
-  royalty?: number;
-  rarity?: string;
-  attrs?: { [key: string]: string };
+  item: ListingType;
+  onBuySubmit: (onSuccess: () => void) => void;
+  onOfferSubmit: (value: string, onSuccess: () => void) => void;
 };
 
-function SaleListing(props: Props) {
-  const { isOwner, id, heading, description, owner, image, offers, price, royalty, rarity, attrs } = props;
-
-  const sendMessage = useMarketplaceMessage();
-
+function SaleListing({ isOwner, item, onBuySubmit, onOfferSubmit }: Props) {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
 
-  const openConfirmationModal = () => {
-    setIsConfirmationModalOpen(true);
-  };
-
-  const openPriceModal = () => {
-    setIsPriceModalOpen(true);
-  };
+  const openConfirmationModal = () => setIsConfirmationModalOpen(true);
+  const openPriceModal = () => setIsPriceModalOpen(true);
 
   const closeModal = () => {
     setIsConfirmationModalOpen(false);
     setIsPriceModalOpen(false);
   };
 
-  const buy = () => {
-    const payload = { BuyItem: { nftContractId: ADDRESS.NFT_CONTRACT, tokenId: id } };
-    const value = price?.replaceAll(',', '');
-
-    sendMessage(payload, { value, onSuccess: closeModal });
-  };
-
-  const offer = (priceValue: string) => {
-    const payload = {
-      AddOffer: {
-        nftContractId: ADDRESS.NFT_CONTRACT,
-        ftContractId: null,
-        tokenId: id,
-        price: priceValue,
-      },
-    };
-
-    sendMessage(payload, { value: priceValue, onSuccess: closeModal });
-  };
-
   return (
     <>
-      <Listing
-        heading={heading}
-        description={description}
-        owner={owner}
-        image={image}
-        offers={offers}
-        price={price}
-        royalty={royalty}
-        rarity={rarity}
-        attrs={attrs}>
+      <Listing item={item}>
         <OnLogin>
           {!isOwner && (
             <>
@@ -82,8 +34,8 @@ function SaleListing(props: Props) {
           )}
         </OnLogin>
       </Listing>
-      {isConfirmationModalOpen && <ConfirmationModal heading="Buy item?" close={closeModal} onSubmit={buy} />}
-      {isPriceModalOpen && <PriceModal heading="Enter your offer" close={closeModal} onSubmit={offer} />}
+      {isConfirmationModalOpen && <ConfirmationModal heading="Buy item?" close={closeModal} onSubmit={onBuySubmit} />}
+      {isPriceModalOpen && <PriceModal heading="Enter your offer" close={closeModal} onSubmit={onOfferSubmit} />}
     </>
   );
 }

@@ -1,71 +1,31 @@
-import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { Listing, PriceModal, OnLogin } from 'components';
-import { ADDRESS } from 'consts';
-import { useMarketplaceMessage } from 'hooks';
 import { useState } from 'react';
+import { AuctionFormValues, Listing as ListingType } from 'types';
 import { AuctionModal } from './auction-modal';
 
 type Props = {
   isOwner: boolean;
-  id: string;
-  heading: string;
-  description: string;
-  owner: Hex;
-  image: string;
-  offers: any[];
-  price?: string;
-  royalty?: number;
-  rarity?: string;
-  attrs?: { [key: string]: string };
+  item: ListingType;
+  onAuctionSubmit: (values: AuctionFormValues, onSuccess: () => void) => void;
+  onSaleSubmit: (value: string, onSuccess: () => void) => void;
 };
 
-function OwnerListing(props: Props) {
-  const { isOwner, id, heading, description, owner, image, offers, price, royalty, rarity, attrs } = props;
-
-  const sendMessage = useMarketplaceMessage();
-
+function OwnerListing({ isOwner, item, onAuctionSubmit, onSaleSubmit }: Props) {
   const [isAuctionModalOpen, setIsAuctionModalOpen] = useState(false);
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
 
-  const openAuctionModal = () => {
-    setIsAuctionModalOpen(true);
-  };
-
-  const openPriceModal = () => {
-    setIsPriceModalOpen(true);
-  };
+  const openAuctionModal = () => setIsAuctionModalOpen(true);
+  const openPriceModal = () => setIsPriceModalOpen(true);
 
   const closeModal = () => {
     setIsAuctionModalOpen(false);
     setIsPriceModalOpen(false);
   };
 
-  const startSale = (priceValue: string) => {
-    const payload = {
-      AddMarketData: {
-        nftContractId: ADDRESS.NFT_CONTRACT,
-        ftContractId: null,
-        tokenId: id,
-        price: priceValue,
-      },
-    };
-
-    sendMessage(payload, { value: priceValue, onSuccess: closeModal });
-  };
-
   return (
     <>
-      <Listing
-        heading={heading}
-        description={description}
-        owner={owner}
-        image={image}
-        offers={offers}
-        price={price}
-        royalty={royalty}
-        rarity={rarity}
-        attrs={attrs}>
+      <Listing item={item}>
         <OnLogin>
           {isOwner && (
             <>
@@ -75,8 +35,10 @@ function OwnerListing(props: Props) {
           )}
         </OnLogin>
       </Listing>
-      {isAuctionModalOpen && <AuctionModal close={closeModal} />}
-      {isPriceModalOpen && <PriceModal heading="Enter price to start sale" close={closeModal} onSubmit={startSale} />}
+      {isAuctionModalOpen && <AuctionModal close={closeModal} onSubmit={onAuctionSubmit} />}
+      {isPriceModalOpen && (
+        <PriceModal heading="Enter price to start sale" close={closeModal} onSubmit={onSaleSubmit} />
+      )}
     </>
   );
 }

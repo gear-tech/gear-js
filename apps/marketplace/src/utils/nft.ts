@@ -1,9 +1,11 @@
 import { ButtonProps } from '@gear-js/ui';
 import { ADDRESS } from 'consts';
-import { NFT } from 'types';
+import { Auction, BaseNFT, MarketNFT, NFT, NFTDetails } from 'types';
 import { getIpfsAddress } from 'utils';
 
 const getMarketNFTPayload = (tokenId: string) => ({ ItemInfo: { nftContractId: ADDRESS.NFT_CONTRACT, tokenId } });
+const getHeading = (name: string, id: string) => `${name} #${id}`;
+const getTimestamp = (value: string) => +value.replaceAll(',', '');
 
 function getButtonText(isOwner: boolean, isAuction: boolean) {
   if (!isOwner) {
@@ -40,4 +42,31 @@ function getNFTProps(nft: NFT, isOwner: boolean) {
   return { name, path, src, text, button: price ? buttonProp : undefined, price: priceProp };
 }
 
-export { getMarketNFTPayload, getNFTProps };
+function getListingProps(baseNft: BaseNFT, marketNft: MarketNFT, details: NFTDetails) {
+  const { id, name, description, ownerId, media } = baseNft;
+  const { auction } = marketNft;
+  const { rarity, attributes } = details;
+
+  const heading = getHeading(name, id);
+  const src = getIpfsAddress(media);
+
+  const offers = auction ? auction.bids : marketNft.offers;
+  const price = auction ? auction.currentPrice : marketNft.price;
+
+  return { heading, description, owner: ownerId, price, src, rarity, attrs: attributes, offers };
+}
+
+function getAuctionDate(auction: Auction) {
+  const { startedAt, endedAt } = auction;
+
+  const startTimestamp = getTimestamp(startedAt);
+  const endTimestamp = getTimestamp(endedAt);
+  const currentTimestamp = new Date().getTime();
+  const startDate = new Date(startTimestamp).toLocaleString();
+  const endDate = new Date(endTimestamp).toLocaleString();
+  const isAuctionOver = currentTimestamp > endTimestamp;
+
+  return { startDate, endDate, isAuctionOver };
+}
+
+export { getMarketNFTPayload, getNFTProps, getListingProps, getAuctionDate };

@@ -1,33 +1,22 @@
-import { Hex } from '@gear-js/api';
 import { ReactNode } from 'react';
-import { Offer as OfferType } from 'types';
-import { ADDRESS } from 'consts';
+import { Listing as ListingType } from 'types';
 import { Card } from './card';
 import { Offer } from './offer';
 import styles from './Listing.module.scss';
 
 type Props = {
+  item: ListingType;
   children: ReactNode;
-  heading: string;
-  description: string;
-  owner: Hex;
-  image: string;
-  offers: OfferType[];
-  price?: string;
-  royalty?: number;
-  rarity?: string;
-  attrs?: { [key: string]: string };
 };
 
-function Listing({ children, heading, description, owner, price, royalty, image, rarity, attrs, offers }: Props) {
+function Listing({ children, item }: Props) {
+  const { heading, description, owner, price, src, rarity, attrs, offers } = item;
   const isAnyOffer = offers.length > 0;
-  const royaltyText = `${royalty}%`;
-  const src = `${ADDRESS.IPFS_GATEWAY}/${image}`;
 
-  // TODO: ! assert, lint rule
   const getAttributes = () =>
+    attrs &&
     // eslint-disable-next-line react/no-array-index-key
-    Object.keys(attrs!).map((attr, index) => <p key={index} className={styles.text}>{`${attr}: ${attrs![attr]}`}</p>);
+    Object.keys(attrs).map((attr, index) => <p key={index} className={styles.text}>{`${attr}: ${attrs![attr]}`}</p>);
 
   const getOffers = () =>
     offers
@@ -44,7 +33,6 @@ function Listing({ children, heading, description, owner, price, royalty, image,
         <div>
           {price && <Card heading="Current price" text={price} />}
           <Card heading="Description" text={description} />
-          {royalty && <Card heading="Royalty" text={royaltyText} />}
           <Card heading="Owner" text={owner} />
         </div>
         <div className={styles.main}>

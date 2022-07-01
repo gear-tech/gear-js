@@ -5,7 +5,7 @@ import styles from '../index.module.scss';
 type Props = {
   heading: string;
   close: () => void;
-  onSubmit: (price: string) => void;
+  onSubmit: (value: string, onSuccess: () => void) => void;
 };
 
 function PriceModal({ heading, close, onSubmit }: Props) {
@@ -15,7 +15,7 @@ function PriceModal({ heading, close, onSubmit }: Props) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (Number(price) > 0) onSubmit(price);
+    if (Number(price) > 0) onSubmit(price, close);
   };
 
   return (

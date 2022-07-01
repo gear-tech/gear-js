@@ -2,8 +2,9 @@ import { useAccount } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { NFTDetails } from 'types';
-import { useMarketNft, useNft } from 'hooks';
-import { getIpfsAddress } from 'utils';
+import { useMarketNft, useMarketplaceActions, useNft } from 'hooks';
+import { getAuctionDate, getIpfsAddress, getListingProps } from 'utils';
+import { Loader } from 'components';
 import { AuctionListing } from './auction-listing';
 import { OwnerListing } from './owner-listing';
 import { SaleListing } from './sale-listing';
@@ -15,79 +16,59 @@ type Params = {
 function Listing() {
   const { id } = useParams() as Params;
   const { account } = useAccount();
-  const nft = useNft(id);
 
-  const [details, setDetails] = useState<NFTDetails>();
-  const { royalty, rarity, attributes } = details || {};
+  const nft = useNft(id);
+  const { reference, ownerId } = nft || {};
+  const isOwner = account?.decodedAddress === ownerId;
 
   const marketNft = useMarketNft(id);
-  const { price, auction, offers } = marketNft || {};
-  const { startedAt, endedAt, currentPrice, bids } = auction || {};
-
+  const { price, auction } = marketNft || {};
   const isSale = !!price;
   const isAuction = !!auction;
-  const isOwner = account?.decodedAddress === nft?.ownerId;
+  const isListed = isSale || isAuction;
+
+  const { buy, offer, bid, settle, startSale, startAuction } = useMarketplaceActions(id, price);
+  const [details, setDetails] = useState<NFTDetails>();
 
   useEffect(() => {
-    const { reference } = nft || {};
-
     if (reference) {
-      const path = getIpfsAddress(reference);
-
-      fetch(path)
+      fetch(getIpfsAddress(reference))
         .then((response) => response.json())
         .then(setDetails);
     }
-  }, [nft]);
+  }, [reference]);
 
-  // eslint-disable-next-line no-nested-ternary
-  return nft ? (
-    // eslint-disable-next-line no-nested-ternary
-    isSale ? (
-      <SaleListing
-        id={id}
-        isOwner={isOwner}
-        heading={`${nft.name} #${id}`}
-        description={nft.description}
-        image={nft.media}
-        owner={nft.ownerId}
-        price={price}
-        offers={offers || []}
-        rarity={rarity}
-        royalty={royalty}
-        attrs={attributes}
-      />
-    ) : isAuction ? (
-      <AuctionListing
-        id={id}
-        isOwner={isOwner}
-        heading={`${nft.name} #${id}`}
-        description={nft.description}
-        image={nft.media}
-        owner={nft.ownerId}
-        price={currentPrice}
-        offers={bids || []}
-        rarity={rarity}
-        royalty={royalty}
-        attrs={attributes}
-        startedAt={startedAt || ''}
-        endedAt={endedAt || ''}
-      />
-    ) : (
-      <OwnerListing
-        id={id}
-        isOwner={isOwner}
-        heading={`${nft.name} #${id}`}
-        description={nft.description}
-        image={nft.media}
-        owner={nft.ownerId}
-        offers={offers || []}
-        rarity={rarity}
-        royalty={royalty}
-        attrs={attributes}
-      />
-    )
-  ) : null;
+  return nft && marketNft && details ? (
+    <>
+      {isSale && (
+        <SaleListing
+          isOwner={isOwner}
+          item={getListingProps(nft, marketNft, details)}
+          onBuySubmit={buy}
+          onOfferSubmit={offer}
+        />
+      )}
+      {isAuction && (
+        <AuctionListing
+          isOwner={isOwner}
+          item={getListingProps(nft, marketNft, details)}
+          date={getAuctionDate(auction)}
+          onBidSubmit={bid}
+          onSettleSubmit={settle}
+        />
+      )}
+      {!isListed && (
+        <OwnerListing
+          isOwner={isOwner}
+          item={getListingProps(nft, marketNft, details)}
+          onAuctionSubmit={startAuction}
+          onSaleSubmit={startSale}
+        />
+      )}
+    </>
+  ) : (
+    <Loader />
+  );
 }
 
 export { Listing };
