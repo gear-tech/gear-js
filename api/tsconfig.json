@@ -10,7 +10,8 @@
     "resolveJsonModule": true,
     "pretty": true,
     "skipLibCheck": true,
-    "declaration": true
+    "declaration": true,
+    "sourceMap": false
   },
   "include": ["src", "src/**/*.json"]
 }

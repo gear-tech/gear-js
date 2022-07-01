@@ -6,13 +6,11 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "prebuild": "rm -rf lib",
     "test": "jest --runInBand",
-    "build": "rollup --config rollup.config.js",
+    "build": "yarn prebuild && rollup --config rollup.config.js",
+    "prebuild": "rm -rf lib",
     "prettier": "npx prettier --write src/*",
-    "tslint": "tslint -p tsconfig.json",
-    "codestyle": "npm run prettier && npm run tslint",
-    "prepare": "npm run build"
+    "codestyle": "yarn prettier"
   },
   "exports": {
     ".": {
@@ -48,7 +46,6 @@
     "rollup-plugin-peer-deps-external": "2.2.4",
     "rollup-plugin-typescript2": "0.31.2",
     "ts-jest": "28.0.4",
-    "tslint": "6.1.3",
     "typescript": "4.7.3"
   },
   "directories": {
