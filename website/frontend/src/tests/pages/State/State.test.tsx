@@ -16,8 +16,8 @@ import { routes } from 'routes';
 import { ApiProvider } from 'context';
 import { getPreformattedText } from 'helpers';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
-import { State } from 'components/pages/State';
-import { FormValues } from 'components/pages/State/children/StateForm/types';
+import { State } from 'pages/State';
+import { FormValues } from 'pages/State/children/StateForm/types';
 
 type Props = {
   programId: string;
