@@ -8,7 +8,7 @@ import { waitForProgramInit } from './helpers';
 
 import { routes } from 'routes';
 import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
-import { readFileAsync } from 'helpers';
+import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
 import { uploadMetadata } from 'services/ApiService';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 import { Method } from 'types/explorer';
@@ -75,21 +75,21 @@ const useProgramUpload = () => {
             if (data.status.isFinalized) {
               alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
 
-              data.events.forEach(({ event: { method, section } }) => {
-                const eventTitle = `${section}.${method}`;
+              data.events.forEach(({ event }) => {
+                const { method, section } = event;
 
-                if (method === Method.MessageEnqueued) {
-                  alert.success('Success', { title: eventTitle });
+                const alertOptions = { title: `${section}.${method}` };
 
-                  callback();
+                if (method === Method.ExtrinsicFailed) {
+                  alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
                   return;
                 }
 
-                if (method === Method.ExtrinsicFailed) {
-                  alert.error('Extrinsic Failed', {
-                    title: eventTitle,
-                  });
+                if (method === Method.MessageEnqueued) {
+                  alert.success('Success', alertOptions);
+
+                  callback();
                 }
               });
 

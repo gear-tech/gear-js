@@ -1,9 +1,8 @@
-import { Event } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
 
-import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
 import { useApi, useAccount, useAlert } from 'hooks';
-import { readFileAsync } from 'helpers';
+import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
+import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
 import { Method } from 'types/explorer';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 import { CopiedInfo } from 'components/common/CopiedInfo';
@@ -18,13 +17,6 @@ const useCodeUpload = () => {
     const buffer = Buffer.from(arrayBuffer);
 
     return api.code.submit(buffer);
-  };
-
-  const getErrorMessage = (event: Event) => {
-    const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
-    const formattedDocs = docs.filter(Boolean).join('. ');
-
-    return `${errorMethod}: ${formattedDocs}`;
   };
 
   const uploadCode = async (file: File) => {
@@ -55,20 +47,16 @@ const useCodeUpload = () => {
           events.forEach(({ event }) => {
             const { method, section } = event;
 
-            const eventTitle = `${section}.${method}`;
+            const alertOptions = { title: `${section}.${method}` };
 
-            if (method === Method.CodeSaved) {
-              alert.success(<CopiedInfo title="Code hash" info={codeHash} />, {
-                title: eventTitle,
-              });
+            if (method === Method.ExtrinsicFailed) {
+              alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
               return;
             }
 
-            if (method === Method.ExtrinsicFailed) {
-              alert.error(getErrorMessage(event), { title: eventTitle });
-
-              return;
+            if (method === Method.CodeSaved) {
+              alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
             }
           });
 
