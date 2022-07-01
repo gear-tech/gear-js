@@ -1,0 +1,23 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "To run examples run",
+  "main": "meta.js",
+  "scripts": {
+    "program:upload": "ts-node src/program/uploadProgram.ts",
+    "message:send": "ts-node src/message/sendMessage.ts",
+    "state:read": "ts-node src/state/readState.ts",
+    "mailbox:read": "ts-node src/message/readMailbox.ts",
+    "mailbox:claimValue": "ts-node src/message/claimValue.ts",
+    "code:submit": "ts-node src/program/submitCode.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@gear-js/api": "0.22.1",
+    "@polkadot/api": "8.9.1",
+    "dotenv": "^16.0.0",
+    "rxjs": "^7.5.5",
+    "ts-node": "^10.4.0"
+  }
+}

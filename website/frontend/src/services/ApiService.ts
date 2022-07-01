@@ -9,12 +9,13 @@ import { waitForProgramInit } from './helpers';
 import { nodeApi } from 'api/initApi';
 
 import { GetMetaResponse } from 'api/responses';
-import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE } from 'consts';
+import { RPC_METHODS, PROGRAM_ERRORS, LOCAL_STORAGE, GEAR_BALANCE_TRANSFER_VALUE } from 'consts';
 import { readFileAsync, signPayload, isDevChain, getLocalProgramMeta } from 'helpers';
 import { Account } from 'context/types';
 import { AlertContainerFactory } from 'context/alert/types';
 import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 import { UploadProgramModel, Message, Reply, ProgramStatus } from 'types/program';
+import { AddressOrPair } from '@polkadot/api/types';
 
 export const uploadMetadata = (
   programId: string,
@@ -237,10 +238,35 @@ export const addMetadata = async (
   uploadMetadata(programId, account, name, injector, alert, metaFile, meta, meta.title);
 };
 
+export const transferBalance = (
+  api: GearApi,
+  addressTo: string,
+  addressFrom: AddressOrPair,
+  alert: AlertContainerFactory
+) => {
+  api.balance.transfer(addressTo, GEAR_BALANCE_TRANSFER_VALUE);
+
+  api.balance.signAndSend(addressFrom, ({ events }) => {
+    events.forEach(({ event: { method } }) => {
+      if (method === 'Transfer') {
+        alert.success('Balance received successfully');
+
+        return;
+      }
+
+      if (method === 'ExtrinsicFailed') {
+        alert.error('Error when receiving balance');
+      }
+    });
+  });
+};
+
 export const subscribeToEvents = (alert: AlertContainerFactory) => {
   const filterKey = localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);
 
-  nodeApi.subscribeToUserMessageSentEvents(async ({ data: { source, destination, reply, payload } }) => {
+  nodeApi.subscribeToUserMessageSentEvents(async ({ data: { message } }) => {
+    const { source, destination, reply, payload } = message;
+
     if (destination.toHex() === filterKey) {
       let meta = null;
       let decodedPayload: any;
@@ -265,17 +291,22 @@ export const subscribeToEvents = (alert: AlertContainerFactory) => {
       }
 
       // TODO: add payload parsing
-      const message = `LOG from program\n ${source.toHex()}\n ${decodedPayload ? `Response: ${decodedPayload}` : ''}`;
+      const alertMessage = `LOG from program\n ${source.toHex()}\n ${
+        decodedPayload ? `Response: ${decodedPayload}` : ''
+      }`;
+
       const isSuccess = (reply.isSome && reply.unwrap()[1].toNumber() === 0) || reply.isNone;
+
       const showAlert = isSuccess ? alert.success : alert.error;
 
-      showAlert(message);
+      showAlert(alertMessage);
     }
   });
 
-  nodeApi.subscribeToTransferEvents(({ data: { from, to, value } }) => {
+  nodeApi.subscribeToTransferEvents(({ data: { from, to, amount } }) => {
     if (to.toHex() === filterKey) {
-      const message = `TRANSFER BALANCE\n FROM:${GearKeyring.encodeAddress(from.toHex())}\n VALUE:${value.toString()}`;
+      const message = `TRANSFER BALANCE\n FROM:${GearKeyring.encodeAddress(from.toHex())}\n VALUE:${amount.toString()}`;
+
       alert.info(message);
     }
   });

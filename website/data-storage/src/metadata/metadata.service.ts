@@ -1,55 +1,67 @@
 import { Repository } from 'typeorm';
-import { GearKeyring } from '@gear-js/api';
+import { GearKeyring, Metadata } from '@gear-js/api';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/common';
 
 import { SignatureNotVerified, MetadataNotFound } from '../errors';
-import { ProgramsService } from '../programs/programs.service';
+import { ProgramService } from '../program/program.service';
 import { Meta } from '../entities/meta.entity';
 import { sleep } from '../utils';
+import { MetadataRepo } from './metadata.repo';
+import { ProgramRepo } from '../program/program.repo';
+import { plainToClass } from 'class-transformer';
+import { UpdateProgramDataInput } from '../program/types';
 
 @Injectable()
 export class MetadataService {
   constructor(
-    @InjectRepository(Meta)
-    private readonly metaRepo: Repository<Meta>,
-    private readonly programService: ProgramsService,
+    private programService: ProgramService,
+    private programRepository: ProgramRepo,
+    private metadataRepository: MetadataRepo,
   ) {}
 
   async addMeta(params: AddMetaParams): Promise<AddMetaResult> {
-    await sleep(1000);
-    const program = await this.programService.findProgram({
-      id: params.programId,
-      genesis: params.genesis,
-    });
+    const { programId, genesis, signature, meta, title, name } = params;
+    const [_, program] = await Promise.all([sleep(1000), this.programRepository.getByIdAndGenesis(programId, genesis)]);
+
     try {
-      if (!GearKeyring.checkSign(program.owner, params.signature, params.meta)) {
+      if (!GearKeyring.checkSign(program.owner, signature, meta)) {
         throw new SignatureNotVerified();
       }
     } catch (err) {
       throw new SignatureNotVerified(err.message);
     }
-    const metadata = this.metaRepo.create({
-      owner: program.owner,
-      meta: typeof params.meta === 'string' ? params.meta : JSON.stringify(params.meta),
-      metaFile: params.metaFile,
+    const metadataTypeDB = plainToClass(Meta, {
+      ...params,
+      meta: this.isStringMetaParam(params.meta) ? params.meta : JSON.stringify(params.meta),
       program: program.id,
+      owner: program.owner,
     });
-    const savedMeta = await this.metaRepo.save(metadata);
-    await this.programService.addProgramInfo(params.programId, params.genesis, params.name, params.title, savedMeta);
+
+    const metadata = await this.metadataRepository.save(metadataTypeDB);
+
+    const updateProgramDataInput: UpdateProgramDataInput = {
+      id: params.programId,
+      genesis,
+      name,
+      title,
+      meta: metadata,
+    };
+    await this.programService.updateProgramData(updateProgramDataInput);
 
     return { status: 'Metadata added' };
   }
 
   async getMeta(params: GetMetaParams): Promise<GetMetaResult> {
-    const meta = await this.metaRepo.findOne({
-      where: { program: params.programId },
-      select: ['program', 'meta', 'metaFile'],
-    });
+    const meta = await this.metadataRepository.getByProgramId(params.programId);
     if (!meta) {
       throw new MetadataNotFound();
     }
     return meta;
+  }
+
+  private isStringMetaParam(meta: string): boolean {
+    return typeof meta === 'string';
   }
 }

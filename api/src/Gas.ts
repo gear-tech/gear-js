@@ -1,12 +1,11 @@
 import { isHex, isString, isU8a, u8aToHex } from '@polkadot/util';
-import { u64 } from '@polkadot/types';
 import { CreateType } from './create-type';
 import { Metadata } from './types/interfaces';
 import { Hex, PayloadType } from './types';
 import { GearApi } from './GearApi';
 import { createPayload } from './utils';
 import { GetGasSpentError } from './errors/program.errors';
-import { GasInfo } from 'types/gear-core';
+import { GasInfo } from './types/gear-core';
 
 export class GearGas {
   api: GearApi;
