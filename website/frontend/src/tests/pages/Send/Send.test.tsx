@@ -8,8 +8,8 @@ import { PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2, META } from '..
 import * as helpers from 'helpers';
 import * as ApiService from 'services/ApiService';
 import { AlertProvider, ApiProvider, AccountProvider } from 'context';
-import { Send } from 'components/pages/Send/Send';
-import { FormValues } from 'components/pages/Send/children/MessageForm/types';
+import { Send } from 'pages/Send/Send';
+import { FormValues } from 'pages/Send/children/MessageForm/types';
 import { TypeStructure } from 'components/common/Form/FormPayload/types';
 import { getSubmitPayload, getPayloadValue } from 'components/common/Form/FormPayload/helpers';
 

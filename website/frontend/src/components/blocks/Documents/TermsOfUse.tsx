@@ -1,5 +1,7 @@
 import { VFC } from 'react';
 
+import './Document.scss';
+
 export const TermsOfUse: VFC = () => (
   <div className="document">
     <h2 className="document__title">Terms of use</h2>

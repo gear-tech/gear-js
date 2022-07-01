@@ -13,7 +13,7 @@ import { FILE_TYPES } from 'consts';
 import { getPreformattedText } from 'helpers';
 import { AlertProvider, AccountProvider } from 'context';
 import * as ApiServiceModule from 'services/ApiService';
-import { Meta } from 'components/pages/Meta/Meta';
+import { Meta } from 'pages/Meta/Meta';
 
 const UploadMetaPage = () => (
   <AccountProvider>
