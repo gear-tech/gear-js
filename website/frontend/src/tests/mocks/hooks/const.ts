@@ -16,8 +16,14 @@ export const TEST_ACCOUNT: Account = {
 };
 
 export const TEST_API = {
-  reply: jest.fn(),
-  message: jest.fn(),
+  reply: {
+    submit: jest.fn(),
+    signAndSend: jest.fn(),
+  },
+  message: {
+    submit: jest.fn(),
+    signAndSend: jest.fn(),
+  },
   balance: { findOut: jest.fn() },
   gearEvents: {
     subscribeToNewBlocks: jest.fn(),

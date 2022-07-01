@@ -19,7 +19,7 @@ type Props = {
   replyErrorCode?: string;
 };
 
-export const MessageForm: VFC<Props> = ({ id, isReply, metadata, replyErrorCode }) => {
+const MessageForm = ({ id, isReply, metadata, replyErrorCode }: Props) => {
   const { api } = useApi();
   const alert = useAlert();
   const sendMessage = useSendMessage();
@@ -33,7 +33,6 @@ export const MessageForm: VFC<Props> = ({ id, isReply, metadata, replyErrorCode 
   });
 
   const isMeta = useMemo(() => metadata && Object.keys(metadata).length > 0, [metadata]);
-  const isReply = !!replyErrorCode;
 
   const method = isReply ? 'reply' : 'handle';
 

@@ -6,12 +6,11 @@ import { useAccountMock, useApiMock, TEST_API, TEST_ACCOUNT } from '../../mocks/
 import { PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2, META } from '../../const';
 
 import * as helpers from 'helpers';
-import * as ApiService from 'services/ApiService';
 import { AlertProvider, ApiProvider, AccountProvider } from 'context';
 import { Send } from 'pages/Send/Send';
 import { FormValues } from 'pages/Send/children/MessageForm/types';
 import { TypeStructure } from 'components/common/Form/FormPayload/types';
-import { getSubmitPayload, getPayloadValue } from 'components/common/Form/FormPayload/helpers';
+import { getPayloadValue } from 'components/common/Form/FormPayload/helpers';
 
 type Props = {
   path: string;
@@ -31,6 +30,10 @@ const SendMessagePage = ({ path, initialEntries }: Props) => (
     </AccountProvider>
   </ApiProvider>
 );
+
+jest.mock('@polkadot/extension-dapp', () => ({
+  web3FromSource: () => Promise.resolve({ signer: 'signer' }),
+}));
 
 describe('send message page tests', () => {
   const submit = (element: Element) => {
@@ -56,8 +59,10 @@ describe('send message page tests', () => {
   it('sends message to program without meta', async () => {
     useApiMock(TEST_API);
 
+    TEST_API.message.submit.mockResolvedValue('');
+    TEST_API.message.signAndSend.mockResolvedValue('');
+
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
-    const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
 
     const { rerender } = render(
       <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />
@@ -100,7 +105,7 @@ describe('send message page tests', () => {
 
     submit(sendMessageBtn);
 
-    await waitFor(() => expect(screen.getByText('WALLET NOT CONNECTED')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Wallet not connected')).toBeInTheDocument());
 
     useAccountMock(TEST_ACCOUNT);
 
@@ -157,25 +162,9 @@ describe('send message page tests', () => {
 
     submit(sendMessageBtn);
 
-    const message = {
-      value: formValues.value.toString(),
-      payload: getSubmitPayload(formValues.payload),
-      gasLimit: '2400000',
-      replyToId: formValues.destination,
-      destination: formValues.destination,
-    };
-
     await waitFor(() => {
-      expect(sendMessageMock).toBeCalledTimes(1);
-      expect(sendMessageMock).toBeCalledWith(
-        TEST_API.message,
-        TEST_ACCOUNT,
-        message,
-        expect.any(Object),
-        expect.any(Function),
-        undefined,
-        'u32'
-      );
+      expect(screen.getByText('SignIn')).toBeInTheDocument();
+      expect(screen.getByText('gear.sendMessage')).toBeInTheDocument();
     });
   });
 
@@ -183,8 +172,10 @@ describe('send message page tests', () => {
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT);
 
+    TEST_API.message.submit.mockResolvedValue('');
+    TEST_API.message.signAndSend.mockResolvedValue('');
+
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
-    const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
 
     render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_1}`]} />);
 
@@ -260,25 +251,9 @@ describe('send message page tests', () => {
 
     submit(sendMessageBtn);
 
-    const message = {
-      value: formValues.value.toString(),
-      payload: getSubmitPayload(formValues.payload),
-      gasLimit: '2400000',
-      replyToId: formValues.destination,
-      destination: formValues.destination,
-    };
-
     await waitFor(() => {
-      expect(sendMessageMock).toBeCalledTimes(1);
-      expect(sendMessageMock).toBeCalledWith(
-        TEST_API.message,
-        TEST_ACCOUNT,
-        message,
-        expect.any(Object),
-        expect.any(Function),
-        META,
-        undefined
-      );
+      expect(screen.getByText('SignIn')).toBeInTheDocument();
+      expect(screen.getByText('gear.sendMessage')).toBeInTheDocument();
     });
   });
 
@@ -286,8 +261,10 @@ describe('send message page tests', () => {
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT);
 
+    TEST_API.reply.submit.mockResolvedValue('');
+    TEST_API.reply.signAndSend.mockResolvedValue('');
+
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
-    const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
 
     render(<SendMessagePage path="/send/reply/:messageId" initialEntries={[`/send/reply/${MESSAGE_ID_2}`]} />);
 
@@ -371,25 +348,9 @@ describe('send message page tests', () => {
 
     submit(sendReplyBtn);
 
-    const message = {
-      value: formValues.value.toString(),
-      payload: getSubmitPayload(formValues.payload),
-      gasLimit: '2400000',
-      replyToId: formValues.destination,
-      destination: formValues.destination,
-    };
-
     await waitFor(() => {
-      expect(sendMessageMock).toBeCalledTimes(1);
-      expect(sendMessageMock).toBeCalledWith(
-        TEST_API.reply,
-        TEST_ACCOUNT,
-        message,
-        expect.any(Object),
-        expect.any(Function),
-        undefined,
-        'u32'
-      );
+      expect(screen.getByText('SignIn')).toBeInTheDocument();
+      expect(screen.getByText('gear.sendMessage')).toBeInTheDocument();
     });
   });
 
@@ -397,8 +358,10 @@ describe('send message page tests', () => {
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT);
 
+    TEST_API.reply.submit.mockResolvedValue('');
+    TEST_API.reply.signAndSend.mockResolvedValue('');
+
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
-    const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
 
     render(<SendMessagePage path="/reply/message/:messageId" initialEntries={[`/reply/message/${MESSAGE_ID_1}`]} />);
 
@@ -470,25 +433,9 @@ describe('send message page tests', () => {
 
     submit(sendReplyBtn);
 
-    const message = {
-      value: formValues.value.toString(),
-      payload: getSubmitPayload(formValues.payload),
-      gasLimit: '2400000',
-      replyToId: formValues.destination,
-      destination: formValues.destination,
-    };
-
     await waitFor(() => {
-      expect(sendMessageMock).toBeCalledTimes(1);
-      expect(sendMessageMock).toBeCalledWith(
-        TEST_API.reply,
-        TEST_ACCOUNT,
-        message,
-        expect.any(Object),
-        expect.any(Function),
-        META,
-        undefined
-      );
+      expect(screen.getByText('SignIn')).toBeInTheDocument();
+      expect(screen.getByText('gear.sendMessage')).toBeInTheDocument();
     });
   });
 });

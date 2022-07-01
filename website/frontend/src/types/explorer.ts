@@ -59,6 +59,7 @@ export enum Sections {
 export enum Method {
   Transfer = 'Transfer',
   CodeSaved = 'CodeSaved',
+  ProgramChanged = 'ProgramChanged',
   UserMessageSent = 'UserMessageSent',
   MessageEnqueued = 'MessageEnqueued',
   MessagesDispatched = 'MessagesDispatched',

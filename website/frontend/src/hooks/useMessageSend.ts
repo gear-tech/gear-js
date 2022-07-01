@@ -21,64 +21,64 @@ const useSendMessage = () => {
       meta?: Metadata,
       payloadType?: string
     ) => {
+      if (!account) {
+        alert.error('Wallet not connected');
+
+        return;
+      }
+
+      const alertId = alert.loading('SignIn', { title: 'gear.sendMessage' });
+
       try {
-        if (!account) {
-          throw new Error('Wallet not connected');
-        }
-
-        const alertId = alert.loading('SignIn', { title: 'gear.sendMessage' });
-
         const { signer } = await web3FromSource(account.meta.source);
         const apiExtrinsic = extrinsic === 'handle' ? api.message : api.reply;
 
         apiExtrinsic.submit(message, meta, payloadType);
 
-        await apiExtrinsic
-          .signAndSend(account.address, { signer }, (data) => {
-            if (data.status.isReady) {
-              alert.update(alertId, TransactionStatus.Ready);
+        await apiExtrinsic.signAndSend(account.address, { signer }, (data) => {
+          if (data.status.isReady) {
+            alert.update(alertId, TransactionStatus.Ready);
 
-              return;
-            }
+            return;
+          }
 
-            if (data.status.isInBlock) {
-              alert.update(alertId, TransactionStatus.InBlock);
+          if (data.status.isInBlock) {
+            alert.update(alertId, TransactionStatus.InBlock);
 
-              return;
-            }
+            return;
+          }
 
-            if (data.status.isFinalized) {
-              alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
+          if (data.status.isFinalized) {
+            alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
 
-              data.events.forEach(({ event }) => {
-                const { method, section } = event;
+            data.events.forEach(({ event }) => {
+              const { method, section } = event;
 
-                const eventTitle = `${section}.${method}`;
+              const eventTitle = `${section}.${method}`;
 
-                if (method === Method.MessageEnqueued) {
-                  alert.success('Success', { title: eventTitle });
-                  callback();
+              if (method === Method.MessageEnqueued) {
+                alert.success('Success', { title: eventTitle });
+                callback();
 
-                  return;
-                }
+                return;
+              }
 
-                if (method === Method.ExtrinsicFailed) {
-                  alert.error('Extrinsic Failed', { title: eventTitle });
-                }
-              });
+              if (method === Method.ExtrinsicFailed) {
+                alert.error('Extrinsic Failed', { title: eventTitle });
+              }
+            });
 
-              return;
-            }
+            return;
+          }
 
-            if (data.status.isInvalid) {
-              alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-            }
-          })
-          .catch((error) => {
-            alert.update(alertId, error.message, DEFAULT_ERROR_OPTIONS);
-          });
+          if (data.status.isInvalid) {
+            alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
+          }
+        });
       } catch (error) {
-        alert.error((error as Error).message);
+        const errorMessage = (error as Error).message;
+
+        alert.update(alertId, errorMessage, DEFAULT_ERROR_OPTIONS);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

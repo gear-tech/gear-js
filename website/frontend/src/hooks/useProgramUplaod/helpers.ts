@@ -1,6 +1,7 @@
 import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
+import { Method } from 'types/explorer';
 import { ProgramStatus } from 'types/program';
 
 export const waitForProgramInit = (api: GearApi, programId: string) => {
@@ -13,7 +14,7 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
     unsubPromise = api.query.system.events((events) => {
       events.forEach(({ event }) => {
         switch (event.method) {
-          case 'MessageEnqueued': {
+          case Method.MessageEnqueued: {
             const meEvent = event as MessageEnqueued;
 
             if (meEvent.data.destination.eq(programId) && meEvent.data.entry.isInit) {
@@ -22,7 +23,7 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
 
             break;
           }
-          case 'MessagesDispatched': {
+          case Method.MessagesDispatched: {
             const mdEvent = event as MessagesDispatched;
 
             for (const [id, status] of mdEvent.data.statuses) {
@@ -33,7 +34,7 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
 
             break;
           }
-          case 'ProgramChanged': {
+          case Method.ProgramChanged: {
             const pcEvent = event as ProgramChanged;
 
             if (pcEvent.data.id.eq(programId) && pcEvent.data.change.isActive) {

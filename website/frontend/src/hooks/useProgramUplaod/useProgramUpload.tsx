@@ -43,14 +43,16 @@ const useProgramUpload = () => {
 
   const uploadProgram = useCallback(
     async (file: File, programModel: UploadProgramModel, metaBuffer: string | null, callback: () => void) => {
+      if (!account) {
+        alert.error('Wallet not connected');
+
+        return;
+      }
+
+      const alertId = alert.loading('SignIn', { title: 'gear.submitProgram' });
+
       try {
-        if (!account) {
-          throw new Error('Wallet not connected');
-        }
-
         const injector = await web3FromSource(account.meta.source);
-
-        const alertId = alert.loading('SignIn', { title: 'gear.submitProgram' });
 
         const { programId } = await submit(file, programModel);
 
