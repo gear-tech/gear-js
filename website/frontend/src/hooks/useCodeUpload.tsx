@@ -28,67 +28,67 @@ const useCodeUpload = () => {
   };
 
   const uploadCode = async (file: File) => {
+    if (!account) {
+      alert.error('Wallet not connected');
+
+      return;
+    }
+
+    const alertId = alert.loading('SignIn', { title: 'gear.submitCode' });
+
     try {
-      if (!account) {
-        throw new Error('Wallet not connected');
-      }
-
       const { address, meta } = account;
-
-      const alertId = alert.loading('SignIn', { title: 'gear.submitCode' });
 
       const { signer } = await web3FromSource(meta.source);
       const { codeHash } = await submit(file);
 
-      await api.code
-        .signAndSend(address, { signer }, ({ events, status }) => {
-          if (status.isReady) {
-            alert.update(alertId, TransactionStatus.Ready);
+      await api.code.signAndSend(address, { signer }, ({ events, status }) => {
+        if (status.isReady) {
+          alert.update(alertId, TransactionStatus.Ready);
 
-            return;
-          }
+          return;
+        }
 
-          if (status.isInBlock) {
-            alert.update(alertId, TransactionStatus.InBlock);
+        if (status.isInBlock) {
+          alert.update(alertId, TransactionStatus.InBlock);
 
-            events.forEach(({ event }) => {
-              const { method, section } = event;
+          events.forEach(({ event }) => {
+            const { method, section } = event;
 
-              const eventTitle = `${section}.${method}`;
+            const eventTitle = `${section}.${method}`;
 
-              if (method === Method.CodeSaved) {
-                alert.success(<CopiedInfo title="Code hash" info={codeHash} />, {
-                  title: eventTitle,
-                });
+            if (method === Method.CodeSaved) {
+              alert.success(<CopiedInfo title="Code hash" info={codeHash} />, {
+                title: eventTitle,
+              });
 
-                return;
-              }
+              return;
+            }
 
-              if (method === Method.ExtrinsicFailed) {
-                alert.error(getErrorMessage(event), { title: eventTitle });
+            if (method === Method.ExtrinsicFailed) {
+              alert.error(getErrorMessage(event), { title: eventTitle });
 
-                return;
-              }
-            });
+              return;
+            }
+          });
 
-            return;
-          }
+          return;
+        }
 
-          if (status.isFinalized) {
-            alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
+        if (status.isFinalized) {
+          alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
 
-            return;
-          }
+          return;
+        }
 
-          if (status.isInvalid) {
-            alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-          }
-        })
-        .catch((error) => {
-          alert.update(alertId, error.message, DEFAULT_ERROR_OPTIONS);
-        });
+        if (status.isInvalid) {
+          alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
+        }
+      });
     } catch (error) {
-      alert.error((error as Error).message);
+      const message = (error as Error).message;
+
+      alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
     }
   };
 
