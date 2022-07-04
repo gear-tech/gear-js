@@ -5,7 +5,6 @@ import * as gearHooks from '@gear-js/react-hooks';
 import { renderWithProviders, textMatcher } from './utils';
 import { useApiMock, TEST_API } from './mocks/hooks';
 
-import { nodeApi } from 'api/initApi';
 import { Header } from 'components/blocks/Header';
 import menuStyles from 'components/blocks/Header/children/Menu/Menu.module.scss';
 
@@ -14,6 +13,10 @@ const accounts = [
   { address: '456', meta: { name: 'second acc' } },
   { address: '789', meta: { name: 'third acc' } },
 ];
+
+jest.mock('context/api/const', () => ({
+  NODE_API_ADDRESS: 'testnet-address',
+}));
 
 describe('header tests', () => {
   const mockedUseAccounts = jest.spyOn(gearHooks, 'useAccounts');
@@ -78,8 +81,6 @@ describe('header tests', () => {
 
     expect(queriedSidebar).not.toBeInTheDocument();
     expect(sidebarButton).toHaveTextContent('Loading...');
-
-    jest.spyOn(nodeApi, 'address', 'get').mockImplementation(() => 'testnet-address');
 
     useApiMock(TEST_API);
 

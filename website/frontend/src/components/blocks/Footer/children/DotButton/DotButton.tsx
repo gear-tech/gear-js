@@ -1,14 +1,15 @@
-import dot from 'assets/images/dot-logo.svg';
-import { nodeApi } from 'api/initApi';
 import styles from './DotButton.module.scss';
 
+import { NODE_API_ADDRESS } from 'context/api/const';
+import dotSVG from 'assets/images/dot-logo.svg';
+
 const DotButton = () => {
-  const query = `?rpc=${nodeApi.address}#`;
+  const query = `?rpc=${NODE_API_ADDRESS}#`;
   const href = `https://polkadot.js.org/apps/${query}/explorer`;
 
   return (
     <a href={href} target="_blank" rel="noreferrer" className={styles.button}>
-      <img src={dot} alt="logo" className={styles.icon} />
+      <img src={dotSVG} alt="logo" className={styles.icon} />
       Polkadot Explorer
     </a>
   );
