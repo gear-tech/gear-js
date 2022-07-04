@@ -1,7 +1,6 @@
 import { Controller, Logger } from '@nestjs/common';
 import {
   AddMetaParams,
-  AddPayloadParams,
   FindMessageParams,
   FindProgramParams,
   GetAllProgramsParams,
@@ -77,12 +76,6 @@ export class ConsumerController {
   @MessagePattern(KAFKA_TOPICS.MESSAGE_DATA)
   async messageData(@Payload() payload: KafkaPayload<FindMessageParams>) {
     const result = await this.consumerService.message(payload.value);
-    return JSON.stringify(result);
-  }
-
-  @MessagePattern(KAFKA_TOPICS.MESSAGE_ADD_PAYLOAD)
-  async savePayload(@Payload() payload: KafkaPayload<AddPayloadParams>) {
-    const result = await this.consumerService.addPayload(payload.value);
     return JSON.stringify(result);
   }
 }

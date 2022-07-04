@@ -3,9 +3,11 @@ interface IMessage {
   destination: string;
   source: string;
   payload?: string;
-  error?: string;
-  replyTo?: string | null;
-  replyError?: string | null;
+  value?: string;
+  entry?: string;
+  replyToMessageId: string | null;
+  exitCode: number | null;
+  expiration?: number;
 }
 
 interface IMessageEnqueuedData {

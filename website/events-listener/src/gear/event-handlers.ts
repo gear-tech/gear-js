@@ -31,7 +31,7 @@ function messageEnqueuedHandler(data: MessageEnqueuedData): NewEventData<Keys.Me
 }
 
 function userMessageSentHandler(data: UserMessageSentData): NewEventData<Keys.UserMessageSent, IMessage> {
-  const { id, source, destination, payload, reply } = data.message;
+  const { id, source, destination, payload, value, reply } = data.message;
   return {
     key: Keys.UserMessageSent,
     value: {
@@ -39,8 +39,9 @@ function userMessageSentHandler(data: UserMessageSentData): NewEventData<Keys.Us
       source: source.toHex(),
       destination: destination.toHex(),
       payload: payload.toHex(),
-      replyTo: reply.isSome ? reply.unwrap()[0].toHex() : null,
-      replyError: reply.isSome ? reply.unwrap()[1].toString() : null,
+      value: value.toString(),
+      replyToMessageId: reply.isSome ? reply.unwrap()[0].toHex() : null,
+      exitCode: reply.isSome ? reply.unwrap()[1].toNumber() : null,
     },
   };
 }
@@ -73,7 +74,11 @@ function messagesDispatchedHandler(
 
 function codeChangedHandler(data: CodeChangedData): NewEventData<Keys.CodeChanged, ICodeChangedData> | null {
   const { id, change } = data;
-  return { key: Keys.CodeChanged, value: { id: id.toHex(), change: change.toHex() } };
+  const status = change.isActive ? 'Active' : change.isInactive ? 'Inactive' : null;
+  if (!status) {
+    return null;
+  }
+  return { key: Keys.CodeChanged, value: { id: id.toHex(), change: status } };
 }
 
 function dataBaseWipedHandler(): NewEventData<Keys.DatabaseWiped, unknown> {

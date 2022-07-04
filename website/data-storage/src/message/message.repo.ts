@@ -18,30 +18,6 @@ export class MessageRepo {
     return this.messageRepo.save(message);
   }
 
-  public async listByIdAndSource(params: GetMessagesParams): Promise<[Message[], number]> {
-    const { genesis, destination, query, limit, offset } = params;
-    return this.messageRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis, destination }, query, ['id', 'source']),
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      order: {
-        timestamp: 'DESC',
-      },
-    });
-  }
-
-  public async listByIdAndDestination(params: GetMessagesParams): Promise<[Message[], number]> {
-    const { genesis, source, query, limit, offset } = params;
-    return this.messageRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis, source }, query, ['id', 'destination']),
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      order: {
-        timestamp: 'DESC',
-      },
-    });
-  }
-
   public async listByIdAndSourceAndDestination(params: GetMessagesParams): Promise<[Message[], number]> {
     const { genesis, source, query, destination, limit, offset } = params;
     const strictParams = { genesis };
@@ -86,5 +62,9 @@ export class MessageRepo {
 
   public async remove(messages: Message[]): Promise<Message[]> {
     return this.messageRepo.remove(messages);
+  }
+
+  public async updateMessagePanicStatus(messageId: string, genesis: string, processedWithPanic: boolean) {
+    return this.messageRepo.update({ id: messageId, genesis }, { processedWithPanic });
   }
 }
