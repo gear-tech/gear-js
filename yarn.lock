@@ -1856,25 +1856,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.20.1":
-  version: 0.20.1
-  resolution: "@gear-js/api@npm:0.20.1"
-  peerDependencies:
-    "@polkadot/api": ^8.6.1
-    "@polkadot/wasm-crypto": ^6.1.1
-    rxjs: ^7.5.5
-  checksum: 418132963e7f0aad5c98d3e3d295dd7a1496fb2deb47596453b532c93235228f7f11853a582a2b11dfa1ace65d92e7500a141a6f768abdc75be16657387c77ce
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:0.22.1, @gear-js/api@npm:^0.22.1":
-  version: 0.22.1
-  resolution: "@gear-js/api@npm:0.22.1"
+"@gear-js/api@npm:0.22.2, @gear-js/api@npm:^0.22.2":
+  version: 0.22.2
+  resolution: "@gear-js/api@npm:0.22.2"
   peerDependencies:
     "@polkadot/api": ^8.9.1
     "@polkadot/wasm-crypto": ^6.1.1
     rxjs: ^7.5.5
-  checksum: 6b024cfaab49fdb4f46143d036014ee09098a94fd80ef9c338a4a3406defd04f49051542de6b8e30b58f3c1289d6b09f315087aa0ffa81046a3c76d316655e68
+  checksum: 97ed6debe22039aac5002ab3d5d3445f7fd1258429535ef9f7e384509de6250fc0c111726a1ad0c6f027a7311aa8c0a2e67f477703771bd659651e202867ec0b
   languageName: node
   linkType: hard
 
@@ -1897,7 +1886,7 @@ __metadata:
     "@babel/plugin-transform-modules-commonjs": 7.18.2
     "@babel/plugin-transform-typescript": 7.18.4
     "@babel/preset-typescript": 7.17.12
-    "@gear-js/api": 0.20.1
+    "@gear-js/api": 0.22.2
     "@gear-js/common": "workspace:^"
     "@nestjs/cli": 8.2.6
     "@nestjs/common": 8.4.7
@@ -1944,7 +1933,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/event-listener@workspace:website/events-listener"
   dependencies:
-    "@gear-js/api": ^0.22.1
+    "@gear-js/api": ^0.22.2
     "@gear-js/common": "workspace:^"
     "@polkadot/api": ^8.9.1
     "@types/express": 4.17.13
@@ -1972,7 +1961,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.22.1
+    "@gear-js/api": 0.22.2
     "@gear-js/ui": 0.2.5
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
@@ -2050,7 +2039,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:website/test-balance"
   dependencies:
-    "@gear-js/api": ^0.22.1
+    "@gear-js/api": ^0.22.2
     "@gear-js/common": "workspace:^"
     "@polkadot/api": ^8.9.1
     "@types/express": 4.17.13
