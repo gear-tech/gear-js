@@ -3,7 +3,7 @@ import { Hex, MailboxType } from '@gear-js/api';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import styles from './Mailbox.module.scss';
-import { Message } from './children/Message/Message';
+import { Message } from './children/Message';
 
 import { useApi, useAccount, useClaimMessage } from 'hooks';
 import { Box } from 'layout/Box/Box';
