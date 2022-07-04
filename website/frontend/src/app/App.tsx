@@ -6,9 +6,9 @@ import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
 import styles from './App.module.scss';
 
 import { routes } from 'routes';
-import { nodeApi } from 'api/initApi';
 import { useEvents, useEventSubscriptions } from 'hooks';
 import { withProviders } from 'context';
+import { NODE_API_ADDRESS } from 'context/api/const';
 import { NODE_ADRESS_URL_PARAM } from 'consts';
 
 import 'assets/scss/common.scss';
@@ -47,7 +47,7 @@ const Component = () => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
 
     if (!urlNodeAddress) {
-      searchParams.set(NODE_ADRESS_URL_PARAM, nodeApi.address);
+      searchParams.set(NODE_ADRESS_URL_PARAM, NODE_API_ADDRESS);
       setSearchParams(searchParams, { replace: true });
     }
   }, [searchParams, setSearchParams]);

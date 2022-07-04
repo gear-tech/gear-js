@@ -1,7 +1,9 @@
 import { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AlertProvider, AccountProvider, ApiProvider } from '@gear-js/react-hooks';
+import { AccountProvider } from '@gear-js/react-hooks';
 
+import { ApiProvider } from './api';
+import { AlertProvider } from './alert';
 import { BlocksProvider } from './blocks';
 import { EditorProvider } from './editor';
 

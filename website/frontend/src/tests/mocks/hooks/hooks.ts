@@ -1,8 +1,8 @@
-import * as hooks from '@gear-js/react-hooks';
+import * as gearHooks from '@gear-js/react-hooks';
 import { Account } from '@gear-js/react-hooks';
 
 export const useAccountMock = (account?: Account) => {
-  const mock = jest.spyOn(hooks, 'useAccount');
+  const mock = jest.spyOn(gearHooks, 'useAccount');
 
   mock.mockReturnValue({
     account,
@@ -15,7 +15,7 @@ export const useAccountMock = (account?: Account) => {
 };
 
 export const useApiMock = (api?: any) => {
-  const mock = jest.spyOn(hooks, 'useApi');
+  const mock = jest.spyOn(gearHooks, 'useApi');
 
   mock.mockReturnValue({
     api,

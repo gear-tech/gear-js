@@ -1,12 +1,12 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { GearKeyring } from '@gear-js/api';
+import * as gearHooks from '@gear-js/react-hooks';
 
 import { renderWithProviders, textMatcher } from './utils';
 import { useApiMock, TEST_API } from './mocks/hooks';
 
 import { nodeApi } from 'api/initApi';
 import { Header } from 'components/blocks/Header';
-import { useAccounts } from 'components/blocks/Wallet/hooks';
 import menuStyles from 'components/blocks/Header/children/Menu/Menu.module.scss';
 
 const accounts = [
@@ -15,11 +15,9 @@ const accounts = [
   { address: '789', meta: { name: 'third acc' } },
 ];
 
-// mocking useAccounts since mocking @polkadot/extension-dapp doesn't work (cuz of read only properties?)
-jest.mock('components/blocks/Wallet/hooks');
-const mockedUseAccounts = useAccounts as jest.MockedFunction<any>;
-
 describe('header tests', () => {
+  const mockedUseAccounts = jest.spyOn(gearHooks, 'useAccounts');
+
   it('renders logo and menu', () => {
     renderWithProviders(<Header />);
 

@@ -1,4 +1,4 @@
-import { Account } from 'context/types';
+import { Account } from '@gear-js/react-hooks';
 
 export const TEST_ACCOUNT: Account = {
   address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
