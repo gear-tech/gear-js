@@ -17,8 +17,13 @@ jest.setTimeout(30000);
 beforeAll(async () => {
   api = await GearApi.create({ providerAddress: base.gear.wsProvider });
   genesis = api.genesisHash.toHex();
-  prepared = await processPrepare(api);
   await waitReady();
+  try {
+    prepared = await processPrepare(api);
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
 });
 
 afterAll(async () => {
@@ -28,6 +33,7 @@ afterAll(async () => {
 
 describe('program methods', () => {
   test('program.all request', async () => {
+    console.log(prepared.programs);
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
   });
 

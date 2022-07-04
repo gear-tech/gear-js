@@ -5,7 +5,7 @@ import { GetMessagesParams } from '@gear-js/common';
 
 import { Message } from '../entities';
 import { PAGINATION_LIMIT } from '../config/configuration';
-import { sqlWhereWithILike } from '../utils';
+import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
 
 @Injectable()
 export class MessageRepo {
@@ -27,6 +27,7 @@ export class MessageRepo {
     if (destination) {
       strictParams['destination'] = destination;
     }
+    console.log(sqlWhereWithILike);
     return this.messageRepo.findAndCount({
       where: sqlWhereWithILike(strictParams, query, ['id', 'source', 'destination']),
       take: limit || PAGINATION_LIMIT,

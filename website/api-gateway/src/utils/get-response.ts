@@ -6,6 +6,10 @@ export function getResponse(procedure: IRpcRequest, error?: any, result?: any): 
     id: procedure.id,
   };
   if (error) {
+    if (!JSONRPC_ERRORS[error]) {
+      error = 'InternalError';
+      console.log(error);
+    }
     response['error'] = { message: JSONRPC_ERRORS[error].message, code: JSONRPC_ERRORS[error].code };
   } else if (result) {
     response['result'] = result;

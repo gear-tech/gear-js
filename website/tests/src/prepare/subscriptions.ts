@@ -18,3 +18,11 @@ export async function listenToProgramChanged(
     callback(event.data.id.toHex(), event.data.change.isActive);
   });
 }
+
+export async function listenToMessagesDispatched(api: GearApi, callback: (id: Hex, success: boolean) => void) {
+  return api.gearEvents.subscribeToGearEvent('MessagesDispatched', ({ data: { statuses } }) => {
+    statuses.forEach((status, messageId) => {
+      callback(messageId.toHex(), status.isSuccess ? true : false);
+    });
+  });
+}

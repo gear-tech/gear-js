@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node --experimental-specifier-resolution=node dist/main.js",
-    "dev": "nodemon src/main.ts",
+    "dev": "clear && nodemon src/main.ts",
     "build": "tsc -p tsconfig.json"
   },
   "author": "",

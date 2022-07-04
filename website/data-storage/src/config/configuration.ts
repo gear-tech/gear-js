@@ -26,7 +26,7 @@ export default () => ({
     },
   },
   healthcheck: {
-    port: parseInt(process.env.HEALTHCHECK_PORT || '3000', 10),
+    port: parseInt(process.env.HEALTHCHECK_PORT || '3001', 10),
   },
 });
 

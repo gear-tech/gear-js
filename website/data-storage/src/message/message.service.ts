@@ -13,7 +13,7 @@ import {
 import { Message } from '../entities/message.entity';
 import { ProgramService } from '../program/program.service';
 import { MessageNotFound } from '../errors';
-import { sleep } from '../utils';
+import { sleep } from '../utils/sleep';
 import { MessageRepo } from './message.repo';
 
 @Injectable()

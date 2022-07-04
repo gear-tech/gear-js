@@ -2,14 +2,14 @@ ping:
   - id: 1
     payload: PING
     metaType: String
-    gasLimit: 2000000000
+    gasLimit: 20000000000
     account: alice
     log: '0x504f4e47'
 
   - id: 2
     payload: PING
     metaType: String
-    gasLimit: 2000000000
+    gasLimit: 20000000000
     account: bob
     log: '0x504f4e47'
 
@@ -20,7 +20,7 @@ guestbook:
         author: Alice
         msg: Hello, World!
     pathToMeta: ./wasm/guestbook.meta.wasm
-    gasLimit: 2000000000
+    gasLimit: 20000000000
     account: alice
 
   - id: 4
@@ -29,13 +29,13 @@ guestbook:
         author: Bob
         msg: Hello, Alice!
     pathToMeta: ./wasm/guestbook.meta.wasm
-    gasLimit: 2000000000
+    gasLimit: 20000000000
     account: bob
 
   - id: 5
     payload:
       ViewMessages: 'Null'
     pathToMeta: ./wasm/guestbook.meta.wasm
-    gasLimit: 2000000000
+    gasLimit: 20000000000
     account: alice
     log: '0x0814416c6963653448656c6c6f2c20576f726c64210c426f623448656c6c6f2c20416c69636521'
