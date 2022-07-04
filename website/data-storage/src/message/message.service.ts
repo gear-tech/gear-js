@@ -70,7 +70,7 @@ export class MessageService {
         this.logger.error(error.message, error.stack);
       }
 
-      if (statuses[messageId] === 'Failure') {
+      if (statuses[messageId] === 'Failed') {
         const message = await this.messageRepository.get(messageId);
         if (message.entry === 'Init') {
           this.programService.setStatus(message.destination, genesis, InitStatus.FAILED);
