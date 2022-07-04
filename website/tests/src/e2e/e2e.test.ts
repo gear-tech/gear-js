@@ -33,7 +33,6 @@ afterAll(async () => {
 
 describe('program methods', () => {
   test('program.all request', async () => {
-    console.log(prepared.programs);
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
   });
 

@@ -5,8 +5,8 @@ interface IMessage {
   payload?: string;
   value?: string;
   entry?: string;
-  replyToMessageId: string | null;
-  exitCode: number | null;
+  replyToMessageId?: string;
+  exitCode?: number;
   expiration?: number;
 }
 
