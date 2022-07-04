@@ -51,56 +51,6 @@ describe('Message service', () => {
     expect(mockMessageRepository.save).toHaveBeenCalled();
   });
 
-  // it('should be successfully get messages and called listByIdAndSource method', async () => {
-  //   const messageMock = MESSAGE_DB_MOCK[1];
-
-  //   const params: GetMessagesParams = {
-  //     genesis: messageMock.genesis,
-  //     destination: messageMock.destination,
-  //     source: messageMock.source,
-  //     limit: 1,
-  //   };
-
-  //   const result = await messageService.getIncoming(params);
-
-  //   expect(result.messages[0].destination).toEqual(messageMock.destination);
-  //   expect(result.messages[0].source).toEqual(messageMock.source);
-  //   expect(mockMessageRepository.listByIdAndSource).toHaveBeenCalled();
-  // });
-
-  // it('should be get empty array and called listByIdAndSource method', async () => {
-  //   const params: GetMessagesParams = {
-  //     genesis: 'not_exist_genesis',
-  //     destination: 'not_exist_destination',
-  //     source: 'source',
-  //     limit: 1,
-  //   };
-
-  //   const result = await messageService.getIncoming(params);
-
-  //   expect(result.messages.length).toEqual(0);
-  //   expect(mockMessageRepository.listByIdAndSource).toHaveBeenCalled();
-  // });
-
-  // it('should be successfully get messages and called listByIdAndDestination method', async () => {
-  //   const messageMock = MESSAGE_DB_MOCK[2];
-
-  //   const params: GetMessagesParams = {
-  //     genesis: messageMock.genesis,
-  //     destination: messageMock.destination,
-  //     source: messageMock.source,
-  //     limit: 1,
-  //   };
-
-  //   const result = await messageService.getOutgoing(params);
-
-  //   expect(result.messages.length).toEqual(1);
-  //   expect(result.messages[0].id).toEqual(messageMock.id);
-  //   expect(result.messages[0].source).toEqual(messageMock.source);
-  //   expect(result.messages[0].destination).toEqual(messageMock.destination);
-  //   expect(mockMessageRepository.listByIdAndDestination).toHaveBeenCalled();
-  // });
-
   it('should be successfully get messages and called listByIdAndSourceAndDestination method', async () => {
     const messageMock = MESSAGE_DB_MOCK[0];
 
