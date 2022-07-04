@@ -31,7 +31,7 @@ export interface MessageEnqueuedData extends GenericEventData {
 
 export interface UserMessageSentData extends GenericEventData {
   message: UserMessageSentMessage;
-  expiration: BlockNumber;
+  expiration: Option<BlockNumber>;
 }
 
 export interface UserMessageReadData extends GenericEventData {
