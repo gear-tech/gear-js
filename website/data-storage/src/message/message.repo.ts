@@ -27,7 +27,6 @@ export class MessageRepo {
     if (destination) {
       strictParams['destination'] = destination;
     }
-    console.log(sqlWhereWithILike);
     return this.messageRepo.findAndCount({
       where: sqlWhereWithILike(strictParams, query, ['id', 'source', 'destination']),
       take: limit || PAGINATION_LIMIT,

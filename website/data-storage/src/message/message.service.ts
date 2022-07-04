@@ -30,8 +30,8 @@ export class MessageService {
       });
 
       if (params.replyToMessageId) {
-        const messageThatReplied = await this.messageRepository.get(params.replyToMessageId);
-        messageTypeDB.entry = messageThatReplied.entry;
+        const { entry } = await this.messageRepository.get(params.replyToMessageId);
+        messageTypeDB.entry = entry;
       }
 
       return this.messageRepository.save(messageTypeDB);

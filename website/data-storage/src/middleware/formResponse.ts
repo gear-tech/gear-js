@@ -7,7 +7,6 @@ export function FormResponse(target: Object, propertyKey: string, descriptor: Ty
       return { result: await originalMethod.apply(this, arguments) };
     } catch (ex) {
       console.log(ex);
-      dataStorageLogger.error(`FormResponse: ${JSON.stringify(ex)}`);
       return { error: ex.name };
     }
   };

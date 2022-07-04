@@ -21,6 +21,6 @@ export default {
     provider: process.env.WS_PROVIDER,
   },
   healthcheck: {
-    port: parseInt(process.env.PORT || '3002'),
+    port: Number(process.env.PORT || '3002'),
   },
 };
