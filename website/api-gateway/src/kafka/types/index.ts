@@ -10,6 +10,7 @@ import {
   GetMetaParams,
   GetOutgoingMessagesParams,
   GetTestBalanceParams,
+  IRpcRequest,
   ProgramDataResult,
 } from '@gear-js/common';
 
@@ -20,7 +21,6 @@ export type KafkaParams =
   | GetAllProgramsParams
   | GetIncomingMessagesParams
   | GetMessagesParams
-  | GetMetaParams
   | GetMetaParams
   | GetOutgoingMessagesParams
   | GetTestBalanceParams

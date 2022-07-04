@@ -1982,7 +1982,6 @@ __metadata:
     "@polkadot/react-identicon": 2.0.1
     "@polkadot/types": 8.9.1
     "@polkadot/wasm-crypto": 6.1.5
-    "@stitches/react": 1.2.7
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 12.1.5
     "@testing-library/user-event": 14.1.1
@@ -2058,6 +2057,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
     chalk: 4.1.2
+    class-transformer: ^0.5.1
     dotenv: 10.0.0
     eslint: 7.32.0
     eslint-config-prettier: 8.5.0
@@ -3484,15 +3484,6 @@ __metadata:
   version: 1.2.3
   resolution: "@sqltools/formatter@npm:1.2.3"
   checksum: 5d80554b84ed15747fcfa6e488ef794c610c08152a53ebac0f270574ad938cdf39a02de7dfba4e9d9c33a790368f819945d315ee6dae360b220c29e092cba930
-  languageName: node
-  linkType: hard
-
-"@stitches/react@npm:1.2.7":
-  version: 1.2.7
-  resolution: "@stitches/react@npm:1.2.7"
-  peerDependencies:
-    react: ">= 16.3.0"
-  checksum: f4a66d208607a5f72d902d06388c0e3c5cec6cccc207e3b01228d3dc8e5b09742f4191fe932fac84c19ece825df174009025ba5939511501914785ed26a2c767
   languageName: node
   linkType: hard
 

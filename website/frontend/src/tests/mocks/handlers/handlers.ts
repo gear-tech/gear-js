@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 
 import { GET_NODES_RESPONSE } from './const';
-import { getMessageResponse, getProgramResponse } from './helpers';
+import { getMessageResponse, getProgramResponse, getMetadataResponse } from './helpers';
 
 import { DEFAULT_NODES_URL, API_URL, RPC_METHODS } from 'consts';
 import { RPCRequest } from 'services/ServerRPCRequestService';
@@ -23,6 +23,13 @@ const gearApi = rest.post<RPCRequest>(API_URL, (req, res, ctx) => {
       const programId = (params as any).id;
 
       const responseData = getProgramResponse(programId);
+
+      return res(ctx.json(responseData));
+    }
+    case RPC_METHODS.GET_METADATA: {
+      const programId = (params as any).programId;
+
+      const responseData = getMetadataResponse(programId);
 
       return res(ctx.json(responseData));
     }

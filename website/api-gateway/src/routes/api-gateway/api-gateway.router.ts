@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 
-import { apiGatewayService } from '../../domain/api-gateway.service';
+import { apiGatewayService } from '../../services/api-gateway.service';
 import { apiGatewayLogger } from '../../common/event-listener.logger';
 
 export const apiGatewayRouter = Router({});

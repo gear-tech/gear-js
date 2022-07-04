@@ -10,8 +10,8 @@ import { localPrograms } from 'services/LocalDBService';
 import { AlertContainerFactory } from 'context/alert/types';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
-import { FormValues as SendMessageInitialValues } from 'components/pages/Send/children/MessageForm/types';
-import { FormValues as UploadInitialValues } from 'components/pages/Programs/children/Upload/children/UploadForm/types';
+import { FormValues as SendMessageInitialValues } from 'pages/Send/children/MessageForm/types';
+import { FormValues as UploadInitialValues } from 'pages/Programs/children/Upload/children/UploadForm/types';
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;

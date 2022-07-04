@@ -3,19 +3,13 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 
 import { useAccountMock, useApiMock, TEST_API, TEST_ACCOUNT } from '../../mocks/hooks';
-import {
-  PROGRAM_ID_WITH_META,
-  PROGRAM_ID_WITHOUT_META,
-  MESSAGE_ID_FOR_PROGRAM_WITH_META,
-  MESSAGE_ID_FOR_PROGRAM_WITHOUT_META,
-  META,
-} from '../../const';
+import { PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2, META } from '../../const';
 
 import * as helpers from 'helpers';
 import * as ApiService from 'services/ApiService';
 import { AlertProvider, ApiProvider, AccountProvider } from 'context';
-import { Send } from 'components/pages/Send/Send';
-import { FormValues } from 'components/pages/Send/children/MessageForm/types';
+import { Send } from 'pages/Send/Send';
+import { FormValues } from 'pages/Send/children/MessageForm/types';
 import { TypeStructure } from 'components/common/Form/FormPayload/types';
 import { getSubmitPayload, getPayloadValue } from 'components/common/Form/FormPayload/helpers';
 
@@ -66,7 +60,7 @@ describe('send message page tests', () => {
     const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
 
     const { rerender } = render(
-      <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_WITHOUT_META}`]} />
+      <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />
     );
 
     await testInitPageLoading();
@@ -110,9 +104,7 @@ describe('send message page tests', () => {
 
     useAccountMock(TEST_ACCOUNT);
 
-    rerender(
-      <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_WITHOUT_META}`]} />
-    );
+    rerender(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />);
 
     // form validation
 
@@ -155,7 +147,7 @@ describe('send message page tests', () => {
       expect.any(Object),
       undefined,
       null,
-      PROGRAM_ID_WITHOUT_META,
+      PROGRAM_ID_2,
       undefined
     );
 
@@ -194,9 +186,7 @@ describe('send message page tests', () => {
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
     const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
 
-    render(
-      <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_WITH_META}`]} />
-    );
+    render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_1}`]} />);
 
     await testInitPageLoading();
 
@@ -260,7 +250,7 @@ describe('send message page tests', () => {
       expect.any(Object),
       META,
       null,
-      PROGRAM_ID_WITH_META,
+      PROGRAM_ID_1,
       undefined
     );
 
@@ -299,12 +289,7 @@ describe('send message page tests', () => {
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
     const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
 
-    render(
-      <SendMessagePage
-        path="/send/reply/:messageId"
-        initialEntries={[`/send/reply/${MESSAGE_ID_FOR_PROGRAM_WITHOUT_META}`]}
-      />
-    );
+    render(<SendMessagePage path="/send/reply/:messageId" initialEntries={[`/send/reply/${MESSAGE_ID_2}`]} />);
 
     await testInitPageLoading();
 
@@ -361,7 +346,7 @@ describe('send message page tests', () => {
       payload: '0x00',
       gasLimit: 30000000,
       payloadType: 'u32',
-      destination: MESSAGE_ID_FOR_PROGRAM_WITHOUT_META,
+      destination: MESSAGE_ID_2,
     };
 
     // calculate gas
@@ -376,7 +361,7 @@ describe('send message page tests', () => {
       expect.any(Object),
       undefined,
       null,
-      MESSAGE_ID_FOR_PROGRAM_WITHOUT_META,
+      MESSAGE_ID_2,
       '1'
     );
 
@@ -415,12 +400,7 @@ describe('send message page tests', () => {
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
     const sendMessageMock = jest.spyOn(ApiService, 'sendMessage').mockResolvedValue();
 
-    render(
-      <SendMessagePage
-        path="/reply/message/:messageId"
-        initialEntries={[`/reply/message/${MESSAGE_ID_FOR_PROGRAM_WITH_META}`]}
-      />
-    );
+    render(<SendMessagePage path="/reply/message/:messageId" initialEntries={[`/reply/message/${MESSAGE_ID_1}`]} />);
 
     await testInitPageLoading();
 
@@ -465,7 +445,7 @@ describe('send message page tests', () => {
       payload: getPayloadValue(typeStructure),
       gasLimit: 30000000,
       payloadType: 'Bytes',
-      destination: MESSAGE_ID_FOR_PROGRAM_WITH_META,
+      destination: MESSAGE_ID_1,
     };
 
     // calculate gas
@@ -480,7 +460,7 @@ describe('send message page tests', () => {
       expect.any(Object),
       META,
       null,
-      MESSAGE_ID_FOR_PROGRAM_WITH_META,
+      MESSAGE_ID_1,
       '1'
     );
 

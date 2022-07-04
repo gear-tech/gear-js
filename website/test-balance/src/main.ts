@@ -1,12 +1,11 @@
 import express from 'express';
 
-import config from './config/config';
+import config from './config/configuration';
 
-import { GearService } from './domain/gear/gear.service';
-import { KafkaConsumer } from './kafka/kafka.consumer';
-import { DbService } from './database/db';
 import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthcheck.router';
-import { KAFKA_TOPICS } from '@gear-js/common';
+import { dbCreateConnection } from './database/db-create-connection';
+import { gearService } from './gear';
+import { connectKafka } from './kafka/kafka';
 
 const app = express();
 
@@ -15,15 +14,11 @@ const port = config.healthcheck.port;
 app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
-  const db = new DbService();
-  await db.connect();
+  await dbCreateConnection();
   changeStatus('database');
-  const gear = new GearService(db);
-  await gear.connect();
+  await gearService.connect();
   changeStatus('ws');
-  const kafka = new KafkaConsumer(gear, db);
-  await kafka.connect();
-  await kafka.subscribe(KAFKA_TOPICS.TEST_BALANCE_GET);
+  await connectKafka();
   changeStatus('kafka');
   app.listen(port, () => {
     console.log(`Healthckech server is running on port ${port} 🚀`);
