@@ -1,12 +1,13 @@
 import { Dispatch, SetStateAction } from 'react';
-import { useAlert } from 'hooks';
-import copy from 'assets/images/copy.svg';
-import trash from 'assets/images/trash.svg';
+import { useAlert } from '@gear-js/react-hooks';
 import { Button, Radio } from '@gear-js/ui';
+
+import styles from './Node.module.scss';
+import { Nodes } from '../../../../../../types';
 import { nodeApi } from 'api/initApi';
 import { copyToClipboard } from 'helpers';
-import { Nodes } from '../../../../../../types';
-import styles from './Node.module.scss';
+import copy from 'assets/images/copy.svg';
+import trash from 'assets/images/trash.svg';
 
 type Props = {
   address: string;

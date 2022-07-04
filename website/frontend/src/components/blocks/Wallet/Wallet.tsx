@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { useApi, useAccount, useAccounts } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 
 import styles from './Wallet.module.scss';
-import { useAccounts } from './hooks';
 import { SelectAccountModal } from './SelectAccountModal';
-
-import { useAccount, useApi } from 'hooks';
 
 const Wallet = () => {
   const { api } = useApi();

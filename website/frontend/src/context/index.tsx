@@ -1,8 +1,7 @@
 import { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AccountProvider } from './account';
-import { AlertProvider } from './alert';
-import { ApiProvider } from './api';
+import { AlertProvider, AccountProvider, ApiProvider } from '@gear-js/react-hooks';
+
 import { BlocksProvider } from './blocks';
 import { EditorProvider } from './editor';
 
@@ -11,9 +10,6 @@ const providers = [BrowserRouter, AlertProvider, ApiProvider, BlocksProvider, Ac
 const withProviders = (Component: ComponentType) => () =>
   providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, <Component />);
 
-export * from './account';
-export * from './alert';
-export * from './api';
 export * from './blocks';
 export * from './editor';
 

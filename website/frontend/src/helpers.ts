@@ -1,14 +1,14 @@
 import { Hex, GearApi, Metadata } from '@gear-js/api';
-import { GasInfo } from '@gear-js/api/lib/types/gear-core';
 import { Event } from '@polkadot/types/interfaces';
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
+import { GasInfo } from '@gear-js/api/lib/types/gear-core';
+import { AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { NODE_ADDRESS_REGEX } from 'regexes';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
 import { GetMetaResponse } from 'api/responses';
 import { localPrograms } from 'services/LocalDBService';
-import { AlertContainerFactory } from 'context/alert/types';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
 import { FormValues as SendMessageInitialValues } from 'pages/Send/children/MessageForm/types';

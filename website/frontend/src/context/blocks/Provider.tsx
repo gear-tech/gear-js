@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Header } from '@polkadot/types/interfaces';
-import { useApi, useSubscription } from 'hooks';
+import { useApi } from '@gear-js/react-hooks';
+
 import { Props } from '../types';
 import { BlocksContext } from './Context';
 import { Block, Blocks } from './types';
+
+import { useSubscription } from 'hooks';
 
 const { Provider } = BlocksContext;
 

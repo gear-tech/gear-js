@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Hex, MailboxType } from '@gear-js/api';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { Hex, MailboxType } from '@gear-js/api';
+import { useApi, useAccount } from '@gear-js/react-hooks';
 
 import styles from './Mailbox.module.scss';
 import { Message } from './children/Message';
 
-import { useApi, useAccount, useClaimMessage } from 'hooks';
+import { useClaimMessage } from 'hooks';
 import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
 

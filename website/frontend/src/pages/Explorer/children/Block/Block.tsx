@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Block as DotBlock } from '@polkadot/types/interfaces';
-import { EventRecords } from 'types/explorer';
-import { useApi } from 'hooks';
-import { isHex } from 'helpers';
-import { Spinner } from 'components/common/Spinner/Spinner';
+import { useApi } from '@gear-js/react-hooks';
+
+import styles from './Block.module.scss';
 import { Summary } from './children/Summary/Summary';
 import { MainTable } from './children/MainTable/MainTable';
 import { System } from './children/System/System';
-import styles from './Block.module.scss';
+
+import { isHex } from 'helpers';
+import { EventRecords } from 'types/explorer';
+import { Spinner } from 'components/common/Spinner/Spinner';
 
 type Props = {
   blockId: string;

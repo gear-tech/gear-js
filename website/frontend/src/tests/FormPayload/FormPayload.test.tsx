@@ -1,12 +1,12 @@
 import { Formik, Form } from 'formik';
 import { render, screen, within, fireEvent, waitFor } from '@testing-library/react';
+import { AlertProvider } from '@gear-js/react-hooks';
 
 import { FormValues, TestFormProps } from './types';
 import { INPUT_PAYLOAD_VALUES, INPUT_MANUAL_PAYLOAD, INIT_FORM_VALUES, INPUT_FILE_CONTENT } from './inputData';
 
 import { FILE_TYPES } from 'consts';
 import { getPreformattedText } from 'helpers';
-import { AlertProvider } from 'context/alert';
 import { FormPayload } from 'components/common/Form/FormPayload';
 
 const TestFormPayload = ({ values, onSubmit }: TestFormProps) => (

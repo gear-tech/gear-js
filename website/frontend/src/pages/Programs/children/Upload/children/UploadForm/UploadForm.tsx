@@ -3,6 +3,7 @@ import { Formik, Form } from 'formik';
 import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
+import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 
 import styles from './UploadForm.module.scss';
 import { Schema } from './Schema';
@@ -12,7 +13,7 @@ import { DroppedFile } from '../../types';
 
 import { Box } from 'layout/Box/Box';
 import { UploadProgramModel } from 'types/program';
-import { useAccount, useApi, useAlert, useProgramUpload } from 'hooks';
+import { useProgramUpload } from 'hooks';
 import { readFileAsync, calculateGas } from 'helpers';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import { Fieldset } from 'components/common/Fieldset';

@@ -1,8 +1,10 @@
 import { NavLink } from 'react-router-dom';
-import { useApi } from 'hooks';
-import { routes } from 'routes';
+import { useApi } from '@gear-js/react-hooks';
 import clsx from 'clsx';
+
 import styles from './Menu.module.scss';
+
+import { routes } from 'routes';
 
 type Props = {
   openSidebar: () => void;

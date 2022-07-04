@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useAccount } from '@gear-js/react-hooks';
 
 import styles from '../../Programs.module.scss';
 
 import { getMessages } from 'services';
 import { MessageModel } from 'types/message';
-import { useAccount } from 'hooks';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
 import { Pagination } from 'components/Pagination/Pagination';
 import { SearchForm } from 'components/blocks/SearchForm/SearchForm';

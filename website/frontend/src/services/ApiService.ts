@@ -2,6 +2,7 @@ import { GearApi, Metadata } from '@gear-js/api';
 import { AddressOrPair } from '@polkadot/api/types';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedExtension } from '@polkadot/extension-inject/types';
+import { AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { localPrograms } from './LocalDBService';
 import ServerRPCRequestService from './ServerRPCRequestService';
@@ -10,7 +11,6 @@ import { RPC_METHODS, GEAR_BALANCE_TRANSFER_VALUE } from 'consts';
 import { signPayload, isDevChain } from 'helpers';
 import { ProgramStatus } from 'types/program';
 import { Account } from 'context/types';
-import { AlertContainerFactory } from 'context/alert/types';
 
 export const uploadMetadata = async (
   programId: string,

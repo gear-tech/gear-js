@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Formik, Form, FormikProps } from 'formik';
-import { Button } from '@gear-js/ui';
 import { Metadata } from '@gear-js/api';
+import { useAlert, useAccount } from '@gear-js/react-hooks';
+import { Button } from '@gear-js/ui';
 
 import { Schema } from './Shema';
 import { FormValues } from './types';
+
+import { addMetadata } from 'services/ApiService';
 import { FormInput, formStyles } from 'components/common/Form';
 import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
-
-import { useAccount, useAlert } from 'hooks';
-import { addMetadata } from 'services/ApiService';
 
 type Props = {
   programId: string;

@@ -1,12 +1,13 @@
 import '@polkadot/api-augment'; // dot types fix, source: https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#701-dec-20-2021
 import { useEffect } from 'react';
 import { Route, Routes, useSearchParams } from 'react-router-dom';
+import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
 
 import styles from './App.module.scss';
 
 import { routes } from 'routes';
 import { nodeApi } from 'api/initApi';
-import { useApi, useEvents, useLoggedInAccount, useEventSubscriptions } from 'hooks';
+import { useEvents, useEventSubscriptions } from 'hooks';
 import { withProviders } from 'context';
 import { NODE_ADRESS_URL_PARAM } from 'consts';
 

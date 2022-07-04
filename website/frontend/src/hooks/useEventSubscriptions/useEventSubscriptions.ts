@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { useApi, useAccount, useAlert } from '@gear-js/react-hooks';
 
 import { transferEventsHandler, messageSentEventsHandler } from './helpers';
 
-import { useAccount, useApi, useAlert } from 'hooks';
 import { Method } from 'types/explorer';
 
 const useEventSubscriptions = () => {

@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useApi, useBlocks } from 'hooks';
+import { useApi } from '@gear-js/react-hooks';
+
 import styles from './BlocksSummary.module.scss';
+
+import { useBlocks } from 'hooks';
 
 const BlocksSummary = () => {
   const { api } = useApi();

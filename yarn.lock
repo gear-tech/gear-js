@@ -1961,7 +1961,8 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:website/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.22.2
+    "@gear-js/api": 0.22.1
+    "@gear-js/react-hooks": ^0.2.1
     "@gear-js/ui": 0.2.5
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
@@ -2034,6 +2035,19 @@ __metadata:
     yup: 0.32.11
   languageName: unknown
   linkType: soft
+
+"@gear-js/react-hooks@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@gear-js/react-hooks@npm:0.2.1"
+  peerDependencies:
+    "@gear-js/api": ^0.21.0
+    "@polkadot/extension-dapp": ^0.43.2
+    react: ">=17.0.2"
+    react-dom: ">=17.0.2"
+    react-transition-group: ^4.4.2
+  checksum: e7744af023294ec0359fbed6200f7c567c4e2aea24dacb8eda2988e190f92a4081ce865a16fc0c73c62fb69ed2497d9afc04ca0f7e424b1d8b2557fb2717bfed
+  languageName: node
+  linkType: hard
 
 "@gear-js/test-balance@workspace:website/test-balance":
   version: 0.0.0-use.local

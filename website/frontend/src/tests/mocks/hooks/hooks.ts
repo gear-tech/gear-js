@@ -1,5 +1,5 @@
-import * as hooks from 'hooks';
-import { Account } from 'context/types';
+import * as hooks from '@gear-js/react-hooks';
+import { Account } from '@gear-js/react-hooks';
 
 export const useAccountMock = (account?: Account) => {
   const mock = jest.spyOn(hooks, 'useAccount');

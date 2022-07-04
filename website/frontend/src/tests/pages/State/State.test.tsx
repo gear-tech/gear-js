@@ -7,13 +7,13 @@ import {
   getDefaultNormalizer,
   SelectorMatcherOptions,
 } from '@testing-library/react';
+import { ApiProvider } from '@gear-js/react-hooks';
 
 import { READED_STATE } from './inputData';
 import { useApiMock, TEST_API } from '../../mocks/hooks';
 import { PROGRAM_ID_1, PROGRAM_ID_2, META_FILE } from '../../const';
 
 import { routes } from 'routes';
-import { ApiProvider } from 'context';
 import { getPreformattedText } from 'helpers';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
 import { State } from 'pages/State';
