@@ -45,14 +45,15 @@ async function createKafkaTopic(admin: Admin, topic: string): Promise<void> {
       });
       eventListenerLogger.info(`Kafka producer: Topic ${topic} created`);
     } else {
-      eventListenerLogger.warn(`Kafka producer: Topic ${topic} already existed`);
+      eventListenerLogger.info(`Kafka producer: Topic ${topic} already existed`);
     }
   } catch (error) {
     eventListenerLogger.error(`Kafka producer: ${error}`);
-    await admin.disconnect();
-    eventListenerLogger.info(`Admin is disconnected`);
     throw error;
   }
+
+  await admin.disconnect();
+  eventListenerLogger.info(`Admin is disconnected`);
 }
 
 function isTopicAlreadyExist(topics: string[], topic: string): boolean {
