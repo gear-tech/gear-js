@@ -6,10 +6,9 @@ import styles from './App.module.scss';
 
 import { routes } from 'routes';
 import { nodeApi } from 'api/initApi';
+import { useApi, useEvents, useLoggedInAccount, useEventSubscriptions } from 'hooks';
 import { withProviders } from 'context';
 import { NODE_ADRESS_URL_PARAM } from 'consts';
-import { subscribeToEvents } from 'services/ApiService';
-import { useApi, useAlert, useEvents, useLoggedInAccount } from 'hooks';
 
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
@@ -34,19 +33,14 @@ const mainRoutes = [routes.main, routes.uploadedPrograms, routes.allPrograms, ro
 const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
 const Component = () => {
-  const alert = useAlert();
   const events = useEvents();
   const { isApiReady } = useApi();
 
   const [searchParams, setSearchParams] = useSearchParams();
+
   useLoggedInAccount();
 
-  useEffect(() => {
-    if (isApiReady) {
-      subscribeToEvents(alert);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isApiReady]);
+  useEventSubscriptions();
 
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);

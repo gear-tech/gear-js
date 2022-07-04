@@ -24,5 +24,3 @@ export const useApiMock = (api?: any) => {
 
   return mock;
 };
-
-export const useAlertMock = () => {};

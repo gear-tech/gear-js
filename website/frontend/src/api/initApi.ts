@@ -1,5 +1,4 @@
-import { GearApi, Transfer, UserMessageSent } from '@gear-js/api';
-import { UnsubscribePromise } from '@polkadot/api/types';
+import { GearApi } from '@gear-js/api';
 import { isNodeAddressValid } from 'helpers';
 import { NODE_ADDRESS, NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
 
@@ -27,11 +26,8 @@ class NodeApi {
 
   private _api: GearApi | null = null;
 
-  readonly subscriptions: Record<string, UnsubscribePromise> = {};
-
   constructor(address: string) {
     this._address = address;
-    this.subscriptions = {};
     this.chain = null;
     this.genesis = null;
   }
@@ -45,22 +41,6 @@ class NodeApi {
     localStorage.setItem(LOCAL_STORAGE.GENESIS, this.genesis);
 
     return this._api;
-  }
-
-  public subscribeToUserMessageSentEvents(cb: (event: UserMessageSent) => void) {
-    if (this._api && !('UserMessageSent' in this.subscriptions)) {
-      this.subscriptions.userMessageSent = this._api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
-        cb(event);
-      });
-    }
-  }
-
-  public subscribeToTransferEvents(cb: (event: Transfer) => void) {
-    if (this._api && !('subscribeTransferEvents' in this.subscriptions)) {
-      this.subscriptions.subscribeTransferEvents = this._api.gearEvents.subscribeToTransferEvents((event) => {
-        cb(event);
-      });
-    }
   }
 }
 

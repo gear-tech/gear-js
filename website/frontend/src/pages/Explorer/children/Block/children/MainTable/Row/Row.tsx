@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { DispatchInfo, Extrinsic as DotExtrinsic } from '@polkadot/types/interfaces';
-import { IdeaEvents, Methods, Sections } from 'types/explorer';
+import { IdeaEvents, Method, Sections } from 'types/explorer';
 import { Event } from 'pages/Explorer/common/Event/Event';
 import { Extrinsic } from 'pages/Explorer/common/Extrinsic/Extrinsic';
 import styles from './Row.module.scss';
@@ -17,7 +17,7 @@ const Row = ({ extrinsic, events }: Props) => {
   const getInfoEvent = () =>
     events.find(({ section, method }) => {
       const isSystem = section === Sections.SYSTEM;
-      const isExtrinsic = method === Methods.EXTRINSIC_FAILED || method === Methods.EXTRINSIC_SUCCESS;
+      const isExtrinsic = method === Method.ExtrinsicFailed || method === Method.ExtrinsicSuccess;
 
       return isSystem && isExtrinsic;
     });
@@ -27,7 +27,7 @@ const Row = ({ extrinsic, events }: Props) => {
 
     if (infoEvent) {
       const { method, data } = infoEvent;
-      const isSuccess = method === Methods.EXTRINSIC_SUCCESS;
+      const isSuccess = method === Method.ExtrinsicSuccess;
       const index = isSuccess ? 0 : 1;
 
       return data[index] as DispatchInfo;

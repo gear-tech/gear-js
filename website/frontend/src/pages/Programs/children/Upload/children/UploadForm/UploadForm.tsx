@@ -12,8 +12,7 @@ import { DroppedFile } from '../../types';
 
 import { Box } from 'layout/Box/Box';
 import { UploadProgramModel } from 'types/program';
-import { UploadProgram } from 'services/ApiService';
-import { useAccount, useApi, useAlert } from 'hooks';
+import { useAccount, useApi, useAlert, useProgramUpload } from 'hooks';
 import { readFileAsync, calculateGas } from 'helpers';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import { Fieldset } from 'components/common/Fieldset';
@@ -29,6 +28,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
   const { api } = useApi();
   const alert = useAlert();
   const { account } = useAccount();
+  const uploadProgram = useProgramUpload();
 
   const [meta, setMeta] = useState<Metadata>();
   const [metaFile, setMetaFile] = useState<string | null>(null);
@@ -47,16 +47,9 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
     setValues(INITIAL_VALUES, false);
   };
 
-  const handleResetForm = () => {
-    setDroppedFile(null);
-  };
+  const handleResetForm = () => setDroppedFile(null);
 
   const handleSubmitForm = (values: FormValues) => {
-    if (!account) {
-      alert.error(`Wallet not connected`);
-      return;
-    }
-
     const { value, payload, gasLimit, programName, payloadType } = values;
 
     const programOptions: UploadProgramModel = {
@@ -69,9 +62,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
       initPayload: meta ? getSubmitPayload(payload) : payload,
     };
 
-    UploadProgram(api, account, droppedFile, programOptions, metaFile, alert, handleResetForm).catch(() => {
-      alert.error(`Invalid JSON format`);
-    });
+    uploadProgram(droppedFile, programOptions, metaFile, handleResetForm);
   };
 
   const handleCalculateGas = async (values: FormValues, setFieldValue: SetFieldValue) => {

@@ -56,12 +56,15 @@ export enum Sections {
   SYSTEM = 'system',
 }
 
-export enum Methods {
-  TRANSFER = 'Transfer',
-  USER_MESSAGE_SENT = 'UserMessageSent',
-  MESSAGES_DISPATCHED = 'MessagesDispatched',
-  EXTRINSIC_FAILED = 'ExtrinsicFailed',
-  EXTRINSIC_SUCCESS = 'ExtrinsicSuccess',
+export enum Method {
+  Transfer = 'Transfer',
+  CodeSaved = 'CodeSaved',
+  ProgramChanged = 'ProgramChanged',
+  UserMessageSent = 'UserMessageSent',
+  MessageEnqueued = 'MessageEnqueued',
+  MessagesDispatched = 'MessagesDispatched',
+  ExtrinsicFailed = 'ExtrinsicFailed',
+  ExtrinsicSuccess = 'ExtrinsicSuccess',
 }
 
 export type EventRecords = Vec<FrameSystemEventRecord>;

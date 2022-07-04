@@ -7,8 +7,9 @@ import styles from './UserProgram.module.scss';
 
 import { routes } from 'routes';
 import { useAlert } from 'hooks';
-import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
+import { copyToClipboard, formatDate } from 'helpers';
 import { ProgramModel, ProgramStatus } from 'types/program';
+import { CustomLink } from 'components/common/CustomLink';
 import copySVG from 'assets/images/copy.svg';
 import messageSVG from 'assets/images/message.svg';
 import uploadMetaSVG from 'assets/images/upload-cloud.svg';
@@ -37,9 +38,7 @@ const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
           )}
         />
         <div className={styles.programWrapperName}>
-          <Link className={styles.programLink} to={generatePath(routes.program, { programId })}>
-            {fileNameHandler(name || programId)}
-          </Link>
+          <CustomLink to={generatePath(routes.program, { programId })} text={name || programId} />
         </div>
         <div className={styles.programsCopyId}>
           <Button icon={copySVG} color="transparent" onClick={handleCopy} />
