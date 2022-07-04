@@ -1,6 +1,5 @@
 import {
   AddMetaParams,
-  AddPayloadParams,
   FindMessageParams,
   FindProgramParams,
   GetAllProgramsParams,
@@ -16,7 +15,6 @@ import {
 
 export type KafkaParams =
   | AddMetaParams
-  | AddPayloadParams
   | FindMessageParams
   | FindProgramParams
   | GetAllProgramsParams

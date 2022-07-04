@@ -1,7 +1,6 @@
 import { nanoid } from 'nanoid';
 import {
   AddMetaParams,
-  AddPayloadParams,
   FindMessageParams,
   FindProgramParams,
   GetAllProgramsParams,
@@ -87,16 +86,6 @@ async function messageData(params: FindMessageParams) {
   return res;
 }
 
-async function messageAddPayload(params: AddPayloadParams) {
-  const correlationId: string = nanoid(6);
-  await kafkaSendByTopic(KAFKA_TOPICS.MESSAGE_ADD_PAYLOAD, correlationId, params);
-
-  let topicEvent;
-  const res = new Promise((resolve) => (topicEvent = resolve));
-  kafkaEventMap.set(correlationId, topicEvent);
-  return res;
-}
-
 async function messageIncoming(params: GetIncomingMessagesParams) {
   const correlationId: string = nanoid(6);
   await kafkaSendByTopic(KAFKA_TOPICS.MESSAGE_ALL, correlationId, params);
@@ -137,6 +126,5 @@ export {
   messageData,
   messageIncoming,
   messageOutGoing,
-  messageAddPayload,
   testBalance,
 };
