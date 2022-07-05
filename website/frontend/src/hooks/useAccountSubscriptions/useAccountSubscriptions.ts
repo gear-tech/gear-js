@@ -6,21 +6,22 @@ import { transferEventsHandler, messageSentEventsHandler } from './helpers';
 
 import { Method } from 'types/explorer';
 
-const useEventSubscriptions = () => {
+const useAccountSubscriptions = () => {
   const alert = useAlert();
-  const { account } = useAccount();
   const { api, isApiReady } = useApi();
+  const { account, updateBalance } = useAccount();
 
-  const decodedAddress = account?.decodedAddress;
+  const { address, decodedAddress } = account || {};
 
   useEffect(() => {
-    if (!isApiReady || !decodedAddress) {
+    if (!isApiReady || !decodedAddress || !address) {
       return;
     }
 
     const unsubs: UnsubscribePromise[] = [];
 
     unsubs.push(
+      api.gearEvents.subscribeToBalanceChange(address, updateBalance),
       api.gearEvents.subscribeToGearEvent(Method.UserMessageSent, (event) =>
         messageSentEventsHandler(event, decodedAddress, alert)
       ),
@@ -29,13 +30,13 @@ const useEventSubscriptions = () => {
 
     return () => {
       if (unsubs.length) {
-        unsubs.forEach((unsubPromise) => {
-          unsubPromise.then((unsubscribe) => unsubscribe());
+        Promise.all(unsubs).then((result) => {
+          result.forEach((unsubscribe) => unsubscribe());
         });
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [decodedAddress, isApiReady]);
+  }, [decodedAddress, address, isApiReady]);
 };
 
-export { useEventSubscriptions };
+export { useAccountSubscriptions };

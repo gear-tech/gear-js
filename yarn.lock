@@ -1856,6 +1856,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gear-js/api@npm:0.22.1":
+  version: 0.22.1
+  resolution: "@gear-js/api@npm:0.22.1"
+  peerDependencies:
+    "@polkadot/api": ^8.9.1
+    "@polkadot/wasm-crypto": ^6.1.1
+    rxjs: ^7.5.5
+  checksum: 6b024cfaab49fdb4f46143d036014ee09098a94fd80ef9c338a4a3406defd04f49051542de6b8e30b58f3c1289d6b09f315087aa0ffa81046a3c76d316655e68
+  languageName: node
+  linkType: hard
+
 "@gear-js/api@npm:0.22.2, @gear-js/api@npm:^0.22.2":
   version: 0.22.2
   resolution: "@gear-js/api@npm:0.22.2"

@@ -6,10 +6,10 @@ import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
 import styles from './App.module.scss';
 
 import { routes } from 'routes';
-import { useEvents, useEventSubscriptions } from 'hooks';
+import { useEvents, useAccountSubscriptions } from 'hooks';
 import { withProviders } from 'context';
 import { NODE_API_ADDRESS } from 'context/api/const';
-import { NODE_ADRESS_URL_PARAM } from 'consts';
+import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
 
 import 'assets/scss/common.scss';
 import 'assets/scss/index.scss';
@@ -35,13 +35,13 @@ const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
 const Component = () => {
   const events = useEvents();
-  const { isApiReady } = useApi();
+  const { api, isApiReady } = useApi();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   useLoggedInAccount();
 
-  useEventSubscriptions();
+  useAccountSubscriptions();
 
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
@@ -51,6 +51,14 @@ const Component = () => {
       setSearchParams(searchParams, { replace: true });
     }
   }, [searchParams, setSearchParams]);
+
+  useEffect(() => {
+    if (isApiReady) {
+      localStorage.setItem(LOCAL_STORAGE.CHAIN, api.runtimeChain.toHuman());
+      localStorage.setItem(LOCAL_STORAGE.GENESIS, api.genesisHash.toHex());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isApiReady]);
 
   // we'll get rid of multiple paths in one route anyway, so temp solution
   const getMultipleRoutes = (paths: string[], element: JSX.Element) =>

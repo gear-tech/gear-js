@@ -11,7 +11,7 @@ import { useCodeUpload } from './useCodeUpload';
 import { useSendMessage } from './useMessageSend';
 import { useProgramUpload } from './useProgramUplaod';
 import { useClaimMessage } from './useClaimMessage';
-import { useEventSubscriptions } from './useEventSubscriptions';
+import { useAccountSubscriptions } from './useAccountSubscriptions';
 
 const useBlocks = () => useContext(BlocksContext);
 const useEditor = () => useContext(EditorContext);
@@ -29,5 +29,5 @@ export {
   useChangeEffect,
   useBodyScrollLock,
   useSubscription,
-  useEventSubscriptions,
+  useAccountSubscriptions,
 };

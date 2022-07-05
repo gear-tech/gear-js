@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import { useApi } from '@gear-js/react-hooks';
 import clsx from 'clsx';
+import { useApi } from '@gear-js/react-hooks';
 
 import styles from './Menu.module.scss';
 
@@ -34,6 +34,7 @@ const Menu = ({ openSidebar }: Props) => {
       </li>
     ));
 
+  const chain = api?.runtimeChain.toHuman();
   const specName = api?.runtimeVersion.specName.toHuman();
   const specVersion = api?.runtimeVersion.specVersion.toHuman();
 
@@ -43,7 +44,7 @@ const Menu = ({ openSidebar }: Props) => {
         <button className={styles.sidebarBtn} onClick={openSidebar}>
           {isApiReady ? (
             <>
-              <span>{localStorage.chain}</span>
+              <span>{chain}</span>
               <span className={styles.runtime}>
                 {specName}/{specVersion}
               </span>
