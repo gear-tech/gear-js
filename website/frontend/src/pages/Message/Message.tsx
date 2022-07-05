@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CreateType } from '@gear-js/api';
 
 import { Params } from './types';
+import { getDecodedMessagePayload } from './helpers';
 import { MessageInfo } from './children/MessageInfo';
+import { MessagePageHeader } from './children/MessagePageHeader';
 
 import { useProgram } from 'hooks';
 import { getPreformattedText } from 'helpers';
@@ -11,7 +12,6 @@ import { getMessage } from 'services';
 import { MessageModel } from 'types/message';
 import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
-import { PageHeader } from 'components/blocks/PageHeader';
 
 const Message = () => {
   const { messageId } = useParams() as Params;
@@ -26,30 +26,21 @@ const Message = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 1 field with 4 var: init, handle ..
-  // if no meta => message.payload
-  // if meta => look at field, if init -> meta.init_output => was then decode => not message.payload ...
-  // if replyError => then message.payload
-
   useEffect(() => {
-    if (program && message) {
-      const inputOutput = meta?.init_output;
-      const handleOutput = meta?.handle_output;
-
-      const type = handleOutput || inputOutput || 'Bytes';
-
-      const decodedPayload = CreateType.create(type, message.payload, meta);
-
-      setMessagePayload(getPreformattedText(decodedPayload));
+    if (!program || !message) {
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    const payload = meta && !message.exitCode ? getDecodedMessagePayload(meta, message) : message.payload;
+
+    setMessagePayload(getPreformattedText(payload));
   }, [program, message, meta]);
 
   return (
     <div className="wrapper">
       {message ? (
         <>
-          <PageHeader title="Message" fileName={messageId} />
+          <MessagePageHeader id={messageId} isError={Boolean(message.exitCode)} />
           <Box>
             <MessageInfo message={message} payload={messagePayload} />
           </Box>

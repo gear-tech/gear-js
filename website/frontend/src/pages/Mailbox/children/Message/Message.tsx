@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, generatePath } from 'react-router-dom';
 import { Hex, HumanedMessage } from '@gear-js/api';
 import { Button, buttonStyles } from '@gear-js/ui';
@@ -9,7 +10,6 @@ import { routes } from 'routes';
 import { getPreformattedText } from 'helpers';
 import claimSVG from 'assets/images/claim.svg';
 import messageSVG from 'assets/images/message.svg';
-import { useState } from 'react';
 
 type Props = {
   message: HumanedMessage;
@@ -17,7 +17,7 @@ type Props = {
 };
 
 const Message = ({ message, onClaim }: Props) => {
-  const { id: messageId } = message;
+  const messageId = message.id;
 
   const [isLoading, setIsLoading] = useState(false);
 

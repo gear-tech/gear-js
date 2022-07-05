@@ -1,10 +1,18 @@
+import { Hex } from '@gear-js/api';
+
 export interface MessageModel {
-  destination: string;
-  source: string;
   id: string;
-  timestamp: string;
-  replyError: any;
+  entry: 'Init' | 'Handle' | 'Reply' | null;
+  value: string;
+  source: string;
   payload: string;
+  exitCode: number | null;
+  timestamp: string;
+  expiration: null | number;
+  replyError: any;
+  destination: string;
+  replyToMessageId: Hex | null;
+  processedWithPanic: boolean;
 }
 
 export interface MessagePaginationModel {
