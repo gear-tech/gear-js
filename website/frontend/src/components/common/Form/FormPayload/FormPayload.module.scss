@@ -10,11 +10,6 @@
   }
 }
 
-.field,
-.select {
-  flex-direction: column;
-}
-
 .textarea {
   & > span {
     padding-top: 0;
@@ -26,6 +21,7 @@
 }
 
 .field {
+  flex-direction: column;
   align-items: stretch;
 
   & > span {
