@@ -11,7 +11,7 @@ interface GetAllProgramsResult extends IPaginationResult {
   programs: IProgram[];
 }
 
-interface GetListCodeResult extends IPaginationResult {
+interface GetAllCodeResult extends IPaginationResult {
   listCode: ICode[];
 }
 
@@ -40,7 +40,7 @@ interface IRpcResponse {
     | IMessage[]
     | GetMetaResult
     | AddMetaResult
-    | GetListCodeResult;
+    | GetAllCodeResult;
   error?: IRpcError;
 }
 
@@ -59,7 +59,7 @@ enum RpcErrorCode {
 export {
   AllMessagesResult,
   GetAllProgramsResult,
-  GetListCodeResult,
+  GetAllCodeResult,
   AddMetaResult,
   GetMetaResult,
   ProgramDataResult,
