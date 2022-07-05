@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetMessagesParams } from '@gear-js/common';
@@ -6,6 +6,7 @@ import { GetMessagesParams } from '@gear-js/common';
 import { Message } from '../entities';
 import { PAGINATION_LIMIT } from '../config/configuration';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class MessageRepo {
@@ -64,7 +65,7 @@ export class MessageRepo {
     return this.messageRepo.remove(messages);
   }
 
-  public async updateMessagePanicStatus(messageId: string, genesis: string, processedWithPanic: boolean) {
-    return this.messageRepo.update({ id: messageId, genesis }, { processedWithPanic });
+  public async updateMessage(where: FindOptionsWhere<Message>, partialEntity: QueryDeepPartialEntity<Message>) {
+    return this.messageRepo.update(where, partialEntity);
   }
 }

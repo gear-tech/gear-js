@@ -61,10 +61,9 @@ export class MessageService {
     await sleep(1000);
     for (const messageId of Object.keys(statuses)) {
       try {
-        await this.messageRepository.updateMessagePanicStatus(
-          messageId,
-          genesis,
-          statuses[messageId] === 'Success' ? false : true,
+        await this.messageRepository.updateMessage(
+          { id: messageId, genesis },
+          { processedWithPanic: statuses[messageId] === 'Success' ? false : true },
         );
       } catch (error) {
         this.logger.error(error.message, error.stack);
