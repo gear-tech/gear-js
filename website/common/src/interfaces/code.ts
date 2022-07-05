@@ -10,4 +10,9 @@ interface ICode {
   expiration?: number | null;
 }
 
-export { ICode, CODE_STATUS };
+interface ICodeChangedData {
+  id: string;
+  change: string;
+}
+
+export { ICode, CODE_STATUS, ICodeChangedData };
