@@ -1,5 +1,6 @@
 import { Hex, MessagesDispatched, ProgramId } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
+import { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect, useState, useContext } from 'react';
 import { AlertContext, ApiContext } from 'context';
 import { useConditionalMetaBuffer } from './useMetadata';
@@ -47,12 +48,16 @@ function useReadState<T = AnyJson>(
   };
 
   useEffect(() => {
-    const unsub = api?.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
+    let unsub: UnsubscribePromise | undefined;
+
+    if (api && metaBuffer) {
+      unsub = api.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
+    }
 
     return () => {
       if (unsub) unsub.then((unsubCallback) => unsubCallback());
     };
-  }, [api]);
+  }, [api, metaBuffer]);
 
   return { state, isStateRead };
 }
