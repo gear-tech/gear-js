@@ -1,3 +1,16 @@
+## 0.22.3
+
+_07/05/2022_
+
+https://github.com/gear-tech/gear-js/pull/794
+
+### Changes
+
+- Rename the stateChanged field to stateChanges in the MessagesDispatchedData class
+- Set type of expiration in the UserMessageSentData class to Option<BlockNumber>
+
+---
+
 ## 0.22.2
 
 _06/27/2022_
