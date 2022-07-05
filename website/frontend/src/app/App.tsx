@@ -21,7 +21,7 @@ import { EditorPage } from 'pages/Editor';
 import { Programs } from 'pages/Programs/Programs';
 import { Program } from 'pages/Program/Program';
 import { Mailbox } from 'pages/Mailbox';
-import { Message } from 'pages/Message/Message';
+import { Message } from 'pages/Message';
 import { Explorer } from 'pages/Explorer/Explorer';
 import { Document } from 'pages/Document/Document';
 import { PageNotFound } from 'pages/PageNotFound/PageNotFound';
