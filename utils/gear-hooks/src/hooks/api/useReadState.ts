@@ -40,7 +40,7 @@ function useReadState<T = AnyJson>(
   }, [metaBuffer, payload]);
 
   const handleStateChange = ({ data }: MessagesDispatched) => {
-    const changedIDs = data.stateChanged.toHuman() as Hex[];
+    const changedIDs = data.stateChanges.toHuman() as Hex[];
     const isAnyChange = changedIDs.some((id) => id === programId);
 
     if (isAnyChange) readState();
