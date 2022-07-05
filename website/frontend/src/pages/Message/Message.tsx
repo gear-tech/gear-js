@@ -40,7 +40,7 @@ const Message = () => {
     <div className="wrapper">
       {message ? (
         <>
-          <MessagePageHeader id={messageId} isError={Boolean(message.exitCode)} />
+          <MessagePageHeader id={messageId} exitCode={message.exitCode} />
           <Box>
             <MessageInfo message={message} payload={messagePayload} />
           </Box>

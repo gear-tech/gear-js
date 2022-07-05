@@ -64,29 +64,10 @@
 }
 
 .programsListIndicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
   margin-right: 15px;
-  background-color: $textColor;
 
   @include md {
     margin-right: 0;
-  }
-
-  &.success {
-    background-color: $successColor;
-    box-shadow: 0px 0px 10px $successColor;
-  }
-
-  &.failure {
-    background-color: $errorColor;
-    box-shadow: 0px 0px 10px $errorColor;
-  }
-
-  &.loading {
-    background-color: #3975e9;
-    box-shadow: 0px 0px 10px #3975e9;
   }
 }
 

@@ -5,11 +5,13 @@ import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './UserProgram.module.scss';
+import { getIndicatorStatus } from './helpers';
 
 import { routes } from 'routes';
 import { copyToClipboard, formatDate } from 'helpers';
-import { ProgramModel, ProgramStatus } from 'types/program';
+import { ProgramModel } from 'types/program';
 import { CustomLink } from 'components/common/CustomLink';
+import { CircleIndicator } from 'components/common/CircleIndicator';
 import copySVG from 'assets/images/copy.svg';
 import messageSVG from 'assets/images/message.svg';
 import uploadMetaSVG from 'assets/images/upload-cloud.svg';
@@ -29,14 +31,7 @@ const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
   return (
     <div className={styles.programsListItem}>
       <div className={styles.programWrapper}>
-        <span
-          className={clsx(
-            styles.programsListIndicator,
-            initStatus === ProgramStatus.Success && styles.success,
-            initStatus === ProgramStatus.Failed && styles.failure,
-            initStatus === ProgramStatus.InProgress && styles.loading
-          )}
-        />
+        <CircleIndicator status={getIndicatorStatus(initStatus)} className={styles.programsListIndicator} />
         <div className={styles.programWrapperName}>
           <CustomLink to={generatePath(routes.program, { programId })} text={name || programId} />
         </div>
