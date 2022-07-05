@@ -1,7 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { Button, Input, Modal } from '@gear-js/ui';
+import { isHex } from '@polkadot/util';
 import { useForm } from 'react-hook-form';
-import { isHex } from 'utils';
 import styles from './AddressModal.module.scss';
 
 type Props = {
