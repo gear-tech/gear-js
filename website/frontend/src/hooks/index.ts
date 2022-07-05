@@ -10,6 +10,7 @@ import { useProgram } from './useProgram';
 import { useCodeUpload } from './useCodeUpload';
 import { useSendMessage } from './useMessageSend';
 import { useProgramUpload } from './useProgramUplaod';
+import { useClaimMessage } from './useClaimMessage';
 import { useLoggedInAccount } from './useLoggedInAccount';
 import { useEventSubscriptions } from './useEventSubscriptions';
 
@@ -30,6 +31,7 @@ export {
   useCodeUpload,
   useSendMessage,
   useProgramUpload,
+  useClaimMessage,
   useOutsideClick,
   useChangeEffect,
   useBodyScrollLock,

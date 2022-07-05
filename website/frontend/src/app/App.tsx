@@ -15,11 +15,11 @@ import 'assets/scss/index.scss';
 
 import { Meta } from 'pages/Meta/Meta';
 import { Send } from 'pages/Send/Send';
-import { State } from 'pages/State/State';
+import { State } from 'pages/State';
 import { EditorPage } from 'pages/Editor';
 import { Programs } from 'pages/Programs/Programs';
 import { Program } from 'pages/Program/Program';
-import { Mailbox } from 'pages/Mailbox/Mailbox';
+import { Mailbox } from 'pages/Mailbox';
 import { Message } from 'pages/Message/Message';
 import { Explorer } from 'pages/Explorer/Explorer';
 import { Document } from 'pages/Document/Document';
