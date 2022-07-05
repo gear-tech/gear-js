@@ -50,14 +50,14 @@ function useReadState<T = AnyJson>(
   useEffect(() => {
     let unsub: UnsubscribePromise | undefined;
 
-    if (api && metaBuffer) {
+    if (api && metaBuffer && payload) {
       unsub = api.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
     }
 
     return () => {
       if (unsub) unsub.then((unsubCallback) => unsubCallback());
     };
-  }, [api, metaBuffer]);
+  }, [api, metaBuffer, payload]);
 
   return { state, isStateRead };
 }
