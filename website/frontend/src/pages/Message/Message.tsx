@@ -25,7 +25,12 @@ const Message = () => {
     getMessage(messageId).then(({ result }) => setMessage(result));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(message?.payload);
+
+  // 1 field with 4 var: init, handle ..
+  // if no meta => message.payload
+  // if meta => look at field, if init -> meta.init_output => was then decode => not message.payload ...
+  // if replyError => then message.payload
+
   useEffect(() => {
     if (program && message) {
       const inputOutput = meta?.init_output;
@@ -33,12 +38,12 @@ const Message = () => {
 
       const type = handleOutput || inputOutput || 'Bytes';
 
-      const decodedPayload = new CreateType().create(type, message.payload, meta);
+      const decodedPayload = CreateType.create(type, message.payload, meta);
 
       setMessagePayload(getPreformattedText(decodedPayload));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [program, message]);
+  }, [program, message, meta]);
 
   return (
     <div className="wrapper">
