@@ -5,15 +5,17 @@ import { checkInit, getAccount, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR, TEST_WASM_DIR } from './config';
 
 const api = new GearApi();
+
 const demo_meta_test = {
   code: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_meta.opt.wasm')),
   meta: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_meta.meta.wasm')),
-  id: undefined,
+  id: '0x',
+  uploadBlock: '0x',
 };
 const timestamp_test = {
   code: readFileSync(join(TEST_WASM_DIR, 'timestamp.opt.wasm')),
   meta: readFileSync(join(TEST_WASM_DIR, 'timestamp.meta.wasm')),
-  id: undefined,
+  id: '0x',
 };
 
 beforeAll(async () => {
@@ -37,7 +39,11 @@ beforeAll(async () => {
     await getWasmMetadata(demo_meta_test.meta),
   ).programId;
   initStatus = checkInit(api, demo_meta_test.id);
-  api.program.signAndSend(alice, () => {});
+  api.program.signAndSend(alice, ({ status }) => {
+    if (status.isInBlock) {
+      demo_meta_test.uploadBlock = status.asInBlock.toHex();
+    }
+  });
   expect(await initStatus()).toBe('success');
 });
 
@@ -86,5 +92,17 @@ describe('Read State', () => {
   test('Tests read demo_meta state with Some input', async () => {
     const state = await api.programState.read(demo_meta_test.id, demo_meta_test.meta, { decimal: 1, hex: [1] });
     expect(state.toHex()).toBe('0x04010000000000000004012c536f6d655375726e616d6520536f6d654e616d65');
+  });
+});
+
+describe('Events related to state change', () => {
+  test('stateChanges should be in MessagesDispatched event data', async () => {
+    const apiAt = await api.at(demo_meta_test.uploadBlock);
+    const events = await apiAt.query.system.events();
+    const messagesDispatchedEvents = events.filter(({ event }) => api.events.gear.MessagesDispatched.is(event));
+    expect(messagesDispatchedEvents).toHaveLength(1);
+    expect(messagesDispatchedEvents[0].event.data).toHaveProperty('stateChanges');
+    expect(messagesDispatchedEvents[0].event.data['stateChanges'].size).toBe(1);
+    expect(messagesDispatchedEvents[0].event.data['stateChanges'].toHuman()[0]).toEqual(demo_meta_test.id);
   });
 });
