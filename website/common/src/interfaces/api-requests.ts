@@ -19,6 +19,8 @@ interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam 
   owner?: string;
 }
 
+interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam {}
+
 interface GetAllUserProgramsParams extends IGenesis, IPaginationParams, Pick<IProgram, 'owner'>, SearchParam {}
 
 interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
@@ -37,6 +39,10 @@ interface GetMetaParams extends IGenesis {
   programId: string;
 }
 
+interface GetCodeParams extends IGenesis {
+  codeId: string;
+}
+
 interface GetTestBalanceParams extends IGenesis {
   address: string;
   token: string;
@@ -50,7 +56,14 @@ interface IRpcRequest {
   jsonrpc: '2.0';
   id: number;
   method: string;
-  params?: FindProgramParams | GetAllProgramsParams | AddMetaParams | GetMetaParams | GetMessagesParams;
+  params?:
+    | FindProgramParams
+    | GetAllProgramsParams
+    | AddMetaParams
+    | GetMetaParams
+    | GetMessagesParams
+    | GetCodeParams
+    | GetAllCodeParams;
 }
 
 export {
@@ -66,4 +79,6 @@ export {
   GetTestBalanceParams,
   SearchParam,
   IRpcRequest,
+  GetCodeParams,
+  GetAllCodeParams,
 };
