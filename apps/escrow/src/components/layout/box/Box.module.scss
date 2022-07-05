@@ -1,0 +1,20 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+
+.box {
+  max-width: 440px;
+  padding: 50px 40px;
+  border-radius: $borderRadius;
+}
+
+.heading {
+  @extend %h1;
+  margin-bottom: 20px;
+}
+
+.body {
+  & > :not(:last-child),
+  form > :not(:last-child) {
+    margin-bottom: 15px;
+  }
+}

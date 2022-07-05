@@ -1,0 +1,31 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+
+.summary {
+  max-width: 425px;
+  margin-top: auto;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+}
+
+.key {
+  @include heading($fontSize, 21px);
+  color: $textColorSecondary;
+}
+
+.value {
+  font-size: $fontSizeMedium;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &::before {
+    content: '—';
+    margin-right: 10px;
+  }
+}
