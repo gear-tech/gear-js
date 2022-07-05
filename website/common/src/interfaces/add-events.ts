@@ -1,10 +1,11 @@
-import { IBaseDBRecord, IGenesis } from './common';
+import { IBaseDBRecord } from './common';
 import { IMessage, IMessageEnqueuedData, IMessagesDispatchedData } from './message';
-import { IProgram, IProgramChangedData } from './program';
+import { IProgramChangedData } from './program';
 
 enum Keys {
   MessageEnqueued = 'MessageEnqueued',
   UserMessageSent = 'UserMessageSent',
+  UserMessageRead = 'UserMessageRead',
   MessagesDispatched = 'MessagesDispatched',
   ProgramChanged = 'ProgramChanged',
   CodeChanged = 'CodeChanged',

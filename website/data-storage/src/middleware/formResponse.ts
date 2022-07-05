@@ -6,7 +6,7 @@ export function FormResponse(target: Object, propertyKey: string, descriptor: Ty
     try {
       return { result: await originalMethod.apply(this, arguments) };
     } catch (ex) {
-      dataStorageLogger.warn(`Middleware: ${JSON.stringify(ex)}`);
+      console.log(ex);
       return { error: ex.name };
     }
   };

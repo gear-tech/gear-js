@@ -1,7 +1,6 @@
 import { KAFKA_TOPICS } from '@gear-js/common';
 
 import {
-  messageAddPayload,
   messageAll,
   messageData,
   programAll,
@@ -22,7 +21,6 @@ const rpcMethods: RpcMethods = {
   [KAFKA_TOPICS.PROGRAM_ALL_USER]: programAllUsers,
   [KAFKA_TOPICS.MESSAGE_ALL]: messageAll,
   [KAFKA_TOPICS.MESSAGE_DATA]: messageData,
-  [KAFKA_TOPICS.MESSAGE_ADD_PAYLOAD]: messageAddPayload,
   [KAFKA_TOPICS.TEST_BALANCE_GET]: testBalance,
 };
 

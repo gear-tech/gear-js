@@ -1,6 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import {
   FindProgramParams,
   GetAllProgramsParams,
@@ -8,11 +6,9 @@ import {
   GetAllUserProgramsParams,
   InitStatus,
   IProgram,
-  ProgramDataResult,
 } from '@gear-js/common';
 
-import { Meta } from '../entities/meta.entity';
-import { getPaginationParams, sqlWhereWithILike, sleep } from '../utils';
+import { sleep } from '../utils/sleep';
 import { ProgramNotFound } from '../errors';
 import { Program } from '../entities/program.entity';
 import { CreateProgramInput, UpdateProgramDataInput } from './types';

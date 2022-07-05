@@ -1,4 +1,4 @@
-import { GearKeyring, getWasmMetadata, Hex } from '@gear-js/api';
+import { getWasmMetadata, Hex } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import { expect } from 'chai';
 import { readFileSync } from 'fs';
@@ -65,5 +65,18 @@ export async function getMeta(genesis: string, programId: string): Promise<Passe
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
   expect(response.result).to.have.all.keys('program', 'meta', 'metaFile');
+  return true;
+}
+
+export async function checkInitStatus(genesis: string, programId: string, init: boolean) {
+  const data = {
+    genesis,
+    id: programId,
+  };
+  const status = init ? 'success' : 'failed';
+  const response = await request('program.data', data);
+  expect(response).to.have.property('result');
+
+  expect(response.result.initStatus).to.eq(status);
   return true;
 }

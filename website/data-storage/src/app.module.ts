@@ -27,7 +27,6 @@ const entities = [Meta, Message, Program];
         username: configService.get('database.user'),
         password: configService.get('database.password'),
         database: configService.get('database.name'),
-        logging: true,
         synchronize: false,
         entities,
       }),

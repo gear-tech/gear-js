@@ -23,7 +23,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, { cors: true });
   await app.listen(healthcheck.port);
-  dataStorageLogger.info(`HelathCheck app is running on ${healthcheck.port} 🚀`);
+  dataStorageLogger.info(`HealthCheck app is running on ${healthcheck.port} 🚀`);
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,

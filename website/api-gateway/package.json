@@ -10,7 +10,7 @@
     "build": "tsc -p tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "node dist/main.js",
-    "dev": "nodemon src/main.ts"
+    "dev": "clear && nodemon src/main.ts"
   },
   "dependencies": {
     "@gear-js/common": "workspace:^",

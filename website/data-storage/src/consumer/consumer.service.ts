@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import {
   AddMetaParams,
   AddMetaResult,
-  AddPayloadParams,
   AllMessagesResult,
   FindMessageParams,
   FindProgramParams,
@@ -62,16 +61,19 @@ export class ConsumerService {
         id: id,
         destination: destination,
         source: source,
+        entry,
         payload: null,
-        replyTo: null,
-        replyError: null,
+        replyToMessageId: null,
+        exitCode: null,
         genesis: genesis,
         blockHash: blockHash,
         timestamp: timestamp,
       });
     },
     ProgramChanged: (value: IProgramChangedKafkaValue) => {
-      this.programService.setStatus(value.id, value.genesis, value.isActive ? InitStatus.SUCCESS : InitStatus.FAILED);
+      if (value.isActive) {
+        this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS);
+      }
     },
     CodeChanged: () => {
       console.log('TODO: CodeChanged');
@@ -114,19 +116,8 @@ export class ConsumerService {
   }
 
   @FormResponse
-  async addPayload(params: AddPayloadParams): Result<void> {
-    return;
-  }
-
-  @FormResponse
   async allMessages(params: GetMessagesParams): Result<AllMessagesResult> {
-    if (params.destination && params.source) {
-      return await this.messageService.getAllMessages(params);
-    }
-    if (params.destination) {
-      return await this.messageService.getIncoming(params);
-    }
-    return await this.messageService.getOutgoing(params);
+    return await this.messageService.getAllMessages(params);
   }
 
   @FormResponse
