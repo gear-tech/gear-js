@@ -13,4 +13,3 @@ RUN yarn build:data-storage
 WORKDIR /src/website/data-storage
 
 CMD ["node", "dist/main"]
-#example
