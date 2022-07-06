@@ -3,6 +3,7 @@ import {
   AddMetaParams,
   FindMessageParams,
   FindProgramParams,
+  GetAllCodeParams,
   GetAllProgramsParams,
   GetAllUserProgramsParams,
   GetCodeParams,
@@ -127,7 +128,7 @@ async function codeData(params: GetCodeParams) {
   return res;
 }
 
-async function codeAll(params: GetTestBalanceParams) {
+async function codeAll(params: GetAllCodeParams) {
   const correlationId: string = nanoid(6);
   await kafkaProducer.sendByTopic(KAFKA_TOPICS.CODE_ALL, correlationId, params);
 
