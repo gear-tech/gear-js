@@ -5,6 +5,7 @@ import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllUserProgramsParams,
+  GetCodeParams,
   GetIncomingMessagesParams,
   GetMessagesParams,
   GetMetaParams,
@@ -116,6 +117,26 @@ async function testBalance(params: GetTestBalanceParams) {
   return res;
 }
 
+async function codeData(params: GetCodeParams) {
+  const correlationId: string = nanoid(6);
+  await kafkaProducer.sendByTopic(KAFKA_TOPICS.CODE_DATA, correlationId, params);
+
+  let topicEvent;
+  const res = new Promise((resolve) => (topicEvent = resolve));
+  kafkaEventMap.set(correlationId, topicEvent);
+  return res;
+}
+
+async function codeAll(params: GetTestBalanceParams) {
+  const correlationId: string = nanoid(6);
+  await kafkaProducer.sendByTopic(KAFKA_TOPICS.CODE_ALL, correlationId, params);
+
+  let topicEvent;
+  const res = new Promise((resolve) => (topicEvent = resolve));
+  kafkaEventMap.set(correlationId, topicEvent);
+  return res;
+}
+
 export {
   programData,
   programMetaAdd,
@@ -127,4 +148,6 @@ export {
   messageIncoming,
   messageOutGoing,
   testBalance,
+  codeData,
+  codeAll,
 };
