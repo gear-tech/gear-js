@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import { Link, generatePath } from 'react-router-dom';
+import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './MessageItem.module.scss';
 
 import { routes } from 'routes';
-import { useAlert } from 'hooks';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { MessageModel } from 'types/message';
 import copyIcon from 'assets/images/copy.svg';
