@@ -1,6 +1,14 @@
-type CreateWalletFormData = {
-  values: { buyer: string; seller: string; amount: string };
-  onSuccess: () => void;
+import { Hex } from '@gear-js/api';
+
+type CreateFormValues = { buyer: string; seller: string; amount: string };
+
+type Escrow = {
+  buyer: Hex;
+  seller: Hex;
+  state: string;
+  amount: string;
 };
 
-export type { CreateWalletFormData };
+type EscrowState = { Info: Escrow };
+
+export type { CreateFormValues, Escrow, EscrowState };

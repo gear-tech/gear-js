@@ -9,6 +9,10 @@
 .text {
   display: flex;
   flex-direction: column;
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
 }
 
 .key {
@@ -27,5 +31,14 @@
   &::before {
     content: '—';
     margin-right: 10px;
+    color: $textColor;
   }
+}
+
+.role {
+  color: $successColor;
+}
+
+.state {
+  color: $errorColor;
 }
