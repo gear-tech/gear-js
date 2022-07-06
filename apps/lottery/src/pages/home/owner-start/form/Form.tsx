@@ -1,9 +1,9 @@
 import { Button, Checkbox, Input } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
+import { isHex } from '@polkadot/util';
 import clsx from 'clsx';
 import { useLotteryMessage } from 'hooks';
 import { useEffect, useState } from 'react';
-import { isHex } from 'utils';
 import styles from './Form.module.scss';
 
 const initialValues = { duration: '', prizeFund: '', participationCost: '', tokenAddress: '' };
