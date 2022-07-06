@@ -12,7 +12,7 @@ type Params = {
   programId: string;
 };
 
-export const Meta = () => {
+const Meta = () => {
   const { programId } = useParams() as Params;
 
   const [program] = useProgram(programId);
@@ -25,7 +25,7 @@ export const Meta = () => {
         <>
           <PageHeader title="Upload metadata" fileName={programName} />
           <Box>
-            <UploadMetaForm programId={program.id} programName={programName} />
+            <UploadMetaForm programId={programId} programName={programName} />
           </Box>
         </>
       ) : (
@@ -34,3 +34,5 @@ export const Meta = () => {
     </div>
   );
 };
+
+export { Meta };

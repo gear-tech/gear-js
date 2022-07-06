@@ -4,11 +4,9 @@ import { META_FIELDS } from './const';
 
 import { getPreformattedText } from 'helpers';
 
-export const getMetaProperties = (metaWasm: Metadata): Metadata => {
-  const decodedTypes = decodeHexTypes(metaWasm.types ?? '');
-
+export const getMetaProperties = (metadata: Metadata): Metadata => {
   const valuesFromMeta = META_FIELDS.reduce((result, metaKey) => {
-    const metaValue = metaWasm[metaKey];
+    const metaValue = metadata[metaKey];
 
     if (metaKey !== 'types' && metaValue) {
       // eslint-disable-next-line no-param-reassign
@@ -18,7 +16,10 @@ export const getMetaProperties = (metaWasm: Metadata): Metadata => {
     return result;
   }, {} as Metadata);
 
-  valuesFromMeta.types = getPreformattedText(decodedTypes);
+  if (metadata.types) {
+    const decodedTypes = decodeHexTypes(metadata.types);
+    valuesFromMeta.types = getPreformattedText(decodedTypes);
+  }
 
   return valuesFromMeta;
 };

@@ -30,20 +30,23 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
   const { account } = useAccount();
   const uploadProgram = useProgramUpload();
 
-  const [meta, setMeta] = useState<Metadata>();
-  const [metaFile, setMetaFile] = useState<string | null>(null);
+  const [metadata, setMetadata] = useState<Metadata>();
+  const [metadataFile, setMetadataFile] = useState<File>();
+  const [metadataBuffer, setMetadataBuffer] = useState<string | null>(null);
 
   const handleUploadMetaFile = (setFiledValue: SetFieldValue) => (data: UploadData) => {
-    const metadata = data.meta;
+    const { meta, metaFile, metaBuffer } = data;
 
-    setMeta(metadata);
-    setMetaFile(data.metaBufferString);
-    setFiledValue('programName', metadata?.title || '', false);
+    setMetadata(meta);
+    setMetadataFile(metaFile);
+    setMetadataBuffer(metaBuffer);
+    setFiledValue('programName', meta?.title || '', false);
   };
 
   const handleResetMeta = (setValues: SetValues) => () => {
-    setMeta(void 0);
-    setMetaFile(null);
+    setMetadata(undefined);
+    setMetadataFile(undefined);
+    setMetadataBuffer(null);
     setValues(INITIAL_VALUES, false);
   };
 
@@ -53,26 +56,26 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
     const { value, payload, gasLimit, programName, payloadType } = values;
 
     const programOptions: UploadProgramModel = {
-      meta,
+      meta: metadata,
       value,
       title: '',
       gasLimit,
       programName,
-      payloadType: meta ? void 0 : payloadType,
-      initPayload: meta ? getSubmitPayload(payload) : payload,
+      payloadType: metadata ? void 0 : payloadType,
+      initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    uploadProgram(droppedFile, programOptions, metaFile, handleResetForm);
+    uploadProgram(droppedFile, programOptions, metadataBuffer, handleResetForm);
   };
 
   const handleCalculateGas = async (values: FormValues, setFieldValue: SetFieldValue) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, values, alert, meta, code).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
+    calculateGas('init', api, values, alert, metadata, code).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
   };
 
-  const payloadFormValues = useMemo(() => getPayloadFormValues(meta?.types, meta?.init_input), [meta]);
+  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, metadata?.init_input), [metadata]);
 
   const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
 
@@ -103,11 +106,16 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
 
                 <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
 
-                {!meta && <FormPayloadType name="payloadType" label="Initial payload type" />}
+                {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
               </div>
 
               <Fieldset legend="Metadata:" className={styles.meta}>
-                <UploadMeta onReset={handleResetMeta(setValues)} onUpload={handleUploadMetaFile(setFieldValue)} />
+                <UploadMeta
+                  meta={metadata}
+                  metaFile={metadataFile}
+                  onReset={handleResetMeta(setValues)}
+                  onUpload={handleUploadMetaFile(setFieldValue)}
+                />
               </Fieldset>
             </div>
 
