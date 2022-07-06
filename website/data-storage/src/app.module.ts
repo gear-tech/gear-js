@@ -10,9 +10,9 @@ import { CodeModule } from './code/code.module';
 import { HealthcheckController } from './healthcheck/healthcheck.controller';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import configurations from './config/configuration';
-import { Message, Meta, Program } from './entities';
+import { Code, Message, Meta, Program } from './entities';
 
-const entities = [Meta, Message, Program];
+const entities = [Meta, Message, Program, Code];
 
 @Module({
   imports: [
