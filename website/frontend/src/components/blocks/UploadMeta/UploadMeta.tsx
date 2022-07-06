@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useMemo } from 'react';
 import { Metadata, getWasmMetadata } from '@gear-js/api';
 import { FileInput } from '@gear-js/ui';
 
@@ -11,27 +11,24 @@ import { readFileAsync, checkFileFormat } from 'helpers';
 import { formStyles, FormText } from 'components/common/Form';
 
 type Props = {
+  meta?: Metadata;
+  metaFile?: File;
   onReset: () => void;
   onUpload: (data: UploadData) => void;
 };
 
-const UploadMeta = ({ onReset, onUpload }: Props) => {
+const UploadMeta = (props: Props) => {
   const alert = useAlert();
 
-  const [metaProperties, setMetaProperties] = useState<[string, string][]>();
-  const [droppedMetaFile, setDroppedMetaFile] = useState<File>();
-
-  const handleResetMetaForm = () => {
-    setMetaProperties(void 0);
-    setDroppedMetaFile(void 0);
-    onReset();
-  };
+  const { meta, metaFile, onReset, onUpload } = props;
 
   const handleUploadMetaFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) {
-      return handleResetMetaForm();
+      onReset();
+
+      return;
     }
 
     try {
@@ -40,41 +37,48 @@ const UploadMeta = ({ onReset, onUpload }: Props) => {
       }
 
       const readedFile = (await readFileAsync(file)) as Buffer;
-      const meta: Metadata = await getWasmMetadata(readedFile);
+      const fileMeta: Metadata = await getWasmMetadata(readedFile);
 
-      if (!meta) {
-        throw new Error('Failed to load metadata');
+      if (!fileMeta) {
+        throw new Error('Failed to load meta');
       }
 
-      const metaBufferString = Buffer.from(new Uint8Array(readedFile)).toString('base64');
-      const propertiesFromFile = getMetaProperties(meta);
+      const metaBuffer = Buffer.from(new Uint8Array(readedFile)).toString('base64');
 
-      setDroppedMetaFile(file);
-      setMetaProperties(Object.entries(propertiesFromFile));
-
-      onUpload({ meta, metaBufferString });
+      onUpload({ meta: fileMeta, metaFile: file, metaBuffer });
     } catch (error) {
-      alert.error(String(error));
+      const message = (error as Error).message;
+
+      alert.error(message);
     }
   };
+
+  const metaProperties = useMemo(() => {
+    // if incorrect wasm file, then types will be '0x'
+    if (!meta || meta.types === '0x') {
+      return null;
+    }
+
+    const propertiesFromMeta = getMetaProperties(meta);
+
+    return Object.entries(propertiesFromMeta).map(([name, value]) => (
+      <FormText key={name} text={value} label={name} isTextarea={name === 'types'} />
+    ));
+  }, [meta]);
 
   return (
     <>
       <div className={formStyles.formItem}>
         <FileInput
           data-testid="metaFileInput"
+          value={metaFile}
           label="Metadata file"
-          value={droppedMetaFile}
           className={styles.fileInput}
           onChange={handleUploadMetaFile}
         />
       </div>
 
-      {metaProperties?.map((property) => {
-        const [name, value] = property;
-
-        return <FormText key={name} text={value} label={name} isTextarea={name === 'types'} />;
-      })}
+      {metaProperties}
     </>
   );
 };

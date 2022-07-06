@@ -123,10 +123,24 @@ describe('test uplaod meta page', () => {
       );
     });
 
-    // TODO: add tests after will refactor form logic
+    // reset form
 
     await (() => expect(programNameFiled).toHaveValue('NFT'));
 
     expect(uploadMetaBtn).toBeDisabled();
+
+    expect(screen.getByText('Select file')).toBeInTheDocument();
+
+    expect(screen.queryByText('nft.meta.wasm')).not.toBeInTheDocument();
+    expect(screen.queryByText('init_input')).not.toBeInTheDocument();
+    expect(screen.queryByText('InitNFT')).not.toBeInTheDocument();
+    expect(screen.queryByText('handle_input')).not.toBeInTheDocument();
+    expect(screen.queryByText('NFTAction')).not.toBeInTheDocument();
+    expect(screen.queryByText('handle_output')).not.toBeInTheDocument();
+    expect(screen.queryByText('Vec<u8>')).not.toBeInTheDocument();
+    expect(screen.queryByText('meta_state_input')).not.toBeInTheDocument();
+    expect(screen.queryByText('NFTQuery')).not.toBeInTheDocument();
+    expect(screen.queryByText('meta_state_output')).not.toBeInTheDocument();
+    expect(screen.queryByText('NFTQueryReply')).not.toBeInTheDocument();
   });
 });
