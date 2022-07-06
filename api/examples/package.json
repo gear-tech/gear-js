@@ -4,6 +4,7 @@
   "description": "To run examples run",
   "main": "meta.js",
   "scripts": {
+    "build": "tsc",
     "program:upload": "ts-node src/program/uploadProgram.ts",
     "message:send": "ts-node src/message/sendMessage.ts",
     "state:read": "ts-node src/state/readState.ts",
