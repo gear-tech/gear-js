@@ -94,6 +94,6 @@ describe('Code service', () => {
     const codeMock = CODE_DB_MOCK[2];
 
     await codeService.deleteRecords(codeMock.genesis);
-    expect(mockCodeRepository.remove).toHaveBeenCalled();
+    expect(mockCodeRepository.removeByGenesis).toHaveBeenCalled();
   });
 });

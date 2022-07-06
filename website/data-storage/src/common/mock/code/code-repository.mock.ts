@@ -30,7 +30,11 @@ export const mockCodeRepository = {
   save: jest.fn().mockImplementation((code: Code): Promise<Code> => {
     return new Promise((resolve) => resolve(code));
   }),
-  remove: jest.fn().mockImplementation((listCodeToDelete: Code[]): Promise<Code[]> => {
-    return new Promise((resolve) => resolve(listCodeToDelete));
+  removeByGenesis: jest.fn().mockImplementation((genesis: string): Code[] => {
+    return CODE_DB_MOCK.filter((code) => {
+      if (code.genesis !== genesis) {
+        return code;
+      }
+    });
   }),
 };
