@@ -2,10 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/common';
 
-import { CreateCodeInput } from './types';
+import { UpdateCodeInput } from './types';
 import { Code } from '../entities';
 import { CodeRepo } from './code.repo';
 import { CodeNotFound } from '../errors';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class CodeService {
@@ -29,11 +30,26 @@ export class CodeService {
     return code;
   }
 
-  public async create(createCodeInput: CreateCodeInput): Promise<Code> {
+  public async updateCode(updateCodeInput: UpdateCodeInput): Promise<Code | UpdateResult> {
+    const { id, genesis } = updateCodeInput;
+    const code = await this.codeRepository.getByIdAndGenesis(id, genesis);
+
+    if (code) {
+      return this.updateCodeData(code, updateCodeInput);
+    } else {
+      return this.create(updateCodeInput);
+    }
+  }
+
+  public async deleteRecords(genesis: string): Promise<void> {
+    await this.codeRepository.removeByGenesis(genesis);
+  }
+
+  private async create(updateCodeInput: UpdateCodeInput): Promise<Code> {
     const codeTypeDB = plainToClass(Code, {
-      ...createCodeInput,
-      name: createCodeInput.id,
-      timestamp: new Date(createCodeInput.timestamp),
+      ...updateCodeInput,
+      name: updateCodeInput.id,
+      timestamp: new Date(updateCodeInput.timestamp),
     });
 
     try {
@@ -43,7 +59,15 @@ export class CodeService {
     }
   }
 
-  public async deleteRecords(genesis: string): Promise<void> {
-    await this.codeRepository.removeByGenesis(genesis);
+  private async updateCodeData(codeEntityDB: Code, updateCodeInput: UpdateCodeInput): Promise<UpdateResult> {
+    const { id, genesis } = updateCodeInput;
+
+    return this.codeRepository.update(
+      { id, genesis },
+      {
+        status: updateCodeInput.status,
+        expiration: updateCodeInput.expiration,
+      },
+    );
   }
 }

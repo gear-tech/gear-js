@@ -33,7 +33,7 @@ import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
 import { FormResponse } from '../middleware/formResponse';
 import { CodeService } from '../code/code.service';
-import { CreateCodeInput } from '../code/types';
+import { UpdateCodeInput } from '../code/types';
 
 @Injectable()
 export class ConsumerService {
@@ -85,11 +85,11 @@ export class ConsumerService {
       }
     },
     CodeChanged: (value: ICodeChangedKafkaValue) => {
-      const createCodeInput: CreateCodeInput = {
+      const updateCodeInput: UpdateCodeInput = {
         ...value,
         status: value.change as CODE_STATUS,
       };
-      this.codeService.create(createCodeInput);
+      this.codeService.updateCode(updateCodeInput);
     },
     MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
       this.messageService.setDispatchedStatus(value);
