@@ -5,7 +5,7 @@ import { AlertContainerFactory } from '@gear-js/react-hooks';
 import { routes } from 'routes';
 import { RPC_METHODS } from 'consts';
 import { isDevChain, getLocalProgramMeta } from 'helpers';
-import { GetMetaResponse } from 'api/responses';
+import { GetMetaResponse } from 'types/api';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { CustomLink } from 'components/common/CustomLink';
 

@@ -1,6 +1,6 @@
 import { PaginationModel, UserPrograms } from 'types/common';
 import { ProgramModel, ProgramPaginationModel } from 'types/program';
-import { GetMetaResponse } from 'api/responses';
+import { GetMetaResponse } from 'types/api';
 import { RPC_METHODS } from 'consts';
 import ServerRPCRequestService from './ServerRPCRequestService';
 

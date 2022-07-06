@@ -13,8 +13,6 @@ const Wallet = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const accountAddress = account?.address;
-
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -46,7 +44,7 @@ const Wallet = () => {
             </div>
             <div className={styles.section}>
               <button type="button" className={accButtonClassName} onClick={openModal}>
-                <Identicon value={accountAddress} size={28} theme="polkadot" className={styles.avatar} />
+                <Identicon value={account.address} size={28} theme="polkadot" className={styles.avatar} />
                 {account.meta.name}
               </button>
             </div>

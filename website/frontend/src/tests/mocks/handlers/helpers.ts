@@ -9,7 +9,7 @@ import {
 } from '../../const';
 
 import { RPCResponse } from 'services/ServerRPCRequestService';
-import { GetMetaResponse } from 'api/responses';
+import { GetMetaResponse } from 'types/api';
 import { MessageModel } from 'types/message';
 import { ProgramModel } from 'types/program';
 

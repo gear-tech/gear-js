@@ -24,10 +24,15 @@ export const TEST_API = {
     submit: jest.fn(),
     signAndSend: jest.fn(),
   },
-  balance: { findOut: jest.fn() },
+  balance: {
+    findOut: jest.fn(),
+  },
   gearEvents: {
     subscribeToNewBlocks: jest.fn(),
     subscribeToBalanceChange: jest.fn(),
+  },
+  runtimeChain: {
+    toHuman: jest.fn(),
   },
   runtimeVersion: {
     specName: {
