@@ -1,6 +1,6 @@
-import { u8, u32, u128, Vec, Option, BTreeMap, BTreeSet, GenericEventData, Bool } from '@polkadot/types';
+import { u32, u128, Vec, Option, BTreeMap, BTreeSet, GenericEventData, Bool } from '@polkadot/types';
 import { BlockNumber, AccountId32 } from '@polkadot/types/interfaces';
-import { Reply, QueuedDispatch, ProgramDetails } from '../types/interfaces';
+import { QueuedDispatch, ProgramDetails } from '../types/interfaces';
 import {
   MessageId,
   UserId,
@@ -42,7 +42,7 @@ export interface UserMessageReadData extends GenericEventData {
 export interface MessagesDispatchedData extends GenericEventData {
   total: u32;
   statuses: BTreeMap<MessageId, DispatchStatus>;
-  stateChanged: BTreeSet<ProgramId>;
+  stateChanges: BTreeSet<ProgramId>;
 }
 
 export interface MessageWaitedData extends GenericEventData {
