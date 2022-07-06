@@ -25,6 +25,10 @@ jobs:
         with:
           node-version: 16.x
 
+      - name: Install dependencies and build @gear-js/api
+        working-directory: api
+        run: npm install
+
       - name: Prepare
         run: |
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
@@ -33,23 +37,19 @@ jobs:
           chmod +x gear-node
           ./gear-node --dev --tmp --pruning archive & sleep 10
 
-      - name: Install dependencies and build @gear-js/api
-        run: |
-          cd api
-          npm install
+      - name: Unpack gear-examples
+        working-directory: api/test/wasm/examples
+        run: tar -xvf examples.tar.gz
 
       - name: Run tests
-        run: |
-          cd api/test/wasm/examples
-          tar -xvf examples.tar.gz
-          cd ../../..
-          npm test
+        working-directory: api
+        run: npm test
 
       - name: Build examples
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
         working-directory: api/examples
         run: |
-          yarn install
+          yarn install --no-immutable
           yarn build
 
   publish-to-npm:
