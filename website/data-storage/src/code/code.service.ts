@@ -5,7 +5,7 @@ import { GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/comm
 import { CreateCodeInput } from './types';
 import { Code } from '../entities';
 import { CodeRepo } from './code.repo';
-import { CodeNotFound, MessageNotFound } from '../errors';
+import { CodeNotFound } from '../errors';
 
 @Injectable()
 export class CodeService {
@@ -44,7 +44,6 @@ export class CodeService {
   }
 
   public async deleteRecords(genesis: string): Promise<void> {
-    const listCode = await this.codeRepository.listByGenesis(genesis);
-    await this.codeRepository.remove(listCode);
+    await this.codeRepository.removeByGenesis(genesis);
   }
 }

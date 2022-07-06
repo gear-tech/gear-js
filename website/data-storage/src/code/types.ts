@@ -14,6 +14,7 @@ interface UpdateCodeInput {
   genesis: string;
   name?: string;
   status?: CODE_STATUS;
+  expiration?: number | null;
 }
 
 export { CreateCodeInput, UpdateCodeInput };

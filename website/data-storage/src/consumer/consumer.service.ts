@@ -45,10 +45,10 @@ export class ConsumerService {
   ) {}
 
   events = {
-    UserMessageSent: async (value: IUserMessageSentKafkaValue) => {
-      await this.messageService.createMessage(value);
+    UserMessageSent: (value: IUserMessageSentKafkaValue) => {
+      this.messageService.createMessage(value);
     },
-    MessageEnqueued: async ({
+    MessageEnqueued: ({
       id,
       destination,
       source,
@@ -58,7 +58,7 @@ export class ConsumerService {
       blockHash,
     }: IMessageEnqueuedKafkaValue) => {
       if (entry === 'Init') {
-        await this.programService.createProgram({
+        this.programService.createProgram({
           id: destination,
           owner: source,
           genesis: genesis,
@@ -66,7 +66,7 @@ export class ConsumerService {
           blockHash: blockHash,
         });
       }
-      await this.messageService.createMessage({
+      this.messageService.createMessage({
         id: id,
         destination: destination,
         source: source,
@@ -79,20 +79,20 @@ export class ConsumerService {
         timestamp: timestamp,
       });
     },
-    ProgramChanged: async (value: IProgramChangedKafkaValue) => {
+    ProgramChanged: (value: IProgramChangedKafkaValue) => {
       if (value.isActive) {
-        await this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS);
+        this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS);
       }
     },
-    CodeChanged: async (value: ICodeChangedKafkaValue) => {
+    CodeChanged: (value: ICodeChangedKafkaValue) => {
       const createCodeInput: CreateCodeInput = {
         ...value,
         status: value.change as CODE_STATUS,
       };
-      await this.codeService.create(createCodeInput);
+      this.codeService.create(createCodeInput);
     },
-    MessagesDispatched: async (value: IMessagesDispatchedKafkaValue) => {
-      await this.messageService.setDispatchedStatus(value);
+    MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
+      this.messageService.setDispatchedStatus(value);
     },
     DatabaseWiped: async (value: IGenesis) => {
       await Promise.all([
