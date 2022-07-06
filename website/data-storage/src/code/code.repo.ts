@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
 import { CODE_STATUS, GetAllCodeParams } from '@gear-js/common';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { Code } from '../entities';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
@@ -41,6 +42,13 @@ export class CodeRepo {
 
   public async save(code: Code): Promise<Code> {
     return this.codeRepo.save(code);
+  }
+
+  public async update(
+    where: FindOptionsWhere<Code>,
+    partialEntity: QueryDeepPartialEntity<Code>,
+  ): Promise<UpdateResult> {
+    return this.codeRepo.update(where, partialEntity);
   }
 
   public async removeByGenesis(genesis: string): Promise<void> {
