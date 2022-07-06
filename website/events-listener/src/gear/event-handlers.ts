@@ -75,10 +75,11 @@ function messagesDispatchedHandler(
 function codeChangedHandler(data: CodeChangedData): NewEventData<Keys.CodeChanged, ICodeChangedData> | null {
   const { id, change } = data;
   const status = change.isActive ? 'Active' : change.isInactive ? 'Inactive' : null;
+  const expiration = change.isActive ? change.asActive.expiration.toHuman() : null;
   if (!status) {
     return null;
   }
-  return { key: Keys.CodeChanged, value: { id: id.toHex(), change: status } };
+  return { key: Keys.CodeChanged, value: { id: id.toHex(), change: status, expiration } as ICodeChangedData };
 }
 
 function dataBaseWipedHandler(): NewEventData<Keys.DatabaseWiped, unknown> {
