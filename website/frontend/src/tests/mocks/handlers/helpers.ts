@@ -29,7 +29,6 @@ export const getMessageResponse = (messageId: string) =>
     exitCode: null,
     timestamp: '2022-06-29T09:54:04.000Z',
     expiration: null,
-    replyError: '1',
     destination: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
     replyToMessageId: null,
     processedWithPanic: false,

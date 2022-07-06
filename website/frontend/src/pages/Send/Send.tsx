@@ -33,7 +33,7 @@ const Send = () => {
         <>
           <PageHeader title={isReply ? 'Send reply' : 'New message'} fileName={program.name || id} />
           <Box>
-            <MessageForm id={id} isReply={isReply} replyErrorCode={message?.replyError} metadata={metadata} />
+            <MessageForm id={id} isReply={isReply} metadata={metadata} />
           </Box>
         </>
       ) : (

@@ -9,7 +9,7 @@ import { MessageModel } from 'types/message';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
 import { Pagination } from 'components/Pagination/Pagination';
 import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
-import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
+import { MessagesList } from 'components/blocks/MessagesList';
 
 const Messages = () => {
   const { account } = useAccount();

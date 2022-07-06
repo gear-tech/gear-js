@@ -9,7 +9,6 @@ export interface MessageModel {
   exitCode: number | null;
   timestamp: string;
   expiration: null | number;
-  replyError: any;
   destination: string;
   replyToMessageId: Hex | null;
   processedWithPanic: boolean;
