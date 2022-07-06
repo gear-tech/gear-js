@@ -3,7 +3,7 @@ import { plainToClass } from 'class-transformer';
 import { GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/common';
 
 import { CreateCodeInput } from './types';
-import { Code, Program } from '../entities';
+import { Code } from '../entities';
 import { CodeRepo } from './code.repo';
 import { CodeNotFound, MessageNotFound } from '../errors';
 
