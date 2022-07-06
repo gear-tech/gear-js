@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-
-import { CodeService } from '../../dist/code/code.service';
-import { Code } from '../../src/entities';
-import { CodeRepo } from '../../dist/code/code.repo';
-import { mockCodeRepository } from '../../src/common/mock/code/code-repository.mock';
-import { CreateCodeInput } from '../../dist/code/types';
 import { CODE_STATUS, GetAllCodeParams, GetCodeParams } from '@gear-js/common';
+
+import { Code } from '../../src/entities';
+import { mockCodeRepository } from '../../src/common/mock/code/code-repository.mock';
 import { CODE_DB_MOCK } from '../../src/common/mock/code/code-db.mock';
+import { CodeRepo } from '../../src/code/code.repo';
+import { CodeService } from '../../src/code/code.service';
+import { CreateCodeInput } from '../../src/code/types';
 
 const CODE_ENTITY_ID = '0x7357';
 
