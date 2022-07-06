@@ -74,9 +74,9 @@ const LogContent = ({ data }: Props) => {
 
   const getDecodedPayloadData = () => {
     // is there a better way to get logData with replaced payload?
-    const [message, expiration] = formattedData as [{}, string];
+    const { message, expiration } = formattedData as { message: {}; expiration: string };
 
-    return [{ ...message, payload: decodedPayload?.toHuman() }, expiration];
+    return { message: { ...message, payload: decodedPayload?.toHuman() }, expiration };
   };
 
   return (
