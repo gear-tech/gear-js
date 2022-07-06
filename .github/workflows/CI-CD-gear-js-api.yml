@@ -38,12 +38,12 @@ jobs:
           cd api
           npm install
 
-      # - name: Run tests
-      #   run: |
-      #     cd api/test/wasm/examples
-      #     tar -xvf examples.tar.gz
-      #     cd ../../..
-      #     npm test
+      - name: Run tests
+        run: |
+          cd api/test/wasm/examples
+          tar -xvf examples.tar.gz
+          cd ../../..
+          npm test
 
       - name: Build examples
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
