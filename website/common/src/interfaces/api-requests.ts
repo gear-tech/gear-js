@@ -3,8 +3,6 @@ import { IMessage } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';
 
-interface AddPayloadParams extends IGenesis, ISignature, Pick<IMessage, 'id' | 'payload'> {}
-
 interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam {
   destination?: string;
   source?: string;
@@ -52,17 +50,10 @@ interface IRpcRequest {
   jsonrpc: '2.0';
   id: number;
   method: string;
-  params?:
-    | FindProgramParams
-    | GetAllProgramsParams
-    | AddMetaParams
-    | GetMetaParams
-    | AddPayloadParams
-    | GetMessagesParams;
+  params?: FindProgramParams | GetAllProgramsParams | AddMetaParams | GetMetaParams | GetMessagesParams;
 }
 
 export {
-  AddPayloadParams,
   GetMessagesParams,
   FindMessageParams,
   GetIncomingMessagesParams,

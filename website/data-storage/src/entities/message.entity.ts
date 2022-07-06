@@ -2,6 +2,7 @@ import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 import { IMessage } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
+import { bool } from '@polkadot/types-codec';
 
 @Entity()
 export class Message extends BaseEntity implements IMessage {
@@ -19,15 +20,21 @@ export class Message extends BaseEntity implements IMessage {
   @Column({ nullable: true })
   payload: string;
 
-  @Column({ nullable: true })
-  error: string;
+  @Column({ default: '0' })
+  value: string;
 
   @Column({ nullable: true })
-  replyTo: string;
+  exitCode: number;
 
   @Column({ nullable: true })
-  replyError: string;
+  replyToMessageId: string;
 
-  @Column({ default: false })
+  @Column({ nullable: true })
   processedWithPanic: boolean;
+
+  @Column({ nullable: true })
+  entry: string;
+
+  @Column({ nullable: true })
+  expiration: number;
 }

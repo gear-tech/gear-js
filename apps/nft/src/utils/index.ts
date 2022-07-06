@@ -6,10 +6,4 @@ const isLoggedIn = ({ address }: InjectedAccountWithMeta) => localStorage[LOCAL_
 
 const getIpfsAddress = (cid: string) => `${ADDRESS.IPFS_GATEWAY}/${cid}`;
 
-const isHex = (value: unknown) => {
-  const hexRegex = /^0x[\da-fA-F]+/;
-
-  return typeof value === 'string' && hexRegex.test(value);
-};
-
-export { isLoggedIn, getIpfsAddress, isHex, getMintDetails, getMintPayload };
+export { isLoggedIn, getIpfsAddress, getMintDetails, getMintPayload };

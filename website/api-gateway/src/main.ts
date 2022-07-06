@@ -2,9 +2,9 @@ import * as express from 'express';
 
 import { apiGatewayRouter } from './routes/api-gateway/api-gateway.router';
 import { healthcheckRouter } from './routes/healthcheck/healthcheck.router';
-import configuration from './config/configuration';
-import { connectKafka } from './kafka/kafka';
 import { apiGatewayLogger } from './common/event-listener.logger';
+import { kafkaCreateConnection } from './kafka/kafka-create-connection';
+import configuration from './config/configuration';
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use('/api', apiGatewayRouter);
 app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
-  await connectKafka();
+  await kafkaCreateConnection();
   app.listen(port, () => {
     apiGatewayLogger.info(`App successfully run on the ${port} 🚀`);
   });

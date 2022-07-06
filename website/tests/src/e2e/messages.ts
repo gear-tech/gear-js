@@ -1,10 +1,7 @@
-import { GearKeyring, getWasmMetadata, Hex } from '@gear-js/api';
-import { u8aToHex } from '@polkadot/util';
+import { Hex } from '@gear-js/api';
 import { expect } from 'chai';
-import { readFileSync } from 'fs';
 import request from './request';
-import { IPreparedProgram, Passed } from '../interfaces';
-import accounts from '../config/accounts';
+import { Passed } from '../interfaces';
 
 export async function getAllMessages(genesis: string, messagesIds: Hex[]): Promise<Passed> {
   const response = await request('message.all', { genesis, limit: 100 });
@@ -25,10 +22,12 @@ export async function getMessageData(genesis: string, messageId: Hex) {
     'destination',
     'source',
     'payload',
-    'error',
-    'replyTo',
-    'replyError',
+    'entry',
+    'expiration',
+    'replyToMessageId',
+    'exitCode',
     'processedWithPanic',
+    'value',
   ]);
   return true;
 }

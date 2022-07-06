@@ -8,7 +8,11 @@ import { useSubscription } from './useSubscription';
 import { useChangeEffect } from './useChangeEffect';
 import { useProgram } from './useProgram';
 import { useCodeUpload } from './useCodeUpload';
+import { useSendMessage } from './useMessageSend';
+import { useProgramUpload } from './useProgramUplaod';
+import { useClaimMessage } from './useClaimMessage';
 import { useLoggedInAccount } from './useLoggedInAccount';
+import { useEventSubscriptions } from './useEventSubscriptions';
 
 const useApi = () => useContext(ApiContext);
 const useAlert = () => useContext(AlertContext);
@@ -25,9 +29,13 @@ export {
   useEvents,
   useProgram,
   useCodeUpload,
+  useSendMessage,
+  useProgramUpload,
+  useClaimMessage,
   useOutsideClick,
   useChangeEffect,
   useBodyScrollLock,
   useSubscription,
   useLoggedInAccount,
+  useEventSubscriptions,
 };

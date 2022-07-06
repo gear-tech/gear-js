@@ -3,9 +3,10 @@ import { ButtonHTMLAttributes } from 'react';
 interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
   icon?: string;
-  color?: 'primary' | 'secondary' | 'transparent';
+  color?: 'primary' | 'secondary' | 'tertiary' | 'transparent';
   size?: 'normal' | 'small';
   block?: boolean;
+  noWrap?: boolean;
 }
 
 interface TextProps extends BaseProps {

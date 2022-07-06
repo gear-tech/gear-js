@@ -4,10 +4,9 @@ import {
   AccountProvider,
   ProviderProps,
 } from '@gear-js/react-hooks';
-
+import { Alert, alertStyles } from '@gear-js/ui';
 import { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { Alert } from 'components';
 import { ADDRESS } from 'consts';
 
 function ApiProvider({ children }: ProviderProps) {
@@ -15,7 +14,11 @@ function ApiProvider({ children }: ProviderProps) {
 }
 
 function AlertProvider({ children }: ProviderProps) {
-  return <GearAlertProvider template={Alert}>{children}</GearAlertProvider>;
+  return (
+    <GearAlertProvider template={Alert} containerClassName={alertStyles.root}>
+      {children}
+    </GearAlertProvider>
+  );
 }
 
 const providers = [BrowserRouter, AlertProvider, ApiProvider, AccountProvider];

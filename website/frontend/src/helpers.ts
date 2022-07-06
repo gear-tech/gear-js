@@ -1,5 +1,6 @@
 import { Hex, GearApi, Metadata } from '@gear-js/api';
 import { GasInfo } from '@gear-js/api/lib/types/gear-core';
+import { Event } from '@polkadot/types/interfaces';
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
 
@@ -10,8 +11,15 @@ import { localPrograms } from 'services/LocalDBService';
 import { AlertContainerFactory } from 'context/alert/types';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
-import { FormValues as SendMessageInitialValues } from 'components/pages/Send/children/MessageForm/types';
-import { FormValues as UploadInitialValues } from 'components/pages/Programs/children/Upload/children/UploadForm/types';
+import { FormValues as SendMessageInitialValues } from 'pages/Send/children/MessageForm/types';
+import { FormValues as UploadInitialValues } from 'pages/Programs/children/Upload/children/UploadForm/types';
+
+export const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
+  const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
+  const formattedDocs = docs.filter(Boolean).join('. ');
+
+  return `${errorMethod}: ${formattedDocs}`;
+};
 
 export const fileNameHandler = (filename: string) => {
   const transformedFileName = filename;

@@ -40,13 +40,12 @@ export const PROGRESS_BAR_STATUSES = {
   COMPLETED: 'COMPLETED',
 };
 
-export const SOCKET_RESULT_STATUSES = {
-  IN_BLOCK: 'InBlock',
-  FINALIZED: 'Finalized',
-  PROGRAM_INITIALIZED: 'ProgramInitialized',
-  SUCCESS: 'Success',
-  LOG: 'Log',
-};
+export enum TransactionStatus {
+  Ready = 'Ready',
+  InBlock = 'InBlock',
+  IsInvalid = 'IsInvalid',
+  Finalized = 'Finalized',
+}
 
 export const RPC_METHODS = {
   PROGRAM_DATA: 'program.data',
@@ -72,21 +71,12 @@ export const EDITOR_BTNS = {
   BUILD_RUN: 'BUILD_RUN',
 };
 
-export const KEY_TYPES = {
-  MNEMOINIC: 'mnemonic',
-  RAW: 'raw',
-};
-
 export const DEVELOPMENT_CHAIN = 'Development';
 
 export const URL_PARAMS = {
   PAGE: 'page',
   QUERY: 'query',
 };
-
-export enum ZIndexes {
-  'alert' = 999,
-}
 
 export const FILE_TYPES = {
   WASM: 'application/wasm',

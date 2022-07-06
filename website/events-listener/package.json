@@ -5,13 +5,13 @@
   "main": "main.js",
   "scripts": {
     "start": "node --experimental-specifier-resolution=node dist/main.js",
-    "dev": "nodemon src/main.ts",
+    "dev": "clear && nodemon src/main.ts",
     "build": "tsc -p tsconfig.json"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gear-js/api": "^0.22.1",
+    "@gear-js/api": "^0.22.2",
     "@gear-js/common": "workspace:^",
     "@polkadot/api": "^8.9.1",
     "avsc": "^5.7.3",

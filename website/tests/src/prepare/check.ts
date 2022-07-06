@@ -9,16 +9,16 @@ export function checkPrograms(
 ): IPreparedPrograms {
   const result: IPreparedPrograms = {};
 
-  Object.keys(programs).forEach((id) => {
-    assert(initSuccess.has(id), `InitStatus of ${id} program not found`);
-    assert(programs[id].shouldSuccess === initSuccess.get(id), `InitStatus of ${id} doesn't match`);
+  for (let id of Object.keys(programs)) {
+    assert(initSuccess.has(programs[id].messageId), `InitStatus of ${id} program not found`);
+    assert(programs[id].shouldSuccess === initSuccess.get(programs[id].messageId), `InitStatus of ${id} doesn't match`);
 
     result[id] = {
       spec: programs[id],
-      init: initSuccess.get(id),
+      init: initSuccess.get(programs[id].messageId),
       id: id,
     };
-  });
+  }
   return result;
 }
 
