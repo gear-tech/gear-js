@@ -6,7 +6,8 @@ import { mockCodeRepository } from '../../src/common/mock/code/code-repository.m
 import { CODE_DB_MOCK } from '../../src/common/mock/code/code-db.mock';
 import { CodeRepo } from '../../src/code/code.repo';
 import { CodeService } from '../../src/code/code.service';
-import { CreateCodeInput } from '../../src/code/types';
+import { UpdateCodeInput } from '../../src/code/types';
+import { UpdateResult } from 'typeorm';
 
 const CODE_ENTITY_ID = '0x7357';
 
@@ -28,7 +29,7 @@ describe('Code service', () => {
   });
 
   it('should be successfully create code entity', async () => {
-    const createCodeInput: CreateCodeInput = {
+    const updateCodeInput: UpdateCodeInput = {
       id: CODE_ENTITY_ID,
       genesis: '0x07357',
       timestamp: 0,
@@ -37,10 +38,12 @@ describe('Code service', () => {
       expiration: 111,
     };
 
-    const code = await codeService.create(createCodeInput);
+    const code = await codeService.updateCode(updateCodeInput);
 
-    expect(code.id).toEqual(createCodeInput.id);
-    expect(code.status).toEqual(createCodeInput.status);
+    if (!(code instanceof UpdateResult)) {
+      expect(code.id).toEqual(updateCodeInput.id);
+      expect(code.status).toEqual(updateCodeInput.status);
+    }
     expect(mockCodeRepository.save).toHaveBeenCalled();
   });
 
