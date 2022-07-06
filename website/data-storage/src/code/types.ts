@@ -1,6 +1,6 @@
 import { CODE_STATUS } from '@gear-js/common';
 
-interface CreateCodeInput {
+interface UpdateCodeInput {
   id: string;
   status: CODE_STATUS;
   genesis: string;
@@ -9,12 +9,4 @@ interface CreateCodeInput {
   expiration?: number | null;
 }
 
-interface UpdateCodeInput {
-  id: string;
-  genesis: string;
-  name?: string;
-  status?: CODE_STATUS;
-  expiration?: number | null;
-}
-
-export { CreateCodeInput, UpdateCodeInput };
+export { UpdateCodeInput };
