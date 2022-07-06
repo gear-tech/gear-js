@@ -3,14 +3,20 @@ import {
   AddMetaParams,
   AddMetaResult,
   AllMessagesResult,
+  CODE_STATUS,
   FindMessageParams,
   FindProgramParams,
+  GetAllCodeParams,
+  GetAllCodeResult,
   GetAllProgramsParams,
   GetAllProgramsResult,
   GetAllUserProgramsParams,
+  GetCodeParams,
   GetMessagesParams,
   GetMetaParams,
   GetMetaResult,
+  ICode,
+  ICodeChangedKafkaValue,
   IGenesis,
   IMessage,
   IMessageEnqueuedKafkaValue,
@@ -26,18 +32,21 @@ import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
 import { FormResponse } from '../middleware/formResponse';
+import { CodeService } from '../code/code.service';
+import { CreateCodeInput } from '../code/types';
 
 @Injectable()
 export class ConsumerService {
   constructor(
-    private readonly programService: ProgramService,
-    private readonly messageService: MessageService,
-    private readonly metaService: MetadataService,
+    private programService: ProgramService,
+    private messageService: MessageService,
+    private metaService: MetadataService,
+    private codeService: CodeService,
   ) {}
 
   events = {
-    UserMessageSent: (value: IUserMessageSentKafkaValue) => {
-      this.messageService.createMessage(value);
+    UserMessageSent: async (value: IUserMessageSentKafkaValue) => {
+      await this.messageService.createMessage(value);
     },
     MessageEnqueued: async ({
       id,
@@ -70,20 +79,27 @@ export class ConsumerService {
         timestamp: timestamp,
       });
     },
-    ProgramChanged: (value: IProgramChangedKafkaValue) => {
+    ProgramChanged: async (value: IProgramChangedKafkaValue) => {
       if (value.isActive) {
-        this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS);
+        await this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS);
       }
     },
-    CodeChanged: () => {
-      console.log('TODO: CodeChanged');
+    CodeChanged: async (value: ICodeChangedKafkaValue) => {
+      const createCodeInput: CreateCodeInput = {
+        ...value,
+        status: value.change as CODE_STATUS,
+      };
+      await this.codeService.create(createCodeInput);
     },
-    MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
-      this.messageService.setDispatchedStatus(value);
+    MessagesDispatched: async (value: IMessagesDispatchedKafkaValue) => {
+      await this.messageService.setDispatchedStatus(value);
     },
-    DatabaseWiped: (value: IGenesis) => {
-      this.messageService.deleteRecords(value.genesis);
-      this.programService.deleteRecords(value.genesis);
+    DatabaseWiped: async (value: IGenesis) => {
+      await Promise.all([
+        this.messageService.deleteRecords(value.genesis),
+        this.programService.deleteRecords(value.genesis),
+        this.codeService.deleteRecords(value.genesis),
+      ]);
     },
   };
 
@@ -123,5 +139,15 @@ export class ConsumerService {
   @FormResponse
   async message(params: FindMessageParams): Result<IMessage> {
     return await this.messageService.getMessage(params);
+  }
+
+  @FormResponse
+  async allCode(params: GetAllCodeParams): Result<GetAllCodeResult> {
+    return await this.codeService.getAllCode(params);
+  }
+
+  @FormResponse
+  async code(params: GetCodeParams): Result<ICode> {
+    return await this.codeService.getByIdAndGenesis(params);
   }
 }
