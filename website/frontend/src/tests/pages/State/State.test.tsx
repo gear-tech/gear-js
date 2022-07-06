@@ -13,8 +13,8 @@ import { useApiMock, TEST_API } from '../../mocks/hooks';
 import { PROGRAM_ID_1, PROGRAM_ID_2, META_FILE } from '../../const';
 
 import { routes } from 'routes';
-import { ApiProvider } from 'context';
 import { getPreformattedText } from 'helpers';
+import { ApiProvider } from 'context/api';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
 import { State } from 'pages/State';
 import { FormValues } from 'pages/State/children/StateForm/types';

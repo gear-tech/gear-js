@@ -1,12 +1,12 @@
 import { ChangeEvent, useMemo } from 'react';
 import { Metadata, getWasmMetadata } from '@gear-js/api';
+import { useAlert } from '@gear-js/react-hooks';
 import { FileInput } from '@gear-js/ui';
 
 import styles from './UploadMeta.module.scss';
 import { UploadData } from './types';
 import { getMetaProperties } from './helpers';
 
-import { useAlert } from 'hooks';
 import { readFileAsync, checkFileFormat } from 'helpers';
 import { formStyles, FormText } from 'components/common/Form';
 

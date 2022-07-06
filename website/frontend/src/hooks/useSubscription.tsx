@@ -1,7 +1,6 @@
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect } from 'react';
-// eslint-disable-next-line import/no-cycle
-import { useApi } from '.';
+import { UnsubscribePromise } from '@polkadot/api/types';
+import { useApi } from '@gear-js/react-hooks';
 
 export function useSubscription(callback: () => UnsubscribePromise) {
   const { api } = useApi();

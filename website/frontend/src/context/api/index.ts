@@ -1,4 +1,1 @@
-import { ApiContext } from './Context';
-import { ApiProvider } from './Provider';
-
-export { ApiContext, ApiProvider };
+export * from './Provider';

@@ -1,8 +1,9 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { screen, render, fireEvent, waitFor, getDefaultNormalizer } from '@testing-library/react';
-import { decodeHexTypes } from '@gear-js/api';
 import { join } from 'path';
 import { readFileSync } from 'fs';
+import { decodeHexTypes } from '@gear-js/api';
+import { AccountProvider } from '@gear-js/react-hooks';
 
 import { PROGRAM_ID_1, META } from '../../const';
 
@@ -11,7 +12,7 @@ import { useAccountMock, TEST_ACCOUNT } from '../../mocks/hooks';
 import { routes } from 'routes';
 import { FILE_TYPES } from 'consts';
 import { getPreformattedText } from 'helpers';
-import { AlertProvider, AccountProvider } from 'context';
+import { AlertProvider } from 'context/alert';
 import * as ApiServiceModule from 'services/ApiService';
 import { Meta } from 'pages/Meta/Meta';
 

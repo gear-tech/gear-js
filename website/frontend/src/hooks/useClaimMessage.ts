@@ -1,11 +1,9 @@
 import { useCallback } from 'react';
-import { Hex, UserMessageRead } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { Hex, UserMessageRead } from '@gear-js/api';
+import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
 
-// eslint-disable-next-line import/no-cycle
-import { useApi, useAccount, useAlert } from '.';
 import { getExtrinsicFailedMessage } from 'helpers';
-import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 
 const useClaimMessage = () => {
   const alert = useAlert();

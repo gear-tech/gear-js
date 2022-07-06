@@ -1,11 +1,11 @@
 import { GearKeyring } from '@gear-js/api';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { useAlert, useAccount } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './SelectAccountModal.module.scss';
 import { AccountList } from '../AccountList';
 
-import { useAccount, useAlert } from 'hooks';
 import { LOCAL_STORAGE } from 'consts';
 import logoutSVG from 'assets/images/logout.svg';
 import { Modal } from 'components/blocks/Modal';
@@ -34,7 +34,7 @@ const SelectAccountModal = (props: Props) => {
   };
 
   const handleLogout = () => {
-    logout()
+    logout();
 
     localStorage.removeItem(LOCAL_STORAGE.ACCOUNT);
     localStorage.removeItem(LOCAL_STORAGE.PUBLIC_KEY_RAW);

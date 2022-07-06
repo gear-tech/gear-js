@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { GearKeyring } from '@gear-js/api';
+import { useAccount, useApi, useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './ProgramSwitch.module.scss';
 
 import { routes } from 'routes';
-import { useAccount, useApi, useAlert } from 'hooks';
 import { isDevChain } from 'helpers';
 import { transferBalance } from 'services/ApiService';
 import { RPC_METHODS, HCAPTCHA_SITE_KEY } from 'consts';

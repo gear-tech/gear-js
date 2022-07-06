@@ -2,12 +2,12 @@ import { Dispatch, SetStateAction, useCallback, useRef } from 'react';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import clsx from 'clsx';
+import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './DropTarget.module.scss';
 import { DroppedFile, UploadTypes } from '../../types';
 
-import { useAlert } from 'hooks';
 import { FILE_TYPES } from 'consts';
 import { checkFileFormat } from 'helpers';
 import uploadSVG from 'assets/images/upload.svg';

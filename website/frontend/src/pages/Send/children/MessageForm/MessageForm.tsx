@@ -1,13 +1,14 @@
 import { useMemo, useRef } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { Metadata } from '@gear-js/api';
+import { useApi, useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import { Schema } from './Schema';
 import { FormValues, SetFieldValue } from './types';
 
 import { calculateGas } from 'helpers';
-import { useApi, useAlert, useSendMessage } from 'hooks';
+import { useSendMessage } from 'hooks';
 import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import sendMessageSVG from 'assets/images/message.svg';

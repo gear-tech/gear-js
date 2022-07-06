@@ -1,13 +1,12 @@
 import { useCallback } from 'react';
 import { Metadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { useAccount, useApi, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
-import { useAccount, useApi, useAlert } from 'hooks';
 import { getExtrinsicFailedMessage } from 'helpers';
 import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
 import { Method } from 'types/explorer';
 import { Message, Reply } from 'types/program';
-import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 
 const useSendMessage = () => {
   const alert = useAlert();

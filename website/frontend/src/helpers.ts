@@ -1,14 +1,14 @@
 import { Hex, GearApi, Metadata } from '@gear-js/api';
-import { GasInfo } from '@gear-js/api/lib/types/gear-core';
 import { Event } from '@polkadot/types/interfaces';
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
+import { GasInfo } from '@gear-js/api/lib/types/gear-core';
+import { AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { NODE_ADDRESS_REGEX } from 'regexes';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
-import { GetMetaResponse } from 'api/responses';
 import { localPrograms } from 'services/LocalDBService';
-import { AlertContainerFactory } from 'context/alert/types';
+import { GetMetaResponse } from 'types/api';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
 import { FormValues as SendMessageInitialValues } from 'pages/Send/children/MessageForm/types';
@@ -21,11 +21,13 @@ export const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
   return `${errorMethod}: ${formattedDocs}`;
 };
 
-export const fileNameHandler = (filename: string) => {
+export const fileNameHandler = (filename: string, maxLength = 24) => {
   const transformedFileName = filename;
 
-  return transformedFileName.length > 24
-    ? `${transformedFileName.slice(0, 12)}…${transformedFileName.slice(-12)}`
+  const halfLenght = Math.floor(maxLength / 2);
+
+  return transformedFileName.length > maxLength
+    ? `${transformedFileName.slice(0, halfLenght)}…${transformedFileName.slice(-halfLenght)}`
     : transformedFileName;
 };
 
@@ -66,12 +68,6 @@ export function readFileAsync(file: File) {
     reader.readAsArrayBuffer(file);
   });
 }
-
-export const toShortAddress = (_address: string) => {
-  const address = (_address || '').toString();
-
-  return address.length > 13 ? `${address.slice(0, 6)}…${address.slice(-6)}` : address;
-};
 
 export const copyToClipboard = (key: string, alert: any, successfulText?: string) => {
   try {

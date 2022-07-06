@@ -1,22 +1,8 @@
-import { useEffect, useState } from 'react';
-import { GearApi } from '@gear-js/api';
-import { nodeApi } from 'api/initApi';
+import { ApiProvider as Provider } from '@gear-js/react-hooks';
+
 import { Props } from '../types';
-import { ApiContext } from './Context';
+import { NODE_API_ADDRESS } from './const';
 
-const { Provider } = ApiContext;
-
-const useApi = () => {
-  const [api, setApi] = useState<GearApi>();
-  const isApiReady = !!api;
-
-  useEffect(() => {
-    nodeApi.init().then(setApi);
-  }, []);
-
-  return { api: api as GearApi, isApiReady };
-};
-
-const ApiProvider = ({ children }: Props) => <Provider value={useApi()}>{children}</Provider>;
+const ApiProvider = ({ children }: Props) => <Provider providerAddress={NODE_API_ADDRESS}>{children}</Provider>;
 
 export { ApiProvider };

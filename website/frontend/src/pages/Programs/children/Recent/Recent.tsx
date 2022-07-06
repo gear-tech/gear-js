@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useAccount } from '@gear-js/react-hooks';
 
 import styles from '../../Programs.module.scss';
 import { UserProgram } from '../UserProgram/UserProgram';
 import { ProgramsLegend } from '../ProgramsLegend/ProgramsLegend';
 
-import { useAccount } from 'hooks';
 import { ProgramModel } from 'types/program';
 import { getUserPrograms } from 'services';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';

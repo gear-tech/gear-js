@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useAlert } from 'hooks';
 import JSZip from 'jszip';
 import saveAs from 'file-saver';
-import { EditorContext } from './Context';
+import { useAlert } from '@gear-js/react-hooks';
+
 import { Props } from '../types';
+import { EditorContext } from './Context';
+
 import { LOCAL_STORAGE, WASM_COMPILER_GET } from 'consts';
 
 const { Provider } = EditorContext;
