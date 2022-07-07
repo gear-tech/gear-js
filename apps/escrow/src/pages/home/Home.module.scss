@@ -1,5 +1,13 @@
+@use '@gear-js/ui/variables' as *;
+
 .container {
   flex: 1;
   display: flex;
   justify-content: space-between;
+}
+
+.text {
+  padding: 15px 20px;
+  border: 1px dashed #ffffff;
+  border-radius: $borderRadius;
 }

@@ -7,6 +7,11 @@
   border-radius: $borderRadius;
 }
 
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .heading {
   @extend %h1;
   margin-bottom: 20px;

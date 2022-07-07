@@ -17,9 +17,9 @@ function Home() {
   const programId = ADDRESS.ESCROW_CONTRACT;
   const [status, setStatus] = useState('');
 
-  const sendMessage = useEscrowMessage();
   const { walletId, setWalletId } = useWalletId();
   const { escrow, isEscrowRead } = useEscrow(walletId);
+  const sendMessage = useEscrowMessage();
 
   const { buyer, seller, state, amount } = escrow || {};
   const isBuyer = account?.decodedAddress === buyer;
@@ -59,7 +59,7 @@ function Home() {
           <Button text="Refund tokens" onClick={refund} />
         );
       case 'Closed':
-        return <p>Wallet is closed, please go back and select or create another one.</p>;
+        return <p className={styles.text}>Wallet is closed, please go back and select or create another one.</p>;
       default:
         return isBuyer ? (
           <>
@@ -72,10 +72,22 @@ function Home() {
     }
   };
 
+  const goBack = () => {
+    if (walletId) setWalletId('');
+    if (status === 'initWallet' || status === 'inputWallet') setStatus('');
+  };
+
+  const goHome = () => {
+    setStatus('');
+    setWalletId('');
+  };
+
   return isEscrowRead ? (
     <div className={styles.container}>
       <Summary programId={programId} walletId={walletId} role={getRole()} state={state} amount={amount} />
-      <Box>{walletId ? getComponents() : getWalletForm()}</Box>
+      <Box onBack={goBack} onHome={goHome}>
+        {walletId ? getComponents() : getWalletForm()}
+      </Box>
     </div>
   ) : (
     <Loader />

@@ -8,7 +8,10 @@ function useEscrow(id: string) {
   const payload = useMemo(() => (id ? { Info: id } : undefined), [id]);
   const { state, isStateRead } = useReadState<EscrowState>(ADDRESS.ESCROW_CONTRACT, escrowMetaWasm, payload);
 
-  return { escrow: state?.Info, isEscrowRead: id ? isStateRead : true };
+  const escrow = id ? state?.Info : undefined;
+  const isEscrowRead = id ? isStateRead : true;
+
+  return { escrow, isEscrowRead };
 }
 
 function useEscrowMessage() {
