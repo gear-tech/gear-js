@@ -7,15 +7,15 @@ type Props = {
   messages: MessageModel[];
 };
 
-const MessagesList = ({ messages }: Props) => (
-  <div>
-    <MessagesListHeader />
-    <ul>
-      {messages.map((message: MessageModel) => (
-        <MessageItem key={message.id} message={message} />
-      ))}
-    </ul>
-  </div>
-);
+const MessagesList = ({ messages }: Props) => {
+  const getMessages = () => messages.map((message) => <MessageItem key={message.id} message={message} />);
+
+  return (
+    <div>
+      <MessagesListHeader />
+      <ul>{getMessages()}</ul>
+    </div>
+  );
+};
 
 export { MessagesList };

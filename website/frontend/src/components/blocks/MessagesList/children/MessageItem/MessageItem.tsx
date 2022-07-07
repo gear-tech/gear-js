@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { Link, generatePath } from 'react-router-dom';
 import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
@@ -8,8 +7,8 @@ import styles from './MessageItem.module.scss';
 import { routes } from 'routes';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { MessageModel } from 'types/message';
-import copyIcon from 'assets/images/copy.svg';
 import { CircleIndicator, IndicatorStatus } from 'components/common/CircleIndicator';
+import copySVG from 'assets/images/copy.svg';
 
 type Props = {
   message: MessageModel;
@@ -25,7 +24,7 @@ const MessageItem = ({ message }: Props) => {
   const status = exitCode ? IndicatorStatus.Error : IndicatorStatus.Success;
 
   return (
-    <li className={clsx(styles.messageItem, exitCode ? styles.error : styles.success)}>
+    <li className={styles.messageItem}>
       <div className={styles.itemCol}>
         <CircleIndicator status={status} className={styles.messageStatus} />
         <p>{fileNameHandler(message.destination)}</p>
@@ -34,7 +33,7 @@ const MessageItem = ({ message }: Props) => {
         <Link className={styles.messageLink} to={generatePath(routes.message, { messageId })}>
           {messageId}
         </Link>
-        <Button icon={copyIcon} size="small" color="transparent" className={styles.copyButton} onClick={handleCopy} />
+        <Button icon={copySVG} size="small" color="transparent" className={styles.copyButton} onClick={handleCopy} />
       </div>
       <div className={styles.itemCol}>
         <p>{formatDate(timestamp)}</p>
