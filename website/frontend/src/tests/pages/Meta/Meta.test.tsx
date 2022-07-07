@@ -12,20 +12,23 @@ import { useAccountMock, TEST_ACCOUNT } from '../../mocks/hooks';
 import { routes } from 'routes';
 import { FILE_TYPES } from 'consts';
 import { getPreformattedText } from 'helpers';
+import { ApiProvider } from 'context/api';
 import { AlertProvider } from 'context/alert';
 import * as ApiServiceModule from 'services/ApiService';
 import { Meta } from 'pages/Meta/Meta';
 
 const UploadMetaPage = () => (
-  <AccountProvider>
-    <AlertProvider>
-      <MemoryRouter initialEntries={[`/meta/${PROGRAM_ID_1}`]}>
-        <Routes>
-          <Route path={routes.meta} element={<Meta />} />
-        </Routes>
-      </MemoryRouter>
-    </AlertProvider>
-  </AccountProvider>
+  <ApiProvider>
+    <AccountProvider>
+      <AlertProvider>
+        <MemoryRouter initialEntries={[`/meta/${PROGRAM_ID_1}`]}>
+          <Routes>
+            <Route path={routes.meta} element={<Meta />} />
+          </Routes>
+        </MemoryRouter>
+      </AlertProvider>
+    </AccountProvider>
+  </ApiProvider>
 );
 
 describe('test uplaod meta page', () => {

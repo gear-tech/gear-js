@@ -65,13 +65,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validateOnBlur
-      validationSchema={Schema}
-      enableReinitialize
-      onSubmit={handleSubmit}
-    >
+    <Formik initialValues={initialValues} validationSchema={Schema} enableReinitialize onSubmit={handleSubmit}>
       {({ isValid, isSubmitting }: FormikProps<FormValues>) => {
         const isDisable = !metadata || !isValid || isSubmitting;
 

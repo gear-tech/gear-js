@@ -1,6 +1,6 @@
 import { decodeHexTypes, createPayloadTypeStructure } from '@gear-js/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, render, fireEvent, waitFor } from '@testing-library/react';
+import { screen, render, fireEvent, waitFor, act } from '@testing-library/react';
 import { AccountProvider } from '@gear-js/react-hooks';
 
 import { useAccountMock, useApiMock, TEST_API, TEST_ACCOUNT } from '../../mocks/hooks';
@@ -143,8 +143,12 @@ describe('send message page tests', () => {
     };
 
     // calculate gas
+    // some formik error, act must be used
+    act(() => {
+      fireEvent.click(calculateGasBtn);
+    });
 
-    fireEvent.click(calculateGasBtn);
+    await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
     expect(calculateGas).toBeCalledWith(
@@ -157,8 +161,6 @@ describe('send message page tests', () => {
       PROGRAM_ID_2,
       undefined
     );
-
-    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     // authorized submit
 
@@ -233,7 +235,11 @@ describe('send message page tests', () => {
 
     // calculate gas
 
-    fireEvent.click(calculateGasBtn);
+    act(() => {
+      fireEvent.click(calculateGasBtn);
+    });
+
+    await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
     expect(calculateGas).toBeCalledWith(
@@ -246,8 +252,6 @@ describe('send message page tests', () => {
       PROGRAM_ID_1,
       undefined
     );
-
-    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     // authorized submit
 
@@ -330,7 +334,11 @@ describe('send message page tests', () => {
 
     // calculate gas
 
-    fireEvent.click(calculateGasBtn);
+    act(() => {
+      fireEvent.click(calculateGasBtn);
+    });
+
+    await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
     expect(calculateGas).toBeCalledWith(
@@ -343,8 +351,6 @@ describe('send message page tests', () => {
       MESSAGE_ID_2,
       '1'
     );
-
-    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     // authorized submit
 
@@ -415,7 +421,11 @@ describe('send message page tests', () => {
 
     // calculate gas
 
-    fireEvent.click(calculateGasBtn);
+    act(() => {
+      fireEvent.click(calculateGasBtn);
+    });
+
+    await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
     expect(calculateGas).toBeCalledWith(
@@ -428,8 +438,6 @@ describe('send message page tests', () => {
       MESSAGE_ID_1,
       '1'
     );
-
-    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     // authorized submit
 
