@@ -78,7 +78,7 @@ describe('message methods', () => {
   });
 });
 
-describe.skip('testBalance', () => {
+describe('testBalance', () => {
   test('testBalance.get request', async () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
   });
