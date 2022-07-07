@@ -1,6 +1,8 @@
 import { KAFKA_TOPICS } from '@gear-js/common';
 
 import {
+  codeAll,
+  codeData,
   messageAll,
   messageData,
   programAll,
@@ -22,6 +24,8 @@ const rpcMethods: RpcMethods = {
   [KAFKA_TOPICS.MESSAGE_ALL]: messageAll,
   [KAFKA_TOPICS.MESSAGE_DATA]: messageData,
   [KAFKA_TOPICS.TEST_BALANCE_GET]: testBalance,
+  [KAFKA_TOPICS.CODE_DATA]: codeData,
+  [KAFKA_TOPICS.CODE_ALL]: codeAll,
 };
 
 export function jsonRpcMethodHandler(method: KAFKA_TOPICS | string, params: KafkaParams): Promise<any> {

@@ -1,13 +1,14 @@
 import { ChangeEvent, useReducer, useEffect, useState } from 'react';
-import { saveAs } from 'file-saver';
-import Editor from '@monaco-editor/react';
-import JSZip from 'jszip';
 import { useNavigate } from 'react-router-dom';
+import Editor from '@monaco-editor/react';
+import { saveAs } from 'file-saver';
+import JSZip from 'jszip';
 import clsx from 'clsx';
 import get from 'lodash.get';
+import { useAlert } from '@gear-js/react-hooks';
 
 import { PageHeader } from 'components/blocks/legacy/PageHeader/PageHeader';
-import { useAlert, useEditor } from 'hooks';
+import { useEditor } from 'hooks';
 import { EDITOR_BTNS, PAGE_TYPES, WASM_COMPILER_BUILD, LOCAL_STORAGE } from 'consts';
 
 import EditorDownload from 'assets/images/editor-download.svg';

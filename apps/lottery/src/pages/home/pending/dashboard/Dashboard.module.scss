@@ -1,0 +1,54 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/mixins' as *;
+@use 'assets/styles/shared' as *;
+
+.dashboard {
+  @extend %box;
+  margin-bottom: 8px;
+  text-align: left;
+
+  & > *:not(:last-child) {
+    margin-bottom: 8px;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  p {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+  }
+}
+
+.key {
+  color: $textColorSecondary;
+}
+
+.status {
+  &::before {
+    @include square(8px);
+    content: '';
+    display: inline-block;
+    margin-right: 8px;
+    border-radius: 50%;
+    background-color: #adadad;
+  }
+}
+
+.pending {
+  &::before {
+    background-color: $successColor;
+  }
+}
+
+.winner {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.countdown {
+  font-size: 12px;
+  color: $textColorSecondary;
+}

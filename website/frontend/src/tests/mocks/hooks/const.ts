@@ -1,4 +1,4 @@
-import { Account } from 'context/types';
+import { Account } from '@gear-js/react-hooks';
 
 export const TEST_ACCOUNT: Account = {
   address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
@@ -24,10 +24,15 @@ export const TEST_API = {
     submit: jest.fn(),
     signAndSend: jest.fn(),
   },
-  balance: { findOut: jest.fn() },
+  balance: {
+    findOut: jest.fn(),
+  },
   gearEvents: {
     subscribeToNewBlocks: jest.fn(),
     subscribeToBalanceChange: jest.fn(),
+  },
+  runtimeChain: {
+    toHuman: jest.fn(),
   },
   runtimeVersion: {
     specName: {

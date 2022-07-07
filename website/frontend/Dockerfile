@@ -19,4 +19,4 @@ RUN npm run build
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
 COPY --from=builder /frontend/build /usr/share/nginx/html
-#check
+#check7

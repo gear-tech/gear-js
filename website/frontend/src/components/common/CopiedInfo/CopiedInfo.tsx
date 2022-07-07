@@ -1,8 +1,8 @@
+import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './CopiedInfo.module.scss';
 
-import { useAlert } from 'hooks';
 import { copyToClipboard } from 'helpers';
 import copySVG from 'assets/images/copy.svg';
 

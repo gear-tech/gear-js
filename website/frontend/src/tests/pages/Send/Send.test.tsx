@@ -1,12 +1,14 @@
 import { decodeHexTypes, createPayloadTypeStructure } from '@gear-js/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
+import { AccountProvider } from '@gear-js/react-hooks';
 
 import { useAccountMock, useApiMock, TEST_API, TEST_ACCOUNT } from '../../mocks/hooks';
 import { PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2, META } from '../../const';
 
 import * as helpers from 'helpers';
-import { AlertProvider, ApiProvider, AccountProvider } from 'context';
+import { ApiProvider } from 'context/api';
+import { AlertProvider } from 'context/alert';
 import { Send } from 'pages/Send/Send';
 import { FormValues } from 'pages/Send/children/MessageForm/types';
 import { TypeStructure } from 'components/common/Form/FormPayload/types';

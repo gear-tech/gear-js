@@ -1338,14 +1338,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.22.1":
-  version: 0.22.1
-  resolution: "@gear-js/api@npm:0.22.1"
+"@gear-js/api@npm:0.22.2":
+  version: 0.22.2
+  resolution: "@gear-js/api@npm:0.22.2"
   peerDependencies:
     "@polkadot/api": ^8.9.1
     "@polkadot/wasm-crypto": ^6.1.1
     rxjs: ^7.5.5
-  checksum: 6b024cfaab49fdb4f46143d036014ee09098a94fd80ef9c338a4a3406defd04f49051542de6b8e30b58f3c1289d6b09f315087aa0ffa81046a3c76d316655e68
+  checksum: 97ed6debe22039aac5002ab3d5d3445f7fd1258429535ef9f7e384509de6250fc0c111726a1ad0c6f027a7311aa8c0a2e67f477703771bd659651e202867ec0b
   languageName: node
   linkType: hard
 
@@ -1356,7 +1356,7 @@ __metadata:
     "@babel/plugin-transform-typescript": ^7.16.8
     "@babel/preset-env": ^7.17.10
     "@babel/preset-typescript": ^7.16.7
-    "@gear-js/api": 0.22.1
+    "@gear-js/api": 0.22.2
     "@polkadot/api": 8.9.1
     "@types/chai": ^4.3.1
     "@types/jest": ^27.5.1

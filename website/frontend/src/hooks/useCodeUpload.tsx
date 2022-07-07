@@ -1,10 +1,9 @@
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
-import { useApi, useAccount, useAlert } from 'hooks';
 import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
 import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
 import { Method } from 'types/explorer';
-import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 import { CopiedInfo } from 'components/common/CopiedInfo';
 
 const useCodeUpload = () => {

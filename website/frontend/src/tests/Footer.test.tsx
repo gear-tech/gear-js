@@ -1,8 +1,11 @@
 import { render, screen, within } from '@testing-library/react';
+
 import { Footer } from 'components/blocks/Footer';
 
-jest.mock('api/initApi', () => ({
-  nodeApi: { address: 'random-address' },
+const address = 'random-address';
+
+jest.mock('context/api/const', () => ({
+  NODE_API_ADDRESS: address,
 }));
 
 describe('footer tests', () => {
@@ -14,7 +17,7 @@ describe('footer tests', () => {
     // polkadot explorer link
 
     expect(dotLink).toHaveTextContent('Polkadot Explorer');
-    expect(dotLink).toHaveAttribute('href', `https://polkadot.js.org/apps/?rpc=random-address#/explorer`);
+    expect(dotLink).toHaveAttribute('href', `https://polkadot.js.org/apps/?rpc=${address}#/explorer`);
 
     // copyright
 

@@ -1,12 +1,12 @@
 import { memo } from 'react';
 import clsx from 'clsx';
 import { Link, generatePath } from 'react-router-dom';
+import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './UserProgram.module.scss';
 
 import { routes } from 'routes';
-import { useAlert } from 'hooks';
 import { copyToClipboard, formatDate } from 'helpers';
 import { ProgramModel, ProgramStatus } from 'types/program';
 import { CustomLink } from 'components/common/CustomLink';

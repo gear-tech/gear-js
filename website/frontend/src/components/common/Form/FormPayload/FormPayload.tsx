@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { useField } from 'formik';
 import clsx from 'clsx';
+import { useAlert } from '@gear-js/react-hooks';
 import { Checkbox, FileInput, Textarea } from '@gear-js/ui';
 
 import styles from './FormPayload.module.scss';
@@ -8,7 +9,7 @@ import formStyles from '../Form.module.scss';
 import { FormPayloadValues, PayloadValue } from './types';
 import { PayloadStructure } from './PayloadStructure';
 
-import { useAlert, useChangeEffect } from 'hooks';
+import { useChangeEffect } from 'hooks';
 import { FILE_TYPES } from 'consts';
 import { checkFileFormat, readTextFileAsync } from 'helpers';
 

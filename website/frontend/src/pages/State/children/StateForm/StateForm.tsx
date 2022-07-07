@@ -1,12 +1,12 @@
 import { useMemo, useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Metadata } from '@gear-js/api';
+import { useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import { FormValues } from './types';
 import { INITIAL_VALUES } from './const';
 
-import { useApi } from 'hooks';
 import { getPreformattedText } from 'helpers';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import { Spinner } from 'components/common/Spinner/Spinner';

@@ -1,16 +1,14 @@
-/* eslint-disable import/no-cycle */
 import { useCallback } from 'react';
 import { generatePath } from 'react-router-dom';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
-import { useApi, useAccount, useAlert } from '../index';
 import { waitForProgramInit } from './helpers';
 
 import { routes } from 'routes';
 import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
 import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
 import { uploadMetadata } from 'services/ApiService';
-import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
 import { Method } from 'types/explorer';
 import { UploadProgramModel, ProgramStatus } from 'types/program';
 import { CustomLink } from 'components/common/CustomLink';

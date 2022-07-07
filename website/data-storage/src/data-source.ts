@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
 
-import { Message, Meta, Program } from './entities';
+import { Code, Message, Meta, Program } from './entities';
 import config from './config/configuration';
 
-const entities = [Meta, Message, Program];
+const entities = [Meta, Message, Program, Code];
 
 // Do not delete DataSource
 // TypeORM CLI commands has been changed (0.3.X)

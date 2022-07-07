@@ -1,6 +1,7 @@
 import { FC } from 'react';
-import { useAlert } from 'hooks';
+import { useAlert } from '@gear-js/react-hooks';
 import { HelpCircle } from 'react-feather';
+
 import styles from './Hint.module.scss';
 
 type Params = {

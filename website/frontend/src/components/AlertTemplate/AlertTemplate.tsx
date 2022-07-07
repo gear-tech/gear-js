@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import clsx from 'clsx';
+import { AlertTemplateProps } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './AlertTemplate.module.scss';
 
 import closeSVG from 'assets/images/close.svg';
-import { AlertTemplateProps } from 'context/alert/types';
 
 const AlertTemplate = ({ alert, onClose }: AlertTemplateProps) => {
   const { type, title, style, isClosed } = alert.options;
