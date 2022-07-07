@@ -7,6 +7,7 @@ import { MetadataModule } from '../metadata/metadata.module';
 import { ProgramModule } from '../program/program.module';
 import { MessageModule } from '../message/message.module';
 import { ConsumerService } from './consumer.service';
+import { CodeModule } from '../code/code.module';
 
 const configKafka = configuration().kafka;
 @Module({
@@ -34,6 +35,7 @@ const configKafka = configuration().kafka;
     MetadataModule,
     ProgramModule,
     MessageModule,
+    CodeModule,
   ],
   controllers: [ConsumerController],
   providers: [ConsumerService],

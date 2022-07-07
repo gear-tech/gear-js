@@ -34,6 +34,7 @@ import { MetadataService } from '../metadata/metadata.service';
 import { FormResponse } from '../middleware/formResponse';
 import { CodeService } from '../code/code.service';
 import { UpdateCodeInput } from '../code/types';
+import { sleep } from '../utils/sleep';
 
 @Injectable()
 export class ConsumerService {
@@ -45,7 +46,8 @@ export class ConsumerService {
   ) {}
 
   events = {
-    UserMessageSent: (value: IUserMessageSentKafkaValue) => {
+    UserMessageSent: async (value: IUserMessageSentKafkaValue) => {
+      await sleep(1000);
       this.messageService.createMessage(value);
     },
     MessageEnqueued: ({

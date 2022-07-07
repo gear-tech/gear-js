@@ -3,11 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CodeService } from './code.service';
 import { Code } from '../entities';
+import { CodeRepo } from './code.repo';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Code])],
   controllers: [],
-  providers: [CodeService],
-  exports: [CodeService],
+  providers: [CodeService, CodeRepo],
+  exports: [CodeService, CodeRepo],
 })
 export class CodeModule {}
