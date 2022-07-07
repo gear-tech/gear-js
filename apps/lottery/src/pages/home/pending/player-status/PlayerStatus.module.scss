@@ -1,0 +1,15 @@
+@use '@gear-js/ui/variables' as *;
+@use 'assets/styles/shared' as *;
+
+.status {
+  @extend %box;
+  border-color: #3d3d3d;
+}
+
+.win {
+  background-color: rgba(52, 101, 52, 0.1);
+}
+
+.lose {
+  background-color: rgba(101, 52, 52, 0.1);
+}

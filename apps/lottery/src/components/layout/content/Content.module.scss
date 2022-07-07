@@ -1,0 +1,22 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+
+.container {
+  width: 100%;
+  max-width: 675px;
+  text-align: center;
+
+  & > *:not(:last-child) {
+    margin-bottom: 48px;
+  }
+}
+
+.heading {
+  @extend %h1;
+  margin-bottom: 8px;
+}
+
+.subheading {
+  font-size: $fontSizeMedium;
+  color: $textColorSecondary;
+}

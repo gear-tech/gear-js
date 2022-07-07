@@ -1,0 +1,39 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+
+.heading {
+  @extend %h5;
+  margin-bottom: 16px;
+}
+
+.header {
+  font-weight: 600;
+  color: $textColorSecondary;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  &:nth-child(even) {
+    background-color: $bgColor;
+  }
+
+  &:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.cell {
+  padding: 10px 20px;
+}
+
+.text {
+  color: $textColorSecondary;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.address {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
