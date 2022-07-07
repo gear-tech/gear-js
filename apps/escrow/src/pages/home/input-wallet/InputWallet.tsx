@@ -7,7 +7,7 @@ type Props = {
 
 const initialValues = { address: '' };
 
-function InputWalletForm({ onSubmit }: Props) {
+function InputWallet({ onSubmit }: Props) {
   const form = useForm({ initialValues });
   const { getInputProps } = form;
 
@@ -19,4 +19,4 @@ function InputWalletForm({ onSubmit }: Props) {
   );
 }
 
-export { InputWalletForm };
+export { InputWallet };

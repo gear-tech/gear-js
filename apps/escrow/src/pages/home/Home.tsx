@@ -5,9 +5,9 @@ import { ADDRESS } from 'consts';
 import { CreateFormValues } from 'types';
 import { useEscrow, useEscrowMessage, useWalletId } from 'hooks';
 import { Box, Loader } from 'components';
-import { InitWalletForm } from './init-wallet-form';
-import { InputWalletForm } from './input-wallet-form';
-import { StartWalletForm } from './start-wallet-form';
+import { CreateWallet } from './create-wallet';
+import { InputWallet } from './input-wallet';
+import { StartWallet } from './start-wallet';
 import { Summary } from './summary';
 import styles from './Home.module.scss';
 
@@ -37,11 +37,11 @@ function Home() {
   const getWalletForm = () => {
     switch (status) {
       case 'initWallet':
-        return <InitWalletForm onSubmit={create} />;
+        return <CreateWallet onSubmit={create} />;
       case 'inputWallet':
-        return <InputWalletForm onSubmit={setWalletId} />;
+        return <InputWallet onSubmit={setWalletId} />;
       default:
-        return <StartWalletForm onInit={init} onUse={use} />;
+        return <StartWallet onInit={init} onUse={use} />;
     }
   };
 

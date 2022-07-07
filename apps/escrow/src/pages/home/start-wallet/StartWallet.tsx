@@ -5,7 +5,7 @@ type Props = {
   onUse: () => void;
 };
 
-function StartWalletForm({ onInit, onUse }: Props) {
+function StartWallet({ onInit, onUse }: Props) {
   return (
     <>
       <Button text="Create wallet" onClick={onInit} block />
@@ -14,4 +14,4 @@ function StartWalletForm({ onInit, onUse }: Props) {
   );
 }
 
-export { StartWalletForm };
+export { StartWallet };

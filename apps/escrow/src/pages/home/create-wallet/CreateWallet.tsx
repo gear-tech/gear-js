@@ -1,7 +1,7 @@
 import { Input, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { CreateFormValues } from 'types';
-import styles from './InitWalletForm.module.scss';
+import styles from './CreateWallet.module.scss';
 
 type Props = {
   onSubmit: (values: CreateFormValues) => void;
@@ -9,7 +9,7 @@ type Props = {
 
 const initialValues = { buyer: '', seller: '', amount: '' };
 
-function InitWalletForm({ onSubmit }: Props) {
+function CreateWallet({ onSubmit }: Props) {
   const form = useForm({ initialValues });
   const { getInputProps } = form;
 
@@ -23,4 +23,4 @@ function InitWalletForm({ onSubmit }: Props) {
   );
 }
 
-export { InitWalletForm };
+export { CreateWallet };
