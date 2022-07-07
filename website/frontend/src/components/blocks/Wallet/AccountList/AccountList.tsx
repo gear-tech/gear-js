@@ -2,9 +2,11 @@ import { FC } from 'react';
 import Identicon from '@polkadot/react-identicon';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
-import { toShortAddress } from 'helpers';
+
 import './AccountList.scss';
+
 import { LOCAL_STORAGE } from 'consts';
+import { fileNameHandler } from 'helpers';
 
 type Props = {
   list: Array<InjectedAccountWithMeta>;
@@ -29,7 +31,7 @@ export const AccountList: FC<Props> = ({ list, toggleAccount }: Props) => {
             <Identicon value={account.address} size={25} theme="polkadot" />
           </span>
           <span className="account-list__name">{account.meta.name}</span>
-          <span className="account-list__address">{toShortAddress(account.address)}</span>
+          <span className="account-list__address">{fileNameHandler(account.address, 13)}</span>
         </button>
       </li>
     ));

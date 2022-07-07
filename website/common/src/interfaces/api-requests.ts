@@ -3,8 +3,6 @@ import { IMessage } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';
 
-interface AddPayloadParams extends IGenesis, ISignature, Pick<IMessage, 'id' | 'payload'> {}
-
 interface GetMessagesParams extends IGenesis, IPaginationParams, SearchParam {
   destination?: string;
   source?: string;
@@ -20,6 +18,8 @@ interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam 
   publicKeyRaw?: string;
   owner?: string;
 }
+
+interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam {}
 
 interface GetAllUserProgramsParams extends IGenesis, IPaginationParams, Pick<IProgram, 'owner'>, SearchParam {}
 
@@ -37,6 +37,10 @@ interface AddMetaParams extends IGenesis, ISignature {
 
 interface GetMetaParams extends IGenesis {
   programId: string;
+}
+
+interface GetCodeParams extends IGenesis {
+  codeId: string;
 }
 
 interface GetTestBalanceParams extends IGenesis {
@@ -57,12 +61,12 @@ interface IRpcRequest {
     | GetAllProgramsParams
     | AddMetaParams
     | GetMetaParams
-    | AddPayloadParams
-    | GetMessagesParams;
+    | GetMessagesParams
+    | GetCodeParams
+    | GetAllCodeParams;
 }
 
 export {
-  AddPayloadParams,
   GetMessagesParams,
   FindMessageParams,
   GetIncomingMessagesParams,
@@ -75,4 +79,6 @@ export {
   GetTestBalanceParams,
   SearchParam,
   IRpcRequest,
+  GetCodeParams,
+  GetAllCodeParams,
 };

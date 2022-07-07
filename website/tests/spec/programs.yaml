@@ -10,3 +10,10 @@ guestbook:
   gasLimit: 2000000000
   account: alice
   shouldSuccess: true
+
+meta:
+  pathToOpt: ./wasm/demo_meta.opt.wasm
+  pathToMeta: ./wasm/demo_meta.meta.wasm
+  gasLimit: 2000000000
+  account: alice
+  shouldSuccess: false

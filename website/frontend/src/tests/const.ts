@@ -2,13 +2,15 @@ import { Metadata } from '@gear-js/api';
 
 import { ProgramModel, ProgramStatus } from 'types/program';
 
-export const PROGRAM_ID_WITH_META = '0x52970eb8531778ac816303e806c694caf65579dfad5fafa31c2b7b0f61dfd6f1';
+export const PROGRAM_ID_1 = '0x52970eb8531778ac816303e806c694caf65579dfad5fafa31c2b7b0f61dfd6f1';
 
-export const PROGRAM_ID_WITHOUT_META = '0x52970eb8531778ac816303e806c694caf65579dfad5fafa31c2b7b0f61dfd6f2';
+export const PROGRAM_ID_2 = '0x52970eb8531778ac816303e806c694caf65579dfad5fafa31c2b7b0f61dfd6f2';
 
-export const MESSAGE_ID_FOR_PROGRAM_WITH_META = '0x0d0d71c81a07009d08ed05ef0b0b0568a0dffd688d3d608ce3076a7b23788b61';
+export const MESSAGE_ID_1 = '0x0d0d71c81a07009d08ed05ef0b0b0568a0dffd688d3d608ce3076a7b23788b61';
 
-export const MESSAGE_ID_FOR_PROGRAM_WITHOUT_META = '0x0d0d71c81a07009d08ed05ef0b0b0568a0dffd688d3d608ce3076a7b23788b62';
+export const MESSAGE_ID_2 = '0x0d0d71c81a07009d08ed05ef0b0b0568a0dffd688d3d608ce3076a7b23788b62';
+
+export const META_FILE = 'AGFzbQEAAAABiAEUYAN/f38Bf2ACf38Bf2ABfwBgAn9/AGABf';
 
 export const META: Metadata = {
   types:
@@ -27,7 +29,7 @@ export const META: Metadata = {
 };
 
 export const PROGRAM_WITH_META: ProgramModel = {
-  id: PROGRAM_ID_WITH_META,
+  id: PROGRAM_ID_1,
   blockHash: '0x77b645ace89291fe7a26ec8574740612c1cc3db8448906ba192c4a0efed3bcad',
   timestamp: '2022-06-06T21:47:49.000Z',
   owner: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
@@ -41,6 +43,6 @@ export const PROGRAM_WITH_META: ProgramModel = {
 
 export const PROGRAM_WITHOUT_META: ProgramModel = {
   ...PROGRAM_WITH_META,
-  id: PROGRAM_ID_WITHOUT_META,
+  id: PROGRAM_ID_2,
   meta: null,
 };

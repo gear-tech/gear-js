@@ -1,10 +1,12 @@
 import { useSearchParams } from 'react-router-dom';
 import { Button } from '@gear-js/ui';
-import refresh from 'assets/images/refresh2.svg';
-import cross from 'assets/images/close.svg';
-import { nodeApi } from 'api/initApi';
-import { LOCAL_STORAGE, NODE_ADRESS_URL_PARAM } from 'consts';
+
 import styles from './Header.module.scss';
+
+import { LOCAL_STORAGE, NODE_ADRESS_URL_PARAM } from 'consts';
+import { NODE_API_ADDRESS } from 'context/api/const';
+import crossSVG from 'assets/images/close.svg';
+import refreshSVG from 'assets/images/refresh.svg';
 
 type Props = {
   closeSidebar: () => void;
@@ -32,11 +34,11 @@ const Header = ({ closeSidebar, selectedNode }: Props) => {
       <Button
         text="Switch"
         size="small"
-        icon={refresh}
+        icon={refreshSVG}
         onClick={switchNode}
-        disabled={selectedNode === nodeApi.address}
+        disabled={selectedNode === NODE_API_ADDRESS}
       />
-      <Button aria-label="Close sidebar" icon={cross} color="transparent" onClick={closeSidebar} />
+      <Button aria-label="Close sidebar" icon={crossSVG} color="transparent" onClick={closeSidebar} />
     </header>
   );
 };

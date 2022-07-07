@@ -1,10 +1,9 @@
-import { Event } from '@polkadot/types/interfaces';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
-import { PROGRAM_ERRORS } from 'consts';
-import { useApi, useAccount, useAlert } from 'hooks';
-import { readFileAsync } from 'helpers';
-import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from 'context/alert/const';
+import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
+import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
+import { Method } from 'types/explorer';
 import { CopiedInfo } from 'components/common/CopiedInfo';
 
 const useCodeUpload = () => {
@@ -19,13 +18,6 @@ const useCodeUpload = () => {
     return api.code.submit(buffer);
   };
 
-  const getErrorMessage = (event: Event) => {
-    const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
-    const formattedDocs = docs.filter(Boolean).join('. ');
-
-    return `${errorMethod}: ${formattedDocs}`;
-  };
-
   const uploadCode = async (file: File) => {
     if (!account) {
       alert.error('Wallet not connected');
@@ -33,41 +25,37 @@ const useCodeUpload = () => {
       return;
     }
 
-    const { address, meta } = account;
-
-    const alertTitle = 'gear.submitCode';
-    const alertId = alert.loading('SignIn', { title: alertTitle });
+    const alertId = alert.loading('SignIn', { title: 'gear.submitCode' });
 
     try {
+      const { address, meta } = account;
+
       const { signer } = await web3FromSource(meta.source);
       const { codeHash } = await submit(file);
 
       await api.code.signAndSend(address, { signer }, ({ events, status }) => {
         if (status.isReady) {
-          alert.update(alertId, 'Ready');
+          alert.update(alertId, TransactionStatus.Ready);
 
           return;
         }
 
         if (status.isInBlock) {
-          alert.update(alertId, 'InBlock');
+          alert.update(alertId, TransactionStatus.InBlock);
 
           events.forEach(({ event }) => {
             const { method, section } = event;
 
-            if (method === 'CodeSaved') {
-              alert.success(<CopiedInfo title="Code hash" info={codeHash} />, {
-                title: `${section}.CodeSaved`,
-                timeout: 0,
-              });
+            const alertOptions = { title: `${section}.${method}` };
+
+            if (method === Method.ExtrinsicFailed) {
+              alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
               return;
             }
 
-            if (method === 'ExtrinsicFailed') {
-              alert.error(getErrorMessage(event), { title: `${section}.ExtrinsicFailed` });
-
-              return;
+            if (method === Method.CodeSaved) {
+              alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
             }
           });
 
@@ -75,7 +63,7 @@ const useCodeUpload = () => {
         }
 
         if (status.isFinalized) {
-          alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+          alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
 
           return;
         }
@@ -85,8 +73,9 @@ const useCodeUpload = () => {
         }
       });
     } catch (error) {
-      alert.update(alertId, `${error}`, DEFAULT_ERROR_OPTIONS);
-      console.error(error);
+      const message = (error as Error).message;
+
+      alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
     }
   };
 

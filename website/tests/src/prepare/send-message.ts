@@ -36,7 +36,7 @@ export async function sendMessages(
   const sentMessages = new Map<number, any>();
   const logs = new Map<Hex, any>();
   const unsub = await listenToUserMessageSent(api, (data) => {
-    logs.set(data.id.toHex(), data.toHuman());
+    logs.set(data.message.id.toHex(), data.toHuman());
   });
   for (let program of Object.keys(messages)) {
     for (let message of messages[program]) {

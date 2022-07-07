@@ -1,6 +1,6 @@
 import { GearApi, Hex } from '@gear-js/api';
 import { waitReady } from '@polkadot/wasm-crypto';
-import { getAllPrograms, getMeta, getProgramData, uploadMeta } from './programs';
+import { checkInitStatus, getAllPrograms, getMeta, getProgramData, uploadMeta } from './programs';
 import base from '../config/base';
 import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram } from '../interfaces';
@@ -17,8 +17,13 @@ jest.setTimeout(30000);
 beforeAll(async () => {
   api = await GearApi.create({ providerAddress: base.gear.wsProvider });
   genesis = api.genesisHash.toHex();
-  prepared = await processPrepare(api);
   await waitReady();
+  try {
+    prepared = await processPrepare(api);
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
 });
 
 afterAll(async () => {
@@ -50,7 +55,11 @@ describe('program methods', () => {
     }
   });
 
-  test.todo('test init status');
+  test('check if init status saved correctly', async () => {
+    for (let id_ of Object.keys(prepared.programs)) {
+      expect(await checkInitStatus(genesis, id_, prepared.programs[id_].init)).toBeTruthy();
+    }
+  });
 });
 
 describe('message methods', () => {
@@ -69,7 +78,7 @@ describe('message methods', () => {
   });
 });
 
-describe('testBalance', () => {
+describe.skip('testBalance', () => {
   test('testBalance.get request', async () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
   });

@@ -1,5 +1,4 @@
 import { Header, Footer } from './layout';
-import { ApiLoader } from './api-loader';
-import { Alert } from './alert';
+import { ApiLoader, Loader } from './loaders';
 
-export { Header, Footer, ApiLoader, Alert };
+export { Header, Footer, ApiLoader, Loader };

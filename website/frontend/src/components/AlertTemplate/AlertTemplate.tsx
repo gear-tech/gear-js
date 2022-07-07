@@ -1,15 +1,20 @@
+import { useMemo } from 'react';
 import clsx from 'clsx';
+import { AlertTemplateProps } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './AlertTemplate.module.scss';
 
 import closeSVG from 'assets/images/close.svg';
-import { AlertTemplateProps } from 'context/alert/types';
 
 const AlertTemplate = ({ alert, onClose }: AlertTemplateProps) => {
   const { type, title, style, isClosed } = alert.options;
 
-  const currentDate = new Date();
+  const currentDate = useMemo(
+    () => new Date(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [type, alert.content]
+  );
 
   return (
     <div className={styles.alert} style={style}>

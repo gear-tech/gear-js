@@ -3,13 +3,18 @@ import { Test } from '@nestjs/testing';
 import { MessageService } from '../../src/message/message.service';
 import { mockMessageRepository } from '../../src/common/mock/message/message-repository.mock';
 import { MessageRepo } from '../../src/message/message.repo';
-import { AddPayloadParams, FindMessageParams, GetMessagesParams } from '@gear-js/common';
+import { FindMessageParams, GetMessagesParams } from '@gear-js/common';
 import { MESSAGE_DB_MOCK } from '../../src/common/mock/message/message-db.mock';
+import { ProgramModule } from '../../src/program/program.module';
+import { ProgramService } from '../../src/program/program.service';
+import { ProgramRepo } from '../../src/program/program.repo';
+import { mockProgramRepository } from '../../src/common/mock/program/program-repository.mock';
 
 const MESSAGE_ENTITY_ID = '0x7357';
 
 describe('Message service', () => {
   let messageService!: MessageService;
+  let programService!: ProgramService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -19,6 +24,11 @@ describe('Message service', () => {
           useFactory: () => mockMessageRepository,
         },
         MessageService,
+        {
+          provide: ProgramRepo,
+          useFactory: () => mockProgramRepository,
+        },
+        ProgramService,
       ],
     }).compile();
 
@@ -39,56 +49,6 @@ describe('Message service', () => {
 
     expect(message.id).toEqual(createMessageInput.id);
     expect(mockMessageRepository.save).toHaveBeenCalled();
-  });
-
-  it('should be successfully get messages and called listByIdAndSource method', async () => {
-    const messageMock = MESSAGE_DB_MOCK[1];
-
-    const params: GetMessagesParams = {
-      genesis: messageMock.genesis,
-      destination: messageMock.destination,
-      source: messageMock.source,
-      limit: 1,
-    };
-
-    const result = await messageService.getIncoming(params);
-
-    expect(result.messages[0].destination).toEqual(messageMock.destination);
-    expect(result.messages[0].source).toEqual(messageMock.source);
-    expect(mockMessageRepository.listByIdAndSource).toHaveBeenCalled();
-  });
-
-  it('should be get empty array and called listByIdAndSource method', async () => {
-    const params: GetMessagesParams = {
-      genesis: 'not_exist_genesis',
-      destination: 'not_exist_destination',
-      source: 'source',
-      limit: 1,
-    };
-
-    const result = await messageService.getIncoming(params);
-
-    expect(result.messages.length).toEqual(0);
-    expect(mockMessageRepository.listByIdAndSource).toHaveBeenCalled();
-  });
-
-  it('should be successfully get messages and called listByIdAndDestination method', async () => {
-    const messageMock = MESSAGE_DB_MOCK[2];
-
-    const params: GetMessagesParams = {
-      genesis: messageMock.genesis,
-      destination: messageMock.destination,
-      source: messageMock.source,
-      limit: 1,
-    };
-
-    const result = await messageService.getOutgoing(params);
-
-    expect(result.messages.length).toEqual(1);
-    expect(result.messages[0].id).toEqual(messageMock.id);
-    expect(result.messages[0].source).toEqual(messageMock.source);
-    expect(result.messages[0].destination).toEqual(messageMock.destination);
-    expect(mockMessageRepository.listByIdAndDestination).toHaveBeenCalled();
   });
 
   it('should be successfully get messages and called listByIdAndSourceAndDestination method', async () => {

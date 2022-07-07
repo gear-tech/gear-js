@@ -2,10 +2,10 @@ import { GearApi } from '@gear-js/api';
 import config from '../config/configuration';
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { changeStatus } from '../routes/healthcheck/healthcheck.router';
-import { KafkaProducer } from '../kafka/producer';
 import { listen } from './listener';
+import { kafkaProducer } from '../kafka/producer';
 
-export async function connectToGearNode(producer: KafkaProducer) {
+export async function connectToGearNode() {
   const api: GearApi = new GearApi({
     providerAddress: config.api.provider,
     throwOnConnect: true,
@@ -24,7 +24,7 @@ export async function connectToGearNode(producer: KafkaProducer) {
   eventListenerLogger.info(`Connected to ${chain} with genesis ${genesis}`);
 
   const unsub = await listen(api, genesis, ({ key, value }) => {
-    producer.send(key, value, genesis);
+    kafkaProducer.send(key, value, genesis);
   });
 
   return new Promise((resolve) => {

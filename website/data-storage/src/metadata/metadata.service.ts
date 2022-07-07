@@ -1,13 +1,11 @@
-import { Repository } from 'typeorm';
-import { GearKeyring, Metadata } from '@gear-js/api';
+import { GearKeyring } from '@gear-js/api';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/common';
 
 import { SignatureNotVerified, MetadataNotFound } from '../errors';
 import { ProgramService } from '../program/program.service';
 import { Meta } from '../entities/meta.entity';
-import { sleep } from '../utils';
+import { sleep } from '../utils/sleep';
 import { MetadataRepo } from './metadata.repo';
 import { ProgramRepo } from '../program/program.repo';
 import { plainToClass } from 'class-transformer';

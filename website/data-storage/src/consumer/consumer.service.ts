@@ -2,16 +2,21 @@ import { Injectable } from '@nestjs/common';
 import {
   AddMetaParams,
   AddMetaResult,
-  AddPayloadParams,
   AllMessagesResult,
+  CODE_STATUS,
   FindMessageParams,
   FindProgramParams,
+  GetAllCodeParams,
+  GetAllCodeResult,
   GetAllProgramsParams,
   GetAllProgramsResult,
   GetAllUserProgramsParams,
+  GetCodeParams,
   GetMessagesParams,
   GetMetaParams,
   GetMetaResult,
+  ICode,
+  ICodeChangedKafkaValue,
   IGenesis,
   IMessage,
   IMessageEnqueuedKafkaValue,
@@ -27,20 +32,23 @@ import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
 import { FormResponse } from '../middleware/formResponse';
+import { CodeService } from '../code/code.service';
+import { UpdateCodeInput } from '../code/types';
 
 @Injectable()
 export class ConsumerService {
   constructor(
-    private readonly programService: ProgramService,
-    private readonly messageService: MessageService,
-    private readonly metaService: MetadataService,
+    private programService: ProgramService,
+    private messageService: MessageService,
+    private metaService: MetadataService,
+    private codeService: CodeService,
   ) {}
 
   events = {
     UserMessageSent: (value: IUserMessageSentKafkaValue) => {
       this.messageService.createMessage(value);
     },
-    MessageEnqueued: async ({
+    MessageEnqueued: ({
       id,
       destination,
       source,
@@ -50,7 +58,7 @@ export class ConsumerService {
       blockHash,
     }: IMessageEnqueuedKafkaValue) => {
       if (entry === 'Init') {
-        await this.programService.createProgram({
+        this.programService.createProgram({
           id: destination,
           owner: source,
           genesis: genesis,
@@ -58,30 +66,40 @@ export class ConsumerService {
           blockHash: blockHash,
         });
       }
-      await this.messageService.createMessage({
+      this.messageService.createMessage({
         id: id,
         destination: destination,
         source: source,
+        entry,
         payload: null,
-        replyTo: null,
-        replyError: null,
+        replyToMessageId: null,
+        exitCode: null,
         genesis: genesis,
         blockHash: blockHash,
         timestamp: timestamp,
       });
     },
     ProgramChanged: (value: IProgramChangedKafkaValue) => {
-      this.programService.setStatus(value.id, value.genesis, value.isActive ? InitStatus.SUCCESS : InitStatus.FAILED);
+      if (value.isActive) {
+        this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS);
+      }
     },
-    CodeChanged: () => {
-      console.log('TODO: CodeChanged');
+    CodeChanged: (value: ICodeChangedKafkaValue) => {
+      const updateCodeInput: UpdateCodeInput = {
+        ...value,
+        status: value.change as CODE_STATUS,
+      };
+      this.codeService.updateCode(updateCodeInput);
     },
     MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
       this.messageService.setDispatchedStatus(value);
     },
-    DatabaseWiped: (value: IGenesis) => {
-      this.messageService.deleteRecords(value.genesis);
-      this.programService.deleteRecords(value.genesis);
+    DatabaseWiped: async (value: IGenesis) => {
+      await Promise.all([
+        this.messageService.deleteRecords(value.genesis),
+        this.programService.deleteRecords(value.genesis),
+        this.codeService.deleteRecords(value.genesis),
+      ]);
     },
   };
 
@@ -114,23 +132,22 @@ export class ConsumerService {
   }
 
   @FormResponse
-  async addPayload(params: AddPayloadParams): Result<void> {
-    return;
-  }
-
-  @FormResponse
   async allMessages(params: GetMessagesParams): Result<AllMessagesResult> {
-    if (params.destination && params.source) {
-      return await this.messageService.getAllMessages(params);
-    }
-    if (params.destination) {
-      return await this.messageService.getIncoming(params);
-    }
-    return await this.messageService.getOutgoing(params);
+    return await this.messageService.getAllMessages(params);
   }
 
   @FormResponse
   async message(params: FindMessageParams): Result<IMessage> {
     return await this.messageService.getMessage(params);
+  }
+
+  @FormResponse
+  async allCode(params: GetAllCodeParams): Result<GetAllCodeResult> {
+    return await this.codeService.getAllCode(params);
+  }
+
+  @FormResponse
+  async code(params: GetCodeParams): Result<ICode> {
+    return await this.codeService.getByIdAndGenesis(params);
   }
 }

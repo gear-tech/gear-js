@@ -1,11 +1,13 @@
 import { Controller, Logger } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   AddMetaParams,
-  AddPayloadParams,
   FindMessageParams,
   FindProgramParams,
+  GetAllCodeParams,
   GetAllProgramsParams,
   GetAllUserProgramsParams,
+  GetCodeParams,
   GetMessagesParams,
   GetMetaParams,
   KAFKA_TOPICS,
@@ -14,7 +16,6 @@ import {
   NewEventData,
 } from '@gear-js/common';
 
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ConsumerService } from './consumer.service';
 
 const logger = new Logger('ConsumerController');
@@ -80,9 +81,15 @@ export class ConsumerController {
     return JSON.stringify(result);
   }
 
-  @MessagePattern(KAFKA_TOPICS.MESSAGE_ADD_PAYLOAD)
-  async savePayload(@Payload() payload: KafkaPayload<AddPayloadParams>) {
-    const result = await this.consumerService.addPayload(payload.value);
+  @MessagePattern(KAFKA_TOPICS.CODE_DATA)
+  async codeData(@Payload() payload: KafkaPayload<GetCodeParams>) {
+    const result = await this.consumerService.code(payload.value);
+    return JSON.stringify(result);
+  }
+
+  @MessagePattern(KAFKA_TOPICS.CODE_ALL)
+  async allCode(@Payload() payload: KafkaPayload<GetAllCodeParams>) {
+    const result = await this.consumerService.allCode(payload.value);
     return JSON.stringify(result);
   }
 }

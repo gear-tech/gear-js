@@ -1,39 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
-import { UnsubscribePromise } from '@polkadot/api/types';
+import { useAccount, useAccounts } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 
 import styles from './Wallet.module.scss';
-import { useAccounts } from './hooks';
 import { SelectAccountModal } from './SelectAccountModal';
 
-import { useAccount, useApi } from 'hooks';
-
 const Wallet = () => {
-  const { api } = useApi();
   const accounts = useAccounts();
-  const { account, updateBalance } = useAccount();
+  const { account } = useAccount();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const accountAddress = account?.address;
-
-  useEffect(() => {
-    // TODO: think how to wrap it hook
-    let unsub: UnsubscribePromise | undefined;
-
-    if (accountAddress && api) {
-      unsub = api.gearEvents.subscribeToBalanceChange(accountAddress, updateBalance);
-    }
-
-    return () => {
-      if (unsub) {
-        unsub.then((callback) => callback());
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, accountAddress]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -66,7 +44,7 @@ const Wallet = () => {
             </div>
             <div className={styles.section}>
               <button type="button" className={accButtonClassName} onClick={openModal}>
-                <Identicon value={accountAddress} size={28} theme="polkadot" className={styles.avatar} />
+                <Identicon value={account.address} size={28} theme="polkadot" className={styles.avatar} />
                 {account.meta.name}
               </button>
             </div>

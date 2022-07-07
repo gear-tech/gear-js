@@ -1,14 +1,16 @@
 import { VFC } from 'react';
 import clsx from 'clsx';
-import { useAlert } from 'hooks';
+import { useAlert } from '@gear-js/react-hooks';
 import { Link } from 'react-router-dom';
+
+import './MessagesList.scss';
+
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
+import { MessageModel } from 'types/message';
 import copyIcon from 'assets/images/copy.svg';
 import codeIcon from 'assets/images/code_icon.svg';
 import idIcon from 'assets/images/id_icon.svg';
 import timestampIcon from 'assets/images/timestamp_icon.svg';
-import { MessageModel } from 'types/message';
-import './MessagesList.scss';
 
 type Props = {
   messages?: MessageModel[] | null;

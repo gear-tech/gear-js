@@ -1,11 +1,12 @@
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetMessagesParams } from '@gear-js/common';
 
 import { Message } from '../entities';
 import { PAGINATION_LIMIT } from '../config/configuration';
-import { sqlWhereWithILike } from '../utils';
+import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class MessageRepo {
@@ -16,30 +17,6 @@ export class MessageRepo {
 
   public async save(message: Message): Promise<Message> {
     return this.messageRepo.save(message);
-  }
-
-  public async listByIdAndSource(params: GetMessagesParams): Promise<[Message[], number]> {
-    const { genesis, destination, query, limit, offset } = params;
-    return this.messageRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis, destination }, query, ['id', 'source']),
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      order: {
-        timestamp: 'DESC',
-      },
-    });
-  }
-
-  public async listByIdAndDestination(params: GetMessagesParams): Promise<[Message[], number]> {
-    const { genesis, source, query, limit, offset } = params;
-    return this.messageRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis, source }, query, ['id', 'destination']),
-      take: limit || PAGINATION_LIMIT,
-      skip: offset || 0,
-      order: {
-        timestamp: 'DESC',
-      },
-    });
   }
 
   public async listByIdAndSourceAndDestination(params: GetMessagesParams): Promise<[Message[], number]> {
@@ -86,5 +63,9 @@ export class MessageRepo {
 
   public async remove(messages: Message[]): Promise<Message[]> {
     return this.messageRepo.remove(messages);
+  }
+
+  public async updateMessage(where: FindOptionsWhere<Message>, partialEntity: QueryDeepPartialEntity<Message>) {
+    return this.messageRepo.update(where, partialEntity);
   }
 }

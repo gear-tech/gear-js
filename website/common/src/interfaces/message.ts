@@ -3,9 +3,11 @@ interface IMessage {
   destination: string;
   source: string;
   payload?: string;
-  error?: string;
-  replyTo?: string | null;
-  replyError?: string | null;
+  value?: string;
+  entry?: string;
+  replyToMessageId?: string | null;
+  exitCode?: number | null;
+  expiration?: number | null;
 }
 
 interface IMessageEnqueuedData {
@@ -16,7 +18,7 @@ interface IMessageEnqueuedData {
 }
 
 interface IMessagesDispatchedData {
-  statuses: { [key: string]: 'Success' | 'Failure' };
+  statuses: { [key: string]: 'Success' | 'Failed' };
 }
 
 export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData };

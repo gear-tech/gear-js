@@ -2,25 +2,47 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { GearKeyring } from '@gear-js/api';
 
 import { renderWithProviders, textMatcher } from './utils';
-import { useApiMock, TEST_API } from './mocks/hooks';
+import { useApiMock, useAccountMock, useAccountsMock, TEST_API } from './mocks/hooks';
 
-import { nodeApi } from 'api/initApi';
 import { Header } from 'components/blocks/Header';
-import { useAccounts } from 'components/blocks/Wallet/hooks';
 import menuStyles from 'components/blocks/Header/children/Menu/Menu.module.scss';
 
 const accounts = [
-  { address: '123', meta: { name: 'first acc' } },
-  { address: '456', meta: { name: 'second acc' } },
-  { address: '789', meta: { name: 'third acc' } },
+  {
+    address: '123',
+    meta: { name: 'first acc' },
+    balance: {
+      value: '1000',
+      unit: 'MUnit',
+    },
+  },
+  {
+    address: '456',
+    meta: { name: 'second acc' },
+    balance: {
+      value: '2000',
+      unit: 'MUnit',
+    },
+  },
+  {
+    address: '789',
+    meta: { name: 'third acc' },
+    balance: {
+      value: '3000',
+      unit: 'MUnit',
+    },
+  },
 ];
 
-// mocking useAccounts since mocking @polkadot/extension-dapp doesn't work (cuz of read only properties?)
-jest.mock('components/blocks/Wallet/hooks');
-const mockedUseAccounts = useAccounts as jest.MockedFunction<any>;
+jest.mock('context/api/const', () => ({
+  NODE_API_ADDRESS: 'testnet-address',
+}));
 
 describe('header tests', () => {
   it('renders logo and menu', () => {
+    useApiMock();
+    useAccountsMock();
+
     renderWithProviders(<Header />);
 
     const [logo, ...menuLinks] = screen.getAllByRole('link');
@@ -68,8 +90,8 @@ describe('header tests', () => {
   });
 
   it('renders sidebar button, opens/closes sidebar, adds/copies/removes/switches node', async () => {
-    TEST_API.runtimeVersion.specName.toHuman.mockReturnValue('test-name');
-    TEST_API.runtimeVersion.specVersion.toHuman.mockReturnValue('12345');
+    useApiMock();
+    useAccountsMock();
 
     renderWithProviders(<Header />);
 
@@ -81,11 +103,16 @@ describe('header tests', () => {
     expect(queriedSidebar).not.toBeInTheDocument();
     expect(sidebarButton).toHaveTextContent('Loading...');
 
-    jest.spyOn(nodeApi, 'address', 'get').mockImplementation(() => 'testnet-address');
+    TEST_API.runtimeChain.toHuman.mockReturnValue('Test chain');
+    TEST_API.runtimeVersion.specName.toHuman.mockReturnValue('test-name');
+    TEST_API.runtimeVersion.specVersion.toHuman.mockReturnValue('12345');
 
     useApiMock(TEST_API);
 
-    await waitFor(() => expect(sidebarButton).toHaveTextContent('test-name/12345'));
+    await waitFor(() => {
+      expect(screen.getByText('Test chain'));
+      expect(sidebarButton).toHaveTextContent('test-name/12345');
+    });
 
     fireEvent.click(sidebarButton);
 
@@ -250,20 +277,15 @@ describe('header tests', () => {
     const getButtons = () => within(getButtonsList()).getAllByRole('button');
     const getButton = (index: number) => getButtons()[index];
 
-    const unsubMock = jest.fn();
-
     const getLoginButton = () => screen.getByText('Connect');
     const getLoginButtonQuery = () => screen.queryByText('Connect');
 
     it('logins/logouts, switches account and closes modal', async () => {
-      TEST_API.gearEvents.subscribeToBalanceChange.mockResolvedValue(unsubMock);
-
       useApiMock(TEST_API);
+      useAccountMock();
+      useAccountsMock(accounts);
 
       renderWithProviders(<Header />);
-
-      // @ts-ignore
-      mockedUseAccounts.mockImplementation(() => accounts);
 
       // mocking raw public key get since it gets saved in localstorage on account switch
       jest.spyOn(GearKeyring, 'decodeAddress').mockImplementation(() => '0x00');
@@ -280,16 +302,15 @@ describe('header tests', () => {
       expect(secondButton).toHaveTextContent('second acc');
       expect(secondButton).toHaveTextContent('456');
 
-      TEST_API.balance.findOut.mockResolvedValue({ toHuman: () => '1000 mUnit' });
+      useAccountMock(accounts[1]);
 
       fireEvent.click(secondButton);
-
-      await waitFor(() => true);
 
       const accountButton = screen.getByText('second acc');
       const balance = screen.getByText('Balance:');
 
-      await waitFor(() => expect(balance).toHaveTextContent('Balance: 1000'));
+      await waitFor(() => expect(balance).toHaveTextContent('Balance: 2000 MUnit'));
+
       expect(getModalQuery()).not.toBeInTheDocument();
       expect(getLoginButtonQuery()).not.toBeInTheDocument();
 
@@ -301,11 +322,12 @@ describe('header tests', () => {
         button === getButton(1) ? expect(button).toHaveClass('active') : expect(button).not.toHaveClass('active')
       );
 
-      TEST_API.balance.findOut.mockResolvedValue({ toHuman: () => '2000 mUnit' });
+      useAccountMock(accounts[2]);
 
       fireEvent.click(getButton(2));
 
-      await waitFor(() => expect(balance).toHaveTextContent('Balance: 2000'));
+      await waitFor(() => expect(balance).toHaveTextContent('Balance: 3000 MUnit'));
+
       expect(getModalQuery()).not.toBeInTheDocument();
       expect(accountButton).toHaveTextContent('third acc');
 
@@ -318,6 +340,8 @@ describe('header tests', () => {
       // logouts
 
       const logoutButton = screen.getByLabelText('Logout');
+
+      useAccountMock();
 
       fireEvent.click(logoutButton);
 
@@ -335,14 +359,11 @@ describe('header tests', () => {
 
       fireEvent.click(closeModalButton);
       expect(getModalQuery()).not.toBeInTheDocument();
-
-      // balance subscription
-
-      expect(TEST_API.gearEvents.subscribeToBalanceChange).toBeCalledTimes(2);
-      await waitFor(() => expect(unsubMock).toBeCalledTimes(2));
     });
 
     it('logins without extension', () => {
+      useApiMock();
+
       renderWithProviders(<Header />);
 
       fireEvent.click(getLoginButton());
@@ -355,8 +376,10 @@ describe('header tests', () => {
     });
 
     it('logins without accounts', () => {
+      useApiMock();
+      useAccountsMock([]);
+
       renderWithProviders(<Header />);
-      mockedUseAccounts.mockImplementation(() => []);
 
       fireEvent.click(getLoginButton());
 
