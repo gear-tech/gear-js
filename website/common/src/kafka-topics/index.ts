@@ -7,4 +7,6 @@ export enum KAFKA_TOPICS {
   MESSAGE_ALL = 'message.all',
   MESSAGE_DATA = 'message.data',
   TEST_BALANCE_GET = 'testBalance.get',
+  CODE_ALL = 'code.all',
+  CODE_DATA = 'code.data',
 }

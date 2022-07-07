@@ -1,6 +1,7 @@
 import { IMessage } from './message';
 import { IPaginationResult } from './pagination';
 import { IProgram } from './program';
+import { ICode } from './code';
 
 interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];
@@ -8,6 +9,10 @@ interface AllMessagesResult extends IPaginationResult {
 
 interface GetAllProgramsResult extends IPaginationResult {
   programs: IProgram[];
+}
+
+interface GetAllCodeResult extends IPaginationResult {
+  listCode: ICode[];
 }
 
 interface AddMetaResult {
@@ -34,7 +39,8 @@ interface IRpcResponse {
     | IProgram[]
     | IMessage[]
     | GetMetaResult
-    | AddMetaResult;
+    | AddMetaResult
+    | GetAllCodeResult;
   error?: IRpcError;
 }
 
@@ -53,6 +59,7 @@ enum RpcErrorCode {
 export {
   AllMessagesResult,
   GetAllProgramsResult,
+  GetAllCodeResult,
   AddMetaResult,
   GetMetaResult,
   ProgramDataResult,
