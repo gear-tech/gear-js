@@ -27,7 +27,9 @@ jobs:
 
       - name: Install dependencies and build @gear-js/api
         working-directory: api
-        run: npm install
+        run: |
+          yarn install
+          yarn build
 
       - name: Prepare
         run: |
@@ -43,7 +45,7 @@ jobs:
 
       - name: Run tests
         working-directory: api
-        run: npm test
+        run: yarn test
 
       - name: Build examples
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
@@ -76,7 +78,8 @@ jobs:
         working-directory: api
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          npm ci
+          yarn install
+          yarn build
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
