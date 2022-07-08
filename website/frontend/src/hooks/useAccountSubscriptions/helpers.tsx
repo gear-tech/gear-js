@@ -23,9 +23,9 @@ export const messageSentEventsHandler = (event: UserMessageSent, address: Hex, a
   showAlert(
     <>
       <p>
-        ID: <CustomLink to={generatePath(routes.message, { id: messageId })} text={messageId} />
+        ID: <CustomLink to={generatePath(routes.message, { messageId })} text={messageId} />
       </p>
-      {isError && <p>{payload.toHuman()}</p>},
+      {isError && <p>{payload.toHuman()}</p>}
     </>,
     alertOptions
   );
