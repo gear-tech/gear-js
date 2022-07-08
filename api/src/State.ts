@@ -15,7 +15,7 @@ export class GearProgramState extends GearStorage {
    */
   decodeState(state: Uint8Array, meta: Metadata): Codec {
     if (!state) {
-      throw new ReadStateError(`Unable to read state. meta_state function is not specified in metadata`);
+      throw new ReadStateError('Unable to read state. meta_state function is not specified in metadata');
     }
     const bytes = this.api.createType('Bytes', Array.from(state));
     const decoded = this.createType.create(meta.meta_state_output, bytes, meta);
@@ -51,14 +51,14 @@ export class GearProgramState extends GearStorage {
     const blockTimestamp = await this.api.blocks.getBlockTimestamp(block.toHex());
 
     if (!pages) {
-      throw new ReadStateError(`Unable to read state. Unable to recieve program pages from chain`);
+      throw new ReadStateError('Unable to read state. Unable to recieve program pages from chain');
     }
     const metadata = await getWasmMetadata(metaWasm);
     if (!metadata.meta_state_output) {
-      throw new ReadStateError(`Unable to read state. meta_state_output type is not specified in metadata`);
+      throw new ReadStateError('Unable to read state. meta_state_output type is not specified in metadata');
     }
     if (metadata.meta_state_input && inputValue === undefined) {
-      throw new ReadStateError(`Unable to read state. inputValue not specified`);
+      throw new ReadStateError('Unable to read state. inputValue not specified');
     }
     const encodedInput = inputValue === undefined ? undefined : this.encodeInput(metadata, inputValue);
     const state = await readState(metaWasm, initialSize, pages, encodedInput, blockTimestamp);

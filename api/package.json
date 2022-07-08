@@ -24,9 +24,8 @@
     "test": "jest --runInBand",
     "prebuild": "rm -rf lib",
     "build": "rollup --config rollup.config.js",
-    "prettier": "npx prettier --write src/*",
     "lint": "eslint ./src --ext .ts",
-    "lint-fix": "eslint ./src --ext .ts --fix",
+    "lint:fix": "eslint --fix ./src --ext .ts",
     "prepare": "npm run build"
   },
   "exports": {

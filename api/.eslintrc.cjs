@@ -12,6 +12,10 @@ module.exports = {
   },
   plugins: ['@typescript-eslint'],
   rules: {
+    indent: ['error', 2, { 'SwitchCase': 1 }, { "offsetTernaryExpressions": true }],
+    'linebreak-style': ['error', 'unix'],
+    quotes: ['error', 'single'],
+    semi: ['error', 'always'],
     '@typescript-eslint/no-empty-function': 0,
   },
 };
