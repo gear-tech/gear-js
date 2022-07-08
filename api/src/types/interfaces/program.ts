@@ -1,4 +1,4 @@
-import { Vec, Bytes, u8, u32, u64, Null, Map, Type, BTreeSet } from '@polkadot/types';
+import { u32, u64, Map, Type, BTreeSet } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 
 export declare interface IGearPages {

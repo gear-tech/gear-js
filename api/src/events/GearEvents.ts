@@ -17,24 +17,24 @@ export interface GearEvent<D extends GenericEventData> extends GenericEvent {
   data: D;
 }
 
-export interface MessageEnqueued extends GearEvent<MessageEnqueuedData> {}
+export type MessageEnqueued = GearEvent<MessageEnqueuedData>;
 
-export interface UserMessageSent extends GearEvent<UserMessageSentData> {}
+export type UserMessageSent = GearEvent<UserMessageSentData>;
 
-export interface UserMessageRead extends GearEvent<UserMessageReadData> {}
+export type UserMessageRead = GearEvent<UserMessageReadData>;
 
-export interface MessagesDispatched extends GearEvent<MessagesDispatchedData> {}
+export type MessagesDispatched = GearEvent<MessagesDispatchedData>;
 
-export interface MessageWaited extends GearEvent<MessageWaitedData> {}
+export type MessageWaited = GearEvent<MessageWaitedData>;
 
-export interface MessageWaken extends GearEvent<MessageWakenData> {}
+export type MessageWaken = GearEvent<MessageWakenData>;
 
-export interface CodeChanged extends GearEvent<CodeChangedData> {}
+export type CodeChanged = GearEvent<CodeChangedData>;
 
-export interface ProgramChanged extends GearEvent<ProgramChangedData> {}
+export type ProgramChanged = GearEvent<ProgramChangedData>;
 
-export interface DebugDataSnapshot extends GearEvent<DebugData> {}
+export type DebugDataSnapshot = GearEvent<DebugData>;
 
-export interface DebugMode extends GearEvent<DebugModeData> {}
+export type DebugMode = GearEvent<DebugModeData>;
 
-export interface Transfer extends GearEvent<TransferData> {}
+export type Transfer = GearEvent<TransferData>;

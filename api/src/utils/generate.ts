@@ -1,10 +1,17 @@
+import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 import { isHex, isU8a, u8aToHex } from '@polkadot/util';
+import { AnyJson, Codec } from '@polkadot/types/types';
+
 import { Metadata } from '../types/interfaces';
 import { Hex } from '../types';
 import { CreateType } from '../create-type/CreateType';
-import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 
-export function createPayload(createType: CreateType, type: any, data: any, meta?: Metadata): Hex {
+export function createPayload(
+  createType: CreateType,
+  type: string,
+  data: AnyJson | Uint8Array,
+  meta?: Metadata,
+): Hex | Codec {
   if (data === undefined) {
     return '0x00';
   }
@@ -13,19 +20,11 @@ export function createPayload(createType: CreateType, type: any, data: any, meta
   } else if (isU8a(data)) {
     return u8aToHex(data);
   }
-  let payload = data;
   if (meta && type) {
-    const encoded = createType.create(type, data, meta);
-    payload = isHex(encoded) ? encoded : encoded.toHex();
-  } else if (type) {
-    try {
-      const encoded = createType.create(type, data);
-      payload = isHex(encoded) ? encoded : encoded.toHex();
-    } catch (error) {
-      console.error(error.message);
-    }
+    return createType.create(type, data, meta);
+  } else {
+    return createType.create(type, data);
   }
-  return payload;
 }
 
 export function generateCodeHash(code: Buffer | Uint8Array): Hex {

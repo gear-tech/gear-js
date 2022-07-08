@@ -2,8 +2,8 @@
   "name": "@gear-js/api",
   "version": "0.22.3",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
-  "main": "lib/index.cjs",
-  "module": "lib/index.js",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
   "types": "lib/index.d.ts",
   "type": "module",
   "author": "Gear Technologies",
@@ -22,15 +22,17 @@
   ],
   "scripts": {
     "test": "jest --runInBand",
-    "build": "yarn prebuild && rollup --config rollup.config.js",
     "prebuild": "rm -rf lib",
+    "build": "rollup --config rollup.config.js",
     "prettier": "npx prettier --write src/*",
-    "codestyle": "yarn prettier"
+    "lint": "eslint ./src --ext .ts",
+    "lint-fix": "eslint ./src --ext .ts --fix",
+    "prepare": "npm run build"
   },
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.cjs"
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js"
     }
   },
   "license": "GPL-3.0",
@@ -48,14 +50,13 @@
     "@rollup/plugin-typescript": "8.3.3",
     "@types/jest": "27.5.2",
     "@types/rollup-plugin-peer-deps-external": "2.2.1",
-    "@typescript-eslint/eslint-plugin": "5.27.1",
-    "@typescript-eslint/parser": "5.27.1",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
     "babel-cli": "6.26.0",
     "babel-core": "6.26.3",
     "babel-jest": "28.1.1",
-    "eslint": "8.17.0",
+    "eslint": "8.19.0",
     "jest": "28.1.1",
-    "prettier": "2.6.2",
     "rollup": "2.75.6",
     "rollup-plugin-peer-deps-external": "2.2.4",
     "rollup-plugin-typescript2": "0.31.2",

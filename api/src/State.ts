@@ -1,7 +1,8 @@
+import { Codec, AnyJson } from '@polkadot/types/types';
+
 import { getWasmMetadata, readState } from './wasm';
 import { Metadata } from './types/interfaces';
 import { ProgramId } from './types';
-import { Codec } from '@polkadot/types/types';
 import { ReadStateError } from './errors';
 import { GearStorage } from './Storage';
 
@@ -27,7 +28,7 @@ export class GearProgramState extends GearStorage {
    * @param inputValue - input parameters
    * @returns ArrayBuffer with encoded data
    */
-  encodeInput(meta: Metadata, inputValue: any): Uint8Array {
+  encodeInput(meta: Metadata, inputValue: AnyJson): Uint8Array {
     const encoded = this.createType.create(meta.meta_state_input, inputValue, meta);
     return encoded.toU8a();
   }
@@ -38,7 +39,7 @@ export class GearProgramState extends GearStorage {
    * @param metaWasm - file with metadata
    * @returns decoded state
    */
-  async read(programId: ProgramId, metaWasm: Buffer, inputValue?: any): Promise<Codec> {
+  async read(programId: ProgramId, metaWasm: Buffer, inputValue?: AnyJson): Promise<Codec> {
     const program = await this.gProg(programId);
     if (!program) {
       throw new ReadStateError('Program is terminated');

@@ -1,9 +1,11 @@
-import { UnsubscribePromise } from '@polkadot/api/types';
+import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
+
 import { GearTransaction } from './Transaction';
 import { DebugDataSnapshot } from './events';
 
 export class DebugMode extends GearTransaction {
-  enabled: any;
+  enabled: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   enable() {
     this.enabled = this.api.tx.sudo.sudo(this.api.tx.gearDebug.enableDebugMode(true));

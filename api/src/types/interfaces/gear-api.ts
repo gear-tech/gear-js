@@ -1,4 +1,4 @@
-import { i32, Bytes } from '@polkadot/types';
+import { Bytes } from '@polkadot/types';
 import { H256 } from '@polkadot/types/interfaces';
 import { ApiOptions } from '@polkadot/api/types';
 

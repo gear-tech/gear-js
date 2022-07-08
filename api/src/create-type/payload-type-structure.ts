@@ -1,9 +1,11 @@
-import { enumTypes, TypeTree } from './interfaces';
-import { isJSON, splitByCommas, toJSON } from '../utils';
-import generate from './generate';
-import { REGULAR_EXP } from './regexp';
+import { AnyJson } from '@polkadot/types/types';
 
-function getIfTuple(typeName: string, types: any, raw: boolean): TypeTree | TypeTree[] | null {
+import { isJSON, splitByCommas, toJSON } from '../utils';
+import { enumTypes, TypeTree } from './interfaces';
+import { REGULAR_EXP } from './regexp';
+import generate from './generate';
+
+function getIfTuple(typeName: string, types: AnyJson, raw: boolean): TypeTree | TypeTree[] | null {
   if (typeName.includes(':')) return null;
   const match = typeName.match(REGULAR_EXP.roundBracket);
   if (match) {
@@ -15,7 +17,7 @@ function getIfTuple(typeName: string, types: any, raw: boolean): TypeTree | Type
   return null;
 }
 
-function getIfArray(typeName: string, types: any, raw: boolean): TypeTree | [TypeTree, number] | null {
+function getIfArray(typeName: string, types: AnyJson, raw: boolean): TypeTree | [TypeTree, number] | null {
   const match = typeName.match(REGULAR_EXP.squareBracket);
   if (match) {
     const splitted = typeName.slice(1, typeName.length - 1).split(';');
@@ -25,7 +27,7 @@ function getIfArray(typeName: string, types: any, raw: boolean): TypeTree | [Typ
   return null;
 }
 
-function getIfGeneric(typeName: string, types: any, raw: boolean): TypeTree | any | null {
+function getIfGeneric(typeName: string, types: AnyJson, raw: boolean): TypeTree | any | null {
   if (typeName.includes(':')) return null;
 
   const match = typeName.match(REGULAR_EXP.angleBracket);
@@ -58,7 +60,7 @@ function getIfGeneric(typeName: string, types: any, raw: boolean): TypeTree | an
   return null;
 }
 
-function getIfStruct(typeName: string, types: any, raw: boolean): TypeTree | null {
+function getIfStruct(typeName: string, types: AnyJson, raw: boolean): TypeTree | null {
   const value: any = {};
   if (types[typeName] && isJSON(types[typeName])) {
     const jsoned = toJSON(types[typeName]);
@@ -76,7 +78,7 @@ function getIfStruct(typeName: string, types: any, raw: boolean): TypeTree | nul
   return raw ? value : generate.Struct(typeName, value);
 }
 
-function getIfEnum(typeName: string, types: any, raw: boolean): TypeTree | { _enum: any } | null {
+function getIfEnum(typeName: string, types: AnyJson, raw: boolean): TypeTree | { _enum: any } | null {
   if (types[typeName] && typeof types[typeName] === 'object') {
     if (Object.keys(types[typeName]).length === 1 && Object.keys(types[typeName]).includes('_enum')) {
       const type = types[typeName];
@@ -97,7 +99,7 @@ function getIfEnum(typeName: string, types: any, raw: boolean): TypeTree | { _en
  * @param raw set it to true if there is a need to get type structure without additional fields
  * @returns
  */
-export function createPayloadTypeStructure(typeName: string, types: any, raw = false): TypeTree | any {
+export function createPayloadTypeStructure(typeName: string, types: AnyJson, raw = false): TypeTree | any {
   if (!typeName) {
     return undefined;
   }
