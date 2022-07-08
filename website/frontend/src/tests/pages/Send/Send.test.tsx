@@ -159,8 +159,7 @@ describe('send message page tests', () => {
       expect.any(Object),
       undefined,
       null,
-      PROGRAM_ID_2,
-      undefined
+      PROGRAM_ID_2
     );
 
     // authorized submit
@@ -243,16 +242,7 @@ describe('send message page tests', () => {
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
-    expect(calculateGas).toBeCalledWith(
-      'handle',
-      TEST_API,
-      formValues,
-      expect.any(Object),
-      META,
-      null,
-      PROGRAM_ID_1,
-      undefined
-    );
+    expect(calculateGas).toBeCalledWith('handle', TEST_API, formValues, expect.any(Object), META, null, PROGRAM_ID_1);
 
     // authorized submit
 
@@ -349,8 +339,7 @@ describe('send message page tests', () => {
       expect.any(Object),
       undefined,
       null,
-      MESSAGE_ID_2,
-      '1'
+      MESSAGE_ID_2
     );
 
     // authorized submit
@@ -429,16 +418,7 @@ describe('send message page tests', () => {
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
-    expect(calculateGas).toBeCalledWith(
-      'reply',
-      TEST_API,
-      formValues,
-      expect.any(Object),
-      META,
-      null,
-      MESSAGE_ID_1,
-      '1'
-    );
+    expect(calculateGas).toBeCalledWith('reply', TEST_API, formValues, expect.any(Object), META, null, MESSAGE_ID_1);
 
     // authorized submit
 
