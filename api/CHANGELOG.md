@@ -1,3 +1,15 @@
+## 0.23.1
+
+_07/08/2022_
+
+https://github.com/gear-tech/gear-js/pull/811
+
+### Changes
+
+- Add `isProgramId` method to check whether the address belongs to some program.
+
+---
+
 ## 0.23.0
 
 _07/08/2022_
