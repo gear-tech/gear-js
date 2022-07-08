@@ -1,35 +1,22 @@
 import { KAFKA_TOPICS } from '@gear-js/common';
+import { nanoid } from 'nanoid';
 
-import {
-  codeAll,
-  codeData,
-  messageAll,
-  messageData,
-  programAll,
-  programAllUsers,
-  programData,
-  programMetaAdd,
-  programMetaGet,
-  testBalance,
-} from '../kafka/kafka-events';
 import { KafkaParams } from '../kafka/types';
-import { RpcMethods } from './types';
+import { kafkaEventMap } from '../kafka/kafka-event-map';
+import { kafkaProducer } from '../kafka/producer';
 
-const rpcMethods: RpcMethods = {
-  [KAFKA_TOPICS.PROGRAM_DATA]: programData,
-  [KAFKA_TOPICS.PROGRAM_ALL]: programAll,
-  [KAFKA_TOPICS.PROGRAM_META_ADD]: programMetaAdd,
-  [KAFKA_TOPICS.PROGRAM_META_GET]: programMetaGet,
-  [KAFKA_TOPICS.PROGRAM_ALL_USER]: programAllUsers,
-  [KAFKA_TOPICS.MESSAGE_ALL]: messageAll,
-  [KAFKA_TOPICS.MESSAGE_DATA]: messageData,
-  [KAFKA_TOPICS.TEST_BALANCE_GET]: testBalance,
-  [KAFKA_TOPICS.CODE_DATA]: codeData,
-  [KAFKA_TOPICS.CODE_ALL]: codeAll,
-};
+async function handleKafkaEventByTopic(kafkaTopic: KAFKA_TOPICS, params: KafkaParams): Promise<unknown> {
+  const correlationId: string = nanoid(6);
+  await kafkaProducer.sendByTopic(kafkaTopic, correlationId, params);
 
-export function jsonRpcMethodHandler(method: KAFKA_TOPICS | string, params: KafkaParams): Promise<any> {
-  const rpcMethod = rpcMethods[method];
-
-  return rpcMethod(params);
+  let topicEvent;
+  const res = new Promise((resolve) => (topicEvent = resolve));
+  kafkaEventMap.set(correlationId, topicEvent);
+  return res;
 }
+
+async function jsonRpcMethodHandler(method: KAFKA_TOPICS, params: KafkaParams): Promise<any> {
+  return handleKafkaEventByTopic(method, params);
+}
+
+export { jsonRpcMethodHandler };

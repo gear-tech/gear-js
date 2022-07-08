@@ -25,7 +25,7 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
   }
   const { method, params } = procedure;
-  const { error, result } = await jsonRpcMethodHandler(method, params);
+  const { error, result } = await jsonRpcMethodHandler(method as KAFKA_TOPICS, params);
   return getResponse(procedure, error, result);
 }
 
