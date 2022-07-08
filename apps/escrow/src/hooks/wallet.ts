@@ -2,10 +2,13 @@ import { UserMessageSent, CreateType } from '@gear-js/api';
 import { useAccount, useApi, useMetadata } from '@gear-js/react-hooks';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { u8, Vec } from '@polkadot/types';
+import { useEffect, useState } from 'react';
 import isPlainObject from 'lodash.isplainobject';
 import escrowMetaWasm from 'assets/wasm/escrow.meta.wasm';
-import { ADDRESS } from 'consts';
-import { useEffect, useState } from 'react';
+import { LOCAL_STORAGE } from 'consts';
+import { getProgramId } from 'utils';
+
+const initWalletId = (localStorage[LOCAL_STORAGE.WALLET] as string) || '';
 
 function useWalletId() {
   const { api } = useApi();
@@ -15,7 +18,9 @@ function useWalletId() {
 
   const { metadata } = useMetadata(escrowMetaWasm);
 
-  const [walletId, setWalletId] = useState('');
+  const [walletId, setWalletId] = useState(initWalletId);
+
+  const resetWalletId = () => setWalletId('');
 
   const getDecodedPayload = (payload: Vec<u8>) => {
     // handle_output is specific for escrow contract
@@ -37,7 +42,7 @@ function useWalletId() {
     const { message } = data;
     const { destination, source, payload } = message;
     const isOwner = destination.toHex() === account?.decodedAddress;
-    const isEscrowProgram = source.toHex() === ADDRESS.ESCROW_CONTRACT;
+    const isEscrowProgram = source.toHex() === getProgramId();
 
     if (isOwner && isEscrowProgram) {
       const id = getWalletId(payload);
@@ -58,7 +63,7 @@ function useWalletId() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, decodedAddress, metadata]);
 
-  return { walletId, setWalletId };
+  return { walletId, setWalletId, resetWalletId };
 }
 
 export { useWalletId };

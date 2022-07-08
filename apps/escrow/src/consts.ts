@@ -1,12 +1,28 @@
-import { Hex } from '@gear-js/api';
-
 const ADDRESS = {
   NODE: process.env.REACT_APP_NODE_ADDRESS as string,
-  ESCROW_CONTRACT: process.env.REACT_APP_ESCROW_CONTRACT_ADDRESS as Hex,
 };
 
 const LOCAL_STORAGE = {
   ACCOUNT: 'account',
+  PROGRAM: 'program',
+  WALLET: 'wallet',
 };
 
-export { ADDRESS, LOCAL_STORAGE };
+const FORM = {
+  INIT: { PROGRAM: 'initProgram', WALLET: 'initWallet' },
+  INPUT: { PROGRAM: 'inputProgram', WALLET: 'inputWallet' },
+};
+
+const ESCROW = {
+  ROLE: {
+    BUYER: 'Buyer',
+    SELLER: 'Seller',
+  },
+  STATE: {
+    AWAITING_DEPOSIT: 'AwaitingDeposit',
+    AWAITING_CONFIRMATION: 'AwaitingConfirmation',
+    CLOSED: 'Closed',
+  },
+};
+
+export { ADDRESS, LOCAL_STORAGE, FORM, ESCROW };
