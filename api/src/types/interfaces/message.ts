@@ -9,7 +9,7 @@ export declare interface Reply extends Tuple {
   1: ExitCode;
 }
 
-export declare interface Payload extends Vec<u8> {}
+export type Payload = Vec<u8>;
 
 export declare interface Message extends Codec {
   id: H256;
@@ -21,14 +21,14 @@ export declare interface Message extends Codec {
   reply: Option<Reply>;
 }
 
-export declare interface QueuedMessage extends Omit<Message, 'gas_limit'> {}
+export type QueuedMessage = Omit<Message, 'gas_limit'>;
 
 export declare interface DispatchKind extends Type {
-  isInit: Boolean;
+  isInit: boolean;
   asInit: Null;
-  isHandle: Boolean;
+  isHandle: boolean;
   asHandle: Null;
-  isHandleReply: Boolean;
+  isHandleReply: boolean;
   asHandleReply: Null;
 }
 
@@ -37,7 +37,7 @@ export declare interface PayloadStore extends Codec {
   new_programs: Vec<Codec>;
   reply: Option<Payload>;
   awaken: Vec<Codec>;
-  reply_was_sent: Boolean;
+  reply_was_sent: boolean;
 }
 
 export declare interface QueuedDispatch extends Codec {
@@ -46,7 +46,7 @@ export declare interface QueuedDispatch extends Codec {
   payload_store: Option<PayloadStore>;
 }
 
-export declare interface StoredMessage extends Omit<Message, 'gas_limit'> {}
+export type StoredMessage = Omit<Message, 'gas_limit'>;
 
 export interface HumanedMessage {
   id: MessageId;

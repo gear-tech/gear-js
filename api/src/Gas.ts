@@ -1,4 +1,5 @@
 import { isHex, isString, isU8a, u8aToHex } from '@polkadot/util';
+import { Codec } from '@polkadot/types-codec/types';
 import { CreateType } from './create-type';
 import { Metadata } from './types/interfaces';
 import { Hex, PayloadType } from './types';
@@ -19,7 +20,7 @@ export class GearGas {
     payload: PayloadType,
     metaOrTypeOfPayload: string | Metadata,
     meta_type: string,
-  ): Hex | Uint8Array {
+  ): Hex | Uint8Array | Codec {
     if (isHex(payload)) {
       return payload;
     } else if (isU8a(payload)) {

@@ -1,9 +1,12 @@
-import { GearApi } from '../GearApi';
-import { Metadata } from '../types/interfaces';
-import { toJSON, isJSON } from '../utils/json';
 import { isHex, isU8a } from '@polkadot/util';
 import { Registry, Codec } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
+import { RegistryTypes } from '@polkadot/types-codec/types/registry';
+
+import { GearApi } from '../GearApi';
+import { Metadata } from '../types/interfaces';
+import { toJSON, isJSON } from '../utils/json';
+import { Hex } from '../types';
 import { checkTypeAndPayload, getTypesFromTypeDef, setNamespaces, typeIsString } from './utils';
 
 export class CreateType {
@@ -15,7 +18,7 @@ export class CreateType {
     this.namespaces = undefined;
   }
 
-  private createRegistry(types?: any): Map<string, string> {
+  private createRegistry(types?: Hex | object | Uint8Array): Map<string, string> {
     if (!types) {
       return null;
     }
@@ -24,7 +27,7 @@ export class CreateType {
       types = typesFromTypeDef;
       this.namespaces = namespaces;
     }
-    this.registerTypes(types);
+    this.registerTypes(types as RegistryTypes);
     return this.namespaces;
   }
 
@@ -50,7 +53,7 @@ export class CreateType {
    * createType.create('CustomStruct', { fieldA: 'Hello', fieldB: 255 });
    * ```
    */
-  public registerTypes(types?: any) {
+  public registerTypes(types?: RegistryTypes) {
     this.registry.setKnownTypes({ types: { ...types } });
     this.registry.register({ ...types });
   }
@@ -76,7 +79,7 @@ export class CreateType {
    * console.log(encoded.toHex());
    * ```
    */
-  public create(type: string, payload: any, meta?: Metadata): Codec {
+  public create(type: string, payload: unknown, meta?: Metadata): Codec {
     type = checkTypeAndPayload(type, payload);
     const namespaces = meta?.types ? this.createRegistry(meta.types) : this.createRegistry();
 
@@ -98,12 +101,12 @@ export class CreateType {
    * console.log(encoded.toHex()); // 0x48656c6c6f2c20576f726c6421
    * ```
    */
-  static create(type: string, payload: any, meta?: Metadata): Codec {
+  static create(type: string, payload: unknown, meta?: Metadata): Codec {
     const createType = new CreateType();
     return createType.create(type, payload, meta);
   }
 
-  private createType(type: string, data: any): Codec {
+  private createType(type: string, data: unknown): Codec {
     if (typeIsString(type)) {
       return this.registry.createType('String', data);
     } else if (type.toLowerCase() === 'bytes') {
@@ -116,21 +119,5 @@ export class CreateType {
     } else {
       return this.registry.createType(type, data);
     }
-  }
-
-  /**
-   * @deprecated use `CreateType.create()`
-   */
-  static encode(type: any, payload: any, meta?: Metadata): Codec {
-    const createType = new CreateType();
-    return createType.create(type, payload, meta);
-  }
-
-  /**
-   * @deprecated use `CreateType.create()`
-   */
-  static decode(type: string, payload: any, meta?: Metadata): Codec {
-    const createType = new CreateType();
-    return createType.create(type, payload, meta);
   }
 }

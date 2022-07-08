@@ -1,15 +1,16 @@
-import { Hex, ProgramId } from './types';
-import { Metadata } from './types/interfaces';
-import { SubmitProgramError } from './errors';
-import { AnyNumber, ISubmittableResult } from '@polkadot/types/types';
-import { Bytes, u64 } from '@polkadot/types';
+import { AnyJson, AnyNumber, ISubmittableResult } from '@polkadot/types/types';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex } from '@polkadot/util-crypto';
-import { GearTransaction } from './Transaction';
+import { Bytes, u64 } from '@polkadot/types';
+
 import { createPayload, generateProgramId } from './utils';
-import { GearGas } from './Gas';
+import { Metadata } from './types/interfaces';
+import { GearTransaction } from './Transaction';
+import { SubmitProgramError } from './errors';
 import { GearApi } from './GearApi';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { GearGas } from './Gas';
+import { Hex } from './types';
 
 export class GearProgram extends GearTransaction {
   calculateGas: GearGas;
@@ -41,7 +42,7 @@ export class GearProgram extends GearTransaction {
     program: {
       code: Buffer | Uint8Array;
       salt?: `0x${string}`;
-      initPayload?: string | any;
+      initPayload?: AnyJson;
       gasLimit: u64 | AnyNumber;
       value?: BalanceOf | AnyNumber;
     },
@@ -50,7 +51,7 @@ export class GearProgram extends GearTransaction {
   ): { programId: Hex; salt: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> } {
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
-    let payload = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
+    const payload = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
     try {
       this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
       const programId = generateProgramId(code, salt);
@@ -65,7 +66,7 @@ export class GearProgram extends GearTransaction {
    * @returns
    */
   async allUploadedPrograms(): Promise<string[]> {
-    let programs = (await this.api.rpc.state.getKeys('g::prog::')).map((prog) => {
+    const programs = (await this.api.rpc.state.getKeys('g::prog::')).map((prog) => {
       return `0x${prog.toHex().slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
     });
     return programs;

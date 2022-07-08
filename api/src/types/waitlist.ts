@@ -4,7 +4,7 @@ import { HumanedMessage } from './interfaces';
 export type StoredDispatch = {
   kind: 'Init' | 'Handle' | 'Reply';
   message: HumanedMessage;
-  context: any;
+  context: unknown;
 };
 
 export type WaitlistItem = {

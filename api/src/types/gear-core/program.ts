@@ -2,9 +2,9 @@ import { Hash, BlockNumber, H256 } from '@polkadot/types/interfaces';
 import { Null, Enum, Option } from '@polkadot/types';
 import { MessageId } from './message';
 
-export interface ProgramId extends Hash {}
+export type ProgramId = Hash;
 
-export interface CodeId extends Hash {}
+export type CodeId = Hash;
 
 export interface Entry extends Enum {
   isInit: boolean;

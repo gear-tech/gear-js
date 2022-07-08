@@ -1,3 +1,18 @@
+## 0.23.0
+
+_07/08/2022_
+
+https://github.com/gear-tech/gear-js/pull/806
+
+### Changes
+
+- Build library using rollup
+- Add eslint config
+- Specify specific types instead any
+- Bump `@polkadot/api` to 8.11.3
+
+---
+
 ## 0.22.3
 
 _07/05/2022_

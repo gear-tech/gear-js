@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies and build @gear-js/api
         working-directory: api
-        run: npm install
+        run: npm ci
 
       - name: Prepare
         run: |
