@@ -72,7 +72,7 @@ export class GearProgram extends GearTransaction {
     });
   }
 
-  async isExist(id: Hex): Promise<boolean> {
+  async isProgramId(id: Hex): Promise<boolean> {
     const progs = await this.api.rpc.state.getKeys(GPROG);
     return progs.find((prog) => prog.eq(`0x${GPROG_HEX}${id.slice(2)}`)) ? true : false;
   }

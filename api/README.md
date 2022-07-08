@@ -123,6 +123,14 @@ try {
 }
 ```
 
+#### Check that the address belongs to some program
+
+```javascript
+const programId = '0x0000000000000000000000000000000000000000000000000000000000000000';
+const programExists = await api.program.isProgramId(programId);
+console.log(`Program with address ${programId} ${programExists ? 'exists' : "doesn't exist"}`);
+```
+
 ### Send message
 
 ```javascript
