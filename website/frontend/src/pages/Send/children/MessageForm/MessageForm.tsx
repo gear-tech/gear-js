@@ -17,10 +17,9 @@ type Props = {
   id: string;
   isReply: boolean;
   metadata?: Metadata;
-  replyErrorCode?: string;
 };
 
-const MessageForm = ({ id, isReply, metadata, replyErrorCode }: Props) => {
+const MessageForm = ({ id, isReply, metadata }: Props) => {
   const { api } = useApi();
   const alert = useAlert();
 
@@ -45,7 +44,7 @@ const MessageForm = ({ id, isReply, metadata, replyErrorCode }: Props) => {
   };
 
   const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>
-    calculateGas(method, api, values, alert, metadata, null, id, replyErrorCode).then((gasLimit) =>
+    calculateGas(method, api, values, alert, metadata, null, id).then((gasLimit) =>
       setFieldValue('gasLimit', gasLimit)
     );
 

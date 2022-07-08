@@ -184,8 +184,7 @@ export const calculateGas = async (
   alert: AlertContainerFactory,
   meta?: Metadata,
   code?: Uint8Array | null,
-  addressId?: string,
-  replyCodeError?: string
+  addressId?: string
 ): Promise<number> => {
   const payload = getSubmitPayload(values.payload);
 
@@ -228,7 +227,7 @@ export const calculateGas = async (
         estimatedGas = await api.program.calculateGas.reply(
           localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
           addressId as Hex,
-          Number(replyCodeError),
+          0,
           payload,
           value,
           true,

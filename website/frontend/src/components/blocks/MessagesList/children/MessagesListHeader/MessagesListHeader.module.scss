@@ -1,0 +1,32 @@
+@use '@gear-js/ui/variables' as *;
+
+.messagesListHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid #363636;
+  background-color: $bgColor;
+
+  .headerItem {
+    display: flex;
+    color: $textColor;
+    align-items: center;
+
+    &:nth-child(1) {
+      flex: 0 1 225px;
+    }
+
+    &:nth-child(2) {
+      flex: 0 2 700px;
+    }
+
+    &:nth-child(3) {
+      flex: 0 1 200px;
+    }
+
+    .headerIcon {
+      display: block;
+      margin-right: 10px;
+    }
+  }
+}

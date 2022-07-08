@@ -8,7 +8,7 @@ export const routes = {
   allPrograms: '/all-programs',
   program: '/program/:programId',
   messages: '/messages',
-  message: '/message/:id',
+  message: '/message/:messageId',
   state: '/state/:programId',
   send: '/send',
   sendMessage: 'message/:programId',
