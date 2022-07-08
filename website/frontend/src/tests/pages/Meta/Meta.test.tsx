@@ -7,7 +7,7 @@ import { AccountProvider } from '@gear-js/react-hooks';
 
 import { PROGRAM_ID_1, META } from '../../const';
 
-import { useAccountMock, TEST_ACCOUNT } from '../../mocks/hooks';
+import { useAccountMock, TEST_ACCOUNT, useApiMock } from '../../mocks/hooks';
 
 import { routes } from 'routes';
 import { FILE_TYPES } from 'consts';
@@ -18,21 +18,24 @@ import * as ApiServiceModule from 'services/ApiService';
 import { Meta } from 'pages/Meta/Meta';
 
 const UploadMetaPage = () => (
-  <ApiProvider>
-    <AccountProvider>
-      <AlertProvider>
+  <AlertProvider>
+    <ApiProvider>
+      <AccountProvider>
         <MemoryRouter initialEntries={[`/meta/${PROGRAM_ID_1}`]}>
           <Routes>
             <Route path={routes.meta} element={<Meta />} />
           </Routes>
         </MemoryRouter>
-      </AlertProvider>
-    </AccountProvider>
-  </ApiProvider>
+      </AccountProvider>
+    </ApiProvider>
+  </AlertProvider>
 );
 
 describe('test uplaod meta page', () => {
   it('test upload metadata logic', async () => {
+    useApiMock();
+    useAccountMock();
+
     const addMetadataMock = jest.spyOn(ApiServiceModule, 'addMetadata').mockResolvedValue();
 
     const { rerender } = render(<UploadMetaPage />);

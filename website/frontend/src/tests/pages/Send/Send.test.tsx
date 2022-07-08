@@ -20,17 +20,17 @@ type Props = {
 };
 
 const SendMessagePage = ({ path, initialEntries }: Props) => (
-  <ApiProvider>
-    <AccountProvider>
-      <AlertProvider>
+  <AlertProvider>
+    <ApiProvider>
+      <AccountProvider>
         <MemoryRouter initialEntries={initialEntries}>
           <Routes>
             <Route path={path} element={<Send />} />
           </Routes>
         </MemoryRouter>
-      </AlertProvider>
-    </AccountProvider>
-  </ApiProvider>
+      </AccountProvider>
+    </ApiProvider>
+  </AlertProvider>
 );
 
 jest.mock('@polkadot/extension-dapp', () => ({
@@ -60,6 +60,7 @@ describe('send message page tests', () => {
 
   it('sends message to program without meta', async () => {
     useApiMock(TEST_API);
+    useAccountMock();
 
     TEST_API.message.submit.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
