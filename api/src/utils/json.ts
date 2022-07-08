@@ -1,6 +1,6 @@
-export function isJSON(data: any) {
+export function isJSON(data: unknown) {
   try {
-    JSON.parse(data);
+    JSON.parse(data as string);
   } catch (error) {
     try {
       if (JSON.stringify(data)[0] !== '{') {
@@ -14,9 +14,9 @@ export function isJSON(data: any) {
   return true;
 }
 
-export function toJSON(data: any) {
+export function toJSON(data: unknown) {
   try {
-    return JSON.parse(data);
+    return JSON.parse(data as string);
   } catch (error) {
     return data;
   }

@@ -8,14 +8,23 @@ export default [
     input: 'src/index.ts',
     output: [
       {
-        file: 'lib/index.mjs',
-        format: 'esm',
-        sourcemap: true,
+        dir: 'lib',
+        format: 'es',
+        preserveModules: true,
+        entryFileNames: () => '[name].mjs',
+      },
+      {
+        dir: 'lib',
+        format: 'cjs',
+        preserveModules: true,
+        entryFileNames: () => '[name].js',
+        exports: 'named',
       },
     ],
+
     plugins: [
       typescript({
-        tsconfig: 'tsconfig.esm.json',
+        tsconfig: 'tsconfig.json',
       }),
       json(),
       nodeResolve({ preferBuiltins: true, resolveOnly: (module) => !module.includes('polkadot') }),

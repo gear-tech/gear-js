@@ -3,7 +3,7 @@ import { hexToU8a } from '@polkadot/util';
 import { isJSON } from '../utils';
 
 export function decodeHexTypes(hexTypes: string) {
-  let { typesFromTypeDef, namespaces } = getTypesFromTypeDef(hexToU8a(hexTypes));
+  const { typesFromTypeDef, namespaces } = getTypesFromTypeDef(hexToU8a(hexTypes));
   const result = {};
   namespaces.forEach((value, key) => {
     const replaced = replaceNamespaces(typesFromTypeDef[value], namespaces);

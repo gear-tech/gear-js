@@ -7,7 +7,7 @@ import { Reply } from '../interfaces';
 import { ProgramId } from './program';
 import { UserId } from './user';
 
-export interface MessageId extends Hash {}
+export type MessageId = Hash;
 export interface UserMessageSentMessage extends Codec {
   id: MessageId;
   source: ProgramId;
@@ -38,7 +38,7 @@ export interface UserMessageReadSystemReason extends Enum {
   asOutOfRent: Null;
 }
 
-export interface UserMessageReadReason extends Reason<UserMessageReadRuntimeReason, UserMessageReadSystemReason> {}
+export type UserMessageReadReason = Reason<UserMessageReadRuntimeReason, UserMessageReadSystemReason>;
 
 export interface MessageWaitedRuntimeReason extends Enum {
   isWaitCalled: boolean;
@@ -50,7 +50,7 @@ export interface MessageWaitedSystemReason extends Enum {
   asProgramIsNotInitialized: Null;
 }
 
-export interface MessageWaitedReason extends Reason<MessageWaitedRuntimeReason, MessageWaitedSystemReason> {}
+export type MessageWaitedReason = Reason<MessageWaitedRuntimeReason, MessageWaitedSystemReason>;
 
 export interface MessageWokenRuntimeReason extends Enum {
   isWakeCalled: boolean;
@@ -66,4 +66,4 @@ export interface MessageWokenSystemReason extends Enum {
   asOutOfRent: Null;
 }
 
-export interface MessageWokenReason extends Reason<MessageWokenRuntimeReason, MessageWokenSystemReason> {}
+export type MessageWokenReason = Reason<MessageWokenRuntimeReason, MessageWokenSystemReason>;

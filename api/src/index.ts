@@ -15,7 +15,6 @@ export { GearClaimValue } from './Claim';
 export { GearWaitlist } from './Waitlist';
 export * from './Transaction';
 export * from './wasm';
-export * from './CreateType';
 export * from './create-type';
 export * from './types/interfaces';
 export * from './types';

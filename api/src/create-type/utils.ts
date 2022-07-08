@@ -11,7 +11,7 @@ export function typeIsString(type: string): boolean {
   return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase());
 }
 
-export function checkTypeAndPayload(type: string, payload: any): string {
+export function checkTypeAndPayload(type: string, payload: unknown): string {
   if (payload === undefined) {
     throw new CreateTypeError('Payload is not specified');
   }
@@ -19,7 +19,7 @@ export function checkTypeAndPayload(type: string, payload: any): string {
 }
 
 function findTypeInNamepaces(type: string, namespaces: Map<string, string>) {
-  for (let [key, value] of namespaces) {
+  for (const [key, value] of namespaces) {
     if (key.toLowerCase() === type.toLowerCase()) {
       return value;
     }
@@ -32,7 +32,7 @@ export function setNamespaces(type: string, namespaces: Map<string, string>): st
   findTypeInNamepaces(type, namespaces);
   matches.forEach((match, index) => {
     if (namespaces) {
-      let foundType =
+      const foundType =
         findTypeInNamepaces(match, namespaces) || findTypeInNamepaces(`${match}${matches[index + 1]}`, namespaces);
       if (foundType !== undefined) {
         type = type.replace(new RegExp(match, 'g'), foundType);
@@ -53,7 +53,7 @@ export function replaceNamespaces(type: string, namespaces: Map<string, string>)
 export function getTypesFromTypeDef(
   types: Uint8Array | Hex,
   registry?: Registry,
-): { typesFromTypeDef: any; namespaces: Map<string, string> } {
+): { typesFromTypeDef: { [name: string]: string }; namespaces: Map<string, string> } {
   if (!registry) {
     registry = new TypeRegistry();
   }

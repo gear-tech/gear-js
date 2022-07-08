@@ -10,13 +10,8 @@
     "resolveJsonModule": true,
     "pretty": true,
     "skipLibCheck": true,
-    "paths": {
-      "@polkadot/api/augment": ["src/interfaces/augment-api.ts"],
-      "@polkadot/types/augment": ["src/interfaces/augment-types.ts"],
-      "@polkadot/api/types/storage": ["src/interfaces/augment-api-query.ts"],
-      "@polkadot/rpc-core/types/jsonrpc": ["src/interfaces/augment-api-rpc.ts"]
-    }
+    "declaration": true,
+    "sourceMap": false
   },
-  "exclude": ["test", "examples", "node_modules", "dist"],
   "include": ["src", "src/**/*.json"]
 }

@@ -51,7 +51,7 @@ export class GearStorage {
         .slice(2)}`;
     });
     const pages = {};
-    for (let key of Object.keys(keys)) {
+    for (const key of Object.keys(keys)) {
       const storage = ((await this.api.rpc.state.getStorage(keys[key])) as Option<Codec>).unwrap().toU8a();
       pages[key] = storage;
     }

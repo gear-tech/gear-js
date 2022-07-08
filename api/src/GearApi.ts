@@ -1,20 +1,21 @@
-import { ApiPromise, WsProvider } from '@polkadot/api';
-import { Event } from '@polkadot/types/interfaces';
 import { SpRuntimeDispatchError } from '@polkadot/types/lookup';
 import { RegistryError } from '@polkadot/types-codec/types';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { Event } from '@polkadot/types/interfaces';
+
+import { GearMessageReply } from './MessageReply';
+import { GearApiOptions } from './types/interfaces';
+import { gearRpc, gearTypes } from './default';
+import { GearProgramState } from './State';
+import { GearWaitlist } from './Waitlist';
+import { GearClaimValue } from './Claim';
 import { GearProgram } from './Program';
+import { GearStorage } from './Storage';
+import { GearMailbox } from './Mailbox';
 import { GearMessage } from './Message';
 import { GearBalance } from './Balance';
 import { GearEvents } from './events';
-import { GearProgramState } from './State';
-import { GearMessageReply } from './MessageReply';
-import { GearWaitlist } from './Waitlist';
-import { gearRpc, gearTypes } from './default';
-import { GearApiOptions } from './types/interfaces';
 import { GearBlock } from './Blocks';
-import { GearStorage } from './Storage';
-import { GearMailbox } from './Mailbox';
-import { GearClaimValue } from './Claim';
 import { GearCode } from './Code';
 
 export class GearApi extends ApiPromise {
@@ -24,7 +25,7 @@ export class GearApi extends ApiPromise {
   public reply: GearMessageReply;
   public balance: GearBalance;
   public gearEvents: GearEvents;
-  public defaultTypes: any;
+  public defaultTypes: Record<string, unknown>;
   public blocks: GearBlock;
   public storage: GearStorage;
   public mailbox: GearMailbox;

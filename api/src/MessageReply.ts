@@ -1,11 +1,12 @@
-import { createPayload } from './utils';
+import { AnyJson, AnyNumber, ISubmittableResult } from '@polkadot/types/types';
+import { H256, BalanceOf } from '@polkadot/types/interfaces';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { u64 } from '@polkadot/types';
+
+import { GearTransaction } from './Transaction';
 import { Metadata } from './types/interfaces';
 import { SendReplyError } from './errors';
-import { u64 } from '@polkadot/types';
-import { AnyNumber, ISubmittableResult } from '@polkadot/types/types';
-import { H256, BalanceOf } from '@polkadot/types/interfaces';
-import { GearTransaction } from './Transaction';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { createPayload } from './utils';
 
 export class GearMessageReply extends GearTransaction {
   /**
@@ -31,14 +32,14 @@ export class GearMessageReply extends GearTransaction {
   submit(
     message: {
       replyToId: H256 | string;
-      payload: string | any;
+      payload: AnyJson;
       gasLimit: u64 | AnyNumber;
       value?: BalanceOf | AnyNumber;
     },
     meta?: Metadata,
     messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    let payload = createPayload(
+    const payload = createPayload(
       this.createType,
       messageType || meta?.async_handle_input || meta?.async_init_input,
       message.payload,

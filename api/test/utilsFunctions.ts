@@ -9,7 +9,6 @@ import {
   UserMessageSentData,
   MessageEnqueued,
   MessagesDispatched,
-  ProgramChanged,
 } from '../src';
 
 export const checkInit = (api: GearApi, programId: string) => {
@@ -27,19 +26,17 @@ export const checkInit = (api: GearApi, programId: string) => {
             break;
           case 'MessagesDispatched':
             const mdEvent = event as MessagesDispatched;
-            for (let [id, status] of mdEvent.data.statuses) {
+            for (const [id, status] of mdEvent.data.statuses) {
               if (id.eq(messageId)) {
                 if (status.isFailed) {
                   reject('failed');
                   break;
                 }
+                if (status.isSuccess) {
+                  resolve('success');
+                  break;
+                }
               }
-            }
-            break;
-          case 'ProgramChanged':
-            const pcEvent = event as ProgramChanged;
-            if (pcEvent.data.id.eq(programId) && pcEvent.data.change.isActive) {
-              resolve('success');
             }
             break;
         }
@@ -71,7 +68,7 @@ export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
     );
     (await unsub)();
     if (!message) {
-      throw new Error(`UserMessageSent not found`);
+      throw new Error('UserMessageSent not found');
     }
     return message.data;
   };
