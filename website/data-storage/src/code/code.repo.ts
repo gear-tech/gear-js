@@ -4,7 +4,7 @@ import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
 import { CODE_STATUS, GetAllCodeParams } from '@gear-js/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { Code } from '../entities';
+import { Code } from '../database/entities';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
 import { PAGINATION_LIMIT } from '../config/configuration';
 

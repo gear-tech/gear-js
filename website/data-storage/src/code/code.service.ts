@@ -3,9 +3,9 @@ import { plainToClass } from 'class-transformer';
 import { GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/common';
 
 import { UpdateCodeInput } from './types';
-import { Code } from '../entities';
+import { Code } from '../database/entities';
 import { CodeRepo } from './code.repo';
-import { CodeNotFound } from '../errors';
+import { CodeNotFound } from '../common/errors';
 import { UpdateResult } from 'typeorm';
 
 @Injectable()

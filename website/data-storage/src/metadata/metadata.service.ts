@@ -2,9 +2,9 @@ import { GearKeyring } from '@gear-js/api';
 import { Injectable } from '@nestjs/common';
 import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/common';
 
-import { SignatureNotVerified, MetadataNotFound } from '../errors';
+import { SignatureNotVerified, MetadataNotFound } from '../common/errors';
 import { ProgramService } from '../program/program.service';
-import { Meta } from '../entities/meta.entity';
+import { Meta } from '../database/entities/meta.entity';
 import { sleep } from '../utils/sleep';
 import { MetadataRepo } from './metadata.repo';
 import { ProgramRepo } from '../program/program.repo';

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CodeService } from './code.service';
-import { Code } from '../entities';
+import { Code } from '../database/entities';
 import { CodeRepo } from './code.repo';
 
 @Module({

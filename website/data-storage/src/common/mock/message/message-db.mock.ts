@@ -1,4 +1,4 @@
-import { Message } from '../../../entities';
+import { Message } from '../../../database/entities';
 
 const message_1 = new Message();
 message_1.id = '0x7350';

@@ -10,9 +10,9 @@ import {
   IUserMessageSentKafkaValue,
 } from '@gear-js/common';
 
-import { Message } from '../entities/message.entity';
+import { Message } from '../database/entities/message.entity';
 import { ProgramService } from '../program/program.service';
-import { MessageNotFound } from '../errors';
+import { MessageNotFound } from '../common/errors';
 import { sleep } from '../utils/sleep';
 import { MessageRepo } from './message.repo';
 

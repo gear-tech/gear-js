@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { CODE_STATUS, GetAllCodeParams, GetCodeParams } from '@gear-js/common';
 
-import { Code } from '../../src/entities';
+import { Code } from '../../src/database/entities';
 import { mockCodeRepository } from '../../src/common/mock/code/code-repository.mock';
 import { CODE_DB_MOCK } from '../../src/common/mock/code/code-db.mock';
 import { CodeRepo } from '../../src/code/code.repo';

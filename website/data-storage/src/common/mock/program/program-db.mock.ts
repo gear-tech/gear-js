@@ -1,4 +1,4 @@
-import { Meta, Program } from '../../../entities';
+import { Meta, Program } from '../../../database/entities';
 
 const metadata = new Meta();
 

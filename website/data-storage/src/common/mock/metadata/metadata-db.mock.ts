@@ -1,4 +1,4 @@
-import { Meta } from '../../../entities';
+import { Meta } from '../../../database/entities';
 
 const metadata_1 = new Meta();
 metadata_1.id = '0x7350';
