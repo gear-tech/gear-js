@@ -4,7 +4,7 @@ import { BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { Bytes, u64 } from '@polkadot/types';
 
-import { createPayload, generateProgramId } from './utils';
+import { createPayload, generateProgramId, GPROG, GPROG_HEX } from './utils';
 import { Metadata } from './types/interfaces';
 import { GearTransaction } from './Transaction';
 import { SubmitProgramError } from './errors';
@@ -65,10 +65,15 @@ export class GearProgram extends GearTransaction {
    * Get ids of all uploaded programs
    * @returns
    */
-  async allUploadedPrograms(): Promise<string[]> {
-    const programs = (await this.api.rpc.state.getKeys('g::prog::')).map((prog) => {
-      return `0x${prog.toHex().slice(Buffer.from('g::prog::').toString('hex').length + 2)}`;
+  async allUploadedPrograms(): Promise<Hex[]> {
+    const keys = await this.api.rpc.state.getKeys(GPROG);
+    return keys.map((prog) => {
+      return `0x${prog.toHex().slice(GPROG_HEX.length + 2)}` as Hex;
     });
-    return programs;
+  }
+
+  async isExist(id: Hex): Promise<boolean> {
+    const progs = await this.api.rpc.state.getKeys(GPROG);
+    return progs.find((prog) => prog.eq(`0x${GPROG_HEX}${id.slice(2)}`)) ? true : false;
   }
 }
