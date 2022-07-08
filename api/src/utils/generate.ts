@@ -1,6 +1,6 @@
 import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 import { isHex, isU8a, u8aToHex } from '@polkadot/util';
-import { AnyJson, Codec } from '@polkadot/types/types';
+import { AnyJson } from '@polkadot/types/types';
 
 import { Metadata } from '../types/interfaces';
 import { Hex } from '../types';
