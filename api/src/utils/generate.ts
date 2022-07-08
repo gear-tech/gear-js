@@ -6,14 +6,9 @@ import { Metadata } from '../types/interfaces';
 import { Hex } from '../types';
 import { CreateType } from '../create-type/CreateType';
 
-export function createPayload(
-  createType: CreateType,
-  type: string,
-  data: AnyJson | Uint8Array,
-  meta?: Metadata,
-): Hex | Codec {
+export function createPayload(createType: CreateType, type: string, data: AnyJson | Uint8Array, meta?: Metadata): Hex {
   if (data === undefined) {
-    return '0x00';
+    return '0x';
   }
   if (isHex(data)) {
     return data;
@@ -21,9 +16,9 @@ export function createPayload(
     return u8aToHex(data);
   }
   if (meta && type) {
-    return createType.create(type, data, meta);
+    return createType.create(type, data, meta).toHex();
   } else {
-    return createType.create(type, data);
+    return createType.create(type, data).toHex();
   }
 }
 
