@@ -21,7 +21,7 @@ describe('Program', () => {
   });
 
   test('Program is exist', async () => {
-    const programs = await api.program.isProgramId(someProgramId);
+    const programs = await api.program.is(someProgramId);
     expect(programs).toBeTruthy();
   });
 });

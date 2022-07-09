@@ -127,7 +127,7 @@ try {
 
 ```javascript
 const programId = '0x0000000000000000000000000000000000000000000000000000000000000000';
-const programExists = await api.program.isProgramId(programId);
+const programExists = await api.program.is(programId);
 console.log(`Program with address ${programId} ${programExists ? 'exists' : "doesn't exist"}`);
 ```
 
