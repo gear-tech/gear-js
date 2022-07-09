@@ -6,7 +6,7 @@ https://github.com/gear-tech/gear-js/pull/811
 
 ### Changes
 
-- Add `isProgramId` method to check whether the address belongs to some program.
+- Add `api.program.is` method to check whether the address belongs to some program.
 
 ---
 
