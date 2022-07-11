@@ -1,7 +1,4 @@
-enum CODE_STATUS {
-  ACTIVE = 'Active',
-  INACTIVE = 'Inactive',
-}
+import { CODE_STATUS } from '../enums';
 
 interface ICode {
   id: string;
@@ -16,4 +13,4 @@ interface ICodeChangedData {
   expiration?: number | null;
 }
 
-export { ICode, CODE_STATUS, ICodeChangedData };
+export { ICode, ICodeChangedData };

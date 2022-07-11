@@ -1,4 +1,4 @@
-export enum GEAR_EVENT {
+enum GEAR_EVENT {
   MESSAGE_ENQUEUED = 'MessageEnqueued',
   USER_MESSAGE_SENT = 'UserMessageSent',
   USER_MESSAGE_READ = 'UserMessageRead',
@@ -7,3 +7,5 @@ export enum GEAR_EVENT {
   PROGRAM_CHANGED = 'ProgramChanged',
   DATABASE_WIPED = 'DatabaseWiped',
 }
+
+export { GEAR_EVENT };

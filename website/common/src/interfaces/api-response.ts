@@ -2,6 +2,7 @@ import { IMessage } from './message';
 import { IPaginationResult } from './pagination';
 import { IProgram } from './program';
 import { ICode } from './code';
+import { RpcErrorCode } from '../enums';
 
 interface AllMessagesResult extends IPaginationResult {
   messages: IMessage[];
@@ -49,13 +50,6 @@ interface IRpcError {
   message: string;
 }
 
-enum RpcErrorCode {
-  GearError = -32602,
-  MethodNotFoundError = -32601,
-  InternalServerError = -32500,
-  UnathorizedError = -32401,
-}
-
 export {
   AllMessagesResult,
   GetAllProgramsResult,
@@ -65,5 +59,4 @@ export {
   ProgramDataResult,
   IRpcResponse,
   IRpcError,
-  RpcErrorCode,
 };

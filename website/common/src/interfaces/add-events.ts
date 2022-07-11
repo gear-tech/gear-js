@@ -2,16 +2,7 @@ import { IBaseDBRecord } from './common';
 import { IMessage, IMessageEnqueuedData, IMessagesDispatchedData, IUserMessageReadData } from './message';
 import { IProgramChangedData } from './program';
 import { ICodeChangedData } from './code';
-
-enum Keys {
-  MessageEnqueued = 'MessageEnqueued',
-  UserMessageSent = 'UserMessageSent',
-  UserMessageRead = 'UserMessageRead',
-  MessagesDispatched = 'MessagesDispatched',
-  ProgramChanged = 'ProgramChanged',
-  CodeChanged = 'CodeChanged',
-  DatabaseWiped = 'DatabaseWiped',
-}
+import { Keys } from '../enums';
 
 interface NewEventData<K extends Keys, V> {
   key: K;
@@ -31,7 +22,6 @@ interface IProgramChangedKafkaValue extends IProgramChangedData, IBaseDBRecord<n
 interface IMessagesDispatchedKafkaValue extends IMessagesDispatchedData, IBaseDBRecord<number> {}
 
 export {
-  Keys,
   NewEventData,
   IMessageEnqueuedKafkaValue,
   IUserMessageSentKafkaValue,
