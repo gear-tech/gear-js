@@ -1,6 +1,6 @@
 import { GetMessagesParams } from '@gear-js/common';
 
-import { Message } from '../../../entities';
+import { Message } from '../../../database/entities';
 import { MESSAGE_DB_MOCK } from './message-db.mock';
 
 export const mockMessageRepository = {

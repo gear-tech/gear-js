@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 
-import { Code, Message, Meta, Program } from './entities';
+import { Code, Message, Meta, Program } from './database/entities';
 import config from './config/configuration';
 
 const entities = [Meta, Message, Program, Code];

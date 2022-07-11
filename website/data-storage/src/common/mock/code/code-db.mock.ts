@@ -1,4 +1,4 @@
-import { Code } from '../../../entities';
+import { Code } from '../../../database/entities';
 import { CODE_STATUS } from '@gear-js/common';
 
 const code_1 = new Code();

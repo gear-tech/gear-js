@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Meta } from '../entities';
+import { Meta } from '../database/entities';
 
 @Injectable()
 export class MetadataRepo {

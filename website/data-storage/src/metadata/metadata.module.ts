@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { MetadataService } from './metadata.service';
 import { MetadataRepo } from './metadata.repo';
-import { Meta } from '../entities';
+import { Meta } from '../database/entities';
 import { ProgramModule } from '../program/program.module';
 
 @Module({

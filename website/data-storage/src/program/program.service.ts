@@ -9,8 +9,8 @@ import {
 } from '@gear-js/common';
 
 import { sleep } from '../utils/sleep';
-import { ProgramNotFound } from '../errors';
-import { Program } from '../entities/program.entity';
+import { ProgramNotFound } from '../common/errors';
+import { Program } from '../database/entities/program.entity';
 import { CreateProgramInput, UpdateProgramDataInput } from './types';
 import { plainToClass } from 'class-transformer';
 import { ProgramRepo } from './program.repo';

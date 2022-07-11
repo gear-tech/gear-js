@@ -1,46 +1,31 @@
-import { initLogger, JSONRPC_ERRORS, KAFKA_TOPICS, kafkaLogger } from '@gear-js/common';
-import { Consumer, Kafka, KafkaMessage, Producer } from 'kafkajs';
+import { Consumer, KafkaMessage } from 'kafkajs';
+import { initLogger, JSONRPC_ERRORS } from '@gear-js/common';
 
 import config from '../config/configuration';
-import { transferService } from '../services/transfer/transfer.service';
+import { initKafka } from './init-kafka';
 import { gearService } from '../gear';
+import { transferService } from '../services/transfer/transfer.service';
+import { kafkaProducer } from './producer';
+
+const consumer: Consumer = initKafka.consumer({ groupId: config.kafka.groupId });
 
 const logger = initLogger('KafkaConsumer');
 
-const kafka = new Kafka({
-  clientId: config.kafka.clientId,
-  brokers: config.kafka.brokers,
-  logCreator: kafkaLogger,
-  sasl: {
-    mechanism: 'plain',
-    username: config.kafka.sasl.username,
-    password: config.kafka.sasl.password,
-  },
-});
-
-const kafkaConsumer: Consumer = kafka.consumer({ groupId: config.kafka.groupId });
-const kafkaProducer: Producer = kafka.producer();
-
-async function connectKafka() {
-  try {
-    await Promise.all([
-      kafkaProducer.connect(),
-      kafkaConsumer.connect(),
-      subscribeConsumerTopic(KAFKA_TOPICS.TEST_BALANCE_GET),
-    ]);
-    await kafkaConsumer.run({
-      eachMessage: async ({ message }) => {
-        await messageProcessing(message);
-      },
-    });
-  } catch (err) {
-    console.log(err);
-  }
+async function subscribeConsumerTopic(topic: string): Promise<void> {
+  await consumer.subscribe({ topic });
+  logger.info(`Subscribe to ${topic} topic`);
 }
 
-async function subscribeConsumerTopic(topic: string): Promise<void> {
-  await kafkaConsumer.subscribe({ topic });
-  logger.info(`Subscribe to ${topic} topic`);
+async function connect(): Promise<void> {
+  await consumer.connect();
+}
+
+async function run(): Promise<void> {
+  await consumer.run({
+    eachMessage: async ({ message }) => {
+      await messageProcessing(message);
+    },
+  });
 }
 
 async function messageProcessing(message: KafkaMessage) {
@@ -70,15 +55,7 @@ async function messageProcessing(message: KafkaMessage) {
 }
 
 async function sendReply(message: any, value: string) {
-  await kafkaProducer.send({
-    topic: message.headers.kafka_replyTopic.toString(),
-    messages: [
-      {
-        value,
-        headers: { kafka_correlationId: message.headers.kafka_correlationId.toString() },
-      },
-    ],
-  });
+  await kafkaProducer.send(message, value);
 }
 
 async function getPayloadFromMessage(message: KafkaMessage): Promise<{ error: string; payload: any }> {
@@ -95,4 +72,4 @@ async function getPayloadFromMessage(message: KafkaMessage): Promise<{ error: st
   return result;
 }
 
-export { connectKafka };
+export const kafkaConsumer = { subscribeConsumerTopic, connect, run };

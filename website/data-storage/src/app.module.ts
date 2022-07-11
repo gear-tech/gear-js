@@ -10,7 +10,7 @@ import { CodeModule } from './code/code.module';
 import { HealthcheckController } from './healthcheck/healthcheck.controller';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import configurations from './config/configuration';
-import { Code, Message, Meta, Program } from './entities';
+import { Code, Message, Meta, Program } from './database/entities';
 
 const entities = [Meta, Message, Program, Code];
 

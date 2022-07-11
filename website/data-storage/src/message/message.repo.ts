@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetMessagesParams } from '@gear-js/common';
 
-import { Message } from '../entities';
+import { Message } from '../database/entities';
 import { PAGINATION_LIMIT } from '../config/configuration';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';

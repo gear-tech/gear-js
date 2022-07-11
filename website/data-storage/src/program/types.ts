@@ -1,4 +1,4 @@
-import { Meta } from '../entities';
+import { Meta } from '../database/entities';
 
 interface CreateProgramInput {
   id: string;

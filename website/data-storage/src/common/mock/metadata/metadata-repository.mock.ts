@@ -1,4 +1,4 @@
-import { Meta } from '../../../entities';
+import { Meta } from '../../../database/entities';
 import { METADATA_DB_MOCK } from './metadata-db.mock';
 
 export const mockMetadataRepository = {
