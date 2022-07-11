@@ -5,9 +5,6 @@ function Menu() {
   return (
     <ul className={styles.menu}>
       <li>
-        <Link to="/my">My Channel</Link>
-      </li>
-      <li>
         <Link to="/all">Show all</Link>
       </li>
     </ul>

@@ -1,0 +1,18 @@
+@use '@gear-js/ui/variables' as *;
+
+.header {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.heading {
+  font-family: 'Syncopate', sans-serif;
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.list {
+  width: 100%;
+  max-width: 800px;
+}
