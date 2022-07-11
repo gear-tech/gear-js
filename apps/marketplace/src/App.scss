@@ -1,6 +1,5 @@
 @use 'assets/styles';
 @use '@gear-js/ui/variables' as *;
-@use '@gear-js/ui/mixins' as *;
 
 #root {
   max-width: 1200px;
@@ -14,10 +13,10 @@
 
 main {
   flex: 1;
-  padding: 30px 0;
-  position: relative; // for api loader
+  padding: 30px 0 60px;
+  position: relative; // for loaders
 }
 
 body {
-  background: $bgColor url('assets/images/bg.svg');
+  background: $bgColor url(assets/images/bg.svg);
 }

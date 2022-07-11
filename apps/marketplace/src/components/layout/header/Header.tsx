@@ -1,22 +1,24 @@
-import { useApi } from 'hooks';
-import OnLogin from 'components/on-login';
-import Logo from './logo';
-import Account from './account';
+import { useApi } from '@gear-js/react-hooks';
+import { OnLogin } from 'components';
+import { Logo } from './logo';
+import { Menu } from './menu';
+import { Account } from './account';
 import styles from './Header.module.scss';
-import Menu from './menu';
 
 function Header() {
   const { isApiReady } = useApi();
 
   return (
     <header className={styles.header}>
-      <Logo />
-      <OnLogin>
-        <Menu />
-      </OnLogin>
+      <nav className={styles.nav}>
+        <Logo />
+        <OnLogin>
+          <Menu />
+        </OnLogin>
+      </nav>
       {isApiReady && <Account />}
     </header>
   );
 }
 
-export default Header;
+export { Header };

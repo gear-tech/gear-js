@@ -1,3 +1,3 @@
-import OwnerListing from './OwnerListing';
+import { OwnerListing } from './OwnerListing';
 
-export default OwnerListing;
+export { OwnerListing };

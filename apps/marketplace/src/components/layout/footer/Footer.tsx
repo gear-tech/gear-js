@@ -1,5 +1,5 @@
-import Socials from './socials';
-import Copyright from './copyright';
+import { Socials } from './socials';
+import { Copyright } from './copyright';
 import styles from './Footer.module.scss';
 
 function Footer() {
@@ -11,4 +11,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+export { Footer };

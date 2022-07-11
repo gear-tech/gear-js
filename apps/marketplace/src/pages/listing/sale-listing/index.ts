@@ -1,3 +1,3 @@
-import SaleListing from './SaleListing';
+import { SaleListing } from './SaleListing';
 
-export default SaleListing;
+export { SaleListing };

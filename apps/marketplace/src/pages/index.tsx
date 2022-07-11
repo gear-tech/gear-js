@@ -1,10 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import OnLogin from 'components/on-login';
-import InfoText from 'components/info-text';
-import Listing from './listing';
-import Listings from './listings';
-import Create from './create';
-import Me from './me';
+import { OnLogin, InfoText } from 'components';
+import { Listing } from './listing';
+import { Listings } from './listings';
+import { Create } from './create';
+import { Me } from './me';
 
 const routes = [
   { path: '/', Page: Listings },
@@ -34,4 +33,4 @@ function Routing() {
   return <Routes>{getRoutes()}</Routes>;
 }
 
-export default Routing;
+export { Routing };

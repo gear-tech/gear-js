@@ -1,47 +1,79 @@
-import { Hex } from '@gear-js/api';
+import { useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { AnyJson } from '@polkadot/types/types';
-import { marketplaceMetaWasm } from 'assets';
-import { MARKETPLACE_CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from 'consts';
 import { useMemo } from 'react';
-import { MarketNFT } from 'types';
-import { useMessage, useMetadata, useReadState } from './api';
+import marketplaceMetaWasm from 'assets/wasm/marketplace.meta.wasm';
+import { ADDRESS } from 'consts';
+import { AuctionFormValues, MarketNFT, MarketNFTState, MarketplaceState } from 'types';
+import { getMarketNFTPayload, getMilliseconds } from 'utils';
 
-type NFTPayload = { ItemInfo: { nftContractId: Hex; tokenId: string } };
-type NFTState = { ItemInfo: MarketNFT };
-
-type NFTsPayload = { AllItems: null };
-type NFTsState = { AllItems: MarketNFT[] };
-
-function useMarketplaceMeta() {
-  const { metadata, metaBuffer } = useMetadata(marketplaceMetaWasm);
-
-  return { marketplaceMeta: metadata, marketplaceMetaBuffer: metaBuffer };
-}
-
-function useMarketplaceState(payload: NFTPayload): NFTState | undefined;
-function useMarketplaceState(payload: NFTsPayload): NFTsState | undefined;
-function useMarketplaceState(payload: AnyJson) {
-  const { marketplaceMetaBuffer } = useMarketplaceMeta();
-  const marketplaceState = useReadState(MARKETPLACE_CONTRACT_ADDRESS, marketplaceMetaBuffer, payload);
-
-  return marketplaceState;
-}
-
-function useMarketNft(tokenId: string) {
-  const payload = useMemo(() => ({ ItemInfo: { nftContractId: NFT_CONTRACT_ADDRESS, tokenId } }), [tokenId]);
-  const state = useMarketplaceState(payload);
-  return state?.ItemInfo;
+function useMarketplaceState<T>(payload: AnyJson) {
+  return useReadState<T>(ADDRESS.MARKETPLACE_CONTRACT, marketplaceMetaWasm, payload);
 }
 
 function useMarketplace() {
   const payload = useMemo(() => ({ AllItems: null }), []);
-  const state = useMarketplaceState(payload);
-  return state?.AllItems;
+  const { state, isStateRead } = useMarketplaceState<MarketplaceState>(payload);
+
+  return { NFTs: state?.AllItems, isEachNFTRead: isStateRead };
+}
+
+function useMarketNft(tokenId: string) {
+  const payload = useMemo(() => getMarketNFTPayload(tokenId), [tokenId]);
+  const { state } = useMarketplaceState<MarketNFTState>(payload);
+
+  return state?.ItemInfo;
 }
 
 function useMarketplaceMessage() {
-  const { marketplaceMeta } = useMarketplaceMeta();
-  return useMessage(MARKETPLACE_CONTRACT_ADDRESS, marketplaceMeta);
+  return useSendMessage(ADDRESS.MARKETPLACE_CONTRACT, marketplaceMetaWasm);
 }
 
-export { useMarketplaceMeta, useMarketplaceState, useMarketNft, useMarketplace, useMarketplaceMessage };
+function useMarketplaceActions(tokenId: string, price: MarketNFT['price'] | undefined) {
+  const sendMessage = useMarketplaceMessage();
+
+  const nftContractId = ADDRESS.NFT_CONTRACT;
+  const ftContractId = null;
+
+  const buy = (onSuccess: () => void) => {
+    const payload = { BuyItem: { nftContractId, tokenId } };
+    const value = price?.replaceAll(',', '');
+
+    sendMessage(payload, { value, onSuccess });
+  };
+
+  const offer = (value: string, onSuccess: () => void) => {
+    const payload = { AddOffer: { nftContractId, ftContractId, tokenId, price: value } };
+
+    sendMessage(payload, { value, onSuccess });
+  };
+
+  const bid = (value: string, onSuccess: () => void) => {
+    const payload = { AddBid: { nftContractId, tokenId, price: value } };
+    sendMessage(payload, { value, onSuccess });
+  };
+
+  const settle = (onSuccess: () => void) => {
+    const payload = { SettleAuction: { nftContractId, tokenId } };
+    sendMessage(payload, { onSuccess });
+  };
+
+  const startSale = (value: string, onSuccess: () => void) => {
+    const payload = { AddMarketData: { nftContractId, ftContractId, tokenId, price: value } };
+
+    sendMessage(payload, { value, onSuccess });
+  };
+
+  const startAuction = (values: AuctionFormValues, onSuccess: () => void) => {
+    const duration = getMilliseconds(values.duration);
+    const bidPeriod = getMilliseconds(values.bidPeriod);
+    const { minPrice } = values;
+
+    const payload = { CreateAuction: { nftContractId, ftContractId, tokenId, duration, bidPeriod, minPrice } };
+
+    sendMessage(payload, { onSuccess });
+  };
+
+  return { buy, offer, bid, settle, startSale, startAuction };
+}
+
+export { useMarketplaceState, useMarketNft, useMarketplace, useMarketplaceMessage, useMarketplaceActions };

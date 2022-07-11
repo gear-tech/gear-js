@@ -1,3 +1,3 @@
-import AccountButton from './AccountButton';
+import { AccountButton } from './AccountButton';
 
-export default AccountButton;
+export { AccountButton };

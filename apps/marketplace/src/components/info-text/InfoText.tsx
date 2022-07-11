@@ -8,4 +8,4 @@ function InfoText({ text }: Props) {
   return <p className={styles.text}>{text}</p>;
 }
 
-export default InfoText;
+export { InfoText };

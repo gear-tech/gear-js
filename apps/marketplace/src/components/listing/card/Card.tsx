@@ -22,4 +22,4 @@ function Card({ heading, text, children }: Props) {
   );
 }
 
-export default Card;
+export { Card };

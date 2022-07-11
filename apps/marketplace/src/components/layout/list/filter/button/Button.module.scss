@@ -1,0 +1,18 @@
+@use '@gear-js/ui/variables' as *;
+
+.button {
+  background-color: transparent;
+
+  &:hover {
+    background-color: $textColorSecondary;
+  }
+}
+
+.active {
+  background-color: #212121;
+  cursor: default;
+
+  &:hover {
+    background-color: #212121;
+  }
+}

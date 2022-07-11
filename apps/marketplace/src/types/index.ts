@@ -1,7 +1,6 @@
 import { Hex } from '@gear-js/api';
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
-type NFT = {
+type BaseNFT = {
   id: string;
   name: string;
   description: string;
@@ -42,9 +41,48 @@ type MarketNFT = {
   offers: Offer[];
 };
 
-interface Account extends InjectedAccountWithMeta {
-  decodedAddress: Hex;
-  balance: { value: string; unit: string };
-}
+type NFT = BaseNFT & MarketNFT;
 
-export type { NFT, NFTDetails, Offer, MarketNFT, Account };
+type MarketplaceState = { AllItems: MarketNFT[] };
+type MarketNFTState = { ItemInfo: MarketNFT };
+type NFTState = { Token: { token: BaseNFT } };
+type OwnersNFTState = { TokensForOwner: { tokens: BaseNFT[] } };
+
+type Filter = {
+  value: string;
+  list: string[];
+  onChange: (filter: string) => void;
+};
+
+type Listing = {
+  heading: string;
+  description: string;
+  owner: Hex;
+  src: string;
+  offers: Offer[];
+  price: MarketNFT['price'];
+  rarity?: string;
+  attrs?: NFTDetails['attributes'];
+};
+
+type AuctionFormValues = {
+  duration: string;
+  bidPeriod: string;
+  minPrice: string;
+};
+
+export type {
+  BaseNFT,
+  NFTDetails,
+  Offer,
+  Auction,
+  MarketNFT,
+  NFT,
+  MarketplaceState,
+  MarketNFTState,
+  NFTState,
+  OwnersNFTState,
+  Filter,
+  Listing,
+  AuctionFormValues,
+};

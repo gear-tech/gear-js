@@ -1,3 +1,3 @@
-import AuctionListing from './AuctionListing';
+import { AuctionListing } from './AuctionListing';
 
-export default AuctionListing;
+export { AuctionListing };

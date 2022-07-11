@@ -1,5 +1,5 @@
+import { useAccount } from '@gear-js/react-hooks';
 import { ReactNode } from 'react';
-import { useAccount } from 'hooks';
 
 type Props = {
   children: ReactNode;
@@ -13,4 +13,4 @@ function OnLogin({ children, fallback }: Props) {
   return <>{account ? children : fallback}</>;
 }
 
-export default OnLogin;
+export { OnLogin };

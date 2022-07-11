@@ -1,38 +1,38 @@
-import { useMarketplace } from 'hooks';
 import { useState } from 'react';
+import { List } from 'components';
+import { useMergedNFTs } from 'hooks';
 import { MarketNFT } from 'types';
-import Header from './header';
-import List from './list';
-import styles from './Listings.module.scss';
 
 const filters = ['All', 'Buy now', 'On auction', 'Has offers'];
 
-type Conditions = {
-  [key: string]: (nft: MarketNFT) => boolean | MarketNFT;
-};
-
-const conditions: Conditions = {
-  All: (nft) => nft,
-  'Buy now': ({ price }) => !!price,
-  'On auction': ({ auction }) => !!auction,
-  'Has offers': ({ offers, auction }) => (auction ? auction.bids.length > 0 : offers.length > 0),
-};
-
 function Listings() {
+  const { NFTs, isEachNFTRead } = useMergedNFTs();
   const [filter, setFilter] = useState('All');
-  const nfts = useMarketplace();
 
-  const conditionCallback = conditions[filter];
-  const filteredNfts = nfts?.map((nft) =>
-    conditionCallback(nft) ? { ...nft, isVisible: true } : { ...nft, isVisible: false },
-  );
+  const getFilteredNft = (nft: MarketNFT) => {
+    const { price, auction, offers } = nft;
+
+    switch (filter) {
+      case 'Buy now':
+        return !!price;
+      case 'On auction':
+        return !!auction;
+      case 'Has offers':
+        return auction ? auction.bids.length > 0 : offers.length > 0;
+      default:
+        return nft;
+    }
+  };
+
+  const filteredNfts = NFTs?.filter(getFilteredNft);
 
   return (
-    <>
-      <Header text="NFT Marketplace" filter={filter} filters={filters} onFilterChange={setFilter} />
-      <div className={styles.main}>{filteredNfts && <List nfts={filteredNfts} />}</div>
-    </>
+    <List
+      heading="NFT Marketplace"
+      filter={{ value: filter, list: filters, onChange: setFilter }}
+      NFTs={{ list: filteredNfts, isRead: isEachNFTRead, fallback: 'There are no listings at the moment.' }}
+    />
   );
 }
 
-export default Listings;
+export { Listings };
