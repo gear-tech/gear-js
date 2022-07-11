@@ -53,9 +53,9 @@ function Home() {
 
       case ESCROW.STATE.AWAITING_CONFIRMATION:
         return isBuyer ? (
-          <Button text="Confirm deal" onClick={confirm} />
+          <Button text="Confirm deal" onClick={confirm} block />
         ) : (
-          <Button text="Refund tokens" onClick={refund} />
+          <Button text="Refund tokens" onClick={refund} block />
         );
 
       case ESCROW.STATE.CLOSED:
