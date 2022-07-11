@@ -11,7 +11,7 @@ import { INITIAL_LIMIT_BY_PAGE, LOCAL_STORAGE } from 'consts';
 import { MessageModel } from 'types/message';
 import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
-import { MessagesList } from 'components/blocks/MessagesList/MessagesList';
+import { MessagesList } from 'components/blocks/MessagesList';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 
 const Program = () => {

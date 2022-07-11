@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { Metadata } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
@@ -17,25 +17,17 @@ type Props = {
   id: string;
   isReply: boolean;
   metadata?: Metadata;
-  replyErrorCode?: string;
 };
 
-const MessageForm = ({ id, isReply, metadata, replyErrorCode }: Props) => {
+const MessageForm = ({ id, isReply, metadata }: Props) => {
   const { api } = useApi();
   const alert = useAlert();
-  const sendMessage = useSendMessage();
-
-  const initialValues = useRef<FormValues>({
-    value: 0,
-    payload: '',
-    gasLimit: 20000000,
-    payloadType: 'Bytes',
-    destination: id,
-  });
 
   const isMeta = useMemo(() => metadata && Object.keys(metadata).length > 0, [metadata]);
 
   const method = isReply ? 'reply' : 'handle';
+
+  const sendMessage = useSendMessage();
 
   const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
     const payloadType = isMeta ? void 0 : values.payloadType;
@@ -52,14 +44,22 @@ const MessageForm = ({ id, isReply, metadata, replyErrorCode }: Props) => {
   };
 
   const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>
-    calculateGas(method, api, values, alert, metadata, null, id, replyErrorCode).then((gasLimit) =>
+    calculateGas(method, api, values, alert, metadata, null, id).then((gasLimit) =>
       setFieldValue('gasLimit', gasLimit)
     );
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, metadata?.handle_input), [metadata]);
 
+  const initialValues: FormValues = {
+    value: 0,
+    payload: '',
+    gasLimit: 20000000,
+    payloadType: 'Bytes',
+    destination: id,
+  };
+
   return (
-    <Formik initialValues={initialValues.current} validateOnBlur validationSchema={Schema} onSubmit={handleSubmit}>
+    <Formik initialValues={initialValues} validationSchema={Schema} onSubmit={handleSubmit}>
       {({ values, setFieldValue }) => (
         <Form data-testid="sendMessageForm" className={formStyles.largeForm}>
           <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />

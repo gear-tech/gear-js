@@ -38,8 +38,14 @@ jest.mock('context/api/const', () => ({
   NODE_API_ADDRESS: 'testnet-address',
 }));
 
+// this shit fixed the react-testing-lib error
+const fixReactError = async () => {
+  fireEvent.click(screen.getAllByRole('button')[0]);
+  await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(9));
+};
+
 describe('header tests', () => {
-  it('renders logo and menu', () => {
+  it('renders logo and menu', async () => {
     useApiMock();
     useAccountsMock();
 
@@ -87,13 +93,16 @@ describe('header tests', () => {
     menuLinks.forEach((link) =>
       link === explorer ? expect(link).toHaveClass(menuStyles.active) : expect(link).not.toHaveClass(menuStyles.active)
     );
+
+    // temp test fix
+    await fixReactError();
   });
 
   it('renders sidebar button, opens/closes sidebar, adds/copies/removes/switches node', async () => {
     useApiMock();
     useAccountsMock();
 
-    renderWithProviders(<Header />);
+    const { rerender } = renderWithProviders(<Header />);
 
     // sidebar button
 
@@ -109,20 +118,22 @@ describe('header tests', () => {
 
     useApiMock(TEST_API);
 
-    await waitFor(() => {
-      expect(screen.getByText('Test chain'));
-      expect(sidebarButton).toHaveTextContent('test-name/12345');
-    });
+    rerender(<Header />);
+
+    expect(screen.getByText('Test chain'));
+    expect(sidebarButton).toHaveTextContent('test-name/12345');
 
     fireEvent.click(sidebarButton);
 
     const sidebar = screen.getByTestId('sidebar');
+
     expect(sidebar).toBeInTheDocument();
 
     // sidebar
 
-    const [nodeSectionsList] = within(sidebar).getAllByRole('list');
-    const [testnetSection, , , devSection] = within(nodeSectionsList).getAllByRole('listitem');
+    const nodeSectionsList = within(sidebar).getByRole('list');
+
+    const [testnetSection, , , devSection] = await within(nodeSectionsList).findAllByRole('listitem');
 
     const testnetHeading = screen.getByText('testnet heading');
     const testnetList = within(testnetSection).getByRole('list');
@@ -181,7 +192,7 @@ describe('header tests', () => {
     const addButton = screen.getByText('Add');
     const input = screen.getByRole('textbox');
 
-    expect(input).toHaveValue('');
+    expect(input).toHaveValue('testnet-address');
     expect(addButton).toBeDisabled();
 
     fireEvent.change(input, { target: { value: 'wss://' } });
@@ -268,126 +279,134 @@ describe('header tests', () => {
     expect(window.location.reload).toHaveBeenCalledTimes(1);
     expect(localStorage.setItem).toBeCalledWith('node_address', 'random-testnet-address');
   });
+});
 
-  describe('account switch tests', () => {
-    const getModal = () => screen.getByTestId('modal');
-    const getModalQuery = () => screen.queryByTestId('modal');
+describe('account switch tests', () => {
+  const getModal = () => screen.getByTestId('modal');
+  const getModalQuery = () => screen.queryByTestId('modal');
 
-    const getButtonsList = () => within(getModal()).getByRole('list');
-    const getButtons = () => within(getButtonsList()).getAllByRole('button');
-    const getButton = (index: number) => getButtons()[index];
+  const getButtonsList = () => within(getModal()).getByRole('list');
+  const getButtons = () => within(getButtonsList()).getAllByRole('button');
+  const getButton = (index: number) => getButtons()[index];
 
-    const getLoginButton = () => screen.getByText('Connect');
-    const getLoginButtonQuery = () => screen.queryByText('Connect');
+  const getLoginButton = () => screen.getByText('Connect');
+  const getLoginButtonQuery = () => screen.queryByText('Connect');
 
-    it('logins/logouts, switches account and closes modal', async () => {
-      useApiMock(TEST_API);
-      useAccountMock();
-      useAccountsMock(accounts);
+  it('logins/logouts, switches account and closes modal', async () => {
+    useApiMock(TEST_API);
+    useAccountMock();
+    useAccountsMock(accounts);
 
-      renderWithProviders(<Header />);
+    // mocking raw public key get since it gets saved in localstorage on account switch
+    jest.spyOn(GearKeyring, 'decodeAddress').mockImplementation(() => '0x00');
 
-      // mocking raw public key get since it gets saved in localstorage on account switch
-      jest.spyOn(GearKeyring, 'decodeAddress').mockImplementation(() => '0x00');
+    renderWithProviders(<Header />);
 
-      // logins
+    // TODO: delete this temp solution
+    await fixReactError();
 
-      fireEvent.click(getLoginButton());
+    // logins
 
-      const buttons = getButtons();
-      const secondButton = getButton(1);
+    fireEvent.click(getLoginButton());
 
-      expect(buttons).toHaveLength(3);
-      buttons.forEach((button) => expect(button).not.toHaveClass('active'));
-      expect(secondButton).toHaveTextContent('second acc');
-      expect(secondButton).toHaveTextContent('456');
+    const buttons = getButtons();
+    const secondButton = getButton(1);
 
-      useAccountMock(accounts[1]);
+    expect(buttons).toHaveLength(3);
+    buttons.forEach((button) => expect(button).not.toHaveClass('active'));
+    expect(secondButton).toHaveTextContent('second acc');
+    expect(secondButton).toHaveTextContent('456');
 
-      fireEvent.click(secondButton);
+    useAccountMock(accounts[1]);
 
-      const accountButton = screen.getByText('second acc');
-      const balance = screen.getByText('Balance:');
+    fireEvent.click(secondButton);
 
-      await waitFor(() => expect(balance).toHaveTextContent('Balance: 2000 MUnit'));
+    const accountButton = screen.getByText('second acc');
+    const balance = screen.getByText('Balance:');
 
-      expect(getModalQuery()).not.toBeInTheDocument();
-      expect(getLoginButtonQuery()).not.toBeInTheDocument();
+    await waitFor(() => expect(balance).toHaveTextContent('Balance: 2000 MUnit'));
 
-      // switches
+    expect(getModalQuery()).not.toBeInTheDocument();
+    expect(getLoginButtonQuery()).not.toBeInTheDocument();
 
-      fireEvent.click(accountButton);
+    // switches
 
-      getButtons().forEach((button) =>
-        button === getButton(1) ? expect(button).toHaveClass('active') : expect(button).not.toHaveClass('active')
-      );
+    fireEvent.click(accountButton);
 
-      useAccountMock(accounts[2]);
+    getButtons().forEach((button) =>
+      button === getButton(1) ? expect(button).toHaveClass('active') : expect(button).not.toHaveClass('active')
+    );
 
-      fireEvent.click(getButton(2));
+    useAccountMock(accounts[2]);
 
-      await waitFor(() => expect(balance).toHaveTextContent('Balance: 3000 MUnit'));
+    fireEvent.click(getButton(2));
 
-      expect(getModalQuery()).not.toBeInTheDocument();
-      expect(accountButton).toHaveTextContent('third acc');
+    await waitFor(() => expect(balance).toHaveTextContent('Balance: 3000 MUnit'));
 
-      fireEvent.click(accountButton);
+    expect(getModalQuery()).not.toBeInTheDocument();
+    expect(accountButton).toHaveTextContent('third acc');
 
-      getButtons().forEach((button) =>
-        button === getButton(2) ? expect(button).toHaveClass('active') : expect(button).not.toHaveClass('active')
-      );
+    fireEvent.click(accountButton);
 
-      // logouts
+    getButtons().forEach((button) =>
+      button === getButton(2) ? expect(button).toHaveClass('active') : expect(button).not.toHaveClass('active')
+    );
 
-      const logoutButton = screen.getByLabelText('Logout');
+    // logouts
 
-      useAccountMock();
+    const logoutButton = screen.getByLabelText('Logout');
 
-      fireEvent.click(logoutButton);
+    useAccountMock();
 
-      expect(getModalQuery()).not.toBeInTheDocument();
-      expect(balance).not.toBeInTheDocument();
-      expect(accountButton).not.toBeInTheDocument();
+    fireEvent.click(logoutButton);
 
-      fireEvent.click(getLoginButton());
+    expect(getModalQuery()).not.toBeInTheDocument();
+    expect(balance).not.toBeInTheDocument();
+    expect(accountButton).not.toBeInTheDocument();
 
-      getButtons().forEach((button) => expect(button).not.toHaveClass('active'));
+    fireEvent.click(getLoginButton());
 
-      // closes modal
+    getButtons().forEach((button) => expect(button).not.toHaveClass('active'));
 
-      const closeModalButton = screen.getByLabelText('Close modal');
+    // closes modal
 
-      fireEvent.click(closeModalButton);
-      expect(getModalQuery()).not.toBeInTheDocument();
-    });
+    const closeModalButton = screen.getByLabelText('Close modal');
 
-    it('logins without extension', () => {
-      useApiMock();
+    fireEvent.click(closeModalButton);
+    expect(getModalQuery()).not.toBeInTheDocument();
+  });
 
-      renderWithProviders(<Header />);
+  it('logins without extension', async () => {
+    useApiMock();
 
-      fireEvent.click(getLoginButton());
+    renderWithProviders(<Header />);
 
-      const noExtensionMessage = screen.getByText(
-        textMatcher('Polkadot extension was not found or disabled. Please install it')
-      );
+    fireEvent.click(getLoginButton());
 
-      expect(getModal()).toContainElement(noExtensionMessage);
-    });
+    const noExtensionMessage = screen.getByText(
+      textMatcher('Polkadot extension was not found or disabled. Please install it')
+    );
 
-    it('logins without accounts', () => {
-      useApiMock();
-      useAccountsMock([]);
+    expect(getModal()).toContainElement(noExtensionMessage);
+    // TODO: delete this temp solution
+    await fixReactError();
+  });
 
-      renderWithProviders(<Header />);
+  it('logins without accounts', async () => {
+    useApiMock();
+    useAccountsMock([]);
 
-      fireEvent.click(getLoginButton());
+    renderWithProviders(<Header />);
 
-      const noAccountsMessage = screen.getByText(
-        'No accounts found. Please open your Polkadot extension and create a new account or import existing. Then reload this page.'
-      );
+    fireEvent.click(getLoginButton());
 
-      expect(getModal()).toContainElement(noAccountsMessage);
-    });
+    const noAccountsMessage = screen.getByText(
+      'No accounts found. Please open your Polkadot extension and create a new account or import existing. Then reload this page.'
+    );
+
+    expect(getModal()).toContainElement(noAccountsMessage);
+
+    // TODO: delete this temp solution
+    await fixReactError();
   });
 });

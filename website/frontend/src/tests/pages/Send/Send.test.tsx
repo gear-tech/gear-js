@@ -1,6 +1,6 @@
 import { decodeHexTypes, createPayloadTypeStructure } from '@gear-js/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, render, fireEvent, waitFor } from '@testing-library/react';
+import { screen, render, fireEvent, waitFor, act } from '@testing-library/react';
 import { AccountProvider } from '@gear-js/react-hooks';
 
 import { useAccountMock, useApiMock, TEST_API, TEST_ACCOUNT } from '../../mocks/hooks';
@@ -20,17 +20,17 @@ type Props = {
 };
 
 const SendMessagePage = ({ path, initialEntries }: Props) => (
-  <ApiProvider>
-    <AccountProvider>
-      <AlertProvider>
+  <AlertProvider>
+    <ApiProvider>
+      <AccountProvider>
         <MemoryRouter initialEntries={initialEntries}>
           <Routes>
             <Route path={path} element={<Send />} />
           </Routes>
         </MemoryRouter>
-      </AlertProvider>
-    </AccountProvider>
-  </ApiProvider>
+      </AccountProvider>
+    </ApiProvider>
+  </AlertProvider>
 );
 
 jest.mock('@polkadot/extension-dapp', () => ({
@@ -60,6 +60,7 @@ describe('send message page tests', () => {
 
   it('sends message to program without meta', async () => {
     useApiMock(TEST_API);
+    useAccountMock();
 
     TEST_API.message.submit.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
@@ -143,8 +144,12 @@ describe('send message page tests', () => {
     };
 
     // calculate gas
+    // some formik error, act must be used
+    act(() => {
+      fireEvent.click(calculateGasBtn);
+    });
 
-    fireEvent.click(calculateGasBtn);
+    await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
     expect(calculateGas).toBeCalledWith(
@@ -154,11 +159,8 @@ describe('send message page tests', () => {
       expect.any(Object),
       undefined,
       null,
-      PROGRAM_ID_2,
-      undefined
+      PROGRAM_ID_2
     );
-
-    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     // authorized submit
 
@@ -233,21 +235,14 @@ describe('send message page tests', () => {
 
     // calculate gas
 
-    fireEvent.click(calculateGasBtn);
+    act(() => {
+      fireEvent.click(calculateGasBtn);
+    });
+
+    await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
-    expect(calculateGas).toBeCalledWith(
-      'handle',
-      TEST_API,
-      formValues,
-      expect.any(Object),
-      META,
-      null,
-      PROGRAM_ID_1,
-      undefined
-    );
-
-    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
+    expect(calculateGas).toBeCalledWith('handle', TEST_API, formValues, expect.any(Object), META, null, PROGRAM_ID_1);
 
     // authorized submit
 
@@ -330,7 +325,11 @@ describe('send message page tests', () => {
 
     // calculate gas
 
-    fireEvent.click(calculateGasBtn);
+    act(() => {
+      fireEvent.click(calculateGasBtn);
+    });
+
+    await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
     expect(calculateGas).toBeCalledWith(
@@ -340,11 +339,8 @@ describe('send message page tests', () => {
       expect.any(Object),
       undefined,
       null,
-      MESSAGE_ID_2,
-      '1'
+      MESSAGE_ID_2
     );
-
-    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     // authorized submit
 
@@ -415,21 +411,14 @@ describe('send message page tests', () => {
 
     // calculate gas
 
-    fireEvent.click(calculateGasBtn);
+    act(() => {
+      fireEvent.click(calculateGasBtn);
+    });
+
+    await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
-    expect(calculateGas).toBeCalledWith(
-      'reply',
-      TEST_API,
-      formValues,
-      expect.any(Object),
-      META,
-      null,
-      MESSAGE_ID_1,
-      '1'
-    );
-
-    await (() => expect(gasLimitField).toHaveValue('2,400,000'));
+    expect(calculateGas).toBeCalledWith('reply', TEST_API, formValues, expect.any(Object), META, null, MESSAGE_ID_1);
 
     // authorized submit
 

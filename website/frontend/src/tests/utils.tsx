@@ -1,11 +1,14 @@
 import { ReactElement } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, BrowserRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import { providers } from 'context';
+import { AlertProvider } from 'context/alert';
+import { AccountProvider, ApiProvider } from '@gear-js/react-hooks';
 
 type Props = {
   children: ReactElement;
 };
+
+const providers = [BrowserRouter, AlertProvider, ApiProvider, AccountProvider];
 
 const Providers = ({ children: element }: Props) =>
   providers.reduceRight((children, Provider) => <Provider>{children}</Provider>, element);

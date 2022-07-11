@@ -2064,7 +2064,6 @@ __metadata:
     "@polkadot/extension-dapp": 0.43.1
     "@polkadot/react-identicon": 2.0.1
     "@polkadot/types": 8.9.1
-    "@polkadot/wasm-crypto": 6.1.5
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 12.1.5
     "@testing-library/user-event": 14.1.1
@@ -2075,7 +2074,6 @@ __metadata:
     "@types/lodash.isobject": 3.0.6
     "@types/lodash.isplainobject": ^4.0.7
     "@types/lodash.isstring": 4.0.6
-    "@types/lodash.setwith": 4.3.6
     "@types/node": 17.0.21
     "@types/react": 17.0.44
     "@types/react-alert": 7.0.2
@@ -2103,12 +2101,10 @@ __metadata:
     lodash.isobject: 3.0.2
     lodash.isplainobject: ^4.0.6
     lodash.isstring: 4.0.1
-    lodash.setwith: 4.3.2
     monaco-editor: 0.33.0
     msw: 0.42.3
     nanoid: 3.3.2
     prettier: 2.6.2
-    prop-types: 15.8.1
     react: 17.0.2
     react-dnd: 16.0.0
     react-dnd-html5-backend: 16.0.0
@@ -3495,18 +3491,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/wasm-bridge@npm:6.1.5":
-  version: 6.1.5
-  resolution: "@polkadot/wasm-bridge@npm:6.1.5"
-  dependencies:
-    "@babel/runtime": ^7.18.3
-  peerDependencies:
-    "@polkadot/util": "*"
-    "@polkadot/x-randomvalues": "*"
-  checksum: 81da501fd04c44d5de9f9aa900e7125248cbb49f39b497d77d06cfa3252739c08501aab19a4d46bb4b84358bbf4ce064fc3d96674ab133e61cb4129fe8835b34
-  languageName: node
-  linkType: hard
-
 "@polkadot/wasm-bridge@npm:6.2.2":
   version: 6.2.2
   resolution: "@polkadot/wasm-bridge@npm:6.2.2"
@@ -3519,17 +3503,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/wasm-crypto-asmjs@npm:6.1.5":
-  version: 6.1.5
-  resolution: "@polkadot/wasm-crypto-asmjs@npm:6.1.5"
-  dependencies:
-    "@babel/runtime": ^7.18.3
-  peerDependencies:
-    "@polkadot/util": "*"
-  checksum: a68b5612dc27d6b0eeae4c0d292b07c3689f78dfb9592db1077cda61cd5aab3ab8b5b3af9fb72448dc317723076a950b9a50ea6d4c03b8055e179ab9fb87d938
-  languageName: node
-  linkType: hard
-
 "@polkadot/wasm-crypto-asmjs@npm:6.2.2":
   version: 6.2.2
   resolution: "@polkadot/wasm-crypto-asmjs@npm:6.2.2"
@@ -3538,20 +3511,6 @@ __metadata:
   peerDependencies:
     "@polkadot/util": "*"
   checksum: 0245a21898e4fb7549b0d125911cbba0d4766e2d15d534bc4e60267ba5a332147d53585132e8ce34884581a0b4bc72c85208ce3150372d88e7a14b94a4b969a4
-  languageName: node
-  linkType: hard
-
-"@polkadot/wasm-crypto-init@npm:6.1.5":
-  version: 6.1.5
-  resolution: "@polkadot/wasm-crypto-init@npm:6.1.5"
-  dependencies:
-    "@babel/runtime": ^7.18.3
-    "@polkadot/wasm-bridge": 6.1.5
-    "@polkadot/wasm-crypto-asmjs": 6.1.5
-    "@polkadot/wasm-crypto-wasm": 6.1.5
-  peerDependencies:
-    "@polkadot/util": "*"
-  checksum: 2ec430b412893ac8b0c898da3d1563fa53dbe52e9db41ffea376349b7e3f26a36f6b75d1a6b4f81ddebeb1f2d82b686b8cc793101f672b43224cce2ab5a6b632
   languageName: node
   linkType: hard
 
@@ -3570,18 +3529,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/wasm-crypto-wasm@npm:6.1.5":
-  version: 6.1.5
-  resolution: "@polkadot/wasm-crypto-wasm@npm:6.1.5"
-  dependencies:
-    "@babel/runtime": ^7.18.3
-    "@polkadot/wasm-util": 6.1.5
-  peerDependencies:
-    "@polkadot/util": "*"
-  checksum: 780844529bf606a6adb93ef8bd053381546cbbdc0ff9062b9c10765550c3a079e2ffe7ae4301686076e2b159a3596997fa63bb8937ad0bfc445dc5cf093f364f
-  languageName: node
-  linkType: hard
-
 "@polkadot/wasm-crypto-wasm@npm:6.2.2":
   version: 6.2.2
   resolution: "@polkadot/wasm-crypto-wasm@npm:6.2.2"
@@ -3591,22 +3538,6 @@ __metadata:
   peerDependencies:
     "@polkadot/util": "*"
   checksum: 73a90282777d3f94ae1f08d708598ffc74d95e19bec8fb9a218b742d20e6ee6b05486f59e207e117ec3587b310ebce38738b588956fe0c79c836d4811aaf2283
-  languageName: node
-  linkType: hard
-
-"@polkadot/wasm-crypto@npm:6.1.5":
-  version: 6.1.5
-  resolution: "@polkadot/wasm-crypto@npm:6.1.5"
-  dependencies:
-    "@babel/runtime": ^7.18.3
-    "@polkadot/wasm-bridge": 6.1.5
-    "@polkadot/wasm-crypto-asmjs": 6.1.5
-    "@polkadot/wasm-crypto-init": 6.1.5
-    "@polkadot/wasm-crypto-wasm": 6.1.5
-    "@polkadot/wasm-util": 6.1.5
-  peerDependencies:
-    "@polkadot/util": "*"
-  checksum: 8ff82a7bb497ae42d4b68d68751ff926395e9d794f6371feb799e14e996ba2f8eaa2574ce5f59fad08e05518e6da971c8efde2d70ef52ebc964c420e27c61f6a
   languageName: node
   linkType: hard
 
@@ -3624,17 +3555,6 @@ __metadata:
     "@polkadot/util": "*"
     "@polkadot/x-randomvalues": "*"
   checksum: fb1292120a71e2c8395b11b7fe933a4f455a964586bd3570b9f7e4e50f8afdfdae7ba649e1b72f6c810e7e9d8dd318b8cd781a0418f0c62cbe02df95351bd5d7
-  languageName: node
-  linkType: hard
-
-"@polkadot/wasm-util@npm:6.1.5":
-  version: 6.1.5
-  resolution: "@polkadot/wasm-util@npm:6.1.5"
-  dependencies:
-    "@babel/runtime": ^7.18.3
-  peerDependencies:
-    "@polkadot/util": "*"
-  checksum: 1e3081fc38b67317b1f4463b212e309024baf1d75b64511d65d8c46038f8741062cde164728c29464194a9d4ffff567cc6bd09158f7a0d0f1b0ae14cf568f48e
   languageName: node
   linkType: hard
 
@@ -4500,15 +4420,6 @@ __metadata:
   dependencies:
     "@types/lodash": "*"
   checksum: ac171e3e3cac9aa0a2b4a80817699188604d48d9ecb3e665b52718db9cbf1a543f87974e9e6d786e5f3e361c0f2bf768255ff81cc83a5b83fda44ed5e513774c
-  languageName: node
-  linkType: hard
-
-"@types/lodash.setwith@npm:4.3.6":
-  version: 4.3.6
-  resolution: "@types/lodash.setwith@npm:4.3.6"
-  dependencies:
-    "@types/lodash": "*"
-  checksum: d419583a52556ea3afe142f79b738232a07a4161a9396b19ba609786a6a79b77f7b51b4a3654279cf0aed47f3c1835eb6e20cc82b0e2d22b9379d9000c62cc14
   languageName: node
   linkType: hard
 
@@ -12861,13 +12772,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.setwith@npm:4.3.2":
-  version: 4.3.2
-  resolution: "lodash.setwith@npm:4.3.2"
-  checksum: 49102fa08de45e48ac333f55d76b789db3ac0225c4e0d3dbfc56ef7e61518c986517b1b93120609493380e531a4ebddba58577c6787291b0366d897dc54d5b77
-  languageName: node
-  linkType: hard
-
 "lodash.sortby@npm:^4.7.0":
   version: 4.7.0
   resolution: "lodash.sortby@npm:4.7.0"
@@ -15484,7 +15388,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.8.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
