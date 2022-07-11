@@ -21,6 +21,11 @@ interface IMessagesDispatchedData {
   statuses: { [key: string]: 'Success' | 'Failed' };
 }
 
+interface IUserMessageReadData {
+  id: string;
+  reason: MESSAGE_READ_STATUS | null;
+}
+
 enum MESSAGE_TYPE {
   USER_MESS_SENT = 'UserMessageSent',
   ENQUEUED = 'Enqueued',
@@ -32,4 +37,11 @@ enum MESSAGE_READ_STATUS {
   REPLIED = 'Replied',
 }
 
-export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData, MESSAGE_TYPE, MESSAGE_READ_STATUS };
+export {
+  IMessage,
+  IMessageEnqueuedData,
+  IMessagesDispatchedData,
+  IUserMessageReadData,
+  MESSAGE_TYPE,
+  MESSAGE_READ_STATUS,
+};
