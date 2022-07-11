@@ -1,4 +1,12 @@
+@use '@gear-js/ui/variables' as *;
+
 .input {
   display: grid;
   grid-template-columns: 1fr 3fr;
+}
+
+.error {
+  margin-top: 5px;
+  color: $errorColor;
+  text-align: right;
 }
