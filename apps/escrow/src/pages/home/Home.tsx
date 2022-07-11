@@ -1,5 +1,4 @@
 import { useAccount } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui';
 import { useEffect, useState } from 'react';
 import { ESCROW, FORM, LOCAL_STORAGE } from 'consts';
 import { CreateFormValues } from 'types';
@@ -9,6 +8,9 @@ import { CreateWallet } from './create-wallet';
 import { InputForm } from './input-form';
 import { Summary } from './summary';
 import { Start } from './start';
+import { Deposit } from './deposit';
+import { Confirmation } from './confirmation';
+import { Closed } from './closed';
 import styles from './Home.module.scss';
 
 function Home() {
@@ -24,8 +26,8 @@ function Home() {
   const sendMessage = useEscrowMessage();
 
   const { buyer, seller, state, amount } = escrow || {};
-  const isBuyer = account && account.decodedAddress === buyer;
-  const isSeller = account && account.decodedAddress === seller;
+  const isBuyer = !!account && account.decodedAddress === buyer;
+  const isSeller = !!account && account.decodedAddress === seller;
   const isStart = !form && !programId && !walletId;
 
   const create = (values: CreateFormValues) => sendMessage({ Create: values });
@@ -33,38 +35,6 @@ function Home() {
   const cancel = () => sendMessage({ Cancel: walletId });
   const confirm = () => sendMessage({ Confirm: walletId });
   const refund = () => sendMessage({ Refund: walletId });
-
-  const getRole = () => {
-    if (isBuyer) return ESCROW.ROLE.BUYER;
-    if (isSeller) return ESCROW.ROLE.SELLER;
-  };
-
-  const getButtons = () => {
-    switch (state) {
-      case ESCROW.STATE.AWAITING_DEPOSIT:
-        return isBuyer ? (
-          <>
-            <Button text="Make deposit" onClick={deposit} block />
-            <Button text="Cancel deal" color="secondary" onClick={cancel} block />
-          </>
-        ) : (
-          <Button text="Cancel deal" color="secondary" onClick={cancel} block />
-        );
-
-      case ESCROW.STATE.AWAITING_CONFIRMATION:
-        return isBuyer ? (
-          <Button text="Confirm deal" onClick={confirm} block />
-        ) : (
-          <Button text="Refund tokens" onClick={refund} block />
-        );
-
-      case ESCROW.STATE.CLOSED:
-        return <p className={styles.text}>Wallet is closed, please go back and select or create another one.</p>;
-
-      default:
-        return '';
-    }
-  };
 
   const goBack = () => {
     if (form) resetForm();
@@ -83,6 +53,11 @@ function Home() {
   const openInitWalletForm = () => setForm(FORM.INIT.WALLET);
   const openInputWalletForm = () => setForm(FORM.INPUT.WALLET);
 
+  const getRole = () => {
+    if (isBuyer) return ESCROW.ROLE.BUYER;
+    if (isSeller) return ESCROW.ROLE.SELLER;
+  };
+
   const getForm = () => {
     switch (form) {
       case FORM.INIT.PROGRAM:
@@ -94,7 +69,21 @@ function Home() {
       case FORM.INPUT.WALLET:
         return <InputForm label="Wallet ID" onSubmit={setWalletId} />;
       default:
-        return '';
+    }
+  };
+
+  const getButtons = () => {
+    switch (state) {
+      case ESCROW.STATE.AWAITING_DEPOSIT:
+        return <Deposit isBuyer={isBuyer} onDeposit={deposit} onCancel={cancel} />;
+
+      case ESCROW.STATE.AWAITING_CONFIRMATION:
+        return <Confirmation isBuyer={isBuyer} onConfirm={confirm} onRefund={refund} />;
+
+      case ESCROW.STATE.CLOSED:
+        return <Closed />;
+
+      default:
     }
   };
 

@@ -1,0 +1,7 @@
+@use '@gear-js/ui/variables' as *;
+
+.text {
+  padding: 15px 20px;
+  border: 1px dashed #ffffff;
+  border-radius: $borderRadius;
+}
