@@ -1,7 +1,5 @@
-import { KAFKA_TOPICS } from '@gear-js/common';
+import { IRpcResponse } from '@gear-js/common';
 
-import { KafkaParams } from '../../kafka/types';
+type RpcResponse = Pick<IRpcResponse, 'result' | 'error'>;
 
-type RpcMethods = Record<KAFKA_TOPICS, (params: KafkaParams) => Promise<any>>;
-
-export { RpcMethods };
+export { RpcResponse };
