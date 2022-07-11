@@ -2,7 +2,7 @@ import { IRpcRequest, IRpcResponse, KAFKA_TOPICS, JSONRPC_ERRORS } from '@gear-j
 
 import { getResponse } from '../utils';
 import { API_GATEWAY } from '../common/constant';
-import { jsonRpcMethodHandler } from './json-rpc-method.handler';
+import { jsonRpcHandler } from './json-rpc.handler';
 import { apiGatewayLogger } from '../common/event-listener.logger';
 
 async function jsonRpcRequestHandler(
@@ -25,7 +25,7 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
   }
   const { method, params } = procedure;
-  const { error, result } = await jsonRpcMethodHandler(method, params);
+  const { error, result } = await jsonRpcHandler(method as KAFKA_TOPICS, params);
   return getResponse(procedure, error, result);
 }
 
