@@ -1,4 +1,4 @@
-@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
 
 .header {
   margin-bottom: 30px;
@@ -7,19 +7,11 @@
 }
 
 .heading {
-  // TODO: replace w/ @gear-js/ui heading styles
-  font-family: 'Syncopate', sans-serif;
-  font-size: 22px;
-  line-height: 30px;
+  @extend %h5;
 }
 
 .list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
-}
-
-.text {
-  font-size: $fontSizeMedium;
-  color: $textColorSecondary;
 }
