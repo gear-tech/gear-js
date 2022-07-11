@@ -5,12 +5,13 @@ import { CreateFormValues } from 'types';
 import { useEscrow, useEscrowMessage, useWalletId, useProgram } from 'hooks';
 import { Box, Loader } from 'components';
 import { CreateWallet } from './create-wallet';
-import { InputForm } from './input-form';
 import { Summary } from './summary';
 import { Start } from './start';
 import { Deposit } from './deposit';
 import { Confirmation } from './confirmation';
 import { Closed } from './closed';
+import { InputAddress } from './input-address';
+import { InputWallet } from './input-wallet';
 import styles from './Home.module.scss';
 
 function Home() {
@@ -61,13 +62,13 @@ function Home() {
   const getForm = () => {
     switch (form) {
       case FORM.INIT.PROGRAM:
-        return <InputForm label="Fungible token address" onSubmit={uploadProgram} />;
+        return <InputAddress label="Fungible token address" onSubmit={uploadProgram} />;
       case FORM.INPUT.PROGRAM:
-        return <InputForm label="Program address" onSubmit={setProgramId} />;
+        return <InputAddress label="Program address" onSubmit={setProgramId} />;
       case FORM.INIT.WALLET:
         return <CreateWallet onSubmit={create} />;
       case FORM.INPUT.WALLET:
-        return <InputForm label="Wallet ID" onSubmit={setWalletId} />;
+        return <InputWallet onSubmit={setWalletId} />;
       default:
     }
   };
@@ -76,13 +77,10 @@ function Home() {
     switch (state) {
       case ESCROW.STATE.AWAITING_DEPOSIT:
         return <Deposit isBuyer={isBuyer} onDeposit={deposit} onCancel={cancel} />;
-
       case ESCROW.STATE.AWAITING_CONFIRMATION:
         return <Confirmation isBuyer={isBuyer} onConfirm={confirm} onRefund={refund} />;
-
       case ESCROW.STATE.CLOSED:
         return <Closed />;
-
       default:
     }
   };
