@@ -47,6 +47,15 @@ export class GearApi extends ApiPromise {
       rpc: {
         ...gearRpc,
       },
+      // it's temporarily necessary to avoid the warning "API/INIT: Not decorating unknown runtime apis: GearApi/1"
+      runtime: {
+        GearApi: [
+          {
+            methods: {},
+            version: 1,
+          },
+        ],
+      },
       ...restOptions,
     });
 

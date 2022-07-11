@@ -1,18 +1,13 @@
-import { GearApi } from './GearApi';
-import { IActiveProgram, IGearPages, IProgram } from './types/interfaces';
-import { Hex, ProgramId } from './types';
 import { Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { u8aToHex } from '@polkadot/util';
+
+import { IActiveProgram, IGearPages, IProgram } from './types/interfaces';
+import { GPAGES_HEX, GPROG_HEX, SEPARATOR } from './utils';
 import { CreateType } from './create-type';
+import { Hex, ProgramId } from './types';
 import { ReadStateError } from './errors';
-
-const PREFIXES = {
-  prog: Buffer.from('g::prog::').toString('hex'),
-  pages: Buffer.from('g::pages::').toString('hex'),
-};
-
-const SEPARATOR = Buffer.from('::').toString('hex');
+import { GearApi } from './GearApi';
 
 export class GearStorage {
   api: GearApi;
@@ -28,7 +23,7 @@ export class GearStorage {
    * @returns
    */
   async gProg(programId: ProgramId): Promise<IActiveProgram> {
-    const storage = (await this.api.rpc.state.getStorage(`0x${PREFIXES.prog}${programId.slice(2)}`)) as Option<Raw>;
+    const storage = (await this.api.rpc.state.getStorage(`0x${GPROG_HEX}${programId.slice(2)}`)) as Option<Raw>;
     if (storage.isNone) {
       throw new ReadStateError(`Program with id ${programId} was not found in the storage`);
     }
@@ -45,7 +40,7 @@ export class GearStorage {
   async gPages(programId: ProgramId, gProg: IActiveProgram): Promise<IGearPages> {
     const keys = {};
     gProg.pages_with_data.forEach((value) => {
-      keys[value.toNumber()] = `0x${PREFIXES.pages}${programId.slice(2)}${SEPARATOR}${this.api
+      keys[value.toNumber()] = `0x${GPAGES_HEX}${programId.slice(2)}${SEPARATOR}${this.api
         .createType('Bytes', Array.from(this.api.createType('u32', value).toU8a()))
         .toHex()
         .slice(2)}`;
