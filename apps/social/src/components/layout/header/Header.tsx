@@ -9,8 +9,10 @@ function Header() {
 
   return (
     <header className={styles.header}>
-      <Logo />
-      <Menu />
+      <nav className={styles.nav}>
+        <Logo />
+        <Menu />
+      </nav>
       {isApiReady && <Account />}
     </header>
   );
