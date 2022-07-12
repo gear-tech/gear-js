@@ -1,11 +1,11 @@
-import { readFileSync } from 'fs';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { join } from 'path';
-import { GearApi, GearKeyring, Hex } from '../src';
-import { TEST_WASM_DIR } from './config';
-import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
-import { GasInfo } from '../src/types/gear-core';
 import { u64 } from '@polkadot/types-codec';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { GearApi, GearKeyring } from '../src';
+import { GasInfo, Hex } from '../src/types';
+import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
+import { TEST_WASM_DIR } from './config';
 
 const api = new GearApi();
 let alice: KeyringPair;

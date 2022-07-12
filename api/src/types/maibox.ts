@@ -1,4 +1,5 @@
-import { AccountId, MessageId } from './ids';
-import { HumanedMessage } from './interfaces';
+import { Hex } from './common';
+import { HumanStoredMessage } from './interfaces';
 
-export type MailboxType = [[AccountId, MessageId], HumanedMessage][];
+// 1: AccountId, 2: MessageId
+export type MailboxRecord = [[Hex, Hex], HumanStoredMessage];

@@ -2,7 +2,7 @@ import { Codec, AnyJson } from '@polkadot/types/types';
 
 import { getWasmMetadata, readState } from './wasm';
 import { Metadata } from './types/interfaces';
-import { ProgramId } from './types';
+import { Hex } from './types';
 import { ReadStateError } from './errors';
 import { GearStorage } from './Storage';
 
@@ -39,7 +39,7 @@ export class GearProgramState extends GearStorage {
    * @param metaWasm - file with metadata
    * @returns decoded state
    */
-  async read(programId: ProgramId, metaWasm: Buffer, inputValue?: AnyJson): Promise<Codec> {
+  async read(programId: Hex, metaWasm: Buffer, inputValue?: AnyJson): Promise<Codec> {
     const program = await this.gProg(programId);
     if (!program) {
       throw new ReadStateError('Program is terminated');

@@ -17,7 +17,6 @@ export * from './Transaction';
 export * from './wasm';
 export * from './create-type';
 export * from './types/interfaces';
-export * from './types';
 export * from './events';
 export * from './utils';
 export * from './events';

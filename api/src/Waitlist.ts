@@ -1,7 +1,7 @@
 import { Option, StorageKey } from '@polkadot/types';
 import { AnyTuple } from '@polkadot/types/types';
 
-import { Hex, ProgramId, MessageId, StoredDispatch, WaitlistItem } from './types';
+import { Hex, HumanStoredDispatch, WaitlistItem } from './types';
 import { StoredMessage } from './types/interfaces';
 import { GearApi } from './GearApi';
 
@@ -50,10 +50,10 @@ export class GearWaitlist {
     const [storedDispatched, blockNumber] = this.api.createType('(GearCoreMessageStoredStoredDispatch, u32)', option);
     const result = {
       blockNumber: blockNumber.toNumber(),
-      storedDispatch: storedDispatched.toHuman() as unknown as StoredDispatch,
+      storedDispatch: storedDispatched.toHuman() as unknown as HumanStoredDispatch,
     };
     if (keys) {
-      const [programId, messageId] = keys.toHuman() as [ProgramId, MessageId];
+      const [programId, messageId] = keys.toHuman() as [Hex, Hex];
       result['programId'] = programId;
       result['messageId'] = messageId;
     }

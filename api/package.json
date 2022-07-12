@@ -29,9 +29,15 @@
     "prepare": "npm run build"
   },
   "exports": {
+    "./cjs/package.json": "./lib/cjs/package.json",
+    "./cjs/*": "./lib/cjs/*.js",
     ".": {
-      "import": "./lib/index.mjs",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./types": {
+      "import": "./lib/types/index.d.ts"
     }
   },
   "license": "GPL-3.0",

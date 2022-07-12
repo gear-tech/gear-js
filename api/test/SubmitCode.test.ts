@@ -19,7 +19,7 @@ afterAll(async () => {
 
 describe('Submit code', () => {
   test('demo_sum', async () => {
-    const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `demo_sum.opt.wasm`));
+    const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_sum.opt.wasm'));
     const { codeHash } = api.code.submit(code);
     expect(codeHash).toBeDefined();
 

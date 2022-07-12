@@ -6,7 +6,7 @@ import { Hex, PayloadType } from './types';
 import { GearApi } from './GearApi';
 import { createPayload } from './utils';
 import { GetGasSpentError } from './errors/program.errors';
-import { GasInfo } from './types/gear-core';
+import { GasInfo } from './types';
 
 export class GearGas {
   api: GearApi;

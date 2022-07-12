@@ -16,9 +16,9 @@ import { GEAR_EXAMPLES_WASM_DIR } from './config';
 const programs = new Map();
 const messages = new Map();
 const api = new GearApi();
-let accounts = {};
+const accounts = {};
 
-let testFiles: {
+const testFiles: {
   title: string;
   skip: boolean;
   program: {
@@ -59,7 +59,7 @@ afterAll(async () => {
 });
 
 describe('Upload program', () => {
-  for (let testFile of testFiles) {
+  for (const testFile of testFiles) {
     testif(!testFile.skip)(testFile.title, async () => {
       const program = testFile.program;
       const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, `${program.name}.opt.wasm`));
@@ -95,11 +95,11 @@ describe('Upload program', () => {
 });
 
 describe('Send Message', () => {
-  for (let testFile of testFiles) {
+  for (const testFile of testFiles) {
     if (!testFile.messages) continue;
 
     describeif(!testFile.skip)(testFile.title, () => {
-      for (let message of testFile.messages) {
+      for (const message of testFile.messages) {
         test(message.id.toString(), async () => {
           let payload = message.payload;
           const program = programs.get(`${testFile.title}.${message.program}`);
@@ -140,10 +140,10 @@ describe('Send Message', () => {
 });
 
 describe('Read Mailbox', () => {
-  for (let testFile of testFiles) {
+  for (const testFile of testFiles) {
     if (!testFile.mailbox) continue;
     testif(!testFile.skip)(testFile.title, async () => {
-      for (let options of testFile.mailbox) {
+      for (const options of testFile.mailbox) {
         const { message, claim, account } = options;
         const messageId = messages.get(`${testFile.title}.${message}`).logId;
         let mailbox = await api.mailbox.read(GearKeyring.decodeAddress(accounts[account].address));
