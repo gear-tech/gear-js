@@ -18,7 +18,7 @@ function useReadState<T = AnyJson>(
   const metaBuffer = useConditionalMetaBuffer(metaSourceOrBuffer);
 
   const [state, setState] = useState<T>();
-  const [isStateRead, setIsStateRead] = useState(false);
+  const [isStateRead, setIsStateRead] = useState(true);
 
   const readState = (isInitLoad?: boolean) => {
     if (programId && metaBuffer && payload) {
