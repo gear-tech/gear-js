@@ -24,7 +24,7 @@ const logger = new Logger('ConsumerController');
 export class ConsumerController {
   constructor(private readonly consumerService: ConsumerService) {}
 
-  @MessagePattern('events')
+  @MessagePattern(KAFKA_TOPICS.EVENTS)
   async addEvent(@Payload() payload: NewEventData<Keys, any>) {
     const key = payload.key;
     const value = payload.value;

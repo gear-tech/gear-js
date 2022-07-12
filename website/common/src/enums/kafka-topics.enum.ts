@@ -1,4 +1,5 @@
 enum KAFKA_TOPICS {
+  EVENTS = 'events',
   PROGRAM_DATA = 'program.data',
   PROGRAM_META_ADD = 'program.meta.add',
   PROGRAM_META_GET = 'program.meta.get',

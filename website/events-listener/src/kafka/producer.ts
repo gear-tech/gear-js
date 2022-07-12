@@ -1,4 +1,6 @@
 import { Admin, Producer } from 'kafkajs';
+import { KAFKA_TOPICS } from '@gear-js/common';
+
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { initKafka } from './init-kafka';
 
@@ -11,7 +13,7 @@ async function connect(): Promise<void> {
 
 async function send(key: string, value: string, genesis: string): Promise<void> {
   await producer.send({
-    topic: 'events',
+    topic: KAFKA_TOPICS.EVENTS,
     messages: [{ key, value: JSON.stringify(value), headers: { genesis } }],
   });
 }
