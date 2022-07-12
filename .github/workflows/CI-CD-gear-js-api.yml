@@ -49,8 +49,8 @@ jobs:
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
         working-directory: api/examples
         run: |
-          yarn install --no-immutable
-          yarn build
+          npm install
+          npm run build
 
   publish-to-npm:
     if: github.event_name == 'push'
