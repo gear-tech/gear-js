@@ -71,12 +71,15 @@ jobs:
           file-url: https://unpkg.com/@gear-js/api@latest/package.json
           static-checking: localIsNew
 
+      - name: Install dependencies and build @gear-js/api
+        working-directory: api
+        run: npm ci
+
       - name: Publish
         if: steps.check.outputs.changed == 'true'
-        working-directory: api
+        working-directory: api/lib
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
-          npm ci
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:
