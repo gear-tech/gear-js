@@ -1,3 +1,16 @@
+## 0.23.2
+
+_07/12/2022_
+
+https://github.com/gear-tech/gear-js/pull/819
+
+### Changes
+
+- Improve types
+- Update build process
+
+---
+
 ## 0.23.1
 
 _07/08/2022_
