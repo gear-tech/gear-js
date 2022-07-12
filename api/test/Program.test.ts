@@ -1,4 +1,5 @@
-import { GearApi, Hex } from '../src';
+import { GearApi } from '../src';
+import { Hex } from '../src/types';
 import { sleep } from './utilsFunctions';
 
 const api = new GearApi();

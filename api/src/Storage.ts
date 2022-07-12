@@ -5,7 +5,7 @@ import { u8aToHex } from '@polkadot/util';
 import { IActiveProgram, IGearPages, IProgram } from './types/interfaces';
 import { GPAGES_HEX, GPROG_HEX, SEPARATOR } from './utils';
 import { CreateType } from './create-type';
-import { Hex, ProgramId } from './types';
+import { Hex } from './types';
 import { ReadStateError } from './errors';
 import { GearApi } from './GearApi';
 
@@ -22,7 +22,7 @@ export class GearStorage {
    * @param programId
    * @returns
    */
-  async gProg(programId: ProgramId): Promise<IActiveProgram> {
+  async gProg(programId: Hex): Promise<IActiveProgram> {
     const storage = (await this.api.rpc.state.getStorage(`0x${GPROG_HEX}${programId.slice(2)}`)) as Option<Raw>;
     if (storage.isNone) {
       throw new ReadStateError(`Program with id ${programId} was not found in the storage`);
@@ -37,7 +37,7 @@ export class GearStorage {
    * @param gProg
    * @returns
    */
-  async gPages(programId: ProgramId, gProg: IActiveProgram): Promise<IGearPages> {
+  async gPages(programId: Hex, gProg: IActiveProgram): Promise<IGearPages> {
     const keys = {};
     gProg.pages_with_data.forEach((value) => {
       keys[value.toNumber()] = `0x${GPAGES_HEX}${programId.slice(2)}${SEPARATOR}${this.api
@@ -58,7 +58,7 @@ export class GearStorage {
    * @param programId
    * @returns codeHash in hex format
    */
-  async getCodeHash(programId: ProgramId): Promise<Hex> {
+  async getCodeHash(programId: Hex): Promise<Hex> {
     const program = await this.gProg(programId);
     return u8aToHex(program.code_hash);
   }

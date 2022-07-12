@@ -3,19 +3,20 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR, TEST_WASM_DIR } from './config';
+import { Hex } from '../src/types';
 
 const api = new GearApi();
 
 const demo_meta_test = {
   code: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_meta.opt.wasm')),
   meta: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_meta.meta.wasm')),
-  id: '0x',
+  id: '0x' as Hex,
   uploadBlock: '0x',
 };
 const timestamp_test = {
   code: readFileSync(join(TEST_WASM_DIR, 'timestamp.opt.wasm')),
   meta: readFileSync(join(TEST_WASM_DIR, 'timestamp.meta.wasm')),
-  id: '0x',
+  id: '0x' as Hex,
 };
 
 beforeAll(async () => {

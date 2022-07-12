@@ -1,9 +1,9 @@
-import { GearApi, DebugMode, ProgramState } from '../src';
-import { getAccount, sendTransaction, sleep } from './utilsFunctions';
+import { KeyringPair } from '@polkadot/keyring/types';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { GearApi, DebugMode } from '../src';
+import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
-import { KeyringPair } from '@polkadot/keyring/types';
 
 const api = new GearApi();
 let alice: KeyringPair;
@@ -28,7 +28,7 @@ describe('DebugMode', () => {
   });
 
   test('get snapshots', async () => {
-    const snapshots = [];
+    const snapshots: any[] = [];
     const unsub = debug.snapshots((event) => {
       snapshots.push(event.data);
     });
@@ -41,14 +41,14 @@ describe('DebugMode', () => {
     await sendTransaction(api.message.submitted, alice, 'MessageEnqueued');
     (await unsub)();
     expect(snapshots).toHaveLength(2);
-    for (let snapshot of snapshots) {
+    for (const snapshot of snapshots) {
       expect(snapshot[0]).toHaveProperty('dispatchQueue');
       expect(snapshot[0]).toHaveProperty('programs');
     }
     expect(snapshots[0][0].programs).toHaveLength(1);
     expect(snapshots[0][0].programs[0]).toHaveProperty('state');
     expect(snapshots[0][0].programs[0].state.isActive).toBeTruthy();
-    for (let prop of ['codeHash', 'persistentPages', 'staticPages']) {
+    for (const prop of ['codeHash', 'persistentPages', 'staticPages']) {
       expect(snapshots[0][0].programs[0].state.asActive).toHaveProperty(prop);
     }
   });

@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/api",
-  "version": "0.23.1",
+  "version": "0.23.2",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
   "main": "lib/index.js",
   "module": "lib/index.mjs",
@@ -29,9 +29,15 @@
     "prepare": "npm run build"
   },
   "exports": {
+    "./cjs/package.json": "./lib/cjs/package.json",
+    "./cjs/*": "./lib/cjs/*.js",
     ".": {
-      "import": "./lib/index.mjs",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./types": {
+      "import": "./lib/types/index.d.ts"
     }
   },
   "license": "GPL-3.0",
@@ -62,5 +68,7 @@
     "ts-jest": "28.0.4",
     "typescript": "4.7.3"
   },
-  "packageManager": "yarn@3.2.0"
+  "files": [
+    "lib"
+  ]
 }

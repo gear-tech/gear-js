@@ -10,3 +10,4 @@ babel.*
 jest.*
 rollup.*
 package-lock.json
+examples/
