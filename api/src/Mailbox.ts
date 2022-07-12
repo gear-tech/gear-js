@@ -1,10 +1,10 @@
-import { GearApi } from './GearApi';
-import { StoredMessage } from './types';
-import { MailboxRecord, Hex } from './types';
-import { Option } from '@polkadot/types';
 import { AccountId32, H256 } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { Option } from '@polkadot/types';
+
+import { MailboxRecord, Hex, StoredMessage } from './types';
 import { GearClaimValue } from './Claim';
+import { GearApi } from './GearApi';
 
 export class GearMailbox {
   api: GearApi;

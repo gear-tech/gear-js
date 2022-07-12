@@ -1,9 +1,10 @@
-import { GearTransaction } from './Transaction';
-import { Hex } from './types';
-import { Bytes } from '@polkadot/types';
-import { generateCodeHash } from './utils';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { Bytes } from '@polkadot/types';
+
+import { GearTransaction } from './Transaction';
+import { generateCodeHash } from './utils';
+import { Hex } from './types';
 export class GearCode extends GearTransaction {
   /**
    * Submit code without initialization

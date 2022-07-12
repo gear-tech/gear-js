@@ -1,10 +1,9 @@
-import { AnyJson, AnyNumber, ISubmittableResult } from '@polkadot/types/types';
-import { H256, BalanceOf } from '@polkadot/types/interfaces';
+import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
+import { H256 } from '@polkadot/types/interfaces';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { u64 } from '@polkadot/types';
 
+import { Metadata, GasLimit, Value } from './types';
 import { GearTransaction } from './Transaction';
-import { Metadata } from './types/interfaces';
 import { SendReplyError } from './errors';
 import { createPayload } from './utils';
 
@@ -33,8 +32,8 @@ export class GearMessageReply extends GearTransaction {
     message: {
       replyToId: H256 | string;
       payload: AnyJson;
-      gasLimit: u64 | AnyNumber;
-      value?: BalanceOf | AnyNumber;
+      gasLimit: GasLimit;
+      value?: Value;
     },
     meta?: Metadata,
     messageType?: string,

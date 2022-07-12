@@ -1,9 +1,8 @@
 import { Codec, AnyJson } from '@polkadot/types/types';
 
 import { getWasmMetadata, readState } from './wasm';
-import { Metadata } from './types/interfaces';
-import { Hex } from './types';
 import { ReadStateError } from './errors';
+import { Metadata, Hex } from './types';
 import { GearStorage } from './Storage';
 
 export class GearProgramState extends GearStorage {

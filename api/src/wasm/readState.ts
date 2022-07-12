@@ -1,7 +1,8 @@
-import { IGearPages } from '../types/interfaces';
-import importObj from './importObj';
-import { getExportValue, PAGE_SIZE } from './utils';
 import { u64, Compact } from '@polkadot/types';
+
+import { getExportValue, PAGE_SIZE } from './utils';
+import { IGearPages } from '../types';
+import importObj from './importObj';
 
 export async function readState(
   wasmBytes: Buffer,
