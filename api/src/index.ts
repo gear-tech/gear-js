@@ -20,3 +20,4 @@ export * from './types/interfaces';
 export * from './events';
 export * from './utils';
 export * from './events';
+export * from './types';
