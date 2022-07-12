@@ -2,8 +2,6 @@ import { GetAllCodeParams } from '@gear-js/common';
 
 import { Code, Message } from '../../../database/entities';
 import { CODE_DB_MOCK } from './code-db.mock';
-import { UpdateCodeInput } from '../../../code/types';
-import { MESSAGE_DB_MOCK } from '../message/message-db.mock';
 
 export const mockCodeRepository = {
   listByGenesis: jest.fn((genesis: string) => {
