@@ -30,6 +30,6 @@ module.exports = {
 
     'consistent-return': 'off', // we want functions to have different return behavior
 
-    'react/jsx-props-no-spreading': ['error', { exceptions: ['Input', 'FileInput', 'Textarea'] }], // disable for form elements, cuz @mantine/form input props needs to be desctructured
+    'react/jsx-props-no-spreading': ['error', { exceptions: ['Input', 'FileInput', 'Textarea', 'Select'] }], // disable for form elements, cuz @mantine/form input props needs to be desctructured
   },
 };

@@ -11,4 +11,8 @@ type Escrow = {
 
 type EscrowState = { Info: Escrow };
 
-export type { CreateFormValues, Escrow, EscrowState };
+type Wallet = [string, Escrow];
+
+type WalletsState = { CreatedWallets: Wallet[] };
+
+export type { CreateFormValues, Escrow, EscrowState, Wallet, WalletsState };

@@ -2,7 +2,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { useEffect, useState } from 'react';
 import { ESCROW, FORM, LOCAL_STORAGE } from 'consts';
 import { CreateFormValues } from 'types';
-import { useEscrow, useEscrowMessage, useWalletId, useProgram } from 'hooks';
+import { useEscrow, useEscrowMessage, useWalletId, useProgram, useWallets } from 'hooks';
 import { Box, Loader } from 'components';
 import { CreateWallet } from './create-wallet';
 import { Summary } from './summary';
@@ -11,7 +11,7 @@ import { Deposit } from './deposit';
 import { Confirmation } from './confirmation';
 import { Closed } from './closed';
 import { InputAddress } from './input-address';
-import { InputWallet } from './input-wallet';
+import { SelectWallet } from './select-wallet';
 import styles from './Home.module.scss';
 
 function Home() {
@@ -24,6 +24,7 @@ function Home() {
   const { walletId, setWalletId, resetWalletId } = useWalletId();
 
   const { escrow, isEscrowRead } = useEscrow(walletId);
+  const { wallets, isWalletsStateRead } = useWallets();
   const sendMessage = useEscrowMessage();
 
   const { buyer, seller, state, amount } = escrow || {};
@@ -68,7 +69,7 @@ function Home() {
       case FORM.INIT.WALLET:
         return <CreateWallet onSubmit={create} />;
       case FORM.INPUT.WALLET:
-        return <InputWallet onSubmit={setWalletId} />;
+        return <SelectWallet wallets={wallets} onSubmit={setWalletId} />;
       default:
     }
   };
@@ -89,7 +90,7 @@ function Home() {
   useEffect(() => localStorage.setItem(LOCAL_STORAGE.WALLET, walletId), [walletId]);
   useEffect(() => resetForm(), [programId, walletId]);
 
-  return isEscrowRead ? (
+  return isEscrowRead && isWalletsStateRead ? (
     <div className={styles.container}>
       <Summary programId={programId} walletId={walletId} role={getRole()} state={state} amount={amount} />
       <Box onBack={goBack} onHome={goHome} isNavigationVisible={!isStart}>
