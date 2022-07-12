@@ -18,7 +18,7 @@ export default [
     input: 'src/index.ts',
     output: [
       {
-        dir: 'lib',
+        dir: '.',
         format: 'es',
         preserveModules: true,
       },
@@ -37,7 +37,7 @@ export default [
     input: 'src/index.ts',
     output: [
       {
-        dir: 'lib/cjs',
+        dir: './cjs',
         format: 'cjs',
         preserveModules: true,
         exports: 'named',
