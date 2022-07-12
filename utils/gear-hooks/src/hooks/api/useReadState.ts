@@ -8,7 +8,7 @@ import { useConditionalMetaBuffer } from './useMetadata';
 type State<T> = { state: T | undefined; isStateRead: boolean };
 
 function useReadState<T = AnyJson>(
-  programId: ProgramId,
+  programId: ProgramId | undefined,
   metaSourceOrBuffer: string | Buffer | undefined,
   payload?: AnyJson,
 ): State<T> {
@@ -21,7 +21,7 @@ function useReadState<T = AnyJson>(
   const [isStateRead, setIsStateRead] = useState(false);
 
   const readState = (isInitLoad?: boolean) => {
-    if (metaBuffer && payload) {
+    if (programId && metaBuffer && payload) {
       if (isInitLoad) setIsStateRead(false);
 
       api.programState
@@ -37,8 +37,7 @@ function useReadState<T = AnyJson>(
 
   useEffect(() => {
     readState(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metaBuffer, payload]);
+  }, [programId, metaBuffer, payload]);
 
   const handleStateChange = ({ data }: MessagesDispatched) => {
     const changedIDs = data.stateChanges.toHuman() as Hex[];
@@ -50,14 +49,14 @@ function useReadState<T = AnyJson>(
   useEffect(() => {
     let unsub: UnsubscribePromise | undefined;
 
-    if (api && metaBuffer && payload) {
+    if (api && programId && metaBuffer && payload) {
       unsub = api.gearEvents.subscribeToGearEvent('MessagesDispatched', handleStateChange);
     }
 
     return () => {
       if (unsub) unsub.then((unsubCallback) => unsubCallback());
     };
-  }, [api, metaBuffer, payload]);
+  }, [api, programId, metaBuffer, payload]);
 
   return { state, isStateRead };
 }
