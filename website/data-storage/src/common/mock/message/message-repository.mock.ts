@@ -7,6 +7,13 @@ export const mockMessageRepository = {
   save: jest.fn().mockImplementation((message: Message): Promise<Message> => {
     return new Promise((resolve) => resolve(message));
   }),
+  update: jest.fn().mockImplementation((messageEntityDB: Message, updateMessageInput: Message): Promise<Message> => {
+    const { id, genesis } = messageEntityDB;
+    const updateMessageIndex = MESSAGE_DB_MOCK.findIndex((message) => message.id === id || message.genesis === genesis);
+    MESSAGE_DB_MOCK[updateMessageIndex] = { ...MESSAGE_DB_MOCK[updateMessageIndex], ...updateMessageInput };
+
+    return new Promise((resolve) => resolve(MESSAGE_DB_MOCK[updateMessageIndex]));
+  }),
   listByIdAndSource: jest.fn((params: GetMessagesParams) => {
     const { limit, genesis, destination } = params;
     const messages = MESSAGE_DB_MOCK.filter((message) => {
