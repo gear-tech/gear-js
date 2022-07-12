@@ -1,4 +1,4 @@
-import { GearApi, GearKeyring, getWasmMetadata, Hex, MessageEnqueued } from '@gear-js/api';
+import { GearApi, GearKeyring, getWasmMetadata, MessageEnqueued, Hex } from '@gear-js/api';
 import { readFileSync } from 'fs';
 import { PATH_TO_META } from '../config';
 import { waitForReply } from './waitForReply';

@@ -2,7 +2,6 @@ import { UnsubscribePromise } from '@polkadot/api/types';
 import {
   GearApi,
   GearKeyring,
-  Hex,
   IGearEvent,
   MessageWaitedData,
   UserMessageSent,
@@ -10,7 +9,7 @@ import {
   MessageEnqueued,
   MessagesDispatched,
 } from '../src';
-
+import { Hex } from '../src/types';
 export const checkInit = (api: GearApi, programId: string) => {
   let unsub: UnsubscribePromise;
   let messageId: Hex;

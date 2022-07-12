@@ -1,15 +1,15 @@
-import { MessageId, ProgramId } from './ids';
-import { HumanedMessage } from './interfaces';
+import { Hex } from './common';
+import { HumanMessage } from './interfaces';
 
-export type StoredDispatch = {
+export type HumanStoredDispatch = {
   kind: 'Init' | 'Handle' | 'Reply';
-  message: HumanedMessage;
+  message: HumanMessage;
   context: unknown;
 };
 
 export type WaitlistItem = {
-  programId?: ProgramId;
-  messageId?: MessageId;
+  programId?: Hex;
+  messageId?: Hex;
   blockNumber: number;
-  storedDispatch: StoredDispatch;
+  storedDispatch: HumanStoredDispatch;
 };
