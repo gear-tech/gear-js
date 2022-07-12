@@ -1,8 +1,9 @@
 import { GetAllCodeParams } from '@gear-js/common';
 
-import { Code } from '../../../database/entities';
+import { Code, Message } from '../../../database/entities';
 import { CODE_DB_MOCK } from './code-db.mock';
 import { UpdateCodeInput } from '../../../code/types';
+import { MESSAGE_DB_MOCK } from '../message/message-db.mock';
 
 export const mockCodeRepository = {
   listByGenesis: jest.fn((genesis: string) => {
@@ -32,19 +33,12 @@ export const mockCodeRepository = {
     return new Promise((resolve) => resolve(code));
   }),
 
-  update: jest.fn().mockImplementation((codeEntityDB: Code, updateCodeInput: UpdateCodeInput): Promise<Code> => {
-    const { id, genesis } = codeEntityDB;
-    let updateCodeEntityDB;
-    CODE_DB_MOCK.map((code) => {
-      if (code.id === id || code.genesis === genesis) {
-        const updateCode = { ...code, ...updateCodeInput };
-        updateCodeEntityDB = updateCode;
-        return updateCode;
-      }
-      return code;
-    });
+  update: jest.fn().mockImplementation((messageEntityDB: Code, updateCodeInput: Code): Promise<Code> => {
+    const { id, genesis } = messageEntityDB;
+    const updateCodeIndex = CODE_DB_MOCK.findIndex((code) => code.id === id || code.genesis === genesis);
+    CODE_DB_MOCK[updateCodeIndex] = { ...CODE_DB_MOCK[updateCodeIndex], ...updateCodeInput };
 
-    return new Promise((resolve) => resolve(updateCodeEntityDB));
+    return new Promise((resolve) => resolve(CODE_DB_MOCK[updateCodeIndex]));
   }),
   removeByGenesis: jest.fn().mockImplementation((genesis: string): Code[] => {
     return CODE_DB_MOCK.filter((code) => {
