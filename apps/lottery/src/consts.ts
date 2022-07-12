@@ -13,6 +13,7 @@ const SUBHEADING = {
   AWAIT: 'Waiting for owner to start the lottery.',
   PENDING: 'You can see the lottery status here.',
   FORM: "Specify lottery duration and, if necessary, the address of the token contract and click the 'Submit and start' button to launch the lottery.",
+  LOGIN: 'In order to start, please login.',
 };
 
 const STATUS = {
