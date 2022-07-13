@@ -15,7 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.11.41",
-    "@types/react": "^18.0.14",
+    "@types/react": "18.0.15",
     "@types/react-dom": "^18.0.5",
     "clsx": "^1.1.1",
     "ipfs-http-client": "^57.0.3",
