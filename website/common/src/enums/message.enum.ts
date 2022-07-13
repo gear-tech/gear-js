@@ -1,6 +1,6 @@
 enum MESSAGE_TYPE {
   USER_MESS_SENT = 'UserMessageSent',
-  ENQUEUED = 'Enqueued',
+  ENQUEUED = 'MessageEnqueued',
 }
 
 enum MESSAGE_READ_STATUS {
