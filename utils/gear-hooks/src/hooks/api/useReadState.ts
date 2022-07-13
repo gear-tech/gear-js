@@ -5,12 +5,13 @@ import { useEffect, useState, useContext } from 'react';
 import { AlertContext, ApiContext } from 'context';
 import { useConditionalMetaBuffer } from './useMetadata';
 
-type State<T> = { state: T | undefined; isStateRead: boolean };
+type State<T> = { state: T | undefined; isStateRead: boolean; error: string };
 
 function useReadState<T = AnyJson>(
   programId: Hex | undefined,
   metaSourceOrBuffer: string | Buffer | undefined,
   payload?: AnyJson,
+  isReadOnError?: boolean,
 ): State<T> {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const alert = useContext(AlertContext);
@@ -18,6 +19,7 @@ function useReadState<T = AnyJson>(
   const metaBuffer = useConditionalMetaBuffer(metaSourceOrBuffer);
 
   const [state, setState] = useState<T>();
+  const [error, setError] = useState('');
   const [isStateRead, setIsStateRead] = useState(true);
 
   const readState = (isInitLoad?: boolean) => {
@@ -29,9 +31,12 @@ function useReadState<T = AnyJson>(
         .then((codecState) => codecState.toHuman())
         .then((result) => {
           setState(result as unknown as T);
-          setIsStateRead(true);
+          if (!isReadOnError) setIsStateRead(true);
         })
-        .catch(({ message }: Error) => alert.error(message));
+        .catch(({ message }: Error) => setError(message))
+        .finally(() => {
+          if (isReadOnError) setIsStateRead(true);
+        });
     }
   };
 
@@ -58,7 +63,11 @@ function useReadState<T = AnyJson>(
     };
   }, [api, programId, metaBuffer, payload]);
 
-  return { state, isStateRead };
+  useEffect(() => {
+    if (error) alert.error(error);
+  }, [error]);
+
+  return { state, isStateRead, error };
 }
 
 export { useReadState };
