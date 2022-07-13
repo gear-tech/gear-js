@@ -25,8 +25,7 @@
     "prebuild": "rm -rf lib",
     "build": "rollup --config rollup.config.js",
     "lint": "eslint ./src --ext .ts",
-    "lint:fix": "eslint --fix ./src --ext .ts",
-    "prepare": "npm run build"
+    "lint:fix": "eslint --fix ./src --ext .ts"
   },
   "exports": {
     "./cjs/package.json": "./cjs/package.json",
