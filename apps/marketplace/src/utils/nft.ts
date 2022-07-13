@@ -42,10 +42,10 @@ function getNFTProps(nft: NFT, isOwner: boolean) {
   return { name, path, src, text, button: price ? buttonProp : undefined, price: priceProp };
 }
 
-function getListingProps(baseNft: BaseNFT, marketNft: MarketNFT, details: NFTDetails) {
+function getListingProps(baseNft: BaseNFT, marketNft: MarketNFT, details: NFTDetails | undefined) {
   const { id, name, description, ownerId, media } = baseNft;
   const { auction } = marketNft;
-  const { rarity, attributes } = details;
+  const { rarity, attributes } = details || {};
 
   const heading = getHeading(name, id);
   const src = getIpfsAddress(media);
