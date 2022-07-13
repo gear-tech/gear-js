@@ -42,6 +42,7 @@ function useReadState<T = AnyJson>(
 
   useEffect(() => {
     readState(true);
+    setError('');
   }, [programId, metaBuffer, payload]);
 
   const handleStateChange = ({ data }: MessagesDispatched) => {
