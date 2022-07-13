@@ -4,7 +4,7 @@ import { Metadata } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
-import { Schema } from './Schema';
+import { getValidationSchema } from './Schema';
 import { FormValues, SetFieldValue } from './types';
 
 import { calculateGas } from 'helpers';
@@ -23,14 +23,12 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
   const { api } = useApi();
   const alert = useAlert();
 
-  const isMeta = useMemo(() => metadata && Object.keys(metadata).length > 0, [metadata]);
-
   const method = isReply ? 'reply' : 'handle';
 
   const sendMessage = useSendMessage();
 
-  const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
-    const payloadType = isMeta ? void 0 : values.payloadType;
+  const handleSubmit = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
+    const payloadType = metadata ? void 0 : values.payloadType;
 
     const message = {
       value: values.value.toString(),
@@ -40,7 +38,7 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
       destination: values.destination,
     };
 
-    sendMessage(method, message, resetForm, metadata, payloadType);
+    sendMessage(method, message, helpers.resetForm, metadata, payloadType);
   };
 
   const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>
@@ -48,7 +46,11 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
       setFieldValue('gasLimit', gasLimit)
     );
 
-  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, metadata?.handle_input), [metadata]);
+  const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
+
+  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
+
+  const validationSchema = useMemo(() => getValidationSchema(encodeType, metadata), [metadata, encodeType]);
 
   const initialValues: FormValues = {
     value: 0,
@@ -59,31 +61,45 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
   };
 
   return (
-    <Formik initialValues={initialValues} validationSchema={Schema} onSubmit={handleSubmit}>
-      {({ values, setFieldValue }) => (
-        <Form data-testid="sendMessageForm" className={formStyles.largeForm}>
-          <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />
+    <Formik
+      initialValues={initialValues}
+      validateOnChange={false}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ values, isValid, isSubmitting, setFieldValue }) => {
+        const isDisabled = !isValid || isSubmitting;
 
-          <FormPayload name="payload" label="Payload" values={payloadFormValues} />
+        return (
+          <Form data-testid="sendMessageForm" className={formStyles.largeForm}>
+            <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />
 
-          {!isMeta && <FormPayloadType name="payloadType" label="Payload type" />}
+            <FormPayload name="payload" label="Payload" values={payloadFormValues} />
 
-          <FormNumberFormat
-            name="gasLimit"
-            label="Gas limit"
-            placeholder="20,000,000"
-            thousandSeparator
-            allowNegative={false}
-          />
+            {!metadata && <FormPayloadType name="payloadType" label="Payload type" />}
 
-          <FormInput type="number" name="value" label="Value" placeholder="20000" />
+            <FormNumberFormat
+              name="gasLimit"
+              label="Gas limit"
+              placeholder="20,000,000"
+              thousandSeparator
+              allowNegative={false}
+            />
 
-          <div className={formStyles.formButtons}>
-            <Button text="Calculate Gas" onClick={handleCalculateGas(values, setFieldValue)} />
-            <Button type="submit" icon={sendMessageSVG} text={isReply ? 'Send reply' : 'Send message'} />
-          </div>
-        </Form>
-      )}
+            <FormInput type="number" name="value" label="Value" placeholder="20000" />
+
+            <div className={formStyles.formButtons}>
+              <Button text="Calculate Gas" onClick={handleCalculateGas(values, setFieldValue)} disabled={isDisabled} />
+              <Button
+                type="submit"
+                icon={sendMessageSVG}
+                text={isReply ? 'Send reply' : 'Send message'}
+                disabled={isDisabled}
+              />
+            </div>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };

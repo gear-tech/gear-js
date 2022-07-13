@@ -6,8 +6,8 @@ import { Button } from '@gear-js/ui';
 import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
 
 import styles from './UploadForm.module.scss';
-import { Schema } from './Schema';
 import { INITIAL_VALUES } from './const';
+import { getValidationSchema } from './Schema';
 import { FormValues, SetFieldValue, SetValues } from './types';
 import { DroppedFile } from '../../types';
 
@@ -26,14 +26,15 @@ type Props = {
 };
 
 const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
-  const { api } = useApi();
   const alert = useAlert();
+  const { api } = useApi();
   const { account } = useAccount();
-  const uploadProgram = useProgramUpload();
 
   const [metadata, setMetadata] = useState<Metadata>();
   const [metadataFile, setMetadataFile] = useState<File>();
   const [metadataBuffer, setMetadataBuffer] = useState<string | null>(null);
+
+  const uploadProgram = useProgramUpload();
 
   const handleUploadMetaFile = (setFiledValue: SetFieldValue) => (data: UploadData) => {
     const { meta, metaFile, metaBuffer } = data;
@@ -48,7 +49,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
     setMetadata(undefined);
     setMetadataFile(undefined);
     setMetadataBuffer(null);
-    setValues(INITIAL_VALUES, false);
+    setValues(INITIAL_VALUES);
   };
 
   const handleResetForm = () => setDroppedFile(null);
@@ -76,68 +77,77 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
     calculateGas('init', api, values, alert, metadata, code).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
   };
 
-  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, metadata?.init_input), [metadata]);
+  const encodeType = metadata?.init_input;
+
+  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
+
+  const validationSchema = useMemo(() => getValidationSchema(encodeType, metadata), [metadata, encodeType]);
 
   const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
 
   return (
     <Box className={styles.uploadFormWrapper}>
       <h3 className={styles.heading}>UPLOAD NEW PROGRAM</h3>
-      <Formik initialValues={INITIAL_VALUES} validateOnBlur validationSchema={Schema} onSubmit={handleSubmitForm}>
-        {({ values, setFieldValue, setValues }) => (
-          <Form className={styles.uploadForm}>
-            <div className={styles.formContent}>
-              <div className={styles.program}>
-                <div className={clsx(formStyles.formItem, styles.file)}>
-                  <span className={formStyles.fieldLabel}>File</span>
-                  <span className={clsx(formStyles.fieldContent, styles.fileName)}>{droppedFile.name}</span>
+      <Formik
+        initialValues={INITIAL_VALUES}
+        validateOnChange={false}
+        validationSchema={validationSchema}
+        onReset={handleResetForm}
+        onSubmit={handleSubmitForm}
+      >
+        {({ values, isValid, isSubmitting, setValues, setFieldValue }) => {
+          const isDisabled = !isValid || isSubmitting;
+
+          return (
+            <Form className={styles.uploadForm}>
+              <div className={styles.formContent}>
+                <div className={styles.program}>
+                  <div className={clsx(formStyles.formItem, styles.file)}>
+                    <span className={formStyles.fieldLabel}>File</span>
+                    <span className={clsx(formStyles.fieldContent, styles.fileName)}>{droppedFile.name}</span>
+                  </div>
+
+                  <FormInput name="programName" label="Name" placeholder="Name" />
+
+                  <FormNumberFormat
+                    name="gasLimit"
+                    label="Gas limit"
+                    placeholder="20,000,000"
+                    thousandSeparator
+                    allowNegative={false}
+                  />
+
+                  <FormInput type="number" name="value" label="Initial value" placeholder="0" />
+
+                  <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
+
+                  {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
                 </div>
 
-                <FormInput name="programName" label="Name" placeholder="Name" />
-
-                <FormNumberFormat
-                  name="gasLimit"
-                  label="Gas limit"
-                  placeholder="20,000,000"
-                  thousandSeparator
-                  allowNegative={false}
-                />
-
-                <FormInput type="number" name="value" label="Initial value" placeholder="0" />
-
-                <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
-
-                {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
+                <Fieldset legend="Metadata:" className={styles.meta}>
+                  <UploadMeta
+                    meta={metadata}
+                    metaFile={metadataFile}
+                    onReset={handleResetMeta(setValues)}
+                    onUpload={handleUploadMetaFile(setFieldValue)}
+                  />
+                </Fieldset>
               </div>
 
-              <Fieldset legend="Metadata:" className={styles.meta}>
-                <UploadMeta
-                  meta={metadata}
-                  metaFile={metadataFile}
-                  onReset={handleResetMeta(setValues)}
-                  onUpload={handleUploadMetaFile(setFieldValue)}
+              <div className={styles.buttons}>
+                <Button type="submit" text="Upload program" disabled={isDisabled || isUploadAvailable} />
+                <Button
+                  text="Calculate Gas"
+                  onClick={() => {
+                    handleCalculateGas(values, setFieldValue);
+                  }}
+                  disabled={isDisabled}
                 />
-              </Fieldset>
-            </div>
-
-            <div className={styles.buttons}>
-              <Button type="submit" text="Upload program" disabled={isUploadAvailable} />
-              <Button
-                text="Calculate Gas"
-                onClick={() => {
-                  handleCalculateGas(values, setFieldValue);
-                }}
-              />
-              <Button
-                type="submit"
-                text="Cancel upload"
-                color="transparent"
-                aria-label="closeUploadForm"
-                onClick={handleResetForm}
-              />
-            </div>
-          </Form>
-        )}
+                <Button type="reset" text="Cancel upload" color="transparent" />
+              </div>
+            </Form>
+          );
+        }}
       </Formik>
     </Box>
   );

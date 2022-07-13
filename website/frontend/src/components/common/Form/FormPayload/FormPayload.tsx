@@ -42,7 +42,7 @@ const FormPayload = (props: Props) => {
     resetFileData();
 
     if (values) {
-      setValue(values.manualPayload, false);
+      setValue(values.manualPayload);
     }
   };
 
@@ -76,7 +76,7 @@ const FormPayload = (props: Props) => {
 
     const payloadValue = isManualView ? jsonManualPayload.current ?? values.manualPayload : values.payload;
 
-    setValue(payloadValue, false);
+    setValue(payloadValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isManualView]);
 

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Route, Routes, useSearchParams } from 'react-router-dom';
 import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
 
+import 'yup-extended';
 import styles from './App.module.scss';
 
 import { routes } from 'routes';
