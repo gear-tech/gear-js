@@ -29,6 +29,7 @@ function Listing() {
 
   const { buy, offer, bid, settle, startSale, startAuction } = useMarketplaceActions(id, price);
   const [details, setDetails] = useState<NFTDetails>();
+  const isReferenceLoaded = reference ? !!details : true;
 
   useEffect(() => {
     if (reference) {
@@ -38,7 +39,7 @@ function Listing() {
     }
   }, [reference]);
 
-  return nft && marketNft && details ? (
+  return nft && marketNft && isReferenceLoaded ? (
     <>
       {isSale && (
         <SaleListing
