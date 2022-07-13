@@ -37,7 +37,7 @@ export class Message extends BaseEntity implements IMessage {
   @Column({ nullable: true })
   expiration: number;
 
-  @Column({ type: 'enum', enum: MESSAGE_TYPE })
+  @Column({ type: 'enum', enum: MESSAGE_TYPE, nullable: true })
   type: MESSAGE_TYPE;
 
   @Column({ type: 'enum', enum: MESSAGE_READ_STATUS, nullable: true })
