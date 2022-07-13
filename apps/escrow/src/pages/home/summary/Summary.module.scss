@@ -4,19 +4,23 @@
 .summary {
   max-width: 425px;
   margin-top: auto;
+
+  & > *:not(:last-child) {
+    margin-bottom: 15px;
+  }
+}
+
+.button {
+  margin-top: 8px;
 }
 
 .text {
   display: flex;
   flex-direction: column;
-
-  &:not(:last-child) {
-    margin-bottom: 15px;
-  }
 }
 
 .key {
-  @include heading($fontSize, 21px);
+  @include heading(12px, 24px);
   color: $textColorSecondary;
 }
 

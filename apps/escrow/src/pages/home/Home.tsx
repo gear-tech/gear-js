@@ -86,13 +86,35 @@ function Home() {
     }
   };
 
-  useEffect(() => localStorage.setItem(LOCAL_STORAGE.PROGRAM, programId), [programId]);
-  useEffect(() => localStorage.setItem(LOCAL_STORAGE.WALLET, walletId), [walletId]);
-  useEffect(() => resetForm(), [programId, walletId]);
+  useEffect(() => {
+    if (programId) localStorage.setItem(LOCAL_STORAGE.PROGRAM, programId);
+    if (walletId) localStorage.setItem(LOCAL_STORAGE.WALLET, walletId);
+
+    resetForm();
+  }, [programId, walletId]);
+
+  const handleResetWalletClick = () => {
+    resetWalletId();
+    localStorage.removeItem(LOCAL_STORAGE.WALLET);
+  };
+
+  const handleResetProgramClick = () => {
+    handleResetWalletClick();
+    resetProgramId();
+    localStorage.removeItem(LOCAL_STORAGE.PROGRAM);
+  };
 
   return isEscrowRead && isWalletsStateRead ? (
     <div className={styles.container}>
-      <Summary programId={programId} walletId={walletId} role={getRole()} state={state} amount={amount} />
+      <Summary
+        programId={programId}
+        walletId={walletId}
+        role={getRole()}
+        state={state}
+        amount={amount}
+        onProgramReset={handleResetProgramClick}
+        onWalletReset={handleResetWalletClick}
+      />
       <Box onBack={goBack} onHome={goHome} isNavigationVisible={!isStart}>
         {form && getForm()}
         {!form &&

@@ -1,4 +1,5 @@
 import { Hex } from '@gear-js/api';
+import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
 import styles from './Summary.module.scss';
 
@@ -8,9 +9,11 @@ type Props = {
   role: string | undefined;
   state: string | undefined;
   amount: string | undefined;
+  onProgramReset: () => void;
+  onWalletReset: () => void;
 };
 
-function Summary({ programId, walletId, role, state, amount }: Props) {
+function Summary({ programId, walletId, role, state, amount, onProgramReset, onWalletReset }: Props) {
   const roleClassName = clsx(styles.value, styles.role);
   const stateClassName = clsx(styles.value, styles.state);
 
@@ -22,14 +25,20 @@ function Summary({ programId, walletId, role, state, amount }: Props) {
         </p>
       )}
       {programId && (
-        <p className={styles.text}>
-          <span className={styles.key}>Program ID:</span> <span className={styles.value}>{programId}</span>
-        </p>
+        <div>
+          <p className={styles.text}>
+            <span className={styles.key}>Program ID:</span> <span className={styles.value}>{programId}</span>
+          </p>
+          <Button text="Reset" color="secondary" size="small" className={styles.button} onClick={onProgramReset} />
+        </div>
       )}
       {walletId && (
-        <p className={styles.text}>
-          <span className={styles.key}>Wallet ID:</span> <span className={styles.value}>{walletId}</span>
-        </p>
+        <div>
+          <p className={styles.text}>
+            <span className={styles.key}>Wallet ID:</span> <span className={styles.value}>{walletId}</span>
+          </p>
+          <Button text="Reset" color="secondary" size="small" className={styles.button} onClick={onWalletReset} />
+        </div>
       )}
       {state && (
         <p className={styles.text}>

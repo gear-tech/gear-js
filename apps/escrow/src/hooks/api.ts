@@ -26,8 +26,8 @@ function useEscrowMeta() {
   return useMetadata(escrowMetaWasm);
 }
 
-function useEscrowState<T>(payload: AnyJson) {
-  return useReadState<T>(getProgramId(), escrowMetaWasm, payload);
+function useEscrowState<T>(payload: AnyJson, isReadOnError?: boolean) {
+  return useReadState<T>(getProgramId(), escrowMetaWasm, payload, isReadOnError);
 }
 
 function useEscrow(id: string) {
@@ -42,7 +42,7 @@ function useEscrow(id: string) {
 
 function useWallets() {
   const payload = useMemo(() => ({ CreatedWallets: null }), []);
-  const { state, isStateRead } = useEscrowState<WalletsState>(payload);
+  const { state, isStateRead } = useEscrowState<WalletsState>(payload, true);
 
   return { wallets: state?.CreatedWallets, isWalletsStateRead: isStateRead };
 }
