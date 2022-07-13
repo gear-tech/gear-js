@@ -23,7 +23,10 @@ import {
   IMessagesDispatchedKafkaValue,
   InitStatus,
   IProgramChangedKafkaValue,
+  IUserMessageReadData,
+  IUserMessageReadKafkaValue,
   IUserMessageSentKafkaValue,
+  MESSAGE_TYPE,
   ProgramDataResult,
 } from '@gear-js/common';
 
@@ -48,7 +51,7 @@ export class ConsumerService {
   events = {
     UserMessageSent: async (value: IUserMessageSentKafkaValue) => {
       await sleep(1000);
-      this.messageService.createMessage(value);
+      this.messageService.createMessage({ ...value, type: MESSAGE_TYPE.USER_MESS_SENT });
     },
     MessageEnqueued: ({
       id,
@@ -79,6 +82,7 @@ export class ConsumerService {
         genesis: genesis,
         blockHash: blockHash,
         timestamp: timestamp,
+        type: MESSAGE_TYPE.ENQUEUED,
       });
     },
     ProgramChanged: (value: IProgramChangedKafkaValue) => {
@@ -95,6 +99,9 @@ export class ConsumerService {
     },
     MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
       this.messageService.setDispatchedStatus(value);
+    },
+    UserMessageRead: async (value: IUserMessageReadKafkaValue) => {
+      this.messageService.updateReadStatus(value.id, value.reason);
     },
     DatabaseWiped: async (value: IGenesis) => {
       await Promise.all([

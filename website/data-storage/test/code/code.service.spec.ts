@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { CODE_STATUS, GetAllCodeParams, GetCodeParams } from '@gear-js/common';
+import { UpdateResult } from 'typeorm';
 
 import { Code } from '../../src/database/entities';
 import { mockCodeRepository } from '../../src/common/mock/code/code-repository.mock';
@@ -7,7 +8,6 @@ import { CODE_DB_MOCK } from '../../src/common/mock/code/code-db.mock';
 import { CodeRepo } from '../../src/code/code.repo';
 import { CodeService } from '../../src/code/code.service';
 import { UpdateCodeInput } from '../../src/code/types';
-import { UpdateResult } from 'typeorm';
 
 const CODE_ENTITY_ID = '0x7357';
 
@@ -91,6 +91,13 @@ describe('Code service', () => {
 
     await expect(codeService.getByIdAndGenesis(params)).rejects.toThrowError();
     expect(mockCodeRepository.getByIdAndGenesis).toHaveBeenCalled();
+  });
+
+  it('should be successfully deleted code entity and called remove method', async () => {
+    const codeMock = CODE_DB_MOCK[2];
+
+    await codeService.deleteRecords(codeMock.genesis);
+    expect(mockCodeRepository.removeByGenesis).toHaveBeenCalled();
   });
 
   it('should be successfully deleted code entity and called remove method', async () => {

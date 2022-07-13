@@ -1,11 +1,6 @@
 import { IMeta } from './meta';
 import { IBaseDBRecord } from './common';
-
-enum InitStatus {
-  SUCCESS = 'success',
-  FAILED = 'failed',
-  PROGRESS = 'in progress',
-}
+import { InitStatus } from '../enums';
 
 interface IProgram extends IBaseDBRecord<number | Date> {
   id: string;
@@ -21,4 +16,4 @@ interface IProgramChangedData {
   isActive: boolean;
 }
 
-export { InitStatus, IProgram, IProgramChangedData };
+export { IProgram, IProgramChangedData };

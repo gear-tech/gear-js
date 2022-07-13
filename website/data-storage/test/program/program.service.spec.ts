@@ -1,9 +1,9 @@
 import { Test } from '@nestjs/testing';
+import { GetAllProgramsParams, GetAllUserProgramsParams, InitStatus } from '@gear-js/common';
 
 import { ProgramService } from '../../src/program/program.service';
 import { ProgramRepo } from '../../src/program/program.repo';
 import { UpdateProgramDataInput } from '../../src/program/types';
-import { GetAllProgramsParams, GetAllUserProgramsParams, InitStatus } from '@gear-js/common';
 
 import { mockProgramRepository } from '../../src/common/mock/program/program-repository.mock';
 import { PROGRAM_DB_MOCK } from '../../src/common/mock/program/program-db.mock';

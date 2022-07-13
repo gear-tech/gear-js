@@ -8,6 +8,7 @@ import {
   IMessagesDispatchedKafkaValue,
   InitStatus,
   IUserMessageSentKafkaValue,
+  MESSAGE_READ_STATUS,
 } from '@gear-js/common';
 
 import { Message } from '../database/entities/message.entity';
@@ -15,30 +16,13 @@ import { ProgramService } from '../program/program.service';
 import { MessageNotFound } from '../common/errors';
 import { sleep } from '../utils/sleep';
 import { MessageRepo } from './message.repo';
+import { CreateMessageInput } from './types';
 
 @Injectable()
 export class MessageService {
   private logger: Logger = new Logger('MessageService');
 
-  constructor(private messageRepository: MessageRepo, private readonly programService: ProgramService) {}
-
-  public async createMessage({ timestamp, ...params }: IUserMessageSentKafkaValue): Promise<IMessage> {
-    try {
-      const messageTypeDB = plainToClass(Message, {
-        ...params,
-        timestamp: new Date(timestamp),
-      });
-
-      if (params.replyToMessageId) {
-        const { entry } = await this.messageRepository.get(params.replyToMessageId);
-        messageTypeDB.entry = entry;
-      }
-
-      return this.messageRepository.save(messageTypeDB);
-    } catch (error) {
-      this.logger.error(error, error.stack);
-    }
-  }
+  constructor(private messageRepository: MessageRepo, private programService: ProgramService) {}
 
   public async getAllMessages(params: GetMessagesParams): Promise<AllMessagesResult> {
     const [messages, total] = await this.messageRepository.listByIdAndSourceAndDestination(params);
@@ -57,11 +41,29 @@ export class MessageService {
     return message;
   }
 
+  public async createMessage({ timestamp, ...params }: CreateMessageInput): Promise<IMessage> {
+    try {
+      const messageTypeDB = plainToClass(Message, {
+        ...params,
+        timestamp: new Date(timestamp),
+      });
+
+      if (params.replyToMessageId) {
+        const { entry } = await this.messageRepository.get(params.replyToMessageId);
+        messageTypeDB.entry = entry;
+      }
+
+      return this.messageRepository.save(messageTypeDB);
+    } catch (error) {
+      this.logger.error(error, error.stack);
+    }
+  }
+
   public async setDispatchedStatus({ statuses, genesis }: IMessagesDispatchedKafkaValue): Promise<void> {
     await sleep(1000);
     for (const messageId of Object.keys(statuses)) {
       try {
-        await this.messageRepository.updateMessage(
+        await this.messageRepository.update(
           { id: messageId, genesis },
           { processedWithPanic: statuses[messageId] === 'Success' ? false : true },
         );
@@ -75,6 +77,14 @@ export class MessageService {
           this.programService.setStatus(message.destination, genesis, InitStatus.FAILED);
         }
       }
+    }
+  }
+
+  public async updateReadStatus(id: string, readStatus: MESSAGE_READ_STATUS): Promise<void> {
+    try {
+      await this.messageRepository.update({ id }, { readStatus });
+    } catch (error) {
+      this.logger.error(error, error.stack);
     }
   }
 

@@ -1,4 +1,5 @@
-export enum KAFKA_TOPICS {
+enum KAFKA_TOPICS {
+  EVENTS = 'events',
   PROGRAM_DATA = 'program.data',
   PROGRAM_META_ADD = 'program.meta.add',
   PROGRAM_META_GET = 'program.meta.get',
@@ -10,3 +11,5 @@ export enum KAFKA_TOPICS {
   CODE_ALL = 'code.all',
   CODE_DATA = 'code.data',
 }
+
+export { KAFKA_TOPICS };

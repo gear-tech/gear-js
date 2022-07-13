@@ -1,6 +1,6 @@
 import { GetAllCodeParams } from '@gear-js/common';
 
-import { Code } from '../../../database/entities';
+import { Code, Message } from '../../../database/entities';
 import { CODE_DB_MOCK } from './code-db.mock';
 
 export const mockCodeRepository = {
@@ -31,8 +31,12 @@ export const mockCodeRepository = {
     return new Promise((resolve) => resolve(code));
   }),
 
-  update: jest.fn().mockImplementation((code: Code): Promise<Code> => {
-    return new Promise((resolve) => resolve(code));
+  update: jest.fn().mockImplementation((messageEntityDB: Code, updateCodeInput: Code): Promise<Code> => {
+    const { id, genesis } = messageEntityDB;
+    const updateCodeIndex = CODE_DB_MOCK.findIndex((code) => code.id === id || code.genesis === genesis);
+    CODE_DB_MOCK[updateCodeIndex] = { ...CODE_DB_MOCK[updateCodeIndex], ...updateCodeInput };
+
+    return new Promise((resolve) => resolve(CODE_DB_MOCK[updateCodeIndex]));
   }),
   removeByGenesis: jest.fn().mockImplementation((genesis: string): Code[] => {
     return CODE_DB_MOCK.filter((code) => {

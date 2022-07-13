@@ -28,6 +28,8 @@ export async function getMessageData(genesis: string, messageId: Hex) {
     'exitCode',
     'processedWithPanic',
     'value',
+    'type',
+    'readStatus',
   ]);
   return true;
 }

@@ -3,6 +3,7 @@ import {
   MessageEnqueuedData,
   MessagesDispatchedData,
   ProgramChangedData,
+  UserMessageReadData,
   UserMessageSentData,
 } from '@gear-js/api';
 import {
@@ -12,10 +13,12 @@ import {
   IMessageEnqueuedData,
   IMessagesDispatchedData,
   IProgramChangedData,
+  IUserMessageReadData,
   Keys,
   NewEventData,
 } from '@gear-js/common';
 import { GenericEventData } from '@polkadot/types';
+import { getMessageReadStatus } from '../utils';
 
 function messageEnqueuedHandler(data: MessageEnqueuedData): NewEventData<Keys.MessageEnqueued, IMessageEnqueuedData> {
   const { id, source, destination, entry } = data;
@@ -42,6 +45,16 @@ function userMessageSentHandler(data: UserMessageSentData): NewEventData<Keys.Us
       value: value.toString(),
       replyToMessageId: reply.isSome ? reply.unwrap()[0].toHex() : null,
       exitCode: reply.isSome ? reply.unwrap()[1].toNumber() : null,
+    },
+  };
+}
+
+function userMessageReadHandler(data: UserMessageReadData): NewEventData<Keys.UserMessageRead, IUserMessageReadData> {
+  return {
+    key: Keys.UserMessageRead,
+    value: {
+      id: data.id.toHex(),
+      reason: getMessageReadStatus(data),
     },
   };
 }
@@ -92,6 +105,8 @@ const handleEvent = (method: GEAR_EVENT, data: GenericEventData): { key: Keys; v
       return messageEnqueuedHandler(data as MessageEnqueuedData);
     case GEAR_EVENT.USER_MESSAGE_SENT:
       return userMessageSentHandler(data as UserMessageSentData);
+    case GEAR_EVENT.USER_MESSAGE_READ:
+      return userMessageReadHandler(data as UserMessageReadData);
     case GEAR_EVENT.PROGRAM_CHANGED:
       return programChangedHandler(data as ProgramChangedData);
     case GEAR_EVENT.MESSAGES_DISPATCHED:
