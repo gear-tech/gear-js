@@ -1,7 +1,8 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { GearApi } from '../GearApi';
-import { ISystemAccountInfo, IBalanceCallback, IBlocksCallback } from '../types/interfaces';
+
+import { ISystemAccountInfo, IBalanceCallback, IBlocksCallback } from '../types';
 import { IGearEvent } from './types';
+import { GearApi } from '../GearApi';
 import { Transfer } from './GearEvents';
 
 export class GearEvents {

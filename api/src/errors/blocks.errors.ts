@@ -1,5 +1,6 @@
-import { GearError } from './gear.errors';
 import { isU8a, u8aToString } from '@polkadot/util';
+
+import { GearError } from './gear.errors';
 
 export class GetBlockError extends GearError {
   name = 'GetBlockError';

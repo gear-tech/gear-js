@@ -4,11 +4,11 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
 
 import { GearMessageReply } from './MessageReply';
-import { GearApiOptions } from './types/interfaces';
 import { gearRpc, gearTypes } from './default';
 import { GearProgramState } from './State';
 import { GearWaitlist } from './Waitlist';
 import { GearClaimValue } from './Claim';
+import { GearApiOptions } from './types';
 import { GearProgram } from './Program';
 import { GearStorage } from './Storage';
 import { GearMailbox } from './Mailbox';

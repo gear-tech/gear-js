@@ -1,11 +1,12 @@
-import { GearApi } from './GearApi';
-import { GetBlockError } from './errors';
-import { AnyTuple, AnyNumber } from '@polkadot/types/types';
 import { u64, Compact, GenericExtrinsic, Vec } from '@polkadot/types';
 import { SignedBlock, BlockNumber, BlockHash } from '@polkadot/types/interfaces';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
+import { AnyTuple, AnyNumber } from '@polkadot/types/types';
 import { isHex, isU8a } from '@polkadot/util';
+
 import { CreateType } from './create-type';
+import { GetBlockError } from './errors';
+import { GearApi } from './GearApi';
 export class GearBlock {
   protected api: GearApi;
   constructor(api: GearApi) {

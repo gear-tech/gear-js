@@ -1,9 +1,10 @@
-import { Keyring } from '@polkadot/api';
-import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
-import { hexToU8a, isU8a, stringToU8a, isString, u8aToHex } from '@polkadot/util';
 import { mnemonicGenerate, mnemonicToMiniSecret, signatureVerify } from '@polkadot/util-crypto';
+import { hexToU8a, isU8a, stringToU8a, isString, u8aToHex } from '@polkadot/util';
+import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
 import { Keypair } from '@polkadot/util-crypto/types';
 import { waitReady } from '@polkadot/wasm-crypto';
+import { Keyring } from '@polkadot/api';
+
 import { Hex } from './types';
 
 export class GearKeyring {

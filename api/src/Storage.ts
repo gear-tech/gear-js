@@ -2,10 +2,9 @@ import { Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { u8aToHex } from '@polkadot/util';
 
-import { IActiveProgram, IGearPages, IProgram } from './types/interfaces';
+import { IActiveProgram, IGearPages, IProgram, Hex } from './types';
 import { GPAGES_HEX, GPROG_HEX, SEPARATOR } from './utils';
 import { CreateType } from './create-type';
-import { Hex } from './types';
 import { ReadStateError } from './errors';
 import { GearApi } from './GearApi';
 
