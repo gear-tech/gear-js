@@ -1,4 +1,4 @@
-import { Hex, MessagesDispatched, ProgramId } from '@gear-js/api';
+import { Hex, MessagesDispatched } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { useEffect, useState, useContext } from 'react';
@@ -8,7 +8,7 @@ import { useConditionalMetaBuffer } from './useMetadata';
 type State<T> = { state: T | undefined; isStateRead: boolean };
 
 function useReadState<T = AnyJson>(
-  programId: ProgramId | undefined,
+  programId: Hex | undefined,
   metaSourceOrBuffer: string | Buffer | undefined,
   payload?: AnyJson,
 ): State<T> {
