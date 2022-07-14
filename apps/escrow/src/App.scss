@@ -20,5 +20,5 @@ main {
 }
 
 body {
-  background: $bgColor url(assets/images/bg.svg);
+  background: $bgColor url(assets/images/bg.svg) center/cover no-repeat;
 }

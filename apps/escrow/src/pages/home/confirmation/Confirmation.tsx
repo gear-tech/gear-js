@@ -1,4 +1,6 @@
 import { Button } from '@gear-js/ui';
+import check from 'assets/images/icons/check.svg';
+import reset from 'assets/images/icons/reset.svg';
 
 type Props = {
   isBuyer: boolean;
@@ -8,9 +10,9 @@ type Props = {
 
 function Confirmation({ isBuyer, onConfirm, onRefund }: Props) {
   return isBuyer ? (
-    <Button text="Confirm deal" onClick={onConfirm} block />
+    <Button text="Confirm deal" icon={check} onClick={onConfirm} block />
   ) : (
-    <Button text="Refund tokens" onClick={onRefund} block />
+    <Button text="Refund tokens" icon={reset} onClick={onRefund} block />
   );
 }
 

@@ -21,7 +21,9 @@ function Box({ onBack, onHome, isNavigationVisible, children }: Props) {
             <Button icon={home} color="secondary" onClick={onHome} />
           </div>
         )}
-        <h2 className={styles.heading}>Escrow contract</h2>
+        <h2 className={styles.heading}>
+          Escrow <span className={styles.contract}>contract</span>
+        </h2>
       </header>
       <div className={styles.body}>{children}</div>
     </div>

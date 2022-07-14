@@ -3,6 +3,7 @@ import { useApi } from '@gear-js/react-hooks';
 import { Input, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
+import check from 'assets/images/icons/check.svg';
 import styles from './InputAddress.module.scss';
 
 type Props = {
@@ -37,7 +38,7 @@ function InputAddress({ label, onSubmit }: Props) {
         <Input label={label} {...getInputProps('address')} />
         <p className={styles.error}>{errors.address}</p>
       </div>
-      <Button type="submit" text="Continue" block />
+      <Button type="submit" text="Continue" icon={check} block />
     </form>
   );
 }

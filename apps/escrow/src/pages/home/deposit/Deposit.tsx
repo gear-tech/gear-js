@@ -1,4 +1,6 @@
 import { Button } from '@gear-js/ui';
+import wallet from 'assets/images/icons/wallet.svg';
+import cross from 'assets/images/icons/cross.svg';
 
 type Props = {
   isBuyer: boolean;
@@ -9,11 +11,11 @@ type Props = {
 function Deposit({ isBuyer, onDeposit, onCancel }: Props) {
   return isBuyer ? (
     <>
-      <Button text="Make deposit" onClick={onDeposit} block />
-      <Button text="Cancel deal" color="secondary" onClick={onCancel} block />
+      <Button text="Make deposit" icon={wallet} onClick={onDeposit} block />
+      <Button text="Cancel deal" icon={cross} color="secondary" onClick={onCancel} block />
     </>
   ) : (
-    <Button text="Cancel deal" color="secondary" onClick={onCancel} block />
+    <Button text="Cancel deal" icon={cross} color="secondary" onClick={onCancel} block />
   );
 }
 

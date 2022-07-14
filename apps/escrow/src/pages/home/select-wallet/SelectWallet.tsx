@@ -1,5 +1,6 @@
 import { Button, Select } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
+import check from 'assets/images/icons/check.svg';
 import { Wallet } from 'types';
 import styles from './SelectWallet.module.scss';
 
@@ -20,7 +21,7 @@ function SelectWallet({ wallets, onSubmit }: Props) {
   return isAnyWallet ? (
     <form onSubmit={form.onSubmit(({ id }) => onSubmit(id as string))}>
       <Select label="Wallet ID" options={getOptions()} {...getInputProps('id')} />
-      <Button type="submit" text="Continue" block />
+      <Button type="submit" text="Continue" icon={check} block />
     </form>
   ) : (
     <p className={styles.text}>There are no wallets in your contract, please create one</p>

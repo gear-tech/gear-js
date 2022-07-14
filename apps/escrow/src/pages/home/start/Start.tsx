@@ -1,4 +1,6 @@
 import { Button } from '@gear-js/ui';
+import idea from 'assets/images/icons/idea.svg';
+import general from 'assets/images/icons/general.svg';
 
 type Props = {
   text: string;
@@ -9,8 +11,8 @@ type Props = {
 function Start({ text, onInit, onUse }: Props) {
   return (
     <>
-      <Button text={text} onClick={onInit} block />
-      <Button text="Use existing one" color="secondary" onClick={onUse} block />
+      <Button text={text} icon={idea} onClick={onInit} block />
+      <Button text="Use existing one" icon={general} color="secondary" onClick={onUse} block />
     </>
   );
 }

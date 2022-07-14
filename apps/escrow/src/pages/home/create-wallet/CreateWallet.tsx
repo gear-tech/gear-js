@@ -1,6 +1,7 @@
 import { Input, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
+import check from 'assets/images/icons/check.svg';
 import { CreateFormValues } from 'types';
 import styles from './CreateWallet.module.scss';
 
@@ -33,7 +34,7 @@ function CreateWallet({ onSubmit }: Props) {
         <Input type="number" label="Amount" className={styles.input} {...getInputProps('amount')} />
         <p className={styles.error}>{errors.amount}</p>
       </div>
-      <Button text="Create wallet" type="submit" block />
+      <Button text="Create wallet" type="submit" icon={check} block />
     </form>
   );
 }

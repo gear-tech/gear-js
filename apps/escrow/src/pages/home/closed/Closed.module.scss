@@ -1,7 +1,17 @@
 @use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/mixins' as *;
 
 .text {
   padding: 15px 20px;
+  display: grid;
+  grid-template-columns: 1fr 7fr;
+  font-size: $fontSizeMedium;
   border: 1px dashed #ffffff;
   border-radius: $borderRadius;
+
+  &::before {
+    @include square(24px);
+    content: '';
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0Zm1.6 20h-3.2v-3.2h3.2V20Zm0-5.6h-3.2V4h3.2v10.4Z' fill='%23fff'/%3E%3C/svg%3E%0A");
+  }
 }
