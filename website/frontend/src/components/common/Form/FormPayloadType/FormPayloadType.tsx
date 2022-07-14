@@ -13,7 +13,7 @@ type Props = {
 const FormPayloadType = ({ name, label }: Props) => {
   const [isChecked, setIsChecked] = useState(false);
 
-  const [field, { touched, initialValue }, helpers] = useField(name);
+  const [field, { touched, initialValue, error }, helpers] = useField(name);
 
   const toggleSwitch = (event: ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked;
@@ -28,6 +28,8 @@ const FormPayloadType = ({ name, label }: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked, touched]);
+
+  const showError = error && touched;
 
   return (
     <div className={clsx(styles.formItem, styles.field)}>
@@ -44,6 +46,7 @@ const FormPayloadType = ({ name, label }: Props) => {
         />
         <Input {...field} id={field.name} disabled={!isChecked} />
       </div>
+      {showError && <div className={styles.error}>{error}</div>}
     </div>
   );
 };
