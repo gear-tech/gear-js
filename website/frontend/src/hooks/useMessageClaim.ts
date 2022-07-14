@@ -4,8 +4,10 @@ import { Hex, UserMessageRead } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
 
 import { getExtrinsicFailedMessage } from 'helpers';
+import { TransactionStatus } from 'consts';
+import { Method } from 'types/explorer';
 
-const useClaimMessage = () => {
+const useMessageClaim = () => {
   const alert = useAlert();
   const { api } = useApi();
   const { account } = useAccount();
@@ -29,33 +31,33 @@ const useClaimMessage = () => {
 
         await api.claimValueFromMailbox.signAndSend(address, { signer }, ({ status, events }) => {
           if (status.isReady) {
-            alert.update(alertId, 'Ready');
+            alert.update(alertId, TransactionStatus.Ready);
 
             return;
           }
 
           if (status.isInBlock) {
-            alert.update(alertId, 'InBlock');
+            alert.update(alertId, TransactionStatus.InBlock);
 
             events.forEach(({ event }) => {
               const { method, section, data } = event as UserMessageRead;
 
-              const title = `${section}.${method}`;
+              const alertOptions = { title: `${section}.${method}` };
 
-              if (method === 'UserMessageRead') {
+              if (method === Method.UserMessageRead) {
                 const reason = data.reason.toHuman() as { [key: string]: string };
                 const reasonKey = Object.keys(reason)[0];
                 const reasonValue = reason[reasonKey];
 
                 const message = `${data.id.toHuman()}\n ${reasonKey}: ${reasonValue}`;
 
-                alert.success(message, { title });
+                alert.success(message, alertOptions);
 
                 return;
               }
 
-              if (method === 'ExtrinsicFailed') {
-                alert.error(getExtrinsicFailedMessage(api, event), { title });
+              if (method === Method.ExtrinsicFailed) {
+                alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
                 return;
               }
@@ -65,7 +67,7 @@ const useClaimMessage = () => {
           }
 
           if (status.isFinalized) {
-            alert.update(alertId, 'Finalized', DEFAULT_SUCCESS_OPTIONS);
+            alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
 
             callback();
           }
@@ -85,4 +87,4 @@ const useClaimMessage = () => {
   return claimMessage;
 };
 
-export { useClaimMessage };
+export { useMessageClaim };

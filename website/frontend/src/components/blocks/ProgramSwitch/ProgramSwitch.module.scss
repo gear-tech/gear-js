@@ -13,15 +13,6 @@
   }
 }
 
-.switchWrapper {
-  display: flex;
-  align-items: center;
-
-  @include md {
-    flex-direction: column;
-  }
-}
-
 .switchButtons {
   padding: 4px 5px;
   border-radius: 40px;

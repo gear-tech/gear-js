@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
 import { DEFAULT_NODES_URL } from 'consts';
-import { NodeSection } from 'types/api';
+import { GetDefaultNodesResponse } from 'types/api';
 
-function useSidebarNodes() {
-  const [nodeSections, setNodeSections] = useState<NodeSection[]>([]);
+const useSidebarNodes = () => {
+  const [nodeSections, setNodeSections] = useState<GetDefaultNodesResponse>([]);
 
   useEffect(() => {
     fetch(DEFAULT_NODES_URL)
@@ -14,6 +14,6 @@ function useSidebarNodes() {
   }, []);
 
   return nodeSections;
-}
+};
 
 export { useSidebarNodes };

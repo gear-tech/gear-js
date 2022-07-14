@@ -1,0 +1,19 @@
+@use '@gear-js/ui/variables' as *;
+
+.testBalanceBtn {
+  padding: 0;
+
+  .icon {
+    width: 30px;
+    height: 30px;
+
+    &,
+    & * {
+      transition: inherit;
+    }
+  }
+
+  &:hover .icon path {
+    fill: $successColor;
+  }
+}

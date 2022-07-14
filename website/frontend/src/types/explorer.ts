@@ -61,6 +61,7 @@ export enum Method {
   CodeSaved = 'CodeSaved',
   ProgramChanged = 'ProgramChanged',
   UserMessageSent = 'UserMessageSent',
+  UserMessageRead = 'UserMessageRead',
   MessageEnqueued = 'MessageEnqueued',
   MessagesDispatched = 'MessagesDispatched',
   ExtrinsicFailed = 'ExtrinsicFailed',

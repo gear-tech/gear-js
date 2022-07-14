@@ -6,7 +6,7 @@ import { useApi, useAccount } from '@gear-js/react-hooks';
 import styles from './Mailbox.module.scss';
 import { Message, HumanMailboxItem } from './children/Message';
 
-import { useClaimMessage } from 'hooks';
+import { useMessageClaim } from 'hooks';
 import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
 
@@ -16,7 +16,7 @@ const Mailbox = () => {
 
   const [mailbox, setMailbox] = useState<MailboxItem[] | null>(null);
 
-  const claimMessage = useClaimMessage();
+  const claimMessage = useMessageClaim();
 
   const handleClaim = useCallback(
     (messageId: Hex) => {

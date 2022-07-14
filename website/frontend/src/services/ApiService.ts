@@ -1,5 +1,4 @@
-import { GearApi, Metadata } from '@gear-js/api';
-import { AddressOrPair } from '@polkadot/api/types';
+import { Metadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import type { InjectedExtension } from '@polkadot/extension-inject/types';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
@@ -7,7 +6,7 @@ import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 import { localPrograms } from './LocalDBService';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
-import { RPC_METHODS, GEAR_BALANCE_TRANSFER_VALUE } from 'consts';
+import { RPC_METHODS } from 'consts';
 import { signPayload, isDevChain } from 'helpers';
 import { ProgramStatus } from 'types/program';
 
@@ -84,29 +83,4 @@ export const addMetadata = async (
   const injector = await web3FromSource(account.meta.source);
 
   await uploadMetadata(programId, account, name, injector, alert, metaFile, meta, meta.title);
-};
-
-export const transferBalance = (
-  api: GearApi,
-  addressTo: string,
-  addressFrom: AddressOrPair,
-  alert: AlertContainerFactory
-) => {
-  api.balance.transfer(addressTo, GEAR_BALANCE_TRANSFER_VALUE);
-
-  api.balance.signAndSend(addressFrom, ({ events }) => {
-    events.forEach(({ event: { method, section } }) => {
-      const eventTitle = `${section}.${method}`;
-
-      if (method === 'Transfer') {
-        alert.success('Balance received successfully', { title: eventTitle });
-
-        return;
-      }
-
-      if (method === 'ExtrinsicFailed') {
-        alert.error('Error when receiving balance', { title: eventTitle });
-      }
-    });
-  });
 };
