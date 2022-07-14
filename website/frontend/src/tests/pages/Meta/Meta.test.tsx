@@ -7,7 +7,7 @@ import { AccountProvider } from '@gear-js/react-hooks';
 
 import { PROGRAM_ID_1, META } from '../../const';
 
-import { useAccountMock, TEST_ACCOUNT, useApiMock } from '../../mocks/hooks';
+import { useAccountMock, TEST_ACCOUNT_1, useApiMock } from '../../mocks/hooks';
 
 import { routes } from 'routes';
 import { FILE_TYPES } from 'consts';
@@ -112,7 +112,7 @@ describe('test uplaod meta page', () => {
 
     // authorized submit
 
-    useAccountMock(TEST_ACCOUNT);
+    useAccountMock(TEST_ACCOUNT_1);
 
     rerender(<UploadMetaPage />);
 
@@ -123,7 +123,7 @@ describe('test uplaod meta page', () => {
       expect(addMetadataMock).toBeCalledWith(
         META,
         Buffer.from(new Uint8Array(fileBuffer)).toString('base64'),
-        TEST_ACCOUNT,
+        TEST_ACCOUNT_1,
         PROGRAM_ID_1,
         'TEST',
         expect.any(Object)

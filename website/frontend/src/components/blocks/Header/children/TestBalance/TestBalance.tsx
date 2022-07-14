@@ -74,7 +74,7 @@ const TestBalance = ({ address }: Props) => {
       <Tooltip content="Get test balance">
         <button
           aria-label="get test balance"
-          date-testid="testBalanceBtn"
+          data-testid="testBalanceBtn"
           className={clsx(buttonStyles.button, buttonStyles.noText, styles.testBalanceBtn)}
           onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}
         >
