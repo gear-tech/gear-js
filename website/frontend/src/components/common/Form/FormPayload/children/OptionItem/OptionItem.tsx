@@ -26,6 +26,7 @@ const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
   useChangeEffect(() => {
     const fieldValue = isNone ? null : parsedPayload;
 
+    helpers.setError(undefined);
     helpers.setValue(fieldValue, false);
   }, [isNone]);
 

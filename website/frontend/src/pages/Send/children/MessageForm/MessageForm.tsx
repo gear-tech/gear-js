@@ -20,10 +20,23 @@ type Props = {
 };
 
 const MessageForm = ({ id, isReply, metadata }: Props) => {
-  const { api } = useApi();
   const alert = useAlert();
+  const { api } = useApi();
 
   const method = isReply ? 'reply' : 'handle';
+  const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
+
+  const initialValues: FormValues = {
+    value: 0,
+    payload: '0x00',
+    gasLimit: 20000000,
+    payloadType: 'Bytes',
+    destination: id,
+  };
+
+  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
+
+  const validationSchema = useMemo(() => getValidationSchema(encodeType, metadata), [metadata, encodeType]);
 
   const sendMessage = useSendMessage();
 
@@ -38,27 +51,24 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
       destination: values.destination,
     };
 
-    sendMessage(method, message, helpers.resetForm, metadata, payloadType);
+    const callback = () => {
+      const { payload } = payloadFormValues ?? initialValues;
+
+      helpers.resetForm({
+        values: {
+          ...initialValues,
+          payload,
+        },
+      });
+    };
+
+    sendMessage(method, message, callback, metadata, payloadType).catch(() => helpers.setSubmitting(false));
   };
 
   const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>
     calculateGas(method, api, values, alert, metadata, null, id).then((gasLimit) =>
       setFieldValue('gasLimit', gasLimit)
     );
-
-  const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
-
-  const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
-
-  const validationSchema = useMemo(() => getValidationSchema(encodeType, metadata), [metadata, encodeType]);
-
-  const initialValues: FormValues = {
-    value: 0,
-    payload: '',
-    gasLimit: 20000000,
-    payloadType: 'Bytes',
-    destination: id,
-  };
 
   return (
     <Formik

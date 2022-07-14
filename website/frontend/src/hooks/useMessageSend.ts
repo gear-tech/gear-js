@@ -79,6 +79,8 @@ const useSendMessage = () => {
         const errorMessage = (error as Error).message;
 
         alert.update(alertId, errorMessage, DEFAULT_ERROR_OPTIONS);
+
+        return Promise.reject(error);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

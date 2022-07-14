@@ -26,11 +26,12 @@ const FormNumberFormat = (props: Props) => {
         <span className={inputStyles.text}>{label}</span>
         <div className={inputStyles.wrapper}>
           <NumberFormat
+            {...other}
             name={field.name}
             value={field.value}
-            onValueChange={handleChange}
             className={inputStyles.input}
-            {...other}
+            onBlur={field.onBlur}
+            onValueChange={handleChange}
           />
         </div>
       </label>

@@ -1,8 +1,12 @@
 import {
   PROGRAM_ID_1,
   PROGRAM_ID_2,
+  PROGRAM_ID_3,
+  PROGRAM_ID_4,
   PROGRAM_WITH_META,
   PROGRAM_WITHOUT_META,
+  PROGRAM_WITH_REPLY_META,
+  PROGRAM_WITHOUT_REPLY_META,
   MESSAGE_ID_1,
   META_FILE,
   META,
@@ -24,7 +28,7 @@ export const getMessageResponse = (messageId: string) =>
     id: messageId,
     entry: null,
     value: '',
-    source: messageId === MESSAGE_ID_1 ? PROGRAM_ID_1 : PROGRAM_ID_2,
+    source: messageId === MESSAGE_ID_1 ? PROGRAM_ID_3 : PROGRAM_ID_4,
     payload: '0x4e6f7420656e6f7567682067617320666f7220696e697469616c206d656d6f72792068616e646c696e67',
     exitCode: null,
     timestamp: '2022-06-29T09:54:04.000Z',
@@ -34,10 +38,33 @@ export const getMessageResponse = (messageId: string) =>
     processedWithPanic: false,
   });
 
-export const getProgramResponse = (programId: string) =>
-  getApiResponse<ProgramModel>({
-    ...(programId === PROGRAM_ID_1 ? PROGRAM_WITH_META : PROGRAM_WITHOUT_META),
-  });
+export const getProgramResponse = (programId: string) => {
+  let response: ProgramModel;
+
+  switch (programId) {
+    case PROGRAM_ID_1: {
+      response = PROGRAM_WITH_META;
+      break;
+    }
+    case PROGRAM_ID_2: {
+      response = PROGRAM_WITHOUT_META;
+      break;
+    }
+    case PROGRAM_ID_3: {
+      response = PROGRAM_WITH_REPLY_META;
+      break;
+    }
+    case PROGRAM_ID_4: {
+      response = PROGRAM_WITHOUT_REPLY_META;
+      break;
+    }
+    default: {
+      response = PROGRAM_WITH_META;
+    }
+  }
+
+  return getApiResponse<ProgramModel>({ ...response });
+};
 
 export const getMetadataResponse = (programId: string) =>
   getApiResponse<GetMetaResponse>({
