@@ -1,8 +1,7 @@
 import { Option, StorageKey } from '@polkadot/types';
 import { AnyTuple } from '@polkadot/types/types';
 
-import { Hex, HumanStoredDispatch, WaitlistItem } from './types';
-import { StoredMessage } from './types/interfaces';
+import { Hex, HumanStoredDispatch, WaitlistItem, StoredMessage } from './types';
 import { GearApi } from './GearApi';
 
 export class GearWaitlist {

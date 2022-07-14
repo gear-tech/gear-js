@@ -1,8 +1,7 @@
-import { AnyJson, AnyNumber, ISubmittableResult } from '@polkadot/types/types';
+import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { BalanceOf } from '@polkadot/types/interfaces';
 import { randomAsHex } from '@polkadot/util-crypto';
-import { Bytes, u64 } from '@polkadot/types';
+import { Bytes } from '@polkadot/types';
 
 import { createPayload, generateProgramId, GPROG, GPROG_HEX } from './utils';
 import { Metadata } from './types/interfaces';
@@ -10,7 +9,7 @@ import { GearTransaction } from './Transaction';
 import { SubmitProgramError } from './errors';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
-import { Hex } from './types';
+import { GasLimit, Hex, Value } from './types';
 
 export class GearProgram extends GearTransaction {
   calculateGas: GearGas;
@@ -43,8 +42,8 @@ export class GearProgram extends GearTransaction {
       code: Buffer | Uint8Array;
       salt?: `0x${string}`;
       initPayload?: AnyJson;
-      gasLimit: u64 | AnyNumber;
-      value?: BalanceOf | AnyNumber;
+      gasLimit: GasLimit;
+      value?: Value;
     },
     meta?: Metadata,
     messageType?: string,

@@ -1,11 +1,12 @@
+import { AddressOrPair, SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
+import { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
+import { ISubmittableResult } from '@polkadot/types/types';
+import { isFunction } from '@polkadot/util';
+
+import { TransactionStatusCb } from './types';
+import { TransactionError } from './errors';
 import { CreateType } from './create-type';
 import { GearApi } from './GearApi';
-import { TransactionStatusCb } from './types';
-import { isFunction } from '@polkadot/util';
-import { AddressOrPair, SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
-import { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
-import { TransactionError } from './errors';
 
 export class GearTransaction {
   protected api: GearApi;

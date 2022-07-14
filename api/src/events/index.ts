@@ -1,4 +1,3 @@
-export { Methods } from './methods';
 export * from './GearEvents';
 export * from './GearEventData';
 export * from './types';

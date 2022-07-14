@@ -2,13 +2,22 @@ import typescript from 'rollup-plugin-typescript2';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import { writeFileSync } from 'fs';
+import { writeFileSync, cpSync } from 'fs';
 
-function writeCjsPackageJson() {
+function writePackageJson() {
   return {
-    name: 'write-cjs-package-json',
+    name: 'write-package-json',
     closeBundle() {
       writeFileSync('./lib/cjs/package.json', JSON.stringify({ type: 'commonjs' }));
+      cpSync('./package.json', 'lib/package.json');
+    },
+  };
+}
+function cpReadme() {
+  return {
+    name: 'cp-readme',
+    closeBundle() {
+      cpSync('./README.md', 'lib/README.md');
     },
   };
 }
@@ -51,7 +60,8 @@ export default [
       json(),
       nodeResolve({ preferBuiltins: true, resolveOnly: (module) => !module.includes('polkadot') }),
       commonjs(),
-      writeCjsPackageJson(),
+      writePackageJson(),
+      cpReadme(),
     ],
   },
 ];

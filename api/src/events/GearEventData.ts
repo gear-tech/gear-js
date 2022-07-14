@@ -1,6 +1,7 @@
 import { u32, u128, Vec, Option, BTreeMap, BTreeSet, GenericEventData, Bool } from '@polkadot/types';
 import { BlockNumber, AccountId32 } from '@polkadot/types/interfaces';
-import { QueuedDispatch, ProgramDetails } from '../types/interfaces';
+
+import { QueuedDispatch, ProgramDetails } from '../types';
 import {
   MessageId,
   ProgramId,

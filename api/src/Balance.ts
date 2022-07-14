@@ -1,9 +1,10 @@
-import { ISystemAccountInfo } from './types/interfaces';
-import { Balance } from '@polkadot/types/interfaces';
-import { BN } from '@polkadot/util';
-import { GearTransaction } from './Transaction';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
+import { Balance } from '@polkadot/types/interfaces';
+import { BN } from '@polkadot/util';
+
+import { GearTransaction } from './Transaction';
+import { ISystemAccountInfo } from './types';
 import { GearApi } from './GearApi';
 
 export class GearBalance extends GearTransaction {

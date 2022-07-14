@@ -1,3 +1,16 @@
+## 0.23.3
+
+_07/12/2022_
+
+https://github.com/gear-tech/gear-js/pull/822
+
+### Changes
+
+- Add specific types for gas limit and value
+- Update build process
+
+---
+
 ## 0.23.2
 
 _07/12/2022_
