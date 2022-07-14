@@ -10,6 +10,7 @@ import styles from './TestBalance.module.scss';
 import { isDevChain } from 'helpers';
 import { useBalanceTransfer } from 'hooks';
 import { RPC_METHODS, HCAPTCHA_SITE_KEY } from 'consts';
+import { Tooltip } from 'components/common/Tooltip';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 import { ReactComponent as TestBalanceSVG } from 'assets/images/testBalance.svg';
 
@@ -70,13 +71,16 @@ const TestBalance = ({ address }: Props) => {
 
   return (
     <div>
-      <button
-        aria-label="get test balance"
-        className={clsx(buttonStyles.button, buttonStyles.noText, styles.testBalanceBtn)}
-        onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}
-      >
-        <TestBalanceSVG className={styles.icon} />
-      </button>
+      <Tooltip content="Get test balance">
+        <button
+          aria-label="get test balance"
+          date-testid="testBalanceBtn"
+          className={clsx(buttonStyles.button, buttonStyles.noText, styles.testBalanceBtn)}
+          onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}
+        >
+          <TestBalanceSVG className={styles.icon} />
+        </button>
+      </Tooltip>
       <HCaptcha
         ref={captchaRef}
         size="invisible"
