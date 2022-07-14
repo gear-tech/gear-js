@@ -112,7 +112,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
                   <FormNumberFormat
                     name="gasLimit"
                     label="Gas limit"
-                    placeholder="20,000,000"
+                    placeholder="1,000,000,000"
                     thousandSeparator
                     allowNegative={false}
                   />

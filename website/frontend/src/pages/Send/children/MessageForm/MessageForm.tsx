@@ -9,6 +9,7 @@ import { FormValues, SetFieldValue } from './types';
 
 import { calculateGas } from 'helpers';
 import { useSendMessage } from 'hooks';
+import { MIN_GAS_LIMIT } from 'consts';
 import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import sendMessageSVG from 'assets/images/message.svg';
@@ -29,7 +30,7 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
   const initialValues: FormValues = {
     value: 0,
     payload: '0x00',
-    gasLimit: 20000000,
+    gasLimit: MIN_GAS_LIMIT,
     payloadType: 'Bytes',
     destination: id,
   };
@@ -91,7 +92,7 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
             <FormNumberFormat
               name="gasLimit"
               label="Gas limit"
-              placeholder="20,000,000"
+              placeholder="1,000,000,000"
               thousandSeparator
               allowNegative={false}
             />
