@@ -1,5 +1,6 @@
 import { useAccount } from '@gear-js/react-hooks';
 import { toShortAddress } from 'utils'
+import { Hex } from '@gear-js/api';
 import { buttonStyles } from '@gear-js/ui';
 import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
@@ -7,9 +8,9 @@ import clsx from 'clsx';
 import styles from './Item.module.scss';
 
 type Props = {
-  id: string;
+  id: Hex;
   name: string;
-  ownerId: string;
+  ownerId: Hex;
 };
 
 function Item({ id, name, ownerId }: Props) {

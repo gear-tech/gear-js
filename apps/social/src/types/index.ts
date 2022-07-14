@@ -11,4 +11,4 @@ type Channel = {
   description: string;
 };
 
-export type { Params, Channel };
+export type { Params, Channel, Hex };
