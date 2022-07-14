@@ -1,9 +1,8 @@
 import { IRpcRequest, IRpcResponse, KAFKA_TOPICS, JSONRPC_ERRORS } from '@gear-js/common';
 
 import { getResponse } from '../utils';
-import { API_GATEWAY } from '../common/constant';
+import { API_GATEWAY, apiGatewayLogger } from '../common';
 import { jsonRpcHandler } from './json-rpc.handler';
-import { apiGatewayLogger } from '../common/event-listener.logger';
 
 async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],

@@ -1,8 +1,9 @@
 import { GearApi } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
-import { eventListenerLogger } from '../common/event-listener.logger';
-import { handleEvent } from './event-handlers';
 import { GEAR_EVENT } from '@gear-js/common';
+
+import { eventListenerLogger } from '../common';
+import { handleEvent } from './event-handlers';
 
 export const listen = (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) => {
   return api.query.system.events(async (events) => {

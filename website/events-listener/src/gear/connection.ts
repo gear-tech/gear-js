@@ -1,6 +1,7 @@
 import { GearApi } from '@gear-js/api';
+
 import config from '../config/configuration';
-import { eventListenerLogger } from '../common/event-listener.logger';
+import { eventListenerLogger } from '../common';
 import { changeStatus } from '../routes/healthcheck/healthcheck.router';
 import { listen } from './listener';
 import { kafkaProducer } from '../kafka/producer';

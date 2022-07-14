@@ -1,0 +1,5 @@
+enum EVENTS_LISTENER_ROUTERS {
+  HEALTH = '/health',
+}
+
+export { EVENTS_LISTENER_ROUTERS };

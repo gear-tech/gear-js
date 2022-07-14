@@ -1,4 +1,5 @@
 import { KAFKA_TOPICS } from '@gear-js/common';
+
 import { kafkaProducer } from './producer';
 import { kafkaConsumer } from './consumer';
 

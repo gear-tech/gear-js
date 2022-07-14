@@ -6,12 +6,13 @@ import { changeStatus, healthcheckRouter } from './routes/healthcheck/healthchec
 import { dbCreateConnection } from './database/db-create-connection';
 import { gearService } from './gear';
 import { kafkaCreateConnection } from './kafka/kafka-create-connection';
+import { TEST_BALANCE_ROUTERS } from './common';
 
 const app = express();
 
 const port = config.healthcheck.port;
 
-app.use('/health', healthcheckRouter);
+app.use(TEST_BALANCE_ROUTERS.HEALTH, healthcheckRouter);
 
 const startApp = async () => {
   await dbCreateConnection();
