@@ -1,8 +1,9 @@
-import { Admin, Producer } from 'kafkajs';
+import { Admin, Message, Producer } from 'kafkajs';
 import { KAFKA_TOPICS } from '@gear-js/common';
 
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { initKafka } from './init-kafka';
+import { SendByKafkaTopicInput } from './types';
 
 const producer: Producer = initKafka.producer();
 
@@ -11,17 +12,18 @@ async function connect(): Promise<void> {
   eventListenerLogger.info('Producer is connected');
 }
 
-async function send(key: string, value: string, genesis: string): Promise<void> {
+async function send(sendByKafkaTopicInput: SendByKafkaTopicInput): Promise<void> {
+  const { topic } = sendByKafkaTopicInput;
   await producer.send({
-    topic: KAFKA_TOPICS.EVENTS,
-    messages: [{ key, value: JSON.stringify(value), headers: { genesis } }],
+    topic,
+    messages: getMessageFormByTopic(sendByKafkaTopicInput),
   });
 }
 
-async function createTopic(topic: string): Promise<void> {
+async function createTopics(topics: string[]): Promise<void> {
   const admin = initKafka.admin();
   await connectKafkaAdmin(admin);
-  await createKafkaTopic(admin, topic);
+  await createKafkaTopics(admin, topics);
   await admin.disconnect();
   eventListenerLogger.info(`Admin is disconnected`);
 }
@@ -37,21 +39,23 @@ async function connectKafkaAdmin(admin: Admin): Promise<void> {
   }
 }
 
-async function createKafkaTopic(admin: Admin, topic: string): Promise<void> {
-  try {
-    const kafkaTopics = await admin.listTopics();
-    if (!isTopicAlreadyExist(kafkaTopics, topic)) {
-      await admin.createTopics({
-        waitForLeaders: true,
-        topics: [{ topic }],
-      });
-      eventListenerLogger.info(`Kafka producer: Topic ${topic} created`);
-    } else {
-      eventListenerLogger.info(`Kafka producer: Topic ${topic} already existed`);
+async function createKafkaTopics(admin: Admin, topics: string[]): Promise<void> {
+  for (const topic of topics) {
+    try {
+      const kafkaTopics = await admin.listTopics();
+      if (!isTopicAlreadyExist(kafkaTopics, topic)) {
+        await admin.createTopics({
+          waitForLeaders: true,
+          topics: [{ topic }],
+        });
+        eventListenerLogger.info(`Kafka producer: Topic ${topic} created`);
+      } else {
+        eventListenerLogger.info(`Kafka producer: Topic ${topic} already existed`);
+      }
+    } catch (error) {
+      eventListenerLogger.error(`Kafka producer: ${error}`);
+      throw error;
     }
-  } catch (error) {
-    eventListenerLogger.error(`Kafka producer: ${error}`);
-    throw error;
   }
 
   await admin.disconnect();
@@ -62,4 +66,12 @@ function isTopicAlreadyExist(topics: string[], topic: string): boolean {
   return topics.includes(topic);
 }
 
-export const kafkaProducer = { connect, send, createTopic };
+function getMessageFormByTopic(sendByKafkaTopicInput: SendByKafkaTopicInput): Message[] {
+  const { topic, genesis, params, key } = sendByKafkaTopicInput;
+  if (topic === KAFKA_TOPICS.EVENTS) {
+    return [{ key, value: JSON.stringify(params), headers: { genesis } }];
+  }
+  return [{ value: JSON.stringify(params) }];
+}
+
+export const kafkaProducer = { connect, send, createTopics };
