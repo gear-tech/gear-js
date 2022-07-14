@@ -70,7 +70,7 @@ const TestBalance = ({ address }: Props) => {
   }, [captchaToken]);
 
   return (
-    <div>
+    <div className={styles.testBalanceWrapper}>
       <Tooltip content="Get test balance">
         <button
           aria-label="get test balance"
