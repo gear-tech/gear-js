@@ -44,12 +44,3 @@
     font-weight: 600;
   }
 }
-
-.testBalanceButton {
-  margin: 0 32px;
-
-  @include md {
-    width: 100%;
-    margin: 26px 0;
-  }
-}
