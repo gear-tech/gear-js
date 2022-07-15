@@ -9,6 +9,7 @@ import {
   InitStatus,
   IUserMessageSentKafkaValue,
   MESSAGE_READ_STATUS,
+  UpdateMessageParams,
 } from '@gear-js/common';
 
 import { Message } from '../database/entities/message.entity';
@@ -78,6 +79,11 @@ export class MessageService {
         }
       }
     }
+  }
+
+  public async updateData(updateMessageParams: UpdateMessageParams): Promise<void> {
+    const { messageId, ...data } = updateMessageParams;
+    await this.messageRepository.update({ id: messageId }, { ...data });
   }
 
   public async updateReadStatus(id: string, readStatus: MESSAGE_READ_STATUS): Promise<void> {
