@@ -8,5 +8,4 @@ export const getValidationSchema = (type?: string, metadata?: Metadata) =>
     payload: yup.mixed().default('').testPayload(type, metadata),
     gasLimit: yup.number().required('This field is required').min(1, 'Initial value should be more than 0'),
     payloadType: yup.string().required('This field is required'),
-    destination: yup.string().required('This field is required'),
   });

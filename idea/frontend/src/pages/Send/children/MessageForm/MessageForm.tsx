@@ -4,11 +4,19 @@ import { Metadata } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 
 import { getValidationSchema } from './Schema';
+import { INITIAL_VALUES } from './const';
 import { FormValues, SetFieldValue } from './types';
 
-import { MIN_GAS_LIMIT, GasMethod } from 'consts';
+import { GasMethod } from 'consts';
 import { useSendMessage, useGasCalculate } from 'hooks';
-import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
+import {
+  FormText,
+  FormInput,
+  FormPayload,
+  FormPayloadType,
+  FormNumberFormat,
+  formStyles,
+} from 'components/common/Form';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import sendMessageSVG from 'assets/images/message.svg';
 
@@ -21,14 +29,6 @@ type Props = {
 const MessageForm = ({ id, isReply, metadata }: Props) => {
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
-
-  const initialValues: FormValues = {
-    value: 0,
-    payload: '0x00',
-    gasLimit: MIN_GAS_LIMIT,
-    payloadType: 'Bytes',
-    destination: id,
-  };
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
 
@@ -44,16 +44,16 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
       value: values.value.toString(),
       payload: getSubmitPayload(values.payload),
       gasLimit: values.gasLimit.toString(),
-      replyToId: values.destination,
-      destination: values.destination,
+      replyToId: id,
+      destination: id,
     };
 
     const callback = () => {
-      const { payload } = payloadFormValues ?? initialValues;
+      const { payload } = payloadFormValues ?? INITIAL_VALUES;
 
       helpers.resetForm({
         values: {
-          ...initialValues,
+          ...INITIAL_VALUES,
           payload,
         },
       });
@@ -67,7 +67,7 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={INITIAL_VALUES}
       validateOnChange={false}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
@@ -77,7 +77,7 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
 
         return (
           <Form data-testid="sendMessageForm" className={formStyles.largeForm}>
-            <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />
+            <FormText label={isReply ? 'Message Id' : 'Destination'} text={id} />
 
             <FormPayload name="payload" label="Payload" values={payloadFormValues} />
 
