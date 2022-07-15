@@ -36,12 +36,6 @@ export function validateGasLimit(gas: GasLimit, api: GearApi) {
   }
 }
 
-export function validateProgramId(programId: Hex, api: GearApi) {
-  if (api.program.is(programId)) {
-    throw new ValidationError('Program already exists');
-  }
-}
-
 export async function validateCodeId(codeId: Hex, api: GearApi) {
   if (await api.code.exists(codeId)) {
     throw new ValidationError('Code already exists');

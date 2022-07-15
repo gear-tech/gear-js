@@ -3,7 +3,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { Bytes } from '@polkadot/types';
 
-import { createPayload, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
+import { createPayload, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateProgramId, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { Metadata } from './types/interfaces';
 import { SubmitProgramError } from './errors';
@@ -54,10 +54,11 @@ export class GearProgram extends GearTransaction {
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
     const payload = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
+    const programId = generateProgramId(code, salt);
+    validateProgramId(programId, this.api);
 
     try {
       this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
-      const programId = generateProgramId(code, salt);
       return { programId, salt, submitted: this.submitted };
     } catch (error) {
       throw new SubmitProgramError();
