@@ -17,8 +17,4 @@ interface ApiResult {
   params: ApiHandlerResult;
 }
 
-enum API_HANDLE_METHODS {
-  MessageEnqueued = API_METHODS.MESSAGE_UPDATE_DATA,
-}
-
-export { GenericApiData, UpdateMessageDataExtrinsic, ApiResult, API_HANDLE_METHODS };
+export { GenericApiData, UpdateMessageDataExtrinsic, ApiResult };

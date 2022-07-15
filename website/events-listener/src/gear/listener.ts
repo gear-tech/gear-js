@@ -52,8 +52,8 @@ export const listen = (
       try {
         const updateData = handleApiEvent(method, data as GenericApiData);
         if (Array.isArray(updateData?.params)) {
-          for (const param of updateData!.params) {
-            callback({ params: { ...updateData }, method: updateData!.method });
+          for (const data of updateData!.params) {
+            callback({ params: { ...data }, method: updateData!.method });
           }
         } else {
           updateData && callback({ params: { ...updateData }, method: updateData.method });
