@@ -1,7 +1,9 @@
 import { Button } from '@gear-js/ui';
+import { useAccount } from '@gear-js/react-hooks';
 import { ReactNode } from 'react';
 import back from 'assets/images/icons/back.svg';
 import home from 'assets/images/icons/home.svg';
+import { InfoText } from '../../info-text';
 import styles from './Box.module.scss';
 
 type Props = {
@@ -12,6 +14,8 @@ type Props = {
 };
 
 function Box({ onBack, onHome, isNavigationVisible, children }: Props) {
+  const { account } = useAccount();
+
   return (
     <div className={styles.box}>
       <header>
@@ -25,7 +29,7 @@ function Box({ onBack, onHome, isNavigationVisible, children }: Props) {
           Escrow <span className={styles.contract}>contract</span>
         </h2>
       </header>
-      <div className={styles.body}>{children}</div>
+      <div className={styles.body}>{account ? children : <InfoText text="In order to use app, please login." />}</div>
     </div>
   );
 }

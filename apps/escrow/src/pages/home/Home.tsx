@@ -3,13 +3,12 @@ import { useEffect, useState } from 'react';
 import { ESCROW, FORM, LOCAL_STORAGE } from 'consts';
 import { CreateFormValues } from 'types';
 import { useEscrow, useEscrowMessage, useWalletId, useProgram, useWallets } from 'hooks';
-import { Box, Loader } from 'components';
+import { Box, InfoText, Loader } from 'components';
 import { CreateWallet } from './create-wallet';
 import { Summary } from './summary';
 import { Start } from './start';
 import { Deposit } from './deposit';
 import { Confirmation } from './confirmation';
-import { Closed } from './closed';
 import { InputAddress } from './input-address';
 import { SelectWallet } from './select-wallet';
 import styles from './Home.module.scss';
@@ -60,6 +59,8 @@ function Home() {
     if (isSeller) return ESCROW.ROLE.SELLER;
   };
 
+  const role = getRole();
+
   const getForm = () => {
     switch (form) {
       case FORM.INIT.PROGRAM:
@@ -77,11 +78,11 @@ function Home() {
   const getButtons = () => {
     switch (state) {
       case ESCROW.STATE.AWAITING_DEPOSIT:
-        return <Deposit isBuyer={isBuyer} onDeposit={deposit} onCancel={cancel} />;
+        return <Deposit role={role} onDeposit={deposit} onCancel={cancel} />;
       case ESCROW.STATE.AWAITING_CONFIRMATION:
-        return <Confirmation isBuyer={isBuyer} onConfirm={confirm} onRefund={refund} />;
+        return <Confirmation role={role} onConfirm={confirm} onRefund={refund} />;
       case ESCROW.STATE.CLOSED:
-        return <Closed />;
+        return <InfoText text="Wallet is closed, please go back and select or create another one." />;
       default:
     }
   };
@@ -109,7 +110,7 @@ function Home() {
       <Summary
         programId={programId}
         walletId={walletId}
-        role={getRole()}
+        role={role}
         state={state}
         amount={amount}
         onProgramReset={handleResetProgramClick}
