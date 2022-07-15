@@ -38,6 +38,7 @@ interface AddMetaParams extends IGenesis, ISignature {
 interface UpdateMessageParams {
   messageId: string;
   payload: string;
+  genesis: string;
 }
 
 interface GetMetaParams extends IGenesis {
