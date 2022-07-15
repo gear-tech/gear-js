@@ -35,6 +35,11 @@ interface AddMetaParams extends IGenesis, ISignature {
   title?: string;
 }
 
+interface UpdateMessageParams {
+  messageId: string;
+  payload: string;
+}
+
 interface GetMetaParams extends IGenesis {
   programId: string;
 }
@@ -81,4 +86,5 @@ export {
   IRpcRequest,
   GetCodeParams,
   GetAllCodeParams,
+  UpdateMessageParams,
 };
