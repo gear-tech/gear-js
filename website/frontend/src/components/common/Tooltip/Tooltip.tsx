@@ -8,18 +8,19 @@ type Props = {
   width?: number;
   content: ReactNode;
   children: ReactNode;
+  className?: string;
   contentClassName?: string;
 };
 
-const Tooltip = ({ width = 160, content, children, contentClassName }: Props) => {
-  const [isVisible, setIsVisible] = useState(false);
+const Tooltip = ({ width = 160, content, children, className, contentClassName }: Props) => {
+  const [isVisible, setIsVisible] = useState(true);
 
   const hideTooltip = () => setIsVisible(false);
   const showTooltip = () => setIsVisible(true);
 
   return (
     <div
-      className={styles.tooltip}
+      className={clsx(styles.tooltip, className)}
       onBlur={hideTooltip}
       onFocus={showTooltip}
       onMouseOver={showTooltip}
