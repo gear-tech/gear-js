@@ -6,6 +6,7 @@ import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './DropTarget.module.scss';
+import pageStyles from '../../Upload.module.scss';
 import { DroppedFile, UploadTypes } from '../../types';
 
 import { FILE_TYPES } from 'consts';
@@ -80,14 +81,16 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
   const isActive = canDrop && isOver;
   const isProgramUpload = type === UploadTypes.PROGRAM;
 
+  const dropClasses = clsx(pageStyles.action, styles.drop, isActive && styles.active);
+
   return (
-    <div ref={drop} className={clsx(styles.drop, isActive && styles.active)}>
+    <div ref={drop} className={dropClasses}>
       {isActive ? (
         <div className={styles.file}>
-          <span className={styles.text}>Drop your .wasm files here to upload</span>
+          <p className={pageStyles.actionDescription}>Drop your .wasm files here to upload</p>
         </div>
       ) : (
-        <div className={styles.noFile}>
+        <div className={pageStyles.actionContent}>
           <input ref={inputRef} type="file" accept={FILE_TYPES.WASM} className={styles.input} onChange={handleChange} />
           <Button
             text={buttonText}
@@ -95,7 +98,9 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
             color={isProgramUpload ? 'primary' : 'secondary'}
             onClick={emulateInputClick}
           />
-          <div className={styles.text}>{`Click “${buttonText}” to browse or drag and drop your .wasm files here`}</div>
+          <p
+            className={pageStyles.actionDescription}
+          >{`Click “${buttonText}” to browse or drag and drop your .wasm files here`}</p>
         </div>
       )}
     </div>

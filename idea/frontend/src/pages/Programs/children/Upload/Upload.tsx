@@ -6,6 +6,7 @@ import styles from './Upload.module.scss';
 import { DroppedFile, UploadTypes } from './types';
 import { BlockList } from '../BlocksList/BlocksList';
 import { DropTarget } from './children/DropTarget/DropTarget';
+import { SendMessage } from './children/SendMessage';
 import { UploadForm } from './children/UploadForm/UploadForm';
 
 import { useCodeUpload } from 'hooks';
@@ -32,6 +33,7 @@ export const Upload = () => {
         ) : (
           <div className={styles.upload}>
             <DropTarget type={UploadTypes.PROGRAM} setDroppedFile={setDroppedFile} />
+            <SendMessage />
             <DropTarget type={UploadTypes.CODE} setDroppedFile={setDroppedFile} />
           </div>
         )}
