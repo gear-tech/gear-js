@@ -26,6 +26,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
     // @ts-ignore
     const parsedStructure = getPayloadValue(value[selected]);
 
+    helpers.setError(undefined);
     helpers.setValue({ [selected]: parsedStructure }, false);
   }, [selected]);
 

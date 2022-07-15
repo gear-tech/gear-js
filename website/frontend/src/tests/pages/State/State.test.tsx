@@ -40,12 +40,17 @@ describe('test state page', () => {
     normalizer: getDefaultNormalizer({ collapseWhitespace: false }),
   };
 
-  it('reads program state with meta_state_input metadata prop', async () => {
-    useApiMock(TEST_API);
+  const changeFieldValue = (element: Element | Node, value: string) => {
+    fireEvent.change(element, { target: { value } });
+    fireEvent.blur(element);
+  };
 
+  it('reads program state with meta_state_input metadata prop', async () => {
     TEST_API.programState.read.mockResolvedValue({
       toHuman: () => READED_STATE,
     });
+
+    useApiMock(TEST_API);
 
     render(<StatePage programId={PROGRAM_ID_1} />);
 
@@ -57,19 +62,62 @@ describe('test state page', () => {
 
     const readStateBtn = elements[1];
 
-    expect(readStateBtn).toBeEnabled();
+    const checkBtnDisabled = () => expect(readStateBtn).toBeDisabled();
+    const checkBtnEnabled = () => expect(readStateBtn).toBeEnabled();
+
+    checkBtnEnabled();
 
     expect(screen.getByText(PROGRAM_ID_1)).toBeInTheDocument();
     expect(screen.getByText('Program Id')).toBeInTheDocument();
     expect(screen.getByText('Input Parameters')).toBeInTheDocument();
     expect(screen.getByText('NftQuery')).toBeInTheDocument();
-    expect(screen.getByRole('combobox')).toBeInTheDocument();
 
-    const metaField = screen.getByLabelText('Null');
+    const payloadSelector = screen.getByRole('combobox');
 
-    expect(metaField).toBeInTheDocument();
-    fireEvent.change(metaField, { target: { value: 'null' } });
-    expect(metaField).toHaveValue('null');
+    expect(payloadSelector).toBeInTheDocument();
+
+    // validate payload
+    changeFieldValue(payloadSelector, 'Token');
+
+    const tokenField = screen.getByLabelText('tokenId (U256)');
+    expect(tokenField).toBeInTheDocument();
+
+    changeFieldValue(tokenField, 'a');
+
+    const nftInfoFieldError = await screen.findByText('Invalid payload');
+
+    expect(tokenField).toHaveValue('a');
+    expect(nftInfoFieldError).toBeInTheDocument();
+
+    checkBtnDisabled();
+    changeFieldValue(tokenField, '1');
+
+    await waitFor(expect(nftInfoFieldError).not.toBeInTheDocument);
+    expect(tokenField).toHaveValue('1');
+
+    checkBtnEnabled();
+    changeFieldValue(payloadSelector, 'TokensForOwner');
+
+    const tokensForOwnerField = screen.getByLabelText('owner (ActorId)');
+    expect(tokensForOwnerField).toBeInTheDocument();
+
+    changeFieldValue(tokensForOwnerField, 'a');
+
+    const tokenForOwnerFieldError = await screen.findByText('Invalid payload');
+
+    expect(tokensForOwnerField).toHaveValue('a');
+    expect(tokenForOwnerFieldError).toBeInTheDocument();
+
+    checkBtnDisabled();
+    changeFieldValue(payloadSelector, 'NFTInfo');
+    checkBtnEnabled();
+
+    const nftInfoField = screen.getByLabelText('Null');
+    expect(nftInfoField).toBeInTheDocument();
+
+    changeFieldValue(nftInfoField, 'null');
+
+    checkBtnEnabled();
 
     // read state
 
@@ -113,12 +161,12 @@ describe('test state page', () => {
   });
 
   it('reads program state without meta_state_input metadata prop', async () => {
-    useApiMock(TEST_API);
-
     TEST_API.programState.read.mockReset();
     TEST_API.programState.read.mockResolvedValue({
       toHuman: () => READED_STATE,
     });
+
+    useApiMock(TEST_API);
 
     render(<StatePage programId={PROGRAM_ID_2} />);
 

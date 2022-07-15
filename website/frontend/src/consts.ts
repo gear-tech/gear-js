@@ -9,7 +9,7 @@ export const WASM_COMPILER_GET = `${process.env.REACT_APP_WASM_COMPILER_URL}/get
 export const isProd = process.env.NODE_ENV === 'production';
 export const INITIAL_LIMIT_BY_PAGE = 13;
 export const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
-export const MIN_GAS_LIMIT = 20_000_000;
+export const MIN_GAS_LIMIT = 1_000_000_000;
 
 export const HCAPTCHA_SITE_KEY = process.env.REACT_APP_HCAPTCHA_SITE_KEY as string;
 
