@@ -112,6 +112,10 @@ export class ConsumerService {
     },
   };
 
+  async updateMessage(params: UpdateMessageParams): Result<void> {
+    await this.messageService.updateData(params);
+  }
+
   @FormResponse
   async programData(params: FindProgramParams): Result<ProgramDataResult> {
     return await this.programService.findProgram(params);
@@ -158,10 +162,5 @@ export class ConsumerService {
   @FormResponse
   async code(params: GetCodeParams): Result<ICode> {
     return await this.codeService.getByIdAndGenesis(params);
-  }
-
-  @FormResponse
-  async updateMessage(params: UpdateMessageParams): Result<void> {
-    await this.messageService.updateData(params);
   }
 }
