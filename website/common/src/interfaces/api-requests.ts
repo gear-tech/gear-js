@@ -39,6 +39,7 @@ interface UpdateMessageParams {
   messageId: string;
   payload: string;
   genesis: string;
+  value: string;
 }
 
 interface GetMetaParams extends IGenesis {
