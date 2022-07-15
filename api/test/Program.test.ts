@@ -7,7 +7,7 @@ let someProgramId: Hex;
 
 beforeAll(async () => {
   await api.isReady;
-  await sleep(1000);
+  await sleep(2000);
 });
 
 afterAll(async () => {
