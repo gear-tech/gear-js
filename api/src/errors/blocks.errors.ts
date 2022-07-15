@@ -1,8 +1,6 @@
 import { isU8a, u8aToString } from '@polkadot/util';
 
-import { GearError } from './gear.errors';
-
-export class GetBlockError extends GearError {
+export class GetBlockError extends Error {
   name = 'GetBlockError';
 
   constructor(message: string, hash?: string | Uint8Array) {

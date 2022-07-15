@@ -7,6 +7,7 @@ let someProgramId: Hex;
 
 beforeAll(async () => {
   await api.isReady;
+  await sleep(1000);
 });
 
 afterAll(async () => {
@@ -24,5 +25,17 @@ describe('Program', () => {
   test('Program is exist', async () => {
     const programs = await api.program.is(someProgramId);
     expect(programs).toBeTruthy();
+  });
+
+  test('Throw error if value is incorrect', async () => {
+    expect(() =>
+      api.program.submit({ code: Buffer.from('0x00'), gasLimit: 1000, value: api.existentialDeposit.toNumber() - 1 }),
+    ).toThrow(`Value should be 0 or more than ${api.existentialDeposit.toString()}`);
+  });
+
+  test('Not to throw error if value is correct', async () => {
+    expect(() =>
+      api.program.submit({ code: Buffer.from('0x00'), gasLimit: 1000, value: api.existentialDeposit.toNumber() }),
+    ).not.toThrow();
   });
 });

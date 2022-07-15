@@ -1,6 +1,4 @@
-import { GearError } from './gear.errors';
-
-export class ClaimValueError extends GearError {
+export class ClaimValueError extends Error {
   name = 'ClaimValueError';
 
   constructor(message?: string) {
