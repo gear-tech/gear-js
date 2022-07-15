@@ -1,5 +1,5 @@
 import { Admin, Message, Producer } from 'kafkajs';
-import { KAFKA_TOPICS } from '@gear-js/common';
+import { API_METHODS } from '@gear-js/common';
 
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { initKafka } from './init-kafka';
@@ -13,9 +13,10 @@ async function connect(): Promise<void> {
 }
 
 async function send(sendByKafkaTopicInput: SendByKafkaTopicInput): Promise<void> {
-  const { topic } = sendByKafkaTopicInput;
+  const { topic, key } = sendByKafkaTopicInput;
+  const kafkaTopic = key ? API_METHODS.EVENTS : topic;
   await producer.send({
-    topic,
+    topic: kafkaTopic!,
     messages: getMessageFormByTopic(sendByKafkaTopicInput),
   });
 }
@@ -67,8 +68,8 @@ function isTopicAlreadyExist(topics: string[], topic: string): boolean {
 }
 
 function getMessageFormByTopic(sendByKafkaTopicInput: SendByKafkaTopicInput): Message[] {
-  const { topic, genesis, params, key } = sendByKafkaTopicInput;
-  if (topic === KAFKA_TOPICS.EVENTS) {
+  const { genesis, params, key } = sendByKafkaTopicInput;
+  if (key) {
     return [{ key, value: JSON.stringify(params), headers: { genesis } }];
   }
   return [{ value: JSON.stringify(params) }];

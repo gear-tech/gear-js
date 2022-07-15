@@ -1,20 +1,13 @@
 import { filterEvents } from '@polkadot/api/util';
-import { KAFKA_TOPICS } from '@gear-js/common';
-import { ExtrinsicStatus, SignedBlock } from '@polkadot/types/interfaces';
+import { API_METHODS, UpdateMessageParams } from '@gear-js/common';
 import { MessageEnqueuedData } from '@gear-js/api';
 
-import { eventListenerLogger } from '../common/event-listener.logger';
-import { kafkaProducer } from '../kafka/producer';
-import { SendByKafkaTopicInput } from '../kafka/types';
-import { sleep } from '../utils';
+import { API_HANDLE_METHODS, ApiResult, GenericApiData, UpdateMessageDataExtrinsic } from './types';
 
-async function updateMessagePayload(
-  signedBlock: SignedBlock,
-  genesis: string,
-  events: any,
-  status: ExtrinsicStatus,
-): Promise<void> {
-  await sleep(1000);
+function updateMessageHandler(data: UpdateMessageDataExtrinsic): ApiResult {
+  const result: UpdateMessageParams[] = [];
+  const { signedBlock, events, status, genesis } = data;
+
   const eventMethods = ['sendMessage', 'submitProgram', 'sendReply'];
   const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }: { method: { method: string } }) =>
     eventMethods.includes(method),
@@ -31,27 +24,31 @@ async function updateMessagePayload(
     const eventData = filteredEvents[0].event.data as MessageEnqueuedData;
 
     const messageId = eventData.id.toHex();
-    const payload = getPayload(args, method); // return [payload, value]
+    const [payload, value] = getUpdateMessageData(args, method); // return [payload, value]
 
-    try {
-      const sendByKafkaTopicInput: SendByKafkaTopicInput = {
-        topic: KAFKA_TOPICS.MESSAGE_UPDATE_DATA,
-        //TODO add
-        params: { messageId, payload, genesis },
-      };
-      await kafkaProducer.send(sendByKafkaTopicInput);
-    } catch (error) {
-      eventListenerLogger.error(error);
-      console.log(error);
-    }
+    result.push({ messageId, payload, genesis, value });
+  }
+
+  return { method: API_METHODS.MESSAGE_UPDATE_DATA, params: result };
+}
+
+function getUpdateMessageData(args: any, method: string): [any, any] {
+  const indexPayload = ['sendMessage', 'sendReply'].includes(method) ? 1 : 2;
+  const indexValue = indexPayload + 2;
+
+  const payload = args[indexPayload].toHuman();
+  const value = args[indexValue].toHuman();
+
+  return [payload, value];
+}
+
+function handleApiEvent(method: API_HANDLE_METHODS | string, data: GenericApiData): ApiResult | null {
+  switch (method) {
+    case API_HANDLE_METHODS.MessageEnqueued:
+      return updateMessageHandler(data);
+    default:
+      return null;
   }
 }
 
-function getPayload(args: any, method: string) {
-  const indexPayload = ['sendMessage', 'sendReply'].includes(method) ? 1 : 2;
-  //TODO return args[indexValue]
-  const indexValue = indexPayload + 2;
-  return args[indexPayload].toHuman();
-}
-
-export const gearService = { updateMessagePayload };
+export { handleApiEvent };

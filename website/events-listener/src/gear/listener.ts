@@ -1,16 +1,21 @@
 import { GearApi } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
-import { GEAR_EVENT } from '@gear-js/common';
+import { API_METHODS, GEAR_EVENT } from '@gear-js/common';
 
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { handleEvent } from './event-handlers';
-import { gearService } from '../services/gear.service';
+import { handleApiEvent } from './api-handlers';
+import { GenericApiData } from './types';
 
-export const listen = (api: GearApi, genesis: string, callback: (arg: { key: string; value: any }) => void) => {
+export const listen = (
+  api: GearApi,
+  genesis: string,
+  callback: (arg: { key?: string; params: any; method?: API_METHODS }) => void,
+) => {
   return api.query.system.events(async (events) => {
     const blockHash = events.createdAtHash!.toHex();
 
-    const [signerBlockTimestamp, signedBlock, extrinsicStatus] = await Promise.all([
+    const [blockTimestamp, block, extrinsicStatus] = await Promise.all([
       api.blocks.getBlockTimestamp(blockHash!),
       api.blocks.get(blockHash),
       api.createType('ExtrinsicStatus', { finalized: blockHash }),
@@ -19,7 +24,7 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
     const base = {
       genesis,
       blockHash,
-      timestamp: signerBlockTimestamp.toNumber(),
+      timestamp: blockTimestamp.toNumber(),
     };
 
     for (const {
@@ -27,13 +32,35 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
     } of events) {
       try {
         const eventData = handleEvent(method as GEAR_EVENT, data as GenericEventData);
-        eventData !== null && callback({ key: eventData.key, value: { ...eventData.value, ...base } });
+        eventData !== null && callback({ key: eventData.key, params: { ...eventData.value, ...base } });
       } catch (error) {
         eventListenerLogger.error({ method, data: data.toHuman() });
         eventListenerLogger.error(error);
       }
     }
 
-    await gearService.updateMessagePayload<typeof extrinsicStatus>(signedBlock, events, extrinsicStatus);
+    const data = {
+      signedBlock: block,
+      genesis,
+      events,
+      status: extrinsicStatus,
+    };
+
+    for (const {
+      event: { method },
+    } of events) {
+      try {
+        const updateData = handleApiEvent(method, data as GenericApiData);
+        if (Array.isArray(updateData?.params)) {
+          for (const param of updateData!.params) {
+            callback({ params: { ...updateData }, method: updateData!.method });
+          }
+        } else {
+          updateData && callback({ params: { ...updateData }, method: updateData.method });
+        }
+      } catch (error) {
+        eventListenerLogger.error(error);
+      }
+    }
   });
 };
