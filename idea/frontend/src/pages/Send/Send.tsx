@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { MessageForm } from './children/MessageForm/MessageForm';
-
 import { useProgram } from 'hooks';
 import { MessageModel } from 'types/message';
 import { messagesService } from 'services/MessagesRequestServices';
 import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
+import { MessageForm } from 'components/blocks/MessageForm/MessageForm';
 
 const Send = () => {
   const { programId = '', messageId = '' } = useParams();

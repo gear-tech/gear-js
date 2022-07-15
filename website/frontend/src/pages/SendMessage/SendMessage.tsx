@@ -1,15 +1,15 @@
-import { SendMessageForm } from './children/SendMessageForm';
+import { Stepper } from './children/Stepper';
 
 import { Box } from 'layout/Box/Box';
 import { PageHeader } from 'components/blocks/PageHeader/PageHeader';
 
-const Send = () => (
+const SendMessage = () => (
   <div className="wrapper">
     <PageHeader title="New message" />
     <Box>
-      <SendMessageForm />
+      <Stepper />
     </Box>
   </div>
 );
 
-export { Send };
+export { SendMessage };

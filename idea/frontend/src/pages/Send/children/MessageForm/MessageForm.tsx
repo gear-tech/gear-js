@@ -22,11 +22,11 @@ import sendMessageSVG from 'assets/images/message.svg';
 
 type Props = {
   id: string;
-  isReply: boolean;
+  isReply?: boolean;
   metadata?: Metadata;
 };
 
-const MessageForm = ({ id, isReply, metadata }: Props) => {
+const MessageForm = ({ id, isReply = false, metadata }: Props) => {
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
 

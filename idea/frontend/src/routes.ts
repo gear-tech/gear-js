@@ -10,6 +10,7 @@ export const routes = {
   messages: '/messages',
   message: '/message/:messageId',
   state: '/state/:programId',
+  testRoute: '/test',
   send: '/send',
   sendMessage: 'message/:programId',
   reply: 'reply/:messageId',

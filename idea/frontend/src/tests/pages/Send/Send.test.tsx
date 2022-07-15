@@ -9,7 +9,7 @@ import { META, REPLY_META, PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_
 import { ApiProvider } from 'context/api';
 import { AlertProvider } from 'context/alert';
 import { Send } from 'pages/Send/Send';
-import { FormValues } from 'pages/Send/children/MessageForm/types';
+import { FormValues } from 'components/blocks/MessageForm/types';
 import { TypeStructure } from 'components/common/Form/FormPayload/types';
 import { getPayloadValue } from 'components/common/Form/FormPayload/helpers';
 
