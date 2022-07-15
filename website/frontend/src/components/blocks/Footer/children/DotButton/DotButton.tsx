@@ -1,15 +1,17 @@
-import styles from './DotButton.module.scss';
+import clsx from 'clsx';
+import { buttonStyles } from '@gear-js/ui';
 
-import { NODE_API_ADDRESS } from 'context/api/const';
+import styles from './DotButton.module.scss';
+import { DOT_HREF } from './const';
+
 import dotSVG from 'assets/images/dot-logo.svg';
 
 const DotButton = () => {
-  const query = `?rpc=${NODE_API_ADDRESS}#`;
-  const href = `https://polkadot.js.org/apps/${query}/explorer`;
+  const linkClasses = clsx(buttonStyles.button, buttonStyles.transparent, buttonStyles.normal);
 
   return (
-    <a href={href} target="_blank" rel="noreferrer" className={styles.button}>
-      <img src={dotSVG} alt="logo" className={styles.icon} />
+    <a href={DOT_HREF} target="_blank" rel="noreferrer" className={linkClasses}>
+      <img src={dotSVG} alt="logo" className={clsx(buttonStyles.icon, styles.icon)} />
       Polkadot Explorer
     </a>
   );
