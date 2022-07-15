@@ -3,7 +3,7 @@ import { Formik, Form, FormikHelpers } from 'formik';
 import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import { useApi, useAlert, useAccount } from '@gear-js/react-hooks';
+import { useAccount } from '@gear-js/react-hooks';
 
 import styles from './UploadForm.module.scss';
 import { INITIAL_VALUES } from './const';
@@ -11,11 +11,12 @@ import { getValidationSchema } from './Schema';
 import { FormValues, SetFieldValue, SetValues } from './types';
 import { DroppedFile } from '../../types';
 
-import { Box } from 'layout/Box/Box';
-import { UploadProgramModel } from 'types/program';
-import { useProgramUpload } from 'hooks';
-import { readFileAsync, calculateGas } from 'helpers';
+import { GasMethod } from 'consts';
+import { useProgramUpload, useGasCalculate } from 'hooks';
+import { readFileAsync } from 'helpers';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
+import { UploadProgramModel } from 'types/program';
+import { Box } from 'layout/Box/Box';
 import { Fieldset } from 'components/common/Fieldset';
 import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
 import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
@@ -26,14 +27,13 @@ type Props = {
 };
 
 const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
-  const alert = useAlert();
-  const { api } = useApi();
   const { account } = useAccount();
 
   const [metadata, setMetadata] = useState<Metadata>();
   const [metadataFile, setMetadataFile] = useState<File>();
   const [metadataBuffer, setMetadataBuffer] = useState<string | null>(null);
 
+  const calculateGas = useGasCalculate();
   const uploadProgram = useProgramUpload();
 
   const handleUploadMetaFile = (setFiledValue: SetFieldValue) => (data: UploadData) => {
@@ -76,7 +76,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
     const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
     const code = Buffer.from(new Uint8Array(fileBuffer));
 
-    calculateGas('init', api, values, alert, metadata, code).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
+    calculateGas(GasMethod.Init, values, code, metadata).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
   };
 
   const encodeType = metadata?.init_input;

@@ -51,6 +51,12 @@ export enum TransactionStatus {
   Finalized = 'Finalized',
 }
 
+export enum GasMethod {
+  Init = 'init',
+  Reply = 'reply',
+  Handle = 'handle',
+}
+
 export const RPC_METHODS = {
   PROGRAM_DATA: 'program.data',
   PROGRAMS_ALL: 'program.all',

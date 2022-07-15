@@ -1,34 +1,25 @@
 import { useMemo } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { Metadata } from '@gear-js/api';
+import { useApi, useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import { getValidationSchema } from './Schema';
+import { INITIAL_VALUES } from './const';
 import { FormValues, SetFieldValue } from './types';
 
-import { MIN_GAS_LIMIT, GasMethod } from 'consts';
-import { useSendMessage, useGasCalculate } from 'hooks';
+import { GasMethod } from 'consts';
+import { useGasCalculate, useSendMessage } from 'hooks';
 import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import sendMessageSVG from 'assets/images/message.svg';
 
 type Props = {
-  id: string;
-  isReply: boolean;
   metadata?: Metadata;
 };
 
-const MessageForm = ({ id, isReply, metadata }: Props) => {
-  const method = isReply ? GasMethod.Reply : GasMethod.Handle;
-  const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
-
-  const initialValues: FormValues = {
-    value: 0,
-    payload: '0x00',
-    gasLimit: MIN_GAS_LIMIT,
-    payloadType: 'Bytes',
-    destination: id,
-  };
+const SendMessageForm = ({ metadata }: Props) => {
+  const encodeType = metadata?.handle_input;
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
 
@@ -49,25 +40,28 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
     };
 
     const callback = () => {
-      const { payload } = payloadFormValues ?? initialValues;
+      const { payload } = payloadFormValues ?? INITIAL_VALUES;
 
       helpers.resetForm({
         values: {
-          ...initialValues,
+          ...INITIAL_VALUES,
+          destination: values.destination,
           payload,
         },
       });
     };
 
-    sendMessage(method, message, callback, metadata, payloadType).catch(() => helpers.setSubmitting(false));
+    sendMessage('handle', message, callback, metadata, payloadType).catch(() => helpers.setSubmitting(false));
   };
 
   const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>
-    calculateGas(method, values, null, metadata, id).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
+    calculateGas(GasMethod.Handle, values, null, metadata, values.destination).then((gasLimit) =>
+      setFieldValue('gasLimit', gasLimit)
+    );
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={INITIAL_VALUES}
       validateOnChange={false}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
@@ -77,7 +71,7 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
 
         return (
           <Form data-testid="sendMessageForm" className={formStyles.largeForm}>
-            <FormInput name="destination" label={isReply ? 'Message Id' : 'Destination'} />
+            <FormInput name="destination" label="Destination" />
 
             <FormPayload name="payload" label="Payload" values={payloadFormValues} />
 
@@ -95,12 +89,7 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
 
             <div className={formStyles.formButtons}>
               <Button text="Calculate Gas" onClick={handleCalculateGas(values, setFieldValue)} disabled={isDisabled} />
-              <Button
-                type="submit"
-                icon={sendMessageSVG}
-                text={isReply ? 'Send reply' : 'Send message'}
-                disabled={isDisabled}
-              />
+              <Button type="submit" icon={sendMessageSVG} text="Send message" disabled={isDisabled} />
             </div>
           </Form>
         );
@@ -109,4 +98,4 @@ const MessageForm = ({ id, isReply, metadata }: Props) => {
   );
 };
 
-export { MessageForm };
+export { SendMessageForm };
