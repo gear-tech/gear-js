@@ -98,6 +98,21 @@ export class GearApi extends ApiPromise {
     return (await this.rpc.system.version()).toHuman();
   }
 
+  get existentialDeposit() {
+    return this.consts.balances.existentialDeposit;
+  }
+
+  get blockGasLimit() {
+    return this.consts.gearGas.blockGasLimit;
+  }
+
+  get mailboxTreshold() {
+    return this.consts.gear.mailboxThreshold;
+  }
+
+  get waitlistCost() {
+    return this.consts.gear.waitlistCost;
+  }
   /**
    * Method provides opportunity to get informations about error occurs in ExtrinsicFailed event
    * @param event
@@ -105,7 +120,6 @@ export class GearApi extends ApiPromise {
    */
   getExtrinsicFailedError(event: Event): RegistryError {
     const error = event.data[0] as SpRuntimeDispatchError;
-
     const { isModule, asModule } = error;
     return isModule ? this.registry.findMetaError(asModule) : null;
   }
