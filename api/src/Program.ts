@@ -3,7 +3,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { Bytes } from '@polkadot/types';
 
-import { createPayload, generateProgramId, GPROG, GPROG_HEX, validateValue } from './utils';
+import { createPayload, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { Metadata } from './types/interfaces';
 import { SubmitProgramError } from './errors';
@@ -49,6 +49,7 @@ export class GearProgram extends GearTransaction {
     messageType?: string,
   ): { programId: Hex; salt: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> } {
     validateValue(program.value, this.api);
+    validateGasLimit(program.gasLimit, this.api);
 
     const salt = program.salt || randomAsHex(20);
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;

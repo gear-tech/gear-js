@@ -2,6 +2,7 @@ import { SpRuntimeDispatchError } from '@polkadot/types/lookup';
 import { RegistryError } from '@polkadot/types-codec/types';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
+import { u128, u64 } from '@polkadot/types';
 
 import { GearMessageReply } from './MessageReply';
 import { gearRpc, gearTypes } from './default';
@@ -98,20 +99,20 @@ export class GearApi extends ApiPromise {
     return (await this.rpc.system.version()).toHuman();
   }
 
-  get existentialDeposit() {
+  get existentialDeposit(): u128 {
     return this.consts.balances.existentialDeposit;
   }
 
-  get blockGasLimit() {
-    return this.consts.gearGas.blockGasLimit;
+  get blockGasLimit(): u64 {
+    return this.consts.gearGas.blockGasLimit as u64;
   }
 
-  get mailboxTreshold() {
-    return this.consts.gear.mailboxThreshold;
+  get mailboxTreshold(): u64 {
+    return this.consts.gear.mailboxThreshold as u64;
   }
 
-  get waitlistCost() {
-    return this.consts.gear.waitlistCost;
+  get waitlistCost(): u64 {
+    return this.consts.gear.waitlistCost as u64;
   }
   /**
    * Method provides opportunity to get informations about error occurs in ExtrinsicFailed event

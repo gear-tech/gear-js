@@ -5,7 +5,7 @@ import { H256 } from '@polkadot/types/interfaces';
 import { GasLimit, Metadata, PayloadType, Value } from './types';
 import { GearTransaction } from './Transaction';
 import { SendMessageError } from './errors';
-import { createPayload, validateValue } from './utils';
+import { createPayload, validateGasLimit, validateValue } from './utils';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -33,6 +33,8 @@ export class GearMessage extends GearTransaction {
     messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(message.value, this.api);
+    validateGasLimit(message.gasLimit, this.api);
+
     const payload = createPayload(this.createType, messageType || meta?.handle_input, message.payload, meta);
     try {
       this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);
