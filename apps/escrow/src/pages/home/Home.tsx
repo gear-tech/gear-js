@@ -27,15 +27,16 @@ function Home() {
   const sendMessage = useEscrowMessage();
 
   const { buyer, seller, state, amount } = escrow || {};
-  const isBuyer = !!account && account.decodedAddress === buyer;
-  const isSeller = !!account && account.decodedAddress === seller;
+  const isBuyer = account && account.decodedAddress === buyer;
+  const isSeller = account && account.decodedAddress === seller;
   const isStart = !form && !programId && !walletId;
 
   const create = (values: CreateFormValues) => sendMessage({ Create: values });
-  const deposit = () => sendMessage({ Deposit: walletId });
-  const cancel = () => sendMessage({ Cancel: walletId });
-  const confirm = () => sendMessage({ Confirm: walletId });
-  const refund = () => sendMessage({ Refund: walletId });
+  const action = (key: string) => () => sendMessage({ [key]: walletId });
+  const deposit = action('Deposit');
+  const cancel = action('Cancel');
+  const confirm = action('Confirm');
+  const refund = action('Refund');
 
   const goBack = () => {
     if (form) resetForm();
