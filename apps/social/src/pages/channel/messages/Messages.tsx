@@ -24,7 +24,7 @@ function Messages({ ownerId }: Props) {
     </div>
   ));
 
-  return <div className={styles.container}>{messages ? message : <Loader />}</div>;
+  return <div className={styles.container}>{messages ? message?.reverse() : <Loader />}</div>;
 }
 
 export { Messages };

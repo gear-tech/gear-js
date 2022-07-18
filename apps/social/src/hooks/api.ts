@@ -1,9 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useReadState, useSendMessage, useAccount, useApi } from '@gear-js/react-hooks';
 import { routerMetaWasm } from 'assets/wasm';
+import { getWasmMetadata } from '@gear-js/api';
 import { ADDRESS, GENESIS } from 'consts';
 import { ServerRPCRequestService } from 'services';
-import { Params, Channel, Hex, Message } from 'types';
+import { Params, Channel, Hex, Message, Metadata } from 'types';
 import { useParams } from 'react-router-dom';
 import { AnyJson } from '@polkadot/types/types';
 
@@ -14,11 +15,6 @@ type SubscriptionState = { SubscribedToChannels: Hex[] };
 // Router State wrapper
 function useRouterState<T>(payload: AnyJson) {
   return useReadState<T>(ADDRESS.ROUTER_CONTRACT, routerMetaWasm, payload);
-}
-
-// Router message wrapper
-function useRouterMessage() {
-  return useSendMessage(ADDRESS.ROUTER_CONTRACT, routerMetaWasm);
 }
 
 function useChannel() {
@@ -49,12 +45,7 @@ function useSubscriptions() {
 
 function useMessages() {
   const [messages, setMessages] = useState<Message[] | null>();
-  const [isStateRead, setIsStateRead] = useState(false);
   const apiRequest = new ServerRPCRequestService();
-
-  const readState = () => {
-    setIsStateRead(!isStateRead)
-  }
 
   const { id } = useParams() as Params;
   const { api } = useApi();
@@ -65,29 +56,45 @@ function useMessages() {
       .then(({ result: { metaFile } }) => Buffer.from(metaFile, 'base64'))
       .then((buffer) => api.programState.read(id, buffer))
       .then((state) => setMessages(state.toHuman() as Message[]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, isStateRead]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-  return { messages, readState };
+  return { messages };
 }
 
-function useSubscribreActions() {
-  const sendMessage = useRouterMessage();
+function useChannelActions() {
+  const apiRequest = new ServerRPCRequestService();
+  const [metadata, setMetadata] = useState<Metadata>();
+
   const { id } = useParams() as Params;
 
-  const subscribe = (onSuccess: () => void) => {
+  useEffect(() => {
+    apiRequest
+      .getResource('program.meta.get', { programId: id, chain: 'Workshop', genesis: GENESIS })
+      .then(({ result: { metaFile } }) => Buffer.from(metaFile, 'base64'))
+      .then((buffer) => getWasmMetadata(buffer))
+      .then((m) => setMetadata(m));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const sendMessage = useSendMessage(id, metadata);
+
+  const post = (text: string, onSuccess?: () => void) => {
+    const payload = { Post: text };
+    sendMessage(payload, { onSuccess });
+  };
+
+  const subscribe = (onSuccess?: () => void) => {
     const payload = { AddSubscriberToChannel: id };
-
     sendMessage(payload, { onSuccess });
   };
 
-  const unsubscribe = (onSuccess: () => void) => {
+  const unsubscribe = (onSuccess?: () => void) => {
     const payload = { RemoveSubscriberFromChannel: id };
-
     sendMessage(payload, { onSuccess });
   };
 
-  return { subscribe, unsubscribe };
+  return { post, subscribe, unsubscribe };
 }
 
-export { useChannel, useChannels, useSubscriptions, useSubscribreActions, useMessages };
+export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages };

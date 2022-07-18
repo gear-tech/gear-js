@@ -1,8 +1,8 @@
 import { Button } from '@gear-js/ui';
-import { useSubscribreActions } from 'hooks';
+import { useChannelActions } from 'hooks';
 
 function SubscribeAction() {
-  const { subscribe } = useSubscribreActions();
+  const { subscribe } = useChannelActions();
 
   const handleSubscribe = () => {
     subscribe(() => console.log('Subscribed'));
