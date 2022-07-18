@@ -32,7 +32,8 @@ export const listen = (
     } of events) {
       try {
         const eventData = handleEvent(method as GEAR_EVENT, data as GenericEventData);
-        eventData !== null && callback({ key: eventData.key, params: { ...eventData.value, ...base } });
+        eventData !== null &&
+          callback({ key: eventData.key, params: { ...eventData.value, ...base }, method: API_METHODS.EVENTS });
       } catch (error) {
         eventListenerLogger.error({ method, data: data.toHuman() });
         eventListenerLogger.error(error);

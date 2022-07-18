@@ -13,10 +13,9 @@ async function connect(): Promise<void> {
 }
 
 async function send(sendByKafkaTopicInput: SendByKafkaTopicInput): Promise<void> {
-  const { topic, key } = sendByKafkaTopicInput;
-  const kafkaTopic = key ? API_METHODS.EVENTS : topic;
+  const { method } = sendByKafkaTopicInput;
   await producer.send({
-    topic: kafkaTopic!,
+    topic: method!,
     messages: getMessageFormByTopic(sendByKafkaTopicInput),
   });
 }
@@ -68,8 +67,8 @@ function isTopicAlreadyExist(topics: string[], topic: string): boolean {
 }
 
 function getMessageFormByTopic(sendByKafkaTopicInput: SendByKafkaTopicInput): Message[] {
-  const { genesis, params, key } = sendByKafkaTopicInput;
-  if (key) {
+  const { genesis, params, key, method } = sendByKafkaTopicInput;
+  if (key && method === API_METHODS.EVENTS) {
     return [{ key, value: JSON.stringify(params), headers: { genesis } }];
   }
   return [{ value: JSON.stringify(params) }];
