@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
@@ -9,24 +9,23 @@ import styles from './UploadForm.module.scss';
 import { INITIAL_VALUES } from './const';
 import { getValidationSchema } from './Schema';
 import { FormValues, SetFieldValue, SetValues } from './types';
-import { DroppedFile } from '../../types';
+import { FormWrapper } from '../FormWrapper';
 
 import { GasMethod } from 'consts';
 import { useProgramUpload, useGasCalculate } from 'hooks';
 import { readFileAsync } from 'helpers';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 import { UploadProgramModel } from 'types/program';
-import { Box } from 'layout/Box/Box';
 import { Fieldset } from 'components/common/Fieldset';
 import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
 import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
 
 type Props = {
-  setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
   droppedFile: File;
+  onReset: () => void;
 };
 
-const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
+const UploadForm = ({ droppedFile, onReset }: Props) => {
   const { account } = useAccount();
 
   const [metadata, setMetadata] = useState<Metadata>();
@@ -52,8 +51,6 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
     setValues(INITIAL_VALUES);
   };
 
-  const handleResetForm = () => setDroppedFile(null);
-
   const handleSubmitForm = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     const { value, payload, gasLimit, programName, payloadType } = values;
 
@@ -67,9 +64,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    uploadProgram(droppedFile, programOptions, metadataBuffer, handleResetForm).catch(() =>
-      helpers.setSubmitting(false)
-    );
+    uploadProgram(droppedFile, programOptions, metadataBuffer, onReset).catch(() => helpers.setSubmitting(false));
   };
 
   const handleCalculateGas = async (values: FormValues, setFieldValue: SetFieldValue) => {
@@ -88,20 +83,19 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
   const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
 
   return (
-    <Box className={styles.uploadFormWrapper}>
-      <h3 className={styles.heading}>UPLOAD NEW PROGRAM</h3>
+    <FormWrapper header="Uplaod new program">
       <Formik
         initialValues={INITIAL_VALUES}
         validateOnChange={false}
         validationSchema={validationSchema}
-        onReset={handleResetForm}
+        onReset={onReset}
         onSubmit={handleSubmitForm}
       >
         {({ values, isValid, isSubmitting, setValues, setFieldValue }) => {
           const isDisabled = !isValid || isSubmitting;
 
           return (
-            <Form className={styles.uploadForm}>
+            <Form>
               <div className={styles.formContent}>
                 <div className={styles.program}>
                   <div className={clsx(formStyles.formItem, styles.file)}>
@@ -151,7 +145,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
           );
         }}
       </Formik>
-    </Box>
+    </FormWrapper>
   );
 };
 

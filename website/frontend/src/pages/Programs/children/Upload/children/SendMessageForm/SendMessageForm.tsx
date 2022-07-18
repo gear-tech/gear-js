@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 
-import { ProgramForm, FormValues } from '../ProgramForm';
+import { FormWrapper } from '../FormWrapper';
+import { ProgramForm, FormValues } from './children/ProgramForm';
 
 import { useProgram } from 'hooks';
 import { MessageForm } from 'components/blocks/MessageForm';
 
-const Stepper = () => {
+type Props = {
+  onReset: () => void;
+};
+
+const SendMessageForm = ({ onReset }: Props) => {
   const [step, setStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [destination, setDestination] = useState<string>();
@@ -26,11 +31,11 @@ const Stepper = () => {
   }, [program]);
 
   return (
-    <>
+    <FormWrapper header="Send new message">
       {step === 0 && <ProgramForm isLoading={isLoading} destination={destination} onSubmit={handleProgranSubmit} />}
       {step === 1 && program && <MessageForm id={program.id} metadata={metadata} />}
-    </>
+    </FormWrapper>
   );
 };
 
-export { Stepper };
+export { SendMessageForm };

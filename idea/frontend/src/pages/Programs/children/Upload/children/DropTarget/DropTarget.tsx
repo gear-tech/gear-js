@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import clsx from 'clsx';
@@ -7,7 +7,7 @@ import { Button } from '@gear-js/ui';
 
 import styles from './DropTarget.module.scss';
 import pageStyles from '../../Upload.module.scss';
-import { DroppedFile, UploadTypes } from '../../types';
+import { ContentType } from '../../types';
 
 import { FILE_TYPES } from 'consts';
 import { checkFileFormat } from 'helpers';
@@ -15,11 +15,11 @@ import uploadSVG from 'assets/images/upload.svg';
 import editorSVG from 'assets/images/editor_icon.svg';
 
 type Props = {
-  type: UploadTypes;
-  setDroppedFile: Dispatch<SetStateAction<DroppedFile | null>>;
+  type: ContentType;
+  onUpload: (type: ContentType, file: File) => void;
 };
 
-const DropTarget = ({ type, setDroppedFile }: Props) => {
+const DropTarget = ({ type, onUpload }: Props) => {
   const alert = useAlert();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,7 +36,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
     }
 
     if (checkFileFormat(file)) {
-      setDroppedFile({ file, type });
+      onUpload(type, file);
       // since type='file' input can't be controlled,
       // reset it's value to trigger onChange again in case the same file selected twice
       // eslint-disable-next-line no-param-reassign
@@ -55,13 +55,13 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
       }
 
       if (checkFileFormat(file)) {
-        setDroppedFile({ file, type });
+        onUpload(type, file);
       } else {
         alert.error('Wrong file format');
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [checkFileFormat, setDroppedFile, type]
+    [checkFileFormat, onUpload, type]
   );
 
   const [{ canDrop, isOver }, drop] = useDrop(
@@ -79,7 +79,7 @@ const DropTarget = ({ type, setDroppedFile }: Props) => {
   const buttonText = `Upload ${type}`;
 
   const isActive = canDrop && isOver;
-  const isProgramUpload = type === UploadTypes.PROGRAM;
+  const isProgramUpload = type === ContentType.Program;
 
   const dropClasses = clsx(pageStyles.action, styles.drop, isActive && styles.active);
 
