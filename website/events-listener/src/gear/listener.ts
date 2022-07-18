@@ -4,8 +4,8 @@ import { API_METHODS, GEAR_EVENT } from '@gear-js/common';
 
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { handleEvent } from './event-handlers';
-import { handleApiEvent } from './api-handlers';
-import { GenericApiData } from './types';
+import { handleBlockExtrinsics } from './block-extrinsics-handler';
+import { UpdateBlockExtrinsics } from './types';
 
 export const listen = (
   api: GearApi,
@@ -40,28 +40,14 @@ export const listen = (
       }
     }
 
-    const data = {
+    const updateBlockExtrinsics: UpdateBlockExtrinsics = {
       signedBlock: block,
       genesis,
       events,
       status: extrinsicStatus,
     };
 
-    for (const {
-      event: { method },
-    } of events) {
-      try {
-        const updateData = handleApiEvent(method, data as GenericApiData);
-        if (Array.isArray(updateData?.params)) {
-          for (const data of updateData!.params) {
-            callback({ params: { ...data }, method: updateData!.method });
-          }
-        } else {
-          updateData && callback({ params: { ...updateData }, method: updateData.method });
-        }
-      } catch (error) {
-        eventListenerLogger.error(error);
-      }
-    }
+    const { params } = await handleBlockExtrinsics(updateBlockExtrinsics);
+    callback({ params, method: API_METHODS.MESSAGE_UPDATE_DATA });
   });
 };

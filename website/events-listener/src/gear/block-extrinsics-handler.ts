@@ -1,11 +1,13 @@
 import { filterEvents } from '@polkadot/api/util';
-import { API_METHODS, UpdateMessageParams } from '@gear-js/common';
 import { MessageEnqueuedData } from '@gear-js/api';
 
-import { ExtrinsicsResult, UpdateMessageBlockExtrinsics } from './types';
+import { ExtrinsicsResult, UpdateBlockExtrinsics } from './types';
+import { sleep } from '../utils';
 
-function handleBlockExtrinsics(data: UpdateMessageBlockExtrinsics): ExtrinsicsResult {
-  const result: UpdateMessageParams[] = [];
+async function handleBlockExtrinsics(data: UpdateBlockExtrinsics): Promise<ExtrinsicsResult> {
+  const ONE_SECOND = 1000;
+  await sleep(ONE_SECOND);
+  const result: ExtrinsicsResult = { params: [] };
   const { signedBlock, events, status, genesis } = data;
 
   const eventMethods = ['sendMessage', 'submitProgram', 'sendReply'];
@@ -22,12 +24,12 @@ function handleBlockExtrinsics(data: UpdateMessageBlockExtrinsics): ExtrinsicsRe
     const eventData = filteredEvents[0].event.data as MessageEnqueuedData;
 
     const messageId = eventData.id.toHex();
-    const [payload, value] = getUpdateMessageData(args, method); // return [payload, value]
+    const [payload, value] = getUpdateMessageData(args, method);
 
-    result.push({ messageId, payload, genesis, value });
+    result.params.push({ messageId, payload, genesis, value });
   }
 
-  return { method: API_METHODS.MESSAGE_UPDATE_DATA, params: result };
+  return result;
 }
 
 function getUpdateMessageData(args: any, method: string): [any, any] {
