@@ -3,7 +3,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { Bytes } from '@polkadot/types';
 
-import { createPayload, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateProgramId, validateValue } from './utils';
+import { createPayload, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { Metadata } from './types/interfaces';
 import { SubmitProgramError } from './errors';
@@ -55,7 +55,6 @@ export class GearProgram extends GearTransaction {
     const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
     const payload = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
     const programId = generateProgramId(code, salt);
-    validateProgramId(programId, this.api);
 
     try {
       this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
@@ -81,7 +80,7 @@ export class GearProgram extends GearTransaction {
    * @param id some address in hex format
    * @returns if address belongs to program, method returns `true`, otherwise `false`
    */
-  async is(id: Hex): Promise<boolean> {
+  async exists(id: Hex): Promise<boolean> {
     const progs = await this.api.rpc.state.getKeys(GPROG);
     return progs.find((prog) => prog.eq(`0x${GPROG_HEX}${id.slice(2)}`)) ? true : false;
   }

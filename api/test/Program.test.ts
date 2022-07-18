@@ -22,8 +22,8 @@ describe('Program', () => {
     expect(programs).toBeDefined();
   });
 
-  test('Program is exist', async () => {
-    const programs = await api.program.is(someProgramId);
+  test('Program exists', async () => {
+    const programs = await api.program.exists(someProgramId);
     expect(programs).toBeTruthy();
   });
 
@@ -45,7 +45,7 @@ describe('Program', () => {
     ).toThrow(`GasLimit too high. Maximum gasLimit value is ${api.blockGasLimit.toHuman()}`);
   });
 
-  test('Not to throw error if gasLimit is okay', () => {
+  test('Not to throw error if gasLimit is correct', () => {
     expect(() =>
       api.program.submit({ code: Buffer.from('0x00'), gasLimit: api.blockGasLimit }),
     ).not.toThrow();
