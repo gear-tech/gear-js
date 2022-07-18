@@ -1,1 +1,1 @@
-export { useGasCalculate } from './useGasCalculate';
+export * from './useGasCalculate';

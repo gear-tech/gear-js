@@ -2,7 +2,7 @@ import { GearApi } from '@gear-js/api';
 import * as gearHooks from '@gear-js/react-hooks';
 import { Account } from '@gear-js/react-hooks';
 
-import * as hooks from 'hooks';
+import * as UseGasCalculateModule from 'hooks/useGasCalculate/useGasCalculate';
 
 export const useAccountMock = (account?: Account) => {
   const mock = jest.spyOn(gearHooks, 'useAccount');
@@ -39,7 +39,7 @@ export const useApiMock = (api?: any) => {
 };
 
 export const useGasCalculateMock = (gasLimit: number) => {
-  const mock = jest.spyOn(hooks, 'useGasCalculate');
+  const mock = jest.spyOn(UseGasCalculateModule, 'useGasCalculate');
 
   const calculateGasMock = jest.fn().mockResolvedValue(gasLimit);
 
