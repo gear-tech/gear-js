@@ -1,4 +1,4 @@
-import { GearApi, Hex } from '@gear-js/api';
+import { GearApi, Hex } from '../../../lib';
 import { readFileSync } from 'fs';
 import { PATH_TO_META } from '../config';
 

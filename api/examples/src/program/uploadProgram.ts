@@ -1,4 +1,4 @@
-import { GearApi, GearKeyring, getWasmMetadata } from '@gear-js/api';
+import { GearApi, GearKeyring, getWasmMetadata } from '../../../lib';
 import { readFileSync } from 'fs';
 import { PATH_TO_META, PATH_TO_OPT } from '../config';
 import { waitForInit } from './waitForInit';
