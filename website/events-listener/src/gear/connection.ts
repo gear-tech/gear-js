@@ -24,8 +24,8 @@ export async function connectToGearNode() {
 
   eventListenerLogger.info(`Connected to ${chain} with genesis ${genesis}`);
 
-  const unsub = await listen(api, genesis, ({ key, params }) => {
-    kafkaProducer.send({ key, params, genesis, method: null });
+  const unsub = await listen(api, genesis, ({ key, params, method }) => {
+    kafkaProducer.send({ key, params, genesis, method });
   });
 
   return new Promise((resolve) => {

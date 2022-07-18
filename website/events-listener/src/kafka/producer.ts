@@ -15,7 +15,7 @@ async function connect(): Promise<void> {
 async function send(sendByKafkaTopicInput: SendByKafkaTopicInput): Promise<void> {
   const { method } = sendByKafkaTopicInput;
   await producer.send({
-    topic: method!,
+    topic: method,
     messages: getMessageFormByTopic(sendByKafkaTopicInput),
   });
 }

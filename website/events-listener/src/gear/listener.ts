@@ -10,7 +10,7 @@ import { GenericApiData } from './types';
 export const listen = (
   api: GearApi,
   genesis: string,
-  callback: (arg: { key?: string; params: any; method: API_METHODS | null }) => void,
+  callback: (arg: { key?: string; params: any; method: API_METHODS }) => void,
 ) => {
   return api.query.system.events(async (events) => {
     const blockHash = events.createdAtHash!.toHex();
