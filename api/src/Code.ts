@@ -20,15 +20,31 @@ export class GearCode extends GearTransaction {
     return { codeHash, submitted: this.submitted };
   }
 
+  /**
+   * Check that codeId exists on chain
+   * @param codeId 
+   * @returns 
+   */
   async exists(codeId: string) {
     const codeMetadata = await this.api.query.gearProgram.metadataStorage(codeId) as Option<CodeMetadata>;
     return codeMetadata.isSome;
   }
 
+
+  /**
+   * Get code storage
+   * @param codeId 
+   * @returns 
+   */
   async storage(codeId: Hex): Promise<CodeStorage> {
     return this.api.query.gearProgram.codeStorage(codeId) as unknown as CodeStorage;
   }
 
+  /**
+   * Get static pages of code
+   * @param codeId 
+   * @returns 
+   */
   async staticPages(codeId: Hex): Promise<number | null> {
     const storage = await this.storage(codeId);
     return storage.isSome ? storage.unwrap().staticPages.toNumber() : null;

@@ -2,12 +2,12 @@ import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { u8aToHex } from '@polkadot/util';
-import { Bytes, BTreeSet, u32 } from '@polkadot/types';
+import { Bytes } from '@polkadot/types';
 
 import { createPayload, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
 import { Metadata } from './types/interfaces';
-import { ProgramDoesNotExistError, SubmitProgramError } from './errors';
+import { SubmitProgramError } from './errors';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
 import { GasLimit, Hex, Value } from './types';
@@ -97,13 +97,5 @@ export class GearProgram extends GearTransaction {
   async codeHash(programId: Hex): Promise<Hex> {
     const program = await this.api.storage.gProg(programId);
     return u8aToHex(program.code_hash);
-  }
-
-  async allocations(programId: Hex): Promise<BTreeSet<u32>> {
-    const program = await this.api.storage.gProg(programId);
-    if (!program) {
-      throw new ProgramDoesNotExistError();
-    }
-    return program.allocations;
   }
 }
