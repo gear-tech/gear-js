@@ -38,6 +38,7 @@
       "error",
       "always"
     ],
+    "eol-last": "error",
     "@typescript-eslint/no-empty-function": 0,
     "no-case-declarations": 0,
     "@typescript-eslint/interface-name-prefix": "off",
