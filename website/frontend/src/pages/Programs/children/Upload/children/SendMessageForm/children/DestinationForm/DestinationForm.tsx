@@ -7,22 +7,29 @@ import { FormValues } from './types';
 import { FormInput, formStyles } from 'components/common/Form';
 
 type Props = {
-  isLoading: boolean;
   destination?: string;
+  onReset: () => void;
   onSubmit: (values: FormValues, helpert: FormikHelpers<FormValues>) => void;
 };
 
-const ProgramForm = ({ isLoading, destination = '', onSubmit }: Props) => (
-  <Formik initialValues={{ destination }} validateOnChange={false} validationSchema={Schema} onSubmit={onSubmit}>
+const DestinationForm = ({ destination = '', onSubmit, onReset }: Props) => (
+  <Formik
+    initialValues={{ destination }}
+    validateOnChange={false}
+    validationSchema={Schema}
+    onSubmit={onSubmit}
+    onReset={onReset}
+  >
     {({ isValid, isSubmitting }) => {
-      const isDisabled = isLoading || !isValid || isSubmitting;
+      const isDisabled = !isValid || isSubmitting;
 
       return (
         <Form data-testid="sendMessageForm" className={formStyles.largeForm}>
-          <FormInput name="destination" label="Destination" placeholder="Destination" />
+          <FormInput name="destination" label="Destination" />
 
           <div className={formStyles.formButtons}>
-            <Button type="submit" text="Find program" disabled={isDisabled} />
+            <Button type="submit" text="Next step" color="secondary" disabled={isDisabled} />
+            <Button type="reset" text="Cancel" color="transparent" />
           </div>
         </Form>
       );
@@ -30,4 +37,4 @@ const ProgramForm = ({ isLoading, destination = '', onSubmit }: Props) => (
   </Formik>
 );
 
-export { ProgramForm };
+export { DestinationForm };

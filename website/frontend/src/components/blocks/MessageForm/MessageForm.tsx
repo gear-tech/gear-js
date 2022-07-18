@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { Metadata } from '@gear-js/api';
-import { Button } from '@gear-js/ui';
 
 import { getValidationSchema } from './Schema';
 import { INITIAL_VALUES } from './const';
-import { FormValues, SetFieldValue } from './types';
+import { FormValues, SetFieldValue, RenderButtonsProps } from './types';
 
 import { GasMethod } from 'consts';
 import { useSendMessage, useGasCalculate } from 'hooks';
@@ -18,15 +17,17 @@ import {
   formStyles,
 } from 'components/common/Form';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
-import sendMessageSVG from 'assets/images/message.svg';
 
 type Props = {
   id: string;
   isReply?: boolean;
   metadata?: Metadata;
+  renderButtons: (props: RenderButtonsProps) => ReactNode;
 };
 
-const MessageForm = ({ id, isReply = false, metadata }: Props) => {
+const MessageForm = (props: Props) => {
+  const { id, isReply = false, metadata, renderButtons } = props;
+
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
 
@@ -94,13 +95,7 @@ const MessageForm = ({ id, isReply = false, metadata }: Props) => {
             <FormInput type="number" name="value" label="Value" placeholder="20000" />
 
             <div className={formStyles.formButtons}>
-              <Button text="Calculate Gas" onClick={handleCalculateGas(values, setFieldValue)} disabled={isDisabled} />
-              <Button
-                type="submit"
-                icon={sendMessageSVG}
-                text={isReply ? 'Send reply' : 'Send message'}
-                disabled={isDisabled}
-              />
+              {renderButtons({ isDisabled, calculateGas: handleCalculateGas(values, setFieldValue) })}
             </div>
           </Form>
         );

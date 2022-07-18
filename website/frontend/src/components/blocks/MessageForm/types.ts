@@ -9,4 +9,9 @@ export type FormValues = {
   payloadType: string;
 };
 
+export type RenderButtonsProps = {
+  isDisabled: boolean;
+  calculateGas: () => void;
+};
+
 export type SetFieldValue = FormikHelpers<FormValues>['setFieldValue'];

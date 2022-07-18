@@ -1,39 +1,81 @@
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
+import { Metadata } from '@gear-js/api';
+import { useAlert } from '@gear-js/react-hooks';
+import { Button } from '@gear-js/ui';
 
 import { FormWrapper } from '../FormWrapper';
-import { ProgramForm, FormValues } from './children/ProgramForm';
+import { DestinationForm, FormValues } from './children/DestinationForm';
 
-import { useProgram } from 'hooks';
-import { MessageForm } from 'components/blocks/MessageForm';
+import { getProgram } from 'services';
+import { RPCResponseError } from 'services/ServerRPCRequestService';
+import { MessageForm, RenderButtonsProps } from 'components/blocks/MessageForm';
+import sendMessageSVG from 'assets/images/message.svg';
 
 type Props = {
   onReset: () => void;
 };
 
 const SendMessageForm = ({ onReset }: Props) => {
-  const [step, setStep] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [destination, setDestination] = useState<string>();
+  const alert = useAlert();
 
-  const [program, metadata] = useProgram(destination);
+  const destination = useRef<string>('');
 
-  const handleProgranSubmit = (values: FormValues) => {
-    setIsLoading(true);
-    setDestination(values.destination);
+  const [step, setStep] = useState(1);
+  const [metadata, setMetadata] = useState<Metadata>();
+
+  const goToFirstStep = () => setStep(1);
+
+  const goToSecondStep = (newDestination: string) => {
+    destination.current = newDestination;
+    setStep(2);
   };
 
-  useEffect(() => {
-    if (program && isLoading) {
-      setStep(1);
-      setIsLoading(false);
+  const handleDestinationSubmit = async (values: FormValues) => {
+    const newDestination = values.destination;
+
+    if (newDestination === destination.current) {
+      goToSecondStep(newDestination);
+
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [program]);
+
+    try {
+      const { result } = await getProgram(newDestination);
+      const meta = result?.meta?.meta;
+
+      if (meta) setMetadata(JSON.parse(meta));
+
+      goToSecondStep(newDestination);
+    } catch (error) {
+      const message = (error as RPCResponseError).message;
+
+      if (message === 'Program not found') {
+        goToSecondStep(newDestination);
+
+        return;
+      }
+
+      alert.error(message);
+    }
+  };
+
+  const renderFormButtons = ({ isDisabled, calculateGas }: RenderButtonsProps) => (
+    <>
+      <Button text="Previous step" color="secondary" onClick={goToFirstStep} />
+      <Button text="Calculate Gas" onClick={calculateGas} disabled={isDisabled} />
+      <Button type="submit" icon={sendMessageSVG} text="Send message" disabled={isDisabled} />
+      <Button text="Cancel" onClick={onReset} color="transparent" />
+    </>
+  );
 
   return (
     <FormWrapper header="Send new message">
-      {step === 0 && <ProgramForm isLoading={isLoading} destination={destination} onSubmit={handleProgranSubmit} />}
-      {step === 1 && program && <MessageForm id={program.id} metadata={metadata} />}
+      {step === 1 && (
+        <DestinationForm destination={destination.current} onReset={onReset} onSubmit={handleDestinationSubmit} />
+      )}
+      {step === 2 && destination && (
+        <MessageForm id={destination.current} metadata={metadata} renderButtons={renderFormButtons} />
+      )}
     </FormWrapper>
   );
 };
