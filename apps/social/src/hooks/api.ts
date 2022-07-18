@@ -10,7 +10,7 @@ import { AnyJson } from '@polkadot/types/types';
 
 type ChannelState = { Channel: Channel };
 type ChannelsState = { AllChannels: Channel[] };
-type SubscriptionState = { SubscribedToChannels: Hex[] };
+type SubscriptionState = { SubscribedToChannels: Array<Hex> };
 
 // Router State wrapper
 function useRouterState<T>(payload: AnyJson) {
@@ -38,9 +38,9 @@ function useSubscriptions() {
   const actorId = account?.decodedAddress;
   const payload = useMemo(() => ({ SubscribedToChannels: actorId }), [actorId]);
 
-  const { state } = useRouterState<SubscriptionState>(payload);
+  const { state, isStateRead } = useRouterState<SubscriptionState>(payload);
 
-  return state?.SubscribedToChannels;
+  return { subscriptions: state?.SubscribedToChannels, readSubscriptions: isStateRead}
 }
 
 function useMessages() {
@@ -85,12 +85,12 @@ function useChannelActions() {
   };
 
   const subscribe = (onSuccess?: () => void) => {
-    const payload = { AddSubscriberToChannel: id };
+    const payload = { Subscribe: "Null" };
     sendMessage(payload, { onSuccess });
   };
 
   const unsubscribe = (onSuccess?: () => void) => {
-    const payload = { RemoveSubscriberFromChannel: id };
+    const payload = { Unsubscribe: "Null" };
     sendMessage(payload, { onSuccess });
   };
 

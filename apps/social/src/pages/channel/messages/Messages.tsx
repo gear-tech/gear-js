@@ -13,7 +13,7 @@ function Messages({ ownerId }: Props) {
   const { messages } = useMessages();
 
   const message = messages?.map(({ text, timestamp }) => (
-    <div className={styles.message} key={Number(timestamp)}>
+    <div className={styles.message} key={timestamp.replaceAll(',', '')}>
       <div className={styles.info}>
         <div className={styles.icon}>
           <Identicon value={ownerId} size={25} theme="polkadot" />
