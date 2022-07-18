@@ -87,7 +87,7 @@ export const listen = (
 
 async function handleGearApiEvent(
   params: HandleGearSystemEventParams,
-  callback: (arg: { key?: string; params: any }) => void,
+  callback: (arg: { key?: string; params: any; method?: API_METHODS }) => void,
 ): Promise<void> {
   const { events, genesis, blockHash, timestamp } = params;
 
@@ -112,7 +112,7 @@ async function handleGearApiEvent(
 
 async function updateGearApiEvent(
   params: UpdateGearApiEventParams,
-  callback: (arg: { params: any; method?: API_METHODS }) => void,
+  callback: (arg: { key?: string; params: any; method?: API_METHODS }) => void,
 ): Promise<void> {
   const { events, status, genesis, signedBlock } = params;
 

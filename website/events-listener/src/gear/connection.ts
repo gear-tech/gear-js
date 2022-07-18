@@ -1,5 +1,4 @@
 import { GearApi } from '@gear-js/api';
-import { KAFKA_TOPICS } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { eventListenerLogger } from '../common/event-listener.logger';
