@@ -1,4 +1,4 @@
-import { GearApi, GearKeyring } from '@gear-js/api';
+import { GearApi, GearKeyring } from '../../../lib';
 import { readFileSync } from 'fs';
 import { PATH_TO_OPT } from '../config';
 
@@ -9,7 +9,7 @@ const main = async () => {
 
   const code = readFileSync(PATH_TO_OPT);
 
-  const { codeHash } = api.code.submit(code);
+  const { codeHash } = await api.code.submit(code);
 
   console.log(`CodeHash: ${codeHash}\n`);
 

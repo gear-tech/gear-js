@@ -1,34 +1,20 @@
 import { NavLink } from 'react-router-dom';
-import clsx from 'clsx';
 import { useApi } from '@gear-js/react-hooks';
 
 import styles from './Menu.module.scss';
-
-import { routes } from 'routes';
+import { NAV_LINKS } from './const';
 
 type Props = {
   openSidebar: () => void;
 };
 
-type ClassNameProps = {
-  isActive: boolean;
-};
-
-const links = [
-  { to: routes.explorer, text: 'Explorer' },
-  { to: routes.editor, text: '</> IDE' },
-  { to: routes.mailbox, text: 'Mailbox' },
-];
-
 const Menu = ({ openSidebar }: Props) => {
   const { api, isApiReady } = useApi();
 
-  const getClassName = ({ isActive }: ClassNameProps) => clsx(styles.link, isActive && styles.active);
-
   const getItems = () =>
-    links.map(({ to, text }) => (
-      <li key={text}>
-        <NavLink className={getClassName} to={to}>
+    NAV_LINKS.map(({ to, text }) => (
+      <li key={text} className={styles.navItem}>
+        <NavLink className={styles.link} to={to}>
           {text}
         </NavLink>
       </li>
@@ -40,7 +26,7 @@ const Menu = ({ openSidebar }: Props) => {
 
   return (
     <ul className={styles.menu}>
-      <li>
+      <li className={styles.nodeInfo}>
         <button className={styles.sidebarBtn} onClick={openSidebar}>
           {isApiReady ? (
             <>

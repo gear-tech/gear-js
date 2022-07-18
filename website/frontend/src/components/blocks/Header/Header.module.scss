@@ -1,5 +1,5 @@
-@use 'assets/scss/variables' as *;
-@use 'assets/scss/breakpoints' as *;
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
 
 .header {
   $padding: 16px;
@@ -8,7 +8,7 @@
   justify-content: space-between;
   align-items: center;
   color: $textColor;
-  background-color: $mainBackground;
+  background-color: $bgColor;
 
   @include lg {
     padding-top: $padding;
@@ -29,11 +29,21 @@
   }
 
   & > *:not(:last-child) {
-    margin-right: 100px;
+    margin-right: 30px;
 
     @include lg {
       margin-right: 0;
       margin-bottom: 32px;
     }
+  }
+}
+
+.separator {
+  height: 48px;
+  border: none;
+  border-left: 1px solid $lineColor;
+
+  @include lg {
+    display: none;
   }
 }

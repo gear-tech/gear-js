@@ -1,8 +1,4 @@
-export class GearError extends Error {
-  name = 'GearError';
-}
-
-export class CreateTypeError extends GearError {
+export class CreateTypeError extends Error {
   name = 'CreateTypeError';
   message = 'Unable to create type.';
 
@@ -12,7 +8,7 @@ export class CreateTypeError extends GearError {
   }
 }
 
-export class TransactionError extends GearError {
+export class TransactionError extends Error {
   name = 'TransactionError';
 
   constructor(message: string) {

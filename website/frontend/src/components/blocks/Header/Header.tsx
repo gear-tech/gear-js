@@ -22,6 +22,7 @@ const Header = () => {
     <header className={styles.header}>
       <nav className={styles.nav}>
         <Logo />
+        <hr className={styles.separator} />
         <Menu openSidebar={openSidebar} />
       </nav>
       <Wallet />

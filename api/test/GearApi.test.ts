@@ -5,11 +5,12 @@ const api = new GearApi();
 
 beforeAll(async () => {
   await api.isReady;
+  await sleep(2000);
 });
 
 afterAll(async () => {
   await api.disconnect();
-  await sleep(1000);
+  await sleep(2000);
 });
 
 describe('GearApi', () => {
@@ -27,6 +28,18 @@ describe('GearApi', () => {
 
   test('totalIssuance', async () => {
     expect(await api.totalIssuance()).toBeDefined();
+  });
+
+  test('existentialDeposit', () => {
+    expect(api.existentialDeposit).toBeDefined();
+  });
+
+  test('mailboxTreshold', () => {
+    expect(api.mailboxTreshold).toBeDefined();
+  });
+
+  test('waitlistCost', () => {
+    expect(api.waitlistCost).toBeDefined();
   });
 });
 

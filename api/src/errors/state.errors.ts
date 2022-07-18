@@ -1,6 +1,4 @@
-import { GearError } from './gear.errors';
-
-export class ReadStateError extends GearError {
+export class ReadStateError extends Error {
   name = 'ReadStateError';
 
   constructor(message?: string) {
@@ -8,7 +6,7 @@ export class ReadStateError extends GearError {
   }
 }
 
-export class ReadStorageError extends GearError {
+export class ReadStorageError extends Error {
   name = 'ReadStorageError';
 
   constructor(message?: string) {

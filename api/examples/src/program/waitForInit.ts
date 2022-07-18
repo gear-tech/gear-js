@@ -1,4 +1,4 @@
-import { GearApi, Hex, MessageEnqueued, ProgramChanged, UserMessageSent } from '@gear-js/api';
+import { GearApi, Hex, MessageEnqueued, ProgramChanged, UserMessageSent } from '../../../lib';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
 export function waitForInit(api: GearApi, programId: string): Promise<UnsubscribePromise> {

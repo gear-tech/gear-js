@@ -1,4 +1,4 @@
-import { GearApi, GearKeyring } from '@gear-js/api';
+import { GearApi, GearKeyring } from '../../../lib';
 
 const main = async () => {
   const api = await GearApi.create();

@@ -1,3 +1,18 @@
+## 0.23.4
+
+_07/18/2022_
+
+https://github.com/gear-tech/gear-js/pull/840
+
+### Changes
+
+- Rename `api.program.is` method to `api.program.exists`
+- Add validation of gasLimit, value and codeId before sending transactions
+- `api.code.submit` method is now async
+- Add get some runtime constants (`existentialDeposit`, `blockGasLimit`, `mailboxTreshold`, `waitlistCost`)
+- Add eslint config
+
+---
 ## 0.23.3
 
 _07/12/2022_
