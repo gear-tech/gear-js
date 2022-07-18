@@ -1,11 +1,10 @@
 import { Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
-import { u8aToHex } from '@polkadot/util';
 
-import { IActiveProgram, IGearPages, IProgram, Hex } from './types';
+import { ActiveProgram, IGearPages, IProgram, Hex } from './types';
 import { GPAGES_HEX, GPROG_HEX, SEPARATOR } from './utils';
 import { CreateType } from './create-type';
-import { ReadStateError } from './errors';
+import { ProgramTerminatedError, ReadStateError } from './errors';
 import { GearApi } from './GearApi';
 
 export class GearStorage {
@@ -21,13 +20,16 @@ export class GearStorage {
    * @param programId
    * @returns
    */
-  async gProg(programId: Hex): Promise<IActiveProgram> {
+  async gProg(programId: Hex): Promise<ActiveProgram> {
     const storage = (await this.api.rpc.state.getStorage(`0x${GPROG_HEX}${programId.slice(2)}`)) as Option<Raw>;
     if (storage.isNone) {
       throw new ReadStateError(`Program with id ${programId} was not found in the storage`);
     }
     const program = this.api.createType('Program', storage.unwrap()) as IProgram;
-    return program.isActive ? program.asActive : program.asTerminated;
+
+    if (program.isTerminated) throw new ProgramTerminatedError();
+
+    return program.asActive;
   }
 
   /**
@@ -36,7 +38,7 @@ export class GearStorage {
    * @param gProg
    * @returns
    */
-  async gPages(programId: Hex, gProg: IActiveProgram): Promise<IGearPages> {
+  async gPages(programId: Hex, gProg: ActiveProgram): Promise<IGearPages> {
     const keys = {};
     gProg.pages_with_data.forEach((value) => {
       keys[value.toNumber()] = `0x${GPAGES_HEX}${programId.slice(2)}${SEPARATOR}${this.api
@@ -50,15 +52,5 @@ export class GearStorage {
       pages[key] = storage;
     }
     return pages;
-  }
-
-  /**
-   * Get codeHash of program on-chain
-   * @param programId
-   * @returns codeHash in hex format
-   */
-  async getCodeHash(programId: Hex): Promise<Hex> {
-    const program = await this.gProg(programId);
-    return u8aToHex(program.code_hash);
   }
 }

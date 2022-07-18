@@ -39,13 +39,18 @@ export class GearProgramState extends GearStorage {
    * @returns decoded state
    */
   async read(programId: Hex, metaWasm: Buffer, inputValue?: AnyJson): Promise<Codec> {
+    const codeHash = await this.api.program.codeHash(programId);
+    let initialSize = await this.api.code.staticPages(codeHash);
+
     const program = await this.gProg(programId);
-    if (!program) {
-      throw new ReadStateError('Program is terminated');
-    }
+
+    program.allocations.forEach((value) => {
+      if (value.gtn(initialSize - 1)) {
+        initialSize = value.toNumber();
+      }
+    });
 
     const pages = await this.gPages(programId, program);
-    const initialSize = program.allocations.size;
     const block = await this.api.blocks.getFinalizedHead();
     const blockTimestamp = await this.api.blocks.getBlockTimestamp(block.toHex());
 

@@ -1,6 +1,7 @@
 import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
+import { u8aToHex } from '@polkadot/util';
 import { Bytes } from '@polkadot/types';
 
 import { createPayload, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
@@ -84,5 +85,17 @@ export class GearProgram extends GearTransaction {
     const progs = await this.api.rpc.state.getKeys(GPROG);
     const program = progs.find((prog) => prog.eq(`0x${GPROG_HEX}${id.slice(2)}`));
     return Boolean(program);
+  }
+
+
+
+  /**
+   * Get codeHash of program on-chain
+   * @param programId
+   * @returns codeHash in hex format
+   */
+  async codeHash(programId: Hex): Promise<Hex> {
+    const program = await this.api.storage.gProg(programId);
+    return u8aToHex(program.code_hash);
   }
 }

@@ -32,7 +32,8 @@
     "website/common"
   ],
   "lint-staged": {
-    "*.{js,css,ts,tsx,scss}": "eslint --fix"
+    "*.{js,css,ts,tsx,scss}": "eslint --fix",
+    "./api/*.{js,ts}": "cd api && npm run lint:fix"
   },
   "resolutions": {
     "@types/react": "17.0.44"
