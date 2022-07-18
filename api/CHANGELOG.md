@@ -1,3 +1,14 @@
+## 0.23.5
+
+_07/18/2022_
+
+https://github.com/gear-tech/gear-js/pull/843
+
+### Changes
+
+- Fix getting program pages according to https://github.com/gear-tech/gear/pull/1193
+
+---
 ## 0.23.4
 
 _07/18/2022_

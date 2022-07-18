@@ -12,6 +12,7 @@ const demo_meta_test = {
   meta: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_meta.meta.wasm')),
   id: '0x' as Hex,
   uploadBlock: '0x',
+  codeHash: '0x' as Hex,
 };
 const timestamp_test = {
   code: readFileSync(join(TEST_WASM_DIR, 'timestamp.opt.wasm')),
@@ -28,7 +29,7 @@ beforeAll(async () => {
     gasLimit: 2_000_000_000,
   }).programId;
   let initStatus = checkInit(api, timestamp_test.id);
-  api.program.signAndSend(alice, () => {});
+  api.program.signAndSend(alice, () => { });
   expect(await initStatus()).toBe('success');
 
   demo_meta_test.id = api.program.submit(
@@ -67,6 +68,22 @@ describe('Read State', () => {
     const gProg = await api.storage.gProg(demo_meta_test.id);
     const gPages = await api.storage.gPages(demo_meta_test.id, gProg);
     expect(gPages).toBeDefined();
+  });
+
+  test('Get codeHash', async () => {
+    demo_meta_test.codeHash = await api.program.codeHash(demo_meta_test.id);
+    expect(demo_meta_test.codeHash).toBeDefined();
+    expect(demo_meta_test.codeHash.startsWith('0x')).toBeTruthy();
+  });
+
+  test('Get code storage', async () => {
+    const codeStorage = await api.code.storage(demo_meta_test.codeHash);
+    expect(codeStorage.isSome).toBeTruthy();
+    const unwrappedCodeStorage = codeStorage.unwrap().toHuman();
+    expect(unwrappedCodeStorage).toHaveProperty('code');
+    expect(unwrappedCodeStorage).toHaveProperty('exports');
+    expect(unwrappedCodeStorage).toHaveProperty('staticPages');
+    expect(unwrappedCodeStorage).toHaveProperty('version');
   });
 
   test('Get nonexistent program from storage', async () => {
