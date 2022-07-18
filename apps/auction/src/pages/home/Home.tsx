@@ -1,7 +1,8 @@
+import { Buy } from './buy';
 import { Sell } from './sell';
 
 function Home() {
-  return <Sell />;
+  return <Buy />;
 }
 
 export { Home };

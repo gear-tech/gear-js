@@ -1,0 +1,56 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+
+.container {
+  display: flex;
+}
+
+.content {
+  margin-left: auto;
+}
+
+.imgWrapper {
+  padding: 120px 67px;
+  background-image: linear-gradient(139.06deg, rgba(255, 255, 255, 0.1) 6.36%, rgba(40, 40, 40, 0.1) 96.84%),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03));
+  border: 1px solid;
+  border-image: linear-gradient(139.06deg, rgba(255, 255, 255, 0.1) 6.36%, rgba(40, 40, 40, 0.1) 96.84%) 1;
+  border-radius: $borderRadius;
+}
+
+.image {
+  // prolly img-fluid
+  width: 100%;
+  max-width: 450px;
+
+  display: block;
+  margin: 0 auto;
+  border-radius: $borderRadius;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+
+  &:not(:last-child) {
+    margin-bottom: 25px;
+  }
+}
+
+.key {
+  @include heading($fontSizeSmall, 34px);
+  color: $textColorSecondary;
+}
+
+.value {
+  font-size: $fontSizeMedium;
+}
+
+.prices {
+  display: flex;
+  margin-bottom: 50px;
+
+  & > *:first-child {
+    margin-right: 100px;
+  }
+}

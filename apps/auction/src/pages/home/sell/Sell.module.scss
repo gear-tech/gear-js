@@ -1,6 +1,10 @@
 @use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/mixins' as *;
 
+.content {
+  margin: 0 auto;
+}
+
 .info {
   display: flex;
   align-items: center;

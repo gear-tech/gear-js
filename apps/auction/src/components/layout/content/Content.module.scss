@@ -2,8 +2,8 @@
 @use '@gear-js/ui/headings' as *;
 
 .container {
+  width: 100%;
   max-width: 470px;
-  margin: 0 auto;
 }
 
 .header {
