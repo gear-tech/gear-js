@@ -32,7 +32,7 @@
     "website/common"
   ],
   "lint-staged": {
-    "*.{js,css,md,ts,tsx,scss}": "eslint --fix"
+    "*.{js,css,ts,tsx,scss}": "eslint --fix"
   },
   "resolutions": {
     "@types/react": "17.0.44"
