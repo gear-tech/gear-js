@@ -49,8 +49,10 @@ jobs:
 
       - name: Build examples
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
-        working-directory: api/examples
+        working-directory: api
         run: |
+          npm run build
+          cd examples
           npm install --no-package-lock
           npm run build
 
