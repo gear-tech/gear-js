@@ -1,12 +1,7 @@
 {
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "strict": true,
-    "target": "esNext",
-    "outDir": "dist",
-    "skipLibCheck": true
-  },
-  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+  "extends": "../../tsconfig.json",
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
 }

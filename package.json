@@ -32,7 +32,8 @@
     "website/common"
   ],
   "lint-staged": {
-    "*.{js,css,ts,tsx,scss}": "eslint --fix"
+    "*.{js,css,ts,tsx,scss}": "eslint --fix",
+    "./website/frontend/src/*.{js,css,ts,tsx,scss}": "cd website/frontend && yarn lint:fix"
   },
   "resolutions": {
     "@types/react": "17.0.44"

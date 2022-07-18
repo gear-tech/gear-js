@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "removeComments": true,
+    "module": "commonjs",
+    "target": "esnext",
+    "strict": true,
+    "allowJs": true
+  }
+}
