@@ -2,16 +2,14 @@ import { filterEvents } from '@polkadot/api/util';
 import { API_METHODS, UpdateMessageParams } from '@gear-js/common';
 import { MessageEnqueuedData } from '@gear-js/api';
 
-import { ApiResult, GenericApiData, UpdateMessageDataExtrinsic } from './types';
+import { ExtrinsicsResult, UpdateMessageBlockExtrinsics } from './types';
 
-function updateMessageDataHandler(data: UpdateMessageDataExtrinsic): ApiResult {
+function handleBlockExtrinsics(data: UpdateMessageBlockExtrinsics): ExtrinsicsResult {
   const result: UpdateMessageParams[] = [];
   const { signedBlock, events, status, genesis } = data;
 
   const eventMethods = ['sendMessage', 'submitProgram', 'sendReply'];
-  const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }: { method: { method: string } }) =>
-    eventMethods.includes(method),
-  );
+  const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) => eventMethods.includes(method));
 
   for (const {
     hash,
@@ -42,13 +40,4 @@ function getUpdateMessageData(args: any, method: string): [any, any] {
   return [payload, value];
 }
 
-function handleApiEvent(method: API_METHODS | string, data: GenericApiData): ApiResult | null {
-  switch (method) {
-    case 'MessageEnqueued':
-      return updateMessageDataHandler(data);
-    default:
-      return null;
-  }
-}
-
-export { handleApiEvent };
+export { handleBlockExtrinsics };

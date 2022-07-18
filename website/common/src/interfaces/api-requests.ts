@@ -1,5 +1,5 @@
 import { IGenesis, ISignature } from './common';
-import { IMessage } from './message';
+import { IMessage, UpdateMessageData } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';
 
@@ -35,11 +35,8 @@ interface AddMetaParams extends IGenesis, ISignature {
   title?: string;
 }
 
-interface UpdateMessageParams {
-  messageId: string;
-  payload: string;
-  genesis: string;
-  value: string;
+interface UpdateMessagesParams {
+  params: UpdateMessageData[];
 }
 
 interface GetMetaParams extends IGenesis {
@@ -88,5 +85,5 @@ export {
   IRpcRequest,
   GetCodeParams,
   GetAllCodeParams,
-  UpdateMessageParams,
+  UpdateMessagesParams,
 };
