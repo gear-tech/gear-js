@@ -22,9 +22,6 @@ export class GearCode extends GearTransaction {
 
   async exists(codeId: string) {
     const codeMetadata = await this.api.query.gearProgram.metadataStorage(codeId) as Option<CodeMetadata>;
-    if (codeMetadata.isSome) {
-      return true;
-    }
-    return false;
+    return codeMetadata.isSome;
   }
 }

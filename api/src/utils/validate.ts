@@ -6,7 +6,7 @@ import { ValidationError } from '../errors';
 import { GearApi } from '../GearApi';
 
 export function validateValue(value: Value | undefined, api: GearApi) {
-  if (value === undefined) return;
+  if (!value) return;
 
   const existentialDeposit = api.existentialDeposit;
 
