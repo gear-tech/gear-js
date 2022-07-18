@@ -42,9 +42,9 @@ function getUpdateMessageData(args: any, method: string): [any, any] {
   return [payload, value];
 }
 
-function handleApiEvent(method: API_METHODS | string | 'MessageEnqueued', data: GenericApiData): ApiResult | null {
+function handleApiEvent(method: API_METHODS | string, data: GenericApiData): ApiResult | null {
   switch (method) {
-    case API_METHODS.MESSAGE_UPDATE_DATA || 'MessageEnqueued':
+    case 'MessageEnqueued':
       return updateMessageDataHandler(data);
     default:
       return null;

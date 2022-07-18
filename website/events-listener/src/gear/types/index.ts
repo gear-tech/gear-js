@@ -17,4 +17,13 @@ interface ApiResult {
   params: ApiHandlerResult;
 }
 
-export { GenericApiData, UpdateMessageDataExtrinsic, ApiResult };
+interface HandleGearSystemEventParams {
+  events: any;
+  genesis: string;
+  blockHash: string;
+  timestamp: number;
+}
+
+type UpdateGearApiEventParams = UpdateMessageDataExtrinsic;
+
+export { GenericApiData, UpdateMessageDataExtrinsic, ApiResult, HandleGearSystemEventParams, UpdateGearApiEventParams };
