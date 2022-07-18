@@ -27,7 +27,7 @@ export const listen = (
     //   timestamp: blockTimestamp.toNumber(),
     // };
 
-    handleGearApiEvent(
+    await handleGearApiEvent(
       {
         genesis,
         blockHash,
@@ -56,7 +56,7 @@ export const listen = (
     //   status: extrinsicStatus,
     // };
 
-    updateGearApiEvent(
+    await updateGearApiEvent(
       {
         signedBlock: block,
         genesis,
