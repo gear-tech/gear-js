@@ -1,6 +1,4 @@
-import { GearError } from './gear.errors';
-
-export class SubmitProgramError extends GearError {
+export class SubmitProgramError extends Error {
   name = 'SubmitProgramError';
 
   constructor(message?: string) {
@@ -8,7 +6,7 @@ export class SubmitProgramError extends GearError {
   }
 }
 
-export class GetGasSpentError extends GearError {
+export class GetGasSpentError extends Error {
   name = 'GetGasSpentError';
 
   constructor(message?: string) {

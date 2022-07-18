@@ -1,5 +1,8 @@
-import { i32 } from '@polkadot/types';
+import { AnyNumber } from '@polkadot/types/types';
+import { u128, u64 } from '@polkadot/types';
 
-export declare type Hex = `0x${string}`;
+export type Hex = `0x${string}`;
 
-export declare type ExitCode = i32;
+export type Value = AnyNumber | u128;
+
+export type GasLimit = AnyNumber | u64;

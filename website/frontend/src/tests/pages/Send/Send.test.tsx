@@ -1,10 +1,10 @@
 import { decodeHexTypes, createPayloadTypeStructure } from '@gear-js/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, render, fireEvent, waitFor, act } from '@testing-library/react';
+import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { AccountProvider } from '@gear-js/react-hooks';
 
 import { useAccountMock, useApiMock, TEST_API, TEST_ACCOUNT } from '../../mocks/hooks';
-import { PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2, META } from '../../const';
+import { META, REPLY_META, PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2 } from '../../const';
 
 import * as helpers from 'helpers';
 import { ApiProvider } from 'context/api';
@@ -44,6 +44,7 @@ describe('send message page tests', () => {
 
   const changeFieldValue = (element: Element | Node, value: string) => {
     fireEvent.change(element, { target: { value } });
+    fireEvent.blur(element);
   };
 
   const testInitPageLoading = async () => {
@@ -58,18 +59,29 @@ describe('send message page tests', () => {
     });
   };
 
-  it('sends message to program without meta', async () => {
+  it('show error if wallet not connected', async () => {
     useApiMock(TEST_API);
     useAccountMock();
 
+    render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />);
+
+    const sendMessageBtn = await screen.findByText('Send message');
+
+    submit(sendMessageBtn);
+
+    await waitFor(() => expect(screen.getByText('Wallet not connected')).toBeInTheDocument());
+  });
+
+  it('sends message to program without meta', async () => {
     TEST_API.message.submit.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
 
+    useApiMock(TEST_API);
+    useAccountMock(TEST_ACCOUNT);
+
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
 
-    const { rerender } = render(
-      <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />
-    );
+    render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />);
 
     await testInitPageLoading();
 
@@ -104,54 +116,139 @@ describe('send message page tests', () => {
     expect(sendMessageBtn).toBeInTheDocument();
     expect(calculateGasBtn).toBeInTheDocument();
 
-    // unauthorized submit
-
-    submit(sendMessageBtn);
-
-    await waitFor(() => expect(screen.getByText('Wallet not connected')).toBeInTheDocument());
-
-    useAccountMock(TEST_ACCOUNT);
-
-    rerender(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />);
-
     // form validation
 
+    const checkBtnDisabled = () => {
+      expect(sendMessageBtn).toBeDisabled();
+      expect(calculateGasBtn).toBeDisabled();
+    };
+
+    const checkBtnEnabled = () => {
+      expect(sendMessageBtn).toBeEnabled();
+      expect(calculateGasBtn).toBeEnabled();
+    };
+
+    checkBtnEnabled();
+
+    // validate value field
+
+    changeFieldValue(valueField, '-1');
+
+    expect(valueField).toHaveValue(-1);
+
+    const valueFieldError = await screen.findByText('Initial value should be more or equal than 0');
+
+    expect(valueFieldError).toBeInTheDocument();
+
+    checkBtnDisabled();
+
     changeFieldValue(valueField, '1000');
+
     expect(valueField).toHaveValue(1000);
+    await waitFor(expect(valueFieldError).not.toBeInTheDocument);
 
-    changeFieldValue(payloadField, '0x00');
-    expect(payloadField).toHaveValue('0x00');
+    checkBtnEnabled();
 
-    changeFieldValue(gasLimitField, '30000000');
-    expect(gasLimitField).toHaveValue('30,000,000');
+    // validate payload field
 
-    changeFieldValue(destinationField, 'program');
-    expect(destinationField).toHaveValue('program');
+    changeFieldValue(payloadField, '');
+
+    expect(payloadField).toHaveValue('');
+
+    await waitFor(expect(screen.queryByText('Invalid payload')).not.toBeInTheDocument);
+
+    checkBtnEnabled();
 
     fireEvent.click(payloadTypeSwitch);
 
-    expect(payloadTypeField).not.toBeDisabled();
+    expect(payloadTypeField).toBeEnabled();
 
-    changeFieldValue(payloadTypeField, 'u32');
-    expect(payloadTypeField).toHaveValue('u32');
+    changeFieldValue(payloadTypeField, 'u16');
+
+    expect(payloadTypeField).toHaveValue('u16');
+
+    await waitFor(expect(screen.queryByText('This field is required')).not.toBeInTheDocument);
+
+    changeFieldValue(payloadField, '12345678');
+
+    const payloadFieldError = await screen.findByText('Invalid payload');
+
+    expect(payloadField).toHaveValue('12345678');
+    expect(payloadFieldError).toBeInTheDocument();
+
+    checkBtnDisabled();
+    changeFieldValue(payloadField, '12345');
+
+    expect(payloadField).toHaveValue('12345');
+
+    await waitFor(expect(payloadFieldError).not.toBeInTheDocument);
+
+    checkBtnEnabled();
+
+    // validate gas limit field
+
+    changeFieldValue(gasLimitField, '0');
+
+    const gasLimitFieldError = await screen.findByText('Initial value should be more than 0');
+
+    expect(gasLimitField).toHaveValue('0');
+    expect(gasLimitFieldError).toBeInTheDocument();
+
+    checkBtnDisabled();
+
+    changeFieldValue(gasLimitField, '30000000');
+
+    expect(gasLimitField).toHaveValue('30,000,000');
+
+    await waitFor(expect(gasLimitFieldError).not.toBeInTheDocument);
+
+    checkBtnEnabled();
+
+    // validate destination field
+
+    changeFieldValue(destinationField, '');
+
+    const destinationFieldError = await screen.findByText('This field is required');
+
+    expect(destinationField).toHaveValue('');
+    expect(destinationFieldError).toBeInTheDocument();
+
+    checkBtnDisabled();
+
+    changeFieldValue(destinationField, 'program');
+
+    await waitFor(expect(destinationFieldError).not.toBeInTheDocument);
+
+    checkBtnEnabled();
+
+    // validate payload type field
+
+    changeFieldValue(payloadTypeField, '');
+
+    const payloadTypeFieldError = await screen.findByText('This field is required');
+
+    expect(payloadTypeFieldError).toBeInTheDocument();
+
+    checkBtnDisabled();
+
+    changeFieldValue(payloadTypeField, 'u16');
+
+    await waitFor(expect(payloadTypeFieldError).not.toBeInTheDocument);
+
+    checkBtnEnabled();
 
     const formValues: FormValues = {
       value: 1000,
-      payload: '0x00',
+      payload: '12345',
       gasLimit: 30000000,
-      payloadType: 'u32',
+      payloadType: 'u16',
       destination: 'program',
     };
 
     // calculate gas
-    // some formik error, act must be used
-    act(() => {
-      fireEvent.click(calculateGasBtn);
-    });
+    fireEvent.click(calculateGasBtn);
 
-    await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
-
-    expect(calculateGas).toBeCalledTimes(1);
+    await waitFor(() => expect(calculateGas).toBeCalledTimes(1));
     expect(calculateGas).toBeCalledWith(
       'handle',
       TEST_API,
@@ -173,11 +270,11 @@ describe('send message page tests', () => {
   });
 
   it('sends message to program with meta', async () => {
-    useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT);
-
     TEST_API.message.submit.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
+
+    useApiMock(TEST_API);
+    useAccountMock(TEST_ACCOUNT);
 
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
 
@@ -201,6 +298,8 @@ describe('send message page tests', () => {
     const sendMessageBtn = screen.getByText('Send message');
     const calculateGasBtn = screen.getByText('Calculate Gas');
 
+    const payloadSelector = screen.getByRole('combobox');
+
     expect(valueField).toBeInTheDocument();
     expect(gasLimitField).toBeInTheDocument();
     expect(destinationField).toBeInTheDocument();
@@ -211,7 +310,59 @@ describe('send message page tests', () => {
     expect(sendMessageBtn).toBeInTheDocument();
     expect(calculateGasBtn).toBeInTheDocument();
 
-    // form validation
+    const checkBtnDisabled = () => {
+      expect(sendMessageBtn).toBeDisabled();
+      expect(calculateGasBtn).toBeDisabled();
+    };
+
+    const checkBtnEnabled = () => {
+      expect(sendMessageBtn).toBeEnabled();
+      expect(calculateGasBtn).toBeEnabled();
+    };
+
+    checkBtnEnabled();
+
+    // payload validation
+
+    changeFieldValue(payloadSelector, 'Transfer');
+
+    const firstPayloadField = await screen.findByLabelText('to (ActorId)');
+    const secondPayloadField = screen.getByLabelText('tokenId (U256)');
+
+    expect(firstPayloadField).toBeInTheDocument();
+    expect(secondPayloadField).toBeInTheDocument();
+
+    checkBtnEnabled();
+
+    changeFieldValue(firstPayloadField, '1');
+
+    let payloadError = await screen.findByText('Invalid payload');
+
+    expect(payloadError).toBeInTheDocument();
+    expect(firstPayloadField).toHaveValue('1');
+
+    checkBtnDisabled();
+    changeFieldValue(firstPayloadField, '0x68780805f94b15bc01f2d5428fa7bdbde6a14f77841ee24416c47c571a274f05');
+
+    expect(firstPayloadField).toHaveValue('0x68780805f94b15bc01f2d5428fa7bdbde6a14f77841ee24416c47c571a274f05');
+    await waitFor(expect(payloadError).not.toBeInTheDocument);
+
+    checkBtnEnabled();
+    changeFieldValue(secondPayloadField, '1b');
+
+    expect(secondPayloadField).toHaveValue('1b');
+    payloadError = await screen.findByText('Invalid payload');
+
+    expect(payloadError).toBeInTheDocument();
+
+    checkBtnDisabled();
+    changeFieldValue(payloadSelector, 'Mint');
+
+    await waitFor(expect(payloadError).not.toBeInTheDocument);
+
+    checkBtnEnabled();
+
+    // change form fileds
 
     changeFieldValue(valueField, '1000');
     expect(valueField).toHaveValue(1000);
@@ -235,9 +386,7 @@ describe('send message page tests', () => {
 
     // calculate gas
 
-    act(() => {
-      fireEvent.click(calculateGasBtn);
-    });
+    fireEvent.click(calculateGasBtn);
 
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
@@ -255,11 +404,11 @@ describe('send message page tests', () => {
   });
 
   it('sends reply to message of program without meta', async () => {
-    useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT);
-
     TEST_API.reply.submit.mockResolvedValue('');
     TEST_API.reply.signAndSend.mockResolvedValue('');
+
+    useApiMock(TEST_API);
+    useAccountMock(TEST_ACCOUNT);
 
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
 
@@ -269,7 +418,7 @@ describe('send message page tests', () => {
 
     // header
 
-    expect(screen.getByText('NFT')).toBeInTheDocument();
+    expect(screen.getByText('META')).toBeInTheDocument();
 
     // checking if fields are present in a form
 
@@ -302,8 +451,8 @@ describe('send message page tests', () => {
     changeFieldValue(valueField, '1000');
     expect(valueField).toHaveValue(1000);
 
-    changeFieldValue(payloadField, '0x00');
-    expect(payloadField).toHaveValue('0x00');
+    changeFieldValue(payloadField, '12345');
+    expect(payloadField).toHaveValue('12345');
 
     changeFieldValue(gasLimitField, '30000000');
     expect(gasLimitField).toHaveValue('30,000,000');
@@ -312,22 +461,20 @@ describe('send message page tests', () => {
 
     expect(payloadTypeField).not.toBeDisabled();
 
-    changeFieldValue(payloadTypeField, 'u32');
-    expect(payloadTypeField).toHaveValue('u32');
+    changeFieldValue(payloadTypeField, 'u16');
+    expect(payloadTypeField).toHaveValue('u16');
 
     const formValues: FormValues = {
       value: 1000,
-      payload: '0x00',
+      payload: '12345',
       gasLimit: 30000000,
-      payloadType: 'u32',
+      payloadType: 'u16',
       destination: MESSAGE_ID_2,
     };
 
     // calculate gas
 
-    act(() => {
-      fireEvent.click(calculateGasBtn);
-    });
+    fireEvent.click(calculateGasBtn);
 
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
@@ -353,11 +500,11 @@ describe('send message page tests', () => {
   });
 
   it('sends reply to message of program with meta', async () => {
-    useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT);
-
     TEST_API.reply.submit.mockResolvedValue('');
     TEST_API.reply.signAndSend.mockResolvedValue('');
+
+    useApiMock(TEST_API);
+    useAccountMock(TEST_ACCOUNT);
 
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
 
@@ -367,7 +514,7 @@ describe('send message page tests', () => {
 
     // header
 
-    expect(screen.getByText('NFT')).toBeInTheDocument();
+    expect(screen.getByText('META')).toBeInTheDocument();
 
     // checking if fields are present in a form
 
@@ -398,8 +545,8 @@ describe('send message page tests', () => {
     changeFieldValue(gasLimitField, '30000000');
     expect(gasLimitField).toHaveValue('30,000,000');
 
-    const decodedTypes = decodeHexTypes(META.types!);
-    const typeStructure = createPayloadTypeStructure(META.handle_input!, decodedTypes) as TypeStructure;
+    const decodedTypes = decodeHexTypes(REPLY_META.types!);
+    const typeStructure = createPayloadTypeStructure(REPLY_META.async_handle_input!, decodedTypes) as TypeStructure;
 
     const formValues: FormValues = {
       value: 1000,
@@ -411,14 +558,20 @@ describe('send message page tests', () => {
 
     // calculate gas
 
-    act(() => {
-      fireEvent.click(calculateGasBtn);
-    });
+    fireEvent.click(calculateGasBtn);
 
     await waitFor(() => expect(gasLimitField).toHaveValue('2,400,000'));
 
     expect(calculateGas).toBeCalledTimes(1);
-    expect(calculateGas).toBeCalledWith('reply', TEST_API, formValues, expect.any(Object), META, null, MESSAGE_ID_1);
+    expect(calculateGas).toBeCalledWith(
+      'reply',
+      TEST_API,
+      formValues,
+      expect.any(Object),
+      REPLY_META,
+      null,
+      MESSAGE_ID_1
+    );
 
     // authorized submit
 

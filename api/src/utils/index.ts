@@ -4,3 +4,4 @@ export * from './json';
 export * from './types';
 export * from './prefixes';
 export * from './separator';
+export * from './validate';

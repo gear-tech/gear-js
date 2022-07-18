@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNFTs, useOwnerNFTs, useApprovedNFTs } from 'hooks';
-import { Loader } from 'components';
+import { InfoText, Loader } from 'components';
 import { FILTERS } from 'consts';
 import { useAccount } from '@gear-js/react-hooks';
 import { NFT } from './nft';
@@ -46,7 +46,7 @@ function Home() {
       {isEachNftLoaded ? (
         <>
           {isAnyNft && <ul className={styles.list}>{NFTs}</ul>}
-          {!isAnyNft && <p className={styles.text}>There are no NFTs at the moment.</p>}
+          {!isAnyNft && <InfoText text="There are no NFTs at the moment." />}
         </>
       ) : (
         <Loader />

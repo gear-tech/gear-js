@@ -1,11 +1,12 @@
-import { Metadata } from './types/interfaces';
-import { SendMessageError } from './errors';
-import { createPayload } from './utils';
-import { GearTransaction } from './Transaction';
-import { H256 } from '@polkadot/types/interfaces';
-import { AnyNumber, ISubmittableResult } from '@polkadot/types/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { PayloadType } from './types';
+import { H256 } from '@polkadot/types/interfaces';
+
+import { GasLimit, Metadata, PayloadType, Value } from './types';
+import { GearTransaction } from './Transaction';
+import { SendMessageError } from './errors';
+import { createPayload, validateGasLimit, validateValue } from './utils';
+
 export class GearMessage extends GearTransaction {
   /**
    * Send message
@@ -27,10 +28,13 @@ export class GearMessage extends GearTransaction {
    * ```
    */
   submit(
-    message: { destination: string | H256; payload: PayloadType; gasLimit: AnyNumber; value?: AnyNumber },
+    message: { destination: string | H256; payload: PayloadType; gasLimit: GasLimit; value?: Value },
     meta?: Metadata,
     messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    validateValue(message.value, this.api);
+    validateGasLimit(message.gasLimit, this.api);
+
     const payload = createPayload(this.createType, messageType || meta?.handle_input, message.payload, meta);
     try {
       this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);

@@ -1,12 +1,13 @@
 import { isHex, isString, isU8a, u8aToHex } from '@polkadot/util';
 import { Codec } from '@polkadot/types-codec/types';
-import { CreateType } from './create-type';
-import { Metadata } from './types/interfaces';
-import { Hex, PayloadType } from './types';
-import { GearApi } from './GearApi';
-import { createPayload } from './utils';
+
 import { GetGasSpentError } from './errors/program.errors';
-import { GasInfo } from './types/gear-core';
+import { Hex, PayloadType, Value } from './types';
+import { Metadata } from './types/interfaces';
+import { CreateType } from './create-type';
+import { createPayload } from './utils';
+import { GearApi } from './GearApi';
+import { GasInfo } from './types';
 
 export class GearGas {
   api: GearApi;
@@ -66,7 +67,7 @@ export class GearGas {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     meta?: Metadata,
   ): Promise<GasInfo>;
@@ -97,7 +98,7 @@ export class GearGas {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     typeOfPayload?: string,
   ): Promise<GasInfo>;
@@ -116,7 +117,7 @@ export class GearGas {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo>;
@@ -125,7 +126,7 @@ export class GearGas {
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
@@ -171,7 +172,7 @@ export class GearGas {
     sourceId: Hex,
     destinationId: Hex | Buffer,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     meta?: Metadata,
   ): Promise<GasInfo>;
@@ -203,7 +204,7 @@ export class GearGas {
     sourceId: Hex,
     destinationId: Hex | Buffer,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     typeOfPayload?: string,
   ): Promise<GasInfo>;
@@ -222,7 +223,7 @@ export class GearGas {
     sourceId: Hex,
     destinationId: Hex | Buffer,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo>;
@@ -231,7 +232,7 @@ export class GearGas {
     sourceId: Hex,
     destinationId: Hex,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
@@ -275,7 +276,7 @@ export class GearGas {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     meta?: Metadata,
   ): Promise<GasInfo>;
@@ -311,7 +312,7 @@ export class GearGas {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     typeOfPayload?: string,
   ): Promise<GasInfo>;
@@ -332,7 +333,7 @@ export class GearGas {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo>;
@@ -342,7 +343,7 @@ export class GearGas {
     messageId: Hex,
     exitCode: number,
     payload: PayloadType,
-    value?: number | string,
+    value?: Value,
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {

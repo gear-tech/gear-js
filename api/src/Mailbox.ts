@@ -1,10 +1,10 @@
-import { GearApi } from './GearApi';
-import { StoredMessage } from './types/interfaces';
-import { MailboxType, AccountId, Hex, MessageId } from './types';
-import { Option } from '@polkadot/types';
 import { AccountId32, H256 } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { Option } from '@polkadot/types';
+
+import { MailboxRecord, Hex, StoredMessage } from './types';
 import { GearClaimValue } from './Claim';
+import { GearApi } from './GearApi';
 
 export class GearMailbox {
   api: GearApi;
@@ -27,10 +27,10 @@ export class GearMailbox {
    * console.log(mailbox);
    * ```
    */
-  async read(accountId: Hex | AccountId32 | string, messageId?: Hex | H256): Promise<MailboxType> {
+  async read(accountId: Hex | AccountId32 | string, messageId?: Hex | H256): Promise<MailboxRecord[]> {
     if (messageId) {
       const mailbox = await this.api.query.gearMessenger.mailbox(accountId, messageId);
-      return mailbox.toHuman() as MailboxType;
+      return mailbox.toHuman() as MailboxRecord[];
     } else {
       const keys = await this.api.query.gearMessenger.mailbox.keys(accountId);
       if (keys.length === 0) {
@@ -41,10 +41,10 @@ export class GearMailbox {
       const mailbox = (await this.api.rpc.state.queryStorageAt(keysPaged)) as Option<StoredMessage>[];
       return mailbox.map((option, index) => {
         return [
-          keys[index].toHuman() as [AccountId, MessageId],
-          this.api.createType('GearCoreMessageStoredStoredMessage', option.unwrap()).toHuman() as unknown,
-        ];
-      }) as MailboxType;
+          keys[index].toHuman() as [Hex, Hex],
+          this.api.createType('GearCoreMessageStoredStoredMessage', option.unwrap()).toHuman(),
+        ] as MailboxRecord;
+      });
     }
   }
 }

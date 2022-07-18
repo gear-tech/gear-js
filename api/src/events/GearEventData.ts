@@ -1,9 +1,9 @@
 import { u32, u128, Vec, Option, BTreeMap, BTreeSet, GenericEventData, Bool } from '@polkadot/types';
 import { BlockNumber, AccountId32 } from '@polkadot/types/interfaces';
-import { QueuedDispatch, ProgramDetails } from '../types/interfaces';
+
+import { QueuedDispatch, ProgramDetails } from '../types';
 import {
   MessageId,
-  UserId,
   ProgramId,
   Entry,
   ProgramChangedKind,
@@ -14,7 +14,7 @@ import {
   CodeId,
   CodeChangeKind,
   UserMessageSentMessage,
-} from '../types/gear-core';
+} from '../types';
 
 export class GearEventData extends GenericEventData {
   constructor(data: GenericEventData) {
@@ -24,7 +24,7 @@ export class GearEventData extends GenericEventData {
 
 export interface MessageEnqueuedData extends GenericEventData {
   id: MessageId;
-  source: UserId;
+  source: AccountId32;
   destination: ProgramId;
   entry: Entry;
 }

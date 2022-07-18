@@ -1,4 +1,4 @@
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetMessagesParams } from '@gear-js/common';
@@ -65,7 +65,10 @@ export class MessageRepo {
     return this.messageRepo.remove(messages);
   }
 
-  public async updateMessage(where: FindOptionsWhere<Message>, partialEntity: QueryDeepPartialEntity<Message>) {
+  public async update(
+    where: FindOptionsWhere<Message>,
+    partialEntity: QueryDeepPartialEntity<Message>,
+  ): Promise<UpdateResult> {
     return this.messageRepo.update(where, partialEntity);
   }
 }

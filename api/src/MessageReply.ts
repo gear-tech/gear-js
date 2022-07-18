@@ -1,12 +1,11 @@
-import { AnyJson, AnyNumber, ISubmittableResult } from '@polkadot/types/types';
-import { H256, BalanceOf } from '@polkadot/types/interfaces';
+import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
+import { H256 } from '@polkadot/types/interfaces';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { u64 } from '@polkadot/types';
 
+import { Metadata, GasLimit, Value } from './types';
 import { GearTransaction } from './Transaction';
-import { Metadata } from './types/interfaces';
 import { SendReplyError } from './errors';
-import { createPayload } from './utils';
+import { createPayload, validateGasLimit, validateValue } from './utils';
 
 export class GearMessageReply extends GearTransaction {
   /**
@@ -33,12 +32,15 @@ export class GearMessageReply extends GearTransaction {
     message: {
       replyToId: H256 | string;
       payload: AnyJson;
-      gasLimit: u64 | AnyNumber;
-      value?: BalanceOf | AnyNumber;
+      gasLimit: GasLimit;
+      value?: Value;
     },
     meta?: Metadata,
     messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
+    validateValue(message.value, this.api);
+    validateGasLimit(message.gasLimit, this.api);
+
     const payload = createPayload(
       this.createType,
       messageType || meta?.async_handle_input || meta?.async_init_input,

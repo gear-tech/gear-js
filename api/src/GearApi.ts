@@ -2,13 +2,14 @@ import { SpRuntimeDispatchError } from '@polkadot/types/lookup';
 import { RegistryError } from '@polkadot/types-codec/types';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
+import { u128, u64 } from '@polkadot/types';
 
 import { GearMessageReply } from './MessageReply';
-import { GearApiOptions } from './types/interfaces';
 import { gearRpc, gearTypes } from './default';
 import { GearProgramState } from './State';
 import { GearWaitlist } from './Waitlist';
 import { GearClaimValue } from './Claim';
+import { GearApiOptions } from './types';
 import { GearProgram } from './Program';
 import { GearStorage } from './Storage';
 import { GearMailbox } from './Mailbox';
@@ -98,6 +99,21 @@ export class GearApi extends ApiPromise {
     return (await this.rpc.system.version()).toHuman();
   }
 
+  get existentialDeposit(): u128 {
+    return this.consts.balances.existentialDeposit;
+  }
+
+  get blockGasLimit(): u64 {
+    return this.consts.gearGas.blockGasLimit as u64;
+  }
+
+  get mailboxTreshold(): u64 {
+    return this.consts.gear.mailboxThreshold as u64;
+  }
+
+  get waitlistCost(): u64 {
+    return this.consts.gearScheduler.waitlistCost as u64;
+  }
   /**
    * Method provides opportunity to get informations about error occurs in ExtrinsicFailed event
    * @param event
@@ -105,7 +121,6 @@ export class GearApi extends ApiPromise {
    */
   getExtrinsicFailedError(event: Event): RegistryError {
     const error = event.data[0] as SpRuntimeDispatchError;
-
     const { isModule, asModule } = error;
     return isModule ? this.registry.findMetaError(asModule) : null;
   }

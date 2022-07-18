@@ -24,12 +24,17 @@ const FormPayload = (props: Props) => {
 
   const alert = useAlert();
 
-  const [field, meta, { setValue }] = useField<PayloadValue>(name);
+  const [field, meta, helpers] = useField<PayloadValue>(name);
 
   const jsonManualPayload = useRef<string>();
 
   const [isManualView, setIsManualView] = useState(!values);
   const [manualPayloadFile, setManualPayloadFile] = useState<File>();
+
+  const changeValue = (value: PayloadValue) => {
+    helpers.setError(undefined);
+    helpers.setValue(value, false);
+  };
 
   const handleViewChange = () => setIsManualView((prevState) => !prevState);
 
@@ -42,7 +47,7 @@ const FormPayload = (props: Props) => {
     resetFileData();
 
     if (values) {
-      setValue(values.manualPayload, false);
+      changeValue(values.manualPayload);
     }
   };
 
@@ -62,7 +67,7 @@ const FormPayload = (props: Props) => {
 
       const fileText = (await readTextFileAsync(file)) ?? '';
 
-      setValue(fileText);
+      changeValue(fileText);
       jsonManualPayload.current = fileText;
     } catch (error: unknown) {
       alert.error((error as Error).message);
@@ -76,7 +81,7 @@ const FormPayload = (props: Props) => {
 
     const payloadValue = isManualView ? jsonManualPayload.current ?? values.manualPayload : values.payload;
 
-    setValue(payloadValue, false);
+    changeValue(payloadValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isManualView]);
 

@@ -27,19 +27,23 @@ jobs:
 
       - name: Install dependencies and build @gear-js/api
         working-directory: api
-        run: npm ci
+        run: |
+          npm ci
+          npm run build
 
       - name: Prepare
         run: |
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
-          mkdir api/test/wasm/examples
-          wget -O api/test/wasm/examples/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           chmod +x gear-node
           ./gear-node --dev --tmp --pruning archive & sleep 10
 
-      - name: Unpack gear-examples
-        working-directory: api/test/wasm/examples
-        run: tar -xvf examples.tar.gz
+      - name: Download gear examples
+        working-directory: api/test/wasm
+        run: |
+          mkdir examples
+          cd examples
+          wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
+          tar -xvf examples.tar.gz
 
       - name: Run tests
         working-directory: api
@@ -49,8 +53,8 @@ jobs:
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
         working-directory: api/examples
         run: |
-          yarn install --no-immutable
-          yarn build
+          npm install --no-package-lock
+          npm run build
 
   publish-to-npm:
     if: github.event_name == 'push'
@@ -71,12 +75,17 @@ jobs:
           file-url: https://unpkg.com/@gear-js/api@latest/package.json
           static-checking: localIsNew
 
-      - name: Publish
-        if: steps.check.outputs.changed == 'true'
+      - name: Install dependencies and build @gear-js/api
         working-directory: api
         run: |
-          export token=$(printenv $(printenv GITHUB_ACTOR))
           npm ci
+          npm run build
+
+      - name: Publish
+        if: steps.check.outputs.changed == 'true'
+        working-directory: api/lib
+        run: |
+          export token=$(printenv $(printenv GITHUB_ACTOR))
           npm config set //registry.npmjs.org/:_authToken=$token
           npm publish
         env:

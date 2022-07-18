@@ -1,7 +1,7 @@
 {
   "name": "examples",
   "version": "1.0.0",
-  "description": "To run examples run",
+  "description": "Examples of using @gear-js/api library",
   "main": "meta.js",
   "scripts": {
     "build": "tsc",
@@ -13,7 +13,7 @@
     "code:submit": "ts-node src/program/submitCode.ts"
   },
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "dependencies": {
     "@gear-js/api": "file:../",
     "@polkadot/api": "8.9.1",

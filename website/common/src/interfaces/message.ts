@@ -1,3 +1,5 @@
+import { MESSAGE_READ_STATUS } from '../enums';
+
 interface IMessage {
   id: string;
   destination: string;
@@ -21,4 +23,9 @@ interface IMessagesDispatchedData {
   statuses: { [key: string]: 'Success' | 'Failed' };
 }
 
-export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData };
+interface IUserMessageReadData {
+  id: string;
+  reason: MESSAGE_READ_STATUS | null;
+}
+
+export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData, IUserMessageReadData };

@@ -1,4 +1,5 @@
-import { CreateType, GearApi, Hex, MessageWaitedData } from '../src';
+import { CreateType, GearApi, MessageWaitedData } from '../src';
+import { Hex } from '../src/types';
 import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
 import { TEST_WASM_DIR } from './config';
@@ -30,7 +31,7 @@ afterAll(async () => {
 });
 
 describe('GearWaitlist', () => {
-  test(`read program's waitlist`, async () => {
+  test("read program's waitlist", async () => {
     api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
     messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued')).id;
     const eventData = await messageWaited(messageId);
@@ -50,7 +51,7 @@ describe('GearWaitlist', () => {
     expect(waitlist[0].storedDispatch).toHaveProperty('context');
   });
 
-  test(`read program's waitlist with messageId`, async () => {
+  test("read program's waitlist with messageId", async () => {
     const waitlist = await api.waitlist.read(programId, messageId);
     expect(waitlist).toHaveProperty('blockNumber');
     expect(waitlist).toHaveProperty('storedDispatch');
@@ -59,19 +60,19 @@ describe('GearWaitlist', () => {
     expect(waitlist.storedDispatch).toHaveProperty('context');
   });
 
-  test(`send one more message and read program's waitlist`, async () => {
+  test("send one more message and read program's waitlist", async () => {
     api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
     messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued'))[0];
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(2);
   });
 
-  test(`read waitlist of non-program address`, async () => {
+  test('read waitlist of non-program address', async () => {
     const waitlist = await api.waitlist.read(CreateType.create('[u8;32]', 0).toHex());
     expect(waitlist).toHaveLength(0);
   });
 
-  test(`read program's waitlist with incorrect messageId`, async () => {
+  test("read program's waitlist with incorrect messageId", async () => {
     const waitlist = await api.waitlist.read(programId, CreateType.create('[u8;32]', 0).toHex());
     expect(waitlist).toBeNull();
   });
