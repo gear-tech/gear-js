@@ -10,7 +10,7 @@ import styles from './Item.module.scss';
 type Props = {
   id: Hex;
   name: string;
-  ownerId: Hex;
+  ownerId: string;
 };
 
 function Item({ id, name, ownerId }: Props) {

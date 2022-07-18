@@ -1,8 +1,9 @@
-import { useReadState, useSendMessage, useAccount } from '@gear-js/react-hooks';
-import { useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { useReadState, useSendMessage, useAccount, useApi } from '@gear-js/react-hooks';
 import { routerMetaWasm } from 'assets/wasm';
-import { ADDRESS } from 'consts';
-import { Params, Channel, Hex } from 'types';
+import { ADDRESS, GENESIS } from 'consts';
+import { ServerRPCRequestService } from 'services';
+import { Params, Channel, Hex, Message } from 'types';
 import { useParams } from 'react-router-dom';
 import { AnyJson } from '@polkadot/types/types';
 
@@ -10,10 +11,12 @@ type ChannelState = { Channel: Channel };
 type ChannelsState = { AllChannels: Channel[] };
 type SubscriptionState = { SubscribedToChannels: Hex[] };
 
-function useChannelState<T>(payload: AnyJson) {
+// Router State wrapper
+function useRouterState<T>(payload: AnyJson) {
   return useReadState<T>(ADDRESS.ROUTER_CONTRACT, routerMetaWasm, payload);
 }
 
+// Router message wrapper
 function useRouterMessage() {
   return useSendMessage(ADDRESS.ROUTER_CONTRACT, routerMetaWasm);
 }
@@ -22,14 +25,14 @@ function useChannel() {
   const { id } = useParams() as Params;
   const payload = useMemo(() => ({ Channel: id }), [id]);
 
-  const { state } = useChannelState<ChannelState>(payload);
+  const { state } = useRouterState<ChannelState>(payload);
 
   return state?.Channel;
 }
 
 function useChannels() {
   const payload = useMemo(() => ({ AllChannels: null }), []);
-  const { state } = useChannelState<ChannelsState>(payload);
+  const { state } = useRouterState<ChannelsState>(payload);
 
   return state?.AllChannels;
 }
@@ -39,9 +42,33 @@ function useSubscriptions() {
   const actorId = account?.decodedAddress;
   const payload = useMemo(() => ({ SubscribedToChannels: actorId }), [actorId]);
 
-  const { state } = useChannelState<SubscriptionState>(payload);
+  const { state } = useRouterState<SubscriptionState>(payload);
 
   return state?.SubscribedToChannels;
+}
+
+function useMessages() {
+  const [messages, setMessages] = useState<Message[] | null>();
+  const [isStateRead, setIsStateRead] = useState(false);
+  const apiRequest = new ServerRPCRequestService();
+
+  const readState = () => {
+    setIsStateRead(!isStateRead)
+  }
+
+  const { id } = useParams() as Params;
+  const { api } = useApi();
+
+  useEffect(() => {
+    apiRequest
+      .getResource('program.meta.get', { programId: id, chain: 'Workshop', genesis: GENESIS })
+      .then(({ result: { metaFile } }) => Buffer.from(metaFile, 'base64'))
+      .then((buffer) => api.programState.read(id, buffer))
+      .then((state) => setMessages(state.toHuman() as Message[]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isStateRead]);
+
+  return { messages, readState };
 }
 
 function useSubscribreActions() {
@@ -50,8 +77,6 @@ function useSubscribreActions() {
 
   const subscribe = (onSuccess: () => void) => {
     const payload = { AddSubscriberToChannel: id };
-
-    console.log(payload)
 
     sendMessage(payload, { onSuccess });
   };
@@ -65,4 +90,4 @@ function useSubscribreActions() {
   return { subscribe, unsubscribe };
 }
 
-export { useChannel, useChannels, useSubscriptions, useSubscribreActions };
+export { useChannel, useChannels, useSubscriptions, useSubscribreActions, useMessages };

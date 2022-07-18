@@ -1,14 +1,19 @@
 import { Hex } from '@gear-js/api';
 
 type Params = {
-  id: string;
+  id: Hex;
 };
 
 type Channel = {
   id: Hex;
   name: string;
-  ownerId: Hex;
+  ownerId: string;
   description: string;
 };
 
-export type { Params, Channel, Hex };
+type Message = {
+  text: string;
+  timestamp: string;
+};
+
+export type { Params, Channel, Hex, Message };

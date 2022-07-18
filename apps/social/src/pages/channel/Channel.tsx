@@ -3,13 +3,14 @@ import { Loader, OnLogin } from 'components';
 import { toShortAddress } from 'utils';
 import { useAccount } from '@gear-js/react-hooks';
 import { SubscribeAction, MessageAction } from './actions';
+import { Messages } from './messages';
 
 import styles from './Channel.module.scss';
 
 function Channel() {
   const { account } = useAccount();
   const channel = useChannel();
-  
+
   const { name, description, ownerId } = channel || {};
   const isOwner = account?.decodedAddress === ownerId;
 
@@ -26,6 +27,7 @@ function Channel() {
           <div className={styles.buttons}>
             <OnLogin>{isOwner ? <MessageAction /> : <SubscribeAction />}</OnLogin>
           </div>
+          {ownerId && <Messages ownerId={ownerId}/>}
         </>
       ) : (
         <Loader />
