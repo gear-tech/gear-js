@@ -27,7 +27,7 @@ import {
   IUserMessageSentKafkaValue,
   MESSAGE_TYPE,
   ProgramDataResult,
-  UpdateMessageParams,
+  UpdateMessagesParams,
 } from '@gear-js/common';
 
 import { Result } from './types';
@@ -112,8 +112,8 @@ export class ConsumerService {
     },
   };
 
-  async updateMessage(params: UpdateMessageParams): Result<void> {
-    await this.messageService.updateData(params);
+  async updateMessages(params: UpdateMessagesParams): Result<void> {
+    await this.messageService.updateMessagesData(params);
   }
 
   @FormResponse
