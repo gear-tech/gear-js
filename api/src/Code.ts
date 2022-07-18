@@ -4,7 +4,7 @@ import { Bytes, Option } from '@polkadot/types';
 
 import { GearTransaction } from './Transaction';
 import { generateCodeHash, validateCodeId } from './utils';
-import { CodeMetadata, Hex } from './types';
+import { CodeMetadata, CodeStorage, Hex } from './types';
 export class GearCode extends GearTransaction {
   /**
    * Submit code without initialization
@@ -23,5 +23,14 @@ export class GearCode extends GearTransaction {
   async exists(codeId: string) {
     const codeMetadata = await this.api.query.gearProgram.metadataStorage(codeId) as Option<CodeMetadata>;
     return codeMetadata.isSome;
+  }
+
+  async storage(codeId: Hex): Promise<CodeStorage> {
+    return this.api.query.gearProgram.codeStorage(codeId) as unknown as CodeStorage;
+  }
+
+  async staticPages(codeId: Hex): Promise<number | null> {
+    const storage = await this.storage(codeId);
+    return storage.isSome ? storage.unwrap().staticPages.toNumber() : null;
   }
 }
