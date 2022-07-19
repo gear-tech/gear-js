@@ -1,4 +1,4 @@
-FROM node:16-alpine AS builder
+FROM node:18-alpine AS builder
 WORKDIR /frontend
 ARG REACT_APP_API_URL \
     REACT_APP_NODE_ADDRESS \
