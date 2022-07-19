@@ -46,6 +46,15 @@
   font-size: $fontSizeMedium;
 }
 
+.countdown {
+  flex-direction: row;
+  align-items: center;
+
+  .key {
+    margin-right: 20px;
+  }
+}
+
 .prices {
   display: flex;
   margin-bottom: 50px;
