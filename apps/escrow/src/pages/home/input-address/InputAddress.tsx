@@ -20,7 +20,7 @@ function InputAddress({ label, onSubmit }: Props) {
   const form = useForm({ initialValues, validate });
   const { getInputProps, errors, setFieldError } = form;
 
-  const handleProgramSubmit = async (address: Hex) => {
+  const handleSubmit = async (address: Hex) => {
     const isProgram = await api.program.is(address);
 
     if (isProgram) {
@@ -30,10 +30,8 @@ function InputAddress({ label, onSubmit }: Props) {
     }
   };
 
-  const submitHandler = label === 'Program address' ? handleProgramSubmit : onSubmit;
-
   return (
-    <form onSubmit={form.onSubmit(({ address }) => submitHandler(address))}>
+    <form onSubmit={form.onSubmit(({ address }) => handleSubmit(address))}>
       <div>
         <Input label={label} {...getInputProps('address')} />
         <p className={styles.error}>{errors.address}</p>

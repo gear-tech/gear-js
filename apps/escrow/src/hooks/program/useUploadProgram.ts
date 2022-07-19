@@ -68,20 +68,12 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
 
           case 'MessagesDispatched': {
             const mdEvent = event as MessagesDispatched;
-
-            mdEvent.data.statuses.forEach(
-              (status, id) => id.eq(messageId) && status.isFailed && resolve(ProgramStatus.Failed),
-            );
-
-            break;
-          }
-
-          case 'ProgramChanged': {
-            const pcEvent = event as ProgramChanged;
-
-            if (pcEvent.data.id.eq(programId) && pcEvent.data.change.isActive) {
-              resolve(ProgramStatus.Success);
-            }
+            mdEvent.data.statuses.forEach(({ isFailed, isSuccess }, id) => {
+              if (id.eq(messageId)) {
+                if (isFailed) resolve(ProgramStatus.Failed);
+                if (isSuccess) resolve(ProgramStatus.Success);
+              }
+            });
 
             break;
           }
