@@ -39,6 +39,7 @@
       "always"
     ],
     "object-curly-spacing": ["error", "always"],
+    "max-len": ["error", { "code": 120, "tabWidth": 2 }],
     "eol-last": "error",
     "@typescript-eslint/no-empty-function": 0,
     "no-case-declarations": 0,

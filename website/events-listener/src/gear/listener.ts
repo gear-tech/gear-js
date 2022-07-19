@@ -8,7 +8,10 @@ import { handleBlockExtrinsics } from './block-extrinsics-handler';
 import { UpdateBlockExtrinsics } from './types';
 import { sleep } from '../utils';
 
-export const listen = (api: GearApi, genesis: string,  callback: (arg: { key?: string; params: any; method: API_METHODS }) => void,) => {
+export const listen = (
+  api: GearApi,
+  genesis: string,
+  callback: (arg: { key?: string; params: any; method: API_METHODS }) => void) => {
   return api.query.system.events(async (events) => {
     const blockHash = events.createdAtHash!.toHex();
 
