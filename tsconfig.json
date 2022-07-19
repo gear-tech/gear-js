@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "noEmit": true,
     "skipLibCheck": true,
-    "outDir": "dist",
+    "outDir": "./dist",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "removeComments": true,
