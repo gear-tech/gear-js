@@ -1,3 +1,15 @@
+## 0.24.0
+
+_07/19/2022_
+
+https://github.com/gear-tech/gear-js/pull/848
+
+### Changes
+
+- Update `reply` field in data of `UserMessageSent` event
+  _Type of `reply` field is Struct with fields `replyTo` and `exitCode` intead of Tuple from now on_
+
+---
 ## 0.23.6
 
 _07/19/2022_

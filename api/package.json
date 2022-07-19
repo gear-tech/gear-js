@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/api",
-  "version": "0.23.6",
+  "version": "0.24.0",
   "description": "A JavaScript library that provides functionality to connect GEAR Component APIs.",
   "main": "cjs/index.js",
   "module": "index.js",
@@ -24,8 +24,8 @@
     "test": "jest --runInBand",
     "prebuild": "rm -rf lib",
     "build": "rollup --config rollup.config.js",
-    "lint": "eslint ./src/**/*.ts ./test/**/*.ts",
-    "lint:fix": "eslint --fix ./src/**/*.ts ./test/**/*.ts"
+    "lint": "eslint ./src/**/*.ts ./test/**/*.ts ./examples/**/*.ts",
+    "lint:fix": "eslint --fix ./src/**/*.ts ./test/**/*.ts, ./examples/**/*.ts"
   },
   "exports": {
     "./cjs/package.json": "./cjs/package.json",
