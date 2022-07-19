@@ -75,6 +75,7 @@ jobs:
           cmd: install
 
       - name: Build common package
+        if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
         run: yarn build:common
 
       - name: Run data-storage tests
@@ -85,8 +86,7 @@ jobs:
       - name: Run frontend tests
         if: steps.check_file_changed.outputs.frontend_changed == 'True'
         working-directory: 'website/frontend'
-        run: |
-          yarn test
+        run: yarn test
 
   wait-previous-run:
     needs: [run-unit-tests]
