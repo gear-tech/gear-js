@@ -1,37 +1,34 @@
-import { createPayloadTypeStructure, CreateType, decodeHexTypes, getWasmMetadata, Metadata } from '../src';
+import { createPayloadTypeStructure, CreateType, decodeHexTypes, getWasmMetadata, Hex, Metadata } from '../src';
 import { TEST_WASM_DIR } from './config';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
 describe('Create type structure test', () => {
-  let types: any;
-  beforeAll(() => {
-    types = {
-      Action: {
-        _enum: {
-          AVariant: 'AStruct',
-          BVar: 'Option<CustomStructU8>',
-          CVariant: 'BTreeMap<Text, u8>',
-        },
+  const types = {
+    Action: {
+      _enum: {
+        AVariant: 'AStruct',
+        BVar: 'Option<CustomStructU8>',
+        CVariant: 'BTreeMap<Text, u8>',
       },
-      AStruct: { id: 'Bytes', online: 'bool' },
-      CustomStructU8: { field: 'u8' },
-      CustomStructOption: { field: 'Option<(Option<u8>,u128,[u8;3])>' },
-      FungibleTokenAction: {
-        _enum: {
-          Mint: 'u128',
-          Burn: 'u128',
-          Transfer: '{"from":"ActorId","to":"ActorId","amount":"u128"}',
-          Approve: '{"to":"ActorId","amount":"u128"}',
-          TotalSupply: 'Null',
-          BalanceOf: 'ActorId',
-        },
+    },
+    AStruct: { id: 'Bytes', online: 'bool' },
+    CustomStructU8: { field: 'u8' },
+    CustomStructOption: { field: 'Option<(Option<u8>,u128,[u8;3])>' },
+    FungibleTokenAction: {
+      _enum: {
+        Mint: 'u128',
+        Burn: 'u128',
+        Transfer: '{"from":"ActorId","to":"ActorId","amount":"u128"}',
+        Approve: '{"to":"ActorId","amount":"u128"}',
+        TotalSupply: 'Null',
+        BalanceOf: 'ActorId',
       },
-      GenericInStruct:
-        '{"nftContractId":"ActorId","ftContractId":"Option<ActorId>","tokenId":"U256","price":"Option<u128>"}',
-      TupleInStruct: '{"nftContractId":"ActorId","someTuple":"(u128, String)"}',
-    };
-  });
+    },
+    GenericInStruct:
+      '{"nftContractId":"ActorId","ftContractId":"Option<ActorId>","tokenId":"U256","price":"Option<u128>"}',
+    TupleInStruct: '{"nftContractId":"ActorId","someTuple":"(u128, String)"}',
+  };
   test('Enum', () => {
     expect(createPayloadTypeStructure('Action', types)).toEqual({
       type: 'Enum',
@@ -427,7 +424,7 @@ describe('BTreeSet test', () => {
   });
 
   test('decodeHexTypes will not fail', () => {
-    expect(decodeHexTypes(metadata.types)).toEqual({
+    expect(decodeHexTypes(metadata.types as Hex)).toEqual({
       ActorId: '[u8;32]',
       TestBTreeSet: { first: 'BTreeSet<ActorId>', second: 'BTreeSet<u8>' },
     });
@@ -450,5 +447,47 @@ describe('BTreeSet test', () => {
       first: ['0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6'],
       second: ['1', '2', '3'],
     });
+  });
+});
+
+
+describe('Simple enum test', () => {
+  const types = '0x4000082861756374696f6e5f696f28496e6974436f6e6669670000000004082861756374696f6e5f696f18416374696f6e00010c0c427579000000184372656174650400080130437265617465436f6e66696700010024466f72636553746f700002000008082861756374696f6e5f696f30437265617465436f6e66696700001801546e66745f636f6e74726163745f6163746f725f69640c011c4163746f72496400012c746f6b656e5f6f776e65720c011c4163746f724964000120746f6b656e5f6964180110553235360001387374617274696e675f707269636524011075313238000134646973636f756e745f72617465240110753132380001206475726174696f6e2801204475726174696f6e00000c10106773746418636f6d6d6f6e287072696d6974697665731c4163746f724964000004001001205b75383b2033325d00001000000320000000140014000005030018083c7072696d69746976655f74797065731055323536000004001c01205b7536343b20345d00001c00000304000000200020000005060024000005070028082861756374696f6e5f696f204475726174696f6e00000c01106461797320010c753634000114686f75727320010c75363400011c6d696e7574657320010c75363400002c082861756374696f6e5f696f144576656e740001083841756374696f6e537461727465640c012c746f6b656e5f6f776e65720c011c4163746f724964000114707269636524011075313238000120746f6b656e5f6964180110553235360000003441756374696f6e53746f70656408012c746f6b656e5f6f776e65720c011c4163746f724964000120746f6b656e5f69641801105532353600010000300c3464757463685f61756374696f6e14737461746514537461746500010c28546f6b656e507269636500000020497341637469766500010010496e666f00020000340c3464757463685f61756374696f6e1473746174652853746174655265706c7900010c28546f6b656e50726963650400240110753132380000002049734163746976650400380110626f6f6c00010010496e666f04003c012c41756374696f6e496e666f000200003800000500003c0c3464757463685f61756374696f6e1473746174652c41756374696f6e496e666f00001001546e66745f636f6e74726163745f6163746f725f69640c011c4163746f724964000120746f6b656e5f69641801105532353600012c746f6b656e5f6f776e65720c011c4163746f7249640001387374617274696e675f7072696365240110753132380000';
+  test('State (from types of dutch auction)', () => {
+    const decodedTypes = decodeHexTypes(types);
+    const structure = createPayloadTypeStructure('State', decodedTypes);
+    expect(structure).toEqual(
+      {
+        'type': 'Enum',
+        'name': 'State',
+        'value': {
+          'TokenPrice': {
+            'type': 'Primitive',
+            'name': 'Null',
+            'value': 'Null'
+          },
+          'IsActive': {
+            'type': 'Primitive',
+            'name': 'Null',
+            'value': 'Null'
+          },
+          'Info': {
+            'type': 'Primitive',
+            'name': 'Null',
+            'value': 'Null'
+          }
+        }
+      }
+    );
+    expect(CreateType.create('State', { 'TokenPrice': null }, { types }).toHex()).toBe('0x00');
+  });
+  test('Raw State (from types of dutch auction)', () => {
+    const decodedTypes = decodeHexTypes(types);
+    const structure = createPayloadTypeStructure('State', decodedTypes, true);
+    expect(structure).toEqual(
+      {
+        '_enum': { 'TokenPrice': 'Null', 'IsActive': 'Null', 'Info': 'Null' }
+      }
+    );
   });
 });

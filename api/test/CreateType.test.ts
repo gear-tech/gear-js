@@ -1,4 +1,4 @@
-import { CreateType, getWasmMetadata, decodeHexTypes } from '../src';
+import { CreateType, getWasmMetadata, decodeHexTypes, Hex } from '../src';
 import yaml from 'js-yaml';
 import fs from 'fs';
 import { join } from 'path';
@@ -15,7 +15,7 @@ describe('Create type test', () => {
       for (const type in testFile.types) {
         expect(meta[type]).toBe(testFile.types[type]);
       }
-      expect(decodeHexTypes(meta.types)).toEqual(testFile.displayed_types);
+      expect(decodeHexTypes(meta.types as Hex)).toEqual(testFile.displayed_types);
       const createType = new CreateType();
       const encode = testFile.payloads.encode;
       for (const payloadType in encode) {
