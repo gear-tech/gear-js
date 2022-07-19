@@ -83,9 +83,15 @@ function getIfEnum(typeName: string, types: AnyJson, raw: boolean): TypeTree | {
     if (Object.keys(types[typeName]).length === 1 && Object.keys(types[typeName]).includes('_enum')) {
       const type = types[typeName];
       const value: any = {};
-      Object.keys(type['_enum']).forEach((field) => {
-        value[field] = createPayloadTypeStructure(type['_enum'][field], types, raw);
-      });
+      if (Array.isArray(type['_enum'])) {
+        type['_enum'].forEach((field) => {
+          value[field] = createPayloadTypeStructure('Null', types, raw);
+        });
+      } else {
+        Object.keys(type['_enum']).forEach((field) => {
+          value[field] = createPayloadTypeStructure(type['_enum'][field], types, raw);
+        });
+      }
       return raw ? { _enum: value } : generate.Enum(typeName, value);
     }
   }
