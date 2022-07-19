@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 
 import { apiGatewayRouter } from './routes/api-gateway/api-gateway.router';
 import { healthcheckRouter } from './routes/healthcheck/healthcheck.router';
