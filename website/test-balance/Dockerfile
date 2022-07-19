@@ -2,6 +2,7 @@ FROM node:16-alpine
 WORKDIR /src
 COPY package.json .
 COPY yarn.lock .
+COPY tsconfig.json .
 COPY .yarn .yarn
 COPY .yarnrc.yml .
 COPY ./website/common website/common

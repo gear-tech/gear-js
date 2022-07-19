@@ -14,6 +14,8 @@
     "run:event-listener": "yarn workspace @gear-js/event-listener start:dev",
     "run:api-gateway": "yarn workspace @gear-js/api-gateway start:dev",
     "run:data-storage": "yarn workspace @gear-js/data-storage start:dev",
+    "test:data-storage": "yarn workspace @gear-js/data-storage test",
+    "test:frontend": "yarn workspace @gear-js/frontend test",
     "postinstall": "husky install"
   },
   "devDependencies": {
@@ -33,6 +35,7 @@
   ],
   "lint-staged": {
     "*.{js,css,ts,tsx,scss}": "eslint --fix",
+    "./website/frontend/src/*.{js,css,ts,tsx,scss}": "cd website/frontend && yarn lint:fix",
     "./api/*.{js,ts}": "cd api && npm run lint:fix"
   },
   "resolutions": {
