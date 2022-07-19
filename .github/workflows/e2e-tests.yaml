@@ -66,7 +66,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: 17
           cache: yarn
 
       - name: Install dependencies
@@ -80,13 +80,11 @@ jobs:
 
       - name: Run data-storage tests
         if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
-        working-directory: 'website/data-storage'
-        run: yarn test
+        run: yarn test:data-storage
 
       - name: Run frontend tests
         if: steps.check_file_changed.outputs.frontend_changed == 'True'
-        working-directory: 'website/frontend'
-        run: yarn test
+        run: yarn test:frontend
 
   wait-previous-run:
     needs: [run-unit-tests]
