@@ -24,8 +24,8 @@
     "test": "jest --runInBand",
     "prebuild": "rm -rf lib",
     "build": "rollup --config rollup.config.js",
-    "lint": "eslint ./src --ext .ts",
-    "lint:fix": "eslint --fix ./src --ext .ts"
+    "lint": "eslint ./src/**/*.ts ./test/**/*.ts",
+    "lint:fix": "eslint --fix ./src/**/*.ts ./test/**/*.ts"
   },
   "exports": {
     "./cjs/package.json": "./cjs/package.json",

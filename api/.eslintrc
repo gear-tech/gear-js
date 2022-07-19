@@ -18,6 +18,14 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "semi": [
+      "error",
+      "always"
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ],
     "indent": [
       "warn",
       2,
@@ -34,11 +42,8 @@
       "warn",
       "single"
     ],
-    "semi": [
-      "error",
-      "always"
-    ],
     "@typescript-eslint/no-empty-function": 0,
-    "no-case-declarations": 0
+    "no-case-declarations": 0,
+    "eol-last": "error"
   }
 }

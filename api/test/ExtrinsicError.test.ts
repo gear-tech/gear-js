@@ -1,4 +1,4 @@
-import { GearKeyring, GearApi } from '../src';
+import { GearApi } from '../src';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { RegistryError } from '@polkadot/types-codec/types';
 import { getAccount, sleep } from './utilsFunctions';
