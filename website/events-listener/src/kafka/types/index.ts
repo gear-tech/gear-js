@@ -1,10 +1,8 @@
-import { API_METHODS, UpdateMessageParams } from '@gear-js/common';
-
-type KafkaParams = UpdateMessageParams;
+import { API_METHODS, UpdateMessageData } from '@gear-js/common';
 
 interface SendByKafkaTopicInput {
   method: API_METHODS;
-  params: string | KafkaParams;
+  params: UpdateMessageData[];
   genesis?: string;
   key?: string;
 }
