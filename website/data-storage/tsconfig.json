@@ -4,6 +4,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "strict": false
+    "strict": false,
+    "incremental": true,
+    "target": "es2017"
   }
 }
