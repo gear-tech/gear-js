@@ -4,6 +4,7 @@ import config from '../config/configuration';
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { changeStatus } from '../routes/healthcheck/healthcheck.router';
 import { listen } from './listener';
+import { kafkaProducer } from '../kafka/producer';
 
 export async function connectToGearNode() {
   const api: GearApi = new GearApi({
@@ -23,7 +24,9 @@ export async function connectToGearNode() {
 
   eventListenerLogger.info(`Connected to ${chain} with genesis ${genesis}`);
 
-  const unsub = await listen(api, genesis);
+  const unsub = await listen(api, genesis, ({ key, params, method }) => {
+    kafkaProducer.send({ key, params, genesis, method });
+  });
 
   return new Promise((resolve) => {
     api.on('error', (error) => {

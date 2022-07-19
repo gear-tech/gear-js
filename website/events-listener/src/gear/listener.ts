@@ -6,9 +6,9 @@ import { eventListenerLogger } from '../common/event-listener.logger';
 import { handleEvent } from './event-handlers';
 import { handleBlockExtrinsics } from './block-extrinsics-handler';
 import { UpdateBlockExtrinsics } from './types';
-import { kafkaProducer } from '../kafka/producer';
+import { sleep } from '../utils';
 
-export const listen = (api: GearApi, genesis: string) => {
+export const listen = (api: GearApi, genesis: string,  callback: (arg: { key?: string; params: any; method: API_METHODS }) => void,) => {
   return api.query.system.events(async (events) => {
     const blockHash = events.createdAtHash!.toHex();
 
@@ -29,12 +29,11 @@ export const listen = (api: GearApi, genesis: string) => {
     } of events) {
       try {
         const eventData = handleEvent(method as GEAR_EVENT, data as GenericEventData);
-        eventData &&
-          (await kafkaProducer.send({
-            key: eventData.key,
-            params: { ...eventData.value, ...base },
-            method: API_METHODS.EVENTS,
-          }));
+        eventData && callback({
+          key: eventData.key,
+          params: { ...eventData.value, ...base },
+          method: API_METHODS.EVENTS,
+        });
       } catch (error) {
         eventListenerLogger.error({ method, data: data.toHuman() });
         eventListenerLogger.error(error);
@@ -48,7 +47,8 @@ export const listen = (api: GearApi, genesis: string) => {
       status: extrinsicStatus,
     };
 
-    const { params } = await handleBlockExtrinsics(updateBlockExtrinsics);
-    await kafkaProducer.send({ params, method: API_METHODS.MESSAGE_UPDATE_DATA });
+    const { params } = handleBlockExtrinsics(updateBlockExtrinsics);
+    await sleep(1000);
+    callback({ params, method: API_METHODS.MESSAGE_UPDATE_DATA });
   });
 };
