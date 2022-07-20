@@ -1,3 +1,14 @@
+## 0.23.6
+
+_07/19/2022_
+
+https://github.com/gear-tech/gear-js/pull/845
+
+### Changes
+
+- Adjust simple enum generation
+
+---
 ## 0.23.5
 
 _07/18/2022_
