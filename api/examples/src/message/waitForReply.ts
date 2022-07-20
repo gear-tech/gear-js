@@ -11,7 +11,7 @@ export function waitForReply(api: GearApi, programId: string): (messageId: strin
           },
         } = event as UserMessageSent;
         if (source.eq(programId) && reply.isSome) {
-          messages[reply.unwrap()[0].toHex()] = event as UserMessageSent;
+          messages[reply.unwrap().replyTo.toHex()] = event as UserMessageSent;
         }
       }
     });

@@ -31,7 +31,7 @@ afterAll(async () => {
 });
 
 describe('GearWaitlist', () => {
-  test("read program's waitlist", async () => {
+  test('read program\'s waitlist', async () => {
     api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
     messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued')).id;
     const eventData = await messageWaited(messageId);
@@ -43,24 +43,26 @@ describe('GearWaitlist', () => {
     expect(eventData).toHaveProperty('origin');
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(1);
-    expect(waitlist[0].programId).toBe(programId);
-    expect(waitlist[0].messageId).toBe(messageId);
-    expect(waitlist[0].blockNumber).toBeDefined();
-    expect(waitlist[0].storedDispatch).toHaveProperty('kind');
-    expect(waitlist[0].storedDispatch).toHaveProperty('message');
-    expect(waitlist[0].storedDispatch).toHaveProperty('context');
+    expect(waitlist[0]).toHaveProperty('toHuman');
+    expect(waitlist[0].toHuman()).toHaveLength(2);
+    expect(waitlist[0][0]).toHaveProperty('kind');
+    expect(waitlist[0][0]).toHaveProperty('message');
+    expect(waitlist[0][0]).toHaveProperty('context');
+    expect(waitlist[0][1]).toHaveProperty('start');
+    expect(waitlist[0][1]).toHaveProperty('finish');
   });
 
-  test("read program's waitlist with messageId", async () => {
+  test('read program\'s waitlist with messageId', async () => {
     const waitlist = await api.waitlist.read(programId, messageId);
-    expect(waitlist).toHaveProperty('blockNumber');
-    expect(waitlist).toHaveProperty('storedDispatch');
-    expect(waitlist.storedDispatch).toHaveProperty('kind');
-    expect(waitlist.storedDispatch).toHaveProperty('message');
-    expect(waitlist.storedDispatch).toHaveProperty('context');
+    expect(waitlist).toHaveLength(2);
+    expect(waitlist[0]).toHaveProperty('kind');
+    expect(waitlist[0]).toHaveProperty('message');
+    expect(waitlist[0]).toHaveProperty('context');
+    expect(waitlist[1]).toHaveProperty('start');
+    expect(waitlist[1]).toHaveProperty('finish');
   });
 
-  test("send one more message and read program's waitlist", async () => {
+  test('send one more message and read program\'s waitlist', async () => {
     api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
     messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued'))[0];
     const waitlist = await api.waitlist.read(programId);
@@ -72,7 +74,7 @@ describe('GearWaitlist', () => {
     expect(waitlist).toHaveLength(0);
   });
 
-  test("read program's waitlist with incorrect messageId", async () => {
+  test('read program\'s waitlist with incorrect messageId', async () => {
     const waitlist = await api.waitlist.read(programId, CreateType.create('[u8;32]', 0).toHex());
     expect(waitlist).toBeNull();
   });
