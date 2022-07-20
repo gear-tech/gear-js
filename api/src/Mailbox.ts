@@ -1,8 +1,8 @@
-import { AccountId32, H256 } from '@polkadot/types/interfaces';
+import { AccountId32 } from '@polkadot/types/interfaces';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { Option } from '@polkadot/types';
 
-import { MailboxRecord, Hex, StoredMessage } from './types';
+import { Hex, MailboxItem } from './types';
 import { GearClaimValue } from './Claim';
 import { GearApi } from './GearApi';
 
@@ -16,6 +16,9 @@ export class GearMailbox {
     this.claimValue = gearApi.claimValueFromMailbox;
   }
 
+  async read(accountId: Hex, numberOfMessages?: number): Promise<MailboxItem[]>;
+
+  async read(accountId: Hex, messageId: Hex): Promise<MailboxItem>;
   /**
    * Read mailbox
    * @param accountId
@@ -27,23 +30,34 @@ export class GearMailbox {
    * console.log(mailbox);
    * ```
    */
-  async read(accountId: Hex | AccountId32 | string, messageId?: Hex | H256): Promise<MailboxRecord[]> {
+  async read(
+    accountId: Hex | AccountId32 | string,
+    messageIdOrNumberOfMessages?: Hex | number,
+  ): Promise<MailboxItem[] | MailboxItem> {
+    const [messageId, numberOfMessages] =
+      typeof messageIdOrNumberOfMessages === 'string'
+        ? [messageIdOrNumberOfMessages, undefined]
+        : [undefined, messageIdOrNumberOfMessages || 1000];
     if (messageId) {
       const mailbox = await this.api.query.gearMessenger.mailbox(accountId, messageId);
-      return mailbox.toHuman() as MailboxRecord[];
+      const typedMailbox = this.api.createType(
+        'Option<(GearCoreMessageStoredStoredMessage, GearCommonStoragePrimitivesInterval)>',
+        mailbox,
+      ) as Option<MailboxItem>;
+      return typedMailbox.unwrapOr(null);
     } else {
-      const keys = await this.api.query.gearMessenger.mailbox.keys(accountId);
-      if (keys.length === 0) {
+      const keyPrefixes = this.api.query.gearMessenger.mailbox.keyPrefix(accountId);
+      const keysPaged = await this.api.rpc.state.getKeysPaged(keyPrefixes, numberOfMessages, keyPrefixes);
+      if (keysPaged.length === 0) {
         return [];
       }
-      const keyPrefixes = this.api.query.gearMessenger.mailbox.keyPrefix(accountId);
-      const keysPaged = await this.api.rpc.state.getKeysPaged(keyPrefixes, 1000, keyPrefixes);
-      const mailbox = (await this.api.rpc.state.queryStorageAt(keysPaged)) as Option<StoredMessage>[];
-      return mailbox.map((option, index) => {
-        return [
-          keys[index].toHuman() as [Hex, Hex],
-          this.api.createType('GearCoreMessageStoredStoredMessage', option.unwrap()).toHuman(),
-        ] as MailboxRecord;
+      const mailbox = (await this.api.rpc.state.queryStorageAt(keysPaged)) as Option<MailboxItem>[];
+      return mailbox.map((item) => {
+        const typedItem = this.api.createType(
+          'Option<(GearCoreMessageStoredStoredMessage, GearCommonStoragePrimitivesInterval)>',
+          item,
+        ) as Option<MailboxItem>;
+        return typedItem.unwrapOr(null);
       });
     }
   }

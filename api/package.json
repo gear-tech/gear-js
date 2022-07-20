@@ -25,7 +25,7 @@
     "prebuild": "rm -rf lib",
     "build": "rollup --config rollup.config.js",
     "lint": "eslint ./src/**/*.ts ./test/**/*.ts ./examples/**/*.ts",
-    "lint:fix": "eslint --fix ./src/**/*.ts ./test/**/*.ts, ./examples/**/*.ts"
+    "lint:fix": "eslint --fix ./src/**/*.ts ./test/**/*.ts ./examples/**/*.ts"
   },
   "exports": {
     "./cjs/package.json": "./cjs/package.json",
@@ -40,7 +40,7 @@
     }
   },
   "license": "GPL-3.0",
-  "dependencies": {
+  "peerDependencies": {
     "@polkadot/api": "^8.11.3",
     "rxjs": "^7.5.5"
   },

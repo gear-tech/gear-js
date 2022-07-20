@@ -27,7 +27,7 @@ describe('Gear Message', () => {
     const code = readFileSync(join(TEST_WASM_DIR, 'test_mailbox.opt.wasm'));
     guestbookId = api.program.submit({
       code,
-      gasLimit: 2_000_000_000
+      gasLimit: 2_000_000_000,
     }).programId;
     const status = checkInit(api, guestbookId);
     const transactionData = await sendTransaction(api.program, alice, 'MessageEnqueued');
@@ -41,11 +41,11 @@ describe('Gear Message', () => {
         payload: {
           AddParticipant: {
             name: 'Dmitriy',
-          }
+          },
         },
-        value: 100_000
+        value: 100_000,
       },
-      { payload: 'ViewAllParticipants', reply: '0x041c446d6974726979', claim: true }
+      { payload: 'ViewAllParticipants', reply: '0x041c446d6974726979', claim: true },
     ];
     const metaWasm = readFileSync(join(TEST_WASM_DIR, 'test_mailbox.meta.wasm'));
     const meta = await getWasmMetadata(metaWasm);
@@ -56,9 +56,9 @@ describe('Gear Message', () => {
           destination: guestbookId,
           payload: message.payload,
           gasLimit: 2_000_000_000,
-          value: message.value
+          value: message.value,
         },
-        meta
+        meta,
       );
       const waitForReply = message.reply ? listenToUserMessageSent(api, guestbookId) : undefined;
 
@@ -79,7 +79,23 @@ describe('Gear Message', () => {
 
   test('Read mailbox', async () => {
     const mailbox = await api.mailbox.read(GearKeyring.decodeAddress(alice.address));
-    expect(mailbox.filter((value) => value[0][1] === messageToClaim)).toHaveLength(1);
+    const filteredMB = mailbox.filter((value) => value[0].id.eq(messageToClaim));
+    expect(filteredMB).toHaveLength(1);
+    expect(filteredMB).toHaveProperty([0, 'toHuman']);
+    expect(filteredMB[0].toHuman()).toHaveLength(2);
+    expect(filteredMB).toHaveProperty([0, 0, 'id']);
+    expect(filteredMB).toHaveProperty([0, 1, 'finish']);
+    expect(filteredMB).toHaveProperty([0, 1, 'start']);
+  });
+
+  test('Read mailbox with message id', async () => {
+    const mailbox = await api.mailbox.read(GearKeyring.decodeAddress(alice.address), messageToClaim);
+    expect(mailbox).toHaveProperty([0, 'toHuman']);
+    expect(mailbox.toHuman()).toHaveLength(2);
+    expect(mailbox).toHaveProperty([0, 'id']);
+    expect(mailbox[0].id.eq(messageToClaim)).toBeTruthy();
+    expect(mailbox).toHaveProperty([1, 'finish']);
+    expect(mailbox).toHaveProperty([1, 'start']);
   });
 
   test('Claim value from mailbox', async () => {
@@ -90,4 +106,3 @@ describe('Gear Message', () => {
     expect(mailbox.filter((value) => value[0][1] === messageToClaim)).toHaveLength(0);
   });
 });
-
