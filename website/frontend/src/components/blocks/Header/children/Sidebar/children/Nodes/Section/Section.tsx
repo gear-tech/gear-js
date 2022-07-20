@@ -1,12 +1,14 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Nodes, NodeSection } from '../../../../../types';
-import { Node } from './Node/Node';
+
 import styles from './Section.module.scss';
+import { Node as NodeElement } from './Node/Node';
+
+import { Node, NodeSection } from 'types/api';
 
 type Props = {
   section: NodeSection;
-  localNodes: Nodes;
-  setLocalNodes: Dispatch<React.SetStateAction<Nodes>>;
+  localNodes: Node[];
+  setLocalNodes: Dispatch<React.SetStateAction<Node[]>>;
   selectedNode: string;
   setSelectedNode: Dispatch<SetStateAction<string>>;
 };
@@ -17,7 +19,7 @@ const Section = ({ section, localNodes, setLocalNodes, selectedNode, setSelected
 
   const getNodes = () =>
     concatedNodes.map((node, index) => (
-      <Node
+      <NodeElement
         // eslint-disable-next-line react/no-array-index-key
         key={index}
         address={node.address}

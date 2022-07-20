@@ -1,6 +1,6 @@
 import { Account } from '@gear-js/react-hooks';
 
-export const TEST_ACCOUNT: Account = {
+export const TEST_ACCOUNT_1: Account = {
   address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
   meta: {
     genesisHash: null,
@@ -26,6 +26,8 @@ export const TEST_API = {
   },
   balance: {
     findOut: jest.fn(),
+    transfer: jest.fn(),
+    signAndSend: jest.fn(),
   },
   gearEvents: {
     subscribeToNewBlocks: jest.fn(),
