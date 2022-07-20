@@ -1,18 +1,41 @@
-import { GearApi } from '../src';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { KeyringPair } from '@polkadot/keyring/types';
+
+import { GEAR_EXAMPLES_WASM_DIR } from './config';
+import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { Hex } from '../src/types';
-import { sleep } from './utilsFunctions';
+import { GearApi } from '../src';
 
 const api = new GearApi();
 let someProgramId: Hex;
+let alice: KeyringPair;
 
 beforeAll(async () => {
   await api.isReady;
-  await sleep(2000);
+  [alice] = await getAccount();
 });
 
 afterAll(async () => {
   await api.disconnect();
   await sleep(1000);
+});
+
+describe('Upload programs', () => {
+  test('demo_ping', async () => {
+    const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_ping.opt.wasm'));
+    const { programId, salt } = api.program.submit({
+      code,
+      gasLimit: 2_000_000_000
+    });
+    expect(programId).toBeDefined();
+    expect(salt).toBeDefined();
+
+    const status = checkInit(api, programId);
+    const transactionData = await sendTransaction(api.program, alice, 'MessageEnqueued');
+    expect(transactionData.destination).toBe(programId);
+    expect(await status()).toBe('success');
+  });
 });
 
 describe('Program', () => {
@@ -51,3 +74,5 @@ describe('Program', () => {
     ).not.toThrow();
   });
 });
+
+
