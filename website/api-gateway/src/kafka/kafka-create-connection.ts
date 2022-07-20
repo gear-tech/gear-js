@@ -1,7 +1,7 @@
 import { KAFKA_TOPICS } from '@gear-js/common';
 
 import { changeStatus } from '../routes/healthcheck/healthcheck.router';
-import { apiGatewayLogger } from '../common/event-listener.logger';
+import { apiGatewayLogger } from '../common';
 import { kafkaProducer } from './producer';
 import { kafkaConsumer } from './consumer';
 

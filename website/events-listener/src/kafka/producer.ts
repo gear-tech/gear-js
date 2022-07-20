@@ -1,7 +1,7 @@
 import { Admin, Producer } from 'kafkajs';
 import { KAFKA_TOPICS } from '@gear-js/common';
 
-import { eventListenerLogger } from '../common/event-listener.logger';
+import { eventListenerLogger } from '../common';
 import { initKafka } from './init-kafka';
 
 const producer: Producer = initKafka.producer();
