@@ -1,6 +1,6 @@
 enum API_METHODS {
   EVENTS = 'events',
-  MESSAGE_UPDATE_DATA = 'message.update.data',
+  MESSAGES_UPDATE_DATA = 'messages.update.data',
 }
 
 export { API_METHODS };

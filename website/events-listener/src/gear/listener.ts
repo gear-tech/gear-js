@@ -52,6 +52,6 @@ export const listen = (
 
     const { params } = handleBlockExtrinsics(updateBlockExtrinsics);
     await sleep(1000);
-    callback({ params, method: API_METHODS.MESSAGE_UPDATE_DATA });
+    callback({ params, method: API_METHODS.MESSAGES_UPDATE_DATA });
   });
 };

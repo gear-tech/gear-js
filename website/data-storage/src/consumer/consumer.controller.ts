@@ -94,7 +94,7 @@ export class ConsumerController {
     return JSON.stringify(result);
   }
 
-  @MessagePattern(API_METHODS.MESSAGE_UPDATE_DATA)
+  @MessagePattern(API_METHODS.MESSAGES_UPDATE_DATA)
   async updateMessagesData(@Payload() payload: KafkaPayload<UpdateMessagesParams>): Promise<void> {
     await this.consumerService.updateMessages(payload.value);
   }
