@@ -54,7 +54,7 @@
     "@rollup/plugin-typescript": "8.3.3",
     "@types/jest": "27.5.2",
     "@types/rollup-plugin-peer-deps-external": "2.2.1",
-    "@typescript-eslint/parser": "5.30.6",
+    "@typescript-eslint/parser": "5.30.7",
     "babel-cli": "6.26.0",
     "babel-core": "6.26.3",
     "babel-jest": "28.1.3",
