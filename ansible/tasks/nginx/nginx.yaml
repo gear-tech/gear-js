@@ -1,8 +1,0 @@
----
-#Install Nginx with self-signed certs
-- name: Restart nginx service
-  systemd:
-    name: nginx
-    state: restarted
-    enabled: yes
-    daemon-reload: yes
