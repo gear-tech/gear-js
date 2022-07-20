@@ -16,7 +16,7 @@ export const listen = (
     const blockHash = events.createdAtHash!.toHex();
 
     const [blockTimestamp, block, extrinsicStatus] = await Promise.all([
-      api.blocks.getBlockTimestamp(blockHash!),
+      api.blocks.getBlockTimestamp(blockHash),
       api.blocks.get(blockHash),
       api.createType('ExtrinsicStatus', { finalized: blockHash }),
     ]);
