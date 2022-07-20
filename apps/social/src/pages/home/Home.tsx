@@ -1,5 +1,9 @@
+import { Wellcome } from './wellcome'
+
 function Home() {
-  return <div>Home page</div>;
+  return (
+    <Wellcome />
+  )
 }
 
 export { Home };

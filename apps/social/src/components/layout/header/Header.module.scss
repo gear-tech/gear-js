@@ -8,5 +8,7 @@
 .nav {
   & > *:not(:last-child) {
     margin-right: 64px;
+    position: relative;
+    top: -4px;
   }
 }
