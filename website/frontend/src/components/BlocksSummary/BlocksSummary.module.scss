@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 @use 'assets/scss/mixins' as *;
 
 .summary {
@@ -10,8 +10,8 @@
 }
 
 .section {
-  align-items: flex-end;
   display: flex;
+  align-items: flex-end;
   flex-direction: column;
   position: relative;
 
@@ -25,16 +25,27 @@
       width: 1px;
       height: 37px;
       margin: auto;
-      background-color: $separateLineColor;
+      background-color: $lineColor;
     }
   }
 }
 
 .data {
+  display: flex;
+  align-items: center;
   font-size: $fontSizeLarge;
 }
 
 .number {
   color: $textColor;
   font-weight: 600;
+  margin-right: 6px;
+}
+
+.question {
+  margin-left: 9px;
+}
+
+.questionTooltip {
+  transform: translate(-88%, calc(100% + 8.5px)) !important;
 }
