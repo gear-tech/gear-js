@@ -21,6 +21,8 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
       } catch (error) {
         eventListenerLogger.error({ method, data: data.toHuman() });
         console.error(error);
+        console.log(data.toHuman());
+        console.log('--------------ENDERROR--------------');
       }
     });
   });
