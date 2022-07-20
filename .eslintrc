@@ -32,7 +32,8 @@
     ],
     "quotes": [
       "warn",
-      "single"
+      "single",
+      {"avoidEscape": true}
     ],
     "semi": [
       "error",
