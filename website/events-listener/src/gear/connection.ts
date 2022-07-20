@@ -20,7 +20,7 @@ export async function connectToGearNode() {
 
   const chain = await api.chain();
   const genesis = api.genesisHash.toHex();
-  const version = await api.nodeVersion();
+  const version = api.runtimeVersion.specVersion.toHuman();
 
   eventListenerLogger.info(`Connected to ${chain} with genesis ${genesis}. version: ${version}`);
 
