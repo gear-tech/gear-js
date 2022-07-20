@@ -13,7 +13,7 @@ type Props = {
 };
 
 const Tooltip = ({ width = 160, content, children, className, contentClassName }: Props) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   const hideTooltip = () => setIsVisible(false);
   const showTooltip = () => setIsVisible(true);

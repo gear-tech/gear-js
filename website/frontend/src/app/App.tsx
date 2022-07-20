@@ -1,4 +1,3 @@
-import '@polkadot/api-augment'; // dot types fix, source: https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#701-dec-20-2021
 import { useEffect } from 'react';
 import { Route, Routes, useSearchParams } from 'react-router-dom';
 import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';

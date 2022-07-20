@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
-import { Metadata } from '@gear-js/api';
+import { Metadata, Hex } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
@@ -30,11 +30,11 @@ const StateForm = ({ metadata, programId, metaBuffer }: Props) => {
     setIsLoading(true);
   };
 
-  const readState = (options?: object | string) => {
+  const readState = (options?: any) => {
     if (metaBuffer) {
       resetState();
 
-      api.programState.read(programId, metaBuffer, options).then((result) => {
+      api.programState.read(programId as Hex, metaBuffer, options).then((result) => {
         setState(getPreformattedText(result.toHuman()));
         setIsLoading(false);
       });

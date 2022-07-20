@@ -34,9 +34,9 @@
     "website/common"
   ],
   "lint-staged": {
-    "./website/frontend/src/*.{js,css,ts,tsx,scss}": "cd website/frontend && yarn lint:fix",
-    "./api/*.{js,ts}": "cd api && npm run lint:fix",
-    "*.{js,css,ts,tsx,scss}": "eslint --fix"
+    "website/frontend/src/**/*.{js,css,ts,tsx,scss}": "cd website/frontend && yarn lint:fix",
+    "api/**/*.{js,ts}": "cd api && npm run lint:fix",
+    "**/*.{js,css,ts,tsx,scss}": "eslint --fix --ignore-pattern 'website/frontend/**'"
   },
   "resolutions": {
     "@types/react": "17.0.44"
