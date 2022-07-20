@@ -1,6 +1,5 @@
 import { GearApi } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
-import { eventListenerLogger } from '../common/event-listener.logger';
 import { handleEvent } from './event-handlers';
 import { GEAR_EVENT } from '@gear-js/common';
 
@@ -19,8 +18,9 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
         const eventData = handleEvent(method as GEAR_EVENT, data as GenericEventData);
         eventData !== null && callback({ key: eventData.key, value: { ...eventData.value, ...base } });
       } catch (error) {
-        eventListenerLogger.error({ method, data: data.toHuman() });
-        eventListenerLogger.error(error);
+        console.error(error);
+        console.log({ method, data: data.toHuman() });
+        console.log('--------------ENDERROR--------------');
       }
     });
   });

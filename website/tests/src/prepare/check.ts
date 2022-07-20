@@ -9,7 +9,7 @@ export function checkPrograms(
 ): IPreparedPrograms {
   const result: IPreparedPrograms = {};
 
-  for (let id of Object.keys(programs)) {
+  for (const id of Object.keys(programs)) {
     assert(initSuccess.has(programs[id].messageId), `InitStatus of ${id} program not found`);
     assert(programs[id].shouldSuccess === initSuccess.get(programs[id].messageId), `InitStatus of ${id} doesn't match`);
 
@@ -28,7 +28,7 @@ export function checkMessages(sentMessages: Map<number, any>, specMessages: { [p
       counter += specMessages[key].length;
       return counter;
     }, 0) === sentMessages.size,
-    `Some messages wasn't sent`,
+    "Some messages wasn't sent",
   );
   return sentMessages;
 }
@@ -47,7 +47,7 @@ export function checkUserMessageSent(
       }, 0);
       return counter;
     }, 0) === checkUserMessageSentMessages.size,
-    `Some logs wasn't received`,
+    "Some logs wasn't received",
   );
   return checkUserMessageSentMessages;
 }

@@ -1322,13 +1322,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.23.5":
-  version: 0.23.5
-  resolution: "@gear-js/api@npm:0.23.5"
-  dependencies:
+"@gear-js/api@npm:0.24.0":
+  version: 0.24.0
+  resolution: "@gear-js/api@npm:0.24.0"
+  peerDependencies:
     "@polkadot/api": ^8.11.3
     rxjs: ^7.5.5
-  checksum: 3be44283a7257246fa0773b95854dc32adfd129d48b777a0e03c2441eeea5fb61d041f18280942115e37029be1cc7a6f493e19b1381c8a7480a0309b1e511b7a
+  checksum: b07e40da505bdbd67221e75498c73901ce10e9f1ef546f67c2c3d05052037dc473f92f44d3ea5224cb2d0de2b3d9b2a6b74466a353f7754e307dfc5b7c0cc40d
   languageName: node
   linkType: hard
 
@@ -1339,7 +1339,7 @@ __metadata:
     "@babel/plugin-transform-typescript": 7.16.8
     "@babel/preset-env": 7.17.10
     "@babel/preset-typescript": 7.16.7
-    "@gear-js/api": 0.23.5
+    "@gear-js/api": 0.24.0
     "@polkadot/api": 8.13.1
     "@types/chai": 4.3.1
     "@types/jest": 27.5.1
@@ -1738,7 +1738,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:8.13.1, @polkadot/api@npm:^8.11.3":
+"@polkadot/api@npm:8.13.1":
   version: 8.13.1
   resolution: "@polkadot/api@npm:8.13.1"
   dependencies:
@@ -5280,15 +5280,6 @@ __metadata:
   bin:
     rimraf: bin.js
   checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
-  languageName: node
-  linkType: hard
-
-"rxjs@npm:^7.5.5":
-  version: 7.5.5
-  resolution: "rxjs@npm:7.5.5"
-  dependencies:
-    tslib: ^2.1.0
-  checksum: e034f60805210cce756dd2f49664a8108780b117cf5d0e2281506e9e6387f7b4f1532d974a8c8b09314fa7a16dd2f6cff3462072a5789672b5dcb45c4173f3c6
   languageName: node
   linkType: hard
 
