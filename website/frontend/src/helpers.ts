@@ -1,8 +1,7 @@
-import { Hex, GearApi, Metadata } from '@gear-js/api';
+import { Hex, GearApi, Metadata, GasInfo } from '@gear-js/api';
 import { Event } from '@polkadot/types/interfaces';
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
-import { GasInfo } from '@gear-js/api/lib/types/gear-core';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { NODE_ADDRESS_REGEX } from 'regexes';
