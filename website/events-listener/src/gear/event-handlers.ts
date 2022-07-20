@@ -43,8 +43,8 @@ function userMessageSentHandler(data: UserMessageSentData): NewEventData<Keys.Us
       destination: destination.toHex(),
       payload: payload.toHex(),
       value: value.toString(),
-      replyToMessageId: reply.isSome ? reply.unwrap()[0].toHex() : null,
-      exitCode: reply.isSome ? reply.unwrap()[1].toNumber() : null,
+      replyToMessageId: reply.isSome ? reply.unwrap().replyTo.toHex() : null,
+      exitCode: reply.isSome ? reply.unwrap().exitCode.toNumber() : null,
     },
   };
 }
