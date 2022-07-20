@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import isPlainObject from 'lodash.isplainobject';
-import { Metadata, Hex } from '@gear-js/api';
-import { GasInfo } from '@gear-js/api/lib/types/gear-core';
+import { Metadata, Hex, GasInfo } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
 import { GasMethods, Values } from './types';
