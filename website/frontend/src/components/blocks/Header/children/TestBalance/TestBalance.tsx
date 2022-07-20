@@ -8,7 +8,7 @@ import { buttonStyles } from '@gear-js/ui';
 import styles from './TestBalance.module.scss';
 
 import { isDevChain } from 'helpers';
-import { useBalanceTransfer } from 'hooks';
+import { useChangeEffect, useBalanceTransfer } from 'hooks';
 import { RPC_METHODS, HCAPTCHA_SITE_KEY } from 'consts';
 import { Tooltip } from 'components/common/Tooltip';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
@@ -68,6 +68,10 @@ const TestBalance = ({ address }: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [captchaToken]);
+
+  useChangeEffect(() => {
+    setCaptchaToken('');
+  }, [address]);
 
   return (
     <div className={styles.testBalanceWrapper}>
