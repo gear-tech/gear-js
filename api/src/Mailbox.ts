@@ -16,20 +16,36 @@ export class GearMailbox {
     this.claimValue = gearApi.claimValueFromMailbox;
   }
 
-  async read(accountId: Hex, numberOfMessages?: number): Promise<MailboxItem[]>;
-
-  async read(accountId: Hex, messageId: Hex): Promise<MailboxItem>;
   /**
-   * Read mailbox
+   * ## Read mailbox connected with account
    * @param accountId
-   * @returns
-   * @example
+   * @param numberOfMessages _(default 1000)_ number of messages that will be read from mailbox
    * ```javascript
+   * const alice = '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
    * const api = await GearApi.create();
-   * const mailbox = await api.mailbox.read('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
-   * console.log(mailbox);
+   * const mailbox = await api.mailbox.read(alice);
+   * console.log(mailbox.map(item => item.toHuman()));
    * ```
    */
+  async read(accountId: Hex, numberOfMessages?: number): Promise<MailboxItem[]>;
+
+  /**
+   * ## Get particular message from mailbox
+   * @param accountId
+   * @param messageId
+   * ```javascript
+   * const api = await GearApi.create();
+   *
+   * const alice = '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
+   * const messageId = '0xe9f3b99f23203d0c032868d3bd0349c8e243119626a8af98a2f4ac5ea6c78947'
+   * const mailbox = await api.mailbox.read(alice, messageId);
+   * if (mailbox !== null) {
+   *   console.log(mailbox.toHuman());
+   * }
+   * ```
+   */
+  async read(accountId: Hex, messageId: Hex): Promise<MailboxItem>;
+
   async read(
     accountId: Hex | AccountId32 | string,
     messageIdOrNumberOfMessages?: Hex | number,
