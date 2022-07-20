@@ -1,46 +1,67 @@
+import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
 import { Content } from 'components';
-import styles from './Buy.module.scss';
+import { useCountdown } from 'hooks';
+import { getCountdownNumber, getNumber } from 'utils';
 import { Countdown } from './countdown';
-import placeholder from './placeholder.png';
+import styles from './Buy.module.scss';
 
-function Buy() {
+type Props = {
+  src: string;
+  timeLeft: string;
+  owner: Hex;
+  contract: Hex;
+  token: string;
+  startPrice: string;
+  currentPrice: string;
+  rate: string;
+  onSubmit: () => void;
+};
+
+function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, rate, onSubmit }: Props) {
+  const { hours, minutes, seconds, price } = useCountdown(
+    getCountdownNumber(timeLeft),
+    getNumber(currentPrice),
+    getNumber(rate),
+  );
+
   const countdownClassName = clsx(styles.text, styles.countdown);
+  const addressClassName = clsx(styles.value, styles.address);
 
   return (
     <div className={styles.container}>
       <div className={styles.imgWrapper}>
-        <img src={placeholder} alt="" className={styles.image} />
+        <img src={src} alt="" className={styles.image} />
       </div>
       <Content heading="Buy NFT" className={styles.content}>
-        <p className={countdownClassName}>
+        <div className={countdownClassName}>
           <span className={styles.key}>Time left:</span>
-          <Countdown days="00" minutes="00" seconds="00" />
-        </p>
+          <Countdown hours={hours} minutes={minutes} seconds={seconds} />
+        </div>
         <p className={styles.text}>
           <span className={styles.key}>Owner address:</span>
-          <span className={styles.value}>Value</span>
+          <span className={addressClassName}>{owner}</span>
         </p>
         <p className={styles.text}>
           <span className={styles.key}>Contract address:</span>
-          <span className={styles.value}>Value</span>
+          <span className={addressClassName}>{contract}</span>
         </p>
         <p className={styles.text}>
           <span className={styles.key}>Token ID:</span>
-          <span className={styles.value}>Value</span>
+          <span className={styles.value}>{token}</span>
         </p>
         <div className={styles.prices}>
           <p className={styles.text}>
             <span className={styles.key}>Start price:</span>
-            <span className={styles.value}>Value</span>
+            <span className={styles.value}>{startPrice}</span>
           </p>
           <p className={styles.text}>
             <span className={styles.key}>Current price:</span>
-            <span className={styles.value}>Value</span>
+            <span className={styles.value}>{price}</span>
           </p>
         </div>
-        <Button text="Buy item" block />
+        <Button text="Buy item" onClick={onSubmit} block />
       </Content>
     </div>
   );

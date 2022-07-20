@@ -3,6 +3,7 @@
 
 .container {
   display: flex;
+  align-items: center;
 }
 
 .content {
@@ -12,7 +13,9 @@
 .imgWrapper {
   padding: 120px 67px;
   background-image: linear-gradient(139.06deg, rgba(255, 255, 255, 0.1) 6.36%, rgba(40, 40, 40, 0.1) 96.84%),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03));
+    linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), url(/assets/images/nft-bg.svg);
+  background-position: top right;
+  background-repeat: no-repeat;
   border: 1px solid;
   border-image: linear-gradient(139.06deg, rgba(255, 255, 255, 0.1) 6.36%, rgba(40, 40, 40, 0.1) 96.84%) 1;
   border-radius: $borderRadius;
@@ -21,7 +24,7 @@
 .image {
   // prolly img-fluid
   width: 100%;
-  max-width: 450px;
+  max-width: 515px;
 
   display: block;
   margin: 0 auto;
@@ -53,6 +56,11 @@
   .key {
     margin-right: 20px;
   }
+}
+
+.address {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .prices {

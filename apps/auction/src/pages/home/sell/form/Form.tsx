@@ -4,13 +4,13 @@ import { useAuctionMessage } from 'hooks';
 import styles from './Form.module.scss';
 
 const initialValues = {
-  nftContractActorId: '',
-  tokenId: '',
-  startingPrice: '',
-  discountRate: '',
+  nftContractActorId: '0xf9be5c25e821bc7abc546a90104dab55774fd49981d1128e1a0f5c0a92d650db',
+  tokenId: '0',
+  startingPrice: '1000',
+  discountRate: '5',
   days: '',
   hours: '',
-  minutes: '',
+  minutes: '1',
 };
 
 function Form() {
@@ -38,7 +38,7 @@ function Form() {
           <Input type="number" label="Start price" className={styles.input} {...getInputProps('startingPrice')} />
           <Input
             type="number"
-            label="Discount rate per ms"
+            label="Discount rate per second"
             className={styles.input}
             {...getInputProps('discountRate')}
           />
