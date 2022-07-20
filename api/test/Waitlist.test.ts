@@ -43,21 +43,23 @@ describe('GearWaitlist', () => {
     expect(eventData).toHaveProperty('origin');
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(1);
-    expect(waitlist[0].programId).toBe(programId);
-    expect(waitlist[0].messageId).toBe(messageId);
-    expect(waitlist[0].blockNumber).toBeDefined();
-    expect(waitlist[0].storedDispatch).toHaveProperty('kind');
-    expect(waitlist[0].storedDispatch).toHaveProperty('message');
-    expect(waitlist[0].storedDispatch).toHaveProperty('context');
+    expect(waitlist[0]).toHaveProperty('toHuman');
+    expect(waitlist[0].toHuman()).toHaveLength(2);
+    expect(waitlist[0][0]).toHaveProperty('kind');
+    expect(waitlist[0][0]).toHaveProperty('message');
+    expect(waitlist[0][0]).toHaveProperty('context');
+    expect(waitlist[0][1]).toHaveProperty('start');
+    expect(waitlist[0][1]).toHaveProperty('finish');
   });
 
   test('read program\'s waitlist with messageId', async () => {
     const waitlist = await api.waitlist.read(programId, messageId);
-    expect(waitlist).toHaveProperty('blockNumber');
-    expect(waitlist).toHaveProperty('storedDispatch');
-    expect(waitlist.storedDispatch).toHaveProperty('kind');
-    expect(waitlist.storedDispatch).toHaveProperty('message');
-    expect(waitlist.storedDispatch).toHaveProperty('context');
+    expect(waitlist).toHaveLength(2);
+    expect(waitlist[0]).toHaveProperty('kind');
+    expect(waitlist[0]).toHaveProperty('message');
+    expect(waitlist[0]).toHaveProperty('context');
+    expect(waitlist[1]).toHaveProperty('start');
+    expect(waitlist[1]).toHaveProperty('finish');
   });
 
   test('send one more message and read program\'s waitlist', async () => {
