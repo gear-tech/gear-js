@@ -7,7 +7,6 @@ import {
   IMessage,
   IMessagesDispatchedKafkaValue,
   InitStatus,
-  IUserMessageSentKafkaValue,
   MESSAGE_READ_STATUS,
 } from '@gear-js/common';
 

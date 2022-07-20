@@ -20,7 +20,7 @@ export const listen = (api: GearApi, genesis: string, callback: (arg: { key: str
         eventData !== null && callback({ key: eventData.key, value: { ...eventData.value, ...base } });
       } catch (error) {
         eventListenerLogger.error({ method, data: data.toHuman() });
-        eventListenerLogger.error(error);
+        console.error(error);
       }
     });
   });

@@ -38,8 +38,8 @@ export async function sendMessages(
   const unsub = await listenToUserMessageSent(api, (data) => {
     logs.set(data.message.id.toHex(), data.toHuman());
   });
-  for (let program of Object.keys(messages)) {
-    for (let message of messages[program]) {
+  for (const program of Object.keys(messages)) {
+    for (const message of messages[program]) {
       sentMessages.set(
         message.id,
         await sendMessage(
