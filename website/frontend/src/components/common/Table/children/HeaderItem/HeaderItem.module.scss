@@ -1,0 +1,16 @@
+@use '@gear-js/ui/variables' as *;
+
+.headerItem {
+  display: flex;
+  align-items: center;
+  
+  .icon {
+    display: block;
+    margin-right: 10px;
+  }
+
+  .text {
+    font-size: $fontSize;
+    color: $textColor;
+  }
+}

@@ -1,22 +1,9 @@
 @use '@gear-js/ui/variables' as *;
 
-.item {
+.message {
   display: flex;
   align-items: center;
-  color: $textColor;
-
-  &:nth-child(2) {
-    flex: 0 2 700px;
-  }
-
-  &:nth-child(3) {
-    flex: 0 1 200px;
-  }
-
-  .messageStatus {
-    margin-right: 15px;
-  }
-
+  
   .copyButton {
     margin-left: 5px;
   }
@@ -31,3 +18,7 @@
   }
 }
 
+.text {
+  color: $textColor;
+  font-size: $fontSize;
+}
