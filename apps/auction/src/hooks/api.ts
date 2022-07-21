@@ -14,10 +14,12 @@ function useAuction() {
 }
 
 function useNft(address: Hex | undefined, tokenId: string | undefined) {
-  const payload = useMemo(() => ({ Token: { tokenId } }), [tokenId]);
-  const { state } = useReadState<NFTState>(address, nftMetaWasm, payload);
+  const isAddress = !address?.startsWith('0x00');
 
-  return state?.Token.token;
+  const payload = useMemo(() => ({ Token: { tokenId } }), [tokenId]);
+  const { state, isStateRead } = useReadState<NFTState>(isAddress ? address : undefined, nftMetaWasm, payload);
+
+  return { nft: state?.Token.token, isNftStateRead: isStateRead };
 }
 
 function useAuctionMessage() {

@@ -10,11 +10,11 @@ function Home() {
   const { nftContractActorId, tokenId, timeLeft } = auction || {};
   const isAuctionStarted = timeLeft && !!getNumber(timeLeft);
 
-  const nft = useNft(nftContractActorId, tokenId);
+  const { nft, isNftStateRead } = useNft(nftContractActorId, tokenId);
   const { media } = nft || {};
   const src = `${ADDRESS.IPFS_GATEWAY_ADDRESS}/${media}`;
 
-  return auction && nft ? (
+  return auction && isNftStateRead ? (
     <>
       {isAuctionStarted && (
         <Buy
