@@ -1,6 +1,6 @@
 import { Loader } from 'components';
 import { ADDRESS } from 'consts';
-import { useAuction, useNft, useAuctionMessage } from 'hooks';
+import { useAuction, useNft } from 'hooks';
 import { getNumber } from 'utils';
 import { Buy } from './buy';
 import { Sell } from './sell';
@@ -14,10 +14,6 @@ function Home() {
   const { media } = nft || {};
   const src = `${ADDRESS.IPFS_GATEWAY_ADDRESS}/${media}`;
 
-  const sendMessage = useAuctionMessage();
-
-  const buy = () => sendMessage({ Buy: null });
-
   return auction && nft ? (
     <>
       {isAuctionStarted && (
@@ -30,7 +26,6 @@ function Home() {
           startPrice={auction.startingPrice}
           currentPrice={auction.currentPrice}
           rate={auction.discountRate}
-          onSubmit={buy}
         />
       )}
       {!isAuctionStarted && <Sell />}

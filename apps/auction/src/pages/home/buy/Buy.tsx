@@ -2,7 +2,7 @@ import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
 import { Content } from 'components';
-import { useCountdown } from 'hooks';
+import { useAuctionMessage, useCountdown } from 'hooks';
 import { getCountdownNumber, getNumber } from 'utils';
 import { Countdown } from './countdown';
 import styles from './Buy.module.scss';
@@ -16,10 +16,11 @@ type Props = {
   startPrice: string;
   currentPrice: string;
   rate: string;
-  onSubmit: () => void;
 };
 
-function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, rate, onSubmit }: Props) {
+function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, rate }: Props) {
+  const sendMessage = useAuctionMessage();
+
   const { hours, minutes, seconds, price } = useCountdown(
     getCountdownNumber(timeLeft),
     getNumber(currentPrice),
@@ -28,6 +29,8 @@ function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, 
 
   const countdownClassName = clsx(styles.text, styles.countdown);
   const addressClassName = clsx(styles.value, styles.address);
+
+  const buy = () => sendMessage({ Buy: null }, { value: price + 500 }); // adding 500 to avoid error on too low refund value
 
   return (
     <div className={styles.container}>
@@ -61,7 +64,7 @@ function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, 
             <span className={styles.value}>{price}</span>
           </p>
         </div>
-        <Button text="Buy item" onClick={onSubmit} block />
+        <Button text="Buy item" onClick={buy} block />
       </Content>
     </div>
   );

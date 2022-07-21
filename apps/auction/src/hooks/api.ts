@@ -24,4 +24,8 @@ function useAuctionMessage() {
   return useSendMessage(ADDRESS.AUCTION_CONTRACT, auctionMetaWasm);
 }
 
-export { useAuction, useNft, useAuctionMessage };
+function useNftMessage(address: Hex) {
+  return useSendMessage(address, nftMetaWasm);
+}
+
+export { useAuction, useNft, useAuctionMessage, useNftMessage };

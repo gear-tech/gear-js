@@ -1,4 +1,4 @@
-import { useAuction, useNft, useAuctionMessage } from './api';
+import { useAuction, useNft, useAuctionMessage, useNftMessage } from './api';
 import { useCountdown } from './countdown';
 
-export { useAuction, useNft, useAuctionMessage, useCountdown };
+export { useAuction, useNft, useAuctionMessage, useNftMessage, useCountdown };

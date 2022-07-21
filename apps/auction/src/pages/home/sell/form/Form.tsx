@@ -1,8 +1,9 @@
+import { Hex } from '@gear-js/api';
 import { Input, inputStyles, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import clsx from 'clsx';
-import { MULTIPLIER } from 'consts';
-import { useAuctionMessage } from 'hooks';
+import { ADDRESS, MULTIPLIER } from 'consts';
+import { useAuctionMessage, useNftMessage } from 'hooks';
 import styles from './Form.module.scss';
 
 const initialValues = {
@@ -17,14 +18,17 @@ const initialValues = {
 
 function Form() {
   const { getInputProps, onSubmit, values } = useForm({ initialValues });
+  const { nftContractActorId, tokenId, days, hours, minutes } = values;
 
-  const sendMessage = useAuctionMessage();
+  const sendAuctionMessage = useAuctionMessage();
+  const sendNftMessage = useNftMessage(nftContractActorId as Hex);
 
-  const handleSubmit = ({ days, hours, minutes, ...restValues }: typeof initialValues) => {
-    const duration = { days, hours, minutes };
-    const payload = { Create: { duration, ...restValues } };
+  const createAuction = () => sendAuctionMessage({ Create: { duration: { days, hours, minutes }, ...values } });
 
-    sendMessage(payload);
+  const handleSubmit = () => {
+    const approveTokenPayload = { Approve: { to: ADDRESS.AUCTION_CONTRACT, tokenId } };
+
+    sendNftMessage(approveTokenPayload, { onSuccess: createAuction });
   };
 
   // const getSeconds = () => {
@@ -36,8 +40,8 @@ function Form() {
   //   return hourSeconds + minuteSeconds + seconds;
   // };
 
-  const finalPrice = +values.startingPrice - +values.minutes * MULTIPLIER.SECONDS * +values.discountRate;
-  const priceClassName = clsx(styles.price, finalPrice > 0 && styles.success, finalPrice < 0 && styles.error);
+  const price = +values.startingPrice - +values.minutes * MULTIPLIER.SECONDS * +values.discountRate;
+  const priceClassName = clsx(styles.price, price > 0 && styles.success, price < 0 && styles.error);
 
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
@@ -60,7 +64,7 @@ function Form() {
         </div>
         <p>
           <span className={inputStyles.label}>Final price:</span>
-          <span className={priceClassName}>{finalPrice}</span>
+          <span className={priceClassName}>{price}</span>
         </p>
       </div>
       <Button type="submit" text="Sell NFT" block />
