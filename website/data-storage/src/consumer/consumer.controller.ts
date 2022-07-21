@@ -2,6 +2,7 @@ import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   AddMetaParams,
+  API_METHODS,
   FindMessageParams,
   FindProgramParams,
   GetAllCodeParams,
@@ -14,25 +15,25 @@ import {
   KafkaPayload,
   Keys,
   NewEventData,
+  UpdateMessagesParams,
 } from '@gear-js/common';
 
 import { ConsumerService } from './consumer.service';
 
-const logger = new Logger('ConsumerController');
-
 @Controller()
 export class ConsumerController {
-  constructor(private readonly consumerService: ConsumerService) {}
+  private logger: Logger = new Logger('ConsumerController');
+  constructor(private consumerService: ConsumerService) {}
 
-  @MessagePattern(KAFKA_TOPICS.EVENTS)
+  @MessagePattern(API_METHODS.EVENTS)
   async addEvent(@Payload() payload: NewEventData<Keys, any>) {
     const key = payload.key;
     const value = payload.value;
     try {
       await this.consumerService.events[key](value);
     } catch (error) {
-      logger.error(error.message, error.stack);
-      logger.error({
+      this.logger.error(error.message, error.stack);
+      this.logger.error({
         key,
         value,
       });
@@ -91,5 +92,10 @@ export class ConsumerController {
   async allCode(@Payload() payload: KafkaPayload<GetAllCodeParams>): Promise<string> {
     const result = await this.consumerService.allCode(payload.value);
     return JSON.stringify(result);
+  }
+
+  @MessagePattern(API_METHODS.MESSAGES_UPDATE_DATA)
+  async updateMessagesData(@Payload() payload: KafkaPayload<UpdateMessagesParams>): Promise<void> {
+    await this.consumerService.updateMessages(payload.value);
   }
 }

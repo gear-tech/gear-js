@@ -35,7 +35,7 @@
   ],
   "lint-staged": {
     "api/**/*.{js,ts}": "cd api && npm run lint:fix",
-    "**/*.{js,css,ts,tsx,scss}": "eslint --fix --ignore-pattern 'website/frontend/**'"
+    "**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'website/frontend/**' --ignore-pattern 'apps/**"
   },
   "resolutions": {
     "@types/react": "17.0.44"

@@ -5,3 +5,4 @@ export * from './add-events.enum';
 export * from './rpc-error-code.enum';
 export * from './gear-events.enum';
 export * from './kafka-topics.enum';
+export * from './api-methods.enum';
