@@ -5,7 +5,8 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { TEST_WASM_DIR } from './config';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
 import { Hex } from '../src/types';
-import { GearApi, GearKeyring, getWasmMetadata } from '../src';
+import { GearApi, getWasmMetadata } from '../src';
+import { decodeAddress } from '../src/utils';
 
 const api = new GearApi();
 let alice: KeyringPair;
@@ -78,7 +79,7 @@ describe('Gear Message', () => {
   });
 
   test('Read mailbox', async () => {
-    const mailbox = await api.mailbox.read(GearKeyring.decodeAddress(alice.address));
+    const mailbox = await api.mailbox.read(decodeAddress(alice.address));
     const filteredMB = mailbox.filter((value) => value[0].id.eq(messageToClaim));
     expect(filteredMB).toHaveLength(1);
     expect(filteredMB).toHaveProperty([0, 'toHuman']);
@@ -89,7 +90,7 @@ describe('Gear Message', () => {
   });
 
   test('Read mailbox with message id', async () => {
-    const mailbox = await api.mailbox.read(GearKeyring.decodeAddress(alice.address), messageToClaim);
+    const mailbox = await api.mailbox.read(decodeAddress(alice.address), messageToClaim);
     expect(mailbox).toHaveProperty([0, 'toHuman']);
     expect(mailbox.toHuman()).toHaveLength(2);
     expect(mailbox).toHaveProperty([0, 'id']);
@@ -102,7 +103,7 @@ describe('Gear Message', () => {
     const submitted = api.claimValueFromMailbox.submit(messageToClaim);
     const transactionData = await sendTransaction(submitted, alice, 'UserMessageRead');
     expect(transactionData.id).toBe(messageToClaim);
-    const mailbox = await api.mailbox.read(GearKeyring.decodeAddress(alice.address));
+    const mailbox = await api.mailbox.read(decodeAddress(alice.address));
     expect(mailbox.filter((value) => value[0][1] === messageToClaim)).toHaveLength(0);
   });
 });
