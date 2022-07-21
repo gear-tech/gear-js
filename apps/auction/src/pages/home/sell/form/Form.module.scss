@@ -36,3 +36,9 @@
     color: $errorColor;
   }
 }
+
+.error {
+  margin-top: 5px;
+  color: $errorColor;
+  text-align: right;
+}
