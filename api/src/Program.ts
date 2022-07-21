@@ -13,11 +13,11 @@ import { GearGas } from './Gas';
 import { GasLimit, Hex, Value } from './types';
 
 export class GearProgram extends GearTransaction {
-  calculateGas: GearGas;
+  public calculateGas: GearGas;
 
-  constructor(gearApi: GearApi) {
-    super(gearApi);
-    this.calculateGas = new GearGas(gearApi);
+  constructor(protected _api: GearApi) {
+    super(_api);
+    this.calculateGas = new GearGas(_api);
   }
   /**
    * @param program Upload program data
@@ -49,16 +49,16 @@ export class GearProgram extends GearTransaction {
     meta?: Metadata,
     messageType?: string,
   ): { programId: Hex; salt: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> } {
-    validateValue(program.value, this.api);
-    validateGasLimit(program.gasLimit, this.api);
+    validateValue(program.value, this._api);
+    validateGasLimit(program.gasLimit, this._api);
 
     const salt = program.salt || randomAsHex(20);
-    const code = this.createType.create('bytes', Array.from(program.code)) as Bytes;
-    const payload = createPayload(this.createType, messageType || meta?.init_input, program.initPayload, meta);
+    const code = this._createType.create('bytes', Array.from(program.code)) as Bytes;
+    const payload = createPayload(this._createType, messageType || meta?.init_input, program.initPayload, meta);
     const programId = generateProgramId(code, salt);
 
     try {
-      this.submitted = this.api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
+      this.submitted = this._api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
       return { programId, salt, submitted: this.submitted };
     } catch (error) {
       throw new SubmitProgramError();
@@ -70,7 +70,7 @@ export class GearProgram extends GearTransaction {
    * @returns
    */
   async allUploadedPrograms(): Promise<Hex[]> {
-    const keys = await this.api.rpc.state.getKeys(GPROG);
+    const keys = await this._api.rpc.state.getKeys(GPROG);
     return keys.map((prog) => {
       return `0x${prog.toHex().slice(GPROG_HEX.length + 2)}` as Hex;
     });
@@ -82,12 +82,10 @@ export class GearProgram extends GearTransaction {
    * @returns if address belongs to program, method returns `true`, otherwise `false`
    */
   async exists(id: Hex): Promise<boolean> {
-    const progs = await this.api.rpc.state.getKeys(GPROG);
+    const progs = await this._api.rpc.state.getKeys(GPROG);
     const program = progs.find((prog) => prog.eq(`0x${GPROG_HEX}${id.slice(2)}`));
     return Boolean(program);
   }
-
-
 
   /**
    * Get codeHash of program on-chain
@@ -95,7 +93,7 @@ export class GearProgram extends GearTransaction {
    * @returns codeHash in hex format
    */
   async codeHash(programId: Hex): Promise<Hex> {
-    const program = await this.api.storage.gProg(programId);
+    const program = await this._api.storage.gProg(programId);
     return u8aToHex(program.code_hash);
   }
 }

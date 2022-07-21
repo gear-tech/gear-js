@@ -65,8 +65,8 @@ describe('Gear Message', () => {
       const transactionData = await sendTransaction(api.message, alice, 'MessageEnqueued');
       expect(transactionData).toBeDefined();
 
-      if (message.reply) {
-        const reply = await waitForReply!(transactionData.id);
+      if (waitForReply) {
+        const reply = await waitForReply(transactionData.id);
         expect(reply?.message.reply.isSome).toBeTruthy();
         expect(reply?.message.reply.unwrap().exitCode.toNumber()).toBe(0);
         expect(reply?.message.payload.toHex()).toBe(message.reply);

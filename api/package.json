@@ -37,6 +37,11 @@
     },
     "./types": {
       "import": "./types/index.d.ts"
+    },
+    "./utils": {
+      "import": "./utils/index.js",
+      "require": "./cjs/utils/index.js",
+      "types": "./utils/index.d.ts"
     }
   },
   "license": "GPL-3.0",
