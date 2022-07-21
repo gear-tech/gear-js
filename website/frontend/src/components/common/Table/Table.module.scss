@@ -1,0 +1,29 @@
+@use '@gear-js/ui/variables' as *;
+
+.header,
+.tableRow {
+  display: grid;
+}
+
+.header {
+  padding: 10px 20px;
+  border-bottom: 1px solid $lineColor;
+  background-color: $bgColor;
+}
+
+.tableBody {
+  position: relative;
+  overflow-y: auto;
+}
+
+.tableRow {
+  padding: 25px 20px;
+  border-bottom: 1px solid $lineColor;
+}
+
+.emptyContent {
+  text-align: center;
+  margin-top: 30px;
+  color: $textColor;
+  font-size: $fontSizeMedium;
+}
