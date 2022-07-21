@@ -1,6 +1,7 @@
 import { GearApi } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
 import { API_METHODS, GEAR_EVENT } from '@gear-js/common';
+
 import { handleEvent } from './event-handlers';
 import { handleBlockExtrinsics } from './block-extrinsics-handler';
 import { UpdateBlockExtrinsics } from './types';
