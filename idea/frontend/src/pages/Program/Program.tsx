@@ -55,7 +55,6 @@ const Program = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(waitlist);
   return (
     <div className="wrapper">
       {program ? (
