@@ -1867,7 +1867,7 @@ __metadata:
     "@types/express": 4.17.13
     "@types/jest": 26.0.24
     "@types/node": 14.18.22
-    "@types/nodemon": 1.19.1
+    "@types/nodemon": 1.19.2
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
     dotenv: 16.0.1
@@ -1906,7 +1906,7 @@ __metadata:
   resolution: "@gear-js/common@workspace:website/common"
   dependencies:
     kafkajs: ^2.0.2
-    typescript: 4.6.4
+    typescript: 4.7.4
     winston: ^3.7.2
   languageName: unknown
   linkType: soft
@@ -1972,7 +1972,7 @@ __metadata:
     "@polkadot/api": ^8.13.1
     "@types/express": 4.17.13
     "@types/node": 17.0.21
-    "@types/nodemon": 1.19.1
+    "@types/nodemon": 1.19.2
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
     avsc: ^5.7.3
@@ -4316,12 +4316,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/nodemon@npm:1.19.1":
-  version: 1.19.1
-  resolution: "@types/nodemon@npm:1.19.1"
+"@types/nodemon@npm:1.19.2":
+  version: 1.19.2
+  resolution: "@types/nodemon@npm:1.19.2"
   dependencies:
     "@types/node": "*"
-  checksum: 62d0efcec06509ded373f6f5bbc0310901e23028ccc7828c703030b011c4bd17ae188d8387b8eb83bcc1e4e6006ec23572965f5d95aef10f5015ea376daaa1e7
+  checksum: 2f9301089b0643ad3d9ee20b8a79984c53ed425c6afac3022d1546e73374baf87ae3736329bf3f038cf39d921862754b4166574815a00a17525901c9180a6884
   languageName: node
   linkType: hard
 
@@ -18171,16 +18171,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.6.4":
-  version: 4.6.4
-  resolution: "typescript@npm:4.6.4"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: e7bfcc39cd4571a63a54e5ea21f16b8445268b9900bf55aee0e02ad981be576acc140eba24f1af5e3c1457767c96cea6d12861768fb386cf3ffb34013718631a
-  languageName: node
-  linkType: hard
-
 "typescript@npm:4.7.4":
   version: 4.7.4
   resolution: "typescript@npm:4.7.4"
@@ -18208,16 +18198,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 6bf45caf847062420592e711bc9c28bf5f9a9a7fa8245343b81493e4ededae33f1774009d1234d911422d1646a2c839f44e1a23ecb111b40a60ac2ea4c1482a8
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@4.6.4#~builtin<compat/typescript>":
-  version: 4.6.4
-  resolution: "typescript@patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=bda367"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 1cb434fbc637d347be90e3a0c6cd05e33c38f941713c8786d3031faf1842c2c148ba91d2fac01e7276b0ae3249b8633f1660e32686cc7a8c6a8fd5361dc52c66
   languageName: node
   linkType: hard
 
