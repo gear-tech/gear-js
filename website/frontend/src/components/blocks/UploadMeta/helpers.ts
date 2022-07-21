@@ -1,4 +1,4 @@
-import { Metadata, decodeHexTypes } from '@gear-js/api';
+import { Metadata, decodeHexTypes, Hex } from '@gear-js/api';
 
 import { META_FIELDS } from './const';
 
@@ -18,7 +18,7 @@ export const getMetaProperties = (metadata: Metadata): Metadata => {
 
   if (metadata.types) {
     const decodedTypes = decodeHexTypes(metadata.types);
-    valuesFromMeta.types = getPreformattedText(decodedTypes);
+    valuesFromMeta.types = getPreformattedText(decodedTypes) as Hex;
   }
 
   return valuesFromMeta;

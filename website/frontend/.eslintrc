@@ -10,10 +10,7 @@
     "plugin:react/jsx-runtime",
     "prettier"
   ],
-  "plugins": [
-    "react",
-    "@typescript-eslint"
-  ],
+  "plugins": ["react", "@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
@@ -24,6 +21,7 @@
     "es2021": true
   },
   "rules": {
+    "semi": ["error", "always"],
     "no-void": "off",
     "no-alert": "off",
     "no-console": "off",
@@ -33,43 +31,29 @@
         "allowForLoopAfterthoughts": true
       }
     ],
-    "no-lonely-if": [
-      "error"
-    ],
+    "no-lonely-if": ["error"],
     // TODO: discuss and adjust
     "no-return-assign": "off",
     "no-param-reassign": "warn",
     "no-useless-return": "off",
     "no-underscore-dangle": "off",
     "no-restricted-syntax": "off",
-    "curly": [
-      "warn"
-    ],
+    "curly": ["warn"],
     "id-length": [
       "warn",
       {
-        "exceptions": [
-          "i",
-          "j"
-        ],
+        "exceptions": ["i", "j"],
         "min": 2
       }
     ],
-    "max-depth": [
-      "warn",
-      4
-    ],
+    "max-depth": ["warn", 4],
     "consistent-return": "off",
     // TODO: discuss and adjust
     "arrow-body-style": "off",
     "prefer-destructuring": "off",
     "class-methods-use-this": "off",
-    "jsx-a11y/href-no-hash": [
-      "off"
-    ],
-    "jsx-a11y/anchor-is-valid": [
-      "off"
-    ],
+    "jsx-a11y/href-no-hash": ["off"],
+    "jsx-a11y/anchor-is-valid": ["off"],
     "jsx-a11y/anchor-has-content": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/label-has-associated-control": [
@@ -82,35 +66,22 @@
     "react/button-has-type": "off",
     "react/no-array-index-key": "warn",
     "react/require-default-props": "off",
-    "react/state-in-constructor": [
-      "off"
-    ],
+    "react/state-in-constructor": ["off"],
     "react/jsx-no-useless-fragment": "off",
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [
-          ".tsx",
-          ".ts"
-        ]
+        "extensions": [".tsx", ".ts"]
       }
     ],
-    "react/jsx-props-no-spreading": [
-      "off"
-    ],
+    "react/jsx-props-no-spreading": ["off"],
     "react/static-property-placement": "off",
-    "react/destructuring-assignment": [
-      "off"
-    ],
+    "react/destructuring-assignment": ["off"],
     "react/function-component-definition": "off",
     "react/jsx-no-constructed-context-values": "warn",
     "@typescript-eslint/no-redeclare": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "warn"
-    ],
-    "@typescript-eslint/default-param-last": [
-      "off"
-    ],
+    "@typescript-eslint/no-unused-vars": ["warn"],
+    "@typescript-eslint/default-param-last": ["off"],
     // TODO: discuss and adjust
     "import/order": "off",
     "import/no-cycle": "warn",
@@ -118,10 +89,7 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": [
-          "src/tests/**",
-          "src/setupTests.ts"
-        ]
+        "devDependencies": ["src/tests/**", "src/setupTests.ts"]
       }
     ],
     "import/prefer-default-export": "off"

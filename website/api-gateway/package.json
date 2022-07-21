@@ -25,7 +25,7 @@
     "@types/express": "4.17.13",
     "@types/jest": "26.0.24",
     "@types/node": "14.18.22",
-    "@types/nodemon": "1.19.1",
+    "@types/nodemon": "1.19.2",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
     "eslint": "7.32.0",

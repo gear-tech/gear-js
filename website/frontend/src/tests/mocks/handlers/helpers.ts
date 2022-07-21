@@ -1,15 +1,15 @@
 import {
+  META,
+  META_FILE,
   PROGRAM_ID_1,
   PROGRAM_ID_2,
   PROGRAM_ID_3,
   PROGRAM_ID_4,
+  MESSAGE_ID_1,
   PROGRAM_WITH_META,
   PROGRAM_WITHOUT_META,
   PROGRAM_WITH_REPLY_META,
   PROGRAM_WITHOUT_REPLY_META,
-  MESSAGE_ID_1,
-  META_FILE,
-  META,
 } from '../../const';
 
 import { RPCResponse } from 'services/ServerRPCRequestService';

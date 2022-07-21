@@ -2,8 +2,9 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { GearKeyring } from '@gear-js/api';
 
 import { renderWithProviders, textMatcher } from './utils';
-import { useApiMock, useAccountMock, useAccountsMock, TEST_API } from './mocks/hooks';
+import { useApiMock, useAccountMock, useAccountsMock, TEST_API, TEST_ACCOUNT_1 } from './mocks/hooks';
 
+import * as helpers from 'helpers';
 import { Header } from 'components/blocks/Header';
 import menuStyles from 'components/blocks/Header/children/Menu/Menu.module.scss';
 
@@ -96,6 +97,54 @@ describe('header tests', () => {
 
     // temp test fix
     await fixReactError();
+  });
+
+  it('renders test balance button, get test balance', async () => {
+    TEST_API.balance.signAndSend.mockResolvedValue('');
+
+    useApiMock(TEST_API);
+    useAccountMock();
+
+    const { rerender } = renderWithProviders(<Header />);
+
+    // unauthorized
+    expect(screen.queryByTestId('testBalanceBtn')).not.toBeInTheDocument();
+
+    useAccountMock(TEST_ACCOUNT_1);
+    jest.spyOn(helpers, 'isDevChain').mockReturnValue(true);
+
+    rerender(<Header />);
+
+    const testBalanceBtn = await screen.findByTestId('testBalanceBtn');
+
+    expect(testBalanceBtn).toBeInTheDocument();
+    expect(testBalanceBtn).toBeEnabled();
+
+    // show, hide tooltip
+
+    fireEvent.mouseOver(testBalanceBtn);
+
+    const tooltip = screen.getByText('Get test balance');
+
+    expect(tooltip).toBeInTheDocument();
+
+    fireEvent.mouseLeave(testBalanceBtn);
+
+    await waitFor(() => expect(tooltip).not.toBeInTheDocument());
+
+    // temp test fix
+    await fixReactError();
+
+    // transfer balance in development chain
+
+    jest.spyOn(GearKeyring, 'fromSuri').mockResolvedValue('alice-address' as any);
+
+    fireEvent.click(testBalanceBtn);
+
+    await waitFor(() => {
+      expect(TEST_API.balance.transfer).toBeCalledTimes(1);
+      expect(TEST_API.balance.signAndSend).toBeCalledTimes(1);
+    });
   });
 
   it('renders sidebar button, opens/closes sidebar, adds/copies/removes/switches node', async () => {

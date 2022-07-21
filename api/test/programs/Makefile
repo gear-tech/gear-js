@@ -21,8 +21,19 @@ cp-gas:
 
 all-gas: build-gas wasm-proc-gas cp-gas
 
+build-mailbox:
+	cargo build --release --manifest-path ./test-mailbox/Cargo.toml
 
-all: all-waitlist all-gas
+wasm-proc-mailbox:
+	wasm-proc -p test-mailbox/target/wasm32-unknown-unknown/release/test_mailbox.wasm
+
+cp-mailbox: 
+	cp test-mailbox/target/wasm32-unknown-unknown/release/test_mailbox.*.wasm ../wasm
+
+all-mailbox: build-mailbox wasm-proc-mailbox cp-mailbox
+
+
+all: all-waitlist all-gas all-mailbox
 
 
 clean:

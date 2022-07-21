@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, generatePath } from 'react-router-dom';
-import { Hex, HumanedMessage } from '@gear-js/api';
+import { Hex } from '@gear-js/api';
 import { Button, buttonStyles } from '@gear-js/ui';
 import clsx from 'clsx';
 
 import styles from './Message.module.scss';
+import { HumanMailboxItem } from './types';
 
 import { routes } from 'routes';
 import { getPreformattedText } from 'helpers';
@@ -12,12 +13,12 @@ import claimSVG from 'assets/images/claim.svg';
 import messageSVG from 'assets/images/message.svg';
 
 type Props = {
-  message: HumanedMessage;
+  message: HumanMailboxItem;
   onClaim: (messageId: Hex) => Promise<void>;
 };
 
 const Message = ({ message, onClaim }: Props) => {
-  const messageId = message.id;
+  const messageId = message[0].id;
 
   const [isLoading, setIsLoading] = useState(false);
 

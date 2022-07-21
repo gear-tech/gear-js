@@ -5,7 +5,7 @@ import { Hex } from '@gear-js/api';
 import { Button, buttonStyles } from '@gear-js/ui';
 
 import { routes } from 'routes';
-import { useClaimMessage } from 'hooks';
+import { useMessageClaim } from 'hooks';
 import { formatDate } from 'helpers';
 import { MessageModel } from 'types/message';
 import { Spinner } from 'components/common/Spinner/Spinner';
@@ -23,7 +23,7 @@ const MessageInfo = ({ message, payload }: Props) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const claimMessage = useClaimMessage();
+  const claimMessage = useMessageClaim();
 
   const disableLoading = () => setIsLoading(false);
 

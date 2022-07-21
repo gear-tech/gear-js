@@ -3,7 +3,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { AccountProvider } from '@gear-js/react-hooks';
 
-import { useAccountMock, useApiMock, TEST_API, TEST_ACCOUNT } from '../../mocks/hooks';
+import { useAccountMock, useApiMock, TEST_API, TEST_ACCOUNT_1 } from '../../mocks/hooks';
 import { META, REPLY_META, PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2 } from '../../const';
 
 import * as helpers from 'helpers';
@@ -77,7 +77,7 @@ describe('send message page tests', () => {
     TEST_API.message.signAndSend.mockResolvedValue('');
 
     useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT);
+    useAccountMock(TEST_ACCOUNT_1);
 
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
 
@@ -270,11 +270,14 @@ describe('send message page tests', () => {
   });
 
   it('sends message to program with meta', async () => {
+    useApiMock(TEST_API);
+    useAccountMock(TEST_ACCOUNT_1);
+
     TEST_API.message.submit.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
 
     useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT);
+    useAccountMock(TEST_ACCOUNT_1);
 
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
 
@@ -404,11 +407,14 @@ describe('send message page tests', () => {
   });
 
   it('sends reply to message of program without meta', async () => {
+    useApiMock(TEST_API);
+    useAccountMock(TEST_ACCOUNT_1);
+
     TEST_API.reply.submit.mockResolvedValue('');
     TEST_API.reply.signAndSend.mockResolvedValue('');
 
     useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT);
+    useAccountMock(TEST_ACCOUNT_1);
 
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
 
@@ -500,11 +506,14 @@ describe('send message page tests', () => {
   });
 
   it('sends reply to message of program with meta', async () => {
+    useApiMock(TEST_API);
+    useAccountMock(TEST_ACCOUNT_1);
+
     TEST_API.reply.submit.mockResolvedValue('');
     TEST_API.reply.signAndSend.mockResolvedValue('');
 
     useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT);
+    useAccountMock(TEST_ACCOUNT_1);
 
     const calculateGas = jest.spyOn(helpers, 'calculateGas').mockResolvedValue(2400000);
 

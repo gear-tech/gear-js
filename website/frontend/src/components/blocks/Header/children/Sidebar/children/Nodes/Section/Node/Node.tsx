@@ -3,17 +3,17 @@ import { useAlert } from '@gear-js/react-hooks';
 import { Button, Radio } from '@gear-js/ui';
 
 import styles from './Node.module.scss';
-import { Nodes } from '../../../../../../types';
 
 import { copyToClipboard } from 'helpers';
 import { NODE_API_ADDRESS } from 'context/api/const';
-import copy from 'assets/images/copy.svg';
-import trash from 'assets/images/trash.svg';
+import { Node as NodeType } from 'types/api';
+import copySVG from 'assets/images/copy.svg';
+import trashSVG from 'assets/images/trash.svg';
 
 type Props = {
   address: string;
   isCustom: boolean;
-  setLocalNodes: Dispatch<React.SetStateAction<Nodes>>;
+  setLocalNodes: Dispatch<React.SetStateAction<NodeType[]>>;
   selectedNode: string;
   setSelectedNode: Dispatch<SetStateAction<string>>;
 };
@@ -47,11 +47,11 @@ function Node({ address, isCustom, setLocalNodes, selectedNode, setSelectedNode 
         onChange={handleChange}
       />
       <div className={styles.buttons}>
-        <Button aria-label="Copy node address" icon={copy} color="transparent" onClick={handleCopy} />
+        <Button aria-label="Copy node address" icon={copySVG} color="transparent" onClick={handleCopy} />
         {isCustom && (
           <Button
             aria-label="Remove node address"
-            icon={trash}
+            icon={trashSVG}
             color="transparent"
             onClick={removeNode}
             disabled={address === NODE_API_ADDRESS}

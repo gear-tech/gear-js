@@ -32,8 +32,8 @@ const useSendMessage = () => {
       try {
         const { signer } = await web3FromSource(account.meta.source);
         const apiExtrinsic = extrinsic === 'handle' ? api.message : api.reply;
-
-        apiExtrinsic.submit(message, meta, payloadType);
+        // TODO: fix message type
+        apiExtrinsic.submit(message as any, meta, payloadType);
 
         await apiExtrinsic.signAndSend(account.address, { signer }, (data) => {
           if (data.status.isReady) {
