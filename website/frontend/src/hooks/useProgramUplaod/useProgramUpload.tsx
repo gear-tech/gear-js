@@ -56,64 +56,55 @@ const useProgramUpload = () => {
 
         const initialization = waitForProgramInit(api, programId);
 
-        const signStatus = await api.program
-          .signAndSend(account.address, { signer: injector.signer }, (data) => {
-            if (data.status.isReady) {
-              alert.update(alertId, TransactionStatus.Ready);
+        await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
+          if (data.status.isReady) {
+            alert.update(alertId, TransactionStatus.Ready);
 
-              return;
-            }
+            return;
+          }
 
-            if (data.status.isInBlock) {
-              alert.update(alertId, TransactionStatus.InBlock);
+          if (data.status.isInBlock) {
+            alert.update(alertId, TransactionStatus.InBlock);
 
-              return;
-            }
+            return;
+          }
 
-            if (data.status.isFinalized) {
-              alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
+          if (data.status.isFinalized) {
+            alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
 
-              data.events.forEach(({ event }) => {
-                const { method, section } = event;
+            data.events.forEach(({ event }) => {
+              const { method, section } = event;
 
-                const alertOptions = { title: `${section}.${method}` };
+              const alertOptions = { title: `${section}.${method}` };
 
-                if (method === Method.ExtrinsicFailed) {
-                  alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
+              if (method === Method.ExtrinsicFailed) {
+                alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
-                  return;
-                }
+                return;
+              }
 
-                if (method === Method.MessageEnqueued) {
-                  alert.success('Success', alertOptions);
+              if (method === Method.MessageEnqueued) {
+                alert.success('Success', alertOptions);
 
-                  callback();
-                }
-              });
+                callback();
+              }
+            });
 
-              return;
-            }
+            return;
+          }
 
-            if (data.status.isInvalid) {
-              alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-            }
-          })
-          .then(() => ProgramStatus.Success)
-          .catch(() => ProgramStatus.Failed);
-
-        if (signStatus === ProgramStatus.Failed) {
-          alert.update(alertId, 'Cancelled', DEFAULT_ERROR_OPTIONS);
-
-          return;
-        }
+          if (data.status.isInvalid) {
+            alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
+          }
+        });
 
         const initStatus = await initialization;
 
+        const alertOptions = { title: 'Program initialization' };
         const programMessage = getProgramMessage(programId);
-        const programAlertOptions = { title: 'Program initialization' };
 
         if (initStatus === ProgramStatus.Failed) {
-          alert.error(programMessage, programAlertOptions);
+          alert.error(programMessage, alertOptions);
 
           return;
         }
@@ -126,9 +117,13 @@ const useProgramUpload = () => {
           await uploadMetadata(programId, account, name, injector, alert, metaBuffer, meta, title);
         }
 
-        alert.success(programMessage, programAlertOptions);
+        alert.success(programMessage, alertOptions);
       } catch (error) {
-        alert.error((error as Error).message);
+        const message = (error as Error).message;
+
+        alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+
+        return Promise.reject(error);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -55,7 +55,7 @@ const BlocksSummary = () => {
       </div>
       <div className={styles.section}>
         <p>Total issuance</p>
-        <p className={styles.data}>
+        <div className={styles.data}>
           <span className={styles.number}>{totalIssuance}</span>
           <span>MUnit</span>
           <Tooltip
@@ -66,7 +66,7 @@ const BlocksSummary = () => {
           >
             <QuestionSVG />
           </Tooltip>
-        </p>
+        </div>
       </div>
     </div>
   );
