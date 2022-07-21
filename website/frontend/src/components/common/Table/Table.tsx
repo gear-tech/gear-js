@@ -1,4 +1,5 @@
 import { ReactNode, useMemo } from 'react';
+import clsx from 'clsx';
 
 import styles from './Table.module.scss';
 import { HeaderItem } from './children/HeaderItem';
@@ -9,12 +10,14 @@ type Props = {
   rows: any[];
   header: HeaderCol[];
   className?: string;
+  bodyClassName?: string;
+  defaultMessage?: string;
   renderRow: (row: any, index: number) => ReactNode;
   getRowKey: (row: any, index: number) => string | number;
 };
 
 const Table = (props: Props) => {
-  const { header, cols, rows, getRowKey, className, renderRow } = props;
+  const { header, cols, rows, getRowKey, className, bodyClassName, defaultMessage = 'No content', renderRow } = props;
 
   const gridStyle = useMemo(
     () => ({
@@ -22,6 +25,14 @@ const Table = (props: Props) => {
     }),
     [cols]
   );
+
+  if (!rows.length) {
+    return (
+      <div className={className}>
+        <p className={styles.emptyContent}>{defaultMessage}</p>
+      </div>
+    );
+  }
 
   return (
     <div className={className}>
@@ -31,7 +42,7 @@ const Table = (props: Props) => {
         ))}
       </header>
 
-      <div>
+      <div className={clsx(styles.tableBody, bodyClassName)}>
         {rows.map((row, index) => (
           <div key={getRowKey(row, index)} style={gridStyle} className={styles.tableRow}>
             {renderRow(row, index)}

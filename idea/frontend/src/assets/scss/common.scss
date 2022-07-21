@@ -1,3 +1,4 @@
+@use '@gear-js/ui/variables' as *;
 @use 'assets/scss/breakpoints' as *;
 
 .search-queries {
@@ -106,4 +107,22 @@
 .disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.customScroll {
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $lineColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    background-color: $textColor;
+  }
+
+  scrollbar-color: $textColor  $lineColor;
+  scrollbar-width: thin;
 }

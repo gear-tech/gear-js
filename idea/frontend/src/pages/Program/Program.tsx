@@ -23,8 +23,8 @@ const Program = () => {
   const { account } = useAccount();
 
   const { programId } = useParams() as Params;
+  const { program, metadata } = useProgram(programId);
 
-  const [program, metadata] = useProgram(programId);
   const [waitlist, setWaitlist] = useState<WaitlistItem[]>([]);
   const [messages, setMessages] = useState<MessageModel[]>([]);
 

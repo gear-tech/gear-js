@@ -1,5 +1,10 @@
 @use '@gear-js/ui/variables' as *;
 
+.emptyContent {
+  color: $textColor;
+  font-size: $fontSizeMedium;
+}
+
 .header,
 .tableRow {
   display: grid;
@@ -9,6 +14,10 @@
   padding: 10px 20px;
   border-bottom: 1px solid $lineColor;
   background-color: $bgColor;
+}
+
+.tableBody {
+  overflow-y: auto;
 }
 
 .tableRow {

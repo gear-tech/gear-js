@@ -8,6 +8,7 @@ import { getRowKey } from './helpers';
 import { TABLE_HEADER, TABLE_COLS } from './const';
 import { WaitlistRowItem } from './children/WaitlistRowItem';
 
+import { HumanWaitlistItem } from 'types/api';
 import { Table } from 'components/common/Table';
 import triangleSVG from 'assets/images/triangle.svg';
 
@@ -16,11 +17,15 @@ type Props = {
 };
 
 const ProgramWaitlist = ({ waitlist }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(Boolean(waitlist.length));
 
   const handleClick = () => setIsOpen((prevState) => !prevState);
 
-  const renderRow = useCallback((row: WaitlistItem) => <WaitlistRowItem {...row.toHuman()[0]} />, []);
+  const renderRow = useCallback((row: WaitlistItem) => {
+    const [content, interval] = row.toHuman() as HumanWaitlistItem;
+
+    return <WaitlistRowItem content={content} interval={interval} />;
+  }, []);
 
   return (
     <div className={styles.waitlistWrapper}>
@@ -41,6 +46,8 @@ const ProgramWaitlist = ({ waitlist }: Props) => {
           header={TABLE_HEADER}
           getRowKey={getRowKey}
           className={styles.waitlistTable}
+          bodyClassName={styles.waitlistTableBody}
+          defaultMessage="No entries on the waitlist"
           renderRow={renderRow}
         />
       )}

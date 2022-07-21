@@ -21,7 +21,7 @@ const Message = () => {
   const [message, setMessage] = useState<MessageModel>();
   const [messagePayload, setMessagePayload] = useState('');
 
-  const [program, meta] = useProgram(message?.source);
+  const { metadata, isLoading } = useProgram(message?.source);
 
   useEffect(() => {
     getMessage(messageId)
@@ -31,14 +31,14 @@ const Message = () => {
   }, []);
 
   useEffect(() => {
-    if (!program || !message) {
+    if (isLoading || !message) {
       return;
     }
 
-    const payload = meta && !message.exitCode ? getDecodedMessagePayload(meta, message) : message.payload;
+    const payload = metadata && !message.exitCode ? getDecodedMessagePayload(metadata, message) : message.payload;
 
-    setMessagePayload(getPreformattedText(payload));
-  }, [program, message, meta]);
+    setMessagePayload(payload ? getPreformattedText(payload) : '-');
+  }, [metadata, message, isLoading]);
 
   return (
     <div className="wrapper">
