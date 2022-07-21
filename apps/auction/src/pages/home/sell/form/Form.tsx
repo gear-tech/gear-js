@@ -1,5 +1,7 @@
 import { Input, inputStyles, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
+import clsx from 'clsx';
+import { MULTIPLIER } from 'consts';
 import { useAuctionMessage } from 'hooks';
 import styles from './Form.module.scss';
 
@@ -14,15 +16,28 @@ const initialValues = {
 };
 
 function Form() {
-  const { getInputProps, onSubmit } = useForm({ initialValues });
+  const { getInputProps, onSubmit, values } = useForm({ initialValues });
+
   const sendMessage = useAuctionMessage();
 
-  const handleSubmit = ({ days, hours, minutes, ...values }: typeof initialValues) => {
+  const handleSubmit = ({ days, hours, minutes, ...restValues }: typeof initialValues) => {
     const duration = { days, hours, minutes };
-    const payload = { Create: { duration, ...values } };
+    const payload = { Create: { duration, ...restValues } };
 
     sendMessage(payload);
   };
+
+  // const getSeconds = () => {
+  //   const { hours, minutes, seconds } = values;
+
+  //   const hourSeconds = +hours * MULTIPLIER.MINUTES * MULTIPLIER.SECONDS;
+  //   const minuteSeconds = +minutes * MULTIPLIER.SECONDS;
+
+  //   return hourSeconds + minuteSeconds + seconds;
+  // };
+
+  const finalPrice = +values.startingPrice - +values.minutes * MULTIPLIER.SECONDS * +values.discountRate;
+  const priceClassName = clsx(styles.price, finalPrice > 0 && styles.success, finalPrice < 0 && styles.error);
 
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
@@ -45,7 +60,7 @@ function Form() {
         </div>
         <p>
           <span className={inputStyles.label}>Final price:</span>
-          <span className={styles.price}>00.00</span>
+          <span className={priceClassName}>{finalPrice}</span>
         </p>
       </div>
       <Button type="submit" text="Sell NFT" block />
