@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAlert } from '@gear-js/react-hooks';
 
 import { Params } from './types';
 import { getDecodedMessagePayload } from './helpers';
@@ -14,6 +15,7 @@ import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
 
 const Message = () => {
+  const alert = useAlert();
   const { messageId } = useParams() as Params;
 
   const [message, setMessage] = useState<MessageModel>();
@@ -22,7 +24,9 @@ const Message = () => {
   const [program, meta] = useProgram(message?.source);
 
   useEffect(() => {
-    getMessage(messageId).then(({ result }) => setMessage(result));
+    getMessage(messageId)
+      .then(({ result }) => setMessage(result))
+      .catch((error) => alert.error(error.message));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

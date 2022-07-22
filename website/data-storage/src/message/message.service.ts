@@ -8,6 +8,8 @@ import {
   IMessagesDispatchedKafkaValue,
   InitStatus,
   MESSAGE_READ_STATUS,
+  UpdateMessageData,
+  UpdateMessagesParams,
 } from '@gear-js/common';
 
 import { Message } from '../database/entities/message.entity';
@@ -79,6 +81,18 @@ export class MessageService {
     }
   }
 
+  public async updateMessagesData(updateMessagesParams: UpdateMessagesParams): Promise<void> {
+    const promises = updateMessagesParams.params.map((updateMessageData) => {
+      return this.updateMessage(updateMessageData);
+    });
+
+    try {
+      await Promise.all(promises);
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
   public async updateReadStatus(id: string, readStatus: MESSAGE_READ_STATUS): Promise<void> {
     try {
       await this.messageRepository.update({ id }, { readStatus });
@@ -90,5 +104,10 @@ export class MessageService {
   public async deleteRecords(genesis: string): Promise<void> {
     const messages = await this.messageRepository.listByGenesis(genesis);
     await this.messageRepository.remove(messages);
+  }
+
+  private async updateMessage(updateMessageData: UpdateMessageData): Promise<void> {
+    const { messageId, genesis, ...data } = updateMessageData;
+    await this.messageRepository.update({ id: messageId, genesis }, { ...data });
   }
 }

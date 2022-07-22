@@ -11,5 +11,4 @@ const ADDRESS = {
 const LOCAL_STORAGE = {
   ACCOUNT: 'account',
 };
-
 export { ADDRESS, LOCAL_STORAGE };

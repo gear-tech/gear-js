@@ -28,4 +28,11 @@ interface IUserMessageReadData {
   reason: MESSAGE_READ_STATUS | null;
 }
 
-export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData, IUserMessageReadData };
+interface UpdateMessageData {
+  messageId: string;
+  payload: string;
+  genesis: string;
+  value: string;
+}
+
+export { IMessage, IMessageEnqueuedData, IMessagesDispatchedData, IUserMessageReadData, UpdateMessageData };

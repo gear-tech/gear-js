@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState, useMemo } from 'react';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
@@ -54,7 +54,7 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
 
   const handleResetForm = () => setDroppedFile(null);
 
-  const handleSubmitForm = (values: FormValues) => {
+  const handleSubmitForm = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     const { value, payload, gasLimit, programName, payloadType } = values;
 
     const programOptions: UploadProgramModel = {
@@ -67,7 +67,9 @@ const UploadForm = ({ setDroppedFile, droppedFile }: Props) => {
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    uploadProgram(droppedFile, programOptions, metadataBuffer, handleResetForm);
+    uploadProgram(droppedFile, programOptions, metadataBuffer, handleResetForm).catch(() =>
+      helpers.setSubmitting(false)
+    );
   };
 
   const handleCalculateGas = async (values: FormValues, setFieldValue: SetFieldValue) => {

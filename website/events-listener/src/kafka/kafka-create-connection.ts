@@ -1,9 +1,11 @@
-import { KAFKA_TOPICS } from '@gear-js/common';
+import { API_METHODS } from '@gear-js/common';
 
 import { kafkaProducer } from './producer';
 
+const topics: string[] = [API_METHODS.EVENTS, API_METHODS.MESSAGES_UPDATE_DATA];
+
 async function kafkaCreateConnection(): Promise<void> {
-  await kafkaProducer.createTopic(KAFKA_TOPICS.EVENTS);
+  await kafkaProducer.createTopics(topics);
   await kafkaProducer.connect();
 }
 

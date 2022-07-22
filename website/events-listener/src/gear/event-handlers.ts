@@ -18,6 +18,7 @@ import {
   NewEventData,
 } from '@gear-js/common';
 import { GenericEventData } from '@polkadot/types';
+
 import { getMessageReadStatus } from '../utils';
 
 function messageEnqueuedHandler(data: MessageEnqueuedData): NewEventData<Keys.MessageEnqueued, IMessageEnqueuedData> {
