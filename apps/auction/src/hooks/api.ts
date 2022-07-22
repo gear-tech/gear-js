@@ -1,6 +1,6 @@
 import { useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { useMemo } from 'react';
-import auctionMetaWasm from 'assets/wasm/auction.meta.wasm';
+import auctionMetaWasm from 'assets/wasm/dutch_auction.meta.wasm';
 import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
 import { ADDRESS } from 'consts';
 import { AuctionState, NFTState } from 'types';

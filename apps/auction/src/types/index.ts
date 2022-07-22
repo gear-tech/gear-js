@@ -8,6 +8,7 @@ type Auction = {
   timeLeft: string;
   tokenId: string;
   tokenOwner: Hex;
+  status: string | { Purchased: { price: string } };
 };
 
 type Token = {
@@ -25,4 +26,4 @@ type NFTState = { Token: { token: Token } };
 
 type Countdown = { hours: string; minutes: string; seconds: string };
 
-export type { AuctionState, NFTState, Countdown };
+export type { Auction, AuctionState, NFTState, Countdown };

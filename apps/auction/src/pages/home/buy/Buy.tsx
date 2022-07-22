@@ -16,15 +16,17 @@ type Props = {
   startPrice: string;
   currentPrice: string;
   rate: string;
+  onCountdownReset: () => void;
 };
 
-function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, rate }: Props) {
+function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, rate, onCountdownReset }: Props) {
   const sendMessage = useAuctionMessage();
 
   const { hours, minutes, seconds, price } = useCountdown(
     getCountdownNumber(timeLeft),
     getNumber(currentPrice),
     getNumber(rate),
+    onCountdownReset,
   );
 
   const countdownClassName = clsx(styles.text, styles.countdown);

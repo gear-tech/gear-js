@@ -2,7 +2,7 @@ import { MULTIPLIER } from 'consts';
 import { useState, useEffect, useRef } from 'react';
 import { getCountdown } from 'utils';
 
-function useCountdown(initTimeLeft: number, initPrice: number, rate: number) {
+function useCountdown(initTimeLeft: number, initPrice: number, rate: number, onReset: () => void) {
   const [timeLeft, setTimeLeft] = useState(initTimeLeft);
   const [price, setPrice] = useState(initPrice);
   const intervalId = useRef<NodeJS.Timer>();
@@ -18,7 +18,13 @@ function useCountdown(initTimeLeft: number, initPrice: number, rate: number) {
     }
 
     return () => {
-      if (intervalId.current && timeLeft === MULTIPLIER.MILLISECONDS) clearInterval(intervalId.current);
+      if (intervalId.current && timeLeft === MULTIPLIER.MILLISECONDS) {
+        clearInterval(intervalId.current);
+
+        // TODO: reset on unmount
+        console.log('clear');
+        onReset();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft]);

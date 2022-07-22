@@ -9,8 +9,8 @@ import { useAuctionMessage, useNftMessage } from 'hooks';
 import styles from './Form.module.scss';
 
 const initialValues = {
-  nftContractActorId: '0xf9be5c25e821bc7abc546a90104dab55774fd49981d1128e1a0f5c0a92d650db',
-  tokenId: '0',
+  nftContractActorId: '0x2cb1532754e0883ce06b175c208d4e780da81f543106cdd45a01201c4c04808b',
+  tokenId: '1',
   startingPrice: '1000',
   discountRate: '5',
   days: '00',
