@@ -24,6 +24,10 @@ export const LOCAL_STORAGE = {
   ACCOUNT: 'account',
 };
 
+export const ACCOUNT_ERRORS = {
+  WALLET_NOT_CONNECTED: 'Wallet no connected',
+};
+
 export const PROGRAM_ERRORS = {
   UNAUTHORIZED: 'Unauthorized',
   INVALID_PARAMS: 'Invalid method parameters',
