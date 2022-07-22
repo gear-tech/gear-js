@@ -80,7 +80,7 @@ function useFeed() {
   useEffect(() => {
     if (promises) Promise.all(promises!).then((result) => {
       const msg = result.flat() as Message[];
-      const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', '')) - parseInt(next.timestamp.replaceAll(',', '')))
+      const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10))
       setMessages(sorted.reverse())
     })
 
@@ -107,7 +107,7 @@ function useOwnFeed() {
   useEffect(() => {
     if (promises) Promise.all(promises!).then((result) => {
       const msg = result.flat() as Message[];
-      const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', '')) - parseInt(next.timestamp.replaceAll(',', '')))
+      const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10))
       setMessages(sorted.reverse())
     })
 
