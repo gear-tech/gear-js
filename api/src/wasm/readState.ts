@@ -1,4 +1,5 @@
-import { u64, Compact } from '@polkadot/types';
+import { u64 } from '@polkadot/types';
+import { BlockNumber } from '@polkadot/types/interfaces';
 
 import { getExportValue, PAGE_SIZE } from './utils';
 import { IGearPages } from '../types';
@@ -9,10 +10,14 @@ export async function readState(
   initialSize: number,
   pages: IGearPages,
   inputValue?: Uint8Array,
-  blockTimestamp?: Compact<u64>,
+  blockTimestamp?: u64,
+  blockNumber?: BlockNumber,
 ): Promise<Uint8Array> {
   const memory = new WebAssembly.Memory({ initial: initialSize });
-  const module = await WebAssembly.instantiate(wasmBytes, importObj(memory, false, inputValue, blockTimestamp));
+  const module = await WebAssembly.instantiate(
+    wasmBytes,
+    importObj(memory, false, inputValue, blockTimestamp, blockNumber),
+  );
   Object.keys(pages).forEach((pageNumber: string) => {
     const start = +pageNumber * PAGE_SIZE;
     const end = start + PAGE_SIZE;

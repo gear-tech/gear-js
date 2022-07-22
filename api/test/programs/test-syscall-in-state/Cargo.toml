@@ -1,5 +1,5 @@
 [package]
-name = "test-mailbox"
+name = "test-syscall-in-state"
 version = "0.1.0"
 authors = ["Gear Technologies"]
 edition = "2021"

@@ -1,3 +1,14 @@
+## 0.24.1
+
+_07/22/2022_
+
+https://github.com/gear-tech/gear-js/pull/872
+
+### Changes
+
+- Add oportunity to call `gr_block_height` syscall in meta_state function
+
+---
 ## 0.24.0
 
 _07/19/2022_
@@ -11,7 +22,6 @@ https://github.com/gear-tech/gear-js/pull/848
 - Update type of waitlist and mailbox item according to https://github.com/gear-tech/gear/pull/1197
   _From this moment the types are Tuple with 2 elements, the first one remained the same and the 2nd one is object with `start` and `finish` fields that show block's number when message gets into **mailbox / waitlist** and last block's number when message gets out of **mailbox / waitlist**_
 - Also `waitlist.read` and `mailbox.read` methods now return Codec types without keys.
-
 
 ---
 ## 0.23.6
