@@ -31,11 +31,12 @@
     "website/events-listener",
     "website/frontend",
     "website/test-balance",
-    "website/common"
+    "website/common",
+    "apps/**"
   ],
   "lint-staged": {
     "api/**/*.{js,ts}": "cd api && npm run lint:fix",
-    "website/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'website/frontend/**' --ignore-pattern 'apps/**"
+    "website/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'website/frontend/**'"
   },
   "resolutions": {
     "@types/react": "17.0.44"
