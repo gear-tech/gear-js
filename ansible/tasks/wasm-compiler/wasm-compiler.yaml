@@ -20,7 +20,7 @@
 
 - name: Copy wasm-compiler
   copy:
-    src: ../../../website/wasm-compiler/
+    src: ../../../idea/wasm-compiler/
     dest: /home/ec2-user/wasm-compiler
 
 - name: Install dependencies

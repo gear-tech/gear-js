@@ -32,30 +32,30 @@ Refer to the [gear-ui](https://github.com/gear-tech/gear-js/blob/master/utils/ge
 
 #### [npm package](https://www.npmjs.com/package/@gear-js/ui)
 
-## [website](https://github.com/gear-tech/gear-js/tree/master/website)
+## [idea](https://github.com/gear-tech/gear-js/tree/master/idea)
 
 Source code of [idea.gear-tech.io](https://idea.gear-tech.io/) and backend microservices
 
-#### [frontend](https://github.com/gear-tech/gear-js/tree/master/website/frontend)
+#### [frontend](https://github.com/gear-tech/gear-js/tree/master/idea/frontend)
 
 React application that serves as a get-familiar with Gear to help developers write, test and upload smart contracts to a test network as well as manage accounts, balances, events and more
 
-#### [events-listener](https://github.com/gear-tech/gear-js/tree/master/website/events-listener)
+#### [events-listener](https://github.com/gear-tech/gear-js/tree/master/idea/events-listener)
 
 Microservice listens to all the events occuring in the Gear node and sends to the data-storage to store the information about them
 
-#### [data-storage](https://github.com/gear-tech/gear-js/tree/master/website/data-storage)
+#### [data-storage](https://github.com/gear-tech/gear-js/tree/master/idea/data-storage)
 
 Microservice is responsible for storing metadata of uploaded programs and information about events
 
-#### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/website/api-gateway)
+#### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/idea/api-gateway)
 
 Microservice provides any interaction between the events / meta data store and an external user
 
-#### [test-balance](https://github.com/gear-tech/gear-js/tree/master/website/test-balance)
+#### [test-balance](https://github.com/gear-tech/gear-js/tree/master/idea/test-balance)
 
 Microservice provides the opportunity to obtain test tokens
 
-#### [wasm-compiler](https://github.com/gear-tech/gear-js/tree/master/website/wasm-compiler)
+#### [wasm-compiler](https://github.com/gear-tech/gear-js/tree/master/idea/wasm-compiler)
 
 Microservice provides the opportunity to compile rust projects to wasm
