@@ -7,10 +7,10 @@
   "version": "0.2.1",
   "preferGlobal": true,
   "dependencies": {
-    "@gear-js/api": "0.20.0",
+    "@gear-js/api": "0.24.1",
     "@polkadot/api": "7.15.1",
     "chalk": "5.0.1",
-    "commander": "9.3.0",
+    "commander": "9.4.0",
     "inquirer": "8.2.4"
   },
   "repository": {

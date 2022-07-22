@@ -407,14 +407,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@gear-js/api@npm:0.20.0"
+"@gear-js/api@npm:0.24.1":
+  version: 0.24.1
+  resolution: "@gear-js/api@npm:0.24.1"
   peerDependencies:
-    "@polkadot/api": ^8.6.1
-    "@polkadot/wasm-crypto": ^6.1.1
+    "@polkadot/api": ^8.13.1
+    "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
-  checksum: bf10be2adf72f012ee2c7f17b673f68a614ba7e9c26ef6e3c9b895766e780ff11663fd502c3841628f9232475aeafc39ebb5da443699c4e680646472cc72195c
+  checksum: c097ed7fa37ec299f754a152eed70a9898d14c5313d3b4ddfb4fb57b9bd1f9f5c1d518cd4617f3f7ee8751fc62fa12d9878ac0fb6843e8e1c1faedc234dfc18f
   languageName: node
   linkType: hard
 
@@ -422,10 +422,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/gear-meta@workspace:."
   dependencies:
-    "@gear-js/api": 0.20.0
+    "@gear-js/api": 0.24.1
     "@polkadot/api": 7.15.1
     chalk: 5.0.1
-    commander: 9.3.0
+    commander: 9.4.0
     inquirer: 8.2.4
     jest: 27.5.1
   bin:
@@ -1847,10 +1847,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:9.3.0":
-  version: 9.3.0
-  resolution: "commander@npm:9.3.0"
-  checksum: d421ce66fee25792a1470c69aa8d1b86434bf873a96483aa92c8267f81a6f20c6f7c426f5e82f88ac50a8ec4855d3f2787aebcdef8aa559e1080a2337a95a217
+"commander@npm:9.4.0":
+  version: 9.4.0
+  resolution: "commander@npm:9.4.0"
+  checksum: a322de584a6ccd1ea83c24f6a660e52d16ffbe2613fcfbb8d2cc68bc9dec637492456d754fe8bb5b039ad843ed8e04fb0b107e581a75f62cde9e1a0ab1546e09
   languageName: node
   linkType: hard
 
