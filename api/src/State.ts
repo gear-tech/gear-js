@@ -51,8 +51,12 @@ export class GearProgramState extends GearStorage {
     });
 
     const pages = await this.gPages(programId, program);
-    const block = await this.api.blocks.getFinalizedHead();
-    const blockTimestamp = await this.api.blocks.getBlockTimestamp(block.toHex());
+    const blockHash = await this.api.blocks.getFinalizedHead();
+    const block = await this.api.blocks.get(blockHash);
+
+    const blockTimestamp = await this.api.blocks.getBlockTimestamp(block);
+
+    const blockNumber = block.block.header.number.unwrap();
 
     if (!pages) {
       throw new ReadStateError('Unable to read state. Unable to recieve program pages from chain');
@@ -65,7 +69,7 @@ export class GearProgramState extends GearStorage {
       throw new ReadStateError('Unable to read state. inputValue not specified');
     }
     const encodedInput = inputValue === undefined ? undefined : this.encodeInput(metadata, inputValue);
-    const state = await readState(metaWasm, initialSize, pages, encodedInput, blockTimestamp);
+    const state = await readState(metaWasm, initialSize, pages, encodedInput, blockTimestamp.unwrap(), blockNumber);
 
     return this.decodeState(state, metadata);
   }

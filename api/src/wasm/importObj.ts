@@ -1,10 +1,12 @@
-import { u64, Compact } from '@polkadot/types';
+import { u64 } from '@polkadot/types';
+import { BlockNumber } from '@polkadot/types/interfaces';
 
 export default (
   memory: WebAssembly.Memory,
   showDebug?: boolean,
   inputValue?: Uint8Array,
-  timestamp?: Compact<u64>,
+  timestamp?: u64,
+  block_height?: BlockNumber,
 ) => ({
   env: {
     abortStackOverflow: () => {
@@ -24,7 +26,7 @@ export default (
       return memory.grow(pages);
     },
     free: () => {},
-    gr_block_height: () => {},
+    gr_block_height: () => block_height,
     gr_block_timestamp: () => timestamp,
     gr_exit: () => {},
     gr_gas_available: () => {},
