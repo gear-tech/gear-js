@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { GearApi, getWasmMetadata, Hex, MessageEnqueuedData } from '@gear-js/api';
+
 import accounts from '../config/accounts';
 import { IPreparedPrograms, IProgramSpec, IUploadedPrograms } from '../interfaces';
 import { sleep } from '../utils';
@@ -46,7 +47,7 @@ export async function uploadPrograms(
 
   const uploadedPrograms: { [key: Hex]: IUploadedPrograms } = {};
 
-  for (let program of Object.keys(programs)) {
+  for (const program of Object.keys(programs)) {
     const uploadedProgram = await uploadProgram(api, programs[program]);
     uploadedPrograms[uploadedProgram.destination] = {
       ...programs[program],

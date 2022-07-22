@@ -2,9 +2,10 @@ import { getWasmMetadata, Hex } from '@gear-js/api';
 import { u8aToHex } from '@polkadot/util';
 import { expect } from 'chai';
 import { readFileSync } from 'fs';
+
 import request from './request';
-import { IPreparedProgram, Passed } from '../interfaces';
 import accounts from '../config/accounts';
+import { IPreparedProgram, Passed } from '../interfaces';
 
 export async function getAllPrograms(genesis: string, expected: Hex[]): Promise<Passed> {
   const response = await request('program.all', { genesis });

@@ -1,9 +1,10 @@
 import { Hex } from '@gear-js/api';
+
 import assert from 'assert';
 
-import { IMessageSpec, IPreparedPrograms, IUploadedPrograms } from '../interfaces';
+import { ICodeSpec, IMessageSpec, IPreparedCollectionCode, IPreparedPrograms, IUploadedPrograms } from '../interfaces';
 
-export function checkPrograms(
+function checkPrograms(
   programs: { [id: Hex]: IUploadedPrograms },
   initSuccess: Map<string, boolean>,
 ): IPreparedPrograms {
@@ -22,7 +23,7 @@ export function checkPrograms(
   return result;
 }
 
-export function checkMessages(sentMessages: Map<number, any>, specMessages: { [program: string]: IMessageSpec[] }) {
+function checkMessages(sentMessages: Map<number, any>, specMessages: { [program: string]: IMessageSpec[] }) {
   assert(
     Object.keys(specMessages).reduce((counter, key) => {
       counter += specMessages[key].length;
@@ -33,7 +34,7 @@ export function checkMessages(sentMessages: Map<number, any>, specMessages: { [p
   return sentMessages;
 }
 
-export function checkUserMessageSent(
+function checkUserMessageSent(
   specMessages: { [program: string]: IMessageSpec[] },
   checkUserMessageSentMessages: Map<Hex, any>,
 ) {
@@ -51,3 +52,18 @@ export function checkUserMessageSent(
   );
   return checkUserMessageSentMessages;
 }
+
+function checkCollectionCode(
+  sentCollectionCode: Map<Hex, any>,
+  specCollectionCode: { [key: string]: ICodeSpec[] }): Map<Hex, any> {
+  assert(
+    Object.keys(sentCollectionCode).reduce((counter, key) => {
+      counter += specCollectionCode[key].length;
+      return counter;
+    }, 0) === sentCollectionCode.size,
+    "Some code wasn't sent",
+  );
+  return sentCollectionCode;
+}
+
+export  { checkPrograms, checkMessages, checkUserMessageSent,  checkCollectionCode };
