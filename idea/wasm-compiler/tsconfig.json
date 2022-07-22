@@ -8,7 +8,7 @@
     "baseUrl": "./src",
     "resolveJsonModule": true,
     "allowJs": true,
-    "outDir": "./build",
+    "outDir": "./dist",
     "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

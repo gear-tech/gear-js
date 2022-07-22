@@ -21,8 +21,8 @@ export class DBService {
 
   async connect() {
     await this.dataSource.initialize();
-    console.log('Connected to DB');
     this.repo = this.dataSource.getRepository(Wasm);
+    console.log('Connected to DB');
   }
 
   newBuild(id: string): Promise<Wasm> {

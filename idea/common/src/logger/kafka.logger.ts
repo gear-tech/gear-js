@@ -1,5 +1,4 @@
 import { logLevel } from 'kafkajs';
-import winston from 'winston';
 
 import { initLogger } from './logger';
 
@@ -18,13 +17,8 @@ const toWinstonLogLevel = (level: logLevel) => {
   }
 };
 
-export const kafkaLogger = (logLevel: logLevel) => {
-  const logger = winston.createLogger({
-    level: toWinstonLogLevel(logLevel),
-    transports: [new winston.transports.Console()],
-  });
-
-  return ({ namespace, level, label, log }) => {
+export const kafkaLogger = () => {
+  return ({ level, log }: any) => {
     const { message, ...extra } = log;
     initLogger('Kafka').log({
       level: toWinstonLogLevel(level),
