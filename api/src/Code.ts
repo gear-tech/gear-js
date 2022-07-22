@@ -11,7 +11,9 @@ export class GearCode extends GearTransaction {
    * @param code
    * @returns Code hash
    */
-  async submit(code: Buffer | Uint8Array): Promise<{ codeHash: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> }> {
+  async submit(
+    code: Buffer | Uint8Array,
+  ): Promise<{ codeHash: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> }> {
     const codeHash = generateCodeHash(code);
     await validateCodeId(codeHash, this.api);
 
@@ -22,19 +24,18 @@ export class GearCode extends GearTransaction {
 
   /**
    * Check that codeId exists on chain
-   * @param codeId 
-   * @returns 
+   * @param codeId
+   * @returns
    */
   async exists(codeId: string) {
-    const codeMetadata = await this.api.query.gearProgram.metadataStorage(codeId) as Option<CodeMetadata>;
+    const codeMetadata = (await this.api.query.gearProgram.metadataStorage(codeId)) as Option<CodeMetadata>;
     return codeMetadata.isSome;
   }
 
-
   /**
    * Get code storage
-   * @param codeId 
-   * @returns 
+   * @param codeId
+   * @returns
    */
   async storage(codeId: Hex): Promise<CodeStorage> {
     return this.api.query.gearProgram.codeStorage(codeId) as unknown as CodeStorage;
@@ -42,8 +43,8 @@ export class GearCode extends GearTransaction {
 
   /**
    * Get static pages of code
-   * @param codeId 
-   * @returns 
+   * @param codeId
+   * @returns
    */
   async staticPages(codeId: Hex): Promise<number | null> {
     const storage = await this.storage(codeId);
