@@ -2,11 +2,12 @@ import { u64, Compact, GenericExtrinsic, Vec } from '@polkadot/types';
 import { SignedBlock, BlockNumber, BlockHash } from '@polkadot/types/interfaces';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { AnyTuple, AnyNumber } from '@polkadot/types/types';
-import { isHex, isU8a } from '@polkadot/util';
+import { isHex, isU8a, isNumber } from '@polkadot/util';
 
 import { CreateType } from './create-type';
 import { GetBlockError } from './errors';
 import { GearApi } from './GearApi';
+import { Hex } from './types';
 export class GearBlock {
   constructor(private api: GearApi) {}
 
@@ -15,7 +16,7 @@ export class GearBlock {
    * @param hash
    * @returns
    */
-  async get(hash: `0x${string}` | Uint8Array): Promise<SignedBlock>;
+  async get(hash: Hex | Uint8Array): Promise<SignedBlock>;
 
   /**
    * Get data of particular block by blockNumber
@@ -29,14 +30,14 @@ export class GearBlock {
    * @param hashOrNumber
    * @returns
    */
-  async get(hashOrNumber: `0x${string}` | Uint8Array | number): Promise<SignedBlock>;
+  async get(hashOrNumber: Hex | Uint8Array | number): Promise<SignedBlock>;
 
   /**
    * Get data of particular block by blockNumber or blockHash
    * @param hashOrNumber
    * @returns
    */
-  async get(hashOrNumber: `0x${string}` | Uint8Array | number): Promise<SignedBlock> {
+  async get(hashOrNumber: Hex | Uint8Array | number): Promise<SignedBlock> {
     const hash = isU8a(hashOrNumber) || isHex(hashOrNumber) ? hashOrNumber : await this.getBlockHash(+hashOrNumber);
     try {
       return await this.api.rpc.chain.getBlock(hash);
@@ -65,12 +66,29 @@ export class GearBlock {
   }
 
   /**
-   * Get timestamp of block
-   * @param hashOrNumber hash or number of particular block
-   * @returns
+   * ### Get block's timestamp
+   * @param block
    */
-  async getBlockTimestamp(hashOrNumber: `0x${string}` | Uint8Array | number): Promise<Compact<u64>> {
-    const block = await this.get(hashOrNumber);
+  async getBlockTimestamp(block: SignedBlock): Promise<Compact<u64>>;
+
+  /**
+   * ### Get block's timestamp by blockHash
+   * @param hash
+   */
+  async getBlockTimestamp(hash: Hex | Uint8Array): Promise<Compact<u64>>;
+
+  /**
+   * ### Get block's timestamp by blockNumber
+   * @param number
+   */
+  async getBlockTimestamp(number: number): Promise<Compact<u64>>;
+
+  async getBlockTimestamp(blockOrHashOrNumber: Hex | Uint8Array | number | SignedBlock): Promise<Compact<u64>> {
+    const block =
+      isHex(blockOrHashOrNumber) || isU8a(blockOrHashOrNumber) || isNumber(blockOrHashOrNumber)
+        ? await this.get(blockOrHashOrNumber)
+        : blockOrHashOrNumber;
+
     const tsAsU8a = block.block.extrinsics.find(
       (value) => value.method.method === 'set' && value.method.section === 'timestamp',
     ).data;

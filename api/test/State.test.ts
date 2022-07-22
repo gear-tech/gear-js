@@ -14,9 +14,9 @@ const demo_meta_test = {
   uploadBlock: '0x',
   codeHash: '0x' as Hex,
 };
-const timestamp_test = {
-  code: readFileSync(join(TEST_WASM_DIR, 'timestamp.opt.wasm')),
-  meta: readFileSync(join(TEST_WASM_DIR, 'timestamp.meta.wasm')),
+const syscalls_test = {
+  code: readFileSync(join(TEST_WASM_DIR, 'test_syscall_in_state.opt.wasm')),
+  meta: readFileSync(join(TEST_WASM_DIR, 'test_syscall_in_state.meta.wasm')),
   id: '0x' as Hex,
 };
 
@@ -24,12 +24,12 @@ beforeAll(async () => {
   await api.isReady;
   const [alice] = await getAccount();
 
-  timestamp_test.id = api.program.submit({
-    code: timestamp_test.code,
+  syscalls_test.id = api.program.submit({
+    code: syscalls_test.code,
     gasLimit: 2_000_000_000,
   }).programId;
-  let initStatus = checkInit(api, timestamp_test.id);
-  api.program.signAndSend(alice, () => { });
+  let initStatus = checkInit(api, syscalls_test.id);
+  api.program.signAndSend(alice, () => {});
   expect(await initStatus()).toBe('success');
 
   demo_meta_test.id = api.program.submit(
@@ -94,12 +94,6 @@ describe('Read State', () => {
     );
   });
 
-  test('Test call timestamp in meta_state', async () => {
-    const state = await api.programState.read(timestamp_test.id, timestamp_test.meta);
-    expect(state).toBeDefined();
-    expect(parseInt(state.toString())).not.toBe(NaN);
-  });
-
   test('Tests read demo_meta state with None input', async () => {
     const state = await api.programState.read(demo_meta_test.id, demo_meta_test.meta, null);
     expect(state.toHex()).toBe(
@@ -113,6 +107,16 @@ describe('Read State', () => {
   });
 });
 
+describe('Syscalls in meta_state function', () => {
+  test('Test syscalls in meta_state', async () => {
+    const state = await api.programState.read(syscalls_test.id, syscalls_test.meta);
+    expect(state).toBeDefined();
+    expect(state[0]).toBeDefined();
+    expect(Number(state[0].toString())).not.toBe(NaN);
+    expect(state[1]).toBeDefined();
+    expect(Number(state[1].toString())).not.toBe(NaN);
+  });
+});
 describe('Events related to state change', () => {
   test('stateChanges should be in MessagesDispatched event data', async () => {
     const apiAt = await api.at(demo_meta_test.uploadBlock);
