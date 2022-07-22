@@ -7,7 +7,7 @@ export interface HumanMessage {
   payload: Hex | string;
   gas_limit: string;
   value: string;
-  reply: null | [number, Hex];
+  reply: null | { exitCode: number; replyTo: Hex };
 }
 
 export type HumanStoredMessage = Omit<HumanMessage, 'gas_limit'>;

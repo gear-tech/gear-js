@@ -38,18 +38,18 @@ export class GearMessageReply extends GearTransaction {
     meta?: Metadata,
     messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    validateValue(message.value, this.api);
-    validateGasLimit(message.gasLimit, this.api);
+    validateValue(message.value, this._api);
+    validateGasLimit(message.gasLimit, this._api);
 
     const payload = createPayload(
-      this.createType,
+      this._createType,
       messageType || meta?.async_handle_input || meta?.async_init_input,
       message.payload,
       meta,
     );
 
     try {
-      this.submitted = this.api.tx.gear.sendReply(message.replyToId, payload, message.gasLimit, message.value);
+      this.submitted = this._api.tx.gear.sendReply(message.replyToId, payload, message.gasLimit, message.value);
       return this.submitted;
     } catch (error) {
       throw new SendReplyError();

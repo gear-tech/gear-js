@@ -1,5 +1,4 @@
 import { AccountId32 } from '@polkadot/types/interfaces';
-import { UnsubscribePromise } from '@polkadot/api/types';
 import { Option } from '@polkadot/types';
 
 import { Hex, MailboxItem } from './types';
@@ -7,13 +6,10 @@ import { GearClaimValue } from './Claim';
 import { GearApi } from './GearApi';
 
 export class GearMailbox {
-  api: GearApi;
-  subscription: UnsubscribePromise;
-  claimValue: GearClaimValue;
+  public claimValue: GearClaimValue;
 
-  constructor(gearApi: GearApi) {
-    this.api = gearApi;
-    this.claimValue = gearApi.claimValueFromMailbox;
+  constructor(private api: GearApi) {
+    this.claimValue = api.claimValueFromMailbox;
   }
 
   /**

@@ -9,10 +9,7 @@ import { GetBlockError } from './errors';
 import { GearApi } from './GearApi';
 import { Hex } from './types';
 export class GearBlock {
-  protected api: GearApi;
-  constructor(api: GearApi) {
-    this.api = api;
-  }
+  constructor(private api: GearApi) {}
 
   /**
    * Get data of particular block by blockHash
