@@ -24,10 +24,11 @@
       }
     ],
     "linebreak-style": ["error", "unix"],
-    "quotes": ["warn", "single"],
+    "quotes": ["warn", "single", { "avoidEscape": true }],
     "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/no-explicit-any": "off",
     "no-case-declarations": 0,
     "eol-last": "error",
-    "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreStrings": true }]
+    "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreStrings": true, "ignoreComments": true }]
   }
 }

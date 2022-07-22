@@ -9,13 +9,11 @@ import { CreateType } from './create-type';
 import { GearApi } from './GearApi';
 
 export class GearTransaction {
-  protected api: GearApi;
-  protected createType: CreateType;
+  protected _createType: CreateType;
   submitted: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
-  constructor(gearApi: GearApi) {
-    this.api = gearApi;
-    this.createType = new CreateType(gearApi);
+  constructor(protected _api: GearApi) {
+    this._createType = new CreateType(_api);
   }
 
   signAndSend(account: AddressOrPair, callback: TransactionStatusCb): Promise<() => void>;

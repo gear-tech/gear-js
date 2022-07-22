@@ -4,11 +4,7 @@ import { Hex, WaitlistItem } from './types';
 import { GearApi } from './GearApi';
 
 export class GearWaitlist {
-  api: GearApi;
-
-  constructor(gearApi: GearApi) {
-    this.api = gearApi;
-  }
+  constructor(private _api: GearApi) {}
 
   /**
    * ## _Read program's waitlist_
@@ -45,21 +41,21 @@ export class GearWaitlist {
         : [undefined, messageIdOrNumberOfMessages || 1000];
 
     if (messageId) {
-      const waitlist = await this.api.query.gearMessenger.waitlist(programId, messageId);
-      const typedWaitlist = this.api.createType(
+      const waitlist = await this._api.query.gearMessenger.waitlist(programId, messageId);
+      const typedWaitlist = this._api.createType(
         'Option<(GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval)>',
         waitlist,
       ) as Option<WaitlistItem>;
       return typedWaitlist.unwrapOr(null);
     } else {
-      const keyPrefix = this.api.query.gearMessenger.waitlist.keyPrefix(programId);
-      const keysPaged = await this.api.rpc.state.getKeysPaged(keyPrefix, numberOfMessages, keyPrefix);
+      const keyPrefix = this._api.query.gearMessenger.waitlist.keyPrefix(programId);
+      const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefix, numberOfMessages, keyPrefix);
       if (keysPaged.length === 0) {
         return [];
       }
-      const waitlist = (await this.api.rpc.state.queryStorageAt(keysPaged)) as Option<WaitlistItem>[];
+      const waitlist = (await this._api.rpc.state.queryStorageAt(keysPaged)) as Option<WaitlistItem>[];
       return waitlist.map((item) => {
-        const typedItem = this.api.createType(
+        const typedItem = this._api.createType(
           'Option<(GearCoreMessageStoredStoredDispatch, GearCommonStoragePrimitivesInterval)>',
           item,
         );

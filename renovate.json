@@ -19,7 +19,7 @@
       "matchPaths": ["website/frontend/**"],
       "groupName": "idea-frontend",
       "reviewers": ["nikitayutanov", "aderrod94", "Pinkdesu"],
-      "labels": ["frontend"]
+      "addLabels": ["frontend"]
     },
     {
       "matchPaths": [
@@ -32,31 +32,31 @@
       ],
       "groupName": "idea-backend",
       "reviewers": ["osipov-mit", "Almazatun"],
-      "labels": ["backend"]
+      "addLabels": ["backend"]
     },
     {
       "matchPaths": ["website/tests/**"],
       "groupName": "idea-tests",
       "reviewers": ["osipov-mit", "Almazatun"],
-      "labels": ["tests"]
+      "addLabels": ["tests"]
     },
     {
       "matchPaths": ["utils/meta-cli/**"],
       "groupName": "utils",
       "reviewers": ["osipov-mit"],
-      "labels": ["utils"]
+      "addLabels": ["utils"]
     },
     {
       "matchPaths": ["utils/gear-ui/**", "utils/gear-hooks/**", "utils/create-gear-app/**"],
       "groupName": "utils",
       "reviewers": ["nikitayutanov"],
-      "labels": ["utils"]
+      "addLabels": ["utils"]
     },
     {
       "matchPaths": ["apps/**"],
       "groupName": "apps",
       "reviewers": ["nikitayutanov"],
-      "labels": ["apps"]
+      "addLabels": ["apps"]
     }
   ]
 }

@@ -25,7 +25,7 @@ async function createTopics(topics: string[]): Promise<void> {
   await connectKafkaAdmin(admin);
   await createKafkaTopics(admin, topics);
   await admin.disconnect();
-  eventListenerLogger.info(`Admin is disconnected`);
+  eventListenerLogger.info('Admin is disconnected');
 }
 
 async function connectKafkaAdmin(admin: Admin): Promise<void> {
@@ -59,7 +59,7 @@ async function createKafkaTopics(admin: Admin, topics: string[]): Promise<void> 
   }
 
   await admin.disconnect();
-  eventListenerLogger.info(`Admin is disconnected`);
+  eventListenerLogger.info('Admin is disconnected');
 }
 
 function isTopicAlreadyExist(topics: string[], topic: string): boolean {

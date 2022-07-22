@@ -10,11 +10,10 @@ import { GearApi } from './GearApi';
 import { GasInfo } from './types';
 
 export class GearGas {
-  api: GearApi;
-  createType: CreateType;
-  constructor(api: GearApi) {
-    this.api = api;
-    this.createType = new CreateType(this.api);
+  #createType: CreateType;
+
+  constructor(private _api: GearApi) {
+    this.#createType = new CreateType(_api);
   }
 
   private getPayload(
@@ -33,7 +32,7 @@ export class GearGas {
     const [type, meta] = isString(metaOrTypeOfPayload)
       ? [metaOrTypeOfPayload, undefined]
       : [metaOrTypeOfPayload[meta_type], metaOrTypeOfPayload];
-    return createPayload(this.createType, type, payload, meta);
+    return createPayload(this.#createType, type, payload, meta);
   }
 
   /**
@@ -130,9 +129,9 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
-    return this.api.rpc['gear'].calculateInitGas(
+    return this._api.rpc['gear'].calculateInitGas(
       sourceId,
-      isHex(code) ? code : this.createType.create('bytes', Array.from(code)).toHex(),
+      isHex(code) ? code : this.#createType.create('bytes', Array.from(code)).toHex(),
       this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
       value || 0,
       allowOtherPanics || true,
@@ -236,7 +235,7 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
-    return this.api.rpc['gear'].calculateHandleGas(
+    return this._api.rpc['gear'].calculateHandleGas(
       sourceId,
       destinationId,
       this.getPayload(payload, metaOrTypeOfPayload, 'handle_input'),
@@ -347,7 +346,7 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
-    return this.api.rpc['gear'].calculateReplyGas(
+    return this._api.rpc['gear'].calculateReplyGas(
       sourceId,
       messageId,
       exitCode,

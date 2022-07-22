@@ -1,6 +1,5 @@
 import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { AnyJson } from '@polkadot/types-codec/types';
 import {
   GearApi,
   GearKeyring,
@@ -53,7 +52,7 @@ export const checkInit = (api: GearApi, programId: string) => {
   };
 };
 
-export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
+export function listenToUserMessageSent(api: GearApi, programId: Hex) {
   const messages: UserMessageSent[] = [];
   const unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
     if (event.data.message.source.eq(programId)) {
@@ -74,9 +73,13 @@ export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
     }
     return message.data;
   };
-};
+}
 
-export async function sendTransaction<E extends keyof IGearEvent = keyof IGearEvent>(submitted: GearTransaction | SubmittableExtrinsic<'promise'>, account: KeyringPair, methodName: E): Promise<any> {
+export async function sendTransaction<E extends keyof IGearEvent = keyof IGearEvent>(
+  submitted: GearTransaction | SubmittableExtrinsic<'promise'>,
+  account: KeyringPair,
+  methodName: E,
+): Promise<any> {
   return new Promise((resolve, reject) => {
     submitted
       .signAndSend(account, ({ events, status }) => {

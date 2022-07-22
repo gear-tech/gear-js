@@ -8,10 +8,7 @@ import { CreateType } from './create-type';
 import { GetBlockError } from './errors';
 import { GearApi } from './GearApi';
 export class GearBlock {
-  protected api: GearApi;
-  constructor(api: GearApi) {
-    this.api = api;
-  }
+  constructor(private api: GearApi) {}
 
   /**
    * Get data of particular block by blockHash
