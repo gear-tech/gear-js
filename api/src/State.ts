@@ -16,8 +16,8 @@ export class GearProgramState extends GearStorage {
     if (!state) {
       throw new ReadStateError('Unable to read state. meta_state function is not specified in metadata');
     }
-    const bytes = this.api.createType('Bytes', Array.from(state));
-    const decoded = this.createType.create(meta.meta_state_output, bytes, meta);
+    const bytes = this._api.createType('Bytes', Array.from(state));
+    const decoded = this._createType.create(meta.meta_state_output, bytes, meta);
     return decoded;
   }
 
@@ -28,7 +28,7 @@ export class GearProgramState extends GearStorage {
    * @returns ArrayBuffer with encoded data
    */
   encodeInput(meta: Metadata, inputValue: AnyJson): Uint8Array {
-    const encoded = this.createType.create(meta.meta_state_input, inputValue, meta);
+    const encoded = this._createType.create(meta.meta_state_input, inputValue, meta);
     return encoded.toU8a();
   }
 
@@ -39,15 +39,24 @@ export class GearProgramState extends GearStorage {
    * @returns decoded state
    */
   async read(programId: Hex, metaWasm: Buffer, inputValue?: AnyJson): Promise<Codec> {
+    const codeHash = await this._api.program.codeHash(programId);
+    let initialSize = await this._api.code.staticPages(codeHash);
+
     const program = await this.gProg(programId);
-    if (!program) {
-      throw new ReadStateError('Program is terminated');
-    }
+
+    program.allocations.forEach((value) => {
+      if (value.gtn(initialSize - 1)) {
+        initialSize = value.toNumber();
+      }
+    });
 
     const pages = await this.gPages(programId, program);
-    const initialSize = program.allocations.size;
-    const block = await this.api.blocks.getFinalizedHead();
-    const blockTimestamp = await this.api.blocks.getBlockTimestamp(block.toHex());
+    const blockHash = await this._api.blocks.getFinalizedHead();
+    const block = await this._api.blocks.get(blockHash);
+
+    const blockTimestamp = await this._api.blocks.getBlockTimestamp(block);
+
+    const blockNumber = block.block.header.number.unwrap();
 
     if (!pages) {
       throw new ReadStateError('Unable to read state. Unable to recieve program pages from chain');
@@ -60,7 +69,7 @@ export class GearProgramState extends GearStorage {
       throw new ReadStateError('Unable to read state. inputValue not specified');
     }
     const encodedInput = inputValue === undefined ? undefined : this.encodeInput(metadata, inputValue);
-    const state = await readState(metaWasm, initialSize, pages, encodedInput, blockTimestamp);
+    const state = await readState(metaWasm, initialSize, pages, encodedInput, blockTimestamp.unwrap(), blockNumber);
 
     return this.decodeState(state, metadata);
   }

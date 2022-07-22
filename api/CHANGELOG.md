@@ -1,3 +1,51 @@
+## 0.24.1
+
+_07/22/2022_
+
+https://github.com/gear-tech/gear-js/pull/872
+
+### Changes
+
+- Add oportunity to call `gr_block_height` syscall in meta_state function
+
+---
+## 0.24.0
+
+_07/19/2022_
+
+https://github.com/gear-tech/gear-js/pull/848
+
+### Changes
+
+- Update `reply` field of `Message` type according to https://github.com/gear-tech/gear/pull/1198
+  _Type of `reply` field is Struct with fields `replyTo` and `exitCode` instead of Tuple from now on_
+- Update type of waitlist and mailbox item according to https://github.com/gear-tech/gear/pull/1197
+  _From this moment the types are Tuple with 2 elements, the first one remained the same and the 2nd one is object with `start` and `finish` fields that show block's number when message gets into **mailbox / waitlist** and last block's number when message gets out of **mailbox / waitlist**_
+- Also `waitlist.read` and `mailbox.read` methods now return Codec types without keys.
+
+---
+## 0.23.6
+
+_07/19/2022_
+
+https://github.com/gear-tech/gear-js/pull/845
+
+### Changes
+
+- Adjust simple enum generation
+
+---
+## 0.23.5
+
+_07/18/2022_
+
+https://github.com/gear-tech/gear-js/pull/843
+
+### Changes
+
+- Fix getting program pages according to https://github.com/gear-tech/gear/pull/1193
+
+---
 ## 0.23.4
 
 _07/18/2022_

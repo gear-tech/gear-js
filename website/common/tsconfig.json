@@ -1,13 +1,8 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "outDir": "./dist",
-    "sourceMap": true,
     "declaration": true,
-    "skipLibCheck": true
+    "forceConsistentCasingInFileNames": true
   }
 }

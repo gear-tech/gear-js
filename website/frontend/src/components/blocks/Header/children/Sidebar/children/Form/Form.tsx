@@ -2,15 +2,15 @@ import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'reac
 import { Button } from '@gear-js/ui';
 
 import styles from './Form.module.scss';
-import { Nodes, NodeSections } from '../../../../types';
 
 import { isNodeAddressValid } from 'helpers';
 import { NODE_API_ADDRESS } from 'context/api/const';
+import { Node, NodeSection } from 'types/api';
 
 type Props = {
-  nodeSections: NodeSections;
-  localNodes: Nodes;
-  setLocalNodes: Dispatch<SetStateAction<Nodes>>;
+  nodeSections: NodeSection[];
+  localNodes: Node[];
+  setLocalNodes: Dispatch<SetStateAction<Node[]>>;
 };
 
 const Form = ({ nodeSections, localNodes, setLocalNodes }: Props) => {

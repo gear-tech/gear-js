@@ -1,17 +1,18 @@
 import { GearApi, GearKeyring } from '../../../lib';
+import { decodeAddress } from '../../../lib/utils';
 
 const main = async () => {
   const api = await GearApi.create();
 
   const alice = await GearKeyring.fromSuri('//Alice');
 
-  const mailbox = await api.mailbox.read(GearKeyring.decodeAddress(alice.address));
+  const mailbox = await api.mailbox.read(decodeAddress(alice.address));
 
-  const messageWithValue = mailbox.find(([_, message]) => parseInt(message.value) > 0);
+  const messageWithValue = mailbox.find((item) => item[0].value.gtn(0));
 
   console.log(messageWithValue);
 
-  const messageId = messageWithValue[0][1];
+  const messageId = messageWithValue[0].id.toHex();
 
   api.mailbox.claimValue.submit(messageId);
   try {

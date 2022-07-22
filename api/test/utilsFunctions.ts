@@ -1,4 +1,5 @@
-import { UnsubscribePromise } from '@polkadot/api/types';
+import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
+import { KeyringPair } from '@polkadot/keyring/types';
 import {
   GearApi,
   GearKeyring,
@@ -8,6 +9,7 @@ import {
   UserMessageSentData,
   MessageEnqueued,
   MessagesDispatched,
+  GearTransaction,
 } from '../src';
 import { Hex } from '../src/types';
 export const checkInit = (api: GearApi, programId: string) => {
@@ -50,7 +52,7 @@ export const checkInit = (api: GearApi, programId: string) => {
   };
 };
 
-export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
+export function listenToUserMessageSent(api: GearApi, programId: Hex) {
   const messages: UserMessageSent[] = [];
   const unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
     if (event.data.message.source.eq(programId)) {
@@ -63,7 +65,7 @@ export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
         data: {
           message: { reply },
         },
-      }) => (messageId === null ? reply.isNone : reply.isSome && reply.unwrap()[0].eq(messageId)),
+      }) => (messageId === null ? reply.isNone : reply.isSome && reply.unwrap().replyTo.eq(messageId)),
     );
     (await unsub)();
     if (!message) {
@@ -71,9 +73,13 @@ export const listenToUserMessageSent = (api: GearApi, programId: Hex) => {
     }
     return message.data;
   };
-};
+}
 
-export const sendTransaction = async (submitted: any, account: any, methodName: keyof IGearEvent): Promise<any> => {
+export async function sendTransaction<E extends keyof IGearEvent = keyof IGearEvent>(
+  submitted: GearTransaction | SubmittableExtrinsic<'promise'>,
+  account: KeyringPair,
+  methodName: E,
+): Promise<any> {
   return new Promise((resolve, reject) => {
     submitted
       .signAndSend(account, ({ events, status }) => {
@@ -90,7 +96,7 @@ export const sendTransaction = async (submitted: any, account: any, methodName: 
         reject(err.message);
       });
   });
-};
+}
 
 export const getAccount = () => {
   return Promise.all([GearKeyring.fromSuri('//Alice'), GearKeyring.fromSuri('//Bob')]);

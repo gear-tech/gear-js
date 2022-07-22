@@ -1,16 +1,17 @@
 import { Enum, u32, u64, Map, BTreeSet } from '@polkadot/types';
 
 import { MessageId } from '../ids';
+import { WasmPageNumber } from './pages';
 
 export interface IProgram extends Enum {
   isActive: boolean;
-  asActive: IActiveProgram;
+  asActive: ActiveProgram;
   isTerminated: boolean;
   asTerminated: null;
 }
 
-export interface IActiveProgram extends Map {
-  allocations: BTreeSet<u32>;
+export interface ActiveProgram extends Map {
+  allocations: BTreeSet<WasmPageNumber>;
   pages_with_data: BTreeSet<u32>;
   code_hash: Uint8Array;
   nonce: u64;

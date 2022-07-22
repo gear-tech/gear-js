@@ -1,57 +1,62 @@
 {
   "extends": ["config:base"],
   "labels": ["dependencies"],
+  "branchConcurrentLimit": 5,
   "branchPrefix": "renovate-",
   "ignorePaths": ["ansible/**", ".github/**"],
-  "assignAutomerge": true,
-  "automergeType": "pr-comment",
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "matchDepTypes": ["devDependencies"],
-      "automerge": true
+      "matchDepTypes": ["devDependencies"]
     },
     {
       "matchPaths": ["api/**"],
-      "groupName": "@gear-js/api",
+      "groupName": "api",
       "reviewers": ["osipov-mit"],
-      "labels": ["api", "dependencies"]
+      "addLabels": ["api"]
     },
     {
       "matchPaths": ["website/frontend/**"],
-      "groupName": "frontend",
-      "reviewers": ["nikitayutanov", "aderrod94", "codev0"],
-      "labels": ["frontend", "dependencies"]
+      "groupName": "idea-frontend",
+      "reviewers": ["nikitayutanov", "aderrod94", "Pinkdesu"],
+      "addLabels": ["frontend"]
     },
     {
       "matchPaths": [
         "website/api-gateway/**",
+        "website/common/**",
         "website/data-storage/**",
         "website/events-listener/**",
         "website/test-balance/**",
         "website/wasm-compiler/**"
       ],
-      "groupName": "backend",
-      "reviewers": ["osipov-mit"],
-      "labels": ["backend", "dependencies"]
+      "groupName": "idea-backend",
+      "reviewers": ["osipov-mit", "Almazatun"],
+      "addLabels": ["backend"]
     },
     {
       "matchPaths": ["website/tests/**"],
-      "groupName": "tests",
-      "reviewers": ["osipov-mit"],
-      "labels": ["tests", "dependencies"]
+      "groupName": "idea-tests",
+      "reviewers": ["osipov-mit", "Almazatun"],
+      "addLabels": ["tests"]
     },
     {
       "matchPaths": ["utils/meta-cli/**"],
       "groupName": "utils",
       "reviewers": ["osipov-mit"],
-      "labels": ["utils", "dependencies"]
+      "addLabels": ["utils"]
     },
     {
-      "matchPaths": ["utils/gear-ui/**"],
+      "matchPaths": ["utils/gear-ui/**", "utils/gear-hooks/**", "utils/create-gear-app/**"],
       "groupName": "utils",
       "reviewers": ["nikitayutanov"],
-      "labels": ["utils", "dependencies"]
+      "addLabels": ["utils"]
+    },
+    {
+      "matchPaths": ["apps/**"],
+      "groupName": "apps",
+      "reviewers": ["nikitayutanov"],
+      "addLabels": ["apps"]
     }
   ]
 }

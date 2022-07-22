@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import styles from './Sidebar.module.scss';
-import { Nodes as NodesType, NodeSections } from '../../types';
 import { Form } from './children/Form/Form';
 import { Nodes } from './children/Nodes/Nodes';
 import { Header } from './children/Header/Header';
@@ -9,19 +8,20 @@ import { Header } from './children/Header/Header';
 import { LOCAL_STORAGE } from 'consts';
 import { useOutsideClick } from 'hooks';
 import { NODE_API_ADDRESS } from 'context/api/const';
+import { Node, NodeSection } from 'types/api';
 
 type Props = {
   closeSidebar: () => void;
-  nodeSections: NodeSections;
+  nodeSections: NodeSection[];
 };
 
 const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
-  const getLocalNodes = (): NodesType => {
+  const getLocalNodes = (): Node[] => {
     const nodes = localStorage.getItem(LOCAL_STORAGE.NODES);
     return nodes ? JSON.parse(nodes) : [];
   };
 
-  const [localNodes, setLocalNodes] = useState<NodesType>(getLocalNodes());
+  const [localNodes, setLocalNodes] = useState<Node[]>(getLocalNodes());
   const [selectedNode, setSelectedNode] = useState(NODE_API_ADDRESS);
   const ref = useOutsideClick(closeSidebar);
 

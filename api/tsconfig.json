@@ -11,7 +11,7 @@
     "pretty": true,
     "skipLibCheck": true,
     "declaration": true,
-    "sourceMap": false
+    "sourceMap": true
   },
   "include": ["src", "src/**/*.json"]
 }

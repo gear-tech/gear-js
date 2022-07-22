@@ -6,6 +6,7 @@ import { waitReady } from '@polkadot/wasm-crypto';
 import { Keyring } from '@polkadot/api';
 
 import { Hex } from './types';
+import { decodeAddress } from './utils';
 
 export class GearKeyring {
   private static unlock(keyring: KeyringPair, passphrase?: string) {
@@ -80,6 +81,10 @@ export class GearKeyring {
     return { seed: u8aToHex(mnemonicToMiniSecret(mnemonic)), mnemonic };
   }
 
+  /**
+   * @deprecated - use `signatureIsValid` function exported directly from `api`
+   * - Will be removed in 0.25.0 version
+   */
   static checkSign(publicKey: string, signature: string, message: string) {
     if (signatureVerify(message, signature, publicKey).isValid) {
       return true;
@@ -92,17 +97,25 @@ export class GearKeyring {
     return keyring.sign(stringToU8a(message));
   }
 
+  /**
+   * @deprecated - use `decodeAddress` function exported directly from `api`
+   * - Will be removed in 0.25.0 version
+   */
   static decodeAddress(publicKey: string): Hex {
     return u8aToHex(new Keyring().decodeAddress(publicKey));
   }
 
+  /**
+   * @deprecated - use `encodeAddress` function exported directly from `api`
+   * - Will be removed in 0.25.0 version
+   */
   static encodeAddress(publicKeyRaw: string | Uint8Array): string {
     return new Keyring().encodeAddress(publicKeyRaw);
   }
 
   static checkPublicKey(publicKey: string): boolean {
     try {
-      GearKeyring.decodeAddress(publicKey);
+      decodeAddress(publicKey);
     } catch (error) {
       return false;
     }

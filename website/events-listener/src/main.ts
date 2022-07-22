@@ -14,6 +14,7 @@ app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
   await kafkaCreateConnection();
+
   changeStatus('kafka');
 
   app.listen(port, () => {
@@ -21,6 +22,7 @@ const startApp = async () => {
   });
 
   // It's necessary to retain connection during runtimeUpgrade
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     await connectToGearNode();
     console.log('Reconnecting...');

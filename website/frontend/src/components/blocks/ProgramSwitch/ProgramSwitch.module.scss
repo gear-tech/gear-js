@@ -13,15 +13,6 @@
   }
 }
 
-.switchWrapper {
-  display: flex;
-  align-items: center;
-
-  @include md {
-    flex-direction: column;
-  }
-}
-
 .switchButtons {
   padding: 4px 5px;
   border-radius: 40px;
@@ -51,14 +42,5 @@
     text-align: center;
     line-height: 14px;
     font-weight: 600;
-  }
-}
-
-.testBalanceButton {
-  margin: 0 32px;
-
-  @include md {
-    width: 100%;
-    margin: 26px 0;
   }
 }

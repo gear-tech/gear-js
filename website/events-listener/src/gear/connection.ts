@@ -1,4 +1,5 @@
 import { GearApi } from '@gear-js/api';
+
 import config from '../config/configuration';
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { changeStatus } from '../routes/healthcheck/healthcheck.router';
@@ -20,11 +21,12 @@ export async function connectToGearNode() {
 
   const chain = await api.chain();
   const genesis = api.genesisHash.toHex();
+  const version = api.runtimeVersion.specVersion.toHuman();
 
-  eventListenerLogger.info(`Connected to ${chain} with genesis ${genesis}`);
+  eventListenerLogger.info(`Connected to ${chain} with genesis ${genesis}. version: ${version}`);
 
-  const unsub = await listen(api, genesis, ({ key, value }) => {
-    kafkaProducer.send(key, value, genesis);
+  const unsub = await listen(api, genesis, ({ key, params, method }) => {
+    kafkaProducer.send({ key, params, genesis, method });
   });
 
   return new Promise((resolve) => {

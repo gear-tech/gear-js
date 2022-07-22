@@ -9,3 +9,5 @@ export interface Entry extends Enum {
   asHandle: Null;
   asReply: MessageId;
 }
+
+export type DispatchKind = Entry

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { Hex, MailboxType } from '@gear-js/api';
+import { Hex, MailboxItem } from '@gear-js/api';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 
 import styles from './Mailbox.module.scss';
-import { Message } from './children/Message';
+import { Message, HumanMailboxItem } from './children/Message';
 
-import { useClaimMessage } from 'hooks';
+import { useMessageClaim } from 'hooks';
 import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
 
@@ -14,21 +14,21 @@ const Mailbox = () => {
   const { api } = useApi();
   const { account } = useAccount();
 
-  const [mailbox, setMailbox] = useState<MailboxType | null>(null);
+  const [mailbox, setMailbox] = useState<MailboxItem[] | null>(null);
 
-  const claimMessage = useClaimMessage();
+  const claimMessage = useMessageClaim();
 
   const handleClaim = useCallback(
     (messageId: Hex) => {
       const removeMail = () =>
-        setMailbox((prevState) => prevState && prevState.filter(([, message]) => message.id !== messageId));
+        setMailbox((prevState) => prevState && prevState.filter(([mail]) => !mail.id.eq(messageId)));
 
       return claimMessage(messageId, removeMail);
     },
     [claimMessage]
   );
 
-  const address = account?.address;
+  const address = account?.address as Hex;
 
   useEffect(() => {
     if (address) {
@@ -45,9 +45,9 @@ const Mailbox = () => {
           <h2 className={styles.heading}>Mailbox:</h2>
           <div className={styles.messages}>
             <TransitionGroup component={null}>
-              {mailbox.map(([, message]) => (
-                <CSSTransition key={message.id} timeout={300}>
-                  <Message message={message} onClaim={handleClaim} />
+              {mailbox.map((mail) => (
+                <CSSTransition key={mail[0].id.toHex()} timeout={300}>
+                  <Message message={mail.toHuman() as HumanMailboxItem} onClaim={handleClaim} />
                 </CSSTransition>
               ))}
             </TransitionGroup>

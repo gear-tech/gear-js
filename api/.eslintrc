@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     "browser": true,
     "es2021": true,
@@ -12,11 +13,22 @@
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "indent": ["warn", 2, { "SwitchCase": 1, "flatTernaryExpressions": false }],
-    "linebreak-style": ["error", "unix"],
-    "quotes": ["warn", "single"],
     "semi": ["error", "always"],
+    "object-curly-spacing": ["error", "always"],
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1,
+        "flatTernaryExpressions": false
+      }
+    ],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["warn", "single", { "avoidEscape": true }],
     "@typescript-eslint/no-empty-function": 0,
-    "no-case-declarations": 0
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-case-declarations": 0,
+    "eol-last": "error",
+    "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreStrings": true, "ignoreComments": true }]
   }
 }
