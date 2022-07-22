@@ -28,9 +28,9 @@ function useChannel() {
 
 function useChannels() {
   const payload = useMemo(() => ({ AllChannels: null }), []);
-  const { state } = useRouterState<ChannelsState>(payload);
+  const { state, isStateRead } = useRouterState<ChannelsState>(payload);
 
-  return state?.AllChannels;
+  return { channels: state?.AllChannels, isStateRead }
 }
 
 function useSubscriptions() {
@@ -40,7 +40,7 @@ function useSubscriptions() {
 
   const { state, isStateRead } = useRouterState<SubscriptionState>(payload);
 
-  return { subscriptions: state?.SubscribedToChannels, readSubscriptions: isStateRead}
+  return { subscriptions: state?.SubscribedToChannels, readSubscriptions: isStateRead }
 }
 
 function useMessages() {
@@ -56,10 +56,64 @@ function useMessages() {
       .then(({ result: { metaFile } }) => Buffer.from(metaFile, 'base64'))
       .then((buffer) => api.programState.read(id, buffer))
       .then((state) => setMessages(state.toHuman() as Message[]));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return { messages };
+}
+
+function useFeed() {
+  const apiRequest = new ServerRPCRequestService();
+
+  const [messages, setMessages] = useState<Message[] | null>();
+  const { channels } = useChannels();
+  const { api } = useApi();
+
+  const promises = channels?.map(async ({ id }) => {
+    const { result: { metaFile } } = await apiRequest.getResource('program.meta.get', { programId: id, chain: 'Workshop', genesis: GENESIS })
+    const buffer = Buffer.from(metaFile, 'base64');
+    const state = await api.programState.read(id, buffer);
+
+    return state.toHuman();
+  })
+
+  useEffect(() => {
+    if (promises) Promise.all(promises!).then((result) => {
+      const msg = result.flat() as Message[];
+      const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', '')) - parseInt(next.timestamp.replaceAll(',', '')))
+      setMessages(sorted.reverse())
+    })
+
+  }, [promises])
+
+  return messages
+}
+
+function useOwnFeed() {
+  const apiRequest = new ServerRPCRequestService();
+
+  const [messages, setMessages] = useState<Message[] | null>();
+  const { subscriptions } = useSubscriptions();
+  const { api } = useApi();
+
+  const promises = subscriptions?.map(async (id) => {
+    const { result: { metaFile } } = await apiRequest.getResource('program.meta.get', { programId: id, chain: 'Workshop', genesis: GENESIS })
+    const buffer = Buffer.from(metaFile, 'base64');
+    const state = await api.programState.read(id, buffer);
+
+    return state.toHuman();
+  })
+
+  useEffect(() => {
+    if (promises) Promise.all(promises!).then((result) => {
+      const msg = result.flat() as Message[];
+      const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', '')) - parseInt(next.timestamp.replaceAll(',', '')))
+      setMessages(sorted.reverse())
+    })
+
+  }, [promises])
+
+  return messages
 }
 
 function useChannelActions() {
@@ -74,7 +128,7 @@ function useChannelActions() {
       .then(({ result: { metaFile } }) => Buffer.from(metaFile, 'base64'))
       .then((buffer) => getWasmMetadata(buffer))
       .then((m) => setMetadata(m));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const sendMessage = useSendMessage(id, metadata);
@@ -97,4 +151,4 @@ function useChannelActions() {
   return { post, subscribe, unsubscribe };
 }
 
-export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages };
+export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages, useOwnFeed, useFeed };

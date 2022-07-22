@@ -1,28 +1,14 @@
 import { useMessages } from 'hooks';
-import { Loader } from 'components';
-import Identicon from '@polkadot/react-identicon';
-import { toShortAddress } from 'utils';
+import { Loader, MessageItem } from 'components';
 
 import styles from './Messages.module.scss';
 
-type Props = {
-  ownerId: string;
-};
-
-function Messages({ ownerId }: Props) {
+function Messages() {
   const { messages } = useMessages();
 
-  const message = messages?.map(({ text, timestamp }) => (
-    <div className={styles.message} key={timestamp.replaceAll(',', '')}>
-      <div className={styles.info}>
-        <div className={styles.icon}>
-          <Identicon value={ownerId} size={25} theme="polkadot" />
-        </div>
-        <div className={styles.name}>{toShortAddress(ownerId!)}</div>
-      </div>
-      <div className={styles.text}>{text}</div>
-    </div>
-  ));
+  const message = messages?.map(({ text, timestamp, owner }) =>
+    <MessageItem text={text} owner={owner} key={timestamp.replaceAll(',', '')}/>
+  );
 
   return <div className={styles.container}>{messages ? message?.reverse() : <Loader />}</div>;
 }

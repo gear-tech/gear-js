@@ -27,7 +27,7 @@ function Channel() {
           <div className={styles.buttons}>
             <OnLogin>{isOwner ? <MessageAction /> : <SubscribeAction />}</OnLogin>
           </div>
-          {ownerId && <Messages ownerId={ownerId}/>}
+          <Messages />
         </>
       ) : (
         <Loader />

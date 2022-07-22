@@ -10,7 +10,7 @@ function Channels() {
   const [filter, setFilter] = useState('All Channels');
   const { account } = useAccount();
 
-  const channels = useChannels();
+  const { channels } = useChannels();
   const ownerChannels = channels?.filter((ch) => ch.ownerId === account?.decodedAddress);
 
   const getList = () => {

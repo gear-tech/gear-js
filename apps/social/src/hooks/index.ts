@@ -1,3 +1,3 @@
-import { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages } from './api';
+import { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages, useOwnFeed, useFeed } from './api';
 
-export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages };
+export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages, useOwnFeed, useFeed };
