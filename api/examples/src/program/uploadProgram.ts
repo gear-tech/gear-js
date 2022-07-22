@@ -1,4 +1,5 @@
 import { GearApi, GearKeyring, getWasmMetadata } from '../../../lib';
+import { decodeAddress } from '../../../lib/utils';
 import { readFileSync } from 'fs';
 import { PATH_TO_META, PATH_TO_OPT } from '../config';
 import { waitForInit } from './waitForInit';
@@ -17,14 +18,7 @@ const main = async () => {
     name_of_event: 'GEAR JS EXAMPLE',
   };
 
-  const gas = await api.program.calculateGas.init(
-    GearKeyring.decodeAddress(alice.address),
-    code,
-    initPayload,
-    0,
-    true,
-    meta,
-  );
+  const gas = await api.program.calculateGas.init(decodeAddress(alice.address), code, initPayload, 0, true, meta);
 
   const { programId } = api.program.submit({ code, initPayload, gasLimit: gas.min_limit }, meta);
 

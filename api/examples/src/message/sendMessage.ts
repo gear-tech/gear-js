@@ -1,4 +1,5 @@
 import { GearApi, GearKeyring, getWasmMetadata, MessageEnqueued, Hex } from '../../../lib';
+import { decodeAddress } from '../../../lib/utils';
 import { readFileSync } from 'fs';
 import { PATH_TO_META } from '../config';
 import { waitForReply } from './waitForReply';
@@ -22,7 +23,7 @@ const main = async () => {
   };
 
   const gas = await api.program.calculateGas.handle(
-    GearKeyring.decodeAddress(alice.address),
+    decodeAddress(alice.address),
     programId as Hex,
     payload,
     20000,

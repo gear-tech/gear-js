@@ -2,7 +2,8 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { u64 } from '@polkadot/types-codec';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { GearApi, GearKeyring } from '../src';
+import { GearApi } from '../src';
+import { decodeAddress } from '../src/utils';
 import { GasInfo, Hex } from '../src/types';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
 import { TEST_WASM_DIR } from './config';
@@ -22,7 +23,7 @@ const gasLimits: { init: u64 | undefined; handle: u64 | undefined; reply: u64 | 
 beforeAll(async () => {
   await api.isReady;
   [alice] = await getAccount();
-  aliceRaw = GearKeyring.decodeAddress(alice.address);
+  aliceRaw = decodeAddress(alice.address);
 });
 
 afterAll(async () => {

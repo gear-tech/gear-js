@@ -32,12 +32,17 @@ export class GearMessage extends GearTransaction {
     meta?: Metadata,
     messageType?: string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    validateValue(message.value, this.api);
-    validateGasLimit(message.gasLimit, this.api);
+    validateValue(message.value, this._api);
+    validateGasLimit(message.gasLimit, this._api);
 
-    const payload = createPayload(this.createType, messageType || meta?.handle_input, message.payload, meta);
+    const payload = createPayload(this._createType, messageType || meta?.handle_input, message.payload, meta);
     try {
-      this.submitted = this.api.tx.gear.sendMessage(message.destination, payload, message.gasLimit, message.value || 0);
+      this.submitted = this._api.tx.gear.sendMessage(
+        message.destination,
+        payload,
+        message.gasLimit,
+        message.value || 0,
+      );
       return this.submitted;
     } catch (error) {
       throw new SendMessageError(error.message);
