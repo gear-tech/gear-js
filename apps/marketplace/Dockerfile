@@ -17,4 +17,3 @@ RUN npm run build
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
 COPY --from=builder /marketplace/build /usr/share/nginx/html
-#update
