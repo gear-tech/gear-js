@@ -4,8 +4,8 @@ import { readFileSync } from 'fs';
 
 import { sendMessages } from './send-message';
 import { uploadPrograms } from './upload-programs';
+import { sendCollectionCode } from './upload-collection-code';
 import { IMessageSpec, IProgramSpec, IPrepared, ICodeSpec } from '../interfaces';
-import { sendCollectionCode } from './upload-list-code';
 
 export async function processPrepare(api: GearApi): Promise<IPrepared> {
   const programs = load(readFileSync('./spec/programs.yaml', 'utf8')) as { [program: string]: IProgramSpec };

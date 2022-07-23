@@ -5,7 +5,7 @@ import { ICodeSpec, IPreparedCollectionCode } from '../interfaces';
 import accounts from '../config/accounts';
 import { checkCollectionCode } from './check';
 
-async function sendCode(api: GearApi, spec: ICodeSpec): Promise<{ id: Hex, change: string, expiration: any }> {
+async function sendCode(api: GearApi, spec: ICodeSpec): Promise<{ id: Hex, change: string, expiration: any } | void> {
   const code = readFileSync(spec.pathToOpt);
   const account = (await accounts())[spec.account];
   await api.code.submit(code);
