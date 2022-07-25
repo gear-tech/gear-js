@@ -4,7 +4,7 @@ import { GearApi, getWasmMetadata, Hex, MessageEnqueuedData } from '@gear-js/api
 import accounts from '../config/accounts';
 import { IPreparedPrograms, IProgramSpec, IUploadedPrograms } from '../interfaces';
 import { sleep } from '../utils';
-import { listenToMessagesDispatched, listenToUserMessageSent } from './subscriptions';
+import { listenToCodeChanged, listenToMessagesDispatched, listenToUserMessageSent } from './subscriptions';
 import { checkPrograms } from './check';
 
 async function uploadProgram(api: GearApi, spec: IProgramSpec): Promise<{ id: Hex; source: Hex; destination: Hex }> {
@@ -34,15 +34,21 @@ async function uploadProgram(api: GearApi, spec: IProgramSpec): Promise<{ id: He
 export async function uploadPrograms(
   api: GearApi,
   programs: { [program: string]: IProgramSpec },
-): Promise<[IPreparedPrograms, Map<Hex, any>]> {
+): Promise<[IPreparedPrograms, Map<Hex, any>, Map<Hex, any>]> {
   const initSuccess = new Map<string, boolean>();
   const userMessages = new Map<Hex, any>();
+  const collectionCodeChanged = new Map<Hex, any>();
+
   const unsubMessagesDispatched = await listenToMessagesDispatched(api, (messageId, success) => {
     initSuccess.set(messageId, success);
   });
 
   const unsubUserMessageSent = await listenToUserMessageSent(api, (data) => {
     userMessages.set(data.message.id.toHex(), data.toHuman());
+  });
+
+  const unsubCodeChanged = await listenToCodeChanged(api, (data) => {
+    collectionCodeChanged.set(data.id.toHex(), data.toHuman());
   });
 
   const uploadedPrograms: { [key: Hex]: IUploadedPrograms } = {};
@@ -58,6 +64,7 @@ export async function uploadPrograms(
   await sleep();
   unsubMessagesDispatched();
   unsubUserMessageSent();
+  unsubCodeChanged();
 
-  return [checkPrograms(uploadedPrograms, initSuccess), userMessages];
+  return [checkPrograms(uploadedPrograms, initSuccess), userMessages, collectionCodeChanged];
 }
