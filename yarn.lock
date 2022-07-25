@@ -2001,17 +2001,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.24.0, @gear-js/api@npm:^0.24.0":
-  version: 0.24.0
-  resolution: "@gear-js/api@npm:0.24.0"
-  peerDependencies:
-    "@polkadot/api": ^8.11.3
-    rxjs: ^7.5.5
-  checksum: b07e40da505bdbd67221e75498c73901ce10e9f1ef546f67c2c3d05052037dc473f92f44d3ea5224cb2d0de2b3d9b2a6b74466a353f7754e307dfc5b7c0cc40d
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:^0.22.3":
+"@gear-js/api@npm:0.22.3":
   version: 0.22.3
   resolution: "@gear-js/api@npm:0.22.3"
   peerDependencies:
@@ -2019,6 +2009,16 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.1.1
     rxjs: ^7.5.5
   checksum: b1c88346716efdf54b1939929f45fc241d9ed1b4aa381e0b8f473cbf7ef068c01598d8950e94d0e2fc480bc33ef2deee0e1f7426f64244f0bfbf8ad6339da56f
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:0.24.0, @gear-js/api@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "@gear-js/api@npm:0.24.0"
+  peerDependencies:
+    "@polkadot/api": ^8.11.3
+    rxjs: ^7.5.5
+  checksum: b07e40da505bdbd67221e75498c73901ce10e9f1ef546f67c2c3d05052037dc473f92f44d3ea5224cb2d0de2b3d9b2a6b74466a353f7754e307dfc5b7c0cc40d
   languageName: node
   linkType: hard
 
@@ -2186,7 +2186,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/react-hooks@npm:^0.2.1, @gear-js/react-hooks@npm:^0.2.11, @gear-js/react-hooks@npm:^0.2.4":
+"@gear-js/react-hooks@npm:0.2.11, @gear-js/react-hooks@npm:^0.2.1":
   version: 0.2.11
   resolution: "@gear-js/react-hooks@npm:0.2.11"
   peerDependencies:
@@ -2237,7 +2237,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/ui@npm:^0.4.0":
+"@gear-js/ui@npm:0.4.0":
   version: 0.4.0
   resolution: "@gear-js/ui@npm:0.4.0"
   peerDependencies:
@@ -2973,7 +2973,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/form@npm:^4.2.12, @mantine/form@npm:^4.2.9":
+"@mantine/form@npm:4.2.12":
   version: 4.2.12
   resolution: "@mantine/form@npm:4.2.12"
   peerDependencies:
@@ -3437,7 +3437,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:8.13.1, @polkadot/api@npm:^8.11.3, @polkadot/api@npm:^8.13.1, @polkadot/api@npm:^8.9.1":
+"@polkadot/api@npm:8.13.1, @polkadot/api@npm:^8.13.1":
   version: 8.13.1
   resolution: "@polkadot/api@npm:8.13.1"
   dependencies:
@@ -3478,7 +3478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/extension-dapp@npm:^0.43.2, @polkadot/extension-dapp@npm:^0.43.3":
+"@polkadot/extension-dapp@npm:0.43.3":
   version: 0.43.3
   resolution: "@polkadot/extension-dapp@npm:0.43.3"
   dependencies:
@@ -3612,7 +3612,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/react-identicon@npm:^2.2.1, @polkadot/react-identicon@npm:^2.4.1, @polkadot/react-identicon@npm:^2.6.2, @polkadot/react-identicon@npm:^2.7.2":
+"@polkadot/react-identicon@npm:2.9.1":
   version: 2.9.1
   resolution: "@polkadot/react-identicon@npm:2.9.1"
   dependencies:
@@ -3745,7 +3745,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:8.13.1, @polkadot/types@npm:^8.11.3, @polkadot/types@npm:^8.13.1, @polkadot/types@npm:^8.7.1, @polkadot/types@npm:^8.9.1":
+"@polkadot/types@npm:8.13.1, @polkadot/types@npm:^8.13.1, @polkadot/types@npm:^8.7.1":
   version: 8.13.1
   resolution: "@polkadot/types@npm:8.13.1"
   dependencies:
@@ -3912,7 +3912,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util@npm:9.7.2, @polkadot/util@npm:^9.0.1, @polkadot/util@npm:^9.4.1, @polkadot/util@npm:^9.7.2":
+"@polkadot/util@npm:9.7.2, @polkadot/util@npm:^9.0.1, @polkadot/util@npm:^9.4.1":
   version: 9.7.2
   resolution: "@polkadot/util@npm:9.7.2"
   dependencies:
@@ -4673,7 +4673,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:5.16.4, @testing-library/jest-dom@npm:^5.16.4":
+"@testing-library/jest-dom@npm:5.16.4":
   version: 5.16.4
   resolution: "@testing-library/jest-dom@npm:5.16.4"
   dependencies:
@@ -4704,7 +4704,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^13.2.0, @testing-library/react@npm:^13.3.0":
+"@testing-library/react@npm:13.3.0":
   version: 13.3.0
   resolution: "@testing-library/react@npm:13.3.0"
   dependencies:
@@ -4718,16 +4718,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:14.1.1":
-  version: 14.1.1
-  resolution: "@testing-library/user-event@npm:14.1.1"
-  peerDependencies:
-    "@testing-library/dom": ">=7.21.4"
-  checksum: dd02aecbde64002aa3c58392137672156101fc3bb821f43db99e3c652e6a6d34b3eb29b2524eb41ad2a317cfdff6ab2e88d7027605d88dccaacf4f07a08dc7a9
-  languageName: node
-  linkType: hard
-
-"@testing-library/user-event@npm:^13.5.0":
+"@testing-library/user-event@npm:13.5.0":
   version: 13.5.0
   resolution: "@testing-library/user-event@npm:13.5.0"
   dependencies:
@@ -4735,6 +4726,15 @@ __metadata:
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
   checksum: 16319de685fbb7008f1ba667928f458b2d08196918002daca56996de80ef35e6d9de26e9e1ece7d00a004692b95a597cf9142fff0dc53f2f51606a776584f549
+  languageName: node
+  linkType: hard
+
+"@testing-library/user-event@npm:14.1.1":
+  version: 14.1.1
+  resolution: "@testing-library/user-event@npm:14.1.1"
+  peerDependencies:
+    "@testing-library/dom": ">=7.21.4"
+  checksum: dd02aecbde64002aa3c58392137672156101fc3bb821f43db99e3c652e6a6d34b3eb29b2524eb41ad2a317cfdff6ab2e88d7027605d88dccaacf4f07a08dc7a9
   languageName: node
   linkType: hard
 
@@ -5082,7 +5082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:27.5.2, @types/jest@npm:^27.5.1, @types/jest@npm:^27.5.2":
+"@types/jest@npm:27.5.2":
   version: 27.5.2
   resolution: "@types/jest@npm:27.5.2"
   dependencies:
@@ -5147,7 +5147,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.isplainobject@npm:^4.0.7":
+"@types/lodash.isplainobject@npm:4.0.7, @types/lodash.isplainobject@npm:^4.0.7":
   version: 4.0.7
   resolution: "@types/lodash.isplainobject@npm:4.0.7"
   dependencies:
@@ -5226,6 +5226,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:16.11.45":
+  version: 16.11.45
+  resolution: "@types/node@npm:16.11.45"
+  checksum: 57d61c951024f66d796e71e4a972faef266007398cd4e93a195822fea2d5deb41d0615f394a99ece89772b145ff057321d138c7e3442455dc7d785ff67cebde3
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:17.0.21":
   version: 17.0.21
   resolution: "@types/node@npm:17.0.21"
@@ -5237,13 +5244,6 @@ __metadata:
   version: 17.0.38
   resolution: "@types/node@npm:17.0.38"
   checksum: 9db1c39d603850ced665ab60b8f8ebce674ff9d762dfff0f776d520e71e4d73fdcd4c7f69213b804d878cf3e726911b09cae4ee66e35ae2724538de9f4838681
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^16.11.36, @types/node@npm:^16.11.41, @types/node@npm:^16.11.43":
-  version: 16.11.45
-  resolution: "@types/node@npm:16.11.45"
-  checksum: 57d61c951024f66d796e71e4a972faef266007398cd4e93a195822fea2d5deb41d0615f394a99ece89772b145ff057321d138c7e3442455dc7d785ff67cebde3
   languageName: node
   linkType: hard
 
@@ -5307,21 +5307,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-dom@npm:18.0.6, @types/react-dom@npm:^18.0.0":
+  version: 18.0.6
+  resolution: "@types/react-dom@npm:18.0.6"
+  dependencies:
+    "@types/react": "*"
+  checksum: db571047af1a567631758700b9f7d143e566df939cfe5fbf7535347cc0c726a1cdbb5e3f8566d076e54cf708b6c1166689de194a9ba09ee35efc9e1d45911685
+  languageName: node
+  linkType: hard
+
 "@types/react-dom@npm:<18.0.0":
   version: 17.0.17
   resolution: "@types/react-dom@npm:17.0.17"
   dependencies:
     "@types/react": ^17
   checksum: 23caf98aa03e968811560f92a2c8f451694253ebe16b670929b24eaf0e7fa62ba549abe9db0ac028a9d8a9086acd6ab9c6c773f163fa21224845edbc00ba6232
-  languageName: node
-  linkType: hard
-
-"@types/react-dom@npm:^18.0.0, @types/react-dom@npm:^18.0.4, @types/react-dom@npm:^18.0.5":
-  version: 18.0.6
-  resolution: "@types/react-dom@npm:18.0.6"
-  dependencies:
-    "@types/react": "*"
-  checksum: db571047af1a567631758700b9f7d143e566df939cfe5fbf7535347cc0c726a1cdbb5e3f8566d076e54cf708b6c1166689de194a9ba09ee35efc9e1d45911685
   languageName: node
   linkType: hard
 
@@ -5544,7 +5544,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.17.0, @typescript-eslint/eslint-plugin@npm:^5.25.0, @typescript-eslint/eslint-plugin@npm:^5.28.0, @typescript-eslint/eslint-plugin@npm:^5.30.0, @typescript-eslint/eslint-plugin@npm:^5.30.5, @typescript-eslint/eslint-plugin@npm:^5.5.0":
+"@typescript-eslint/eslint-plugin@npm:5.30.7, @typescript-eslint/eslint-plugin@npm:^5.17.0, @typescript-eslint/eslint-plugin@npm:^5.30.5, @typescript-eslint/eslint-plugin@npm:^5.5.0":
   version: 5.30.7
   resolution: "@typescript-eslint/eslint-plugin@npm:5.30.7"
   dependencies:
@@ -5611,7 +5611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.17.0, @typescript-eslint/parser@npm:^5.25.0, @typescript-eslint/parser@npm:^5.28.0, @typescript-eslint/parser@npm:^5.30.0, @typescript-eslint/parser@npm:^5.30.5, @typescript-eslint/parser@npm:^5.5.0":
+"@typescript-eslint/parser@npm:5.30.7, @typescript-eslint/parser@npm:^5.17.0, @typescript-eslint/parser@npm:^5.30.5, @typescript-eslint/parser@npm:^5.5.0":
   version: 5.30.7
   resolution: "@typescript-eslint/parser@npm:5.30.7"
   dependencies:
@@ -8234,7 +8234,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:^1.1.1, clsx@npm:^1.2.0":
+"clsx@npm:1.2.1":
   version: 1.2.1
   resolution: "clsx@npm:1.2.1"
   checksum: 30befca8019b2eb7dbad38cff6266cf543091dae2825c856a62a8ccf2c3ab9c2907c4d12b288b73101196767f66812365400a227581484a05f968b0307cfaf12
@@ -10008,42 +10008,42 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "escrow@workspace:apps/escrow"
   dependencies:
-    "@gear-js/api": ^0.24.0
-    "@gear-js/react-hooks": ^0.2.11
-    "@gear-js/ui": ^0.4.0
-    "@mantine/form": ^4.2.12
-    "@polkadot/api": ^8.11.3
-    "@polkadot/extension-dapp": ^0.43.3
-    "@polkadot/react-identicon": ^2.7.2
-    "@polkadot/types": ^8.11.3
-    "@polkadot/util": ^9.7.2
-    "@testing-library/jest-dom": ^5.16.4
-    "@testing-library/react": ^13.3.0
-    "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.2
-    "@types/lodash.isplainobject": ^4.0.7
-    "@types/node": ^16.11.43
-    "@types/react": ^18.0.14
-    "@types/react-dom": ^18.0.5
-    "@typescript-eslint/eslint-plugin": ^5.30.5
-    "@typescript-eslint/parser": ^5.30.5
-    clsx: ^1.2.0
-    eslint: ^8.19.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^17.0.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsx-a11y: ^6.6.0
-    eslint-plugin-react: ^7.30.1
-    eslint-plugin-react-hooks: ^4.6.0
-    lodash.isplainobject: ^4.0.6
-    react: ^18.2.0
-    react-app-rewired: ^2.2.1
-    react-dom: ^18.2.0
-    react-router-dom: ^6.3.0
-    react-scripts: ^5.0.1
-    typescript: ^4.7.4
-    web-vitals: ^2.1.4
+    "@gear-js/api": 0.24.0
+    "@gear-js/react-hooks": 0.2.11
+    "@gear-js/ui": 0.4.0
+    "@mantine/form": 4.2.12
+    "@polkadot/api": 8.13.1
+    "@polkadot/extension-dapp": 0.43.3
+    "@polkadot/react-identicon": 2.9.1
+    "@polkadot/types": 8.13.1
+    "@polkadot/util": 9.7.2
+    "@testing-library/jest-dom": 5.16.4
+    "@testing-library/react": 13.3.0
+    "@testing-library/user-event": 13.5.0
+    "@types/jest": 27.5.2
+    "@types/lodash.isplainobject": 4.0.7
+    "@types/node": 16.11.45
+    "@types/react": 18.0.15
+    "@types/react-dom": 18.0.6
+    "@typescript-eslint/eslint-plugin": 5.30.7
+    "@typescript-eslint/parser": 5.30.7
+    clsx: 1.2.1
+    eslint: 8.20.0
+    eslint-config-airbnb: 19.0.4
+    eslint-config-airbnb-typescript: 17.0.0
+    eslint-config-prettier: 8.5.0
+    eslint-plugin-import: 2.26.0
+    eslint-plugin-jsx-a11y: 6.6.1
+    eslint-plugin-react: 7.30.1
+    eslint-plugin-react-hooks: 4.6.0
+    lodash.isplainobject: 4.0.6
+    react: 18.2.0
+    react-app-rewired: 2.2.1
+    react-dom: 18.2.0
+    react-router-dom: 6.3.0
+    react-scripts: 5.0.1
+    typescript: 4.7.4
+    web-vitals: 2.1.4
   languageName: unknown
   linkType: soft
 
@@ -10062,6 +10062,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-config-airbnb-typescript@npm:17.0.0":
+  version: 17.0.0
+  resolution: "eslint-config-airbnb-typescript@npm:17.0.0"
+  dependencies:
+    eslint-config-airbnb-base: ^15.0.0
+  peerDependencies:
+    "@typescript-eslint/eslint-plugin": ^5.13.0
+    "@typescript-eslint/parser": ^5.0.0
+    eslint: ^7.32.0 || ^8.2.0
+    eslint-plugin-import: ^2.25.3
+  checksum: e598ae7bcc3629bbc847a749f8c1ad69e6ef111335b60d88bde91d1bb335077b06688868257fe2fcc95c3687a0d6e3e1f91e0534cc633f5a118239e52bb05a54
+  languageName: node
+  linkType: hard
+
 "eslint-config-airbnb-typescript@npm:^16.2.0":
   version: 16.2.0
   resolution: "eslint-config-airbnb-typescript@npm:16.2.0"
@@ -10076,21 +10090,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-airbnb-typescript@npm:^17.0.0":
-  version: 17.0.0
-  resolution: "eslint-config-airbnb-typescript@npm:17.0.0"
-  dependencies:
-    eslint-config-airbnb-base: ^15.0.0
-  peerDependencies:
-    "@typescript-eslint/eslint-plugin": ^5.13.0
-    "@typescript-eslint/parser": ^5.0.0
-    eslint: ^7.32.0 || ^8.2.0
-    eslint-plugin-import: ^2.25.3
-  checksum: e598ae7bcc3629bbc847a749f8c1ad69e6ef111335b60d88bde91d1bb335077b06688868257fe2fcc95c3687a0d6e3e1f91e0534cc633f5a118239e52bb05a54
-  languageName: node
-  linkType: hard
-
-"eslint-config-airbnb@npm:^19.0.4":
+"eslint-config-airbnb@npm:19.0.4, eslint-config-airbnb@npm:^19.0.4":
   version: 19.0.4
   resolution: "eslint-config-airbnb@npm:19.0.4"
   dependencies:
@@ -10176,7 +10176,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.25.3, eslint-plugin-import@npm:^2.25.4, eslint-plugin-import@npm:^2.26.0":
+"eslint-plugin-import@npm:2.26.0, eslint-plugin-import@npm:^2.25.3, eslint-plugin-import@npm:^2.25.4":
   version: 2.26.0
   resolution: "eslint-plugin-import@npm:2.26.0"
   dependencies:
@@ -10216,7 +10216,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsx-a11y@npm:^6.5.1":
+"eslint-plugin-jsx-a11y@npm:6.6.0, eslint-plugin-jsx-a11y@npm:^6.5.1":
   version: 6.6.0
   resolution: "eslint-plugin-jsx-a11y@npm:6.6.0"
   dependencies:
@@ -10239,7 +10239,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsx-a11y@npm:^6.6.0":
+"eslint-plugin-jsx-a11y@npm:6.6.1":
   version: 6.6.1
   resolution: "eslint-plugin-jsx-a11y@npm:6.6.1"
   dependencies:
@@ -10277,7 +10277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^4.3.0, eslint-plugin-react-hooks@npm:^4.4.0, eslint-plugin-react-hooks@npm:^4.5.0, eslint-plugin-react-hooks@npm:^4.6.0":
+"eslint-plugin-react-hooks@npm:4.6.0, eslint-plugin-react-hooks@npm:^4.3.0, eslint-plugin-react-hooks@npm:^4.4.0":
   version: 4.6.0
   resolution: "eslint-plugin-react-hooks@npm:4.6.0"
   peerDependencies:
@@ -10286,7 +10286,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.27.1, eslint-plugin-react@npm:^7.29.4, eslint-plugin-react@npm:^7.30.0, eslint-plugin-react@npm:^7.30.1":
+"eslint-plugin-react@npm:7.30.1, eslint-plugin-react@npm:^7.27.1, eslint-plugin-react@npm:^7.29.4":
   version: 7.30.1
   resolution: "eslint-plugin-react@npm:7.30.1"
   dependencies:
@@ -10448,7 +10448,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.12.0, eslint@npm:^8.16.0, eslint@npm:^8.17.0, eslint@npm:^8.18.0, eslint@npm:^8.19.0, eslint@npm:^8.3.0":
+"eslint@npm:8.20.0, eslint@npm:^8.12.0, eslint@npm:^8.19.0, eslint@npm:^8.3.0":
   version: 8.20.0
   resolution: "eslint@npm:8.20.0"
   dependencies:
@@ -12279,7 +12279,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ipfs-http-client@npm:^57.0.1, ipfs-http-client@npm:^57.0.3":
+"ipfs-http-client@npm:57.0.3":
   version: 57.0.3
   resolution: "ipfs-http-client@npm:57.0.3"
   dependencies:
@@ -14353,7 +14353,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.isplainobject@npm:^4.0.6":
+"lodash.isplainobject@npm:4.0.6, lodash.isplainobject@npm:^4.0.6":
   version: 4.0.6
   resolution: "lodash.isplainobject@npm:4.0.6"
   checksum: 29c6351f281e0d9a1d58f1a4c8f4400924b4c79f18dfc4613624d7d54784df07efaff97c1ff2659f3e085ecf4fff493300adc4837553104cef2634110b0d5337
@@ -14466,40 +14466,40 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "lottery@workspace:apps/lottery"
   dependencies:
-    "@gear-js/api": ^0.22.3
-    "@gear-js/react-hooks": ^0.2.4
-    "@gear-js/ui": ^0.4.0
-    "@mantine/form": ^4.2.9
-    "@polkadot/api": ^8.9.1
-    "@polkadot/extension-dapp": ^0.43.3
-    "@polkadot/react-identicon": ^2.4.1
-    "@polkadot/types": ^8.9.1
-    "@polkadot/util": ^9.7.2
-    "@testing-library/jest-dom": ^5.16.4
-    "@testing-library/react": ^13.3.0
-    "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.2
-    "@types/node": ^16.11.41
-    "@types/react": ^18.0.12
-    "@types/react-dom": ^18.0.5
-    "@typescript-eslint/eslint-plugin": ^5.28.0
-    "@typescript-eslint/parser": ^5.28.0
-    clsx: ^1.1.1
-    eslint: ^8.17.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^17.0.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsx-a11y: ^6.5.1
-    eslint-plugin-react: ^7.30.0
-    eslint-plugin-react-hooks: ^4.6.0
-    react: ^18.2.0
-    react-app-rewired: ^2.2.1
-    react-dom: ^18.2.0
-    react-router-dom: ^6.3.0
-    react-scripts: ^5.0.1
-    typescript: ^4.7.3
-    web-vitals: ^2.1.4
+    "@gear-js/api": 0.22.3
+    "@gear-js/react-hooks": 0.2.11
+    "@gear-js/ui": 0.4.0
+    "@mantine/form": 4.2.12
+    "@polkadot/api": 8.13.1
+    "@polkadot/extension-dapp": 0.43.3
+    "@polkadot/react-identicon": 2.9.1
+    "@polkadot/types": 8.13.1
+    "@polkadot/util": 9.7.2
+    "@testing-library/jest-dom": 5.16.4
+    "@testing-library/react": 13.3.0
+    "@testing-library/user-event": 13.5.0
+    "@types/jest": 27.5.2
+    "@types/node": 16.11.45
+    "@types/react": 18.0.15
+    "@types/react-dom": 18.0.6
+    "@typescript-eslint/eslint-plugin": 5.30.7
+    "@typescript-eslint/parser": 5.30.7
+    clsx: 1.2.1
+    eslint: 8.20.0
+    eslint-config-airbnb: 19.0.4
+    eslint-config-airbnb-typescript: 17.0.0
+    eslint-config-prettier: 8.5.0
+    eslint-plugin-import: 2.26.0
+    eslint-plugin-jsx-a11y: 6.6.0
+    eslint-plugin-react: 7.30.1
+    eslint-plugin-react-hooks: 4.6.0
+    react: 18.2.0
+    react-app-rewired: 2.2.1
+    react-dom: 18.2.0
+    react-router-dom: 6.3.0
+    react-scripts: 5.0.1
+    typescript: 4.7.4
+    web-vitals: 2.1.4
   languageName: unknown
   linkType: soft
 
@@ -14638,40 +14638,40 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "marketplace@workspace:apps/marketplace"
   dependencies:
-    "@gear-js/api": ^0.22.3
-    "@gear-js/react-hooks": ^0.2.4
-    "@gear-js/ui": ^0.4.0
-    "@polkadot/api": ^8.9.1
-    "@polkadot/extension-dapp": ^0.43.3
-    "@polkadot/react-identicon": ^2.6.2
-    "@polkadot/types": ^8.9.1
-    "@testing-library/jest-dom": ^5.16.4
-    "@testing-library/react": ^13.3.0
-    "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.2
-    "@types/node": ^16.11.41
-    "@types/react": ^18.0.14
-    "@types/react-dom": ^18.0.5
-    "@typescript-eslint/eslint-plugin": ^5.30.0
-    "@typescript-eslint/parser": ^5.30.0
-    clsx: ^1.1.1
-    eslint: ^8.18.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^17.0.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsx-a11y: ^6.6.0
-    eslint-plugin-react: ^7.30.1
-    eslint-plugin-react-hooks: ^4.6.0
-    ipfs-http-client: ^57.0.3
-    react: ^18.2.0
-    react-app-rewired: ^2.2.1
-    react-dom: ^18.2.0
-    react-hook-form: ^7.33.0
-    react-router-dom: ^6.3.0
-    react-scripts: ^5.0.1
-    typescript: ^4.7.4
-    web-vitals: ^2.1.4
+    "@gear-js/api": 0.22.3
+    "@gear-js/react-hooks": 0.2.11
+    "@gear-js/ui": 0.4.0
+    "@polkadot/api": 8.13.1
+    "@polkadot/extension-dapp": 0.43.3
+    "@polkadot/react-identicon": 2.9.1
+    "@polkadot/types": 8.13.1
+    "@testing-library/jest-dom": 5.16.4
+    "@testing-library/react": 13.3.0
+    "@testing-library/user-event": 13.5.0
+    "@types/jest": 27.5.2
+    "@types/node": 16.11.45
+    "@types/react": 18.0.15
+    "@types/react-dom": 18.0.6
+    "@typescript-eslint/eslint-plugin": 5.30.7
+    "@typescript-eslint/parser": 5.30.7
+    clsx: 1.2.1
+    eslint: 8.20.0
+    eslint-config-airbnb: 19.0.4
+    eslint-config-airbnb-typescript: 17.0.0
+    eslint-config-prettier: 8.5.0
+    eslint-plugin-import: 2.26.0
+    eslint-plugin-jsx-a11y: 6.6.1
+    eslint-plugin-react: 7.30.1
+    eslint-plugin-react-hooks: 4.6.0
+    ipfs-http-client: 57.0.3
+    react: 18.2.0
+    react-app-rewired: 2.2.1
+    react-dom: 18.2.0
+    react-hook-form: 7.33.1
+    react-router-dom: 6.3.0
+    react-scripts: 5.0.1
+    typescript: 4.7.4
+    web-vitals: 2.1.4
   languageName: unknown
   linkType: soft
 
@@ -15201,41 +15201,41 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nft@workspace:apps/nft"
   dependencies:
-    "@gear-js/api": ^0.22.3
-    "@gear-js/react-hooks": ^0.2.4
-    "@gear-js/ui": ^0.4.0
-    "@polkadot/api": ^8.9.1
-    "@polkadot/extension-dapp": ^0.43.2
-    "@polkadot/react-identicon": ^2.2.1
-    "@polkadot/types": ^8.9.1
-    "@polkadot/util": ^9.7.2
-    "@testing-library/jest-dom": ^5.16.4
-    "@testing-library/react": ^13.2.0
-    "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.1
-    "@types/node": ^16.11.36
-    "@types/react": ^18.0.9
-    "@types/react-dom": ^18.0.4
-    "@typescript-eslint/eslint-plugin": ^5.25.0
-    "@typescript-eslint/parser": ^5.25.0
-    clsx: ^1.1.1
-    eslint: ^8.16.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^17.0.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsx-a11y: ^6.5.1
-    eslint-plugin-react: ^7.30.0
-    eslint-plugin-react-hooks: ^4.5.0
-    ipfs-http-client: ^57.0.1
-    react: ^18.1.0
-    react-app-rewired: ^2.2.1
-    react-dom: ^18.1.0
-    react-hook-form: ^7.31.3
-    react-router-dom: ^6.3.0
+    "@gear-js/api": 0.22.3
+    "@gear-js/react-hooks": 0.2.11
+    "@gear-js/ui": 0.4.0
+    "@polkadot/api": 8.13.1
+    "@polkadot/extension-dapp": 0.43.3
+    "@polkadot/react-identicon": 2.9.1
+    "@polkadot/types": 8.13.1
+    "@polkadot/util": 9.7.2
+    "@testing-library/jest-dom": 5.16.4
+    "@testing-library/react": 13.3.0
+    "@testing-library/user-event": 13.5.0
+    "@types/jest": 27.5.2
+    "@types/node": 16.11.45
+    "@types/react": 18.0.15
+    "@types/react-dom": 18.0.6
+    "@typescript-eslint/eslint-plugin": 5.30.7
+    "@typescript-eslint/parser": 5.30.7
+    clsx: 1.2.1
+    eslint: 8.20.0
+    eslint-config-airbnb: 19.0.4
+    eslint-config-airbnb-typescript: 17.0.0
+    eslint-config-prettier: 8.5.0
+    eslint-plugin-import: 2.26.0
+    eslint-plugin-jsx-a11y: 6.6.0
+    eslint-plugin-react: 7.30.1
+    eslint-plugin-react-hooks: 4.6.0
+    ipfs-http-client: 57.0.3
+    react: 18.2.0
+    react-app-rewired: 2.2.1
+    react-dom: 18.2.0
+    react-hook-form: 7.33.1
+    react-router-dom: 6.3.0
     react-scripts: 5.0.1
-    typescript: ^4.6.4
-    web-vitals: ^2.1.4
+    typescript: 4.7.4
+    web-vitals: 2.1.4
   languageName: unknown
   linkType: soft
 
@@ -17456,7 +17456,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-app-rewired@npm:^2.2.1":
+"react-app-rewired@npm:2.2.1":
   version: 2.2.1
   resolution: "react-app-rewired@npm:2.2.1"
   dependencies:
@@ -17560,7 +17560,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^18.1.0, react-dom@npm:^18.2.0":
+"react-dom@npm:18.2.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
   dependencies:
@@ -17608,7 +17608,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.31.3, react-hook-form@npm:^7.33.0":
+"react-hook-form@npm:7.33.1":
   version: 7.33.1
   resolution: "react-hook-form@npm:7.33.1"
   peerDependencies:
@@ -17666,7 +17666,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.3.0, react-router-dom@npm:^6.3.0":
+"react-router-dom@npm:6.3.0":
   version: 6.3.0
   resolution: "react-router-dom@npm:6.3.0"
   dependencies:
@@ -17690,7 +17690,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-scripts@npm:5.0.1, react-scripts@npm:^5.0.1":
+"react-scripts@npm:5.0.1":
   version: 5.0.1
   resolution: "react-scripts@npm:5.0.1"
   dependencies:
@@ -17782,7 +17782,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.1.0, react@npm:^18.2.0":
+"react@npm:18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:
@@ -20424,7 +20424,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.7.4, typescript@npm:^4.6.4, typescript@npm:^4.7.3, typescript@npm:^4.7.4":
+"typescript@npm:4.7.4":
   version: 4.7.4
   resolution: "typescript@npm:4.7.4"
   bin:
@@ -20454,7 +20454,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.7.4#~builtin<compat/typescript>":
   version: 4.7.4
   resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=bda367"
   bin:
@@ -20819,7 +20819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:2.1.4, web-vitals@npm:^2.1.4":
+"web-vitals@npm:2.1.4":
   version: 2.1.4
   resolution: "web-vitals@npm:2.1.4"
   checksum: 03d3f47dbf55c3dce07beb0ff5de8ddd52e2d0a53a8df5c84e7a16dda93543341d67231fa79b1d9772b091419af4ec0fd395b8bcf451a0e26846e3f76b3d0efc
