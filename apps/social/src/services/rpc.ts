@@ -13,26 +13,27 @@ function generateRandomId() {
 export class ServerRPCRequestService {
   RPC_API_PATH = IDE_BACKEND_ADDRESS;
 
-  async getResource(method: string, postParams: Object = {}, headers = {}) {
+  async getResource(method: string, postParamArr: Array<Object>, headers = {}) {
     const url = this.RPC_API_PATH;
-    const requestId = generateRandomId();
 
     const params: RequestParams = {
       method: 'POST',
       headers,
     };
 
-    const methodParams = { ...postParams };
+    const paramArr = postParamArr.map((postParams) => {
+      const requestId = generateRandomId();
 
-    params.body = JSON.stringify({
-      jsonrpc: '2.0',
-      id: requestId,
-      method,
-      params: methodParams,
+      return {
+        jsonrpc: '2.0',
+        id: requestId,
+        method,
+        params: postParams,
+      }
     });
 
+    params.body = JSON.stringify(paramArr)
     params.headers['Content-Type'] = 'application/json;charset=utf-8';
-
     const response = await fetch(url, params);
 
     return response.json();

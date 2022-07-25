@@ -52,10 +52,10 @@ function useMessages() {
 
   useEffect(() => {
     apiRequest
-      .getResource('program.meta.get', { programId: id, chain: 'Workshop', genesis: GENESIS })
-      .then(({ result: { metaFile } }) => Buffer.from(metaFile, 'base64'))
+      .getResource('program.meta.get', [{ programId: id, chain: 'Workshop', genesis: GENESIS }])
+      .then(([{ result: { metaFile } }]) => Buffer.from(metaFile, 'base64'))
       .then((buffer) => api.programState.read(id, buffer))
-      .then((state) => setMessages(state.toHuman() as Message[]));
+      .then((state) => setMessages(state.toHuman() as Message[]))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -63,55 +63,75 @@ function useMessages() {
 }
 
 function useFeed() {
-  const apiRequest = new ServerRPCRequestService();
-
   const [messages, setMessages] = useState<Message[] | null>();
   const { channels } = useChannels();
   const { api } = useApi();
 
-  const promises = channels?.map(async ({ id }) => {
-    const { result: { metaFile } } = await apiRequest.getResource('program.meta.get', { programId: id, chain: 'Workshop', genesis: GENESIS })
-    const buffer = Buffer.from(metaFile, 'base64');
-    const state = await api.programState.read(id, buffer);
-
-    return state.toHuman();
-  })
-
   useEffect(() => {
-    if (promises) Promise.all(promises!).then((result) => {
-      const msg = result.flat() as Message[];
+    const getMessges = (async () => {
+
+      const apiRequest = new ServerRPCRequestService();
+
+      const batchParams = channels!.map(({ id }) => ({
+        programId: id,
+        chain: 'Workshop',
+        genesis: GENESIS
+      }));
+
+      const response = await apiRequest.getResource('program.meta.get', batchParams)
+
+      const promises = response.map(async ({ result: { program, metaFile } }: any) => {
+        const buffer = Buffer.from(metaFile, 'base64');
+        const state = await api.programState.read(program, buffer);
+        return state.toHuman();
+      })
+
+      const messagaArr = await Promise.all(promises);
+      const msg = messagaArr.flat() as Message[];
       const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10))
       setMessages(sorted.reverse())
+
     })
 
-  }, [promises])
+    if (channels) getMessges();
+  }, [channels, api.programState])
 
   return messages
 }
 
 function useOwnFeed() {
-  const apiRequest = new ServerRPCRequestService();
 
   const [messages, setMessages] = useState<Message[] | null>();
   const { subscriptions } = useSubscriptions();
   const { api } = useApi();
 
-  const promises = subscriptions?.map(async (id) => {
-    const { result: { metaFile } } = await apiRequest.getResource('program.meta.get', { programId: id, chain: 'Workshop', genesis: GENESIS })
-    const buffer = Buffer.from(metaFile, 'base64');
-    const state = await api.programState.read(id, buffer);
-
-    return state.toHuman();
-  })
-
   useEffect(() => {
-    if (promises) Promise.all(promises!).then((result) => {
-      const msg = result.flat() as Message[];
+    const getMessges = (async () => {
+      const apiRequest = new ServerRPCRequestService();
+
+      const batchParams = subscriptions!.map((id) => ({
+        programId: id,
+        chain: 'Workshop',
+        genesis: GENESIS
+      }));
+
+      const response = await apiRequest.getResource('program.meta.get', batchParams)
+
+      const promises = response.map(async ({ result: { program, metaFile } }: any) => {
+        const buffer = Buffer.from(metaFile, 'base64');
+        const state = await api.programState.read(program, buffer);
+        return state.toHuman();
+      })
+
+      const messagaArr = await Promise.all(promises);
+      const msg = messagaArr.flat() as Message[];
       const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10))
-      setMessages(sorted.reverse())
+      setMessages(sorted.reverse());
+
     })
 
-  }, [promises])
+    if (subscriptions) getMessges();
+  }, [subscriptions, api.programState])
 
   return messages
 }
@@ -124,8 +144,8 @@ function useChannelActions() {
 
   useEffect(() => {
     apiRequest
-      .getResource('program.meta.get', { programId: id, chain: 'Workshop', genesis: GENESIS })
-      .then(({ result: { metaFile } }) => Buffer.from(metaFile, 'base64'))
+      .getResource('program.meta.get', [{ programId: id, chain: 'Workshop', genesis: GENESIS }])
+      .then(([{ result: { metaFile } }]) => Buffer.from(metaFile, 'base64'))
       .then((buffer) => getWasmMetadata(buffer))
       .then((m) => setMetadata(m));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,4 +171,4 @@ function useChannelActions() {
   return { post, subscribe, unsubscribe };
 }
 
-export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages, useOwnFeed, useFeed };
+export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages, useOwnFeed, useFeed }
