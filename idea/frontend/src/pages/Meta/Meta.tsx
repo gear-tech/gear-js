@@ -15,7 +15,7 @@ type Params = {
 const Meta = () => {
   const { programId } = useParams() as Params;
 
-  const [program] = useProgram(programId);
+  const { program } = useProgram(programId);
 
   const programName = program?.name || programId;
 

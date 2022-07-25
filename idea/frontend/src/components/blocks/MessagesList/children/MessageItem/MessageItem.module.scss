@@ -1,39 +1,25 @@
 @use '@gear-js/ui/variables' as *;
 
-.messageItem {
+.item {
   display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  border-bottom: 1px solid #363636;
+  align-items: center;
+  color: $textColor;
 
-  .itemCol {
-    display: flex;
-    align-items: center;
-    color: $textColor;
+  .messageStatus {
+    margin-right: 15px;
+  }
 
-    &:nth-child(2) {
-      flex: 0 2 700px;
-    }
+  .copyButton {
+    margin-left: 5px;
+  }
 
-    &:nth-child(3) {
-      flex: 0 1 200px;
-    }
+  .messageLink {
+    color: $textColorSecondary;
+    text-decoration: none;
 
-    .messageStatus {
-      margin-right: 15px;
-    }
-
-    .copyButton {
-      margin-left: 5px;
-    }
-
-    .messageLink {
-      color: $textColorSecondary;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
+    &:hover {
+      text-decoration: underline;
     }
   }
 }
+

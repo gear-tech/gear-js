@@ -5,10 +5,10 @@ import { Button, buttonStyles } from '@gear-js/ui';
 import clsx from 'clsx';
 
 import styles from './Message.module.scss';
-import { HumanMailboxItem } from './types';
 
 import { routes } from 'routes';
 import { getPreformattedText } from 'helpers';
+import { HumanMailboxItem } from 'types/api';
 import claimSVG from 'assets/images/claim.svg';
 import letterSVG from 'assets/images/letter.svg';
 import messageSVG from 'assets/images/message.svg';

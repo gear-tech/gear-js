@@ -6,10 +6,11 @@ import { getProgram } from 'services';
 import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { ProgramModel } from 'types/program';
 
-const useProgram = (id?: string): [ProgramModel?, Metadata?] => {
+const useProgram = (id?: string) => {
   const alert = useAlert();
 
   const [program, setProgram] = useState<ProgramModel>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const metadata = useMemo(() => {
     const meta = program?.meta?.meta;
@@ -21,14 +22,16 @@ const useProgram = (id?: string): [ProgramModel?, Metadata?] => {
 
   useEffect(() => {
     if (id) {
+      setIsLoading(true);
       getProgram(id)
         .then(({ result }) => setProgram(result))
-        .catch((err: RPCResponseError) => alert.error(err.message));
+        .catch((err: RPCResponseError) => alert.error(err.message))
+        .finally(() => setIsLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  return [program, metadata];
+  return { program, metadata, isLoading };
 };
 
 export { useProgram };
