@@ -1,6 +1,9 @@
 name: Deploy Gear-apps to k8s stage/prod
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+    branches: ['master']
   push:
     branches: ['master']
     paths:
