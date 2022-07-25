@@ -1,6 +1,7 @@
 import { Button } from '@gear-js/ui';
+import { useAccount } from '@gear-js/react-hooks';
 import clsx from 'clsx';
-import { Content } from 'components';
+import { Content, Info } from 'components';
 import { useAuctionMessage, useCountdown } from 'hooks';
 import { getCountdownNumber, getNumber } from 'utils';
 import { Auction } from 'types';
@@ -15,7 +16,10 @@ type Props = {
 };
 
 function Buy({ src, auction, onCountdownSet, onCountdownReset }: Props) {
-  const { timeLeft, tokenOwner, nftContractActorId, tokenId, startingPrice, currentPrice, discountRate } = auction;
+  const { timeLeft, tokenOwner, nftContractActorId, tokenId, startingPrice, currentPrice, discountRate, auctionOwner } =
+    auction;
+
+  const { account } = useAccount();
   const sendMessage = useAuctionMessage();
 
   const { hours, minutes, seconds, price } = useCountdown(
@@ -26,6 +30,7 @@ function Buy({ src, auction, onCountdownSet, onCountdownReset }: Props) {
     onCountdownSet,
   );
 
+  const isOwner = account?.decodedAddress === auctionOwner;
   const countdownClassName = clsx(styles.text, styles.countdown);
   const addressClassName = clsx(styles.value, styles.address);
 
@@ -63,7 +68,11 @@ function Buy({ src, auction, onCountdownSet, onCountdownReset }: Props) {
             <span className={styles.value}>{price}</span>
           </p>
         </div>
-        <Button text="Buy item" onClick={buy} block />
+        {isOwner ? (
+          <Info text="You can't participate in your own auction" />
+        ) : (
+          <Button text="Buy item" onClick={buy} block />
+        )}
       </Content>
     </>
   );

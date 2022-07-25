@@ -8,6 +8,7 @@ type Auction = {
   timeLeft: string;
   tokenId: string;
   tokenOwner: Hex;
+  auctionOwner: Hex;
   status: string | { Purchased: { price: string } };
 };
 
