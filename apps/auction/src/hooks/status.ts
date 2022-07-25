@@ -12,8 +12,9 @@ function useStatus(stateStatus: Status | undefined) {
 
   const resetStatus = () => setStatus('None');
   const setExpiredStatus = () => setStatus('Expired');
+  const setRunningStatus = () => setStatus('IsRunning');
 
-  return { status, resetStatus, setExpiredStatus };
+  return { status, resetStatus, setExpiredStatus, setRunningStatus };
 }
 
 export { useStatus };

@@ -1,32 +1,29 @@
-import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
 import { Content } from 'components';
 import { useAuctionMessage, useCountdown } from 'hooks';
 import { getCountdownNumber, getNumber } from 'utils';
+import { Auction } from 'types';
 import { Countdown } from './countdown';
 import styles from './Buy.module.scss';
 
 type Props = {
   src: string;
-  timeLeft: string;
-  owner: Hex;
-  contract: Hex;
-  token: string;
-  startPrice: string;
-  currentPrice: string;
-  rate: string;
+  auction: Auction;
   onCountdownReset: () => void;
+  onCountdownSet: () => void;
 };
 
-function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, rate, onCountdownReset }: Props) {
+function Buy({ src, auction, onCountdownSet, onCountdownReset }: Props) {
+  const { timeLeft, tokenOwner, nftContractActorId, tokenId, startingPrice, currentPrice, discountRate } = auction;
   const sendMessage = useAuctionMessage();
 
   const { hours, minutes, seconds, price } = useCountdown(
     getCountdownNumber(timeLeft),
     getNumber(currentPrice),
-    getNumber(rate),
+    getNumber(discountRate),
     onCountdownReset,
+    onCountdownSet,
   );
 
   const countdownClassName = clsx(styles.text, styles.countdown);
@@ -46,20 +43,20 @@ function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, 
         </div>
         <p className={styles.text}>
           <span className={styles.key}>Owner address:</span>
-          <span className={addressClassName}>{owner}</span>
+          <span className={addressClassName}>{tokenOwner}</span>
         </p>
         <p className={styles.text}>
           <span className={styles.key}>Contract address:</span>
-          <span className={addressClassName}>{contract}</span>
+          <span className={addressClassName}>{nftContractActorId}</span>
         </p>
         <p className={styles.text}>
           <span className={styles.key}>Token ID:</span>
-          <span className={styles.value}>{token}</span>
+          <span className={styles.value}>{tokenId}</span>
         </p>
         <div className={styles.prices}>
           <p className={styles.text}>
             <span className={styles.key}>Start price:</span>
-            <span className={styles.value}>{startPrice}</span>
+            <span className={styles.value}>{startingPrice}</span>
           </p>
           <p className={styles.text}>
             <span className={styles.key}>Current price:</span>
