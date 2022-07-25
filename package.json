@@ -10,10 +10,6 @@
     "build:frontend": "yarn workspace @gear-js/frontend build",
     "build:test-balance": "yarn workspace @gear-js/test-balance build",
     "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
-    "run:front": "PORT=3001 yarn workspace @gear-js/frontend start",
-    "run:event-listener": "yarn workspace @gear-js/event-listener start:dev",
-    "run:api-gateway": "yarn workspace @gear-js/api-gateway start:dev",
-    "run:data-storage": "yarn workspace @gear-js/data-storage start:dev",
     "test:data-storage": "yarn workspace @gear-js/data-storage test",
     "test:frontend": "yarn workspace @gear-js/frontend test",
     "postinstall": "husky install"
@@ -26,16 +22,12 @@
     "lint-staged": "12.5.0"
   },
   "workspaces": [
-    "website/api-gateway",
-    "website/data-storage",
-    "website/events-listener",
-    "website/frontend",
-    "website/test-balance",
-    "website/common"
+    "idea/**",
+    "apps/**"
   ],
   "lint-staged": {
     "api/**/*.{js,ts}": "cd api && npm run lint:fix",
-    "website/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'website/frontend/**' --ignore-pattern 'apps/**"
+    "idea/**/*.{js,ts,tsx}": "eslint --fix --ignore-pattern 'idea/frontend/**'"
   },
   "resolutions": {
     "@types/react": "17.0.44"

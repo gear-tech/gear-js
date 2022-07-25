@@ -12,13 +12,13 @@ const replaceWorkspaces = (workspacesList, pathToPackageJson) => {
 };
 
 const workspaces = {
-  apiGateway: 'website/api-gateway',
-  dataStorage: 'website/data-storage',
-  eventsListener: 'website/events-listener',
-  frontend: 'website/frontend',
-  testBalance: 'website/test-balance',
-  interfaces: 'website/interfaces',
-  jsonrpcErrors: 'website/jsonrpc-errors',
+  apiGateway: 'idea/api-gateway',
+  dataStorage: 'idea/data-storage',
+  eventsListener: 'idea/events-listener',
+  frontend: 'idea/frontend',
+  testBalance: 'idea/test-balance',
+  interfaces: 'idea/interfaces',
+  jsonrpcErrors: 'idea/jsonrpc-errors',
 };
 
 const args = process.argv.slice(2);

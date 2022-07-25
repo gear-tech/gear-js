@@ -1,0 +1,25 @@
+@use '@gear-js/ui/variables' as *;
+
+.item {
+  display: flex;
+  align-items: center;
+  color: $textColor;
+
+  .messageStatus {
+    margin-right: 15px;
+  }
+
+  .copyButton {
+    margin-left: 5px;
+  }
+
+  .messageLink {
+    color: $textColorSecondary;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+

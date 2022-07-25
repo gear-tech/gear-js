@@ -16,26 +16,26 @@
       "addLabels": ["api"]
     },
     {
-      "matchPaths": ["website/frontend/**"],
+      "matchPaths": ["idea/frontend/**"],
       "groupName": "idea-frontend",
       "reviewers": ["nikitayutanov", "aderrod94", "Pinkdesu"],
       "addLabels": ["frontend"]
     },
     {
       "matchPaths": [
-        "website/api-gateway/**",
-        "website/common/**",
-        "website/data-storage/**",
-        "website/events-listener/**",
-        "website/test-balance/**",
-        "website/wasm-compiler/**"
+        "idea/api-gateway/**",
+        "idea/common/**",
+        "idea/data-storage/**",
+        "idea/events-listener/**",
+        "idea/test-balance/**",
+        "idea/wasm-compiler/**"
       ],
       "groupName": "idea-backend",
       "reviewers": ["osipov-mit", "Almazatun"],
       "addLabels": ["backend"]
     },
     {
-      "matchPaths": ["website/tests/**"],
+      "matchPaths": ["idea/tests/**"],
       "groupName": "idea-tests",
       "reviewers": ["osipov-mit", "Almazatun"],
       "addLabels": ["tests"]

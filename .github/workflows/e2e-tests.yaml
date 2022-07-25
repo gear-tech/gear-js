@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     branches: master
     paths:
-      - website/**
+      - idea/**
   workflow_dispatch:
 
 concurrency:
@@ -47,10 +47,10 @@ jobs:
           # Diff HEAD with the previous commit
           $diff = git diff --name-only HEAD^ HEAD
           # Check if a file under dataStorage/ has changed (added, modified, deleted)
-          $SourceDiffDataStorage = $diff | Where-Object { $_ -match '^website/data-storage/' }
+          $SourceDiffDataStorage = $diff | Where-Object { $_ -match '^idea/data-storage/' }
           $HasDiffDataStorage = $SourceDiffDataStorage.Length -gt 0
           # Check if a file under frontend/ has changed (added, modified, deleted)
-          $SourceDiffFrontend = $diff | Where-Object { $_ -match '^website/frontend/' }
+          $SourceDiffFrontend = $diff | Where-Object { $_ -match '^idea/frontend/' }
           $HasDiffFrontend = $SourceDiffFrontend.Length -gt 0
           # Set the output
           Write-Host "::set-output name=dataStorage_changed::$HasDiffDataStorage"
@@ -146,7 +146,7 @@ jobs:
       - name: Build and push Data Storage Docker image
         uses: docker/build-push-action@master
         with:
-          file: website/data-storage/Dockerfile
+          file: idea/data-storage/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:dev
 
@@ -173,7 +173,7 @@ jobs:
       - name: Build and push Api Gateway Docker image
         uses: docker/build-push-action@master
         with:
-          file: website/api-gateway/Dockerfile
+          file: idea/api-gateway/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:dev
 
@@ -200,7 +200,7 @@ jobs:
       - name: Build and push Events Listener Docker image
         uses: docker/build-push-action@master
         with:
-          file: website/events-listener/Dockerfile
+          file: idea/events-listener/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-events-listener:dev
 
@@ -227,7 +227,7 @@ jobs:
       - name: Build and push Test Balance Docker image
         uses: docker/build-push-action@master
         with:
-          file: website/test-balance/Dockerfile
+          file: idea/test-balance/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-test-balance:dev
 
@@ -292,7 +292,7 @@ jobs:
           node-version: 16.x
 
       - name: Prepare&Run Tests
-        working-directory: website/tests
+        working-directory: idea/tests
         env:
           API_ENDPOINT: ${{ secrets.API_ADDRESS_URL_TEST }}
           WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}

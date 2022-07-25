@@ -20,14 +20,14 @@
 
 - name: Copy wasm-compiler
   copy:
-    src: ../../../website/wasm-compiler/
+    src: ../../../idea/wasm-compiler/
     dest: /home/ec2-user/wasm-compiler
 
 - name: Install dependencies
   shell: >
     cd /home/ec2-user/wasm-compiler;
     npm install --force; npm run build;
-    cp -r build/ dist;
+    cp -r dist/ dist;
 
 - name: Give permissions to build-image script
   ansible.builtin.file:

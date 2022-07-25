@@ -22,7 +22,7 @@
       }
     ],
     "object-curly-spacing": ["error", "always"],
-    "max-len": ["error", { "code": 120, "tabWidth": 2 }],
+    "max-len": ["error", { "code": 120, "tabWidth": 2, "ignoreComments": true, "ignoreStrings": true }],
     "linebreak-style": ["error", "unix"],
     "quotes": ["warn", "single", { "avoidEscape": true }],
     "semi": ["error", "always"],
@@ -32,6 +32,7 @@
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "prefer-rest-params": "off"
   }
 }
