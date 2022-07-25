@@ -13,7 +13,7 @@ COPY .yarn .yarn
 COPY .yarnrc.yml .
 COPY ./apps/escrow apps/escrow
 RUN yarn install
-RUN yarn workspace escrow build
+RUN yarn build:escrow
 
 
 # COPY . /escrow

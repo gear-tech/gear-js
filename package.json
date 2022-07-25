@@ -12,6 +12,7 @@
     "build:wasm-compiler": "yarn workspace @gear-js/wasm-compiler build",
     "test:data-storage": "yarn workspace @gear-js/data-storage test",
     "test:frontend": "yarn workspace @gear-js/frontend test",
+    "build:escrow": "yarn workspace escrow build",
     "postinstall": "husky install"
   },
   "devDependencies": {
