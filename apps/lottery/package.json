@@ -1,5 +1,5 @@
 {
-  "name": "lottery",
+  "name": "@gear-js/lottery",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

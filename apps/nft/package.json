@@ -1,5 +1,5 @@
 {
-  "name": "nft",
+  "name": "@gear-js/nft",
   "version": "0.1.0",
   "private": true,
   "scripts": {

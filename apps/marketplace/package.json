@@ -1,5 +1,5 @@
 {
-  "name": "marketplace",
+  "name": "@gear-js/marketplace",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
