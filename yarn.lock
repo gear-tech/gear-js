@@ -10044,6 +10044,7 @@ __metadata:
     react-router-dom: ^6.3.0
     react-scripts: ^5.0.1
     react-transition-group: ^4.4.2
+    sass: ^1.54.0
     typescript: ^4.7.4
     web-vitals: ^2.1.4
   languageName: unknown
@@ -18406,6 +18407,19 @@ __metadata:
   bin:
     sass: sass.js
   checksum: 43738cc83a3921731456f769aba190277f0620f8b80c14426ab098be9ab8dc8465957f5bf2edbcffda189edb3024ed83dee2cb8cd580459ca4984a9fc88c18f7
+  languageName: node
+  linkType: hard
+
+"sass@npm:^1.54.0":
+  version: 1.54.0
+  resolution: "sass@npm:1.54.0"
+  dependencies:
+    chokidar: ">=3.0.0 <4.0.0"
+    immutable: ^4.0.0
+    source-map-js: ">=0.6.2 <2.0.0"
+  bin:
+    sass: sass.js
+  checksum: 7d3acf124d771e8811fce876ad37f786faafa9edce64b20dcf32bf6aed5116802c863d3311fd79e7e7682fcccc4dc684960be1365cffa7dad045be7251c40d70
   languageName: node
   linkType: hard
 
