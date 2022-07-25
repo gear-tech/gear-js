@@ -2,7 +2,12 @@ import { Hex } from '@gear-js/api';
 
 import assert from 'assert';
 
-import { ICodeSpec, IMessageSpec, IPreparedCollectionCode, IPreparedPrograms, IUploadedPrograms } from '../interfaces';
+import {
+  ICodeSpec,
+  IMessageSpec,
+  IPreparedPrograms,
+  IUploadedPrograms
+} from '../interfaces';
 
 function checkPrograms(
   programs: { [id: Hex]: IUploadedPrograms },
@@ -57,7 +62,7 @@ function checkCollectionCode(
   sentCollectionCode: Map<Hex, any>,
   specCollectionCode: { [key: string]: ICodeSpec[] }): Map<Hex, any> {
   assert(
-    [...sentCollectionCode.keys()].reduce((counter, key) => {
+    Object.keys(specCollectionCode).reduce((counter, key) => {
       counter += specCollectionCode[key].length;
       return counter;
     }, 0) === sentCollectionCode.size,
