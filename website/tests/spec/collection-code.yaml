@@ -1,22 +1,17 @@
 ping:
   - id: 1
-    gasLimit: 20000000000
     account: alice
     pathToOpt: ./wasm/bot.opt.wasm
 
-
-guestbook:
-  - id: 3
-    gasLimit: 20000000000
-    account: alice
-    pathToOpt: ./wasm/bot.opt.wasm
-
-  - id: 4
-    gasLimit: 20000000000
-    account: bob
-    pathToOpt: ./wasm/bot.opt.wasm
-
-  - id: 5
-    gasLimit: 20000000000
-    account: alice
-    pathToOpt: ./wasm/bot.opt.wasm
+#guestbook:
+#  - id: 3
+#    account: alice
+#    pathToOpt: ./wasm/bot.opt.wasm
+#
+#  - id: 4
+#    account: bob
+#    pathToOpt: ./wasm/bot.opt.wasm
+#
+#  - id: 5
+#    account: alice
+#    pathToOpt: ./wasm/bot.opt.wasm
