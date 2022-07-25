@@ -2,7 +2,6 @@
 
 .box {
   display: flex;
-  color: $textColor;
 }
 
 .heading {
@@ -19,6 +18,7 @@
 
   .noMessages {
     display: none;
+    color: $textColor;
 
     &:only-child {
       display: block;
