@@ -5,7 +5,7 @@ import { ICodeSpec, IPreparedCollectionCode } from '../interfaces';
 import accounts from '../config/accounts';
 import { checkCollectionCode } from './check';
 
-async function sendCode(api: GearApi, spec: ICodeSpec): Promise<{ id: Hex, change: string, expiration: any } | void> {
+async function uploadCode(api: GearApi, spec: ICodeSpec): Promise<{ id: Hex, change: string, expiration: any } | void> {
   const code = readFileSync(spec.pathToOpt);
   const account = (await accounts())[spec.account];
   await api.code.submit(code);
@@ -30,7 +30,7 @@ async function sendCode(api: GearApi, spec: ICodeSpec): Promise<{ id: Hex, chang
 }
 
 
-async function sendCollectionCode(
+async function uploadCollectionCode(
   api: GearApi,
   collectionCode: { [key: string]: ICodeSpec[] },
 ):Promise<IPreparedCollectionCode> {
@@ -40,7 +40,7 @@ async function sendCollectionCode(
     const listCode = collectionCode[key];
 
     for (const code of listCode) {
-      const sentCode = await sendCode(api, code);
+      const sentCode = await uploadCode(api, code);
       if (sentCode) {
         sendCollectionCode.set(sentCode.id, sentCode);
       }
@@ -50,4 +50,4 @@ async function sendCollectionCode(
   return checkCollectionCode(sendCollectionCode, collectionCode);
 }
 
-export  { sendCollectionCode };
+export  { uploadCollectionCode };

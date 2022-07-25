@@ -82,13 +82,13 @@ describe('message methods', () => {
 
 describe('code methods', () => {
   test('code.all request', async () => {
-    const codeIds = [...prepared.collectionCode.keys()];
+    const codeIds = Array.from(prepared.collectionCode.keys());
     expect(await getListCode(genesis, codeIds)).toBeTruthy();
   });
 
   test('code.data request', async () => {
     const codeIndex = 0;
-    const codeId = [...prepared.collectionCode.keys()][codeIndex];
+    const codeId = Array.from(prepared.collectionCode.keys())[codeIndex];
     expect(await getCodeData(genesis, codeId)).toBeTruthy();
   });
 });
