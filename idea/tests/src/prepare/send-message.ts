@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { GearApi, getWasmMetadata, Hex } from '@gear-js/api';
+
 import accounts from '../config/accounts';
 import { IMessageSpec, IPreparedPrograms } from '../interfaces';
 import { listenToUserMessageSent } from './subscriptions';

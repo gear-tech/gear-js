@@ -1,7 +1,7 @@
-import { GearApi, Hex, UserMessageSentData } from '@gear-js/api';
+import { CodeChangedData, GearApi, Hex, UserMessageSentData } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-export async function listenToUserMessageSent(
+async function listenToUserMessageSent(
   api: GearApi,
   callback: (logData: UserMessageSentData) => void,
 ): UnsubscribePromise {
@@ -10,10 +10,18 @@ export async function listenToUserMessageSent(
   });
 }
 
-export async function listenToMessagesDispatched(api: GearApi, callback: (id: Hex, success: boolean) => void) {
+async function listenToMessagesDispatched(api: GearApi, callback: (id: Hex, success: boolean) => void) {
   return api.gearEvents.subscribeToGearEvent('MessagesDispatched', ({ data: { statuses } }) => {
     statuses.forEach((status, messageId) => {
       callback(messageId.toHex(), status.isSuccess ? true : false);
     });
   });
 }
+
+async function listenToCodeChanged(api: GearApi,  callback: (logData: CodeChangedData) => void ) {
+  return api.gearEvents.subscribeToGearEvent('CodeChanged', (event) => {
+    callback(event.data);
+  });
+}
+
+export { listenToUserMessageSent, listenToMessagesDispatched, listenToCodeChanged };

@@ -1,6 +1,7 @@
+import { expect } from 'chai';
+
 import { Passed } from '../interfaces';
 import request from './request';
-import { expect } from 'chai';
 
 export async function getTestBalance(genesis: string): Promise<Passed> {
   const response = await request('testBalance.get', {
