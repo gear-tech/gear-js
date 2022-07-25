@@ -1,17 +1,4 @@
-ping:
+bot:
   - id: 1
-    account: alice
-    pathToOpt: ./wasm/bot.opt.wasm
-
-guestbook:
-  - id: 3
-    account: alice
-    pathToOpt: ./wasm/bot.opt.wasm
-
-  - id: 4
-    account: bob
-    pathToOpt: ./wasm/bot.opt.wasm
-
-  - id: 5
     account: alice
     pathToOpt: ./wasm/bot.opt.wasm

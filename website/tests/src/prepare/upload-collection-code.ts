@@ -13,16 +13,15 @@ async function sendCode(api: GearApi, spec: ICodeSpec): Promise<{ id: Hex, chang
   return new Promise((resolve) => {
     api.code.signAndSend(account, ({ events = [] }) => {
       events.forEach(({ event: { method, data } }) => {
-        const { id, change } = data as CodeChangedData;
-
-        const status = change.isActive ? 'Active' : change.isInactive ? 'Inactive' : null;
-        const expiration = change.isActive ? change.asActive.expiration.toHuman() : null;
-
         if (method === 'ExtrinsicFailed') {
           throw new Error(`Unable to send code. ExtrinsicFailed. ${data.toString()}`);
         }
 
         if (method === 'CodeChanged') {
+          const { id, change } = data as CodeChangedData;
+          const status = change.isActive ? 'Active' : change.isInactive ? 'Inactive' : null;
+          const expiration = change.isActive ? change.asActive.expiration.toHuman() : null;
+
           resolve({ id: id.toHex(), change: status, expiration });
         }
       });
