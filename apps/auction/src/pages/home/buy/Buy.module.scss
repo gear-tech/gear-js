@@ -1,16 +1,8 @@
 @use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/headings' as *;
 
-.container {
-  display: flex;
-  align-items: center;
-}
-
-.content {
-  margin-left: auto;
-}
-
 .imgWrapper {
+  margin-right: 80px;
   padding: 120px 67px;
   background-image: linear-gradient(139.06deg, rgba(255, 255, 255, 0.1) 6.36%, rgba(40, 40, 40, 0.1) 96.84%),
     linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), url(/assets/images/nft-bg.svg);

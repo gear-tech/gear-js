@@ -35,11 +35,11 @@ function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, 
   const buy = () => sendMessage({ Buy: null }, { value: price + 500 }); // adding 500 to avoid error on too low refund value
 
   return (
-    <div className={styles.container}>
+    <>
       <div className={styles.imgWrapper}>
         <img src={src} alt="" className={styles.image} />
       </div>
-      <Content heading="Buy NFT" className={styles.content}>
+      <Content heading="Buy NFT">
         <div className={countdownClassName}>
           <span className={styles.key}>Time left:</span>
           <Countdown hours={hours} minutes={minutes} seconds={seconds} />
@@ -68,7 +68,7 @@ function Buy({ src, timeLeft, owner, contract, token, startPrice, currentPrice, 
         </div>
         <Button text="Buy item" onClick={buy} block />
       </Content>
-    </div>
+    </>
   );
 }
 
