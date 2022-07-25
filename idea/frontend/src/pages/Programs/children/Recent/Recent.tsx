@@ -63,7 +63,7 @@ const Recent = () => {
         <Pagination page={page} pagesAmount={programsCount || 1} />
       </div>
       <SearchForm placeholder="Find program" />
-      <ProgramsList programs={programs} address={account?.decodedAddress} />
+      <ProgramsList programs={programs} address={account?.decodedAddress} className={styles.tableBody} />
       {programsCount > 0 && (
         <div className={styles.bottomPagination}>
           <Pagination page={page} pagesAmount={programsCount} />

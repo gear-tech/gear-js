@@ -4,6 +4,11 @@
   margin: 0 40px;
 }
 
+.tableBody {
+  // TODO: override 
+  min-height: 420px !important; 
+}
+
 .topPagination {
   display: flex;
   margin: 20px 0;
