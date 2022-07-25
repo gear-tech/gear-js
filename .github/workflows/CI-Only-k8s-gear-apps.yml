@@ -176,7 +176,7 @@ jobs:
       - name: Build Escrow Docker image
         uses: docker/build-push-action@master
         with:
-          context: apps/escrow
+          file: apps/escrow/Dockerfile
           push: false
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-escrow:ci
           build-args: |
