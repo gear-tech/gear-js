@@ -57,7 +57,7 @@ function checkCollectionCode(
   sentCollectionCode: Map<Hex, any>,
   specCollectionCode: { [key: string]: ICodeSpec[] }): Map<Hex, any> {
   assert(
-    Object.keys(sentCollectionCode).reduce((counter, key) => {
+    [...sentCollectionCode.keys()].reduce((counter, key) => {
       counter += specCollectionCode[key].length;
       return counter;
     }, 0) === sentCollectionCode.size,
