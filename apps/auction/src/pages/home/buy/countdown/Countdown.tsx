@@ -12,24 +12,36 @@ function Countdown({ hours, minutes, seconds }: Props) {
       <div>
         <span className={styles.label}>Hours</span>
         <div>
-          <span className={styles.digit}>{hours[0]}</span>
-          <span className={styles.digit}>{hours[1]}</span>
+          <div className={styles.digit}>
+            <span>{hours[0]}</span>
+          </div>
+          <div className={styles.digit}>
+            <span>{hours[1]}</span>
+          </div>
         </div>
       </div>
       <span className={styles.separator}>:</span>
       <div>
         <span className={styles.label}>Minutes</span>
         <div>
-          <span className={styles.digit}>{minutes[0]}</span>
-          <span className={styles.digit}>{minutes[1]}</span>
+          <div className={styles.digit}>
+            <span>{minutes[0]}</span>
+          </div>
+          <div className={styles.digit}>
+            <span>{minutes[1]}</span>
+          </div>
         </div>
       </div>
       <span className={styles.separator}>:</span>
       <div>
         <span className={styles.label}>Seconds</span>
         <div>
-          <span className={styles.digit}>{seconds[0]}</span>
-          <span className={styles.digit}>{seconds[1]}</span>
+          <div className={styles.digit}>
+            <span>{seconds[0]}</span>
+          </div>
+          <div className={styles.digit}>
+            <span>{seconds[1]}</span>
+          </div>
         </div>
       </div>
     </div>
