@@ -1,5 +1,6 @@
 import { Hex } from '@gear-js/api';
 import { expect } from 'chai';
+
 import request from './request';
 import { Passed } from '../interfaces';
 

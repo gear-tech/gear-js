@@ -1,12 +1,14 @@
 import { GearApi, Hex } from '@gear-js/api';
 import { waitReady } from '@polkadot/wasm-crypto';
+
 import { checkInitStatus, getAllPrograms, getMeta, getProgramData, uploadMeta } from './programs';
-import base from '../config/base';
 import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram } from '../interfaces';
 import { sleep } from '../utils';
 import { getAllMessages, getMessageData } from './messages';
 import { getTestBalance } from './testBalance';
+import { getCodeData, getListCode } from './code';
+import base from '../config/base';
 
 let genesis: Hex;
 let prepared: IPrepared;
@@ -75,6 +77,19 @@ describe('message methods', () => {
     for (const message of prepared.messages.log) {
       expect(await getMessageData(genesis, message[0])).toBeTruthy();
     }
+  });
+});
+
+describe('code methods', () => {
+  test('code.all request', async () => {
+    const codeIds = Array.from(prepared.collectionCode.keys());
+    expect(await getListCode(genesis, codeIds)).toBeTruthy();
+  });
+
+  test('code.data request', async () => {
+    const codeIndex = 0;
+    const codeId = Array.from(prepared.collectionCode.keys())[codeIndex];
+    expect(await getCodeData(genesis, codeId)).toBeTruthy();
   });
 });
 

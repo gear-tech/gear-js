@@ -1,0 +1,4 @@
+bot:
+  - id: 1
+    account: alice
+    pathToOpt: ./wasm/bot.opt.wasm
