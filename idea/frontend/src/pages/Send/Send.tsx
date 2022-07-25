@@ -15,7 +15,7 @@ const Send = () => {
 
   const [message, setMessage] = useState<MessageModel>();
 
-  const [program, metadata] = useProgram(programId || message?.source);
+  const { program, metadata } = useProgram(programId || message?.source);
 
   useEffect(() => {
     if (messageId) {

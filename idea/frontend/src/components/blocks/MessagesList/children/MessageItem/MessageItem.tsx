@@ -24,21 +24,21 @@ const MessageItem = ({ message }: Props) => {
   const status = exitCode ? IndicatorStatus.Error : IndicatorStatus.Success;
 
   return (
-    <li className={styles.messageItem}>
-      <div className={styles.itemCol}>
+    <>
+      <div className={styles.item}>
         <CircleIndicator status={status} className={styles.messageStatus} />
         <p>{fileNameHandler(message.destination)}</p>
       </div>
-      <div className={styles.itemCol}>
+      <div className={styles.item}>
         <Link className={styles.messageLink} to={generatePath(routes.message, { messageId })}>
           {messageId}
         </Link>
         <Button icon={copySVG} size="small" color="transparent" className={styles.copyButton} onClick={handleCopy} />
       </div>
-      <div className={styles.itemCol}>
+      <div className={styles.item}>
         <p>{formatDate(timestamp)}</p>
       </div>
-    </li>
+    </>
   );
 };
 

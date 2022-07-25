@@ -4,10 +4,11 @@ import { Hex, MailboxItem } from '@gear-js/api';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 
 import styles from './Mailbox.module.scss';
-import { Message, HumanMailboxItem } from './children/Message';
+import { Message } from './children/Message';
 
 import { useMessageClaim } from 'hooks';
 import { ACCOUNT_ERRORS } from 'consts';
+import { HumanMailboxItem } from 'types/api';
 import { Box } from 'layout/Box/Box';
 import { Spinner } from 'components/common/Spinner/Spinner';
 
