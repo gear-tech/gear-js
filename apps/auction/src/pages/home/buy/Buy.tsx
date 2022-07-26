@@ -7,6 +7,7 @@ import { getCountdownNumber, getNumber } from 'utils';
 import { Auction } from 'types';
 import { Countdown } from './countdown';
 import styles from './Buy.module.scss';
+import { MIN_TRANSFER_AMOUNT } from 'consts';
 
 type Props = {
   src: string;
@@ -33,8 +34,10 @@ function Buy({ src, auction, onCountdownSet, onCountdownReset }: Props) {
   const isOwner = account?.decodedAddress === auctionOwner;
   const countdownClassName = clsx(styles.text, styles.countdown);
   const addressClassName = clsx(styles.value, styles.address);
+  const currentPriceClassName = clsx(styles.value, styles.currentPrice);
 
-  const buy = () => sendMessage({ Buy: null }, { value: price + 500 }); // adding 500 to avoid error on too low refund value
+  // adding min transfer amount to avoid error on too low refund value
+  const buy = () => sendMessage({ Buy: null }, { value: price + MIN_TRANSFER_AMOUNT });
 
   return (
     <>
@@ -59,13 +62,15 @@ function Buy({ src, auction, onCountdownSet, onCountdownReset }: Props) {
           <span className={styles.value}>{tokenId}</span>
         </p>
         <div className={styles.prices}>
-          <p className={styles.text}>
-            <span className={styles.key}>Start price:</span>
+          <div className={styles.text}>
+            <div className={styles.startPrice}>
+              <span className={styles.key}>Start price:</span>
+            </div>
             <span className={styles.value}>{startingPrice}</span>
-          </p>
+          </div>
           <p className={styles.text}>
             <span className={styles.key}>Current price:</span>
-            <span className={styles.value}>{price}</span>
+            <span className={currentPriceClassName}>{price}</span>
           </p>
         </div>
         {isOwner ? (
