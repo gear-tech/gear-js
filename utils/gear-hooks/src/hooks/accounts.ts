@@ -21,13 +21,20 @@ function useLoggedInAccount() {
   const { switchAccount } = useAccount();
   const accounts = useAccounts();
 
+  const [isLoginReady, setIsLoginReady] = useState(false);
+
   const isLoggedIn = ({ address }: InjectedAccountWithMeta) => localStorage.account === address;
+  const setLoginReady = () => setIsLoginReady(true);
 
   useEffect(() => {
     const loggedInAccount = accounts?.find(isLoggedIn);
-    if (loggedInAccount) switchAccount(loggedInAccount);
+    if (loggedInAccount) {
+      switchAccount(loggedInAccount).finally(setLoginReady);
+    } else setLoginReady();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, accounts]);
+
+  return { isLoginReady };
 }
 
 export { useAccounts, useLoggedInAccount };
