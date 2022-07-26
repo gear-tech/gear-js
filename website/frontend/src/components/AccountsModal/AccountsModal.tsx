@@ -1,32 +1,27 @@
-import { GearKeyring } from '@gear-js/api';
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { useAlert, useAccount } from '@gear-js/react-hooks';
+import { Account, useAlert, useAccount } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
-import styles from './SelectAccountModal.module.scss';
-import { AccountList } from '../AccountList';
+import styles from './AccountsModal.module.scss';
+import { AccountList } from './children/AccountList';
 
 import { LOCAL_STORAGE } from 'consts';
+import { ModalProps } from 'context/modal/types';
+import { Modal } from 'components/common/Modal';
 import logoutSVG from 'assets/images/logout.svg';
-import { Modal } from 'components/blocks/Modal';
 
-type Props = {
-  isOpen: boolean;
-  accounts?: InjectedAccountWithMeta[];
-  onClose: () => void;
+type Props = ModalProps & {
+  accounts: Account[];
 };
 
-const SelectAccountModal = (props: Props) => {
+const AccountsModal = ({ accounts, onClose }: Props) => {
   const alert = useAlert();
   const { logout, switchAccount } = useAccount();
 
-  const { isOpen, accounts, onClose } = props;
-
-  const selectAccount = (account: InjectedAccountWithMeta) => {
+  const selectAccount = (account: Account) => {
     switchAccount(account);
 
     localStorage.setItem(LOCAL_STORAGE.ACCOUNT, account.address);
-    localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, GearKeyring.decodeAddress(account.address));
+    localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, account.decodeAddress);
 
     onClose();
 
@@ -44,7 +39,6 @@ const SelectAccountModal = (props: Props) => {
 
   return (
     <Modal
-      open={isOpen}
       title="Connect"
       content={
         accounts ? (
@@ -72,4 +66,4 @@ const SelectAccountModal = (props: Props) => {
   );
 };
 
-export { SelectAccountModal };
+export { AccountsModal };

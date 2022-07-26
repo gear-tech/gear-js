@@ -1,0 +1,43 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
+
+.modalWrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10000;
+  background: rgba(28, 28, 28, 0.7);
+}
+
+.modal {
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  padding: 40px 30px 60px;
+  background: $bgColor;
+  border-radius: $borderRadius;
+  overflow-y: auto;
+  max-height: 90vh;
+  color: $textColor;
+
+  @include md {
+    width: 90%;
+  }
+}
+
+.modalCloseBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px;
+}
+
+.modalTitle {
+  font-weight: 700;
+  font-size: $fontSizeLarge;
+  padding: 0 0 30px;
+  text-align: center;
+}
