@@ -1,19 +1,28 @@
+import { load } from 'js-yaml';
+import { readFileSync } from 'fs';
+
 import { Meta } from '../../../database/entities';
 
-const metadata_1 = new Meta();
-metadata_1.id = '0x7350';
-metadata_1.owner = 'metadata_1';
-metadata_1.metaFile = 'metadata_1';
-metadata_1.meta = 'metadata_1';
-metadata_1.program = 'metadata_1';
+function getMetadataDBMock(): Meta[] {
+  const pathCollectionMetadata = '/collection-metadata.mock.yaml';
+  let result: Meta[] = [];
 
-const metadata_2 = new Meta();
-metadata_2.id = '0x7351';
-metadata_2.owner = 'metadata_2';
-metadata_2.metaFile = 'metadata_2';
-metadata_2.meta = 'metadata_2';
-metadata_2.program = 'metadata_2';
+  (async function (){
+    try {
+      const collectionMessages = load(readFileSync(__dirname + pathCollectionMetadata, 'utf8'));
+      const keys = Object.keys(collectionMessages);
 
-const METADATA_DB_MOCK = [metadata_1, metadata_2];
+      for (const key of keys) {
+        result = collectionMessages[key];
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  })();
+
+  return result;
+}
+
+const METADATA_DB_MOCK = getMetadataDBMock();
 
 export { METADATA_DB_MOCK };
