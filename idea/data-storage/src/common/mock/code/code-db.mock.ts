@@ -1,30 +1,29 @@
+import { readFileSync } from 'fs';
+import { load } from 'js-yaml';
+
 import { Code } from '../../../database/entities';
-import { CODE_STATUS } from '@gear-js/common';
 
-const code_1 = new Code();
-code_1.id = '0x7350';
-code_1.genesis = '0x7350';
-code_1.status = CODE_STATUS.ACTIVE;
-code_1.name = 'code_1';
-code_1.blockHash = 'code_1';
-code_1.timestamp = new Date();
+function getCodeDBMock(): Code[] {
+  const pathCollectionCode = '/collection-code.mock.yaml';
+  let result: Code[] = [];
 
-const code_2 = new Code();
-code_2.id = '0x7351';
-code_2.genesis = '0x7351';
-code_2.status = CODE_STATUS.INACTIVE;
-code_2.name = 'code_2';
-code_2.blockHash = 'code_2';
-code_2.timestamp = new Date();
+  (async function (){
+    try {
+      const collectionCode = load(readFileSync(__dirname + pathCollectionCode, 'utf8'));
+      const keys = Object.keys(collectionCode);
 
-const code_3 = new Code();
-code_3.id = '0x7353';
-code_3.genesis = '0x7353';
-code_3.status = CODE_STATUS.INACTIVE;
-code_3.name = 'code_3';
-code_3.blockHash = 'code_3';
-code_3.timestamp = new Date();
+      for (const key of keys) {
+        const listCode: Code[] = collectionCode[key];
+        result = listCode.map((code) => ({ ...code, timestamp: new Date() }));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  })();
 
-const CODE_DB_MOCK = [code_1, code_2, code_3];
+  return result;
+}
+
+const CODE_DB_MOCK = getCodeDBMock();
 
 export { CODE_DB_MOCK };
