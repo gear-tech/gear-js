@@ -5,9 +5,9 @@ import { Content, Info } from 'components';
 import { useAuctionMessage, useCountdown } from 'hooks';
 import { getCountdownNumber, getNumber } from 'utils';
 import { Auction } from 'types';
+import { MIN_TRANSFER_AMOUNT } from 'consts';
 import { Countdown } from './countdown';
 import styles from './Buy.module.scss';
-import { MIN_TRANSFER_AMOUNT } from 'consts';
 
 type Props = {
   src: string;

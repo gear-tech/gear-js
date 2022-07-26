@@ -32,10 +32,12 @@ function useCountdown(initTimeLeft: number, initPrice: number, rate: number, onR
     return () => {
       if (intervalId.current) resetInterval();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (intervalId.current && timeLeft === MULTIPLIER.MILLISECONDS) resetInterval();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft]);
 
   return { ...getCountdown(timeLeft), price };
