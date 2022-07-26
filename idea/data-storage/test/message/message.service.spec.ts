@@ -2,12 +2,12 @@ import { Test } from '@nestjs/testing';
 import { FindMessageParams, GetMessagesParams, MESSAGE_TYPE, MESSAGE_READ_STATUS } from '@gear-js/common';
 
 import { MessageService } from '../../src/message/message.service';
-import { mockMessageRepository } from '../../src/common/mock/message/message-repository.mock';
+import { mockMessageRepository } from '../mock/message/message-repository.mock';
 import { MessageRepo } from '../../src/message/message.repo';
-import { MESSAGE_DB_MOCK } from '../../src/common/mock/message/message-db.mock';
+import { MESSAGE_DB_MOCK } from '../mock/message/message-db.mock';
 import { ProgramService } from '../../src/program/program.service';
 import { ProgramRepo } from '../../src/program/program.repo';
-import { mockProgramRepository } from '../../src/common/mock/program/program-repository.mock';
+import { mockProgramRepository } from '../mock/program/program-repository.mock';
 import { CreateMessageInput } from '../../src/message/types';
 
 const MESSAGE_ENTITY_ID = '0x7357';

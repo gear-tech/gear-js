@@ -2054,6 +2054,7 @@ __metadata:
     "@polkadot/api": 8.13.1
     "@types/express": 4.17.13
     "@types/jest": 27.5.2
+    "@types/js-yaml": 4.0.5
     "@types/node": 14.18.22
     "@types/supertest": 2.0.12
     "@typescript-eslint/eslint-plugin": 4.33.0
@@ -2067,6 +2068,7 @@ __metadata:
     eslint-config-prettier: 8.5.0
     eslint-plugin-prettier: 3.4.1
     jest: 27.5.1
+    js-yaml: 4.1.0
     kafkajs: 1.16.0
     pg: 8.7.3
     prettier: 2.7.1

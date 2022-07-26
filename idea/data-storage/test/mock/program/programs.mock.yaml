@@ -1,0 +1,20 @@
+- id: '0x7350'
+  genesis: '0x7350'
+  name: 'program_1'
+  title: 'program_1'
+  meta: NULL
+  owner: 'program_1'
+
+- id: '0x7351'
+  genesis: '0x7351'
+  name: 'program_2'
+  title: 'program_2'
+  meta: NULL
+  owner: 'program_2'
+
+- id: '0x7352'
+  genesis: '0x7352'
+  name: 'program_3'
+  title: 'program_3'
+  meta: NULL
+  owner: 'program_3'

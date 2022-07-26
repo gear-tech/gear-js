@@ -3,8 +3,8 @@ import { CODE_STATUS, GetAllCodeParams, GetCodeParams } from '@gear-js/common';
 import { UpdateResult } from 'typeorm';
 
 import { Code } from '../../src/database/entities';
-import { mockCodeRepository } from '../../src/common/mock/code/code-repository.mock';
-import { CODE_DB_MOCK } from '../../src/common/mock/code/code-db.mock';
+import { mockCodeRepository } from '../mock/code/code-repository.mock';
+import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 import { CodeRepo } from '../../src/code/code.repo';
 import { CodeService } from '../../src/code/code.service';
 import { UpdateCodeInput } from '../../src/code/types';
