@@ -7,42 +7,29 @@ type Props = {
 };
 
 function Countdown({ hours, minutes, seconds }: Props) {
+  const getDigits = (value: string) =>
+    value.split('').map((digit, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <div key={index} className={styles.digit}>
+        <span>{digit}</span>
+      </div>
+    ));
+
   return (
     <div className={styles.countdown}>
       <div>
         <span className={styles.label}>Hours</span>
-        <div>
-          <div className={styles.digit}>
-            <span>{hours[0]}</span>
-          </div>
-          <div className={styles.digit}>
-            <span>{hours[1]}</span>
-          </div>
-        </div>
+        <div>{getDigits(hours)}</div>
       </div>
       <span className={styles.separator}>:</span>
       <div>
         <span className={styles.label}>Minutes</span>
-        <div>
-          <div className={styles.digit}>
-            <span>{minutes[0]}</span>
-          </div>
-          <div className={styles.digit}>
-            <span>{minutes[1]}</span>
-          </div>
-        </div>
+        <div>{getDigits(minutes)}</div>
       </div>
       <span className={styles.separator}>:</span>
       <div>
         <span className={styles.label}>Seconds</span>
-        <div>
-          <div className={styles.digit}>
-            <span>{seconds[0]}</span>
-          </div>
-          <div className={styles.digit}>
-            <span>{seconds[1]}</span>
-          </div>
-        </div>
+        <div>{getDigits(seconds)}</div>
       </div>
     </div>
   );
