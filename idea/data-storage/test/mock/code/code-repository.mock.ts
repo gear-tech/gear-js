@@ -1,6 +1,6 @@
 import { GetAllCodeParams } from '@gear-js/common';
 
-import { Code } from '../../../database/entities';
+import { Code } from '../../../src/database/entities';
 import { CODE_DB_MOCK } from './code-db.mock';
 
 export const mockCodeRepository = {

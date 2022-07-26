@@ -1,6 +1,6 @@
 import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common';
 
-import { Program } from '../../../database/entities';
+import { Program } from '../../../src/database/entities';
 import { PROGRAM_DB_MOCK } from './program-db.mock';
 
 export const mockProgramRepository = {
