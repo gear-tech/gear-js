@@ -16,7 +16,7 @@ type Props = {
 };
 
 const Modal = ({ title, children, className, onClose }: Props) => {
-  const modalRef = useOutsideClick(onClose);
+  const modalRef = useOutsideClick<HTMLDialogElement>(onClose);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -42,7 +42,7 @@ const Modal = ({ title, children, className, onClose }: Props) => {
 
   return (
     <div className={styles.modalWrapper}>
-      <div ref={modalRef} className={clsx(styles.modal, className)} data-testid="modal">
+      <dialog ref={modalRef} open className={clsx(styles.modal, className)} data-testid="modal">
         <Button
           icon={closeSVG}
           aria-label="Close modal"
@@ -52,7 +52,7 @@ const Modal = ({ title, children, className, onClose }: Props) => {
         />
         {title && <h2 className={styles.modalTitle}>{title}</h2>}
         <div>{children}</div>
-      </div>
+      </dialog>
     </div>
   );
 };
