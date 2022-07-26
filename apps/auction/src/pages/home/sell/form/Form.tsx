@@ -13,9 +13,9 @@ const initialValues = {
   tokenId: '1',
   startingPrice: '1000',
   discountRate: '5',
-  days: '00',
   hours: '00',
-  minutes: '01',
+  minutes: '00',
+  seconds: '01',
 };
 
 const validate = {
@@ -23,34 +23,32 @@ const validate = {
   tokenId: (value: string) => (!value ? 'Field is required' : null),
   startingPrice: (value: string) => (!value ? 'Field is required' : null),
   discountRate: (value: string) => (!value ? 'Field is required' : null),
-  days: (value: string) => (+value < 0 ? "Time can't be negative" : null),
   hours: (value: string) => (+value < 0 ? "Time can't be negative" : null),
   minutes: (value: string) => (+value < 0 ? "Time can't be negative" : null),
+  seconds: (value: string) => (+value < 0 ? "Time can't be negative" : null),
 };
 
 function Form() {
   const { api } = useApi();
 
   const { getInputProps, onSubmit, values, errors, setFieldError } = useForm({ initialValues, validate });
-  const { nftContractActorId, tokenId, days, hours, minutes } = values;
+  const { nftContractActorId, tokenId, hours, minutes, seconds } = values;
 
   const sendAuctionMessage = useAuctionMessage();
   const sendNftMessage = useNftMessage(nftContractActorId as Hex);
 
-  const createAuction = () => sendAuctionMessage({ Create: { duration: { days, hours, minutes }, ...values } });
+  const createAuction = () => sendAuctionMessage({ Create: { duration: { hours, minutes, seconds }, ...values } });
   const approveTokenAndCreateAuction = () =>
     sendNftMessage({ Approve: { to: ADDRESS.AUCTION_CONTRACT, tokenId } }, { onSuccess: createAuction });
 
-  // const getSeconds = () => {
-  //   const { hours, minutes, seconds } = values;
+  const getSeconds = () => {
+    const hourSeconds = +hours * MULTIPLIER.MINUTES * MULTIPLIER.SECONDS;
+    const minuteSeconds = +minutes * MULTIPLIER.SECONDS;
 
-  //   const hourSeconds = +hours * MULTIPLIER.MINUTES * MULTIPLIER.SECONDS;
-  //   const minuteSeconds = +minutes * MULTIPLIER.SECONDS;
+    return hourSeconds + minuteSeconds + +seconds;
+  };
 
-  //   return hourSeconds + minuteSeconds + seconds;
-  // };
-
-  const price = +values.startingPrice - +values.minutes * MULTIPLIER.SECONDS * +values.discountRate;
+  const price = +values.startingPrice - getSeconds() * +values.discountRate;
   const priceClassName = clsx(styles.price, price > 0 && styles.success, price < 0 && styles.error);
 
   const isNftContractAddressValid = async () => api.program.exists(nftContractActorId as Hex);
@@ -70,11 +68,11 @@ function Form() {
       <div className={styles.inputs}>
         <div>
           <div className={styles.row}>
-            <Input type="number" min="0" label="Days" className={styles.input} {...getInputProps('days')} />
             <Input type="number" min="0" label="Hours" className={styles.input} {...getInputProps('hours')} />
             <Input type="number" min="0" label="Minutes" className={styles.input} {...getInputProps('minutes')} />
+            <Input type="number" min="0" label="Seconds" className={styles.input} {...getInputProps('seconds')} />
           </div>
-          <p className={styles.error}>{errors.days || errors.hours || errors.minutes}</p>
+          <p className={styles.error}>{errors.hours || errors.minutes || errors.seconds}</p>
         </div>
         <div>
           <Input label="NFT contract address" className={styles.input} {...getInputProps('nftContractActorId')} />
