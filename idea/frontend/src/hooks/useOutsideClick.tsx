@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
-function useOutsideClick(callback: () => void) {
-  const ref = useRef<HTMLDivElement>(null);
+function useOutsideClick<TElement extends Element>(callback: () => void) {
+  const ref = useRef<TElement>(null);
 
   const handleClick = ({ target }: MouseEvent) => {
     const isElementClicked = ref.current?.contains(target as Node);
