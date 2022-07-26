@@ -1,14 +1,14 @@
 /* eslint-disable import/no-cycle */
 import { useContext } from 'react';
-import { BlocksContext, EditorContext } from 'context';
+import { BlocksContext, EditorContext, ModalContext } from 'context';
 
 const useBlocks = () => useContext(BlocksContext);
 const useEditor = () => useContext(EditorContext);
+const useModal = () => useContext(ModalContext);
 
-export { useBlocks, useEditor };
+export { useBlocks, useEditor, useModal };
 export { useEvents } from './useEvents';
 export { useOutsideClick } from './useOutsideClick';
-export { useBodyScrollLock } from './useBodyScrollLock';
 export { useSubscription } from './useSubscription';
 export { useChangeEffect } from './useChangeEffect';
 export { useProgram } from './useProgram';
