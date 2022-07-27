@@ -7,6 +7,7 @@ import { Button } from '@gear-js/ui';
 import { Schema } from './Shema';
 import { FormValues } from './types';
 
+import { ACCOUNT_ERRORS } from 'consts';
 import { addMetadata } from 'services/ApiService';
 import { FormInput, formStyles } from 'components/common/Form';
 import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
@@ -21,16 +22,14 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
   const { account } = useAccount();
 
   const [metadata, setMetadata] = useState<Metadata>();
-  const [metadataFile, setMetadataFile] = useState<File>();
   const [metadataBuffer, setMetadataBuffer] = useState<string | null>(null);
 
   const [initialValues, setInitialValues] = useState<FormValues>({ programName });
 
   const handleUploadMetaFile = (data: UploadData) => {
-    const { meta, metaFile, metaBuffer } = data;
+    const { meta, metaBuffer } = data;
 
     setMetadata(meta);
-    setMetadataFile(metaFile);
     setMetadataBuffer(metaBuffer);
     setInitialValues({
       programName: meta.title ?? programName,
@@ -39,7 +38,6 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
 
   const handleResetMetaFile = () => {
     setMetadata(undefined);
-    setMetadataFile(undefined);
     setMetadataBuffer(null);
     setInitialValues({ programName });
   };
@@ -47,7 +45,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
   const handleSubmit = async (values: FormValues) => {
     try {
       if (!account) {
-        throw new Error('Wallet not connected');
+        throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
       }
 
       if (!metadata) {
@@ -59,7 +57,6 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
       handleResetMetaFile();
     } catch (error) {
       const message = (error as Error).message;
-
       alert.error(message);
     }
   };
@@ -73,12 +70,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
           <Form className={formStyles.largeForm}>
             <FormInput name="programName" label="Program name" />
 
-            <UploadMeta
-              meta={metadata}
-              metaFile={metadataFile}
-              onReset={handleResetMetaFile}
-              onUpload={handleUploadMetaFile}
-            />
+            <UploadMeta meta={metadata} onReset={handleResetMetaFile} onUpload={handleUploadMetaFile} />
 
             <div className={formStyles.formButtons}>
               <Button type="submit" text="Upload metadata" disabled={isDisable} />

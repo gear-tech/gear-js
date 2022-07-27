@@ -2,7 +2,7 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
-import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
+import { ACCOUNT_ERRORS, PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
 import { Method } from 'types/explorer';
 import { CopiedInfo } from 'components/common/CopiedInfo';
 
@@ -20,12 +20,12 @@ const useCodeUpload = () => {
 
   const uploadCode = async (file: File) => {
     if (!account) {
-      alert.error('Wallet not connected');
+      alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
 
       return;
     }
 
-    const alertId = alert.loading('SignIn', { title: 'gear.submitCode' });
+    const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
     try {
       const { address, meta } = account;

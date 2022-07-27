@@ -12,7 +12,6 @@ import { formStyles, FormText } from 'components/common/Form';
 
 type Props = {
   meta?: Metadata;
-  metaFile?: File;
   onReset: () => void;
   onUpload: (data: UploadData) => void;
 };
@@ -20,7 +19,7 @@ type Props = {
 const UploadMeta = (props: Props) => {
   const alert = useAlert();
 
-  const { meta, metaFile, onReset, onUpload } = props;
+  const { meta, onReset, onUpload } = props;
 
   const handleUploadMetaFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -45,7 +44,7 @@ const UploadMeta = (props: Props) => {
 
       const metaBuffer = Buffer.from(new Uint8Array(readedFile)).toString('base64');
 
-      onUpload({ meta: fileMeta, metaFile: file, metaBuffer });
+      onUpload({ meta: fileMeta, metaBuffer });
     } catch (error) {
       const message = (error as Error).message;
 
@@ -70,9 +69,8 @@ const UploadMeta = (props: Props) => {
     <>
       <div className={formStyles.formItem}>
         <FileInput
-          data-testid="metaFileInput"
-          value={metaFile?.name}
           label="Metadata file"
+          data-testid="metaFileInput"
           className={styles.fileInput}
           onChange={handleUploadMetaFile}
         />

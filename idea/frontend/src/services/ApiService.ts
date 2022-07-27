@@ -7,7 +7,7 @@ import { localPrograms } from './LocalDBService';
 import ServerRPCRequestService from './ServerRPCRequestService';
 
 import { RPC_METHODS } from 'consts';
-import { signPayload, isDevChain } from 'helpers';
+import { isDevChain } from 'helpers';
 import { ProgramStatus } from 'types/program';
 
 export const uploadMetadata = async (
@@ -20,56 +20,49 @@ export const uploadMetadata = async (
   meta?: Metadata,
   title?: string
 ) => {
-  try {
-    const jsonMeta = JSON.stringify(meta);
+  const jsonMeta = JSON.stringify(meta);
 
-    if (isDevChain()) {
-      await localPrograms.setItem(programId, {
-        id: programId,
-        name,
-        title,
-        meta: {
-          meta: jsonMeta,
-          metaFile,
-          programId,
-        },
-        owner: account.decodedAddress,
-        timestamp: Date(),
-        initStatus: ProgramStatus.Success,
-      });
-
-      alert.success('Program added to the localDB successfully');
-
-      return;
-    }
-
-    const apiRequest = new ServerRPCRequestService();
-
-    await new Promise((resolve, reject) => {
-      signPayload(injector, account.address, jsonMeta, (signature: string) => {
-        apiRequest
-          .callRPC(RPC_METHODS.ADD_METADATA, {
-            name,
-            meta: jsonMeta,
-            title,
-            metaFile,
-            signature,
-            programId,
-          })
-          .then(({ error }) => {
-            if (error) {
-              reject(new Error(error.message));
-            }
-
-            alert.success('Metadata saved successfully');
-            resolve('success');
-          })
-          .catch(reject);
-      });
+  if (isDevChain()) {
+    await localPrograms.setItem(programId, {
+      id: programId,
+      name,
+      title,
+      meta: {
+        meta: jsonMeta,
+        metaFile,
+        programId,
+      },
+      owner: account.decodedAddress,
+      timestamp: Date(),
+      initStatus: ProgramStatus.Success,
     });
-  } catch (error) {
-    alert.error((error as Error).message);
+
+    alert.success('Program added to the localDB successfully');
+
+    return;
   }
+
+  const apiRequest = new ServerRPCRequestService();
+  const { signature } = await injector.signer.signRaw!({
+    address: account.address,
+    data: jsonMeta,
+    type: 'payload',
+  });
+
+  const { error } = await apiRequest.callRPC(RPC_METHODS.ADD_METADATA, {
+    name,
+    meta: jsonMeta,
+    title,
+    metaFile,
+    signature,
+    programId,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  alert.success('Metadata saved successfully');
 };
 
 export const addMetadata = async (

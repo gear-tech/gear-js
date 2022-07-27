@@ -2,17 +2,14 @@ import { useEffect } from 'react';
 import { Route, Routes, useSearchParams } from 'react-router-dom';
 import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
 
+import './App.scss';
 import 'yup-extended';
-import styles from './App.module.scss';
 
 import { routes } from 'routes';
 import { useEvents, useAccountSubscriptions } from 'hooks';
 import { withProviders } from 'context';
 import { NODE_API_ADDRESS } from 'context/api/const';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
-
-import 'assets/scss/common.scss';
-import 'assets/scss/index.scss';
 
 import { Meta } from 'pages/Meta/Meta';
 import { Send } from 'pages/Send/Send';
@@ -65,7 +62,7 @@ const Component = () => {
     paths.map((path) => <Route key={path} path={path} element={element} />);
 
   return (
-    <div className={styles.app}>
+    <>
       <Header />
       <Main>
         {isApiReady ? (
@@ -95,7 +92,7 @@ const Component = () => {
         )}
       </Main>
       <Footer />
-    </div>
+    </>
   );
 };
 

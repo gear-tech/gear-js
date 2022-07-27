@@ -1,8 +1,0 @@
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  justify-content: space-between;
-  // cuz if flexGap mixin is used for layout that is close to viewport borders there'll be extra pixels
-  overflow-x: hidden;
-}
