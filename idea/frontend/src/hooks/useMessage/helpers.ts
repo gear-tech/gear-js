@@ -3,7 +3,7 @@ import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-h
 import { SignAndSendArg } from './types';
 
 import { getExtrinsicFailedMessage } from 'helpers';
-import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
+import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from 'consts';
 import { Method } from 'types/explorer';
 
 export const signAndSend = async ({
@@ -11,14 +11,15 @@ export const signAndSend = async ({
   alert,
   signer,
   address,
-  apiExtrinsic,
-  transactionName,
+  isReply = false,
   reject,
   resolve,
 }: SignAndSendArg) => {
   const alertId = alert.loading('SignIn', {
-    title: transactionName,
+    title: isReply ? TransactionName.SendReply : TransactionName.SendMessage,
   });
+
+  const apiExtrinsic = isReply ? api.reply : api.message;
 
   try {
     await apiExtrinsic.signAndSend(address, { signer }, (data) => {

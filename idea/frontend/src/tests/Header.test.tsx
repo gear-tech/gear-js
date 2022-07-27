@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { GearKeyring } from '@gear-js/api';
+import { BrowserRouter } from 'react-router-dom';
 
 import { renderWithProviders, textMatcher } from './utils';
 import { useApiMock, useAccountMock, useAccountsMock, TEST_API, TEST_ACCOUNT_1 } from './mocks/hooks';
@@ -39,6 +40,12 @@ jest.mock('context/api/const', () => ({
   NODE_API_ADDRESS: 'testnet-address',
 }));
 
+const HeaderComponent = () => (
+  <BrowserRouter>
+    <Header />
+  </BrowserRouter>
+);
+
 // this shit fixed the react-testing-lib error
 const fixReactError = async () => {
   fireEvent.click(screen.getAllByRole('button')[0]);
@@ -50,7 +57,7 @@ describe('header tests', () => {
     useApiMock();
     useAccountsMock();
 
-    renderWithProviders(<Header />);
+    renderWithProviders(<HeaderComponent />);
 
     const [logo, ...menuLinks] = screen.getAllByRole('link');
 
@@ -105,7 +112,7 @@ describe('header tests', () => {
     useApiMock(TEST_API);
     useAccountMock();
 
-    const { rerender } = renderWithProviders(<Header />);
+    const { rerender } = renderWithProviders(<HeaderComponent />);
 
     // unauthorized
     expect(screen.queryByTestId('testBalanceBtn')).not.toBeInTheDocument();
@@ -113,7 +120,7 @@ describe('header tests', () => {
     useAccountMock(TEST_ACCOUNT_1);
     jest.spyOn(helpers, 'isDevChain').mockReturnValue(true);
 
-    rerender(<Header />);
+    rerender(<HeaderComponent />);
 
     const testBalanceBtn = await screen.findByTestId('testBalanceBtn');
 
@@ -151,7 +158,7 @@ describe('header tests', () => {
     useApiMock();
     useAccountsMock();
 
-    const { rerender } = renderWithProviders(<Header />);
+    const { rerender } = renderWithProviders(<HeaderComponent />);
 
     // sidebar button
 
@@ -167,7 +174,7 @@ describe('header tests', () => {
 
     useApiMock(TEST_API);
 
-    rerender(<Header />);
+    rerender(<HeaderComponent />);
 
     expect(screen.getByText('Test chain'));
     expect(sidebarButton).toHaveTextContent('test-name/12345');
@@ -349,7 +356,7 @@ describe('account switch tests', () => {
     // mocking raw public key get since it gets saved in localstorage on account switch
     jest.spyOn(GearKeyring, 'decodeAddress').mockImplementation(() => '0x00');
 
-    renderWithProviders(<Header />);
+    const { rerender } = renderWithProviders(<HeaderComponent />);
 
     // TODO: delete this temp solution
     await fixReactError();
@@ -370,8 +377,10 @@ describe('account switch tests', () => {
 
     fireEvent.click(secondButton);
 
-    const accountButton = screen.getByText('second acc');
+    rerender(<HeaderComponent />);
+
     const balance = screen.getByText('Balance:');
+    const accountButton = screen.getByText('second acc');
 
     await waitFor(() => expect(balance).toHaveTextContent('Balance: 2000 MUnit'));
 
@@ -389,6 +398,8 @@ describe('account switch tests', () => {
     useAccountMock(accounts[2]);
 
     fireEvent.click(getButton(2));
+
+    rerender(<HeaderComponent />);
 
     await waitFor(() => expect(balance).toHaveTextContent('Balance: 3000 MUnit'));
 
@@ -409,6 +420,8 @@ describe('account switch tests', () => {
 
     fireEvent.click(logoutButton);
 
+    rerender(<HeaderComponent />);
+
     expect(getModalQuery()).not.toBeInTheDocument();
     expect(balance).not.toBeInTheDocument();
     expect(accountButton).not.toBeInTheDocument();
@@ -419,7 +432,7 @@ describe('account switch tests', () => {
 
     // closes modal
 
-    const closeModalButton = screen.getByLabelText('Close modal');
+    const closeModalButton = within(getModalQuery()!).getAllByRole('button')[0];
 
     fireEvent.click(closeModalButton);
     expect(getModalQuery()).not.toBeInTheDocument();
@@ -428,7 +441,7 @@ describe('account switch tests', () => {
   it('logins without extension', async () => {
     useApiMock();
 
-    renderWithProviders(<Header />);
+    renderWithProviders(<HeaderComponent />);
 
     fireEvent.click(getLoginButton());
 
@@ -445,7 +458,7 @@ describe('account switch tests', () => {
     useApiMock();
     useAccountsMock([]);
 
-    renderWithProviders(<Header />);
+    renderWithProviders(<HeaderComponent />);
 
     fireEvent.click(getLoginButton());
 

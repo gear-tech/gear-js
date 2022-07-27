@@ -25,7 +25,7 @@ export const LOCAL_STORAGE = {
 };
 
 export const ACCOUNT_ERRORS = {
-  WALLET_NOT_CONNECTED: 'Wallet no connected',
+  WALLET_NOT_CONNECTED: 'Wallet not connected',
 };
 
 export const PROGRAM_ERRORS = {

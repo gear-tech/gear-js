@@ -19,10 +19,12 @@ export const TEST_API = {
   reply: {
     submit: jest.fn(),
     signAndSend: jest.fn(),
+    paymentInfo: jest.fn(),
   },
   message: {
     submit: jest.fn(),
     signAndSend: jest.fn(),
+    paymentInfo: jest.fn(),
   },
   balance: {
     findOut: jest.fn(),

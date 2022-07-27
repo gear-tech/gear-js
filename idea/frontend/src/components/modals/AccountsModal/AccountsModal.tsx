@@ -38,9 +38,9 @@ const AccountsModal = ({ accounts, onClose }: AccountsModalProps) => {
         <>
           <AccountList list={accounts} address={account?.address} toggleAccount={selectAccount} />
           <Button
-            aria-label="Logout"
             icon={logoutSVG}
             color="transparent"
+            aria-label="Logout"
             className={styles.logoutButton}
             onClick={handleLogout}
           />

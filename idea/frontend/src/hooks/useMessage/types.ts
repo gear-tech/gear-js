@@ -1,16 +1,20 @@
-import { GearMessage, Metadata, GearMessageReply } from '@gear-js/api';
+import { Metadata } from '@gear-js/api';
 
 import { OperationCallbacks, SignAndSendArg as CommonSignAndSendArg } from 'types/hooks';
 import { Message, Reply } from 'types/program';
 
 export type SendMessageParams = OperationCallbacks & {
-  message: Message & Reply;
+  message: Message;
   metadata?: Metadata;
-  extrinsic: 'handle' | 'reply';
+  payloadType?: string;
+};
+
+export type ReplyMessageParams = OperationCallbacks & {
+  reply: Reply;
+  metadata?: Metadata;
   payloadType?: string;
 };
 
 export type SignAndSendArg = CommonSignAndSendArg & {
-  apiExtrinsic: GearMessage | GearMessageReply;
-  transactionName: string;
+  isReply?: boolean;
 };
