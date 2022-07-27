@@ -1,5 +1,5 @@
-import { Wellcome } from './wellcome'
-import { Feeds } from './feeds'
+import { Wellcome } from './wellcome';
+import { Feeds } from './feeds';
 
 function Home() {
   return (
@@ -7,7 +7,7 @@ function Home() {
       <Wellcome />
       <Feeds />
     </>
-  )
+  );
 }
 
 export { Home };

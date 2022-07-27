@@ -3,7 +3,7 @@ import { useApi, useBalanceSubscription, useLoggedInAccount } from '@gear-js/rea
 import { Routing } from 'pages';
 import { Header, Footer, ApiLoader } from 'components';
 import { withProviders } from 'hocs';
-import { LOCAL_STORAGE } from './consts'
+import { LOCAL_STORAGE } from './consts';
 import 'App.scss';
 
 function Component() {

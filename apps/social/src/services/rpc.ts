@@ -29,10 +29,10 @@ export class ServerRPCRequestService {
         id: requestId,
         method,
         params: postParams,
-      }
+      };
     });
 
-    params.body = JSON.stringify(paramArr)
+    params.body = JSON.stringify(paramArr);
     params.headers['Content-Type'] = 'application/json;charset=utf-8';
     const response = await fetch(url, params);
 

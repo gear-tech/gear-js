@@ -30,7 +30,7 @@ function useChannels() {
   const payload = useMemo(() => ({ AllChannels: null }), []);
   const { state, isStateRead } = useRouterState<ChannelsState>(payload);
 
-  return { channels: state?.AllChannels, isStateRead }
+  return { channels: state?.AllChannels, isStateRead };
 }
 
 function useSubscriptions() {
@@ -40,7 +40,7 @@ function useSubscriptions() {
 
   const { state, isStateRead } = useRouterState<SubscriptionState>(payload);
 
-  return { subscriptions: state?.SubscribedToChannels, readSubscriptions: isStateRead }
+  return { subscriptions: state?.SubscribedToChannels, readSubscriptions: isStateRead };
 }
 
 function useMessages() {
@@ -51,13 +51,18 @@ function useMessages() {
   const { api } = useApi();
   const genesis = localStorage.getItem(LOCAL_STORAGE.GENESIS);
 
-
   useEffect(() => {
     apiRequest
       .getResource('program.meta.get', [{ programId: id, chain: 'Workshop', genesis }])
-      .then(([{ result: { metaFile } }]) => Buffer.from(metaFile, 'base64'))
+      .then(
+        ([
+          {
+            result: { metaFile },
+          },
+        ]) => Buffer.from(metaFile, 'base64'),
+      )
       .then((buffer) => api.programState.read(id, buffer))
-      .then((state) => setMessages(state.toHuman() as Message[]))
+      .then((state) => setMessages(state.toHuman() as Message[]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -70,78 +75,82 @@ function useFeed() {
   const { api } = useApi();
 
   useEffect(() => {
-    const getMessges = (async () => {
-
+    const getMessges = async () => {
       const apiRequest = new ServerRPCRequestService();
 
       const batchParams = channels!.map(({ id }) => ({
         programId: id,
         chain: 'Workshop',
-        genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS)
+        genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS),
       }));
 
-      const response = await apiRequest.getResource('program.meta.get', batchParams)
+      const response = await apiRequest.getResource('program.meta.get', batchParams);
 
-      const promises = response.filter((res: any) => res.result).map(async (res: any) => {
+      const promises = response
+        .filter((res: any) => res.result)
+        .map(async (res: any) => {
+          const { program, metaFile } = res.result;
+          const buffer = Buffer.from(metaFile, 'base64');
+          const state = await api.programState.read(program, buffer);
 
-        const { program, metaFile } = res.result
-        const buffer = Buffer.from(metaFile, 'base64');
-        const state = await api.programState.read(program, buffer);
-
-        return state.toHuman();
-      })
+          return state.toHuman();
+        });
 
       const messagaArr = await Promise.all(promises);
       const msg = messagaArr.flat() as Message[];
-      const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10))
-      setMessages(sorted.reverse())
-
-    })
+      const sorted = msg.sort(
+        (prev, next) =>
+          parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10),
+      );
+      setMessages(sorted.reverse());
+    };
 
     if (channels) getMessges();
-  }, [channels, api.programState])
+  }, [channels, api.programState]);
 
-  return messages
+  return messages;
 }
 
 function useOwnFeed() {
-
   const [messages, setMessages] = useState<Message[] | null>();
   const { subscriptions } = useSubscriptions();
   const { api } = useApi();
 
   useEffect(() => {
-    const getMessges = (async () => {
+    const getMessges = async () => {
       const apiRequest = new ServerRPCRequestService();
 
       const batchParams = subscriptions!.map((id) => ({
         programId: id,
         chain: 'Workshop',
-        genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS)
+        genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS),
       }));
 
-      const response = await apiRequest.getResource('program.meta.get', batchParams)
+      const response = await apiRequest.getResource('program.meta.get', batchParams);
 
-      const promises = response.filter((res: any) => res.result).map(async (res: any) => {
+      const promises = response
+        .filter((res: any) => res.result)
+        .map(async (res: any) => {
+          const { program, metaFile } = res.result;
+          const buffer = Buffer.from(metaFile, 'base64');
+          const state = await api.programState.read(program, buffer);
 
-        const { program, metaFile } = res.result
-        const buffer = Buffer.from(metaFile, 'base64');
-        const state = await api.programState.read(program, buffer);
-
-        return state.toHuman();
-      })
+          return state.toHuman();
+        });
 
       const messagaArr = await Promise.all(promises);
       const msg = messagaArr.flat() as Message[];
-      const sorted = msg.sort((prev, next) => parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10))
+      const sorted = msg.sort(
+        (prev, next) =>
+          parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10),
+      );
       setMessages(sorted.reverse());
-
-    })
+    };
 
     if (subscriptions) getMessges();
-  }, [subscriptions, api.programState])
+  }, [subscriptions, api.programState]);
 
-  return messages
+  return messages;
 }
 
 function useChannelActions() {
@@ -154,7 +163,13 @@ function useChannelActions() {
   useEffect(() => {
     apiRequest
       .getResource('program.meta.get', [{ programId: id, chain: 'Workshop', genesis }])
-      .then(([{ result: { metaFile } }]) => Buffer.from(metaFile, 'base64'))
+      .then(
+        ([
+          {
+            result: { metaFile },
+          },
+        ]) => Buffer.from(metaFile, 'base64'),
+      )
       .then((buffer) => getWasmMetadata(buffer))
       .then((m) => setMetadata(m));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,16 +183,16 @@ function useChannelActions() {
   };
 
   const subscribe = (onSuccess?: () => void) => {
-    const payload = { Subscribe: "Null" };
+    const payload = { Subscribe: 'Null' };
     sendMessage(payload, { onSuccess });
   };
 
   const unsubscribe = (onSuccess?: () => void) => {
-    const payload = { Unsubscribe: "Null" };
+    const payload = { Unsubscribe: 'Null' };
     sendMessage(payload, { onSuccess });
   };
 
   return { post, subscribe, unsubscribe };
 }
 
-export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages, useOwnFeed, useFeed }
+export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages, useOwnFeed, useFeed };

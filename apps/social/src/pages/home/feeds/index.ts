@@ -1,3 +1,3 @@
-import { Feeds } from './Feeds'
+import { Feeds } from './Feeds';
 
-export { Feeds }
+export { Feeds };

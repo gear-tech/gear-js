@@ -20,9 +20,10 @@ function Feeds() {
     }
   };
 
-  const getMessages = () => getList()?.map(({ timestamp, text, owner }) =>
-    <MessageItem text={text} owner={owner} key={timestamp.replaceAll(',', '')} />
-  );
+  const getMessages = () =>
+    getList()?.map(({ timestamp, text, owner }) => (
+      <MessageItem text={text} owner={owner} key={timestamp.replaceAll(',', '')} />
+    ));
 
   const Messages = getMessages();
   const isAnyMessages = !!Messages?.length;
@@ -43,7 +44,7 @@ function Feeds() {
         )}
       </div>
     </>
-  )
+  );
 }
 
-export { Feeds }
+export { Feeds };

@@ -1,3 +1,3 @@
-import { Wellcome } from './Wellcome'
+import { Wellcome } from './Wellcome';
 
-export { Wellcome }
+export { Wellcome };

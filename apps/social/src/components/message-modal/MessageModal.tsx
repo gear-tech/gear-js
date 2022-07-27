@@ -19,13 +19,13 @@ function MessageModal({ heading, close, onSubmit }: Props) {
     if (message.length > 0) onSubmit(message, close);
   };
 
-  const isDisabled =  message.length > 0
+  const isDisabled = message.length > 0;
 
   return (
     <Modal heading={heading} close={close}>
       <form onSubmit={handleSubmit}>
         <Textarea className={styles.textarea} value={message} onChange={handleMessageChange} />
-        <Button type="submit" text="Sent message" block disabled={!isDisabled}/>
+        <Button type="submit" text="Sent message" block disabled={!isDisabled} />
       </form>
     </Modal>
   );

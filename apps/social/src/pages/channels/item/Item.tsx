@@ -1,5 +1,5 @@
 import { useAccount } from '@gear-js/react-hooks';
-import { toShortAddress } from 'utils'
+import { toShortAddress } from 'utils';
 import { Hex } from '@gear-js/api';
 import { buttonStyles } from '@gear-js/ui';
 import { NavLink } from 'react-router-dom';
@@ -24,8 +24,14 @@ function Item({ id, name, ownerId }: Props) {
       <i className={styles.tower} />
       <div className={styles.info}>{name}</div>
       <div className={styles.address}>{toShortAddress(id)}</div>
-      <NavLink to={to} className={clsx(buttonStyles.button, buttonStyles.small, isOwner ? buttonStyles.secondary : buttonStyles.primary)}>
-        {isOwner? 'To my channel' : 'Go to'}
+      <NavLink
+        to={to}
+        className={clsx(
+          buttonStyles.button,
+          buttonStyles.small,
+          isOwner ? buttonStyles.secondary : buttonStyles.primary,
+        )}>
+        {isOwner ? 'To my channel' : 'Go to'}
       </NavLink>
     </div>
   );

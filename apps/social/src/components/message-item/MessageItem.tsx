@@ -4,12 +4,11 @@ import { toShortAddress } from 'utils';
 import styles from './MessageItem.module.scss';
 
 type Props = {
-  text: string,
-  owner: string,
+  text: string;
+  owner: string;
 };
 
 function MessageItem({ text, owner }: Props) {
-
   return (
     <div className={styles.message}>
       <div className={styles.info}>
