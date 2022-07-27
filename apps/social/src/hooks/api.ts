@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useReadState, useSendMessage, useAccount, useApi } from '@gear-js/react-hooks';
 import { routerMetaWasm } from 'assets/wasm';
 import { getWasmMetadata } from '@gear-js/api';
-import { ADDRESS, GENESIS } from 'consts';
+import { ADDRESS, LOCAL_STORAGE } from 'consts';
 import { ServerRPCRequestService } from 'services';
 import { Params, Channel, Hex, Message, Metadata } from 'types';
 import { useParams } from 'react-router-dom';
@@ -49,10 +49,12 @@ function useMessages() {
 
   const { id } = useParams() as Params;
   const { api } = useApi();
+  const genesis = localStorage.getItem(LOCAL_STORAGE.GENESIS);
+
 
   useEffect(() => {
     apiRequest
-      .getResource('program.meta.get', [{ programId: id, chain: 'Workshop', genesis: GENESIS }])
+      .getResource('program.meta.get', [{ programId: id, chain: 'Workshop', genesis }])
       .then(([{ result: { metaFile } }]) => Buffer.from(metaFile, 'base64'))
       .then((buffer) => api.programState.read(id, buffer))
       .then((state) => setMessages(state.toHuman() as Message[]))
@@ -75,14 +77,17 @@ function useFeed() {
       const batchParams = channels!.map(({ id }) => ({
         programId: id,
         chain: 'Workshop',
-        genesis: GENESIS
+        genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS)
       }));
 
       const response = await apiRequest.getResource('program.meta.get', batchParams)
 
-      const promises = response.map(async ({ result: { program, metaFile } }: any) => {
+      const promises = response.filter((res: any) => res.result).map(async (res: any) => {
+
+        const { program, metaFile } = res.result
         const buffer = Buffer.from(metaFile, 'base64');
         const state = await api.programState.read(program, buffer);
+
         return state.toHuman();
       })
 
@@ -112,14 +117,17 @@ function useOwnFeed() {
       const batchParams = subscriptions!.map((id) => ({
         programId: id,
         chain: 'Workshop',
-        genesis: GENESIS
+        genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS)
       }));
 
       const response = await apiRequest.getResource('program.meta.get', batchParams)
 
-      const promises = response.map(async ({ result: { program, metaFile } }: any) => {
+      const promises = response.filter((res: any) => res.result).map(async (res: any) => {
+
+        const { program, metaFile } = res.result
         const buffer = Buffer.from(metaFile, 'base64');
         const state = await api.programState.read(program, buffer);
+
         return state.toHuman();
       })
 
@@ -141,10 +149,11 @@ function useChannelActions() {
   const [metadata, setMetadata] = useState<Metadata>();
 
   const { id } = useParams() as Params;
+  const genesis = localStorage.getItem(LOCAL_STORAGE.GENESIS);
 
   useEffect(() => {
     apiRequest
-      .getResource('program.meta.get', [{ programId: id, chain: 'Workshop', genesis: GENESIS }])
+      .getResource('program.meta.get', [{ programId: id, chain: 'Workshop', genesis }])
       .then(([{ result: { metaFile } }]) => Buffer.from(metaFile, 'base64'))
       .then((buffer) => getWasmMetadata(buffer))
       .then((m) => setMetadata(m));

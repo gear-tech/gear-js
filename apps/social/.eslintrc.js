@@ -27,10 +27,10 @@ module.exports = {
     'import/prefer-default-export': 'off', // force named exports
     'import/no-default-export': 'error',
 
-    '@typescript-eslint/no-unused-vars': 'warn', // 'error' is not convinient in development
+    '@typescript-eslint/no-unused-vars': 'warn', // 'error' is not convenient in development mode
 
     'consistent-return': 'off', // we want functions to have different return behavior
 
-    'react/jsx-props-no-spreading': ['error', { exceptions: ['Input', 'FileInput', 'Textarea'] }], // disable for form elements, cuz @mantine/form input props needs to be desctructured
+    'react/jsx-props-no-spreading': ['error', { exceptions: ['Input', 'FileInput', 'Textarea'] }], // disable for form elements, coz react-hook-form input props need to be destructured
   },
 };

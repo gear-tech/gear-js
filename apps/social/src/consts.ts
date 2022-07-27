@@ -9,10 +9,10 @@ const IDE_BACKEND_ADDRESS = process.env.REACT_APP_IDE_BACKEND_ADDRESS as string
 
 const FILTERS = ['All Channels', 'My'];
 const FILTERS_2 = ['All Channels', 'My Feed'];
-const GENESIS = '0x3617a674664505d0eb457413b1ef76bb7df16b58622ede3d8f512cd17f2b0ee9'
 
 const LOCAL_STORAGE = {
   ACCOUNT: 'account',
+  GENESIS: 'genesis'
 };
 
-export { ADDRESS, LOCAL_STORAGE, FILTERS, FILTERS_2, IDE_BACKEND_ADDRESS, GENESIS };
+export { ADDRESS, LOCAL_STORAGE, FILTERS, FILTERS_2, IDE_BACKEND_ADDRESS };
