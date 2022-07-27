@@ -31,12 +31,12 @@ const TransactionModal = (props: TransactionModalProps) => {
       <div className={styles.contentTransactionInfo}>
         <Identicon value={addressFrom} size={28} theme="polkadot" className={styles.infoIcon} />
         <p className={styles.infoParticipant}>
-          <span className={styles.participantSide}>From</span>
+          <span className={styles.participantSide}>From:</span>
           <span className={styles.participantValue}>{fileNameHandler(addressFrom)}</span>
         </p>
         {addressTo && (
           <p className={styles.infoParticipant}>
-            <span className={styles.participantSide}>To</span>
+            <span className={styles.participantSide}>To:</span>
             <span className={styles.participantValue}>{fileNameHandler(addressTo)}</span>
           </p>
         )}

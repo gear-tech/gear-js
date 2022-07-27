@@ -1,34 +1,25 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, render, fireEvent, waitFor, getDefaultNormalizer } from '@testing-library/react';
+import { screen, fireEvent, waitFor, getDefaultNormalizer } from '@testing-library/react';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import { decodeHexTypes } from '@gear-js/api';
-import { AccountProvider } from '@gear-js/react-hooks';
 
 import { PROGRAM_ID_1, META } from '../../const';
-
 import { useAccountMock, TEST_ACCOUNT_1, useApiMock } from '../../mocks/hooks';
+import { renderWithProviders } from '../../utils';
 
 import { routes } from 'routes';
-import { FILE_TYPES } from 'consts';
+import { FILE_TYPES, ACCOUNT_ERRORS } from 'consts';
 import { getPreformattedText } from 'helpers';
-import { ApiProvider } from 'context/api';
-import { AlertProvider } from 'context/alert';
 import * as ApiServiceModule from 'services/ApiService';
 import { Meta } from 'pages/Meta/Meta';
 
 const UploadMetaPage = () => (
-  <AlertProvider>
-    <ApiProvider>
-      <AccountProvider>
-        <MemoryRouter initialEntries={[`/meta/${PROGRAM_ID_1}`]}>
-          <Routes>
-            <Route path={routes.meta} element={<Meta />} />
-          </Routes>
-        </MemoryRouter>
-      </AccountProvider>
-    </ApiProvider>
-  </AlertProvider>
+  <MemoryRouter initialEntries={[`/meta/${PROGRAM_ID_1}`]}>
+    <Routes>
+      <Route path={routes.meta} element={<Meta />} />
+    </Routes>
+  </MemoryRouter>
 );
 
 describe('test uplaod meta page', () => {
@@ -38,7 +29,7 @@ describe('test uplaod meta page', () => {
 
     const addMetadataMock = jest.spyOn(ApiServiceModule, 'addMetadata').mockResolvedValue();
 
-    const { rerender } = render(<UploadMetaPage />);
+    const { rerender } = renderWithProviders(<UploadMetaPage />);
 
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
 
@@ -106,7 +97,7 @@ describe('test uplaod meta page', () => {
 
     fireEvent.click(uploadMetaBtn);
 
-    await waitFor(() => expect(screen.getByText('Wallet not connected')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED)).toBeInTheDocument());
 
     expect(addMetadataMock).not.toBeCalled();
 
@@ -132,11 +123,9 @@ describe('test uplaod meta page', () => {
 
     // reset form
 
-    await (() => expect(programNameFiled).toHaveValue('NFT'));
+    await waitFor(expect(screen.getByText('Select file')).toBeInTheDocument);
 
     expect(uploadMetaBtn).toBeDisabled();
-
-    expect(screen.getByText('Select file')).toBeInTheDocument();
 
     expect(screen.queryByText('nft.meta.wasm')).not.toBeInTheDocument();
     expect(screen.queryByText('init_input')).not.toBeInTheDocument();

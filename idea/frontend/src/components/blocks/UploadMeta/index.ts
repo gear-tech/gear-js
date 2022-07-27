@@ -1,2 +1,2 @@
-export * from './UploadMeta';
+export { UploadMeta } from './UploadMeta';
 export * from './types';

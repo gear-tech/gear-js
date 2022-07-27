@@ -6,8 +6,9 @@ import { getValidationSchema } from './Schema';
 import { INITIAL_VALUES } from './const';
 import { FormValues, SetFieldValue, RenderButtonsProps } from './types';
 
+import { useMessage, useGasCalculate } from 'hooks';
 import { GasMethod } from 'consts';
-import { useSendMessage, useGasCalculate } from 'hooks';
+import { Reply, Message } from 'types/program';
 import {
   FormText,
   FormInput,
@@ -19,7 +20,7 @@ import {
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
 
 type Props = {
-  id: string;
+  id: Hex;
   isReply?: boolean;
   metadata?: Metadata;
   renderButtons: (props: RenderButtonsProps) => ReactNode;
@@ -28,6 +29,9 @@ type Props = {
 const MessageForm = (props: Props) => {
   const { id, isReply = false, metadata, renderButtons } = props;
 
+  const calculateGas = useGasCalculate();
+  const { sendMessage, replyMessage } = useMessage();
+
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
 
@@ -35,18 +39,13 @@ const MessageForm = (props: Props) => {
 
   const validationSchema = useMemo(() => getValidationSchema(encodeType, metadata), [metadata, encodeType]);
 
-  const sendMessage = useSendMessage();
-  const calculateGas = useGasCalculate();
-
   const handleSubmit = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     const payloadType = metadata ? void 0 : values.payloadType;
 
-    const message = {
+    const commonValues = {
       value: values.value.toString(),
       payload: getSubmitPayload(values.payload),
       gasLimit: values.gasLimit.toString(),
-      replyToId: id as Hex,
-      destination: id as Hex,
     };
 
     const reject = () => helpers.setSubmitting(false);
@@ -61,7 +60,13 @@ const MessageForm = (props: Props) => {
       });
     };
 
-    sendMessage({ extrinsic: method, message, metadata, payloadType, reject, resolve });
+    if (isReply) {
+      const reply: Reply = { ...commonValues, replyToId: id };
+      replyMessage({ reply, metadata, payloadType, reject, resolve });
+    } else {
+      const message: Message = { ...commonValues, destination: id };
+      sendMessage({ message, metadata, payloadType, reject, resolve });
+    }
   };
 
   const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>
