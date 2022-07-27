@@ -1,6 +1,6 @@
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
-import { GearApi, Hex, MessageEnqueued, MessagesDispatched, Metadata, ProgramChanged } from '@gear-js/api';
+import { GearApi, Hex, MessageEnqueued, MessagesDispatched, Metadata } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { Event } from '@polkadot/types/interfaces';
 import { useEscrowMeta, useEscrowOpt } from '../api';
