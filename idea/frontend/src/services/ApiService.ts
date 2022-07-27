@@ -1,6 +1,6 @@
 import { Metadata } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import type { InjectedExtension } from '@polkadot/extension-inject/types';
+import { Signer } from '@polkadot/api/types';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { localPrograms } from './LocalDBService';
@@ -14,7 +14,7 @@ export const uploadMetadata = async (
   programId: string,
   account: Account,
   name: string,
-  injector: InjectedExtension,
+  signer: Signer,
   alert: AlertContainerFactory,
   metaFile?: any,
   meta?: Metadata,
@@ -43,7 +43,7 @@ export const uploadMetadata = async (
   }
 
   const apiRequest = new ServerRPCRequestService();
-  const { signature } = await injector.signer.signRaw!({
+  const { signature } = await signer.signRaw!({
     address: account.address,
     data: jsonMeta,
     type: 'payload',
@@ -73,7 +73,7 @@ export const addMetadata = async (
   name: any,
   alert: AlertContainerFactory
 ) => {
-  const injector = await web3FromSource(account.meta.source);
+  const { signer } = await web3FromSource(account.meta.source);
 
-  await uploadMetadata(programId, account, name, injector, alert, metaFile, meta, meta.title);
+  await uploadMetadata(programId, account, name, signer, alert, metaFile, meta, meta.title);
 };

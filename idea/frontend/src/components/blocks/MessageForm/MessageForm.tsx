@@ -61,7 +61,7 @@ const MessageForm = (props: Props) => {
       });
     };
 
-    sendMessage({ extrinsic: method, message, metadata, payloadType, resolve, reject });
+    sendMessage({ extrinsic: method, message, metadata, payloadType, reject, resolve });
   };
 
   const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>

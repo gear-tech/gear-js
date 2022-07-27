@@ -34,10 +34,12 @@ const TransactionModal = (props: TransactionModalProps) => {
           <span className={styles.participantSide}>From</span>
           <span className={styles.participantValue}>{fileNameHandler(addressFrom)}</span>
         </p>
-        <p className={styles.infoParticipant}>
-          <span className={styles.participantSide}>To</span>
-          <span className={styles.participantValue}>{fileNameHandler(addressTo)}</span>
-        </p>
+        {addressTo && (
+          <p className={styles.infoParticipant}>
+            <span className={styles.participantSide}>To</span>
+            <span className={styles.participantValue}>{fileNameHandler(addressTo)}</span>
+          </p>
+        )}
       </div>
       <div className={styles.contentButtons}>
         <Button text="Submit" className={styles.actionButton} onClick={handleConfirm} />

@@ -1,28 +1,21 @@
 import { useCallback } from 'react';
-import { generatePath } from 'react-router-dom';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
+import { useApi, useAccount, useAlert } from '@gear-js/react-hooks';
 
-import { waitForProgramInit } from './helpers';
+import { useModal } from '../index';
+import { UploadProgramParams } from './types';
+import { signAndUpload } from './helpers';
 
-import { routes } from 'routes';
-import { ACCOUNT_ERRORS, PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
-import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
-import { uploadMetadata } from 'services/ApiService';
-import { Method } from 'types/explorer';
-import { UploadProgramModel, ProgramStatus } from 'types/program';
-import { CustomLink } from 'components/common/CustomLink';
+import { readFileAsync } from 'helpers';
+import { ACCOUNT_ERRORS, TransactionName } from 'consts';
+import { UploadProgramModel } from 'types/program';
+import { TransactionModal, TransactionModalProps } from 'components/modals/TransactionModal';
 
 const useProgramUpload = () => {
   const alert = useAlert();
   const { api } = useApi();
   const { account } = useAccount();
-
-  const getProgramMessage = (programId: string) => (
-    <p>
-      ID: <CustomLink to={generatePath(routes.program, { programId })} text={programId} />
-    </p>
-  );
+  const { showModal } = useModal();
 
   const submit = async (file: File, programModel: UploadProgramModel) => {
     const fileBuffer = (await readFileAsync(file)) as ArrayBufferLike;
@@ -40,92 +33,46 @@ const useProgramUpload = () => {
   };
 
   const uploadProgram = useCallback(
-    async (file: File, programModel: UploadProgramModel, metaBuffer: string | null, callback: () => void) => {
+    async ({ file, programModel, metadataBuffer, reject, resolve }: UploadProgramParams) => {
       if (!account) {
         alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
 
         return;
       }
 
-      const alertId = alert.loading('SignIn', { title: TransactionName.SubmitProgram });
-
       try {
-        const injector = await web3FromSource(account.meta.source);
-
         const { programId } = await submit(file, programModel);
 
-        const initialization = waitForProgramInit(api, programId);
+        const { signer } = await web3FromSource(account.meta.source);
+        // @ts-ignore
+        const { partialFee } = await api.program.paymentInfo(address, { signer });
 
-        await api.program.signAndSend(account.address, { signer: injector.signer }, (data) => {
-          if (data.status.isReady) {
-            alert.update(alertId, TransactionStatus.Ready);
+        const handleConfirm = () =>
+          signAndUpload({
+            api,
+            file,
+            alert,
+            signer,
+            account,
+            programId,
+            metadataBuffer,
+            programModel,
+            reject,
+            resolve,
+          });
 
-            return;
-          }
-
-          if (data.status.isInBlock) {
-            alert.update(alertId, TransactionStatus.InBlock);
-
-            return;
-          }
-
-          if (data.status.isFinalized) {
-            alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
-
-            data.events.forEach(({ event }) => {
-              const { method, section } = event;
-
-              const alertOptions = { title: `${section}.${method}` };
-
-              if (method === Method.ExtrinsicFailed) {
-                alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-
-                return;
-              }
-
-              if (method === Method.MessageEnqueued) {
-                alert.success('Success', alertOptions);
-
-                callback();
-              }
-            });
-
-            return;
-          }
-
-          if (data.status.isInvalid) {
-            alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-          }
+        showModal<TransactionModalProps>(TransactionModal, {
+          fee: partialFee.toHuman(),
+          name: TransactionName.SubmitProgram,
+          addressFrom: account.address,
+          onCancel: reject,
+          onConfirm: handleConfirm,
         });
-
-        const initStatus = await initialization;
-
-        const alertOptions = { title: 'Program initialization' };
-        const programMessage = getProgramMessage(programId);
-
-        if (initStatus === ProgramStatus.Failed) {
-          alert.error(programMessage, alertOptions);
-
-          return;
-        }
-
-        const { meta, title, programName } = programModel;
-
-        if (meta && metaBuffer) {
-          const name = programName ?? file.name;
-
-          await uploadMetadata(programId, account, name, injector, alert, metaBuffer, meta, title).catch((error) =>
-            alert.error(error.message)
-          );
-        }
-
-        alert.success(programMessage, alertOptions);
       } catch (error) {
         const message = (error as Error).message;
 
-        alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-
-        return Promise.reject(error);
+        alert.error(message);
+        reject();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

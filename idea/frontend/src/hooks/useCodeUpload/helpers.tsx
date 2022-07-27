@@ -1,16 +1,17 @@
-import { UserMessageRead } from '@gear-js/api';
-import { DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
+import { DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
+
+import { SignAndSendArg } from './types';
 
 import { getExtrinsicFailedMessage } from 'helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
 import { Method } from 'types/explorer';
-import { SignAndSendArg } from 'types/hooks';
+import { CopiedInfo } from 'components/common/CopiedInfo';
 
-export const signAndSend = async ({ api, alert, signer, address, reject, resolve }: SignAndSendArg) => {
-  const alertId = alert.loading('SignIn', { title: TransactionName.ClaimMessage });
+export const signAndSend = async ({ api, alert, signer, address, codeHash }: SignAndSendArg) => {
+  const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
   try {
-    await api.claimValueFromMailbox.signAndSend(address, { signer }, ({ status, events }) => {
+    await api.code.signAndSend(address, { signer }, ({ events, status }) => {
       if (status.isReady) {
         alert.update(alertId, TransactionStatus.Ready);
 
@@ -21,27 +22,18 @@ export const signAndSend = async ({ api, alert, signer, address, reject, resolve
         alert.update(alertId, TransactionStatus.InBlock);
 
         events.forEach(({ event }) => {
-          const { method, section, data } = event as UserMessageRead;
+          const { method, section } = event;
 
           const alertOptions = { title: `${section}.${method}` };
 
-          if (method === Method.UserMessageRead) {
-            const reason = data.reason.toHuman() as { [key: string]: string };
-            const reasonKey = Object.keys(reason)[0];
-            const reasonValue = reason[reasonKey];
-
-            const message = `${data.id.toHuman()}\n ${reasonKey}: ${reasonValue}`;
-
-            alert.success(message, alertOptions);
+          if (method === Method.ExtrinsicFailed) {
+            alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
 
             return;
           }
 
-          if (method === Method.ExtrinsicFailed) {
-            alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-            reject();
-
-            return;
+          if (method === Method.CodeSaved) {
+            alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
           }
         });
 
@@ -50,20 +42,17 @@ export const signAndSend = async ({ api, alert, signer, address, reject, resolve
 
       if (status.isFinalized) {
         alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
-        resolve();
 
         return;
       }
 
       if (status.isInvalid) {
         alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
-        reject();
       }
     });
   } catch (error) {
     const message = (error as Error).message;
 
     alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
-    reject();
   }
 };

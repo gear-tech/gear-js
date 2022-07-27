@@ -30,7 +30,7 @@ const MessageInfo = ({ message, payload }: Props) => {
   const handleClaim = () => {
     setIsLoading(true);
 
-    claimMessage(id as Hex, disableLoading).catch(disableLoading);
+    claimMessage({ messageId: id as Hex, reject: disableLoading, resolve: disableLoading });
   };
 
   const pathTo = generatePath(`${routes.send}/${routes.reply}`, { messageId: id });
