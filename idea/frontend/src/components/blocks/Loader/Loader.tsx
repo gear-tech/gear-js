@@ -1,10 +1,10 @@
-import { FC } from 'react';
-import { ProgressBar } from 'components/ProgressBar/ProgressBar';
-import UpGear from 'assets/images/loader/gear_up.svg';
-import DownGear from 'assets/images/loader/gear_down.svg';
 import styles from './Loader.module.scss';
 
-export const Loader: FC = () => (
+import UpGear from 'assets/images/loader/gear_up.svg';
+import DownGear from 'assets/images/loader/gear_down.svg';
+import { ProgressBar } from 'components/ProgressBar/ProgressBar';
+
+const Loader = () => (
   <div className={styles.loader}>
     <div className={styles.overlayTop} />
     <div className={styles.overlayBottom} />
@@ -18,3 +18,5 @@ export const Loader: FC = () => (
     </div>
   </div>
 );
+
+export { Loader };

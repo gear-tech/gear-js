@@ -1,15 +1,15 @@
 @use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/breakpoints' as *;
 
-.accountList {
+.accountList {  
   & > *:not(:last-child) {
     margin-bottom: 16px;
   }
 }
 
 .accountButton {
-  font-weight: 500;
   width: 100%;
+  font-weight: 500;
   text-transform: uppercase;
   padding: 16px 40px;
 
@@ -26,7 +26,7 @@
 .accountIcon,
 .accountAddress {
   @include md {
-    display: none;
+    display: none !important;
   }
 }
 

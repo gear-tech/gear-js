@@ -1,0 +1,31 @@
+@import 'assets/scss/index.scss';
+@import 'assets/scss/common.scss';
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: space-between;
+  // cuz if flexGap mixin is used for layout that is close to viewport borders there'll be extra pixels
+  overflow-x: hidden;
+}
+
+#alert-root {
+  position: fixed;
+  z-index: 999;
+  width: 390px;
+  right: 22px;
+  bottom: 5px;
+}
+
+// TODO: remove it after the geat-ui will updated
+#modal-root {
+  & > div > div {
+    width: auto;
+    max-width: unset;
+
+    h3 {
+      text-transform: uppercase;
+    }
+  }
+}

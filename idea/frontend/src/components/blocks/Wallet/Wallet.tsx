@@ -5,17 +5,15 @@ import { Button, buttonStyles } from '@gear-js/ui';
 
 import styles from './Wallet.module.scss';
 
-import { AccountsModal } from 'components/modals/AccountsModal';
-import { useState } from 'react';
+import { useModal } from 'hooks';
+import { AccountsModal, AccountsModalProps } from 'components/modals/AccountsModal';
 
 const Wallet = () => {
   const { account } = useAccount();
   const { accounts } = useAccounts();
+  const { showModal } = useModal();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openModal = () => showModal<AccountsModalProps>(AccountsModal, { accounts });
 
   const balanceSectionClassName = clsx(styles.section, styles.balance);
   const accButtonClassName = clsx(
@@ -26,33 +24,30 @@ const Wallet = () => {
   );
 
   return (
-    <>
-      <div className={styles.wallet}>
-        {account ? (
-          <>
-            <div className={balanceSectionClassName}>
-              <p>
-                Balance:{' '}
-                <span className={styles.balanceAmount}>
-                  {account.balance.value} {account.balance.unit}
-                </span>
-              </p>
-            </div>
-            <div className={styles.section}>
-              <button type="button" className={accButtonClassName} onClick={openModal}>
-                <Identicon value={account.address} size={28} theme="polkadot" className={styles.avatar} />
-                {account.meta.name}
-              </button>
-            </div>
-          </>
-        ) : (
-          <div>
-            <Button text="Connect" color="secondary" className={styles.accountButton} onClick={openModal} />
+    <div className={styles.wallet}>
+      {account ? (
+        <>
+          <div className={balanceSectionClassName}>
+            <p>
+              Balance:{' '}
+              <span className={styles.balanceAmount}>
+                {account.balance.value} {account.balance.unit}
+              </span>
+            </p>
           </div>
-        )}
-      </div>
-      {isModalOpen && <AccountsModal accounts={accounts} onClose={closeModal} />}
-    </>
+          <div className={styles.section}>
+            <button type="button" className={accButtonClassName} onClick={openModal}>
+              <Identicon value={account.address} size={28} theme="polkadot" className={styles.avatar} />
+              {account.meta.name}
+            </button>
+          </div>
+        </>
+      ) : (
+        <div>
+          <Button text="Connect" color="secondary" className={styles.accountButton} onClick={openModal} />
+        </div>
+      )}
+    </div>
   );
 };
 

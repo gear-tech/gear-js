@@ -6,7 +6,7 @@ import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OP
 import { waitForProgramInit } from './helpers';
 
 import { routes } from 'routes';
-import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
+import { ACCOUNT_ERRORS, PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
 import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
 import { uploadMetadata } from 'services/ApiService';
 import { Method } from 'types/explorer';
@@ -42,12 +42,12 @@ const useProgramUpload = () => {
   const uploadProgram = useCallback(
     async (file: File, programModel: UploadProgramModel, metaBuffer: string | null, callback: () => void) => {
       if (!account) {
-        alert.error('Wallet not connected');
+        alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
 
         return;
       }
 
-      const alertId = alert.loading('SignIn', { title: 'gear.submitProgram' });
+      const alertId = alert.loading('SignIn', { title: TransactionName.SubmitProgram });
 
       try {
         const injector = await web3FromSource(account.meta.source);
@@ -114,7 +114,9 @@ const useProgramUpload = () => {
         if (meta && metaBuffer) {
           const name = programName ?? file.name;
 
-          await uploadMetadata(programId, account, name, injector, alert, metaBuffer, meta, title);
+          await uploadMetadata(programId, account, name, injector, alert, metaBuffer, meta, title).catch((error) =>
+            alert.error(error.message)
+          );
         }
 
         alert.success(programMessage, alertOptions);

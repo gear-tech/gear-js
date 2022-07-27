@@ -49,7 +49,8 @@ const MessageForm = (props: Props) => {
       destination: id as Hex,
     };
 
-    const callback = () => {
+    const reject = () => helpers.setSubmitting(false);
+    const resolve = () => {
       const { payload } = payloadFormValues ?? INITIAL_VALUES;
 
       helpers.resetForm({
@@ -60,7 +61,7 @@ const MessageForm = (props: Props) => {
       });
     };
 
-    sendMessage(method, message, callback, metadata, payloadType).catch(() => helpers.setSubmitting(false));
+    sendMessage({ extrinsic: method, message, metadata, payloadType, resolve, reject });
   };
 
   const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>

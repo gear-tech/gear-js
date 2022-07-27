@@ -57,6 +57,14 @@ export enum GasMethod {
   Handle = 'handle',
 }
 
+export enum TransactionName {
+  SendReply = 'gear.sendReply',
+  SendMessage = 'gear.sendMessage',
+  ClaimMessage = 'gear.claimValueFromMailbox',
+  SubmitCode = 'gear.submitCode',
+  SubmitProgram = 'gear.submitProgram',
+}
+
 export const RPC_METHODS = {
   PROGRAM_DATA: 'program.data',
   PROGRAMS_ALL: 'program.all',

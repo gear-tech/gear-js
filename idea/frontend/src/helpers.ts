@@ -72,20 +72,6 @@ export const copyToClipboard = (key: string, alert: any, successfulText?: string
   }
 };
 
-export const signPayload = async (injector: any, address: string, payload: any, callback: any) => {
-  try {
-    const { signature } = await injector.signer.signRaw!({
-      address,
-      data: payload,
-      type: 'payload',
-    });
-
-    callback(signature);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 export const getLocalPrograms = (params: any) => {
   const result: ProgramPaginationModel = {
     count: 0,
