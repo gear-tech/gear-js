@@ -6,14 +6,14 @@ import 'App.scss';
 
 function Component() {
   const { isApiReady } = useApi();
+  const { isLoginReady } = useLoggedInAccount();
 
   useBalanceSubscription();
-  useLoggedInAccount();
 
   return (
     <>
-      <Header />
-      <main>{isApiReady ? <Routing /> : <ApiLoader />}</main>
+      <Header isAccountVisible={isLoginReady} />
+      <main>{isApiReady && isLoginReady ? <Routing /> : <ApiLoader />}</main>
       <Footer />
     </>
   );

@@ -1,6 +1,7 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useAccount } from '@gear-js/react-hooks';
 import { isLoggedIn } from 'utils';
+import { LOCAL_STORAGE } from 'consts';
 import { AccountButton } from '../account-button';
 import styles from './Accounts.module.scss';
 
@@ -15,8 +16,7 @@ function Accounts({ list, onChange }: Props) {
 
   const handleAccountButtonClick = (account: InjectedAccountWithMeta) => {
     switchAccount(account);
-    // TODO: 'account' to consts
-    localStorage.setItem('account', account.address);
+    localStorage.setItem(LOCAL_STORAGE.ACCOUNT, account.address);
     onChange();
   };
 
