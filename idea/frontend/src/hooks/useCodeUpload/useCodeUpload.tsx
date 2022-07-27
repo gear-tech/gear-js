@@ -20,7 +20,9 @@ const useCodeUpload = () => {
     const arrayBuffer = (await readFileAsync(file)) as ArrayBuffer;
     const buffer = Buffer.from(arrayBuffer);
 
-    return api.code.submit(buffer);
+    const result = await api.code.submit(buffer);
+
+    return result.codeHash;
   };
 
   const uploadCode = useCallback(
@@ -34,10 +36,8 @@ const useCodeUpload = () => {
       const { address, meta } = account;
 
       try {
-        const { codeHash } = await submit(file);
+        const [codeHash, { signer }] = await Promise.all([submit(file), web3FromSource(meta.source)]);
 
-        const { signer } = await web3FromSource(meta.source);
-        // @ts-ignore
         const { partialFee } = await api.code.paymentInfo(address, { signer });
 
         const handleConfirm = () =>

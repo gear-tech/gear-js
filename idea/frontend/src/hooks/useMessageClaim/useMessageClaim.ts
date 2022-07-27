@@ -29,7 +29,6 @@ const useMessageClaim = () => {
         api.claimValueFromMailbox.submit(messageId);
 
         const { signer } = await web3FromSource(meta.source);
-        // @ts-ignore
         const { partialFee } = await api.claimValueFromMailbox.paymentInfo(address, { signer });
 
         const handleConfirm = () =>

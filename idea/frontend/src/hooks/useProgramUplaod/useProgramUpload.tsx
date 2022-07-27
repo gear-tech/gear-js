@@ -29,7 +29,9 @@ const useProgramUpload = () => {
       initPayload,
     };
 
-    return api.program.upload(program, meta, payloadType);
+    const result = await api.program.upload(program, meta, payloadType);
+
+    return result.programId;
   };
 
   const uploadProgram = useCallback(
@@ -40,11 +42,11 @@ const useProgramUpload = () => {
         return;
       }
 
-      try {
-        const { programId } = await submit(file, programModel);
+      const { meta, address } = account;
 
-        const { signer } = await web3FromSource(account.meta.source);
-        // @ts-ignore
+      try {
+        const [programId, { signer }] = await Promise.all([submit(file, programModel), web3FromSource(meta.source)]);
+
         const { partialFee } = await api.program.paymentInfo(address, { signer });
 
         const handleConfirm = () =>
