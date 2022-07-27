@@ -51,7 +51,7 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
   const handleSubmitForm = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     const { value, payload, gasLimit, programName, payloadType } = values;
 
-    const programOptions: UploadProgramModel = {
+    const programModel: UploadProgramModel = {
       meta: metadata,
       value,
       title: '',
@@ -61,7 +61,13 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    uploadProgram(droppedFile, programOptions, metadataBuffer, onReset).catch(() => helpers.setSubmitting(false));
+    uploadProgram({
+      file: droppedFile,
+      programModel,
+      metadataBuffer,
+      reject: () => helpers.setSubmitting(false),
+      resolve: onReset,
+    });
   };
 
   const handleCalculateGas = async (values: FormValues, setFieldValue: SetFieldValue) => {

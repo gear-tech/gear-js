@@ -15,7 +15,7 @@ import messageSVG from 'assets/images/message.svg';
 
 type Props = {
   message: HumanMailboxItem;
-  onClaim: (messageId: Hex) => Promise<void>;
+  onClaim: (messageId: Hex, reject: () => void) => void;
 };
 
 const Message = ({ message, onClaim }: Props) => {
@@ -26,7 +26,7 @@ const Message = ({ message, onClaim }: Props) => {
   const handleClaim = () => {
     setIsLoading(true);
 
-    onClaim(messageId).catch(() => setIsLoading(false));
+    onClaim(messageId, () => setIsLoading(false));
   };
 
   const replyPath = generatePath(`${routes.send}/${routes.reply}`, { messageId });

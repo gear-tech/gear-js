@@ -40,7 +40,7 @@ const Upload = () => {
 
   useEffect(() => {
     if (contentType === ContentType.Code && droppedFile) {
-      uploadCode(droppedFile);
+      uploadCode({ file: droppedFile });
       resetUploadData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

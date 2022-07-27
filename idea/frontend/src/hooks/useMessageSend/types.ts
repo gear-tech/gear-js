@@ -1,8 +1,6 @@
-import { AddressOrPair, Signer } from '@polkadot/api/types';
-import { GearApi, GearMessage, Metadata, GearMessageReply } from '@gear-js/api';
-import { AlertContainerFactory } from '@gear-js/react-hooks';
+import { GearMessage, Metadata, GearMessageReply } from '@gear-js/api';
 
-import { OperationCallbacks } from 'types/hooks';
+import { OperationCallbacks, SignAndSendArg as CommonSignAndSendArg } from 'types/hooks';
 import { Message, Reply } from 'types/program';
 
 export type SendMessageParams = OperationCallbacks & {
@@ -12,11 +10,7 @@ export type SendMessageParams = OperationCallbacks & {
   payloadType?: string;
 };
 
-export type SignAndSendArg = OperationCallbacks & {
-  api: GearApi;
-  alert: AlertContainerFactory;
-  signer: Signer;
-  address: AddressOrPair;
+export type SignAndSendArg = CommonSignAndSendArg & {
   apiExtrinsic: GearMessage | GearMessageReply;
   transactionName: string;
 };
