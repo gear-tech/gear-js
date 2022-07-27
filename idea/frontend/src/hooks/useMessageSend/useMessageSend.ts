@@ -34,7 +34,6 @@ const useSendMessage = () => {
         apiExtrinsic.submit(message as any, metadata, payloadType);
 
         const { signer } = await web3FromSource(meta.source);
-        // @ts-ignore
         const { partialFee } = await apiExtrinsic.paymentInfo(address, { signer });
 
         const handleConfirm = () =>
