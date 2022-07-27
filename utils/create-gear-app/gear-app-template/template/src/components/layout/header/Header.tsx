@@ -1,15 +1,16 @@
-import { useApi } from '@gear-js/react-hooks';
 import { Logo } from './logo';
 import { Account } from './account';
 import styles from './Header.module.scss';
 
-function Header() {
-  const { isApiReady } = useApi();
+type Props = {
+  isAccountVisible: boolean;
+};
 
+function Header({ isAccountVisible }: Props) {
   return (
     <header className={styles.header}>
       <Logo />
-      {isApiReady && <Account />}
+      {isAccountVisible && <Account />}
     </header>
   );
 }
