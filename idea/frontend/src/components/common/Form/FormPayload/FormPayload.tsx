@@ -123,7 +123,7 @@ const FormPayload = (props: Props) => {
             {values && (
               <FileInput
                 data-testid="payloadFileInput"
-                value={manualPayloadFile}
+                value={manualPayloadFile?.name}
                 accept={FILE_TYPES.JSON}
                 className={styles.fileInput}
                 onChange={handleUploadManualPayload}

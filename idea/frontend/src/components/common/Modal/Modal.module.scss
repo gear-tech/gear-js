@@ -1,7 +1,7 @@
 @use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/breakpoints' as *;
 
-.modalWrapper {
+.viewBackground {
   position: fixed;
   top: 0;
   right: 0;
@@ -11,20 +11,25 @@
   background: rgba(28, 28, 28, 0.7);
 }
 
-.modal {
+.modalWrapper {
   top:50%;
   left:50%;
-  transform:translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   padding: 40px 30px 60px;
   background: $bgColor;
-  border-radius: $borderRadius;
   overflow-y: auto;
+  padding: 20px;
   max-height: 90vh;
-  color: $textColor;
 
   @include md {
     width: 90%;
   }
+}
+
+.modal {
+  color: $textColor;
+  border: 1px solid;
+  border: linear-gradient(55.05deg, #575757 50.83%, rgba(35, 35, 35, 0.1) 75.7%);
 }
 
 .modalCloseBtn {

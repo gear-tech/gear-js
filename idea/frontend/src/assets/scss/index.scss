@@ -1,11 +1,7 @@
-@import '../fonts/fonts';
-
-html {
-  box-sizing: border-box;
-}
+@use '@gear-js/ui/typography.scss';
+@use '@gear-js/ui/resets.scss';
 
 * {
-  font-family: Prompt, sans-serif;
   margin: 0;
   box-sizing: border-box;
 }
@@ -16,32 +12,11 @@ body {
   scrollbar-gutter: stable both-edges;
 }
 
-a {
-  // underline only if link is a part of paragraph
-  &:not(p &) {
-    text-decoration: none;
-  }
-}
-
-ul {
-  list-style: none;
-}
-
-ul,
-p {
-  margin: 0;
-  padding: 0;
-}
-
 button {
   background: none;
   border: none;
   cursor: pointer;
   outline: none;
-}
-
-small {
-  font: inherit;
 }
 
 input::-webkit-outer-spin-button,
@@ -65,4 +40,10 @@ select {
   width: 390px;
   right: 22px;
   bottom: 5px;
+}
+
+#modal-root {
+  h3 {
+    text-transform: uppercase;
+  }
 }

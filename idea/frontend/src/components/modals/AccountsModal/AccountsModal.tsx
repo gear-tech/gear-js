@@ -1,17 +1,20 @@
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { GearKeyring } from '@gear-js/api';
-import { Button } from '@gear-js/ui';
+import { Button, Modal } from '@gear-js/ui';
 
 import styles from './AccountsModal.module.scss';
-import { AccountsModalProps } from './types';
 import { AccountList } from './children/AccountList';
 
 import { LOCAL_STORAGE } from 'consts';
-import { Modal } from 'components/common/Modal';
 import logoutSVG from 'assets/images/logout.svg';
 
-const AccountsModal = ({ accounts, onClose }: AccountsModalProps) => {
+type Props = {
+  accounts?: InjectedAccountWithMeta[];
+  onClose: () => void;
+};
+
+const AccountsModal = ({ accounts, onClose }: Props) => {
   const alert = useAlert();
   const { logout, switchAccount, account } = useAccount();
 
@@ -34,7 +37,7 @@ const AccountsModal = ({ accounts, onClose }: AccountsModalProps) => {
   };
 
   return (
-    <Modal title="Connect" onClose={onClose}>
+    <Modal heading="Connect" close={onClose}>
       {accounts ? (
         <>
           <AccountList list={accounts} address={account?.address} toggleAccount={selectAccount} />
