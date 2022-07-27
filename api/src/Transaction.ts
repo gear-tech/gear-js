@@ -61,7 +61,7 @@ export class GearTransaction {
    * consolg.log(transactionFee);
    * ```
    */
-  paymentInfo(account: AddressOrPair, options?: SignerOptions): Promise<RuntimeDispatchInfo> {
+  paymentInfo(account: AddressOrPair, options?: Partial<SignerOptions>): Promise<RuntimeDispatchInfo> {
     return this.submitted.paymentInfo(account, options);
   }
 }
