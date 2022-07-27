@@ -1,12 +1,11 @@
 /* eslint-disable import/no-cycle */
 import { useContext } from 'react';
-import { BlocksContext, EditorContext, ModalContext } from 'context';
+import { BlocksContext, EditorContext } from 'context';
 
 const useBlocks = () => useContext(BlocksContext);
 const useEditor = () => useContext(EditorContext);
-const useModal = () => useContext(ModalContext);
 
-export { useBlocks, useEditor, useModal };
+export { useBlocks, useEditor };
 export { useEvents } from './useEvents';
 export { useOutsideClick } from './useOutsideClick';
 export { useSubscription } from './useSubscription';

@@ -41,17 +41,19 @@ const Modal = ({ title, children, className, onClose }: Props) => {
   }, [handleKeyDown]);
 
   return (
-    <div className={styles.modalWrapper}>
-      <dialog ref={modalRef} open className={clsx(styles.modal, className)} data-testid="modal">
-        <Button
-          icon={closeSVG}
-          aria-label="Close modal"
-          color="transparent"
-          className={styles.modalCloseBtn}
-          onClick={onClose}
-        />
-        {title && <h2 className={styles.modalTitle}>{title}</h2>}
-        <div>{children}</div>
+    <div className={styles.viewBackground}>
+      <dialog ref={modalRef} open className={clsx(styles.modalWrapper, className)} data-testid="modal">
+        <div className={styles.modal}>
+          <Button
+            icon={closeSVG}
+            aria-label="Close modal"
+            color="transparent"
+            className={styles.modalCloseBtn}
+            onClick={onClose}
+          />
+          {title && <h1 className={styles.modalTitle}>{title}</h1>}
+          <div>{children}</div>
+        </div>
       </dialog>
     </div>
   );
