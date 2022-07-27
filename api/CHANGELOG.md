@@ -1,3 +1,14 @@
+## 0.24.2
+
+_07/27/2022_
+
+https://github.com/gear-tech/gear-js/pull/894
+
+### Changes
+
+- Fix type of `paymentInfo` method's argument.
+
+---
 ## 0.24.1
 
 _07/22/2022_
