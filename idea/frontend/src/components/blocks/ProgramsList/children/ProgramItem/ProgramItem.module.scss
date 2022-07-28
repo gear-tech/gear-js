@@ -2,21 +2,6 @@
 @use '@gear-js/ui/breakpoints' as *;
 @use 'assets/scss/common.scss' as *;
 
-.programsListItem {
-  display: flex;
-  padding: 20px;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  border-bottom: 1px solid $lineColor;
-
-  @include md {
-    * {
-      align-items: unset;
-    }
-  }
-}
-
 .programsListNumber {
   color: $textColorSecondary;
   font-size: $fontSizeLarge;

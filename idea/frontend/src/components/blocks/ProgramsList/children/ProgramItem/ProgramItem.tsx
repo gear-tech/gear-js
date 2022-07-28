@@ -4,7 +4,7 @@ import { Link, generatePath } from 'react-router-dom';
 import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
-import styles from './UserProgram.module.scss';
+import styles from './ProgramItem.module.scss';
 import { getIndicatorStatus } from './helpers';
 
 import { routes } from 'routes';
@@ -21,7 +21,7 @@ type Props = {
   isMetaLinkActive?: boolean;
 };
 
-const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
+const ProgramItem = memo(({ program, isMetaLinkActive }: Props) => {
   const alert = useAlert();
 
   const { id: programId, name, initStatus, timestamp } = program;
@@ -29,7 +29,7 @@ const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
   const handleCopy = () => copyToClipboard(programId, alert, 'Program ID copied');
 
   return (
-    <div className={styles.programsListItem}>
+    <>
       <div className={styles.programWrapper}>
         <CircleIndicator status={getIndicatorStatus(initStatus)} className={styles.programsListIndicator} />
         <div className={styles.programWrapperName}>
@@ -56,8 +56,8 @@ const UserProgram = memo<Props>(({ program, isMetaLinkActive = true }) => {
           <img src={uploadMetaSVG} alt="Upload metadata" />
         </Link>
       </div>
-    </div>
+    </>
   );
 });
 
-export { UserProgram };
+export { ProgramItem };

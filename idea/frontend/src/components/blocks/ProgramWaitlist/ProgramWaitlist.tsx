@@ -13,11 +13,13 @@ import { Table } from 'components/common/Table';
 import triangleSVG from 'assets/images/triangle.svg';
 
 type Props = {
-  waitlist: WaitlistItem[];
+  waitlist?: WaitlistItem[];
 };
 
 const ProgramWaitlist = ({ waitlist }: Props) => {
-  const [isOpen, setIsOpen] = useState(Boolean(waitlist.length));
+  const messagesCount = waitlist?.length || 0;
+
+  const [isOpen, setIsOpen] = useState(Boolean(messagesCount));
 
   const handleClick = () => setIsOpen((prevState) => !prevState);
 
@@ -37,17 +39,17 @@ const ProgramWaitlist = ({ waitlist }: Props) => {
           className={clsx(styles.button, isOpen && styles.openBtn)}
           onClick={handleClick}
         />
-        <span className={styles.count}>{waitlist.length}</span>
+        <span className={styles.count}>{messagesCount}</span>
       </div>
       {isOpen && (
         <Table
           rows={waitlist}
           cols={TABLE_COLS}
           header={TABLE_HEADER}
-          getRowKey={getRowKey}
+          message="No entries on the waitlist"
           className={styles.waitlistTable}
           bodyClassName={styles.waitlistTableBody}
-          defaultMessage="No entries on the waitlist"
+          getRowKey={getRowKey}
           renderRow={renderRow}
         />
       )}

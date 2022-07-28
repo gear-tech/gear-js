@@ -25,8 +25,8 @@ const Program = () => {
   const { programId } = useParams() as Params;
   const { program, metadata } = useProgram(programId);
 
-  const [waitlist, setWaitlist] = useState<WaitlistItem[]>([]);
-  const [messages, setMessages] = useState<MessageModel[]>([]);
+  const [waitlist, setWaitlist] = useState<WaitlistItem[]>();
+  const [messages, setMessages] = useState<MessageModel[]>();
 
   const decodedAddress = account?.decodedAddress;
 
