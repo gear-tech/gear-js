@@ -51,7 +51,7 @@ function Form() {
   const price = +values.startingPrice - getSeconds() * +values.discountRate;
   const priceClassName = clsx(styles.price, price > 0 && styles.success, price < 0 && styles.error);
 
-  const isNftContractAddressValid = async () => api.program.exists(nftContractActorId as Hex);
+  const isNftContractAddressValid = () => api.program.exists(nftContractActorId as Hex);
 
   const handleSubmit = async () => {
     if (price < 0) {

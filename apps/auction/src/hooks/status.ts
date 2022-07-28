@@ -1,3 +1,4 @@
+import { STATUS } from 'consts';
 import { useEffect, useState } from 'react';
 import { Auction } from 'types';
 
@@ -10,9 +11,9 @@ function useStatus(stateStatus: Status | undefined) {
     setStatus(stateStatus);
   }, [stateStatus]);
 
-  const resetStatus = () => setStatus('None');
-  const setExpiredStatus = () => setStatus('Expired');
-  const setRunningStatus = () => setStatus('IsRunning');
+  const resetStatus = () => setStatus(STATUS.NONE);
+  const setExpiredStatus = () => setStatus(STATUS.EXPIRED);
+  const setRunningStatus = () => setStatus(STATUS.IS_RUNNING);
 
   return { status, resetStatus, setExpiredStatus, setRunningStatus };
 }

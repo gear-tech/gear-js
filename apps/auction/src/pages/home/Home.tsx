@@ -1,5 +1,5 @@
 import { Loader } from 'components';
-import { ADDRESS } from 'consts';
+import { ADDRESS, STATUS } from 'consts';
 import { useAuction, useNft, useStatus } from 'hooks';
 import { Buy } from './buy';
 import { Sell } from './sell';
@@ -18,11 +18,11 @@ function Home() {
 
   return auction && isNftStateRead ? (
     <>
-      {status === 'IsRunning' && (
+      {status === STATUS.IS_RUNNING && (
         <Buy src={src} auction={auction} onCountdownReset={setExpiredStatus} onCountdownSet={setRunningStatus} />
       )}
-      {status === 'None' && <Sell />}
-      {(status === 'Expired' || purchasePrice) && <Start price={purchasePrice} onSubmit={resetStatus} />}
+      {status === STATUS.NONE && <Sell />}
+      {(status === STATUS.EXPIRED || purchasePrice) && <Start price={purchasePrice} onSubmit={resetStatus} />}
     </>
   ) : (
     <Loader />
