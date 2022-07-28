@@ -50,7 +50,7 @@ const Messages = () => {
       };
 
       getMessages(messageParams).then(({ result }) => {
-        // setMessages(result.messages);
+        setMessages(result.messages);
         setMessagesCount(result.count);
       });
     }
