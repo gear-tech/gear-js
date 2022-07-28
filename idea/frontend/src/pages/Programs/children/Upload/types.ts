@@ -1,9 +1,5 @@
-export enum UploadTypes {
-  PROGRAM = 'program',
-  CODE = 'code',
+export enum ContentType {
+  Code = 'code',
+  Message = 'message',
+  Program = 'program',
 }
-
-export type DroppedFile = {
-  file: File;
-  type: UploadTypes;
-};
