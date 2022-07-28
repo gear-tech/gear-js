@@ -17,12 +17,12 @@
   right: 22px;
   bottom: 5px;
 }
-
 // TODO: remove it after the geat-ui will updated
 #modal-root {
   & > div > div {
     width: auto;
     max-width: unset;
+    background-color:#232323;
 
     h3 {
       text-transform: uppercase;
