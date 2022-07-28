@@ -7,7 +7,11 @@ export type FormValues = {
   gasLimit: number;
   payload: PayloadValue;
   payloadType: string;
-  destination: string;
+};
+
+export type RenderButtonsProps = {
+  isDisabled: boolean;
+  calculateGas: () => void;
 };
 
 export type SetFieldValue = FormikHelpers<FormValues>['setFieldValue'];

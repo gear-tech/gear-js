@@ -19,3 +19,4 @@ export { useMessageClaim } from './useMessageClaim';
 export { useBalanceTransfer } from './useBalanceTransfer';
 export { useAccountSubscriptions } from './useAccountSubscriptions';
 export { useSidebarNodes } from './useSidebarNodes';
+export { useGasCalculate } from './useGasCalculate';
