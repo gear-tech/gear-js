@@ -1,0 +1,124 @@
+import { useCallback } from 'react';
+import { web3FromSource } from '@polkadot/extension-dapp';
+import { useAlert, useAccount } from '@gear-js/react-hooks';
+
+import { UploadMetaParams, SignAndSend } from './types';
+import { useModal } from '../index';
+
+import { RPC_METHODS, ACCOUNT_ERRORS } from 'consts';
+import { isDevChain } from 'helpers';
+import { ProgramStatus } from 'types/program';
+import { localPrograms } from 'services/LocalDBService';
+import ServerRPCRequestService from 'services/ServerRPCRequestService';
+import { UploadMetadataModal, UploadMetadataModalProps } from 'components/modals/UploadMetadataModal';
+
+const useMetadataUplaod = () => {
+  const alert = useAlert();
+  const { account } = useAccount();
+  const { showModal } = useModal();
+
+  const signAndUpload = async (params: SignAndSend) => {
+    const { name, title, signer, metadataBuffer, programId, jsonMeta, reject, resolve } = params;
+
+    const apiRequest = new ServerRPCRequestService();
+
+    try {
+      const { signature } = await signer.signRaw!({
+        type: 'payload',
+        data: jsonMeta,
+        address: account!.address,
+      });
+
+      const { error } = await apiRequest.callRPC(RPC_METHODS.ADD_METADATA, {
+        name,
+        meta: jsonMeta,
+        title,
+        metaFile: metadataBuffer,
+        signature,
+        programId,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      alert.success('Metadata saved successfully');
+
+      if (resolve) resolve();
+    } catch (error) {
+      const message = (error as Error).message;
+
+      alert.error(message);
+
+      if (reject) reject();
+    }
+  };
+
+  const uploadMetadata = useCallback(
+    async (params: UploadMetaParams) => {
+      if (!account) {
+        alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+
+        return;
+      }
+
+      const { name, title, metadata, metadataBuffer, programId, reject, resolve } = params;
+      const jsonMeta = JSON.stringify(metadata);
+
+      try {
+        if (isDevChain()) {
+          await localPrograms.setItem(programId, {
+            id: programId,
+            name,
+            title,
+            metadata: {
+              metadata: jsonMeta,
+              metaFile: metadataBuffer,
+              programId,
+            },
+            owner: account.decodedAddress,
+            timestamp: Date(),
+            initStatus: ProgramStatus.Success,
+          });
+
+          alert.success('Program added to the localDB successfully');
+
+          if (resolve) resolve();
+
+          return;
+        }
+
+        const signer = params.signer ?? (await web3FromSource(account.meta.source)).signer;
+
+        const handleConfirm = () =>
+          signAndUpload({
+            name,
+            title,
+            signer,
+            jsonMeta,
+            programId,
+            metadataBuffer,
+            reject,
+            resolve,
+          });
+
+        showModal<UploadMetadataModalProps>(UploadMetadataModal, {
+          onCancel: reject,
+          onConfirm: handleConfirm,
+        });
+      } catch (error) {
+        const message = (error as Error).message;
+
+        alert.error(message);
+
+        if (reject) reject();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [account]
+  );
+
+  return uploadMetadata;
+};
+
+export { useMetadataUplaod };

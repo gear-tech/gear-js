@@ -4,13 +4,13 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '../index';
+import { useMetadataUplaod } from '../useMetadataUpload';
 import { UploadProgramParams, SignAndUploadArg } from './types';
 import { waitForProgramInit } from './helpers';
 
 import { routes } from 'routes';
 import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
 import { PROGRAM_ERRORS, ACCOUNT_ERRORS, TransactionName, TransactionStatus } from 'consts';
-import { uploadMetadata } from 'services/ApiService';
 import { Method } from 'types/explorer';
 import { UploadProgramModel, ProgramStatus } from 'types/program';
 import { CustomLink } from 'components/common/CustomLink';
@@ -20,7 +20,9 @@ const useProgramUpload = () => {
   const alert = useAlert();
   const { api } = useApi();
   const { account } = useAccount();
+
   const { showModal } = useModal();
+  const uploadMetadata = useMetadataUplaod();
 
   const getProgramMessage = (programId: string) => (
     <p>
@@ -115,17 +117,19 @@ const useProgramUpload = () => {
         return;
       }
 
-      const { meta, title, programName } = programModel;
+      const { meta: metadata, title, programName } = programModel;
 
-      if (meta && metadataBuffer) {
-        const name = programName ?? file.name;
-
-        await uploadMetadata(programId, account, name, signer, alert, metadataBuffer, meta, title).catch((error) =>
-          alert.error(error.message)
-        );
+      if (metadata && metadataBuffer) {
+        uploadMetadata({
+          name: programName ?? file.name,
+          title,
+          signer,
+          metadata,
+          programId,
+          metadataBuffer,
+          resolve: () => alert.success(programMessage, alertOptions),
+        });
       }
-
-      alert.success(programMessage, alertOptions);
     } catch (error) {
       const message = (error as Error).message;
 
@@ -175,7 +179,7 @@ const useProgramUpload = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [api, account]
+    [api, account, uploadMetadata]
   );
 
   return uploadProgram;
