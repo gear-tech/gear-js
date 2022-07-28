@@ -1,46 +1,40 @@
-# Getting Started with Create React App
+# Gear Social App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the Gear Social App. This program is designed to demonstrate asynchronous interactions between two Gear programs. The application's logic simulates the example of a `decentralized Twitter`, where each user can create his channel and connect it to a common Hub - A router.
 
-## Available Scripts
+The main program is designed to store data about user channels and their subscriptions. And the channel program provides the storage of user messages of this channel and allows you to perform actions such as add messages, subscribe, and unsubscribe.
 
-In the project directory, you can run:
+For more information see [our documentation](https://wiki.gear-tech.io/examples/feeds)
 
-### `npm start`
+## To use application
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Configure basic in .env file in `root` directory of the project:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```shell
+REACT_APP_NODE_ADDRESS
+REACT_APP_ROUTER_CONTRACT_ADDRESS
+REACT_APP_META_STORAGE_API
+```
 
-### `npm test`
+- `REACT_APP_NODE_ADDRESS` is Gear network address (wss://node-workshop.gear.rs)
+- `REACT_APP_ROUTER_CONTRACT_ADDRESS` is Gear Router address
+- `REACT_APP_META_STORAGE_API` is the address of the metadata storage for the channels (in this case https://idea.gear-tech.io/api)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`.env.example` provided in the root directory of the project.
 
-### `npm run build`
+To install dependencies:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```shell
+yarn install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To run:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```shell
+yarn run start
+```
 
-### `npm run eject`
+# License
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+The source code is licensed under GPL v3.0 license.
+See [LICENSE](LICENSE) for details.
