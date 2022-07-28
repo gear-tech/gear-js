@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAccount } from '@gear-js/react-hooks';
 
 import styles from '../../Programs.module.scss';
 
+import { useChangeEffect } from 'hooks';
 import { ProgramModel } from 'types/program';
 import { getUserPrograms } from 'services';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
@@ -13,7 +14,6 @@ import { ProgramsList } from 'components/blocks/ProgramsList';
 
 const Recent = () => {
   const { account } = useAccount();
-  const isAccountLoaded = useRef(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -22,23 +22,7 @@ const Recent = () => {
 
   const page = Number(searchParams.get(URL_PARAMS.PAGE) ?? 1);
   const query = searchParams.get(URL_PARAMS.QUERY) ?? '';
-  const address = account?.address;
   const decodedAddress = account?.decodedAddress;
-
-  useEffect(() => {
-    if (isAccountLoaded.current) {
-      searchParams.set(URL_PARAMS.PAGE, String(1));
-      searchParams.set(URL_PARAMS.QUERY, '');
-      setSearchParams(searchParams);
-      setPrograms([]);
-      setProgramsCount(0);
-    }
-
-    return () => {
-      isAccountLoaded.current = Boolean(address);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address]);
 
   useEffect(() => {
     if (decodedAddress) {
@@ -56,6 +40,16 @@ const Recent = () => {
     }
   }, [page, query, decodedAddress]);
 
+  useChangeEffect(() => {
+    searchParams.set(URL_PARAMS.PAGE, String(1));
+    searchParams.set(URL_PARAMS.QUERY, '');
+    setSearchParams(searchParams);
+    setPrograms([]);
+    setProgramsCount(0);
+  }, [decodedAddress]);
+
+  const isLoading = !programs && Boolean(account);
+
   return (
     <div>
       <div className={styles.topPagination}>
@@ -63,7 +57,12 @@ const Recent = () => {
         <Pagination page={page} pagesAmount={programsCount || 1} />
       </div>
       <SearchForm placeholder="Find program" />
-      <ProgramsList programs={programs} address={account?.decodedAddress} className={styles.tableBody} />
+      <ProgramsList
+        programs={programs}
+        address={account?.decodedAddress}
+        isLoading={isLoading}
+        className={styles.tableBody}
+      />
       {programsCount > 0 && (
         <div className={styles.bottomPagination}>
           <Pagination page={page} pagesAmount={programsCount} />
