@@ -1,4 +1,4 @@
-import { IDE_BACKEND_ADDRESS } from 'consts';
+import { META_STORAGE_ADDRESS } from 'consts';
 
 type RequestParams = {
   method: string;
@@ -11,7 +11,7 @@ function generateRandomId() {
 }
 
 export class ServerRPCRequestService {
-  RPC_API_PATH = IDE_BACKEND_ADDRESS;
+  RPC_API_PATH = META_STORAGE_ADDRESS;
 
   async getResource(method: string, postParamArr: Array<Object>, headers = {}) {
     const url = this.RPC_API_PATH;

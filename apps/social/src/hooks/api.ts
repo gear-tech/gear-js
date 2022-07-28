@@ -80,7 +80,6 @@ function useFeed() {
 
       const batchParams = channels!.map(({ id }) => ({
         programId: id,
-        chain: 'Workshop',
         genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS),
       }));
 
@@ -88,8 +87,7 @@ function useFeed() {
 
       const promises = response
         .filter((res: any) => res.result)
-        .map(async (res: any) => {
-          const { program, metaFile } = res.result;
+        .map(async ({ result: { program, metaFile } }: any) => {
           const buffer = Buffer.from(metaFile, 'base64');
           const state = await api.programState.read(program, buffer);
 
@@ -122,7 +120,6 @@ function useOwnFeed() {
 
       const batchParams = subscriptions!.map((id) => ({
         programId: id,
-        chain: 'Workshop',
         genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS),
       }));
 
@@ -130,8 +127,7 @@ function useOwnFeed() {
 
       const promises = response
         .filter((res: any) => res.result)
-        .map(async (res: any) => {
-          const { program, metaFile } = res.result;
+        .map(async ({ result: { program, metaFile } }: any) => {
           const buffer = Buffer.from(metaFile, 'base64');
           const state = await api.programState.read(program, buffer);
 
