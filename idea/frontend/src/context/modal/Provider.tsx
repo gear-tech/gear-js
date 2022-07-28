@@ -1,5 +1,4 @@
 import { FC, useState, useCallback, useMemo, useEffect } from 'react';
-import { lock, unlock } from 'tua-body-scroll-lock';
 
 import { ModalProps, InpitModalProps } from './types';
 import { Props } from '../types';
@@ -30,12 +29,12 @@ const ModalProvider = ({ children }: Props) => {
 
   useEffect(() => {
     if (currentModal) {
-      lock();
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
       if (currentModal) {
-        unlock();
+        document.body.style.overflow = 'auto';
       }
     };
   }, [currentModal]);

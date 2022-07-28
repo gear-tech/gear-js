@@ -35,7 +35,6 @@
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.2",
-    "tua-body-scroll-lock": "1.2.1",
     "yup": "0.32.11"
   },
   "scripts": {

@@ -1,12 +1,15 @@
 import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { useApi, useAccount, useAlert } from '@gear-js/react-hooks';
+import { UserMessageRead } from '@gear-js/api';
+import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '../index';
 import { ClaimMessageParams } from './types';
-import { signAndSend } from './helpers';
 
-import { ACCOUNT_ERRORS, TransactionName } from 'consts';
+import { ACCOUNT_ERRORS, PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
+import { getExtrinsicFailedMessage } from 'helpers';
+import { Method } from 'types/explorer';
+import { SignAndSendArg } from 'types/hooks';
 import { TransactionModal, TransactionModalProps } from 'components/modals/TransactionModal';
 
 const useMessageClaim = () => {
@@ -14,6 +17,68 @@ const useMessageClaim = () => {
   const { api } = useApi();
   const { account } = useAccount();
   const { showModal } = useModal();
+
+  const signAndSend = async ({ signer, reject, resolve }: SignAndSendArg) => {
+    const alertId = alert.loading('SignIn', { title: TransactionName.ClaimMessage });
+
+    try {
+      await api.claimValueFromMailbox.signAndSend(account!.address, { signer }, ({ status, events }) => {
+        if (status.isReady) {
+          alert.update(alertId, TransactionStatus.Ready);
+
+          return;
+        }
+
+        if (status.isInBlock) {
+          alert.update(alertId, TransactionStatus.InBlock);
+
+          events.forEach(({ event }) => {
+            const { method, section, data } = event as UserMessageRead;
+
+            const alertOptions = { title: `${section}.${method}` };
+
+            if (method === Method.UserMessageRead) {
+              const reason = data.reason.toHuman() as { [key: string]: string };
+              const reasonKey = Object.keys(reason)[0];
+              const reasonValue = reason[reasonKey];
+
+              const message = `${data.id.toHuman()}\n ${reasonKey}: ${reasonValue}`;
+
+              alert.success(message, alertOptions);
+
+              return;
+            }
+
+            if (method === Method.ExtrinsicFailed) {
+              alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
+              reject();
+
+              return;
+            }
+          });
+
+          return;
+        }
+
+        if (status.isFinalized) {
+          alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
+          resolve();
+
+          return;
+        }
+
+        if (status.isInvalid) {
+          alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
+          reject();
+        }
+      });
+    } catch (error) {
+      const message = (error as Error).message;
+
+      alert.update(alertId, message, DEFAULT_ERROR_OPTIONS);
+      reject();
+    }
+  };
 
   const claimMessage = useCallback(
     async ({ messageId, reject, resolve }: ClaimMessageParams) => {
@@ -33,10 +98,7 @@ const useMessageClaim = () => {
 
         const handleConfirm = () =>
           signAndSend({
-            api,
-            alert,
             signer,
-            address,
             reject,
             resolve,
           });
