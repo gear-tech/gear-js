@@ -76,15 +76,12 @@ const useMessage = () => {
 
   const sendMessage = useCallback(
     async ({ metadata, message, payloadType, reject, resolve }: SendMessageParams) => {
-      if (!account) {
-        alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-
-        return;
-      }
-
-      const { meta, address } = account;
-
       try {
+        if (!account) {
+          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+        }
+
+        const { meta, address } = account;
         // TODO: fix message type
         api.message.submit(message as any, metadata, payloadType);
 

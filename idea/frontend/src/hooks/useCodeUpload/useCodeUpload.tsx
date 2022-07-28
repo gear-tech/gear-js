@@ -78,15 +78,13 @@ const useCodeUpload = () => {
 
   const uploadCode = useCallback(
     async ({ file }: UploadCodeParams) => {
-      if (!account) {
-        alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-
-        return;
-      }
-
-      const { address, meta } = account;
-
       try {
+        if (!account) {
+          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+        }
+
+        const { address, meta } = account;
+
         const [codeHash, { signer }] = await Promise.all([submit(file), web3FromSource(meta.source)]);
 
         const { partialFee } = await api.code.paymentInfo(address, { signer });
