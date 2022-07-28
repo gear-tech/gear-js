@@ -20,7 +20,7 @@ export const useAccountMock = (account?: Account) => {
 export const useAccountsMock = (accounts?: Account[]) => {
   const mock = jest.spyOn(gearHooks, 'useAccounts');
 
-  mock.mockReturnValue(accounts);
+  mock.mockReturnValue({ accounts, isExtensionReady: Boolean(accounts) });
 
   return mock;
 };
