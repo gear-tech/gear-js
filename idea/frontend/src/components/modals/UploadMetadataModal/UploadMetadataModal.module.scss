@@ -1,0 +1,38 @@
+@use '@gear-js/ui/variables' as *;
+
+%textStyle {
+  font-size: $fontSizeMedium;
+  font-weight: 400;
+  line-height: 25px;
+}
+
+.modalContent { 
+  width: 460px;
+  text-align: center;
+}
+
+.contentHeading {
+  @extend %textStyle;
+
+  color: $textColor;
+  margin-bottom: 10px;
+}
+
+.contentFeeInfo {
+  @extend %textStyle;
+
+  color: $successColor;
+}
+
+.contentButtons {
+  display: flex;
+  margin-top: 20px;
+
+  & > *:not(:last-child) {
+    margin-right: 10px;
+  }
+
+  .actionButton {
+    flex: 1 1 50%; 
+  }
+}
