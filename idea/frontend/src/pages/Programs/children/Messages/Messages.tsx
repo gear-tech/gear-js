@@ -17,7 +17,7 @@ const Messages = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [messages, setMessages] = useState<MessageModel[]>([]);
+  const [messages, setMessages] = useState<MessageModel[]>();
   const [messagesCount, setMessagesCount] = useState(0);
 
   const page = Number(searchParams.get(URL_PARAMS.PAGE) ?? 1);
@@ -50,7 +50,7 @@ const Messages = () => {
       };
 
       getMessages(messageParams).then(({ result }) => {
-        setMessages(result.messages);
+        // setMessages(result.messages);
         setMessagesCount(result.count);
       });
     }
@@ -63,7 +63,7 @@ const Messages = () => {
         <Pagination page={page} pagesAmount={messagesCount || 1} />
       </div>
       <SearchForm placeholder="Find message by ID" />
-      <MessagesList messages={messages} />
+      <MessagesList messages={messages} className={styles.tableBody} />
       {messagesCount > 0 && (
         <div className={styles.bottomPagination}>
           <Pagination page={page} pagesAmount={messagesCount} />
