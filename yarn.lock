@@ -2216,7 +2216,6 @@ __metadata:
     react-transition-group: ^4.4.2
     sass: 1.50.0
     stream-browserify: 3.0.0
-    tua-body-scroll-lock: 1.2.1
     typescript: 4.6.3
     vercel: 24.1.0
     web-vitals: 2.1.4
@@ -20347,13 +20346,6 @@ __metadata:
   peerDependencies:
     typescript: ">=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta"
   checksum: 1843f4c1b2e0f975e08c4c21caa4af4f7f65a12ac1b81b3b8489366826259323feb3fc7a243123453d2d1a02314205a7634e048d4a8009921da19f99755cdc48
-  languageName: node
-  linkType: hard
-
-"tua-body-scroll-lock@npm:1.2.1":
-  version: 1.2.1
-  resolution: "tua-body-scroll-lock@npm:1.2.1"
-  checksum: 695d367f0d6facea4c14ed31b5d6e4ec70c4f92e7151c30ac639adb9030c3f1bf49a84ed623b012911d5d2212c4c178f1f073174d03d7a0f76feb2c624869884
   languageName: node
   linkType: hard
 

@@ -1,5 +1,3 @@
-import { Account } from '@gear-js/react-hooks';
-
 import { OperationCallbacks, SignAndSendArg as CommonSignAndSendArg } from 'types/hooks';
 import { UploadProgramModel } from 'types/program';
 
@@ -11,8 +9,7 @@ type UploadData = {
 
 export type UploadProgramParams = OperationCallbacks & UploadData;
 
-export type SignAndUploadArg = Omit<CommonSignAndSendArg, 'address'> &
+export type SignAndUploadArg = CommonSignAndSendArg &
   UploadData & {
-    account: Account;
     programId: string;
   };
