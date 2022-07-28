@@ -1,11 +1,11 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, fireEvent, waitFor, getDefaultNormalizer } from '@testing-library/react';
+import { screen, fireEvent, waitFor, getDefaultNormalizer, within } from '@testing-library/react';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import { decodeHexTypes } from '@gear-js/api';
 
 import { PROGRAM_ID_1, META } from '../../const';
-import { useAccountMock, TEST_ACCOUNT_1, useApiMock } from '../../mocks/hooks';
+import { useAccountMock, TEST_ACCOUNT_1, useApiMock, TEST_API } from '../../mocks/hooks';
 import { renderWithProviders } from '../../utils';
 
 import { routes } from 'routes';
@@ -21,9 +21,34 @@ const UploadMetaPage = () => (
   </MemoryRouter>
 );
 
+jest.mock('@polkadot/extension-dapp', () => ({
+  web3FromSource: () =>
+    Promise.resolve({
+      signer: {
+        signRaw: () => Promise.resolve({ signature: '' }),
+      },
+    }),
+}));
+
 describe('test uplaod meta page', () => {
+  const checkMetadataModal = async () => {
+    const modal = await screen.findByTestId('modal');
+
+    expect(within(modal).getByText('Upload metadata')).toBeInTheDocument();
+    expect(
+      within(modal).getByText(
+        'Uploading metadata into the backend is necessary for further interaction with the program'
+      )
+    ).toBeInTheDocument();
+    expect(within(modal).getByText('This is a free of charge operation')).toBeInTheDocument();
+    expect(within(modal).getByText('Please sign the metadata uploading at the next step')).toBeInTheDocument();
+
+    expect(within(modal).getByText('Submit')).toBeInTheDocument();
+    expect(within(modal).getByText('Cancel')).toBeInTheDocument();
+  };
+
   it('test upload metadata logic', async () => {
-    useApiMock();
+    useApiMock(TEST_API);
     useAccountMock();
 
     const { rerender } = renderWithProviders(<UploadMetaPage />);
@@ -96,33 +121,45 @@ describe('test uplaod meta page', () => {
 
     await waitFor(() => expect(screen.getByText(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED)).toBeInTheDocument());
 
-    // expect(addMetadataMock).not.toBeCalled();
-
-    // authorized submit
+    // open modal
 
     useAccountMock(TEST_ACCOUNT_1);
 
     rerender(<UploadMetaPage />);
 
+    expect(uploadMetaBtn).toBeEnabled();
+
     fireEvent.click(uploadMetaBtn);
 
-    // await waitFor(() => {
-    //  expect(addMetadataMock).toBeCalledTimes(1);
-    //  expect(addMetadataMock).toBeCalledWith(
-    //    META,
-    //    Buffer.from(new Uint8Array(fileBuffer)).toString('base64'),
-    //    TEST_ACCOUNT_1,
-    //    PROGRAM_ID_1,
-    //    'TEST',
-    //    expect.any(Object)
-    //  );
-    // });
+    await checkMetadataModal();
+
+    expect(uploadMetaBtn).toBeDisabled();
+
+    // close modal
+
+    const modalCancelBtn = screen.getByText('Cancel');
+
+    fireEvent.click(modalCancelBtn);
+
+    expect(uploadMetaBtn).toBeEnabled();
+
+    // authorized submit
+
+    fireEvent.click(uploadMetaBtn);
+
+    await checkMetadataModal();
+
+    const modalSubmitBtn = screen.getByText('Submit');
+
+    fireEvent.click(modalSubmitBtn);
 
     // reset form
 
-    await waitFor(expect(screen.getByText('Select file')).toBeInTheDocument);
+    await waitFor(() => expect(screen.getByText('Metadata saved successfully')).toBeInTheDocument());
 
     expect(uploadMetaBtn).toBeDisabled();
+    expect(screen.getByText('NFT')).toBeInTheDocument();
+    expect(screen.getByText('Select file')).toBeInTheDocument();
 
     expect(screen.queryByText('nft.meta.wasm')).not.toBeInTheDocument();
     expect(screen.queryByText('init_input')).not.toBeInTheDocument();

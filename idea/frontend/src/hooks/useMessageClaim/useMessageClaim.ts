@@ -82,15 +82,13 @@ const useMessageClaim = () => {
 
   const claimMessage = useCallback(
     async ({ messageId, reject, resolve }: ClaimMessageParams) => {
-      if (!account) {
-        alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-
-        return;
-      }
-
-      const { meta, address } = account;
-
       try {
+        if (!account) {
+          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+        }
+
+        const { meta, address } = account;
+
         api.claimValueFromMailbox.submit(messageId);
 
         const { signer } = await web3FromSource(meta.source);

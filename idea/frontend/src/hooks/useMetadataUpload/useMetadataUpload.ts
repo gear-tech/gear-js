@@ -56,16 +56,15 @@ const useMetadataUplaod = () => {
 
   const uploadMetadata = useCallback(
     async (params: UploadMetaParams) => {
-      if (!account) {
-        alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-
-        return;
-      }
-
       const { name, title, metadata, metadataBuffer, programId, reject, resolve } = params;
-      const jsonMeta = JSON.stringify(metadata);
 
       try {
+        if (!account) {
+          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+        }
+
+        const jsonMeta = JSON.stringify(metadata);
+
         if (isDevChain()) {
           await localPrograms.setItem(programId, {
             id: programId,

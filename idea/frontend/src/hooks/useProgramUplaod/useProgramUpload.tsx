@@ -140,15 +140,13 @@ const useProgramUpload = () => {
 
   const uploadProgram = useCallback(
     async ({ file, programModel, metadataBuffer, reject, resolve }: UploadProgramParams) => {
-      if (!account) {
-        alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-
-        return;
-      }
-
-      const { meta, address } = account;
-
       try {
+        if (!account) {
+          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+        }
+
+        const { meta, address } = account;
+
         const [programId, { signer }] = await Promise.all([submit(file, programModel), web3FromSource(meta.source)]);
 
         const { partialFee } = await api.program.paymentInfo(address, { signer });

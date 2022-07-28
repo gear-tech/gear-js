@@ -43,8 +43,11 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
   };
 
   const handleSubmit = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
+    const disableSubmitting = () => helpers.setSubmitting(false);
+
     if (!metadata) {
       alert.error('Metadata not loaded');
+      disableSubmitting();
 
       return;
     }
@@ -54,7 +57,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
       metadata,
       programId,
       metadataBuffer,
-      reject: () => helpers.setSubmitting(false),
+      reject: disableSubmitting,
       resolve: handleResetMetaFile,
     });
   };
