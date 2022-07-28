@@ -116,15 +116,13 @@ const useMessage = () => {
 
   const replyMessage = useCallback(
     async ({ reply, metadata, payloadType, reject, resolve }: ReplyMessageParams) => {
-      if (!account) {
-        alert.error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-
-        return;
-      }
-
-      const { meta, address } = account;
-
       try {
+        if (!account) {
+          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+        }
+
+        const { meta, address } = account;
+
         api.reply.submit(reply as any, metadata, payloadType);
 
         const { signer } = await web3FromSource(meta.source);
