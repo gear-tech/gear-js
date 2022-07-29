@@ -1,6 +1,7 @@
 import { ReactNode, useMemo } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { Hex, Metadata, IMessageSendOptions, IMessageSendReplyOptions } from '@gear-js/api';
+import { useApi } from '@gear-js/react-hooks';
 
 import { getValidationSchema } from './Schema';
 import { INITIAL_VALUES } from './const';
@@ -26,17 +27,23 @@ type Props = {
 };
 
 const MessageForm = (props: Props) => {
+  const { api } = useApi();
+
   const { id, isReply = false, metadata, renderButtons } = props;
 
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessage();
 
+  const deposit = +api.existentialDeposit.toHuman();
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
 
-  const validationSchema = useMemo(() => getValidationSchema(encodeType, metadata), [metadata, encodeType]);
+  const validationSchema = useMemo(
+    () => getValidationSchema(deposit, encodeType, metadata),
+    [deposit, metadata, encodeType]
+  );
 
   const handleSubmit = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     const payloadType = metadata ? void 0 : values.payloadType;
@@ -97,7 +104,7 @@ const MessageForm = (props: Props) => {
               allowNegative={false}
             />
 
-            <FormInput type="number" name="value" label="Value" placeholder="20000" />
+            <FormInput min={0} type="number" name="value" label="Value" placeholder="20000" />
 
             <div className={formStyles.formButtons}>
               {renderButtons({ isDisabled, calculateGas: handleCalculateGas(values, setFieldValue) })}
