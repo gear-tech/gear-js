@@ -53,7 +53,7 @@ function useMessages() {
 
   useEffect(() => {
     apiRequest
-      .getResource('program.meta.get', [{ programId: id, chain: 'Workshop', genesis }])
+      .getResource('program.meta.get', [{ programId: id, genesis }])
       .then(
         ([
           {
