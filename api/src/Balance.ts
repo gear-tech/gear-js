@@ -13,7 +13,7 @@ export class GearBalance extends GearTransaction {
   }
 
   transfer(to: string, value: number | BN): SubmittableExtrinsic<'promise', ISubmittableResult> {
-    this.submitted = this._api.tx.balances.transfer(to, value);
-    return this.submitted;
+    this.extrinsic = this._api.tx.balances.transfer(to, value);
+    return this.extrinsic;
   }
 }

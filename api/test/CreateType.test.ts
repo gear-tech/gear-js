@@ -8,7 +8,7 @@ const testFiles = fs.readdirSync('test/spec/meta');
 
 describe('Create type test', () => {
   for (const filePath of testFiles) {
-    const testFile = yaml.load(fs.readFileSync(join('./test/spec/meta', filePath), 'utf8'));
+    const testFile: any = yaml.load(fs.readFileSync(join('./test/spec/meta', filePath), 'utf8'));
     test(testFile.title, async () => {
       const metaFile = fs.readFileSync(join(GEAR_EXAMPLES_WASM_DIR, testFile.file));
       const meta = await getWasmMetadata(metaFile);

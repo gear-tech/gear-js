@@ -18,7 +18,7 @@ beforeAll(async () => {
   await api.isReady;
   const code = readFileSync(CODE_PATH);
   alice = (await getAccount())[0];
-  programId = api.program.submit({ code, gasLimit: 2_000_000_000 }).programId;
+  programId = api.program.upload({ code, gasLimit: 2_000_000_000 }).programId;
   const init = checkInit(api, programId);
   await sendTransaction(api.program, alice, 'MessageEnqueued');
   expect(await init()).toBe('success');
@@ -31,8 +31,8 @@ afterAll(async () => {
 });
 
 describe('GearWaitlist', () => {
-  test('read program\'s waitlist', async () => {
-    api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
+  test("read program's waitlist", async () => {
+    api.message.send({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
     messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued')).id;
     const eventData = await messageWaited(messageId);
     expect(eventData).toBeDefined();
@@ -52,7 +52,7 @@ describe('GearWaitlist', () => {
     expect(waitlist[0][1]).toHaveProperty('finish');
   });
 
-  test('read program\'s waitlist with messageId', async () => {
+  test("read program's waitlist with messageId", async () => {
     const waitlist = await api.waitlist.read(programId, messageId);
     expect(waitlist).toHaveLength(2);
     expect(waitlist[0]).toHaveProperty('kind');
@@ -62,8 +62,8 @@ describe('GearWaitlist', () => {
     expect(waitlist[1]).toHaveProperty('finish');
   });
 
-  test('send one more message and read program\'s waitlist', async () => {
-    api.message.submit({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
+  test("send one more message and read program's waitlist", async () => {
+    api.message.send({ destination: programId, payload: '0x00', gasLimit: 2_000_000_000 });
     messageId = (await sendTransaction(api.message, alice, 'MessageEnqueued'))[0];
     const waitlist = await api.waitlist.read(programId);
     expect(waitlist).toHaveLength(2);
@@ -74,7 +74,7 @@ describe('GearWaitlist', () => {
     expect(waitlist).toHaveLength(0);
   });
 
-  test('read program\'s waitlist with incorrect messageId', async () => {
+  test("read program's waitlist with incorrect messageId", async () => {
     const waitlist = await api.waitlist.read(programId, CreateType.create('[u8;32]', 0).toHex());
     expect(waitlist).toBeNull();
   });

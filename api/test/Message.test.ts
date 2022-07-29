@@ -26,7 +26,7 @@ afterAll(async () => {
 describe('Gear Message', () => {
   test('upload test_mailbox', async () => {
     const code = readFileSync(join(TEST_WASM_DIR, 'test_mailbox.opt.wasm'));
-    guestbookId = api.program.submit({
+    guestbookId = api.program.upload({
       code,
       gasLimit: 2_000_000_000,
     }).programId;
@@ -52,7 +52,7 @@ describe('Gear Message', () => {
     const meta = await getWasmMetadata(metaWasm);
 
     for (const message of messages) {
-      api.message.submit(
+      api.message.send(
         {
           destination: guestbookId,
           payload: message.payload,

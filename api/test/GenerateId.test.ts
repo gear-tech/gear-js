@@ -27,4 +27,6 @@ describe('Generate IDs', () => {
     const programId = generateProgramId(pingCode, '1234');
     expect(programId).toBe('0x20b5c1306227dd23c184c98634d440ab50108af0793b5c5b5b1affd0e3487ab0');
   });
+
+  test.todo('generate programId using codeId');
 });

@@ -32,13 +32,13 @@ describe('DebugMode', () => {
     const unsub = debug.snapshots((event) => {
       snapshots.push(event.data);
     });
-    const { programId } = api.program.submit({
+    const { programId } = api.program.upload({
       code: readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_ping.opt.wasm')),
       gasLimit: 2_000_000_000,
     });
-    await sendTransaction(api.program.submitted, alice, 'MessageEnqueued');
-    api.message.submit({ destination: programId, payload: 'PING', gasLimit: 2_000_000_000 });
-    await sendTransaction(api.message.submitted, alice, 'MessageEnqueued');
+    await sendTransaction(api.program.extrinsic, alice, 'MessageEnqueued');
+    api.message.send({ destination: programId, payload: 'PING', gasLimit: 2_000_000_000 });
+    await sendTransaction(api.message.extrinsic, alice, 'MessageEnqueued');
     (await unsub)();
     expect(snapshots).toHaveLength(2);
     for (const snapshot of snapshots) {
