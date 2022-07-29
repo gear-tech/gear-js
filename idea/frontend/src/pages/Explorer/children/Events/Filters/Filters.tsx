@@ -55,7 +55,7 @@ const Filters = ({ values, setValues, isAnySelected }: Props) => {
     close();
   };
 
-  const ref = useOutsideClick(close);
+  const ref = useOutsideClick<HTMLDivElement>(close);
   const toggleButtonClassName = clsx(styles.button, styles.toggleButton);
   const resetButtonClassName = clsx(styles.button, styles.resetButton);
 

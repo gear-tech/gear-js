@@ -1,5 +1,5 @@
-import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
+import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
 
 import { Method } from 'types/explorer';
 import { ProgramStatus } from 'types/program';

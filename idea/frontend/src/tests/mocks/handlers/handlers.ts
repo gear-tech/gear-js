@@ -33,6 +33,9 @@ const gearApi = rest.post<RPCRequest>(API_URL, (req, res, ctx) => {
 
       return res(ctx.json(responseData));
     }
+    case RPC_METHODS.ADD_METADATA: {
+      return res(ctx.json({}));
+    }
     default:
       return res();
   }
