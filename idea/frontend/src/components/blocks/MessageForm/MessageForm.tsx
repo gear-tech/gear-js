@@ -34,15 +34,17 @@ const MessageForm = (props: Props) => {
   const calculateGas = useGasCalculate();
   const { sendMessage, replyMessage } = useMessage();
 
-  const deposit = +api.existentialDeposit.toHuman();
+  const deposit = api.existentialDeposit.toNumber();
+  const maxGasLimit = api.blockGasLimit.toNumber();
   const method = isReply ? GasMethod.Reply : GasMethod.Handle;
   const encodeType = isReply ? metadata?.async_handle_input : metadata?.handle_input;
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
 
   const validationSchema = useMemo(
-    () => getValidationSchema(deposit, encodeType, metadata),
-    [deposit, metadata, encodeType]
+    () => getValidationSchema({ type: encodeType, deposit, metadata, maxGasLimit }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [metadata, encodeType]
   );
 
   const handleSubmit = (values: FormValues, helpers: FormikHelpers<FormValues>) => {

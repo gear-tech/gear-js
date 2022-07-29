@@ -78,14 +78,16 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
     calculateGas(GasMethod.Init, values, code, metadata).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
   };
 
-  const deposit = +api.existentialDeposit.toHuman();
   const encodeType = metadata?.init_input;
+  const deposit = api.existentialDeposit.toNumber();
+  const maxGasLimit = api.existentialDeposit.toNumber();
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
 
   const validationSchema = useMemo(
-    () => getValidationSchema(deposit, encodeType, metadata),
-    [deposit, metadata, encodeType]
+    () => getValidationSchema({ type: encodeType, deposit, metadata, maxGasLimit }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [metadata, encodeType]
   );
 
   const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
