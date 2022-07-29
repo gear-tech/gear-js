@@ -1,3 +1,5 @@
+import { Metadata } from '@gear-js/api';
+
 export type PaginationModel = {
   publicKeyRaw?: string | null;
   source?: string | null;
@@ -18,4 +20,11 @@ export type UserPrograms = {
 export type SearchQueryModel = {
   type: number;
   query: string;
+};
+
+export type PayloadSchemaParams = {
+  type?: string;
+  deposit: number;
+  metadata?: Metadata;
+  maxGasLimit: number;
 };
