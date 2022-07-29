@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 @use 'assets/scss/mixins' as *;
 
 @keyframes rotating {
@@ -13,10 +13,10 @@
 .alert {
   width: 100%;
   position: relative;
-  font-size: $fontSizeBase;
+  font-size: $fontSize;
   padding: 15px 40px 15px 15px;
-  background-color: $mainBackground;
-  border-radius: $borderRadiusBase;
+  background-color: $bgColor;
+  border-radius: $borderRadius;
   box-shadow: 0px 5px 5px 0px #00000033, 0px 3px 14px 0px #0000001f, 0px 8px 10px 0px #00000024;
 
   & > *:not(:last-child) {
@@ -92,6 +92,6 @@
 }
 
 .footer {
-  font-size: $fontSizeSmall;
+  font-size: 12px;
   color: $textColorSecondary;
 }

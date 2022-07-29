@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 import { routes } from 'routes';
-import { ReactComponent as SVG } from './images/logo.svg';
+
+import styles from './Logo.module.scss';
+
+import { ReactComponent as LogoSVG } from 'assets/images/logo.svg';
 
 const Logo = () => (
-  <Link to={routes.main} className="img-wrapper">
-    <SVG data-testid="svg" />
+  <Link to={routes.main} className={styles.imgWrapper}>
+    <LogoSVG data-testid="svg" />
   </Link>
 );
 
