@@ -21,7 +21,7 @@ const Message = () => {
   const [message, setMessage] = useState<MessageModel>();
   const [messagePayload, setMessagePayload] = useState('');
 
-  const { metadata, isLoading } = useProgram(message?.source);
+  const { metadata, isLoading } = useProgram(message?.source, true);
 
   useEffect(() => {
     getMessage(messageId)
