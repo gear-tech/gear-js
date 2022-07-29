@@ -78,9 +78,9 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
     calculateGas(GasMethod.Init, values, code, metadata).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
   };
 
-  const encodeType = metadata?.init_input;
   const deposit = api.existentialDeposit.toNumber();
-  const maxGasLimit = api.existentialDeposit.toNumber();
+  const encodeType = metadata?.init_input;
+  const maxGasLimit = api.blockGasLimit.toNumber();
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
 

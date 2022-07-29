@@ -3,7 +3,17 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { screen, fireEvent, waitFor, within } from '@testing-library/react';
 
 import { useApiMock, useAccountMock, useGasCalculateMock, TEST_API, TEST_ACCOUNT_1 } from '../../mocks/hooks';
-import { META, REPLY_META, PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2, PARTIAL_FEE } from '../../const';
+import {
+  META,
+  DEPOSIT,
+  REPLY_META,
+  MAX_GAS_LIMIT,
+  PROGRAM_ID_1,
+  PROGRAM_ID_2,
+  MESSAGE_ID_1,
+  MESSAGE_ID_2,
+  PARTIAL_FEE,
+} from '../../const';
 import { renderWithProviders } from '../../utils';
 
 import * as helpers from 'helpers';
@@ -70,6 +80,8 @@ describe('send message page tests', () => {
 
   it('show error if wallet not connected', async () => {
     TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
 
     useApiMock(TEST_API);
     useAccountMock();
@@ -89,6 +101,8 @@ describe('send message page tests', () => {
     TEST_API.message.send.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
     TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
@@ -155,7 +169,7 @@ describe('send message page tests', () => {
 
     expect(valueField).toHaveValue(-1);
 
-    const valueFieldError = await screen.findByText('Initial value should be more or equal than 0');
+    const valueFieldError = await screen.findByText(`Value should be more ${DEPOSIT} or equal than 0`);
 
     expect(valueFieldError).toBeInTheDocument();
 
@@ -164,7 +178,7 @@ describe('send message page tests', () => {
     changeFieldValue(valueField, '1000');
 
     expect(valueField).toHaveValue(1000);
-    await waitFor(expect(valueFieldError).not.toBeInTheDocument);
+    await waitFor(() => expect(valueFieldError).not.toBeInTheDocument());
 
     checkBtnEnabled();
 
@@ -174,7 +188,7 @@ describe('send message page tests', () => {
 
     expect(payloadField).toHaveValue('');
 
-    await waitFor(expect(screen.queryByText('Invalid payload')).not.toBeInTheDocument);
+    await waitFor(() => expect(screen.queryByText('Invalid payload')).not.toBeInTheDocument());
 
     checkBtnEnabled();
 
@@ -186,7 +200,7 @@ describe('send message page tests', () => {
 
     expect(payloadTypeField).toHaveValue('u16');
 
-    await waitFor(expect(screen.queryByText('This field is required')).not.toBeInTheDocument);
+    await waitFor(() => expect(screen.queryByText('This field is required')).not.toBeInTheDocument());
 
     changeFieldValue(payloadField, '12345678');
 
@@ -200,7 +214,7 @@ describe('send message page tests', () => {
 
     expect(payloadField).toHaveValue('12345');
 
-    await waitFor(expect(payloadFieldError).not.toBeInTheDocument);
+    await waitFor(() => expect(payloadFieldError).not.toBeInTheDocument());
 
     checkBtnEnabled();
 
@@ -208,9 +222,16 @@ describe('send message page tests', () => {
 
     changeFieldValue(gasLimitField, '0');
 
-    const gasLimitFieldError = await screen.findByText('Initial value should be more than 0');
+    let gasLimitFieldError = await screen.findByText('Gas limit should be more than 0');
 
     expect(gasLimitField).toHaveValue('0');
+    expect(gasLimitFieldError).toBeInTheDocument();
+
+    checkBtnDisabled();
+
+    changeFieldValue(gasLimitField, '25000000000000');
+
+    gasLimitFieldError = await screen.findByText(`Gas limit should be less than ${MAX_GAS_LIMIT}`);
     expect(gasLimitFieldError).toBeInTheDocument();
 
     checkBtnDisabled();
@@ -288,6 +309,8 @@ describe('send message page tests', () => {
     TEST_API.message.send.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
     TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
@@ -433,6 +456,8 @@ describe('send message page tests', () => {
     TEST_API.message.sendReply.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
     TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
@@ -535,6 +560,8 @@ describe('send message page tests', () => {
     TEST_API.message.sendReply.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
     TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);

@@ -2,6 +2,9 @@ import { Metadata } from '@gear-js/api';
 
 import { ProgramModel, ProgramStatus } from 'types/program';
 
+export const DEPOSIT = 500;
+export const MAX_GAS_LIMIT = 2500000000000;
+
 export const PROGRAM_ID_1 = '0x52970eb8531778ac816303e806c694caf65579dfad5fafa31c2b7b0f61dfd6f1';
 
 export const PROGRAM_ID_2 = '0x52970eb8531778ac816303e806c694caf65579dfad5fafa31c2b7b0f61dfd6f2';
