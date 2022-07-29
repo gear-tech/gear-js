@@ -7,8 +7,7 @@ export const getValidationSchema = ({ type, deposit, metadata, maxGasLimit }: Pa
     value: yup
       .number()
       .required('This field is required')
-      .min(0, `Initial value should be more ${deposit} or equal than 0`)
-      .moreThan(deposit, `Initial value should be more ${deposit} or equal than 0`),
+      .test('min', `Value should be more ${deposit} or equal than 0`, (value = 0) => value === 0 || value > deposit),
     // @ts-ignore
     payload: yup.mixed().default('').testPayload(type, metadata),
     gasLimit: yup
