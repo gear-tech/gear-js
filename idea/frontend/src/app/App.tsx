@@ -25,16 +25,17 @@ import { EditorPage } from 'pages/Editor';
 import { Program } from 'pages/Program/Program';
 import { Mailbox } from 'pages/Mailbox';
 import { Message } from 'pages/Message';
-import { Explorer } from 'pages/Explorer/Explorer';
-import { Document } from 'pages/Document/Document';
+import { ExplorerBlock } from 'pages/ExplorerBlock';
+import { ExplorerEvents } from 'pages/ExplorerEvents';
+import { TermsOfUse } from 'pages/TermsOfUse';
+import { PrivacyPolicy } from 'pages/PrivacyPolicy';
 import { PageNotFound } from 'pages/PageNotFound/PageNotFound';
 import { MainPageLayout } from 'layout/MainPageLayout';
+import { ExplorerPageLayout } from 'layout/ExplorerPageLayout';
 import { Main as MainLayout } from 'layout/Main/Main';
 import { Loader } from 'components/blocks/Loader/Loader';
 import { Header } from 'components/blocks/Header/Header';
 import { Footer } from 'components/blocks/Footer/Footer';
-
-const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
 const Component = () => {
   const events = useEvents();
@@ -82,23 +83,26 @@ const Component = () => {
               <Route path={routes.messages} element={<Messages />} />
             </Route>
 
-            {getMultipleRoutes(utilRoutes, <Document />)}
+            <Route path={routes.explorer} element={ExplorerPageLayout}>
+              <Route index element={<ExplorerEvents events={events} />} />
+              <Route path=":blockId" element={<ExplorerBlock />} />
+            </Route>
 
-            {/* temp solution since in react-router v6 optional parameters are gone */}
-            <Route path={routes.explorer}>
-              <Route path="" element={<Explorer events={events} />} />
-              <Route path=":blockId" element={<Explorer events={events} />} />
-            </Route>
-            <Route path={routes.program} element={<Program />} />
-            <Route path={routes.message} element={<Message />} />
-            <Route path={routes.state} element={<State />} />
             <Route path={routes.send}>
-              <Route path={routes.sendMessage} element={<Send />} />
               <Route path={routes.reply} element={<Send />} />
+              <Route path={routes.sendMessage} element={<Send />} />
             </Route>
+
             <Route path={routes.meta} element={<Meta />} />
-            <Route path={routes.editor} element={<EditorPage />} />
+            <Route path={routes.state} element={<State />} />
             <Route path={routes.mailbox} element={<Mailbox />} />
+            <Route path={routes.message} element={<Message />} />
+            <Route path={routes.program} element={<Program />} />
+            <Route path={routes.editor} element={<EditorPage />} />
+
+            <Route path={routes.termsOfUse} element={<TermsOfUse />} />
+            <Route path={routes.privacyPolicy} element={<PrivacyPolicy />} />
+
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         ) : (

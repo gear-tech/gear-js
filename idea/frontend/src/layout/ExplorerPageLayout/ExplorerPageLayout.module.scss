@@ -1,0 +1,29 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
+
+.explorer {
+  padding: 40px;
+  color: $textColor;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+
+  @include sm {
+    flex-direction: column;
+  }
+}
+
+.search {
+  flex: 1;
+  display: flex;
+  margin-right: 32px;
+
+  @include sm {
+    margin-right: 0;
+    margin-bottom: 16px;
+  }
+}
