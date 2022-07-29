@@ -10,6 +10,7 @@ import { GearApi } from '../src';
 const api = new GearApi();
 let someProgramId: Hex;
 let alice: KeyringPair;
+let codeId: Hex;
 
 beforeAll(async () => {
   await api.isReady;
@@ -21,11 +22,28 @@ afterAll(async () => {
   await sleep(1000);
 });
 
-describe('Upload programs', () => {
+describe('Upload program', () => {
   test('demo_ping', async () => {
     const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_ping.opt.wasm'));
-    const { programId, salt } = api.program.upload({
+    const program = api.program.upload({
       code,
+      gasLimit: 2_000_000_000,
+    });
+    expect(program.programId).toBeDefined();
+    expect(program.salt).toBeDefined();
+    expect(program.codeId).toBeDefined();
+    codeId = program.codeId;
+
+    const status = checkInit(api, program.programId);
+    const transactionData = await sendTransaction(api.program, alice, 'MessageEnqueued');
+    expect(transactionData.destination).toBe(program.programId);
+    expect(await status()).toBe('success');
+  });
+
+  test('Сreate program', async () => {
+    expect(codeId).toBeDefined();
+    const { programId, salt } = api.program.create({
+      codeId,
       gasLimit: 2_000_000_000,
     });
     expect(programId).toBeDefined();
@@ -71,6 +89,4 @@ describe('Program', () => {
   test('Not to throw error if gasLimit is correct', () => {
     expect(() => api.program.upload({ code: Buffer.from('0x00'), gasLimit: api.blockGasLimit })).not.toThrow();
   });
-
-  test.todo('create program');
 });
