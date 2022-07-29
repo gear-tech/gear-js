@@ -1,0 +1,44 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+
+.row {
+  display: flex;
+  gap: 30px;
+}
+
+.input {
+  flex-direction: column;
+  align-items: flex-start;
+
+  div,
+  input {
+    // TODO: remove after @gear-js/ui update
+    width: 100%;
+  }
+}
+
+.inputs {
+  margin-bottom: 45px;
+
+  & > *:not(:last-child) {
+    margin-bottom: 15px;
+  }
+}
+
+.price {
+  @extend %h5;
+
+  &.success {
+    color: $successColor;
+  }
+
+  &.error {
+    color: $errorColor;
+  }
+}
+
+.error {
+  margin-top: 5px;
+  color: $errorColor;
+  text-align: right;
+}
