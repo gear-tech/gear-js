@@ -4,8 +4,18 @@ import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { AccountProvider } from '@gear-js/react-hooks';
 
 import { useAccountMock, useApiMock, useGasCalculateMock, TEST_API, TEST_ACCOUNT_1 } from '../../mocks/hooks';
-import { META, REPLY_META, PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2 } from '../../const';
+import {
+  META,
+  REPLY_META,
+  DEPOSIT,
+  MAX_GAS_LIMIT,
+  PROGRAM_ID_1,
+  PROGRAM_ID_2,
+  MESSAGE_ID_1,
+  MESSAGE_ID_2,
+} from '../../const';
 
+import { ACCOUNT_ERRORS } from 'consts';
 import { ApiProvider } from 'context/api';
 import { AlertProvider } from 'context/alert';
 import { Send } from 'pages/Send/Send';
@@ -59,6 +69,9 @@ describe('send message page tests', () => {
   };
 
   it('show error if wallet not connected', async () => {
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
+
     useApiMock(TEST_API);
     useAccountMock();
 
@@ -68,12 +81,14 @@ describe('send message page tests', () => {
 
     submit(sendMessageBtn);
 
-    await waitFor(() => expect(screen.getByText('Wallet not connected')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED)).toBeInTheDocument());
   });
 
   it('sends message to program without meta', async () => {
     TEST_API.message.submit.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
@@ -138,16 +153,20 @@ describe('send message page tests', () => {
 
     expect(valueField).toHaveValue(-1);
 
-    const valueFieldError = await screen.findByText('Initial value should be more or equal than 0');
+    const valueFieldError = await screen.findByText(`Value should be more ${DEPOSIT} or equal than 0`);
 
     expect(valueFieldError).toBeInTheDocument();
 
     checkBtnDisabled();
+    changeFieldValue(valueField, '499');
 
+    await waitFor(() => expect(valueFieldError).toBeInTheDocument());
+
+    checkBtnDisabled();
     changeFieldValue(valueField, '1000');
 
     expect(valueField).toHaveValue(1000);
-    await waitFor(expect(valueFieldError).not.toBeInTheDocument);
+    await waitFor(() => expect(valueFieldError).not.toBeInTheDocument());
 
     checkBtnEnabled();
 
@@ -157,7 +176,7 @@ describe('send message page tests', () => {
 
     expect(payloadField).toHaveValue('');
 
-    await waitFor(expect(screen.queryByText('Invalid payload')).not.toBeInTheDocument);
+    await waitFor(() => expect(screen.queryByText('Invalid payload')).not.toBeInTheDocument());
 
     checkBtnEnabled();
 
@@ -169,7 +188,7 @@ describe('send message page tests', () => {
 
     expect(payloadTypeField).toHaveValue('u16');
 
-    await waitFor(expect(screen.queryByText('This field is required')).not.toBeInTheDocument);
+    await waitFor(() => expect(screen.queryByText('This field is required')).not.toBeInTheDocument());
 
     changeFieldValue(payloadField, '12345678');
 
@@ -183,7 +202,7 @@ describe('send message page tests', () => {
 
     expect(payloadField).toHaveValue('12345');
 
-    await waitFor(expect(payloadFieldError).not.toBeInTheDocument);
+    await waitFor(() => expect(payloadFieldError).not.toBeInTheDocument());
 
     checkBtnEnabled();
 
@@ -191,9 +210,16 @@ describe('send message page tests', () => {
 
     changeFieldValue(gasLimitField, '0');
 
-    const gasLimitFieldError = await screen.findByText('Initial value should be more than 0');
+    let gasLimitFieldError = await screen.findByText('Gas limit should be more than 0');
 
     expect(gasLimitField).toHaveValue('0');
+    expect(gasLimitFieldError).toBeInTheDocument();
+
+    checkBtnDisabled();
+
+    changeFieldValue(gasLimitField, '25000000000000');
+
+    gasLimitFieldError = await screen.findByText(`Gas limit should be less than ${MAX_GAS_LIMIT}`);
     expect(gasLimitFieldError).toBeInTheDocument();
 
     checkBtnDisabled();
@@ -246,11 +272,10 @@ describe('send message page tests', () => {
   });
 
   it('sends message to program with meta', async () => {
-    useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT_1);
-
     TEST_API.message.submit.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
@@ -382,11 +407,10 @@ describe('send message page tests', () => {
   });
 
   it('sends reply to message of program without meta', async () => {
-    useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT_1);
-
     TEST_API.reply.submit.mockResolvedValue('');
     TEST_API.reply.signAndSend.mockResolvedValue('');
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
@@ -475,11 +499,10 @@ describe('send message page tests', () => {
   });
 
   it('sends reply to message of program with meta', async () => {
-    useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT_1);
-
     TEST_API.reply.submit.mockResolvedValue('');
     TEST_API.reply.signAndSend.mockResolvedValue('');
+    TEST_API.blockGasLimit.toNumber.mockReturnValue(MAX_GAS_LIMIT);
+    TEST_API.existentialDeposit.toNumber.mockReturnValue(DEPOSIT);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
