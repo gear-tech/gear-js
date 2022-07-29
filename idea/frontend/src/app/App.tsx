@@ -11,23 +11,29 @@ import { withProviders } from 'context';
 import { NODE_API_ADDRESS } from 'context/api/const';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
 
+import 'assets/scss/common.scss';
+import 'assets/scss/index.scss';
+
+import { Main } from 'pages/Main';
+import { Messages } from 'pages/Messages';
+import { AllPrograms } from 'pages/AllPrograms';
+import { UserPrograms } from 'pages/UserPrograms';
 import { Meta } from 'pages/Meta/Meta';
 import { Send } from 'pages/Send/Send';
 import { State } from 'pages/State';
 import { EditorPage } from 'pages/Editor';
-import { Programs } from 'pages/Programs/Programs';
 import { Program } from 'pages/Program/Program';
 import { Mailbox } from 'pages/Mailbox';
 import { Message } from 'pages/Message';
 import { Explorer } from 'pages/Explorer/Explorer';
 import { Document } from 'pages/Document/Document';
 import { PageNotFound } from 'pages/PageNotFound/PageNotFound';
-import { Main } from 'layout/Main/Main';
+import { MainPageLayout } from 'layout/MainPageLayout';
+import { Main as MainLayout } from 'layout/Main/Main';
 import { Loader } from 'components/blocks/Loader/Loader';
 import { Header } from 'components/blocks/Header/Header';
 import { Footer } from 'components/blocks/Footer/Footer';
 
-const mainRoutes = [routes.main, routes.uploadedPrograms, routes.allPrograms, routes.messages];
 const utilRoutes = [routes.privacyPolicy, routes.termsOfUse];
 
 const Component = () => {
@@ -69,7 +75,13 @@ const Component = () => {
       <Main>
         {isInitLoaded ? (
           <Routes>
-            {getMultipleRoutes(mainRoutes, <Programs />)}
+            <Route path={routes.main} element={<MainPageLayout />}>
+              <Route index element={<Main />} />
+              <Route path={routes.allPrograms} element={<AllPrograms />} />
+              <Route path={routes.uploadedPrograms} element={<UserPrograms />} />
+              <Route path={routes.messages} element={<Messages />} />
+            </Route>
+
             {getMultipleRoutes(utilRoutes, <Document />)}
 
             {/* temp solution since in react-router v6 optional parameters are gone */}
@@ -92,7 +104,7 @@ const Component = () => {
         ) : (
           <Loader />
         )}
-      </Main>
+      </MainLayout>
       <Footer />
     </>
   );

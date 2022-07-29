@@ -2,17 +2,16 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAccount } from '@gear-js/react-hooks';
 
-import styles from '../../Programs.module.scss';
-
 import { useChangeEffect } from 'hooks';
 import { ProgramModel } from 'types/program';
 import { getUserPrograms } from 'services';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
+import { layoutStyles } from 'layout/MainPageLayout';
 import { Pagination } from 'components/Pagination/Pagination';
 import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 import { ProgramsList } from 'components/blocks/ProgramsList';
 
-const Recent = () => {
+const UserPrograms = () => {
   const { account } = useAccount();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -52,8 +51,8 @@ const Recent = () => {
 
   return (
     <div>
-      <div className={styles.topPagination}>
-        <span className={styles.caption}>Total results: {programsCount}</span>
+      <div className={layoutStyles.topPagination}>
+        <span className={layoutStyles.caption}>Total results: {programsCount}</span>
         <Pagination page={page} pagesAmount={programsCount || 1} />
       </div>
       <SearchForm placeholder="Find program" />
@@ -61,10 +60,10 @@ const Recent = () => {
         programs={programs}
         address={account?.decodedAddress}
         isLoading={isLoading}
-        className={styles.tableBody}
+        className={layoutStyles.tableBody}
       />
       {programsCount > 0 && (
-        <div className={styles.bottomPagination}>
+        <div className={layoutStyles.bottomPagination}>
           <Pagination page={page} pagesAmount={programsCount} />
         </div>
       )}
@@ -72,4 +71,4 @@ const Recent = () => {
   );
 };
 
-export { Recent };
+export { UserPrograms };

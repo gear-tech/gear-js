@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import styles from './Upload.module.scss';
+import styles from './Main.module.scss';
 import { ContentType } from './types';
-import { BlockList } from '../BlocksList/BlocksList';
+import { BlockList } from '../Programs/children/BlocksList/BlocksList';
 import { DropTarget } from './children/DropTarget/DropTarget';
 import { MessageSide } from './children/MessageSide';
 import { SendMessageForm } from './children/SendMessageForm';
@@ -12,7 +12,7 @@ import { UploadForm } from './children/UploadForm/UploadForm';
 
 import { useCodeUpload } from 'hooks';
 
-const Upload = () => {
+const Main = () => {
   const [droppedFile, setDroppedFile] = useState<File | null>(null);
   const [contentType, setContentType] = useState<ContentType | null>(null);
 
@@ -64,4 +64,4 @@ const Upload = () => {
   );
 };
 
-export { Upload };
+export { Main };

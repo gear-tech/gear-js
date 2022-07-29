@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom';
 
-import styles from './ProgramSwitch.module.scss';
+import styles from './Navigation.module.scss';
 
 import { routes } from 'routes';
 import { BlocksSummary } from 'components/BlocksSummary/BlocksSummary';
 
-const ProgramSwitch = () => (
+const Navigation = () => (
   <div className={styles.programSwitch}>
     <div className={styles.switchButtons}>
       <NavLink to={routes.main} className={styles.switchButton}>
@@ -25,4 +25,4 @@ const ProgramSwitch = () => (
   </div>
 );
 
-export { ProgramSwitch };
+export { Navigation };

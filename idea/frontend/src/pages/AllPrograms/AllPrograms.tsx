@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAccount } from '@gear-js/react-hooks';
 
-import styles from '../../Programs.module.scss';
-
 import { getPrograms } from 'services';
 import { ProgramModel } from 'types/program';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
+import { layoutStyles } from 'layout/MainPageLayout';
 import { Pagination } from 'components/Pagination/Pagination';
 import { SearchForm } from 'components/blocks/SearchForm/SearchForm';
 import { ProgramsList } from 'components/blocks/ProgramsList';
 
-export const All = () => {
+const AllPrograms = () => {
   const { account } = useAccount();
   const [searchParams] = useSearchParams();
 
@@ -32,17 +31,24 @@ export const All = () => {
 
   return (
     <div>
-      <div className={styles.topPagination}>
-        <span className={styles.caption}>Total results: {programsCount}</span>
+      <div className={layoutStyles.topPagination}>
+        <span className={layoutStyles.caption}>Total results: {programsCount}</span>
         <Pagination page={page} pagesAmount={programsCount || 1} />
       </div>
       <SearchForm placeholder="Find program" />
-      <ProgramsList programs={programs} address={account?.address} isLoading={!programs} className={styles.tableBody} />
+      <ProgramsList
+        programs={programs}
+        address={account?.address}
+        isLoading={!programs}
+        className={layoutStyles.tableBody}
+      />
       {programsCount > 0 && (
-        <div className={styles.bottomPagination}>
+        <div className={layoutStyles.bottomPagination}>
           <Pagination page={page} pagesAmount={programsCount} />
         </div>
       )}
     </div>
   );
 };
+
+export { AllPrograms };

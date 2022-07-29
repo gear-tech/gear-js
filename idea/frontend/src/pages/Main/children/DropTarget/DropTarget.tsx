@@ -6,7 +6,7 @@ import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
 import styles from './DropTarget.module.scss';
-import pageStyles from '../../Upload.module.scss';
+import pageStyles from '../../Main.module.scss';
 import { ContentType } from '../../types';
 
 import { FILE_TYPES } from 'consts';

@@ -1,6 +1,6 @@
 import { Button } from '@gear-js/ui';
 
-import pageStyles from '../../Upload.module.scss';
+import pageStyles from '../../Main.module.scss';
 
 import letterSVG from 'assets/images/letter.svg';
 
