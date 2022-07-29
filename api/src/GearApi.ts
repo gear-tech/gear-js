@@ -4,7 +4,6 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
 import { u128, u64 } from '@polkadot/types';
 
-import { GearMessageReply } from './MessageReply';
 import { gearRpc, gearTypes } from './default';
 import { GearProgramState } from './State';
 import { GearWaitlist } from './Waitlist';
@@ -23,7 +22,6 @@ export class GearApi extends ApiPromise {
   public program: GearProgram;
   public programState: GearProgramState;
   public message: GearMessage;
-  public reply: GearMessageReply;
   public balance: GearBalance;
   public gearEvents: GearEvents;
   public defaultTypes: Record<string, unknown>;
@@ -64,7 +62,6 @@ export class GearApi extends ApiPromise {
       this.program = new GearProgram(this);
       this.message = new GearMessage(this);
       this.balance = new GearBalance(this);
-      this.reply = new GearMessageReply(this);
       this.gearEvents = new GearEvents(this);
       this.defaultTypes = defaultTypes;
       this.programState = new GearProgramState(this);

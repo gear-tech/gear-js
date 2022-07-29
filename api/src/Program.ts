@@ -1,16 +1,22 @@
-import { AnyJson, ISubmittableResult } from '@polkadot/types/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { u8aToHex } from '@polkadot/util';
 import { Bytes } from '@polkadot/types';
 
-import { createPayload, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
+import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult, Hex } from './types';
+import {
+  createPayload,
+  generateCodeId,
+  generateProgramId,
+  GPROG,
+  GPROG_HEX,
+  validateGasLimit,
+  validateValue,
+} from './utils';
 import { GearTransaction } from './Transaction';
 import { Metadata } from './types/interfaces';
 import { SubmitProgramError } from './errors';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
-import { GasLimit, Hex, Value } from './types';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;
@@ -19,8 +25,9 @@ export class GearProgram extends GearTransaction {
     super(_api);
     this.calculateGas = new GearGas(_api);
   }
-  /**
-   * @param program Upload program data
+
+  /** ### Upload program with code
+   * @param program
    * @param meta Metadata
    * @returns ProgramId
    * @example
@@ -28,7 +35,7 @@ export class GearProgram extends GearTransaction {
    * const code = fs.readFileSync('path/to/program.opt.wasm');
    * const meta = await getWasmMetadata(fs.readFileSync('path/to/program.meta.wasm'));
    * const api = await GearApi.create();
-   * const { programId, salt, submitted } = api.program.submit({
+   * const { programId, codeId, salt, extrinsic } = api.program.upload({
    *   code,
    *   initPayload: {field: 'someValue'},
    *   gasLimit: 20_000_000,
@@ -38,28 +45,60 @@ export class GearProgram extends GearTransaction {
    * })
    * ```
    */
-  submit(
-    program: {
-      code: Buffer | Uint8Array;
-      salt?: `0x${string}`;
-      initPayload?: AnyJson;
-      gasLimit: GasLimit;
-      value?: Value;
-    },
-    meta?: Metadata,
-    messageType?: string,
-  ): { programId: Hex; salt: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> } {
+  upload(program: IProgramUploadOptions, meta?: Metadata, messageType?: string): IProgramUploadResult {
     validateValue(program.value, this._api);
     validateGasLimit(program.gasLimit, this._api);
 
     const salt = program.salt || randomAsHex(20);
     const code = this._createType.create('bytes', Array.from(program.code)) as Bytes;
     const payload = createPayload(this._createType, messageType || meta?.init_input, program.initPayload, meta);
+    const codeId = generateCodeId(code);
     const programId = generateProgramId(code, salt);
 
     try {
-      this.submitted = this._api.tx.gear.submitProgram(code, salt, payload, program.gasLimit, program.value || 0);
-      return { programId, salt, submitted: this.submitted };
+      this.extrinsic = this._api.tx.gear.uploadProgram(code, salt, payload, program.gasLimit, program.value || 0);
+      return { programId, codeId, salt, extrinsic: this.extrinsic };
+    } catch (error) {
+      throw new SubmitProgramError();
+    }
+  }
+
+  /** ## Create program using existed codeId
+   * @param program
+   * @param meta Metadata
+   * @returns ProgramId
+   * @example
+   * ```javascript
+   * const codeId = '0x...';
+   * const meta = await getWasmMetadata(fs.readFileSync('path/to/program.meta.wasm'));
+   * const api = await GearApi.create();
+   * const { programId, salt, extrinsic } = api.program.create({
+   *   codeId,
+   *   initPayload: { field: 'someValue' },
+   *   gasLimit: 20_000_000,
+   * }, meta)
+   * extrinsic.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  create(program: IProgramCreateOptions, meta?: Metadata, messageType?: string): IProgramCreateResult {
+    validateValue(program.value, this._api);
+    validateGasLimit(program.gasLimit, this._api);
+
+    const salt = program.salt || randomAsHex(20);
+    const payload = createPayload(this._createType, messageType || meta?.init_input, program.initPayload, meta);
+    const programId = generateProgramId(program.codeId, salt);
+
+    try {
+      this.extrinsic = this._api.tx.gear.createProgram(
+        program.codeId,
+        salt,
+        payload,
+        program.gasLimit,
+        program.value || 0,
+      );
+      return { programId, salt, extrinsic: this.extrinsic };
     } catch (error) {
       throw new SubmitProgramError();
     }

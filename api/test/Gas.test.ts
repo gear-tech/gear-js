@@ -44,7 +44,7 @@ describe('Calculate gas', () => {
 
   test('Submit program', async () => {
     expect(gasLimits.init).toBeDefined();
-    programId = api.program.submit({ code, gasLimit: gasLimits.init as u64 }).programId;
+    programId = api.program.upload({ code, gasLimit: gasLimits.init as u64 }).programId;
     const initStatus = checkInit(api, programId);
     api.program.signAndSend(alice, () => {});
     expect(await initStatus()).toBe('success');
@@ -62,7 +62,7 @@ describe('Calculate gas', () => {
 
   test('Send message', async () => {
     expect(gasLimits.handle).toBeDefined();
-    api.message.submit({
+    api.message.send({
       destination: programId,
       payload: '0x50494e47',
       gasLimit: (gasLimits.handle as u64).muln(2), // TODO remove `* 1.5` when expiration_block will work
@@ -101,7 +101,7 @@ describe('Calculate gas', () => {
 
   test('Send reply', async () => {
     expect(gasLimits.reply).toBeDefined();
-    api.reply.submit({ replyToId: messageId, payload: '0x50494e47', gasLimit: gasLimits.reply as u64 });
+    api.reply.send({ replyToId: messageId, payload: '0x50494e47', gasLimit: gasLimits.reply as u64 });
     const data = await sendTransaction(api.reply, alice, 'MessageEnqueued');
     expect(data).toBeDefined();
   });

@@ -3,7 +3,6 @@ export { GearApi } from './GearApi';
 export { GearKeyring } from './Keyring';
 export { GearProgram } from './Program';
 export { GearMessage } from './Message';
-export { GearMessageReply } from './MessageReply';
 export { GearBalance } from './Balance';
 export { DebugMode } from './DebugMode';
 export { GearMailbox } from './Mailbox';
