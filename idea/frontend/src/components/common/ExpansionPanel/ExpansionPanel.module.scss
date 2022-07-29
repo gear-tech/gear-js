@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 
 .item {
   display: flex;
@@ -15,7 +15,7 @@
 }
 
 .text {
-  font-size: 14px;
+  font-size: $fontSize;
   font-weight: 400;
   color: $textColorSecondary;
 }

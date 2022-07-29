@@ -1,13 +1,13 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 
 .header {
   margin-bottom: 20px;
-  font-size: 21px;
+  font-size: $fontSizeLarge;
   font-weight: 600;
   color: $textColorSecondary;
 }
 
 .message {
   margin-top: 24px;
-  font-size: 16px;
+  font-size: $fontSizeMedium;
 }

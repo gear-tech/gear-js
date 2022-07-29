@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 
 .cell {
   $lastRow: ':nth-last-child(-n + 4)';
@@ -6,7 +6,7 @@
   overflow-x: auto;
 
   &:not(#{$lastRow}) {
-    border-bottom: 1px solid $separateLineColor;
+    border-bottom: 1px solid $lineColor;
   }
 }
 

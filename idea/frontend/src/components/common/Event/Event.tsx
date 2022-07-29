@@ -1,7 +1,6 @@
 import { UserMessageSentData } from '@gear-js/api';
-import { GenericEventData } from '@polkadot/types';
 
-import { Content } from './children/Content/Content';
+import { Pre } from '../Pre';
 import { LogContent } from './children/LogContent/LogContent';
 import { ExpansionPanel } from '../ExpansionPanel/ExpansionPanel';
 
@@ -23,11 +22,7 @@ const Event = ({ value, className }: Props) => {
   const isLog = method === Method.UserMessageSent;
 
   const getContent = ({ id, data }: IdeaEvent = event) =>
-    isLog ? (
-      <LogContent key={id} data={data as UserMessageSentData} />
-    ) : (
-      <Content key={id} data={data as GenericEventData} />
-    );
+    isLog ? <LogContent key={id} data={data as UserMessageSentData} /> : <Pre key={id} text={data.toHuman()} />;
 
   const getBody = () => (isGroup ? value.map(getContent) : getContent());
 

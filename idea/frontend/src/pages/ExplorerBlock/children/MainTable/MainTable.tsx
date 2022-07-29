@@ -1,8 +1,10 @@
 import { Extrinsic } from '@polkadot/types/interfaces';
-import { EventRecords, IdeaEvent } from 'types/explorer';
-import { Row } from './Row/Row';
-import commonStyles from '../../Block.module.scss';
+
 import styles from './MainTable.module.scss';
+import commonStyles from '../../ExplorerBlock.module.scss';
+import { Row } from './Row/Row';
+
+import { EventRecords, IdeaEvent } from 'types/explorer';
 
 type Props = {
   extrinsics: Extrinsic[];

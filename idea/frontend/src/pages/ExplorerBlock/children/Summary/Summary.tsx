@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Block } from '@polkadot/types/interfaces';
-import commonStyles from '../../Block.module.scss';
+
 import styles from './Summary.module.scss';
+import commonStyles from '../../ExplorerBlock.module.scss';
 
 type Props = {
   block: Block;

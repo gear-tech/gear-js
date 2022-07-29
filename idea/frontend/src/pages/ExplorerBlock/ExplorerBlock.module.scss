@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 
 $padding: 20px;
 
@@ -22,7 +22,7 @@ $padding: 20px;
   background-color: $mainBackground;
 
   &:first-child {
-    font-size: 21px;
+    font-size: $fontSizeLarge;
   }
 }
 
@@ -33,5 +33,5 @@ $padding: 20px;
 
 .message {
   margin-top: 24px;
-  font-size: 16px;
+  font-size: $fontSizeMedium;
 }

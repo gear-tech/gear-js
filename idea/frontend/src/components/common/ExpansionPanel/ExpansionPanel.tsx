@@ -1,7 +1,8 @@
 import { ReactNode, useState } from 'react';
 import clsx from 'clsx';
-import { Header } from './Header/Header';
+
 import styles from './ExpansionPanel.module.scss';
+import { Header } from './children/Header';
 
 type Props = {
   caption: string;

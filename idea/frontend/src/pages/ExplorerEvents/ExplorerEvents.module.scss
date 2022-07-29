@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 
 .events {
   color: $textColor;
@@ -12,7 +12,7 @@
 }
 
 .heading {
-  font-size: 21px;
+  font-size: $fontSizeLarge;
   font-weight: 600;
   text-transform: uppercase;
 }

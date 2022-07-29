@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 
 .header {
   cursor: pointer;
@@ -8,7 +8,7 @@
   margin-bottom: 5px;
   display: flex;
   align-items: center;
-  font-size: 16px;
+  font-size: $fontSizeMedium;
 }
 
 .caption {
@@ -32,8 +32,18 @@
 .counter {
   margin-left: 16px;
   padding: 0 7.5px;
-  font-size: 14px;
+  font-size: $fontSize;
   color: $textColorSecondary;
   background-color: $bkgButtonColor;
   border-radius: 100px;
+}
+
+.number {
+  margin-left: auto;
+  font-weight: 600;
+  color: $textColorSecondary;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
