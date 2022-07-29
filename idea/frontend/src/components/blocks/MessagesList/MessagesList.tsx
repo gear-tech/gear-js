@@ -7,10 +7,11 @@ import { Table } from 'components/common/Table';
 
 type Props = {
   messages?: MessageModel[];
+  isLoading?: boolean;
   className?: string;
 };
 
-const MessagesList = ({ messages, className }: Props) => {
+const MessagesList = ({ messages, isLoading = false, className }: Props) => {
   const renderRow = (message: MessageModel) => <MessageItem message={message} />;
 
   return (
@@ -19,7 +20,7 @@ const MessagesList = ({ messages, className }: Props) => {
       cols={TABLE_COLS}
       header={TABLE_HEADER}
       message="No messages"
-      isLoading={!messages}
+      isLoading={isLoading}
       bodyClassName={className}
       getRowKey={getRowKey}
       renderRow={renderRow}

@@ -10,10 +10,11 @@ import { Table } from 'components/common/Table';
 type Props = {
   address?: string;
   programs?: ProgramModel[];
+  isLoading: boolean;
   className?: string;
 };
 
-const ProgramsList = memo(({ address, programs, className }: Props) => {
+const ProgramsList = memo(({ address, programs, isLoading, className }: Props) => {
   const renderRow = (program: ProgramModel) => (
     <ProgramItem program={program} isMetaLinkActive={program.owner === address} />
   );
@@ -24,7 +25,7 @@ const ProgramsList = memo(({ address, programs, className }: Props) => {
       cols={TABLE_COLS}
       header={TABLE_HEADER}
       message="No programs"
-      isLoading={!programs}
+      isLoading={isLoading}
       bodyClassName={className}
       renderRow={renderRow}
       getRowKey={getRowKey}

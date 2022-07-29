@@ -16,9 +16,9 @@ const Mailbox = () => {
   const { api } = useApi();
   const { account } = useAccount();
 
-  const [mailbox, setMailbox] = useState<MailboxItem[] | null>(null);
-
   const claimMessage = useMessageClaim();
+
+  const [mailbox, setMailbox] = useState<MailboxItem[] | null>(null);
 
   const handleClaim = useCallback(
     (messageId: Hex) => {
@@ -47,7 +47,6 @@ const Mailbox = () => {
     }
   }, [api, address]);
 
-  // TODO: temp solution, fix it after the gear-hooks will update
   if (!address) {
     return (
       <div className="wrapper">

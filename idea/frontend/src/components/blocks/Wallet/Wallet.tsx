@@ -8,8 +8,8 @@ import styles from './Wallet.module.scss';
 import { SelectAccountModal } from './SelectAccountModal';
 
 const Wallet = () => {
-  const accounts = useAccounts();
   const { account } = useAccount();
+  const { accounts } = useAccounts();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
