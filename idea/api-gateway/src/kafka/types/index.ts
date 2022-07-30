@@ -10,7 +10,6 @@ import {
   GetMetaParams,
   GetOutgoingMessagesParams,
   GetTestBalanceParams,
-  IRpcRequest,
   ProgramDataResult,
 } from '@gear-js/common';
 

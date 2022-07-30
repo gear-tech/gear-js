@@ -1,4 +1,5 @@
 import { KAFKA_TOPICS } from '@gear-js/common';
+import { Message } from 'kafkajs';
 
 import { initKafka } from './init-kafka';
 import { KafkaParams } from './types';
@@ -10,19 +11,22 @@ async function connect(): Promise<void> {
   await producer.connect();
 }
 
-async function sendByTopic(topic: KAFKA_TOPICS, correlationId: string, params: KafkaParams): Promise<void> {
+async function sendByTopic(topic: KAFKA_TOPICS, params: KafkaParams | string, correlationId?: string): Promise<void> {
   await producer.send({
     topic,
-    messages: [
-      {
-        value: transformToSting(params),
-        headers: {
-          kafka_correlationId: correlationId,
-          kafka_replyTopic: `${topic}.reply`,
-        },
-      },
-    ],
+    messages: [getSendKafkaMessage(topic, params, correlationId)],
   });
+}
+
+function getSendKafkaMessage(topic: string, params: KafkaParams | string, correlationId?: string): Message {
+  const result: Message = { value: transformToSting(params), headers: {} };
+
+  if (correlationId) {
+    result.headers = {  kafka_correlationId: correlationId,   kafka_replyTopic: `${topic}.reply` };
+    return result;
+  }
+
+  return result;
 }
 
 export const kafkaProducer = { sendByTopic, connect };
