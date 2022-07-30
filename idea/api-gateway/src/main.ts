@@ -20,9 +20,7 @@ app.use('/health', healthcheckRouter);
 
 const startApp = async () => {
   await kafkaCreateConnection();
-  if (!process.env.TEST_ENV) {
-    schedulerGenesisHashes().start();
-  }
+  schedulerGenesisHashes().start();
   app.listen(port, () => {
     apiGatewayLogger.info(`App successfully run on the ${port} 🚀`);
   });
