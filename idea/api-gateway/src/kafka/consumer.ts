@@ -1,7 +1,8 @@
 import { initKafka } from './init-kafka';
 import config from '../config/configuration';
 import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
-import { KafkaMessage } from 'kafkajs';
+import { genesisHashMap } from '../common/genesis-hash-map';
+import { isIncludeCorrelationId } from '../utils';
 
 const configKafka = config().kafka;
 
@@ -21,15 +22,11 @@ async function run(): Promise<void> {
       }
 
       if (!isIncludeCorrelationId(message)) {
-      //  TODO save to MAP
+        const genesisHash = JSON.parse(message.value.toString());
+        genesisHashMap.set(genesisHash, genesisHash);
       }
     },
   });
-}
-
-function isIncludeCorrelationId(message: KafkaMessage): boolean {
-  // eslint-disable-next-line no-prototype-builtins
-  return message.headers.hasOwnProperty('kafka_correlationId');
 }
 
 async function subscribeConsumerTopics(topics: string[]): Promise<void> {
