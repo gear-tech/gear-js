@@ -10,9 +10,8 @@ function schedulerGenesisHashes(){
   return {
     start() {
       cron = new CronJob(getCronRunTime(), async function (){
-        // genesisHashMap.clear();
-        // await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_SERVICES, 'testBalanceServices');
-        console.log('bla');
+        genesisHashMap.clear();
+        await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_SERVICES, 'testBalanceServices');
       });
 
       if (process.env.TEST_ENV){
