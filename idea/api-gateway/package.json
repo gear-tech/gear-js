@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@gear-js/common": "workspace:^",
+    "@types/cron": "^2.0.0",
+    "cron": "^2.1.0",
     "dotenv": "16.0.1",
     "express": "4.18.1",
     "hcaptcha": "0.1.1",
