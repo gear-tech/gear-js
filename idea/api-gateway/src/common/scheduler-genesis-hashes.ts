@@ -10,15 +10,16 @@ function schedulerGenesisHashes(){
   return {
     start() {
       cron = new CronJob(getCronRunTime(), async function (){
-        genesisHashMap.clear();
-        await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_SERVICES, 'testBalanceServices');
+        // genesisHashMap.clear();
+        // await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_SERVICES, 'testBalanceServices');
+        console.log('bla');
       });
 
       if (process.env.TEST_ENV){
-        const TEN_SECONDS = 10_000;
+        const THIRTEEN_SECONDS = 30_000;
         setTimeout(() => {
           cron.stop();
-        }, TEN_SECONDS);
+        }, THIRTEEN_SECONDS);
       }
 
       cron.start();
@@ -28,8 +29,8 @@ function schedulerGenesisHashes(){
 
 function getCronRunTime(): string {
   if (process.env.TEST_ENV){
-    // every 50 seconds
-    return '*/50 * * * * *';
+    // every 20 seconds
+    return '*/20 * * * * *';
   }
 
   // every 3 hours
