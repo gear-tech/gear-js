@@ -14,12 +14,12 @@ function schedulerGenesisHashes(){
         }, null, true, '');
       }
 
-      if (process.env.TEST_ENV){
-        const SEVENTY_SECONDS = 70 * 1000;
-        setTimeout(async () => {
-          await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_SERVICES, 'testBalanceServices');
-        }, SEVENTY_SECONDS);
-      }
+      // if (process.env.TEST_ENV){
+      //   const SEVENTY_SECONDS = 70 * 1000;
+      //   setTimeout(async () => {
+      //     await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_SERVICES, 'testBalanceServices');
+      //   }, SEVENTY_SECONDS);
+      // }
     }
   };
 }
