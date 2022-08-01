@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
-import { Home } from './home';
+// TODO: index.ts export
+import { Home } from './home/Home';
 
 const routes = [{ path: '/', Page: Home }];
 

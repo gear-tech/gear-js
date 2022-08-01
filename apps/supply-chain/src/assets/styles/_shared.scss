@@ -1,6 +1,15 @@
+@use '@gear-js/ui/variables' as *;
+
 %absoluteCenter {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%);
+}
+
+%box {
+  padding: 25px 40px;
+  background-color: #212121;
+  border: 1px dashed #0e0e0e;
+  border-radius: $borderRadius;
 }

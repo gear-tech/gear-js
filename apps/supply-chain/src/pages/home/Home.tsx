@@ -1,5 +1,7 @@
+import { Start } from '../start';
+
 function Home() {
-  return <div>Home page</div>;
+  return <Start />;
 }
 
 export { Home };
