@@ -1,0 +1,28 @@
+@use '@gear-js/ui/variables' as *;
+
+.users {
+  flex: 1;
+}
+
+.heading {
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  color: $textColorSecondary;
+  font-size: $fontSizeMedium;
+  text-transform: uppercase;
+}
+
+.amount {
+  color: $successColor;
+}
+
+.user {
+  padding: 8px 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+}

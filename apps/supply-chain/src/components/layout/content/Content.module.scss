@@ -18,7 +18,10 @@
 }
 
 .body {
-  & > *:not(:last-child) {
+  width: 100%;
+
+  & > *:not(:last-child),
+  form > *:not(:last-child) {
     margin-bottom: 24px;
   }
 }

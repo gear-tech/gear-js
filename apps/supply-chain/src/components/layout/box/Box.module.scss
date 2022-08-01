@@ -1,0 +1,15 @@
+@use '@gear-js/ui/variables' as *;
+
+.box {
+  border: 1px solid #3d3d3d;
+  border-radius: 5px;
+}
+
+.primary {
+  padding: 25px;
+  background-color: rgba(#212121, 0.5);
+}
+
+.secondary {
+  background-color: #242424;
+}
