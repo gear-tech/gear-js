@@ -2,7 +2,7 @@ import { initKafka } from './init-kafka';
 import config from '../config/configuration';
 import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
 import { isIncludeCorrelationId } from '../utils';
-import { genesisHashesCollection } from '../common/genesis-hash-collection';
+import { genesisHashesCollection } from '../common/genesis-hashes-collection';
 
 const configKafka = config().kafka;
 
