@@ -1,5 +1,5 @@
 import { Consumer, KafkaMessage } from 'kafkajs';
-import { initLogger, JSONRPC_ERRORS } from '@gear-js/common';
+import { initLogger, JSONRPC_ERRORS, KAFKA_TOPICS } from '@gear-js/common';
 
 import config from '../config/configuration';
 import { initKafka } from './init-kafka';
@@ -21,13 +21,13 @@ async function connect(): Promise<void> {
 
 async function run(): Promise<void> {
   await consumer.run({
-    eachMessage: async ({ message }) => {
-      await messageProcessing(message);
+    eachMessage: async ({ message, topic }) => {
+      await messageProcessing(message, topic);
     },
   });
 }
 
-async function messageProcessing(message: KafkaMessage): Promise<void | { error: string }> {
+async function messageProcessing(message: KafkaMessage, topic: string): Promise<void | { error: string }> {
   const { payload, error } = await getPayloadFromMessage(message);
 
   if (error) {
@@ -39,7 +39,9 @@ async function messageProcessing(message: KafkaMessage): Promise<void | { error:
     return;
   }
 
-  await genesisHashService.sendApiGateway();
+  if (topic === KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASHES) {
+    await genesisHashService.sendApiGateway();
+  }
 }
 
 async function getPayloadFromMessage(message: KafkaMessage): Promise<{ error: string; payload: any }> {

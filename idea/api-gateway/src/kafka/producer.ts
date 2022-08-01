@@ -14,11 +14,11 @@ async function connect(): Promise<void> {
 async function sendByTopic(topic: KAFKA_TOPICS, params: KafkaParams | string, correlationId?: string): Promise<void> {
   await producer.send({
     topic,
-    messages: [getSendKafkaMessage(topic, params, correlationId)],
+    messages: [createMessageBody(topic, params, correlationId)],
   });
 }
 
-function getSendKafkaMessage(topic: string, params: KafkaParams | string, correlationId?: string): Message {
+function createMessageBody(topic: string, params: KafkaParams | string, correlationId?: string): Message {
   const result: Message = { value: transformToSting(params), headers: {} };
 
   if (correlationId) {

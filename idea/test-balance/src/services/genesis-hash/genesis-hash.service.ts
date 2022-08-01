@@ -29,7 +29,7 @@ export const genesisHashService = {
   async sendApiGateway(): Promise<void> {
     const genesisHash = gearService.getGenesisHash();
 
-    await kafkaProducer.send(`${KAFKA_TOPICS.TEST_BALANCE_GET_API}.reply`, genesisHash);
+    await kafkaProducer.send(`${KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASH_API}.reply`, genesisHash);
   },
 };
 

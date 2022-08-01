@@ -7,8 +7,8 @@ enum KAFKA_TOPICS {
   MESSAGE_ALL = 'message.all',
   MESSAGE_DATA = 'message.data',
   TEST_BALANCE_GET = 'testBalance.get',
-  TEST_BALANCE_SERVICES = 'testBalance.services',
-  TEST_BALANCE_GET_API = 'testBalance.get.api',
+  TEST_BALANCE_GENESIS_HASHES = 'testBalance.genesis.hashes',
+  TEST_BALANCE_GENESIS_HASH_API = 'testBalance.genesis.hash.api',
   CODE_ALL = 'code.all',
   CODE_DATA = 'code.data',
 }

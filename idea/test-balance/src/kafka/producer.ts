@@ -11,11 +11,11 @@ async function connect(): Promise<void> {
 async function send(topic: string, value: string, correlationId?: string): Promise<void> {
   await producer.send({
     topic,
-    messages: [getSendKafkaMessage(value, correlationId)],
+    messages: [createMessageBody(value, correlationId)],
   });
 }
 
-function getSendKafkaMessage(value: string, correlationId?: string): Message {
+function createMessageBody(value: string, correlationId?: string): Message {
   const result: Message = { value, headers: {} };
 
   if (correlationId) {

@@ -1,7 +1,8 @@
-import { initKafka } from './init-kafka';
+import { KAFKA_TOPICS } from '@gear-js/common';
+
 import config from '../config/configuration';
+import { initKafka } from './init-kafka';
 import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
-import { isIncludeCorrelationId } from '../utils';
 import { genesisHashesCollection } from '../common/genesis-hashes-collection';
 
 const configKafka = config().kafka;
@@ -13,8 +14,8 @@ async function connect(): Promise<void> {
 }
 async function run(): Promise<void> {
   await consumer.run({
-    eachMessage: async ({ message }) => {
-      if (isIncludeCorrelationId(message)) {
+    eachMessage: async ({ message, topic }) => {
+      if (topic !== KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASH_API) {
         const correlationId = message.headers.kafka_correlationId.toString();
         const resultFromService = kafkaEventMap.get(correlationId);
         if (resultFromService) await resultFromService(JSON.parse(message.value.toString()));

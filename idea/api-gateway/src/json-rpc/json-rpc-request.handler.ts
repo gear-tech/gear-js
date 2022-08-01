@@ -5,6 +5,7 @@ import { API_GATEWAY } from '../common/constant';
 import { jsonRpcHandler } from './json-rpc.handler';
 import { apiGatewayLogger } from '../common/event-listener.logger';
 import { genesisHashesCollection } from '../common/genesis-hashes-collection';
+import { GenesisHash } from '../common/enums/genesis-hash.enum';
 
 async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],
@@ -25,11 +26,15 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
   }
 
-  if (procedure.method === KAFKA_TOPICS.TEST_BALANCE_GET
-      && genesisHashesCollection.has(procedure.params.genesis)) {
+  if (procedure.method === GenesisHash.get) {
     const { params: { genesis } } = procedure;
-    const genesisFromCollection = Array.from(genesisHashesCollection.values()).find(gen => gen === genesis);
-    return getResponse(procedure, null, genesisFromCollection);
+
+    if (genesisHashesCollection.has(genesis)) {
+      const genesisFromCollection = Array.from(genesisHashesCollection.values()).find(gen => gen === genesis);
+      return getResponse(procedure, null, genesisFromCollection);
+    } else {
+      return getResponse(procedure, JSONRPC_ERRORS.InternalError.name, null);
+    }
   }
 
   const { method, params } = procedure;
