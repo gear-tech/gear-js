@@ -4,7 +4,7 @@ import { getResponse } from '../utils';
 import { API_GATEWAY } from '../common/constant';
 import { jsonRpcHandler } from './json-rpc.handler';
 import { apiGatewayLogger } from '../common/event-listener.logger';
-import { genesisHashMap } from '../common/genesis-hash-map';
+import { genesisHashesCollection } from '../common/genesis-hashes-collection';
 
 async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],
@@ -26,18 +26,15 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
   }
 
   if (procedure.method === KAFKA_TOPICS.TEST_BALANCE_GET
-      && isExistTestBalanceGenesisHashMap(procedure.params.genesis)) {
+      && genesisHashesCollection.has(procedure.params.genesis)) {
     const { params: { genesis } } = procedure;
-    return getResponse(procedure, null, genesisHashMap.get(genesis));
+    const genesisFromCollection = Array.from(genesisHashesCollection.values()).find(gen => gen === genesis);
+    return getResponse(procedure, null, genesisFromCollection);
   }
 
   const { method, params } = procedure;
   const { error, result } = await jsonRpcHandler(method as KAFKA_TOPICS, params);
   return getResponse(procedure, error, result);
-}
-
-function isExistTestBalanceGenesisHashMap(genesis: string): boolean {
-  return !!genesisHashMap.get(genesis);
 }
 
 function isExistJsonRpcMethod(kafkaTopic: string): boolean {

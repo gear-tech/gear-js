@@ -1,8 +1,8 @@
 import { initKafka } from './init-kafka';
 import config from '../config/configuration';
 import { deleteKafkaEvent, kafkaEventMap } from './kafka-event-map';
-import { genesisHashMap } from '../common/genesis-hash-map';
 import { isIncludeCorrelationId } from '../utils';
+import { genesisHashesCollection } from '../common/genesis-hash-collection';
 
 const configKafka = config().kafka;
 
@@ -19,11 +19,9 @@ async function run(): Promise<void> {
         const resultFromService = kafkaEventMap.get(correlationId);
         if (resultFromService) await resultFromService(JSON.parse(message.value.toString()));
         deleteKafkaEvent(correlationId);
-      }
-
-      if (!isIncludeCorrelationId(message)) {
+      } else {
         const genesisHash = JSON.parse(message.value.toString());
-        genesisHashMap.set(genesisHash, genesisHash);
+        genesisHashesCollection.add(genesisHash);
       }
     },
   });
