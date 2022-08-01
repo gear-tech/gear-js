@@ -15,10 +15,10 @@ function schedulerGenesisHashes(){
       });
 
       if (process.env.TEST_ENV){
-        const THIRTEEN_SECONDS = 30_000;
+        const SEVENTY_SECONDS = 70 * 1000;
         setTimeout(() => {
           cron.stop();
-        }, THIRTEEN_SECONDS);
+        }, SEVENTY_SECONDS);
       }
 
       cron.start();
@@ -28,8 +28,8 @@ function schedulerGenesisHashes(){
 
 function getCronRunTime(): string {
   if (process.env.TEST_ENV){
-    // every 20 seconds
-    return '*/20 * * * * *';
+    // every 1 min
+    return '* * * * *';
   }
 
   // every 3 hours

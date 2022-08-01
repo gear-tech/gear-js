@@ -1,9 +1,10 @@
-import { IRpcRequest, IRpcResponse, KAFKA_TOPICS, JSONRPC_ERRORS } from '@gear-js/common';
+import { IRpcRequest, IRpcResponse, JSONRPC_ERRORS, KAFKA_TOPICS } from '@gear-js/common';
 
 import { getResponse } from '../utils';
 import { API_GATEWAY } from '../common/constant';
 import { jsonRpcHandler } from './json-rpc.handler';
 import { apiGatewayLogger } from '../common/event-listener.logger';
+import { genesisHashMap } from '../common/genesis-hash-map';
 
 async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],
@@ -12,8 +13,7 @@ async function jsonRpcRequestHandler(
     const promises = rpcBodyRequest.map((rpcBody) => {
       return executeProcedure(rpcBody);
     });
-    const result = await Promise.all(promises);
-    return result;
+    return Promise.all(promises);
   } else {
     return executeProcedure(rpcBodyRequest);
   }
@@ -24,9 +24,20 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     apiGatewayLogger.error(`${API_GATEWAY}:${JSON.stringify(JSONRPC_ERRORS.MethodNotFound)}`);
     return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
   }
+
+  if (procedure.method === KAFKA_TOPICS.TEST_BALANCE_GET
+      && isExistTestBalanceGenesisHashMap(procedure.params.genesis)) {
+    const { params: { genesis } } = procedure;
+    return getResponse(procedure, null, genesisHashMap.get(genesis));
+  }
+
   const { method, params } = procedure;
   const { error, result } = await jsonRpcHandler(method as KAFKA_TOPICS, params);
   return getResponse(procedure, error, result);
+}
+
+function isExistTestBalanceGenesisHashMap(genesis: string): boolean {
+  return !!genesisHashMap.get(genesis);
 }
 
 function isExistJsonRpcMethod(kafkaTopic: string): boolean {

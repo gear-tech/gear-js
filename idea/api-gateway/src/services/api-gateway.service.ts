@@ -15,7 +15,6 @@ export const apiGatewayService = {
         return getResponse(body, JSONRPC_ERRORS.Forbidden.name);
       }
     }
-    const response = await jsonRpcRequestHandler(body);
-    return response;
+    return await jsonRpcRequestHandler(body);
   },
 };
