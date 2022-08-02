@@ -12,3 +12,18 @@ export async function getTestBalance(genesis: string): Promise<Passed> {
   expect(response).to.have.own.property('result');
   return true;
 }
+
+export async function validateGenesis(genesis: string): Promise<Passed> {
+  const SIX_MIN = 6 * 60 * 1000;
+  const promise = new Promise((res) => {
+    setTimeout(() => {
+      res('success');
+    }, SIX_MIN);
+  });
+  await promise;
+  const response = await request('genesis.valid', {
+    genesis
+  });
+  console.log(response);
+  return true;
+}

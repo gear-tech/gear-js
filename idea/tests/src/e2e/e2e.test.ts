@@ -6,7 +6,7 @@ import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram } from '../interfaces';
 import { sleep } from '../utils';
 import { getAllMessages, getMessageData } from './messages';
-import { getTestBalance } from './testBalance';
+import { getTestBalance, validateGenesis } from './testBalance';
 import { getCodeData, getListCode } from './code';
 import base from '../config/base';
 
@@ -96,5 +96,8 @@ describe('code methods', () => {
 describe('testBalance', () => {
   test('testBalance.get request', async () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
+  });
+  test('genesis.valid request', async () => {
+    expect(await validateGenesis(genesis));
   });
 });
