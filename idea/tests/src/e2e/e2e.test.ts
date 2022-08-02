@@ -98,6 +98,6 @@ describe('testBalance', () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
   });
   test('genesis.valid request', async () => {
-    expect(await validateGenesis(genesis));
+    expect(await validateGenesis(genesis)).toBeTruthy();
   });
 });
