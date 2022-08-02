@@ -57,7 +57,7 @@ spec:
             - name: ROOT_ACCOUNT_SEED
               value: //Alice
             - name: TEST_ACCOUNT_SEED
-              value: 0x8999331c53e3a76e31d91767d0e2a91529e96e0e008089a0d34e1919c0d84da5
+              value: put here value
             - name: TEST_ACCOUNT_BALANCE
               value: "9000000000000"
             - name: TEST_BALANCE_VALUE
