@@ -1,11 +1,10 @@
 import { IRpcRequest, IRpcResponse, JSONRPC_ERRORS, KAFKA_TOPICS } from '@gear-js/common';
 
-import { getResponse } from '../utils';
+import { getResponse, isValidGenesis } from '../utils';
 import { API_GATEWAY } from '../common/constant';
 import { jsonRpcHandler } from './json-rpc.handler';
 import { apiGatewayLogger } from '../common/event-listener.logger';
-import { genesisHashesCollection } from '../common/genesis-hashes-collection';
-import { GenesisHash } from '../common/enums/genesis-hash.enum';
+import { GenesisRpc } from '../common/enums/genesis-hash.enum';
 
 async function jsonRpcRequestHandler(
   rpcBodyRequest: IRpcRequest | IRpcRequest[],
@@ -26,15 +25,9 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
   }
 
-  if (procedure.method === GenesisHash.get) {
+  if (procedure.method === GenesisRpc.valid) {
     const { params: { genesis } } = procedure;
-
-    if (genesisHashesCollection.has(genesis)) {
-      const genesisFromCollection = Array.from(genesisHashesCollection.values()).find(gen => gen === genesis);
-      return getResponse(procedure, null, genesisFromCollection);
-    } else {
-      return getResponse(procedure, JSONRPC_ERRORS.InternalError.name, null);
-    }
+    return getResponse(procedure, null, isValidGenesis(genesis));
   }
 
   const { method, params } = procedure;
@@ -43,7 +36,7 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
 }
 
 function isExistJsonRpcMethod(kafkaTopic: string): boolean {
-  const topics: string[] = Object.values(KAFKA_TOPICS);
+  const topics: string[] = [...Object.values(KAFKA_TOPICS), ...Object.values(GenesisRpc)];
   return topics.includes(kafkaTopic);
 }
 

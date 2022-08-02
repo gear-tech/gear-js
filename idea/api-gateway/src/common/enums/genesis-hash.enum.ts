@@ -1,5 +1,5 @@
-enum GenesisHash {
-    get = 'genesisHash.get'
+enum GenesisRpc {
+    valid = 'genesis.valid'
 }
 
-export { GenesisHash };
+export { GenesisRpc };
