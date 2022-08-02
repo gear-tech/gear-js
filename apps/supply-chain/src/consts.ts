@@ -6,4 +6,9 @@ const LOCAL_STORAGE = {
   ACCOUNT: 'account',
 };
 
-export { ADDRESS, LOCAL_STORAGE };
+const FORM = {
+  CREATE: 'create',
+  USE: 'use',
+};
+
+export { ADDRESS, LOCAL_STORAGE, FORM };

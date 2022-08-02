@@ -1,9 +1,10 @@
 import { Input as GearInput, InputProps } from '@gear-js/ui';
+import { ReactNode } from 'react';
 import styles from './Input.module.scss';
 
 type Props = InputProps & {
   inputClassName?: string;
-  error?: string;
+  error?: ReactNode;
 };
 
 function Input({ className, error, ...props }: Props) {

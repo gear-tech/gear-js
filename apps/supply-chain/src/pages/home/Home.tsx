@@ -1,17 +1,13 @@
 import { useState } from 'react';
 import { Hex } from '@gear-js/api';
 import { useSupplyChainUpload } from 'hooks';
+import { FORM } from 'consts';
 import { Create } from '../create';
 import { Use } from '../use';
 import { Start } from '../start';
 
-const FORM = {
-  CREATE: 'create',
-  USE: 'use',
-};
-
 function Home() {
-  const [form, setForm] = useState('');
+  const [form, setForm] = useState('use');
 
   const [programId, setProgramId] = useState('' as Hex);
   const uploadSupplyChain = useSupplyChainUpload(setProgramId);
