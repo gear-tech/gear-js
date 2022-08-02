@@ -2,8 +2,8 @@ import { Hex } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
-import { isHex } from '@polkadot/util';
 import { Box, Content, Input } from 'components';
+import { isValidHex } from 'utils';
 import styles from './Use.module.scss';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const initialValues = { programId: '' as Hex };
-const validate = { programId: (value: string) => (!isHex(value) ? 'Address should be hex' : null) };
+const validate = { programId: isValidHex };
 
 function Use({ onCancel, onSubmit }: Props) {
   const { api } = useApi();

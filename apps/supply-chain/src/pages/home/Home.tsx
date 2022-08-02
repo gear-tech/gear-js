@@ -7,7 +7,7 @@ import { Use } from '../use';
 import { Start } from '../start';
 
 function Home() {
-  const [form, setForm] = useState('use');
+  const [form, setForm] = useState('create');
 
   const [programId, setProgramId] = useState('' as Hex);
   const uploadSupplyChain = useSupplyChainUpload(setProgramId);

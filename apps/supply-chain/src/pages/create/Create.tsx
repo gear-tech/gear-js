@@ -1,8 +1,12 @@
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import { Box, Content, Input } from 'components';
+import { useForm } from '@mantine/form';
 import clsx from 'clsx';
+import { Box, Content, Input } from 'components';
 import { InitPayload } from 'types';
+import { isValidHex } from 'utils';
+import { useApi } from '@gear-js/react-hooks';
+import { useState } from 'react';
 import { Users } from './users';
 import styles from './Create.module.scss';
 
@@ -13,19 +17,43 @@ type Props = {
   onSubmit: (value: InitPayload) => void;
 };
 
+const initialValues = { ftProgramId: '' as Hex, nftProgramId: '' as Hex };
+const validate = { ftProgramId: isValidHex, nftProgramId: isValidHex };
+
 function Create({ onCancel, onSubmit }: Props) {
+  const { api } = useApi();
+
+  const form = useForm({ initialValues, validate });
+  const { getInputProps, values, setFieldError } = form;
+
+  const [producers, setProducers] = useState([] as Hex[]);
+  const [distributors, setDistributors] = useState([] as Hex[]);
+  const [retailers, setRetailers] = useState([] as Hex[]);
+
   const nftInputClassName = clsx(styles.input, styles.nftInput);
 
-  const handleSubmit = () => onSubmit({} as InitPayload);
+  const handleSubmit = form.onSubmit(async () => {
+    const isNftExists = await api.program.exists(values.nftProgramId);
+    const isFtExists = await api.program.exists(values.ftProgramId);
+
+    if (!isNftExists || !isFtExists) {
+      if (!isNftExists) setFieldError('nftProgramId', 'Program not found in the storage');
+      if (!isFtExists) setFieldError('ftProgramId', 'Program not found in the storage');
+
+      return;
+    }
+
+    onSubmit({ ...values, producers, distributors, retailers });
+  });
 
   return (
     <Content
       heading="Enter GNFT Program ID, GFT Program ID and add users to create a supply chain"
       className={styles.content}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Box>
-          <Input label="GNFT Program ID" className={nftInputClassName} />
-          <Input label="GFT Program ID" className={styles.input} />
+          <Input label="GNFT Program ID" className={nftInputClassName} {...getInputProps('nftProgramId')} />
+          <Input label="GFT Program ID" className={styles.input} {...getInputProps('ftProgramId')} />
         </Box>
 
         <Box>
@@ -45,7 +73,7 @@ function Create({ onCancel, onSubmit }: Props) {
 
         <div className={styles.buttonsSubmit}>
           <Button text="Cancel" color="secondary" onClick={onCancel} />
-          <Button type="submit" text="Create" onClick={handleSubmit} />
+          <Button type="submit" text="Create" />
         </div>
       </form>
     </Content>
