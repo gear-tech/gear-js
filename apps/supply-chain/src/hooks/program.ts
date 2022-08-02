@@ -3,6 +3,7 @@ import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OP
 import { GearApi, Hex, MessageEnqueued, MessagesDispatched, Metadata } from '@gear-js/api';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { Event } from '@polkadot/types/interfaces';
+import { InitPayload } from 'types';
 import { useSupplyChainOpt, useSupplyChainMeta } from './api';
 
 enum ProgramStatus {
@@ -86,7 +87,7 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
   }).finally(unsubscribe);
 };
 
-function useUploadProgram(onSuccess: (programId: Hex) => void) {
+function useSupplyChainUpload(onSuccess: (programId: Hex) => void) {
   const { api } = useApi();
   const { account } = useAccount();
   const alert = useAlert();
@@ -94,12 +95,11 @@ function useUploadProgram(onSuccess: (programId: Hex) => void) {
   const { uintArray, buffer } = useSupplyChainOpt();
   const { metadata } = useSupplyChainMeta();
 
-  const uploadProgram = async (ftProgramId: Hex) => {
+  const uploadProgram = async (initPayload: InitPayload) => {
     if (!account || !buffer || !uintArray || !metadata) return;
 
     try {
       const { decodedAddress } = account;
-      const initPayload = { ftProgramId };
       const value = 0;
 
       const gas = await api.program.calculateGas.init(decodedAddress, buffer, initPayload, value, false, metadata);
@@ -184,4 +184,4 @@ function useUploadProgram(onSuccess: (programId: Hex) => void) {
   return uploadProgram;
 }
 
-export { useUploadProgram };
+export { useSupplyChainUpload };

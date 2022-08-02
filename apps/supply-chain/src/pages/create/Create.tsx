@@ -2,13 +2,21 @@ import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { Box, Content, Input } from 'components';
 import clsx from 'clsx';
+import { InitPayload } from 'types';
 import { Users } from './users';
 import styles from './Create.module.scss';
 
 const users = ['0x00', '0x01', '0x00', '0x01'] as Hex[];
 
-function Create() {
+type Props = {
+  onCancel: () => void;
+  onSubmit: (value: InitPayload) => void;
+};
+
+function Create({ onCancel, onSubmit }: Props) {
   const nftInputClassName = clsx(styles.input, styles.nftInput);
+
+  const handleSubmit = () => onSubmit({} as InitPayload);
 
   return (
     <Content
@@ -36,8 +44,8 @@ function Create() {
         </Box>
 
         <div className={styles.buttonsSubmit}>
-          <Button text="Cancel" color="secondary" />
-          <Button type="submit" text="Create" />
+          <Button text="Cancel" color="secondary" onClick={onCancel} />
+          <Button type="submit" text="Create" onClick={handleSubmit} />
         </div>
       </form>
     </Content>

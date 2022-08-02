@@ -1,3 +1,3 @@
-import { useUploadProgram } from './program';
+import { useSupplyChainUpload } from './program';
 
-export { useUploadProgram };
+export { useSupplyChainUpload };

@@ -1,8 +1,16 @@
+import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { Box, Content, Input } from 'components';
 import styles from './Use.module.scss';
 
-function Use() {
+type Props = {
+  onCancel: () => void;
+  onSubmit: (value: Hex) => void;
+};
+
+function Use({ onCancel, onSubmit }: Props) {
+  const handleSubmit = () => onSubmit('' as Hex);
+
   return (
     <Content
       heading="Type here the ID of an existing supply chain program 
@@ -13,8 +21,8 @@ function Use() {
           <Input label="Program ID" className={styles.input} />
         </Box>
         <div className={styles.buttons}>
-          <Button text="Cancel" color="secondary" />
-          <Button type="submit" text="Submit" />
+          <Button text="Cancel" color="secondary" onClick={onCancel} />
+          <Button type="submit" text="Submit" onClick={handleSubmit} />
         </div>
       </form>
     </Content>
