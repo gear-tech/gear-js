@@ -15,13 +15,13 @@ async function connect(): Promise<void> {
 async function run(): Promise<void> {
   await consumer.run({
     eachMessage: async ({ message, topic }) => {
-      if (topic !== KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASH_API) {
+      if (topic !== `${KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASH_API}.reply`) {
         const correlationId = message.headers.kafka_correlationId.toString();
         const resultFromService = kafkaEventMap.get(correlationId);
         if (resultFromService) await resultFromService(JSON.parse(message.value.toString()));
         deleteKafkaEvent(correlationId);
       } else {
-        const genesisHash = JSON.parse(message.value.toString());
+        const genesisHash = message.value.toString();
         genesisHashesCollection.add(genesisHash);
       }
     },
