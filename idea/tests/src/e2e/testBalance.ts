@@ -16,15 +16,15 @@ export async function getTestBalance(genesis: string): Promise<Passed> {
 export async function validateGenesis(genesis: string): Promise<Passed> {
   //  5.3 min.sec
   const FIVE_MIN_THIRTY_SEC = 5.3 * 60 * 1000;
-  const promise = new Promise((res) => {
+  const promise = new Promise((resolve) => {
     setTimeout(() => {
-      res('success');
+      resolve(0);
     }, FIVE_MIN_THIRTY_SEC);
   });
   await promise;
   const response = await request('genesis.valid', {
     genesis
   });
-  console.log(response);
+  expect(response.result).to.eq(true);
   return true;
 }
