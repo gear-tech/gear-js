@@ -6,6 +6,9 @@ import { genesisHashesCollection } from './genesis-hashes-collection';
 
 let cron: CronJob;
 
+//  6 min
+const SIX_MIN = 6 * 60 * 1000;
+
 function schedulerGenesisHashes(){
   return {
     start() {
@@ -17,8 +20,7 @@ function schedulerGenesisHashes(){
       if(process.env.TEST_ENV){
         setTimeout(() => {
           cron.stop();
-        //  2.20 min
-        }, (140 * 1000));
+        }, SIX_MIN);
       }
 
       cron.start();
@@ -28,8 +30,8 @@ function schedulerGenesisHashes(){
 
 function getCronRunTime(): string {
   if (process.env.TEST_ENV){
-    // every 2 min
-    return '*/2 * * * *';
+    // every 5 min
+    return '*/5 * * * *';
   }
 
   // every 3 hours
