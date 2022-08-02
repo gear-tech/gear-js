@@ -1,5 +1,5 @@
-import { Input, Button } from '@gear-js/ui';
-import { Box, Content } from 'components';
+import { Button } from '@gear-js/ui';
+import { Box, Content, Input } from 'components';
 import styles from './Use.module.scss';
 
 function Use() {

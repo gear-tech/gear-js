@@ -13,7 +13,13 @@ function Users({ heading, list }: Props) {
   const isAnyUser = usersAmount > 0;
   const amountClassName = clsx(isAnyUser && styles.amount);
 
-  const getUsers = () => list.map((user) => <li className={styles.user}>{user}</li>);
+  const getUsers = () =>
+    list.map((user, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <li key={index} className={styles.user}>
+        {user}
+      </li>
+    ));
 
   return (
     <div className={styles.users}>

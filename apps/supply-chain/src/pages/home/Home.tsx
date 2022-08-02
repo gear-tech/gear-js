@@ -3,7 +3,7 @@ import { Use } from 'pages/use';
 import { Start } from '../start';
 
 function Home() {
-  return <Use />;
+  return <Create />;
 }
 
 export { Home };

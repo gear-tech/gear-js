@@ -1,6 +1,6 @@
 import { Hex } from '@gear-js/api';
-import { Button, Input } from '@gear-js/ui';
-import { Box, Content } from 'components';
+import { Button } from '@gear-js/ui';
+import { Box, Content, Input } from 'components';
 import clsx from 'clsx';
 import { Users } from './users';
 import styles from './Create.module.scss';

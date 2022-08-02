@@ -3,8 +3,10 @@
 }
 
 .input {
-  display: grid;
-  grid-template-columns: 1fr 4fr;
+  label {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+  }
 }
 
 .buttons {
