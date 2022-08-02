@@ -13,8 +13,10 @@ function Content({ heading, children, className }: Props) {
 
   return (
     <>
-      <h2 className={styles.heading}>Supply chain</h2>
-      <p className={styles.subheading}>{heading}</p>
+      <header className={styles.header}>
+        <h2 className={styles.heading}>Supply chain</h2>
+        <p className={styles.subheading}>{heading}</p>
+      </header>
       <div className={bodyClassName}>{children}</div>
     </>
   );
