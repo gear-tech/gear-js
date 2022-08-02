@@ -14,11 +14,12 @@ export async function getTestBalance(genesis: string): Promise<Passed> {
 }
 
 export async function validateGenesis(genesis: string): Promise<Passed> {
-  const SIX_MIN = 6 * 60 * 1000;
+  //  3.30 min.sec
+  const TREE_MIN_THIRTY_SEC = 3.3 * 60 * 1000;
   const promise = new Promise((res) => {
     setTimeout(() => {
       res('success');
-    }, SIX_MIN);
+    }, TREE_MIN_THIRTY_SEC);
   });
   await promise;
   const response = await request('genesis.valid', {
