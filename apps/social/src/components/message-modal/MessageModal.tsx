@@ -13,19 +13,18 @@ function MessageModal({ heading, close, onSubmit }: Props) {
   const [message, setMessage] = useState('');
   const handleMessageChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) => setMessage(value);
 
+  const trimmedMessage = message.trim();
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (message.length > 0) onSubmit(message, close);
+    if (trimmedMessage) onSubmit(trimmedMessage, close);
   };
-
-  const isDisabled = message.length > 0;
 
   return (
     <Modal heading={heading} close={close}>
       <form onSubmit={handleSubmit}>
         <Textarea className={styles.textarea} value={message} onChange={handleMessageChange} />
-        <Button type="submit" text="Sent message" block disabled={!isDisabled} />
+        <Button type="submit" text="Sent message" block disabled={!trimmedMessage} />
       </form>
     </Modal>
   );

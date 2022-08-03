@@ -19,7 +19,7 @@ function Wellcome() {
         <a href="https://gear-tech.io" target="_blank" rel="noreferrer">
           here
         </a>
-        .<br /> Follow the instructions to create your own channel.
+        .<p> Follow the instructions to create your own channel.</p>
       </div>
     </header>
   );

@@ -25,8 +25,8 @@ function Feeds() {
       <MessageItem text={text} owner={owner} key={timestamp.replaceAll(',', '')} />
     ));
 
-  const Messages = getMessages();
-  const isAnyMessages = !!Messages?.length;
+  const messages = getMessages();
+  const isAnyMessages = !!messages?.length;
 
   return (
     <>
@@ -36,7 +36,7 @@ function Feeds() {
       <div className={styles.feed}>
         {feed && ownFeed ? (
           <>
-            {isAnyMessages && <ul className={styles.list}>{Messages}</ul>}
+            {isAnyMessages && <ul className={styles.list}>{messages}</ul>}
             {!isAnyMessages && <p className={styles.text}>There are no any message at the moment.</p>}
           </>
         ) : (

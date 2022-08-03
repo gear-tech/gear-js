@@ -25,8 +25,8 @@
   position: relative;
   background: url('/assets/images/icons/tower-icon.svg') no-repeat 50% 100%;
 
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     content: '';
     width: 26px;
     height: 12px;
@@ -36,12 +36,12 @@
     left: 0;
   }
 
-  &:before {
+  &::before {
     animation: firstWave 2s ease-in-out infinite;
     background: url('/assets/images/icons/first-wave.svg') no-repeat 50%;
   }
 
-  &:after {
+  &::after {
     animation: secondWave 2s ease-in-out infinite;
     background: url('/assets/images/icons/second-wave.svg') no-repeat 50%;
   }
@@ -50,12 +50,15 @@
     0% {
       opacity: 0;
     }
+
     30% {
       opacity: 0;
     }
+
     70% {
       opacity: 1;
     }
+
     100% {
       opacity: 0;
     }
@@ -65,12 +68,15 @@
     0% {
       opacity: 0;
     }
+
     45% {
       opacity: 0;
     }
+
     85% {
       opacity: 1;
     }
+
     100% {
       opacity: 0;
     }

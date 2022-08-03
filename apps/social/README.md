@@ -31,7 +31,7 @@ yarn install
 To run:
 
 ```shell
-yarn run start
+yarn start
 ```
 
 # License

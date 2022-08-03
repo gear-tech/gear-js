@@ -15,7 +15,7 @@ function MessageItem({ text, owner }: Props) {
         <div className={styles.icon}>
           <Identicon value={owner} size={25} theme="polkadot" />
         </div>
-        <div className={styles.name}>{toShortAddress(owner!)}</div>
+        <div className={styles.name}>{toShortAddress(owner)}</div>
       </div>
       <div className={styles.text}>{text}</div>
     </div>
