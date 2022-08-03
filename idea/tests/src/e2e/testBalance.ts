@@ -17,6 +17,6 @@ export async function validateGenesis(genesis: string): Promise<Passed> {
   const response = await request('genesis.valid', {
     genesis
   });
-  expect(response).to.have.own.property('result');
+  expect(response.result).to.eq(true);
   return true;
 }

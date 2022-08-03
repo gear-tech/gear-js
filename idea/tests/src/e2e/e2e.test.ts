@@ -14,7 +14,7 @@ let genesis: Hex;
 let prepared: IPrepared;
 let api: GearApi;
 
-jest.setTimeout(30000);
+jest.setTimeout(60_000);
 
 beforeAll(async () => {
   api = await GearApi.create({ providerAddress: base.gear.wsProvider });
@@ -35,6 +35,7 @@ afterAll(async () => {
 
 describe('program methods', () => {
   test('program.all request', async () => {
+    await sleep(60_000);
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
   });
 
