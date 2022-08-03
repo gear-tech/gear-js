@@ -1,0 +1,26 @@
+@use '@gear-js/ui/headings' as *;
+@use '@gear-js/ui/breakpoints' as *;
+
+.heading {
+  @extend %h2;
+
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+}
+
+.cubeWrapper {
+  @include xl {
+    margin-left: 0;
+  }
+
+  margin: -0.75rem 0 0 -8rem;
+}
+
+.outlet {
+  flex: 0 0 32.5rem;
+}

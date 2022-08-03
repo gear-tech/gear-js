@@ -1,0 +1,56 @@
+@use '@gear-js/ui/headings' as *;
+@use '@gear-js/ui/variables' as *;
+@use 'assets/styles/_variables' as *;
+
+.listWrapper {
+  border: 1px solid $formBorderColor;
+  padding: 2.8125rem 2.5rem 3.75rem 2.5rem;
+  background: $formColor;
+}
+
+.header {
+  padding-right: 1rem;
+
+  .timerWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.3125rem;
+    margin-bottom: 1.25rem;
+  
+    .timerDescription {
+      @include heading($fontSizeSmall, 2rem);
+  
+      color: $textColorSecondary;
+      margin-right: 1.25rem;
+    }
+  }
+}
+
+
+.table {
+  position: relative;
+  padding-right: 1rem;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1fr 0.6fr 1fr;
+  padding: 0.6875rem 1.3125rem;
+  background: $bgColor;
+}
+
+.tableCell {
+  align-items: center;
+  
+  .cellIcon {
+    width: 0.9375rem;
+    height: 0.9375rem;
+    margin-right: 0.3125rem;
+  }
+
+  .cellText {
+    color: $textColor;
+    font-size: $fontSizeSmall;
+  }
+}

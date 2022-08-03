@@ -1,0 +1,40 @@
+@use '@gear-js/ui/mixins' as *;
+@use '@gear-js/ui/variables' as *;
+@use 'assets/styles/_variables' as *;
+
+.switcher {
+  display: flex;
+  width: fit-content;
+  border: 1px solid $formBorderColor;
+  border-bottom: none;
+  background: $formColor;
+  border-radius: 5px 5px 0px 0px;
+  padding: 0.625rem;
+
+  & > *:not(:last-child) {
+    margin-right: 0.625rem;
+  }
+}
+
+.switchBtn {
+  @include transition();
+
+  color: $textColorSecondary;
+  cursor: pointer;
+  border: none;
+  font-size: $fontSize;
+  padding: 0.625rem 1.25rem;  
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+
+  &:hover, 
+  &:focus {
+    color: $textColor;
+    background: $buttonColorSecondaryHover;
+  }
+
+  &.active {
+    color: $textColor;
+    background: $formBorderColor;
+  }
+}

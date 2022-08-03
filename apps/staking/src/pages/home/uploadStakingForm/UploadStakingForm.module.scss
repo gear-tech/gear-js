@@ -1,0 +1,16 @@
+@use 'assets/styles/_variables' as *;
+
+.formWrapper {
+  border: 1px solid $formBorderColor;
+  padding: 2.8125rem 2.5rem 3.75rem 2.5rem;
+  background: $formColor;
+}
+
+.form {
+  margin-top: 1.5625rem;
+}
+
+.submitBtn {
+  width: 100%;
+  margin-top: 0.625rem;
+}
