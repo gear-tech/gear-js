@@ -20,7 +20,6 @@ beforeAll(async () => {
   api = await GearApi.create({ providerAddress: base.gear.wsProvider });
   genesis = api.genesisHash.toHex();
   await waitReady();
-  await sleep(50_000);
   try {
     prepared = await processPrepare(api);
   } catch (err) {
@@ -99,6 +98,7 @@ describe('testBalance', () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
   });
   test('genesis.valid request', async () => {
+    await sleep(50_000);
     expect(await validateGenesis(genesis)).toBeTruthy();
   });
 });
