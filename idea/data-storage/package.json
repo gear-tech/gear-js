@@ -33,7 +33,7 @@
     "@nestjs/microservices": "8.4.7",
     "@nestjs/platform-express": "8.4.7",
     "@nestjs/typeorm": "8.1.4",
-    "@polkadot/api": "8.13.1",
+    "@polkadot/api": "9.0.1",
     "kafkajs": "1.16.0",
     "pg": "8.7.3",
     "reflect-metadata": "0.1.13",
