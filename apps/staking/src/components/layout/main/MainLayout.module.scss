@@ -15,12 +15,16 @@
 
 .cubeWrapper {
   @include xl {
-    margin-left: 0;
+    display: none;
   }
 
   margin: -0.75rem 0 0 -8rem;
 }
 
 .outlet {
+  @include xl {
+    flex: 1 1;
+  }
+
   flex: 0 0 32.5rem;
 }

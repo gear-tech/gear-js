@@ -1,15 +1,17 @@
 @use '@gear-js/ui/headings' as *;
 @use '@gear-js/ui/variables' as *;
-@use 'assets/styles/_variables' as *;
 
-.listWrapper {
-  border: 1px solid $formBorderColor;
-  padding: 2.8125rem 2.5rem 3.75rem 2.5rem;
-  background: $formColor;
-}
+// reserve space for scroll
+$contentWidth: calc(100% - 16px);
 
 .header {
-  padding-right: 1rem;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  scrollbar-gutter: stable;
+}
+
+.headerContent {
+  width: $contentWidth;
 
   .timerWrapper {
     display: flex;
@@ -27,30 +29,78 @@
   }
 }
 
-
 .table {
+  overflow-y: auto;
+  max-height: 372px;
+  scrollbar-gutter: stable;
+}
+
+.tableContent {
   position: relative;
-  padding-right: 1rem;
+  width: $contentWidth;
 }
 
 .tableHeader {
-  display: grid;
-  grid-template-columns: 1fr 0.6fr 1fr;
-  padding: 0.6875rem 1.3125rem;
+  position: sticky;
+  top: 0;
+  z-index: 2;
   background: $bgColor;
 }
 
+.tableBody {
+  .tableRow { 
+    &:nth-child(odd) {
+      padding: 0.125rem 0;
+  
+      & > .tableCell {
+        padding: 0.625rem 1.3125rem;
+      }
+    }
+  
+    &:nth-child(even) {
+      background: rgba($bgColor, 0.3);
+      backdrop-filter: blur(8px);
+  
+      & > .tableCell {
+        border-right-color: #1C1C1C;
+      }
+    }
+  }
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr 1fr;
+}
+
 .tableCell {
-  align-items: center;
+  color: $textColor;
+  font-size: $fontSizeSmall;
+  overflow: hidden;
+  align-self: center;
+  text-align: center;
+  text-overflow: ellipsis;
+  padding: 0.75rem 1.3125rem;
   
   .cellIcon {
     width: 0.9375rem;
     height: 0.9375rem;
     margin-right: 0.3125rem;
   }
+  
+  &.address {
+    color: $textColorSecondary;
+  }
 
-  .cellText {
-    color: $textColor;
-    font-size: $fontSizeSmall;
+  &.reward {
+    color: $successColor;
+  }
+  
+  &:first-child {
+    text-align: left;
+  }
+
+  &:not(:last-child) {
+    border-right: 1px solid $bgColor;
   }
 }

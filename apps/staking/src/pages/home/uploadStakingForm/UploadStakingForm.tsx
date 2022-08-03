@@ -1,6 +1,7 @@
 import { useForm } from '@mantine/form';
 import { Button } from '@gear-js/ui';
 
+import { Box } from 'components/common/box';
 import { Subtitle } from 'components/common/subtitle';
 import { FormField } from 'components/common/formField';
 
@@ -16,7 +17,7 @@ function UploadStakingForm() {
   const isValid = Object.values(errors).every((error) => !error);
 
   return (
-    <div className={styles.formWrapper}>
+    <Box>
       <Subtitle>Init form</Subtitle>
       <form className={styles.form} onSubmit={handleSubmit}>
         <FormField
@@ -47,7 +48,7 @@ function UploadStakingForm() {
         />
         <Button type="submit" text="Submit" disabled={!isValid} className={styles.submitBtn} />
       </form>
-    </div>
+    </Box>
   );
 }
 

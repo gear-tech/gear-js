@@ -37,3 +37,21 @@ input[type="number"]:focus {
     appearance: none;
     -moz-appearance: textfield;
 }
+
+.customScroll {
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $lineColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    background-color: $textColor;
+  }
+
+  scrollbar-color: $textColor  $lineColor;
+  scrollbar-width: thin;
+}
