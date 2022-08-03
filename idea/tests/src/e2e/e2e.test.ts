@@ -20,6 +20,7 @@ beforeAll(async () => {
   api = await GearApi.create({ providerAddress: base.gear.wsProvider });
   genesis = api.genesisHash.toHex();
   await waitReady();
+  await sleep(50_000);
   try {
     prepared = await processPrepare(api);
   } catch (err) {
@@ -35,7 +36,6 @@ afterAll(async () => {
 
 describe('program methods', () => {
   test('program.all request', async () => {
-    await sleep(60_000);
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
   });
 
