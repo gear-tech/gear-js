@@ -1,0 +1,20 @@
+@use '@gear-js/ui/variables' as *;
+
+.indicator {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.6875rem;
+  color: $textColor;
+
+  .icon {
+    width: 1.875rem;
+    height: 1.875rem;
+    margin-right: 1.25rem;
+  }
+
+  .highlighted {
+    color: #FF8C00;
+  }
+}

@@ -19,14 +19,14 @@ export const SWITCHER_ITEMS: SwitchItem[] = [
   },
   {
     value: SwitcerValue.Stake,
-    label: 'Stakers List',
+    label: 'Stake',
   },
   {
-    value: SwitcerValue.List,
-    label: 'Stakers List',
+    value: SwitcerValue.Withdraw,
+    label: 'Withdraw',
   },
   {
-    value: SwitcerValue.List,
-    label: 'Stakers List',
+    value: SwitcerValue.State,
+    label: 'State',
   },
 ];

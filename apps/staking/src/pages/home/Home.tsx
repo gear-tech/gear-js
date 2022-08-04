@@ -7,10 +7,30 @@ import { ReactComponent as CubeSVG } from 'assets/images/cube.svg';
 import styles from './Home.module.scss';
 import { SWITCHER_ITEMS, SwitcerValue } from './consts';
 import { StakersList } from './stakersList';
+import { StakeForm } from './stakeForm';
+import { StateForm } from './stateForm';
+import { WithdrawForm } from './withdrawForm';
 import { UploadStakingForm } from './uploadStakingForm';
 
 function Home() {
-  const [activeValue, setActiveValue] = useState<string>(SwitcerValue.List);
+  const [activeValue, setActiveValue] = useState<string>(SwitcerValue.Stake);
+
+  const getContent = () => {
+    switch (activeValue) {
+      case SwitcerValue.Init:
+        return <UploadStakingForm />;
+      case SwitcerValue.List:
+        return <StakersList />;
+      case SwitcerValue.Stake:
+        return <StakeForm />;
+      case SwitcerValue.State:
+        return <StateForm />;
+      case SwitcerValue.Withdraw:
+        return <WithdrawForm />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -21,7 +41,7 @@ function Home() {
         </div>
         <div className={styles.main}>
           <Switcher value={activeValue} items={SWITCHER_ITEMS} onChange={setActiveValue} />
-          <Box>{activeValue === SwitcerValue.Init ? <UploadStakingForm /> : <StakersList />}</Box>
+          <Box>{getContent()}</Box>
         </div>
       </div>
     </>

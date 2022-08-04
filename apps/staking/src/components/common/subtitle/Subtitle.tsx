@@ -1,16 +1,20 @@
-import { memo, ReactNode } from 'react';
+import { ReactNode } from 'react';
+import clsx from 'clsx';
 
 import styles from './Subtitle.module.scss';
 
 type Props = {
   children: ReactNode;
+  className?: string;
 };
 
-const Subtitle = memo(({ children }: Props) => (
-  <h2 className={styles.subtitle}>
-    {children}
-    <hr className={styles.line} />
-  </h2>
-));
+function Subtitle({ className, children }: Props) {
+  return (
+    <h2 className={clsx(styles.subtitle, className)}>
+      {children}
+      <hr className={styles.line} />
+    </h2>
+  );
+}
 
 export { Subtitle };

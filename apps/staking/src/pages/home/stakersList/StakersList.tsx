@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 
-import { Box } from 'components/common/box';
 import { Subtitle } from 'components/common/subtitle';
 import medalSVG from 'assets/images/medal.svg';
 import moneySVG from 'assets/images/money.svg';
@@ -14,7 +13,7 @@ function StakersList() {
   const addressCellClasses = clsx(styles.tableCell, styles.address);
 
   return (
-    <Box>
+    <>
       {/* helper to take into account the scroll of the table */}
       <header className={clsx(styles.header, 'customScroll')}>
         <div className={styles.headerContent}>
@@ -52,7 +51,7 @@ function StakersList() {
           </div>
         </div>
       </div>
-    </Box>
+    </>
   );
 }
 

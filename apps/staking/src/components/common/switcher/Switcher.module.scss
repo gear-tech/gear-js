@@ -4,12 +4,13 @@
 
 .switcher {
   display: flex;
-  width: fit-content;
+  width: 100%;
   border: 1px solid $formBorderColor;
   border-bottom: none;
   background: $formColor;
   border-radius: 5px 5px 0px 0px;
-  padding: 0.625rem;
+  padding: 0.625rem 0.625rem 0.75rem 0.625rem;
+  overflow-x: auto;
 
   & > *:not(:last-child) {
     margin-right: 0.625rem;
@@ -26,6 +27,7 @@
   padding: 0.625rem 1.25rem;  
   background: rgba(0, 0, 0, 0.2);
   border-radius: 5px;
+  white-space: nowrap;
 
   &:hover, 
   &:focus {

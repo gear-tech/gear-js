@@ -13,7 +13,7 @@ function Switcher({ value: currentValue, items, onChange }: Props) {
   const getClasses = (value: string) => clsx(styles.switchBtn, value === currentValue && styles.active);
 
   return (
-    <ul className={styles.switcher}>
+    <ul className={clsx(styles.switcher, 'customScroll')}>
       {items.map(({ value, label }) => (
         <li key={value}>
           <button type="button" className={getClasses(value)} onClick={() => onChange(value)}>
