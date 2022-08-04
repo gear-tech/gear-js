@@ -2,15 +2,15 @@ import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import clsx from 'clsx';
+import { useApi } from '@gear-js/react-hooks';
+import { SetStateAction, useState } from 'react';
 import { Box, Content, Input } from 'components';
 import { InitPayload } from 'types';
 import { isValidHex } from 'utils';
-import { useApi } from '@gear-js/react-hooks';
-import { useState } from 'react';
+import { USER } from 'consts';
+import { Empty } from './empty';
 import { Users } from './users';
 import styles from './Create.module.scss';
-
-const users = ['0x00', '0x01', '0x00', '0x01'] as Hex[];
 
 type Props = {
   onCancel: () => void;
@@ -26,9 +26,12 @@ function Create({ onCancel, onSubmit }: Props) {
   const form = useForm({ initialValues, validate });
   const { getInputProps, values, setFieldError } = form;
 
+  const userForm = useForm({ initialValues: { user: '' as Hex }, validate: { user: isValidHex } });
+
   const [producers, setProducers] = useState([] as Hex[]);
   const [distributors, setDistributors] = useState([] as Hex[]);
   const [retailers, setRetailers] = useState([] as Hex[]);
+  const isAnyUser = producers.length > 0 || distributors.length > 0 || retailers.length > 0;
 
   const nftInputClassName = clsx(styles.input, styles.nftInput);
 
@@ -46,36 +49,60 @@ function Create({ onCancel, onSubmit }: Props) {
     onSubmit({ ...values, producers, distributors, retailers });
   });
 
+  const addUser = (setUsers: (callback: SetStateAction<Hex[]>) => void) =>
+    setUsers((prevUsers) => [...prevUsers, userForm.values.user]);
+
+  const getUsersSetter = (submitName: string) => {
+    switch (submitName) {
+      case USER.DISTRIBUTOR:
+        return setDistributors;
+      case USER.RETAILER:
+        return setRetailers;
+      default:
+        return setProducers;
+    }
+  };
+
+  const handleUserSubmit = userForm.onSubmit((_values, e) => {
+    // @ts-ignore
+    const submitButtonName = e.nativeEvent.submitter.name;
+    addUser(getUsersSetter(submitButtonName));
+    userForm.reset();
+  });
+
   return (
     <Content
       heading="Enter GNFT Program ID, GFT Program ID and add users to create a supply chain"
       className={styles.content}>
-      <form onSubmit={handleSubmit}>
+      <form id="create" onSubmit={handleSubmit}>
         <Box>
           <Input label="GNFT Program ID" className={nftInputClassName} {...getInputProps('nftProgramId')} />
           <Input label="GFT Program ID" className={styles.input} {...getInputProps('ftProgramId')} />
         </Box>
-
-        <Box>
-          <Input label="User ID" className={styles.input} />
-          <div className={styles.buttonsAction}>
-            <Button text="Add producer" color="secondary" size="small" />
-            <Button text="Add distributor" color="secondary" size="small" />
-            <Button text="Add retailer" color="secondary" size="small" />
-          </div>
-
-          <div className={styles.users}>
-            <Users heading="Producers" list={users} />
-            <Users heading="Distributors" list={users} />
-            <Users heading="Retailers" list={users} />
-          </div>
-        </Box>
-
-        <div className={styles.buttonsSubmit}>
-          <Button text="Cancel" color="secondary" onClick={onCancel} />
-          <Button type="submit" text="Create" />
-        </div>
       </form>
+
+      <Box>
+        <form onSubmit={handleUserSubmit}>
+          <Input label="User ID" className={styles.input} {...userForm.getInputProps('user')} />
+          <div className={styles.buttonsAction}>
+            <Button type="submit" text="Add producer" color="secondary" size="small" name={USER.PRODUCER} />
+            <Button type="submit" text="Add distributor" color="secondary" size="small" name={USER.DISTRIBUTOR} />
+            <Button type="submit" text="Add retailer" color="secondary" size="small" name={USER.RETAILER} />
+          </div>
+        </form>
+
+        <div className={styles.users}>
+          <Users heading="Producers" list={producers} />
+          <Users heading="Distributors" list={distributors} />
+          <Users heading="Retailers" list={retailers} />
+          {!isAnyUser && <Empty />}
+        </div>
+      </Box>
+
+      <div className={styles.buttonsSubmit}>
+        <Button text="Cancel" color="secondary" onClick={onCancel} />
+        <Button type="submit" form="create" text="Create" />
+      </div>
     </Content>
   );
 }

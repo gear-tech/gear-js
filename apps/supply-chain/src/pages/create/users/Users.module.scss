@@ -17,6 +17,11 @@
   color: $successColor;
 }
 
+.list {
+  height: 280px;
+  overflow: auto;
+}
+
 .user {
   padding: 8px 16px;
   overflow: hidden;

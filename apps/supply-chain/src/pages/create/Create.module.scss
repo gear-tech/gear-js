@@ -32,6 +32,7 @@
 
 .users {
   display: flex;
+  position: relative;
 
   & > *:not(:last-child) {
     margin-right: 24px;

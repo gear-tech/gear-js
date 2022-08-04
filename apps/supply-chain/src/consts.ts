@@ -11,4 +11,10 @@ const FORM = {
   USE: 'use',
 };
 
-export { ADDRESS, LOCAL_STORAGE, FORM };
+const USER = {
+  PRODUCER: 'producer',
+  DISTRIBUTOR: 'distributor',
+  RETAILER: 'retailer',
+};
+
+export { ADDRESS, LOCAL_STORAGE, FORM, USER };

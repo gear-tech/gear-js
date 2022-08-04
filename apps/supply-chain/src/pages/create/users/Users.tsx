@@ -27,7 +27,7 @@ function Users({ heading, list }: Props) {
         {heading}: <span className={amountClassName}>{usersAmount}</span>
       </p>
       <Box secondary>
-        <ul>{getUsers()}</ul>
+        <ul className={styles.list}>{getUsers()}</ul>
       </Box>
     </div>
   );
