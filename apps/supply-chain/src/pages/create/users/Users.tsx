@@ -1,14 +1,17 @@
 import { Hex } from '@gear-js/api';
+import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
+import trash from 'assets/images/icons/trash.svg';
 import { Box } from 'components';
 import styles from './Users.module.scss';
 
 type Props = {
   heading: string;
   list: Hex[];
+  onRemoveButtonClick: (id: number) => void;
 };
 
-function Users({ heading, list }: Props) {
+function Users({ heading, list, onRemoveButtonClick }: Props) {
   const usersAmount = list.length;
   const isAnyUser = usersAmount > 0;
   const amountClassName = clsx(isAnyUser && styles.amount);
@@ -18,6 +21,7 @@ function Users({ heading, list }: Props) {
       // eslint-disable-next-line react/no-array-index-key
       <li key={index} className={styles.user}>
         {user}
+        <Button icon={trash} color="secondary" className={styles.button} onClick={() => onRemoveButtonClick(index)} />
       </li>
     ));
 

@@ -1,7 +1,7 @@
 @use '@gear-js/ui/variables' as *;
 
 .users {
-  flex: 1;
+  overflow: hidden;
 }
 
 .heading {
@@ -24,10 +24,27 @@
 
 .user {
   padding: 8px 16px;
-  overflow: hidden;
   text-overflow: ellipsis;
+  overflow: hidden;
+  position: relative;
 
   &:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.04);
   }
+
+  &:hover {
+    background-color: #373737;
+
+    .button {
+      display: inline-flex;
+    }
+  }
+}
+
+.button {
+  display: none;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 }

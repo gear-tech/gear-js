@@ -52,6 +52,13 @@ function Create({ onCancel, onSubmit }: Props) {
   const addUser = (setUsers: (callback: SetStateAction<Hex[]>) => void) =>
     setUsers((prevUsers) => [...prevUsers, userForm.values.user]);
 
+  const removeUser = (setUsers: (callback: SetStateAction<Hex[]>) => void) => (id: number) =>
+    setUsers((prevUsers) => prevUsers.filter((_user, index) => index !== id));
+
+  const removeDistrubutor = removeUser(setDistributors);
+  const removeRetailer = removeUser(setRetailers);
+  const removeProducer = removeUser(setProducers);
+
   const getUsersSetter = (submitName: string) => {
     switch (submitName) {
       case USER.DISTRIBUTOR:
@@ -92,9 +99,9 @@ function Create({ onCancel, onSubmit }: Props) {
         </form>
 
         <div className={styles.users}>
-          <Users heading="Producers" list={producers} />
-          <Users heading="Distributors" list={distributors} />
-          <Users heading="Retailers" list={retailers} />
+          <Users heading="Producers" list={producers} onRemoveButtonClick={removeProducer} />
+          <Users heading="Distributors" list={distributors} onRemoveButtonClick={removeDistrubutor} />
+          <Users heading="Retailers" list={retailers} onRemoveButtonClick={removeRetailer} />
           {!isAnyUser && <Empty />}
         </div>
       </Box>

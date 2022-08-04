@@ -31,10 +31,8 @@
 }
 
 .users {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
   position: relative;
-
-  & > *:not(:last-child) {
-    margin-right: 24px;
-  }
 }
