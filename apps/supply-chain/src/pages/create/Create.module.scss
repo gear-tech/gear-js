@@ -9,25 +9,12 @@
   }
 }
 
-.nftInput {
-  margin-bottom: 30px;
-}
-
 .buttons {
-  &Action {
-    margin: 16px 0 30px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-
-  &Submit {
-    max-width: 590px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
+  max-width: 590px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
 .users {
