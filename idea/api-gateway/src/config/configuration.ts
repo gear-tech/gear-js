@@ -22,4 +22,8 @@ export default () => ({
       password: checkEnv('KAFKA_SASL_PASSWORD'),
     },
   },
+  // every 1 hour "0 * * * *"
+  cron: {
+    time: checkEnv('CRON_TIME') || '0 * * * *',
+  }
 });

@@ -1,6 +1,8 @@
 import { CronJob } from 'cron';
 import { KAFKA_TOPICS } from '@gear-js/common';
 
+import configuration from '../config/configuration';
+
 import { kafkaProducer } from '../kafka/producer';
 import { genesisHashesCollection } from './genesis-hashes-collection';
 
@@ -8,11 +10,12 @@ let cron: CronJob;
 
 //  1 min
 const ONE_MIN = 60 * 1000;
+const cronTime = configuration().cron.time;
 
 function schedulerGenesisHashes(){
   return {
     start() {
-      cron = new CronJob(getCronRunTime(), async function () {
+      cron = new CronJob(cronTime, async function () {
         genesisHashesCollection.clear();
         await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASHES, 'testBalance.genesis.hashes');
       });
@@ -26,16 +29,6 @@ function schedulerGenesisHashes(){
       cron.start();
     }
   };
-}
-
-function getCronRunTime(): string {
-  if (process.env.TEST_ENV){
-    // every 30 sec
-    return '*/30 * * * * *';
-  }
-
-  // every 3 hours
-  return '0 */3 * * *';
 }
 
 export { schedulerGenesisHashes };
