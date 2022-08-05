@@ -15,7 +15,7 @@ const cronTime = configuration().cron.time;
 function schedulerGenesisHashes(){
   return {
     start() {
-      cron = new CronJob(cronTime, async function () {
+      cron = new CronJob(process.env.TEST_ENV ?  '*/30 * * * * *'  : '0 */3 * * *', async function () {
         genesisHashesCollection.clear();
         await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASHES, 'testBalance.genesis.hashes');
       });
