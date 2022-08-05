@@ -17,7 +17,7 @@ type Props = {
 function Create({ onCancel, onSubmit }: Props) {
   const { list, action, isAnyUser } = useUsers();
   const { distributors, retailers, producers } = list;
-  const { removeDistrubutor, removeProducer, removeRetailer, addUser } = action;
+  const { removeDistrubutor, removeProducer, removeRetailer, getUserSubmit } = action;
 
   return (
     <Content
@@ -26,7 +26,7 @@ function Create({ onCancel, onSubmit }: Props) {
       <AddressForm id={FORM.CREATE} onSubmit={(addresses) => onSubmit({ ...addresses, ...list })} />
 
       <Box>
-        <UserForm onSubmit={addUser} />
+        <UserForm onSubmit={getUserSubmit} />
         <div className={styles.users}>
           <Users heading="Producers" list={producers} onRemoveButtonClick={removeProducer} />
           <Users heading="Distributors" list={distributors} onRemoveButtonClick={removeDistrubutor} />

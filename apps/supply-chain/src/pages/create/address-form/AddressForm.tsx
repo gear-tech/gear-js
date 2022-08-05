@@ -12,7 +12,10 @@ type Props = {
   onSubmit: (value: { nftProgramId: Hex; ftProgramId: Hex }) => void;
 };
 
-const initialValues = { ftProgramId: '' as Hex, nftProgramId: '' as Hex };
+const initialValues = {
+  ftProgramId: '0xaa384c1419009bb86e1386f7460478c9ab48fa5f55ef09f0fde65fe88e1fee0e' as Hex,
+  nftProgramId: '0xd2786de18d6440446f1c5d1cfe1758e07c17ff5af99c263bcac1ef0b4aefa5d6' as Hex,
+};
 const validate = { ftProgramId: isValidHex, nftProgramId: isValidHex };
 
 function AddressForm({ id, onSubmit }: Props) {

@@ -8,7 +8,7 @@ import commonStyles from '../Create.module.scss';
 import styles from './UserForm.module.scss';
 
 type Props = {
-  onSubmit: (type: string, user: Hex) => void;
+  onSubmit: (type: string, user: Hex) => { isUserExists: boolean; addUser: (user: Hex) => void };
 };
 
 const initialValues = { user: '' as Hex };
@@ -16,13 +16,19 @@ const validate = { user: isValidHex };
 
 function UserForm({ onSubmit }: Props) {
   const form = useForm({ initialValues, validate });
-  const { getInputProps, reset } = form;
+  const { getInputProps, reset, setFieldError } = form;
 
   const handleSubmit = form.onSubmit(({ user }, e) => {
     // @ts-ignore
     const submitButtonName = e.nativeEvent.submitter.name;
-    onSubmit(submitButtonName, user);
-    reset();
+    const { isUserExists, addUser } = onSubmit(submitButtonName, user);
+
+    if (isUserExists) {
+      setFieldError('user', 'User already exists in the choosen list');
+    } else {
+      addUser(user);
+      reset();
+    }
   });
 
   return (
