@@ -36,8 +36,10 @@ describe('Calculate gas', () => {
     const gas: GasInfo = await api.program.calculateGas.init(aliceRaw, code, '0x00', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
+    expect(gas.min_limit.gtn(0)).toBeTruthy();
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
+    expect(gas.toHuman()).toHaveProperty('may_be_returned');
     gasLimits.init = gas.min_limit;
     expect(gasLimits.init.toHuman()).toBe(gas.min_limit.toHuman());
   });
@@ -55,9 +57,11 @@ describe('Calculate gas', () => {
     const gas = await api.program.calculateGas.handle(aliceRaw, programId, '0x50494e47', 1000, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
+    expect(gas.min_limit.gtn(0)).toBeTruthy();
     gasLimits.handle = gas.min_limit;
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
+    expect(gas.toHuman()).toHaveProperty('may_be_returned');
   });
 
   test('Send message', async () => {
@@ -85,8 +89,10 @@ describe('Calculate gas', () => {
 
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
+    expect(gas.min_limit.gtn(0)).toBeTruthy();
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
+    expect(gas.toHuman()).toHaveProperty('may_be_returned');
   });
 
   test('Calculate reply gas', async () => {
@@ -97,12 +103,13 @@ describe('Calculate gas', () => {
     gasLimits.reply = gas.min_limit;
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
+    expect(gas.toHuman()).toHaveProperty('may_be_returned');
   });
 
   test('Send reply', async () => {
     expect(gasLimits.reply).toBeDefined();
-    api.reply.send({ replyToId: messageId, payload: '0x50494e47', gasLimit: gasLimits.reply as u64 });
-    const data = await sendTransaction(api.reply, alice, 'MessageEnqueued');
+    const tx = api.message.sendReply({ replyToId: messageId, payload: '0x50494e47', gasLimit: gasLimits.reply as u64 });
+    const data = await sendTransaction(tx, alice, 'MessageEnqueued');
     expect(data).toBeDefined();
   });
 });
