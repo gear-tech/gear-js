@@ -32,19 +32,19 @@ afterAll(async () => {
 });
 
 describe('Calculate gas', () => {
-  test('Get init gas spent', async () => {
+  test.only('Get init gas spent', async () => {
     const gas: GasInfo = await api.program.calculateGas.init(aliceRaw, code, '0x00', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
+    gasLimits.init = gas.min_limit;
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
     expect(gas.toHuman()).toHaveProperty('may_be_returned');
-    gasLimits.init = gas.min_limit;
     expect(gasLimits.init.toHuman()).toBe(gas.min_limit.toHuman());
   });
 
-  test('Submit program', async () => {
+  test.only('Submit program', async () => {
     expect(gasLimits.init).toBeDefined();
     programId = api.program.upload({ code, gasLimit: gasLimits.init as u64 }).programId;
     const initStatus = checkInit(api, programId);
