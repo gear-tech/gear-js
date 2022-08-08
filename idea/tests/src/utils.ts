@@ -1,7 +1,7 @@
-export function sleep(time?: number) {
+export function sleep(time = 2000) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(0);
-    }, time ? time : 2000);
+    }, time);
   });
 }
