@@ -1,17 +1,12 @@
+import { ProgramState, StakerState } from 'types/state';
 import { SwitchItem } from 'components/common/switcher';
 
-export enum SwitcerValue {
-  Init = 'init',
-  List = 'list',
-  State = 'state',
-  Stake = 'stake',
-  Withdraw = 'withdraw',
-}
+import { SwitcerValue } from './types';
 
 export const SWITCHER_ITEMS: SwitchItem[] = [
   {
-    value: SwitcerValue.Init,
-    label: 'Init / Update Staking',
+    value: SwitcerValue.Update,
+    label: 'Update Staking',
   },
   {
     value: SwitcerValue.List,
@@ -30,3 +25,14 @@ export const SWITCHER_ITEMS: SwitchItem[] = [
     label: 'State',
   },
 ];
+
+export const PAYLOAD_FOR_INFO_STATE = {
+  [ProgramState.Info]: null,
+};
+
+export const DEFAULT_STAKER_STATE: StakerState['Staker'] = {
+  balance: '0',
+  rewardDebt: '0',
+  distributed: '0',
+  rewardAllowed: '0',
+};

@@ -13,5 +13,4 @@ const VALIDATE: FormValidate = {
 export const FORM_CONFIG: UseFormInput<FormValues> = {
   validate: VALIDATE,
   initialValues: INITIAL_VALUES,
-  validateInputOnChange: true,
 };

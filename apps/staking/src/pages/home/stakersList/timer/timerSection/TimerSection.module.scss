@@ -2,19 +2,19 @@
 @use '@gear-js/ui/variables' as *;
 
 .timerSection {
-  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 
   .timeUnit {    
     @include heading(0.5rem, 1.3125rem);
-
-    position: absolute;
-    top: -1.3125rem;
-    left: 50%;
-    transform: translateX(-50%);
   }  
-  
+}
+
+.clockFace {
+  display: flex;
+
   .timeValue {
-    display: inline-block;
     width: 1.75rem;
     color: $bgColor;
     padding: 0.0625rem 0;

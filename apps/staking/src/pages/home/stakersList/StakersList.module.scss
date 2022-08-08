@@ -1,43 +1,37 @@
 @use '@gear-js/ui/headings' as *;
 @use '@gear-js/ui/variables' as *;
 
-// reserve space for scroll
-$contentWidth: calc(100% - 16px);
-
 .header {
   overflow: hidden;
   margin-bottom: 1.25rem;
   scrollbar-gutter: stable;
-}
-
-.headerContent {
-  width: $contentWidth;
 
   .timerWrapper {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding-top: 1.3125rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
   
     .timerDescription {
       @include heading($fontSizeSmall, 2rem);
   
       color: $textColorSecondary;
-      margin-right: 1.25rem;
+      width: 100%;
+      text-align: left;
     }
   }
 }
 
 .table {
+  height: 372px;
   overflow-y: auto;
-  max-height: 372px;
   scrollbar-gutter: stable;
 }
 
 .tableContent {
+  width: calc(100% - 16px);
+  height: 100%;
   position: relative;
-  width: $contentWidth;
 }
 
 .tableHeader {

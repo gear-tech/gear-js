@@ -10,7 +10,11 @@ import styles from './StakeForm.module.scss';
 import { FORM_CONFIG } from './consts';
 import { FieldName, FormValues } from './types';
 
-function StakeForm() {
+type Props = {
+  balance: string;
+};
+
+function StakeForm({ balance }: Props) {
   const { errors, onSubmit, getInputProps } = useForm<FormValues>(FORM_CONFIG);
 
   const handleSubmit = onSubmit(() => {});
@@ -20,7 +24,7 @@ function StakeForm() {
   return (
     <>
       <Subtitle className={styles.subtitle}>Stake form</Subtitle>
-      <IndicatorValue name="Staked Balance" icon={filledMoneySVG} value="5" />
+      <IndicatorValue name="Staked Balance" icon={filledMoneySVG} value={balance} />
       <form className={styles.form} onSubmit={handleSubmit}>
         <FormField label="Stake" placeholder="Enter amount of tokens" {...getInputProps(FieldName.Stake)} />
         <Button type="submit" text="Submit" disabled={isInvalid} className={styles.submitBtn} />

@@ -4,11 +4,11 @@ import { Button } from '@gear-js/ui';
 import { Subtitle } from 'components/common/subtitle';
 import { FormField } from 'components/common/formField';
 
-import styles from './UploadStakingForm.module.scss';
+import styles from './UpdateStakingForm.module.scss';
 import { FieldName, FormValues } from './types';
 import { FORM_CONFIG } from './consts';
 
-function UploadStakingForm() {
+function UpdateStakingForm() {
   const { errors, onSubmit, getInputProps } = useForm<FormValues>(FORM_CONFIG);
 
   const handleSubmit = onSubmit(() => {});
@@ -17,7 +17,7 @@ function UploadStakingForm() {
 
   return (
     <>
-      <Subtitle>Init form</Subtitle>
+      <Subtitle>Update staking form</Subtitle>
       <form className={styles.form} onSubmit={handleSubmit}>
         <FormField
           label="Staking token address"
@@ -30,8 +30,7 @@ function UploadStakingForm() {
           {...getInputProps(FieldName.RewardAddress)}
         />
         <FormField
-          min={0}
-          type="number"
+          type="datetime-local"
           label="Reward payout interval"
           placeholder="Enter time"
           {...getInputProps(FieldName.Interval)}
@@ -43,4 +42,4 @@ function UploadStakingForm() {
   );
 }
 
-export { UploadStakingForm };
+export { UpdateStakingForm };

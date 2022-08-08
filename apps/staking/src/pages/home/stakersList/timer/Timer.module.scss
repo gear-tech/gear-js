@@ -1,9 +1,8 @@
-@use '@gear-js/ui/headings' as *;
 @use '@gear-js/ui/variables' as *;
 
 .timer {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 
   .separator { 
     color: #CCCCCC;

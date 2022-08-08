@@ -1,16 +1,25 @@
 import styles from './TimerSection.module.scss';
 
 type Props = {
-  value: string;
+  value: number;
   timeUnit: string;
 };
 
 function TimerSection({ value, timeUnit }: Props) {
+  const numbers = String(value).split('');
+
   return (
     <div className={styles.timerSection}>
       <span className={styles.timeUnit}>{timeUnit}</span>
-      <p className={styles.timeValue}>{value[0]}</p>
-      <p className={styles.timeValue}>{value[1]}</p>
+      <div className={styles.clockFace}>
+        {numbers.length === 1 && <p className={styles.timeValue}>0</p>}
+        {numbers.map((number, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <p key={`${number} ${index}`} className={styles.timeValue}>
+            {number}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
