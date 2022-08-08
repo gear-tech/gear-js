@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
 import { AnyJson } from '@polkadot/types/types';
-import { useMetadata, useReadState, useSendMessage } from '@gear-js/react-hooks';
+import { useReadState } from '@gear-js/react-hooks';
 
 import { STAKING_CONTRACT_ADDRESS } from 'consts';
 import stakingMetaWasm from 'assets/wasm/staking.meta.wasm';

@@ -1,23 +1,50 @@
 import { useForm } from '@mantine/form';
+import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
+import { useStakingMessage } from 'hooks';
+import { ProgramMessage } from 'types/message';
 import { Subtitle } from 'components/common/subtitle';
 import { FormField } from 'components/common/formField';
 import { IndicatorValue } from 'components/common/indicatorValue';
 import filledMoneySVG from 'assets/images/filledMoney.svg';
+import { getValidation } from './helpers';
 
 import styles from './WithdrawForm.module.scss';
-import { FORM_CONFIG } from './consts';
+import { INITIAL_VALUES } from './consts';
 import { FieldName, FormValues } from './types';
 
 type Props = {
-  balance: string;
+  balance: number;
+  updateStakerInfo: (value: string) => void;
 };
 
-function WithdrawForm({ balance }: Props) {
-  const { errors, onSubmit, getInputProps } = useForm<FormValues>(FORM_CONFIG);
+function WithdrawForm({ balance, updateStakerInfo }: Props) {
+  const alert = useAlert();
 
-  const handleSubmit = onSubmit(() => {});
+  const { errors, reset, onSubmit, getInputProps } = useForm<FormValues>({
+    initialValues: INITIAL_VALUES,
+    validate: getValidation(balance),
+  });
+
+  const sendMessage = useStakingMessage();
+
+  const handleSubmit = onSubmit((values) => {
+    if (balance === 0) {
+      alert.error('Staked balance is 0');
+
+      return;
+    }
+
+    const amount = +values.amount;
+
+    const onSuccess = () => {
+      updateStakerInfo(String(balance - amount));
+      reset();
+    };
+
+    sendMessage({ [ProgramMessage.Withdraw]: amount }, { onSuccess });
+  });
 
   const isInvalid = Boolean(errors[FieldName.Amount]);
 
@@ -26,7 +53,13 @@ function WithdrawForm({ balance }: Props) {
       <Subtitle className={styles.subtitle}>Withdraw form</Subtitle>
       <IndicatorValue name="Staked Balance" icon={filledMoneySVG} value={balance} />
       <form className={styles.form} onSubmit={handleSubmit}>
-        <FormField label="Amount" placeholder="Enter withdraw amount" {...getInputProps(FieldName.Amount)} />
+        <FormField
+          min={1}
+          type="number"
+          label="Amount"
+          placeholder="Enter withdraw amount"
+          {...getInputProps(FieldName.Amount)}
+        />
         <Button type="submit" text="Submit" disabled={isInvalid} className={styles.submitBtn} />
       </form>
     </>

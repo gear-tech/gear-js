@@ -5,7 +5,7 @@ import styles from './IndicatorValue.module.scss';
 type Props = {
   name: string;
   icon: string;
-  value: string;
+  value: number;
   className?: string;
   isHighlighted?: boolean;
 };

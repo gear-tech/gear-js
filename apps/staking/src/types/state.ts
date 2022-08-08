@@ -21,3 +21,11 @@ export type StakerState = {
     rewardAllowed: string;
   };
 };
+
+export type StakersState = {
+  Stakers: {
+    [id: string]: StakerState['Staker'];
+  };
+};
+
+export type Staker = Record<keyof StakerState['Staker'], number>;

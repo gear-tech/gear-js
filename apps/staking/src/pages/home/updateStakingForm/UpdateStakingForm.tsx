@@ -1,6 +1,8 @@
 import { useForm } from '@mantine/form';
 import { Button } from '@gear-js/ui';
 
+import { useStakingMessage } from 'hooks';
+import { ProgramMessage } from 'types/message';
 import { Subtitle } from 'components/common/subtitle';
 import { FormField } from 'components/common/formField';
 
@@ -9,9 +11,23 @@ import { FieldName, FormValues } from './types';
 import { FORM_CONFIG } from './consts';
 
 function UpdateStakingForm() {
-  const { errors, onSubmit, getInputProps } = useForm<FormValues>(FORM_CONFIG);
+  const sendMessage = useStakingMessage();
 
-  const handleSubmit = onSubmit(() => {});
+  const { errors, reset, onSubmit, getInputProps } = useForm<FormValues>(FORM_CONFIG);
+
+  const handleSubmit = onSubmit((values) => {
+    const unixDate = Date.parse(values.distributionTime);
+
+    sendMessage(
+      {
+        [ProgramMessage.UpdateStaking]: {
+          ...values,
+          distributionTime: unixDate - Date.now(),
+        },
+      },
+      { onSuccess: reset },
+    );
+  });
 
   const isValid = Object.values(errors).every((error) => !error);
 
@@ -22,7 +38,7 @@ function UpdateStakingForm() {
         <FormField
           label="Staking token address"
           placeholder="Enter address"
-          {...getInputProps(FieldName.StakingAddress, { withError: true })}
+          {...getInputProps(FieldName.StakingAddress)}
         />
         <FormField
           label="Reward token address"
@@ -33,9 +49,15 @@ function UpdateStakingForm() {
           type="datetime-local"
           label="Reward payout interval"
           placeholder="Enter time"
-          {...getInputProps(FieldName.Interval)}
+          {...getInputProps(FieldName.DistributionTime)}
         />
-        <FormField label="Reward to be distributed" placeholder="Enter reward" {...getInputProps(FieldName.Reward)} />
+        <FormField
+          min={0}
+          type="number"
+          label="Reward to be distributed"
+          placeholder="Enter reward"
+          {...getInputProps(FieldName.Reward)}
+        />
         <Button type="submit" text="Submit" disabled={!isValid} className={styles.submitBtn} />
       </form>
     </>

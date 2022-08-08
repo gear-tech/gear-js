@@ -1,6 +1,9 @@
+import { useMemo } from 'react';
 import clsx from 'clsx';
 
 import { useStakingState } from 'hooks';
+import { preparedStakerState, getReward } from 'utils';
+import { StakersState } from 'types/state';
 import { Loader } from 'components/loaders/loader';
 import { Subtitle } from 'components/common/subtitle';
 import medalSVG from 'assets/images/medal.svg';
@@ -16,10 +19,25 @@ type Props = {
 };
 
 function StakersList({ distributionTime }: Props) {
-  const { state, isStateRead } = useStakingState(PAYLOAD_FOR_STAKERS_STATE);
+  const { state, isStateRead } = useStakingState<StakersState>(PAYLOAD_FOR_STAKERS_STATE);
 
   const rewardCellClasses = clsx(styles.tableCell, styles.reward);
   const addressCellClasses = clsx(styles.tableCell, styles.address);
+
+  const stakers = useMemo(() => {
+    if (!state?.Stakers) {
+      return [];
+    }
+
+    return Object.entries(state.Stakers).map(([id, value]) => (
+      <div key={id} className={styles.tableRow}>
+        <span className={addressCellClasses}>{id}</span>
+        <span className={styles.tableCell}>{value.balance}</span>
+        <span className={rewardCellClasses}>{getReward(preparedStakerState(value))}</span>
+      </div>
+    ));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   return (
     <>
@@ -48,13 +66,7 @@ function StakersList({ distributionTime }: Props) {
           </div>
           {isStateRead ? (
             <div className={styles.tableBody}>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 112, 12].map((value) => (
-                <div key={value} className={styles.tableRow}>
-                  <span className={addressCellClasses}>1BottSLRHSeqrdk1BottSLRHSeqrdk1BottSLRHSeqrdk</span>
-                  <span className={styles.tableCell}>{5 + value}</span>
-                  <span className={rewardCellClasses}>{value}</span>
-                </div>
-              ))}
+              {stakers.length ? stakers : <p className={styles.emptyContent}>No stakers</p>}
             </div>
           ) : (
             <Loader />

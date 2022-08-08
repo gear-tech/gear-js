@@ -4,22 +4,31 @@ import { UseFormInput } from '@mantine/form/lib/types';
 import { FieldName, FormValues, FormValidate } from './types';
 
 const INITIAL_VALUES: FormValues = {
-  [FieldName.Reward]: '',
-  [FieldName.Interval]: 0,
+  [FieldName.Reward]: 0,
   [FieldName.RewardAddress]: '',
   [FieldName.StakingAddress]: '',
+  [FieldName.DistributionTime]: '',
 };
 
 const VALIDATE: FormValidate = {
   [FieldName.Reward]: (value) => (value ? null : 'Field is required'),
-  [FieldName.Interval]: (value) => {
-    if (value < 0) return "Interval can't be negative";
-    if (value === 0) return "Interval can't be 0";
+  [FieldName.RewardAddress]: (value: string) => {
+    if (!value) return 'Field is required';
 
-    return null;
+    return isHex(value) ? null : 'Address should be hex';
   },
-  [FieldName.RewardAddress]: (value) => (isHex(value) ? null : 'Address should be hex'),
-  [FieldName.StakingAddress]: (value) => (isHex(value) ? null : 'Address should be hex'),
+  [FieldName.StakingAddress]: (value: string) => {
+    if (!value) return 'Field is required';
+
+    return isHex(value) ? null : 'Address should be hex';
+  },
+  [FieldName.DistributionTime]: (value: string) => {
+    if (!value) return 'Field is required';
+
+    const currentDate = Date.parse(value);
+
+    return currentDate > Date.now() ? null : 'Date must be greater than current';
+  },
 };
 
 export const FORM_CONFIG: UseFormInput<FormValues> = {

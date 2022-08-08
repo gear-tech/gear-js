@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 
 export enum FieldName {
-  Stake = 'stake',
+  Amount = 'amount',
 }
 
 export type FormValues = {
-  [FieldName.Stake]: string;
+  [FieldName.Amount]: number;
 };
 
 export type FormValidate = Record<keyof FormValues, (value: string | number) => ReactNode>;

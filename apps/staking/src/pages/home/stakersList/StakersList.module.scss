@@ -2,9 +2,8 @@
 @use '@gear-js/ui/variables' as *;
 
 .header {
-  overflow: hidden;
+  padding-right: 16px;
   margin-bottom: 1.25rem;
-  scrollbar-gutter: stable;
 
   .timerWrapper {
     display: flex;
@@ -59,6 +58,12 @@
         border-right-color: #1C1C1C;
       }
     }
+  }
+
+  .emptyContent {
+    padding: 1.5rem 0;
+    font-size: $fontSize;
+    text-align: center;
   }
 }
 

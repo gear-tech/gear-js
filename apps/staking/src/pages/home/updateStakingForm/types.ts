@@ -1,17 +1,17 @@
 import { ReactNode } from 'react';
 
 export enum FieldName {
-  Reward = 'reward',
-  Interval = 'interval',
-  RewardAddress = 'rewardAddress',
-  StakingAddress = 'stakingAddress',
+  Reward = 'rewardTotal ',
+  RewardAddress = 'rewardTokenAddress',
+  StakingAddress = 'stakingTokenAddress',
+  DistributionTime = 'distributionTime',
 }
 
 export type FormValues = {
-  [FieldName.Reward]: string;
-  [FieldName.Interval]: number;
+  [FieldName.Reward]: number;
   [FieldName.RewardAddress]: string;
   [FieldName.StakingAddress]: string;
+  [FieldName.DistributionTime]: string;
 };
 
-export type FormValidate = Record<keyof FormValues, (value: string | number) => ReactNode>;
+export type FormValidate = Record<keyof FormValues, (value: any) => ReactNode>;

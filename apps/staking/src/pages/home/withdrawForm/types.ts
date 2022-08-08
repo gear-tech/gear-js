@@ -5,7 +5,7 @@ export enum FieldName {
 }
 
 export type FormValues = {
-  [FieldName.Amount]: string;
+  [FieldName.Amount]: number;
 };
 
 export type FormValidate = Record<keyof FormValues, (value: string | number) => ReactNode>;

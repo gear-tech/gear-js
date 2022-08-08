@@ -3,7 +3,8 @@ import { useAccount } from '@gear-js/react-hooks';
 
 import { useStakingState } from 'hooks/useStakingState';
 import { TIME } from 'consts';
-import { ProgramState, InfoState, StakerState } from 'types/state';
+import { convertToNumber, preparedStakerState } from 'utils';
+import { ProgramState, InfoState, StakerState, Staker } from 'types/state';
 import { Box } from 'components/common/box';
 import { Loader } from 'components/loaders/loader';
 import { Switcher } from 'components/common/switcher';
@@ -11,7 +12,7 @@ import { ReactComponent as CubeSVG } from 'assets/images/cube.svg';
 
 import styles from './Home.module.scss';
 import { SwitcerValue } from './types';
-import { SWITCHER_ITEMS, PAYLOAD_FOR_INFO_STATE, DEFAULT_STAKER_STATE } from './consts';
+import { SWITCHER_ITEMS, PAYLOAD_FOR_INFO_STATE, DEFAULT_STAKER_INFO } from './consts';
 import { StakersList } from './stakersList';
 import { StakeForm } from './stakeForm';
 import { StateForm } from './stateForm';
@@ -22,7 +23,7 @@ function Home() {
   const { account } = useAccount();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [stakerInfo, setStakerInfo] = useState<StakerState['Staker']>(DEFAULT_STAKER_STATE);
+  const [staker, setStaker] = useState<Staker>(DEFAULT_STAKER_INFO);
   const [activeValue, setActiveValue] = useState<string>(SwitcerValue.List);
   const [distributionTime, setDistributionTime] = useState(0);
 
@@ -35,6 +36,12 @@ function Home() {
 
   const switcherItems = useMemo(() => (isOwner ? SWITCHER_ITEMS : SWITCHER_ITEMS.slice(1)), [isOwner]);
 
+  const updateStakerInfo = (stateName: string) => (value: string) =>
+    setStaker((prevState) => ({
+      ...prevState,
+      [stateName]: value,
+    }));
+
   const reduceDistributionTime = () =>
     setDistributionTime((prevState) => {
       const difference = prevState - TIME.MINUTE;
@@ -45,15 +52,15 @@ function Home() {
   const getContent = () => {
     switch (activeValue) {
       case SwitcerValue.Stake:
-        return <StakeForm balance={stakerInfo.balance} />;
+        return <StakeForm balance={staker.balance} updateStakerInfo={updateStakerInfo('balance')} />;
       case SwitcerValue.State:
-        return <StateForm />;
+        return <StateForm staker={staker} />;
       case SwitcerValue.List:
         return <StakersList distributionTime={distributionTime} />;
       case SwitcerValue.Update:
         return <UpdateStakingForm />;
       case SwitcerValue.Withdraw:
-        return <WithdrawForm balance={stakerInfo.balance} />;
+        return <WithdrawForm balance={staker.balance} updateStakerInfo={updateStakerInfo('balance')} />;
       default:
         return null;
     }
@@ -61,10 +68,11 @@ function Home() {
 
   useEffect(() => {
     if (infoState && stakerState) {
-      const time = +infoState.Info.timeLeft.replaceAll(',', '');
+      const time = convertToNumber(infoState.Info.timeLeft);
+      const preparedInfo = preparedStakerState(stakerState.Staker);
 
       setIsLoading(false);
-      setStakerInfo(stakerState.Staker);
+      setStaker(preparedInfo);
       setDistributionTime(time);
     }
   }, [infoState, stakerState]);

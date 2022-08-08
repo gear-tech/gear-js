@@ -1,4 +1,4 @@
-import { ProgramState, StakerState } from 'types/state';
+import { ProgramState, Staker } from 'types/state';
 import { SwitchItem } from 'components/common/switcher';
 
 import { SwitcerValue } from './types';
@@ -30,9 +30,9 @@ export const PAYLOAD_FOR_INFO_STATE = {
   [ProgramState.Info]: null,
 };
 
-export const DEFAULT_STAKER_STATE: StakerState['Staker'] = {
-  balance: '0',
-  rewardDebt: '0',
-  distributed: '0',
-  rewardAllowed: '0',
+export const DEFAULT_STAKER_INFO: Staker = {
+  balance: 0,
+  rewardDebt: 0,
+  distributed: 0,
+  rewardAllowed: 0,
 };
