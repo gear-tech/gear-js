@@ -10,7 +10,7 @@ import { sleep } from '../utils';
 async function sendMessage(api: GearApi, destination: Hex, spec: IMessageSpec) {
   const meta = spec.pathToMeta ? await getWasmMetadata(readFileSync(spec.pathToMeta)) : undefined;
   const account = (await accounts())[spec.account];
-  api.message.submit(
+  api.message.send(
     { destination, payload: spec.payload, gasLimit: spec.gasLimit, value: spec.value },
     meta,
     spec.metaType,

@@ -8,7 +8,7 @@ import { checkCollectionCode } from './check';
 async function uploadCode(api: GearApi, spec: ICodeSpec): Promise<{ id: Hex, change: string, expiration: any } | void> {
   const code = readFileSync(spec.pathToOpt);
   const account = (await accounts())[spec.account];
-  await api.code.submit(code);
+  await api.code.upload(code);
 
   return new Promise((resolve) => {
     api.code.signAndSend(account, ({ events = [] }) => {
