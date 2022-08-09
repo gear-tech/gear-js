@@ -21,7 +21,7 @@ afterAll(async () => {
 
 describe('Submit code', () => {
   test('demo_sum', async () => {
-    const { codeHash } = await api.code.submit(code);
+    const { codeHash } = await api.code.upload(code);
     expect(codeHash).toBeDefined();
     const transactionData = await sendTransaction(api.code, accounts['alice'], 'CodeChanged');
     expect(transactionData.id).toBe(codeHash);
@@ -30,7 +30,6 @@ describe('Submit code', () => {
   });
 
   test('Throw error when code exists', async () => {
-    await expect(api.code.submit(code),
-    ).rejects.toThrow('Code already exists');
+    await expect(api.code.upload(code)).rejects.toThrow('Code already exists');
   });
 });

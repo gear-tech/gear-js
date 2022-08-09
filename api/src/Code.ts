@@ -2,7 +2,7 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { Bytes, Option } from '@polkadot/types';
 
-import { generateCodeHash, validateCodeId } from './utils';
+import { generateCodeId, validateCodeId } from './utils';
 import { CodeMetadata, CodeStorage, Hex } from './types';
 import { GearTransaction } from './Transaction';
 
@@ -12,15 +12,15 @@ export class GearCode extends GearTransaction {
    * @param code
    * @returns Code hash
    */
-  async submit(
+  async upload(
     code: Buffer | Uint8Array,
   ): Promise<{ codeHash: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> }> {
-    const codeHash = generateCodeHash(code);
+    const codeHash = generateCodeId(code);
     await validateCodeId(codeHash, this._api);
 
     const codeBytes = this._createType.create('bytes', Array.from(code)) as Bytes;
-    this.submitted = this._api.tx.gear.submitCode(codeBytes);
-    return { codeHash, submitted: this.submitted };
+    this.extrinsic = this._api.tx.gear.uploadCode(codeBytes);
+    return { codeHash, submitted: this.extrinsic };
   }
 
   /**

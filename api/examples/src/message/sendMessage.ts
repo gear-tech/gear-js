@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import { PATH_TO_META } from '../config';
 import { waitForReply } from './waitForReply';
 
-const [programId] = process.argv.slice(2);
+const [programId] = process.argv.slice(2) as [Hex];
 
 const main = async () => {
   const api = await GearApi.create();
@@ -24,20 +24,20 @@ const main = async () => {
 
   const gas = await api.program.calculateGas.handle(
     decodeAddress(alice.address),
-    programId as Hex,
+    programId,
     payload,
     20000,
     true,
     meta,
   );
 
-  api.message.submit({ destination: programId, payload, gasLimit: gas.min_limit, value: 20000 }, meta);
+  const tx = api.message.send({ destination: programId, payload, gasLimit: gas.min_limit, value: 20000 }, meta);
 
   const reply = waitForReply(api, programId);
   let messageId: Hex;
   try {
     await new Promise((resolve, reject) => {
-      api.message.signAndSend(alice, ({ events, status }) => {
+      tx.signAndSend(alice, ({ events, status }) => {
         console.log(`STATUS: ${status.toString()}`);
         if (status.isFinalized) resolve(status.asFinalized);
         events.forEach(({ event }) => {

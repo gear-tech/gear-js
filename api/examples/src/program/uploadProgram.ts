@@ -20,7 +20,7 @@ const main = async () => {
 
   const gas = await api.program.calculateGas.init(decodeAddress(alice.address), code, initPayload, 0, true, meta);
 
-  const { programId } = api.program.submit({ code, initPayload, gasLimit: gas.min_limit }, meta);
+  const { programId } = api.program.upload({ code, initPayload, gasLimit: gas.min_limit }, meta);
 
   console.log(`ProgramID: ${programId}\n`);
 

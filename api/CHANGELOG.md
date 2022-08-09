@@ -1,3 +1,20 @@
+## 0.25.0
+
+_08/06/2022_
+
+https://github.com/gear-tech/gear-js/pull/901
+
+### Breaking Changes
+
+- Support `create_program` extrinsic according to https://github.com/gear-tech/gear/pull/1241
+  _Use the `api.program.create` method for this_
+- Remove `MessageReply` class. From now on, use `api.message.sendReply` method to send reply
+- Rename `api.message.submit` to `api.message.send`
+- Rename `api.program.submit` to `api.program.upload`
+- Rename `api.code.submit` to `api.code.upload`
+- Rename `submitted` field in `GearTransaction` class to `extrinsic`
+- Update `GasInfo` type according to https://github.com/gear-tech/gear/pull/1211
+
 ## 0.24.2
 
 _07/27/2022_
