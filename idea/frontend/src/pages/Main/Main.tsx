@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import styles from './Main.module.scss';
 import { ContentType } from './types';
-import { BlockList } from '../Programs/children/BlocksList/BlocksList';
+import { BlockList } from './children/BlocksList/BlocksList';
 import { DropTarget } from './children/DropTarget/DropTarget';
 import { MessageSide } from './children/MessageSide';
 import { SendMessageForm } from './children/SendMessageForm';
