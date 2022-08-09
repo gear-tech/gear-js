@@ -4,132 +4,110 @@ on:
   workflow_dispatch:
     inputs:
       backup_name:
-        description: "Name backup to restore:"
+        description: 'Name backup to restore:'
         required: true
       namespaces:
-        description: "List namespaces. Use separator , :"
+        description: 'List namespaces. Use separator , :'
         required: true
       destination_cluster:
-        description: "Select destination cluster:"
+        description: 'Select destination cluster:'
         required: true
         type: choice
         options:
-          - stg
           - prod
-      prod_password:
-        description: "Password for restore on prod cluster:"
-        required: false
+          - stg
+      restore_password:
+        description: 'Password for restore:'
+        required: true
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.ref }}
 
 env:
-  EKS_RESTORE_PASSWORD_PROD: ${{ secrets.EKS_RESTORE_PASSWORD_PROD }}
+  VELERO_VERSION: v1.9.0
+  DESTINATION_CLUSTER: ${{ github.event.inputs.destination_cluster }}
 
 jobs:
   restore_all_namespaces:
-    name: "Restore all namespaces to ${{ github.event.inputs.destination_cluster }}"
+    name: Restore all namespaces to ${{ github.event.inputs.destination_cluster }}
     if: ${{ github.event.inputs.namespaces == 'All' }}
     runs-on: ubuntu-latest
     steps:
+      - uses: hashicorp/vault-action@v2.4.1
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          tlsSkipVerify: true
+          method: github
+          githubToken: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_access_key_id ;
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_secret_access_key ;
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_eks_region ;
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_eks_cluster ;
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_eks_restore_backup_password
+
+      - run: exit 1
+        if: ${{ github.event.inputs.restore_password != env.AWS_EKS_RESTORE_BACKUP_PASSWORD }}
+
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.VELERO_ID_PROD }}
-          aws-secret-access-key: ${{ secrets.VELERO_KEY_PROD }}
-          aws-region: ${{ secrets.VELERO_REGION_PROD }}
-        if: ${{ github.event.inputs.destination_cluster == 'prod' }}
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_EKS_REGION }}
 
       - run: |
-          aws eks --region ${{ secrets.VELERO_REGION_PROD }} update-kubeconfig --kubeconfig $HOME/.kube/config_prod --name k8s-gear
-        if: ${{ github.event.inputs.destination_cluster == 'prod' }}
-
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.VELERO_ID_STG }}
-          aws-secret-access-key: ${{ secrets.VELERO_KEY_STG }}
-          aws-region: ${{ secrets.VELERO_REGION_STG }}
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
+          aws eks --region ${{ env.AWS_EKS_REGION }} update-kubeconfig --kubeconfig $HOME/.kube/config --name ${{ env.AWS_EKS_CLUSTER }}
 
       - run: |
-          aws eks --region ${{ secrets.VELERO_REGION_STG }} update-kubeconfig --kubeconfig $HOME/.kube/config_stg --name k8s-gear-stg
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
-
-      - run: |
-          wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
+          wget https://github.com/vmware-tanzu/velero/releases/download/${{ env.VELERO_VERSION }}/velero-${{ env.VELERO_VERSION }}-linux-amd64.tar.gz
           tar -xvf velero*.tar.gz
-          cd ./velero-v1.8.1-linux-amd64
+          cd ./velero-${{ env.VELERO_VERSION }}-linux-amd64
           chmod +x ./velero
 
       - run: |
           ./velero restore create \
           ${{ github.run_number }}-${{ github.event.inputs.backup_name }} \
           --from-backup ${{ github.event.inputs.backup_name }} \
-          --kubeconfig $HOME/.kube/config_prod \
+          --kubeconfig $HOME/.kube/config \
           --wait
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'prod' && github.event.inputs.prod_password == env.EKS_RESTORE_PASSWORD_PROD }}
-
-      - run: |
-          ./velero restore create \
-          ${{ github.run_number }}-${{ github.event.inputs.backup_name }} \
-          --from-backup ${{ github.event.inputs.backup_name }} \
-          --kubeconfig $HOME/.kube/config_stg \
-          --wait
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
-
-      - run: |
-          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'prod' }}
-
-      - run: |
-          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
-
-      - run: |
-          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'prod' }}
-
-      - run: |
-          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
-
+          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config
+          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config
+        working-directory: ./velero-${{ env.VELERO_VERSION }}-linux-amd64
 
   restore_specific_namespaces:
-    name: "Restore namespaces: ${{ github.event.inputs.namespaces }} to ${{ github.event.inputs.destination_cluster }}"
+    name: Restore namespaces (${{ github.event.inputs.namespaces }}) to ${{ github.event.inputs.destination_cluster }}
     if: ${{ github.event.inputs.namespaces != 'All' }}
     runs-on: ubuntu-latest
     steps:
+      - uses: hashicorp/vault-action@v2.4.1
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          tlsSkipVerify: true
+          method: github
+          githubToken: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_access_key_id ;
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_secret_access_key ;
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_eks_region ;
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_eks_cluster ;
+            kv/aws/velero/${{ env.DESTINATION_CLUSTER }} aws_eks_restore_backup_password
+
+      - run: exit 1
+        if: ${{ github.event.inputs.restore_password != env.AWS_EKS_RESTORE_BACKUP_PASSWORD }}
+
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.VELERO_ID_PROD }}
-          aws-secret-access-key: ${{ secrets.VELERO_KEY_PROD }}
-          aws-region: ${{ secrets.VELERO_REGION_PROD }}
-        if: ${{ github.event.inputs.destination_cluster == 'prod' }}
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_EKS_REGION }}
 
       - run: |
-          aws eks --region ${{ secrets.VELERO_REGION_PROD }} update-kubeconfig --kubeconfig $HOME/.kube/config_prod --name k8s-gear
-        if: ${{ github.event.inputs.destination_cluster == 'prod' }}
-
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.VELERO_ID_STG }}
-          aws-secret-access-key: ${{ secrets.VELERO_KEY_STG }}
-          aws-region: ${{ secrets.VELERO_REGION_STG }}
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
+          aws eks --region ${{ env.AWS_EKS_REGION }} update-kubeconfig --kubeconfig $HOME/.kube/config --name ${{ env.AWS_EKS_CLUSTER }}
 
       - run: |
-          aws eks --region ${{ secrets.VELERO_REGION_STG }} update-kubeconfig --kubeconfig $HOME/.kube/config_stg --name k8s-gear-stg
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
-
-      - run: |
-          wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
+          wget https://github.com/vmware-tanzu/velero/releases/download/${{ env.VELERO_VERSION }}/velero-${{ env.VELERO_VERSION }}-linux-amd64.tar.gz
           tar -xvf velero*.tar.gz
-          cd ./velero-v1.8.1-linux-amd64
+          cd ./velero-${{ env.VELERO_VERSION }}-linux-amd64
           chmod +x ./velero
 
       - run: |
@@ -137,37 +115,8 @@ jobs:
           ${{ github.run_number }}-${{ github.event.inputs.backup_name }} \
           --from-backup ${{ github.event.inputs.backup_name }} \
           --include-namespaces ${{ github.event.inputs.namespaces }} \
-          --kubeconfig $HOME/.kube/config_prod \
+          --kubeconfig $HOME/.kube/config \
           --wait
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'prod' && github.event.inputs.prod_password == env.EKS_RESTORE_PASSWORD_PROD }}
-
-      - run: |
-          ./velero restore create \
-          ${{ github.run_number }}-${{ github.event.inputs.backup_name }} \
-          --from-backup ${{ github.event.inputs.backup_name }} \
-          --include-namespaces ${{ github.event.inputs.namespaces }} \
-          --kubeconfig $HOME/.kube/config_stg \
-          --wait
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
-
-      - run: |
-          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'prod' }}
-
-      - run: |
-          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
-
-      - run: |
-          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_prod
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'prod' }}
-
-      - run: |
-          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config_stg
-        working-directory: ./velero-v1.8.1-linux-amd64
-        if: ${{ github.event.inputs.destination_cluster == 'stg' }}
+          ./velero restore describe ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config
+          ./velero restore logs ${{ github.run_number }}-${{ github.event.inputs.backup_name }} --kubeconfig $HOME/.kube/config
+        working-directory: ./velero-${{ env.VELERO_VERSION }}-linux-amd64
