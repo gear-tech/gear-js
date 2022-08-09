@@ -31,19 +31,19 @@ const Program = () => {
   const decodedAddress = account?.decodedAddress;
 
   useEffect(() => {
-    if (!decodedAddress) {
-      return;
+    setMessages(undefined);
+
+    if (decodedAddress) {
+      const messageParams = {
+        source: programId,
+        destination: decodedAddress,
+        limit: INITIAL_LIMIT_BY_PAGE,
+      };
+
+      getMessages(messageParams)
+        .then(({ result }) => setMessages(result.messages))
+        .catch((error: Error) => alert.error(error.message));
     }
-
-    const messageParams = {
-      source: programId,
-      destination: decodedAddress,
-      limit: INITIAL_LIMIT_BY_PAGE,
-    };
-
-    getMessages(messageParams)
-      .then(({ result }) => setMessages(result.messages))
-      .catch((error: Error) => alert.error(error.message));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [decodedAddress]);
 
@@ -55,6 +55,8 @@ const Program = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isMesssagesLoading = !messages && Boolean(account);
+
   return (
     <div className="wrapper">
       {program ? (
@@ -65,7 +67,7 @@ const Program = () => {
           </Box>
           <div className={styles.messages}>
             <h2 className={styles.messagesCaption}>Messages</h2>
-            <MessagesList messages={messages} />
+            <MessagesList messages={messages} isLoading={isMesssagesLoading} />
           </div>
           <ProgramWaitlist waitlist={waitlist} />
         </>
