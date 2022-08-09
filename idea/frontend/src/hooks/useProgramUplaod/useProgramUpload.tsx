@@ -36,7 +36,7 @@ const useProgramUpload = () => {
       initPayload,
     };
 
-    return api.program.submit(program, meta, payloadType);
+    return api.program.upload(program, meta, payloadType);
   };
 
   const uploadProgram = useCallback(
