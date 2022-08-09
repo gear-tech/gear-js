@@ -86,7 +86,7 @@ describe('send message page tests', () => {
   });
 
   it('sends message to program without meta', async () => {
-    TEST_API.message.submit.mockResolvedValue('');
+    TEST_API.message.send.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
     TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
 
@@ -285,7 +285,7 @@ describe('send message page tests', () => {
   });
 
   it('sends message to program with meta', async () => {
-    TEST_API.message.submit.mockResolvedValue('');
+    TEST_API.message.send.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
     TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
 
@@ -430,9 +430,9 @@ describe('send message page tests', () => {
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
 
-    TEST_API.reply.submit.mockResolvedValue('');
-    TEST_API.reply.signAndSend.mockResolvedValue('');
-    TEST_API.reply.paymentInfo.mockResolvedValue(PARTIAL_FEE);
+    TEST_API.message.sendReply.mockResolvedValue('');
+    TEST_API.message.signAndSend.mockResolvedValue('');
+    TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
@@ -532,9 +532,9 @@ describe('send message page tests', () => {
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
 
-    TEST_API.reply.submit.mockResolvedValue('');
-    TEST_API.reply.signAndSend.mockResolvedValue('');
-    TEST_API.reply.paymentInfo.mockResolvedValue(PARTIAL_FEE);
+    TEST_API.message.sendReply.mockResolvedValue('');
+    TEST_API.message.signAndSend.mockResolvedValue('');
+    TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);

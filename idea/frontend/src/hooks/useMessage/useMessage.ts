@@ -21,10 +21,8 @@ const useMessage = () => {
       title: isReply ? TransactionName.SendReply : TransactionName.SendMessage,
     });
 
-    const apiExtrinsic = isReply ? api.reply : api.message;
-
     try {
-      await apiExtrinsic.signAndSend(account!.address, { signer }, (data) => {
+      await api.message.signAndSend(account!.address, { signer }, (data) => {
         if (data.status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
 
@@ -82,8 +80,8 @@ const useMessage = () => {
         }
 
         const { meta, address } = account;
-        // TODO: fix message type
-        api.message.submit(message as any, metadata, payloadType);
+
+        api.message.send(message, metadata, payloadType);
 
         const { signer } = await web3FromSource(meta.source);
         const { partialFee } = await api.message.paymentInfo(address, { signer });
@@ -98,7 +96,7 @@ const useMessage = () => {
         showModal<TransactionModalProps>(TransactionModal, {
           fee: partialFee.toHuman(),
           name: TransactionName.SendMessage,
-          addressTo: message.destination,
+          addressTo: message.destination as string,
           addressFrom: address,
           onCancel: reject,
           onConfirm: handleConfirm,
@@ -123,10 +121,10 @@ const useMessage = () => {
 
         const { meta, address } = account;
 
-        api.reply.submit(reply as any, metadata, payloadType);
+        api.message.sendReply(reply, metadata, payloadType);
 
         const { signer } = await web3FromSource(meta.source);
-        const { partialFee } = await api.reply.paymentInfo(address, { signer });
+        const { partialFee } = await api.message.paymentInfo(address, { signer });
 
         const handleConfirm = () =>
           signAndSend({

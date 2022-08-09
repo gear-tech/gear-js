@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Metadata } from '@gear-js/api';
+import { Hex, Metadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
 
@@ -74,7 +74,7 @@ const SendMessageForm = ({ onReset }: Props) => {
         <DestinationForm destination={destination.current} onReset={onReset} onSubmit={handleDestinationSubmit} />
       )}
       {step === 2 && destination && (
-        <MessageForm id={destination.current} metadata={metadata} renderButtons={renderFormButtons} />
+        <MessageForm id={destination.current as Hex} metadata={metadata} renderButtons={renderFormButtons} />
       )}
     </FormWrapper>
   );

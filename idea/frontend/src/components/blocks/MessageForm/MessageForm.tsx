@@ -1,6 +1,6 @@
 import { ReactNode, useMemo } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { Hex, Metadata } from '@gear-js/api';
+import { Hex, Metadata, IMessageSendOptions, IMessageSendReplyOptions } from '@gear-js/api';
 
 import { getValidationSchema } from './Schema';
 import { INITIAL_VALUES } from './const';
@@ -8,7 +8,6 @@ import { FormValues, SetFieldValue, RenderButtonsProps } from './types';
 
 import { useMessage, useGasCalculate } from 'hooks';
 import { GasMethod } from 'consts';
-import { Reply, Message } from 'types/program';
 import {
   FormText,
   FormInput,
@@ -61,10 +60,10 @@ const MessageForm = (props: Props) => {
     };
 
     if (isReply) {
-      const reply: Reply = { ...commonValues, replyToId: id };
+      const reply: IMessageSendReplyOptions = { ...commonValues, replyToId: id };
       replyMessage({ reply, metadata, payloadType, reject, resolve });
     } else {
-      const message: Message = { ...commonValues, destination: id };
+      const message: IMessageSendOptions = { ...commonValues, destination: id };
       sendMessage({ message, metadata, payloadType, reject, resolve });
     }
   };
