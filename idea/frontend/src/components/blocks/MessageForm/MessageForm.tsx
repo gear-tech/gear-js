@@ -1,6 +1,6 @@
 import { ReactNode, useMemo } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { Metadata } from '@gear-js/api';
+import { Hex, Metadata } from '@gear-js/api';
 
 import { getValidationSchema } from './Schema';
 import { INITIAL_VALUES } from './const';
@@ -45,8 +45,8 @@ const MessageForm = (props: Props) => {
       value: values.value.toString(),
       payload: getSubmitPayload(values.payload),
       gasLimit: values.gasLimit.toString(),
-      replyToId: id,
-      destination: id,
+      replyToId: id as Hex,
+      destination: id as Hex,
     };
 
     const callback = () => {

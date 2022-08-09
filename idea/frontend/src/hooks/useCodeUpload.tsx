@@ -15,7 +15,7 @@ const useCodeUpload = () => {
     const arrayBuffer = (await readFileAsync(file)) as ArrayBuffer;
     const buffer = Buffer.from(arrayBuffer);
 
-    return api.code.submit(buffer);
+    return api.code.upload(buffer);
   };
 
   const uploadCode = async (file: File) => {
