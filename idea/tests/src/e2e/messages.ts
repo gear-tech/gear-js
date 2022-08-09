@@ -38,7 +38,7 @@ export async function getMessageData(genesis: string, messageId: Hex) {
 export async function getMessagePayload(genesis: string, messageId: Hex) {
   const response = await request('message.data', { genesis, id: messageId });
   expect(response).to.have.own.property('result');
-  expect(response.result).to.have.key('payload');
+  expect(response.result).to.have.property('payload');
   expect(response.result.payload).to.exist('payload');
   return true;
 }
