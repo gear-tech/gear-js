@@ -1,12 +1,11 @@
 import { useCallback } from 'react';
-import { Metadata } from '@gear-js/api';
+import { Metadata, IMessageSendOptions, IMessageSendReplyOptions } from '@gear-js/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useAccount, useApi, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { getExtrinsicFailedMessage } from 'helpers';
 import { PROGRAM_ERRORS, TransactionStatus } from 'consts';
 import { Method } from 'types/explorer';
-import { Message, Reply } from 'types/program';
 
 const useSendMessage = () => {
   const alert = useAlert();
@@ -16,7 +15,7 @@ const useSendMessage = () => {
   const sendMessage = useCallback(
     async (
       extrinsic: 'handle' | 'reply',
-      message: Message & Reply,
+      message: IMessageSendOptions & IMessageSendReplyOptions,
       callback: () => void,
       meta?: Metadata,
       payloadType?: string
@@ -31,11 +30,11 @@ const useSendMessage = () => {
 
       try {
         const { signer } = await web3FromSource(account.meta.source);
-        const apiExtrinsic = extrinsic === 'handle' ? api.message : api.reply;
-        // TODO: fix message type
-        apiExtrinsic.submit(message as any, meta, payloadType);
+        const apiExtrinsic = extrinsic === 'handle' ? api.message.send : api.message.sendReply;
 
-        await apiExtrinsic.signAndSend(account.address, { signer }, (data) => {
+        apiExtrinsic(message, meta, payloadType);
+
+        await api.message.signAndSend(account.address, { signer }, (data) => {
           if (data.status.isReady) {
             alert.update(alertId, TransactionStatus.Ready);
 

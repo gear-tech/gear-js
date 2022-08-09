@@ -39,7 +39,7 @@ const Component = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  useLoggedInAccount();
+  const { isLoginReady } = useLoggedInAccount();
 
   useAccountSubscriptions();
 
@@ -64,11 +64,13 @@ const Component = () => {
   const getMultipleRoutes = (paths: string[], element: JSX.Element) =>
     paths.map((path) => <Route key={path} path={path} element={element} />);
 
+  const isInitLoaded = isApiReady && isLoginReady;
+
   return (
     <div className={styles.app}>
       <Header />
       <Main>
-        {isApiReady ? (
+        {isInitLoaded ? (
           <Routes>
             {getMultipleRoutes(mainRoutes, <Programs />)}
             {getMultipleRoutes(utilRoutes, <Document />)}

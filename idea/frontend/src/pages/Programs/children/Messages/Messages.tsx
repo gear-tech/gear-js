@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAccount } from '@gear-js/react-hooks';
 
 import styles from '../../Programs.module.scss';
 
+import { useChangeEffect } from 'hooks';
 import { getMessages } from 'services';
 import { MessageModel } from 'types/message';
 import { INITIAL_LIMIT_BY_PAGE, URL_PARAMS } from 'consts';
@@ -13,7 +14,6 @@ import { MessagesList } from 'components/blocks/MessagesList';
 
 const Messages = () => {
   const { account } = useAccount();
-  const isAccountLoaded = useRef(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -22,23 +22,7 @@ const Messages = () => {
 
   const page = Number(searchParams.get(URL_PARAMS.PAGE) ?? 1);
   const query = searchParams.get(URL_PARAMS.QUERY) ?? '';
-  const address = account?.address;
   const decodedAddress = account?.decodedAddress;
-
-  useEffect(() => {
-    if (isAccountLoaded.current) {
-      searchParams.set(URL_PARAMS.PAGE, String(1));
-      searchParams.set(URL_PARAMS.QUERY, '');
-      setSearchParams(searchParams);
-      setMessages([]);
-      setMessagesCount(0);
-    }
-
-    return () => {
-      isAccountLoaded.current = Boolean(address);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address]);
 
   useEffect(() => {
     if (decodedAddress) {
@@ -50,11 +34,21 @@ const Messages = () => {
       };
 
       getMessages(messageParams).then(({ result }) => {
-        // setMessages(result.messages);
+        setMessages(result.messages);
         setMessagesCount(result.count);
       });
     }
   }, [page, query, decodedAddress]);
+
+  useChangeEffect(() => {
+    searchParams.set(URL_PARAMS.PAGE, String(1));
+    searchParams.set(URL_PARAMS.QUERY, '');
+    setSearchParams(searchParams);
+    setMessages([]);
+    setMessagesCount(0);
+  }, [decodedAddress]);
+
+  const isLoading = !messages && Boolean(account);
 
   return (
     <div>
@@ -63,7 +57,7 @@ const Messages = () => {
         <Pagination page={page} pagesAmount={messagesCount || 1} />
       </div>
       <SearchForm placeholder="Find message by ID" />
-      <MessagesList messages={messages} className={styles.tableBody} />
+      <MessagesList messages={messages} isLoading={isLoading} className={styles.tableBody} />
       {messagesCount > 0 && (
         <div className={styles.bottomPagination}>
           <Pagination page={page} pagesAmount={messagesCount} />
