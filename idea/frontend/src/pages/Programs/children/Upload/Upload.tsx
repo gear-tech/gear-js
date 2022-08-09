@@ -21,8 +21,8 @@ const Upload = () => {
   const setMessageType = () => setContentType(ContentType.Message);
 
   const setUplaodData = useCallback((type: ContentType | null, file: File | null) => {
-    setDroppedFile(file);
     setContentType(type);
+    setDroppedFile(file);
   }, []);
 
   const resetUploadData = useCallback(() => setUplaodData(null, null), [setUplaodData]);

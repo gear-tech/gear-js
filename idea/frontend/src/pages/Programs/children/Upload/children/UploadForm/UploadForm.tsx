@@ -100,7 +100,7 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
                 <div className={styles.program}>
                   <div className={clsx(formStyles.formItem, styles.file)}>
                     <span className={formStyles.fieldLabel}>File</span>
-                    <span className={clsx(formStyles.fieldContent, styles.fileName)}>{droppedFile.name}</span>
+                    <span className={clsx(formStyles.fieldContent, styles.fileName)}>{droppedFile?.name}</span>
                   </div>
 
                   <FormInput name="programName" label="Name" placeholder="Name" />
