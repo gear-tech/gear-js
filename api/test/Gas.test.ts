@@ -32,19 +32,21 @@ afterAll(async () => {
 });
 
 describe('Calculate gas', () => {
-  test('Get init gas spent', async () => {
+  test.only('Get init gas spent', async () => {
     const gas: GasInfo = await api.program.calculateGas.init(aliceRaw, code, '0x00', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
+    expect(gas.min_limit.gtn(0)).toBeTruthy();
+    gasLimits.init = gas.min_limit;
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
-    gasLimits.init = gas.min_limit;
+    expect(gas.toHuman()).toHaveProperty('may_be_returned');
     expect(gasLimits.init.toHuman()).toBe(gas.min_limit.toHuman());
   });
 
-  test('Submit program', async () => {
+  test.only('Submit program', async () => {
     expect(gasLimits.init).toBeDefined();
-    programId = api.program.submit({ code, gasLimit: gasLimits.init as u64 }).programId;
+    programId = api.program.upload({ code, gasLimit: gasLimits.init as u64 }).programId;
     const initStatus = checkInit(api, programId);
     api.program.signAndSend(alice, () => {});
     expect(await initStatus()).toBe('success');
@@ -55,14 +57,16 @@ describe('Calculate gas', () => {
     const gas = await api.program.calculateGas.handle(aliceRaw, programId, '0x50494e47', 1000, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
+    expect(gas.min_limit.gtn(0)).toBeTruthy();
     gasLimits.handle = gas.min_limit;
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
+    expect(gas.toHuman()).toHaveProperty('may_be_returned');
   });
 
   test('Send message', async () => {
     expect(gasLimits.handle).toBeDefined();
-    api.message.submit({
+    api.message.send({
       destination: programId,
       payload: '0x50494e47',
       gasLimit: (gasLimits.handle as u64).muln(2), // TODO remove `* 1.5` when expiration_block will work
@@ -85,8 +89,10 @@ describe('Calculate gas', () => {
 
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
+    expect(gas.min_limit.gtn(0)).toBeTruthy();
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
+    expect(gas.toHuman()).toHaveProperty('may_be_returned');
   });
 
   test('Calculate reply gas', async () => {
@@ -97,12 +103,13 @@ describe('Calculate gas', () => {
     gasLimits.reply = gas.min_limit;
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
+    expect(gas.toHuman()).toHaveProperty('may_be_returned');
   });
 
   test('Send reply', async () => {
     expect(gasLimits.reply).toBeDefined();
-    api.reply.submit({ replyToId: messageId, payload: '0x50494e47', gasLimit: gasLimits.reply as u64 });
-    const data = await sendTransaction(api.reply, alice, 'MessageEnqueued');
+    const tx = api.message.sendReply({ replyToId: messageId, payload: '0x50494e47', gasLimit: gasLimits.reply as u64 });
+    const data = await sendTransaction(tx, alice, 'MessageEnqueued');
     expect(data).toBeDefined();
   });
 });

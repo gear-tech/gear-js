@@ -11,7 +11,7 @@ async function uploadProgram(api: GearApi, spec: IProgramSpec): Promise<{ id: He
   const code = readFileSync(spec.pathToOpt);
   const meta = spec.pathToMeta ? await getWasmMetadata(readFileSync(spec.pathToMeta)) : undefined;
   const account = (await accounts())[spec.account];
-  api.program.submit(
+  api.program.upload(
     { code, initPayload: spec.initPayload, gasLimit: spec.gasLimit, value: spec.value },
     meta,
     spec.metaType,
