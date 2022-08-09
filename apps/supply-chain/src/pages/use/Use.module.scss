@@ -1,5 +1,11 @@
+@use 'assets/styles/shared' as *;
+
 .content {
   max-width: 930px;
+}
+
+.box {
+  @extend %box;
 }
 
 .input {

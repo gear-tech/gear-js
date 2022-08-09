@@ -1,5 +1,5 @@
 import { Button } from '@gear-js/ui';
-import { Box, Content } from 'components';
+import { Content } from 'components';
 import { InitPayload } from 'types';
 import { FORM } from 'consts';
 import { useUsers } from 'hooks';
@@ -25,7 +25,7 @@ function Create({ onCancel, onSubmit }: Props) {
       className={styles.content}>
       <AddressForm id={FORM.CREATE} onSubmit={(addresses) => onSubmit({ ...addresses, ...list })} />
 
-      <Box>
+      <div className={styles.box}>
         <UserForm onSubmit={getUserSubmit} />
         <div className={styles.users}>
           <Users heading="Producers" list={producers} onRemoveButtonClick={removeProducer} />
@@ -33,7 +33,7 @@ function Create({ onCancel, onSubmit }: Props) {
           <Users heading="Retailers" list={retailers} onRemoveButtonClick={removeRetailer} />
           {!isAnyUser && <Empty />}
         </div>
-      </Box>
+      </div>
 
       <div className={styles.buttons}>
         <Button text="Cancel" color="secondary" onClick={onCancel} />

@@ -1,4 +1,5 @@
 @use '@gear-js/ui/variables' as *;
+@use 'assets/styles/shared' as *;
 
 .users {
   overflow: hidden;
@@ -18,8 +19,11 @@
 }
 
 .list {
+  @extend %box;
+  padding: 0;
   height: 280px;
   overflow: auto;
+  background-color: #242424;
 }
 
 .user {

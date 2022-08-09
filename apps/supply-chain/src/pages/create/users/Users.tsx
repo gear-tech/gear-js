@@ -2,7 +2,6 @@ import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import clsx from 'clsx';
 import trash from 'assets/images/icons/trash.svg';
-import { Box } from 'components';
 import styles from './Users.module.scss';
 
 type Props = {
@@ -30,9 +29,7 @@ function Users({ heading, list, onRemoveButtonClick }: Props) {
       <p className={styles.heading}>
         {heading}: <span className={amountClassName}>{usersAmount}</span>
       </p>
-      <Box secondary>
-        <ul className={styles.list}>{getUsers()}</ul>
-      </Box>
+      <ul className={styles.list}>{getUsers()}</ul>
     </div>
   );
 }

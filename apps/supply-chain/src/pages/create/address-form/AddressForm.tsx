@@ -2,7 +2,7 @@ import { Hex } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
 import { useForm } from '@mantine/form';
 import clsx from 'clsx';
-import { Box, Input } from 'components';
+import { Input } from 'components';
 import { isValidHex } from 'utils';
 import commonStyles from '../Create.module.scss';
 import styles from './AddressForm.module.scss';
@@ -41,11 +41,9 @@ function AddressForm({ id, onSubmit }: Props) {
   });
 
   return (
-    <form id={id} onSubmit={handleSubmit}>
-      <Box>
-        <Input label="GNFT Program ID" className={nftInputClassName} {...getInputProps('nftProgramId')} />
-        <Input label="GFT Program ID" className={commonStyles.input} {...getInputProps('ftProgramId')} />
-      </Box>
+    <form id={id} onSubmit={handleSubmit} className={styles.form}>
+      <Input label="GNFT Program ID" className={nftInputClassName} {...getInputProps('nftProgramId')} />
+      <Input label="GFT Program ID" className={commonStyles.input} {...getInputProps('ftProgramId')} />
     </form>
   );
 }

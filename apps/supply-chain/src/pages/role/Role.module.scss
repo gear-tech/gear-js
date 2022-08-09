@@ -1,0 +1,48 @@
+@use '@gear-js/ui/variables' as *;
+@use 'assets/styles/shared' as *;
+
+.role {
+  width: 100%;
+}
+
+.actions {
+  padding: 24px 24px 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  .action {
+    color: $successColor;
+  }
+}
+
+.main {
+  @extend %box;
+  padding: 0;
+  display: flex;
+}
+
+.listWrapper {
+  flex: 1;
+  max-width: 280px;
+}
+
+.textWrapper {
+  flex: 1;
+  position: relative;
+  text-align: center;
+
+  .text {
+    @extend %absoluteCenter;
+  }
+}
+
+.heading {
+  font-size: $fontSizeLarge;
+  font-weight: 500;
+  color: $textColorSecondary;
+}
+
+.subheading {
+  font-size: $fontSizeMedium;
+  color: $textColorSecondary;
+}

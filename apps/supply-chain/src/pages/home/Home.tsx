@@ -5,6 +5,7 @@ import { FORM } from 'consts';
 import { Create } from '../create';
 import { Use } from '../use';
 import { Start } from '../start';
+import { Role } from '../role';
 
 function Home() {
   const [form, setForm] = useState('create');
@@ -27,7 +28,7 @@ function Home() {
     }
   };
 
-  return getForm();
+  return <Role programId="0x00" onBackButtonClick={() => {}} />;
 }
 
 export { Home };
