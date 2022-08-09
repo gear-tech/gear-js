@@ -2155,7 +2155,7 @@ __metadata:
   dependencies:
     "@craco/craco": 6.4.3
     "@gear-js/api": 0.25.0
-    "@gear-js/react-hooks": ^0.2.1
+    "@gear-js/react-hooks": ^0.2.17
     "@gear-js/ui": 0.2.5
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
@@ -2356,19 +2356,6 @@ __metadata:
     web-vitals: ^2.1.4
   languageName: unknown
   linkType: soft
-
-"@gear-js/react-hooks@npm:^0.2.1":
-  version: 0.2.11
-  resolution: "@gear-js/react-hooks@npm:0.2.11"
-  peerDependencies:
-    "@gear-js/api": ^0.24.0
-    "@polkadot/extension-dapp": ^0.43.2
-    react: ">=17.0.2"
-    react-dom: ">=17.0.2"
-    react-transition-group: ^4.4.2
-  checksum: 29893d1108f48d0ca5d1c9035c19821fba2a969055264a18dd8e344011763a8b0888f2c4650799854fdb8f1c7ae06531f9039b5f9c28f1ab7d8721f86219e746
-  languageName: node
-  linkType: hard
 
 "@gear-js/react-hooks@npm:^0.2.17":
   version: 0.2.17
