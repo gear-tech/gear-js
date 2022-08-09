@@ -15,8 +15,8 @@ export class GearClaimValue extends GearTransaction {
    */
   submit(messageId: Hex): SubmittableExtrinsic<'promise', ISubmittableResult> {
     try {
-      this.submitted = this._api.tx.gear.claimValueFromMailbox(messageId);
-      return this.submitted;
+      this.extrinsic = this._api.tx.gear.claimValue(messageId);
+      return this.extrinsic;
     } catch (error) {
       throw new ClaimValueError();
     }
