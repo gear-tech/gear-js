@@ -20,8 +20,8 @@ function createMessageBody(value: string, correlationId?: string): Message {
 
   if (correlationId) {
     result.headers = { kafka_correlationId: correlationId };
-    return result;
   }
+
   return result;
 }
 

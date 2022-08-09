@@ -40,7 +40,7 @@ async function messageProcessing(message: KafkaMessage, topic: string): Promise<
   }
 
   if (topic === KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASHES) {
-    await genesisHashService.sendApiGateway();
+    await genesisHashService.sendGenesis();
   }
 }
 

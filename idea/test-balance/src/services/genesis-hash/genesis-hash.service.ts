@@ -26,7 +26,7 @@ export const genesisHashService = {
 
     await sendReply(message, JSON.stringify(result));
   },
-  async sendApiGateway(): Promise<void> {
+  async sendGenesis(): Promise<void> {
     const genesisHash = gearService.getGenesisHash();
 
     await kafkaProducer.send(`${KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASH_API}.reply`, genesisHash);
