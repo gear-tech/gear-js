@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { EventRecord } from '@polkadot/types/interfaces';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '../index';
@@ -8,6 +9,7 @@ import { SendMessageParams, ReplyMessageParams, SignAndSendArg } from './types';
 import { getExtrinsicFailedMessage } from 'helpers';
 import { ACCOUNT_ERRORS, PROGRAM_ERRORS, TransactionStatus, TransactionName } from 'consts';
 import { Method } from 'types/explorer';
+import { OperationCallbacks } from 'types/hooks';
 import { TransactionModal, TransactionModalProps } from 'components/modals/TransactionModal';
 
 const useMessage = () => {
@@ -16,50 +18,36 @@ const useMessage = () => {
   const { account } = useAccount();
   const { showModal } = useModal();
 
+  const handleEventsStatus = (events: EventRecord[], { reject, resolve }: OperationCallbacks) => {
+    events.forEach(({ event }) => {
+      const { method, section } = event;
+      const alertOptions = { title: `${section}.${method}` };
+
+      if (method === Method.ExtrinsicFailed) {
+        alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
+        reject();
+      } else if (method === Method.MessageEnqueued) {
+        alert.success('Success', alertOptions);
+        resolve();
+      }
+    });
+  };
+
   const signAndSend = async ({ signer, isReply = false, reject, resolve }: SignAndSendArg) => {
     const alertId = alert.loading('SignIn', {
       title: isReply ? TransactionName.SendReply : TransactionName.SendMessage,
     });
 
     try {
-      await api.message.signAndSend(account!.address, { signer }, (data) => {
-        if (data.status.isReady) {
+      await api.message.signAndSend(account!.address, { signer }, ({ events, status }) => {
+        if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
-
-          return;
-        }
-
-        if (data.status.isInBlock) {
+        } else if (status.isInBlock) {
           alert.update(alertId, TransactionStatus.InBlock);
-
-          return;
-        }
-
-        if (data.status.isFinalized) {
+        } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
-
-          data.events.forEach(({ event }) => {
-            const { method, section } = event;
-
-            const alertOptions = { title: `${section}.${method}` };
-
-            if (method === Method.ExtrinsicFailed) {
-              alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-              reject();
-
-              return;
-            }
-
-            if (method === Method.MessageEnqueued) {
-              alert.success('Success', alertOptions);
-              resolve();
-            }
-          });
-
-          return;
-        }
-
-        if (data.status.isInvalid) {
+          handleEventsStatus(events, { reject, resolve });
+        } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
           reject();
         }

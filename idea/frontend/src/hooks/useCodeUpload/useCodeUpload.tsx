@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { EventRecord } from '@polkadot/types/interfaces';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '../index';
@@ -26,6 +27,19 @@ const useCodeUpload = () => {
     return result.codeHash;
   };
 
+  const handleEventsStatus = (events: EventRecord[], codeHash: SignAndSendArg['codeHash']) => {
+    events.forEach(({ event }) => {
+      const { method, section } = event;
+      const alertOptions = { title: `${section}.${method}` };
+
+      if (method === Method.ExtrinsicFailed) {
+        alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
+      } else if (method === Method.CodeSaved) {
+        alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
+      }
+    });
+  };
+
   const signAndSend = async ({ signer, codeHash }: SignAndSendArg) => {
     const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
@@ -33,39 +47,12 @@ const useCodeUpload = () => {
       await api.code.signAndSend(account!.address, { signer }, ({ events, status }) => {
         if (status.isReady) {
           alert.update(alertId, TransactionStatus.Ready);
-
-          return;
-        }
-
-        if (status.isInBlock) {
+        } else if (status.isInBlock) {
           alert.update(alertId, TransactionStatus.InBlock);
-
-          events.forEach(({ event }) => {
-            const { method, section } = event;
-
-            const alertOptions = { title: `${section}.${method}` };
-
-            if (method === Method.ExtrinsicFailed) {
-              alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-
-              return;
-            }
-
-            if (method === Method.CodeSaved) {
-              alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
-            }
-          });
-
-          return;
-        }
-
-        if (status.isFinalized) {
+          handleEventsStatus(events, codeHash);
+        } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
-
-          return;
-        }
-
-        if (status.isInvalid) {
+        } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
         }
       });
