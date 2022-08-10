@@ -1,15 +1,15 @@
-@use 'assets/scss/variables' as *;
-@use 'assets/scss/breakpoints' as *;
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
 
 .footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: $desktopSidesMargin;
+  margin: 0 40px;
   padding: 20px 0;
   text-align: center;
   color: $textColorSecondary;
-  border-top: 1px solid $separateLineColor;
+  border-top: 1px solid $lineColor;
 
   @include md {
     flex-direction: column;

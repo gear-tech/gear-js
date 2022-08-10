@@ -1,0 +1,37 @@
+@use '@gear-js/ui/variables' as *;
+
+$padding: 20px;
+
+.block {
+  & > *:not(:last-child) {
+    margin-bottom: 40px;
+  }
+}
+
+.header,
+.cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header {
+  padding: 5px $padding;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  background-color: $bgColor;
+
+  &:first-child {
+    font-size: $fontSizeLarge;
+  }
+}
+
+.cell {
+  padding: 24px $padding 0;
+  color: $textColorSecondary;
+}
+
+.message {
+  margin-top: 24px;
+  font-size: $fontSizeMedium;
+}
