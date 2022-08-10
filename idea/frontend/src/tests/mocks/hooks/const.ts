@@ -42,6 +42,12 @@ export const TEST_API = {
       toHuman: jest.fn(),
     },
   },
+  blockGasLimit: {
+    toNumber: jest.fn(),
+  },
+  existentialDeposit: {
+    toNumber: jest.fn(),
+  },
   programState: {
     read: jest.fn(),
   },

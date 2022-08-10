@@ -6,11 +6,11 @@ import { getProgram } from 'services';
 import { RPCResponseError } from 'services/ServerRPCRequestService';
 import { ProgramModel } from 'types/program';
 
-const useProgram = (id?: string) => {
+const useProgram = (id?: string, initLoading = false) => {
   const alert = useAlert();
 
   const [program, setProgram] = useState<ProgramModel>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(initLoading);
 
   const metadata = useMemo(() => {
     const meta = program?.meta?.meta;
