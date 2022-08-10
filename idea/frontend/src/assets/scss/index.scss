@@ -1,36 +1,14 @@
-@import '../fonts/fonts';
-
-html {
-  box-sizing: border-box;
-}
+@use '@gear-js/ui/resets.scss';
+@use '@gear-js/ui/typography.scss';
 
 * {
-  font-family: Prompt, sans-serif;
   margin: 0;
   box-sizing: border-box;
 }
 
 body {
   background-color: #232323;
-  font-size: 14px;
   scrollbar-gutter: stable both-edges;
-}
-
-a {
-  // underline only if link is a part of paragraph
-  &:not(p &) {
-    text-decoration: none;
-  }
-}
-
-ul {
-  list-style: none;
-}
-
-ul,
-p {
-  margin: 0;
-  padding: 0;
 }
 
 button {
@@ -38,10 +16,6 @@ button {
   border: none;
   cursor: pointer;
   outline: none;
-}
-
-small {
-  font: inherit;
 }
 
 input::-webkit-outer-spin-button,
@@ -54,15 +28,6 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' width='32' height='24' viewBox='0 0 32 24'%3E%3Cpolygon points='0,0 32,0 16,24' style='fill:%23f2f2f2'%3E%3C/polygon%3E%3C/svg%3E");
-  background-size: 12px;
-}
-
-#alert-root {
-  position: fixed;
-  z-index: 999;
-  width: 390px;
-  right: 22px;
-  bottom: 5px;
+input, select, textarea, button, pre {
+  font-family:inherit;
 }

@@ -21,11 +21,11 @@ const Mailbox = () => {
   const [mailbox, setMailbox] = useState<MailboxItem[] | null>(null);
 
   const handleClaim = useCallback(
-    (messageId: Hex) => {
+    (messageId: Hex, reject: () => void) => {
       const removeMail = () =>
         setMailbox((prevState) => prevState && prevState.filter(([mail]) => !mail.id.eq(messageId)));
 
-      return claimMessage(messageId, removeMail);
+      claimMessage({ messageId, resolve: removeMail, reject });
     },
     [claimMessage]
   );

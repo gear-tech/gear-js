@@ -85,3 +85,9 @@ export const PROGRAM_WITHOUT_REPLY_META: ProgramModel = {
   id: PROGRAM_ID_4,
   meta: null,
 };
+
+export const PARTIAL_FEE = {
+  partialFee: {
+    toHuman: () => '1 MUnit',
+  },
+};

@@ -29,24 +29,21 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
   const { account } = useAccount();
 
   const [metadata, setMetadata] = useState<Metadata>();
-  const [metadataFile, setMetadataFile] = useState<File>();
   const [metadataBuffer, setMetadataBuffer] = useState<string | null>(null);
 
   const calculateGas = useGasCalculate();
   const uploadProgram = useProgramUpload();
 
   const handleUploadMetaFile = (setFiledValue: SetFieldValue) => (data: UploadData) => {
-    const { meta, metaFile, metaBuffer } = data;
+    const { meta, metaBuffer } = data;
 
     setMetadata(meta);
-    setMetadataFile(metaFile);
     setMetadataBuffer(metaBuffer);
     setFiledValue('programName', meta?.title || '', false);
   };
 
   const handleResetMeta = (setValues: SetValues) => () => {
     setMetadata(undefined);
-    setMetadataFile(undefined);
     setMetadataBuffer(null);
     setValues(INITIAL_VALUES);
   };
@@ -54,7 +51,7 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
   const handleSubmitForm = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     const { value, payload, gasLimit, programName, payloadType } = values;
 
-    const programOptions: UploadProgramModel = {
+    const programModel: UploadProgramModel = {
       meta: metadata,
       value,
       title: '',
@@ -64,7 +61,13 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    uploadProgram(droppedFile, programOptions, metadataBuffer, onReset).catch(() => helpers.setSubmitting(false));
+    uploadProgram({
+      file: droppedFile,
+      programModel,
+      metadataBuffer,
+      reject: () => helpers.setSubmitting(false),
+      resolve: onReset,
+    });
   };
 
   const handleCalculateGas = async (values: FormValues, setFieldValue: SetFieldValue) => {
@@ -123,7 +126,6 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
                 <Fieldset legend="Metadata:" className={styles.meta}>
                   <UploadMeta
                     meta={metadata}
-                    metaFile={metadataFile}
                     onReset={handleResetMeta(setValues)}
                     onUpload={handleUploadMetaFile(setFieldValue)}
                   />
