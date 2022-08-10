@@ -6,14 +6,13 @@ import { Button, buttonStyles } from '@gear-js/ui';
 import styles from './Wallet.module.scss';
 
 import { useModal } from 'hooks';
-import { AccountsModal, AccountsModalProps } from 'components/modals/AccountsModal';
 
 const Wallet = () => {
   const { account } = useAccount();
   const { accounts } = useAccounts();
   const { showModal } = useModal();
 
-  const openModal = () => showModal<AccountsModalProps>(AccountsModal, { accounts });
+  const openModal = () => showModal('accounts', { accounts });
 
   const balanceSectionClassName = clsx(styles.section, styles.balance);
   const accButtonClassName = clsx(

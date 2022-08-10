@@ -11,7 +11,6 @@ import { ACCOUNT_ERRORS, PROGRAM_ERRORS, TransactionName, TransactionStatus } fr
 import { getExtrinsicFailedMessage } from 'helpers';
 import { Method } from 'types/explorer';
 import { SignAndSendArg, OperationCallbacks } from 'types/hooks';
-import { TransactionModal, TransactionModalProps } from 'components/modals/TransactionModal';
 
 const useMessageClaim = () => {
   const alert = useAlert();
@@ -86,7 +85,7 @@ const useMessageClaim = () => {
             resolve,
           });
 
-        showModal<TransactionModalProps>(TransactionModal, {
+        showModal('transaction', {
           fee: partialFee.toHuman(),
           name: TransactionName.ClaimMessage,
           addressTo: messageId,

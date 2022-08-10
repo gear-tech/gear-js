@@ -10,7 +10,6 @@ import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
 import { PROGRAM_ERRORS, ACCOUNT_ERRORS, TransactionName, TransactionStatus } from 'consts';
 import { Method } from 'types/explorer';
 import { CopiedInfo } from 'components/common/CopiedInfo';
-import { TransactionModal, TransactionModalProps } from 'components/modals/TransactionModal';
 
 const useCodeUpload = () => {
   const { api } = useApi();
@@ -82,7 +81,7 @@ const useCodeUpload = () => {
             codeHash,
           });
 
-        showModal<TransactionModalProps>(TransactionModal, {
+        showModal('transaction', {
           fee: partialFee.toHuman(),
           name: TransactionName.SubmitCode,
           addressFrom: address,

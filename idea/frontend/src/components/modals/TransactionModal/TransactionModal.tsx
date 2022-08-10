@@ -2,11 +2,20 @@ import Identicon from '@polkadot/react-identicon';
 import { Modal, Button } from '@gear-js/ui';
 
 import styles from './TransactionModal.module.scss';
-import { TransactionModalProps } from './types';
 
 import { fileNameHandler } from 'helpers';
+import { ModalProps } from 'context/modal/types';
 
-const TransactionModal = (props: TransactionModalProps) => {
+export type Props = ModalProps & {
+  fee: string;
+  name: string;
+  addressTo?: string;
+  addressFrom: string;
+  onCancel?: () => void;
+  onConfirm: () => void;
+};
+
+const TransactionModal = (props: Props) => {
   const { fee, name, addressTo, addressFrom, onClose, onCancel, onConfirm } = props;
 
   const handleClose = () => {

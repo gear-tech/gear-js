@@ -10,7 +10,6 @@ import { isDevChain } from 'helpers';
 import { ProgramStatus } from 'types/program';
 import { localPrograms } from 'services/LocalDBService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
-import { UploadMetadataModal, UploadMetadataModalProps } from 'components/modals/UploadMetadataModal';
 
 const useMetadataUplaod = () => {
   const alert = useAlert();
@@ -101,7 +100,7 @@ const useMetadataUplaod = () => {
             resolve,
           });
 
-        showModal<UploadMetadataModalProps>(UploadMetadataModal, {
+        showModal('metadata', {
           onCancel: reject,
           onConfirm: handleConfirm,
         });

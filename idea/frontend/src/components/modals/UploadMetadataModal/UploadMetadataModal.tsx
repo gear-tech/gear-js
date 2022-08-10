@@ -1,9 +1,15 @@
 import { Modal, Button } from '@gear-js/ui';
 
 import styles from './UploadMetadataModal.module.scss';
-import { UploadMetadataModalProps } from './types';
 
-const UploadMetadataModal = ({ onClose, onCancel, onConfirm }: UploadMetadataModalProps) => {
+import { ModalProps } from 'context/modal/types';
+
+export type Props = ModalProps & {
+  onCancel?: () => void;
+  onConfirm: () => void;
+};
+
+const UploadMetadataModal = ({ onClose, onCancel, onConfirm }: Props) => {
   const handleClose = () => {
     if (onCancel) {
       onCancel();

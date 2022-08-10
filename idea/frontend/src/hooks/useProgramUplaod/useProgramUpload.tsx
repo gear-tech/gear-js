@@ -16,7 +16,6 @@ import { Method } from 'types/explorer';
 import { UploadProgramModel, ProgramStatus } from 'types/program';
 import { OperationCallbacks } from 'types/hooks';
 import { CustomLink } from 'components/common/CustomLink';
-import { TransactionModal, TransactionModalProps } from 'components/modals/TransactionModal';
 
 const useProgramUpload = () => {
   const alert = useAlert();
@@ -149,7 +148,7 @@ const useProgramUpload = () => {
             resolve,
           });
 
-        showModal<TransactionModalProps>(TransactionModal, {
+        showModal('transaction', {
           fee: partialFee.toHuman(),
           name: TransactionName.SubmitProgram,
           addressFrom: address,

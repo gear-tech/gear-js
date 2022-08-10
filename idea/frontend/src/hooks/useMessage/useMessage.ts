@@ -10,7 +10,6 @@ import { getExtrinsicFailedMessage } from 'helpers';
 import { ACCOUNT_ERRORS, PROGRAM_ERRORS, TransactionStatus, TransactionName } from 'consts';
 import { Method } from 'types/explorer';
 import { OperationCallbacks } from 'types/hooks';
-import { TransactionModal, TransactionModalProps } from 'components/modals/TransactionModal';
 
 const useMessage = () => {
   const alert = useAlert();
@@ -81,7 +80,7 @@ const useMessage = () => {
             resolve,
           });
 
-        showModal<TransactionModalProps>(TransactionModal, {
+        showModal('transaction', {
           fee: partialFee.toHuman(),
           name: TransactionName.SendMessage,
           addressTo: message.destination as string,
@@ -122,7 +121,7 @@ const useMessage = () => {
             resolve,
           });
 
-        showModal<TransactionModalProps>(TransactionModal, {
+        showModal('transaction', {
           fee: partialFee.toHuman(),
           name: TransactionName.SendReply,
           addressTo: reply.replyToId,

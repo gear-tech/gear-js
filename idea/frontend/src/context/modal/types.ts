@@ -1,12 +1,17 @@
-import { FC } from 'react';
+import { ComponentProps } from 'react';
+
+import { MODALS } from './consts';
+
+export type ModalName = keyof typeof MODALS;
 
 export type ModalProps = {
   onClose: () => void;
 };
 
-export type InpitModalProps<Props extends ModalProps> = Omit<Props, 'onClose'> & Partial<Pick<Props, 'onClose'>>;
+export type ModalProperties<T extends ModalName> = Omit<ComponentProps<typeof MODALS[T]>, 'onClose'> &
+  Partial<ModalProps>;
 
 export type ModalContainerFactory = {
-  showModal: <Props extends ModalProps>(modal: FC<Props>, props?: InpitModalProps<Props>) => void;
+  showModal: <K extends ModalName>(name: K, props?: ModalProperties<K>) => void;
   closeModal: () => void;
 };

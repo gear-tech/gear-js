@@ -4,13 +4,17 @@ import { GearKeyring } from '@gear-js/api';
 import { Button, Modal } from '@gear-js/ui';
 
 import styles from './AccountsModal.module.scss';
-import { AccountsModalProps } from './types';
 import { AccountList } from './children/AccountList';
 
 import { LOCAL_STORAGE } from 'consts';
+import { ModalProps } from 'context/modal/types';
 import logoutSVG from 'assets/images/logout.svg';
 
-const AccountsModal = ({ accounts, onClose }: AccountsModalProps) => {
+export type Props = ModalProps & {
+  accounts?: InjectedAccountWithMeta[];
+};
+
+const AccountsModal = ({ accounts, onClose }: Props) => {
   const alert = useAlert();
   const { logout, switchAccount, account } = useAccount();
 

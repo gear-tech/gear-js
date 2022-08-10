@@ -1,23 +1,25 @@
-import { FC, useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 
-import { ModalProps, InpitModalProps } from './types';
+import { MODALS } from './consts';
+import { ModalName, ModalProperties } from './types';
 import { Props } from '../types';
 import { ModalContext } from './Context';
 
 const { Provider } = ModalContext;
 
 const ModalProvider = ({ children }: Props) => {
-  const [currentModal, setCurrentModal] = useState<JSX.Element | null>(null);
+  const [modalName, setModalName] = useState<ModalName | null>(null);
+  const [modalProps, setModalProps] = useState<any>(null);
 
-  const closeModal = useCallback(() => setCurrentModal(null), []);
+  const closeModal = useCallback(() => {
+    setModalName(null);
+    setModalProps(null);
+  }, []);
 
-  const showModal = useCallback(
-    <Props extends ModalProps>(Modal: FC<Props>, props?: InpitModalProps<Props>) => {
-      // @ts-ignore
-      setCurrentModal(<Modal {...(props || {})} onClose={closeModal} />);
-    },
-    [closeModal]
-  );
+  const showModal = useCallback(<K extends ModalName>(name: K, props?: ModalProperties<K>) => {
+    setModalName(name);
+    setModalProps(props ?? {});
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -28,16 +30,24 @@ const ModalProvider = ({ children }: Props) => {
   );
 
   useEffect(() => {
-    if (currentModal) {
+    if (modalName) {
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      if (currentModal) {
+      if (modalName) {
         document.body.style.overflow = 'auto';
       }
     };
-  }, [currentModal]);
+  }, [modalName]);
+
+  const currentModal = useMemo(() => {
+    if (modalName && modalProps) {
+      const ModalComponent = MODALS[modalName];
+
+      return <ModalComponent onClose={closeModal} {...modalProps} />;
+    }
+  }, [modalName, modalProps, closeModal]);
 
   return (
     <Provider value={value}>
