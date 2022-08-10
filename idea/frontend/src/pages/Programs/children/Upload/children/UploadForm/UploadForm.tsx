@@ -3,7 +3,7 @@ import { Formik, Form, FormikHelpers } from 'formik';
 import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import { useAccount } from '@gear-js/react-hooks';
+import { useApi, useAccount } from '@gear-js/react-hooks';
 
 import styles from './UploadForm.module.scss';
 import { INITIAL_VALUES } from './const';
@@ -26,6 +26,7 @@ type Props = {
 };
 
 const UploadForm = ({ droppedFile, onReset }: Props) => {
+  const { api } = useApi();
   const { account } = useAccount();
 
   const [metadata, setMetadata] = useState<Metadata>();
@@ -77,11 +78,17 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
     calculateGas(GasMethod.Init, values, code, metadata).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
   };
 
+  const deposit = api.existentialDeposit.toNumber();
   const encodeType = metadata?.init_input;
+  const maxGasLimit = api.blockGasLimit.toNumber();
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
 
-  const validationSchema = useMemo(() => getValidationSchema(encodeType, metadata), [metadata, encodeType]);
+  const validationSchema = useMemo(
+    () => getValidationSchema({ type: encodeType, deposit, metadata, maxGasLimit }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [metadata, encodeType]
+  );
 
   const isUploadAvailable = !(account && parseInt(account.balance.value, 10) > 0);
 
@@ -116,7 +123,7 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
                     allowNegative={false}
                   />
 
-                  <FormInput type="number" name="value" label="Initial value" placeholder="0" />
+                  <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
 
                   <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
 
