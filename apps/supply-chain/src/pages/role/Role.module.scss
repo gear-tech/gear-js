@@ -6,12 +6,19 @@
 }
 
 .actions {
+  display: flex;
   padding: 24px 24px 12px;
   font-weight: 500;
+  color: $textColorSecondary;
   text-transform: uppercase;
 
   .action {
-    color: $successColor;
+    flex: 1;
+    max-width: 280px;
+
+    &.active {
+      color: $successColor;
+    }
   }
 }
 
@@ -23,7 +30,7 @@
 
 .listWrapper {
   flex: 1;
-  max-width: 280px;
+  display: flex;
 }
 
 .textWrapper {
