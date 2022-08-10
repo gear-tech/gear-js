@@ -2156,7 +2156,7 @@ __metadata:
     "@craco/craco": 6.4.3
     "@gear-js/api": 0.25.0
     "@gear-js/react-hooks": ^0.2.17
-    "@gear-js/ui": 0.2.5
+    "@gear-js/ui": 0.4.0
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
     "@polkadot/api": ^8.13.1
@@ -2208,7 +2208,6 @@ __metadata:
     react-dnd: 16.0.0
     react-dnd-html5-backend: 16.0.0
     react-dom: 17.0.2
-    react-error-boundary: 3.1.4
     react-feather: 2.0.9
     react-number-format: 4.9.1
     react-router-dom: 6.3.0
@@ -2216,7 +2215,6 @@ __metadata:
     react-transition-group: ^4.4.2
     sass: 1.50.0
     stream-browserify: 3.0.0
-    tua-body-scroll-lock: 1.2.1
     typescript: 4.6.3
     vercel: 24.1.0
     web-vitals: 2.1.4
@@ -2398,17 +2396,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/ui@npm:0.2.5":
-  version: 0.2.5
-  resolution: "@gear-js/ui@npm:0.2.5"
-  peerDependencies:
-    react: ">=17.0.2"
-    sass: ^1.49.9
-  checksum: a0f4ad36bd417a1a63ae96bdae49b2858298c703db5927dff91e95fff50461ab7ba1660c7e3f600165cccbf4197a7319a5cb53f13e983899c612172233b2038e
-  languageName: node
-  linkType: hard
-
-"@gear-js/ui@npm:^0.4.0":
+"@gear-js/ui@npm:0.4.0, @gear-js/ui@npm:^0.4.0":
   version: 0.4.0
   resolution: "@gear-js/ui@npm:0.4.0"
   peerDependencies:
@@ -17793,17 +17781,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:3.1.4":
-  version: 3.1.4
-  resolution: "react-error-boundary@npm:3.1.4"
-  dependencies:
-    "@babel/runtime": ^7.12.5
-  peerDependencies:
-    react: ">=16.13.1"
-  checksum: f36270a5d775a25c8920f854c0d91649ceea417b15b5bc51e270a959b0476647bb79abb4da3be7dd9a4597b029214e8fe43ea914a7f16fa7543c91f784977f1b
-  languageName: node
-  linkType: hard
-
 "react-error-overlay@npm:^6.0.11":
   version: 6.0.11
   resolution: "react-error-overlay@npm:6.0.11"
@@ -20357,13 +20334,6 @@ __metadata:
   peerDependencies:
     typescript: ">=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta"
   checksum: 1843f4c1b2e0f975e08c4c21caa4af4f7f65a12ac1b81b3b8489366826259323feb3fc7a243123453d2d1a02314205a7634e048d4a8009921da19f99755cdc48
-  languageName: node
-  linkType: hard
-
-"tua-body-scroll-lock@npm:1.2.1":
-  version: 1.2.1
-  resolution: "tua-body-scroll-lock@npm:1.2.1"
-  checksum: 695d367f0d6facea4c14ed31b5d6e4ec70c4f92e7151c30ac639adb9030c3f1bf49a84ed623b012911d5d2212c4c178f1f073174d03d7a0f76feb2c624869884
   languageName: node
   linkType: hard
 

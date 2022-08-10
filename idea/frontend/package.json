@@ -5,7 +5,7 @@
   "dependencies": {
     "@gear-js/api": "0.25.0",
     "@gear-js/react-hooks": "^0.2.17",
-    "@gear-js/ui": "0.2.5",
+    "@gear-js/ui": "0.4.0",
     "@hcaptcha/react-hcaptcha": "1.2.0",
     "@monaco-editor/react": "4.4.2",
     "@polkadot/api": "^8.13.1",
@@ -29,13 +29,11 @@
     "react-dnd": "16.0.0",
     "react-dnd-html5-backend": "16.0.0",
     "react-dom": "17.0.2",
-    "react-error-boundary": "3.1.4",
     "react-feather": "2.0.9",
     "react-number-format": "4.9.1",
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.2",
-    "tua-body-scroll-lock": "1.2.1",
     "yup": "0.32.11"
   },
   "scripts": {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 
 import { useProgram } from 'hooks';
@@ -46,7 +47,7 @@ const Send = () => {
         <>
           <PageHeader title={isReply ? 'Send reply' : 'New message'} fileName={program.name || id} />
           <Box>
-            <MessageForm id={id} isReply={isReply} metadata={metadata} renderButtons={renderFormButtons} />
+            <MessageForm id={id as Hex} isReply={isReply} metadata={metadata} renderButtons={renderFormButtons} />
           </Box>
         </>
       ) : (

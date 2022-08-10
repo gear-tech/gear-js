@@ -1,13 +1,13 @@
 import { decodeHexTypes, createPayloadTypeStructure } from '@gear-js/api';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, render, fireEvent, waitFor } from '@testing-library/react';
-import { AccountProvider } from '@gear-js/react-hooks';
+import { screen, fireEvent, waitFor, within } from '@testing-library/react';
 
-import { useAccountMock, useApiMock, useGasCalculateMock, TEST_API, TEST_ACCOUNT_1 } from '../../mocks/hooks';
-import { META, REPLY_META, PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2 } from '../../const';
+import { useApiMock, useAccountMock, useGasCalculateMock, TEST_API, TEST_ACCOUNT_1 } from '../../mocks/hooks';
+import { META, REPLY_META, PROGRAM_ID_1, PROGRAM_ID_2, MESSAGE_ID_1, MESSAGE_ID_2, PARTIAL_FEE } from '../../const';
+import { renderWithProviders } from '../../utils';
 
-import { ApiProvider } from 'context/api';
-import { AlertProvider } from 'context/alert';
+import * as helpers from 'helpers';
+import { ACCOUNT_ERRORS, TransactionName } from 'consts';
 import { Send } from 'pages/Send/Send';
 import { FormValues } from 'components/blocks/MessageForm/types';
 import { TypeStructure } from 'components/common/Form/FormPayload/types';
@@ -19,17 +19,11 @@ type Props = {
 };
 
 const SendMessagePage = ({ path, initialEntries }: Props) => (
-  <AlertProvider>
-    <ApiProvider>
-      <AccountProvider>
-        <MemoryRouter initialEntries={initialEntries}>
-          <Routes>
-            <Route path={path} element={<Send />} />
-          </Routes>
-        </MemoryRouter>
-      </AccountProvider>
-    </ApiProvider>
-  </AlertProvider>
+  <MemoryRouter initialEntries={initialEntries}>
+    <Routes>
+      <Route path={path} element={<Send />} />
+    </Routes>
+  </MemoryRouter>
 );
 
 jest.mock('@polkadot/extension-dapp', () => ({
@@ -58,28 +52,51 @@ describe('send message page tests', () => {
     });
   };
 
+  const checkTransactionModal = async (id: string, transactionName = TransactionName.SendMessage) => {
+    const modal = await screen.findByTestId('modal');
+
+    expect(within(modal).getByText('Transaction details'));
+    expect(within(modal).getByText('Sending transaction'));
+    expect(within(modal).getByText(transactionName));
+    expect(within(modal).getByText(`Fees of ${PARTIAL_FEE.partialFee.toHuman()} will be applied to the submission`));
+    expect(within(modal).getByText('From:'));
+    expect(within(modal).getByText(helpers.fileNameHandler(TEST_ACCOUNT_1.address)));
+    expect(within(modal).getByText('To:'));
+    expect(within(modal).getByText(helpers.fileNameHandler(id)));
+
+    expect(within(modal).getByText('Submit'));
+    expect(within(modal).getByText('Cancel'));
+  };
+
   it('show error if wallet not connected', async () => {
+    TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
+
     useApiMock(TEST_API);
     useAccountMock();
 
-    render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />);
+    renderWithProviders(
+      <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />
+    );
 
     const sendMessageBtn = await screen.findByText('Send message');
 
     submit(sendMessageBtn);
 
-    await waitFor(() => expect(screen.getByText('Wallet not connected')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED)).toBeInTheDocument());
   });
 
   it('sends message to program without meta', async () => {
-    TEST_API.message.submit.mockResolvedValue('');
+    TEST_API.message.send.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
+    TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
     const { calculateGasMock } = useGasCalculateMock(2400000);
 
-    render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />);
+    renderWithProviders(
+      <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_2}`]} />
+    );
 
     await testInitPageLoading();
 
@@ -235,28 +252,50 @@ describe('send message page tests', () => {
     await waitFor(() => expect(calculateGasMock).toBeCalledTimes(1));
     expect(calculateGasMock).toBeCalledWith('handle', formValues, null, undefined, PROGRAM_ID_2);
 
+    // show modal
+
+    submit(sendMessageBtn);
+
+    await checkTransactionModal(PROGRAM_ID_2);
+
+    // close modal
+
+    checkBtnDisabled();
+
+    const modalCancelBtn = screen.getByText('Cancel');
+
+    fireEvent.click(modalCancelBtn);
+
+    expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
+
+    checkBtnEnabled();
+
     // authorized submit
 
     submit(sendMessageBtn);
 
+    const modalSubmitBtn = await screen.findByText('Submit');
+
+    fireEvent.click(modalSubmitBtn);
+
     await waitFor(() => {
       expect(screen.getByText('SignIn')).toBeInTheDocument();
-      expect(screen.getByText('gear.sendMessage')).toBeInTheDocument();
+      expect(screen.getByText(TransactionName.SendMessage)).toBeInTheDocument();
     });
   });
 
   it('sends message to program with meta', async () => {
-    useApiMock(TEST_API);
-    useAccountMock(TEST_ACCOUNT_1);
-
-    TEST_API.message.submit.mockResolvedValue('');
+    TEST_API.message.send.mockResolvedValue('');
     TEST_API.message.signAndSend.mockResolvedValue('');
+    TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
     const { calculateGasMock } = useGasCalculateMock(2400000);
 
-    render(<SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_1}`]} />);
+    renderWithProviders(
+      <SendMessagePage path="/send/message/:programId" initialEntries={[`/send/message/${PROGRAM_ID_1}`]} />
+    );
 
     await testInitPageLoading();
 
@@ -375,9 +414,15 @@ describe('send message page tests', () => {
 
     submit(sendMessageBtn);
 
+    await checkTransactionModal(PROGRAM_ID_1);
+
+    const modalSubmitBtn = await screen.findByText('Submit');
+
+    fireEvent.click(modalSubmitBtn);
+
     await waitFor(() => {
       expect(screen.getByText('SignIn')).toBeInTheDocument();
-      expect(screen.getByText('gear.sendMessage')).toBeInTheDocument();
+      expect(screen.getByText(TransactionName.SendMessage)).toBeInTheDocument();
     });
   });
 
@@ -385,14 +430,17 @@ describe('send message page tests', () => {
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
 
-    TEST_API.reply.submit.mockResolvedValue('');
-    TEST_API.reply.signAndSend.mockResolvedValue('');
+    TEST_API.message.sendReply.mockResolvedValue('');
+    TEST_API.message.signAndSend.mockResolvedValue('');
+    TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
     const { calculateGasMock } = useGasCalculateMock(2400000);
 
-    render(<SendMessagePage path="/send/reply/:messageId" initialEntries={[`/send/reply/${MESSAGE_ID_2}`]} />);
+    renderWithProviders(
+      <SendMessagePage path="/send/reply/:messageId" initialEntries={[`/send/reply/${MESSAGE_ID_2}`]} />
+    );
 
     await testInitPageLoading();
 
@@ -468,9 +516,15 @@ describe('send message page tests', () => {
 
     submit(sendReplyBtn);
 
+    await checkTransactionModal(MESSAGE_ID_2, TransactionName.SendReply);
+
+    const modalSubmitBtn = await screen.findByText('Submit');
+
+    fireEvent.click(modalSubmitBtn);
+
     await waitFor(() => {
       expect(screen.getByText('SignIn')).toBeInTheDocument();
-      expect(screen.getByText('gear.sendMessage')).toBeInTheDocument();
+      expect(screen.getByText(TransactionName.SendReply)).toBeInTheDocument();
     });
   });
 
@@ -478,14 +532,17 @@ describe('send message page tests', () => {
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
 
-    TEST_API.reply.submit.mockResolvedValue('');
-    TEST_API.reply.signAndSend.mockResolvedValue('');
+    TEST_API.message.sendReply.mockResolvedValue('');
+    TEST_API.message.signAndSend.mockResolvedValue('');
+    TEST_API.message.paymentInfo.mockResolvedValue(PARTIAL_FEE);
 
     useApiMock(TEST_API);
     useAccountMock(TEST_ACCOUNT_1);
     const { calculateGasMock } = useGasCalculateMock(2400000);
 
-    render(<SendMessagePage path="/reply/message/:messageId" initialEntries={[`/reply/message/${MESSAGE_ID_1}`]} />);
+    renderWithProviders(
+      <SendMessagePage path="/reply/message/:messageId" initialEntries={[`/reply/message/${MESSAGE_ID_1}`]} />
+    );
 
     await testInitPageLoading();
 
@@ -549,9 +606,15 @@ describe('send message page tests', () => {
 
     submit(sendReplyBtn);
 
+    await checkTransactionModal(MESSAGE_ID_1, TransactionName.SendReply);
+
+    const modalSubmitBtn = await screen.findByText('Submit');
+
+    fireEvent.click(modalSubmitBtn);
+
     await waitFor(() => {
       expect(screen.getByText('SignIn')).toBeInTheDocument();
-      expect(screen.getByText('gear.sendMessage')).toBeInTheDocument();
+      expect(screen.getByText(TransactionName.SendReply)).toBeInTheDocument();
     });
   });
 });

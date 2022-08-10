@@ -16,7 +16,7 @@ const MetaField = ({ label, value, type }: Props) => {
 
   const toggleAlert = () => setIsVisible((prevState) => !prevState);
 
-  const fieldRef = useOutsideClick(() => setIsVisible(false));
+  const fieldRef = useOutsideClick<HTMLDivElement>(() => setIsVisible(false));
 
   return (
     <div className={styles.item}>

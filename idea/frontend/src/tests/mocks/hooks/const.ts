@@ -16,13 +16,11 @@ export const TEST_ACCOUNT_1: Account = {
 };
 
 export const TEST_API = {
-  reply: {
-    submit: jest.fn(),
-    signAndSend: jest.fn(),
-  },
   message: {
-    submit: jest.fn(),
+    send: jest.fn(),
+    sendReply: jest.fn(),
     signAndSend: jest.fn(),
+    paymentInfo: jest.fn(),
   },
   balance: {
     findOut: jest.fn(),
