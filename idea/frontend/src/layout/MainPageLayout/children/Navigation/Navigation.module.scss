@@ -28,7 +28,7 @@
   border-radius: 40px;
   color: $textColorSecondary;
   display: inline-block;
-  font-size: 12px;
+  font-size: $fontSizeSmall;
   padding: 12px 18px;
   text-decoration: none;
 
@@ -38,7 +38,7 @@
   }
 
   @include md {
-    font-size: 12px;
+    font-size: $fontSizeSmall;
     text-align: center;
     line-height: 14px;
     font-weight: 600;
