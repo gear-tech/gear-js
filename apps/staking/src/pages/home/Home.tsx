@@ -12,7 +12,7 @@ import { ReactComponent as CubeSVG } from 'assets/images/cube.svg';
 
 import styles from './Home.module.scss';
 import { SwitcerValue } from './types';
-import { SWITCHER_ITEMS, PAYLOAD_FOR_INFO_STATE, DEFAULT_STAKER_INFO } from './consts';
+import { SWITCHER_ITEMS, PAYLOAD_FOR_INFO_STATE } from './consts';
 import { StakersList } from './stakersList';
 import { StakeForm } from './stakeForm';
 import { StateForm } from './stateForm';
@@ -23,24 +23,30 @@ function Home() {
   const { account } = useAccount();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [staker, setStaker] = useState<Staker>(DEFAULT_STAKER_INFO);
+  const [staker, setStaker] = useState<Staker | null>(null);
   const [activeValue, setActiveValue] = useState<string>(SwitcerValue.List);
   const [distributionTime, setDistributionTime] = useState(0);
 
-  const payloadForStakerState = useMemo(() => ({ [ProgramState.GetStaker]: account?.decodedAddress }), [account]);
+  const decodeAddress = account?.decodedAddress;
+
+  const payloadForStakerState = useMemo(() => ({ [ProgramState.GetStaker]: decodeAddress }), [decodeAddress]);
 
   const { state: infoState } = useStakingState<InfoState>(PAYLOAD_FOR_INFO_STATE);
   const { state: stakerState } = useStakingState<StakerState>(payloadForStakerState);
 
-  const isOwner = infoState?.Info.admin === account?.decodedAddress;
+  const isOwner = infoState?.Info.admin === decodeAddress;
 
   const switcherItems = useMemo(() => (isOwner ? SWITCHER_ITEMS : SWITCHER_ITEMS.slice(1)), [isOwner]);
 
-  const updateStakerInfo = (stateName: string) => (value: string) =>
-    setStaker((prevState) => ({
-      ...prevState,
-      [stateName]: value,
-    }));
+  const updateStakerBalance = (balance: number) =>
+    setStaker((prevState) =>
+      prevState
+        ? {
+            ...prevState,
+            balance,
+          }
+        : null,
+    );
 
   const reduceDistributionTime = () =>
     setDistributionTime((prevState) => {
@@ -52,15 +58,15 @@ function Home() {
   const getContent = () => {
     switch (activeValue) {
       case SwitcerValue.Stake:
-        return <StakeForm balance={staker.balance} updateStakerInfo={updateStakerInfo('balance')} />;
+        return <StakeForm balance={staker!.balance} updateStakerBalance={updateStakerBalance} />;
       case SwitcerValue.State:
-        return <StateForm staker={staker} />;
+        return <StateForm staker={staker!} />;
       case SwitcerValue.List:
         return <StakersList distributionTime={distributionTime} />;
       case SwitcerValue.Update:
         return <UpdateStakingForm />;
       case SwitcerValue.Withdraw:
-        return <WithdrawForm balance={staker.balance} updateStakerInfo={updateStakerInfo('balance')} />;
+        return <WithdrawForm balance={staker!.balance} updateStakerBalance={updateStakerBalance} />;
       default:
         return null;
     }
@@ -88,6 +94,14 @@ function Home() {
       clearTimeout(timer);
     };
   }, [distributionTime]);
+
+  useEffect(
+    () => () => {
+      setIsLoading(true);
+      setActiveValue(SwitcerValue.List);
+    },
+    [decodeAddress],
+  );
 
   return (
     <>

@@ -16,10 +16,10 @@ import { FieldName, FormValues } from './types';
 
 type Props = {
   balance: number;
-  updateStakerInfo: (value: string) => void;
+  updateStakerBalance: (balance: number) => void;
 };
 
-function WithdrawForm({ balance, updateStakerInfo }: Props) {
+function WithdrawForm({ balance, updateStakerBalance }: Props) {
   const alert = useAlert();
 
   const { errors, reset, onSubmit, getInputProps } = useForm<FormValues>({
@@ -39,7 +39,7 @@ function WithdrawForm({ balance, updateStakerInfo }: Props) {
     const amount = +values.amount;
 
     const onSuccess = () => {
-      updateStakerInfo(String(balance - amount));
+      updateStakerBalance(balance - amount);
       reset();
     };
 
@@ -57,6 +57,7 @@ function WithdrawForm({ balance, updateStakerInfo }: Props) {
           min={1}
           type="number"
           label="Amount"
+          isFocused
           placeholder="Enter withdraw amount"
           {...getInputProps(FieldName.Amount)}
         />

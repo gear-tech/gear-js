@@ -16,13 +16,13 @@ function UpdateStakingForm() {
   const { errors, reset, onSubmit, getInputProps } = useForm<FormValues>(FORM_CONFIG);
 
   const handleSubmit = onSubmit((values) => {
-    const unixDate = Date.parse(values.distributionTime);
+    const distributionTime = Date.parse(values.distributionTime) - Date.now();
 
     sendMessage(
       {
         [ProgramMessage.UpdateStaking]: {
           ...values,
-          distributionTime: unixDate - Date.now(),
+          distributionTime,
         },
       },
       { onSuccess: reset },
@@ -37,6 +37,7 @@ function UpdateStakingForm() {
       <form className={styles.form} onSubmit={handleSubmit}>
         <FormField
           label="Staking token address"
+          isFocused
           placeholder="Enter address"
           {...getInputProps(FieldName.StakingAddress)}
         />

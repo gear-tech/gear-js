@@ -17,10 +17,10 @@ import { FieldName, FormValues } from './types';
 
 type Props = {
   balance: number;
-  updateStakerInfo: (value: string) => void;
+  updateStakerBalance: (balance: number) => void;
 };
 
-function StakeForm({ balance, updateStakerInfo }: Props) {
+function StakeForm({ balance, updateStakerBalance }: Props) {
   const { errors, reset, onSubmit, getInputProps } = useForm<FormValues>(FORM_CONFIG);
 
   const sendMessageToFToken = useSendMessage(FTOKEN_CONTRACT_ADDRESS, fungibleTokenMetaWasm);
@@ -30,7 +30,7 @@ function StakeForm({ balance, updateStakerInfo }: Props) {
     const amount = +values.amount;
 
     const onStakingSuccess = () => {
-      updateStakerInfo(String(balance + amount));
+      updateStakerBalance(balance + amount);
       reset();
     };
 
@@ -51,6 +51,7 @@ function StakeForm({ balance, updateStakerInfo }: Props) {
           min={1}
           type="number"
           label="Stake"
+          isFocused
           placeholder="Enter amount of tokens"
           {...getInputProps(FieldName.Amount)}
         />
