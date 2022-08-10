@@ -101,7 +101,7 @@ const useMetadataUplaod = () => {
           });
 
         showModal('metadata', {
-          onCancel: reject,
+          onAbort: reject,
           onConfirm: handleConfirm,
         });
       } catch (error) {

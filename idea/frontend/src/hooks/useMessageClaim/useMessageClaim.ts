@@ -90,7 +90,7 @@ const useMessageClaim = () => {
           name: TransactionName.ClaimMessage,
           addressTo: messageId,
           addressFrom: address,
-          onCancel: reject,
+          onAbort: reject,
           onConfirm: handleConfirm,
         });
       } catch (error) {

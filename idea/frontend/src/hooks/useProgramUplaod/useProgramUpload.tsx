@@ -152,7 +152,7 @@ const useProgramUpload = () => {
           fee: partialFee.toHuman(),
           name: TransactionName.SubmitProgram,
           addressFrom: address,
-          onCancel: reject,
+          onAbort: reject,
           onConfirm: handleConfirm,
         });
       } catch (error) {

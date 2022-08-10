@@ -85,7 +85,7 @@ const useMessage = () => {
           name: TransactionName.SendMessage,
           addressTo: message.destination as string,
           addressFrom: address,
-          onCancel: reject,
+          onAbort: reject,
           onConfirm: handleConfirm,
         });
       } catch (error) {
@@ -126,7 +126,7 @@ const useMessage = () => {
           name: TransactionName.SendReply,
           addressTo: reply.replyToId,
           addressFrom: address,
-          onCancel: reject,
+          onAbort: reject,
           onConfirm: handleConfirm,
         });
       } catch (error) {

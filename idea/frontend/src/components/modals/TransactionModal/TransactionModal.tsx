@@ -11,16 +11,16 @@ export type Props = ModalProps & {
   name: string;
   addressTo?: string;
   addressFrom: string;
-  onCancel?: () => void;
+  onAbort?: () => void;
   onConfirm: () => void;
 };
 
 const TransactionModal = (props: Props) => {
-  const { fee, name, addressTo, addressFrom, onClose, onCancel, onConfirm } = props;
+  const { fee, name, addressTo, addressFrom, onClose, onAbort, onConfirm } = props;
 
   const handleClose = () => {
-    if (onCancel) {
-      onCancel();
+    if (onAbort) {
+      onAbort();
     }
 
     onClose();

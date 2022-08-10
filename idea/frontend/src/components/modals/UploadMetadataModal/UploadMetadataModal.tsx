@@ -5,14 +5,14 @@ import styles from './UploadMetadataModal.module.scss';
 import { ModalProps } from 'context/modal/types';
 
 export type Props = ModalProps & {
-  onCancel?: () => void;
+  onAbort?: () => void;
   onConfirm: () => void;
 };
 
-const UploadMetadataModal = ({ onClose, onCancel, onConfirm }: Props) => {
+const UploadMetadataModal = ({ onClose, onAbort, onConfirm }: Props) => {
   const handleClose = () => {
-    if (onCancel) {
-      onCancel();
+    if (onAbort) {
+      onAbort();
     }
 
     onClose();
