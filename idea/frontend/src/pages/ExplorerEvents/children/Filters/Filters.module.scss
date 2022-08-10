@@ -1,0 +1,61 @@
+@use '@gear-js/ui/variables' as *;
+
+.filters {
+  position: relative;
+}
+
+.button {
+  padding: 10px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  transition: 0.25s all;
+}
+
+.toggleButton {
+  color: $textColor;
+  background-color: $successColor;
+}
+
+.body {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: $bgColor;
+  border-radius: $borderRadius;
+  box-shadow: 0px 5px 5px 0px #00000033, 0px 3px 14px 0px #0000001f, 0px 8px 10px 0px #00000024;
+  z-index: 1;
+}
+
+.checkbox {
+  padding: 8px 20px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #3d3d3d;
+  }
+}
+
+.footer {
+  padding: 8px 20px 20px;
+}
+
+.resetButton {
+  $color: #909090;
+  width: 100%;
+  font-weight: inherit;
+  color: $color;
+  border: 1px solid $color;
+
+  &:hover {
+    color: $textColor;
+    border-color: $textColor;
+  }
+
+  .icon {
+    margin-right: 10px;
+  }
+}
