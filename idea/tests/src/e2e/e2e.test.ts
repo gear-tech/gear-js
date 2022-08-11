@@ -5,7 +5,7 @@ import { checkInitStatus, getAllPrograms, getMeta, getProgramData, uploadMeta } 
 import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram } from '../interfaces';
 import { sleep } from '../utils';
-import { getAllMessages, getMessageData } from './messages';
+import { getAllMessages, getMessageData, getMessagePayload } from './messages';
 import { getTestBalance } from './testBalance';
 import { getCodeData, getListCode } from './code';
 import base from '../config/base';
@@ -67,7 +67,7 @@ describe('program methods', () => {
 describe('message methods', () => {
   test('message.all request', async () => {
     const messages = Array.from(prepared.messages.log.keys()).concat(
-      Array.from(prepared.messages.sent.values()).map(({ messageId }) => messageId),
+      Array.from(prepared.messages.sent.values()).map(({ id }) => id),
     ) as Hex[];
     Object.values(prepared.programs).forEach(({ messageId }) => messages.push(messageId));
     expect(await getAllMessages(genesis, messages)).toBeTruthy();
@@ -76,6 +76,9 @@ describe('message methods', () => {
   test('message.data request', async () => {
     for (const message of prepared.messages.log) {
       expect(await getMessageData(genesis, message[0])).toBeTruthy();
+    }
+    for (const [_, value] of prepared.messages.sent) {
+      expect(await getMessagePayload(genesis, value.id));
     }
   });
 });

@@ -9,7 +9,6 @@ import {
   InitStatus,
   MESSAGE_READ_STATUS,
   UpdateMessageData,
-  UpdateMessagesParams,
 } from '@gear-js/common';
 
 import { Message } from '../database/entities/message.entity';
@@ -81,8 +80,8 @@ export class MessageService {
     }
   }
 
-  public async updateMessagesData(updateMessagesParams: UpdateMessagesParams): Promise<void> {
-    const promises = updateMessagesParams.params.map((updateMessageData) => {
+  public async updateMessagesData(updateMessagesParams: UpdateMessageData[]): Promise<void> {
+    const promises = updateMessagesParams.map((updateMessageData) => {
       return this.updateMessage(updateMessageData);
     });
 
