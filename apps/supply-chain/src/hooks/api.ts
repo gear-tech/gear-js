@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import supplyChainOptWasm from 'assets/wasm/supply_chain.opt.wasm';
 import supplyChainMetaWasm from 'assets/wasm/supply_chain.meta.wasm';
-import { useMetadata } from '@gear-js/react-hooks';
+import { useMetadata, useSendMessage } from '@gear-js/react-hooks';
+import { LOCAL_STORAGE } from 'consts';
 
 function useSupplyChainOpt() {
   const [uintArray, setUintArray] = useState<Uint8Array>();
@@ -23,4 +24,8 @@ function useSupplyChainMeta() {
   return useMetadata(supplyChainMetaWasm);
 }
 
-export { useSupplyChainOpt, useSupplyChainMeta };
+function useSupplyChainMessage() {
+  return useSendMessage(localStorage[LOCAL_STORAGE.PROGRAM], supplyChainMetaWasm);
+}
+
+export { useSupplyChainOpt, useSupplyChainMeta, useSupplyChainMessage };

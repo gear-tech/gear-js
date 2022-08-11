@@ -2,9 +2,12 @@ import { Hex } from '@gear-js/api';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { ACTIONS, ROLES } from 'consts';
+import { Form, Input } from 'components';
 import { Header } from './header';
 import { List } from './list';
 import styles from './Role.module.scss';
+import { SelectText } from './select-text';
+import { Approve, Produce, Sale, Ship } from './forms';
 
 type Props = {
   programId: Hex;
@@ -28,11 +31,12 @@ function Role({ programId, onBackButtonClick }: Props) {
       <div className={styles.main}>
         <List list={ROLES} value={role} onChange={setRole} />
         {role && <List list={ACTIONS[role]} value={action} onChange={setAction} />}
-        <div className={styles.text}>
-          <p className={styles.heading}>Select {role ? 'action' : 'role'}</p>
-          <p className={styles.subheading}>
-            Select one of the {role ? 'actions' : 'roles'} in the list on the left to continue
-          </p>
+        <div className={styles.action}>
+          {/* <SelectText value={role ? 'action' : 'role'} /> */}
+          {/* <Produce heading="t" /> */}
+          {/* <Sale heading="t" onSubmit={() => {}} items={['0']} /> */}
+          {/* <Approve heading="t" onSubmit={() => {}} items={['0']} /> */}
+          <Ship heading="t" onSubmit={() => {}} items={['0']} />
         </div>
       </div>
     </div>

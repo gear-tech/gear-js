@@ -4,6 +4,7 @@ const ADDRESS = {
 
 const LOCAL_STORAGE = {
   ACCOUNT: 'account',
+  PROGRAM: 'program',
 };
 
 const FORM = {

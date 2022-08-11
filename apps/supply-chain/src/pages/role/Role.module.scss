@@ -26,21 +26,23 @@
   @extend %box;
   padding: 0;
   display: flex;
-  align-items: center;
+}
+
+.action {
+  display: flex;
+  width: 100%;
+  padding: 24px;
+
+  & > * {
+    flex: 1;
+  }
+}
+
+.input {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
 }
 
 .text {
-  flex: 1;
-  text-align: center;
-}
-
-.heading {
-  font-size: $fontSizeLarge;
-  font-weight: 500;
-  color: $textColorSecondary;
-}
-
-.subheading {
-  font-size: $fontSizeMedium;
   color: $textColorSecondary;
 }

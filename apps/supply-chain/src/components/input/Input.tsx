@@ -7,11 +7,11 @@ type Props = InputProps & {
   error?: ReactNode;
 };
 
-function Input({ className, error, ...props }: Props) {
+function Input({ className, inputClassName, error, ...props }: Props) {
   return (
     <div className={className}>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <GearInput {...props} />
+      <GearInput className={inputClassName} {...props} />
       {error && <span className={styles.error}>{error}</span>}
     </div>
   );

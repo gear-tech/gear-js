@@ -1,0 +1,16 @@
+@use '@gear-js/ui/headings' as *;
+
+.heading {
+  @extend %h4;
+  margin-bottom: 32px;
+}
+
+.form {
+  & > *:not(:last-child) {
+    margin-bottom: 24px;
+  }
+}
+
+.button {
+  margin-top: 32px;
+}
