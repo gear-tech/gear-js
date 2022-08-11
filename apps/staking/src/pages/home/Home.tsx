@@ -29,7 +29,12 @@ function Home() {
 
   const decodeAddress = account?.decodedAddress;
 
-  const payloadForStakerState = useMemo(() => ({ [ProgramState.GetStaker]: decodeAddress }), [decodeAddress]);
+  const payloadForStakerState = useMemo(
+    // update the reward once a minute
+    () => ({ [ProgramState.GetStaker]: decodeAddress }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [decodeAddress, distributionTime],
+  );
 
   const { state: infoState } = useStakingState<InfoState>(PAYLOAD_FOR_INFO_STATE);
   const { state: stakerState } = useStakingState<StakerState>(payloadForStakerState);
@@ -38,12 +43,12 @@ function Home() {
 
   const switcherItems = useMemo(() => (isOwner ? SWITCHER_ITEMS : SWITCHER_ITEMS.slice(1)), [isOwner]);
 
-  const updateStakerBalance = (balance: number) =>
+  const updateStaker = (stateName: keyof Staker) => (value: number) =>
     setStaker((prevState) =>
       prevState
         ? {
             ...prevState,
-            balance,
+            [stateName]: value,
           }
         : null,
     );
@@ -56,17 +61,31 @@ function Home() {
     });
 
   const getContent = () => {
+    const isStakingActive = Boolean(distributionTime);
+
     switch (activeValue) {
       case SwitcerValue.Stake:
-        return <StakeForm balance={staker!.balance} updateStakerBalance={updateStakerBalance} />;
+        return (
+          <StakeForm
+            balance={staker!.balance}
+            isStakingActive={isStakingActive}
+            updateStakerBalance={updateStaker('balance')}
+          />
+        );
       case SwitcerValue.State:
-        return <StateForm staker={staker!} />;
+        return <StateForm staker={staker!} updateStakerReward={updateStaker('reward')} />;
       case SwitcerValue.List:
         return <StakersList distributionTime={distributionTime} />;
       case SwitcerValue.Update:
-        return <UpdateStakingForm />;
+        return <UpdateStakingForm isStakingActive={isStakingActive} />;
       case SwitcerValue.Withdraw:
-        return <WithdrawForm balance={staker!.balance} updateStakerBalance={updateStakerBalance} />;
+        return (
+          <WithdrawForm
+            balance={staker!.balance}
+            isStakingActive={isStakingActive}
+            updateStakerBalance={updateStaker('balance')}
+          />
+        );
       default:
         return null;
     }
@@ -74,13 +93,16 @@ function Home() {
 
   useEffect(() => {
     if (infoState && stakerState) {
-      const time = convertToNumber(infoState.Info.timeLeft);
-      const preparedInfo = preparedStakerState(stakerState.Staker);
+      if (!distributionTime) {
+        const time = convertToNumber(infoState.Info.timeLeft);
 
+        setDistributionTime(time);
+      }
+
+      setStaker(preparedStakerState(stakerState.Staker));
       setIsLoading(false);
-      setStaker(preparedInfo);
-      setDistributionTime(time);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infoState, stakerState]);
 
   useEffect(() => {
@@ -105,7 +127,7 @@ function Home() {
 
   return (
     <>
-      <h1 className={styles.heading}>Stacking</h1>
+      <h1 className={styles.heading}>Staking</h1>
       {isLoading ? (
         <Loader />
       ) : (

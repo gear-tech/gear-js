@@ -1,5 +1,4 @@
 @use '@gear-js/ui/headings' as *;
-@use '@gear-js/ui/breakpoints' as *;
 
 .heading {
   @extend %h2;
@@ -14,19 +13,10 @@
 }
 
 .cubeWrapper {
-  @include xl {
-    display: none;
-  }
-
   margin: -0.75rem 0 0 -8rem;
 }
 
 .main {
-  @include xl {
-    flex: 1 1;
-    max-width: none;
-  }
-
   flex: 0 0 32.5rem;
   max-width: 32.5rem;
 }

@@ -1,12 +1,10 @@
 import { Button } from '@gear-js/ui';
 
 import { useStakingMessage } from 'hooks';
-import { getReward } from 'utils';
 import { Staker } from 'types/state';
 import { ProgramMessage } from 'types/message';
 import { Subtitle } from 'components/common/subtitle';
 import { IndicatorValue } from 'components/common/indicatorValue';
-import awardSVG from 'assets/images/award.svg';
 import filledMoneySVG from 'assets/images/filledMoney.svg';
 import filledMedalSVG from 'assets/images/filledMedal.svg';
 
@@ -14,12 +12,17 @@ import styles from './StateForm.module.scss';
 
 type Props = {
   staker: Staker;
+  updateStakerReward: (value: number) => void;
 };
 
-function StateForm({ staker }: Props) {
+function StateForm({ staker, updateStakerReward }: Props) {
   const sendMessage = useStakingMessage();
 
-  const handleClick = () => sendMessage({ [ProgramMessage.GetReward]: null });
+  const handleClick = () => {
+    const onSuccess = () => updateStakerReward(0);
+
+    sendMessage({ [ProgramMessage.GetReward]: null }, { onSuccess });
+  };
 
   return (
     <>
@@ -28,10 +31,10 @@ function StateForm({ staker }: Props) {
       <IndicatorValue
         name="Total Rewards"
         icon={filledMedalSVG}
-        value={getReward(staker)}
+        value={staker.reward}
+        isHighlighted
         className={styles.indicator}
       />
-      <IndicatorValue name="Latest Reward" icon={awardSVG} value={2} className={styles.indicator} isHighlighted />
       <Button text="Get reward" className={styles.button} onClick={handleClick} />
     </>
   );

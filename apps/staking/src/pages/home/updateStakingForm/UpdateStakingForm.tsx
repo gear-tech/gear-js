@@ -2,6 +2,7 @@ import { useForm } from '@mantine/form';
 import { Button } from '@gear-js/ui';
 
 import { useStakingMessage } from 'hooks';
+import { FTOKEN_CONTRACT_ADDRESS } from 'consts';
 import { ProgramMessage } from 'types/message';
 import { Subtitle } from 'components/common/subtitle';
 import { FormField } from 'components/common/formField';
@@ -10,7 +11,11 @@ import styles from './UpdateStakingForm.module.scss';
 import { FieldName, FormValues } from './types';
 import { FORM_CONFIG } from './consts';
 
-function UpdateStakingForm() {
+type Props = {
+  isStakingActive: boolean;
+};
+
+function UpdateStakingForm({ isStakingActive }: Props) {
   const sendMessage = useStakingMessage();
 
   const { errors, reset, onSubmit, getInputProps } = useForm<FormValues>(FORM_CONFIG);
@@ -21,31 +26,22 @@ function UpdateStakingForm() {
     sendMessage(
       {
         [ProgramMessage.UpdateStaking]: {
-          ...values,
+          rewardTotal: values.rewardTotal,
           distributionTime,
+          rewardTokenAddress: FTOKEN_CONTRACT_ADDRESS,
+          stakingTokenAddress: FTOKEN_CONTRACT_ADDRESS,
         },
       },
       { onSuccess: reset },
     );
   });
 
-  const isValid = Object.values(errors).every((error) => !error);
+  const isDisabled = Object.values(errors).some((error) => Boolean(error)) || isStakingActive;
 
   return (
     <>
       <Subtitle>Update staking form</Subtitle>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <FormField
-          label="Staking token address"
-          isFocused
-          placeholder="Enter address"
-          {...getInputProps(FieldName.StakingAddress)}
-        />
-        <FormField
-          label="Reward token address"
-          placeholder="Enter address"
-          {...getInputProps(FieldName.RewardAddress)}
-        />
         <FormField
           type="datetime-local"
           label="Reward payout interval"
@@ -59,7 +55,7 @@ function UpdateStakingForm() {
           placeholder="Enter reward"
           {...getInputProps(FieldName.Reward)}
         />
-        <Button type="submit" text="Submit" disabled={!isValid} className={styles.submitBtn} />
+        <Button type="submit" text="Submit" disabled={isDisabled} className={styles.submitBtn} />
       </form>
     </>
   );

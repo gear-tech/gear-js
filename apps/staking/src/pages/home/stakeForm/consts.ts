@@ -3,7 +3,7 @@ import { UseFormInput } from '@mantine/form/lib/types';
 import { FieldName, FormValues, FormValidate } from './types';
 
 const INITIAL_VALUES: FormValues = {
-  [FieldName.Amount]: 1,
+  [FieldName.Amount]: 0,
 };
 
 const VALIDATE: FormValidate = {

@@ -17,10 +17,11 @@ import { FieldName, FormValues } from './types';
 
 type Props = {
   balance: number;
+  isStakingActive: boolean;
   updateStakerBalance: (balance: number) => void;
 };
 
-function StakeForm({ balance, updateStakerBalance }: Props) {
+function StakeForm({ balance, isStakingActive, updateStakerBalance }: Props) {
   const { errors, reset, onSubmit, getInputProps } = useForm<FormValues>(FORM_CONFIG);
 
   const sendMessageToFToken = useSendMessage(FTOKEN_CONTRACT_ADDRESS, fungibleTokenMetaWasm);
@@ -40,7 +41,7 @@ function StakeForm({ balance, updateStakerBalance }: Props) {
     sendMessageToFToken({ Approve: { to: STAKING_CONTRACT_ADDRESS, amount } }, { onSuccess: onFTokenSuccess });
   });
 
-  const isInvalid = Boolean(errors[FieldName.Amount]);
+  const isDisabled = Boolean(errors[FieldName.Amount]) || !isStakingActive;
 
   return (
     <>
@@ -48,14 +49,14 @@ function StakeForm({ balance, updateStakerBalance }: Props) {
       <IndicatorValue name="Staked Balance" icon={filledMoneySVG} value={balance} />
       <form className={styles.form} onSubmit={handleSubmit}>
         <FormField
-          min={1}
+          min={0}
           type="number"
           label="Stake"
           isFocused
           placeholder="Enter amount of tokens"
           {...getInputProps(FieldName.Amount)}
         />
-        <Button type="submit" text="Submit" disabled={isInvalid} className={styles.submitBtn} />
+        <Button type="submit" text="Submit" disabled={isDisabled} className={styles.submitBtn} />
       </form>
     </>
   );

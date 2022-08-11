@@ -15,10 +15,8 @@ export type InfoState = {
 
 export type StakerState = {
   Staker: {
+    reward: string;
     balance: string;
-    rewardDebt: string;
-    distributed: string;
-    rewardAllowed: string;
   };
 };
 

@@ -16,10 +16,11 @@ import { FieldName, FormValues } from './types';
 
 type Props = {
   balance: number;
+  isStakingActive: boolean;
   updateStakerBalance: (balance: number) => void;
 };
 
-function WithdrawForm({ balance, updateStakerBalance }: Props) {
+function WithdrawForm({ balance, isStakingActive, updateStakerBalance }: Props) {
   const alert = useAlert();
 
   const { errors, reset, onSubmit, getInputProps } = useForm<FormValues>({
@@ -46,7 +47,7 @@ function WithdrawForm({ balance, updateStakerBalance }: Props) {
     sendMessage({ [ProgramMessage.Withdraw]: amount }, { onSuccess });
   });
 
-  const isInvalid = Boolean(errors[FieldName.Amount]);
+  const isDisabled = Boolean(errors[FieldName.Amount]) || (!isStakingActive && !balance);
 
   return (
     <>
@@ -54,14 +55,14 @@ function WithdrawForm({ balance, updateStakerBalance }: Props) {
       <IndicatorValue name="Staked Balance" icon={filledMoneySVG} value={balance} />
       <form className={styles.form} onSubmit={handleSubmit}>
         <FormField
-          min={1}
+          min={0}
           type="number"
           label="Amount"
           isFocused
           placeholder="Enter withdraw amount"
           {...getInputProps(FieldName.Amount)}
         />
-        <Button type="submit" text="Submit" disabled={isInvalid} className={styles.submitBtn} />
+        <Button type="submit" text="Submit" disabled={isDisabled} className={styles.submitBtn} />
       </form>
     </>
   );

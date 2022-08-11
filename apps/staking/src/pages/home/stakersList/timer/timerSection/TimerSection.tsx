@@ -6,19 +6,15 @@ type Props = {
 };
 
 function TimerSection({ value, timeUnit }: Props) {
-  const numbers = String(value).split('');
+  const numbers = String(value > 99 ? 99 : value);
+  const lastCharIndex = numbers.length - 1;
 
   return (
     <div className={styles.timerSection}>
       <span className={styles.timeUnit}>{timeUnit}</span>
       <div className={styles.clockFace}>
-        {numbers.length === 1 && <p className={styles.timeValue}>0</p>}
-        {numbers.map((number, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <p key={`${number} ${index}`} className={styles.timeValue}>
-            {number}
-          </p>
-        ))}
+        <p className={styles.timeValue}>{lastCharIndex && numbers[0]}</p>
+        <p className={styles.timeValue}>{numbers[lastCharIndex]}</p>
       </div>
     </div>
   );

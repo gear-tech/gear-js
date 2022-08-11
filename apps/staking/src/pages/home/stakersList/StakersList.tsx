@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import clsx from 'clsx';
 
 import { useStakingState } from 'hooks';
-import { preparedStakerState, getReward } from 'utils';
 import { StakersState } from 'types/state';
 import { Loader } from 'components/loaders/loader';
 import { Subtitle } from 'components/common/subtitle';
@@ -33,7 +32,7 @@ function StakersList({ distributionTime }: Props) {
       <div key={id} className={styles.tableRow}>
         <span className={addressCellClasses}>{id}</span>
         <span className={styles.tableCell}>{value.balance}</span>
-        <span className={rewardCellClasses}>{getReward(preparedStakerState(value))}</span>
+        <span className={rewardCellClasses}>{value.reward}</span>
       </div>
     ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,7 +63,7 @@ function StakersList({ distributionTime }: Props) {
               Total rewards
             </span>
           </div>
-          {isStateRead ? (
+          {state && isStateRead ? (
             <div className={styles.tableBody}>
               {stakers.length ? stakers : <p className={styles.emptyContent}>No stakers</p>}
             </div>

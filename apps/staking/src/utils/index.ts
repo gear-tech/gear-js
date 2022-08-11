@@ -13,10 +13,4 @@ const preparedStakerState = (staker: StakerState['Staker']): Staker => {
   return Object.fromEntries(preparedStaker);
 };
 
-export const getReward = (staker: Staker) => {
-  const { balance, rewardDebt, rewardAllowed, distributed } = staker;
-
-  return balance + rewardAllowed - rewardDebt - distributed;
-};
-
 export { isLoggedIn, convertToNumber, preparedStakerState };
