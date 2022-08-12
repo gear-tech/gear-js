@@ -1,20 +1,13 @@
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import {
-  screen,
-  render,
-  fireEvent,
-  waitFor,
-  getDefaultNormalizer,
-  SelectorMatcherOptions,
-} from '@testing-library/react';
+import { screen, fireEvent, waitFor, getDefaultNormalizer, SelectorMatcherOptions } from '@testing-library/react';
 
 import { READED_STATE } from './inputData';
 import { useApiMock, TEST_API } from '../../mocks/hooks';
 import { PROGRAM_ID_1, PROGRAM_ID_2, META_FILE } from '../../const';
+import { renderWithProviders } from '../../utils';
 
 import { routes } from 'routes';
 import { getPreformattedText } from 'helpers';
-import { ApiProvider } from 'context/api';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
 import { State } from 'pages/State';
 import { FormValues } from 'pages/State/children/StateForm/types';
@@ -24,13 +17,11 @@ type Props = {
 };
 
 const StatePage = ({ programId }: Props) => (
-  <ApiProvider>
-    <MemoryRouter initialEntries={[`/state/${programId}`]}>
-      <Routes>
-        <Route path={routes.state} element={<State />} />
-      </Routes>
-    </MemoryRouter>
-  </ApiProvider>
+  <MemoryRouter initialEntries={[`/state/${programId}`]}>
+    <Routes>
+      <Route path={routes.state} element={<State />} />
+    </Routes>
+  </MemoryRouter>
 );
 
 describe('test state page', () => {
@@ -52,7 +43,7 @@ describe('test state page', () => {
 
     useApiMock(TEST_API);
 
-    render(<StatePage programId={PROGRAM_ID_1} />);
+    renderWithProviders(<StatePage programId={PROGRAM_ID_1} />);
 
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
 
@@ -168,7 +159,7 @@ describe('test state page', () => {
 
     useApiMock(TEST_API);
 
-    render(<StatePage programId={PROGRAM_ID_2} />);
+    renderWithProviders(<StatePage programId={PROGRAM_ID_2} />);
 
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
 

@@ -54,7 +54,9 @@ const StateForm = ({ metadata, programId, metaBuffer }: Props) => {
 
           {payloadFormValues && <FormPayload name="payload" label="Input Parameters" values={payloadFormValues} />}
           {/* may be null */}
-          {state !== undefined && <FormText text={getPreformattedText(state)} label="Statedata" isTextarea />}
+          {isReaded && state !== undefined && (
+            <FormText text={getPreformattedText(state)} label="Statedata" isTextarea />
+          )}
 
           {!isReaded && <Spinner />}
 
