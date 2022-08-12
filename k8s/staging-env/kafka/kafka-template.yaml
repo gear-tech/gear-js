@@ -81,7 +81,7 @@ data:
     org.apache.kafka.common.security.plain.PlainLoginModule required
     username=""  --> specify username
     password=""  --> specify password
-    user_kafka_gear_user=""; --> specify password for user
+    user_kafka_gear_user=""; --> specify password
     };
 
 ---
