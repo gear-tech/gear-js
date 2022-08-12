@@ -1,13 +1,12 @@
 import { Hex } from '@gear-js/api';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { ACTIONS, ROLES } from 'consts';
-import { Form, Input } from 'components';
+import { ROLES, ACTIONS } from 'consts';
+import { getAction, getForm, getLabel, getName } from 'utils';
 import { Header } from './header';
 import { List } from './list';
-import styles from './Role.module.scss';
 import { SelectText } from './select-text';
-import { Approve, Produce, Sale, Ship } from './forms';
+import styles from './Role.module.scss';
 
 type Props = {
   programId: Hex;
@@ -21,6 +20,8 @@ function Role({ programId, onBackButtonClick }: Props) {
   const resetAction = () => setAction('');
   useEffect(resetAction, [role]);
 
+  const Form = getForm(action);
+
   return (
     <div className={styles.role}>
       <Header programId={programId} onBackButtonClick={onBackButtonClick} />
@@ -32,11 +33,18 @@ function Role({ programId, onBackButtonClick }: Props) {
         <List list={ROLES} value={role} onChange={setRole} />
         {role && <List list={ACTIONS[role]} value={action} onChange={setAction} />}
         <div className={styles.action}>
-          {/* <SelectText value={role ? 'action' : 'role'} /> */}
-          {/* <Produce heading="t" /> */}
-          {/* <Sale heading="t" onSubmit={() => {}} items={['0']} /> */}
-          {/* <Approve heading="t" onSubmit={() => {}} items={['0']} /> */}
-          <Ship heading="t" onSubmit={() => {}} items={['0']} />
+          {action ? (
+            <Form
+              heading={action}
+              items={[]}
+              action={getAction(action)}
+              label={getLabel(action)}
+              name={getName(action)}
+              onSubmit={() => {}}
+            />
+          ) : (
+            <SelectText value={role ? 'action' : 'role'} />
+          )}
         </div>
       </div>
     </div>

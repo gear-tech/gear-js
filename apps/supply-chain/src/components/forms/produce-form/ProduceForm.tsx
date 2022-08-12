@@ -1,7 +1,7 @@
 import { useForm } from '@mantine/form';
 import { Form, Input } from 'components';
 import { isExists } from 'utils';
-import commonStyles from '../../Role.module.scss';
+import commonStyles from '../form/Form.module.scss';
 
 type Props = {
   heading: string;
@@ -11,7 +11,7 @@ type Props = {
 const initialValues = { name: '', description: '' };
 const validate = { name: isExists, description: isExists };
 
-function Produce({ heading, onSubmit }: Props) {
+function ProduceForm({ heading, onSubmit }: Props) {
   const form = useForm({ initialValues, validate });
   const { getInputProps } = form;
 
@@ -23,4 +23,4 @@ function Produce({ heading, onSubmit }: Props) {
   );
 }
 
-export { Produce };
+export { ProduceForm };

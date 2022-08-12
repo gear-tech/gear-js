@@ -19,41 +19,34 @@ const USER = {
   CONSUMER: 'Consumer',
 };
 
-const ROLES = [
-  { name: USER.PRODUCER, isActive: false },
-  { name: USER.DISTRIBUTOR, isActive: false },
-  { name: USER.RETAILER, isActive: false },
-  { name: USER.CONSUMER, isActive: false },
-];
+const ROLES = Object.values(USER);
 
-const ACTIONS = {
-  [USER.PRODUCER]: [
-    { name: 'Produce an item', isActive: false },
-    { name: 'Put up an item for a sale', isActive: false },
-    { name: 'Approve a purchase', isActive: false },
-    { name: 'Ship an item', isActive: false },
-    { name: 'Get item info', isActive: false },
-  ],
-  [USER.DISTRIBUTOR]: [
-    { name: 'Purchase an item', isActive: false },
-    { name: 'Receive an item', isActive: false },
-    { name: 'Process an item', isActive: false },
-    { name: 'Package an item', isActive: false },
-    { name: 'Put up an item for a sale', isActive: false },
-    { name: 'Approve a purchase', isActive: false },
-    { name: 'Ship an item', isActive: false },
-    { name: 'Get item info', isActive: false },
-  ],
-  [USER.RETAILER]: [
-    { name: 'Purchase an item', isActive: false },
-    { name: 'Receive an item', isActive: false },
-    { name: 'Put up an item for a sale', isActive: false },
-    { name: 'Get item info', isActive: false },
-  ],
-  [USER.CONSUMER]: [
-    { name: 'Purchase an item', isActive: false },
-    { name: 'Get item info', isActive: false },
-  ],
+const ACTION = {
+  PRODUCE: 'Produce an item',
+  SALE: 'Put up an item for a sale',
+  APPROVE: 'Approve a purchase',
+  SHIP: 'Ship an item',
+  PURCHASE: 'Purchase an item',
+  RECEIVE: 'Receive an item',
+  PROCESS: 'Process an item',
+  PACKAGE: 'Package an item',
+  INFO: 'Get item info',
 };
 
-export { ADDRESS, LOCAL_STORAGE, FORM, USER, ROLES, ACTIONS };
+const ACTIONS = {
+  [USER.PRODUCER]: [ACTION.PRODUCE, ACTION.SALE, ACTION.APPROVE, ACTION.SHIP, ACTION.INFO],
+  [USER.DISTRIBUTOR]: [
+    ACTION.PURCHASE,
+    ACTION.RECEIVE,
+    ACTION.PROCESS,
+    ACTION.PACKAGE,
+    ACTION.SALE,
+    ACTION.APPROVE,
+    ACTION.SHIP,
+    ACTION.INFO,
+  ],
+  [USER.RETAILER]: [ACTION.PURCHASE, ACTION.RECEIVE, ACTION.SALE, ACTION.INFO],
+  [USER.CONSUMER]: [ACTION.PURCHASE, ACTION.INFO],
+};
+
+export { ADDRESS, LOCAL_STORAGE, FORM, USER, ROLES, ACTION, ACTIONS };
