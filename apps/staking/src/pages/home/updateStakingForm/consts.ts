@@ -1,5 +1,3 @@
-import { UseFormInput } from '@mantine/form/lib/types';
-
 import { FieldName, FormValues, FormValidate } from './types';
 
 const INITIAL_VALUES: FormValues = {
@@ -18,7 +16,7 @@ const VALIDATE: FormValidate = {
   },
 };
 
-export const FORM_CONFIG: UseFormInput<FormValues> = {
+export const FORM_CONFIG = {
   validate: VALIDATE,
   initialValues: INITIAL_VALUES,
 };
