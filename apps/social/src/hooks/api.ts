@@ -4,7 +4,7 @@ import { routerMetaWasm } from 'assets/wasm';
 import { getWasmMetadata } from '@gear-js/api';
 import { ADDRESS } from 'consts';
 import { ServerRPCRequestService } from 'services';
-import { Params, Message, Metadata, ChannelState, ChannelsState, SubscriptionState } from 'types';
+import { Params, Message, Metadata, ChannelState, ChannelsState, SubscriptionState, RPCmetaResponse, RPCSuccessResponse } from 'types';
 import { useParams } from 'react-router-dom';
 import { AnyJson } from '@polkadot/types/types';
 
@@ -85,8 +85,8 @@ function useFeed() {
       const response = await apiRequest.getResource('program.meta.get', batchParams);
 
       const promises = response
-        .filter((res: any) => res.result)
-        .map(async ({ result: { program, metaFile } }: any) => {
+        .filter((res: RPCmetaResponse) => res.result)
+        .map(async ({ result: { program, metaFile } }: RPCSuccessResponse) => {
           const buffer = Buffer.from(metaFile, 'base64');
           const state = await api.programState.read(program, buffer);
 
@@ -97,9 +97,9 @@ function useFeed() {
       const msg = messagaArr.flat() as Message[];
       const sorted = msg.sort(
         (prev, next) =>
-          parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10),
+          parseInt(next.timestamp.replaceAll(',', ''), 10) - parseInt(prev.timestamp.replaceAll(',', ''), 10),
       );
-      setMessages(sorted.reverse());
+      setMessages(sorted);
     };
 
     if (channels) getMessges();
@@ -126,8 +126,8 @@ function useOwnFeed() {
       const response = await apiRequest.getResource('program.meta.get', batchParams);
 
       const promises = response
-        .filter((res: any) => res.result)
-        .map(async ({ result: { program, metaFile } }: any) => {
+        .filter((res: RPCmetaResponse) => res.result)
+        .map(async ({ result: { program, metaFile } }: RPCSuccessResponse) => {
           const buffer = Buffer.from(metaFile, 'base64');
           const state = await api.programState.read(program, buffer);
 
@@ -138,9 +138,9 @@ function useOwnFeed() {
       const msg = messagaArr.flat() as Message[];
       const sorted = msg.sort(
         (prev, next) =>
-          parseInt(prev.timestamp.replaceAll(',', ''), 10) - parseInt(next.timestamp.replaceAll(',', ''), 10),
+          parseInt(next.timestamp.replaceAll(',', ''), 10) - parseInt(prev.timestamp.replaceAll(',', ''), 10),
       );
-      setMessages(sorted.reverse());
+      setMessages(sorted);
     };
 
     if (subscriptions) getMessges();
@@ -180,12 +180,12 @@ function useChannelActions() {
   };
 
   const subscribe = (onSuccess?: () => void) => {
-    const payload = { Subscribe: 'Null' };
+    const payload = { Subscribe: null };
     sendMessage(payload, { onSuccess });
   };
 
   const unsubscribe = (onSuccess?: () => void) => {
-    const payload = { Unsubscribe: 'Null' };
+    const payload = { Unsubscribe: null };
     sendMessage(payload, { onSuccess });
   };
 

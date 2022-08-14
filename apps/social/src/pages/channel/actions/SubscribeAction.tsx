@@ -8,20 +8,12 @@ function SubscribeAction() {
   const { id } = useParams() as Params;
   const { subscribe, unsubscribe } = useChannelActions();
 
-  const handleSubscribe = () => {
-    subscribe();
-  };
-
-  const handleUnsubsribe = () => {
-    unsubscribe();
-  };
-
   const isSubsribed = readSubscriptions && subscriptions?.find((el) => el === id);
 
   return isSubsribed ? (
-    <Button text="Unsubscribe" onClick={handleUnsubsribe} className={buttonStyles.secondary} />
+    <Button text="Unsubscribe" onClick={() => unsubscribe()} className={buttonStyles.secondary} />
   ) : (
-    <Button text="Subscribe" onClick={handleSubscribe} />
+    <Button text="Subscribe" onClick={() => subscribe()} />
   );
 }
 

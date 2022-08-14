@@ -22,7 +22,7 @@ function Channels() {
     }
   };
 
-  const getChannels = () => getList()?.map(({ id, name, ownerId }) => <Item id={id} name={name} ownerId={ownerId} />);
+  const getChannels = () => getList()?.map(({ id, name, ownerId }) => <Item key={id} id={id} name={name} ownerId={ownerId} />);
 
   const Channel = getChannels();
   const isAnyChannel = !!Channel?.length;
