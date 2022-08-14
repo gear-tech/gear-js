@@ -17,4 +17,8 @@ type Message = {
   timestamp: string;
 };
 
-export type { Params, Channel, Hex, Message, Metadata };
+type ChannelState = { Channel: Channel };
+type ChannelsState = { AllChannels: Channel[] };
+type SubscriptionState = { SubscribedToChannels: Array<Hex> };
+
+export type { Params, Channel, Hex, Message, Metadata, ChannelState, ChannelsState, SubscriptionState };

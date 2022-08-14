@@ -6,7 +6,7 @@ import { FILTERS_2 } from 'consts';
 import styles from './Feeds.module.scss';
 
 function Feeds() {
-  const [filter, setFilter] = useState('All Channels');
+  const [filter, setFilter] = useState(FILTERS_2[0]);
 
   const feed = useFeed();
   const ownFeed = useOwnFeed();

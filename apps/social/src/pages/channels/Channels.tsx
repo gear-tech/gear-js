@@ -7,7 +7,7 @@ import { Item } from './item';
 import styles from './Channels.module.scss';
 
 function Channels() {
-  const [filter, setFilter] = useState('All Channels');
+  const [filter, setFilter] = useState(FILTERS[0]);
   const { account } = useAccount();
 
   const { channels } = useChannels();

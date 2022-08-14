@@ -1,5 +1,6 @@
 @use '@gear-js/ui/variables' as *;
 @use 'assets/styles/shared' as *;
+@use '@gear-js/ui/breakpoints' as *;
 
 .item {
   display: flex;
@@ -10,7 +11,7 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
 
-  @media screen and (max-width: 767px) {
+  @include md {
     flex-direction: column;
     padding: 20px;
     margin: 25px;
@@ -94,7 +95,7 @@
   font-size: $fontSizeMedium;
   color: $textColor;
 
-  @media screen and (max-width: 767px) {
+  @include md {
     align-items: center;
     padding-bottom: 20px;
   }

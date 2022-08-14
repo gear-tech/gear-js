@@ -1,10 +1,10 @@
-import { Wellcome } from './wellcome';
+import { Welcome } from './welcome';
 import { Feeds } from './feeds';
 
 function Home() {
   return (
     <>
-      <Wellcome />
+      <Welcome />
       <Feeds />
     </>
   );

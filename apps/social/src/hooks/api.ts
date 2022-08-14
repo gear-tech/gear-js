@@ -2,15 +2,11 @@ import { useEffect, useState, useMemo } from 'react';
 import { useReadState, useSendMessage, useAccount, useApi } from '@gear-js/react-hooks';
 import { routerMetaWasm } from 'assets/wasm';
 import { getWasmMetadata } from '@gear-js/api';
-import { ADDRESS, LOCAL_STORAGE } from 'consts';
+import { ADDRESS } from 'consts';
 import { ServerRPCRequestService } from 'services';
-import { Params, Channel, Hex, Message, Metadata } from 'types';
+import { Params, Message, Metadata, ChannelState, ChannelsState, SubscriptionState } from 'types';
 import { useParams } from 'react-router-dom';
 import { AnyJson } from '@polkadot/types/types';
-
-type ChannelState = { Channel: Channel };
-type ChannelsState = { AllChannels: Channel[] };
-type SubscriptionState = { SubscribedToChannels: Array<Hex> };
 
 // Router State wrapper
 function useRouterState<T>(payload: AnyJson) {
@@ -49,9 +45,10 @@ function useMessages() {
 
   const { id } = useParams() as Params;
   const { api } = useApi();
-  const genesis = localStorage.getItem(LOCAL_STORAGE.GENESIS);
 
   useEffect(() => {
+    const genesis = api.genesisHash.toHex();
+
     apiRequest
       .getResource('program.meta.get', [{ programId: id, genesis }])
       .then(
@@ -62,6 +59,7 @@ function useMessages() {
         ]) => Buffer.from(metaFile, 'base64'),
       )
       .then((buffer) => api.programState.read(id, buffer))
+      // TODO: replace w/ `useReadState` hook after `@gear-js/api` update with ability to read state using meta buffer
       .then((state) => setMessages(state.toHuman() as Message[]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -77,10 +75,11 @@ function useFeed() {
   useEffect(() => {
     const getMessges = async () => {
       const apiRequest = new ServerRPCRequestService();
+      const genesis = api.genesisHash.toHex();
 
       const batchParams = channels!.map(({ id }) => ({
         programId: id,
-        genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS),
+        genesis
       }));
 
       const response = await apiRequest.getResource('program.meta.get', batchParams);
@@ -104,7 +103,7 @@ function useFeed() {
     };
 
     if (channels) getMessges();
-  }, [channels, api.programState]);
+  }, [channels, api.programState, api.genesisHash]);
 
   return messages;
 }
@@ -117,10 +116,11 @@ function useOwnFeed() {
   useEffect(() => {
     const getMessges = async () => {
       const apiRequest = new ServerRPCRequestService();
+      const genesis = api.genesisHash.toHex();
 
       const batchParams = subscriptions!.map((id) => ({
         programId: id,
-        genesis: localStorage.getItem(LOCAL_STORAGE.GENESIS),
+        genesis
       }));
 
       const response = await apiRequest.getResource('program.meta.get', batchParams);
@@ -144,7 +144,7 @@ function useOwnFeed() {
     };
 
     if (subscriptions) getMessges();
-  }, [subscriptions, api.programState]);
+  }, [subscriptions, api.programState, api.genesisHash]);
 
   return messages;
 }
@@ -154,7 +154,8 @@ function useChannelActions() {
   const [metadata, setMetadata] = useState<Metadata>();
 
   const { id } = useParams() as Params;
-  const genesis = localStorage.getItem(LOCAL_STORAGE.GENESIS);
+  const { api } = useApi();
+  const genesis = api.genesisHash.toHex();
 
   useEffect(() => {
     apiRequest
