@@ -1,0 +1,49 @@
+@use '@gear-js/ui/variables' as *;
+
+.header {
+  cursor: pointer;
+}
+
+.main {
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  font-size: $fontSizeMedium;
+}
+
+.caption {
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+.arrow {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+
+  &.up {
+    border-bottom: 5px solid $textColor;
+  }
+
+  &.down {
+    border-top: 5px solid $textColor;
+  }
+}
+
+.counter {
+  margin-left: 16px;
+  padding: 0 7.5px;
+  font-size: $fontSize;
+  color: $textColorSecondary;
+  background-color: #3d3d3d;
+  border-radius: 100px;
+}
+
+.number {
+  margin-left: auto;
+  font-weight: 600;
+  color: $textColorSecondary;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

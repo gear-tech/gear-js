@@ -2,6 +2,13 @@ import { Hex } from '@gear-js/api';
 
 type Account = 'alice' | 'bob';
 
+export interface HumanMessageEnqueuedData {
+  id: Hex;
+  destination: Hex;
+  source: Hex;
+  expiration: string;
+}
+
 interface IUploadedPrograms extends IProgramSpec {
   name: string;
   messageId: Hex;
@@ -47,7 +54,7 @@ interface IPreparedProgram {
 }
 
 interface IPreparedMessages {
-  sent: Map<number, any>;
+  sent: Map<number, HumanMessageEnqueuedData>;
   log: Map<Hex, any>;
 }
 

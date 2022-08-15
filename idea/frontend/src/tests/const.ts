@@ -2,6 +2,9 @@ import { Metadata } from '@gear-js/api';
 
 import { ProgramModel, ProgramStatus } from 'types/program';
 
+export const DEPOSIT = 500;
+export const MAX_GAS_LIMIT = 2500000000000;
+
 export const PROGRAM_ID_1 = '0x52970eb8531778ac816303e806c694caf65579dfad5fafa31c2b7b0f61dfd6f1';
 
 export const PROGRAM_ID_2 = '0x52970eb8531778ac816303e806c694caf65579dfad5fafa31c2b7b0f61dfd6f2';
@@ -84,4 +87,10 @@ export const PROGRAM_WITHOUT_REPLY_META: ProgramModel = {
   ...PROGRAM_WITH_REPLY_META,
   id: PROGRAM_ID_4,
   meta: null,
+};
+
+export const PARTIAL_FEE = {
+  partialFee: {
+    toHuman: () => '1 MUnit',
+  },
 };

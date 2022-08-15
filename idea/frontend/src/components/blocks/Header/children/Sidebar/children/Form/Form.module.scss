@@ -1,4 +1,4 @@
-@use 'assets/scss/variables' as *;
+@use '@gear-js/ui/variables' as *;
 
 .form {
   display: flex;
@@ -8,10 +8,10 @@
 .input {
   margin-bottom: 10px;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: $fontSizeMedium;
   color: $textColorSecondary;
-  background-color: $mainBackground;
-  border-radius: 2px;
+  background-color: $bgColor;
+  border-radius: $borderRadius;
   border: none;
   outline: none;
 }

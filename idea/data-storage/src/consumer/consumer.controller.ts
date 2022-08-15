@@ -15,7 +15,7 @@ import {
   KafkaPayload,
   Keys,
   NewEventData,
-  UpdateMessagesParams,
+  UpdateMessageData,
 } from '@gear-js/common';
 
 import { ConsumerService } from './consumer.service';
@@ -95,7 +95,7 @@ export class ConsumerController {
   }
 
   @MessagePattern(API_METHODS.MESSAGES_UPDATE_DATA)
-  async updateMessagesData(@Payload() payload: KafkaPayload<UpdateMessagesParams>): Promise<void> {
+  async updateMessagesData(@Payload() payload: KafkaPayload<UpdateMessageData[]>): Promise<void> {
     await this.consumerService.updateMessages(payload.value);
   }
 }

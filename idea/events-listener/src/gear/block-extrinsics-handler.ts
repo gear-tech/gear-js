@@ -2,9 +2,9 @@ import { filterEvents } from '@polkadot/api/util';
 import { MessageEnqueuedData } from '@gear-js/api';
 import { Keys, UpdateMessageData } from '@gear-js/common';
 
-import { ExtrinsicsResult, UpdateBlockExtrinsics } from './types';
+import { UpdateBlockExtrinsics } from './types';
 
-function handleBlockExtrinsics(data: UpdateBlockExtrinsics): ExtrinsicsResult {
+export function handleBlockExtrinsics(data: UpdateBlockExtrinsics): UpdateMessageData[] {
   const { signedBlock, events, status, genesis } = data;
 
   const eventMethods = ['sendMessage', 'submitProgram', 'sendReply'];
@@ -29,7 +29,7 @@ function handleBlockExtrinsics(data: UpdateBlockExtrinsics): ExtrinsicsResult {
     return { messageId, payload, genesis, value } as UpdateMessageData;
   });
 
-  return { params: result };
+  return result;
 }
 
 function getUpdateMessageData(args: any, method: string): [string, string] {
@@ -41,5 +41,3 @@ function getUpdateMessageData(args: any, method: string): [string, string] {
 
   return [payload, value];
 }
-
-export { handleBlockExtrinsics };

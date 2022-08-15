@@ -1,4 +1,4 @@
-import { ChangeEvent, useMemo } from 'react';
+import { ChangeEvent, useMemo, useRef, useEffect } from 'react';
 import { Metadata, getWasmMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { FileInput } from '@gear-js/ui';
@@ -12,7 +12,6 @@ import { formStyles, FormText } from 'components/common/Form';
 
 type Props = {
   meta?: Metadata;
-  metaFile?: File;
   onReset: () => void;
   onUpload: (data: UploadData) => void;
 };
@@ -20,7 +19,10 @@ type Props = {
 const UploadMeta = (props: Props) => {
   const alert = useAlert();
 
-  const { meta, metaFile, onReset, onUpload } = props;
+  const { meta, onReset, onUpload } = props;
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const prevMeta = useRef<Metadata | undefined>(meta);
 
   const handleUploadMetaFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -45,7 +47,7 @@ const UploadMeta = (props: Props) => {
 
       const metaBuffer = Buffer.from(new Uint8Array(readedFile)).toString('base64');
 
-      onUpload({ meta: fileMeta, metaFile: file, metaBuffer });
+      onUpload({ meta: fileMeta, metaBuffer });
     } catch (error) {
       const message = (error as Error).message;
 
@@ -66,13 +68,28 @@ const UploadMeta = (props: Props) => {
     ));
   }, [meta]);
 
+  // TODO: think about this
+  useEffect(() => {
+    const target = inputRef.current;
+
+    if (!meta && prevMeta.current && target) {
+      const change = new Event('change', { bubbles: true });
+
+      target.value = '';
+      target.files = null;
+      target.dispatchEvent(change);
+    }
+
+    prevMeta.current = meta;
+  }, [meta]);
+
   return (
     <>
       <div className={formStyles.formItem}>
         <FileInput
-          data-testid="metaFileInput"
-          value={metaFile}
+          ref={inputRef}
           label="Metadata file"
+          data-testid="metaFileInput"
           className={styles.fileInput}
           onChange={handleUploadMetaFile}
         />

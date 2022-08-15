@@ -1,0 +1,83 @@
+@use '@gear-js/ui/variables' as *;
+
+%textStyle {
+  font-size: $fontSizeMedium;
+  font-weight: 400;
+  line-height: 25px;
+}
+
+.modalContent { 
+  width: 630px;
+  text-align: center;
+}
+
+.contentHeading {
+  @extend %textStyle;
+
+  color: $textColor;
+  margin-bottom: 10px;
+
+  .headingName {
+    color: #F79420EB;
+  }
+}
+
+.contentFeeInfo {
+  @extend %textStyle;
+
+  color: $successColor;
+}
+
+.contentTransactionInfo {
+  position: relative;
+  border: 1px dashed #3D3D3D;
+  margin: 25px 0 20px 14px;
+  padding: 15px 30px 17px;
+  border-radius: $borderRadius;
+  background-color: $bgColor;
+  
+  .infoIcon {
+    position: absolute;
+    top: 50%;
+    left: -14px;
+    transform: translateY(-50%);
+  }
+
+  .infoParticipant {
+    display: flex;
+    justify-content: space-between;
+    font-size: $fontSize;
+    font-weight: 500;
+    line-height: 21px;
+
+    &:not(:last-child){
+      margin-bottom: 5px;
+    }
+
+    .participantSide {
+      flex: 1 0 40px;
+      color: $textColorSecondary;
+      margin-right: 5px;
+      text-align: left;
+    } 
+
+    .participantValue {
+      color: $textColor;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    } 
+  }
+}
+
+.contentButtons {
+  display: flex;
+
+  & > *:not(:last-child) {
+    margin-right: 10px;
+  }
+
+  .actionButton {
+    flex: 1 1 50%; 
+  }
+}
