@@ -35,7 +35,7 @@ function Channels() {
       {channels ? (
         <>
           {isAnyChannel && <div className={styles.list}>{channel}</div>}
-          {!isAnyChannel && <p className={styles.text}>There are no any Channel at the moment.</p>}
+          {!isAnyChannel && <p className={styles.text}>There are no channels at the moment.</p>}
         </>
       ) : (
         <Loader />

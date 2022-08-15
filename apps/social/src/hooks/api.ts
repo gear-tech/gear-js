@@ -69,7 +69,7 @@ function usePRCMeta(ids: Hex[] | undefined) {
       const response = await apiRequest.getResource('program.meta.get', batchParams);
       const promises = response
         .filter((res: RPCmetaResponse) => res.result)
-        .map(async ({ result: { program, metaFile } }: RPCSuccessResponse) => ({
+        .map(({ result: { program, metaFile } }: RPCSuccessResponse) => ({
           program,
           metaFile,
         }));
