@@ -19,8 +19,8 @@
     "postinstall": "husky install"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.30.5",
-    "@typescript-eslint/parser": "^5.30.5",
+    "@typescript-eslint/eslint-plugin": "5.33.1",
+    "@typescript-eslint/parser": "5.33.1",
     "eslint": "^8.19.0",
     "husky": "8.0.1",
     "lint-staged": "12.5.0"
