@@ -1,5 +1,5 @@
 import { Admin, Message, Producer } from 'kafkajs';
-import { API_METHODS } from '@gear-js/common';
+import { KAFKA_TOPICS } from '@gear-js/common';
 
 import { eventListenerLogger } from '../common/event-listener.logger';
 import { initKafka } from './init-kafka';
@@ -68,7 +68,7 @@ function isTopicAlreadyExist(topics: string[], topic: string): boolean {
 
 function getMessageFormByTopic(sendByKafkaTopicInput: SendByKafkaTopicInput): Message[] {
   const { genesis, params, key, method } = sendByKafkaTopicInput;
-  if (key && method === API_METHODS.EVENTS) {
+  if (key && method === KAFKA_TOPICS.EVENTS) {
     return [{ key, value: JSON.stringify(params), headers: { genesis } }];
   }
   return [{ value: JSON.stringify(params) }];

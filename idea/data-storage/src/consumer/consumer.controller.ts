@@ -2,7 +2,6 @@ import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   AddMetaParams,
-  API_METHODS,
   FindMessageParams,
   FindProgramParams,
   GetAllCodeParams,
@@ -25,7 +24,7 @@ export class ConsumerController {
   private logger: Logger = new Logger('ConsumerController');
   constructor(private consumerService: ConsumerService) {}
 
-  @MessagePattern(API_METHODS.EVENTS)
+  @MessagePattern(KAFKA_TOPICS.EVENTS)
   async addEvent(@Payload() payload: NewEventData<Keys, any>) {
     const key = payload.key;
     const value = payload.value;
@@ -94,7 +93,7 @@ export class ConsumerController {
     return JSON.stringify(result);
   }
 
-  @MessagePattern(API_METHODS.MESSAGES_UPDATE_DATA)
+  @MessagePattern(KAFKA_TOPICS.MESSAGES_UPDATE_DATA)
   async updateMessagesData(@Payload() payload: KafkaPayload<UpdateMessageData[]>): Promise<void> {
     await this.consumerService.updateMessages(payload.value);
   }

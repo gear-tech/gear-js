@@ -11,6 +11,8 @@ enum KAFKA_TOPICS {
   TEST_BALANCE_GENESIS_API = 'testBalance.genesis.api',
   CODE_ALL = 'code.all',
   CODE_DATA = 'code.data',
+  EVENTS = 'events',
+  MESSAGES_UPDATE_DATA = 'messages.update.data',
 }
 
 export { KAFKA_TOPICS };

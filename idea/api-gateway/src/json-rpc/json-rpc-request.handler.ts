@@ -1,9 +1,8 @@
-import { IRpcRequest, IRpcResponse, JSONRPC_ERRORS, KAFKA_TOPICS } from '@gear-js/common';
+import { API_METHODS, IRpcRequest, IRpcResponse, JSONRPC_ERRORS } from '@gear-js/common';
 
 import { getResponse, isValidGenesis } from '../utils';
 import { API_GATEWAY } from '../common/constant';
 import { jsonRpcHandler } from './json-rpc.handler';
-import { API_JSON_RPC_METHODS } from '../common/api-json-rpc-methods';
 import { apiGatewayLogger } from '../common/api-gateway.logger';
 
 async function jsonRpcRequestHandler(
@@ -25,18 +24,18 @@ async function executeProcedure(procedure: IRpcRequest): Promise<IRpcResponse> {
     return getResponse(procedure, JSONRPC_ERRORS.MethodNotFound.name);
   }
 
-  if (procedure.method === API_JSON_RPC_METHODS.TEST_BALANCE_AVAILABLE) {
+  if (procedure.method === API_METHODS.TEST_BALANCE_AVAILABLE) {
     const { params: { genesis } } = procedure;
     return getResponse(procedure, null, isValidGenesis(genesis));
   }
 
   const { method, params } = procedure;
-  const { error, result } = await jsonRpcHandler(method as KAFKA_TOPICS, params);
+  const { error, result } = await jsonRpcHandler(method as API_METHODS, params);
   return getResponse(procedure, error, result);
 }
 
 function isExistJsonRpcMethod(kafkaTopic: string): boolean {
-  const methods: string[] = [...Object.values(API_JSON_RPC_METHODS)];
+  const methods: string[] = [...Object.values(API_METHODS)];
   return methods.includes(kafkaTopic);
 }
 
