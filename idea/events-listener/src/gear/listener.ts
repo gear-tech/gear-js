@@ -1,6 +1,6 @@
 import { GearApi } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
-import { API_METHODS, GEAR_EVENT } from '@gear-js/common';
+import { API_METHODS, Keys } from '@gear-js/common';
 
 import { handleEvent } from './event-handlers';
 import { handleBlockExtrinsics } from './block-extrinsics-handler';
@@ -31,7 +31,7 @@ export const listen = (
       event: { data, method },
     } of events) {
       try {
-        const eventData = handleEvent(method as GEAR_EVENT, data as GenericEventData);
+        const eventData = handleEvent(method as Keys, data as GenericEventData);
         eventData &&
           callback({
             key: eventData.key,
