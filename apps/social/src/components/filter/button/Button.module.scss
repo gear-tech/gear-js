@@ -1,0 +1,20 @@
+@use '@gear-js/ui/variables' as *;
+
+.button {
+  background-color: transparent;
+
+  &:hover {
+    background-color: $textColorSecondary;
+  }
+}
+
+.active {
+  // TODO: lot of @gear-js/ui button styles overrides, mb there's a cleaner way to do it
+  // generally it's button w/ size=small and present colors
+  background-color: #212121;
+  cursor: default;
+
+  &:hover {
+    background-color: #212121;
+  }
+}

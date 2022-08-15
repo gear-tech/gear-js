@@ -1,0 +1,18 @@
+@use '@gear-js/ui/variables' as *;
+
+.panel {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.list {
+  width: 100%;
+  max-width: 800px;
+}
+
+.feed {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
