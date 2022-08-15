@@ -22,7 +22,7 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
   const uploadMetadata = useMetadataUplaod();
 
   const [metadata, setMetadata] = useState<Metadata>();
-  const [metadataBuffer, setMetadataBuffer] = useState<string | null>(null);
+  const [metadataBuffer, setMetadataBuffer] = useState<string>();
 
   const [initialValues, setInitialValues] = useState<FormValues>({ programName });
 
@@ -38,14 +38,14 @@ const UploadMetaForm = ({ programId, programName }: Props) => {
 
   const handleResetMetaFile = () => {
     setMetadata(undefined);
-    setMetadataBuffer(null);
+    setMetadataBuffer(undefined);
     setInitialValues({ programName });
   };
 
   const handleSubmit = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     const disableSubmitting = () => helpers.setSubmitting(false);
 
-    if (!metadata) {
+    if (!metadata || !metadataBuffer) {
       alert.error('Metadata not loaded');
       disableSubmitting();
 
