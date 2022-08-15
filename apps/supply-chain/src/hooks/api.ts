@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import supplyChainOptWasm from 'assets/wasm/supply_chain.opt.wasm';
 import supplyChainMetaWasm from 'assets/wasm/supply_chain.meta.wasm';
-import { useMetadata, useSendMessage } from '@gear-js/react-hooks';
+import { useMetadata, useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { LOCAL_STORAGE } from 'consts';
 
 function useSupplyChainOpt() {
