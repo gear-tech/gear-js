@@ -14,7 +14,7 @@ let genesis: Hex;
 let prepared: IPrepared;
 let api: GearApi;
 
-jest.setTimeout(60_000);
+jest.setTimeout(30_000);
 
 beforeAll(async () => {
   api = await GearApi.create({ providerAddress: base.gear.wsProvider });
