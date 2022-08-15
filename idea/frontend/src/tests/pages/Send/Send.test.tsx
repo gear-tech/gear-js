@@ -220,11 +220,11 @@ describe('send message page tests', () => {
 
     // validate gas limit field
 
-    changeFieldValue(gasLimitField, '0');
+    changeFieldValue(gasLimitField, '');
 
-    let gasLimitFieldError = await screen.findByText('Gas limit should be more than 0');
+    let gasLimitFieldError = await screen.findByText('This field is required');
 
-    expect(gasLimitField).toHaveValue('0');
+    expect(gasLimitField).toHaveValue('');
     expect(gasLimitFieldError).toBeInTheDocument();
 
     checkBtnDisabled();
