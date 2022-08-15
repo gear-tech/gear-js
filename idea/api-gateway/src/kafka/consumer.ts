@@ -32,7 +32,7 @@ async function subscribeConsumerTopics(topics: string[]): Promise<void> {
 }
 
 async function messageProcessing(message: KafkaMessage, topic: string): Promise<void> {
-  if (topic !== `${KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASH_API}.reply`) {
+  if (topic !== `${KAFKA_TOPICS.TEST_BALANCE_GENESIS_API}.reply`) {
     const correlationId = message.headers.kafka_correlationId.toString();
     const resultFromService = kafkaEventMap.get(correlationId);
     if (resultFromService) await resultFromService(JSON.parse(message.value.toString()));

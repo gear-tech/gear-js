@@ -24,6 +24,6 @@ export default () => ({
   },
   // every 1 hour "0 * * * *"
   cron: {
-    time: checkEnv('CRON_TIME') || '0 * * * *',
+    time: process.env.CRON_TIME || '0 * * * *',
   }
 });

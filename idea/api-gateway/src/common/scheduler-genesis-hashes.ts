@@ -8,24 +8,16 @@ import { genesisHashesCollection } from './genesis-hashes-collection';
 
 let cron: CronJob;
 
-//  1 min
-const ONE_MIN = 60 * 1000;
 const cronTime = configuration().cron.time;
 
 function schedulerGenesisHashes(){
   return {
-    start() {
+    async start() {
+      await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_GENESIS, 'testBalance.genesis');
       cron = new CronJob(cronTime, async function () {
         genesisHashesCollection.clear();
-        await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_GENESIS_HASHES, 'testBalance.genesis.hashes');
+        await kafkaProducer.sendByTopic(KAFKA_TOPICS.TEST_BALANCE_GENESIS, 'testBalance.genesis');
       });
-
-      if(process.env.TEST_ENV){
-        setTimeout(() => {
-          cron.stop();
-        }, ONE_MIN);
-      }
-
       cron.start();
     }
   };
