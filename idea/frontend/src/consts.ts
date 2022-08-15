@@ -25,7 +25,7 @@ export const LOCAL_STORAGE = {
 };
 
 export const ACCOUNT_ERRORS = {
-  WALLET_NOT_CONNECTED: 'Wallet no connected',
+  WALLET_NOT_CONNECTED: 'Wallet not connected',
 };
 
 export const PROGRAM_ERRORS = {
@@ -49,6 +49,20 @@ export enum TransactionStatus {
   InBlock = 'InBlock',
   IsInvalid = 'IsInvalid',
   Finalized = 'Finalized',
+}
+
+export enum GasMethod {
+  Init = 'init',
+  Reply = 'reply',
+  Handle = 'handle',
+}
+
+export enum TransactionName {
+  SendReply = 'gear.sendReply',
+  SendMessage = 'gear.sendMessage',
+  ClaimMessage = 'gear.claimValueFromMailbox',
+  SubmitCode = 'gear.submitCode',
+  SubmitProgram = 'gear.submitProgram',
 }
 
 export const RPC_METHODS = {

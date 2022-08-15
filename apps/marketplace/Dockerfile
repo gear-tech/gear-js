@@ -1,5 +1,6 @@
 FROM node:16-alpine AS builder
-WORKDIR /marketplace
+MAINTAINER gear
+
 ARG REACT_APP_NODE_ADDRESS  \
     REACT_APP_IPFS_ADDRESS  \
     REACT_APP_MARKETPLACE_NFT_CONTRACT_ADDRESS  \
@@ -10,10 +11,18 @@ ENV REACT_APP_NODE_ADDRESS=${REACT_APP_NODE_ADDRESS} \
     REACT_APP_MARKETPLACE_NFT_CONTRACT_ADDRESS=${REACT_APP_MARKETPLACE_NFT_CONTRACT_ADDRESS} \
     REACT_APP_MARKETPLACE_CONTRACT_ADDRESS=${REACT_APP_MARKETPLACE_CONTRACT_ADDRESS} \
     REACT_APP_IPFS_GATEWAY_ADDRESS=${REACT_APP_IPFS_GATEWAY_ADDRESS}
-COPY . /marketplace
-RUN npm install --force
-RUN npm run build
+
+WORKDIR /src
+COPY package.json .
+COPY yarn.lock .
+COPY tsconfig.json .
+COPY .yarn .yarn
+COPY .yarnrc.yml .
+
+COPY ./apps/marketplace apps/marketplace
+RUN yarn install
+RUN yarn build:marketplace
 
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
-COPY --from=builder /marketplace/build /usr/share/nginx/html
+COPY --from=builder /src/apps/marketplace/build /usr/share/nginx/html

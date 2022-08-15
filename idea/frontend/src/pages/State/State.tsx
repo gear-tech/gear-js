@@ -13,8 +13,8 @@ import { Spinner } from 'components/common/Spinner/Spinner';
 const State = () => {
   const { programId } = useParams() as PageParams;
 
-  const metaBuffer = useRef<Buffer | null>(null);
-  const [metadata, setMetadata] = useState<Metadata | null>(null);
+  const metaBuffer = useRef<Buffer>();
+  const [metadata, setMetadata] = useState<Metadata>();
 
   useEffect(() => {
     getMetadata(programId).then(({ result }) => {
@@ -27,7 +27,7 @@ const State = () => {
 
   return (
     <div className="wrapper">
-      {metadata ? (
+      {metadata && metaBuffer.current ? (
         <>
           <PageHeader title="Read state" />
           <Box>

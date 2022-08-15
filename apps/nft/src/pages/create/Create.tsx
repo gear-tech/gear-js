@@ -95,7 +95,7 @@ function Create() {
               <Checkbox label="Attributes" checked={isAnyAttribute} onChange={toggleAttributes} />
               {isAnyAttribute && <Button icon={plus} color="transparent" onClick={() => append(defaultAttributes)} />}
               <p className={clsx(styles.error, styles.checkboxError)}>
-                {(errors.attributes?.[0].key || errors.attributes?.[0].value) && 'Enter attributes'}
+                {(errors.attributes?.[0]?.key || errors.attributes?.[0]?.value) && 'Enter attributes'}
               </p>
             </div>
           </div>

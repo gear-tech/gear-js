@@ -1,17 +1,12 @@
-import { Hex, GearApi, Metadata, GasInfo } from '@gear-js/api';
+import { GearApi } from '@gear-js/api';
 import { Event } from '@polkadot/types/interfaces';
 import isString from 'lodash.isstring';
-import isPlainObject from 'lodash.isplainobject';
-import { AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { NODE_ADDRESS_REGEX } from 'regexes';
 import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
 import { localPrograms } from 'services/LocalDBService';
 import { GetMetaResponse } from 'types/api';
 import { ProgramModel, ProgramPaginationModel, ProgramStatus } from 'types/program';
-import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
-import { FormValues as SendMessageInitialValues } from 'pages/Send/children/MessageForm/types';
-import { FormValues as UploadInitialValues } from 'pages/Programs/children/Upload/children/UploadForm/types';
 
 export const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
   const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
@@ -74,20 +69,6 @@ export const copyToClipboard = (key: string, alert: any, successfulText?: string
     alert.success(successfulText || 'Copied');
   } catch (err) {
     alert.error('Copy error');
-  }
-};
-
-export const signPayload = async (injector: any, address: string, payload: any, callback: any) => {
-  try {
-    const { signature } = await injector.signer.signRaw!({
-      address,
-      data: payload,
-      type: 'payload',
-    });
-
-    callback(signature);
-  } catch (err) {
-    console.error(err);
   }
 };
 
@@ -175,79 +156,6 @@ export const checkFileFormat = (file: File, types: string | string[] = FILE_TYPE
 };
 
 export const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
-
-export const calculateGas = async (
-  method: string,
-  api: GearApi,
-  values: UploadInitialValues | SendMessageInitialValues,
-  alert: AlertContainerFactory,
-  meta?: Metadata,
-  code?: Uint8Array | null,
-  addressId?: string
-): Promise<number> => {
-  const payload = getSubmitPayload(values.payload);
-
-  try {
-    if (isString(payload) && payload === '') {
-      throw new Error("payload can't be empty");
-    }
-
-    if (isPlainObject(payload) && Object.keys(payload as object).length === 0) {
-      throw new Error(`form can't be empty`);
-    }
-
-    const { value } = values;
-    const metaOrTypeOfPayload = meta || values.payloadType;
-
-    let estimatedGas: GasInfo;
-
-    switch (method) {
-      case 'init':
-        estimatedGas = await api.program.calculateGas.init(
-          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          code as Buffer,
-          payload,
-          value,
-          true,
-          metaOrTypeOfPayload
-        );
-        break;
-      case 'handle':
-        estimatedGas = await api.program.calculateGas.handle(
-          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          addressId as Hex,
-          payload,
-          value,
-          true,
-          metaOrTypeOfPayload
-        );
-        break;
-      case 'reply':
-        estimatedGas = await api.program.calculateGas.reply(
-          localStorage.getItem(LOCAL_STORAGE.PUBLIC_KEY_RAW) as Hex,
-          addressId as Hex,
-          0,
-          payload,
-          value,
-          true,
-          metaOrTypeOfPayload
-        );
-        break;
-      default:
-        throw new Error('Unknown method');
-    }
-
-    const minLimit = estimatedGas.min_limit.toNumber();
-
-    alert.info(`Estimated gas ${minLimit}`);
-
-    return minLimit;
-  } catch (error) {
-    alert.error(String(error));
-
-    return Promise.reject(error);
-  }
-};
 
 export const isHex = (value: unknown) => {
   const hexRegex = /^0x[\da-fA-F]+/;

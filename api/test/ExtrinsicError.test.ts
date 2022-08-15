@@ -18,7 +18,7 @@ afterAll(async () => {
 
 describe('Get extrinsic errors', () => {
   test('send incorrect transaction', async () => {
-    const submitted = api.tx.gear.submitProgram('0x123456', '0x123', '0x00', 1000, 0);
+    const submitted = api.tx.gear.uploadProgram('0x123456', '0x123', '0x00', 1000, 0);
     const error: RegistryError = await new Promise((resolve) => {
       submitted.signAndSend(alice, ({ events = [] }) => {
         events.forEach(({ event }) => {

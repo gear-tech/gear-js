@@ -109,13 +109,13 @@ const program = {
 };
 
 try {
-  const { programId, salt, submitted } = await gearApi.program.submit(uploadProgram, meta);
+  const { programId, salt, extrinsic } = gearApi.program.upload(uploadProgram, meta);
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
 
 try {
-  await gearApi.program.signAndSend(keyring, (event) => {
+  await extrinsic.signAndSend(keyring, (event) => {
     console.log(event.toHuman());
   });
 } catch (error) {
@@ -127,7 +127,7 @@ try {
 
 ```javascript
 const programId = '0x0000000000000000000000000000000000000000000000000000000000000000';
-const programExists = await api.program.is(programId);
+const programExists = await api.program.exists(programId);
 console.log(`Program with address ${programId} ${programExists ? 'exists' : "doesn't exist"}`);
 ```
 
@@ -142,14 +142,14 @@ try {
     value: 1000,
   };
   // In that case payload will be encoded using meta.handle_input type
-  const submitted = await gearApi.message.submit(message, meta);
+  let extrinsic = gearApi.message.send(message, meta);
   // So if you want to use another type you can specify it
-  await gearApi.message.submit(message, meta, meta.async_handle_input); // For example
+  extrinsic = gearApi.message.send(message, meta, meta.async_handle_input);
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
 try {
-  await gearApi.message.signAndSend(keyring, (event) => {
+  await extrinsic.signAndSend(keyring, (event) => {
     console.log(event.toHuman());
   });
 } catch (error) {
@@ -167,15 +167,14 @@ try {
     gasLimit: 10000000,
     value: 1000,
   };
-  // In that case payload will be encoded using meta.async_handle_input type if it exsits, if not it will be used meta.async_init_input
-  const submitted = await gearApi.reply.submit(reply, meta);
-  // So if you want to use another type you can specify it
-  await gearApi.reply.submit(reply, meta, meta.async_init_input);
+  // In this case payload will be encoded using `meta.async_handle_input` type if it exsits, 
+  // otherwise `meta.async_init_input` will be used 
+  const extrinsic = gearApi.message.sendReply(reply, meta);
 } catch (error) {
   console.error(`${error.name}: ${error.message}`);
 }
 try {
-  await gearApi.reply.signAndSend(keyring, (events) => {
+  await extrinsic(keyring, (events) => {
     console.log(event.toHuman());
   });
 } catch (error) {
@@ -187,7 +186,7 @@ try {
 
 ```javascript
 const code = fs.readFileSync('path/to/program.opt.wasm');
-const { codeHash } = gearApi.code.submit(code);
+const { codeHash } = gearApi.code.upload(code);
 gearApi.code.signAndSend(alice, () => {
   events.forEach(({ event: { method, data } }) => {
     if (method === 'ExtrinsicFailed') {
@@ -203,7 +202,7 @@ gearApi.code.signAndSend(alice, () => {
 
 ```javascript
 const api = await GearApi.create();
-api.program.submit({ code, gasLimit });
+api.program.upload({ code, gasLimit });
 // same for api.message, api.reply and others
 const paymentInfo = await api.program.paymentInfo(alice);
 const transactionFee = paymentInfo.partialFee.toNumber();

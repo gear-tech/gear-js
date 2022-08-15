@@ -1,0 +1,55 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
+
+.upload {
+  display: flex;
+  margin-bottom: 54px;
+
+  @include md {
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+
+  & > *:not(:last-child) {
+    margin-right: 30px;
+
+    @include md {
+      margin-right: 0;
+    }
+  }
+}
+
+.action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 345px;
+  justify-content: center;
+
+  @include md {
+    align-items: unset;
+    margin-bottom: 26px;
+    height: fit-content;
+  }
+}
+
+.actionContent {
+  display: flex;
+  flex-direction: column;
+
+  @include md {
+    width: 100%;
+    margin: 14px 0;
+  }
+}
+
+.actionDescription {
+  width: 259px;
+  color: $textColorSecondary;
+  text-align: center;
+  padding-top: 24px;
+
+  @include md {
+    display: none;
+  }
+}

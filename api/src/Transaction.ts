@@ -10,7 +10,7 @@ import { GearApi } from './GearApi';
 
 export class GearTransaction {
   protected _createType: CreateType;
-  submitted: SubmittableExtrinsic<'promise', ISubmittableResult>;
+  extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   constructor(protected _api: GearApi) {
     this._createType = new CreateType(_api);
@@ -36,7 +36,7 @@ export class GearTransaction {
       : [optionsOrCallback, optionalCallback];
 
     try {
-      return await this.submitted.signAndSend(account, options, callback);
+      return await this.extrinsic.signAndSend(account, options, callback);
     } catch (error) {
       const errorCode = +error.message.split(':')[0];
       if (errorCode === 1010) {
@@ -61,7 +61,7 @@ export class GearTransaction {
    * consolg.log(transactionFee);
    * ```
    */
-  paymentInfo(account: AddressOrPair, options?: SignerOptions): Promise<RuntimeDispatchInfo> {
-    return this.submitted.paymentInfo(account, options);
+  paymentInfo(account: AddressOrPair, options?: Partial<SignerOptions>): Promise<RuntimeDispatchInfo> {
+    return this.extrinsic.paymentInfo(account, options);
   }
 }

@@ -16,16 +16,16 @@ const Mailbox = () => {
   const { api } = useApi();
   const { account } = useAccount();
 
-  const [mailbox, setMailbox] = useState<MailboxItem[] | null>(null);
-
   const claimMessage = useMessageClaim();
 
+  const [mailbox, setMailbox] = useState<MailboxItem[] | null>(null);
+
   const handleClaim = useCallback(
-    (messageId: Hex) => {
+    (messageId: Hex, reject: () => void) => {
       const removeMail = () =>
         setMailbox((prevState) => prevState && prevState.filter(([mail]) => !mail.id.eq(messageId)));
 
-      return claimMessage(messageId, removeMail);
+      claimMessage({ messageId, resolve: removeMail, reject });
     },
     [claimMessage]
   );
@@ -47,7 +47,6 @@ const Mailbox = () => {
     }
   }, [api, address]);
 
-  // TODO: temp solution, fix it after the gear-hooks will update
   if (!address) {
     return (
       <div className="wrapper">

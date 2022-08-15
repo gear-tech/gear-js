@@ -1,0 +1,27 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
+
+.drop {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px dotted #0e0e0e;
+  border-radius: $borderRadius;
+
+  @include md {
+    border: none;
+    background: none;
+  }
+
+  &.active {
+    border: 1px dashed $successColor;
+  }
+}
+
+.input {
+  display: none;
+}
+
+.file {
+  color: $textColor;
+  font-size: 16px;
+  font-weight: 600;
+}

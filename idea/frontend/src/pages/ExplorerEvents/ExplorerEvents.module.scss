@@ -1,0 +1,18 @@
+@use '@gear-js/ui/variables' as *;
+
+.events {
+  color: $textColor;
+}
+
+.header {
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.heading {
+  font-size: $fontSizeLarge;
+  font-weight: 600;
+  text-transform: uppercase;
+}

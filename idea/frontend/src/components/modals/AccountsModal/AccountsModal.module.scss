@@ -1,0 +1,19 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
+
+.modal {
+  width: 460px;
+}
+
+.message {
+  text-align: center;
+
+  a {
+    color: inherit;
+  }
+}
+
+.logoutButton {
+  display: block;
+  margin: 32px auto 0;
+}

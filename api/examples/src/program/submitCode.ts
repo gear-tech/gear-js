@@ -9,7 +9,7 @@ const main = async () => {
 
   const code = readFileSync(PATH_TO_OPT);
 
-  const { codeHash } = await api.code.submit(code);
+  const { codeHash } = await api.code.upload(code);
 
   console.log(`CodeHash: ${codeHash}\n`);
 

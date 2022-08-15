@@ -1,0 +1,30 @@
+@use '@gear-js/ui/variables' as *;
+
+.main {
+  margin: 0 40px;
+}
+
+.tableBody {
+  // TODO: override 
+  min-height: 420px !important; 
+}
+
+.topPagination {
+  display: flex;
+  margin: 20px 0;
+  justify-content: space-between;
+  align-items: center;
+
+  .caption {
+    display: flex;
+    font-size: $fontSizeLarge;
+    line-height: 1.3;
+    font-weight: 300;
+    align-items: center;
+    color: $textColorSecondary;
+  }
+}
+
+.bottomPagination {
+  margin-top: 20px;
+}

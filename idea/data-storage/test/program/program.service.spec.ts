@@ -5,8 +5,8 @@ import { ProgramService } from '../../src/program/program.service';
 import { ProgramRepo } from '../../src/program/program.repo';
 import { UpdateProgramDataInput } from '../../src/program/types';
 
-import { mockProgramRepository } from '../../src/common/mock/program/program-repository.mock';
-import { PROGRAM_DB_MOCK } from '../../src/common/mock/program/program-db.mock';
+import { mockProgramRepository } from '../mock/program/program-repository.mock';
+import { PROGRAM_DB_MOCK } from '../mock/program/program-db.mock';
 
 const PROGRAM_ENTITY_ID = '0x7357';
 

@@ -23,7 +23,7 @@ const Sidebar = ({ closeSidebar, nodeSections }: Props) => {
 
   const [localNodes, setLocalNodes] = useState<Node[]>(getLocalNodes());
   const [selectedNode, setSelectedNode] = useState(NODE_API_ADDRESS);
-  const ref = useOutsideClick(closeSidebar);
+  const ref = useOutsideClick<HTMLDivElement>(closeSidebar);
 
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE.NODES, JSON.stringify(localNodes));

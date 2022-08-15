@@ -7,7 +7,7 @@ import { Wallet } from './wallet';
 
 function Account() {
   const { account } = useAccount();
-  const accounts = useAccounts();
+  const { accounts } = useAccounts();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {

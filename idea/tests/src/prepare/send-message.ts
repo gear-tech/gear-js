@@ -2,15 +2,15 @@ import { readFileSync } from 'fs';
 import { GearApi, getWasmMetadata, Hex } from '@gear-js/api';
 
 import accounts from '../config/accounts';
-import { IMessageSpec, IPreparedPrograms } from '../interfaces';
+import { HumanMessageEnqueuedData, IMessageSpec, IPreparedPrograms } from '../interfaces';
 import { listenToUserMessageSent } from './subscriptions';
 import { checkUserMessageSent, checkMessages } from './check';
 import { sleep } from '../utils';
 
-async function sendMessage(api: GearApi, destination: Hex, spec: IMessageSpec) {
+async function sendMessage(api: GearApi, destination: Hex, spec: IMessageSpec): Promise<HumanMessageEnqueuedData> {
   const meta = spec.pathToMeta ? await getWasmMetadata(readFileSync(spec.pathToMeta)) : undefined;
   const account = (await accounts())[spec.account];
-  api.message.submit(
+  api.message.send(
     { destination, payload: spec.payload, gasLimit: spec.gasLimit, value: spec.value },
     meta,
     spec.metaType,
@@ -22,7 +22,7 @@ async function sendMessage(api: GearApi, destination: Hex, spec: IMessageSpec) {
         if (method === 'ExtrinsicFailed') {
           throw new Error(`Unable to send message. ExtrinsicFailed. ${data.toString()}`);
         } else if (method === 'MessageEnqueued') {
-          resolve(data.toHuman());
+          resolve(data.toHuman() as unknown as HumanMessageEnqueuedData);
         }
       });
     });
@@ -34,7 +34,7 @@ export async function sendMessages(
   messages: { [program: string]: IMessageSpec[] },
   uploadedPrograms: IPreparedPrograms,
 ) {
-  const sentMessages = new Map<number, any>();
+  const sentMessages = new Map<number, HumanMessageEnqueuedData>();
   const logs = new Map<Hex, any>();
   const unsub = await listenToUserMessageSent(api, (data) => {
     logs.set(data.message.id.toHex(), data.toHuman());

@@ -73,17 +73,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build MarketPlace Docker image
         uses: docker/build-push-action@master
         with:
-          context: apps/marketplace
+          file: apps/marketplace/Dockerfile
           push: false
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-marketplace:ci
           build-args: |
@@ -105,17 +98,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build Nft Docker image
         uses: docker/build-push-action@master
         with:
-          context: apps/nft
+          file: apps/nft/Dockerfile
           push: false
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-nft:ci
           build-args: |
@@ -137,17 +123,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build Lottery Docker image
         uses: docker/build-push-action@master
         with:
-          context: apps/lottery
+          file: apps/lottery/Dockerfile
           push: false
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-lottery:ci
           build-args: |
@@ -166,17 +145,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Log in to the github container registry
-        uses: docker/login-action@master
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build Escrow Docker image
         uses: docker/build-push-action@master
         with:
-          context: apps/escrow
+          file: apps/escrow/Dockerfile
           push: false
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-escrow:ci
           build-args: |

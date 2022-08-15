@@ -24,7 +24,7 @@ beforeAll(async () => {
   await api.isReady;
   const [alice] = await getAccount();
 
-  syscalls_test.id = api.program.submit({
+  syscalls_test.id = api.program.upload({
     code: syscalls_test.code,
     gasLimit: 2_000_000_000,
   }).programId;
@@ -32,7 +32,7 @@ beforeAll(async () => {
   api.program.signAndSend(alice, () => {});
   expect(await initStatus()).toBe('success');
 
-  demo_meta_test.id = api.program.submit(
+  demo_meta_test.id = api.program.upload(
     {
       code: demo_meta_test.code,
       initPayload: { amount: 8, currency: 'GRT' },

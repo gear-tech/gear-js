@@ -21,7 +21,7 @@
     padding: 0px 5px;
     min-width: 30px;
     font-weight: 600;
-    font-size: 12px;
+    font-size: $fontSizeSmall;
     line-height: 18px;
   } 
 
@@ -41,6 +41,6 @@
 
 .waitlistTableBody {
   @extend .customScroll;
-  
-  max-height: 300px;
+
+  max-height: 300px; 
 }

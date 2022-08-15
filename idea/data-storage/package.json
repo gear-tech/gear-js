@@ -25,7 +25,7 @@
     "migrate-undo": "yarn typeorm migration:revert"
   },
   "dependencies": {
-    "@gear-js/api": "0.24.0",
+    "@gear-js/api": "0.25.0",
     "@gear-js/common": "workspace:^",
     "@nestjs/common": "8.4.7",
     "@nestjs/config": "1.2.1",
@@ -52,6 +52,7 @@
     "@nestjs/testing": "8.4.7",
     "@types/express": "4.17.13",
     "@types/jest": "27.5.2",
+    "@types/js-yaml": "4.0.5",
     "@types/node": "14.18.22",
     "@types/supertest": "2.0.12",
     "@typescript-eslint/eslint-plugin": "4.33.0",
@@ -65,6 +66,7 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "3.4.1",
     "jest": "27.5.1",
+    "js-yaml": "4.1.0",
     "prettier": "2.7.1",
     "supertest": "6.2.4",
     "ts-jest": "27.1.5",
