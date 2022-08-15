@@ -1,0 +1,21 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+
+.header {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.heading {
+  @include heading(22px, 30px);
+}
+
+.list {
+  width: 100%;
+  max-width: 800px;
+}
+
+.text {
+  text-align: center;
+}
