@@ -23,10 +23,11 @@ function Channel() {
             <h3 className={styles.owner}>by {toShortAddress(ownerId!)}</h3>
             <div className={styles.description}>{description}</div>
           </header>
-
-          <div className={styles.buttons}>
-            {isOwner ? <MessageAction /> : <SubscribeAction />}
-          </div>
+          <OnLogin>
+            <div className={styles.buttons}>
+              {isOwner ? <MessageAction /> : <SubscribeAction />}
+            </div>
+          </ OnLogin>
           <Messages />
         </>
       ) : (
