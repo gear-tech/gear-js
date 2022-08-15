@@ -6,14 +6,15 @@ import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OP
 
 import { useModal } from '../index';
 import { useMetadataUplaod } from '../useMetadataUpload';
-import { UploadProgramParams, SignAndUploadArg } from './types';
+import { UploadProgramParams, ProgramData, SignAndUploadArg } from './types';
 import { waitForProgramInit } from './helpers';
 
 import { routes } from 'routes';
-import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
+import { isDevChain, readFileAsync, getExtrinsicFailedMessage } from 'helpers';
 import { PROGRAM_ERRORS, ACCOUNT_ERRORS, TransactionName, TransactionStatus } from 'consts';
+import { uploadLocalProgram } from 'services/LocalDBService';
 import { Method } from 'types/explorer';
-import { UploadProgramModel, ProgramStatus } from 'types/program';
+import { ProgramStatus } from 'types/program';
 import { OperationCallbacks } from 'types/hooks';
 import { CustomLink } from 'components/common/CustomLink';
 
@@ -31,10 +32,10 @@ const useProgramUpload = () => {
     </p>
   );
 
-  const submit = async (file: File, programModel: UploadProgramModel) => {
+  const submit = async (file: File, programData: ProgramData) => {
     const fileBuffer = (await readFileAsync(file)) as ArrayBufferLike;
 
-    const { gasLimit, value, initPayload, meta, payloadType } = programModel;
+    const { gasLimit, value, initPayload, meta, payloadType } = programData;
 
     const program = {
       code: new Uint8Array(fileBuffer),
@@ -67,7 +68,7 @@ const useProgramUpload = () => {
     file,
     signer,
     programId,
-    programModel,
+    programData,
     metadataBuffer,
     reject,
     resolve,
@@ -103,11 +104,16 @@ const useProgramUpload = () => {
         return;
       }
 
-      const { meta: metadata, title, programName } = programModel;
+      const { meta: metadata, title, programName } = programData;
+      const name = programName ?? file.name;
+
+      if (isDevChain()) {
+        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title });
+      }
 
       if (metadata && metadataBuffer) {
         uploadMetadata({
-          name: programName ?? file.name,
+          name,
           title,
           signer,
           metadata,
@@ -125,7 +131,7 @@ const useProgramUpload = () => {
   };
 
   const uploadProgram = useCallback(
-    async ({ file, programModel, metadataBuffer, reject, resolve }: UploadProgramParams) => {
+    async ({ file, programData, metadataBuffer, reject, resolve }: UploadProgramParams) => {
       try {
         if (!account) {
           throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
@@ -133,7 +139,7 @@ const useProgramUpload = () => {
 
         const { meta, address } = account;
 
-        const [programId, { signer }] = await Promise.all([submit(file, programModel), web3FromSource(meta.source)]);
+        const [programId, { signer }] = await Promise.all([submit(file, programData), web3FromSource(meta.source)]);
 
         const { partialFee } = await api.program.paymentInfo(address, { signer });
 
@@ -143,7 +149,7 @@ const useProgramUpload = () => {
             signer,
             programId,
             metadataBuffer,
-            programModel,
+            programData,
             reject,
             resolve,
           });

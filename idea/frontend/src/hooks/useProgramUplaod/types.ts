@@ -1,9 +1,20 @@
+import { Metadata } from '@gear-js/api';
+
 import { OperationCallbacks, SignAndSendArg as CommonSignAndSendArg } from 'types/hooks';
-import { UploadProgramModel } from 'types/program';
+
+export type ProgramData = {
+  meta?: Metadata;
+  value: number;
+  title?: string;
+  gasLimit: number;
+  initPayload: string;
+  programName?: string;
+  payloadType?: string;
+};
 
 type UploadData = {
   file: File;
-  programModel: UploadProgramModel;
+  programData: ProgramData;
   metadataBuffer: string | null;
 };
 

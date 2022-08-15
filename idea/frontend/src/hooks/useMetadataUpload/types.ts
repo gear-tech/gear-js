@@ -9,7 +9,7 @@ export type UploadMetaParams = Partial<OperationCallbacks> & {
   signer?: Signer;
   metadata: Metadata;
   programId: string;
-  metadataBuffer: string | null;
+  metadataBuffer: string;
 };
 
 export type SignAndSend = Partial<OperationCallbacks> &
