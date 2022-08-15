@@ -5,7 +5,7 @@ import { checkInitStatus, getAllPrograms, getMeta, getProgramData, uploadMeta } 
 import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram } from '../interfaces';
 import { sleep } from '../utils';
-import { getAllMessages, getMessageData } from './messages';
+import { getAllMessages, getMessageData, getMessagePayload } from './messages';
 import { getTestBalance, testBalanceAvailable } from './testBalance';
 import { getCodeData, getListCode } from './code';
 import base from '../config/base';
