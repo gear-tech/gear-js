@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Loader, Filter, MessageItem } from 'components';
-import { useOwnFeed, useFeed } from 'hooks';
+import { useOwnFeed, useGeneralFeed } from 'hooks';
 import { FILTERS_2 } from 'consts';
 
 import styles from './Feeds.module.scss';
@@ -8,7 +8,7 @@ import styles from './Feeds.module.scss';
 function Feeds() {
   const [filter, setFilter] = useState(FILTERS_2[0]);
 
-  const feed = useFeed();
+  const feed = useGeneralFeed();
   const ownFeed = useOwnFeed();
 
   const getList = () => {

@@ -11,12 +11,11 @@ function Channels() {
   const { account } = useAccount();
 
   const { channels } = useChannels();
-  const ownerChannels = channels?.filter((ch) => ch.ownerId === account?.decodedAddress);
 
   const getList = () => {
     switch (filter) {
       case 'My':
-        return ownerChannels;
+        return channels?.filter((ch) => ch.ownerId === account?.decodedAddress);
       default:
         return channels;
     }
@@ -24,8 +23,8 @@ function Channels() {
 
   const getChannels = () => getList()?.map(({ id, name, ownerId }) => <Item key={id} id={id} name={name} ownerId={ownerId} />);
 
-  const Channel = getChannels();
-  const isAnyChannel = !!Channel?.length;
+  const channel = getChannels();
+  const isAnyChannel = !!channel?.length;
 
   return (
     <>
@@ -35,7 +34,7 @@ function Channels() {
       </header>
       {channels ? (
         <>
-          {isAnyChannel && <div className={styles.list}>{Channel}</div>}
+          {isAnyChannel && <div className={styles.list}>{channel}</div>}
           {!isAnyChannel && <p className={styles.text}>There are no any Channel at the moment.</p>}
         </>
       ) : (

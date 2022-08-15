@@ -4,7 +4,17 @@ import { routerMetaWasm } from 'assets/wasm';
 import { getWasmMetadata } from '@gear-js/api';
 import { ADDRESS } from 'consts';
 import { ServerRPCRequestService } from 'services';
-import { Params, Message, Metadata, ChannelState, ChannelsState, SubscriptionState, RPCmetaResponse, RPCSuccessResponse } from 'types';
+import {
+  Params,
+  Message,
+  Metadata,
+  ChannelState,
+  ChannelsState,
+  SubscriptionState,
+  RPCmetaResponse,
+  RPCSuccessResponse,
+  Hex,
+} from 'types';
 import { useParams } from 'react-router-dom';
 import { AnyJson } from '@polkadot/types/types';
 
@@ -13,6 +23,7 @@ function useRouterState<T>(payload: AnyJson) {
   return useReadState<T>(ADDRESS.ROUTER_CONTRACT, routerMetaWasm, payload);
 }
 
+// Get channel info
 function useChannel() {
   const { id } = useParams() as Params;
   const payload = useMemo(() => ({ Channel: id }), [id]);
@@ -22,6 +33,7 @@ function useChannel() {
   return state?.Channel;
 }
 
+// Get channel list
 function useChannels() {
   const payload = useMemo(() => ({ AllChannels: null }), []);
   const { state, isStateRead } = useRouterState<ChannelsState>(payload);
@@ -29,6 +41,7 @@ function useChannels() {
   return { channels: state?.AllChannels, isStateRead };
 }
 
+// Get id's of subscribed channels
 function useSubscriptions() {
   const { account } = useAccount();
   const actorId = account?.decodedAddress;
@@ -39,138 +52,142 @@ function useSubscriptions() {
   return { subscriptions: state?.SubscribedToChannels, readSubscriptions: isStateRead };
 }
 
+// Get meta information from Meta storage using RPC request
+function usePRCMeta(ids: Hex[] | undefined) {
+  const [programMeta, setProgramMeta] = useState<any[] | null>();
+  const apiRequest = new ServerRPCRequestService();
+  const { api } = useApi();
+  const genesis = api.genesisHash.toHex();
+
+  const getMeta = async () => {
+    if (ids) {
+      const batchParams = ids.map((id) => ({
+        programId: id,
+        genesis,
+      }));
+
+      const response = await apiRequest.getResource('program.meta.get', batchParams);
+      const promises = response
+        .filter((res: RPCmetaResponse) => res.result)
+        .map(async ({ result: { program, metaFile } }: RPCSuccessResponse) => ({
+          program,
+          metaFile,
+        }));
+
+      const metaArr = await Promise.all(promises);
+      setProgramMeta(metaArr);
+    }
+  };
+
+  useEffect(() => {
+    getMeta();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ids]);
+
+  return programMeta;
+}
+
+// Get messages on channel page
 function useMessages() {
   const [messages, setMessages] = useState<Message[] | null>();
-  const apiRequest = new ServerRPCRequestService();
 
   const { id } = useParams() as Params;
   const { api } = useApi();
+  const idArr = useMemo(() => [id], [id]);
+  const programMeta = usePRCMeta(idArr);
 
   useEffect(() => {
-    const genesis = api.genesisHash.toHex();
+    if (programMeta) {
+      const [{ metaFile }] = programMeta;
+      const buffer = Buffer.from(metaFile, 'base64');
 
-    apiRequest
-      .getResource('program.meta.get', [{ programId: id, genesis }])
-      .then(
-        ([
-          {
-            result: { metaFile },
-          },
-        ]) => Buffer.from(metaFile, 'base64'),
-      )
-      .then((buffer) => api.programState.read(id, buffer))
-      // TODO: replace w/ `useReadState` hook after `@gear-js/api` update with ability to read state using meta buffer
-      .then((state) => setMessages(state.toHuman() as Message[]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+      api.programState.read(id, buffer).then((state) => setMessages(state.toHuman() as Message[]));
+    }
+  }, [id, programMeta, api.programState]);
 
   return { messages };
 }
 
-function useFeed() {
+// Auxiliary hook for receiving a message feed by ids
+function useFeed(ids: Hex[] | undefined) {
   const [messages, setMessages] = useState<Message[] | null>();
-  const { channels } = useChannels();
   const { api } = useApi();
+  const programMeta = usePRCMeta(ids);
 
   useEffect(() => {
     const getMessges = async () => {
-      const apiRequest = new ServerRPCRequestService();
-      const genesis = api.genesisHash.toHex();
-
-      const batchParams = channels!.map(({ id }) => ({
-        programId: id,
-        genesis
-      }));
-
-      const response = await apiRequest.getResource('program.meta.get', batchParams);
-
-      const promises = response
-        .filter((res: RPCmetaResponse) => res.result)
-        .map(async ({ result: { program, metaFile } }: RPCSuccessResponse) => {
+      if (programMeta) {
+        const promises = programMeta.map(async ({ program, metaFile }: any) => {
           const buffer = Buffer.from(metaFile, 'base64');
           const state = await api.programState.read(program, buffer);
 
           return state.toHuman();
         });
 
-      const messagaArr = await Promise.all(promises);
-      const msg = messagaArr.flat() as Message[];
-      const sorted = msg.sort(
-        (prev, next) =>
-          parseInt(next.timestamp.replaceAll(',', ''), 10) - parseInt(prev.timestamp.replaceAll(',', ''), 10),
-      );
-      setMessages(sorted);
+        const messagaArr = await Promise.all(promises);
+        const msg = messagaArr.flat() as Message[];
+        const sorted = msg.sort(
+          (prev, next) =>
+            parseInt(next.timestamp.replaceAll(',', ''), 10) - parseInt(prev.timestamp.replaceAll(',', ''), 10),
+        );
+        setMessages(sorted);
+      }
     };
 
-    if (channels) getMessges();
-  }, [channels, api.programState, api.genesisHash]);
+    getMessges();
+  }, [programMeta, api.programState]);
 
   return messages;
 }
 
+// Get messages all channels
+function useGeneralFeed() {
+  const [messages, setMessages] = useState<Message[] | null>();
+  const { channels } = useChannels();
+  const ids = useMemo(() => channels?.map(({ id }) => id), [channels]);
+  const feed = useFeed(ids);
+
+  useEffect(() => {
+    if (feed) {
+      setMessages(feed);
+    }
+  }, [feed]);
+
+  return messages;
+}
+
+// Get messages on subscribed channels
 function useOwnFeed() {
   const [messages, setMessages] = useState<Message[] | null>();
   const { subscriptions } = useSubscriptions();
-  const { api } = useApi();
+  const ids = useMemo(() => subscriptions?.map((id) => id), [subscriptions]);
+  const feed = useFeed(ids);
 
   useEffect(() => {
-    const getMessges = async () => {
-      const apiRequest = new ServerRPCRequestService();
-      const genesis = api.genesisHash.toHex();
-
-      const batchParams = subscriptions!.map((id) => ({
-        programId: id,
-        genesis
-      }));
-
-      const response = await apiRequest.getResource('program.meta.get', batchParams);
-
-      const promises = response
-        .filter((res: RPCmetaResponse) => res.result)
-        .map(async ({ result: { program, metaFile } }: RPCSuccessResponse) => {
-          const buffer = Buffer.from(metaFile, 'base64');
-          const state = await api.programState.read(program, buffer);
-
-          return state.toHuman();
-        });
-
-      const messagaArr = await Promise.all(promises);
-      const msg = messagaArr.flat() as Message[];
-      const sorted = msg.sort(
-        (prev, next) =>
-          parseInt(next.timestamp.replaceAll(',', ''), 10) - parseInt(prev.timestamp.replaceAll(',', ''), 10),
-      );
-      setMessages(sorted);
-    };
-
-    if (subscriptions) getMessges();
-  }, [subscriptions, api.programState, api.genesisHash]);
+    if (feed) {
+      setMessages(feed);
+    }
+  }, [feed]);
 
   return messages;
 }
 
+// Make transation action: post, subscribe, unsubscribe
 function useChannelActions() {
-  const apiRequest = new ServerRPCRequestService();
   const [metadata, setMetadata] = useState<Metadata>();
 
   const { id } = useParams() as Params;
-  const { api } = useApi();
-  const genesis = api.genesisHash.toHex();
+  const idArr = useMemo(() => [id], [id]);
+  const programMeta = usePRCMeta(idArr);
 
   useEffect(() => {
-    apiRequest
-      .getResource('program.meta.get', [{ programId: id, genesis }])
-      .then(
-        ([
-          {
-            result: { metaFile },
-          },
-        ]) => Buffer.from(metaFile, 'base64'),
-      )
-      .then((buffer) => getWasmMetadata(buffer))
-      .then((m) => setMetadata(m));
+    if (programMeta) {
+      const [{ metaFile }] = programMeta;
+      const buffer = Buffer.from(metaFile, 'base64');
+      getWasmMetadata(buffer).then((m) => setMetadata(m));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [programMeta]);
 
   const sendMessage = useSendMessage(id, metadata);
 
@@ -192,4 +209,4 @@ function useChannelActions() {
   return { post, subscribe, unsubscribe };
 }
 
-export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages, useOwnFeed, useFeed };
+export { useChannel, useChannels, useSubscriptions, useChannelActions, useMessages, useOwnFeed, useGeneralFeed };

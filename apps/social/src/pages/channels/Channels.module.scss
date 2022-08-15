@@ -1,4 +1,5 @@
 @use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
 
 .header {
   margin-bottom: 30px;
@@ -7,9 +8,7 @@
 }
 
 .heading {
-  font-family: 'Syncopate', sans-serif;
-  font-size: 22px;
-  line-height: 30px;
+  @include heading(22px, 30px);
 }
 
 .list {
