@@ -45,7 +45,7 @@ function useChannels() {
 function useSubscriptions() {
   const { account } = useAccount();
   const actorId = account?.decodedAddress;
-  const payload = useMemo(() => ({ SubscribedToChannels: actorId }), [actorId]);
+  const payload = useMemo(() => actorId ? ({ SubscribedToChannels: actorId }) : undefined, [actorId]);
 
   const { state, isStateRead } = useRouterState<SubscriptionState>(payload);
 
