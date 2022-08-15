@@ -13,8 +13,8 @@ export async function getTestBalance(genesis: string): Promise<Passed> {
   return true;
 }
 
-export async function validateGenesis(genesis: string): Promise<Passed> {
-  const response = await request('genesis.valid', {
+export async function testBalanceAvailable(genesis: string): Promise<Passed> {
+  const response = await request('testBalance.available', {
     genesis
   });
   expect(response.result).to.eq(true);
