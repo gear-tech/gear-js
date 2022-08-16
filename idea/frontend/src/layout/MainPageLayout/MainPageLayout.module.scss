@@ -7,6 +7,11 @@
 .tableBody {
   // TODO: override 
   min-height: 420px !important; 
+
+  & > div {
+    background-color: $bgColor;
+    border-bottom-color:  #181818;
+  }
 }
 
 .topPagination {

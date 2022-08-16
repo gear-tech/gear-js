@@ -8,13 +8,10 @@
   .messageStatus {
     margin-right: 15px;
   }
-
-  .copyButton {
-    margin-left: 5px;
-  }
-
+  
   .messageLink {
     color: $textColorSecondary;
+    margin-right: 10px;
     text-decoration: none;
 
     &:hover {

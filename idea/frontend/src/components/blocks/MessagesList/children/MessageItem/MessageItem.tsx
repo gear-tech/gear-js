@@ -7,6 +7,7 @@ import styles from './MessageItem.module.scss';
 import { routes } from 'routes';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { MessageModel } from 'types/message';
+import { Tooltip } from 'components/common/Tooltip';
 import { CircleIndicator, IndicatorStatus } from 'components/common/CircleIndicator';
 import copySVG from 'assets/images/copy.svg';
 
@@ -33,7 +34,9 @@ const MessageItem = ({ message }: Props) => {
         <Link className={styles.messageLink} to={generatePath(routes.message, { messageId })}>
           {messageId}
         </Link>
-        <Button icon={copySVG} size="small" color="transparent" className={styles.copyButton} onClick={handleCopy} />
+        <Tooltip content="Copy ID">
+          <Button icon={copySVG} size="small" color="transparent" onClick={handleCopy} />
+        </Tooltip>
       </div>
       <div className={styles.item}>
         <p>{formatDate(timestamp)}</p>

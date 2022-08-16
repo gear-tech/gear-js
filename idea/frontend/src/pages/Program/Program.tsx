@@ -67,7 +67,7 @@ const Program = () => {
           </Box>
           <div className={styles.messages}>
             <h2 className={styles.messagesCaption}>Messages</h2>
-            <MessagesList messages={messages} isLoading={isMesssagesLoading} />
+            <MessagesList messages={messages} isLoading={isMesssagesLoading} className={styles.messagesList} />
           </div>
           <ProgramWaitlist waitlist={waitlist} />
         </>
