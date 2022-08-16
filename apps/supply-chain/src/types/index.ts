@@ -8,4 +8,13 @@ type InitPayload = {
   retailers: Hex[];
 };
 
-export type { InitPayload };
+type Item = {
+  producer: Hex;
+  distributor: Hex;
+  retailer: Hex;
+  state: string;
+  price: string;
+  deliveryTime: string;
+};
+
+export type { InitPayload, Item };

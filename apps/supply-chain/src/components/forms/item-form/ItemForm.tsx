@@ -3,17 +3,19 @@ import { SelectForm } from '../select-form';
 
 type Props = {
   heading: string;
-  items: string[] | undefined;
+  items: string[];
   action: string;
-  onSubmit: () => void;
+  onSubmit: (value: string) => void;
 };
 
 function ItemForm({ heading, items, action, onSubmit }: Props) {
   // TODO: take a look after gear-js/ui update for undefined select value
-  const initialValues = { itemId: items?.[0] };
+  const initialValues = { itemId: items[0] };
 
   const form = useForm({ initialValues });
   const { getInputProps } = form;
+
+  const handleSubmit = form.onSubmit(({ itemId }) => onSubmit(itemId));
 
   return (
     <SelectForm
@@ -21,7 +23,7 @@ function ItemForm({ heading, items, action, onSubmit }: Props) {
       items={items}
       action={action}
       selectProps={getInputProps('itemId')}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     />
   );
 }
