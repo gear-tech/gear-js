@@ -61,9 +61,13 @@ export class CompilerService {
   }
 
   async _runContainer(pathToFolder: string) {
-    const stream = await this.docker.run(this.id, ['./build.sh'], stdout, {
-      mount: `type=bind,source=${pathToFolder},target=/wasm-build/build`,
-    });
+    const stream = await this.docker.run(
+      this.id,
+      ['./build.sh'],
+      stdout,
+      {},
+      { '--mount': `type=bind,source=${pathToFolder},target=/wasm-build/build` },
+    );
     return new Promise((resolve, reject) => {
       this.docker.modem.followProgress(
         stream,
