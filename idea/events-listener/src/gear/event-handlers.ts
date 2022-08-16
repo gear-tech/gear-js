@@ -7,7 +7,6 @@ import {
   UserMessageSentData,
 } from '@gear-js/api';
 import {
-  GEAR_EVENT,
   ICodeChangedData,
   IMessage,
   IMessageEnqueuedData,
@@ -100,21 +99,21 @@ function dataBaseWipedHandler(): NewEventData<Keys.DatabaseWiped, unknown> {
   return { key: Keys.DatabaseWiped, value: {} };
 }
 
-const handleEvent = (method: GEAR_EVENT, data: GenericEventData): { key: Keys; value: any } | null => {
+const handleEvent = (method: Keys, data: GenericEventData): { key: Keys; value: any } | null => {
   switch (method) {
-    case GEAR_EVENT.MESSAGE_ENQUEUED:
+    case Keys.MessageEnqueued:
       return messageEnqueuedHandler(data as MessageEnqueuedData);
-    case GEAR_EVENT.USER_MESSAGE_SENT:
+    case Keys.UserMessageSent:
       return userMessageSentHandler(data as UserMessageSentData);
-    case GEAR_EVENT.USER_MESSAGE_READ:
+    case Keys.UserMessageRead:
       return userMessageReadHandler(data as UserMessageReadData);
-    case GEAR_EVENT.PROGRAM_CHANGED:
+    case Keys.ProgramChanged:
       return programChangedHandler(data as ProgramChangedData);
-    case GEAR_EVENT.MESSAGES_DISPATCHED:
+    case Keys.MessagesDispatched:
       return messagesDispatchedHandler(data as MessagesDispatchedData);
-    case GEAR_EVENT.CODE_CHANGED:
+    case Keys.CodeChanged:
       return codeChangedHandler(data as CodeChangedData);
-    case GEAR_EVENT.DATABASE_WIPED:
+    case Keys.DatabaseWiped:
       return dataBaseWipedHandler();
     default:
       return null;

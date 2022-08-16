@@ -1,6 +1,6 @@
 import { filterEvents } from '@polkadot/api/util';
 import { MessageEnqueuedData } from '@gear-js/api';
-import { GEAR_EVENT, UpdateMessageData } from '@gear-js/common';
+import { Keys, UpdateMessageData } from '@gear-js/common';
 
 import { UpdateBlockExtrinsics } from './types';
 
@@ -18,7 +18,7 @@ export function handleBlockExtrinsics(data: UpdateBlockExtrinsics): UpdateMessag
     } = extrinsic;
 
     const filteredEvents = filterEvents(hash, signedBlock, events, status).events!.filter(
-      ({ event: { method } }) => method === GEAR_EVENT.MESSAGE_ENQUEUED,
+      ({ event: { method } }) => method === Keys.MessageEnqueued,
     );
 
     const eventData = filteredEvents[0].event.data as MessageEnqueuedData;

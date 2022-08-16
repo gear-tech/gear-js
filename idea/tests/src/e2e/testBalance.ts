@@ -12,3 +12,11 @@ export async function getTestBalance(genesis: string): Promise<Passed> {
   expect(response).to.have.own.property('result');
   return true;
 }
+
+export async function testBalanceAvailable(genesis: string): Promise<Passed> {
+  const response = await request('testBalance.available', {
+    genesis
+  });
+  expect(response.result).to.eq(true);
+  return true;
+}

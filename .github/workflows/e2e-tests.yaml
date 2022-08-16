@@ -296,6 +296,7 @@ jobs:
         env:
           API_ENDPOINT: ${{ secrets.API_ADDRESS_URL_TEST }}
           WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
+          TEST_ENV: ${{ secrets.TEST_ENV }}
         run: |
           YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
           yarn test

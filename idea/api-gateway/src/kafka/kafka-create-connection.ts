@@ -1,9 +1,9 @@
 import { KAFKA_TOPICS } from '@gear-js/common';
 
 import { changeStatus } from '../routes/healthcheck/healthcheck.router';
-import { apiGatewayLogger } from '../common/event-listener.logger';
 import { kafkaProducer } from './producer';
 import { kafkaConsumer } from './consumer';
+import { apiGatewayLogger } from '../common/api-gateway.logger';
 
 const topics = Object.values(KAFKA_TOPICS);
 

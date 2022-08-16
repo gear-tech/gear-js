@@ -6,7 +6,7 @@ import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram } from '../interfaces';
 import { sleep } from '../utils';
 import { getAllMessages, getMessageData, getMessagePayload } from './messages';
-import { getTestBalance } from './testBalance';
+import { getTestBalance, testBalanceAvailable } from './testBalance';
 import { getCodeData, getListCode } from './code';
 import base from '../config/base';
 
@@ -14,7 +14,7 @@ let genesis: Hex;
 let prepared: IPrepared;
 let api: GearApi;
 
-jest.setTimeout(30000);
+jest.setTimeout(30_000);
 
 beforeAll(async () => {
   api = await GearApi.create({ providerAddress: base.gear.wsProvider });
@@ -99,5 +99,8 @@ describe('code methods', () => {
 describe('testBalance', () => {
   test('testBalance.get request', async () => {
     expect(await getTestBalance(genesis)).toBeTruthy();
+  });
+  test('testBalance.available request', async () => {
+    expect(await testBalanceAvailable(genesis)).toBeTruthy();
   });
 });

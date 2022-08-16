@@ -1,6 +1,6 @@
 import { GearApi } from '@gear-js/api';
 import { GenericEventData } from '@polkadot/types';
-import { API_METHODS, GEAR_EVENT } from '@gear-js/common';
+import { KAFKA_TOPICS, Keys } from '@gear-js/common';
 
 import { handleEvent } from './event-handlers';
 import { handleBlockExtrinsics } from './block-extrinsics-handler';
@@ -10,7 +10,7 @@ import { sleep } from '../utils';
 export const listen = (
   api: GearApi,
   genesis: string,
-  callback: (arg: { key?: string; params: any; method: API_METHODS }) => void,
+  callback: (arg: { key?: string; params: any; method: KAFKA_TOPICS }) => void,
 ) => {
   return api.query.system.events(async (events) => {
     const blockHash = events.createdAtHash!.toHex();
@@ -31,12 +31,12 @@ export const listen = (
       event: { data, method },
     } of events) {
       try {
-        const eventData = handleEvent(method as GEAR_EVENT, data as GenericEventData);
+        const eventData = handleEvent(method as Keys, data as GenericEventData);
         eventData &&
           callback({
             key: eventData.key,
             params: { ...eventData.value, ...base },
-            method: API_METHODS.EVENTS,
+            method: KAFKA_TOPICS.EVENTS,
           });
       } catch (error) {
         console.error(error);
@@ -54,6 +54,6 @@ export const listen = (
 
     const messageToUpdate = handleBlockExtrinsics(updateBlockExtrinsics);
     await sleep(1000);
-    callback({ params: messageToUpdate, method: API_METHODS.MESSAGES_UPDATE_DATA });
+    callback({ params: messageToUpdate, method: KAFKA_TOPICS.MESSAGES_UPDATE_DATA });
   });
 };

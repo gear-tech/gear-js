@@ -1,7 +1,7 @@
-import { API_METHODS, UpdateMessageData } from '@gear-js/common';
+import { KAFKA_TOPICS, UpdateMessageData } from '@gear-js/common';
 
 interface SendByKafkaTopicInput {
-  method: API_METHODS;
+  method: KAFKA_TOPICS;
   params: UpdateMessageData[];
   genesis?: string;
   key?: string;

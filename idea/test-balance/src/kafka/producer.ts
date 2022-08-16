@@ -1,4 +1,4 @@
-import { Producer } from 'kafkajs';
+import { Message, Producer } from 'kafkajs';
 
 import { initKafka } from './init-kafka';
 
@@ -8,16 +8,21 @@ async function connect(): Promise<void> {
   await producer.connect();
 }
 
-async function send(message: any, value: string) {
+async function send(topic: string, value: string, correlationId?: string): Promise<void> {
   await producer.send({
-    topic: message.headers.kafka_replyTopic.toString(),
-    messages: [
-      {
-        value,
-        headers: { kafka_correlationId: message.headers.kafka_correlationId.toString() },
-      },
-    ],
+    topic,
+    messages: [createMessageBody(value, correlationId)],
   });
+}
+
+function createMessageBody(value: string, correlationId?: string): Message {
+  const result: Message = { value, headers: {} };
+
+  if (correlationId) {
+    result.headers = { kafka_correlationId: correlationId };
+  }
+
+  return result;
 }
 
 export const kafkaProducer = { connect, send };
