@@ -45,27 +45,13 @@ export class CompilerService {
     });
   }
 
-  async buildImage(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      console.log(PATH_TO_BUILD_IMAGE_SCRIPT);
-      exec(PATH_TO_BUILD_IMAGE_SCRIPT, (error, stdout, stderr) => {
-        console.log(stderr);
-        console.log(stdout);
-        if (error) {
-          console.log(error);
-          reject(error);
-        }
-        return resolve('ok');
-      });
-    });
-  }
-
   async _runContainer(pathToFolder: string) {
     const container = await this.docker.createContainer({
-      Volumes: { '/wasm-build/build': pathToFolder },
+      Volumes: { '/wasm-build/build': {} },
       WorkingDir: '/wasm-build',
       Cmd: ['./build.sh'],
       Image: this.id,
+      HostConfig: { Binds: [`${pathToFolder}:/wasm-build/build`] },
     });
     const result = await container.start();
     console.log(result);
@@ -105,6 +91,7 @@ export class CompilerService {
     try {
       console.log(await this._runContainer(pathToFolder));
     } catch (error) {
+      console.log(error);
       return this.dbService.update(id, null, findErr(error.message));
     }
 
