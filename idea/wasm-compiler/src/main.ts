@@ -6,7 +6,7 @@ const main = async () => {
   const dbService = new DBService();
   await dbService.connect();
   const compiler = new CompilerService(dbService);
-  await compiler.buildImage();
+  await compiler._buildImage();
   console.log('Image built');
   const server = new Server(dbService, compiler);
   server.setRoutes();

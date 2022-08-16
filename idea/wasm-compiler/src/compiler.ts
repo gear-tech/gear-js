@@ -4,6 +4,8 @@ import { isWasm, packZip } from './util';
 import { DBService } from './db';
 import { join } from 'path';
 import { PATH_TO_BUILD_IMAGE_SCRIPT, PATH_TO_RUN_CONTAINER_SCRIPT } from './configuration';
+import Docker from 'dockerode';
+import { stdout } from 'process';
 
 function findErr(error: string) {
   return error.slice(error.indexOf('error['), error.indexOf('Failed')).replace(
@@ -15,9 +17,32 @@ function findErr(error: string) {
 
 export class CompilerService {
   dbService: DBService;
+  docker: Docker;
+  id: string;
 
   constructor(dbService: DBService) {
     this.dbService = dbService;
+    this.docker = new Docker({ socketPath: '/var/run/docker.sock' });
+  }
+
+  async _buildImage() {
+    const stream = await this.docker.buildImage(
+      { context: './wasm-build', src: ['Dockerfile', 'build.sh'] },
+      { t: 'wasm-build' },
+    );
+    return new Promise((resolve, reject) => {
+      this.docker.modem.followProgress(
+        stream,
+        (err, res) => (err ? reject(err) : resolve(res)),
+        (obj) => {
+          obj.stream && console.log(obj.stream);
+          if (obj.aux?.ID) {
+            this.id = obj.aux.ID.slice(7);
+            console.log(`ID: ${this.id}`);
+          }
+        },
+      );
+    });
   }
 
   async buildImage(): Promise<string> {
