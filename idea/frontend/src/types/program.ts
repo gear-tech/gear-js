@@ -1,5 +1,3 @@
-import { Metadata } from '@gear-js/api';
-
 export enum ProgramStatus {
   Success = 'success',
   Failed = 'failed',
@@ -16,23 +14,14 @@ export interface ProgramModel {
   timestamp: string;
   initStatus: ProgramStatus;
   title?: string;
-  meta?: any;
+  meta: {
+    meta: string;
+  } | null;
 }
 
 export interface ProgramPaginationModel {
   count: number;
   programs: ProgramModel[];
-}
-
-export interface UploadProgramModel {
-  id?: string;
-  meta?: Metadata;
-  value: number;
-  title?: string;
-  gasLimit: number;
-  initPayload: string;
-  programName?: string;
-  payloadType?: string;
 }
 
 export interface ProgramsPagintaionModel {

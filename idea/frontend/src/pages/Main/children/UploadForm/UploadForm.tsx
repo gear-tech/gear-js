@@ -15,7 +15,6 @@ import { GasMethod } from 'consts';
 import { useProgramUpload, useGasCalculate } from 'hooks';
 import { readFileAsync } from 'helpers';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
-import { UploadProgramModel } from 'types/program';
 import { Fieldset } from 'components/common/Fieldset';
 import { FormInput, FormPayload, FormPayloadType, FormNumberFormat, formStyles } from 'components/common/Form';
 import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
@@ -52,7 +51,7 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
   const handleSubmitForm = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     const { value, payload, gasLimit, programName, payloadType } = values;
 
-    const programModel: UploadProgramModel = {
+    const programData = {
       meta: metadata,
       value,
       title: '',
@@ -64,7 +63,7 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
 
     uploadProgram({
       file: droppedFile,
-      programModel,
+      programData,
       metadataBuffer,
       reject: () => helpers.setSubmitting(false),
       resolve: onReset,

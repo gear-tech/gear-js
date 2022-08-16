@@ -11,9 +11,9 @@ export type NodeSection = {
 };
 
 export type GetMetaResponse = {
-  program: string;
   meta: string;
   metaFile: string;
+  program: string;
 };
 
 export type GetDefaultNodesResponse = NodeSection[];

@@ -7,8 +7,7 @@ import { useModal } from '../index';
 
 import { RPC_METHODS, ACCOUNT_ERRORS } from 'consts';
 import { isDevChain } from 'helpers';
-import { ProgramStatus } from 'types/program';
-import { localPrograms } from 'services/LocalDBService';
+import { uploadLocalMetadata } from 'services/LocalDBService';
 import ServerRPCRequestService from 'services/ServerRPCRequestService';
 
 const useMetadataUplaod = () => {
@@ -65,21 +64,9 @@ const useMetadataUplaod = () => {
         const jsonMeta = JSON.stringify(metadata);
 
         if (isDevChain()) {
-          await localPrograms.setItem(programId, {
-            id: programId,
-            name,
-            title,
-            metadata: {
-              metadata: jsonMeta,
-              metaFile: metadataBuffer,
-              programId,
-            },
-            owner: account.decodedAddress,
-            timestamp: Date(),
-            initStatus: ProgramStatus.Success,
-          });
+          await uploadLocalMetadata(programId, jsonMeta, metadataBuffer, name);
 
-          alert.success('Program added to the localDB successfully');
+          alert.success('Metadata added to the localDB successfully');
 
           if (resolve) resolve();
 
