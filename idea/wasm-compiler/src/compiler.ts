@@ -65,9 +65,10 @@ export class CompilerService {
       this.id,
       ['./build.sh'],
       stdout,
-      {},
       { mount: `type=bind,source=${pathToFolder},target=/wasm-build/build` },
+      {},
     );
+    console.log(stream);
     return new Promise((resolve, reject) => {
       this.docker.modem.followProgress(
         stream,
