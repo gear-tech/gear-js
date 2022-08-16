@@ -60,6 +60,20 @@ export class CompilerService {
     });
   }
 
+  async _runContainer(pathToFolder: string) {
+    const stream = await this.docker.run(this.id, ['./build.sh'], stdout, {
+      mount: `type=bind,source=${pathToFolder},target=/wasm-build/build`,
+    });
+    return new Promise((resolve, reject) => {
+      this.docker.modem.followProgress(
+        stream,
+        (err, res) => (err ? reject(err) : resolve(res)),
+        (obj) => {
+          obj.stream ? console.log(obj.stream) : console.log(obj);
+        },
+      );
+    });
+  }
   runContainer(pathToFolder: string) {
     return new Promise((resolve, reject) => {
       exec(`PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`, (error) => {
@@ -74,7 +88,7 @@ export class CompilerService {
 
   async processBuild(pathToFolder: string, id: string) {
     try {
-      console.log(await this.runContainer(pathToFolder));
+      console.log(await this._runContainer(pathToFolder));
     } catch (error) {
       return this.dbService.update(id, null, findErr(error.message));
     }
