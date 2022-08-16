@@ -1,6 +1,6 @@
 import { useSupplyChainUpload } from './program';
 import { useUsers } from './create';
 import { useSupplyChainActions } from './actions';
-import { useItem } from './api';
+import { useItem, useNft } from './api';
 
-export { useSupplyChainUpload, useUsers, useSupplyChainActions, useItem };
+export { useSupplyChainUpload, useUsers, useSupplyChainActions, useItem, useNft };

@@ -3,20 +3,13 @@ import { Button } from '@gear-js/ui';
 import styles from './Item.module.scss';
 
 type Props = {
-  data: {
-    id: string;
-    state: string;
-    name: string;
-    description: string;
-    producer: Hex;
-    distributor: Hex;
-    retailer: Hex;
-  };
+  id: string;
+  data: { name: string; description: string; state: string; producer: Hex; distributor: Hex; retailer: Hex };
   onBackClick: () => void;
 };
 
-function Item({ data, onBackClick }: Props) {
-  const { id, state, name, description, producer, distributor, retailer } = data;
+function Item({ id, data, onBackClick }: Props) {
+  const { state, name, description, producer, distributor, retailer } = data;
 
   return (
     <div>

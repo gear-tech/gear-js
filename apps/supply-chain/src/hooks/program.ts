@@ -110,7 +110,7 @@ function useSupplyChainUpload(onSuccess: (programId: Hex) => void) {
       const { signer } = await web3FromSource(account.meta.source);
 
       const program = { code: uintArray, gasLimit: gasLimit.toString(), value: value.toString(), initPayload };
-      const { programId } = await api.program.submit(program, metadata, undefined);
+      const { programId } = await api.program.upload(program, metadata, undefined);
 
       const initialization = waitForProgramInit(api, programId);
 

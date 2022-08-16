@@ -17,4 +17,14 @@ type Item = {
   deliveryTime: string;
 };
 
-export type { InitPayload, Item };
+type Token = {
+  id: string;
+  ownerId: Hex;
+  name: string;
+  description: string;
+  media: string;
+  reference: string;
+  approvedAccountIds: Hex[];
+};
+
+export type { InitPayload, Item, Token };

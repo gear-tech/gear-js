@@ -2,37 +2,28 @@ import { Hex } from '@gear-js/api';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { ROLES, ACTIONS } from 'consts';
-import { getAction, getForm, getLabel, getName } from 'utils';
-import { useItem } from 'hooks';
+import { getAction, getForm, getItemData, getLabel, getName } from 'utils';
+import { useItem, useNft } from 'hooks';
 import { Loader } from 'components';
 import { Header } from './header';
 import { List } from './list';
 import { SelectText } from './select-text';
-import styles from './Role.module.scss';
 import { Item } from './item';
+import styles from './Program.module.scss';
 
 type Props = {
-  programId: Hex;
+  id: Hex;
   onBackButtonClick: () => void;
 };
 
-const item = {
-  id: '00',
-  state: 'Unknown',
-  name: 'name',
-  description: 'Description',
-  producer: '0x00' as Hex,
-  distributor: '0x00' as Hex,
-  retailer: '0x00' as Hex,
-};
-
-function Role({ programId, onBackButtonClick }: Props) {
+function Program({ id, onBackButtonClick }: Props) {
   const [role, setRole] = useState('');
   const [action, setAction] = useState('');
-  const [itemId, setItemId] = useState('00');
+  const [itemId, setItemId] = useState('');
 
-  // const { item, isItemRead } = useItem(itemId);
-  const isItemRead = false;
+  const { item, isItemRead } = useItem(itemId);
+  const { nft, isNftRead } = useNft(itemId);
+  const isItemReady = item && isItemRead && nft && isNftRead;
 
   const resetAction = () => setAction('');
   const resetItem = () => setItemId('');
@@ -43,7 +34,7 @@ function Role({ programId, onBackButtonClick }: Props) {
 
   return (
     <div className={styles.role}>
-      <Header programId={programId} onBackButtonClick={onBackButtonClick} />
+      <Header programId={id} onBackButtonClick={onBackButtonClick} />
       <div className={styles.actions}>
         <p className={clsx(styles.action, !role && styles.active)}>Select role</p>
         {role && <p className={clsx(styles.action, styles.active)}>Select action</p>}
@@ -54,7 +45,8 @@ function Role({ programId, onBackButtonClick }: Props) {
         <div className={styles.action}>
           {action ? (
             <>
-              {itemId && (isItemRead ? <Item data={item} onBackClick={resetItem} /> : <Loader />)}
+              {itemId &&
+                (isItemReady ? <Item id={itemId} data={getItemData(item, nft)} onBackClick={resetItem} /> : <Loader />)}
               {!itemId && (
                 <Form
                   heading={action}
@@ -75,4 +67,4 @@ function Role({ programId, onBackButtonClick }: Props) {
   );
 }
 
-export { Role };
+export { Program };

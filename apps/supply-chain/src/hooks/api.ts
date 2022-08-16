@@ -1,11 +1,16 @@
+import { Hex } from '@gear-js/api';
+import { useMetadata, useReadState, useSendMessage } from '@gear-js/react-hooks';
+import { AnyJson } from '@polkadot/types/types';
 import { useEffect, useMemo, useState } from 'react';
 import supplyChainOptWasm from 'assets/wasm/supply_chain.opt.wasm';
 import supplyChainMetaWasm from 'assets/wasm/supply_chain.meta.wasm';
-import { useMetadata, useReadState, useSendMessage } from '@gear-js/react-hooks';
+import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
 import { LOCAL_STORAGE } from 'consts';
-import { AnyJson } from '@polkadot/types/types';
+import { Item, Token } from 'types';
 
-type ItemPayload = {};
+type ItemState = { ItemInfo: Item };
+type NFTProgramState = { NFTProgram: Hex };
+type NFTState = { Token: { token: Token } };
 
 function useSupplyChainOpt() {
   const [uintArray, setUintArray] = useState<Uint8Array>();
@@ -33,13 +38,29 @@ function useSupplyChainState<T>(payload: AnyJson) {
 
 function useItem(itemId: string) {
   const payload = useMemo(() => (itemId ? { ItemInfo: itemId } : undefined), [itemId]);
-  const { state, isStateRead } = useSupplyChainState<ItemPayload>(payload);
+  const { state, isStateRead } = useSupplyChainState<ItemState>(payload);
 
-  return { item: state, isItemRead: isStateRead };
+  return { item: state?.ItemInfo, isItemRead: isStateRead };
+}
+
+function useNftProgramId() {
+  const payload = useMemo(() => ({ NFTProgram: null }), []);
+  const { state } = useSupplyChainState<NFTProgramState>(payload);
+
+  return state?.NFTProgram;
+}
+
+function useNft(itemId: string) {
+  const nftProgramId = useNftProgramId();
+
+  const payload = useMemo(() => (itemId ? { Token: itemId } : undefined), [itemId]);
+  const { state, isStateRead } = useReadState<NFTState>(nftProgramId, nftMetaWasm, payload);
+
+  return { nft: state?.Token.token, isNftRead: isStateRead };
 }
 
 function useSupplyChainMessage() {
   return useSendMessage(localStorage[LOCAL_STORAGE.PROGRAM], supplyChainMetaWasm);
 }
 
-export { useSupplyChainOpt, useSupplyChainMeta, useItem, useSupplyChainMessage };
+export { useSupplyChainOpt, useSupplyChainMeta, useItem, useNft, useSupplyChainMessage };

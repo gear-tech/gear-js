@@ -17,9 +17,13 @@
   font-size: $fontSizeMedium;
   font-weight: 300;
   color: $textColorSecondary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .programId {
+  margin-left: 16px;
   font-weight: 400;
   color: $textColor;
 

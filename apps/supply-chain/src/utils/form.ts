@@ -1,5 +1,9 @@
+import { isHex } from '@polkadot/util';
 import { ProduceForm, ItemInputForm, ItemSwitchForm, ItemForm } from 'components';
 import { ACTION } from 'consts';
+
+const isValidHex = (value: string) => (!isHex(value) ? 'Address should be hex' : null);
+const isExists = (value: string) => (!value ? 'Field is required' : null);
 
 const getForm = (action: string) => {
   switch (action) {
@@ -41,7 +45,7 @@ const getName = (action: string) => {
 const getAction = (action: string) => {
   switch (action) {
     case ACTION.SALE:
-      return 'sale';
+      return 'sell';
     case ACTION.APPROVE:
       return 'approve';
     case ACTION.SHIP:
@@ -54,9 +58,11 @@ const getAction = (action: string) => {
       return 'process';
     case ACTION.PACKAGE:
       return 'pack';
+    case ACTION.INFO:
+      return 'get info';
     default:
       return '';
   }
 };
 
-export { getForm, getLabel, getName, getAction };
+export { isValidHex, isExists, getForm, getLabel, getName, getAction };

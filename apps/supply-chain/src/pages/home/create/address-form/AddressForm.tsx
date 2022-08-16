@@ -13,8 +13,8 @@ type Props = {
 };
 
 const initialValues = {
-  ftProgramId: '0xaa384c1419009bb86e1386f7460478c9ab48fa5f55ef09f0fde65fe88e1fee0e' as Hex,
-  nftProgramId: '0xd2786de18d6440446f1c5d1cfe1758e07c17ff5af99c263bcac1ef0b4aefa5d6' as Hex,
+  ftProgramId: '0x1848a093fecbc38b9bdc4b2cadb8e534fbd2bc151d085ff2734f2a12dbdaf809' as Hex,
+  nftProgramId: '0x17fae7b359768748f228ed1d00a250bbf4ab46349c3e9d51c94c887a0111abc6' as Hex,
 };
 const validate = { ftProgramId: isValidHex, nftProgramId: isValidHex };
 
