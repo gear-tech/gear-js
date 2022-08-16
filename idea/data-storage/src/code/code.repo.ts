@@ -28,10 +28,7 @@ export class CodeRepo {
   public async listPaginationByGenesis(params: GetAllCodeParams): Promise<[Code[], number]> {
     const { genesis, query, limit, offset } = params;
     return this.codeRepo.findAndCount({
-      where: {
-        ...sqlWhereWithILike({ genesis }, query, ['id', 'name']),
-        status: CODE_STATUS.ACTIVE,
-      },
+      where: sqlWhereWithILike({ genesis, status: CODE_STATUS.ACTIVE }, query, ['id', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
       order: {
