@@ -1,23 +1,22 @@
 import { HeaderCol } from 'components/common/Table';
 
+import hashSVG from 'assets/images/table/hash.svg';
 import codeSVG from 'assets/images/table/code_icon.svg';
-import menuSVG from 'assets/images/table/menu_icon.svg';
 import timestampSVG from 'assets/images/table/timestamp_icon.svg';
 
-export const TABLE_COLS = [1.5, 1, 1];
+export const TABLE_COLS = [2, 4, 1];
 
 export const TABLE_HEADER: HeaderCol[] = [
   {
     icon: codeSVG,
-    text: 'Program name',
+    text: 'Code name',
+  },
+  {
+    icon: hashSVG,
+    text: 'Code hash',
   },
   {
     icon: timestampSVG,
     text: 'Timestamp',
-  },
-  {
-    icon: menuSVG,
-    text: 'Send message / Upload metadata',
-    align: 'right',
   },
 ];
