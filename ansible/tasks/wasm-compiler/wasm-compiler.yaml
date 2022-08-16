@@ -28,6 +28,7 @@
     cd /home/ec2-user/wasm-compiler;
     npm install --force; npm run build;
     cp -r dist/ dist;
+  ignore_errors: yes
 
 - name: Give permissions to build-image script
   ansible.builtin.file:
