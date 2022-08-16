@@ -46,17 +46,25 @@ export class CompilerService {
   }
 
   async _runContainer(pathToFolder: string) {
-    const container = await this.docker.createContainer({
-      Volumes: { '/wasm-build/build': {} },
-      WorkingDir: '/wasm-build',
-      Cmd: ['./build.sh'],
-      Image: this.id,
-      HostConfig: { Binds: [`${pathToFolder}:/wasm-build/build`] },
+    return new Promise((resolve) => {
+      this.docker.createContainer(
+        {
+          Volumes: { '/wasm-build/build': {} },
+          WorkingDir: '/wasm-build',
+          Cmd: ['./build.sh'],
+          Image: this.id,
+          HostConfig: { Binds: [`${pathToFolder}:/wasm-build/build`] },
+          AttachStdout: true,
+        },
+        function (err, container) {
+          container.attach({ stream: true, stdout: true, stderr: true }, function (err, stream) {
+            stream.pipe(process.stdout);
+          });
+          container.start().then(container.stop).then(resolve);
+        },
+      );
     });
-    const result = await container.start();
-    console.log(result);
-    console.log('END');
-    await container.stop();
+
     // const stream = await this.docker.run(
     //   this.id,
     //   ['ls && ./build.sh'],
