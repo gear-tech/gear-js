@@ -3,10 +3,7 @@ import { readdirSync, readFileSync, rmSync } from 'fs';
 import { isWasm, packZip } from './util';
 import { DBService } from './db';
 import { join } from 'path';
-import {
-  PATH_TO_BUILD_IMAGE_SCRIPT,
-  PATH_TO_RUN_CONTAINER_SCRIPT,
-} from './configuration';
+import { PATH_TO_BUILD_IMAGE_SCRIPT, PATH_TO_RUN_CONTAINER_SCRIPT } from './configuration';
 
 function findErr(error: string) {
   return error.slice(error.indexOf('error['), error.indexOf('Failed')).replace(
@@ -25,7 +22,10 @@ export class CompilerService {
 
   async buildImage(): Promise<string> {
     return new Promise((resolve, reject) => {
-      exec(PATH_TO_BUILD_IMAGE_SCRIPT, (error) => {
+      console.log(PATH_TO_BUILD_IMAGE_SCRIPT);
+      exec(PATH_TO_BUILD_IMAGE_SCRIPT, (error, stdout, stderr) => {
+        console.log(stderr);
+        console.log(stdout);
         if (error) {
           console.log(error);
           reject(error);
@@ -37,22 +37,19 @@ export class CompilerService {
 
   runContainer(pathToFolder: string) {
     return new Promise((resolve, reject) => {
-      exec(
-        `PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`,
-        (error) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve('ok');
-          }
-        },
-      );
+      exec(`PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`, (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve('ok');
+        }
+      });
     });
   }
 
   async processBuild(pathToFolder: string, id: string) {
     try {
-      await this.runContainer(pathToFolder);
+      console.log(await this.runContainer(pathToFolder));
     } catch (error) {
       return this.dbService.update(id, null, findErr(error.message));
     }
