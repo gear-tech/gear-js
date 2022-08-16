@@ -61,12 +61,13 @@ export class CompilerService {
   }
 
   async _runContainer(pathToFolder: string) {
+    console.log(pathToFolder);
     const stream = await this.docker.run(
       this.id,
-      ['./build.sh'],
+      ['ls && ./build.sh'],
       stdout,
       { mount: `type=bind,source=${pathToFolder},target=/wasm-build/build` },
-      {},
+      { w: '/wasm-build' },
     );
     console.log(stream);
     return new Promise((resolve, reject) => {
