@@ -17,6 +17,9 @@ const Navigation = () => (
       <NavLink to={routes.allPrograms} className={styles.switchButton}>
         All programs
       </NavLink>
+      <NavLink to={routes.codes} className={styles.switchButton}>
+        Codes
+      </NavLink>
       <NavLink to={routes.messages} className={styles.switchButton}>
         Messages
       </NavLink>

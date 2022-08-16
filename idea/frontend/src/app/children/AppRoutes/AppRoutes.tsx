@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { routes } from 'routes';
 import { useEvents } from 'hooks';
 import { Main } from 'pages/Main';
+import { Codes } from 'pages/Codes';
 import { Messages } from 'pages/Messages';
 import { AllPrograms } from 'pages/AllPrograms';
 import { UserPrograms } from 'pages/UserPrograms';
@@ -28,9 +29,10 @@ const AppRoutes = () => {
     <Routes>
       <Route path={routes.main} element={<MainPageLayout />}>
         <Route index element={<Main />} />
+        <Route path={routes.codes} element={<Codes />} />
+        <Route path={routes.messages} element={<Messages />} />
         <Route path={routes.allPrograms} element={<AllPrograms />} />
         <Route path={routes.uploadedPrograms} element={<UserPrograms />} />
-        <Route path={routes.messages} element={<Messages />} />
       </Route>
 
       <Route path={routes.explorer} element={<ExplorerPageLayout />}>

@@ -71,9 +71,11 @@ export const RPC_METHODS = {
   PROGRAMS_USER: 'program.all.user',
   ADD_METADATA: 'program.meta.add',
   GET_METADATA: 'program.meta.get',
-  GET_TEST_BALANCE: 'testBalance.get',
-  GET_ALL_MESSAGES: 'message.all',
   GET_MESSAGE: 'message.data',
+  GET_ALL_MESSAGES: 'message.all',
+  GET_CODE: 'code.data',
+  GET_ALL_CODES: 'code.all',
+  GET_TEST_BALANCE: 'testBalance.get',
 };
 
 export const PAGE_TYPES = {
