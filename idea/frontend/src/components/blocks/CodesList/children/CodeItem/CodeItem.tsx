@@ -1,9 +1,12 @@
 import { memo } from 'react';
+import { Link, generatePath } from 'react-router-dom';
+import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui';
+import { Button, buttonStyles } from '@gear-js/ui';
 
 import styles from './CodeItem.module.scss';
 
+import { routes } from 'routes';
 import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
 import { CodeModel } from 'types/code';
 import { Tooltip } from 'components/common/Tooltip';
@@ -21,6 +24,8 @@ const CodeItem = memo(({ code }: Props) => {
 
   const handleCopy = () => copyToClipboard(codeId, alert, 'Code ID copied');
 
+  const linkClasses = clsx(buttonStyles.button, buttonStyles.noText, buttonStyles.transparent);
+
   return (
     <>
       <div className={styles.codeNameWrapper}>
@@ -29,7 +34,9 @@ const CodeItem = memo(({ code }: Props) => {
           <Button icon={copySVG} color="transparent" onClick={handleCopy} />
         </Tooltip>
         <Tooltip content="Initialize program">
-          <Button icon={initProgramSVG} color="transparent" onClick={() => {}} />
+          <Link to={generatePath(routes.code, { codeId })} className={linkClasses}>
+            <img src={initProgramSVG} alt="init program" />
+          </Link>
         </Tooltip>
       </div>
       <span className={styles.codeHash}>{codeId}</span>

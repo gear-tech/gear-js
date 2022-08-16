@@ -10,6 +10,7 @@ export const routes = {
   explorer: '/explorer',
   termsOfUse: '/terms-of-use',
   privacyPolicy: '/privacy-policy',
+  code: '/code/:codeId',
   program: '/program/:programId',
   message: '/message/:messageId',
   state: '/state/:programId',

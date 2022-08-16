@@ -1,6 +1,5 @@
 import { memo } from 'react';
 
-import styles from './CodesList.module.scss';
 import { getRowKey } from './helpers';
 import { TABLE_COLS, TABLE_HEADER } from './consts';
 import { CodeItem } from './children/CodeItem';
