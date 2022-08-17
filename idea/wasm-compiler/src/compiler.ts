@@ -24,7 +24,7 @@ export class CompilerService {
     this.docker = new Docker({ socketPath: '/var/run/docker.sock' });
   }
 
-  async _buildImage() {
+  async buildImage() {
     const stream = await this.docker.buildImage(
       { context: './wasm-build', src: ['Dockerfile', 'build.sh'] },
       { t: 'wasm-build' },
@@ -46,19 +46,19 @@ export class CompilerService {
 
   runContainer(pathToFolder: string) {
     return new Promise((resolve, reject) => {
-      const docker = spawn(PATH_TO_RUN_CONTAINER_SCRIPT, {
+      const container = spawn(PATH_TO_RUN_CONTAINER_SCRIPT, {
         env: { PROJECT_PATH: pathToFolder },
       });
 
-      docker.stderr.on('data', (data) => {
+      container.stderr.on('data', (data) => {
         console.error(data);
       });
 
-      docker.stdout.on('data', (data) => {
-        console.log(data);
+      container.stdout.on('data', (data) => {
+        console.log(data.toString());
       });
 
-      docker.on('close', (code) => {
+      container.on('close', (code) => {
         console.log(`Exit with code: ${code}`);
         if (code === 0) {
           resolve(code);
@@ -66,25 +66,12 @@ export class CompilerService {
           reject(code);
         }
       });
-
-      docker.on('exit', (data) => {
-        console.log('*** exit ***');
-        console.log(data);
-      });
-
-      // exec(`PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`, (error) => {
-      //   if (error) {
-      //     reject(error);
-      //   } else {
-      //     resolve('ok');
-      //   }
-      // });
     });
   }
 
   async processBuild(pathToFolder: string, id: string) {
     try {
-      console.log(await this.runContainer(pathToFolder));
+      await this.runContainer(pathToFolder);
     } catch (error) {
       console.log(error);
       return this.dbService.update(id, null, findErr(error.message));
