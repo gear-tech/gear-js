@@ -1,6 +1,6 @@
 import styles from './PageHeader.module.scss';
 
-import { fileNameHandler } from 'helpers';
+import { getShortName } from 'helpers';
 import { BackButton } from 'components/BackButton/BackButton';
 import ProgramIllustrationSVG from 'assets/images/program_icon.svg';
 
@@ -17,7 +17,7 @@ const PageHeader = ({ title, fileName }: Props) => (
       {fileName && (
         <div className={styles.infoFile}>
           <img className={styles.fileIcon} src={ProgramIllustrationSVG} alt="code icon" />
-          <span className={styles.fileName}>{fileNameHandler(fileName)}</span>
+          <span className={styles.fileName}>{getShortName(fileName)}</span>
         </div>
       )}
     </div>

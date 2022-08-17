@@ -7,7 +7,7 @@ import { Button, buttonStyles } from '@gear-js/ui';
 import styles from './CodeItem.module.scss';
 
 import { routes } from 'routes';
-import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
+import { copyToClipboard, getShortName, formatDate } from 'helpers';
 import { CodeModel } from 'types/code';
 import { Tooltip } from 'components/common/Tooltip';
 import copySVG from 'assets/images/copy.svg';
@@ -29,7 +29,7 @@ const CodeItem = memo(({ code }: Props) => {
   return (
     <>
       <div className={styles.codeNameWrapper}>
-        <span className={styles.codeName}>{fileNameHandler(name)}</span>
+        <span className={styles.codeName}>{getShortName(name)}</span>
         <Tooltip content="Copy ID">
           <Button icon={copySVG} color="transparent" onClick={handleCopy} />
         </Tooltip>

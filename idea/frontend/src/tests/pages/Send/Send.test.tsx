@@ -70,9 +70,9 @@ describe('send message page tests', () => {
     expect(within(modal).getByText(transactionName));
     expect(within(modal).getByText(`Fees of ${PARTIAL_FEE.partialFee.toHuman()} will be applied to the submission`));
     expect(within(modal).getByText('From:'));
-    expect(within(modal).getByText(helpers.fileNameHandler(TEST_ACCOUNT_1.address)));
+    expect(within(modal).getByText(helpers.getShortName(TEST_ACCOUNT_1.address)));
     expect(within(modal).getByText('To:'));
-    expect(within(modal).getByText(helpers.fileNameHandler(id)));
+    expect(within(modal).getByText(helpers.getShortName(id)));
 
     expect(within(modal).getByText('Submit'));
     expect(within(modal).getByText('Cancel'));

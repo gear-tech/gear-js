@@ -2,7 +2,7 @@ import { Link, LinkProps } from 'react-router-dom';
 
 import styles from './CustomLink.module.scss';
 
-import { fileNameHandler } from 'helpers';
+import { getShortName } from 'helpers';
 
 type Props = LinkProps & {
   text: string;
@@ -10,7 +10,7 @@ type Props = LinkProps & {
 
 const CustomLink = ({ text, ...other }: Props) => (
   <Link {...other} className={styles.customLink}>
-    {fileNameHandler(text)}
+    {getShortName(text)}
   </Link>
 );
 

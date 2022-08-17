@@ -16,12 +16,6 @@ export const checkWallet = (account?: Account) => {
   }
 };
 
-export const checkTransferAvailability = (balance: string, fee: Balance) => {
-  if (fee.toNumber() > parseInt(balance, 10)) {
-    throw new Error(`${ACCOUNT_ERRORS.NOT_ENOUGH_FUNDS_IN_WALLET}\n Need ${fee.toHuman()}`);
-  }
-};
-
 export const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
   const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
   const formattedDocs = docs.filter(Boolean).join('. ');
@@ -29,7 +23,7 @@ export const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
   return `${errorMethod}: ${formattedDocs}`;
 };
 
-export const fileNameHandler = (filename: string, maxLength = 24) => {
+export const getShortName = (filename: string, maxLength = 24) => {
   const transformedFileName = filename;
 
   const halfLenght = Math.floor(maxLength / 2);

@@ -5,7 +5,7 @@ import { Button } from '@gear-js/ui';
 import styles from './MessageItem.module.scss';
 
 import { routes } from 'routes';
-import { copyToClipboard, fileNameHandler, formatDate } from 'helpers';
+import { copyToClipboard, getShortName, formatDate } from 'helpers';
 import { MessageModel } from 'types/message';
 import { Tooltip } from 'components/common/Tooltip';
 import { CircleIndicator, IndicatorStatus } from 'components/common/CircleIndicator';
@@ -28,7 +28,7 @@ const MessageItem = ({ message }: Props) => {
     <>
       <div className={styles.item}>
         <CircleIndicator status={status} className={styles.messageStatus} />
-        <p>{fileNameHandler(message.destination)}</p>
+        <p>{getShortName(message.destination)}</p>
       </div>
       <div className={styles.item}>
         <Link className={styles.messageLink} to={generatePath(routes.message, { messageId })}>

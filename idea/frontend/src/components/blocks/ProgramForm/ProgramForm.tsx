@@ -19,7 +19,7 @@ type Props = {
   name: string;
   label: string;
   onSubmit: (payload: Payload, helpers: FormikHelpers<FormValues>) => Promise<void> | void;
-  onReset: () => void;
+  onReset?: () => void;
   renderButtons: (props: PropsToRenderButtons) => ReactNode;
 };
 
@@ -56,7 +56,7 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    return onSubmit(data, helpers);
+    onSubmit(data, helpers);
   };
 
   const deposit = api.existentialDeposit.toNumber();
