@@ -6,6 +6,8 @@ on:
     branches: master
     paths:
       - idea/**
+    paths-ignore:
+      - idea/wasm-compiler/**
   workflow_dispatch:
 
 concurrency:
