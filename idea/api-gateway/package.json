@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@gear-js/common": "workspace:^",
-    "@types/cron": "^2.0.0",
-    "cron": "^2.1.0",
+    "@types/cron": "2.0.0",
+    "cron": "2.1.0",
     "dotenv": "16.0.1",
     "express": "4.18.1",
     "hcaptcha": "0.1.1",
@@ -26,7 +26,7 @@
   "devDependencies": {
     "@types/express": "4.17.13",
     "@types/jest": "26.0.24",
-    "@types/node": "14.18.22",
+    "@types/node": "14.18.24",
     "@types/nodemon": "1.19.2",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
