@@ -71,7 +71,7 @@ export class CompilerService {
         process.stdout,
         {
           // mount: `type=bind,source=${pathToFolder},target=/wasm-build/build`,
-          Binds: [`${pathToFolder}:/wasm-build/build`],
+          VolumesFrom: [`${pathToFolder}:/wasm-build/build`],
         },
         (err) => {
           if (err) {

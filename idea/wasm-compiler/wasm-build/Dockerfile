@@ -12,4 +12,4 @@ COPY build.sh /wasm-build/build.sh
 RUN chmod +x /wasm-build/build.sh
 
 WORKDIR /wasm-build
-CMD [ "./build.sh" ]
+CMD [ "ls -a", "&&" "./build.sh" ]
