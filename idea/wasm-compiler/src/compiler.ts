@@ -46,42 +46,45 @@ export class CompilerService {
   }
 
   async _runContainer(pathToFolder: string) {
-    return new Promise((resolve) => {
-      this.docker.createContainer(
-        {
-          Volumes: { '/wasm-build/build': {} },
-          WorkingDir: '/wasm-build',
-          Cmd: ['./build.sh'],
-          Image: this.id,
-          HostConfig: { Binds: [`${pathToFolder}:/wasm-build/build`] },
-          AttachStdout: true,
-        },
-        function (err, container) {
-          container.attach({ stream: true, stdout: true, stderr: true }, function (err, stream) {
-            stream.pipe(process.stdout);
-          });
-          container.start().then(container.stop).then(resolve);
-        },
-      );
-    });
-
-    // const stream = await this.docker.run(
-    //   this.id,
-    //   ['ls && ./build.sh'],
-    //   stdout,
-    //   { mount: `type=bind,source=${pathToFolder},target=/wasm-build/build` },
-    //   { w: '/wasm-build' },
-    // );
-    // console.log(stream);
-    // return new Promise((resolve, reject) => {
-    //   this.docker.modem.followProgress(
-    //     stream,
-    //     (err, res) => (err ? reject(err) : resolve(res)),
-    //     (obj) => {
-    //       obj.stream ? console.log(obj.stream) : console.log(obj);
+    // return new Promise((resolve) => {
+    //   this.docker.createContainer(
+    //     {
+    //       Volumes: { '/wasm-build/build': {} },
+    //       WorkingDir: '/wasm-build',
+    //       Cmd: ['./build.sh'],
+    //       Image: this.id,
+    //       HostConfig: { Binds: [`${pathToFolder}:/wasm-build/build`] },
+    //       AttachStdout: true,
+    //     },
+    //     (err, container) => {
+    //       container.attach({ stream: true, stdout: true, stderr: true }, function (err, stream) {
+    //         stream.pipe(process.stdout);
+    //       });
+    //       // container.start().then(container.stop).then(resolve);
     //     },
     //   );
     // });
+
+    const stream = await this.docker.run(
+      this.id,
+      ['ls && ./build.sh'],
+      process.stdout,
+      {
+        mount: `type=bind,source=${pathToFolder},target=/wasm-build/build`,
+        HostConfig: { Binds: [`${pathToFolder}:/wasm-build/build`] },
+      },
+      { w: '/wasm-build' },
+    );
+    console.log(stream);
+    return new Promise((resolve, reject) => {
+      this.docker.modem.followProgress(
+        stream,
+        (err, res) => (err ? reject(err) : resolve(res)),
+        (obj) => {
+          obj.stream ? console.log(obj.stream) : console.log(obj);
+        },
+      );
+    });
   }
   runContainer(pathToFolder: string) {
     return new Promise((resolve, reject) => {
