@@ -1,26 +1,34 @@
-import { Metadata } from '@gear-js/api';
+import { Hex, Metadata } from '@gear-js/api';
 
-import { OperationCallbacks, SignAndSendArg as CommonSignAndSendArg } from 'types/hooks';
+import { OperationCallbacks, ParamsToSignAndSend } from 'types/hooks';
 
-export type ProgramData = {
-  meta?: Metadata;
+export type Payload = {
   value: number;
   title?: string;
   gasLimit: number;
+  metadata?: Metadata;
+  metadataBuffer?: string;
   initPayload: string;
   programName?: string;
   payloadType?: string;
 };
 
-type UploadData = {
+type DataToUpload = {
   file: File;
-  programData: ProgramData;
-  metadataBuffer: string | null;
+  payload: Payload;
 };
 
-export type UploadProgramParams = OperationCallbacks & UploadData;
+type DataToCreate = {
+  codeId: Hex;
+  payload: Payload;
+};
 
-export type SignAndUploadArg = CommonSignAndSendArg &
-  UploadData & {
-    programId: string;
-  };
+export type ParamsToUpload = OperationCallbacks & DataToUpload;
+
+export type ParamsToCreate = OperationCallbacks & DataToCreate;
+
+export type ParamsToSignAndUpload = ParamsToSignAndSend & {
+  name: string;
+  payload: Payload;
+  programId: string;
+};

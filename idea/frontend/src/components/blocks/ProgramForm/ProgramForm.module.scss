@@ -1,37 +1,6 @@
 @use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/breakpoints' as *;
 
-.uploadFormWrapper {
-  padding: 0 !important;
-  margin-bottom: 40px;
-
-  @include md {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 111;
-    overflow: scroll;
-  }
-
-  .heading {
-    color: $textColor;
-    font-size: $fontSizeLarge;
-    font-weight: 600;
-    border-bottom: 2px solid $successColor;
-
-    @include md {
-      padding: 16px;
-    }
-  }
-
-  .heading,
-  .uploadForm {
-    padding: 32px;
-  }
-}
-
 .formContent {
   display: flex;
   flex-wrap: wrap;

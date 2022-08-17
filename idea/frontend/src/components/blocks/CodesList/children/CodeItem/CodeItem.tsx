@@ -33,9 +33,9 @@ const CodeItem = memo(({ code }: Props) => {
         <Tooltip content="Copy ID">
           <Button icon={copySVG} color="transparent" onClick={handleCopy} />
         </Tooltip>
-        <Tooltip content="Initialize program">
+        <Tooltip content="Create program">
           <Link to={generatePath(routes.code, { codeId })} className={linkClasses}>
-            <img src={initProgramSVG} alt="init program" />
+            <img src={initProgramSVG} alt="create program" />
           </Link>
         </Tooltip>
       </div>

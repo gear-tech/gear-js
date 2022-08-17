@@ -1,19 +1,19 @@
 import { Metadata, IMessageSendOptions, IMessageSendReplyOptions } from '@gear-js/api';
 
-import { OperationCallbacks, SignAndSendArg as CommonSignAndSendArg } from 'types/hooks';
+import { OperationCallbacks, ParamsToSignAndSend as CommonParamsToSignAndSend } from 'types/hooks';
 
-export type SendMessageParams = OperationCallbacks & {
+export type ParamsToSendMessage = OperationCallbacks & {
   message: IMessageSendOptions;
   metadata?: Metadata;
   payloadType?: string;
 };
 
-export type ReplyMessageParams = OperationCallbacks & {
+export type PatamsToReplyMessage = OperationCallbacks & {
   reply: IMessageSendReplyOptions;
   metadata?: Metadata;
   payloadType?: string;
 };
 
-export type SignAndSendArg = CommonSignAndSendArg & {
-  isReply?: boolean;
+export type ParamsToSignAndSend = CommonParamsToSignAndSend & {
+  title?: string;
 };

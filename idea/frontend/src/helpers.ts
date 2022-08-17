@@ -1,9 +1,26 @@
 import { GearApi } from '@gear-js/api';
-import { Event } from '@polkadot/types/interfaces';
+import { Event, Balance } from '@polkadot/types/interfaces';
 import isString from 'lodash.isstring';
+import { Account } from '@gear-js/react-hooks';
 
 import { NODE_ADDRESS_REGEX } from 'regexes';
-import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
+import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES, ACCOUNT_ERRORS } from 'consts';
+
+export const checkWallet = (account?: Account) => {
+  if (!account) {
+    throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+  }
+
+  if (parseInt(account.balance.value, 10) === 0) {
+    throw new Error(ACCOUNT_ERRORS.WALLET_BALLANCE_IS_ZERO);
+  }
+};
+
+export const checkTransferAvailability = (balance: string, fee: Balance) => {
+  if (fee.toNumber() > parseInt(balance, 10)) {
+    throw new Error(`${ACCOUNT_ERRORS.NOT_ENOUGH_FUNDS_IN_WALLET}\n Need ${fee.toHuman()}`);
+  }
+};
 
 export const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
   const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);

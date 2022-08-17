@@ -4,10 +4,10 @@ import { EventRecord } from '@polkadot/types/interfaces';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '../index';
-import { SendMessageParams, ReplyMessageParams, SignAndSendArg } from './types';
+import { ParamsToSendMessage, ParamsToSignAndSend, PatamsToReplyMessage } from './types';
 
-import { getExtrinsicFailedMessage } from 'helpers';
-import { ACCOUNT_ERRORS, PROGRAM_ERRORS, TransactionStatus, TransactionName } from 'consts';
+import { checkWallet, getExtrinsicFailedMessage } from 'helpers';
+import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from 'consts';
 import { Method } from 'types/explorer';
 import { OperationCallbacks } from 'types/hooks';
 
@@ -32,10 +32,8 @@ const useMessage = () => {
     });
   };
 
-  const signAndSend = async ({ signer, isReply = false, reject, resolve }: SignAndSendArg) => {
-    const alertId = alert.loading('SignIn', {
-      title: isReply ? TransactionName.SendReply : TransactionName.SendMessage,
-    });
+  const signAndSend = async ({ signer, title = TransactionName.SendMessage, reject, resolve }: ParamsToSignAndSend) => {
+    const alertId = alert.loading('SignIn', { title });
 
     try {
       await api.message.signAndSend(account!.address, { signer }, ({ events, status }) => {
@@ -60,13 +58,11 @@ const useMessage = () => {
   };
 
   const sendMessage = useCallback(
-    async ({ metadata, message, payloadType, reject, resolve }: SendMessageParams) => {
+    async ({ metadata, message, payloadType, reject, resolve }: ParamsToSendMessage) => {
       try {
-        if (!account) {
-          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-        }
+        checkWallet(account);
 
-        const { meta, address } = account;
+        const { meta, address } = account!;
 
         api.message.send(message, metadata, payloadType);
 
@@ -100,13 +96,11 @@ const useMessage = () => {
   );
 
   const replyMessage = useCallback(
-    async ({ reply, metadata, payloadType, reject, resolve }: ReplyMessageParams) => {
+    async ({ reply, metadata, payloadType, reject, resolve }: PatamsToReplyMessage) => {
       try {
-        if (!account) {
-          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-        }
+        checkWallet(account);
 
-        const { meta, address } = account;
+        const { meta, address } = account!;
 
         api.message.sendReply(reply, metadata, payloadType);
 
@@ -116,7 +110,7 @@ const useMessage = () => {
         const handleConfirm = () =>
           signAndSend({
             signer,
-            isReply: true,
+            title: TransactionName.SendReply,
             reject,
             resolve,
           });

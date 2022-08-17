@@ -26,6 +26,8 @@ export const LOCAL_STORAGE = {
 
 export const ACCOUNT_ERRORS = {
   WALLET_NOT_CONNECTED: 'Wallet not connected',
+  WALLET_BALLANCE_IS_ZERO: 'Wallet balance is zero',
+  NOT_ENOUGH_FUNDS_IN_WALLET: 'Not enough funds in the wallet',
 };
 
 export const PROGRAM_ERRORS = {
