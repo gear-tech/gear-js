@@ -32,7 +32,10 @@ function Home() {
   };
 
   useEffect(() => {
-    if (programId) localStorage.setItem(LOCAL_STORAGE.PROGRAM, programId);
+    if (programId) {
+      localStorage.setItem(LOCAL_STORAGE.PROGRAM, programId);
+      closeForm();
+    }
   }, [programId]);
 
   return programId ? <Program id={programId} onBackButtonClick={closeProgram} /> : getForm();

@@ -9,6 +9,7 @@ import { LOCAL_STORAGE } from 'consts';
 import { Item, Token } from 'types';
 
 type ItemState = { ItemInfo: Item };
+type ItemsState = { ExistingItems: { [id: string]: Item } };
 type NFTProgramState = { NFTProgram: Hex };
 type NFTState = { Token: { token: Token } };
 
@@ -37,10 +38,17 @@ function useSupplyChainState<T>(payload: AnyJson) {
 }
 
 function useItem(itemId: string) {
-  const payload = useMemo(() => (itemId ? { ItemInfo: itemId } : undefined), [itemId]);
+  const payload = useMemo(() => (itemId ? JSON.stringify({ ItemInfo: itemId }) : undefined), [itemId]);
   const { state, isStateRead } = useSupplyChainState<ItemState>(payload);
 
   return { item: state?.ItemInfo, isItemRead: isStateRead };
+}
+
+function useItems() {
+  const payload = useMemo(() => ({ ExistingItems: null }), []);
+  const { state, isStateRead } = useSupplyChainState<ItemsState>(payload);
+
+  return { items: state?.ExistingItems, isEachItemRead: isStateRead };
 }
 
 function useNftProgramId() {
@@ -63,4 +71,4 @@ function useSupplyChainMessage() {
   return useSendMessage(localStorage[LOCAL_STORAGE.PROGRAM], supplyChainMetaWasm);
 }
 
-export { useSupplyChainOpt, useSupplyChainMeta, useItem, useNft, useSupplyChainMessage };
+export { useSupplyChainOpt, useSupplyChainMeta, useItem, useItems, useNft, useSupplyChainMessage };

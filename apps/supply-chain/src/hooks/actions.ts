@@ -1,4 +1,5 @@
 import { ACTION, USER } from 'consts';
+import { useState } from 'react';
 import { useSupplyChainMessage } from './api';
 
 type ProduceValues = { name: string; description: string };
@@ -89,7 +90,10 @@ function useSupplyChainActions() {
 }
 
 function useSubmit(role: string, action: string) {
+  const [itemId, setItemId] = useState('');
   const actions = useSupplyChainActions();
+
+  const resetItem = () => setItemId('');
 
   const getSubmit = () => {
     let userActions: { [key: string]: (value: any, onSuccess: () => void) => void };
@@ -127,11 +131,11 @@ function useSubmit(role: string, action: string) {
       case ACTION.PACKAGE:
         return userActions.pack;
       default:
-        return () => {};
+        return (values: ItemIdValue) => setItemId(values.itemId);
     }
   };
 
-  return getSubmit();
+  return { handleSubmit: getSubmit(), itemId, resetItem };
 }
 
 export { useSubmit };

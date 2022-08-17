@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { ROLES, ACTIONS } from 'consts';
 import { getAction, getForm, getItemData, getLabel, getName } from 'utils';
-import { useItem, useNft, useSubmit } from 'hooks';
+import { useItem, useItems, useNft, useSubmit } from 'hooks';
 import { Loader } from 'components';
 import { Header } from './header';
 import { List } from './list';
@@ -19,17 +19,15 @@ type Props = {
 function Program({ id, onBackButtonClick }: Props) {
   const [role, setRole] = useState('');
   const [action, setAction] = useState('');
-  const [itemId, setItemId] = useState('');
+  const { handleSubmit, itemId, resetItem } = useSubmit(role, action);
 
   const { item, isItemRead } = useItem(itemId);
+  const { items, isEachItemRead } = useItems();
   const { nft, isNftRead } = useNft(itemId);
   const isItemReady = item && isItemRead && nft && isNftRead;
-
-  const handleSubmit = useSubmit(role, action);
+  const isEachItemReady = items && isEachItemRead;
 
   const resetAction = () => setAction('');
-  const resetItem = () => setItemId('');
-
   useEffect(resetAction, [role]);
 
   const Form = getForm(action);
@@ -49,16 +47,19 @@ function Program({ id, onBackButtonClick }: Props) {
             <>
               {itemId &&
                 (isItemReady ? <Item id={itemId} data={getItemData(item, nft)} onBackClick={resetItem} /> : <Loader />)}
-              {!itemId && (
-                <Form
-                  heading={action}
-                  items={[]}
-                  action={getAction(action)}
-                  label={getLabel(action)}
-                  name={getName(action)}
-                  onSubmit={handleSubmit}
-                />
-              )}
+              {!itemId &&
+                (isEachItemReady ? (
+                  <Form
+                    heading={action}
+                    items={Object.keys(items)}
+                    action={getAction(action)}
+                    label={getLabel(action)}
+                    name={getName(action)}
+                    onSubmit={handleSubmit}
+                  />
+                ) : (
+                  <Loader />
+                ))}
             </>
           ) : (
             <SelectText value={role ? 'action' : 'role'} />
