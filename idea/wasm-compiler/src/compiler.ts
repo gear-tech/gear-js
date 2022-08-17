@@ -46,7 +46,7 @@ export class CompilerService {
 
   runContainer(pathToFolder: string) {
     return new Promise((resolve, reject) => {
-      const docker = spawn(`PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`, {
+      const docker = spawn(PATH_TO_RUN_CONTAINER_SCRIPT, {
         env: { PROJECT_PATH: pathToFolder },
       });
 
@@ -65,6 +65,11 @@ export class CompilerService {
         } else {
           reject(code);
         }
+      });
+
+      docker.on('exit', (data) => {
+        console.log('*** exit ***');
+        console.log(data);
       });
 
       // exec(`PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`, (error) => {
