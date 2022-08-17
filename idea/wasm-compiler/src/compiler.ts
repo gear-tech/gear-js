@@ -1,11 +1,10 @@
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import { readdirSync, readFileSync, rmSync } from 'fs';
 import { isWasm, packZip } from './util';
 import { DBService } from './db';
 import { join } from 'path';
-import { PATH_TO_BUILD_IMAGE_SCRIPT, PATH_TO_RUN_CONTAINER_SCRIPT } from './configuration';
+import { PATH_TO_RUN_CONTAINER_SCRIPT } from './configuration';
 import Docker from 'dockerode';
-import { stdout } from 'process';
 
 function findErr(error: string) {
   return error.slice(error.indexOf('error['), error.indexOf('Failed')).replace(
@@ -45,67 +44,42 @@ export class CompilerService {
     });
   }
 
-  async _runContainer(pathToFolder: string) {
-    // return new Promise((resolve) => {
-    //   this.docker.createContainer(
-    //     {
-    //       Volumes: { '/wasm-build/build': {} },
-    //       WorkingDir: '/wasm-build',
-    //       Cmd: ['./build.sh'],
-    //       Image: this.id,
-    //       HostConfig: { Binds: [`${pathToFolder}:/wasm-build/build`] },
-    //       AttachStdout: true,
-    //     },
-    //     (err, container) => {
-    //       container.attach({ stream: true, stdout: true, stderr: true }, function (err, stream) {
-    //         stream.pipe(process.stdout);
-    //       });
-    //       // container.start().then(container.stop).then(resolve);
-    //     },
-    //   );
-    // });
-    return new Promise((resolve, reject) => {
-      const container = this.docker.run(
-        this.id,
-        ['./build.sh'],
-        process.stdout,
-        {
-          // mount: `type=bind,source=${pathToFolder},target=/wasm-build/build`,
-          VolumesFrom: [`${pathToFolder}:/wasm-build/build`],
-        },
-        (err) => {
-          if (err) {
-            console.log('***');
-            console.error('ERROR OCCURED');
-            console.error(err);
-            console.log('***');
-            reject(err);
-          }
-        },
-      );
-      container.on('container', (container) => {
-        console.log('Docker container created');
-        console.log(container);
-        resolve(container);
-      });
-    });
-  }
-
   runContainer(pathToFolder: string) {
     return new Promise((resolve, reject) => {
-      exec(`PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`, (error) => {
-        if (error) {
-          reject(error);
+      const docker = spawn(`PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`, {
+        env: { PROJECT_PATH: pathToFolder },
+      });
+
+      docker.stderr.on('data', (data) => {
+        console.error(data);
+      });
+
+      docker.stdout.on('data', (data) => {
+        console.log(data);
+      });
+
+      docker.on('close', (code) => {
+        console.log(`Exit with code: ${code}`);
+        if (code === 0) {
+          resolve(code);
         } else {
-          resolve('ok');
+          reject(code);
         }
       });
+
+      // exec(`PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`, (error) => {
+      //   if (error) {
+      //     reject(error);
+      //   } else {
+      //     resolve('ok');
+      //   }
+      // });
     });
   }
 
   async processBuild(pathToFolder: string, id: string) {
     try {
-      console.log(await this._runContainer(pathToFolder));
+      console.log(await this.runContainer(pathToFolder));
     } catch (error) {
       console.log(error);
       return this.dbService.update(id, null, findErr(error.message));
