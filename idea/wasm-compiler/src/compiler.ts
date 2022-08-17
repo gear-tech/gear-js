@@ -6,6 +6,8 @@ import { join } from 'path';
 import { PATH_TO_RUN_CONTAINER_SCRIPT } from './configuration';
 import Docker from 'dockerode';
 
+const NEW_LINE = Buffer.from([0x0a]);
+
 function findErr(error: string) {
   return error.slice(error.indexOf('error['), error.indexOf('Failed')).replace(
     // eslint-disable-next-line no-control-regex
@@ -45,17 +47,19 @@ export class CompilerService {
   }
 
   runContainer(pathToFolder: string) {
+    let output = '';
     return new Promise((resolve, reject) => {
       const container = spawn(PATH_TO_RUN_CONTAINER_SCRIPT, {
         env: { PROJECT_PATH: pathToFolder },
       });
 
       container.stderr.on('data', (data) => {
-        console.error(data);
-      });
-
-      container.stdout.on('data', (data) => {
-        console.log(data.toString());
+        if (Buffer.compare(data, NEW_LINE) === 0) {
+          console.log(output);
+          output = '';
+        } else {
+          output += data.toString();
+        }
       });
 
       container.on('close', (code) => {
@@ -69,7 +73,7 @@ export class CompilerService {
     });
   }
 
-  async processBuild(pathToFolder: string, id: string) {
+  async compile(pathToFolder: string, id: string) {
     try {
       await this.runContainer(pathToFolder);
     } catch (error) {

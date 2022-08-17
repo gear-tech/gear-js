@@ -21,47 +21,38 @@ export class Server {
   }
 
   setRoutes() {
-    this.app.post(
-      '/wasm-compiler/build',
-      upload.single('file'),
-      async (req: Request, res: Response) => {
-        const file = req.file;
-        if (!file) {
-          return res.sendStatus(400);
-        }
-        try {
-          const id = generateId();
-          const path = unpackZip(file.buffer, id);
-          this.compiler.processBuild(resolve(path), id).catch((error) => {
-            console.log(error);
-          });
-          return res.json(await this.dbService.newBuild(id));
-        } catch (error) {
+    this.app.post('/wasm-compiler/build', upload.single('file'), async (req: Request, res: Response) => {
+      const file = req.file;
+      if (!file) {
+        return res.sendStatus(400);
+      }
+      try {
+        const id = generateId();
+        const path = unpackZip(file.buffer, id);
+        this.compiler.compile(resolve(path), id).catch((error) => {
           console.log(error);
-          res.sendStatus(500);
-        }
-      },
-    );
+        });
+        return res.json(await this.dbService.newBuild(id));
+      } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+      }
+    });
 
-    this.app.post(
-      '/wasm-compiler/get-wasm',
-      async ({ body }: Request, res: Response) => {
-        if (!body?.id) {
-          return res.sendStatus(400);
-        }
-        try {
-          const result = await this.dbService.getFile(body.id);
-          return res.json(result);
-        } catch (error) {
-          return res.sendStatus(404);
-        }
-      },
-    );
+    this.app.post('/wasm-compiler/get-wasm', async ({ body }: Request, res: Response) => {
+      if (!body?.id) {
+        return res.sendStatus(400);
+      }
+      try {
+        const result = await this.dbService.getFile(body.id);
+        return res.json(result);
+      } catch (error) {
+        return res.sendStatus(404);
+      }
+    });
   }
 
   run() {
-    this.app.listen(config.server.port, () =>
-      console.log(`Server is running on port ${config.server.port} 🚀`),
-    );
+    this.app.listen(config.server.port, () => console.log(`Server is running on port ${config.server.port} 🚀`));
   }
 }
