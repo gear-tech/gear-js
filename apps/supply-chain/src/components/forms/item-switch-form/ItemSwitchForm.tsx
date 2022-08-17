@@ -7,7 +7,7 @@ type Props = {
   heading: string;
   items: string[] | undefined;
   action: string;
-  onSubmit: () => void;
+  onSubmit: (value: any, onSuccess: () => void) => void;
 };
 
 function ItemSwitchForm({ heading, items, action, onSubmit }: Props) {
@@ -15,7 +15,9 @@ function ItemSwitchForm({ heading, items, action, onSubmit }: Props) {
   const initialValues = { itemId: items?.[0], approve: false };
 
   const form = useForm({ initialValues });
-  const { getInputProps } = form;
+  const { getInputProps, reset } = form;
+
+  const handleSubmit = () => form.onSubmit((values) => onSubmit(values, reset));
 
   return (
     <SelectForm
@@ -23,7 +25,7 @@ function ItemSwitchForm({ heading, items, action, onSubmit }: Props) {
       items={items}
       action={action}
       selectProps={getInputProps('itemId')}
-      onSubmit={onSubmit}>
+      onSubmit={handleSubmit}>
       <div className={commonStyles.input}>
         <span className={inputStyles.label}>Approve</span>
         <Checkbox type="switch" label="Yes" {...getInputProps('approve')} />

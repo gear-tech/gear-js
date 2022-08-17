@@ -10,7 +10,7 @@ type Props = {
   name: string;
   items: string[] | undefined;
   action: string;
-  onSubmit: () => void;
+  onSubmit: (value: any, onSuccess: () => void) => void;
 };
 
 function ItemInputForm({ heading, label, name, items, action, onSubmit }: Props) {
@@ -20,7 +20,9 @@ function ItemInputForm({ heading, label, name, items, action, onSubmit }: Props)
 
   // @ts-ignore
   const form = useForm({ initialValues, validate });
-  const { getInputProps } = form;
+  const { getInputProps, reset } = form;
+
+  const handleSubmit = form.onSubmit((values) => onSubmit(values, reset));
 
   return (
     <SelectForm
@@ -28,7 +30,7 @@ function ItemInputForm({ heading, label, name, items, action, onSubmit }: Props)
       items={items}
       action={action}
       selectProps={getInputProps('itemId')}
-      onSubmit={onSubmit}>
+      onSubmit={handleSubmit}>
       <Input label={label} inputClassName={commonStyles.input} {...getInputProps(name)} />
     </SelectForm>
   );

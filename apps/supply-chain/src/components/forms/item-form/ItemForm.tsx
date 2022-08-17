@@ -5,7 +5,7 @@ type Props = {
   heading: string;
   items: string[];
   action: string;
-  onSubmit: (value: string) => void;
+  onSubmit: (value: any, onSuccess: () => void) => void;
 };
 
 function ItemForm({ heading, items, action, onSubmit }: Props) {
@@ -13,9 +13,9 @@ function ItemForm({ heading, items, action, onSubmit }: Props) {
   const initialValues = { itemId: items[0] };
 
   const form = useForm({ initialValues });
-  const { getInputProps } = form;
+  const { getInputProps, reset } = form;
 
-  const handleSubmit = form.onSubmit(({ itemId }) => onSubmit(itemId));
+  const handleSubmit = form.onSubmit((values) => onSubmit(values, reset));
 
   return (
     <SelectForm

@@ -10,7 +10,7 @@ type Props = {
   action: string;
   selectProps: GetInputPropsPayload;
   children?: ReactNode;
-  onSubmit: () => void;
+  onSubmit: (value: any) => void;
 };
 
 function SelectForm({ heading, items, action, selectProps, children, onSubmit }: Props) {

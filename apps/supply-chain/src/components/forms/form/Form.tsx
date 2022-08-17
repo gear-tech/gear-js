@@ -5,7 +5,7 @@ import styles from './Form.module.scss';
 type Props = {
   heading: string;
   children: ReactNode;
-  onSubmit: () => void;
+  onSubmit: (value: any) => void;
 };
 
 function Form({ heading, children, onSubmit }: Props) {

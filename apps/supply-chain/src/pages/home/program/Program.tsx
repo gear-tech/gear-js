@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { ROLES, ACTIONS } from 'consts';
 import { getAction, getForm, getItemData, getLabel, getName } from 'utils';
-import { useItem, useNft } from 'hooks';
+import { useItem, useNft, useSubmit } from 'hooks';
 import { Loader } from 'components';
 import { Header } from './header';
 import { List } from './list';
@@ -24,6 +24,8 @@ function Program({ id, onBackButtonClick }: Props) {
   const { item, isItemRead } = useItem(itemId);
   const { nft, isNftRead } = useNft(itemId);
   const isItemReady = item && isItemRead && nft && isNftRead;
+
+  const handleSubmit = useSubmit(role, action);
 
   const resetAction = () => setAction('');
   const resetItem = () => setItemId('');
@@ -54,7 +56,7 @@ function Program({ id, onBackButtonClick }: Props) {
                   action={getAction(action)}
                   label={getLabel(action)}
                   name={getName(action)}
-                  onSubmit={() => {}}
+                  onSubmit={handleSubmit}
                 />
               )}
             </>
