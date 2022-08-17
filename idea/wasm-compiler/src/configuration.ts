@@ -28,5 +28,4 @@ export default {
   },
 };
 
-export const PATH_TO_BUILD_IMAGE_SCRIPT = './wasm-build/build-image.sh';
 export const PATH_TO_RUN_CONTAINER_SCRIPT = './wasm-build/run-container.sh';

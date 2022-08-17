@@ -1,12 +1,12 @@
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import { readdirSync, readFileSync, rmSync } from 'fs';
 import { isWasm, packZip } from './util';
 import { DBService } from './db';
 import { join } from 'path';
-import {
-  PATH_TO_BUILD_IMAGE_SCRIPT,
-  PATH_TO_RUN_CONTAINER_SCRIPT,
-} from './configuration';
+import { PATH_TO_RUN_CONTAINER_SCRIPT } from './configuration';
+import Docker from 'dockerode';
+
+const NEW_LINE = Buffer.from([0x0a]);
 
 function findErr(error: string) {
   return error.slice(error.indexOf('error['), error.indexOf('Failed')).replace(
@@ -18,42 +18,66 @@ function findErr(error: string) {
 
 export class CompilerService {
   dbService: DBService;
+  docker: Docker;
+  id: string;
 
   constructor(dbService: DBService) {
     this.dbService = dbService;
+    this.docker = new Docker({ socketPath: '/var/run/docker.sock' });
   }
 
-  async buildImage(): Promise<string> {
+  async buildImage() {
+    const stream = await this.docker.buildImage(
+      { context: './wasm-build', src: ['Dockerfile', 'build.sh'] },
+      { t: 'wasm-build' },
+    );
     return new Promise((resolve, reject) => {
-      exec(PATH_TO_BUILD_IMAGE_SCRIPT, (error) => {
-        if (error) {
-          console.log(error);
-          reject(error);
-        }
-        return resolve('ok');
-      });
-    });
-  }
-
-  runContainer(pathToFolder: string) {
-    return new Promise((resolve, reject) => {
-      exec(
-        `PROJECT_PATH=${pathToFolder} ${PATH_TO_RUN_CONTAINER_SCRIPT}`,
-        (error) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve('ok');
+      this.docker.modem.followProgress(
+        stream,
+        (err, res) => (err ? reject(err) : resolve(res)),
+        (obj) => {
+          obj.stream && console.log(obj.stream);
+          if (obj.aux?.ID) {
+            this.id = obj.aux.ID.slice(7);
+            console.log(`ID: ${this.id}`);
           }
         },
       );
     });
   }
 
-  async processBuild(pathToFolder: string, id: string) {
+  runContainer(pathToFolder: string) {
+    let output = '';
+    return new Promise((resolve, reject) => {
+      const container = spawn(PATH_TO_RUN_CONTAINER_SCRIPT, {
+        env: { PROJECT_PATH: pathToFolder },
+      });
+
+      container.stderr.on('data', (data) => {
+        if (Buffer.compare(data, NEW_LINE) === 0) {
+          console.log(output);
+          output = '';
+        } else {
+          output += data.toString();
+        }
+      });
+
+      container.on('close', (code) => {
+        console.log(`Exit with code: ${code}`);
+        if (code === 0) {
+          resolve(code);
+        } else {
+          reject(code);
+        }
+      });
+    });
+  }
+
+  async compile(pathToFolder: string, id: string) {
     try {
       await this.runContainer(pathToFolder);
     } catch (error) {
+      console.log(error);
       return this.dbService.update(id, null, findErr(error.message));
     }
 
