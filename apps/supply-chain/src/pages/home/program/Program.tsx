@@ -2,7 +2,7 @@ import { Hex } from '@gear-js/api';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { ACTIONS, USER } from 'consts';
-import { getAction, getForm, getItemData, getLabel, getName } from 'utils';
+import { getAction, getForm, getItemData, getLabel, getName, getFilteredItems } from 'utils';
 import { useItem, useItems, useNft, useRoles, useSubmit } from 'hooks';
 import { Loader } from 'components';
 import { Header } from './header';
@@ -61,7 +61,7 @@ function Program({ id, onBackButtonClick }: Props) {
               {!itemId && (
                 <Form
                   heading={action}
-                  items={Object.keys(items)}
+                  items={getFilteredItems(items, role, action)}
                   action={getAction(action)}
                   label={getLabel(action)}
                   name={getName(action)}

@@ -24,7 +24,7 @@ function useApprove(role: string) {
 function useShip(role: string) {
   const sendMessage = useSupplyChainMessage();
 
-  return (values: ItemIdValue, onSuccess: () => void) => sendMessage({ [`ShipBy${role}`]: values }, { onSuccess });
+  return ({ itemId }: ItemIdValue, onSuccess: () => void) => sendMessage({ [`ShipBy${role}`]: itemId }, { onSuccess });
 }
 
 function usePurchase(role: string) {
@@ -32,6 +32,13 @@ function usePurchase(role: string) {
 
   return (values: PurchaseValues, onSuccess: () => void) =>
     sendMessage({ [`PurchaseBy${role}`]: values }, { onSuccess });
+}
+
+function useReceive(role: string) {
+  const sendMessage = useSupplyChainMessage();
+
+  return ({ itemId }: ItemIdValue, onSuccess: () => void) =>
+    sendMessage({ [`ReceiveBy${role}`]: itemId }, { onSuccess });
 }
 
 function useProducerActions() {
@@ -53,25 +60,22 @@ function useDistributorActions() {
   const sale = useSale(USER.DISTRIBUTOR);
   const approve = useApprove(USER.DISTRIBUTOR);
   const ship = useShip(USER.DISTRIBUTOR);
+  const receive = useReceive(USER.DISTRIBUTOR);
 
   const process = ({ itemId }: ItemIdValue, onSuccess: () => void) =>
     sendMessage({ ProcessByDistributor: itemId }, { onSuccess });
   const pack = ({ itemId }: ItemIdValue, onSuccess: () => void) =>
     sendMessage({ PackageByDistributor: itemId }, { onSuccess });
 
-  return { purchase, process, pack, sale, approve, ship };
+  return { purchase, process, pack, sale, approve, ship, receive };
 }
 
 function useRetailerActions() {
-  const sendMessage = useSupplyChainMessage();
-
   const purchase = usePurchase(USER.RETAILER);
   const sale = useSale(USER.RETAILER);
+  const receive = useReceive(USER.RETAILER);
 
-  const recieve = ({ itemId }: ItemIdValue, onSuccess: () => void) =>
-    sendMessage({ RecieveByReatiler: itemId }, { onSuccess });
-
-  return { purchase, recieve, sale };
+  return { purchase, receive, sale };
 }
 
 function useConsumerActions() {
@@ -125,7 +129,7 @@ function useSubmit(role: string, action: string) {
       case ACTION.PURCHASE:
         return userActions.purchase;
       case ACTION.RECEIVE:
-        return userActions.recieve;
+        return userActions.receive;
       case ACTION.PROCESS:
         return userActions.process;
       case ACTION.PACKAGE:

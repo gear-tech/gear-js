@@ -6,10 +6,10 @@ import supplyChainOptWasm from 'assets/wasm/supply_chain.opt.wasm';
 import supplyChainMetaWasm from 'assets/wasm/supply_chain.meta.wasm';
 import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
 import { LOCAL_STORAGE } from 'consts';
-import { Item, Token } from 'types';
+import { Item, Items, Token } from 'types';
 
 type ItemState = { ItemInfo: Item };
-type ItemsState = { ExistingItems: { [id: string]: Item } };
+type ItemsState = { ExistingItems: Items };
 type RolesState = { Roles: string[] };
 type NFTProgramState = { NFTProgram: Hex };
 type NFTState = { Token: { token: Token } };

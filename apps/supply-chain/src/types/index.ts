@@ -17,6 +17,10 @@ type Item = {
   deliveryTime: string;
 };
 
+type Items = {
+  [id: string]: Item;
+};
+
 type Token = {
   id: string;
   ownerId: Hex;
@@ -27,4 +31,4 @@ type Token = {
   approvedAccountIds: Hex[];
 };
 
-export type { InitPayload, Item, Token };
+export type { InitPayload, Item, Items, Token };
