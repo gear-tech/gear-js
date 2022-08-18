@@ -85,6 +85,7 @@ export const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
 
       return Object.fromEntries(structure);
     }
+    case ValueType.Null:
     case ValueType.Option: {
       return null;
     }

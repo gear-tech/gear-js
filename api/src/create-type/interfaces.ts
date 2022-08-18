@@ -13,6 +13,7 @@ export enum enumTypes {
 
 export type Types =
   | 'Primitive'
+  | 'Null'
   | 'Tuple'
   | 'Struct'
   | 'Enum'
