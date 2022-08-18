@@ -18,7 +18,7 @@ const main = async () => {
     name_of_event: 'GEAR JS EXAMPLE',
   };
 
-  const gas = await api.program.calculateGas.init(decodeAddress(alice.address), code, initPayload, 0, true, meta);
+  const gas = await api.program.calculateGas.initUpload(decodeAddress(alice.address), code, initPayload, 0, true, meta);
 
   const { programId } = api.program.upload({ code, initPayload, gasLimit: gas.min_limit }, meta);
 
