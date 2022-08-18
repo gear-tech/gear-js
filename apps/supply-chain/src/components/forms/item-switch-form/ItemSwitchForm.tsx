@@ -17,7 +17,7 @@ function ItemSwitchForm({ heading, items, action, onSubmit }: Props) {
   const form = useForm({ initialValues });
   const { getInputProps, reset } = form;
 
-  const handleSubmit = () => form.onSubmit((values) => onSubmit(values, reset));
+  const handleSubmit = form.onSubmit((values) => onSubmit(values, reset));
 
   return (
     <SelectForm

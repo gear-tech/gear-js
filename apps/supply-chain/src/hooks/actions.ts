@@ -117,7 +117,7 @@ function useSubmit(role: string, action: string) {
       case ACTION.PRODUCE:
         return userActions.produce;
       case ACTION.SALE:
-        return userActions.sell;
+        return userActions.sale;
       case ACTION.APPROVE:
         return userActions.approve;
       case ACTION.SHIP:
