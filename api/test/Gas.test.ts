@@ -55,7 +55,7 @@ describe('Calculate gas', () => {
     expect(await initStatus()).toBe('success');
   });
 
-  test.only('Get init gas spent (create)', async () => {
+  test('Get init gas spent (create)', async () => {
     const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, '0x00', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
@@ -67,7 +67,7 @@ describe('Calculate gas', () => {
     expect(gasLimits.init.toHuman()).toBe(gas.min_limit.toHuman());
   });
 
-  test.only('Create program', async () => {
+  test('Create program', async () => {
     expect(gasLimits.init).toBeDefined();
     api.program.create({ codeId, gasLimit: gasLimits.init as u64 });
     const initStatus = checkInit(api, programId);
