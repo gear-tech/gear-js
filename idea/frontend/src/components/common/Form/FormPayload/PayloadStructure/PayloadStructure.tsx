@@ -18,11 +18,14 @@ const PayloadStructure = (props: Props) => {
     const { title, levelName, typeStructure } = itemProps;
 
     switch (typeStructure?.type) {
+      case ValueType.Vec:
       case ValueType.BTreeMap:
-      case ValueType.BTreeSet:
-      case ValueType.Vec: {
+      case ValueType.BTreeSet: {
         Component = VecItem;
         break;
+      }
+      case ValueType.Null: {
+        return null;
       }
       case ValueType.Enum:
       case ValueType.Result: {
