@@ -42,10 +42,10 @@ describe('Calculate gas', () => {
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
     expect(gas.toHuman()).toHaveProperty('may_be_returned');
-    expect(gasLimits.init.toHuman()).toBe(gas.min_limit.toHuman());
+    expect(gas.toHuman()).toHaveProperty('waited');
   });
 
-  test.only('Upload program', async () => {
+  test('Upload program', async () => {
     expect(gasLimits.init).toBeDefined();
     const program = api.program.upload({ code, gasLimit: gasLimits.init as u64 });
     programId = program.programId;
@@ -85,6 +85,7 @@ describe('Calculate gas', () => {
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
     expect(gas.toHuman()).toHaveProperty('may_be_returned');
+    expect(gas.toHuman()).toHaveProperty('waited');
   });
 
   test('Send message', async () => {
@@ -97,13 +98,11 @@ describe('Calculate gas', () => {
     });
     const waitForReply = listenToUserMessageSent(api, programId);
     await sendTransaction(api.message, alice, 'MessageEnqueued');
-    const { message } = await waitForReply(null); //transactionData[0]);
+    const { message } = await waitForReply(null);
     expect(message.id).toBeDefined();
     messageId = message.id.toHex();
     expect(message.reply).toBeDefined();
     expect(message.reply.isNone).toBeTruthy();
-    exitCode = 0; //umsData.reply.unwrap()[1].toNumber();
-    expect(exitCode).toBeDefined();
   });
 
   test('Get gas spent if payload is U8a', async () => {
@@ -116,6 +115,7 @@ describe('Calculate gas', () => {
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
     expect(gas.toHuman()).toHaveProperty('may_be_returned');
+    expect(gas.toHuman()).toHaveProperty('waited');
   });
 
   test('Calculate reply gas', async () => {
@@ -127,6 +127,7 @@ describe('Calculate gas', () => {
     expect(gas.toHuman()).toHaveProperty('burned');
     expect(gas.toHuman()).toHaveProperty('reserved');
     expect(gas.toHuman()).toHaveProperty('may_be_returned');
+    expect(gas.toHuman()).toHaveProperty('waited');
   });
 
   test('Send reply', async () => {
