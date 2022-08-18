@@ -1,3 +1,12 @@
+## 0.25.1
+
+_08/18/2022_
+
+https://github.com/gear-tech/gear-js/pull/935
+
+### Changes
+- Describe Null type in `createPayloadTypeStructure` function
+
 ## 0.25.0
 
 _08/06/2022_
