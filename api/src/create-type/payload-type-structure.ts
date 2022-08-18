@@ -98,6 +98,13 @@ function getIfEnum(typeName: string, types: AnyJson, raw: boolean): TypeTree | {
   return null;
 }
 
+function getIfNull(typeName: string, raw: boolean) {
+  if (typeName === 'Null') {
+    return raw ? 'Null' : generate.Null();
+  }
+  return null;
+}
+
 /**
  *
  * @param typeName to create its structure
@@ -144,6 +151,10 @@ export function createPayloadTypeStructure(typeName: string, types: AnyJson, raw
   const struct = getIfStruct(typeName, types, raw);
   if (struct) {
     return struct;
+  }
+  const null_ = getIfNull(typeName, raw);
+  if (null_) {
+    return null_;
   }
 
   return raw ? typeName : generate.Primitive(typeName);
