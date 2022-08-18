@@ -12,6 +12,7 @@ const api = new GearApi();
 let alice: KeyringPair;
 let aliceRaw: Hex;
 let programId: Hex;
+let codeId: Hex;
 let messageId: Hex;
 let exitCode: number;
 const code = readFileSync(join(TEST_WASM_DIR, 'test_gas.opt.wasm'));
@@ -32,8 +33,8 @@ afterAll(async () => {
 });
 
 describe('Calculate gas', () => {
-  test.only('Get init gas spent', async () => {
-    const gas: GasInfo = await api.program.calculateGas.init(aliceRaw, code, '0x00', 0, true);
+  test.only('Get init gas spent (upload)', async () => {
+    const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, '0x00', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
     expect(gas.min_limit.gtn(0)).toBeTruthy();
@@ -44,9 +45,31 @@ describe('Calculate gas', () => {
     expect(gasLimits.init.toHuman()).toBe(gas.min_limit.toHuman());
   });
 
-  test.only('Submit program', async () => {
+  test.only('Upload program', async () => {
     expect(gasLimits.init).toBeDefined();
-    programId = api.program.upload({ code, gasLimit: gasLimits.init as u64 }).programId;
+    const program = api.program.upload({ code, gasLimit: gasLimits.init as u64 });
+    programId = program.programId;
+    codeId = program.codeId;
+    const initStatus = checkInit(api, programId);
+    api.program.signAndSend(alice, () => {});
+    expect(await initStatus()).toBe('success');
+  });
+
+  test.only('Get init gas spent (create)', async () => {
+    const gas: GasInfo = await api.program.calculateGas.initCreate(aliceRaw, codeId, '0x00', 0, true);
+    expect(gas).toBeDefined();
+    expect(gas.toHuman()).toHaveProperty('min_limit');
+    expect(gas.min_limit.gtn(0)).toBeTruthy();
+    gasLimits.init = gas.min_limit;
+    expect(gas.toHuman()).toHaveProperty('burned');
+    expect(gas.toHuman()).toHaveProperty('reserved');
+    expect(gas.toHuman()).toHaveProperty('may_be_returned');
+    expect(gasLimits.init.toHuman()).toBe(gas.min_limit.toHuman());
+  });
+
+  test.only('Create program', async () => {
+    expect(gasLimits.init).toBeDefined();
+    api.program.create({ codeId, gasLimit: gasLimits.init as u64 });
     const initStatus = checkInit(api, programId);
     api.program.signAndSend(alice, () => {});
     expect(await initStatus()).toBe('success');

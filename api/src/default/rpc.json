@@ -1,8 +1,8 @@
 {
   "rpc": {
     "gear": {
-      "calculateInitGas": {
-        "description": "Calculate gas for Init message",
+      "calculateInitUploadGas": {
+        "description": "Calculate gas for Init message using upload_program extrinsic",
         "params": [
           {
             "name": "source",
@@ -11,6 +11,32 @@
           {
             "name": "code",
             "type": "Vec<u8>"
+          },
+          {
+            "name": "payload",
+            "type": "Vec<u8>"
+          },
+          {
+            "name": "value",
+            "type": "u128"
+          },
+          {
+            "name": "allow_other_panics",
+            "type": "bool"
+          }
+        ],
+        "type": "GasInfo"
+      },
+      "calculateInitCreateGas": {
+        "description": "Calculate gas for Init message using create_program extrinsic",
+        "params": [
+          {
+            "name": "source",
+            "type": "H256"
+          },
+          {
+            "name": "code_id",
+            "type": "H256"
           },
           {
             "name": "payload",

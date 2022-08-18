@@ -36,7 +36,7 @@ export class GearGas {
   }
 
   /**
-   * Get gas spent of init message
+   * ### Get gas spent of init message using upload_program extrinsic
    * @param sourceId Account id
    * @param code Program code
    * @param payload Payload of init message
@@ -62,7 +62,7 @@ export class GearGas {
    * console.log(gas.toHuman());
    * ```
    */
-  async init(
+  async initUpload(
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
@@ -72,7 +72,7 @@ export class GearGas {
   ): Promise<GasInfo>;
 
   /**
-   * Get gas spent of init message
+   * ### Get gas spent of init message using upload_program extrinsic
    * @param sourceId Account id
    * @param code Program code
    * @param payload Payload of init message
@@ -93,7 +93,7 @@ export class GearGas {
    * console.log(gas.toHuman());
    * ```
    */
-  async init(
+  async initUpload(
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
@@ -103,7 +103,7 @@ export class GearGas {
   ): Promise<GasInfo>;
 
   /**
-   * Get gas spent of init message
+   * ### Get gas spent of init message using upload_program extrinsic
    * @param sourceId Account id
    * @param code Program code
    * @param payload Payload of init message
@@ -112,7 +112,7 @@ export class GearGas {
    * @param metaOrTypeOfPayload Metadata or one of the primitives types
    * @returns number in U64 format
    */
-  async init(
+  async initUpload(
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
@@ -121,7 +121,7 @@ export class GearGas {
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo>;
 
-  async init(
+  async initUpload(
     sourceId: Hex,
     code: Hex | Buffer,
     payload: PayloadType,
@@ -129,9 +129,112 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
-    return this._api.rpc['gear'].calculateInitGas(
+    return this._api.rpc['gear'].calculateInitUploadGas(
       sourceId,
       isHex(code) ? code : this.#createType.create('bytes', Array.from(code)).toHex(),
+      this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
+      value || 0,
+      allowOtherPanics || true,
+    );
+  }
+
+  /**
+   * ### Get gas spent of init message using create_program extrinsic
+   * @param sourceId Account id
+   * @param code Program code
+   * @param payload Payload of init message
+   * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
+   * @param meta Metadata
+   * @returns number in U64 format
+   * @example
+   * ```javascript
+   * const code = fs.readFileSync('demo_meta.opt.wasm');
+   * const meta = await getWasmMetadata(fs.readFileSync('demo_meta.opt.wasm'));
+   * const gas = await gearApi.program.gasSpent.init(
+   *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+   *   code,
+   *   {
+   *     amount: 255,
+   *     currency: 'GRT',
+   *   },
+   *   0,
+   *   true,
+   *   meta
+   * );
+   * console.log(gas.toHuman());
+   * ```
+   */
+  async initCreate(
+    sourceId: Hex,
+    code: Hex,
+    payload: PayloadType,
+    value?: Value,
+    allowOtherPanics?: boolean,
+    meta?: Metadata,
+  ): Promise<GasInfo>;
+
+  /**
+   * ### Get gas spent of init message using create_program extrinsic
+   * @param sourceId Account id
+   * @param code Program code
+   * @param payload Payload of init message
+   * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
+   * @param typeOfPayload One of the primitives types
+   * @returns number in U64 format
+   * @example
+   * ```javascript
+   * const code = fs.readFileSync('demo_ping.opt.wasm');
+   * const gas = await gearApi.program.gasSpent.init(
+   *   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
+   *   code,
+   *   '0x00',
+   *   0
+   *   false,
+   * );
+   * console.log(gas.toHuman());
+   * ```
+   */
+  async initCreate(
+    sourceId: Hex,
+    codeId: Hex,
+    payload: PayloadType,
+    value?: Value,
+    allowOtherPanics?: boolean,
+    typeOfPayload?: string,
+  ): Promise<GasInfo>;
+
+  /**
+   * ### Get gas spent of init message using create_program extrinsic
+   * @param sourceId Account id
+   * @param code Program code
+   * @param payload Payload of init message
+   * @param value Value of message
+   * @param allowOtherPanics Should RPC call return error if other contracts panicked, during communication with the initial one
+   * @param metaOrTypeOfPayload Metadata or one of the primitives types
+   * @returns number in U64 format
+   */
+  async initCreate(
+    sourceId: Hex,
+    codeId: Hex,
+    payload: PayloadType,
+    value?: Value,
+    allowOtherPanics?: boolean,
+    metaOrTypeOfPayload?: string | Metadata,
+  ): Promise<GasInfo>;
+
+  async initCreate(
+    sourceId: Hex,
+    codeId: Hex,
+    payload: PayloadType,
+    value?: Value,
+    allowOtherPanics?: boolean,
+    metaOrTypeOfPayload?: string | Metadata,
+  ): Promise<GasInfo> {
+    return this._api.rpc['gear'].calculateInitCreateGas(
+      sourceId,
+      codeId,
       this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
       value || 0,
       allowOtherPanics || true,
