@@ -328,7 +328,7 @@ describe('Create type structure test', () => {
             amount: { type: 'Primitive', name: 'u128', value: 'u128' },
           },
         },
-        TotalSupply: { type: 'Primitive', name: 'Null', value: 'Null' },
+        TotalSupply: { type: 'Null', name: 'Null', value: 'Null' },
         BalanceOf: {
           type: 'Primitive',
           name: 'ActorId',
@@ -461,17 +461,17 @@ describe('Simple enum test', () => {
       name: 'State',
       value: {
         TokenPrice: {
-          type: 'Primitive',
+          type: 'Null',
           name: 'Null',
           value: 'Null',
         },
         IsActive: {
-          type: 'Primitive',
+          type: 'Null',
           name: 'Null',
           value: 'Null',
         },
         Info: {
-          type: 'Primitive',
+          type: 'Null',
           name: 'Null',
           value: 'Null',
         },

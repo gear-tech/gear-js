@@ -219,6 +219,16 @@ describe('form payload tests', () => {
     expect(within(fieldsets[1]).getByLabelText('i32')).toBeInTheDocument();
     expect(within(fieldsets[1]).getByLabelText('i32')).toHaveValue('');
 
+    // Null
+    changeSelectValue(selectors[0], 'Null');
+
+    expect(selectors[0]).toHaveValue('Null');
+
+    expect(selectors).toHaveLength(1);
+    expect(fieldsets).toHaveLength(1);
+
+    expect(within(fieldsets[0]).queryByRole('textbox')).not.toBeInTheDocument();
+
     // Vec
     changeSelectValue(selectors[0], 'Vec');
 
@@ -391,6 +401,17 @@ describe('form payload tests', () => {
 
     submit();
     await verifyValues({ payload: { Result: { err: '1' } } });
+
+    // Null
+
+    changeValue(selectors[0], 'Null');
+
+    submit();
+    await verifyValues({
+      payload: {
+        Null: null,
+      },
+    });
 
     // Vec
     changeValue(selectors[0], 'Vec');

@@ -1,12 +1,11 @@
 ## 0.25.1
 
-_08/17/2022_
+_08/18/2022_
 
-https://github.com/gear-tech/gear-js/pull/933
+https://github.com/gear-tech/gear-js/pull/935
 
 ### Changes
-
-- Add `waited` field to `GasInfo` type according to https://github.com/gear-tech/gear/pull/1276
+- Describe Null type in `createPayloadTypeStructure` function
 
 ## 0.25.0
 

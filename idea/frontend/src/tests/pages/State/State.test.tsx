@@ -101,12 +101,6 @@ describe('test state page', () => {
 
     checkBtnDisabled();
     changeFieldValue(payloadSelector, 'NFTInfo');
-    checkBtnEnabled();
-
-    const nftInfoField = screen.getByLabelText('Null');
-    expect(nftInfoField).toBeInTheDocument();
-
-    changeFieldValue(nftInfoField, 'null');
 
     checkBtnEnabled();
 
@@ -118,7 +112,7 @@ describe('test state page', () => {
 
     const formValues: FormValues = {
       payload: {
-        NFTInfo: 'null',
+        NFTInfo: null,
       },
     };
 

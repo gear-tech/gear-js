@@ -10,6 +10,9 @@ export default {
   Primitive: (type: string) => {
     return getTree('Primitive', type, type);
   },
+  Null: () => {
+    return getTree('Null', 'Null', 'Null');
+  },
   Tuple: (name: string, type: TypeTree[]) => {
     return getTree('Tuple', name, type);
   },

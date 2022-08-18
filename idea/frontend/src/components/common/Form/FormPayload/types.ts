@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 
 export enum ValueType {
   Vec = 'Vec',
+  Null = 'Null',
   Enum = 'Enum',
   Tuple = 'Tuple',
   Array = 'Array',
@@ -13,21 +14,9 @@ export enum ValueType {
   Primitive = 'Primitive',
 }
 
-export type ValueTypes =
-  | 'Vec'
-  | 'Enum'
-  | 'Tuple'
-  | 'Array'
-  | 'Result'
-  | 'Struct'
-  | 'Option'
-  | 'BTreeSet'
-  | 'BTreeMap'
-  | 'Primitive';
-
 export type TypeStructure = {
   name: string;
-  type: ValueTypes;
+  type: ValueType;
   count?: number;
   value:
     | string
