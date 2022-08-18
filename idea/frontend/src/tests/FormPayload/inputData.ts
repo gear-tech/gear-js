@@ -1,6 +1,6 @@
 import { getPreformattedText } from 'helpers';
 import { getPayloadValue } from 'components/common/Form/FormPayload/helpers';
-import { TypeStructure, FormPayloadValues } from 'components/common/Form/FormPayload/types';
+import { TypeStructure, FormPayloadValues, ValueType } from 'components/common/Form/FormPayload/types';
 import { FormValues } from './types';
 
 export const INIT_FORM_VALUES: FormValues = {
@@ -8,32 +8,32 @@ export const INIT_FORM_VALUES: FormValues = {
 };
 
 export const INPUT_TYPE_STRUCTURE: TypeStructure = {
-  type: 'Enum',
+  type: ValueType.Enum,
   name: 'Action',
   // @ts-ignore
   value: {
     Option: {
-      type: 'Option',
+      type: ValueType.Option,
       name: 'Option<Person>',
       value: {
-        type: 'Struct',
+        type: ValueType.Struct,
         name: 'Person',
         value: {
           firstName: {
-            type: 'Primitive',
+            type: ValueType.Primitive,
             name: 'Text',
             value: 'Text',
           },
           secondName: {
-            type: 'Primitive',
+            type: ValueType.Primitive,
             name: 'Text',
             value: 'Text',
           },
           age: {
-            type: 'Option',
+            type: ValueType.Option,
             name: 'Option<i8>',
             value: {
-              type: 'Primitive',
+              type: ValueType.Primitive,
               name: 'i8',
               value: 'i8',
             },
@@ -42,43 +42,48 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
       },
     },
     Result: {
-      type: 'Result',
+      type: ValueType.Result,
       name: 'Result<Text, i32>',
       value: {
         ok: {
-          type: 'Primitive',
+          type: ValueType.Primitive,
           name: 'Text',
           value: 'Text',
         },
         err: {
-          type: 'Primitive',
+          type: ValueType.Primitive,
           name: 'i32',
           value: 'i32',
         },
       },
     },
+    Null: {
+      type: ValueType.Null,
+      name: 'Null',
+      value: 'Null',
+    },
     Vec: {
-      type: 'Vec',
+      type: ValueType.Vec,
       name: 'Vec<Person>',
       value: {
-        type: 'Struct',
+        type: ValueType.Struct,
         name: 'Person',
         value: {
           firstName: {
-            type: 'Primitive',
+            type: ValueType.Primitive,
             name: 'Text',
             value: 'Text',
           },
           secondName: {
-            type: 'Primitive',
+            type: ValueType.Primitive,
             name: 'Text',
             value: 'Text',
           },
           age: {
-            type: 'Option',
+            type: ValueType.Option,
             name: 'Option<i8>',
             value: {
-              type: 'Primitive',
+              type: ValueType.Primitive,
               name: 'i8',
               value: 'i8',
             },
@@ -87,24 +92,24 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
       },
     },
     Struct: {
-      type: 'Struct',
+      type: ValueType.Struct,
       name: 'Person',
       value: {
         firstName: {
-          type: 'Primitive',
+          type: ValueType.Primitive,
           name: 'Text',
           value: 'Text',
         },
         secondName: {
-          type: 'Primitive',
+          type: ValueType.Primitive,
           name: 'Text',
           value: 'Text',
         },
         age: {
-          type: 'Option',
+          type: ValueType.Option,
           name: 'Option<i8>',
           value: {
-            type: 'Primitive',
+            type: ValueType.Primitive,
             name: 'i8',
             value: 'i8',
           },
@@ -112,52 +117,52 @@ export const INPUT_TYPE_STRUCTURE: TypeStructure = {
       },
     },
     Tuple: {
-      type: 'Tuple',
+      type: ValueType.Tuple,
       name: '(ActorId,Text)',
       value: [
         {
-          type: 'Primitive',
+          type: ValueType.Primitive,
           name: 'ActorId',
           value: 'ActorId',
         },
         {
-          type: 'Primitive',
+          type: ValueType.Primitive,
           name: 'Text',
           value: 'Text',
         },
       ],
     },
     Array: {
-      type: 'Array',
+      type: ValueType.Array,
       name: '[u16;4]',
       value: {
-        type: 'Primitive',
+        type: ValueType.Primitive,
         name: 'u16',
         value: 'u16',
       },
       count: 4,
     },
     BTreeMap: {
-      type: 'BTreeMap',
+      type: ValueType.BTreeMap,
       name: 'BTreeMap<Text, u128>',
       value: {
         key: {
-          type: 'Primitive',
+          type: ValueType.Primitive,
           name: 'Text',
           value: 'Text',
         },
         value: {
-          type: 'Primitive',
+          type: ValueType.Primitive,
           name: 'u128',
           value: 'u128',
         },
       },
     },
     BTreeSet: {
-      type: 'BTreeSet',
+      type: ValueType.BTreeSet,
       name: 'BTreeSet<u8>',
       value: {
-        type: 'Primitive',
+        type: ValueType.Primitive,
         name: 'u8',
         value: 'u8',
       },
