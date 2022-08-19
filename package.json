@@ -17,6 +17,7 @@
     "build:marketplace": "yarn workspace @gear-js/marketplace build",
     "build:lottery": "yarn workspace @gear-js/lottery build",
     "build:auction": "yarn workspace @gear-js/auction build",
+    "build:staking": "yarn workspace @gear-js/staking build",
     "postinstall": "husky install"
   },
   "devDependencies": {
