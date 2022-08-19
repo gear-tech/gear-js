@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/frontend",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "dependencies": {
     "@gear-js/api": "0.25.2",
