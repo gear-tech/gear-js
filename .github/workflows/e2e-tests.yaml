@@ -5,9 +5,12 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     branches: master
     paths:
-      - idea/**
-    paths-ignore:
-      - idea/wasm-compiler/**
+      - idea/api-gateway/**
+      - idea/data-storage/**
+      - idea/events-listener/**
+      - idea/frontend/**
+      - idea/test-balance/**
+      - idea/tests/**
   workflow_dispatch:
 
 concurrency:
