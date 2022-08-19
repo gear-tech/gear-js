@@ -11,7 +11,6 @@ export type FormValues = {
   payloadType: string;
 };
 
-export type SetValues = FormikHelpers<FormValues>['setValues'];
 export type SetFieldValue = FormikHelpers<FormValues>['setFieldValue'];
 
 export type PropsToRenderButtons = {
@@ -19,4 +18,9 @@ export type PropsToRenderButtons = {
   metadata?: Metadata;
   isDisabled: boolean;
   setFieldValue: SetFieldValue;
+};
+
+export type Helpers = {
+  resetForm: () => void;
+  finishSubmitting: () => void;
 };

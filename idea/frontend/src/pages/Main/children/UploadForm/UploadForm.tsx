@@ -1,4 +1,3 @@
-import { FormikHelpers } from 'formik';
 import { Button } from '@gear-js/ui';
 
 import { FormWrapper } from '../FormWrapper';
@@ -7,7 +6,7 @@ import { useProgramUpload, useGasCalculate } from 'hooks';
 import { readFileAsync } from 'helpers';
 import { GasMethod } from 'consts';
 import { Payload } from 'hooks/useProgramUplaod/types';
-import { ProgramForm, FormValues, PropsToRenderButtons } from 'components/blocks/ProgramForm';
+import { ProgramForm, Helpers, PropsToRenderButtons } from 'components/blocks/ProgramForm';
 import { useAlert } from '@gear-js/react-hooks';
 
 type Props = {
@@ -21,11 +20,11 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
   const calculateGas = useGasCalculate();
   const { uploadProgram } = useProgramUpload();
 
-  const handleSubmit = (payload: Payload, helpers: FormikHelpers<FormValues>) =>
+  const handleSubmit = (payload: Payload, helpers: Helpers) =>
     uploadProgram({
       file: droppedFile,
       payload,
-      reject: () => helpers.setSubmitting(false),
+      reject: helpers.finishSubmitting,
       resolve: onReset,
     });
 
@@ -34,7 +33,7 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
       const fileBuffer = (await readFileAsync(droppedFile)) as ArrayBuffer;
       const code = Buffer.from(new Uint8Array(fileBuffer));
 
-      const gasLimit = await calculateGas(GasMethod.Init, values, code, metadata);
+      const gasLimit = await calculateGas(GasMethod.InitUpdate, values, code, metadata);
 
       setFieldValue('gasLimit', gasLimit);
     } catch (error) {

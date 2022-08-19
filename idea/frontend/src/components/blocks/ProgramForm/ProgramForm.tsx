@@ -7,7 +7,7 @@ import { useApi } from '@gear-js/react-hooks';
 import styles from './ProgramForm.module.scss';
 import { INITIAL_VALUES } from './const';
 import { getValidationSchema } from './Schema';
-import { FormValues, PropsToRenderButtons, SetFieldValue, SetValues } from './types';
+import { FormValues, PropsToRenderButtons, SetFieldValue, Helpers } from './types';
 
 import { Payload } from 'hooks/useProgramUplaod/types';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
@@ -18,7 +18,7 @@ import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
 type Props = {
   name: string;
   label: string;
-  onSubmit: (payload: Payload, helpers: FormikHelpers<FormValues>) => Promise<void> | void;
+  onSubmit: (payload: Payload, helpers: Helpers) => Promise<void> | void;
   onReset?: () => void;
   renderButtons: (props: PropsToRenderButtons) => ReactNode;
 };
@@ -37,14 +37,16 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
     setFiledValue('programName', meta?.title || '', false);
   };
 
-  const handleResetMeta = (setValues: SetValues) => () => {
+  const handleResetMeta = (resetForm: () => void) => () => {
     setMetadata(undefined);
     setMetadataBuffer(undefined);
-    setValues(INITIAL_VALUES);
+    resetForm();
   };
 
   const handleSubmitForm = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     const { value, payload, gasLimit, programName, payloadType } = values;
+
+    const finishSubmitting = () => helpers.setSubmitting(false);
 
     const data: Payload = {
       value,
@@ -56,11 +58,12 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    onSubmit(data, helpers);
+    onSubmit(data, { resetForm: handleResetMeta(helpers.resetForm), finishSubmitting });
   };
 
-  const deposit = api.existentialDeposit.toNumber();
   const encodeType = metadata?.init_input;
+
+  const deposit = api.existentialDeposit.toNumber();
   const maxGasLimit = api.blockGasLimit.toNumber();
 
   const payloadFormValues = useMemo(() => getPayloadFormValues(metadata?.types, encodeType), [metadata, encodeType]);
@@ -79,7 +82,7 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
       onSubmit={handleSubmitForm}
       onReset={onReset}
     >
-      {({ values, isValid, isSubmitting, setValues, setFieldValue }) => {
+      {({ values, isValid, isSubmitting, resetForm, setFieldValue }) => {
         const isDisabled = !isValid || isSubmitting;
 
         return (
@@ -111,7 +114,7 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
               <Fieldset legend="Metadata:" className={styles.meta}>
                 <UploadMeta
                   meta={metadata}
-                  onReset={handleResetMeta(setValues)}
+                  onReset={handleResetMeta(resetForm)}
                   onUpload={handleUploadMetaFile(setFieldValue)}
                 />
               </Fieldset>

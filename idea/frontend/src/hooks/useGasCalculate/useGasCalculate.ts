@@ -3,7 +3,7 @@ import isPlainObject from 'lodash.isplainobject';
 import { Metadata, Hex, GasInfo } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
-import { Values } from './types';
+import { Values, Code } from './types';
 
 import { LOCAL_STORAGE, GasMethod } from 'consts';
 import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
@@ -16,7 +16,7 @@ const useGasCalculate = () => {
     async <T extends GasMethod>(
       method: T,
       values: Values,
-      code: T extends GasMethod.Init ? Buffer : null,
+      code: Code<T>,
       meta?: Metadata,
       addressId?: string
     ): Promise<number> => {
@@ -34,10 +34,20 @@ const useGasCalculate = () => {
       let estimatedGas: GasInfo;
 
       switch (method) {
-        case GasMethod.Init:
+        case GasMethod.InitUpdate:
           estimatedGas = await api.program.calculateGas.initUpload(
             publicKeyRaw,
-            code!,
+            code as Buffer,
+            submitPayload,
+            value,
+            true,
+            metaOrTypeOfPayload
+          );
+          break;
+        case GasMethod.InitCreate:
+          estimatedGas = await api.program.calculateGas.initCreate(
+            publicKeyRaw,
+            code as Hex,
             submitPayload,
             value,
             true,

@@ -1,5 +1,5 @@
 import { GearApi } from '@gear-js/api';
-import { Event, Balance } from '@polkadot/types/interfaces';
+import { Event } from '@polkadot/types/interfaces';
 import isString from 'lodash.isstring';
 import { Account } from '@gear-js/react-hooks';
 

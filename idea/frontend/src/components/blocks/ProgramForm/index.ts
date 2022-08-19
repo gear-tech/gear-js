@@ -1,2 +1,2 @@
 export { ProgramForm } from './ProgramForm';
-export type { FormValues, PropsToRenderButtons } from './types';
+export type { FormValues, PropsToRenderButtons, Helpers } from './types';

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { FormikHelpers } from 'formik';
 import { Hex } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
@@ -16,7 +15,7 @@ import { Payload } from 'hooks/useProgramUplaod/types';
 import { Box } from 'layout/Box/Box';
 import { PageHeader } from 'components/blocks/PageHeader';
 import { Spinner } from 'components/common/Spinner/Spinner';
-import { ProgramForm, FormValues, PropsToRenderButtons } from 'components/blocks/ProgramForm';
+import { ProgramForm, PropsToRenderButtons, Helpers } from 'components/blocks/ProgramForm';
 
 const Code = () => {
   const alert = useAlert();
@@ -27,19 +26,19 @@ const Code = () => {
   const calculateGas = useGasCalculate();
   const { createProgram } = useProgramUpload();
 
-  const handleSubmit = (payload: Payload, helpers: FormikHelpers<FormValues>) =>
+  const handleSubmit = (payload: Payload, { resetForm, finishSubmitting }: Helpers) =>
     createProgram({
       payload,
       codeId: codeId as Hex,
-      reject: () => helpers.setSubmitting(false),
-      resolve: () => helpers.resetForm(),
+      reject: finishSubmitting,
+      resolve: resetForm,
     });
 
   const handleCalculateGas = async ({ values, metadata, setFieldValue }: PropsToRenderButtons) => {
     try {
-      // const gasLimit = await calculateGas(GasMethod.Init, values, code, metadata);
+      const gasLimit = await calculateGas(GasMethod.InitCreate, values, codeId as Hex, metadata);
 
-      setFieldValue('gasLimit', 0);
+      setFieldValue('gasLimit', gasLimit);
     } catch (error) {
       const message = (error as Error).message;
 

@@ -54,9 +54,10 @@ export enum TransactionStatus {
 }
 
 export enum GasMethod {
-  Init = 'init',
   Reply = 'reply',
   Handle = 'handle',
+  InitCreate = 'initCreate',
+  InitUpdate = 'initUpdate',
 }
 
 export enum TransactionName {
