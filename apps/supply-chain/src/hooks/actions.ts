@@ -80,7 +80,9 @@ function useRetailerActions() {
 }
 
 function useConsumerActions() {
-  const purchase = usePurchase(USER.CONSUMER);
+  const sendMessage = useSupplyChainMessage();
+
+  const purchase = ({ itemId }: ItemIdValue) => sendMessage({ PurchaseByConsumer: itemId });
 
   return { purchase };
 }

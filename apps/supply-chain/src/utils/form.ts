@@ -6,7 +6,7 @@ import { Items } from 'types';
 const isValidHex = (value: string) => (!isHex(value) ? 'Address should be hex' : null);
 const isExists = (value: string) => (!value ? 'Field is required' : null);
 
-const getForm = (action: string) => {
+const getForm = (role: string, action: string) => {
   switch (action) {
     case ACTION.PRODUCE:
       return ProduceForm;
@@ -15,7 +15,7 @@ const getForm = (action: string) => {
     case ACTION.APPROVE:
       return ItemSwitchForm;
     case ACTION.PURCHASE:
-      return ItemInputForm;
+      return role === USER.CONSUMER ? ItemForm : ItemInputForm;
     default:
       return ItemForm;
   }

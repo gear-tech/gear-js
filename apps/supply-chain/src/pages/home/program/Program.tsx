@@ -36,7 +36,7 @@ function Program({ id, onBackButtonClick }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(resetItem, [action]);
 
-  const Form = getForm(action);
+  const Form = getForm(role, action);
 
   const roleTextClassName = clsx(styles.action, !role && styles.active);
   const actionTextClassName = clsx(styles.action, styles.active);
