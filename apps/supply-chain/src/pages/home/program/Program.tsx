@@ -33,6 +33,8 @@ function Program({ id, onBackButtonClick }: Props) {
 
   const resetAction = () => setAction('');
   useEffect(resetAction, [role]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(resetItem, [action]);
 
   const Form = getForm(action);
 
@@ -43,40 +45,50 @@ function Program({ id, onBackButtonClick }: Props) {
   const actionsList = ACTIONS[role];
   const selectTextValue = role ? 'action' : 'role';
 
-  return isEachRoleReady && isEachItemReady ? (
-    <div className={styles.role}>
+  return (
+    <div className={styles.program}>
       <Header programId={id} onBackButtonClick={onBackButtonClick} />
-      <div className={styles.actions}>
-        <p className={roleTextClassName}>Select role</p>
-        {role && <p className={actionTextClassName}>Select action</p>}
-      </div>
-      <div className={styles.main}>
-        <List list={rolesList} value={role} onChange={setRole} />
-        {role && <List list={actionsList} value={action} onChange={setAction} />}
-        <div className={styles.action}>
-          {action ? (
-            <>
-              {itemId &&
-                (isItemReady ? <Item id={itemId} data={getItemData(item, nft)} onBackClick={resetItem} /> : <Loader />)}
-              {!itemId && (
-                <Form
-                  heading={action}
-                  items={getFilteredItems(items, role, action)}
-                  action={getAction(action)}
-                  label={getLabel(action)}
-                  name={getName(action)}
-                  onSubmit={handleSubmit}
-                />
-              )}
-            </>
-          ) : (
-            <SelectText value={selectTextValue} />
-          )}
-        </div>
+      <div className={styles.body}>
+        {isEachRoleReady && isEachItemReady ? (
+          <>
+            <div className={styles.actions}>
+              <p className={roleTextClassName}>Select role</p>
+              {role && <p className={actionTextClassName}>Select action</p>}
+            </div>
+            <div className={styles.main}>
+              <List list={rolesList} value={role} onChange={setRole} />
+              {role && <List list={actionsList} value={action} onChange={setAction} />}
+              <div className={styles.action}>
+                {action ? (
+                  <>
+                    {itemId &&
+                      (isItemReady ? (
+                        <Item id={itemId} data={getItemData(item, nft)} onBackClick={resetItem} />
+                      ) : (
+                        <Loader />
+                      ))}
+                    {!itemId && (
+                      <Form
+                        heading={action}
+                        items={getFilteredItems(items, role, action)}
+                        action={getAction(action)}
+                        label={getLabel(action)}
+                        name={getName(action)}
+                        onSubmit={handleSubmit}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <SelectText value={selectTextValue} />
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <Loader />
+        )}
       </div>
     </div>
-  ) : (
-    <Loader />
   );
 }
 

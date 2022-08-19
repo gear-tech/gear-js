@@ -48,7 +48,8 @@ function useProducerActions() {
   const approve = useApprove(USER.PRODUCER);
   const ship = useShip(USER.PRODUCER);
 
-  const produce = (values: ProduceValues, onSuccess: () => void) => sendMessage({ Produce: values }, { onSuccess });
+  const produce = (tokenMetadata: ProduceValues, onSuccess: () => void) =>
+    sendMessage({ Produce: { tokenMetadata } }, { onSuccess });
 
   return { produce, sale, approve, ship };
 }

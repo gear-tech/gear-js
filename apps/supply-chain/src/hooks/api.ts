@@ -69,10 +69,10 @@ function useNftProgramId() {
   return state?.NFTProgram;
 }
 
-function useNft(itemId: string) {
+function useNft(tokenId: string) {
   const nftProgramId = useNftProgramId();
 
-  const payload = useMemo(() => (itemId ? { Token: itemId } : undefined), [itemId]);
+  const payload = useMemo(() => (tokenId ? { Token: { tokenId } } : undefined), [tokenId]);
   const { state, isStateRead } = useReadState<NFTState>(nftProgramId, nftMetaWasm, payload);
 
   return { nft: state?.Token.token, isNftRead: isStateRead };

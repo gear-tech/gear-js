@@ -29,3 +29,14 @@
 .key {
   color: $textColorSecondary;
 }
+
+.value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:empty {
+    &::before {
+      content: '—';
+    }
+  }
+}

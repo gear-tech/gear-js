@@ -21,37 +21,37 @@ function Item({ id, data, onBackClick }: Props) {
       <ul className={styles.list}>
         <li className={styles.item}>
           <span className={styles.key}>Item ID</span>
-          <span>{id}</span>
+          <span className={styles.value}>{id}</span>
         </li>
         <li className={styles.item}>
           <span className={styles.key}>State</span>
-          <span>{state}</span>
+          <span className={styles.value}>{state}</span>
         </li>
       </ul>
 
       <ul className={styles.list}>
         <li className={styles.item}>
           <span className={styles.key}>Name</span>
-          <span>{name}</span>
+          <span className={styles.value}>{name}</span>
         </li>
         <li className={styles.item}>
           <span className={styles.key}>Description</span>
-          <span>{description}</span>
+          <span className={styles.value}>{description}</span>
         </li>
       </ul>
 
       <ul className={styles.list}>
         <li className={styles.item}>
           <span className={styles.key}>Producer</span>
-          <span>{producer}</span>
+          <span className={styles.value}>{producer}</span>
         </li>
         <li className={styles.item}>
           <span className={styles.key}>Distributor</span>
-          <span>{distributor}</span>
+          <span className={styles.value}>{distributor}</span>
         </li>
         <li className={styles.item}>
           <span className={styles.key}>Retailer</span>
-          <span>{retailer}</span>
+          <span className={styles.value}>{retailer}</span>
         </li>
       </ul>
     </div>
