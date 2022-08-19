@@ -2,7 +2,7 @@ name: 'CI-CD create-gear-app'
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - utils/create-gear-app/**
 
