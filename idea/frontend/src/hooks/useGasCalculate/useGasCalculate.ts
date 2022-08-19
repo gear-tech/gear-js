@@ -36,7 +36,7 @@ const useGasCalculate = () => {
 
         switch (method) {
           case GasMethod.Init:
-            estimatedGas = await api.program.calculateGas.init(
+            estimatedGas = await api.program.calculateGas.initUpload(
               publicKeyRaw,
               code as Buffer,
               submitPayload,
