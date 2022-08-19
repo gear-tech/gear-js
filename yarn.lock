@@ -2049,14 +2049,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.25.1":
-  version: 0.25.1
-  resolution: "@gear-js/api@npm:0.25.1"
+"@gear-js/api@npm:0.25.2":
+  version: 0.25.2
+  resolution: "@gear-js/api@npm:0.25.2"
   peerDependencies:
     "@polkadot/api": ^9.2.2
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
-  checksum: 3c888ee0391051bb2dd189b5cd5873fafd257ac8199d83a45ca55e1111541eca9f74cb71b2fe5eae51086d150b39b7d18771a748cc12a37aa7faf590a77c61e4
+  checksum: 53f2b9759bf3fe3559961bcb38381b5d502694514776026d722b5aa3194a048c261f5796e45ca504bed3e374a71dee4e89d980fd9ef4256edf5abe38b4b92c34
   languageName: node
   linkType: hard
 
@@ -2202,7 +2202,7 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.25.1
+    "@gear-js/api": 0.25.2
     "@gear-js/react-hooks": ^0.2.17
     "@gear-js/ui": 0.4.0
     "@hcaptcha/react-hcaptcha": 1.2.0
