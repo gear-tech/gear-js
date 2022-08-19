@@ -17,7 +17,7 @@ COPY .yarnrc.yml .
 COPY ./apps/auction apps/auction
 
 RUN yarn install
-RUN yarn build:auction
+RUN yarn build
 
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
