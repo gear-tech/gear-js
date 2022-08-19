@@ -17,7 +17,7 @@ COPY .yarnrc.yml .
 COPY ./apps/staking apps/staking
 
 RUN yarn install
-RUN yarn build:staking
+RUN yarn build
 
 FROM nginx:alpine
 RUN rm -vf /usr/share/nginx/html/*
