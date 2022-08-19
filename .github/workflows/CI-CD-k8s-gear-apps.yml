@@ -39,7 +39,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         # Checkout as many commits as needed for the diff
-        fetch-depth: 2
+        fetch-depth: 0
     - shell: pwsh
       id: check_file_changed
       run: |
@@ -211,7 +211,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+        # Checkout as many commits as needed for the diff
+          fetch-depth: 0
 
       - name: Log in to the github container registry
         uses: docker/login-action@master
@@ -241,7 +244,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+        # Checkout as many commits as needed for the diff
+          fetch-depth: 0
 
       - name: Log in to the github container registry
         uses: docker/login-action@master
