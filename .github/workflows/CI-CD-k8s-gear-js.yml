@@ -4,11 +4,12 @@ on:
   push:
     branches: ['master']
     paths:
-      - idea/**
+      - idea/api-gateway/**
+      - idea/data-storage/**
+      - idea/events-listener/**
+      - idea/frontend/**
+      - idea/test-balance/**
       - k8s/**
-      - package.json
-    paths-ignore:
-      - idea/wasm-compiler/**
   workflow_dispatch:
 
 env:
