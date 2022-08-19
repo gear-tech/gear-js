@@ -3,9 +3,9 @@ name: 'CI-CD @gear-js/api'
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled]
-    branches: [master]
+    branches: [main]
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - api/**
 

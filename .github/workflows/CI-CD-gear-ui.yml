@@ -2,11 +2,11 @@ name: 'CI-CD @gear-js/gear-ui'
 
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
     paths:
       - utils/gear-ui/**
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - utils/gear-ui/**
 
