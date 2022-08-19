@@ -32,8 +32,8 @@ jobs:
       marketplace_changed: ${{ steps.check_file_changed.outputs.marketplace_changed }}
       lottery_changed: ${{ steps.check_file_changed.outputs.lottery_changed }}
       escrow_changed: ${{ steps.check_file_changed.outputs.escrow_changed }}
-      auction_changed: ${{ steps.check_file_changed.outputs.lottery_changed }}
-      staking_changed: ${{ steps.check_file_changed.outputs.escrow_changed }}
+      auction_changed: ${{ steps.check_file_changed.outputs.auction_changed }}
+      staking_changed: ${{ steps.check_file_changed.outputs.staking_changed }}
 
     steps:
     - uses: actions/checkout@v2
