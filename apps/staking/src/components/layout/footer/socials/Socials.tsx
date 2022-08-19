@@ -2,6 +2,7 @@ import { ReactComponent as Twitter } from 'assets/images/socials/twitter.svg';
 import { ReactComponent as Github } from 'assets/images/socials/github.svg';
 import { ReactComponent as Discord } from 'assets/images/socials/discord.svg';
 import { ReactComponent as Medium } from 'assets/images/socials/medium.svg';
+
 import styles from './Socials.module.scss';
 
 const socials = [

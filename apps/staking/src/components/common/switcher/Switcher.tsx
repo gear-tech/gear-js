@@ -12,17 +12,16 @@ type Props = {
 function Switcher({ value: currentValue, items, onChange }: Props) {
   const getClasses = (value: string) => clsx(styles.switchBtn, value === currentValue && styles.active);
 
-  return (
-    <ul className={clsx(styles.switcher, 'customScroll')}>
-      {items.map(({ value, label }) => (
-        <li key={value}>
-          <button type="button" className={getClasses(value)} onClick={() => onChange(value)}>
-            {label}
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
+  const getItems = () =>
+    items.map(({ value, label }) => (
+      <li key={value}>
+        <button type="button" className={getClasses(value)} onClick={() => onChange(value)}>
+          {label}
+        </button>
+      </li>
+    ));
+
+  return <ul className={clsx(styles.switcher, 'customScroll')}>{getItems()}</ul>;
 }
 
 export { Switcher };
