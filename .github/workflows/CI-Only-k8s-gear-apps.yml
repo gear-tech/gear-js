@@ -3,7 +3,7 @@ name: CI Gear-apps
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled]
-    branches: ['master']
+    branches: ['main']
     paths:
       - apps/**
   workflow_dispatch:
