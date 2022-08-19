@@ -2,7 +2,7 @@ name: 'CI-CD @gear-js/react-hooks'
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - utils/gear-hooks/**
 
