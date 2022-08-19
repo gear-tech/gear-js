@@ -4,7 +4,7 @@ import styles from './Content.module.scss';
 
 type Props = {
   heading: string;
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
 };
 
