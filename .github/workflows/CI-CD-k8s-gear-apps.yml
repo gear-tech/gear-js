@@ -32,6 +32,9 @@ jobs:
       marketplace_changed: ${{ steps.check_file_changed.outputs.marketplace_changed }}
       lottery_changed: ${{ steps.check_file_changed.outputs.lottery_changed }}
       escrow_changed: ${{ steps.check_file_changed.outputs.escrow_changed }}
+      auction_changed: ${{ steps.check_file_changed.outputs.lottery_changed }}
+      staking_changed: ${{ steps.check_file_changed.outputs.escrow_changed }}
+
     steps:
     - uses: actions/checkout@v2
       with:
@@ -59,11 +62,23 @@ jobs:
         $SourceDiffEscrow = $diff | Where-Object { $_ -match '^apps/escrow/' }
         $HasDiffEscrow = $SourceDiffEscrow.Length -gt 0
 
+        # Check if a file under auction/ has changed (added, modified, deleted)
+        $SourceDiffAuction = $diff | Where-Object { $_ -match '^apps/auction/' }
+        $HasDiffAuction = $SourceDiffAuction.Length -gt 0
+
+        # Check if a file under staking/ has changed (added, modified, deleted)
+        $SourceDiffStaking = $diff | Where-Object { $_ -match '^apps/staking/' }
+        $HasDiffStaking = $SourceDiffStaking.Length -gt 0
+
+
         # Set the output named "nft_changed"
         Write-Host "::set-output name=nft_changed::$HasDiffNft"
         Write-Host "::set-output name=marketplace_changed::$HasDiffMarketplace"
         Write-Host "::set-output name=lottery_changed::$HasDiffLottery"
         Write-Host "::set-output name=escrow_changed::$HasDiffEscrow"
+        Write-Host "::set-output name=auction_changed::$HasDiffAuction"
+        Write-Host "::set-output name=staking_changed::$HasDiffStaking"
+
 
   build-and-push-marketplace-image:
     runs-on: ubuntu-latest
@@ -186,6 +201,66 @@ jobs:
           build-args: |
             REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
 
+  build-and-push-auction-image:
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run,conditional_job_check_files]
+    if: needs.conditional_job_check_files.outputs.auction_changed == 'True'
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Auction Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: apps/auction/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-auction:prod
+          build-args: |
+            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_IPFS_GATEWAY_ADDRESS=${{ secrets.REACT_APP_IPFS_GATEWAY_ADDRESS }}
+            REACT_APP_AUCTION_CONTRACT_ADDRESS=${{ secrets.REACT_APP_AUCTION_CONTRACT_ADDRESS }}
+
+  build-and-push-staking-image:
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run,conditional_job_check_files]
+    if: needs.conditional_job_check_files.outputs.staking_changed == 'True'
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Staking Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: apps/staking/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-staking:prod
+          build-args: |
+            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_FTOKEN_CONTRACT_ADDRESS=${{ secrets.REACT_APP_FTOKEN_CONTRACT_ADDRESS }}
+            REACT_APP_STAKING_CONTRACT_ADDRESS=${{ secrets.REACT_APP_STAKING_CONTRACT_ADDRESS }}
+
        
   deploy-marketplace-k8s:
     needs: [ build-and-push-marketplace-image, wait-previous-run]
@@ -269,6 +344,50 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment escrow -n $KUBE_NAMESPACE
+
+      - name: Check k8s deployments
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
+
+  deploy-auction-k8s:
+    needs: [ build-and-push-auction-image, wait-previous-run]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment auction -n $KUBE_NAMESPACE
+
+      - name: Check k8s deployments
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
+
+  deploy-staking-k8s:
+    needs: [ build-and-push-staking-image, wait-previous-run]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment staking -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
