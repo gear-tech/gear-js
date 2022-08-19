@@ -1,0 +1,13 @@
+@use '@gear-js/ui/variables' as *;
+
+.timer {
+  display: flex;
+  align-items: flex-end;
+
+  .separator { 
+    color: #CCCCCC;
+    font-size: $fontSizeLarge;
+    font-weight: 500;
+    margin: 0 0.375rem;
+  }
+}

@@ -5727,7 +5727,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.11.36, @types/node@npm:^16.11.41, @types/node@npm:^16.11.43, @types/node@npm:^16.11.44":
+"@types/node@npm:^16.11.36, @types/node@npm:^16.11.41, @types/node@npm:^16.11.43, @types/node@npm:^16.11.44, @types/node@npm:^16.11.47":
   version: 16.11.49
   resolution: "@types/node@npm:16.11.49"
   checksum: 05545ee49da3b783ab77cddca45db6f4d47861c2bb148a17b774688e1082f20f27177591d140923724bcd8643b32291203f6f1eadba397e394232d4a1e28e07a
@@ -6040,7 +6040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:5.33.1, @typescript-eslint/eslint-plugin@npm:^5.17.0, @typescript-eslint/eslint-plugin@npm:^5.25.0, @typescript-eslint/eslint-plugin@npm:^5.28.0, @typescript-eslint/eslint-plugin@npm:^5.30.0, @typescript-eslint/eslint-plugin@npm:^5.30.5, @typescript-eslint/eslint-plugin@npm:^5.30.6, @typescript-eslint/eslint-plugin@npm:^5.5.0":
+"@typescript-eslint/eslint-plugin@npm:5.33.1, @typescript-eslint/eslint-plugin@npm:^5.17.0, @typescript-eslint/eslint-plugin@npm:^5.25.0, @typescript-eslint/eslint-plugin@npm:^5.28.0, @typescript-eslint/eslint-plugin@npm:^5.30.0, @typescript-eslint/eslint-plugin@npm:^5.30.5, @typescript-eslint/eslint-plugin@npm:^5.30.6, @typescript-eslint/eslint-plugin@npm:^5.32.0, @typescript-eslint/eslint-plugin@npm:^5.5.0":
   version: 5.33.1
   resolution: "@typescript-eslint/eslint-plugin@npm:5.33.1"
   dependencies:
@@ -6107,7 +6107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:5.33.1, @typescript-eslint/parser@npm:^5.17.0, @typescript-eslint/parser@npm:^5.25.0, @typescript-eslint/parser@npm:^5.28.0, @typescript-eslint/parser@npm:^5.30.0, @typescript-eslint/parser@npm:^5.30.5, @typescript-eslint/parser@npm:^5.30.6, @typescript-eslint/parser@npm:^5.5.0":
+"@typescript-eslint/parser@npm:5.33.1, @typescript-eslint/parser@npm:^5.17.0, @typescript-eslint/parser@npm:^5.25.0, @typescript-eslint/parser@npm:^5.28.0, @typescript-eslint/parser@npm:^5.30.0, @typescript-eslint/parser@npm:^5.30.5, @typescript-eslint/parser@npm:^5.30.6, @typescript-eslint/parser@npm:^5.32.0, @typescript-eslint/parser@npm:^5.5.0":
   version: 5.33.1
   resolution: "@typescript-eslint/parser@npm:5.33.1"
   dependencies:
@@ -10800,7 +10800,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsx-a11y@npm:^6.5.1, eslint-plugin-jsx-a11y@npm:^6.6.0":
+"eslint-plugin-jsx-a11y@npm:^6.5.1, eslint-plugin-jsx-a11y@npm:^6.6.0, eslint-plugin-jsx-a11y@npm:^6.6.1":
   version: 6.6.1
   resolution: "eslint-plugin-jsx-a11y@npm:6.6.1"
   dependencies:
@@ -11009,7 +11009,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:8.22.0, eslint@npm:^8.12.0, eslint@npm:^8.16.0, eslint@npm:^8.17.0, eslint@npm:^8.18.0, eslint@npm:^8.19.0, eslint@npm:^8.3.0":
+"eslint@npm:8.22.0, eslint@npm:^8.12.0, eslint@npm:^8.16.0, eslint@npm:^8.17.0, eslint@npm:^8.18.0, eslint@npm:^8.19.0, eslint@npm:^8.21.0, eslint@npm:^8.3.0":
   version: 8.22.0
   resolution: "eslint@npm:8.22.0"
   dependencies:
@@ -18197,7 +18197,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-transition-group@npm:^4.4.2":
+"react-transition-group@npm:^4.4.2, react-transition-group@npm:^4.4.5":
   version: 4.4.5
   resolution: "react-transition-group@npm:4.4.5"
   dependencies:
@@ -19528,6 +19528,50 @@ __metadata:
   checksum: bae1596873595c4610993fa84f86a3387d67586401c1816ea048c0196800c0646c4d2da98c2ee80557fd9eff05877efe33b91ba6cd052658ed96ddc85d19067d
   languageName: node
   linkType: hard
+
+"staking@workspace:apps/staking":
+  version: 0.0.0-use.local
+  resolution: "staking@workspace:apps/staking"
+  dependencies:
+    "@gear-js/api": ^0.25.0
+    "@gear-js/react-hooks": ^0.2.17
+    "@gear-js/ui": ^0.4.0
+    "@mantine/form": ^4.2.9
+    "@polkadot/api": ^8.13.1
+    "@polkadot/extension-dapp": ^0.43.3
+    "@polkadot/react-identicon": ^2.7.2
+    "@polkadot/types": ^8.13.1
+    "@polkadot/util": ^9.7.2
+    "@polkadot/wasm-crypto": ^6.3.1
+    "@testing-library/jest-dom": ^5.16.4
+    "@testing-library/react": ^13.3.0
+    "@testing-library/user-event": ^13.5.0
+    "@types/jest": ^27.5.2
+    "@types/node": ^16.11.47
+    "@types/react": ^18.0.15
+    "@types/react-dom": ^18.0.6
+    "@typescript-eslint/eslint-plugin": ^5.32.0
+    "@typescript-eslint/parser": ^5.32.0
+    clsx: ^1.2.1
+    eslint: ^8.21.0
+    eslint-config-airbnb: ^19.0.4
+    eslint-config-airbnb-typescript: ^17.0.0
+    eslint-config-prettier: ^8.5.0
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-jsx-a11y: ^6.6.1
+    eslint-plugin-react: ^7.30.1
+    eslint-plugin-react-hooks: ^4.6.0
+    react: ^18.2.0
+    react-app-rewired: ^2.2.1
+    react-dom: ^18.2.0
+    react-router-dom: ^6.3.0
+    react-scripts: ^5.0.1
+    react-transition-group: ^4.4.5
+    sass: ^1.54.0
+    typescript: ^4.7.4
+    web-vitals: ^2.1.4
+  languageName: unknown
+  linkType: soft
 
 "state-local@npm:^1.0.6":
   version: 1.0.7
