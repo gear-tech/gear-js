@@ -2,10 +2,10 @@ import { Button } from '@gear-js/ui';
 
 import { FormWrapper } from '../FormWrapper';
 
-import { useProgramUpload, useGasCalculate } from 'hooks';
+import { useProgramActions, useGasCalculate } from 'hooks';
 import { readFileAsync } from 'helpers';
 import { GasMethod } from 'consts';
-import { Payload } from 'hooks/useProgramUplaod/types';
+import { Payload } from 'hooks/useProgramActions/types';
 import { ProgramForm, Helpers, PropsToRenderButtons } from 'components/blocks/ProgramForm';
 import { useAlert } from '@gear-js/react-hooks';
 
@@ -18,7 +18,7 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
   const alert = useAlert();
 
   const calculateGas = useGasCalculate();
-  const { uploadProgram } = useProgramUpload();
+  const { uploadProgram } = useProgramActions();
 
   const handleSubmit = (payload: Payload, helpers: Helpers) =>
     uploadProgram({

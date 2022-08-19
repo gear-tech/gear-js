@@ -20,7 +20,7 @@ import { ProgramStatus } from 'types/program';
 import { OperationCallbacks } from 'types/hooks';
 import { CustomLink } from 'components/common/CustomLink';
 
-const useProgramUpload = () => {
+const useProgramActions = () => {
   const alert = useAlert();
   const { api } = useApi();
   const { account } = useAccount();
@@ -225,4 +225,4 @@ const useProgramUpload = () => {
   return { uploadProgram: upload, createProgram: create };
 };
 
-export { useProgramUpload };
+export { useProgramActions };

@@ -6,12 +6,12 @@ import { Button } from '@gear-js/ui';
 
 import { Params } from './types';
 
-import { useProgramUpload, useGasCalculate } from 'hooks';
+import { useProgramActions, useGasCalculate } from 'hooks';
 import { GasMethod } from 'consts';
 import { getShortName } from 'helpers';
 import { getCode } from 'services';
 import { CodeModel } from 'types/code';
-import { Payload } from 'hooks/useProgramUplaod/types';
+import { Payload } from 'hooks/useProgramActions/types';
 import { Box } from 'layout/Box/Box';
 import { PageHeader } from 'components/blocks/PageHeader';
 import { Spinner } from 'components/common/Spinner/Spinner';
@@ -24,7 +24,7 @@ const Code = () => {
   const [code, setCode] = useState<CodeModel>();
 
   const calculateGas = useGasCalculate();
-  const { createProgram } = useProgramUpload();
+  const { createProgram } = useProgramActions();
 
   const handleSubmit = (payload: Payload, { resetForm, finishSubmitting }: Helpers) =>
     createProgram({
