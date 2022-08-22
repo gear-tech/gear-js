@@ -1,3 +1,4 @@
+import { AnyJson } from '@polkadot/types/types';
 import { Hex, Metadata } from '@gear-js/api';
 
 import { OperationCallbacks, ParamsToSignAndSend } from 'types/hooks';
@@ -8,7 +9,7 @@ export type Payload = {
   gasLimit: number;
   metadata?: Metadata;
   metadataBuffer?: string;
-  initPayload: string;
+  initPayload: AnyJson;
   programName?: string;
   payloadType?: string;
 };

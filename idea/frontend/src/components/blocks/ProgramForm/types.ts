@@ -11,6 +11,8 @@ export type FormValues = {
   payloadType: string;
 };
 
+export type SetValues = FormikHelpers<FormValues>['setValues'];
+
 export type SetFieldValue = FormikHelpers<FormValues>['setFieldValue'];
 
 export type PropsToRenderButtons = {

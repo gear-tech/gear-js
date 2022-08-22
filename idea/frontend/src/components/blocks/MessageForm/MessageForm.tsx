@@ -1,9 +1,10 @@
 import { ReactNode, useMemo } from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { Hex, Metadata, IMessageSendOptions, IMessageSendReplyOptions } from '@gear-js/api';
-import { useApi } from '@gear-js/react-hooks';
+import { useApi, useAlert } from '@gear-js/react-hooks';
 
 import { getValidationSchema } from './Schema';
+import { resetPayloadValue } from './helpers';
 import { INITIAL_VALUES } from './const';
 import { FormValues, SetFieldValue, RenderButtonsProps } from './types';
 
@@ -27,6 +28,7 @@ type Props = {
 };
 
 const MessageForm = (props: Props) => {
+  const alert = useAlert();
   const { api } = useApi();
 
   const { id, isReply = false, metadata, renderButtons } = props;
@@ -56,29 +58,36 @@ const MessageForm = (props: Props) => {
       gasLimit: values.gasLimit.toString(),
     };
 
-    const reject = () => helpers.setSubmitting(false);
-    const resolve = () => {
-      const { payload } = payloadFormValues ?? INITIAL_VALUES;
+    const finishSubmitting = () => helpers.setSubmitting(false);
 
-      helpers.resetForm({
-        values: {
-          ...INITIAL_VALUES,
-          payload,
-        },
-      });
+    const resolve = () => {
+      helpers.setValues((prevState) => ({
+        ...INITIAL_VALUES,
+        payload: resetPayloadValue(prevState.payload),
+      }));
+      finishSubmitting();
     };
 
     if (isReply) {
       const reply: IMessageSendReplyOptions = { ...commonValues, replyToId: id };
-      replyMessage({ reply, metadata, payloadType, reject, resolve });
+      replyMessage({ reply, metadata, payloadType, reject: finishSubmitting, resolve });
     } else {
       const message: IMessageSendOptions = { ...commonValues, destination: id };
-      sendMessage({ message, metadata, payloadType, reject, resolve });
+      sendMessage({ message, metadata, payloadType, reject: finishSubmitting, resolve });
     }
   };
 
-  const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => () =>
-    calculateGas(method, values, null, metadata, id).then((gasLimit) => setFieldValue('gasLimit', gasLimit));
+  const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => async () => {
+    try {
+      const gasLimit = await calculateGas(method, values, null, metadata, id);
+
+      setFieldValue('gasLimit', gasLimit);
+    } catch (error) {
+      const message = (error as Error).message;
+
+      alert.error(message);
+    }
+  };
 
   return (
     <Formik
