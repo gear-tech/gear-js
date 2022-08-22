@@ -1,9 +1,29 @@
-- repo: non-fungible-token
+- nft:
+  dappName: "nft"
+  repo: "non-fungible-token"
+  payload:
+    name: "test"
+    symbol: "test"
+    baseUrl: "test"
+    royalties: NULL
 
-- repo: lottery
+- nft_marketplace:
+  dappName: "nft_marketplace"
+  repo: "non-fungible-token"
+  payload:
+    adminId: "0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"
+    treasuryId: "0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"
+    treasuryFee: "1"
+
+- lottery:
+  dappName: "lottery"
+  repo: "lottery"
+  payload: "0x00"
 
 #- repo: dutch-auction
 
-- repo: escrow
-
-- repo: supply-chain
+#- escrow:
+#  repo: escrow
+#
+#- supply-chain:
+#  repo: supply-chain

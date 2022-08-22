@@ -7,21 +7,23 @@ import fetch from "node-fetch";
 
 import {
   getAccount,
-  getAllLatestReleaseDapps,
   getLatestReleaseByRepo,
   getNameDapp,
+  getPayloads,
+  getReleases,
+  getUploadDappDataByDappName,
 } from "../common/hellpers";
 import { Asset, Release } from "../common/types";
 import {
   CreateDappInput,
-  UploadDappInChainInput, UploadDappInChainTGInput,
+  UploadDappAssetData,
+  UploadDappInChainInput,
+  UploadDappInChainTGInput,
   UploadNewDappInChainInput,
 } from "./types";
 import { DappData } from "./entities/dapp-data.entity";
-
 import { DappDataRepo } from "./dapp-data.repo";
 import { gearService } from "../gear/gear-service";
-import { DAPP } from "../common/enums";
 import { BadRequestExc } from "../common/exceptions/bad-request.exception";
 
 @Injectable()
@@ -51,18 +53,20 @@ export class DappDataService {
         repo,
       );
 
-      const [optUrl, metaUrl] = this.getDownloadUrlOptAndMetaWasmByNameDapp(
-        dappName,
-        response.data.assets,
-      );
+      const {
+        metaWasmDownloadUrl,
+        optWasmDownloadUrl,
+        release,
+      } = this.getUploadDappByRepoAndDappName(dappName, repo, [response.data]);
 
       const [optWasmData, metaWasmData] = await Promise.all([
-        fetch(optUrl),
-        fetch(metaUrl),
+        fetch(optWasmDownloadUrl),
+        fetch(metaWasmDownloadUrl),
       ]);
 
       const optWasmBuff = await optWasmData.buffer();
       const metaWasmBuff = await metaWasmData.buffer();
+      const { payload } = getUploadDappDataByDappName(dappName);
 
       if (dapp) {
         return this.uploadDappInChainAndUpdate({
@@ -71,7 +75,7 @@ export class DappDataService {
           optWasmBuff,
           metaWasmBuff,
           sourceId,
-          release: response.data.tag_name,
+          release,
         });
       }
       return this.uploadNewDappInChain({
@@ -80,20 +84,75 @@ export class DappDataService {
         metaWasmBuff,
         optWasmBuff,
         dappName,
-        release: response.data.tag_name,
+        release,
         repo,
+        payload,
       });
     } catch (error) {
       this.logger.error(error);
     }
   }
 
-  public async getLatestReleasesDapps() {
+  // eslint-disable-next-line consistent-return
+  public async uploadDappsInChain(): Promise<DappData[]> {
+    const promises = [];
+    const releases = await getReleases();
+    const dappUploadDataList = getPayloads();
+
+    const gearApi = gearService.getApi();
+    const [AL] = await getAccount();
+    const sourceId = decodeAddress(AL.address);
+
+    for (const dappUploadData of dappUploadDataList) {
+      const { dappName, repo } = dappUploadData;
+
+      const {
+        metaWasmDownloadUrl,
+        optWasmDownloadUrl,
+        release,
+      } = this.getUploadDappByRepoAndDappName(dappName, repo, releases);
+
+      const dapp = await this.dappDataRepository.getByNameAndRepo(
+        dappName,
+        repo,
+      );
+
+      const [optWasmData, metaWasmData] = await Promise.all([
+        fetch(optWasmDownloadUrl),
+        fetch(metaWasmDownloadUrl),
+      ]);
+
+      const optWasmBuff = await optWasmData.buffer();
+      const metaWasmBuff = await metaWasmData.buffer();
+      const { payload } = getUploadDappDataByDappName(dappName);
+
+      if (dapp) {
+        promises.push(this.uploadDappInChainAndUpdate({
+          gearApi,
+          dappData: dapp,
+          optWasmBuff,
+          metaWasmBuff,
+          sourceId,
+          release,
+        }));
+      } else {
+        promises.push(this.uploadNewDappInChain({
+          gearApi,
+          sourceId,
+          metaWasmBuff,
+          optWasmBuff,
+          dappName,
+          release,
+          repo,
+          payload,
+        }));
+      }
+    }
+
     try {
-      const res = await getAllLatestReleaseDapps();
-      console.log(res);
+      return Promise.all(promises);
     } catch (error) {
-      this.logger.error(error);
+      console.log(error);
     }
   }
 
@@ -126,10 +185,16 @@ export class DappDataService {
   }
 
   private async uploadNewDappInChain(uploadNewDappInChainInput: UploadNewDappInChainInput): Promise<DappData> {
-    const { sourceId, metaWasmBuff, optWasmBuff, gearApi, dappName, release, repo } = uploadNewDappInChainInput;
-    const paylaod = this.getPayloadByDappName(dappName);
+    const { sourceId,
+      metaWasmBuff,
+      optWasmBuff,
+      gearApi,
+      dappName,
+      release,
+      repo,
+      payload } = uploadNewDappInChainInput;
 
-    if (!paylaod) {
+    if (!payload) {
       throw new BadRequestExc("Invalid dapp name");
     }
 
@@ -147,7 +212,7 @@ export class DappDataService {
       code: optWasmBuff,
       gasLimit: gas.min_limit,
       value: 0,
-      initPayload: this.getPayloadByDappName(dappName),
+      initPayload: payload,
     }, meta);
 
     const createDappInput: CreateDappInput = {
@@ -170,6 +235,17 @@ export class DappDataService {
     return this.dappDataRepository.save(dappDbType);
   }
 
+  // eslint-disable-next-line consistent-return
+  private getUploadDappByRepoAndDappName(name: string, repo: string, releases: Release[]): UploadDappAssetData {
+    for (const release of releases) {
+      const [optUrl, metaUrl] = this.getDownloadUrlOptAndMetaWasmByNameDapp(name, release.assets);
+
+      if (optUrl && metaUrl) {
+        return { metaWasmDownloadUrl: metaUrl, optWasmDownloadUrl: optUrl, release: release.tag_name };
+      }
+    }
+  }
+
   private getDownloadUrlOptAndMetaWasmByNameDapp(
     name: string,
     assets: Asset[],
@@ -185,33 +261,5 @@ export class DappDataService {
       }
     }
     return result;
-  }
-
-  private getPayloadByDappName(name: string) {
-    const payloads = {
-      [DAPP.NFT]: { name: "test", symbol: "test", baseUri: "test", royalties: null },
-      [DAPP.NFT_MARKETPLACE]: { adminId: this.configService.get<string>("nftMarketplace.NFT_MARKETPLACE_ADMIN_ID"),
-        treasuryId: this.configService.get<string>("nftMarketplace.NFT_MARKETPLACE_TREASURY_ID"),
-        treasuryFee: "1" },
-      [DAPP.LOTTERY]: "0x00",
-      [DAPP.DUTCH_AUCTION]: "0x00",
-      [DAPP.ESCROW]: "--",
-      [DAPP.SUPPLY_CHAIN]: "--",
-      default: false,
-    };
-
-    return payloads[name] || payloads.default;
-  }
-
-  private getNameDappsByRelease(release: Release): string[] {
-    return release.assets.reduce((nameDapps, asset) => {
-      const dappName = getNameDapp(asset.name);
-
-      if (!nameDapps.includes(dappName)) {
-        // eslint-disable-next-line no-param-reassign
-        nameDapps = [...nameDapps, dappName];
-      }
-      return nameDapps;
-    }, [] as string[]);
   }
 }

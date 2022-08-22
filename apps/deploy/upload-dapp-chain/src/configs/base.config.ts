@@ -11,6 +11,9 @@ export default () => ({
     TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || "bot",
     TELEGRAM_ACCESS_ACCOUNTS: process.env.TELEGRAM_ACCESS_ACCOUNTS || "1,2,3",
   },
+  dappsPayloadsPath: {
+    DAPPS_PAYLOADS_PATH: process.env.DAPPS_PAYLOADS_PATH || "path",
+  },
   nftMarketplace: {
     NFT_MARKETPLACE_ADMIN_ID: process.env.NFT_MARKETPLACE_ADMIN_ID || "nftMarketplaceId",
     NFT_MARKETPLACE_TREASURY_ID: process.env.NFT_MARKETPLACE_TREASURY_ID || "treasuryId",

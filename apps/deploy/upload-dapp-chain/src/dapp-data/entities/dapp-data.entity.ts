@@ -1,12 +1,12 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class DappData {
   @PrimaryColumn()
-  id: string;
+  name: string; // nft | nft_marketplace
 
   @Column()
-  name: string; // nft | nft_marketplace
+  id: string;
 
   @Column()
   release: string;

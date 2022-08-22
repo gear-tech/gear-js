@@ -25,7 +25,14 @@ interface UploadDappInChainInput {
   release: string
 }
 
-type UploadNewDappInChainInput = Pick<UploadDappInChainInput,
-    "gearApi" | "optWasmBuff" | "metaWasmBuff" | "sourceId"> & { dappName: string, release: string, repo: string};
+interface UploadDappAssetData {
+  optWasmDownloadUrl: string;
+  metaWasmDownloadUrl: string;
+  release: string;
+}
 
-export { CreateDappInput, UploadDappInChainInput, UploadNewDappInChainInput };
+type UploadNewDappInChainInput = Pick<UploadDappInChainInput,
+    "gearApi" | "optWasmBuff" | "metaWasmBuff" | "sourceId">
+  & { dappName: string, release: string, repo: string, payload: {[key: string]: string} | string};
+
+export { CreateDappInput, UploadDappInChainInput, UploadNewDappInChainInput, UploadDappAssetData };

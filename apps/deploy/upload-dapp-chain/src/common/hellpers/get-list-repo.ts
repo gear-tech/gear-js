@@ -1,12 +1,22 @@
 import { readFileSync } from "fs";
 import { load } from "js-yaml";
 
+import { DappUploadData } from "../types/dapp-upload-data";
+
 // eslint-disable-next-line consistent-return
-export function getListRepo(): { repo: string }[] {
-  const path = "/../../../src/common/repos/dapps-repo.yaml";
+export function getListRepo(): string[] {
+  const pathDappsPayloads = process.env.DAPPS_PAYLOADS_PATH as string;
   try {
     // eslint-disable-next-line no-path-concat
-    return load(readFileSync(__dirname + path, "utf8")) as { repo: string }[];
+    const payloads = load(readFileSync(__dirname + pathDappsPayloads, "utf8")) as DappUploadData[];
+
+    return payloads.reduce((listPayloads, payload) => {
+      if (!listPayloads.includes(payload.repo)) {
+        // eslint-disable-next-line no-param-reassign
+        listPayloads = [...listPayloads, payload.repo];
+      }
+      return listPayloads;
+    }, [] as string[]);
   } catch (err) {
     console.error(err);
   }

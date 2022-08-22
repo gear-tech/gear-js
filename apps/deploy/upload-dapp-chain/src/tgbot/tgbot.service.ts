@@ -27,8 +27,24 @@ export class TgbotService {
   @Command("listCommands")
   public async listCommands(ctx: Context) {
     await ctx.reply(
-      "/uploadDappInChain [repository] [dappName]",
+      "/uploadDappInChain [repository] [dappName]" + "\n"
+      + "/uploadDappsInChain",
     );
+  }
+
+  @UseGuards(TgAccessAccountsGuard)
+  @Command("uploadDappsInChain")
+  public async uploadDappsInChain(ctx: Context) {
+    try {
+      const uploadDapps = await this.dappDataService.uploadDappsInChain();
+      if (uploadDapps.length >= 1) {
+        for (const uploadDapp of uploadDapps) {
+          await ctx.reply(JSON.stringify(uploadDapp));
+        }
+      }
+    } catch (error) {
+      ctx.reply(error.message);
+    }
   }
 
   @UseGuards(TgAccessAccountsGuard)

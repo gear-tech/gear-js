@@ -4,7 +4,7 @@ import { getLatestReleaseByRepo } from "./get-latest-release-by-repo";
 import { getOptAndMetaWasmAssets } from "./get-opt-and-meta-wasm-assets";
 
 // eslint-disable-next-line consistent-return
-export async function getAllLatestReleaseDapps(): Promise<
+export async function getReleasesWithRepo(): Promise<
   Awaited<{ repo: string; release: Release }>[]
   > {
   const result: { repo: string; release: Release }[] = [];
@@ -12,7 +12,7 @@ export async function getAllLatestReleaseDapps(): Promise<
   const owner = process.env.GITHUB_OWNER_REPO;
 
   try {
-    for (const { repo } of listRepo) {
+    for (const repo of listRepo) {
       const release = await getLatestReleaseByRepo(repo, owner);
       result.push({
         repo,
