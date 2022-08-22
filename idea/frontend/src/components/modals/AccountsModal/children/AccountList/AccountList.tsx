@@ -5,7 +5,7 @@ import { buttonStyles } from '@gear-js/ui';
 
 import styles from './AccountList.module.scss';
 
-import { fileNameHandler } from 'helpers';
+import { getShortName } from 'helpers';
 
 type Props = {
   list: Array<InjectedAccountWithMeta>;
@@ -25,7 +25,7 @@ const AccountList = ({ list, address, toggleAccount }: Props) => {
         >
           <Identicon value={account.address} size={28} theme="polkadot" className={styles.accountIcon} />
           <span className={styles.accountName}>{account.meta.name}</span>
-          <span className={styles.accountAddress}>{fileNameHandler(account.address, 13)}</span>
+          <span className={styles.accountAddress}>{getShortName(account.address, 13)}</span>
         </button>
       </li>
     ));

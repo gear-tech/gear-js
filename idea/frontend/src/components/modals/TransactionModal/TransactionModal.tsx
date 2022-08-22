@@ -3,7 +3,7 @@ import { Modal, Button } from '@gear-js/ui';
 
 import styles from './TransactionModal.module.scss';
 
-import { fileNameHandler } from 'helpers';
+import { getShortName } from 'helpers';
 import { ModalProps } from 'context/modal/types';
 
 export type Props = ModalProps & {
@@ -41,12 +41,12 @@ const TransactionModal = (props: Props) => {
         <Identicon value={addressFrom} size={28} theme="polkadot" className={styles.infoIcon} />
         <p className={styles.infoParticipant}>
           <span className={styles.participantSide}>From:</span>
-          <span className={styles.participantValue}>{fileNameHandler(addressFrom)}</span>
+          <span className={styles.participantValue}>{getShortName(addressFrom)}</span>
         </p>
         {addressTo && (
           <p className={styles.infoParticipant}>
             <span className={styles.participantSide}>To:</span>
-            <span className={styles.participantValue}>{fileNameHandler(addressTo)}</span>
+            <span className={styles.participantValue}>{getShortName(addressTo)}</span>
           </p>
         )}
       </div>

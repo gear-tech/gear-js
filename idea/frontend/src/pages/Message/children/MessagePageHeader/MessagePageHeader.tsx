@@ -1,6 +1,6 @@
 import styles from './MessagePageHeader.module.scss';
 
-import { fileNameHandler } from 'helpers';
+import { getShortName } from 'helpers';
 import { CircleIndicator, IndicatorStatus } from 'components/common/CircleIndicator';
 import { BackButton } from 'components/BackButton/BackButton';
 import headerStyles from 'components/blocks/PageHeader/PageHeader.module.scss';
@@ -20,7 +20,7 @@ const MessagePageHeader = ({ id, exitCode }: Props) => (
           status={exitCode ? IndicatorStatus.Error : IndicatorStatus.Success}
           className={styles.messageIndicator}
         />
-        <span className={headerStyles.fileName}>{fileNameHandler(id)}</span>
+        <span className={headerStyles.fileName}>{getShortName(id)}</span>
       </div>
     </div>
   </div>

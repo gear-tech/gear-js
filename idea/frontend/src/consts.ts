@@ -26,6 +26,8 @@ export const LOCAL_STORAGE = {
 
 export const ACCOUNT_ERRORS = {
   WALLET_NOT_CONNECTED: 'Wallet not connected',
+  WALLET_BALLANCE_IS_ZERO: 'Wallet balance is zero',
+  NOT_ENOUGH_FUNDS_IN_WALLET: 'Not enough funds in the wallet',
 };
 
 export const PROGRAM_ERRORS = {
@@ -52,9 +54,10 @@ export enum TransactionStatus {
 }
 
 export enum GasMethod {
-  Init = 'init',
   Reply = 'reply',
   Handle = 'handle',
+  InitCreate = 'initCreate',
+  InitUpdate = 'initUpdate',
 }
 
 export enum TransactionName {
@@ -62,7 +65,8 @@ export enum TransactionName {
   SendMessage = 'gear.sendMessage',
   ClaimMessage = 'gear.claimValueFromMailbox',
   SubmitCode = 'gear.submitCode',
-  SubmitProgram = 'gear.submitProgram',
+  CreateProgram = 'gear.createProgram',
+  UploadProgram = 'gear.uploadProgram',
 }
 
 export const RPC_METHODS = {
@@ -71,9 +75,11 @@ export const RPC_METHODS = {
   PROGRAMS_USER: 'program.all.user',
   ADD_METADATA: 'program.meta.add',
   GET_METADATA: 'program.meta.get',
-  GET_TEST_BALANCE: 'testBalance.get',
-  GET_ALL_MESSAGES: 'message.all',
   GET_MESSAGE: 'message.data',
+  GET_ALL_MESSAGES: 'message.all',
+  GET_CODE: 'code.data',
+  GET_ALL_CODES: 'code.all',
+  GET_TEST_BALANCE: 'testBalance.get',
 };
 
 export const PAGE_TYPES = {

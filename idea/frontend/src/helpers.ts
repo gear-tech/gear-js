@@ -1,9 +1,20 @@
 import { GearApi } from '@gear-js/api';
 import { Event } from '@polkadot/types/interfaces';
 import isString from 'lodash.isstring';
+import { Account } from '@gear-js/react-hooks';
 
 import { NODE_ADDRESS_REGEX } from 'regexes';
-import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES } from 'consts';
+import { DEVELOPMENT_CHAIN, LOCAL_STORAGE, FILE_TYPES, ACCOUNT_ERRORS } from 'consts';
+
+export const checkWallet = (account?: Account) => {
+  if (!account) {
+    throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
+  }
+
+  if (parseInt(account.balance.value, 10) === 0) {
+    throw new Error(ACCOUNT_ERRORS.WALLET_BALLANCE_IS_ZERO);
+  }
+};
 
 export const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
   const { docs, method: errorMethod } = api.getExtrinsicFailedError(event);
@@ -12,7 +23,7 @@ export const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
   return `${errorMethod}: ${formattedDocs}`;
 };
 
-export const fileNameHandler = (filename: string, maxLength = 24) => {
+export const getShortName = (filename: string, maxLength = 24) => {
   const transformedFileName = filename;
 
   const halfLenght = Math.floor(maxLength / 2);

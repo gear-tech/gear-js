@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 
-import { UploadMetaParams, SignAndSend } from './types';
+import { ParamsToSignAndUpload, ParamsToUploadMeta } from './types';
 import { useModal } from '../index';
 
 import { RPC_METHODS, ACCOUNT_ERRORS } from 'consts';
@@ -15,7 +15,7 @@ const useMetadataUplaod = () => {
   const { account } = useAccount();
   const { showModal } = useModal();
 
-  const signAndUpload = async (params: SignAndSend) => {
+  const signAndUpload = async (params: ParamsToSignAndUpload) => {
     const { name, title, signer, metadataBuffer, programId, jsonMeta, reject, resolve } = params;
 
     const apiRequest = new ServerRPCRequestService();
@@ -53,7 +53,7 @@ const useMetadataUplaod = () => {
   };
 
   const uploadMetadata = useCallback(
-    async (params: UploadMetaParams) => {
+    async (params: ParamsToUploadMeta) => {
       const { name, title, metadata, metadataBuffer, programId, reject, resolve } = params;
 
       try {

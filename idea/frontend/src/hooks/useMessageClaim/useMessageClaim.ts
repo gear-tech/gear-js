@@ -5,12 +5,12 @@ import { UserMessageRead } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '../index';
-import { ClaimMessageParams } from './types';
+import { ParamsToClaimMessage } from './types';
 
-import { ACCOUNT_ERRORS, PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
-import { getExtrinsicFailedMessage } from 'helpers';
+import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
+import { checkWallet, getExtrinsicFailedMessage } from 'helpers';
 import { Method } from 'types/explorer';
-import { SignAndSendArg, OperationCallbacks } from 'types/hooks';
+import { ParamsToSignAndSend, OperationCallbacks } from 'types/hooks';
 
 const useMessageClaim = () => {
   const alert = useAlert();
@@ -38,7 +38,7 @@ const useMessageClaim = () => {
     });
   };
 
-  const signAndSend = async ({ signer, reject, resolve }: SignAndSendArg) => {
+  const signAndSend = async ({ signer, reject, resolve }: ParamsToSignAndSend) => {
     const alertId = alert.loading('SignIn', { title: TransactionName.ClaimMessage });
 
     try {
@@ -65,13 +65,11 @@ const useMessageClaim = () => {
   };
 
   const claimMessage = useCallback(
-    async ({ messageId, reject, resolve }: ClaimMessageParams) => {
+    async ({ messageId, reject, resolve }: ParamsToClaimMessage) => {
       try {
-        if (!account) {
-          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-        }
+        checkWallet(account);
 
-        const { meta, address } = account;
+        const { meta, address } = account!;
 
         api.claimValueFromMailbox.submit(messageId);
 

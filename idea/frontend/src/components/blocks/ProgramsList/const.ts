@@ -1,8 +1,8 @@
 import { HeaderCol } from 'components/common/Table';
 
-import codeSVG from 'assets/images/code_icon.svg';
-import menuSVG from 'assets/images/menu_icon.svg';
-import timestampSVG from 'assets/images/timestamp_icon.svg';
+import codeSVG from 'assets/images/table/code_icon.svg';
+import menuSVG from 'assets/images/table/menu_icon.svg';
+import timestampSVG from 'assets/images/table/timestamp_icon.svg';
 
 export const TABLE_COLS = [1.5, 1, 1];
 

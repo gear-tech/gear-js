@@ -1,9 +1,9 @@
 import { Signer } from '@polkadot/api/types';
 import { Metadata } from '@gear-js/api';
 
-import { OperationCallbacks, SignAndSendArg as CommonSignAndSend } from 'types/hooks';
+import { OperationCallbacks, ParamsToSignAndSend } from 'types/hooks';
 
-export type UploadMetaParams = Partial<OperationCallbacks> & {
+export type ParamsToUploadMeta = Partial<OperationCallbacks> & {
   name: string;
   title?: string;
   signer?: Signer;
@@ -12,8 +12,8 @@ export type UploadMetaParams = Partial<OperationCallbacks> & {
   metadataBuffer: string;
 };
 
-export type SignAndSend = Partial<OperationCallbacks> &
-  Omit<CommonSignAndSend, 'reject' | 'resolve'> &
-  Omit<UploadMetaParams, 'metadata'> & {
+export type ParamsToSignAndUpload = Partial<OperationCallbacks> &
+  Omit<ParamsToSignAndSend, 'reject' | 'resolve'> &
+  Omit<ParamsToUploadMeta, 'metadata'> & {
     jsonMeta: string;
   };

@@ -1,13 +1,14 @@
 import { useCallback } from 'react';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { EventRecord } from '@polkadot/types/interfaces';
+import { Hex } from '@gear-js/api';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '../index';
-import { UploadCodeParams, SignAndSendArg } from './types';
+import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 
-import { readFileAsync, getExtrinsicFailedMessage } from 'helpers';
-import { PROGRAM_ERRORS, ACCOUNT_ERRORS, TransactionName, TransactionStatus } from 'consts';
+import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'helpers';
+import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'consts';
 import { Method } from 'types/explorer';
 import { CopiedInfo } from 'components/common/CopiedInfo';
 
@@ -26,7 +27,7 @@ const useCodeUpload = () => {
     return result.codeHash;
   };
 
-  const handleEventsStatus = (events: EventRecord[], codeHash: SignAndSendArg['codeHash']) => {
+  const handleEventsStatus = (events: EventRecord[], codeHash: Hex) => {
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -39,7 +40,7 @@ const useCodeUpload = () => {
     });
   };
 
-  const signAndSend = async ({ signer, codeHash }: SignAndSendArg) => {
+  const signAndSend = async ({ signer, codeHash }: ParamsToSignAndSend) => {
     const alertId = alert.loading('SignIn', { title: TransactionName.SubmitCode });
 
     try {
@@ -63,13 +64,11 @@ const useCodeUpload = () => {
   };
 
   const uploadCode = useCallback(
-    async ({ file }: UploadCodeParams) => {
+    async ({ file }: ParamsToUploadCode) => {
       try {
-        if (!account) {
-          throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
-        }
+        checkWallet(account);
 
-        const { address, meta } = account;
+        const { address, meta } = account!;
 
         const [codeHash, { signer }] = await Promise.all([submit(file), web3FromSource(meta.source)]);
 

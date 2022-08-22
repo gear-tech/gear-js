@@ -3,9 +3,11 @@ import { Route, Routes } from 'react-router-dom';
 import { routes } from 'routes';
 import { useEvents } from 'hooks';
 import { Main } from 'pages/Main';
+import { Codes } from 'pages/Codes';
 import { Messages } from 'pages/Messages';
 import { AllPrograms } from 'pages/AllPrograms';
 import { UserPrograms } from 'pages/UserPrograms';
+import { Code } from 'pages/Code';
 import { Meta } from 'pages/Meta/Meta';
 import { Send } from 'pages/Send/Send';
 import { State } from 'pages/State';
@@ -28,9 +30,10 @@ const AppRoutes = () => {
     <Routes>
       <Route path={routes.main} element={<MainPageLayout />}>
         <Route index element={<Main />} />
+        <Route path={routes.codes} element={<Codes />} />
+        <Route path={routes.messages} element={<Messages />} />
         <Route path={routes.allPrograms} element={<AllPrograms />} />
         <Route path={routes.uploadedPrograms} element={<UserPrograms />} />
-        <Route path={routes.messages} element={<Messages />} />
       </Route>
 
       <Route path={routes.explorer} element={<ExplorerPageLayout />}>
@@ -44,6 +47,7 @@ const AppRoutes = () => {
       </Route>
 
       <Route path={routes.meta} element={<Meta />} />
+      <Route path={routes.code} element={<Code />} />
       <Route path={routes.state} element={<State />} />
       <Route path={routes.mailbox} element={<Mailbox />} />
       <Route path={routes.message} element={<Message />} />

@@ -35,7 +35,7 @@ const SearchForm = ({ placeholder }: Props) => {
 
     setSearchValue(currentValue);
     searchParams.set(URL_PARAMS.PAGE, String(1));
-    searchParams.set(URL_PARAMS.QUERY, currentValue);
+    searchParams.set(URL_PARAMS.QUERY, currentValue.trim());
   };
 
   const linkClasses = clsx(buttonStyles.button, buttonStyles.secondary, buttonStyles.small);
