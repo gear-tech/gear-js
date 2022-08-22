@@ -65,7 +65,8 @@ export enum TransactionName {
   SendMessage = 'gear.sendMessage',
   ClaimMessage = 'gear.claimValueFromMailbox',
   SubmitCode = 'gear.submitCode',
-  SubmitProgram = 'gear.submitProgram',
+  CreateProgram = 'gear.createProgram',
+  UploadProgram = 'gear.uploadProgram',
 }
 
 export const RPC_METHODS = {

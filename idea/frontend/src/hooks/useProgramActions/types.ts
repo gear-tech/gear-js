@@ -29,6 +29,7 @@ export type ParamsToCreate = OperationCallbacks & DataToCreate;
 
 export type ParamsToSignAndUpload = ParamsToSignAndSend & {
   name: string;
+  title: string;
   payload: Payload;
   programId: string;
 };

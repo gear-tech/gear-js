@@ -81,8 +81,8 @@ const useProgramActions = () => {
     });
   };
 
-  const signAndUpload = async ({ name, signer, payload, programId, reject, resolve }: ParamsToSignAndUpload) => {
-    const alertId = alert.loading('SignIn', { title: TransactionName.SubmitProgram });
+  const signAndUpload = async ({ name, title, signer, payload, programId, reject, resolve }: ParamsToSignAndUpload) => {
+    const alertId = alert.loading('SignIn', { title });
 
     try {
       const initialization = waitForProgramInit(api, programId);
@@ -112,10 +112,10 @@ const useProgramActions = () => {
         return;
       }
 
-      const { title, metadata, metadataBuffer } = payload;
+      const { title: payloadTitle, metadata, metadataBuffer } = payload;
 
       if (isDevChain()) {
-        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title });
+        await uploadLocalProgram({ id: programId, name, owner: account?.decodedAddress!, title: payloadTitle });
       }
 
       if (metadata && metadataBuffer) {
@@ -156,6 +156,7 @@ const useProgramActions = () => {
         const handleConfirm = () =>
           signAndUpload({
             name,
+            title: TransactionName.CreateProgram,
             signer,
             payload,
             programId,
@@ -165,7 +166,7 @@ const useProgramActions = () => {
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
-          name: TransactionName.SubmitProgram,
+          name: TransactionName.CreateProgram,
           addressFrom: address,
           onAbort: reject,
           onConfirm: handleConfirm,
@@ -197,6 +198,7 @@ const useProgramActions = () => {
         const handleConfirm = () =>
           signAndUpload({
             name,
+            title: TransactionName.UploadProgram,
             signer,
             payload,
             programId,
@@ -206,7 +208,7 @@ const useProgramActions = () => {
 
         showModal('transaction', {
           fee: partialFee.toHuman(),
-          name: TransactionName.SubmitProgram,
+          name: TransactionName.UploadProgram,
           addressFrom: address,
           onAbort: reject,
           onConfirm: handleConfirm,
