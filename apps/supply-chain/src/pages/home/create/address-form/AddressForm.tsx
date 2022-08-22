@@ -24,8 +24,8 @@ function AddressForm({ id, onSubmit }: Props) {
   const nftInputClassName = clsx(commonStyles.input, styles.nftInput);
 
   const handleSubmit = form.onSubmit(async ({ nftProgramId, ftProgramId }) => {
-    const isNftExists = await api.program.exists(nftProgramId);
-    const isFtExists = await api.program.exists(ftProgramId);
+    const programExistencePromises = [api.program.exists(nftProgramId), api.program.exists(ftProgramId)];
+    const [isNftExists, isFtExists] = await Promise.all(programExistencePromises);
 
     if (!isNftExists || !isFtExists) {
       if (!isNftExists) setFieldError('nftProgramId', 'Program not found in the storage');
