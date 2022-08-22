@@ -11,7 +11,7 @@
     },
     "dependencies": {
       "@gear-js/api": "^0.25.2",
-      "@gear-js/react-hooks": "^0.2.18",
+      "@gear-js/react-hooks": "^0.2.19",
       "@gear-js/ui": "^0.4.0",
       "@mantine/form": "^4.2.12",
       "@polkadot/api": "^9.2.2",
@@ -27,6 +27,7 @@
       "@types/node": "^16.11.36",
       "@types/react": "^18.0.9",
       "@types/react-dom": "^18.0.4",
+      "buffer": "^6.0.3",
       "clsx": "^1.1.1",
       "react": "^18.1.0",
       "react-dom": "^18.1.0",
