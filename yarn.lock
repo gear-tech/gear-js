@@ -2083,6 +2083,7 @@ __metadata:
     "@types/react-dom": ^18.0.6
     "@typescript-eslint/eslint-plugin": ^5.30.6
     "@typescript-eslint/parser": ^5.30.6
+    buffer: ^6.0.3
     clsx: ^1.2.1
     eslint: ^8.19.0
     eslint-config-airbnb: ^19.0.4
@@ -2192,6 +2193,7 @@ __metadata:
     "@types/react-dom": ^18.0.5
     "@typescript-eslint/eslint-plugin": ^5.30.5
     "@typescript-eslint/parser": ^5.30.5
+    buffer: ^6.0.3
     clsx: ^1.2.0
     eslint: ^8.19.0
     eslint-config-airbnb: ^19.0.4
@@ -2337,6 +2339,7 @@ __metadata:
     "@types/react-dom": ^18.0.5
     "@typescript-eslint/eslint-plugin": ^5.28.0
     "@typescript-eslint/parser": ^5.28.0
+    buffer: ^6.0.3
     clsx: ^1.1.1
     eslint: ^8.17.0
     eslint-config-airbnb: ^19.0.4
@@ -2379,6 +2382,7 @@ __metadata:
     "@types/react-dom": ^18.0.5
     "@typescript-eslint/eslint-plugin": ^5.30.0
     "@typescript-eslint/parser": ^5.30.0
+    buffer: ^6.0.3
     clsx: ^1.1.1
     eslint: ^8.18.0
     eslint-config-airbnb: ^19.0.4
@@ -2424,6 +2428,7 @@ __metadata:
     "@types/react-dom": ^18.0.4
     "@typescript-eslint/eslint-plugin": ^5.25.0
     "@typescript-eslint/parser": ^5.25.0
+    buffer: ^6.0.3
     clsx: ^1.1.1
     eslint: ^8.16.0
     eslint-config-airbnb: ^19.0.4
@@ -19291,6 +19296,7 @@ __metadata:
     "@types/react-dom": ^18.0.6
     "@typescript-eslint/eslint-plugin": ^5.30.6
     "@typescript-eslint/parser": ^5.30.6
+    buffer: ^6.0.3
     clsx: ^1.2.1
     eslint: ^8.19.0
     eslint-config-airbnb: ^19.0.4
@@ -19565,6 +19571,7 @@ __metadata:
     "@types/react-dom": ^18.0.6
     "@typescript-eslint/eslint-plugin": ^5.32.0
     "@typescript-eslint/parser": ^5.32.0
+    buffer: ^6.0.3
     clsx: ^1.2.1
     eslint: ^8.21.0
     eslint-config-airbnb: ^19.0.4

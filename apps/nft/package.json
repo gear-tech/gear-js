@@ -38,6 +38,7 @@
     "@types/node": "^16.11.36",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
+    "buffer": "^6.0.3",
     "clsx": "^1.1.1",
     "ipfs-http-client": "^57.0.1",
     "react": "^18.1.0",
