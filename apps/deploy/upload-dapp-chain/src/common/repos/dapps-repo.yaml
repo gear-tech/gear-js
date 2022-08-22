@@ -1,3 +1,11 @@
+- nft_marketplace:
+  dappName: "nft_marketplace"
+  repo: "non-fungible-token"
+  payload:
+    adminId: "0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"
+    treasuryId: "0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"
+    treasuryFee: "1"
+
 - nft:
   dappName: "nft"
   repo: "non-fungible-token"
@@ -7,13 +15,14 @@
     baseUrl: "test"
     royalties: NULL
 
-- nft_marketplace:
-  dappName: "nft_marketplace"
+- nft:
+  dappName: "nft"
   repo: "non-fungible-token"
   payload:
-    adminId: "0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"
-    treasuryId: "0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"
-    treasuryFee: "1"
+    name: "test"
+    symbol: "test"
+    baseUrl: "test"
+    royalties: NULL
 
 - lottery:
   dappName: "lottery"
