@@ -11,11 +11,6 @@ export class DappDataController {
     private dappDataRepository: DappDataRepo,
   ) {}
 
-  @Get("release")
-  public getLatestRelease() {
-    return this.dappDataService.getLatestReleasesDapps();
-  }
-
   @Get(":id")
   public getDappDataById(@Param("id") id: string): Promise<DappData> {
     return this.dappDataRepository.get(id);
