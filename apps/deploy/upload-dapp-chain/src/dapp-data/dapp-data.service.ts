@@ -76,6 +76,7 @@ export class DappDataService {
           metaWasmBuff,
           sourceId,
           release,
+          payload,
         });
       }
       return this.uploadNewDappInChain({
@@ -134,6 +135,7 @@ export class DappDataService {
           metaWasmBuff,
           sourceId,
           release,
+          payload,
         }));
       } else {
         promises.push(this.uploadNewDappInChain({
@@ -164,7 +166,7 @@ export class DappDataService {
     const gas = await gearApi.program.calculateGas.initUpload(
       sourceId,
       optWasmBuff,
-      meta.types,
+      uploadDappInChainInput.payload,
       0,
       true,
     );
@@ -203,7 +205,7 @@ export class DappDataService {
     const gas = await gearApi.program.calculateGas.initUpload(
       sourceId,
       optWasmBuff,
-      meta.types,
+      payload,
       0,
       true,
     );

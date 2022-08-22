@@ -22,7 +22,8 @@ interface UploadDappInChainInput {
   optWasmBuff: Buffer;
   metaWasmBuff: Buffer;
   sourceId: Hex;
-  release: string
+  release: string;
+  payload: {[key: string]: string} | string;
 }
 
 interface UploadDappAssetData {
