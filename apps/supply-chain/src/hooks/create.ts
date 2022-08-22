@@ -5,15 +5,9 @@ import { USER } from 'consts';
 type SetUsers = Dispatch<SetStateAction<Hex[]>>;
 
 function useUsers() {
-  const [producers, setProducers] = useState([
-    '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-  ] as Hex[]);
-  const [distributors, setDistributors] = useState([
-    '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-  ] as Hex[]);
-  const [retailers, setRetailers] = useState([
-    '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d',
-  ] as Hex[]);
+  const [producers, setProducers] = useState<Hex[]>([]);
+  const [distributors, setDistributors] = useState<Hex[]>([]);
+  const [retailers, setRetailers] = useState<Hex[]>([]);
 
   const isAnyUser = producers.length > 0 || distributors.length > 0 || retailers.length > 0;
 
