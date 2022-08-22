@@ -112,7 +112,7 @@ function useSupplyChainUpload(onSuccess: (programId: Hex) => void) {
       );
       const gasLimit = gas.min_limit;
 
-      const alertId = alert.loading('SignIn', { title: 'gear.submitProgram' });
+      const alertId = alert.loading('SignIn', { title: 'gear.uploadProgram' });
 
       const { signer } = await web3FromSource(account.meta.source);
 
