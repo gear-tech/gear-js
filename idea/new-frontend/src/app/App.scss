@@ -1,0 +1,12 @@
+@use 'assets/styles';
+@use '@gear-js/ui/variables' as *;
+
+#root {
+  max-width: 1200px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: content-box;
+}
