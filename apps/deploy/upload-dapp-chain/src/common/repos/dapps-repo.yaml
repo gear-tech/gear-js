@@ -15,14 +15,14 @@
     baseUrl: "test"
     royalties: NULL
 
-#- nft:
-#  dappName: "#nft"
-#  repo: "non-fungible-token"
-#  payload:
-#    name: "test"
-#    symbol: "test"
-#    baseUrl: "test"
-#    royalties: NULL
+- nft:
+  dappName: "#nft"
+  repo: "non-fungible-token"
+  payload:
+    name: "test"
+    symbol: "test"
+    baseUrl: "test"
+    royalties: NULL
 
 - lottery:
   dappName: "lottery"

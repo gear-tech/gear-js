@@ -27,6 +27,7 @@ import { DappDataRepo } from "./dapp-data.repo";
 import { gearService } from "../gear/gear-service";
 import { BadRequestExc } from "../common/exceptions/bad-request.exception";
 import { sendTransaction } from "../common/hellpers/send-transaction";
+import { ApiKey } from "../common/enums";
 
 @Injectable()
 export class DappDataService {
@@ -88,6 +89,7 @@ export class DappDataService {
         payload,
       });
     } catch (error) {
+      console.log(error);
       this.logger.error(error);
     }
   }
@@ -146,9 +148,11 @@ export class DappDataService {
     }
 
     try {
+      await this.sendMessageUploadedMarketplace(result);
       return result;
     } catch (error) {
       console.log(error);
+      this.logger.error(error);
     }
   }
 
@@ -177,7 +181,7 @@ export class DappDataService {
 
     const { programId } = gearApi.program.upload(program, meta);
     const status = checkInitProgram(gearApi, programId);
-    await sendTransaction(gearApi, AL, "MessageEnqueued");
+    await sendTransaction(gearApi, AL, "MessageEnqueued", ApiKey.PROGRAM);
 
     console.log("_________>status", await status);
 
@@ -225,7 +229,7 @@ export class DappDataService {
       initPayload: payload,
     }, meta);
     const status = checkInitProgram(gearApi, programId);
-    await sendTransaction(gearApi, AL, "MessageEnqueued");
+    await sendTransaction(gearApi, AL, "MessageEnqueued", ApiKey.PROGRAM);
 
     console.log("_________>status", await status);
 
@@ -278,5 +282,46 @@ export class DappDataService {
       }
     }
     return result;
+  }
+
+  private async sendMessageUploadedMarketplace(uploadedPrograms: DappData[]): Promise<void> {
+    const gearApi = gearService.getApi();
+    const [AL] = await getAccount();
+    const sourceId = decodeAddress(AL.address);
+    const nftForMarketplace = uploadedPrograms.find(uploadedProgram => uploadedProgram.name === "#nft");
+
+    if (!nftForMarketplace) {
+      return;
+    }
+
+    try {
+      const dapp = await this.dappDataRepository.getByName("nft_marketplace");
+
+      const buff = Buffer.from(dapp.metaWasmBase64, "base64");
+      const meta = await getWasmMetadata(buff);
+
+      const gas = await gearApi.program.calculateGas.handle(
+        sourceId,
+        buff,
+        { AddNftContract: nftForMarketplace.id },
+        0,
+        true,
+        meta,
+      );
+
+      const message: IMessageSendOptions = {
+        destination: dapp.id as Hex,
+        payload: { AddNftContract: nftForMarketplace.id },
+        gasLimit: gas.min_limit,
+        value: 0,
+      };
+
+      gearApi.message.send(message, meta);
+
+      await sendTransaction(gearApi, AL, "MessageEnqueued", ApiKey.MESSAGE);
+    } catch (error) {
+      console.error(error);
+      this.logger.error(error);
+    }
   }
 }
