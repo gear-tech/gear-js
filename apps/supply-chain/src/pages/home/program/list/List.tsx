@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
+import { ACTION_ICONS } from 'consts';
 import styles from './List.module.scss';
 
 type Props = {
@@ -10,16 +11,22 @@ type Props = {
 
 function List({ list, value, onChange }: Props) {
   const getItems = () =>
-    list.map((item) => (
-      <li key={item}>
-        <button
-          type="button"
-          className={clsx(buttonStyles.resets, styles.button, value === item && styles.active)}
-          onClick={() => onChange(item)}>
-          {item}
-        </button>
-      </li>
-    ));
+    list.map((item) => {
+      const SVG = ACTION_ICONS[item];
+      const isActive = value === item;
+
+      const buttonClassName = clsx(buttonStyles.resets, styles.button, isActive && styles.active);
+      const iconClassName = clsx(styles.icon, isActive && styles.active);
+
+      return (
+        <li key={item}>
+          <button type="button" className={buttonClassName} onClick={() => onChange(item)}>
+            {SVG && <SVG className={iconClassName} />}
+            {item}
+          </button>
+        </li>
+      );
+    });
 
   return <ul className={styles.list}>{getItems()}</ul>;
 }

@@ -1,3 +1,13 @@
+import { ReactComponent as produceSVG } from 'assets/images/actions/produce.svg';
+import { ReactComponent as saleSVG } from 'assets/images/actions/sale.svg';
+import { ReactComponent as approveSVG } from 'assets/images/actions/approve.svg';
+import { ReactComponent as shipSVG } from 'assets/images/actions/ship.svg';
+import { ReactComponent as purchaseSVG } from 'assets/images/actions/purchase.svg';
+import { ReactComponent as receiveSVG } from 'assets/images/actions/receive.svg';
+import { ReactComponent as processSVG } from 'assets/images/actions/process.svg';
+import { ReactComponent as packSVG } from 'assets/images/actions/pack.svg';
+import { ReactComponent as infoSVG } from 'assets/images/actions/info.svg';
+
 const ADDRESS = {
   NODE: process.env.REACT_APP_NODE_ADDRESS as string,
 };
@@ -49,4 +59,16 @@ const ACTIONS = {
   [USER.CONSUMER]: [ACTION.PURCHASE, ACTION.INFO],
 };
 
-export { ADDRESS, LOCAL_STORAGE, FORM, USER, ROLES, ACTION, ACTIONS };
+const ACTION_ICONS = {
+  [ACTION.PRODUCE]: produceSVG,
+  [ACTION.SALE]: saleSVG,
+  [ACTION.APPROVE]: approveSVG,
+  [ACTION.SHIP]: shipSVG,
+  [ACTION.PURCHASE]: purchaseSVG,
+  [ACTION.RECEIVE]: receiveSVG,
+  [ACTION.PROCESS]: processSVG,
+  [ACTION.PACKAGE]: packSVG,
+  [ACTION.INFO]: infoSVG,
+};
+
+export { ADDRESS, LOCAL_STORAGE, FORM, USER, ROLES, ACTION, ACTIONS, ACTION_ICONS };

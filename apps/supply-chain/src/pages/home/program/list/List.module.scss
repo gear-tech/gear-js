@@ -8,7 +8,7 @@
 
 .list {
   display: inline-block;
-  min-width: 280px;
+  min-width: 305px;
   min-height: 450px;
   background-color: #1e1e1e;
   border-right: 1px solid #3d3d3d;
@@ -46,5 +46,14 @@
     &::after {
       @include arrow(true);
     }
+  }
+}
+
+.icon {
+  margin-right: 13px;
+
+  &.active {
+    fill: $successColor;
+    fill-opacity: 1;
   }
 }
