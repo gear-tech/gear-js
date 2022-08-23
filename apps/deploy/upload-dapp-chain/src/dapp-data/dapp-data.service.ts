@@ -1,11 +1,12 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { HttpService } from "@nestjs/axios";
-import { decodeAddress, getWasmMetadata } from "@gear-js/api";
+import { decodeAddress, getWasmMetadata, Hex, IMessageSendOptions } from "@gear-js/api";
 import { plainToClass } from "class-transformer";
 import fetch from "node-fetch";
 
 import {
+  checkInitProgram,
   getAccount,
   getLatestReleaseByRepo,
   getNameDapp,
@@ -25,6 +26,7 @@ import { DappData } from "./entities/dapp-data.entity";
 import { DappDataRepo } from "./dapp-data.repo";
 import { gearService } from "../gear/gear-service";
 import { BadRequestExc } from "../common/exceptions/bad-request.exception";
+import { sendTransaction } from "../common/hellpers/send-transaction";
 
 @Injectable()
 export class DappDataService {
@@ -39,8 +41,6 @@ export class DappDataService {
   public async uploadDappInChain(uploadDappInChainTGInput: UploadDappInChainTGInput): Promise<DappData> {
     const { dappName, repo } = uploadDappInChainTGInput;
     const gearApi = gearService.getApi();
-    const [AL] = await getAccount();
-    const sourceId = decodeAddress(AL.address);
 
     try {
       const response = await getLatestReleaseByRepo(
@@ -57,7 +57,7 @@ export class DappDataService {
         metaWasmDownloadUrl,
         optWasmDownloadUrl,
         release,
-      } = this.getUploadDappByRepoAndDappName(dappName, repo, [response.data]);
+      } = this.getUploadDappByRepoAndName(dappName, repo, [response.data]);
 
       const [optWasmData, metaWasmData] = await Promise.all([
         fetch(optWasmDownloadUrl),
@@ -74,14 +74,12 @@ export class DappDataService {
           dappData: dapp,
           optWasmBuff,
           metaWasmBuff,
-          sourceId,
           release,
           payload,
         });
       }
       return this.uploadNewDappInChain({
         gearApi,
-        sourceId,
         metaWasmBuff,
         optWasmBuff,
         dappName,
@@ -96,13 +94,11 @@ export class DappDataService {
 
   // eslint-disable-next-line consistent-return
   public async uploadDappsInChain(): Promise<DappData[]> {
-    const promises = [];
+    const result: DappData[] = [];
     const releases = await getReleases();
     const dappUploadDataList = getPayloads();
 
     const gearApi = gearService.getApi();
-    const [AL] = await getAccount();
-    const sourceId = decodeAddress(AL.address);
 
     for (const dappUploadData of dappUploadDataList) {
       const { dappName, repo } = dappUploadData;
@@ -111,7 +107,7 @@ export class DappDataService {
         metaWasmDownloadUrl,
         optWasmDownloadUrl,
         release,
-      } = this.getUploadDappByRepoAndDappName(dappName, repo, releases);
+      } = this.getUploadDappByRepoAndName(dappName, repo, releases);
 
       const dapp = await this.dappDataRepository.getByNameAndRepo(
         dappName,
@@ -128,19 +124,17 @@ export class DappDataService {
       const { payload } = getUploadDappDataByDappName(dappName);
 
       if (dapp) {
-        promises.push(this.uploadDappInChainAndUpdate({
+        result.push(await this.uploadDappInChainAndUpdate({
           gearApi,
           dappData: dapp,
           optWasmBuff,
           metaWasmBuff,
-          sourceId,
           release,
           payload,
         }));
       } else {
-        promises.push(this.uploadNewDappInChain({
+        result.push(await this.uploadNewDappInChain({
           gearApi,
-          sourceId,
           metaWasmBuff,
           optWasmBuff,
           dappName,
@@ -152,16 +146,18 @@ export class DappDataService {
     }
 
     try {
-      return Promise.all(promises);
+      return result;
     } catch (error) {
       console.log(error);
     }
   }
 
   private async uploadDappInChainAndUpdate(uploadDappInChainInput: UploadDappInChainInput): Promise<DappData> {
-    const { dappData, optWasmBuff, metaWasmBuff, sourceId, gearApi, release } = uploadDappInChainInput;
+    const { dappData, optWasmBuff, metaWasmBuff, gearApi, release } = uploadDappInChainInput;
 
     const meta = await getWasmMetadata(metaWasmBuff);
+    const [AL] = await getAccount();
+    const sourceId = decodeAddress(AL.address);
 
     const gas = await gearApi.program.calculateGas.initUpload(
       sourceId,
@@ -169,17 +165,26 @@ export class DappDataService {
       uploadDappInChainInput.payload,
       0,
       true,
+      meta,
     );
+
     const program = {
       code: optWasmBuff,
       gasLimit: gas.min_limit,
       value: 0,
+      initPayload: uploadDappInChainInput.payload,
     };
+
     const { programId } = gearApi.program.upload(program, meta);
+    const status = checkInitProgram(gearApi, programId);
+    await sendTransaction(gearApi, AL, "MessageEnqueued");
+
+    console.log("_________>status", await status);
 
     dappData.id = programId;
     dappData.release = release;
     dappData.metaWasmBase64 = metaWasmBuff.toString("base64");
+    dappData.updatedAt = new Date();
 
     const updateDapp = await this.dappDataRepository.save(dappData);
 
@@ -187,14 +192,16 @@ export class DappDataService {
   }
 
   private async uploadNewDappInChain(uploadNewDappInChainInput: UploadNewDappInChainInput): Promise<DappData> {
-    const { sourceId,
-      metaWasmBuff,
+    const { metaWasmBuff,
       optWasmBuff,
       gearApi,
       dappName,
       release,
       repo,
       payload } = uploadNewDappInChainInput;
+
+    const [AL] = await getAccount();
+    const sourceId = decodeAddress(AL.address);
 
     if (!payload) {
       throw new BadRequestExc("Invalid dapp name");
@@ -208,6 +215,7 @@ export class DappDataService {
       payload,
       0,
       true,
+      meta,
     );
 
     const { programId } = gearApi.program.upload({
@@ -216,6 +224,10 @@ export class DappDataService {
       value: 0,
       initPayload: payload,
     }, meta);
+    const status = checkInitProgram(gearApi, programId);
+    await sendTransaction(gearApi, AL, "MessageEnqueued");
+
+    console.log("_________>status", await status);
 
     const createDappInput: CreateDappInput = {
       id: programId,
@@ -233,14 +245,17 @@ export class DappDataService {
   private createDapp(createDappInput: CreateDappInput): Promise<DappData> {
     const dappDbType = plainToClass(DappData, {
       ...createDappInput,
+      updatedAt: new Date(),
     });
     return this.dappDataRepository.save(dappDbType);
   }
 
   // eslint-disable-next-line consistent-return
-  private getUploadDappByRepoAndDappName(name: string, repo: string, releases: Release[]): UploadDappAssetData {
+  private getUploadDappByRepoAndName(name: string, repo: string, releases: Release[]): UploadDappAssetData {
+    const dappName = name === "#nft" ? "nft" : name;
+
     for (const release of releases) {
-      const [optUrl, metaUrl] = this.getDownloadUrlOptAndMetaWasmByNameDapp(name, release.assets);
+      const [optUrl, metaUrl] = this.getDownloadUrlOptAndMetaWasmByNameDapp(dappName, release.assets);
 
       if (optUrl && metaUrl) {
         return { metaWasmDownloadUrl: metaUrl, optWasmDownloadUrl: optUrl, release: release.tag_name };

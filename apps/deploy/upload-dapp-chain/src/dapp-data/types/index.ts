@@ -8,6 +8,8 @@ export class UploadDappInChainTGInput {
   public repo!: REPO;
 }
 
+type Payload = {[key: string]: string} | string;
+
 interface CreateDappInput {
   id: string;
   name: string;
@@ -21,9 +23,12 @@ interface UploadDappInChainInput {
   dappData: DappData;
   optWasmBuff: Buffer;
   metaWasmBuff: Buffer;
-  sourceId: Hex;
   release: string;
-  payload: {[key: string]: string} | string;
+  payload: Payload
+}
+
+interface SendMessageUploadedMarketplaceInput {
+  uploadedNftProgramId: string
 }
 
 interface UploadDappAssetData {
@@ -33,7 +38,11 @@ interface UploadDappAssetData {
 }
 
 type UploadNewDappInChainInput = Pick<UploadDappInChainInput,
-    "gearApi" | "optWasmBuff" | "metaWasmBuff" | "sourceId">
+    "gearApi" | "optWasmBuff" | "metaWasmBuff" >
   & { dappName: string, release: string, repo: string, payload: {[key: string]: string} | string};
 
-export { CreateDappInput, UploadDappInChainInput, UploadNewDappInChainInput, UploadDappAssetData };
+export { CreateDappInput,
+  UploadDappInChainInput,
+  UploadNewDappInChainInput,
+  UploadDappAssetData,
+  SendMessageUploadedMarketplaceInput };

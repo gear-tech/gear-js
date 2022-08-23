@@ -1,11 +1,9 @@
 import { Command, Update } from "nestjs-telegraf";
-import { UseGuards } from "@nestjs/common";
 
 import { Markup } from "telegraf";
 import { DappDataService } from "../dapp-data/dapp-data.service";
 import { Context } from "./types";
-import { TgAccessAdminsGuard } from "../common/guards/tg-access-admins.guard";
-import { DAPP, REPO } from "../common/enums";
+import { DAPP, REPO, Role } from "../common/enums";
 import { TgbotUserRepo } from "./tgbot-user.repo";
 import { getTgCommands } from "../common/hellpers";
 
@@ -16,24 +14,27 @@ export class TgbotService {
     private tgbotUserRepo: TgbotUserRepo,
   ) {}
 
-  @UseGuards(TgAccessAdminsGuard)
   @Command("addAccessUser")
   public async addAccessUser(ctx: Context) {
     let res;
     // @ts-ignore
     const [, id] = ctx.message.text.split(" ");
 
-    if (!id) {
-      res = "Invalid command arguments 😡";
-    } else {
-      const tgUser = await this.tgbotUserRepo.get(id);
-
-      if (tgUser) {
-        res = "User already exists";
+    if (await this.isAdmin(String(ctx.from.id))) {
+      if (!id) {
+        res = "Invalid command arguments 😡";
       } else {
-        await this.tgbotUserRepo.save({ id });
-        res = "User successfully register";
+        const tgUser = await this.tgbotUserRepo.get(id);
+
+        if (tgUser) {
+          res = "User already exists";
+        } else {
+          await this.tgbotUserRepo.save({ id, role: Role.DEV });
+          res = "User successfully register";
+        }
       }
+    } else {
+      res = "Access denied";
     }
 
     ctx.reply(res);
@@ -70,7 +71,7 @@ export class TgbotService {
           }
         }
       } catch (error) {
-        ctx.reply(error.message);
+        ctx.reply(error);
       }
     } else {
       await ctx.reply("Access denied");
@@ -120,5 +121,11 @@ export class TgbotService {
     const tgUser = await this.tgbotUserRepo.get(userId);
 
     return !!tgUser;
+  }
+
+  private async isAdmin(userId: string): Promise<boolean> {
+    const tgUser = await this.tgbotUserRepo.get(userId);
+
+    return tgUser.role === Role.ADMIN;
   }
 }

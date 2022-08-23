@@ -7,6 +7,7 @@ import { getUploadDappDataByDappName } from "./get-upload-dapp-data-by-dapp-name
 import { getPayloads } from "./get-payloads";
 import { getReleases } from "./get-releases";
 import { getTgCommands } from "./get-tg-commands";
+import { checkInitProgram } from "./check-init-program";
 
 export {
   getUploadDappDataByDappName,
@@ -18,4 +19,5 @@ export {
   getPayloads,
   getReleases,
   getTgCommands,
+  checkInitProgram,
 };
