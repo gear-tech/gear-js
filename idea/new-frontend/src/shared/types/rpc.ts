@@ -1,4 +1,4 @@
-enum JSONRPCErrorCode {
+export enum JSONRPCErrorCode {
   ParseError = -32700,
   InvalidRequest = -32600,
   MethodNotFound = -32601,
@@ -11,13 +11,6 @@ type JsonRpcVersion = '2.0';
 type JsonRpcId = number | string | void;
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-
-type RPCRequest = {
-  jsonrpc: JsonRpcVersion;
-  method: string;
-  id?: JsonRpcId;
-  params?: Object;
-};
 
 type RPCError = {
   code: string | JSONRPCErrorCode;
@@ -32,9 +25,14 @@ type RPCServerResponse<Result> = {
   error: RPCError;
 };
 
-type RPCErrorResponse = PartialBy<RPCServerResponse<undefined>, 'result'>;
-type RPCSuccessResponse<Result> = PartialBy<RPCServerResponse<Result>, 'error'>;
+export type RPCErrorResponse = PartialBy<RPCServerResponse<undefined>, 'result'>;
+export type RPCSuccessResponse<Result> = PartialBy<RPCServerResponse<Result>, 'error'>;
 
-type RPCResponse<Result> = RPCSuccessResponse<Result> | RPCErrorResponse;
+export type RPCRequest = {
+  jsonrpc: JsonRpcVersion;
+  method: string;
+  id?: JsonRpcId;
+  params?: Object;
+};
 
-export type { RPCRequest, RPCResponse, RPCErrorResponse, RPCSuccessResponse, JSONRPCErrorCode };
+export type RPCResponse<Result> = RPCSuccessResponse<Result> | RPCErrorResponse;

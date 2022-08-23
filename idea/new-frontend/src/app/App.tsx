@@ -1,6 +1,6 @@
 // import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
 
-import { useAccountSubscriptions } from 'shared/hooks';
+import { useAccountSubscriptions } from 'hooks';
 
 import './App.scss';
 import { withProviders } from './providers';

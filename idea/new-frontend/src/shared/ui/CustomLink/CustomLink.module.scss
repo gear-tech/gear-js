@@ -1,0 +1,11 @@
+@use '@gear-js/ui/variables' as *;
+
+.customLink {
+  color: $textColor;
+  font-size: $fontSize;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

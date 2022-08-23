@@ -1,0 +1,13 @@
+@use '@gear-js/ui/variables' as *;
+
+.fieldset {
+  border: 1px solid $lineColor;
+  border-radius: $borderRadius;
+  padding: 16px;
+
+  .legend {
+    color: $textColor;
+    font-size: $fontSize;
+    padding: 0 5px;
+  }
+}
