@@ -2,6 +2,15 @@
 @use '@gear-js/ui/breakpoints' as *;
 @use 'assets/scss/common.scss' as *;
 
+.programWrapper {
+  display: flex;
+  align-items: center;
+
+  @include md {
+    flex-direction: column;
+  }
+}
+
 .programsListNumber {
   color: $textColorSecondary;
   font-size: $fontSizeLarge;
@@ -12,18 +21,10 @@
   }
 }
 
-.programWrapper {
-  display: flex;
-  align-items: center;
-  min-width: 270px;
-
-  @include md {
-    flex-direction: column;
-  }
-}
-
 .programWrapperName {
   padding: 0 5px;
+  margin-right: 5px;
+  line-height: 21px;
 
   @include md {
     width: 100%;
@@ -56,29 +57,10 @@
   }
 }
 
-.programWrapperData {
-  display: flex;
-  flex: 0 2 300px;
-  color: $textColorSecondary;
-
-  @include md {
-    width: 100%;
-    flex: unset;
-    justify-content: space-between;
-    flex-direction: column;
-  }
-}
-
 .programsListInfoData {
   color: $textColor;
   display: inline-block;
   min-width: 56px;
-  margin-left: 16px;
-
-  @include md {
-    color: $textColorSecondary;
-    margin-left: 0;
-  }
 }
 
 .programsListBtns {

@@ -5,6 +5,6 @@ export type OperationCallbacks = {
   resolve: () => void;
 };
 
-export type SignAndSendArg = Required<OperationCallbacks> & {
+export type ParamsToSignAndSend = Required<OperationCallbacks> & {
   signer: Signer;
 };

@@ -1,7 +1,7 @@
 import { HeaderCol } from 'components/common/Table';
-import codeSVG from 'assets/images/code_icon.svg';
-import messageIdSVG from 'assets/images/id_icon.svg';
-import timestampSVG from 'assets/images/timestamp_icon.svg';
+import codeSVG from 'assets/images/table/code_icon.svg';
+import messageIdSVG from 'assets/images/table/id_icon.svg';
+import timestampSVG from 'assets/images/table/timestamp_icon.svg';
 
 export const TABLE_COLS = [2, 4, 1];
 

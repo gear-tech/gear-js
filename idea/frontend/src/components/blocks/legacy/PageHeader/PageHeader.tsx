@@ -1,6 +1,6 @@
 import { VFC } from 'react';
 import { PAGE_TYPES } from 'consts';
-import { fileNameHandler } from 'helpers';
+import { getShortName } from 'helpers';
 import ArrowBack from 'assets/images/arrow_back.svg';
 import ProgramIllustration from 'assets/images/program_icon.svg';
 import close from 'assets/images/close.svg';
@@ -36,7 +36,7 @@ export const PageHeader: VFC<Props> = ({ programName, pageType, handleClose }) =
         </button>
         <h2 className="message-header--info__text">{headInscription}</h2>
         <img src={ProgramIllustration} alt="program" className="message-header--info__icon" />
-        <h2 className="message-header--info__filename">{fileNameHandler(programName)}</h2>
+        <h2 className="message-header--info__filename">{getShortName(programName)}</h2>
       </div>
       <Wallet />
       <button type="reset" aria-label="closeButton" form={formId} className="message-header--info__close">

@@ -102,10 +102,17 @@ function useUploadProgram(onSuccess: (programId: Hex) => void) {
       const initPayload = { ftProgramId };
       const value = 0;
 
-      const gas = await api.program.calculateGas.init(decodedAddress, buffer, initPayload, value, false, metadata);
+      const gas = await api.program.calculateGas.initUpload(
+        decodedAddress,
+        buffer,
+        initPayload,
+        value,
+        false,
+        metadata,
+      );
       const gasLimit = gas.min_limit;
 
-      const alertId = alert.loading('SignIn', { title: 'gear.submitProgram' });
+      const alertId = alert.loading('SignIn', { title: 'gear.uploadProgram' });
 
       const { signer } = await web3FromSource(account.meta.source);
 

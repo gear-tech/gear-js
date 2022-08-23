@@ -15,7 +15,7 @@ export { useProgram } from './useProgram';
 export { useMessage } from './useMessage';
 export { useCodeUpload } from './useCodeUpload';
 export { useMessageClaim } from './useMessageClaim';
-export { useProgramUpload } from './useProgramUplaod';
+export { useProgramActions } from './useProgramActions';
 export { useMetadataUplaod } from './useMetadataUpload';
 export { useBalanceTransfer } from './useBalanceTransfer';
 export { useAccountSubscriptions } from './useAccountSubscriptions';

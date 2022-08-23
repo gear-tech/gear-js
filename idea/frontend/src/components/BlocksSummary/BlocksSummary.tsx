@@ -59,7 +59,6 @@ const BlocksSummary = () => {
           <span className={styles.number}>{totalIssuance}</span>
           <span>MUnit</span>
           <Tooltip
-            width={245}
             content="Total issuance balance MUnits"
             className={styles.question}
             contentClassName={styles.questionTooltip}

@@ -12,6 +12,7 @@ import { copyToClipboard, formatDate } from 'helpers';
 import { ProgramModel } from 'types/program';
 import { CustomLink } from 'components/common/CustomLink';
 import { CircleIndicator } from 'components/common/CircleIndicator';
+import { Tooltip } from 'components/common/Tooltip';
 import copySVG from 'assets/images/copy.svg';
 import messageSVG from 'assets/images/message.svg';
 import uploadMetaSVG from 'assets/images/upload-cloud.svg';
@@ -35,14 +36,12 @@ const ProgramItem = memo(({ program, isMetaLinkActive }: Props) => {
         <div className={styles.programWrapperName}>
           <CustomLink to={generatePath(routes.program, { programId })} text={name || programId} />
         </div>
-        <div className={styles.programsCopyId}>
+        <Tooltip content="Copy ID">
           <Button icon={copySVG} color="transparent" onClick={handleCopy} />
-        </div>
+        </Tooltip>
       </div>
-      <div className={styles.programWrapperData}>
-        Timestamp:
-        {timestamp && <span className={styles.programsListInfoData}>{formatDate(timestamp)}</span>}
-      </div>
+
+      <span className={styles.programsListInfoData}>{formatDate(timestamp)}</span>
 
       <div className={styles.programsListBtns}>
         <Link to={`/send/message/${programId}`} className={styles.allProgramsItemSendMessage}>

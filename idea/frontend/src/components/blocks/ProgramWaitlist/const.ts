@@ -1,6 +1,6 @@
 import { HeaderCol } from 'components/common/Table';
-import messageIdSVG from 'assets/images/id_icon.svg';
-import shoppingBagSVG from 'assets/images/shoppingBag.svg';
+import messageIdSVG from 'assets/images/table/id_icon.svg';
+import shoppingBagSVG from 'assets/images/table/shoppingBag.svg';
 import arrowBackSVG from 'assets/images/arrow_back.svg';
 
 export const TABLE_COLS = [2, 2, 2, 1];
