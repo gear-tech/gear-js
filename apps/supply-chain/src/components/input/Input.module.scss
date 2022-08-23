@@ -1,0 +1,9 @@
+@use '@gear-js/ui/variables' as *;
+
+.error {
+  margin-top: 4px;
+  display: block;
+  text-align: right;
+  color: $errorColor;
+  font-weight: 300;
+}

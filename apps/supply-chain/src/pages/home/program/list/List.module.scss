@@ -1,0 +1,59 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/mixins' as *;
+
+@mixin arrow($isActive: false) {
+  $color: if($isActive == false, 'fff', '2bd071');
+  background-image: url("data:image/svg+xml,%3Csvg width='7' height='12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.852 6.373a.542.542 0 0 0 0-.746L1.817.31a.986.986 0 0 0-1.433 0l-.087.09a1.085 1.085 0 0 0 0 1.492L4.169 6 .297 10.11a1.085 1.085 0 0 0 0 1.49l.087.091a.986.986 0 0 0 1.433 0l5.035-5.318Z' fill='%23#{$color}' fill-opacity='.7'/%3E%3C/svg%3E");
+}
+
+.list {
+  display: inline-block;
+  min-width: 305px;
+  min-height: 450px;
+  background-color: #1e1e1e;
+  border-right: 1px solid #3d3d3d;
+}
+
+.button {
+  @include transition;
+  width: 100%;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  font-size: $fontSizeMedium;
+  font-weight: 600;
+  border-radius: $borderRadius;
+  background-color: transparent;
+  color: inherit;
+
+  &:hover {
+    background-color: $textColorSecondary;
+  }
+
+  &::after {
+    @include arrow();
+    content: '';
+    width: 7px;
+    height: 12px;
+    margin-left: auto;
+  }
+
+  &.active {
+    color: $successColor;
+    background-color: rgba($successColor, 0.1);
+    cursor: default;
+
+    &::after {
+      @include arrow(true);
+    }
+  }
+}
+
+.icon {
+  margin-right: 13px;
+
+  &.active {
+    fill: $successColor;
+    fill-opacity: 1;
+  }
+}

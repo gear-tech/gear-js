@@ -1,0 +1,9 @@
+@use 'assets/styles/shared' as *;
+
+.form {
+  @extend %box;
+}
+
+.nftInput {
+  margin-bottom: 30px;
+}
