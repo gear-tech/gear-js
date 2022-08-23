@@ -1,0 +1,6 @@
+.buttons {
+  margin: 16px 0 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
