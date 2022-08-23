@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 
 import { DappUploadData } from "../types/dapp-upload-data";
 
-require("dotenv").config();
+import "dotenv/config";
 
 // eslint-disable-next-line consistent-return
 export function getUploadDappDataByDappName(name: string): DappUploadData {

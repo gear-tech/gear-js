@@ -6,6 +6,7 @@ import { getAccount } from "./get-account";
 import { getUploadDappDataByDappName } from "./get-upload-dapp-data-by-dapp-name";
 import { getPayloads } from "./get-payloads";
 import { getReleases } from "./get-releases";
+import { getTgCommands } from "./get-tg-commands";
 
 export {
   getUploadDappDataByDappName,
@@ -16,4 +17,5 @@ export {
   getAccount,
   getPayloads,
   getReleases,
+  getTgCommands,
 };

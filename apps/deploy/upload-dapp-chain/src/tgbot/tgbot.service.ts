@@ -4,9 +4,10 @@ import { UseGuards } from "@nestjs/common";
 import { Markup } from "telegraf";
 import { DappDataService } from "../dapp-data/dapp-data.service";
 import { Context } from "./types";
-import { TgAccessAccountsGuard } from "../common/guards/tg-access-accounts.guard";
+import { TgAccessAdminsGuard } from "../common/guards/tg-access-admins.guard";
 import { DAPP, REPO } from "../common/enums";
-import { TgbotUserRepo } from "./tgbot.repo";
+import { TgbotUserRepo } from "./tgbot-user.repo";
+import { getTgCommands } from "../common/hellpers";
 
 @Update()
 export class TgbotService {
@@ -15,8 +16,8 @@ export class TgbotService {
     private tgbotUserRepo: TgbotUserRepo,
   ) {}
 
-  @UseGuards(TgAccessAccountsGuard)
-  @Command("addCommandsAccessUser")
+  @UseGuards(TgAccessAdminsGuard)
+  @Command("addAccessUser")
   public async addAccessUser(ctx: Context) {
     let res;
     // @ts-ignore
@@ -52,10 +53,7 @@ export class TgbotService {
   @Command("listCommands")
   public async listCommands(ctx: Context) {
     if (await this.validateTgUser(String(ctx.from.id))) {
-      await ctx.reply(
-        "/uploadDappInChain [repository] [dappName]" + "\n"
-        + "/uploadDappsInChain",
-      );
+      await ctx.reply(getTgCommands());
     } else {
       await ctx.reply("Access denied");
     }
@@ -108,13 +106,14 @@ export class TgbotService {
 
       ctx.reply(res);
     } else {
-      await ctx.reply("Access denied");
+      ctx.reply("Access denied");
     }
   }
 
   @Command("getUserId")
   public async getUserId(ctx: Context) {
-    return ctx.reply(String(ctx.from.id));
+    const tgUserData = { username: ctx.from.username, id: ctx.from.id.toString() };
+    ctx.reply(JSON.stringify(tgUserData));
   }
 
   private async validateTgUser(userId: string): Promise<boolean> {

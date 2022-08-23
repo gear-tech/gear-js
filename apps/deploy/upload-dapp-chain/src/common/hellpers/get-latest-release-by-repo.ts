@@ -3,7 +3,7 @@ import { HttpService } from "@nestjs/axios";
 import { AxiosResponse } from "axios";
 import { Release } from "../types";
 
-require("dotenv").config();
+import "dotenv/config";
 
 // eslint-disable-next-line consistent-return
 export async function getLatestReleaseByRepo(repo: string, owner: string): Promise<AxiosResponse<Release>> {

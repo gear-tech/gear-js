@@ -6,9 +6,11 @@ import baseConfig from "./configs/base.config";
 
 import { DappDataModule } from "./dapp-data/dapp-data.module";
 import { DappData } from "./dapp-data/entities/dapp-data.entity";
+import { TgbotUser } from "./tgbot/entities/tgbot-user.entity";
 import { TgbotModule } from "./tgbot/tgbot.module";
+import { TgAccessAdminsGuard } from "./common/guards/tg-access-admins.guard";
 
-const entities = [DappData];
+const entities = [DappData, TgbotUser];
 
 @Module({
   imports: [
@@ -36,6 +38,6 @@ const entities = [DappData];
     TgbotModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [TgAccessAdminsGuard],
 })
 export class AppModule {}

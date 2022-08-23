@@ -4,15 +4,17 @@ import { ConfigService } from "@nestjs/config";
 
 import { AppModule } from "./app.module";
 import { gearService } from "./gear/gear-service";
-import { TgAccessAccountsGuard } from "./common/guards/tg-access-accounts.guard";
+import { TgAccessAdminsGuard } from "./common/guards/tg-access-admins.guard";
 
 async function bootstrap() {
   try {
     await gearService.connect();
     const app = await NestFactory.create(AppModule);
-    const configService = app.get(ConfigService);
+
+    const configService = app.get<ConfigService>(ConfigService);
+
     app.useGlobalPipes(new ValidationPipe());
-    app.useGlobalGuards(new TgAccessAccountsGuard());
+    app.useGlobalGuards(new TgAccessAdminsGuard());
     await app.listen(configService.get<number>("app.PORT"));
   } catch (error) {
     console.log(error);

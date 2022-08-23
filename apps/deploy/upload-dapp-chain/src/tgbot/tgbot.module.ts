@@ -5,8 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { TgbotService } from "./tgbot.service";
 import { DappDataModule } from "../dapp-data/dapp-data.module";
-import { TgAccessAccountsGuard } from "../common/guards/tg-access-accounts.guard";
-import { TgbotUserRepo } from "./tgbot.repo";
+import { TgbotUserRepo } from "./tgbot-user.repo";
 import { TgbotUser } from "./entities/tgbot-user.entity";
 
 @Module({
@@ -22,6 +21,7 @@ import { TgbotUser } from "./entities/tgbot-user.entity";
     }),
   ],
   controllers: [],
-  providers: [TgbotService, TgAccessAccountsGuard, TgbotUserRepo],
+  providers: [TgbotService, TgbotUserRepo],
+  exports: [TgbotUserRepo],
 })
 export class TgbotModule {}

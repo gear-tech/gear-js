@@ -5,17 +5,18 @@ import { TelegrafExecutionContext, TelegrafException } from "nestjs-telegraf";
 import "dotenv/config";
 
 @Injectable()
-export class TgAccessAccountsGuard implements CanActivate {
+export class TgAccessAdminsGuard implements CanActivate {
   constructor() {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = TelegrafExecutionContext.create(context);
     const { from } = ctx.getContext<Context>();
 
-    const accounts = process.env.TELEGRAM_ACCESS_ACCOUNTS.split(",");
-    const isAccessAccount = accounts.includes(from.username);
-    if (!isAccessAccount) {
-      throw new TelegrafException("You are not include access accounts 😡");
+    const admins = process.env.TELEGRAM_ACCESS_ACCOUNTS.split(",");
+
+    const isAdminAccount = admins.includes(from.username);
+    if (!isAdminAccount) {
+      throw new TelegrafException("You are not include admin accounts 😡");
     }
 
     return true;
