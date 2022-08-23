@@ -1,5 +1,4 @@
 import { GearKeyring } from "@gear-js/api";
-
 import "dotenv/config";
 
 export const getAccount = () => Promise.all([

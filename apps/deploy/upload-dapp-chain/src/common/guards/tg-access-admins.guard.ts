@@ -12,7 +12,7 @@ export class TgAccessAdminsGuard implements CanActivate {
     const ctx = TelegrafExecutionContext.create(context);
     const { from } = ctx.getContext<Context>();
 
-    const admins = process.env.TELEGRAM_ACCESS_ACCOUNTS.split(",");
+    const admins = process.env.TELEGRAM_ADMIN_ACCOUNTS.split(",");
 
     const isAdminAccount = admins.includes(from.username);
     if (!isAdminAccount) {

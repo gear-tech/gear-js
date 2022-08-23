@@ -9,7 +9,7 @@ export default () => ({
   },
   bot: {
     TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || "bot",
-    TELEGRAM_ACCESS_ACCOUNTS: process.env.TELEGRAM_ACCESS_ACCOUNTS || "1,2,3",
+    TELEGRAM_ADMIN_ACCOUNTS: process.env.TELEGRAM_ADMIN_ACCOUNTS,
   },
   dappsPayloadsPath: {
     DAPPS_PAYLOADS_PATH: process.env.DAPPS_PAYLOADS_PATH || "path",
