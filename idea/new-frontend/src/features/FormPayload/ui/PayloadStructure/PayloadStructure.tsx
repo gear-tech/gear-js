@@ -1,13 +1,15 @@
 import { VFC, useCallback } from 'react';
 
-import { ValueType, PayloadItemProps, PayloadStructureProps } from '../../model/types';
-import { VecItem } from '../VecItem';
-import { EnumItem } from '../EnumItem';
-import { TupleItem } from '../TupleItem';
-import { ArrayItem } from '../ArrayItem';
-import { OptionItem } from '../OptionItem';
-import { StructItem } from '../StructItem';
-import { PrimitiveItem } from '../PrimitiveItem';
+import { ValueType } from 'entities/formPayload';
+
+import { PayloadItemProps, PayloadStructureProps } from '../../model/types';
+import { VecItem } from '../vecItem';
+import { EnumItem } from '../enumItem';
+import { TupleItem } from '../tupleItem';
+import { ArrayItem } from '../arrayItem';
+import { OptionItem } from '../optionItem';
+import { StructItem } from '../structItem';
+import { PrimitiveItem } from '../primitiveItem';
 
 type Props = Omit<PayloadStructureProps, 'title'>;
 

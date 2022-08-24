@@ -1,4 +1,6 @@
 {
+  "include": ["src"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -16,6 +18,5 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "src"
-  },
-  "include": ["src"]
+  }
 }

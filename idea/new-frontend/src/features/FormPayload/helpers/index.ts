@@ -1,17 +1,19 @@
+/* eslint-disable no-console */
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
 import { decodeHexTypes, createPayloadTypeStructure, toJSON } from '@gear-js/api';
 
+import { ValueType, TypeStructure, PayloadValue } from 'entities/formPayload';
 import { getPreformattedText } from 'shared/helpers';
 
-import { ValueType, TypeStructure, PayloadValue, FormPayloadValues } from '../model/types';
+import { FormPayloadValues } from '../model/types';
 
-export const getNextLevelName = (currentLevelName: string, nextLevelName: string | number) =>
+const getItemLabel = (name: string, title?: string) => (title ? `${title} (${name})` : name);
+
+const getNextLevelName = (currentLevelName: string, nextLevelName: string | number) =>
   `${currentLevelName}.${nextLevelName}`;
 
-export const getItemLabel = (name: string, title?: string) => (title ? `${title} (${name})` : name);
-
-export const getSubmitPayload = (payload: PayloadValue): any => {
+const getSubmitPayload = (payload: PayloadValue): any => {
   if (isString(payload)) {
     return toJSON(payload);
   }
@@ -25,7 +27,7 @@ export const getSubmitPayload = (payload: PayloadValue): any => {
   return payload;
 };
 
-export const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
+const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
   const { type, value, count } = typeStructure;
 
   switch (type) {
@@ -105,7 +107,7 @@ export const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
   }
 };
 
-export const getPayloadFormValues = (types?: string, typeName?: string): FormPayloadValues | undefined => {
+const getPayloadFormValues = (types?: string, typeName?: string): FormPayloadValues | undefined => {
   if (types && typeName) {
     const decodedTypes = decodeHexTypes(types);
 
@@ -119,3 +121,5 @@ export const getPayloadFormValues = (types?: string, typeName?: string): FormPay
     };
   }
 };
+
+export { getItemLabel, getPayloadValue, getNextLevelName, getSubmitPayload, getPayloadFormValues };

@@ -1,1 +1,3 @@
-export * from './EnumItem';
+import { EnumItem } from './EnumItem';
+
+export { EnumItem };

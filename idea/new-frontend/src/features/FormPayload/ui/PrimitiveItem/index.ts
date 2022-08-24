@@ -1,1 +1,3 @@
-export * from './PrimitiveItem';
+import { PrimitiveItem } from './PrimitiveItem';
+
+export { PrimitiveItem };

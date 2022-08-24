@@ -4437,7 +4437,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:9.3.2, @polkadot/api@npm:^9.2.2, @polkadot/api@npm:^9.2.4":
+"@polkadot/api@npm:9.3.2, @polkadot/api@npm:^9.2.2, @polkadot/api@npm:^9.2.4, @polkadot/api@npm:^9.2.3":
   version: 9.3.2
   resolution: "@polkadot/api@npm:9.3.2"
   dependencies:
@@ -5086,7 +5086,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types@npm:9.3.2, @polkadot/types@npm:^9.2.2":
+"@polkadot/types@npm:9.3.2, @polkadot/types@npm:^9.2.2, @polkadot/types@npm:^9.2.3":
   version: 9.3.2
   resolution: "@polkadot/types@npm:9.3.2"
   dependencies:

@@ -1,52 +1,21 @@
 import { ReactNode } from 'react';
 
-export enum ValueType {
-  Vec = 'Vec',
-  Null = 'Null',
-  Enum = 'Enum',
-  Tuple = 'Tuple',
-  Array = 'Array',
-  Result = 'Result',
-  Struct = 'Struct',
-  Option = 'Option',
-  BTreeSet = 'BTreeSet',
-  BTreeMap = 'BTreeMap',
-  Primitive = 'Primitive',
-}
+import { TypeStructure, PayloadValue } from 'entities/formPayload';
 
-export type TypeStructure = {
-  name: string;
-  type: ValueType;
-  count?: number;
-  value:
-    | string
-    | TypeStructure[]
-    | {
-        [key: string]: TypeStructure;
-      };
-};
-
-export type PayloadValue =
-  | string
-  | string[]
-  | PayloadValue[]
-  | null
-  | {
-      [key: string]: PayloadValue;
-    };
-
-export type FormPayloadValues = {
+type FormPayloadValues = {
   payload: PayloadValue;
   manualPayload: any;
   typeStructure: TypeStructure;
 };
 
-export type PayloadStructureProps = {
+type PayloadStructureProps = {
   title?: string;
   levelName: string;
   typeStructure: TypeStructure;
 };
 
-export type PayloadItemProps = PayloadStructureProps & {
+type PayloadItemProps = PayloadStructureProps & {
   renderNextItem: (props: PayloadStructureProps) => ReactNode;
 };
+
+export type { PayloadItemProps, PayloadStructureProps, FormPayloadValues };

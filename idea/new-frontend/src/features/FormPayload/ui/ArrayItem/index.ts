@@ -1,1 +1,3 @@
-export * from './ArrayItem';
+import { ArrayItem } from './ArrayItem';
+
+export { ArrayItem };

@@ -1,1 +1,3 @@
-export * from './FormPayloadType';
+import { FormPayloadType } from './FormPayloadType';
+
+export { FormPayloadType };

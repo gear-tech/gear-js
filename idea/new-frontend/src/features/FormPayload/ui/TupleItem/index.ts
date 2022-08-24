@@ -1,1 +1,3 @@
-export * from './TupleItem';
+import { TupleItem } from './TupleItem';
+
+export { TupleItem };

@@ -3,9 +3,9 @@ import { useField } from 'formik';
 import { Select } from '@gear-js/ui';
 
 import { useChangeEffect } from 'hooks';
-import { Fieldset } from 'shared/ui/Fieldset';
+import { Fieldset } from 'shared/ui/fieldset';
 
-import styles from '../../FormPayload.module.scss';
+import styles from '../FormPayload.module.scss';
 import { PayloadItemProps } from '../../model/types';
 import { getItemLabel, getNextLevelName, getPayloadValue } from '../../helpers';
 

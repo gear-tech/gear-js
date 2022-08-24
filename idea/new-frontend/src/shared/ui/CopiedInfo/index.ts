@@ -1,1 +1,3 @@
-export * from './CopiedInfo';
+import { CopiedInfo } from './CopiedInfo';
+
+export { CopiedInfo };

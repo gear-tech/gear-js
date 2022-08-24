@@ -10,12 +10,6 @@ type NodeSection = {
   nodes: Node[];
 };
 
-type GetMetaResponse = {
-  meta: string;
-  metaFile: string;
-  program: string;
-};
-
 type GetDefaultNodesResponse = NodeSection[];
 
 type MailMessage = {
@@ -53,4 +47,4 @@ type HumanMailboxItem = [MailMessage, Interval];
 
 type HumanWaitlistItem = [WaitlistContent, Interval];
 
-export type { HumanMailboxItem, HumanWaitlistItem, GetMetaResponse, GetDefaultNodesResponse };
+export type { HumanMailboxItem, HumanWaitlistItem, GetDefaultNodesResponse };

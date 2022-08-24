@@ -1,1 +1,3 @@
-export * from './FormText';
+import { FormText } from './FormText';
+
+export { FormText };

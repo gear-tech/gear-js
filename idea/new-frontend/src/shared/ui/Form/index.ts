@@ -1,8 +1,8 @@
 import formStyles from './Form.module.scss';
+import { FormText } from './formText';
+import { FormInput } from './formInput';
+import { FormTextarea } from './formTextarea';
+import { FormPayloadType } from './formPayloadType';
+import { FormNumberFormat } from './formNumberFormat';
 
-export * from './FormText';
-export * from './FormInput';
-export * from './FormTextarea';
-export * from './FormPayloadType';
-export * from './FormNumberFormat';
-export { formStyles };
+export { formStyles, FormText, FormInput, FormTextarea, FormPayloadType, FormNumberFormat };

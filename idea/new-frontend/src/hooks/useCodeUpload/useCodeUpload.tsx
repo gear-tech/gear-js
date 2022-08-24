@@ -5,10 +5,10 @@ import { Hex } from '@gear-js/api';
 import { useApi, useAlert, useAccount, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from 'hooks';
-import { Method } from 'shared/types/explorer';
+import { Method } from 'entities/explorer';
 import { checkWallet, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
-import { CopiedInfo } from 'shared/ui/CopiedInfo';
+import { CopiedInfo } from 'shared/ui/copiedInfo';
 
 import { ParamsToUploadCode, ParamsToSignAndSend } from './types';
 

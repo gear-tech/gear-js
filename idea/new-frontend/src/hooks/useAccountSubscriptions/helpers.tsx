@@ -3,7 +3,7 @@ import { Hex, UserMessageSent, Transfer, GearKeyring } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { routes } from 'shared/config';
-import { CustomLink } from 'components/common/CustomLink';
+import { CustomLink } from 'shared/ui/customLink';
 
 const messageSentEventsHandler = (event: UserMessageSent, address: Hex, alert: AlertContainerFactory) => {
   const { message, method, section } = event.data;

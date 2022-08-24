@@ -1,1 +1,3 @@
-export * from './useMessage';
+import { useMessage } from './useMessage';
+
+export { useMessage };

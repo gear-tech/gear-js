@@ -1,1 +1,3 @@
-export * from './FormNumberFormat';
+import { FormNumberFormat } from './FormNumberFormat';
+
+export { FormNumberFormat };

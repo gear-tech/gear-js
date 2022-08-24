@@ -3,10 +3,10 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 
 import { useModal } from 'hooks';
-import { RpcMethods, ACCOUNT_ERRORS } from 'shared/config';
+import { uploadLocalMetadata } from 'services/LocalDBService';
+import { RPCService } from 'shared/services/rpcService';
 import { isDevChain } from 'shared/helpers';
-import { uploadLocalMetadata } from 'shared/api/LocalDBService';
-import { ServerRPCRequestService } from 'shared/api/ServerRPCRequestService';
+import { RpcMethods, ACCOUNT_ERRORS } from 'shared/config';
 
 import { ParamsToSignAndUpload, ParamsToUploadMeta } from './types';
 
@@ -18,7 +18,7 @@ const useMetadataUplaod = () => {
   const signAndUpload = async (params: ParamsToSignAndUpload) => {
     const { name, title, signer, metadataBuffer, programId, jsonMeta, reject, resolve } = params;
 
-    const apiRequest = new ServerRPCRequestService();
+    const apiRequest = new RPCService();
 
     try {
       const { signature } = await signer.signRaw!({

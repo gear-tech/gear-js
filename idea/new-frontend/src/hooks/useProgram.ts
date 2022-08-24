@@ -3,8 +3,7 @@ import { Metadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 
 import { getProgram } from 'services';
-import { RPCResponseError } from 'services/ServerRPCRequestService';
-import { ProgramModel } from 'shared/types/program';
+import { ProgramModel } from 'entities/program';
 
 const useProgram = (id?: string, initLoading = false) => {
   const alert = useAlert();
@@ -25,7 +24,7 @@ const useProgram = (id?: string, initLoading = false) => {
       setIsLoading(true);
       getProgram(id)
         .then(({ result }) => setProgram(result))
-        .catch((err: RPCResponseError) => alert.error(err.message))
+        .catch((err) => alert.error(err.message))
         .finally(() => setIsLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

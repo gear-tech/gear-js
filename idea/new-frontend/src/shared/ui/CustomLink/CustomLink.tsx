@@ -1,6 +1,7 @@
 import { Link, LinkProps } from 'react-router-dom';
 
-import { getShortName } from 'helpers';
+import { getShortName } from 'shared/helpers';
+
 import styles from './CustomLink.module.scss';
 
 type Props = LinkProps & {

@@ -1,1 +1,3 @@
-export * from './StructItem';
+import { StructItem } from './StructItem';
+
+export { StructItem };

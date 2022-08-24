@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 
-import { ModalProps } from 'shared/types/modal';
+import { ModalProps } from 'entities/modal';
 
 import { MODALS } from './consts';
 

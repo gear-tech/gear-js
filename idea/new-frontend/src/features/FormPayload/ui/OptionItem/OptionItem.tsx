@@ -3,10 +3,10 @@ import { useField } from 'formik';
 import { Select } from '@gear-js/ui';
 
 import { useChangeEffect } from 'hooks';
-import { Fieldset } from 'shared/ui/Fieldset';
+import { Fieldset } from 'shared/ui/fieldset';
 
-import styles from '../../FormPayload.module.scss';
-import { OPTION_ITEM_OPTIONS, DEFAULT_OPTION_VALUE } from '../../model/const';
+import styles from '../FormPayload.module.scss';
+import { OPTION_ITEM_OPTIONS, DEFAULT_OPTION_VALUE } from '../../model/consts';
 import { PayloadItemProps } from '../../model/types';
 import { getItemLabel, getPayloadValue } from '../../helpers';
 

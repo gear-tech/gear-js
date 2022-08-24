@@ -1,1 +1,3 @@
-export * from './FormPayload';
+import { FormPayload } from './ui/FormPayload';
+
+export { FormPayload };

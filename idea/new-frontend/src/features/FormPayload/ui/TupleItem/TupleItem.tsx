@@ -1,4 +1,4 @@
-import { Fieldset } from 'shared/ui/Fieldset';
+import { Fieldset } from 'shared/ui/fieldset';
 
 import styles from '../../FormPayload.module.scss';
 import { PayloadItemProps } from '../../model/types';

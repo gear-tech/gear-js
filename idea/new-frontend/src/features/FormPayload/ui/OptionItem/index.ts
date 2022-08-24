@@ -1,1 +1,3 @@
-export { OptionItem } from './OptionItem';
+import { OptionItem } from './OptionItem';
+
+export { OptionItem };

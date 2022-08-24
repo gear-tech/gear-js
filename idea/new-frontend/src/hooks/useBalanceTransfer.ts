@@ -3,7 +3,7 @@ import { AddressOrPair } from '@polkadot/api/types';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
-import { Method } from 'shared/types/explorer';
+import { Method } from 'entities/explorer';
 import { getExtrinsicFailedMessage } from 'shared/helpers';
 import { GEAR_BALANCE_TRANSFER_VALUE } from 'shared/config';
 

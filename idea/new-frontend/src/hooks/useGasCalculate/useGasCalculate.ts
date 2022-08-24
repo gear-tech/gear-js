@@ -3,8 +3,8 @@ import isPlainObject from 'lodash.isplainobject';
 import { Metadata, Hex, GasInfo } from '@gear-js/api';
 import { useApi, useAlert } from '@gear-js/react-hooks';
 
+import { getSubmitPayload } from 'features/formPayload/helpers';
 import { LocalStorage, GasMethod } from 'shared/config';
-import { getSubmitPayload } from 'components/common/Form/FormPayload/helpers';
 
 import { Values, Code } from './types';
 

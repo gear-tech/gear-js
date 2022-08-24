@@ -1,8 +1,8 @@
 import { Hex, Metadata } from '@gear-js/api';
 
-import { OperationCallbacks, ParamsToSignAndSend } from 'shared/types/hooks';
+import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
 
-export type Payload = {
+type Payload = {
   value: number;
   title?: string;
   gasLimit: number;
@@ -23,13 +23,15 @@ type DataToCreate = {
   payload: Payload;
 };
 
-export type ParamsToUpload = OperationCallbacks & DataToUpload;
+type ParamsToUpload = OperationCallbacks & DataToUpload;
 
-export type ParamsToCreate = OperationCallbacks & DataToCreate;
+type ParamsToCreate = OperationCallbacks & DataToCreate;
 
-export type ParamsToSignAndUpload = ParamsToSignAndSend & {
+type ParamsToSignAndUpload = ParamsToSignAndSend & {
   name: string;
   title: string;
   payload: Payload;
   programId: string;
 };
+
+export type { Payload, ParamsToUpload, ParamsToCreate, ParamsToSignAndUpload };

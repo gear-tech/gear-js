@@ -1,1 +1,3 @@
-export * from './FormInput';
+import { FormInput } from './FormInput';
+
+export { FormInput };

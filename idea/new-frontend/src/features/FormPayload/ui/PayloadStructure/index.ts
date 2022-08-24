@@ -1,1 +1,3 @@
-export * from './PayloadStructure';
+import { PayloadStructure } from './PayloadStructure';
+
+export { PayloadStructure };

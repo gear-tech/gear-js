@@ -5,10 +5,10 @@ import { UserMessageRead } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_SUCCESS_OPTIONS, DEFAULT_ERROR_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from 'hooks';
+import { Method } from 'entities/explorer';
+import { OperationCallbacks, ParamsToSignAndSend } from 'entities/hooks';
 import { PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
 import { checkWallet, getExtrinsicFailedMessage } from 'shared/helpers';
-import { Method } from 'shared/types/explorer';
-import { ParamsToSignAndSend, OperationCallbacks } from 'shared/types/hooks';
 
 import { ParamsToClaimMessage } from './types';
 

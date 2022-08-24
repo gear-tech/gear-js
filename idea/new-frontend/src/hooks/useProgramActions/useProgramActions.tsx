@@ -6,13 +6,13 @@ import { Hex } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from 'hooks';
+import { uploadLocalProgram } from 'services/LocalDBService';
+import { Method } from 'entities/explorer';
+import { ProgramStatus } from 'entities/program';
+import { OperationCallbacks } from 'entities/hooks';
 import { routes, PROGRAM_ERRORS, TransactionName, TransactionStatus } from 'shared/config';
 import { checkWallet, isDevChain, readFileAsync, getExtrinsicFailedMessage } from 'shared/helpers';
-import { uploadLocalProgram } from 'shared/api/LocalDBService';
-import { Method } from 'shared/types/explorer';
-import { ProgramStatus } from 'shared/types/program';
-import { OperationCallbacks } from 'shared/types/hooks';
-import { CustomLink } from 'shared/ui/CustomLink';
+import { CustomLink } from 'shared/ui/customLink';
 
 import { useMetadataUplaod } from '../useMetadataUpload';
 import { waitForProgramInit } from './helpers';
@@ -49,7 +49,7 @@ const useProgramActions = () => {
   };
 
   const uploadProgram = async (file: File, payload: Payload) => {
-    const fileBuffer = await readFileAsync(file);
+    const fileBuffer = (await readFileAsync(file)) as ArrayBuffer;
 
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 

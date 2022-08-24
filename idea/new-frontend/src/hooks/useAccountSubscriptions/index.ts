@@ -1,1 +1,3 @@
-export * from './useAccountSubscriptions';
+import { useAccountSubscriptions } from './useAccountSubscriptions';
+
+export { useAccountSubscriptions };

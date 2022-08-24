@@ -1,10 +1,10 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
 
-import { Method } from 'shared/types/explorer';
-import { ProgramStatus } from 'shared/types/program';
+import { Method } from 'entities/explorer';
+import { ProgramStatus } from 'entities/program';
 
-export const waitForProgramInit = (api: GearApi, programId: string) => {
+const waitForProgramInit = (api: GearApi, programId: string) => {
   let messageId: Hex;
   let unsubPromise: UnsubscribePromise;
 
@@ -51,3 +51,5 @@ export const waitForProgramInit = (api: GearApi, programId: string) => {
     });
   }).finally(unsubscribe);
 };
+
+export { waitForProgramInit };

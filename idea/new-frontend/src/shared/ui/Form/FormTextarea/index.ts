@@ -1,1 +1,3 @@
-export * from './FormTextarea';
+import { FormTextarea } from './FormTextarea';
+
+export { FormTextarea };

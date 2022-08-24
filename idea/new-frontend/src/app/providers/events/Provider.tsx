@@ -1,7 +1,7 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { useApi } from '@gear-js/react-hooks';
 
-import { IdeaEvent, IdeaEvents, Sections } from 'shared/types/explorer';
+import { IdeaEvent, Section } from 'entities/explorer';
 
 import { EventsContext } from './Context';
 
@@ -11,7 +11,7 @@ type Props = {
 
 const EventsProvider = ({ children }: Props) => {
   const { api } = useApi();
-  const [events, setEvents] = useState<IdeaEvents>([]);
+  const [events, setEvents] = useState<IdeaEvent[]>([]);
 
   const subscribeToEvents = () =>
     api.query.system.events(async (records) => {
@@ -22,7 +22,7 @@ const EventsProvider = ({ children }: Props) => {
 
         const newEvents = records
           .map(({ event }) => new IdeaEvent(event, blockNumber))
-          .filter(({ section }) => section !== Sections.SYSTEM)
+          .filter(({ section }) => section !== Section.System)
           .reverse();
 
         setEvents((prevEvents) => [...newEvents, ...prevEvents]);
