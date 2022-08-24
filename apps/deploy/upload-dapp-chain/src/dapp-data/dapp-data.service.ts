@@ -150,7 +150,7 @@ export class DappDataService {
 
     try {
       await this.sendMessageUploadedMarketplace(AL, result);
-      return result;
+      return result.map(daap => ({ ...daap, metaWasmBase64: "long" }));
     } catch (error) {
       console.log(error);
       this.logger.error(error);
