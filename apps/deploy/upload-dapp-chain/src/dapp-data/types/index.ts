@@ -1,5 +1,4 @@
-import { GearApi, Hex } from "@gear-js/api";
-
+import { KeyringPair } from "@polkadot/keyring/types";
 import { DappData } from "../entities/dapp-data.entity";
 import { DAPP, REPO } from "../../common/enums";
 
@@ -19,12 +18,12 @@ interface CreateDappInput {
 }
 
 interface UploadDappInChainInput {
-  gearApi: GearApi;
   dappData: DappData;
   optWasmBuff: Buffer;
   metaWasmBuff: Buffer;
   release: string;
-  payload: Payload
+  payload: Payload;
+  account: KeyringPair
 }
 
 interface SendMessageUploadedMarketplaceInput {
@@ -37,8 +36,7 @@ interface UploadDappAssetData {
   release: string;
 }
 
-type UploadNewDappInChainInput = Pick<UploadDappInChainInput,
-    "gearApi" | "optWasmBuff" | "metaWasmBuff" >
+type UploadNewDappInChainInput = Pick<UploadDappInChainInput, "optWasmBuff" | "metaWasmBuff"| "account" >
   & { dappName: string, release: string, repo: string, payload: {[key: string]: string} | string};
 
 export { CreateDappInput,

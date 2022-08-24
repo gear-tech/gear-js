@@ -1,8 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { HttpService } from "@nestjs/axios";
-import { decodeAddress, getWasmMetadata, Hex, IMessageSendOptions } from "@gear-js/api";
+import { decodeAddress, GearApi, getWasmMetadata, Hex, IMessageSendOptions } from "@gear-js/api";
 import { plainToClass } from "class-transformer";
+import { KeyringPair } from "@polkadot/keyring/types";
 import fetch from "node-fetch";
 
 import {
@@ -32,16 +32,16 @@ import { ApiKey } from "../common/enums";
 @Injectable()
 export class DappDataService {
   private logger: Logger = new Logger("CodeService");
+  private gearApi: GearApi = gearService.getApi();
 
   constructor(
     private configService: ConfigService,
-    private httpService: HttpService,
     private dappDataRepository: DappDataRepo,
   ) {}
 
   public async uploadDappInChain(uploadDappInChainTGInput: UploadDappInChainTGInput): Promise<DappData> {
     const { dappName, repo } = uploadDappInChainTGInput;
-    const gearApi = gearService.getApi();
+    const [AL] = await getAccount();
 
     try {
       const response = await getLatestReleaseByRepo(
@@ -70,17 +70,18 @@ export class DappDataService {
       const { payload } = getUploadDappDataByDappName(dappName);
 
       if (dapp) {
-        return this.uploadDappInChainAndUpdate({
-          gearApi,
+        const updateDapp = await this.uploadDappInChainAndUpdate({
           dappData: dapp,
           optWasmBuff,
           metaWasmBuff,
           release,
           payload,
+          account: AL,
         });
+        return { ...updateDapp, metaWasmBase64: "long" };
       }
-      return this.uploadNewDappInChain({
-        gearApi,
+      const newDapp = await this.uploadNewDappInChain({
+        account: AL,
         metaWasmBuff,
         optWasmBuff,
         dappName,
@@ -88,6 +89,7 @@ export class DappDataService {
         repo,
         payload,
       });
+      return { ...newDapp, metaWasmBase64: "long" };
     } catch (error) {
       console.log(error);
       this.logger.error(error);
@@ -99,8 +101,7 @@ export class DappDataService {
     const result: DappData[] = [];
     const releases = await getReleases();
     const dappUploadDataList = getPayloads();
-
-    const gearApi = gearService.getApi();
+    const [AL] = await getAccount();
 
     for (const dappUploadData of dappUploadDataList) {
       const { dappName, repo } = dappUploadData;
@@ -127,7 +128,7 @@ export class DappDataService {
 
       if (dapp) {
         result.push(await this.uploadDappInChainAndUpdate({
-          gearApi,
+          account: AL,
           dappData: dapp,
           optWasmBuff,
           metaWasmBuff,
@@ -136,7 +137,7 @@ export class DappDataService {
         }));
       } else {
         result.push(await this.uploadNewDappInChain({
-          gearApi,
+          account: AL,
           metaWasmBuff,
           optWasmBuff,
           dappName,
@@ -148,7 +149,7 @@ export class DappDataService {
     }
 
     try {
-      await this.sendMessageUploadedMarketplace(result);
+      await this.sendMessageUploadedMarketplace(AL, result);
       return result;
     } catch (error) {
       console.log(error);
@@ -157,13 +158,12 @@ export class DappDataService {
   }
 
   private async uploadDappInChainAndUpdate(uploadDappInChainInput: UploadDappInChainInput): Promise<DappData> {
-    const { dappData, optWasmBuff, metaWasmBuff, gearApi, release } = uploadDappInChainInput;
+    const { dappData, optWasmBuff, metaWasmBuff, release, account } = uploadDappInChainInput;
 
     const meta = await getWasmMetadata(metaWasmBuff);
-    const [AL] = await getAccount();
-    const sourceId = decodeAddress(AL.address);
+    const sourceId = decodeAddress(account.address);
 
-    const gas = await gearApi.program.calculateGas.initUpload(
+    const gas = await this.gearApi.program.calculateGas.initUpload(
       sourceId,
       optWasmBuff,
       uploadDappInChainInput.payload,
@@ -179,9 +179,9 @@ export class DappDataService {
       initPayload: uploadDappInChainInput.payload,
     };
 
-    const { programId } = gearApi.program.upload(program, meta);
-    const status = checkInitProgram(gearApi, programId);
-    await sendTransaction(gearApi, AL, "MessageEnqueued", ApiKey.PROGRAM);
+    const { programId } = this.gearApi.program.upload(program, meta);
+    const status = checkInitProgram(this.gearApi, programId);
+    await sendTransaction(this.gearApi, account, "MessageEnqueued", ApiKey.PROGRAM);
 
     console.log("_________>status", await status);
 
@@ -190,22 +190,21 @@ export class DappDataService {
     dappData.metaWasmBase64 = metaWasmBuff.toString("base64");
     dappData.updatedAt = new Date();
 
-    const updateDapp = await this.dappDataRepository.save(dappData);
-
-    return { ...updateDapp, metaWasmBase64: "long" };
+    return this.dappDataRepository.save(dappData);
   }
 
   private async uploadNewDappInChain(uploadNewDappInChainInput: UploadNewDappInChainInput): Promise<DappData> {
-    const { metaWasmBuff,
+    const {
+      metaWasmBuff,
       optWasmBuff,
-      gearApi,
       dappName,
       release,
       repo,
-      payload } = uploadNewDappInChainInput;
+      payload,
+      account,
+    } = uploadNewDappInChainInput;
 
-    const [AL] = await getAccount();
-    const sourceId = decodeAddress(AL.address);
+    const sourceId = decodeAddress(account.address);
 
     if (!payload) {
       throw new BadRequestExc("Invalid dapp name");
@@ -213,7 +212,7 @@ export class DappDataService {
 
     const meta = await getWasmMetadata(metaWasmBuff);
 
-    const gas = await gearApi.program.calculateGas.initUpload(
+    const gas = await this.gearApi.program.calculateGas.initUpload(
       sourceId,
       optWasmBuff,
       payload,
@@ -222,14 +221,14 @@ export class DappDataService {
       meta,
     );
 
-    const { programId } = gearApi.program.upload({
+    const { programId } = this.gearApi.program.upload({
       code: optWasmBuff,
       gasLimit: gas.min_limit,
       value: 0,
       initPayload: payload,
     }, meta);
-    const status = checkInitProgram(gearApi, programId);
-    await sendTransaction(gearApi, AL, "MessageEnqueued", ApiKey.PROGRAM);
+    const status = checkInitProgram(this.gearApi, programId);
+    await sendTransaction(this.gearApi, account, "MessageEnqueued", ApiKey.PROGRAM);
 
     console.log("_________>status", await status);
 
@@ -241,9 +240,7 @@ export class DappDataService {
       metaWasmBase64: metaWasmBuff.toString("base64"),
     };
 
-    const dapp = await this.createDapp(createDappInput);
-
-    return { ...dapp, metaWasmBase64: "long" };
+    return this.createDapp(createDappInput);
   }
 
   private createDapp(createDappInput: CreateDappInput): Promise<DappData> {
@@ -284,23 +281,21 @@ export class DappDataService {
     return result;
   }
 
-  private async sendMessageUploadedMarketplace(uploadedPrograms: DappData[]): Promise<void> {
-    const gearApi = gearService.getApi();
-    const [AL] = await getAccount();
-    const sourceId = decodeAddress(AL.address);
-    const nftForMarketplace = uploadedPrograms.find(uploadedProgram => uploadedProgram.name === "#nft");
+  private async sendMessageUploadedMarketplace(account: KeyringPair, uploadedPrograms: DappData[]): Promise<void> {
+    const sourceId = decodeAddress(account.address);
 
-    if (!nftForMarketplace) {
+    const nftForMarketplace = uploadedPrograms.find(uploadedProgram => uploadedProgram.name === "#nft");
+    const uploadMarketplace = uploadedPrograms.find(uploadedProgram => uploadedProgram.name === "nft_marketplace");
+
+    if (!nftForMarketplace || !uploadMarketplace) {
       return;
     }
 
     try {
-      const dapp = await this.dappDataRepository.getByName("nft_marketplace");
-
-      const buff = Buffer.from(dapp.metaWasmBase64, "base64");
+      const buff = Buffer.from(uploadMarketplace.metaWasmBase64, "base64");
       const meta = await getWasmMetadata(buff);
 
-      const gas = await gearApi.program.calculateGas.handle(
+      const gas = await this.gearApi.program.calculateGas.handle(
         sourceId,
         buff,
         { AddNftContract: nftForMarketplace.id },
@@ -310,15 +305,15 @@ export class DappDataService {
       );
 
       const message: IMessageSendOptions = {
-        destination: dapp.id as Hex,
+        destination: uploadMarketplace.id as Hex,
         payload: { AddNftContract: nftForMarketplace.id },
         gasLimit: gas.min_limit,
         value: 0,
       };
 
-      gearApi.message.send(message, meta);
+      this.gearApi.message.send(message, meta);
 
-      await sendTransaction(gearApi, AL, "MessageEnqueued", ApiKey.MESSAGE);
+      await sendTransaction(this.gearApi, account, "MessageEnqueued", ApiKey.MESSAGE);
     } catch (error) {
       console.error(error);
       this.logger.error(error);
