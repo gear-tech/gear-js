@@ -1,5 +1,5 @@
 import { useAccounts, useLoggedInAccount } from './accounts';
-import { useBalanceSubscription, useMetadata, useReadState, useSendMessage } from './api';
+import { useBalanceSubscription, useMetadata, useReadState, useSendMessage, useUploadProgram } from './api';
 import { useAccount, useAlert, useApi } from './context';
 
 export {
@@ -9,6 +9,7 @@ export {
   useMetadata,
   useReadState,
   useSendMessage,
+  useUploadProgram,
   useAccount,
   useAlert,
   useApi,
