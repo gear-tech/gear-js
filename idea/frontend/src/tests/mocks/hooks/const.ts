@@ -31,6 +31,7 @@ export const TEST_API = {
     subscribeToNewBlocks: jest.fn(),
     subscribeToBalanceChange: jest.fn(),
   },
+  nodeVersion: jest.fn(),
   runtimeChain: {
     toHuman: jest.fn(),
   },

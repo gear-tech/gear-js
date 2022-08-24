@@ -107,6 +107,7 @@ describe('header tests', () => {
   });
 
   it('renders test balance button, get test balance', async () => {
+    TEST_API.nodeVersion.mockResolvedValue('');
     TEST_API.balance.signAndSend.mockResolvedValue('');
 
     useApiMock(TEST_API);
@@ -171,6 +172,7 @@ describe('header tests', () => {
     TEST_API.runtimeChain.toHuman.mockReturnValue('Test chain');
     TEST_API.runtimeVersion.specName.toHuman.mockReturnValue('test-name');
     TEST_API.runtimeVersion.specVersion.toHuman.mockReturnValue('12345');
+    TEST_API.nodeVersion.mockResolvedValue('1-1777cdb0cfa');
 
     useApiMock(TEST_API);
 
@@ -178,6 +180,11 @@ describe('header tests', () => {
 
     expect(screen.getByText('Test chain'));
     expect(sidebarButton).toHaveTextContent('test-name/12345');
+
+    const nodeVersionlink = await screen.findByText('1777cdb0cfa');
+
+    expect(nodeVersionlink).toBeInTheDocument();
+    expect(nodeVersionlink).toHaveAttribute('href', 'https://github.com/gear-tech/gear/commit/1777cdb0cfa');
 
     fireEvent.click(sidebarButton);
 
@@ -349,6 +356,8 @@ describe('account switch tests', () => {
   const getLoginButtonQuery = () => screen.queryByText('Connect');
 
   it('logins/logouts, switches account and closes modal', async () => {
+    TEST_API.nodeVersion.mockResolvedValue('1-1777cdb0cfa');
+
     useApiMock(TEST_API);
     useAccountMock();
     useAccountsMock(accounts);
