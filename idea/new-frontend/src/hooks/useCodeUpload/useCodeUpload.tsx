@@ -19,7 +19,7 @@ const useCodeUpload = () => {
   const { showModal } = useModal();
 
   const submit = async (file: File) => {
-    const arrayBuffer = (await readFileAsync(file)) as ArrayBuffer;
+    const arrayBuffer = await readFileAsync(file, 'buffer');
     const buffer = Buffer.from(arrayBuffer);
 
     const result = await api.code.upload(buffer);

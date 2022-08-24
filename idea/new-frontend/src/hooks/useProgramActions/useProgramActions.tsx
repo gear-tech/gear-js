@@ -49,7 +49,7 @@ const useProgramActions = () => {
   };
 
   const uploadProgram = async (file: File, payload: Payload) => {
-    const fileBuffer = (await readFileAsync(file)) as ArrayBuffer;
+    const fileBuffer = await readFileAsync(file, 'buffer');
 
     const { gasLimit, value, initPayload, metadata, payloadType } = payload;
 

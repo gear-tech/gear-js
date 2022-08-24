@@ -1,5 +1,5 @@
-@use 'assets/styles';
 @use '@gear-js/ui/variables' as *;
+@use './styles';
 
 #root {
   max-width: 1200px;

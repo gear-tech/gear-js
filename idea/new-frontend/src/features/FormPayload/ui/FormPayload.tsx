@@ -66,7 +66,7 @@ const FormPayload = (props: Props) => {
 
       setManualPayloadFile(file);
 
-      const fileText = (await readFileAsync(file, false)) ?? '';
+      const fileText = await readFileAsync(file, 'text');
 
       changeValue(fileText);
       jsonManualPayload.current = fileText;

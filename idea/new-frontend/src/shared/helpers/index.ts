@@ -23,23 +23,29 @@ const formatDate = (rawDate: string) => {
   return `${formatedDate} ${time}`;
 };
 
-const readFileAsync = <T extends File, K extends boolean>(
+const readFileAsync = <T extends File, K extends 'text' | 'buffer'>(
   file: T,
-  readAsBuffer = true,
-): Promise<(K extends true ? ArrayBuffer : string) | null> =>
+  readAs: K,
+): Promise<K extends 'text' ? string : ArrayBuffer> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
 
     reader.onload = () => {
-      resolve(reader.result as (K extends true ? ArrayBuffer : string) | null);
+      const { result } = reader;
+
+      if (result === null) {
+        throw new Error('Unable to read file');
+      }
+
+      resolve(result as K extends 'text' ? string : ArrayBuffer);
     };
 
     reader.onerror = reject;
 
-    if (readAsBuffer) {
-      reader.readAsArrayBuffer(file);
-    } else {
+    if (readAs === 'text') {
       reader.readAsText(file);
+    } else {
+      reader.readAsArrayBuffer(file);
     }
   });
 

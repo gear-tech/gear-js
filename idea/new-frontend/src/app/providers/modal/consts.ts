@@ -1,6 +1,6 @@
-import { AccountsModal } from 'components/modals/AccountsModal';
-import { TransactionModal } from 'components/modals/TransactionModal';
-import { UploadMetadataModal } from 'components/modals/UploadMetadataModal';
+import { AccountsModal } from 'widgets/accountsModal';
+import { TransactionModal } from 'widgets/transactionModal';
+import { UploadMetadataModal } from 'widgets/uploadMetadataModal';
 
 export const MODALS = {
   accounts: AccountsModal,

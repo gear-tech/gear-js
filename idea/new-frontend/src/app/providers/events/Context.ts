@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 
-import { IdeaEvents } from 'shared/types/explorer';
+import { IdeaEvent } from 'entities/explorer';
 
-const EventsContext = createContext<IdeaEvents>([]);
+const EventsContext = createContext<IdeaEvent[]>([]);
 
 export { EventsContext };
