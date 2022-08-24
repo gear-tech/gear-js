@@ -56,8 +56,8 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
       <ProgramForm
         name={droppedFile.name}
         label="File"
-        onSubmit={handleSubmit}
         onReset={onReset}
+        onSubmit={handleSubmit}
         renderButtons={renderButtons}
       />
     </FormWrapper>

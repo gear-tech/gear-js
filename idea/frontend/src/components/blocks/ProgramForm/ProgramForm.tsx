@@ -7,7 +7,7 @@ import { useApi } from '@gear-js/react-hooks';
 import styles from './ProgramForm.module.scss';
 import { INITIAL_VALUES } from './const';
 import { getValidationSchema } from './Schema';
-import { FormValues, PropsToRenderButtons, SetFieldValue, Helpers } from './types';
+import { FormValues, PropsToRenderButtons, SetFieldValue, SetValues, Helpers } from './types';
 
 import { Payload } from 'hooks/useProgramActions/types';
 import { getSubmitPayload, getPayloadFormValues } from 'components/common/Form/FormPayload/helpers';
@@ -29,6 +29,11 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
   const [metadata, setMetadata] = useState<Metadata>();
   const [metadataBuffer, setMetadataBuffer] = useState<string>();
 
+  const dropMetaFile = () => {
+    setMetadata(undefined);
+    setMetadataBuffer(undefined);
+  };
+
   const handleUploadMetaFile = (setFiledValue: SetFieldValue) => (data: UploadData) => {
     const { meta, metaBuffer } = data;
 
@@ -37,9 +42,13 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
     setFiledValue('programName', meta?.title || '', false);
   };
 
-  const handleResetMeta = (resetForm: () => void) => () => {
-    setMetadata(undefined);
-    setMetadataBuffer(undefined);
+  const handleResetMeta = (setValues: SetValues) => () => {
+    dropMetaFile();
+    setValues(INITIAL_VALUES);
+  };
+
+  const handleResetForm = (resetForm: () => void) => () => {
+    dropMetaFile();
     resetForm();
   };
 
@@ -58,7 +67,7 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    onSubmit(data, { resetForm: handleResetMeta(helpers.resetForm), finishSubmitting });
+    onSubmit(data, { resetForm: handleResetForm(helpers.resetForm), finishSubmitting });
   };
 
   const encodeType = metadata?.init_input;
@@ -82,7 +91,7 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
       onSubmit={handleSubmitForm}
       onReset={onReset}
     >
-      {({ values, isValid, isSubmitting, resetForm, setFieldValue }) => {
+      {({ values, isValid, isSubmitting, setValues, setFieldValue }) => {
         const isDisabled = !isValid || isSubmitting;
 
         return (
@@ -114,7 +123,7 @@ const ProgramForm = ({ name, label, onSubmit, onReset, renderButtons }: Props) =
               <Fieldset legend="Metadata:" className={styles.meta}>
                 <UploadMeta
                   meta={metadata}
-                  onReset={handleResetMeta(resetForm)}
+                  onReset={handleResetMeta(setValues)}
                   onUpload={handleUploadMetaFile(setFieldValue)}
                 />
               </Fieldset>
