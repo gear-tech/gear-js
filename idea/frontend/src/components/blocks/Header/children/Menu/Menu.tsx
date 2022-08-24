@@ -1,16 +1,18 @@
 import { NavLink } from 'react-router-dom';
-import { useApi } from '@gear-js/react-hooks';
 
 import styles from './Menu.module.scss';
 import { NAV_LINKS } from './const';
 
 type Props = {
+  chain: string;
+  name: string;
+  version: string;
+  isApiReady: boolean;
+  nodeVersion: string;
   openSidebar: () => void;
 };
 
-const Menu = ({ openSidebar }: Props) => {
-  const { api, isApiReady } = useApi();
-
+const Menu = ({ chain, name, version, isApiReady, nodeVersion, openSidebar }: Props) => {
   const getItems = () =>
     NAV_LINKS.map(({ to, text }) => (
       <li key={text} className={styles.navItem}>
@@ -20,10 +22,6 @@ const Menu = ({ openSidebar }: Props) => {
       </li>
     ));
 
-  const chain = api?.runtimeChain.toHuman();
-  const specName = api?.runtimeVersion.specName.toHuman();
-  const specVersion = api?.runtimeVersion.specVersion.toHuman();
-
   return (
     <ul className={styles.menu}>
       <li className={styles.nodeInfo}>
@@ -32,13 +30,23 @@ const Menu = ({ openSidebar }: Props) => {
             <>
               <span>{chain}</span>
               <span className={styles.runtime}>
-                {specName}/{specVersion}
+                {name}/{version}
               </span>
             </>
           ) : (
             'Loading...'
           )}
         </button>
+        {nodeVersion && (
+          <a
+            rel="external noreferrer"
+            href={`https://github.com/gear-tech/gear/commit/${nodeVersion}`}
+            target="_blank"
+            className={styles.nodeVersionLink}
+          >
+            {nodeVersion}
+          </a>
+        )}
       </li>
       {getItems()}
     </ul>
