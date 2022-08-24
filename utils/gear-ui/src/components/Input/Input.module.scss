@@ -4,9 +4,12 @@
   width: 100%;
   display: flex;
   align-items: center;
-  font-size: 16px;
-  font-weight: 300;
-  color: $textColorSecondary;
+  font-weight: 500;
+  color: #d2d2d3;
+}
+
+.text {
+  margin-right: 16px;
 }
 
 .wrapper,
@@ -16,13 +19,18 @@
 
 .wrapper {
   display: flex;
-  padding: 10px 20px;
-  background-color: #000;
-  border-radius: $borderRadius;
+  padding: 10px 16px;
+  background-color: #222225;
+  border: 1px solid #3a3d4d;
+  border-radius: 20px;
+
+  &:focus-within {
+    border-color: #898b94;
+  }
 
   &.readOnly {
-    background-color: #282828;
-    box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
+    border: none;
+    background-color: #2b2b2e;
   }
 }
 
@@ -39,11 +47,14 @@
   color: $textColor;
 
   &::placeholder {
-    color: $textColorSecondary;
+    color: #ffffff99;
   }
 }
 
-.text,
 .icon {
-  margin-right: 16px;
+  margin-right: 8px;
+}
+
+.clearButton {
+  margin-left: 8px;
 }
