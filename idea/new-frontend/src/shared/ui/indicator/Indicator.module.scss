@@ -1,0 +1,14 @@
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.indicator {
+  padding: 0 toRem(8);
+  border-radius: 64px;
+  background-color: $successColor;
+  color: $white;
+  font-weight: 600;
+  font-size: $fontSize;
+  line-height: toRem(21);
+  letter-spacing: 0.08em;
+}

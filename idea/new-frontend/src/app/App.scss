@@ -1,5 +1,15 @@
 @use '@gear-js/ui/variables' as *;
-@use './styles';
+@use './styles/index.scss';
+@use 'shared/assets/styles/_variables.scss' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: $mainBgColor;
+}
 
 #root {
   max-width: 1200px;
@@ -9,4 +19,8 @@
   display: flex;
   flex-direction: column;
   box-sizing: content-box;
+}
+
+button {
+  border: none;
 }

@@ -1,0 +1,95 @@
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  white-space: nowrap;
+
+  .ideaLogo,
+  .gearLogo {    
+    &:global(.exit-active),
+    &:global(.enter-active) {
+      path {
+        transition: opacity 50ms linear;
+      }
+    }
+
+    &:global(.enter),
+    &:global(.exit-done),
+    &:global(.exit-active) {
+      path {
+        opacity: 0;
+      }
+    }
+
+    &:global(.enter-active)  {
+      path {
+        opacity: 1;
+      }
+    }
+  }
+  
+  .gearsLogo {    
+    margin-left: 5px;
+    margin-right: 8px;  
+  }
+
+  .gearLogo {
+    margin-top: 4px;
+
+    &:global(.enter-active) {
+      path[data-letter="G"] {
+        transition-delay: 50ms;
+      }
+      path[data-letter="E"] {
+        transition-delay: 100ms;
+      }
+      path[data-letter="A"] {
+        transition-delay: 150ms;
+      }
+      path[data-letter="R"] {
+        transition-delay: 200ms;
+      }
+    }
+
+    &:global(.exit-active){
+      path[data-letter="G"] {
+        transition-delay: 150ms;
+      }
+      path[data-letter="E"] {
+        transition-delay: 100ms;
+      }
+      path[data-letter="A"] {
+        transition-delay: 50ms;
+      }
+    }
+  }
+
+  .ideaLogo {
+    &:global(.enter-active) {
+      path[data-letter="I"] {
+        transition-delay: 200ms;
+      }
+      path[data-letter="D"] {
+        transition-delay: 150ms;
+      }
+      path[data-letter="E"] {
+        transition-delay: 100ms;
+      }
+      path[data-letter="A"] {
+        transition-delay: 50ms;
+      }
+    }
+
+    &:global(.exit-active) {
+      path[data-letter="D"] {
+        transition-delay: 100ms;
+      }
+      path[data-letter="E"] {
+        transition-delay: 150ms;
+      }
+      path[data-letter="A"] {
+        transition-delay: 200ms;
+      }
+    }
+  }
+}

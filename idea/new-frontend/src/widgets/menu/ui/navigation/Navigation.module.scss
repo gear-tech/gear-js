@@ -1,0 +1,14 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 toRem(15);
+  margin-top: toRem(96);
+
+  & > *:not(:last-child) {
+    margin-bottom: toRem(6);
+  }
+}

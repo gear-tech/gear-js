@@ -1,17 +1,24 @@
-// import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
+import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
 
 import { useAccountSubscriptions } from 'hooks';
+import { Routing } from 'pages';
+import { Menu } from 'widgets/menu';
 
 import './App.scss';
 import { withProviders } from './providers';
 
-const Component = () => {
-  // const { isApiReady } = useApi();
-  // const { isLoginReady } = useLoggedInAccount();
+const App = withProviders(() => {
+  const { isApiReady } = useApi();
+  const { isLoginReady } = useLoggedInAccount();
 
   useAccountSubscriptions();
 
-  return null;
-};
+  return (
+    <>
+      <Menu />
+      {isApiReady && isLoginReady ? <Routing /> : null}
+    </>
+  );
+});
 
-export const App = withProviders(Component);
+export { App };

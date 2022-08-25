@@ -1,0 +1,57 @@
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.navLink {
+  @include transition(background-color);
+
+  padding: toRem(12);
+  white-space: nowrap;
+  border-radius: 16px;
+  vertical-align: middle;
+  background-color: inherit;
+
+  &:global(.active) {
+    background-color: rgba($successColor, 0.05);
+  }
+
+  &:hover,
+  &:global(.active) {
+    svg path {
+      fill: $successColor;
+    }
+
+    .linkText {
+      color: $successColor;
+    }
+  }
+
+  svg path {
+    @include transition(fill);
+  }
+
+  .icon {
+    display: inline-block;
+    min-width: 20px;
+    text-align: center;
+  }
+}
+
+.linkContent {
+  @include fade();
+
+  margin-left: toRem(16);
+
+  .linkText {
+    @include transition(color);
+  
+    color: $gray800;
+    margin-right: toRem(14);
+    font-size: $fontSize;
+    font-weight: 600;
+    line-height: toRem(21);
+    letter-spacing: 0.08em;
+    text-transform: capitalize
+  }
+}

@@ -1,0 +1,27 @@
+@use '@gear-js/ui/mixins' as *;
+
+//for css transition
+@mixin fade( $delay: 250ms, $triming-function: linear, $duration: 0ms) {
+  &:global(.exit),
+  &:global(.enter-done) {
+    opacity: 1;
+  }
+
+  &:global(.enter),
+  &:global(.exit-done){
+    opacity: 0;
+  } 
+
+  &:global(.enter-active) {
+    opacity: 1 !important; 
+  }
+
+  &:global(.exit-active) {
+    opacity: 0 !important;
+  }
+
+  &:global(.exit-active),
+  &:global(.enter-active){ 
+    transition: opacity $delay $triming-function $duration;
+  }
+}

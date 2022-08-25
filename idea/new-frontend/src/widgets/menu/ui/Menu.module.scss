@@ -1,0 +1,99 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: $mainBgColor;
+}
+
+.menuContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: toRem(28) 0 toRem(16) 0;
+  height: 100%;
+  width: toRem(74);
+  overflow: hidden;
+  transition: width 250ms ease-in-out;
+
+  & > * {
+    position: relative;
+    z-index: 3;
+  }
+
+  &::after,
+  &::before {
+    content: "";
+    display: block;
+    left: 0;
+    width: toRem(228);
+    position: absolute;
+    opacity: 0.7;
+    transition: left 250ms ease-in-out;
+  }
+
+  &::after {  
+    z-index: 2;  
+    top: toRem(88);
+    height: toRem(500);
+    background: radial-gradient(50% 50% at 50% 50%, rgba(3, 52, 199, 0.4) 15%, rgba(24, 24, 27, 0) 100%);
+  }
+  
+  &::before {
+    z-index: 1;
+    top: toRem(-24);
+    height: toRem(600);
+    background: radial-gradient(50% 50% at 50% 50%, rgba(43, 208, 113, 0.4) 15%, rgba(24, 24, 27, 0) 100%);
+  }
+
+
+  &.open {
+    width: toRem(228);
+
+    &::after {  
+      left: toRem(83);
+    }
+  
+    &::before {
+      left: toRem(123);
+    }
+  }
+}
+
+.menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 18px;
+  padding: 10px 5px;
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  cursor: pointer;
+  right: -9px;
+  transform: translateY(-50%);
+  background: rgba($white, 0.1);
+  box-shadow: inset 1px 1px 0px rgba($white, 0.25);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+
+  &::after,
+  &::before {
+    content: '';
+    width: 2px;
+    background: $white;
+  }
+
+  &::after {
+    height: 15px;
+  }
+
+  &::before {
+    height: 10px;
+  }
+}

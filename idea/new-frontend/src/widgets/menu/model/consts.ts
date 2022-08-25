@@ -1,0 +1,3 @@
+const ANIMATION_TIMEOUT = 250;
+
+export { ANIMATION_TIMEOUT };

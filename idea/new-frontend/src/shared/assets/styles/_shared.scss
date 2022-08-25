@@ -1,6 +1,12 @@
+@use '@gear-js/ui/variables' as *;
+
 %absoluteCenter {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%);
+}
+
+@function toRem($value) {
+  @return ($value / 16) + rem;
 }
