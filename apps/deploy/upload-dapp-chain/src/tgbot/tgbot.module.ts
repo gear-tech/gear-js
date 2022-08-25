@@ -1,17 +1,15 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TelegrafModule } from "nestjs-telegraf";
-import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { TgbotService } from "./tgbot.service";
 import { DappDataModule } from "../dapp-data/dapp-data.module";
-import { TgbotUserRepo } from "./tgbot-user.repo";
-import { TgbotUser } from "./entities/tgbot-user.entity";
+import { UserModule } from "../user/user.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TgbotUser]),
     DappDataModule,
+    UserModule,
     TelegrafModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -21,7 +19,7 @@ import { TgbotUser } from "./entities/tgbot-user.entity";
     }),
   ],
   controllers: [],
-  providers: [TgbotService, TgbotUserRepo],
-  exports: [TgbotUserRepo],
+  providers: [TgbotService],
+  exports: [],
 })
 export class TgbotModule {}

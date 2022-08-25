@@ -1,4 +1,5 @@
 import { KeyringPair } from "@polkadot/keyring/types";
+
 import { DappData } from "../entities/dapp-data.entity";
 import { DAPP, REPO } from "../../common/enums";
 

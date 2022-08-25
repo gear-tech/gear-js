@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { decodeAddress, GearApi, getWasmMetadata, Hex, IMessageSendOptions } from "@gear-js/api";
 import { plainToClass } from "class-transformer";
 import { KeyringPair } from "@polkadot/keyring/types";
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
 
 import {
   checkInitProgram,
@@ -27,7 +27,7 @@ import { DappDataRepo } from "./dapp-data.repo";
 import { gearService } from "../gear/gear-service";
 import { BadRequestExc } from "../common/exceptions/bad-request.exception";
 import { sendTransaction } from "../common/hellpers/send-transaction";
-import { ApiKey } from "../common/enums";
+import { ApiKey, FileKey } from "../common/enums";
 
 @Injectable()
 export class DappDataService {
@@ -60,13 +60,16 @@ export class DappDataService {
         release,
       } = this.getUploadDappByRepoAndName(dappName, repo, [response.data]);
 
-      const [optWasmData, metaWasmData] = await Promise.all([
-        fetch(optWasmDownloadUrl),
-        fetch(metaWasmDownloadUrl),
+      const [optWasmData, metaWasmData] = await this.getOptAndMetaWasmFiles(
+        optWasmDownloadUrl,
+        metaWasmDownloadUrl,
+      );
+
+      const [optWasmBuff, metaWasmBuff] = await Promise.all([
+        optWasmData.buffer(),
+        metaWasmData.buffer(),
       ]);
 
-      const optWasmBuff = await optWasmData.buffer();
-      const metaWasmBuff = await metaWasmData.buffer();
       const { payload } = getUploadDappDataByDappName(dappName);
 
       if (dapp) {
@@ -117,13 +120,16 @@ export class DappDataService {
         repo,
       );
 
-      const [optWasmData, metaWasmData] = await Promise.all([
-        fetch(optWasmDownloadUrl),
-        fetch(metaWasmDownloadUrl),
+      const [optWasmData, metaWasmData] = await this.getOptAndMetaWasmFiles(
+        optWasmDownloadUrl,
+        metaWasmDownloadUrl,
+      );
+
+      const [optWasmBuff, metaWasmBuff] = await Promise.all([
+        optWasmData.buffer(),
+        metaWasmData.buffer(),
       ]);
 
-      const optWasmBuff = await optWasmData.buffer();
-      const metaWasmBuff = await metaWasmData.buffer();
       const { payload } = getUploadDappDataByDappName(dappName);
 
       if (dapp) {
@@ -157,6 +163,73 @@ export class DappDataService {
     }
   }
 
+  public async uploadMarketPlaceDapp(uploadDappInChainTGInput: UploadDappInChainTGInput): Promise<DappData> {
+    const result: DappData[] = [];
+    const { dappName, repo } = uploadDappInChainTGInput;
+    const [AL] = await getAccount();
+
+    const releases = await getLatestReleaseByRepo(
+      repo,
+      this.configService.get<string>("github.GITHUB_OWNER_REPO"),
+    );
+
+    const dapps = await Promise.all([
+      this.dappDataRepository.getByNameAndRepo(dappName, repo),
+      this.dappDataRepository.getByNameAndRepo("#nft", repo),
+    ]);
+
+    for (const dapp of dapps) {
+      const {
+        metaWasmDownloadUrl,
+        optWasmDownloadUrl,
+        release,
+      } = this.getUploadDappByRepoAndName(dapp.name, repo, [releases.data]);
+
+      const [optWasmData, metaWasmData] = await this.getOptAndMetaWasmFiles(
+        optWasmDownloadUrl,
+        metaWasmDownloadUrl,
+      );
+
+      const [optWasmBuff, metaWasmBuff] = await Promise.all([
+        optWasmData.buffer(),
+        metaWasmData.buffer(),
+      ]);
+
+      const { payload } = getUploadDappDataByDappName(dappName);
+
+      if (dapp) {
+        result.push(await this.uploadDappInChainAndUpdate({
+          account: AL,
+          dappData: dapp,
+          optWasmBuff,
+          metaWasmBuff,
+          release,
+          payload,
+        }));
+      } else {
+        result.push(await this.uploadNewDappInChain({
+          account: AL,
+          metaWasmBuff,
+          optWasmBuff,
+          dappName,
+          release,
+          repo,
+          payload,
+        }));
+      }
+    }
+
+    try {
+      await this.sendMessageUploadedMarketplace(AL, result);
+      const uploadedMarketplace = result.find(daap => daap.repo === repo);
+
+      return { ...uploadedMarketplace, metaWasmBase64: "long" };
+    } catch (error) {
+      console.log(error);
+      this.logger.error(error);
+    }
+  }
+
   private async uploadDappInChainAndUpdate(uploadDappInChainInput: UploadDappInChainInput): Promise<DappData> {
     const { dappData, optWasmBuff, metaWasmBuff, release, account } = uploadDappInChainInput;
 
@@ -183,7 +256,7 @@ export class DappDataService {
     const status = checkInitProgram(this.gearApi, programId);
     await sendTransaction(this.gearApi, account, "MessageEnqueued", ApiKey.PROGRAM);
 
-    console.log("_________>status", await status);
+    await status;
 
     dappData.id = programId;
     dappData.release = release;
@@ -230,7 +303,7 @@ export class DappDataService {
     const status = checkInitProgram(this.gearApi, programId);
     await sendTransaction(this.gearApi, account, "MessageEnqueued", ApiKey.PROGRAM);
 
-    console.log("_________>status", await status);
+    await status;
 
     const createDappInput: CreateDappInput = {
       id: programId,
@@ -271,10 +344,10 @@ export class DappDataService {
     const result = [];
 
     for (const asset of assets) {
-      if (name === getNameDapp(asset.name) && asset.name.split(".").includes("opt")) {
+      if (name === getNameDapp(asset.name) && asset.name.split(".").includes(FileKey.OPT)) {
         result[0] = asset.browser_download_url;
       }
-      if (name === getNameDapp(asset.name) && asset.name.split(".").includes("meta")) {
+      if (name === getNameDapp(asset.name) && asset.name.split(".").includes(FileKey.META)) {
         result[1] = asset.browser_download_url;
       }
     }
@@ -284,10 +357,10 @@ export class DappDataService {
   private async sendMessageUploadedMarketplace(account: KeyringPair, uploadedPrograms: DappData[]): Promise<void> {
     const sourceId = decodeAddress(account.address);
 
-    const nftForMarketplace = uploadedPrograms.find(uploadedProgram => uploadedProgram.name === "#nft");
+    const uploadNftForMarketplace = uploadedPrograms.find(uploadedProgram => uploadedProgram.name === "#nft");
     const uploadMarketplace = uploadedPrograms.find(uploadedProgram => uploadedProgram.name === "nft_marketplace");
 
-    if (!nftForMarketplace || !uploadMarketplace) {
+    if (!uploadNftForMarketplace || !uploadMarketplace) {
       return;
     }
 
@@ -298,7 +371,7 @@ export class DappDataService {
       const gas = await this.gearApi.program.calculateGas.handle(
         sourceId,
         buff,
-        { AddNftContract: nftForMarketplace.id },
+        { AddNftContract: uploadNftForMarketplace.id },
         0,
         true,
         meta,
@@ -306,7 +379,7 @@ export class DappDataService {
 
       const message: IMessageSendOptions = {
         destination: uploadMarketplace.id as Hex,
-        payload: { AddNftContract: nftForMarketplace.id },
+        payload: { AddNftContract: uploadNftForMarketplace.id },
         gasLimit: gas.min_limit,
         value: 0,
       };
@@ -318,5 +391,15 @@ export class DappDataService {
       console.error(error);
       this.logger.error(error);
     }
+  }
+
+  private async getOptAndMetaWasmFiles(
+    optWasmDownloadUrl: string,
+    metaWasmDownloadUrl: string,
+  ): Promise<Response[]> {
+    return Promise.all([
+      fetch(optWasmDownloadUrl),
+      fetch(metaWasmDownloadUrl),
+    ]);
   }
 }
