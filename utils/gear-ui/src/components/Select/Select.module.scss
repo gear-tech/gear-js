@@ -1,33 +1,44 @@
 @use '../../assets/styles/variables' as *;
+@use '../../assets/styles/shared' as *;
 
-$arrow: "data:image/svg+xml,%3Csvg width='12' height='8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m1.219.588 4.881 6 4.881-6' stroke='%23fff'/%3E%3C/svg%3E";
-
-.label {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  font-size: 16px;
-  font-weight: 300;
-  color: $textColorSecondary;
+@mixin arrow($isLight: false) {
+  $color: if($isLight == true, '2b2b2e', 'fff');
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 4.977 10.125.852l1.178 1.178L6 7.333.697 2.03 1.875.852 6 4.977Z' fill='%23#{$color}' fill-opacity='.7'/%3E%3C/svg%3E");
 }
 
-.text {
-  margin-right: 16px;
+.wrapper {
+  @extend %wrapper;
+}
+
+.label {
+  @extend %label;
 }
 
 .resets {
   appearance: none;
-  border: none;
   outline: none;
   cursor: pointer;
 }
 
 .select {
   @extend .resets;
-  flex: 1;
-  padding: 10px 45px 10px 20px;
-  color: $textColor;
-  background: #282828 url($arrow) center right 16px no-repeat;
-  border-radius: $borderRadius;
-  box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
+  @extend %inputWrapper;
+  @extend %input;
+  width: 100%;
+  padding-right: 40px !important; // overriding %inputWrapper
+
+  background-position: center right 16px;
+  background-repeat: no-repeat;
+
+  &.dark {
+    @include arrow();
+  }
+
+  &.light {
+    @include arrow(true);
+  }
+}
+
+.error {
+  @extend %error;
 }

@@ -50,7 +50,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
             id={id}
             className={inputClassName}
             ref={inputRef}
-            onFocus={clearButton.show}
+            onFocus={readOnly ? undefined : clearButton.show}
             onBlur={clearButton.hide}
             {...attrs}
           />

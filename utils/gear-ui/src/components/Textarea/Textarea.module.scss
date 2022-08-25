@@ -1,11 +1,11 @@
 @use '../../assets/styles/variables' as *;
 @use '../../assets/styles/shared' as *;
 
-.label {
+.wrapper {
   @extend %wrapper;
 }
 
-.text {
+.label {
   @extend %label;
 }
 

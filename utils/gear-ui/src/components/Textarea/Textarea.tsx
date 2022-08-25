@@ -1,4 +1,4 @@
-import { forwardRef, TextareaHTMLAttributes, ForwardedRef, ReactNode } from 'react';
+import { forwardRef, TextareaHTMLAttributes, ForwardedRef, ReactNode, useId } from 'react';
 import clsx from 'clsx';
 import { Gap } from '../../types';
 import { useClearButton } from '../../hooks';
@@ -19,24 +19,30 @@ type Props = XDirectionProps | YDirectionProps;
 
 const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAreaElement>) => {
   const { label, className, error, gap, rows = 5, color = 'dark', size = 'normal', direction = 'x', ...attrs } = props;
-  const { disabled } = attrs;
-  const labelClassName = clsx(styles.label, className, disabled && 'disabled', label && styles[direction]);
-  const textClassName = clsx(styles.text, styles[size], styles[direction]);
+  const { disabled, readOnly } = attrs;
+  const wrapperClassName = clsx(styles.wrapper, className, disabled && 'disabled', label && styles[direction]);
+  const labelClassName = clsx(styles.label, styles[size], styles[direction]);
   const textareaWrapperClassName = clsx(styles.textareaWrapper, styles[color], styles[size], error && styles.error);
   const textareaClassName = clsx(styles.textarea, styles[color]);
 
+  const id = useId();
   const { clearButton, inputRef } = useClearButton<HTMLTextAreaElement>(forwardedRef, color);
 
   return (
-    <label className={labelClassName} style={gap && getLabelGap(gap)} data-testid="label">
-      {label && <span className={textClassName}>{label}</span>}
+    <div className={wrapperClassName} style={gap && getLabelGap(gap)} data-testid="label">
+      {label && (
+        <label htmlFor={id} className={labelClassName}>
+          {label}
+        </label>
+      )}
       <div className={styles.wrapper}>
         <div className={textareaWrapperClassName}>
           <textarea
+            id={id}
             rows={rows}
             className={textareaClassName}
             ref={inputRef}
-            onFocus={clearButton.show}
+            onFocus={readOnly ? undefined : clearButton.show}
             onBlur={clearButton.hide}
             {...attrs}
           />
@@ -52,7 +58,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
         </div>
         {error && <p className={styles.error}>{error}</p>}
       </div>
-    </label>
+    </div>
   );
 });
 
