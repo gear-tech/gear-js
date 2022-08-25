@@ -94,16 +94,19 @@ export class TgbotService {
 
         if (repos.includes(repo) && dapps.includes(dappName)) {
           try {
+            let uploadDapp;
             const uploadDappInChainTGInput: UploadDappInChainTGInput = { repo, dappName };
             if (repo === REPO.NON_FUNGIBLE_TOKEN && dappName === DAPP.NFT_MARKETPLACE) {
-              await this.dappDataService.uploadMarketPlaceDapp(uploadDappInChainTGInput);
+              uploadDapp = await this.dappDataService.uploadMarketPlaceDapp(uploadDappInChainTGInput);
+              ctx.reply(uploadDapp);
               return;
             }
 
-            await this.dappDataService.uploadDappInChain({
+            uploadDapp = await this.dappDataService.uploadDappInChain({
               repo,
               dappName,
             });
+            ctx.reply(uploadDapp);
             return;
           } catch (error) {
             ctx.reply(error.message);

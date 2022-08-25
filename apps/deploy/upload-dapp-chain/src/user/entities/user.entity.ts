@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 
 import { Role } from "../../common/enums";
 
-@Entity()
+@Entity("users")
 export class User {
     @PrimaryColumn()
       id: string;
