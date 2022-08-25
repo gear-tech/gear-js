@@ -1,38 +1,36 @@
-@use 'src/assets/styles/variables' as *;
+@use '../../assets/styles/variables' as *;
+@use '../../assets/styles/shared' as *;
 
 .label {
-  display: flex;
-  font-size: 16px;
-  font-weight: 300;
-  color: $textColorSecondary;
+  @extend %wrapper;
 }
 
 .text {
-  margin-right: 16px;
-  padding-top: 10px;
+  @extend %label;
 }
 
 .resets {
-  border: none;
   outline: none;
   resize: none;
+  background-color: transparent;
+  border: none;
+}
+
+.textareaWrapper {
+  @extend %inputWrapper;
+  align-items: flex-start;
 }
 
 .textarea {
   @extend .resets;
-  flex: 1;
-  padding: 10px 20px;
-  color: $textColor;
-  background-color: #000;
-  border-radius: $borderRadius;
-
-  &::placeholder {
-    color: $textColorSecondary;
-  }
+  @extend %input;
 
   // using attribute selector instead of :read-only pseudo-class cuz latter selects disabled inputs too
   &[readonly] {
-    background-color: #282828;
-    box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
+    @extend %readOnlyInputWrapper;
   }
+}
+
+.error {
+  @extend %error;
 }

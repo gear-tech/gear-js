@@ -1,41 +1,23 @@
-@use 'src/assets/styles/variables' as *;
-
-.label {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  color: #d2d2d3;
-}
-
-.text {
-  margin-right: 16px;
-}
-
-.wrapper,
-.input {
-  flex: 1;
-}
+@use '../../assets/styles/variables' as *;
+@use '../../assets/styles/shared' as *;
 
 .wrapper {
-  display: flex;
-  padding: 10px 16px;
-  background-color: #222225;
-  border: 1px solid #3a3d4d;
-  border-radius: 20px;
+  @extend %wrapper;
+}
 
-  &:focus-within {
-    border-color: #898b94;
-  }
+.label {
+  @extend %label;
+}
+
+.inputWrapper {
+  @extend %inputWrapper;
 
   &.readOnly {
-    border: none;
-    background-color: #2b2b2e;
+    @extend %readOnlyInputWrapper;
   }
 }
 
 .resets {
-  @extend .resets;
   padding: 0;
   background: none;
   border: none;
@@ -44,11 +26,7 @@
 
 .input {
   @extend .resets;
-  color: $textColor;
-
-  &::placeholder {
-    color: #ffffff99;
-  }
+  @extend %input;
 }
 
 .icon {
@@ -57,4 +35,8 @@
 
 .clearButton {
   margin-left: 8px;
+}
+
+.error {
+  @extend %error;
 }

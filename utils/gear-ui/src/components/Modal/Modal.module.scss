@@ -1,4 +1,4 @@
-@use 'src/assets/styles/variables' as *;
+@use '../../assets/styles/variables' as *;
 @use 'src/assets/styles/mixins' as *;
 
 $border: url("data:image/svg+xml,%3Csvg width='430' height='431' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='url(%23a)' d='M20.5 21h389v389h-389z'/%3E%3Cdefs%3E%3ClinearGradient id='a' x1='286.384' y1='309.809' x2='397.1' y2='232.437' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23575757'/%3E%3Cstop offset='1' stop-color='%23232323' stop-opacity='.1'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
