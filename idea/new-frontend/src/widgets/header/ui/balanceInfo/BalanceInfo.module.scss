@@ -1,5 +1,15 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.balanceSection {
+  @include fade();
+
+  &:global(.exit),
+  &:global(.exit-done) {
+    display: none;
+  }
+}
 
 .titleWrapper {
   display: flex;

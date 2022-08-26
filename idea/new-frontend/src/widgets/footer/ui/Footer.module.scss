@@ -1,0 +1,22 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/breakpoints' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 toRem(40);
+  padding: toRem(20) 0;
+  text-align: center;
+  color: $textColorSecondary;
+
+  @include md {
+    flex-direction: column;
+
+    & > *:not(:last-child) {
+      margin-bottom: toRem(32);
+    }
+  }
+}

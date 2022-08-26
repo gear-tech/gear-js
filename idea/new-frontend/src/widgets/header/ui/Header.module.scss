@@ -8,6 +8,8 @@
 
 .header {
   display: flex;
+  position: relative;
+  align-items: center;
   padding-top: toRem(21);
 }
 
@@ -33,5 +35,7 @@
 }
 
 .rightSide {
+  display: flex;
+  align-items: center;
   margin-left: auto;
 }

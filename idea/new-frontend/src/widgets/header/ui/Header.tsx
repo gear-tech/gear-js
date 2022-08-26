@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useApi, useAccount } from '@gear-js/react-hooks';
 
 import styles from './Header.module.scss';
+import { Wallet } from './wallet';
 import { RecentBlock } from './recentBlock';
 import { BalanceInfo } from './balanceInfo';
 import { TotalIssuance } from './totalIssuance';
@@ -21,10 +22,8 @@ const Header = () => {
       <TotalIssuance totalIssuance={totalIssuance} />
       <RecentBlock />
       <div className={styles.rightSide}>
-        {account && (
-          <BalanceInfo unit={account.balance.unit || ''} value={account.balance.value} address={account.address} />
-        )}
-        <span />
+        <BalanceInfo account={account} />
+        <Wallet account={account} />
       </div>
     </header>
   );

@@ -1,9 +1,10 @@
 import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
 
 import { useAccountSubscriptions } from 'hooks';
-import { Routing } from 'pages';
 import { Menu } from 'widgets/menu';
 import { Header } from 'widgets/header';
+import { Footer } from 'widgets/footer';
+import { Routing } from 'pages';
 import { Loader } from 'shared/ui/loader';
 
 import './App.scss';
@@ -20,13 +21,16 @@ const App = withProviders(() => {
   }
 
   return (
-    <main className="main">
-      <Menu />
-      <div className="content">
-        <Header />
-        <Routing />
-      </div>
-    </main>
+    <>
+      <main className="main">
+        <Menu />
+        <div className="content">
+          <Header />
+          <Routing />
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 });
 

@@ -1,9 +1,9 @@
 import { CSSTransition } from 'react-transition-group';
 
 import { ANIMATION_TIMEOUT } from 'shared/config';
-import { ReactComponent as GearsSVG } from 'shared/assets/images/gear/gears.svg';
-import { ReactComponent as IdeaLogoSVG } from 'shared/assets/images/gear/idea.svg';
-import { ReactComponent as GearLogoSVG } from 'shared/assets/images/gear/gearText.svg';
+import { ReactComponent as GearsSVG } from 'shared/assets/images/logos/gears.svg';
+import { ReactComponent as IdeaLogoSVG } from 'shared/assets/images/logos/idea.svg';
+import { ReactComponent as GearLogoSVG } from 'shared/assets/images/logos/gearText.svg';
 
 import styles from './Logo.module.scss';
 

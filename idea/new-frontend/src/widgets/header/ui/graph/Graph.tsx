@@ -28,8 +28,9 @@ const Graph = ({ blocks }: Props) => {
 
   return (
     <div className={styles.graph}>
-      {percents.current.map((value) => (
-        <hr style={{ height: `${value}%` }} className={styles.line} />
+      {percents.current.map((value, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <hr key={index} style={{ height: `${value}%` }} className={styles.line} />
       ))}
     </div>
   );

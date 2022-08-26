@@ -14,6 +14,7 @@ import { useAccountSubscriptions } from './useAccountSubscriptions';
 import { useSidebarNodes } from './useSidebarNodes';
 import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
+import { usePrevious } from './usePrevious';
 
 export {
   useModal,
@@ -21,6 +22,7 @@ export {
   useEvents,
   useMessage,
   useProgram,
+  usePrevious,
   useStateRead,
   useCodeUpload,
   useOutsideClick,

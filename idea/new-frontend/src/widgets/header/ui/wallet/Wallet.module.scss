@@ -1,0 +1,20 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+
+.walletWrapper {
+  margin-left: toRem(16);
+}
+
+.avatar {
+  margin-right: toRem(10);
+  // hacky, but need to override Identicon's 'cursor: copy'
+  cursor: inherit !important;
+}
+
+.accountBtn {
+  width: toRem(183);
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}

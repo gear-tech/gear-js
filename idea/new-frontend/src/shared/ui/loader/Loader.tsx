@@ -1,5 +1,5 @@
-import upGearSVG from 'shared/assets/images/gear/gearUp.svg';
-import downGearSVG from 'shared/assets/images/gear/gearDown.svg';
+import upGearSVG from 'shared/assets/images/logos/gearUp.svg';
+import downGearSVG from 'shared/assets/images/logos/gearDown.svg';
 
 import styles from './Loader.module.scss';
 

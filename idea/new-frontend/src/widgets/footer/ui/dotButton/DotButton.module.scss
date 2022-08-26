@@ -1,0 +1,6 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+
+.icon {
+  //  overriding the icon styles from ui-kit button styles
+  margin-right: toRem(10) !important;
+}
