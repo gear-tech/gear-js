@@ -370,7 +370,7 @@ export class DappDataService {
 
       const gas = await this.gearApi.program.calculateGas.handle(
         sourceId,
-        buff,
+        uploadNftForMarketplace.id as Hex,
         { AddNftContract: uploadNftForMarketplace.id },
         0,
         true,
@@ -384,9 +384,13 @@ export class DappDataService {
         value: 0,
       };
 
-      this.gearApi.message.send(message, meta);
+      const tx = this.gearApi.message.send(message, meta);
 
       await sendTransaction(this.gearApi, account, "MessageEnqueued", ApiKey.MESSAGE);
+
+      await tx.signAndSend(account, ({ events }) => {
+        events.forEach(({ event }) => console.log(event.toHuman()));
+      });
     } catch (error) {
       console.error(error);
       this.logger.error(error);
