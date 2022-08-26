@@ -1,132 +1,101 @@
-import { Command, Update } from "nestjs-telegraf";
-import { Markup } from "telegraf";
+import { Injectable } from "@nestjs/common";
 
+import { WorkflowCommandService } from "../workflow-command/workflow-command.service";
 import { DappDataService } from "../dapp-data/dapp-data.service";
-import { Context } from "./types";
-import { DAPP, REPO, Role, TBErrorMessage } from "../common/enums";
-import { getTgCommands } from "../common/hellpers";
+import { Role, TBErrorMessage } from "../common/enums";
 import { UserService } from "../user/user.service";
 import { UserRepo } from "../user/user.repo";
-import { UploadDappInChainTGInput } from "../dapp-data/types";
+import { getTgCommands } from "../common/hellpers";
+import { getWorkflowCommands } from "../common/hellpers/get-workflow-commands";
+import { SendMessageInput, UploadProgramResult } from "../workflow-command/types";
+import { getUploadProgramData } from "../common/hellpers/get-upload-program-data";
+import { DappData } from "../dapp-data/entities/dapp-data.entity";
+import { Payload } from "../common/types";
 
-@Update()
+@Injectable()
 export class TgbotService {
   constructor(
-    private dappDataService: DappDataService,
-    private userService: UserService,
-    private userRepository: UserRepo,
+      private workflowCommandService: WorkflowCommandService,
+      private dappDataService: DappDataService,
+      private userService: UserService,
+      private userRepository: UserRepo,
   ) {}
 
-  @Command("addAccessUser")
-  public async addAccessUser(ctx: Context): Promise<void> {
-    // @ts-ignore
-    const [, id] = ctx.message.text.split(" ");
+  public async addAccessUser(commandArguments: string, userId: number): Promise<string> {
+    const [, id] = commandArguments.split(" ");
 
-    if (await this.userService.isAdmin(String(ctx.from.id))) {
+    if (!await this.userService.isAdmin(String(userId))) {
       if (!id) {
-        ctx.reply(TBErrorMessage.COMMAND_ARGUMENTS_REQUIRED);
-        return;
+        return TBErrorMessage.COMMAND_ARGUMENTS_REQUIRED;
       }
       const user = await this.userRepository.get(id);
 
       if (user) {
-        ctx.reply("User already exists");
-        return;
+        return "User already exists";
       }
 
       await this.userService.creatUser({ id, role: Role.DEV });
-      ctx.reply("User successfully register");
-      return;
-    }
-    ctx.reply(TBErrorMessage.ACCESS_DENIED);
-  }
-
-  @Command("start")
-  public async start(ctx: Context): Promise<void> {
-    ctx.reply("hello there! Welcome to 📢😎 Gear upload dapp telegram bot.");
-    ctx.reply("commands", Markup
-      .keyboard([
-        ["/listCommands", "😎 Popular"],
-      ])
-      .oneTime()
-      .resize());
-  }
-
-  @Command("listCommands")
-  public async listCommands(ctx: Context): Promise<void> {
-    if (await this.userService.validate(String(ctx.from.id))) {
-      ctx.reply(getTgCommands());
-      return;
+      return "User successfully register";
     }
 
-    ctx.reply(TBErrorMessage.ACCESS_DENIED);
+    return TBErrorMessage.ACCESS_DENIED;
   }
 
-  @Command("uploadDappsInChain")
-  public async uploadDappsInChain(ctx: Context): Promise<void> {
-    if (await this.userService.validate(String(ctx.from.id))) {
+  public async listCommands(userId: number): Promise<string> {
+    if (await this.userService.validate(String(userId))) {
+      return getTgCommands();
+    }
+
+    return TBErrorMessage.ACCESS_DENIED;
+  }
+
+  public async uploadDapps(userId: number): Promise<DappData[] | string> {
+    const workflow = getWorkflowCommands();
+    const uploadedPrograms: UploadProgramResult[] = [];
+
+    if (!await this.userService.validate(String(userId))) {
+      return TBErrorMessage.ACCESS_DENIED;
+    }
+
+    for (const commandInfo of workflow) {
+      const { acc, payload, command, program } = commandInfo;
+      const uploadProgramData = getUploadProgramData(program);
+
       try {
-        const uploadDapps = await this.dappDataService.uploadDappsInChain();
-        if (uploadDapps.length >= 1) {
-          for (const uploadDapp of uploadDapps) {
-            ctx.reply(JSON.stringify(uploadDapp));
-          }
+        if (command === "sendMessage") {
+          const sendMessageInput: SendMessageInput = {
+            payload: this.getPayload(uploadedPrograms, payload),
+            program: uploadProgramData,
+            acc,
+          };
+
+          await this.workflowCommandService.sendMessage(sendMessageInput, uploadedPrograms);
         }
-        return;
+
+        if (command === "uploadProgram") {
+          const uploadedProgramData = await this.workflowCommandService.uploadProgram(uploadProgramData);
+          uploadedPrograms.push(uploadedProgramData);
+        }
       } catch (error) {
-        ctx.reply(error);
-        return;
+        console.log(error);
       }
     }
 
-    ctx.reply(TBErrorMessage.ACCESS_DENIED);
+    const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
+
+    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long" }));
   }
 
-  @Command("uploadDappInChain")
-  public async uploadDappInChain(ctx: Context): Promise<void> {
-    if (await this.userService.validate(String(ctx.from.id))) {
+  private getPayload(uploadProgramsData: UploadProgramResult[], payload: Payload): Payload {
+    // @ts-ignore
+    if (payload.AddNftContract) {
       // @ts-ignore
-      const [, repo, dappName] = ctx.message.text.split(" ");
+      const program = getUploadProgramData(payload.AddNftContract);
+      const uploadedProgram = uploadProgramsData.find(uploadProgram => uploadProgram.dapp === program.dapp);
 
-      if (repo && dappName) {
-        const repos = Object.values(REPO);
-        const dapps = Object.values(DAPP);
-
-        if (repos.includes(repo) && dapps.includes(dappName)) {
-          try {
-            let uploadDapp;
-            const uploadDappInChainTGInput: UploadDappInChainTGInput = { repo, dappName };
-            if (repo === REPO.NON_FUNGIBLE_TOKEN && dappName === DAPP.NFT_MARKETPLACE) {
-              uploadDapp = await this.dappDataService.uploadMarketPlaceDapp(uploadDappInChainTGInput);
-              ctx.reply(uploadDapp);
-              return;
-            }
-
-            uploadDapp = await this.dappDataService.uploadDappInChain({
-              repo,
-              dappName,
-            });
-            ctx.reply(uploadDapp);
-            return;
-          } catch (error) {
-            ctx.reply(error.message);
-            return;
-          }
-        }
-        ctx.reply(TBErrorMessage.INVALID_COMMAND_ARGUMENTS);
-        return;
-      }
-
-      ctx.reply(TBErrorMessage.COMMAND_ARGUMENTS_REQUIRED);
-      return;
+      return { AddNftContract: uploadedProgram.programId };
     }
 
-    ctx.reply(TBErrorMessage.ACCESS_DENIED);
-  }
-
-  @Command("getUserId")
-  public async getUserId(ctx: Context): Promise<void> {
-    const tgUserData = { username: ctx.from.username, id: ctx.from.id.toString() };
-    ctx.reply(JSON.stringify(tgUserData));
+    return payload;
   }
 }

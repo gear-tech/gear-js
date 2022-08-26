@@ -5,11 +5,14 @@ import { TelegrafModule } from "nestjs-telegraf";
 import { TgbotService } from "./tgbot.service";
 import { DappDataModule } from "../dapp-data/dapp-data.module";
 import { UserModule } from "../user/user.module";
+import { TgbotController } from "./tgbot.controller";
+import { WorkflowCommandModule } from "../workflow-command/workflow-command.module";
 
 @Module({
   imports: [
     DappDataModule,
     UserModule,
+    WorkflowCommandModule,
     TelegrafModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -19,7 +22,7 @@ import { UserModule } from "../user/user.module";
     }),
   ],
   controllers: [],
-  providers: [TgbotService],
+  providers: [TgbotService, TgbotController],
   exports: [],
 })
 export class TgbotModule {}

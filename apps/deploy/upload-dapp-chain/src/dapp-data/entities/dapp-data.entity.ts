@@ -9,9 +9,6 @@ export class DappData {
   id: string;
 
   @Column()
-  release: string;
-
-  @Column()
   repo: string;
 
   @Column({ nullable: true })

@@ -11,8 +11,8 @@ export class DappDataRepo {
     private dappDataRepository: Repository<DappData>,
   ) {}
 
-  public async save(dappData: DappData): Promise<DappData> {
-    return this.dappDataRepository.save(dappData);
+  public async save(dappsData: DappData[]): Promise<DappData[]> {
+    return this.dappDataRepository.save(dappsData);
   }
 
   public async get(id: string): Promise<DappData> {

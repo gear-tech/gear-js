@@ -10,8 +10,8 @@ export default () => ({
   bot: {
     TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || "bot",
   },
-  dappsPayloadsPath: {
-    DAPPS_PAYLOADS_PATH: process.env.DAPPS_PAYLOADS_PATH || "path",
+  workflow: {
+    WORKFLOW_PATH: process.env.WORKFLOW_PATH || "path",
   },
   nftMarketplace: {
     NFT_MARKETPLACE_ADMIN_ID: process.env.NFT_MARKETPLACE_ADMIN_ID || "nftMarketplaceId",

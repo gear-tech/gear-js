@@ -1,6 +1,5 @@
 export function getTgCommands(): string {
-  return "/uploadDappInChain [repository] [dappName]" + "\n"
-  + "/uploadDappsInChain" + "\n"
+  return "/uploadDapps" + "\n"
   + "/getUserId" + "\n"
   + "/addAccessUser [telegramUserId]";
 }
