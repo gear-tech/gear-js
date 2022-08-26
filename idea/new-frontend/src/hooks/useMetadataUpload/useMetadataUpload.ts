@@ -3,7 +3,7 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 
 import { useModal } from 'hooks';
-import { uploadLocalMetadata } from 'services/LocalDBService';
+import { uploadLocalMetadata } from 'api/LocalDB';
 import { RPCService } from 'shared/services/rpcService';
 import { isDevChain } from 'shared/helpers';
 import { RpcMethods, ACCOUNT_ERRORS } from 'shared/config';

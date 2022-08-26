@@ -2,8 +2,8 @@ import localForage from 'localforage';
 
 import { ProgramStatus, ProgramModel } from 'entities/program';
 
-import { ProgramPaginationModel } from './ProgramRequestService';
-import { FetchMetadataResponse } from './MetadataRequestService';
+import { ProgramPaginationModel } from './program';
+import { FetchMetadataResponse } from './metadata';
 
 const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({
   name: 'programs',

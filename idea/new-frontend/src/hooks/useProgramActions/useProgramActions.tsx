@@ -6,7 +6,7 @@ import { Hex } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from 'hooks';
-import { uploadLocalProgram } from 'services/LocalDBService';
+import { uploadLocalProgram } from 'api/LocalDB';
 import { Method } from 'entities/explorer';
 import { ProgramStatus } from 'entities/program';
 import { OperationCallbacks } from 'entities/hooks';

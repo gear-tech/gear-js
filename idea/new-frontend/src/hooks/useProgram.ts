@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Metadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 
-import { getProgram } from 'services';
+import { getProgram } from 'api';
 import { ProgramModel } from 'entities/program';
 
 const useProgram = (id?: string, initLoading = false) => {

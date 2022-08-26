@@ -45,4 +45,6 @@ class RPCService {
   }
 }
 
-export { RPCService };
+const rpcService = new RPCService();
+
+export { rpcService, RPCService };

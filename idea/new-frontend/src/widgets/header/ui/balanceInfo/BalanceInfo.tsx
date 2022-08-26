@@ -4,10 +4,10 @@ import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { GearKeyring } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 
+import { getTestBalance } from 'api';
 import { useChangeEffect, useBalanceTransfer } from 'hooks';
-import { RPCService } from 'shared/services/rpcService';
 import { isDevChain } from 'shared/helpers';
-import { HCAPTCHA_SITE_KEY, RpcMethods } from 'shared/config';
+import { HCAPTCHA_SITE_KEY } from 'shared/config';
 
 import styles from './BalanceInfo.module.scss';
 import headerStyles from '../Header.module.scss';
@@ -26,20 +26,11 @@ const BalanceInfo = ({ unit, value, address }: Props) => {
 
   const transferBalance = useBalanceTransfer();
 
-  const handleTransferBalance = async () => {
-    try {
-      const apiRequest = new RPCService();
-
-      await apiRequest.callRPC(RpcMethods.GetTestBalance, {
-        token: captchaToken,
-        address,
-      });
-    } catch (error) {
-      const message = (error as Error).message;
-
-      alert.error(message);
-    }
-  };
+  const handleTransferBalance = () =>
+    getTestBalance({
+      token: captchaToken,
+      address,
+    }).catch((error) => alert.error(error.message));
 
   const handleTestBalanceClick = () => {
     if (!captchaToken) {
