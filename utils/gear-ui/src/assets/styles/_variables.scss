@@ -13,13 +13,19 @@ $lineColor: #333333;
 // button color
 
 $buttonColor: $successColor;
-$buttonColorHover: #12582f;
+$buttonColorHover: #168b4e;
 
-$buttonColorSecondary: #373737;
-$buttonColorSecondaryHover: $textColorSecondary;
+$buttonColorSecondary: #1852ff;
+$buttonColorSecondaryHover: #1443cf;
 
-$buttonColorTertiary: $tertiaryColor;
-$buttonColorTertiaryHover: #2955ab;
+$buttonColorLight: #ffffff1a;
+$buttonColorLightHover: #ffffff4d;
+
+$buttonColorLightGreen: #2bd0711a;
+$buttonColorLightGreenHover: #2bd0714d;
+
+$buttonColorGradient: linear-gradient(87.17deg, #2bd071 53.13%, #1852ff 85.01%);
+$buttonColorGradientHover: linear-gradient(87.17deg, #1852ff 10.42%, #2bd071 79.17%);
 
 // font
 
