@@ -13,7 +13,7 @@
   cursor: pointer;
   padding: toRem(12) toRem(12) toRem(12) toRem(25);
   background: rgba($gray300, .05);
-  box-shadow: inset 0px 1px 0px rgba($white, .05);
+  box-shadow: inset 0px 1px 0px rgba($textColor, .05);
   border-radius: 0px 8px 8px 0px;
   min-height: toRem(58);
 
@@ -46,7 +46,7 @@
     width: 10px;
     height: 10px;
     background: $successColor;
-    border: 2px solid $mainBgColor;
+    border: 2px solid $bgColor;
     border-radius: 50%;
   }
 }

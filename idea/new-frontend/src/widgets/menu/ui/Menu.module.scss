@@ -68,8 +68,8 @@
   cursor: pointer;
   right: -9px;
   transform: translateY(-50%);
-  background: rgba($white, 0.1);
-  box-shadow: inset 1px 1px 0px rgba($white, 0.25);
+  background: rgba($textColor, 0.1);
+  box-shadow: inset 1px 1px 0px rgba($textColor, 0.25);
   border-radius: 10px;
   backdrop-filter: blur(10px);
 
@@ -77,7 +77,7 @@
   &::before {
     content: '';
     width: 2px;
-    background: $white;
+    background: $textColor;
   }
 
   &::after {

@@ -2735,6 +2735,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/ui@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@gear-js/ui@npm:0.5.0"
+  peerDependencies:
+    react: ">=17.0.2"
+    sass: ^1.49.9
+  checksum: b5dde0d6bb0066c62e14c9ec5b143a9092809964cc1d02aadc609315b41821661f63ca85f82e1386de3d6dede0e38a8c9c970649d322648d336eb7c33dfcd2e0
+  languageName: node
+  linkType: hard
+
 "@gear-js/upload-dapp-chain@workspace:apps/upload-dapp-chain":
   version: 0.0.0-use.local
   resolution: "@gear-js/upload-dapp-chain@workspace:apps/upload-dapp-chain"
@@ -14792,7 +14802,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-arguments@npm:^1.0.4":
+"is-arguments@npm:^1.0.4, is-arguments@npm:^1.1.0":
   version: 1.1.1
   resolution: "is-arguments@npm:1.1.1"
   dependencies:
@@ -18004,7 +18014,7 @@ __metadata:
   dependencies:
     "@gear-js/api": ^0.25.2
     "@gear-js/react-hooks": ^0.2.19
-    "@gear-js/ui": ^0.4.0
+    "@gear-js/ui": ^0.5.0
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@polkadot/api": ^9.2.3
     "@polkadot/extension-dapp": ^0.43.3

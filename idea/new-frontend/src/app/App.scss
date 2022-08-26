@@ -8,7 +8,7 @@
 }
 
 body {
-  background: $mainBgColor;
+  background: $bgColor;
 }
 
 #root {
@@ -35,7 +35,7 @@ body {
     right: toRem(-150);
     width: toRem(500);
     height: toRem(300);
-    background: radial-gradient(50% 50% at 50% 50%,rgba($successColor, 0.45) 20%, rgba($mainBgColor, 0) 100%);
+    background: radial-gradient(50% 50% at 50% 50%,rgba($successColor, 0.45) 20%, rgba($bgColor, 0) 100%);
   }
 }
 
