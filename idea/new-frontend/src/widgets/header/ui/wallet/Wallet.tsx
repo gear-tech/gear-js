@@ -18,7 +18,7 @@ const Wallet = ({ account }: Props) => {
 
   const openModal = () => showModal('accounts', { accounts });
 
-  const accountBtnClasses = clsx(buttonStyles.button, buttonStyles.normal, buttonStyles.secondary, styles.accountBtn);
+  const accountBtnClasses = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.light, styles.accountBtn);
 
   return (
     <div className={styles.walletWrapper}>

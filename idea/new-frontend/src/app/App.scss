@@ -7,6 +7,10 @@
   padding: 0;
 }
 
+html {
+  font-size: 14px;
+}
+
 body {
   background: $bgColor;
 }
@@ -18,7 +22,6 @@ body {
 
 .main {
   display: flex;
-  min-height: 100vh;
 }
 
 .content {

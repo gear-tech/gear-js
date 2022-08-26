@@ -1,36 +1,24 @@
-@use '@gear-js/ui/mixins' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .nodeInfoButton {
-  display: flex;
   margin-top: auto;
-  align-items: center;
   align-self: flex-start;
-  gap: toRem(16);
+  justify-content: flex-start;
   width: calc(100% - toRem(8));
-  cursor: pointer;
   padding: toRem(12) toRem(12) toRem(12) toRem(25);
   background: rgba($gray300, .05);
   box-shadow: inset 0px 1px 0px rgba($textColor, .05);
   border-radius: 0px 8px 8px 0px;
   min-height: toRem(58);
 
-  &:global(.enter),
-  &:global(.exit-done),
-  &:global(.exit-active) { 
+  & > *:not(:last-child) {
+    margin-right: toRem(16);
+  }
+
+  &.fullWidth {
     padding-left: toRem(34);
-  }
-
-  &:global(.enter-done),
-  &:global(.enter-active) { 
-    padding-left: toRem(25);
-  }
-
-  &:global(.exit-active),
-  &:global(.enter-active) {
-    @include transition(padding);
   }
 }
 

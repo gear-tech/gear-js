@@ -1,6 +1,14 @@
 @use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
 
-.icon {
-  //  overriding the icon styles from ui-kit button styles
-  margin-right: toRem(10) !important;
+.link {
+  color: $gray800;
+  font-size: $fontSizeMedium;
+  font-weight: 500;
+  line-height: toRem(24);
+    
+  .icon {
+    //  overriding the icon styles from ui-kit button styles
+    margin-right: toRem(10) !important;
+  }
 }

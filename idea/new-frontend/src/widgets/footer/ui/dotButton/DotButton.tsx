@@ -7,7 +7,7 @@ import styles from './DotButton.module.scss';
 import { DOT_HREF } from '../../model/consts';
 
 const DotButton = () => {
-  const linkClasses = clsx(buttonStyles.button, buttonStyles.transparent, buttonStyles.normal);
+  const linkClasses = clsx(buttonStyles.button, buttonStyles.transparent, buttonStyles.normal, styles.link);
 
   return (
     <a href={DOT_HREF} target="_blank" rel="noreferrer" className={linkClasses}>

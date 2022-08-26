@@ -1,5 +1,7 @@
 @use './shared' as *;
 
+$footerHeight: toRem(64);
+
 $textColor: #fff;
 $textColorSecondary: #858585;
 
@@ -16,6 +18,7 @@ $successColor: #2bd071;
 $tertiaryColor: #3975e9;
 
 $bgColor: #18181B;
+$bgColorSecondary: #202022;
 $lineColor: #333333;
 
 // button color

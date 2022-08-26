@@ -1,4 +1,6 @@
 import { CSSTransition } from 'react-transition-group';
+import clsx from 'clsx';
+import { buttonStyles } from '@gear-js/ui';
 
 import { ANIMATION_TIMEOUT } from 'shared/config';
 import { ReactComponent as MenuSVG } from 'shared/assets/images/menu/menu.svg';
@@ -14,27 +16,27 @@ type Props = {
 };
 
 const NodesButton = ({ name, chain, version, isOpen, isApiReady }: Props) => (
-  <CSSTransition in={!isOpen} timeout={ANIMATION_TIMEOUT} className={styles.nodeInfoButton}>
-    <button type="button">
-      <p className={styles.menuIconWrapper}>
-        <MenuSVG />
+  <button
+    type="button"
+    className={clsx(buttonStyles.button, buttonStyles.light, styles.nodeInfoButton, isOpen && styles.fullWidth)}>
+    <p className={styles.menuIconWrapper}>
+      <MenuSVG />
+    </p>
+    <CSSTransition in={isOpen} timeout={ANIMATION_TIMEOUT} className={styles.nodeInfo} unmountOnExit>
+      <p>
+        {isApiReady ? (
+          <>
+            <span className={styles.chain}>{chain}</span>
+            <span className={styles.otherInfo}>
+              {name}/{version}
+            </span>
+          </>
+        ) : (
+          'Loading...'
+        )}
       </p>
-      <CSSTransition in={isOpen} timeout={ANIMATION_TIMEOUT} className={styles.nodeInfo} unmountOnExit>
-        <p>
-          {isApiReady ? (
-            <>
-              <span className={styles.chain}>{chain}</span>
-              <span className={styles.otherInfo}>
-                {name}/{version}
-              </span>
-            </>
-          ) : (
-            'Loading...'
-          )}
-        </p>
-      </CSSTransition>
-    </button>
-  </CSSTransition>
+    </CSSTransition>
+  </button>
 );
 
 export { NodesButton };

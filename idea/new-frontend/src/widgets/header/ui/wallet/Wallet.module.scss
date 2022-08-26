@@ -1,4 +1,5 @@
 @use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
 
 .walletWrapper {
   margin-left: toRem(16);
@@ -11,10 +12,12 @@
 }
 
 .accountBtn {
-  width: toRem(183);
   display: inline-block;
+  width: toRem(183);
   overflow: hidden;
+  font-weight: 600;
+  font-family: 'Kanit';
   white-space: nowrap;
   text-overflow: ellipsis;
-  vertical-align: middle;
+  background-color: $bgColorSecondary;
 }
