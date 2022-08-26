@@ -1,5 +1,5 @@
-@use 'src/assets/styles/variables' as *;
-@use 'src/assets/styles/mixins' as *;
+@use '../../assets/styles/variables' as *;
+@use '../../assets/styles/mixins' as *;
 
 .resets {
   font-family: inherit;
@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: center;
   color: $textColor;
-  border-radius: $borderRadius;
+  border-radius: 24px;
 
   &:disabled {
     pointer-events: none;
@@ -30,22 +30,33 @@
   white-space: nowrap;
 }
 
-.normal {
-  padding: 12px 24px;
-  font-size: 16px;
+.large {
+  padding: 16px 32px;
+  font-size: 15px;
   font-weight: 600;
 
   .icon {
-    margin-right: 16px;
+    margin-right: 10px;
+  }
+}
+
+.medium {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+
+  .icon {
+    margin-right: 10px;
   }
 }
 
 .small {
-  padding: 8px 16px;
+  padding: 6px 16px;
+  font-size: 12px;
   font-weight: 500;
 
   .icon {
-    margin-right: 10px;
+    margin-right: 6px;
   }
 }
 
@@ -69,11 +80,29 @@
   }
 }
 
-.tertiary {
-  background-color: $tertiaryColor;
+.light {
+  color: #bcbcbc;
+  background-color: $buttonColorLight;
 
   &:hover {
-    background-color: $buttonColorTertiaryHover;
+    background-color: $buttonColorLightHover;
+  }
+}
+
+.lightGreen {
+  color: $successColor;
+  background-color: $buttonColorLightGreen;
+
+  &:hover {
+    background-color: $buttonColorLightGreenHover;
+  }
+}
+
+.gradient {
+  background-image: $buttonColorGradient;
+
+  &:hover {
+    background-image: $buttonColorGradientHover;
   }
 }
 

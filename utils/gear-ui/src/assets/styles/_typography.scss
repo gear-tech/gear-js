@@ -1,43 +1,49 @@
 @use './variables' as *;
 
 @font-face {
-  font-family: 'Prompt';
+  font-family: 'Poppins';
   font-weight: 300;
-  src: url('./fonts/prompt-300.woff2') format('woff2');
+  src: url('./fonts/poppins-300.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Prompt';
+  font-family: 'Poppins';
   font-weight: 400;
-  src: url('./fonts/prompt-400.woff2') format('woff2');
+  src: url('./fonts/poppins-400.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Prompt';
+  font-family: 'Poppins';
   font-weight: 500;
-  src: url('./fonts/prompt-500.woff2') format('woff2');
+  src: url('./fonts/poppins-500.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Prompt';
+  font-family: 'Poppins';
   font-weight: 600;
-  src: url('./fonts/prompt-600.woff2') format('woff2');
+  src: url('./fonts/poppins-600.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Prompt';
+  font-family: 'Poppins';
   font-weight: 700;
-  src: url('./fonts/prompt-700.woff2') format('woff2');
+  src: url('./fonts/poppins-700.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Syncopate';
+  font-family: 'Kanit';
+  font-weight: 600;
+  src: url('./fonts/kanit-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Kanit';
   font-weight: 700;
-  src: url('./fonts/syncopate-700.woff2') format('woff2');
+  src: url('./fonts/kanit-700.woff2') format('woff2');
 }
 
 body {
-  font-family: 'Prompt', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: $fontSize;
   color: $textColor;
 }

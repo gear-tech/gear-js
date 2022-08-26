@@ -1,25 +1,47 @@
-import { OptionHTMLAttributes, SelectHTMLAttributes, forwardRef, ForwardedRef } from 'react';
+import { OptionHTMLAttributes, SelectHTMLAttributes, forwardRef, ForwardedRef, ReactNode, useId } from 'react';
 import clsx from 'clsx';
+import { Gap } from '../../types';
+import { getLabelGap } from '../../utils';
 import styles from './Select.module.scss';
 
-interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
+type BaseProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> & {
   options: OptionHTMLAttributes<HTMLOptionElement>[];
-  label?: string;
-}
+  size?: 'normal' | 'large';
+  color?: 'light' | 'dark';
+  error?: ReactNode;
+};
 
-const Select = forwardRef(({ options, label, className, ...attrs }: Props, ref: ForwardedRef<HTMLSelectElement>) => {
+type XDirectionProps = BaseProps & { label?: string; direction?: 'x'; gap?: Gap };
+type YDirectionProps = BaseProps & { label?: string; direction?: 'y'; gap?: never };
+
+type Props = XDirectionProps | YDirectionProps;
+
+const Select = forwardRef((props: Props, ref: ForwardedRef<HTMLSelectElement>) => {
+  const { options, label, className, error, gap, color = 'dark', size = 'normal', direction = 'x', ...attrs } = props;
   const { disabled } = attrs;
-  const labelClassName = clsx(styles.label, className, disabled && 'disabled');
+
+  const wrapperClassName = clsx(styles.wrapper, className, disabled && 'disabled', label && styles[direction]);
+  const labelClassName = clsx(styles.label, styles[size], styles[direction]);
+  const selectClassName = clsx(styles.select, styles[color], styles[size], error && styles.error);
+
+  const id = useId();
 
   const getOptions = () => options.map((option, index) => <option key={index} {...option} />);
 
   return (
-    <label className={labelClassName} data-testid="label">
-      {label && <span className={styles.text}>{label}</span>}
-      <select className={styles.select} ref={ref} {...attrs}>
-        {getOptions()}
-      </select>
-    </label>
+    <div className={wrapperClassName} style={gap && getLabelGap(gap)} data-testid="label">
+      {label && (
+        <label htmlFor={id} className={labelClassName}>
+          {label}
+        </label>
+      )}
+      <div>
+        <select id={id} className={selectClassName} ref={ref} {...attrs}>
+          {getOptions()}
+        </select>
+        {error && <p className={styles.error}>{error}</p>}
+      </div>
+    </div>
   );
 });
 
