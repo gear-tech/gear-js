@@ -1,5 +1,5 @@
-@use '@gear-js/ui/variables' as *;
 @use './styles/index.scss';
+@use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
 * {
@@ -12,13 +12,18 @@ body {
 }
 
 #root {
-  max-width: 1200px;
   min-height: 100vh;
-  margin: 0 auto;
-  padding: 0 16px;
+  position: relative;
+}
+
+.main {
   display: flex;
-  flex-direction: column;
-  box-sizing: content-box;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1 1;
+  padding: 0 toRem(32) 0 toRem(48);
 }
 
 button {

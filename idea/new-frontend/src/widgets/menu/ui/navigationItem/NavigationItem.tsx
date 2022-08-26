@@ -2,8 +2,9 @@ import { ReactNode } from 'react';
 import { NavLink, NavLinkProps } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 
+import { ANIMATION_TIMEOUT } from 'shared/config';
+
 import styles from './NavigationItem.module.scss';
-import { ANIMATION_TIMEOUT } from '../../model/consts';
 
 type Props = NavLinkProps & {
   icon: ReactNode;

@@ -1,0 +1,18 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.recentBlock {
+  display: flex;
+
+  .blockInfo {
+    margin-left: toRem(12);
+  }
+
+  .point {
+    display: inline-block;
+    width: toRem(4);
+    height: toRem(4);
+    border-radius: 50%;
+    background-color: $indigo;
+  }
+}

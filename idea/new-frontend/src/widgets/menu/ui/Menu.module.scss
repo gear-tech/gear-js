@@ -2,10 +2,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  position: relative;
   background: $mainBgColor;
 }
 

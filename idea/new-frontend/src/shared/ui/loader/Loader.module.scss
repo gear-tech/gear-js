@@ -1,0 +1,106 @@
+@use 'shared/assets/styles/_shared' as *;
+@use 'shared/assets/styles/_variables' as *;
+
+@keyframes spinTop {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinBottom {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes progressLine {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.loader {
+  @extend %absoluteCenter;
+
+  width: 200px;
+  height: 200px;
+
+  %overlay {
+    position: absolute;
+    background: $mainBgColor;
+    z-index: 2;
+    height: 55px;
+    width: 100%;
+  }
+
+  .overlayTop {
+    @extend %overlay;
+
+    top: 3px;
+  }
+
+  .overlayBottom {
+    @extend %overlay;
+
+    bottom: 54px;
+  }
+
+  .images {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    top: 5px;
+    margin-bottom: 10px;
+
+    .upGear,
+    .downGear {
+      width: 70px;
+    }
+
+    .upGear {
+      animation: spinTop 8s linear infinite;
+    }
+
+    .downGear {
+      animation: spinBottom 8s linear infinite;
+      margin-right: 7px;
+      margin-top: -3px;
+    }
+  }
+
+  .block {
+    margin-top: -25px;
+    position: relative;
+    z-index: 1000;
+
+    .text {
+      display: block;
+      color: $white;
+      line-height: 1.3;
+      font-size: $fontSizeMedium;
+      margin-top: toRem(16);
+      text-align: center;
+    }
+  }
+}
+
+.progressBar {
+  width: 100%;
+  background-color: $mainBgColor;
+
+  .indicator {
+    animation: progressLine 20s linear 1;
+    background-color: $successColor;
+    height: 1px;
+  }
+}
