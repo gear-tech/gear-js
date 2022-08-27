@@ -1,5 +1,14 @@
 @use '@gear-js/ui/mixins' as *;
 
+@keyframes svgFade {
+  from {
+    fill-opacity: 0.09;
+  }
+  to {
+    fill-opacity: 0.2;
+  }
+}
+
 //for css transition
 @mixin fade($delay: 0ms, $duration: 250ms, $triming-function: linear) {
   &:global(.exit),
@@ -24,4 +33,27 @@
   &:global(.enter-active){ 
     transition: opacity $duration $triming-function $delay;
   }
+}
+
+@mixin fadeAppear($delay: 0ms, $duration: 250ms, $triming-function: linear) {
+  &:global(.appear) {
+    opacity: 0;
+  } 
+
+  &:global(.appear-done),
+  &:global(.enter-done) {
+    opacity: 1;
+  }
+
+  &:global(.appear-active) {
+    opacity: 1 !important; 
+  }
+
+  &:global(.appear-active){ 
+    transition: opacity $duration $triming-function $delay;
+  }
+}
+
+@mixin svgLoading() {
+  animation: svgFade 1s ease-in infinite alternate;
 }

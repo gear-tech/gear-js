@@ -1,0 +1,29 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.emptyContent {
+  @extend %absoluteCenter;
+
+  @include fadeAppear();
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: toRem(550);
+  
+  .title {
+    color: $textColor;
+    font-size: toRem(40);
+    font-family: 'Kanit';
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: toRem(16);
+  }
+  
+  .description {
+    $color: $gray800;
+    line-height: 1.6;
+    font-feature-settings: 'salt' on, 'liga' off;
+  }
+}

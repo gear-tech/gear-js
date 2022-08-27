@@ -14,7 +14,7 @@ import styles from './BalanceInfo.module.scss';
 import headerStyles from '../Header.module.scss';
 
 type Props = {
-  account?: Account;
+  account: Account;
 };
 
 const BalanceInfo = ({ account }: Props) => {
@@ -23,7 +23,7 @@ const BalanceInfo = ({ account }: Props) => {
   const captchaRef = useRef<HCaptcha>(null);
   const [captchaToken, setCaptchaToken] = useState('');
 
-  const address = account?.address;
+  const { address, balance } = account;
 
   const transferBalance = useBalanceTransfer();
 
@@ -65,11 +65,11 @@ const BalanceInfo = ({ account }: Props) => {
 
   useEffect(() => handleExpire, [address]);
 
-  const { unit = 'Unit', value } = account?.balance || {};
+  const { unit = 'Unit', value } = balance;
 
   return (
     <>
-      <CSSTransition in={Boolean(account)} timeout={ANIMATION_TIMEOUT} unmountOnExit>
+      <CSSTransition in appear timeout={ANIMATION_TIMEOUT}>
         <section className={styles.balanceSection}>
           <div className={styles.titleWrapper}>
             <h2 className={clsx(headerStyles.title, styles.title)}>Your balance</h2>

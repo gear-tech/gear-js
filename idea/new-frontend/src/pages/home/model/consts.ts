@@ -1,3 +1,8 @@
-const PROGRAMS_LIMIT = 6;
+enum Filter {
+  MyPrograms = 'user',
+  AllPrograms = 'all',
+}
 
-export { PROGRAMS_LIMIT };
+const PROGRAMS_LIMIT = 12;
+
+export { PROGRAMS_LIMIT, Filter };

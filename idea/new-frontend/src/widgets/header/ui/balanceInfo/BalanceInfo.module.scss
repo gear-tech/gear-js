@@ -3,12 +3,7 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .balanceSection {
-  @include fade();
-
-  &:global(.exit),
-  &:global(.exit-done) {
-    display: none;
-  }
+  @include fadeAppear();
 }
 
 .titleWrapper {

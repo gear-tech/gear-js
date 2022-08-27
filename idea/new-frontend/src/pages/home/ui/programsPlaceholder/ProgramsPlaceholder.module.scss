@@ -1,0 +1,10 @@
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.block {
+  width: 100%;
+  height: 100%;
+
+  &.loading > rect {
+    @include svgLoading();
+  }
+}

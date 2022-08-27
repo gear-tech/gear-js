@@ -1,0 +1,27 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: toRem(14);
+  min-height: toRem(26);
+
+  .title {
+    color: $gray800;
+    font-family: 'Kanit';
+    font-weight: 600;
+    font-size: $fontSizeBig;
+    line-height: 1.3;
+    margin-right: toRem(2);
+  }
+}
+
+.programsWrapper {
+  display: grid;
+  position: relative;
+  grid-auto-rows: minmax(toRem(184), 1fr);
+  grid-template-columns: repeat(4, minmax(toRem(308), 1fr));
+  gap: toRem(24);
+  grid-auto-flow: row dense;
+}

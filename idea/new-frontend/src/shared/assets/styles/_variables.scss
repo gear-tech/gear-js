@@ -5,13 +5,6 @@ $footerHeight: toRem(64);
 $textColor: #fff;
 $textColorSecondary: #858585;
 
-$gray800: rgba($textColor, 0.8);
-$gray700: rgba($textColor, 0.7);
-$gray600: rgba($textColor, 0.6);
-$gray300: rgba($textColor, 0.3); // #ffffff4d
-$gray100: rgba($textColor, 0.1); // #ffffff1a
-
-
 $indigo: #6E7CA9;
 $errorColor: #f24a4a;
 $successColor: #2bd071;
@@ -21,6 +14,18 @@ $bgColor: #18181B;
 $bgColorSecondary: #202022;
 $lineColor: #333333;
 
+$gray800: rgba($textColor, 0.8);
+$gray700: rgba($textColor, 0.7);
+$gray600: rgba($textColor, 0.6);
+$gray300: rgba($textColor, 0.3); // #ffffff4d
+$gray100: rgba($textColor, 0.1); // #ffffff1a
+$gray009: rgba($textColor, 0.09);
+
+$green300: rgba($successColor, 0.3);
+$green100: rgba($successColor, 0.1);
+$green007: rgba($successColor, 0.07);
+$green005: rgba($successColor, 0.05);
+
 // button color
 
 $buttonColor: $successColor;
@@ -29,8 +34,8 @@ $buttonColorHover: #168b4e;
 $buttonColorSecondary: #1852ff;
 $buttonColorSecondaryHover: #1443cf;
 
-$buttonColorLightGreen: rgba($successColor, 0.1);
-$buttonColorLightGreenHover: rgba($successColor, 0.3);
+$buttonColorLightGreen: $green100;
+$buttonColorLightGreenHover: $green300;
 
 $buttonColorGradient: linear-gradient(87.17deg, #2bd071 53.13%, #1852ff 85.01%);
 $buttonColorGradientHover: linear-gradient(87.17deg, #1852ff 10.42%, #2bd071 79.17%);

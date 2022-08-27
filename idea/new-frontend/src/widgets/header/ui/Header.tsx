@@ -22,7 +22,7 @@ const Header = () => {
       <TotalIssuance totalIssuance={totalIssuance} />
       <RecentBlock />
       <div className={styles.rightSide}>
-        <BalanceInfo account={account} />
+        {account && <BalanceInfo account={account} />}
         <Wallet account={account} />
       </div>
     </header>
