@@ -14,13 +14,15 @@ type Props = {
 const ProgramsPlaceholder = ({ isEmpty, isLoading }: Props) => {
   const loaderClasses = clsx(styles.block, isLoading && styles.loading);
 
-  const renderBlocks = () =>
-    new Array(PROGRAMS_LIMIT).fill('').map((_, index) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <div key={index}>
-        <EmptyBlockSVG className={loaderClasses} />
-      </div>
-    ));
+  const renderBlocks = () => {
+    const result = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < PROGRAMS_LIMIT; i++) {
+      result.push(<EmptyBlockSVG key={i} className={loaderClasses} />);
+    }
+
+    return result;
+  };
 
   return (
     <>

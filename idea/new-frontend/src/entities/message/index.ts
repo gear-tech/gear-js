@@ -1,5 +1,5 @@
-import { MessageModel } from './model/types';
+import { IMessage } from './model/types';
 import { Entry } from './model/consts';
 
 export { Entry };
-export type { MessageModel };
+export type { IMessage };

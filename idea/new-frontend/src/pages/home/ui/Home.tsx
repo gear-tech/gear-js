@@ -6,9 +6,7 @@ import { RecentPrograms } from './recentPrograms';
 const Home = () => {
   const { account } = useAccount();
 
-  const isLoggedIn = Boolean(account);
-
-  return <RecentPrograms isLoggedIn={isLoggedIn} />;
+  return <RecentPrograms account={account} />;
 };
 
 export { Home };

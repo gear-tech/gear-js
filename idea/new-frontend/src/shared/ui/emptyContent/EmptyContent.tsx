@@ -13,9 +13,11 @@ type Props = {
 const EmptyContent = ({ title, children, description }: Props) => (
   <CSSTransition in appear timeout={ANIMATION_TIMEOUT}>
     <div className={styles.emptyContent}>
-      <h2 className={styles.title}>{title}</h2>
-      <p className={styles.description}>{description}</p>
-      {children}
+      <div className={styles.textContent}>
+        <h2 className={styles.title}>{title}</h2>
+        <p className={styles.description}>{description}</p>
+        {children}
+      </div>
     </div>
   </CSSTransition>
 );

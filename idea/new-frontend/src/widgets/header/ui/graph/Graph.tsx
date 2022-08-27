@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 
-import { ChainBlock } from 'entities/chainBlock';
+import { IChainBlock } from 'entities/chainBlock';
 
 import styles from './Graph.module.scss';
 import { getRandomPercent } from '../../helpers';
 
 type Props = {
-  blocks: ChainBlock[];
+  blocks: IChainBlock[];
 };
 
 const Graph = ({ blocks }: Props) => {

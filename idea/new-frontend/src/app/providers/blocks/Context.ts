@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 
-import { ChainBlock } from 'entities/chainBlock';
+import { IChainBlock } from 'entities/chainBlock';
 
-const BlocksContext = createContext<ChainBlock[]>([]);
+const BlocksContext = createContext<IChainBlock[]>([]);
 
 export { BlocksContext };

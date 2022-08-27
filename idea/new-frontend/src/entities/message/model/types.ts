@@ -2,7 +2,7 @@ import { Hex } from '@gear-js/api';
 
 import { Entry } from './consts';
 
-type MessageModel = {
+interface IMessage {
   id: string;
   entry: Entry | null;
   value: string;
@@ -14,6 +14,6 @@ type MessageModel = {
   destination: string;
   replyToMessageId: Hex | null;
   processedWithPanic: boolean;
-};
+}
 
-export type { MessageModel };
+export type { IMessage };

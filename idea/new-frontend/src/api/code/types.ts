@@ -1,8 +1,8 @@
-import { CodeModel } from 'entities/code';
+import { ICode } from 'entities/code';
 
 type CodePaginationModel = {
   count: number;
-  listCode: CodeModel[];
+  listCode: ICode[];
 };
 
 export type { CodePaginationModel };

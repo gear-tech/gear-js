@@ -3,12 +3,12 @@ import { Metadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 
 import { getProgram } from 'api';
-import { ProgramModel } from 'entities/program';
+import { IProgram } from 'entities/program';
 
 const useProgram = (id?: string, initLoading = false) => {
   const alert = useAlert();
 
-  const [program, setProgram] = useState<ProgramModel>();
+  const [program, setProgram] = useState<IProgram>();
   const [isLoading, setIsLoading] = useState(initLoading);
 
   const metadata = useMemo(() => {

@@ -1,6 +1,6 @@
 import localForage from 'localforage';
 
-import { ProgramStatus, ProgramModel } from 'entities/program';
+import { ProgramStatus, IProgram } from 'entities/program';
 
 import { ProgramPaginationModel } from './program';
 import { FetchMetadataResponse } from './metadata';
@@ -10,7 +10,7 @@ const PROGRAMS_LOCAL_FORAGE = localForage.createInstance({
 });
 
 const getLocalProgram = (id: string) =>
-  PROGRAMS_LOCAL_FORAGE.getItem<ProgramModel>(id).then((response) => {
+  PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) => {
     if (response) {
       return { result: response };
     }
@@ -19,7 +19,7 @@ const getLocalProgram = (id: string) =>
   });
 
 const getLocalProgramMeta = (id: string) =>
-  PROGRAMS_LOCAL_FORAGE.getItem<ProgramModel>(id).then((response) => {
+  PROGRAMS_LOCAL_FORAGE.getItem<IProgram>(id).then((response) => {
     if (response?.meta) {
       return { result: response.meta as FetchMetadataResponse };
     }
@@ -34,7 +34,7 @@ const getLocalPrograms = (params: any) => {
   };
   const data = { result };
 
-  return PROGRAMS_LOCAL_FORAGE.iterate((elem: ProgramModel, key, iterationNumber) => {
+  return PROGRAMS_LOCAL_FORAGE.iterate((elem: IProgram, key, iterationNumber) => {
     const newLimit = params.offset + params.limit;
 
     data.result.count = iterationNumber;
@@ -57,7 +57,7 @@ const getLocalPrograms = (params: any) => {
   });
 };
 
-const uploadLocalProgram = (program: Pick<ProgramModel, 'id' | 'owner' | 'name' | 'title'>) =>
+const uploadLocalProgram = (program: Pick<IProgram, 'id' | 'owner' | 'name' | 'title'>) =>
   PROGRAMS_LOCAL_FORAGE.setItem(program.id, {
     ...program,
     meta: null,

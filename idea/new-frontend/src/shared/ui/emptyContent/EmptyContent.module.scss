@@ -3,15 +3,24 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .emptyContent {
-  @extend %absoluteCenter;
-
   @include fadeAppear();
 
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(0deg, $bgColor 0%, rgba($bgColor, 0) 90%);
+}
+
+.textContent {
   max-width: toRem(550);
-  
+  text-align: center;
+
   .title {
     color: $textColor;
     font-size: toRem(40);

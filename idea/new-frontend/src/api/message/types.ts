@@ -1,8 +1,8 @@
-import { MessageModel } from 'entities/message';
+import { IMessage } from 'entities/message';
 
 type MessagePaginationModel = {
   count: number;
-  messages: MessageModel[];
+  messages: IMessage[];
 };
 
 export type { MessagePaginationModel };

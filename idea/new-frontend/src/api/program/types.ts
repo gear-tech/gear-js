@@ -1,4 +1,4 @@
-import { ProgramModel } from 'entities/program';
+import { IProgram } from 'entities/program';
 
 type FetchUserProgramsParams = {
   owner: string | null;
@@ -9,7 +9,7 @@ type FetchUserProgramsParams = {
 
 type ProgramPaginationModel = {
   count: number;
-  programs: ProgramModel[];
+  programs: IProgram[];
 };
 
 export type { FetchUserProgramsParams, ProgramPaginationModel };

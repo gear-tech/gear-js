@@ -1,6 +1,6 @@
 import { ProgramStatus } from './consts';
 
-type ProgramModel = {
+interface IProgram {
   id: string;
   blockHash?: string;
   programNumber?: number;
@@ -13,6 +13,6 @@ type ProgramModel = {
   meta: {
     meta: string;
   } | null;
-};
+}
 
-export type { ProgramModel };
+export type { IProgram };

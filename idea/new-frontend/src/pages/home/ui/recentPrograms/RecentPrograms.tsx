@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useAlert } from '@gear-js/react-hooks';
+import { useAlert, Account } from '@gear-js/react-hooks';
 
-import { getPrograms } from 'api';
-import { ProgramModel } from 'entities/program';
+import { getPrograms, getUserPrograms } from 'api';
+import { IProgram } from 'entities/program';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 
 import styles from './RecentPrograms.module.scss';
@@ -11,30 +11,47 @@ import { ProgramsFilter } from '../programsFilter';
 import { ProgramsPlaceholder } from '../programsPlaceholder';
 
 type Props = {
-  isLoggedIn: boolean;
+  account?: Account;
 };
 
-const RecentPrograms = ({ isLoggedIn }: Props) => {
+const RecentPrograms = ({ account }: Props) => {
   const alert = useAlert();
 
-  const [programs, setPrograms] = useState<ProgramModel[]>([]);
+  const [programs, setPrograms] = useState<IProgram[]>([]);
   const [isLoading, setIsloading] = useState(true);
   const [activeFilter, setActiveFilter] = useState(Filter.AllPrograms);
 
-  useEffect(() => {
-    getPrograms({ limit: PROGRAMS_LIMIT })
+  const decodedAddress = account?.decodedAddress;
+
+  const getRecentPrograms = () => {
+    const isAllActive = activeFilter === Filter.AllPrograms;
+    const fetchPrograms = isAllActive ? getPrograms : getUserPrograms;
+
+    setIsloading(true);
+
+    fetchPrograms({ limit: PROGRAMS_LIMIT, owner: isAllActive ? undefined : decodedAddress })
       .then((data) => setPrograms([]))
       .catch((error) => alert.error(error.message))
       .finally(() => setIsloading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    getRecentPrograms();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeFilter]);
+
+  useEffect(() => {
+    if (activeFilter !== Filter.MyPrograms) {
+      return;
+    }
+
+    if (decodedAddress) {
+      getRecentPrograms();
+    } else {
       setActiveFilter(Filter.AllPrograms);
-    },
-    [isLoggedIn],
-  );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decodedAddress]);
 
   const isEmpty = !(isLoading || programs.length);
 
@@ -43,7 +60,7 @@ const RecentPrograms = ({ isLoggedIn }: Props) => {
       <header className={styles.header}>
         <h1 className={styles.title}>Programs</h1>
         <ArrowSVG />
-        {isLoggedIn && <ProgramsFilter value={activeFilter} onClick={setActiveFilter} />}
+        {account && <ProgramsFilter value={activeFilter} onClick={setActiveFilter} />}
       </header>
       <div className={styles.programsWrapper}>
         {isEmpty || isLoading ? <ProgramsPlaceholder isEmpty={isEmpty} isLoading={isLoading} /> : null}

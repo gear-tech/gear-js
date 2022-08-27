@@ -1,6 +1,6 @@
 import { CodeStatus } from './consts';
 
-type CodeModel = {
+interface ICode {
   id: string;
   name: string;
   status: CodeStatus;
@@ -8,6 +8,6 @@ type CodeModel = {
   genesis: string;
   blockHash: string | null;
   timestamp: string;
-};
+}
 
-export type { CodeModel };
+export type { ICode };

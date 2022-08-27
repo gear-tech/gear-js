@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { useBlocks } from 'hooks';
-import { ChainBlock } from 'entities/chainBlock';
+import { IChainBlock } from 'entities/chainBlock';
 
 import styles from './RecentBlock.module.scss';
 import headerStyles from '../Header.module.scss';
@@ -10,7 +10,7 @@ import { Graph } from '../graph';
 const RecentBlock = () => {
   const blocks = useBlocks();
 
-  const [block, setBlock] = useState<ChainBlock>();
+  const [block, setBlock] = useState<IChainBlock>();
   const [timeInstance, setTimeInstance] = useState(0);
 
   useEffect(() => {

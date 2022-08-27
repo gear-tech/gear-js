@@ -1,3 +1,3 @@
-import { ChainBlock } from './model/types';
+import { IChainBlock } from './model/types';
 
-export type { ChainBlock };
+export type { IChainBlock };

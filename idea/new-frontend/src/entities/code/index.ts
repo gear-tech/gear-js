@@ -1,5 +1,5 @@
-import { CodeModel } from './model/types';
+import { ICode } from './model/types';
 import { CodeStatus } from './model/consts';
 
 export { CodeStatus };
-export type { CodeModel };
+export type { ICode };

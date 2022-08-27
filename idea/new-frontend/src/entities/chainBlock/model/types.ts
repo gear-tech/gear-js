@@ -1,9 +1,9 @@
 import { Hex } from '@gear-js/api';
 
-type ChainBlock = {
+interface IChainBlock {
   hash: Hex;
   number: number;
   time: string;
-};
+}
 
-export type { ChainBlock };
+export type { IChainBlock };
