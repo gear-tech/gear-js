@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
 import { EmptyContent } from 'shared/ui/emptyContent';
+import { ExamplesLink } from 'shared/ui/examplesLink';
 import { ReactComponent as EmptyBlockSVG } from 'shared/assets/images/placeholders/emptyBlock.svg';
 
 import styles from './ProgramsPlaceholder.module.scss';
@@ -30,8 +31,9 @@ const ProgramsPlaceholder = ({ isEmpty, isLoading }: Props) => {
       {isEmpty && (
         <EmptyContent
           title="There is no program yet"
-          description="You can start experimenting right now or try to build from examples. Let's Rock!"
-        />
+          description="You can start experimenting right now or try to build from examples. Let's Rock!">
+          <ExamplesLink />
+        </EmptyContent>
       )}
     </>
   );

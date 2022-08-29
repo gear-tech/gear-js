@@ -4,10 +4,10 @@ import { CSSTransition } from 'react-transition-group';
 import { getAnimationTimeout } from 'shared/helpers';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 import readSVG from 'shared/assets/images/actions/read.svg';
-import { IdBlock } from 'shared/ui/IdBlock';
-import { BulbBlock } from 'shared/ui/BulbBlock';
-import { TimestampBlock } from 'shared/ui/TimestampBlock';
-import { ProgramActionLink } from 'shared/ui/ProgramActionLink';
+import { IdBlock } from 'shared/ui/idBlock';
+import { BulbBlock } from 'shared/ui/bulbBlock';
+import { TimestampBlock } from 'shared/ui/timestampBlock';
+import { ProgramActionLink } from 'shared/ui/programActionLink';
 
 import styles from './ProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';

@@ -1,0 +1,18 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.link {
+  background-color: $bgColorThird;
+
+  .text {
+    color: $textColor;
+  }
+
+  & > *:not(:last-child) {
+    margin-right: toRem(10);
+  } 
+
+  &:hover{
+    background-color: $bgColorThird;
+  }
+}

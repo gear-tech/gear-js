@@ -1,4 +1,4 @@
-import { BulbStatus } from 'shared/ui/BulbBlock';
+import { BulbStatus } from 'shared/ui/bulbBlock';
 
 import { ProgramStatus } from '../model/consts';
 
