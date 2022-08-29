@@ -88,7 +88,7 @@ export class TgbotService {
     return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long" }));
   }
 
-  public async uploadDapp(userId: number, commandArguments: string): Promise<any> {
+  public async uploadDapp(userId: number, commandArguments: string): Promise<DappData[] | string> {
     const [, dappName] = commandArguments.split(" ");
     if (!await this.userService.validate(String(userId))) {
       return TBErrorMessage.ACCESS_DENIED;
