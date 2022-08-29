@@ -1,17 +1,9 @@
 @use '../../assets/styles/variables' as *;
-@use '../../assets/styles/shared' as *;
+@use '../../assets/styles/utils' as *;
 
 @mixin arrow($isLight: false) {
   $color: if($isLight == true, '2b2b2e', 'fff');
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 4.977 10.125.852l1.178 1.178L6 7.333.697 2.03 1.875.852 6 4.977Z' fill='%23#{$color}' fill-opacity='.7'/%3E%3C/svg%3E");
-}
-
-.wrapper {
-  @extend %wrapper;
-}
-
-.label {
-  @extend %label;
 }
 
 .resets {
@@ -37,8 +29,4 @@
   &.light {
     @include arrow(true);
   }
-}
-
-.error {
-  @extend %error;
 }

@@ -1,0 +1,42 @@
+@use '../../../assets/styles/variables' as *;
+
+.wrapper {
+  width: 100%;
+  display: grid;
+
+  &.x {
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+  }
+
+  &.y {
+    gap: 8px;
+  }
+}
+
+.labelWrapper {
+  &.x {
+    &.normal {
+      padding: 10px 0;
+    }
+
+    &.large {
+      padding: 14px 0;
+    }
+  }
+}
+
+.tooltip {
+  vertical-align: middle;
+  margin-left: 9px;
+}
+
+.label {
+  color: #d2d2d3;
+  font-weight: 500;
+}
+
+.error {
+  padding-left: 16px;
+  color: $errorColor;
+}

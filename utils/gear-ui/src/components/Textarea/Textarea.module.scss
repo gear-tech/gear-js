@@ -1,13 +1,5 @@
 @use '../../assets/styles/variables' as *;
-@use '../../assets/styles/shared' as *;
-
-.wrapper {
-  @extend %wrapper;
-}
-
-.label {
-  @extend %label;
-}
+@use '../../assets/styles/utils' as *;
 
 .resets {
   outline: none;
@@ -31,6 +23,6 @@
   }
 }
 
-.error {
-  @extend %error;
+.clearButton {
+  @extend %clearButton;
 }

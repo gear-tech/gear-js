@@ -1,8 +1,7 @@
+import { forwardRef, ForwardedRef } from 'react';
 import clsx from 'clsx';
 import { Props } from './Button.types';
 import styles from './Button.module.scss';
-import { forwardRef } from 'react';
-import { ForwardedRef } from 'react';
 
 const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) => {
   const { text, icon, className, block, noWrap, type = 'button', color = 'primary', size = 'medium', ...attrs } = props;

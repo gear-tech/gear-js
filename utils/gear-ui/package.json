@@ -22,7 +22,7 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "react": ">=17.0.2",
+    "react": ">=18.2.0",
     "sass": "^1.49.9"
   },
   "devDependencies": {
@@ -37,7 +37,7 @@
     "@testing-library/jest-dom": "5.16.2",
     "@testing-library/react": "12.1.4",
     "@types/jest": "27.4.1",
-    "@types/react": "17.0.41",
+    "@types/react": "18.0.17",
     "babel-jest": "27.5.1",
     "clsx": "1.1.1",
     "identity-obj-proxy": "3.0.0",
