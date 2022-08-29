@@ -3,7 +3,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
-import { useBlocks } from 'hooks';
+import { useBlocks, useOutsideClick } from 'hooks';
 import { IChainBlock } from 'entities/chainBlock';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 
@@ -21,6 +21,8 @@ const RecentBlock = () => {
   const [timeInstance, setTimeInstance] = useState(0);
 
   const toggleList = () => setIsOpen((prevState) => !prevState);
+
+  const sectionRef = useOutsideClick<HTMLSelectElement>(toggleList, isOpen);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -54,7 +56,7 @@ const RecentBlock = () => {
 
   return (
     <CSSTransition in={isOpen} timeout={300}>
-      <section className={styles.recentBlock}>
+      <section ref={sectionRef} className={styles.recentBlock}>
         <div className={styles.content}>
           <Graph blocks={blocks} className={styles.graph} />
           <div className={styles.blockInfo}>

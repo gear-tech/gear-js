@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-function useOutsideClick<TElement extends Element>(callback: () => void) {
+const useOutsideClick = <TElement extends Element>(callback: () => void, isActive = true) => {
   const ref = useRef<TElement>(null);
 
   const handleClick = ({ target }: MouseEvent) => {
@@ -12,12 +12,19 @@ function useOutsideClick<TElement extends Element>(callback: () => void) {
   };
 
   useEffect(() => {
+    if (!isActive) {
+      return;
+    }
+
     window.addEventListener('click', handleClick);
-    return () => window.removeEventListener('click', handleClick);
+
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isActive]);
 
   return ref;
-}
+};
 
 export { useOutsideClick };
