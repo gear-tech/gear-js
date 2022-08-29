@@ -40,7 +40,7 @@ describe('button tests', () => {
     const icon = screen.getByRole('img');
 
     expect(button).toContainElement(icon);
-    expect(button).toHaveClass(styles.normal);
+    expect(button).toHaveClass(styles.medium);
   });
 
   it('renders small/large button with secondary, light and gradient colors', () => {
