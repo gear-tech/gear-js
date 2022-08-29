@@ -78,6 +78,7 @@
 
 .actions {
   display: flex;
+  margin-top: auto;
   padding: toRem(12) toRem(24);
 
   .sendMessage {
@@ -85,16 +86,11 @@
 
     &:global(.enter) {
       white-space: nowrap;
-      animation: 300ms linear forwards sendMessage;
+      animation: getAnimationTimeout(1) linear forwards sendMessage;
     }
 
     &:global(.enter-done) {
       min-width: toRem(115);
-    }
-
-    &:global(.exit),
-    &:global(.exit-done) {
-      display: none;
     }
   }
 }

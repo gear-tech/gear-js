@@ -1,11 +1,85 @@
+@use '@gear-js/ui/mixins' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+%enterStyles {
+  position: absolute;
+  align-items: center;
+  top: toRem(11);
+  left: toRem(3);
+  z-index: 10;
+  background: linear-gradient(180deg, #29292B 65.67%, $bgColorSecondary 100%);
+  border-radius: 24px; 
+  width: toRem(432);
+  padding: toRem(14) toRem(12) toRem(24) toRem(24);
+  max-height: toRem(32);
+}
+
+%enterDoneStyles {
+  max-height: toRem(558);
+
+  .time,
+  .title,
+  .value {
+    color: $successColor;
+  }
+
+  .graph > hr {
+    border-color: $successColor;
+  }
+
+  .point { 
+    background-color: $successColor;
+  }
+
+  .blocksBtn svg {
+    transform: rotate(-90deg);
+
+    path {
+      fill: $successColor;
+    }
+  } 
+}
 
 .recentBlock {
+  display: flex;
+  flex-direction: column;
+
+  &:global(.enter) {
+    @extend %enterStyles;
+
+    .blocksList { 
+      overflow: hidden;
+    }
+  }
+
+  &:global(.enter-active) {
+    @include transition(max-height);
+    @extend %enterDoneStyles;
+
+    .time,
+    .title,
+    .value,
+    .point,
+    .graph > hr,
+    .blocksBtn svg path {
+      @include transition();
+    }
+  }
+
+  &:global(.enter-done) {
+    @extend %enterStyles;
+    @extend %enterDoneStyles;
+  }
+}
+
+.content {
   display: flex;
 
   .blockInfo {
     margin-left: toRem(12);
+    min-width: toRem(110);
   }
 
   .point {
@@ -14,5 +88,34 @@
     height: toRem(4);
     border-radius: 50%;
     background-color: $indigo;
+  }
+
+  .blocksBtn {
+    align-self: center;
+    margin-left: toRem(4);
+
+    svg {
+      transform: rotate(90deg);
+
+      path {
+        fill: $indigo;
+      }
+    }
+  }
+}
+
+.blocksList {
+  @extend %customScroll;
+
+  overflow-y: auto;
+  margin-top: toRem(20);
+  padding-right: toRem(10);
+
+  & > *:not(:last-child) {
+    margin-bottom: toRem(5);
+  }
+
+  .listItem {
+    @include fade(0ms, getAnimationTimeout(15));
   }
 }

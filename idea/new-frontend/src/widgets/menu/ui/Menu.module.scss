@@ -16,7 +16,7 @@
   height: 100%;
   width: toRem(74);
   overflow: hidden;
-  transition: width 250ms ease-in-out;
+  transition: width $animationTimeout ease-in-out;
 
   &::after,
   &::before {
@@ -26,7 +26,7 @@
     width: toRem(228);
     position: absolute;
     opacity: 0.7;
-    transition: left 250ms ease-in-out;
+    transition: left $animationTimeout ease-in-out;
   }
 
   &::after {  

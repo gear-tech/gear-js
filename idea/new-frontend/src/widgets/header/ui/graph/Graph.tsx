@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import clsx from 'clsx';
 
 import { IChainBlock } from 'entities/chainBlock';
 
@@ -7,9 +8,10 @@ import { getRandomPercent } from '../../helpers';
 
 type Props = {
   blocks: IChainBlock[];
+  className?: string;
 };
 
-const Graph = ({ blocks }: Props) => {
+const Graph = ({ blocks, className }: Props) => {
   const percents = useRef<number[]>(blocks.map(getRandomPercent));
 
   const addPercent = () => {
@@ -27,7 +29,7 @@ const Graph = ({ blocks }: Props) => {
   }, [blocks]);
 
   return (
-    <div className={styles.graph}>
+    <div className={clsx(styles.graph, className)}>
       {percents.current.map((value, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <hr key={index} style={{ height: `${value}%` }} className={styles.line} />

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { Button } from '@gear-js/ui';
 
 import { ANIMATION_TIMEOUT } from 'shared/config';
+import { getAnimationTimeout } from 'shared/helpers';
 
 import styles from './ProgramsFilter.module.scss';
 import { Filter } from '../../model/consts';
@@ -29,7 +30,7 @@ const ProgramsFilter = memo(({ value, onClick }: Props) => {
           onClick={handleClick(Filter.AllPrograms)}
         />
       </CSSTransition>
-      <CSSTransition in appear timeout={ANIMATION_TIMEOUT + 50}>
+      <CSSTransition in appear timeout={getAnimationTimeout(1)}>
         <Button
           size="small"
           text="My programs"

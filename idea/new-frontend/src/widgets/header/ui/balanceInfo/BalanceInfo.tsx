@@ -72,7 +72,7 @@ const BalanceInfo = ({ account }: Props) => {
       <CSSTransition in appear timeout={ANIMATION_TIMEOUT}>
         <section className={styles.balanceSection}>
           <div className={styles.titleWrapper}>
-            <h2 className={clsx(headerStyles.title, styles.title)}>Your balance</h2>
+            <h2 className={clsx(headerStyles.title, styles.title)}>Balance</h2>
             <button
               type="button"
               className={styles.testBalanceBtn}

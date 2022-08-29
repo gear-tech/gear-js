@@ -5,6 +5,28 @@
   transform: translate(-50%, -50%);
 }
 
+%customScroll {
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.1);;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    background-color: #fff;
+  }
+
+  scrollbar-color: #fff rgba(255, 255, 255, 0.1);;
+  scrollbar-width: thin;
+}
+
 @function toRem($value) {
   @return ($value / 14) + rem;
+}
+
+@function getAnimationTimeout($delayTick: 0, $delay: 50) {
+  @return (250 + $delayTick * $delay) + ms;
 }
