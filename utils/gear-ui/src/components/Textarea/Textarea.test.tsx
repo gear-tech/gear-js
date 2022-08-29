@@ -55,20 +55,20 @@ describe('textarea tests', () => {
     render(<Textarea label="label" color="light" size="large" />);
 
     const inputWrapper = screen.getByTestId('inputWrapper');
-    const input = screen.getByRole('textbox');
+    const textarea = screen.getByRole('textbox');
 
     expect(inputWrapper).not.toContainElement(screen.queryByRole('button'));
 
-    fireEvent.focus(input);
+    fireEvent.focus(textarea);
 
     const clearButton = screen.getByRole('button');
     expect(inputWrapper).toContainElement(clearButton);
 
-    fireEvent.change(input, { target: { value: '123' } });
-    expect(input).toHaveValue('123');
+    fireEvent.change(textarea, { target: { value: '123' } });
+    expect(textarea).toHaveValue('123');
 
     fireEvent.click(clearButton);
-    expect(input).toHaveValue('');
+    expect(textarea).toHaveValue('');
   });
 
   it('renders large textarea with light color', () => {

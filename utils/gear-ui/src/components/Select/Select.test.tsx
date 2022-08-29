@@ -21,29 +21,57 @@ describe('select tests', () => {
   });
 
   it('renders select with label', () => {
-    render(<Select options={initOptions} label="random text" />);
+    const { rerender } = render(<Select options={initOptions} label="random text" />);
     const select = screen.getByLabelText('random text');
     expect(select).toBeInTheDocument();
+
+    rerender(<Select options={initOptions} label="label" direction="y" />);
+
+    const inputWrapper = screen.getByTestId('inputWrapper');
+    expect(inputWrapper).not.toHaveClass(styles.x);
+    expect(inputWrapper).toHaveClass(styles.y);
+
+    rerender(<Select options={initOptions} label="label" gap="7/9" />);
+
+    expect(inputWrapper).toHaveStyle('grid-template-columns: 7fr 9fr');
   });
 
-  it('applies className to label wrapper', () => {
+  it('applies className to wrapper', () => {
     render(<Select options={initOptions} className="className" />);
 
-    const label = screen.getByTestId('label');
+    const inputWrapper = screen.getByTestId('inputWrapper');
     const select = screen.getByRole('combobox');
 
-    expect(label).toHaveClass(styles.label, 'className');
+    expect(inputWrapper).toHaveClass('className');
     expect(select).not.toHaveClass('className');
   });
 
   it('renders disabled select', () => {
     render(<Select options={initOptions} disabled />);
 
-    const label = screen.getByTestId('label');
+    const inputWrapper = screen.getByTestId('inputWrapper');
     const select = screen.getByRole('combobox');
 
     expect(select).toBeDisabled();
-    expect(label).toHaveClass('disabled');
+    expect(inputWrapper).toHaveClass('disabled');
+  });
+
+  it('renders large textarea with light color', () => {
+    render(<Select options={initOptions} label="label" color="light" size="large" />);
+
+    const select = screen.getByRole('combobox');
+
+    expect(select).toHaveClass(styles.light, styles.large);
+    expect(select).not.toHaveClass(styles.dark, styles.normal);
+  });
+
+  it('renders textarea with error', () => {
+    render(<Select options={initOptions} label="label" error="random error" />);
+
+    const inputWrapper = screen.getByTestId('inputWrapper');
+    const error = screen.getByText('random error');
+
+    expect(inputWrapper).toContainElement(error);
   });
 
   it('passes ref', () => {
