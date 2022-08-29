@@ -24,3 +24,8 @@ make run
 ```bash
 make run
 ```
+
+7. Run the graphql api
+```bash
+make serve
+```
