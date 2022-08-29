@@ -1,7 +1,7 @@
 @use '../../assets/styles/variables' as *;
 @use '../../assets/styles/utils' as *;
 
-.inputWrapper {
+.wrapper {
   @extend %inputWrapper;
 
   &.readOnly {

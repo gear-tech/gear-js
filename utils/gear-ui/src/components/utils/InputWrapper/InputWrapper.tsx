@@ -29,10 +29,10 @@ const InputWrapper = ({ id, children, className, label, error, direction, size, 
   };
 
   return (
-    <div className={wrapperClassName} style={gap && getLabelGap(gap)}>
+    <div className={wrapperClassName} style={gap && getLabelGap(gap)} data-testid="inputWrapper">
       {label && (
         <div className={labelWrapperClassName}>
-          <label htmlFor={id} className={styles.label} data-testid="label">
+          <label htmlFor={id} className={styles.label}>
             {label}
           </label>
           {tooltip && <Tooltip text={tooltip} className={styles.tooltip} />}

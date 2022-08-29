@@ -27,8 +27,8 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
 
   const { readOnly, disabled } = attrs;
 
-  const inputWrapperClassName = clsx(
-    styles.inputWrapper,
+  const wrapperClassName = clsx(
+    styles.wrapper,
     readOnly && styles.readOnly,
     styles[size],
     styles[color],
@@ -50,7 +50,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
       gap={gap}
       disabled={disabled}
       tooltip={tooltip}>
-      <div className={inputWrapperClassName} data-testid="wrapper">
+      <div className={wrapperClassName} data-testid="wrapper">
         {icon && <img src={icon} alt="input icon" className={styles.icon} />}
         <input
           id={id}
