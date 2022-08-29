@@ -23,6 +23,15 @@ describe('textarea tests', () => {
     rerender(<Textarea label="label" gap="7/9" />);
 
     expect(inputWrapper).toHaveStyle('grid-template-columns: 7fr 9fr');
+
+    rerender(<Textarea label="label" gap="7/9" tooltip="random tooltip" />);
+
+    const tooltipWrapper = screen.getByTestId('tooltipWrapper');
+    const tooltipIcon = screen.getByTestId('tooltipIcon');
+
+    expect(tooltipIcon).toBeInTheDocument();
+    expect(screen.queryByText('random tooltip')).not.toBeInTheDocument();
+    expect(tooltipWrapper).toHaveAttribute('data-tooltip', 'random tooltip');
   });
 
   it('applies className to wrapper', () => {

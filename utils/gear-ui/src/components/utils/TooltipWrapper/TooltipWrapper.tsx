@@ -12,7 +12,7 @@ const TooltipWrapper = ({ text, children, className }: Props) => {
   const wrapperClassName = clsx(styles.wrapper, className);
 
   return (
-    <div className={wrapperClassName} data-tooltip={text}>
+    <div className={wrapperClassName} data-tooltip={text} data-testid="tooltipWrapper">
       {children}
     </div>
   );

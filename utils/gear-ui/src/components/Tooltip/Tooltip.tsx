@@ -9,7 +9,7 @@ type Props = {
 function Tooltip({ text, className }: Props) {
   return (
     <TooltipWrapper text={text} className={className}>
-      <span className={styles.tooltip} />
+      <span className={styles.tooltip} data-testid="tooltipIcon" />
     </TooltipWrapper>
   );
 }

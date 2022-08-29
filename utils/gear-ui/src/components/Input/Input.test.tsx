@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { findByText, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Input } from './Input';
 import styles from './Input.module.scss';
 
@@ -11,7 +11,7 @@ describe('input tests', () => {
     expect(input).toBeInTheDocument();
   });
 
-  it('renders input with label', () => {
+  it('renders input with label', async () => {
     const { rerender } = render(<Input label="label" />);
     const input = screen.getByLabelText('label');
     expect(input).toBeInTheDocument();
@@ -25,6 +25,15 @@ describe('input tests', () => {
     rerender(<Input label="label" gap="7/9" />);
 
     expect(inputWrapper).toHaveStyle('grid-template-columns: 7fr 9fr');
+
+    rerender(<Input label="label" gap="7/9" tooltip="random tooltip" />);
+
+    const tooltipWrapper = screen.getByTestId('tooltipWrapper');
+    const tooltipIcon = screen.getByTestId('tooltipIcon');
+
+    expect(tooltipIcon).toBeInTheDocument();
+    expect(screen.queryByText('random tooltip')).not.toBeInTheDocument();
+    expect(tooltipWrapper).toHaveAttribute('data-tooltip', 'random tooltip');
   });
 
   it('renders input with icon', () => {
