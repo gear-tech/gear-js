@@ -1,1 +1,100 @@
-@use 'shared/assets/styles/_animations.scss' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+//clip-path: polygon(86% 0, 100% 16%, 100% 100%, 0 100%, 0 0);
+.programCard {
+  background: url('/shared/assets/images/placeholders/programBg.svg') no-repeat;
+  background-size: 100% 100%;
+  box-shadow: 0px 4px 4px $bgColor;
+}
+
+.cardContent {
+  position: relative;
+  padding: toRem(16) toRem(40) toRem(16) toRem(24);
+  overflow: hidden;
+
+  .title {
+    color: $gray600;
+    font-size: $fontSizeTiny;
+    line-height: 1.3;
+  }
+
+  .name {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Kanit';
+    color: $textColor;
+    font-weight: 600;
+    font-size: $fontSizeBig;
+    line-height: 1.3;
+    height: toRem(48);
+    overflow-wrap: break-word;
+    margin-bottom: toRem(8);
+  }
+
+  &::after {
+    content: '';
+    width: 160%;
+    height: 90px;
+    position: absolute;
+    left: -60%;
+    bottom: -70px;
+    background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.2) 15%, rgba(24, 24, 27, 0) 100%);
+  }
+}
+
+.otherInfo { 
+  position: relative;
+  z-index: 2;
+  display: flex;
+  margin-top: toRem(8);
+
+  .bulbBlock {
+    padding-left: toRem(4);
+    margin-right: toRem(16);
+  }
+}
+
+@keyframes sendMessage {
+  0% {
+    width: 0;
+    opacity: 0;
+    margin-right: 0;
+  }
+  40% {
+    width: toRem(115);
+    opacity: 0;
+    margin-right: toRem(16);
+  }
+  100% {
+    opacity: 1;
+    width: toRem(115);
+    margin-right: toRem(16);
+  }
+}
+
+.actions {
+  display: flex;
+  padding: toRem(12) toRem(24);
+
+  .sendMessage {
+    margin-right: toRem(16);
+
+    &:global(.enter) {
+      white-space: nowrap;
+      animation: 300ms linear forwards sendMessage;
+    }
+
+    &:global(.enter-done) {
+      min-width: toRem(115);
+    }
+
+    &:global(.exit),
+    &:global(.exit-done) {
+      display: none;
+    }
+  }
+}

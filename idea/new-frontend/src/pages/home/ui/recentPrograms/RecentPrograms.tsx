@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAlert, Account } from '@gear-js/react-hooks';
 
 import { getPrograms, getUserPrograms } from 'api';
-import { IProgram } from 'entities/program';
+import { ProgramCard, IProgram } from 'entities/program';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 
 import styles from './RecentPrograms.module.scss';
@@ -28,9 +28,10 @@ const RecentPrograms = ({ account }: Props) => {
     const fetchPrograms = isAllActive ? getPrograms : getUserPrograms;
 
     setIsloading(true);
+    setPrograms([]);
 
     fetchPrograms({ limit: PROGRAMS_LIMIT, owner: isAllActive ? undefined : decodedAddress })
-      .then((data) => setPrograms([]))
+      .then((data) => setPrograms(data.result.programs))
       .catch((error) => alert.error(error.message))
       .finally(() => setIsloading(false));
   };
@@ -63,7 +64,11 @@ const RecentPrograms = ({ account }: Props) => {
         {account && <ProgramsFilter value={activeFilter} onClick={setActiveFilter} />}
       </header>
       <div className={styles.programsWrapper}>
-        {isEmpty || isLoading ? <ProgramsPlaceholder isEmpty={isEmpty} isLoading={isLoading} /> : null}
+        {isEmpty || isLoading ? (
+          <ProgramsPlaceholder isEmpty={isEmpty} isLoading={isLoading} />
+        ) : (
+          programs.map((program) => <ProgramCard key={program.id} program={program} isLoggedIn={Boolean(account)} />)
+        )}
       </div>
     </section>
   );

@@ -1,0 +1,12 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.linkText {
+  font-family: 'Kanit';
+  font-weight: 600;
+  color: $gray800;
+  font-size: $fontSizeSmall;
+  line-height: toRem(18);
+  letter-spacing: 0.08em;
+  text-transform: capitalize;
+}

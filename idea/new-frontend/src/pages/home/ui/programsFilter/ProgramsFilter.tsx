@@ -21,26 +21,22 @@ const ProgramsFilter = memo(({ value, onClick }: Props) => {
   return (
     <div className={styles.filters}>
       <CSSTransition in appear timeout={ANIMATION_TIMEOUT}>
-        <div className={styles.filterWrapper}>
-          <Button
-            size="small"
-            text="All"
-            color="transparent"
-            className={getFilterClasses(Filter.AllPrograms)}
-            onClick={handleClick(Filter.AllPrograms)}
-          />
-        </div>
+        <Button
+          size="small"
+          text="All"
+          color="transparent"
+          className={getFilterClasses(Filter.AllPrograms)}
+          onClick={handleClick(Filter.AllPrograms)}
+        />
       </CSSTransition>
       <CSSTransition in appear timeout={ANIMATION_TIMEOUT + 50}>
-        <div className={styles.filterWrapper}>
-          <Button
-            size="small"
-            text="My programs"
-            color="transparent"
-            className={getFilterClasses(Filter.MyPrograms)}
-            onClick={handleClick(Filter.MyPrograms)}
-          />
-        </div>
+        <Button
+          size="small"
+          text="My programs"
+          color="transparent"
+          className={getFilterClasses(Filter.MyPrograms)}
+          onClick={handleClick(Filter.MyPrograms)}
+        />
       </CSSTransition>
     </div>
   );

@@ -1,7 +1,7 @@
 import { Event } from '@polkadot/types/interfaces';
 import isString from 'lodash.isstring';
 import { GearApi } from '@gear-js/api';
-import { Account } from '@gear-js/react-hooks';
+import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { DEVELOPMENT_CHAIN, ACCOUNT_ERRORS, FileTypes, LocalStorage } from 'shared/config';
 
@@ -49,9 +49,9 @@ const readFileAsync = <T extends File, K extends 'text' | 'buffer'>(
     }
   });
 
-const copyToClipboard = (key: string, alert: any, successfulText?: string) => {
+const copyToClipboard = async (key: string, alert: AlertContainerFactory, successfulText?: string) => {
   try {
-    navigator.clipboard.writeText(key);
+    await navigator.clipboard.writeText(key);
     alert.success(successfulText || 'Copied');
   } catch (err) {
     alert.error('Copy error');
@@ -65,6 +65,7 @@ const checkFileFormat = (file: File, types: string | string[] = FileTypes.Wasm) 
 
   return types === file.type;
 };
+
 const generateRandomId = () => Math.floor(Math.random() * 100000000);
 
 const getShortName = (filename: string, maxLength = 24) => {
