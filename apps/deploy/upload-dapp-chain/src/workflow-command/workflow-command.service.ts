@@ -1,11 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common";
 
 import { decodeAddress, GearApi, getWasmMetadata, Hex, IMessageSendOptions } from "@gear-js/api";
-import { checkInitProgram, getAccount, getOptAndMetaWasm } from "../common/hellpers";
+import { checkInitProgram, getAccount, getOptAndMetaWasm } from "../common/helpers";
 import { SendMessageInput, UploadProgramInput, UploadProgramResult } from "./types";
 import { gearService } from "../gear/gear-service";
-import { sendTransaction } from "../common/hellpers/send-transaction";
-import { ApiKey } from "../common/enums";
+import { sendTransaction } from "../common/helpers/send-transaction";
 
 @Injectable()
 export class WorkflowCommandService {
@@ -50,13 +49,15 @@ export class WorkflowCommandService {
         initPayload: payload,
       };
 
-      const { programId } = this.gearApi.program.upload(program, meta);
-      const status = checkInitProgram(this.gearApi, programId);
-      await sendTransaction(this.gearApi, account, "MessageEnqueued", ApiKey.PROGRAM);
+      const data = this.gearApi.program.upload(program, meta);
+      const status = checkInitProgram(this.gearApi, data.programId);
+      await sendTransaction(data.extrinsic, account, "MessageEnqueued");
 
       await status;
 
-      return { ...uploadProgramInput, programId, metaWasmBase64: metaWasmBuff.toString("base64") };
+      return { ...uploadProgramInput,
+        programId: data.programId,
+        metaWasmBase64: metaWasmBuff.toString("base64") };
     } catch (error) {
       console.log(error);
       this.logger.error(error);
@@ -92,9 +93,9 @@ export class WorkflowCommandService {
         value,
       };
 
-      this.gearApi.message.send(message, meta);
+      const extrinsic = this.gearApi.message.send(message, meta);
 
-      await sendTransaction(this.gearApi, account, "MessageEnqueued", ApiKey.MESSAGE);
+      await sendTransaction(extrinsic, account, "MessageEnqueued");
     } catch (error) {
       console.error(error);
       this.logger.error(error);

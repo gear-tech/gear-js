@@ -5,13 +5,13 @@ import { DappDataService } from "../dapp-data/dapp-data.service";
 import { Role, TBErrorMessage } from "../common/enums";
 import { UserService } from "../user/user.service";
 import { UserRepo } from "../user/user.repo";
-import { getTgCommands } from "../common/hellpers";
-import { getWorkflowCommands } from "../common/hellpers/get-workflow-commands";
+import { getTgCommands } from "../common/helpers";
+import { getWorkflowCommands } from "../common/helpers/get-workflow-commands";
 import { SendMessageInput, UploadProgramResult } from "../workflow-command/types";
-import { getUploadProgramData } from "../common/hellpers/get-upload-program-data";
+import { getUploadProgramData } from "../common/helpers/get-upload-program-data";
 import { DappData } from "../dapp-data/entities/dapp-data.entity";
 import { Payload } from "../common/types";
-import { getUploadProgramByName } from "../common/hellpers/get-upload-program-by-name";
+import { getUploadProgramByName } from "../common/helpers/get-upload-program-by-name";
 
 @Injectable()
 export class TgbotService {
