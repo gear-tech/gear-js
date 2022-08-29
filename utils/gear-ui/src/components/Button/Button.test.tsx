@@ -4,73 +4,79 @@ import styles from './Button.module.scss';
 
 const arrowIcon = 'icon-path';
 
-// describe('button tests', () => {
-//   it('renders button', () => {
-//     render(<Button text="button text" />);
+describe('button tests', () => {
+  it('renders button', () => {
+    render(<Button text="button text" />);
 
-//     const button = screen.getByRole('button');
+    const button = screen.getByRole('button');
 
-//     expect(button).toHaveTextContent('button text');
-//     expect(button).toHaveAttribute('type', 'button');
-//   });
+    expect(button).toHaveTextContent('button text');
+    expect(button).toHaveAttribute('type', 'button');
+  });
 
-//   it('render submit button', () => {
-//     render(<Button type="submit" text="button text" />);
+  it('render submit button', () => {
+    render(<Button type="submit" text="button text" />);
 
-//     const button = screen.getByRole('button');
+    const button = screen.getByRole('button');
 
-//     expect(button).toHaveTextContent('button text');
-//     expect(button).toHaveAttribute('type', 'submit');
-//   });
+    expect(button).toHaveTextContent('button text');
+    expect(button).toHaveAttribute('type', 'submit');
+  });
 
-//   it('renders icon button', () => {
-//     render(<Button icon={arrowIcon} />);
+  it('renders icon button', () => {
+    render(<Button icon={arrowIcon} />);
 
-//     const button = screen.getByRole('button');
-//     const icon = screen.getByRole('img');
+    const button = screen.getByRole('button');
+    const icon = screen.getByRole('img');
 
-//     expect(button).toContainElement(icon);
-//     expect(button).toHaveClass(styles.noText);
-//   });
+    expect(button).toContainElement(icon);
+    expect(button).toHaveClass(styles.noText);
+  });
 
-//   it('renders button with icon and text', () => {
-//     render(<Button text="button text" icon={arrowIcon} />);
+  it('renders button with icon and text', () => {
+    render(<Button text="button text" icon={arrowIcon} />);
 
-//     const button = screen.getByText('button text');
-//     const icon = screen.getByRole('img');
+    const button = screen.getByText('button text');
+    const icon = screen.getByRole('img');
 
-//     expect(button).toContainElement(icon);
-//     expect(button).toHaveClass(styles.normal);
-//   });
+    expect(button).toContainElement(icon);
+    expect(button).toHaveClass(styles.normal);
+  });
 
-//   it('renders small button with secondary and tertiary color', () => {
-//     const { rerender } = render(<Button text="button text" color="secondary" size="small" />);
+  it('renders small/large button with secondary, light and gradient colors', () => {
+    const { rerender } = render(<Button text="button text" color="secondary" size="small" />);
 
-//     const button = screen.getByRole('button');
-//     expect(button).toHaveClass(styles.secondary, styles.small);
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass(styles.secondary, styles.small);
 
-//     rerender(<Button text="button text" color="tertiary" size="small" />);
-//     expect(button).toHaveClass(styles.tertiary, styles.small);
-//   });
+    rerender(<Button text="button text" color="light" size="small" />);
+    expect(button).toHaveClass(styles.light, styles.small);
 
-//   it('renders button with transparent background', () => {
-//     render(<Button text="button text" color="transparent" />);
-//     const button = screen.getByRole('button');
-//     expect(button).toHaveClass(styles.transparent);
-//   });
+    rerender(<Button text="button text" color="lightGreen" size="large" />);
+    expect(button).toHaveClass(styles.lightGreen, styles.large);
 
-//   it('renders no wrap block button', () => {
-//     render(<Button text="button text" block noWrap />);
-//     const button = screen.getByRole('button');
-//     expect(button).toHaveClass(styles.block, styles.noWrap);
-//   });
+    rerender(<Button text="button text" color="gradient" size="large" />);
+    expect(button).toHaveClass(styles.gradient, styles.large);
+  });
 
-//   it('passes ref', () => {
-//     const ref = { current: null };
-//     render(<Button text="button text" ref={ref} />);
+  it('renders button with transparent background', () => {
+    render(<Button text="button text" color="transparent" />);
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass(styles.transparent);
+  });
 
-//     const button = screen.getByRole('button');
+  it('renders no wrap block button', () => {
+    render(<Button text="button text" block noWrap />);
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass(styles.block, styles.noWrap);
+  });
 
-//     expect(ref.current).toBe(button);
-//   });
-// });
+  it('passes ref', () => {
+    const ref = { current: null };
+    render(<Button text="button text" ref={ref} />);
+
+    const button = screen.getByRole('button');
+
+    expect(ref.current).toBe(button);
+  });
+});
