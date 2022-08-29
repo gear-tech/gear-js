@@ -4,24 +4,26 @@
 .bulbBlock {
   display: flex;
   align-items: center;
-}
 
-.bulb {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: $textColor;
+  &::before {
+    content: '';
 
-  &.error {
-    background-color: $errorColor;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: $textColor;
   }
 
-  &.success {
+  &.error::before {
+    background-color: $errorColor;
+  }
+  
+  &.success::before {
     background-color: $successColor;
     box-shadow: 0px 0px 10px $successColor;
   }
-
-  &.loading {
+  
+  &.loading::before {
     background-color: #3975e9;
   }
 }

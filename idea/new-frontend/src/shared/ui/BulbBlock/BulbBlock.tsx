@@ -10,10 +10,9 @@ type Props = {
 };
 
 const BulbBlock = ({ status, text, className }: Props) => (
-  <div className={clsx(styles.bulbBlock, className)}>
-    <span className={clsx(styles.bulb, styles[status])} />
+  <p className={clsx(styles.bulbBlock, styles[status], className)}>
     <span className={styles.status}>{text ?? status}</span>
-  </div>
+  </p>
 );
 
 export { BulbBlock };
