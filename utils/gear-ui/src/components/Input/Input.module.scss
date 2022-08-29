@@ -1,33 +1,23 @@
-@use 'src/assets/styles/variables' as *;
-
-.label {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  font-weight: 300;
-  color: $textColorSecondary;
-}
-
-.wrapper,
-.input {
-  flex: 1;
-}
+@use '../../assets/styles/variables' as *;
+@use '../../assets/styles/shared' as *;
 
 .wrapper {
-  display: flex;
-  padding: 10px 20px;
-  background-color: #000;
-  border-radius: $borderRadius;
+  @extend %wrapper;
+}
+
+.label {
+  @extend %label;
+}
+
+.inputWrapper {
+  @extend %inputWrapper;
 
   &.readOnly {
-    background-color: #282828;
-    box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
+    @extend %readOnlyInputWrapper;
   }
 }
 
 .resets {
-  @extend .resets;
   padding: 0;
   background: none;
   border: none;
@@ -36,14 +26,17 @@
 
 .input {
   @extend .resets;
-  color: $textColor;
-
-  &::placeholder {
-    color: $textColorSecondary;
-  }
+  @extend %input;
 }
 
-.text,
 .icon {
-  margin-right: 16px;
+  margin-right: 8px;
+}
+
+.clearButton {
+  margin-left: 8px;
+}
+
+.error {
+  @extend %error;
 }

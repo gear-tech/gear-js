@@ -66,7 +66,7 @@ const useProgramActions = () => {
     return result.programId;
   };
 
-  const handleEventsStatus = (events: EventRecord[], { reject, resolve }: OperationCallbacks) => {
+  const handleEventsStatus = (events: EventRecord[], { reject }: Pick<OperationCallbacks, 'reject'>) => {
     events.forEach(({ event }) => {
       const { method, section } = event;
       const alertOptions = { title: `${section}.${method}` };
@@ -76,7 +76,6 @@ const useProgramActions = () => {
         reject();
       } else if (method === Method.MessageEnqueued) {
         alert.success('Success', alertOptions);
-        resolve();
       }
     });
   };
@@ -94,7 +93,7 @@ const useProgramActions = () => {
           alert.update(alertId, TransactionStatus.InBlock);
         } else if (status.isFinalized) {
           alert.update(alertId, TransactionStatus.Finalized, DEFAULT_SUCCESS_OPTIONS);
-          handleEventsStatus(events, { reject, resolve });
+          handleEventsStatus(events, { reject });
         } else if (status.isInvalid) {
           alert.update(alertId, PROGRAM_ERRORS.INVALID_TRANSACTION, DEFAULT_ERROR_OPTIONS);
           reject();
@@ -111,6 +110,8 @@ const useProgramActions = () => {
 
         return;
       }
+
+      resolve();
 
       const { title: payloadTitle, metadata, metadataBuffer } = payload;
 

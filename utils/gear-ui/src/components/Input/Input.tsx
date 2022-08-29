@@ -1,25 +1,72 @@
-import { InputHTMLAttributes, forwardRef, ForwardedRef } from 'react';
+import { InputHTMLAttributes, forwardRef, ForwardedRef, ReactNode, useId } from 'react';
 import clsx from 'clsx';
+import { getLabelGap } from '../../utils';
+import { Gap } from '../../types';
+import { useClearButton } from '../../hooks';
+import { Button } from '../Button/Button';
 import styles from './Input.module.scss';
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+type BaseProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   icon?: string;
-}
+  error?: ReactNode;
+  size?: 'normal' | 'large';
+  color?: 'dark' | 'light';
+};
 
-const Input = forwardRef(({ label, icon, className, ...attrs }: Props, ref: ForwardedRef<HTMLInputElement>) => {
+type XDirectionProps = BaseProps & { label?: string; direction?: 'x'; gap?: Gap };
+type YDirectionProps = BaseProps & { label?: string; direction?: 'y'; gap?: never };
+
+type Props = XDirectionProps | YDirectionProps;
+
+const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
+  const { label, icon, className, error, gap, size = 'normal', color = 'dark', direction = 'x', ...attrs } = props;
+
   const { readOnly, disabled } = attrs;
-  const labelClassName = clsx(styles.label, disabled && 'disabled', className);
-  const wrapperClassName = clsx(styles.wrapper, readOnly && styles.readOnly);
+  const wrapperClassName = clsx(styles.wrapper, disabled && 'disabled', className, label && styles[direction]);
+  const labelClassName = clsx(styles.label, styles[size], styles[direction]);
+  const inputWrapperClassName = clsx(
+    styles.inputWrapper,
+    readOnly && styles.readOnly,
+    styles[size],
+    styles[color],
+    error && styles.error,
+  );
+  const inputClassName = clsx(styles.input, styles[color]);
+
+  const { clearButton, inputRef } = useClearButton(forwardedRef, color);
+  const id = useId();
 
   return (
-    <label className={labelClassName} data-testid="label">
-      {label && <span className={styles.text}>{label}</span>}
-      <div className={wrapperClassName} data-testid="wrapper">
-        {icon && <img src={icon} alt="input icon" className={styles.icon} />}
-        <input className={styles.input} ref={ref} {...attrs} />
+    <div className={wrapperClassName} style={gap && getLabelGap(gap)}>
+      {label && (
+        <label htmlFor={id} className={labelClassName} data-testid="label">
+          {label}
+        </label>
+      )}
+      <div className={styles.errorWrapper}>
+        <div className={inputWrapperClassName} data-testid="wrapper">
+          {icon && <img src={icon} alt="input icon" className={styles.icon} />}
+          <input
+            id={id}
+            className={inputClassName}
+            ref={inputRef}
+            onFocus={readOnly ? undefined : clearButton.show}
+            onBlur={clearButton.hide}
+            {...attrs}
+          />
+          {clearButton.isVisible && (
+            <Button
+              icon={clearButton.icon}
+              color="transparent"
+              onClick={clearButton.handleClick}
+              onMouseDown={clearButton.preventBlur}
+              className={styles.clearButton}
+            />
+          )}
+        </div>
+        {error && <p className={styles.error}>{error}</p>}
       </div>
-    </label>
+    </div>
   );
 });
 

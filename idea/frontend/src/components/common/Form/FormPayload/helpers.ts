@@ -11,9 +11,9 @@ export const getNextLevelName = (currentLevelName: string, nextLevelName: string
 
 export const getItemLabel = (name: string, title?: string) => (title ? `${title} (${name})` : name);
 
-export const getSubmitPayload = (payload: PayloadValue): any => {
+export const getSubmitPayload = (payload: PayloadValue): PayloadValue => {
   if (isString(payload)) {
-    return toJSON(payload);
+    return toJSON(payload.trim());
   }
 
   if (isPlainObject(payload)) {

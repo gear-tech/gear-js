@@ -9,7 +9,7 @@ import {
   useState,
   ChangeEvent,
 } from 'react';
-import { Button } from '@gear-js/ui';
+import { Button } from '../Button/Button';
 import trashSVG from './images/trash.svg';
 import styles from './FileInput.module.scss';
 
