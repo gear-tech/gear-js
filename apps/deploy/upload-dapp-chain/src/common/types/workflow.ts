@@ -6,6 +6,11 @@ interface WorkflowYamlData {
         [key: string]: Program
     }
     workflow: FlowCommand[]
+    workflowSingleDapp: {
+        [key: string]: {
+            actions: FlowCommand[],
+        }
+    }
 }
 
 export { WorkflowYamlData };

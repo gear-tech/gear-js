@@ -4,7 +4,6 @@ import { ConfigService } from "@nestjs/config";
 
 import { AppModule } from "./app.module";
 import { gearService } from "./gear/gear-service";
-import { getUploadProgramData } from "./common/hellpers/get-upload-program-data";
 
 async function bootstrap() {
   await gearService.connect();

@@ -32,12 +32,13 @@ export class WorkflowCommandService {
 
     try {
       const meta = await getWasmMetadata(metaWasmBuff);
+      const value = uploadProgramInput.value ? uploadProgramInput.value : undefined;
 
       const gas = await this.gearApi.program.calculateGas.initUpload(
         sourceId,
         optWasmBuff,
         payload,
-        0,
+        value,
         true,
         meta,
       );
@@ -45,7 +46,7 @@ export class WorkflowCommandService {
       const program = {
         code: optWasmBuff,
         gasLimit: gas.min_limit,
-        value: 0,
+        value,
         initPayload: payload,
       };
 
@@ -73,12 +74,13 @@ export class WorkflowCommandService {
     try {
       const buff = Buffer.from(uploadedProgram.metaWasmBase64, "base64");
       const meta = await getWasmMetadata(buff);
+      const value = sendMessageInput.value ? sendMessageInput.value : undefined;
 
       const gas = await this.gearApi.program.calculateGas.handle(
         sourceId,
           uploadedProgram.programId as Hex,
           payload,
-          0,
+          value,
           true,
           meta,
       );
@@ -87,16 +89,12 @@ export class WorkflowCommandService {
         destination: uploadedProgram.programId as Hex,
         payload,
         gasLimit: gas.min_limit,
-        value: 0,
+        value,
       };
 
-      const tx = this.gearApi.message.send(message, meta);
+      this.gearApi.message.send(message, meta);
 
       await sendTransaction(this.gearApi, account, "MessageEnqueued", ApiKey.MESSAGE);
-
-      await tx.signAndSend(account, ({ events }) => {
-        events.forEach(({ event }) => console.log(event.toHuman()));
-      });
     } catch (error) {
       console.error(error);
       this.logger.error(error);

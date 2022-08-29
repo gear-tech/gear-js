@@ -2,5 +2,6 @@ export interface FlowCommand {
     command: string,
     program: string,
     acc?: string,
-    payload?: { AddNftContract: string} | string
+    payload?: { [key: string]: string} | string
+    value: null | number
 }

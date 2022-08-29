@@ -5,7 +5,8 @@ interface UploadProgramInput extends Program{}
 interface SendMessageInput {
     program: Program
     acc: string
-    payload: { [key: string]: string } | string
+    payload: { [key: string]: string } | string | undefined
+    value: number | null
 }
 
 interface UploadProgramResult extends Program {

@@ -11,6 +11,7 @@ import { SendMessageInput, UploadProgramResult } from "../workflow-command/types
 import { getUploadProgramData } from "../common/hellpers/get-upload-program-data";
 import { DappData } from "../dapp-data/entities/dapp-data.entity";
 import { Payload } from "../common/types";
+import { getUploadProgramByName } from "../common/hellpers/get-upload-program-by-name";
 
 @Injectable()
 export class TgbotService {
@@ -58,7 +59,7 @@ export class TgbotService {
     }
 
     for (const commandInfo of workflow) {
-      const { acc, payload, command, program } = commandInfo;
+      const { acc, payload, command, program, value } = commandInfo;
       const uploadProgramData = getUploadProgramData(program);
 
       try {
@@ -67,6 +68,50 @@ export class TgbotService {
             payload: this.getPayload(uploadedPrograms, payload),
             program: uploadProgramData,
             acc,
+            value,
+          };
+
+          await this.workflowCommandService.sendMessage(sendMessageInput, uploadedPrograms);
+        }
+
+        if (command === "uploadProgram") {
+          const uploadedProgramData = await this.workflowCommandService.uploadProgram(uploadProgramData);
+          uploadedPrograms.push(uploadedProgramData);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
+
+    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long" }));
+  }
+
+  public async uploadDapp(userId: number, commandArguments: string): Promise<any> {
+    const [, dappName] = commandArguments.split(" ");
+    if (!await this.userService.validate(String(userId))) {
+      return TBErrorMessage.ACCESS_DENIED;
+    }
+
+    if (!dappName) {
+      return TBErrorMessage.COMMAND_ARGUMENTS_REQUIRED;
+    }
+
+    const uploadProgramActions = getUploadProgramByName(dappName);
+    const uploadedPrograms: UploadProgramResult[] = [];
+
+    for (const action of uploadProgramActions.actions) {
+      const { payload, acc, value, program, command } = action;
+      const uploadProgramData = getUploadProgramData(program);
+
+      try {
+        if (command === "sendMessage") {
+          const sendMessageInput: SendMessageInput = {
+            payload: this.getPayload(uploadedPrograms, payload),
+            program: uploadProgramData,
+            acc,
+            value,
           };
 
           await this.workflowCommandService.sendMessage(sendMessageInput, uploadedPrograms);

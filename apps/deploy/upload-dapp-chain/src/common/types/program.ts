@@ -7,4 +7,5 @@ export interface Program {
     metaDownloadUrl: string
     acc: string
     payload: Payload
+    value: null | number
 }
