@@ -1,0 +1,349 @@
+programs:
+  1:
+    opt: ./nft_marketplace.opt.wasm
+    meta: ./nft_marketplace.meta.wasm
+    acc: alice
+    payload: 
+      adminId: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
+      treasuryId: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
+      treasuryFee: 3
+  
+  2: 
+    opt: ./nft.opt.wasm
+    meta: ./nft.meta.wasm
+    acc: alice
+    payload: 
+      name: AliceNft
+      symbol: AN
+      baseUri: 'https://gear-tech.io'
+      royalties: null
+
+  3: 
+    opt: ./nft.opt.wasm
+    meta: ./nft.meta.wasm
+    acc: bob
+    payload: 
+      name: BobNft
+      symbol: BN
+      baseUri: https://gear-tech.io
+      royalties: null
+  
+  4: 
+    opt: ./nft.opt.wasm
+    meta: ./nft.meta.wasm
+    acc: mithriy
+    payload: 
+      name: MithriyNft
+      symbol: MN
+      baseUri: https://gear-tech.io
+      royalties: null
+
+  5: 
+    opt: ./nft.opt.wasm
+    meta: ./nft.meta.wasm
+    acc: squid
+    payload: 
+      name: SquidNft
+      symbol: SN
+      baseUri: https://subsquid.io/
+      royalties: null
+  
+
+steps:
+# upload the first nft contract
+  - tx: upload_program
+    program: 2
+
+# mint 2 tokens on the first nft
+  - tx: send_message
+    program: 2
+    acc: alice
+    payload: 
+      Mint: 
+        tokenMetadata:
+          name: token_1_0
+          description: description_1_0
+          media: https://www.gear-tech.io/images/home/top/gear2.svg
+          reference: https://github.com/gear-tech
+
+  - tx: send_message
+    program: 2
+    acc: bob
+    payload: 
+      Mint: 
+        tokenMetadata:
+          name: token_1_1
+          description: description_1_1
+          media: https://www.gear-tech.io/images/home/top/gear2.svg
+          reference: https://github.com/gear-tech
+
+# Alice - 1-0
+# Bob - 1-1
+
+# Make a few transfers
+  - tx: send_message
+    program: 2
+    acc: alice
+    payload: 
+      Transfer: 
+        to: _account-mithriy
+        tokenId: 0
+  
+  - tx: send_message
+    program: 2
+    acc: mithriy
+    payload: 
+      Transfer: 
+        to: _account-bob
+        tokenId: 0
+  
+  - tx: send_message
+    program: 2
+    acc: bob
+    payload: 
+      Transfer: 
+        to: _account-alice
+        tokenId: 0
+
+# Alice - 1-0
+# Bob - 1-1
+
+# upload marketplace
+  - tx: upload_program
+    program: 1
+
+# upload new nft contract
+  - tx: upload_program
+    program: 3
+
+# register nft contracts on marketplace
+  - tx: send_message
+    program: 1
+    acc: alice
+    payload: 
+      AddNftContract: _program-2
+
+  - tx: send_message
+    program: 1
+    acc: alice
+    payload: 
+      AddNftContract: _program-3
+
+
+# mint one more token on the first nft
+  - tx: send_message
+    program: 2
+    acc: mithriy
+    payload: 
+      Mint: 
+        tokenMetadata:
+          name: token_1_2
+          description: description_1_2
+          media: https://www.gear-tech.io/images/home/top/gear2.svg
+          reference: https://github.com/gear-tech
+
+# Alice - 1-0
+# Bob - 1-1
+# Mithriy 1-2
+
+# mint 3 tokens on the second nft
+  - tx: send_message
+    program: 3
+    acc: alice
+    payload: 
+      Mint: 
+        tokenMetadata:
+          name: token_2_0
+          description: description_2_0
+          media: https://www.gear-tech.io/images/home/top/gear2.svg
+          reference: https://github.com/gear-tech
+
+  - tx: send_message
+    program: 3
+    acc: bob
+    payload: 
+      Mint: 
+        tokenMetadata:
+          name: token_2_1
+          description: description_2_1
+          media: https://www.gear-tech.io/images/home/top/gear2.svg
+          reference: https://github.com/gear-tech
+      
+  - tx: send_message
+    program: 3
+    acc: mithriy
+    payload: 
+      Mint: 
+        tokenMetadata:
+          name: token_2_2
+          description: description_2_2
+          media: https://www.gear-tech.io/images/home/top/gear2.svg
+          reference: https://github.com/gear-tech
+
+
+# Alice - 1-0, 2-0
+# Bob - 1-1, 2-1
+# Mithriy 1-2, 2-2
+
+  - tx: send_message
+    program: 2
+    acc: bob
+    payload: 
+      Burn: 
+        tokenId: 1
+  
+  - tx: send_message
+    program: 3
+    acc: bob
+    payload: 
+      Transfer: 
+        to: _account-alice
+        tokenId: 1
+
+# Alice - 1-0, 2-0, 2-1
+# Mithriy 1-2, 2-2
+
+  # AddMarketData
+  - tx: send_message
+    program: 1
+    acc: alice
+    payload: 
+      AddMarketData:
+        nftContractId: _program-2
+        ftContractId: null
+        tokenId: 0
+        price: 20000
+
+  - tx: send_message
+    program: 1
+    acc: alice
+    payload: 
+      AddMarketData:
+        nftContractId: _program-3
+        ftContractId: null
+        tokenId: 0
+        price: null
+  
+  - tx: send_message
+    program: 1
+    acc: mithriy
+    payload: 
+      AddMarketData:
+        nftContractId: _program-3
+        ftContractId: null
+        tokenId: 2
+        price: 20000
+  
+  - tx: send_message
+    program: 1
+    acc: mithriy
+    payload: 
+      AddMarketData:
+        nftContractId: _program-2
+        ftContractId: null
+        tokenId: 2
+        price: 20000
+  
+  - tx: send_message
+    program: 1
+    acc: alice
+    payload: 
+      BuyItem:
+        nftContractId: _program-3
+        tokenId: 2
+    value: 20000
+  
+# Alice - 1-0, 2-0, 2-1(not listed), 2-2
+# Mithriy 1-2
+
+  - tx: send_message
+    program: 1
+    acc: alice
+    payload: 
+      CreateAuction:
+        nftContractId: _program-2
+        ftContractId: null
+        tokenId: 0
+        minPrice: 10000
+        bidPeriod: 60000
+        duration: 120000
+  
+  - tx: send_message
+    program: 1
+    acc: mithriy
+    payload: 
+      AddBid:
+        nftContractId: _program-2
+        tokenId: 0
+        price: 20000
+    value: 20000
+
+  - tx: send_message
+    program: 1
+    acc: bob
+    payload: 
+      AddBid:
+        nftContractId: _program-2
+        tokenId: 0
+        price: 40000
+    value: 40000
+
+  - timeout: 180000
+  
+  - tx: send_message
+    program: 1
+    acc: alice
+    payload: 
+      SettleAuction:
+        nftContractId: _program-2
+        tokenId: 0
+
+# Alice - 2-0, 2-1(not listed), 2-2
+# Bob - 1-0
+# Mithriy 1-2
+ 
+  - tx: send_message
+    program: 1
+    acc: mithriy
+    payload: 
+      AddOffer:
+        nftContractId: _program-3
+        ftContractId: null
+        tokenId: 2
+        price: 5000
+    value: 5000
+
+  - tx: send_message
+    program: 1
+    acc: bob
+    payload: 
+      AddOffer:
+        nftContractId: _program-3
+        ftContractId: null
+        tokenId: 2
+        price: 2000
+    value: 2000
+ 
+  - tx: send_message
+    program: 1
+    acc: bob
+    payload: 
+      Withdraw:
+        nftContractId: _program-3
+        ftContractId: null
+        tokenId: 2
+        price: 2000
+ 
+  - tx: send_message
+    program: 1
+    acc: alice
+    payload: 
+      AcceptOffer:
+        nftContractId: _program-3
+        tokenId: 2
+        ftContractId: null
+        price: 5000
+
+# Alice - 2-0, 2-1(not listed)
+# Bob - 1-0
+# Mithriy 1-2, 2-2
