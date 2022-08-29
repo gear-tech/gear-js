@@ -37,7 +37,7 @@ describe('input tests', () => {
     expect(icon).toHaveAttribute('src', arrowIcon);
   });
 
-  it('applies className to label wrapper', () => {
+  it('applies className to wrapper', () => {
     render(<Input label="label" className="class" />);
 
     const input = screen.getByRole('textbox');

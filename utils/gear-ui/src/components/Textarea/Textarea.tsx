@@ -24,7 +24,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
 
   const { disabled, readOnly } = attrs;
 
-  const textareaWrapperClassName = clsx(styles.textareaWrapper, styles[color], styles[size], error && styles.error);
+  const wrapperClassName = clsx(styles.wrapper, styles[color], styles[size], error && styles.error);
   const textareaClassName = clsx(styles.textarea, styles[color]);
 
   const id = useId();
@@ -41,7 +41,7 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
       gap={gap}
       disabled={disabled}
       tooltip={tooltip}>
-      <div className={textareaWrapperClassName}>
+      <div className={wrapperClassName} data-testid="wrapper">
         <textarea
           id={id}
           rows={rows}
