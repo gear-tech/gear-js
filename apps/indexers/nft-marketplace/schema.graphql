@@ -47,7 +47,7 @@ type Transfer @entity{
   price: BigInt
 }
 
-type Offer @entity @index(fields: ["token", "account"]){
+type Offer @entity{
   token: Token! @index
   price: BigInt!
   account: Account! @index
