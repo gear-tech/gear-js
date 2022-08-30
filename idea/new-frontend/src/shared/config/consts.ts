@@ -40,6 +40,7 @@ enum LocalStorage {
   Genesis = 'genesis',
   NodeAddress = 'node_address',
   PublicKeyRaw = 'public_key_raw',
+  HideWelcomeBanner = 'hide_welcome_banner',
 }
 
 enum GasMethod {

@@ -1,7 +1,7 @@
 import { CSSTransition } from 'react-transition-group';
 
 import { EXAMPLES_HREF, ANIMATION_TIMEOUT } from 'shared/config';
-import { ReactComponent as AppSVG } from 'shared/assets/images/menu/app.svg';
+import { ReactComponent as AppSVG } from 'shared/assets/images/indicators/app.svg';
 import { ReactComponent as ExternalResourceSVG } from 'shared/assets/images/actions/externalResource.svg';
 
 import styles from '../Menu.module.scss';

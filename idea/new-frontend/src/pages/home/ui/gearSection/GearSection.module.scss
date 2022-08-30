@@ -1,0 +1,26 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.gearSection {
+  position: relative;
+  margin-bottom: toRem(32);
+  min-height: toRem(320);
+  
+  .indicators {
+    display: flex;
+    width: 100%;
+    min-height: inherit;
+    
+    & > * {
+      flex: 1 1;
+
+      &:not(:last-child) {
+        margin-right: toRem(24);
+      }
+    }
+  }
+}
+
+.welcomeBanner {
+  @include fade();
+}

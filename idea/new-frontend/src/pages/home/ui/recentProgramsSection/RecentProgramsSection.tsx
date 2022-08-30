@@ -5,7 +5,7 @@ import { getPrograms, getUserPrograms } from 'api';
 import { ProgramCard, IProgram } from 'entities/program';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 
-import styles from './RecentPrograms.module.scss';
+import styles from './RecentProgramsSection.module.scss';
 import { Filter, PROGRAMS_LIMIT } from '../../model/consts';
 import { ProgramsFilter } from '../programsFilter';
 import { ProgramsPlaceholder } from '../programsPlaceholder';
@@ -14,7 +14,7 @@ type Props = {
   account?: Account;
 };
 
-const RecentPrograms = ({ account }: Props) => {
+const RecentProgramsSection = ({ account }: Props) => {
   const alert = useAlert();
 
   const [programs, setPrograms] = useState<IProgram[]>([]);
@@ -74,4 +74,4 @@ const RecentPrograms = ({ account }: Props) => {
   );
 };
 
-export { RecentPrograms };
+export { RecentProgramsSection };

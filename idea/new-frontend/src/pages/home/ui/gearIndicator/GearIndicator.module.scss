@@ -1,0 +1,58 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.gearIndicator {
+  position: relative;
+  overflow: hidden;
+  padding: toRem(20) toRem(24) toRem(48) toRem(24);
+  border-radius: 40px;
+  background-color: $bgColorSecondary;
+
+  &::before {
+    content: '';
+    width: 100%;
+    transform: rotate(-10deg);
+    height: toRem(260);
+    top: toRem(-150);
+    left: -30%;
+    position: absolute;
+    background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.15) 10%, rgba(24, 24, 27, 0) 100%);
+  }
+
+  .textContent {
+    display: flex;
+    position: relative;
+    height: 100%;
+    z-index: 2;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    .icon {
+      padding: toRem(16);
+      margin-bottom: toRem(8);
+      border-radius: 50%;
+      background-color: $green007;
+
+      & > svg path {
+        fill: $successColor;
+      }
+    }
+
+    .value {
+      font-family: 'Kanit';
+      font-weight: 600;
+      font-size: toRem(40);
+      line-height: 1.3;
+      text-align: right;
+      text-transform: uppercase;
+      color: $textColor;
+    }
+
+    .name {
+      color: $gray800;
+      font-size: $fontSizeSmall;
+      line-height: 1.3;
+    }
+  }
+}

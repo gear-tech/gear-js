@@ -3,7 +3,7 @@ import { buttonStyles } from '@gear-js/ui';
 
 import styles from './ExamplesLink.module.scss';
 import { EXAMPLES_HREF } from '../../config';
-import appSVG from '../../assets/images/menu/app.svg';
+import appSVG from '../../assets/images/indicators/app.svg';
 import externalResourceSVG from '../../assets/images/actions/externalResource.svg';
 
 const ExamplesLink = () => {

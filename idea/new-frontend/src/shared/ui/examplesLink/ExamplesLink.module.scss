@@ -2,7 +2,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .link {
-  background-color: $bgColorThird;
+  background-color: $bgColorTertiary;
 
   .text {
     color: $textColor;
@@ -13,6 +13,6 @@
   } 
 
   &:hover{
-    background-color: $bgColorThird;
+    background-color: $bgColorTertiary;
   }
 }
