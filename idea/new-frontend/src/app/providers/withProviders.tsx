@@ -10,12 +10,12 @@ import { EventsProvider } from './events';
 
 const providers = [
   BrowserRouter,
+  AlertProvider,
   ApiProvider,
   AccountProvider,
+  ModalProvider,
   EventsProvider,
   BlocksProvider,
-  ModalProvider,
-  AlertProvider,
 ];
 
 const withProviders = (Component: ComponentType) => () =>

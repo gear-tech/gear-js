@@ -1,0 +1,10 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+
+.fileLabel {
+  width: 100%;
+  margin-bottom: toRem(32);
+
+  .fileInput {
+    display: none;
+  }
+}

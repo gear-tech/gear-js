@@ -5542,7 +5542,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-dnd/shallowequal@npm:^4.0.0":
+"@react-dnd/shallowequal@npm:^4.0.0, @react-dnd/shallowequal@npm:^4.0.1":
   version: 4.0.2
   resolution: "@react-dnd/shallowequal@npm:4.0.2"
   checksum: 7f21d691bddbfd4d2830948cbeefecca1600b2b46bcb1934926795f07ae8a1fa60a3dfd3a2112be5ef682c3820c80a99711e9fa15843f7e300acb25a4ecb70ab
@@ -11532,7 +11532,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dnd-core@npm:^16.0.0":
+"dnd-core@npm:^16.0.0, dnd-core@npm:^16.0.1":
   version: 16.0.1
   resolution: "dnd-core@npm:16.0.1"
   dependencies:
@@ -18049,6 +18049,8 @@ __metadata:
     msw: ^0.45.0
     react: ^18.2.0
     react-app-rewired: ^2.2.1
+    react-dnd: ^16.0.1
+    react-dnd-html5-backend: ^16.0.1
     react-dom: ^18.2.0
     react-number-format: ^4.9.3
     react-router-dom: ^6.3.0
@@ -20575,6 +20577,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-dnd-html5-backend@npm:^16.0.1":
+  version: 16.0.1
+  resolution: "react-dnd-html5-backend@npm:16.0.1"
+  dependencies:
+    dnd-core: ^16.0.1
+  checksum: e2368bf85d5632a5cd867b743feb54c9052d909ea5331608860fa455edf3c633ac791f5b338e3db29b19ea8670c0ba5fb43c9c1c2510760bea030811d726cdfa
+  languageName: node
+  linkType: hard
+
 "react-dnd@npm:16.0.0":
   version: 16.0.0
   resolution: "react-dnd@npm:16.0.0"
@@ -20597,6 +20608,31 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 284bcf825ae66a3b01bad035924d8ae97cb14c0a5ae2350263c5038a6c8ac9c33c35de39ac4422deb132a26e7d883021d6507a0d7b0a4c9466a74721c6fd0e02
+  languageName: node
+  linkType: hard
+
+"react-dnd@npm:^16.0.1":
+  version: 16.0.1
+  resolution: "react-dnd@npm:16.0.1"
+  dependencies:
+    "@react-dnd/invariant": ^4.0.1
+    "@react-dnd/shallowequal": ^4.0.1
+    dnd-core: ^16.0.1
+    fast-deep-equal: ^3.1.3
+    hoist-non-react-statics: ^3.3.2
+  peerDependencies:
+    "@types/hoist-non-react-statics": ">= 3.3.1"
+    "@types/node": ">= 12"
+    "@types/react": ">= 16"
+    react: ">= 16.14"
+  peerDependenciesMeta:
+    "@types/hoist-non-react-statics":
+      optional: true
+    "@types/node":
+      optional: true
+    "@types/react":
+      optional: true
+  checksum: e8da2186aaafcd5bb41c090a995c963a7c3c73c20991667a2cfc0c800d7f7f73913414b2e61c437cdb6221bb2151bd5174088b8b42c17056a896fc4d1da5729f
   languageName: node
   linkType: hard
 

@@ -1,8 +1,9 @@
 const routes = {
   home: '/',
   codes: '/codes',
-  messages: '/messages',
   programs: '/programs',
+  messages: '/messages',
+  uploadCode: '/upload-code',
   uploadProgram: '/upload-program',
   uploadedPrograms: '/uploaded-programs',
   editor: '/editor',

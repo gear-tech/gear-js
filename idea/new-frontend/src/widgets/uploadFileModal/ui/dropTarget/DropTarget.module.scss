@@ -1,0 +1,48 @@
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.dropTarget {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: toRem(267);
+  border: 2px dashed $lineColorSecondary;
+  border-radius: 24px;
+  
+  &:global(.exit-active),
+  &:global(.enter-active) {
+    @include transition(border-color);
+
+    .message {
+      @include transition(color); 
+    }
+  }
+
+  &:global(.exit),
+  &:global(.enter-done),
+  &:global(.enter-active) {
+    border-color: $successColor;
+
+    .message {
+      color: $successColor; 
+    }
+  }
+
+  &:global(.exit-active) {
+    border-color: $lineColorSecondary;
+
+    .message {
+      color: $gray600; 
+    }
+  }
+
+  .message {
+    font-family: 'Kanit';
+    max-width: toRem(140);
+    font-size: $fontSize;
+    line-height: toRem(21);
+    text-align: center;
+    color: $gray600;
+  }
+}
