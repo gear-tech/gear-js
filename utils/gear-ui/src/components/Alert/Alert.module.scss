@@ -1,25 +1,27 @@
 @use '../../assets/styles/variables' as *;
-@use 'src/assets/styles/mixins' as *;
+@use '../../assets/styles/mixins' as *;
+@use '../../assets/styles/headings' as *;
 
 .root {
   width: 390px;
   position: fixed;
   right: 22px;
   bottom: 5px;
+  z-index: 20;
 }
 
 .alert {
   padding: 15px;
-  background-color: $bgColor;
+  background-color: #2b2b2e;
   border-radius: $borderRadius;
-  box-shadow: 0px 5px 5px 0px #00000033, 0px 3px 14px 0px #0000001f, 0px 8px 10px 0px #00000024;
+  box-shadow: 0px 3px 5px 0px #00000033, 0px 1px 18px 0px #0000001f, 0px 6px 10px 0px #00000024;
 }
 
 .header {
+  @include heading(14px, 21px, 500);
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  font-weight: 500;
   text-transform: capitalize;
 
   &::before {

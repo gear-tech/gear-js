@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { findByText, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Input } from './Input';
 import styles from './Input.module.scss';
 
@@ -11,30 +11,49 @@ describe('input tests', () => {
     expect(input).toBeInTheDocument();
   });
 
-  it('renders input with label', () => {
-    render(<Input label="label" />);
+  it('renders input with label', async () => {
+    const { rerender } = render(<Input label="label" />);
     const input = screen.getByLabelText('label');
     expect(input).toBeInTheDocument();
+
+    rerender(<Input label="label" direction="y" />);
+
+    const inputWrapper = screen.getByTestId('inputWrapper');
+    expect(inputWrapper).not.toHaveClass(styles.x);
+    expect(inputWrapper).toHaveClass(styles.y);
+
+    rerender(<Input label="label" gap="7/9" />);
+
+    expect(inputWrapper).toHaveStyle('grid-template-columns: 7fr 9fr');
+
+    rerender(<Input label="label" gap="7/9" tooltip="random tooltip" />);
+
+    const tooltipWrapper = screen.getByTestId('tooltipWrapper');
+    const tooltipIcon = screen.getByTestId('tooltipIcon');
+
+    expect(tooltipIcon).toBeInTheDocument();
+    expect(screen.queryByText('random tooltip')).not.toBeInTheDocument();
+    expect(tooltipWrapper).toHaveAttribute('data-tooltip', 'random tooltip');
   });
 
   it('renders input with icon', () => {
     render(<Input label="label" icon={arrowIcon} />);
 
-    const label = screen.getByTestId('label');
+    const wrapper = screen.getByTestId('wrapper');
     const icon = screen.getByRole('img');
 
-    expect(label).toContainElement(icon);
+    expect(wrapper).toContainElement(icon);
     expect(icon).toHaveAttribute('src', arrowIcon);
   });
 
-  it('applies className to label wrapper', () => {
+  it('applies className to wrapper', () => {
     render(<Input label="label" className="class" />);
 
     const input = screen.getByRole('textbox');
-    const label = screen.getByTestId('label');
+    const inputWrapper = screen.getByTestId('inputWrapper');
 
     expect(input).not.toHaveClass('class');
-    expect(label).toHaveClass('class');
+    expect(inputWrapper).toHaveClass('class');
   });
 
   it('renders read only input', () => {
@@ -51,10 +70,48 @@ describe('input tests', () => {
     render(<Input disabled />);
 
     const input = screen.getByRole('textbox');
-    const label = screen.getByTestId('label');
+    const inputWrapper = screen.getByTestId('inputWrapper');
 
     expect(input).toBeDisabled();
-    expect(label).toHaveClass('disabled');
+    expect(inputWrapper).toHaveClass('disabled');
+  });
+
+  it('enters text and clicks clear button', () => {
+    render(<Input label="label" color="light" size="large" />);
+
+    const inputWrapper = screen.getByTestId('inputWrapper');
+    const input = screen.getByRole('textbox');
+
+    expect(inputWrapper).not.toContainElement(screen.queryByRole('button'));
+
+    fireEvent.focus(input);
+
+    const clearButton = screen.getByRole('button');
+    expect(inputWrapper).toContainElement(clearButton);
+
+    fireEvent.change(input, { target: { value: '123' } });
+    expect(input).toHaveValue('123');
+
+    fireEvent.click(clearButton);
+    expect(input).toHaveValue('');
+  });
+
+  it('renders large input with light color', () => {
+    render(<Input label="label" color="light" size="large" />);
+
+    const wrapper = screen.getByTestId('wrapper');
+
+    expect(wrapper).toHaveClass(styles.light, styles.large);
+    expect(wrapper).not.toHaveClass(styles.dark, styles.normal);
+  });
+
+  it('renders input with error', () => {
+    render(<Input label="label" error="random error" />);
+
+    const inputWrapper = screen.getByTestId('inputWrapper');
+    const error = screen.getByText('random error');
+
+    expect(inputWrapper).toContainElement(error);
   });
 
   it('passes ref', () => {
