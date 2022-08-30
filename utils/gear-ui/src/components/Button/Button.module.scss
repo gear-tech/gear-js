@@ -1,14 +1,15 @@
 @use '../../assets/styles/variables' as *;
 @use '../../assets/styles/mixins' as *;
+@use '../../assets/styles/headings' as *;
 
 .resets {
-  font-family: inherit;
   border: none;
   cursor: pointer;
 }
 
 .button {
   @extend .resets;
+  @extend %headingFont;
   @include transition();
   display: inline-flex;
   align-items: center;

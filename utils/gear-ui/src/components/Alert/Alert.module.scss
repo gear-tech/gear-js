@@ -1,11 +1,13 @@
 @use '../../assets/styles/variables' as *;
-@use 'src/assets/styles/mixins' as *;
+@use '../../assets/styles/mixins' as *;
+@use '../../assets/styles/headings' as *;
 
 .root {
   width: 390px;
   position: fixed;
   right: 22px;
   bottom: 5px;
+  z-index: 20;
 }
 
 .alert {
@@ -16,10 +18,10 @@
 }
 
 .header {
+  @include heading(14px, 21px, 500);
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  font-weight: 500;
   text-transform: capitalize;
 
   &::before {

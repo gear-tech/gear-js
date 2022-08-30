@@ -1,6 +1,8 @@
 @use '../../../assets/styles/variables' as *;
+@use '../../../assets/styles/headings' as *;
 
 .wrapper {
+  @extend %headingFont;
   width: 100%;
   display: grid;
 

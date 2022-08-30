@@ -1,7 +1,9 @@
 @use '../../assets/styles/variables' as *;
-@use 'src/assets/styles/mixins' as *;
+@use '../../assets/styles/mixins' as *;
+@use '../../assets/styles/headings' as *;
 
 .label {
+  @extend %headingFont;
   display: flex;
   align-items: center;
   color: $textColor;
