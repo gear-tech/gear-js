@@ -14,4 +14,4 @@ function Tooltip({ text, className }: Props) {
   );
 }
 
-export { Tooltip };
+export { Tooltip, Props as TooltipProps, styles as TooltipStyles };
