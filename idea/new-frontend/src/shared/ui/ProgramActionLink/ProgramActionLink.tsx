@@ -1,6 +1,6 @@
 import { Link, LinkProps } from 'react-router-dom';
 import clsx from 'clsx';
-import { buttonStyles } from '@gear-js/ui';
+import { buttonStyles } from '@gear-js/ui/dist/esm';
 
 import styles from './ProgramActionLink.module.scss';
 

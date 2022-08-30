@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { useField } from 'formik';
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
-import { Checkbox, FileInput, Textarea } from '@gear-js/ui';
+import { Checkbox, FileInput, Textarea } from '@gear-js/ui/dist/esm';
 
 import { useChangeEffect } from 'hooks';
 import { PayloadValue } from 'entities/formPayload';

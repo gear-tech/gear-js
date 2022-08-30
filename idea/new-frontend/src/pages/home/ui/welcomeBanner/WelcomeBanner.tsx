@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Button } from '@gear-js/ui';
+import { Button } from '@gear-js/ui/dist/esm';
 
 import { ExamplesLink } from 'shared/ui/examplesLink';
 import gear1PNG from 'shared/assets/images/banners/gear1.png';

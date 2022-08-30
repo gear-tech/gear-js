@@ -1,4 +1,4 @@
-import { Modal, Button } from '@gear-js/ui';
+import { Modal, Button } from '@gear-js/ui/dist/esm';
 
 import { ModalProps } from 'entities/modal';
 

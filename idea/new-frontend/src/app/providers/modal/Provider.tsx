@@ -24,6 +24,12 @@ const ModalProvider = ({ children }: Props) => {
     setModalProps(props ?? {});
   }, []);
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  };
+
   const value = useMemo(
     () => ({
       showModal,
@@ -33,15 +39,18 @@ const ModalProvider = ({ children }: Props) => {
   );
 
   useEffect(() => {
-    if (modalName) {
-      document.body.style.overflow = 'hidden';
+    if (!modalName) {
+      return;
     }
 
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown, false);
+
     return () => {
-      if (modalName) {
-        document.body.style.overflow = 'auto';
-      }
+      document.body.style.overflow = 'auto';
+      document.removeEventListener('keydown', handleKeyDown, false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalName]);
 
   const currentModal = useMemo(() => {

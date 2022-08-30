@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useField } from 'formik';
-import { Input, InputProps } from '@gear-js/ui';
+import { Input, InputProps } from '@gear-js/ui/dist/esm';
 
 import styles from '../Form.module.scss';
 

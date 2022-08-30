@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useField } from 'formik';
-import { inputStyles } from '@gear-js/ui';
+import { inputStyles } from '@gear-js/ui/dist/esm';
 import NumberFormat, { NumberFormatProps, NumberFormatValues } from 'react-number-format';
 
 import styles from '../Form.module.scss';

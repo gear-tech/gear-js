@@ -1,5 +1,5 @@
 import { useField } from 'formik';
-import { Input } from '@gear-js/ui';
+import { Input } from '@gear-js/ui/dist/esm';
 
 import styles from '../../FormPayload.module.scss';
 

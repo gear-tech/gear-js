@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui';
+import { Button } from '@gear-js/ui/dist/esm';
 
 import styles from './IdBlock.module.scss';
 

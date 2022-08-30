@@ -1,6 +1,6 @@
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
-import { buttonStyles } from '@gear-js/ui';
+import { buttonStyles } from '@gear-js/ui/dist/esm';
 
 import { ANIMATION_TIMEOUT } from 'shared/config';
 import connectSVG from 'shared/assets/images/menu/connect.svg';

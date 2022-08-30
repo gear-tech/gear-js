@@ -6,8 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 toRem(40);
-  padding: toRem(20) 0;
+  padding: toRem(20) toRem(40);
   text-align: center;
   color: $textColorSecondary;
 

@@ -26,7 +26,7 @@ body {
 
 .content {
   flex: 1 1;
-  padding: 0 toRem(32) 0 toRem(48);
+  padding: 0 toRem(32) toRem(16) toRem(48);
   position: relative;
   overflow: hidden;
 

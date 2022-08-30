@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { inputStyles } from '@gear-js/ui';
+import { inputStyles } from '@gear-js/ui/dist/esm';
 
 import styles from '../Form.module.scss';
 

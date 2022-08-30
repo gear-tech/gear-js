@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
-import { buttonStyles } from '@gear-js/ui';
+import { buttonStyles } from '@gear-js/ui/dist/esm';
 
 import { useBlocks, useOutsideClick } from 'hooks';
 import { IChainBlock } from 'entities/chainBlock';

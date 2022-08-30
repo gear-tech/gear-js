@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, useEffect } from 'react';
 import { useField } from 'formik';
 import clsx from 'clsx';
-import { Input, Checkbox } from '@gear-js/ui';
+import { Input, Checkbox } from '@gear-js/ui/dist/esm';
 
 import styles from '../Form.module.scss';
 

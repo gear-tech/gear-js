@@ -1,7 +1,7 @@
 import Identicon from '@polkadot/react-identicon';
 import clsx from 'clsx';
 import { useAccounts, Account } from '@gear-js/react-hooks';
-import { Button, buttonStyles } from '@gear-js/ui';
+import { Button, buttonStyles } from '@gear-js/ui/dist/esm';
 
 import { useModal } from 'hooks';
 import polkadotSVG from 'shared/assets/images/logos/polkadotLogo.svg';

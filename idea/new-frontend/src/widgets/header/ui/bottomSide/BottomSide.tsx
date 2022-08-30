@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
-import { Button, buttonStyles } from '@gear-js/ui';
+import { Button, buttonStyles } from '@gear-js/ui/dist/esm';
 
 import { getAnimationTimeout } from 'shared/helpers';
 import uploadCodeSVG from 'shared/assets/images/actions/uploadCode.svg';

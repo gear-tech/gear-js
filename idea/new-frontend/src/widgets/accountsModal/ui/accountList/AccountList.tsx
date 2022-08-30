@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import Identicon from '@polkadot/react-identicon';
-import { buttonStyles } from '@gear-js/ui';
+import { buttonStyles } from '@gear-js/ui/dist/esm';
 
 import { getShortName } from 'shared/helpers';
 
