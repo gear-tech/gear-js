@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import { useAlert, useApi } from '@gear-js/react-hooks';
 
 import { LocalStorage, ANIMATION_TIMEOUT } from 'shared/config';
 import { ReactComponent as AppSVG } from 'shared/assets/images/indicators/app.svg';
@@ -15,8 +16,12 @@ type Props = {
 };
 
 const GearSection = ({ isLoggedIn }: Props) => {
+  const { api } = useApi();
+  const alert = useAlert();
+
   const isHidden = isLoggedIn || !!Number(localStorage.getItem(LocalStorage.HideWelcomeBanner));
 
+  const [programsCount, setProgramsCount] = useState<number | null>(null);
   const [isBannerHidden, setIsBannerHidden] = useState(isHidden);
 
   const closeBanner = () => {
@@ -25,19 +30,33 @@ const GearSection = ({ isLoggedIn }: Props) => {
   };
 
   useEffect(() => {
+    api.program
+      .allUploadedPrograms()
+      .then((programs) => setProgramsCount(programs.length))
+      .catch((error) => alert.error(error.message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api]);
+
+  useEffect(() => {
     setIsBannerHidden(isHidden);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
+  const isLoading = programsCount === null;
   return (
     <section className={styles.gearSection}>
       <CSSTransition in={!isBannerHidden} timeout={ANIMATION_TIMEOUT} unmountOnExit>
         <WelcomeBanner className={styles.welcomeBanner} onClose={closeBanner} />
       </CSSTransition>
       <div className={styles.indicators}>
-        <GearIndicator icon={<AppSVG />} name="App Examples" value="31" />
-        <GearIndicator icon={<PulseSVG />} name="Active Programs Count" value="14 412" />
-        <GearIndicator icon={<GlobusSVG />} name="Nodes Count" value="1032" />
+        <GearIndicator icon={<AppSVG />} name="App Examples" value="31" isLoading={isLoading} />
+        <GearIndicator
+          icon={<PulseSVG />}
+          name="Active Programs Count"
+          value={String(programsCount)}
+          isLoading={isLoading}
+        />
+        <GearIndicator icon={<GlobusSVG />} name="Nodes Count" value="1032" isLoading={isLoading} />
       </div>
     </section>
   );

@@ -1,12 +1,13 @@
 @use '@gear-js/ui/mixins' as *;
 @use './variables' as *;
+@use './shared' as *;
 
-@keyframes svgFade {
+@keyframes loading {
   from {
-    fill-opacity: 0.09;
+    transform: translate(-37.5%)
   }
   to {
-    fill-opacity: 0.2;
+    transform: translate(37.5%)
   }
 }
 
@@ -36,6 +37,7 @@
   }
 }
 
+//for css transition
 @mixin fadeAppear($delay: 0ms, $duration: $animationTimeout, $triming-function: linear) {
   &:global(.appear) {
     opacity: 0;
@@ -55,6 +57,15 @@
   }
 }
 
-@mixin svgLoading() {
-  animation: svgFade 1s ease-in infinite alternate;
+@mixin loading($colorFrom: $bgColorSecondary, $colorTo: $bgColorTertiary) {
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 -150%;
+    background: linear-gradient(90deg, rgba($bgColorSecondary, 0.1) 25%,rgba($bgColorTertiary, 0.24) 37%,rgba($bgColorSecondary, 0.1) 63%);
+    animation: loading getAnimationTimeout(15) ease infinite;
+  }
 }

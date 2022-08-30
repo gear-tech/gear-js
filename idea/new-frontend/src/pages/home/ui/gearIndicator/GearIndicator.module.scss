@@ -1,5 +1,17 @@
+@use '@gear-js/ui/mixins' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+%loadingStyles {
+  &::before {
+    opacity: 0;
+  }
+
+  .textContent {
+    opacity: 0;
+  }
+}
 
 .gearIndicator {
   position: relative;
@@ -7,6 +19,25 @@
   padding: toRem(20) toRem(24) toRem(48) toRem(24);
   border-radius: 40px;
   background-color: $bgColorSecondary;
+
+  &.loading {
+    @include loading();
+
+    @extend %loadingStyles;
+  }
+
+  &:global(.enter) {
+    @extend %loadingStyles;
+  }
+
+  &:global(.enter-active) {
+    &::before,
+    .textContent {
+      @include transition(opacity);
+      
+      opacity: 1;
+    }
+  }
 
   &::before {
     content: '';
@@ -18,41 +49,41 @@
     position: absolute;
     background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.15) 10%, rgba(24, 24, 27, 0) 100%);
   }
+}
 
-  .textContent {
-    display: flex;
-    position: relative;
-    height: 100%;
-    z-index: 2;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
+.textContent {
+  display: flex;
+  position: relative;
+  height: 100%;
+  z-index: 2;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 
-    .icon {
-      padding: toRem(16);
-      margin-bottom: toRem(8);
-      border-radius: 50%;
-      background-color: $green007;
+  .icon {
+    padding: toRem(16);
+    margin-bottom: toRem(8);
+    border-radius: 50%;
+    background-color: $green007;
 
-      & > svg path {
-        fill: $successColor;
-      }
+    & > svg path {
+      fill: $successColor;
     }
+  }
 
-    .value {
-      font-family: 'Kanit';
-      font-weight: 600;
-      font-size: toRem(40);
-      line-height: 1.3;
-      text-align: right;
-      text-transform: uppercase;
-      color: $textColor;
-    }
+  .value {
+    font-family: 'Kanit';
+    font-weight: 600;
+    font-size: toRem(40);
+    line-height: 1.3;
+    text-align: right;
+    text-transform: uppercase;
+    color: $textColor;
+  }
 
-    .name {
-      color: $gray800;
-      font-size: $fontSizeSmall;
-      line-height: 1.3;
-    }
+  .name {
+    color: $gray800;
+    font-size: $fontSizeSmall;
+    line-height: 1.3;
   }
 }
