@@ -1,8 +1,8 @@
-import { handlersAreReady } from './handlers';
-import { run } from './processor';
+import { marketplaceInit, nftInit, run } from './processor';
 
 const main = async () => {
-  await handlersAreReady;
+  await nftInit;
+  await marketplaceInit;
   run();
 };
 

@@ -5,7 +5,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node src/main.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "migration:generate": "squid-typeorm-migration generate",
+    "migration:apply": "squid-typeorm-migration apply",
+    "serve": "squid-graphql-server"
   },
   "dependencies": {
     "@gear-js/api": "^0.25.2",

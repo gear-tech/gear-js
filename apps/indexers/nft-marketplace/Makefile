@@ -1,10 +1,10 @@
 .PHONY: migration-generate
 migration-generate: 
-	@DB_HOST=mithriy.com DB_PORT=5432 DB_NAME=nft_squid npx squid-typeorm-migration generate
+	@yarn migration:generate
 
 .PHONY: migration-apply
 migration-apply: 
-	@DB_HOST=mithriy.com DB_PORT=5432 DB_NAME=nft_squid npx squid-typeorm-migration apply
+	@yarn migration:apply
 
 .PHONY: model-generate
 model-generate:
@@ -12,7 +12,7 @@ model-generate:
 
 .PHONY: run
 run:
-	@node dist/main.js
+	@node lib/main.js
 
 .PHONY: install
 install: 
@@ -31,4 +31,4 @@ all: build run
 
 .PHONY: serve
 serve: 
-	@npx squid-graphql-server
+	@yarn serve

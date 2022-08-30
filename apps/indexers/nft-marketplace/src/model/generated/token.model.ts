@@ -6,7 +6,6 @@ import {Auction} from "./auction.model"
 import {Transfer} from "./transfer.model"
 import {Offer} from "./offer.model"
 
-@Index_(["nftContract", "owner"], {unique: false})
 @Entity_()
 export class Token {
   constructor(props?: Partial<Token>) {
@@ -19,6 +18,7 @@ export class Token {
   @Column_("text", {nullable: false})
   tokenId!: string
 
+  @Index_()
   @ManyToOne_(() => NftContract, {nullable: true})
   nftContract!: NftContract
 
