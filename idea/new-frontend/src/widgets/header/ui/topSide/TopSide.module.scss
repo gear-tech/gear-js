@@ -1,0 +1,23 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.topSide {
+  display: flex;
+  position: relative;
+  align-items: center;
+  min-height: $headerTopSideHeight;
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+  .privateContent {
+    display: flex;
+    align-items: center;
+
+    @include fadeAppear();
+  }
+}

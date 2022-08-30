@@ -33,7 +33,7 @@ const ProgramCard = memo(({ program, isLoggedIn }: Props) => {
         </div>
       </div>
       <div className={styles.actions}>
-        <CSSTransition in={isLoggedIn} timeout={getAnimationTimeout(1)} exit={false} mountOnEnter unmountOnExit>
+        <CSSTransition in={isLoggedIn} exit={false} timeout={getAnimationTimeout(1)} unmountOnExit>
           <ProgramActionLink to="/" icon={sendSVG} text="Send Message" className={styles.sendMessage} />
         </CSSTransition>
         <ProgramActionLink to="/" icon={readSVG} text="Read State" />

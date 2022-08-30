@@ -136,6 +136,7 @@
   .linkText {
     @include transition(color);
   
+    font-family: 'Kanit';
     color: $gray800;
     margin-right: toRem(14);
     font-size: $fontSize;

@@ -1,7 +1,24 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
-//clip-path: polygon(86% 0, 100% 16%, 100% 100%, 0 100%, 0 0);
+@keyframes sendMessageAppearance {
+  0% {
+    width: 0;
+    opacity: 0;
+    margin-right: 0;
+  }
+  40% {
+    width: toRem(114.5);
+    opacity: 0;
+    margin-right: toRem(16);
+  }
+  100% {
+    width: toRem(114.5);
+    opacity: 1;
+    margin-right: toRem(16);
+  }
+}
+
 .programCard {
   background: url('/shared/assets/images/placeholders/programBg.svg') no-repeat;
   background-size: 100% 100%;
@@ -58,24 +75,6 @@
   }
 }
 
-@keyframes sendMessage {
-  0% {
-    width: 0;
-    opacity: 0;
-    margin-right: 0;
-  }
-  40% {
-    width: toRem(115);
-    opacity: 0;
-    margin-right: toRem(16);
-  }
-  100% {
-    opacity: 1;
-    width: toRem(115);
-    margin-right: toRem(16);
-  }
-}
-
 .actions {
   display: flex;
   margin-top: auto;
@@ -85,12 +84,14 @@
     margin-right: toRem(16);
 
     &:global(.enter) {
+      width: 0;
+      opacity: 0;
+      margin-right: 0;
       white-space: nowrap;
-      animation: getAnimationTimeout(1) linear forwards sendMessage;
     }
 
-    &:global(.enter-done) {
-      min-width: toRem(115);
+    &:global(.enter-active) {
+      animation: getAnimationTimeout(1) linear sendMessageAppearance;
     }
   }
 }

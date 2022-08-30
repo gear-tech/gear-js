@@ -1,6 +1,8 @@
 @use './shared' as *;
 
-$headerHeight: toRem(90);
+$headerHeight: toRem(164.5);
+$headerTopSideHeight: toRem(52);
+$headerBottomSideHeight: toRem(45.5);
 $footerHeight: toRem(64);
 
 $textColor: #fff;

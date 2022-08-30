@@ -3,11 +3,7 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .header {
-  display: flex;
-  position: relative;
-  align-items: center;
-  padding: toRem(21) 0 toRem(16) 0;
-  min-height: $headerHeight;
+  padding: toRem(21) 0 toRem(30) 0;
 }
 
 .title {
@@ -32,18 +28,5 @@
     color: $indigo;
     font-weight: 600;
     font-family: 'Kanit';
-  }
-}
-
-.rightSide {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-
-  .privateContent {
-    display: flex;
-    align-items: center;
-
-    @include fadeAppear();
   }
 }
