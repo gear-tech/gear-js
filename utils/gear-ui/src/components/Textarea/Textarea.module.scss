@@ -2,6 +2,7 @@
 @use '../../assets/styles/utils' as *;
 
 .resets {
+  font: inherit;
   outline: none;
   resize: none;
   background-color: transparent;
