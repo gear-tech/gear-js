@@ -1,3 +1,4 @@
+@use '@gear-js/ui/mixins' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
@@ -11,13 +12,23 @@
   cursor: inherit !important;
 }
 
-.accountBtn {
-  display: inline-block;
+.fixSize {
   width: toRem(183);
+  min-height: toRem(52); 
+}
+
+.accountBtn {
+  @include transition(background-color);
+
+  display: inline-block;
   overflow: hidden;
   font-weight: 600;
   font-family: 'Kanit';
   white-space: nowrap;
   text-overflow: ellipsis;
   background-color: $bgColorSecondary;
+
+  &:hover {
+    background-color: $bgColorTertiary;
+  }
 }

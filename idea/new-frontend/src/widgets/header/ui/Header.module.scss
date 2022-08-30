@@ -1,28 +1,27 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
-
-%textStyle {
-  color: $indigo;
-  line-height: 1.3;
-}
+@use 'shared/assets/styles/_animations.scss' as *;
 
 .header {
   display: flex;
   position: relative;
   align-items: center;
   padding: toRem(21) 0 toRem(16) 0;
+  min-height: $headerHeight;
 }
 
 .title {
-  @extend %textStyle;
-
+  color: $indigo800;
+  line-height: 1.3;
   font-size: $fontSizeTiny;
 }
 
 .content {
-  @extend %textStyle;
-
   display: flex;
+  color: $indigo700;
+  font-size: $fontSizeBig;
+  font-weight: 300;
+  line-height: 1.3;
   align-items: center;
 
   & > *:not(:last-child) {
@@ -30,7 +29,9 @@
   }
 
   .value {
+    color: $indigo;
     font-weight: 600;
+    font-family: 'Kanit';
   }
 }
 
@@ -38,4 +39,11 @@
   display: flex;
   align-items: center;
   margin-left: auto;
+
+  .privateContent {
+    display: flex;
+    align-items: center;
+
+    @include fadeAppear();
+  }
 }

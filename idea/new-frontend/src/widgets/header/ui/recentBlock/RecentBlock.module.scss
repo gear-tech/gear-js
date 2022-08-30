@@ -6,31 +6,33 @@
 %enterStyles {
   position: absolute;
   align-items: center;
-  top: toRem(11);
-  left: toRem(3);
+  top: toRem(15);
+  left: toRem(24);
   z-index: 10;
   background: linear-gradient(180deg, #29292B 65.67%, $bgColorSecondary 100%);
   border-radius: 24px; 
   width: toRem(432);
   padding: toRem(14) toRem(12) toRem(24) toRem(24);
-  max-height: toRem(32);
+  max-height: toRem(36);
 }
 
 %enterDoneStyles {
   max-height: toRem(558);
 
-  .time,
-  .title,
-  .value {
-    color: $successColor;
-  }
-
-  .graph > hr {
-    border-color: $successColor;
-  }
-
-  .point { 
+  .graph > hr { 
     background-color: $successColor;
+  }
+
+  .blockInfo {
+    .time,
+    .title,
+    .value {
+      color: $successColor;
+    }
+    
+    .point {
+      background-color: $successColor;
+    }  
   }
 
   .blocksBtn svg {
@@ -78,16 +80,20 @@
   display: flex;
 
   .blockInfo {
+    position: relative;
     margin-left: toRem(12);
-    min-width: toRem(110);
-  }
 
-  .point {
-    display: inline-block;
-    width: toRem(4);
-    height: toRem(4);
-    border-radius: 50%;
-    background-color: $indigo;
+    .time {
+      min-width: toRem(40);
+    }
+
+    .point {
+      display: inline-block;
+      width: toRem(4);
+      height: toRem(4);
+      border-radius: 50%;
+      background-color: $indigo;
+    }  
   }
 
   .blocksBtn {

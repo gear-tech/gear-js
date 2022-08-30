@@ -1,5 +1,6 @@
 @use './shared' as *;
 
+$headerHeight: toRem(90);
 $footerHeight: toRem(64);
 
 $textColor: #fff;
@@ -14,6 +15,9 @@ $bgColor: #18181B;
 $bgColorSecondary: #202022;
 $bgColorTertiary:  #414141;
 $lineColor: #333333;
+
+$indigo800: rgba($indigo, 0.8);
+$indigo700: rgba($indigo, 0.7);
 
 $gray800: rgba($textColor, 0.8);
 $gray700: rgba($textColor, 0.7);

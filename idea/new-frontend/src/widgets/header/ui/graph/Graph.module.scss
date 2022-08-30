@@ -5,7 +5,7 @@
   display: flex;
   align-items: flex-end;
   width: toRem(74);
-  height: toRem(31);
+  height: toRem(32);
 
   & > *:not(:last-child) {
     margin-right: toRem(4);
@@ -17,7 +17,8 @@
 
   width: toRem(2);
   opacity: $firstLineOpacity;
-  border-color: $indigo;
+  border: none;
+  background-color: $indigo;
   
   @for $index from 0 to 14 {
     &:nth-child(#{$index}){

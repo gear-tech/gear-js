@@ -18,7 +18,7 @@ const Wallet = ({ account }: Props) => {
 
   const openModal = () => showModal('accounts', { accounts });
 
-  const accountBtnClasses = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.light, styles.accountBtn);
+  const accountBtnClasses = clsx(buttonStyles.button, buttonStyles.medium, styles.accountBtn, styles.fixSize);
 
   return (
     <div className={styles.walletWrapper}>
@@ -28,7 +28,7 @@ const Wallet = ({ account }: Props) => {
           {account.meta.name}
         </button>
       ) : (
-        <Button icon={polkadotSVG} text="Connect" color="primary" onClick={openModal} />
+        <Button icon={polkadotSVG} text="Connect" color="primary" className={styles.fixSize} onClick={openModal} />
       )}
     </div>
   );
