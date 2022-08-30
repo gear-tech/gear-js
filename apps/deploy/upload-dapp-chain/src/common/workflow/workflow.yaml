@@ -72,6 +72,9 @@ workflow:
     - command: uploadProgram
       program: 2
 
+    - command: uploadProgram
+      program: 4
+
 workflowSingleDapp:
     nft:
       actions:

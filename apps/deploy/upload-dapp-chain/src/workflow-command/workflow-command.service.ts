@@ -1,10 +1,9 @@
 import { Injectable, Logger } from "@nestjs/common";
-
 import { decodeAddress, GearApi, getWasmMetadata, Hex, IMessageSendOptions } from "@gear-js/api";
-import { checkInitProgram, getAccount, getOptAndMetaWasm } from "../common/helpers";
+
+import { checkInitProgram, getAccount, getOptAndMetaWasm, sendTransaction } from "../common/helpers";
 import { SendMessageInput, UploadProgramInput, UploadProgramResult } from "./types";
 import { gearService } from "../gear/gear-service";
-import { sendTransaction } from "../common/helpers/send-transaction";
 
 @Injectable()
 export class WorkflowCommandService {
