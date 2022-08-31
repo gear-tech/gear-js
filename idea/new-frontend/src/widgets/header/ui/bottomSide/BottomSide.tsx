@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
-import { Button, buttonStyles } from '@gear-js/ui/dist/esm';
+import { Button, buttonStyles } from '@gear-js/ui';
 
 import { useModal } from 'hooks';
 import { getAnimationTimeout } from 'shared/helpers';

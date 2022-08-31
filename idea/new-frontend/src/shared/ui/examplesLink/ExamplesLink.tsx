@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { buttonStyles } from '@gear-js/ui/dist/esm';
+import { buttonStyles } from '@gear-js/ui';
 
 import styles from './ExamplesLink.module.scss';
 import { EXAMPLES_HREF } from '../../config';

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useField } from 'formik';
-import { Textarea, TextareaProps } from '@gear-js/ui/dist/esm';
+import { Textarea, TextareaProps } from '@gear-js/ui';
 
 import styles from '../Form.module.scss';
 

@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { GearKeyring } from '@gear-js/api';
 import { useApi, useAlert, Account } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui/dist/esm';
+import { Button } from '@gear-js/ui';
 
 import { getTestBalance } from 'api';
 import { useBalanceTransfer } from 'hooks';

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { buttonStyles } from '@gear-js/ui/dist/esm';
+import { buttonStyles } from '@gear-js/ui';
 
 import dotSVG from 'shared/assets/images/logos/dotLogo.svg';
 

@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
-import { Button } from '@gear-js/ui/dist/esm';
+import { Button } from '@gear-js/ui';
 
 import { ANIMATION_TIMEOUT } from 'shared/config';
 import { getAnimationTimeout } from 'shared/helpers';

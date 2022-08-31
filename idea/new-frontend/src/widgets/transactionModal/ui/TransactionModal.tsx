@@ -1,5 +1,5 @@
 import Identicon from '@polkadot/react-identicon';
-import { Modal, Button } from '@gear-js/ui/dist/esm';
+import { Modal, Button } from '@gear-js/ui';
 
 import { ModalProps } from 'entities/modal';
 import { getShortName } from 'shared/helpers';

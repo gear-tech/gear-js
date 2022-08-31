@@ -4,7 +4,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
-import { Modal, buttonStyles } from '@gear-js/ui/dist/esm';
+import { Modal, buttonStyles } from '@gear-js/ui';
 
 import { ModalProps } from 'entities/modal';
 import { checkFileFormat } from 'shared/helpers';

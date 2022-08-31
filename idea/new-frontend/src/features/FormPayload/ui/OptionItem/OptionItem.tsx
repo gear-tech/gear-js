@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, useMemo } from 'react';
 import { useField } from 'formik';
-import { Select } from '@gear-js/ui/dist/esm';
+import { Select } from '@gear-js/ui';
 
 import { useChangeEffect } from 'hooks';
 import { Fieldset } from 'shared/ui/fieldset';

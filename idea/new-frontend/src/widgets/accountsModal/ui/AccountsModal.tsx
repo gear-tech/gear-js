@@ -1,7 +1,7 @@
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { GearKeyring } from '@gear-js/api';
-import { Button, Modal } from '@gear-js/ui/dist/esm';
+import { Button, Modal } from '@gear-js/ui';
 
 import { ModalProps } from 'entities/modal';
 import { LocalStorage } from 'shared/config';

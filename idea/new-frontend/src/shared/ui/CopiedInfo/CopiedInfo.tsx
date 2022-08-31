@@ -1,5 +1,5 @@
 import { useAlert } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui/dist/esm';
+import { Button } from '@gear-js/ui';
 
 import { copyToClipboard } from 'shared/helpers';
 import copySVG from 'shared/assets/images/actions/copy.svg';
