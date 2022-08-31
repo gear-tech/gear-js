@@ -17,10 +17,8 @@ interface IEvent {
 }
 
 export interface IBatchResponse {
-  data: {
-    batch: {
-      header: IHeader;
-      events: IEvent[];
-    }[];
-  };
+  batch: {
+    header: IHeader;
+    events: IEvent[];
+  }[];
 }

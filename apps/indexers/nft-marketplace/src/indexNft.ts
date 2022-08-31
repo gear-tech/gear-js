@@ -1,8 +1,10 @@
-import { archiveReq } from './archiveReq';
 import config from './config';
+import { graphqlRequest } from '@subsquid/util-internal-gql-request';
+
 import { Meta } from './meta';
 import { BatchState } from './state';
 import { MintedPayload, TransferPayload } from './types';
+import { IBatchResponse } from './types/batch';
 
 const LIMIT = 200;
 
@@ -25,9 +27,7 @@ export async function indexNft(
     }
   }`;
 
-  const {
-    data: { batch },
-  } = await archiveReq(config.squid.archiveUrl, query);
+  const { batch } = (await graphqlRequest({ url: config.squid.archiveUrl, query })) as IBatchResponse;
 
   if (batch.length === 0) return;
 

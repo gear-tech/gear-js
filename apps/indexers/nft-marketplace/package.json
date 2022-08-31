@@ -18,8 +18,8 @@
     "@subsquid/substrate-processor": "^1.6.0",
     "@subsquid/typeorm-migration": "^0.1.2",
     "@subsquid/typeorm-store": "^0.1.2",
+    "@subsquid/util-internal-gql-request": "^0.0.0",
     "dotenv": "^16.0.1",
-    "node-fetch": "2",
     "pg": "^8.7.3",
     "typeorm": "^0.3.7",
     "yaml": "^2.1.1"
