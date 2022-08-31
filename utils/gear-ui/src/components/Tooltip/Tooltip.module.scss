@@ -1,0 +1,22 @@
+@use '../../assets/styles/mixins' as *;
+
+@mixin question($isHover: false) {
+  $color: if($isHover == true, '282828', 'fff');
+  background-image: url("data:image/svg+xml,%3Csvg width='6' height='10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.956 6.344c0-.609.069-1.088.206-1.438.138-.354.36-.66.67-.919a4.4 4.4 0 0 0 .7-.706c.162-.216.243-.454.243-.712 0-.63-.27-.944-.813-.944a.754.754 0 0 0-.606.275c-.154.183-.235.431-.244.744H0C.008 1.81.27 1.162.787.7 1.304.233 2.03 0 2.962 0c.93 0 1.648.215 2.157.644.512.429.769 1.04.769 1.831 0 .346-.07.66-.207.944-.137.283-.358.573-.662.868l-.719.67a1.683 1.683 0 0 0-.425.605 2.36 2.36 0 0 0-.131.782H1.956Zm-.256 1.9c0-.309.11-.56.331-.757.225-.2.504-.3.838-.3.333 0 .61.1.831.3a.957.957 0 0 1 .338.757.976.976 0 0 1-.338.762c-.22.196-.498.294-.831.294a1.23 1.23 0 0 1-.838-.294.984.984 0 0 1-.331-.762Z' fill='%23#{$color}'/%3E%3C/svg%3E");
+}
+
+.tooltip {
+  @include circle(20px);
+  @include transition();
+  @include question();
+  display: inline-block;
+  background-color: #373737;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+
+  &:hover {
+    @include question(true);
+    background-color: #fff;
+  }
+}

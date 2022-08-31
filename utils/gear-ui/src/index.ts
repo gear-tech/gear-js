@@ -8,3 +8,4 @@ export * from './components/Textarea/Textarea';
 export * from './components/Modal/Modal';
 export * from './components/FileInput/FileInput';
 export * from './components/Alert/Alert';
+export * from './components/utils';

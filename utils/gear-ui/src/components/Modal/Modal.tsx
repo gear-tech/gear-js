@@ -34,8 +34,10 @@ const Modal = ({ heading, close, children, className }: Props) => {
   const component = (
     <div className={styles.overlay} onClick={handleOverlayClick} data-testid="overlay">
       <div className={styles.modal} data-testid="modal">
-        <Button className={styles.button} icon={icon} color="transparent" onClick={close} />
-        <h3 className={styles.heading}>{heading}</h3>
+        <header className={styles.header}>
+          <h3 className={styles.heading}>{heading}</h3>
+          <Button icon={icon} color="transparent" onClick={close} />
+        </header>
         {children && (
           <div className={bodyClassName} data-testid="body">
             {children}
