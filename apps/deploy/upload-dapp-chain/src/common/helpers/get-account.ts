@@ -2,8 +2,8 @@ import { GearKeyring } from "@gear-js/api";
 import { KeyringPair } from "@polkadot/keyring/types";
 
 import "dotenv/config";
+import assert from "assert";
 
-// eslint-disable-next-line consistent-return
 export async function getAccount(account: string): Promise<KeyringPair> {
   if (account === "alice") {
     return GearKeyring.fromSuri("//Alice");
@@ -12,4 +12,7 @@ export async function getAccount(account: string): Promise<KeyringPair> {
   if (account === "bob") {
     return GearKeyring.fromSuri("//Bob");
   }
+  const seed = process.env[account.toUpperCase()] as string;
+  assert.notStrictEqual(seed, undefined, `Unable to find ${account} seed in environment variables`);
+  return GearKeyring.fromSeed(seed);
 }
