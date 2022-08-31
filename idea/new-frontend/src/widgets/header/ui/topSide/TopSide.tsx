@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { GearKeyring } from '@gear-js/api';
 import { useApi, useAlert, Account } from '@gear-js/react-hooks';
-import { Button } from '@gear-js/ui';
+import { Button, TooltipWrapper } from '@gear-js/ui';
 
 import { getTestBalance } from 'api';
 import { useBalanceTransfer } from 'hooks';
@@ -85,10 +85,12 @@ const TopSide = ({ account }: Props) => {
           {account && (
             <CSSTransition in appear timeout={ANIMATION_TIMEOUT}>
               <div className={styles.privateContent}>
-                <Button
-                  icon={testBalanceSVG}
-                  onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}
-                />
+                <TooltipWrapper text="Get test balance">
+                  <Button
+                    icon={testBalanceSVG}
+                    onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}
+                  />
+                </TooltipWrapper>
                 <BalanceInfo balance={account.balance} />
               </div>
             </CSSTransition>

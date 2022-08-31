@@ -1,5 +1,12 @@
 @use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
 
 .totalIssuance{
   margin-right: toRem(40);
+
+  .tooltip {
+    &::after {
+      color: $textColor;
+    }
+  }
 }
