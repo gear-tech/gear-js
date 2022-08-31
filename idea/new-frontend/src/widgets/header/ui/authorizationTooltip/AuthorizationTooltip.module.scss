@@ -1,0 +1,32 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.authorizationTooltip {
+  @include fadeAppear();
+
+  position: absolute;
+  padding: toRem(12) toRem(16);
+  width: toRem(210);
+  background-color: $oceanBlue;
+  border-radius: 10px;
+  z-index: 10;
+  right: 54%;
+  top: 86%;
+}
+
+.triangle {
+  position: absolute;
+  width: toRem(8.5);
+  height: toRem(7.5);
+  clip-path: polygon(0 1%, 0% 100%, 100% 100%);
+  top: toRem(-7.5);
+  right: toRem(16);
+  background-color: $oceanBlue;
+}
+
+.text {
+  color: $textColor;
+  font-size: $fontSizeSmall;
+  line-height: toRem(18);
+}

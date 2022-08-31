@@ -3,6 +3,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .walletWrapper {
+  position: relative;
   margin-left: toRem(16);
 }
 
