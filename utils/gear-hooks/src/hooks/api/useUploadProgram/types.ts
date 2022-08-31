@@ -1,4 +1,4 @@
-import { Hex, IProgramUploadOptions, Metadata } from '@gear-js/api';
+import { Hex, IProgramUploadOptions, Value } from '@gear-js/api';
 import { ISubmittableResult, Signer } from '@polkadot/types/types';
 
 enum Method {
@@ -47,7 +47,7 @@ enum ProgramError {
 
 type Callbacks = {
   onSuccess?: (programId: Hex) => void;
-  onFail?: () => void;
+  onError?: () => void;
 };
 
 type SingAndSendParams = {
@@ -61,13 +61,13 @@ type SingAndSendParams = {
 type HandleInitParams = {
   status: string;
   programId: Hex;
-  onFail?: () => void;
+  onError?: () => void;
 };
 
 type HandleErrorParams = {
   message: string;
   alertId: string;
-  onFail?: () => void;
+  onError?: () => void;
 };
 
 type HandleSignStatusParams = {
@@ -77,12 +77,14 @@ type HandleSignStatusParams = {
   callbacks?: Callbacks;
 };
 
-type UploadProgramParams = {
-  program: IProgramUploadOptions;
-  callbacks?: Callbacks;
-  metadata?: Metadata | undefined;
-  payloadType?: string | undefined;
+type UploadOptions = {
+  onSuccess?: Callbacks['onSuccess'];
+  onError?: Callbacks['onError'];
+  value?: Value;
+  salt?: Hex;
 };
+
+type Code = IProgramUploadOptions['code'];
 
 export { Method, TransactionStatus, ProgramStatus, TransactionName, ProgramError };
 export type {
@@ -91,5 +93,6 @@ export type {
   HandleInitParams,
   HandleErrorParams,
   HandleSignStatusParams,
-  UploadProgramParams,
+  UploadOptions,
+  Code,
 };

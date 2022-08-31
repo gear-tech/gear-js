@@ -6,9 +6,12 @@ import {
   useReadState,
   useSendMessage,
   useUploadProgram,
+  useCalculateGas,
   useAccount,
   useAlert,
   useApi,
+  useOpt,
+  useUploadHandler,
 } from './hooks';
 
 import { AccountProvider, ApiProvider, AlertProvider } from './context';
@@ -42,12 +45,15 @@ export {
   useReadState,
   useSendMessage,
   useUploadProgram,
+  useCalculateGas,
   useAccount,
   useAlert,
   useApi,
   AccountProvider,
   ApiProvider,
   AlertProvider,
+  useOpt,
+  useUploadHandler,
   DEFAULT_OPTIONS,
   DEFAULT_INFO_OPTIONS,
   DEFAULT_ERROR_OPTIONS,
