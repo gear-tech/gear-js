@@ -4,17 +4,17 @@
 @keyframes bottomSideAppearance {
   0% {
     opacity: 0;
-    height: 0;
+    transform: scaleY(0);
     margin-top: 0;
   }
   40% {
     opacity: 0;
-    height: $headerBottomSideHeight;
+    transform: scaleY(1);
     margin-top: toRem(16);
   }
   100% {
     opacity: 1;
-    height: $headerBottomSideHeight;
+    transform: scaleY(1);
     margin-top: toRem(16);
   }
 }
@@ -30,13 +30,13 @@
     min-width: toRem(225);
   }
 
-  &:global(.appear) {
+  &:global(.enter) {
     opacity: 0;
-    height: 0;
+    transform: scaleY(0);
     margin-top: 0;
   }
 
-  &:global(.appear-active) {
+  &:global(.enter-active) {
     animation: getAnimationTimeout(1) linear bottomSideAppearance;
   }
 }

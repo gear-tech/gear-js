@@ -11,6 +11,15 @@
   }
 }
 
+@keyframes svgFade {
+  from {
+    fill-opacity: 0.1;
+  }
+  to {
+    fill-opacity: 0.2;
+  }
+}
+
 //for css transition
 @mixin fade($delay: 0ms, $duration: $animationTimeout, $triming-function: linear) {
   &:global(.exit),
@@ -68,4 +77,8 @@
     background: linear-gradient(90deg, rgba($bgColorSecondary, 0.1) 25%,rgba($bgColorTertiary, 0.24) 37%,rgba($bgColorSecondary, 0.1) 63%);
     animation: loading getAnimationTimeout(15) ease infinite;
   }
+}
+
+@mixin svgLoading {
+  animation: svgFade getAnimationTimeout(15) ease-in infinite alternate;
 }

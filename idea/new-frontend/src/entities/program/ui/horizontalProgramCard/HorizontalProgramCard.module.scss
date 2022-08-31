@@ -1,0 +1,101 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+@keyframes sendMessageAppearance {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+    margin-bottom: 0;
+  }
+  40% {
+    opacity: 0;
+    transform: scaleY(1);
+    margin-bottom: toRem(6);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+    margin-bottom: toRem(6);
+  }
+}
+
+.horizontalProgramCard {
+  display: flex;
+  border-radius: toRem(16);
+  background-color: $bgColorQuaternary;
+}
+
+.content {
+  flex: 1 1;
+  padding: toRem(24);
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: -40%;
+    bottom: -100%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.2) 10%, rgba(24, 24, 27, 0) 100%);
+  }
+
+  .otherInfo,
+  .programName {
+    display: flex;
+  }
+
+  .programName {
+    margin-bottom: toRem(10);
+    
+    .name {      
+      max-width: 400px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: $textColor;
+      font-size: $fontSizeBig;
+      font-family: 'Kanit';
+      font-weight: 600;
+      line-height: 1.3;
+      margin-right: toRem(15);
+    }
+
+    .tooltip {
+      background-color: $bgColorSecondary;
+
+      &::after {
+        top: calc(100% + 4px);
+      }
+    }
+  }
+
+  .otherInfo {
+    & > *:not(:last-child) {
+      margin-right: toRem(16);
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 0.2 1;
+  padding: toRem(12) toRem(24);
+
+  .sendMessage {
+    margin-bottom: toRem(6);
+
+    &:global(.enter) {
+      opacity: 0;
+      transform: scaleY(0);
+      margin-bottom: 0;
+    }
+
+    &:global(.enter-active) {
+      animation: getAnimationTimeout(1) linear sendMessageAppearance;
+    }
+  }
+}

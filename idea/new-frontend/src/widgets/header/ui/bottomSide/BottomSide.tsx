@@ -12,7 +12,11 @@ import sendMessageSVG from 'shared/assets/images/actions/send.svg';
 import styles from './BottomSide.module.scss';
 import { CODE_MODAL_PROPS, PROGRAM_MODAL_PROPS } from '../../model/consts';
 
-const BottomSide = () => {
+type Props = {
+  isVisible: boolean;
+};
+
+const BottomSide = ({ isVisible }: Props) => {
   const { showModal } = useModal();
 
   const handleUploadCodeClick = () => showModal('uploadFile', CODE_MODAL_PROPS);
@@ -21,7 +25,7 @@ const BottomSide = () => {
   const linkClasses = clsx(buttonStyles.button, buttonStyles.secondary, buttonStyles.medium, styles.fixSize);
 
   return (
-    <CSSTransition in appear timeout={getAnimationTimeout(1)}>
+    <CSSTransition in={isVisible} exit={false} timeout={getAnimationTimeout(1)} mountOnEnter unmountOnExit>
       <div className={styles.bottomSide}>
         <Button
           icon={uploadFileSVG}

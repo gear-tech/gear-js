@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useAlert, Account } from '@gear-js/react-hooks';
+import { Account } from '@gear-js/react-hooks';
 
-import { getPrograms, getUserPrograms } from 'api';
-import { ProgramCard, IProgram } from 'entities/program';
+import { usePrograms } from 'hooks';
+import { ProgramCard } from 'entities/program';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 
 import styles from './RecentProgramsSection.module.scss';
@@ -15,25 +15,16 @@ type Props = {
 };
 
 const RecentProgramsSection = ({ account }: Props) => {
-  const alert = useAlert();
-
-  const [programs, setPrograms] = useState<IProgram[]>([]);
-  const [isLoading, setIsloading] = useState(true);
   const [activeFilter, setActiveFilter] = useState(Filter.AllPrograms);
+
+  const { programsData, isLoading, fetchPrograms } = usePrograms();
 
   const decodedAddress = account?.decodedAddress;
 
   const getRecentPrograms = () => {
     const isAllActive = activeFilter === Filter.AllPrograms;
-    const fetchPrograms = isAllActive ? getPrograms : getUserPrograms;
 
-    setIsloading(true);
-    setPrograms([]);
-
-    fetchPrograms({ limit: PROGRAMS_LIMIT, owner: isAllActive ? undefined : decodedAddress })
-      .then((data) => setPrograms(data.result.programs))
-      .catch((error) => alert.error(error.message))
-      .finally(() => setIsloading(false));
+    fetchPrograms({ limit: PROGRAMS_LIMIT, owner: isAllActive ? undefined : decodedAddress });
   };
 
   useEffect(() => {
@@ -54,6 +45,7 @@ const RecentProgramsSection = ({ account }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [decodedAddress]);
 
+  const { programs } = programsData;
   const isEmpty = !(isLoading || programs.length);
 
   return (
@@ -67,7 +59,9 @@ const RecentProgramsSection = ({ account }: Props) => {
         {isEmpty || isLoading ? (
           <ProgramsPlaceholder isEmpty={isEmpty} isLoading={isLoading} />
         ) : (
-          programs.map((program) => <ProgramCard key={program.id} program={program} isLoggedIn={Boolean(account)} />)
+          programs.map((program) => (
+            <ProgramCard key={program.id} program={program} withSendMessage={Boolean(account)} />
+          ))
         )}
       </div>
     </section>

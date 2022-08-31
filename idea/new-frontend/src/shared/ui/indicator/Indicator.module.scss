@@ -3,6 +3,8 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .indicator {
+  display: inline-flex;
+  align-items: center;
   padding: 0 toRem(8);
   border-radius: 64px;
   background-color: $successColor;

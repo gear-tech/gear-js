@@ -2,10 +2,9 @@ import clsx from 'clsx';
 
 import { EmptyContent } from 'shared/ui/emptyContent';
 import { ExamplesLink } from 'shared/ui/examplesLink';
-import { ReactComponent as EmptyBlockSVG } from 'shared/assets/images/placeholders/emptyBlock.svg';
+import { ReactComponent as EmptyBlockSVG } from 'shared/assets/images/placeholders/secondEmptyBlock.svg';
 
 import styles from './ProgramsPlaceholder.module.scss';
-import { PROGRAMS_LIMIT } from '../../model/consts';
 
 type Props = {
   isEmpty: boolean;
@@ -18,7 +17,7 @@ const ProgramsPlaceholder = ({ isEmpty, isLoading }: Props) => {
   const renderBlocks = () => {
     const result = [];
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < PROGRAMS_LIMIT; i++) {
+    for (let i = 0; i < 6; i++) {
       result.push(
         <div key={i} className={loaderClasses}>
           <EmptyBlockSVG />

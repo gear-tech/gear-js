@@ -1,0 +1,15 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.programsSection {
+  flex: 0 1 70%;
+}
+
+.programs {
+  position: relative;
+  padding-right: toRem(15);
+
+  & > *:not(:last-child) {
+    margin-bottom: toRem(12);
+  }
+}

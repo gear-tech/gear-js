@@ -1,0 +1,10 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.pageWrapper {
+  display: flex;
+
+  & > *:not(:last-child) {
+    margin-right: toRem(22);
+  }
+}

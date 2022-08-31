@@ -5,6 +5,7 @@ import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
 import { useProgram } from './useProgram';
 import { useMessage } from './useMessage';
+import { usePrograms } from './usePrograms';
 import { useCodeUpload } from './useCodeUpload';
 import { useMessageClaim } from './useMessageClaim';
 import { useProgramActions } from './useProgramActions';
@@ -22,6 +23,7 @@ export {
   useEvents,
   useMessage,
   useProgram,
+  usePrograms,
   usePrevious,
   useStateRead,
   useCodeUpload,

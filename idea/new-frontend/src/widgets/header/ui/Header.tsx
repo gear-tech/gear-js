@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <TopSide account={account} />
-      {account && <BottomSide />}
+      <BottomSide isVisible={Boolean(account)} />
     </header>
   );
 };

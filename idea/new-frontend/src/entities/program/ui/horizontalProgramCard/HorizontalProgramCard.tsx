@@ -1,15 +1,17 @@
 import { memo } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import { TooltipWrapper } from '@gear-js/ui';
 
 import { getAnimationTimeout } from 'shared/helpers';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 import readSVG from 'shared/assets/images/actions/read.svg';
 import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
+import { Indicator } from 'shared/ui/indicator';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ProgramActionLink } from 'shared/ui/programActionLink';
 
-import styles from './ProgramCard.module.scss';
+import styles from './HorizontalProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';
 import { IProgram } from '../../model/types';
 
@@ -18,17 +20,21 @@ type Props = {
   withSendMessage: boolean;
 };
 
-const ProgramCard = memo(({ program, withSendMessage }: Props) => {
+const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
   const { id, name, initStatus, timestamp } = program;
 
   return (
-    <article className={styles.programCard}>
-      <div className={styles.cardContent}>
-        <h1 className={styles.title}>Program name</h1>
-        <h2 className={styles.name}>{name}</h2>
-        <IdBlock id={id} className={styles.idBlock} />
+    <article className={styles.horizontalProgramCard}>
+      <div className={styles.content}>
+        <div className={styles.programName}>
+          <h1 className={styles.name}>{name}</h1>
+          <TooltipWrapper text="Messages waiting your attention" className={styles.tooltip}>
+            <Indicator value={25} />
+          </TooltipWrapper>
+        </div>
         <div className={styles.otherInfo}>
-          <BulbBlock text={initStatus} status={getBulbStatus(initStatus)} className={styles.bulbBlock} />
+          <IdBlock id={id} />
+          <BulbBlock text={initStatus} status={getBulbStatus(initStatus)} />
           <TimestampBlock timestamp={timestamp} />
         </div>
       </div>
@@ -42,4 +48,4 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
   );
 });
 
-export { ProgramCard };
+export { HorizontalProgramCard };

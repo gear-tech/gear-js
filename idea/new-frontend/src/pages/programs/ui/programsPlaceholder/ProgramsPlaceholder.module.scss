@@ -3,9 +3,8 @@
 
 .block {
   border-radius: toRem(16);
-  clip-path: polygon(84% 0, 100% 26%, 100% 99%, 0 100%, 0 0);
 
-  & > svg {
+  svg {
     width: 100%;
     height: 100%;
   }

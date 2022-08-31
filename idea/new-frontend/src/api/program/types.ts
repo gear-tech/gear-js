@@ -1,7 +1,7 @@
 import { IProgram } from 'entities/program';
 
 type FetchUserProgramsParams = {
-  owner: string | null;
+  owner?: string | null;
   limit?: number;
   offset?: number;
   query?: string;

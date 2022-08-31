@@ -1,0 +1,39 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: toRem(16);
+  padding-right: toRem(15);
+
+  .title {    
+    color: $gray800;
+    font-size: toRem(24);
+    font-family: 'Kanit';
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .sortByWrapper {
+    display: flex;
+    align-items: center;
+
+    .text {      
+      font-family: 'Kanit';
+      font-size: $fontSizeSmall;
+      color: $gray600;
+      line-height: toRem(18);
+      letter-spacing: 0.08em;
+      margin-right: toRem(10);
+    }
+
+    .sortByBtn {
+      color: $lightGray;
+      font-weight: 400;
+      font-family: 'Kanit';
+      line-height: toRem(20);
+    }
+  }
+}
