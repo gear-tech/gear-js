@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Param, Query } from '@nestjs/common';
 
 import { DappDataService } from "./dapp-data.service";
 import { DappData } from "./entities/dapp-data.entity";
@@ -16,8 +16,8 @@ export class DappDataController {
     return this.dappDataRepository.get(id);
   }
 
-  @Get(":name")
-  public getDappDataByName(@Param("name") name: string): Promise<DappData> {
-    return this.dappDataRepository.getByName(name);
+  @Get()
+  public async getDappDataByName(@Query("name") name: string): Promise<DappData> {
+    return  this.dappDataRepository.getByName(name);
   }
 }
