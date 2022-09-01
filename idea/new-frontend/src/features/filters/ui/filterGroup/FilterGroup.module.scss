@@ -32,10 +32,9 @@
     
     .clearBtn {
       @include fade();
-
+    
       @extend %textStyles;
-
-      opacity: 0;
+    
       color: $successColor;
     }
   }

@@ -1,7 +1,7 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 
 .pageWrapper {
-  @include childrenMargin(toRem(22), right);
+  @include childrenMargin(toRem(36), right);
 
   display: flex;
   align-items: flex-start;

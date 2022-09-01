@@ -16,6 +16,7 @@ import { useSidebarNodes } from './useSidebarNodes';
 import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
 import { usePrevious } from './usePrevious';
+import { useWindowScrollLoader } from './useWindowScrollLoader';
 
 export {
   useModal,
@@ -35,5 +36,6 @@ export {
   useProgramActions,
   useMetadataUplaod,
   useBalanceTransfer,
+  useWindowScrollLoader,
   useAccountSubscriptions,
 };

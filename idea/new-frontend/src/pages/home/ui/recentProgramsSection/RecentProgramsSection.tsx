@@ -17,14 +17,15 @@ type Props = {
 const RecentProgramsSection = ({ account }: Props) => {
   const [activeFilter, setActiveFilter] = useState(Filter.AllPrograms);
 
-  const { programsData, isLoading, fetchPrograms } = usePrograms();
+  const { programs, isLoading, fetchPrograms } = usePrograms();
 
   const decodedAddress = account?.decodedAddress;
 
   const getRecentPrograms = () => {
     const isAllActive = activeFilter === Filter.AllPrograms;
+    const owner = isAllActive ? undefined : decodedAddress;
 
-    fetchPrograms({ limit: PROGRAMS_LIMIT, owner: isAllActive ? undefined : decodedAddress });
+    fetchPrograms({ limit: PROGRAMS_LIMIT, owner }, true);
   };
 
   useEffect(() => {
@@ -45,7 +46,6 @@ const RecentProgramsSection = ({ account }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [decodedAddress]);
 
-  const { programs } = programsData;
   const isEmpty = !(isLoading || programs.length);
 
   return (

@@ -17,17 +17,23 @@
     opacity: 1;
   }
 
+  &:global(.exit),
+  &:global(.enter) {
+    // remove possible transition from elements
+    transition: none;
+  }
+
   &:global(.enter),
   &:global(.exit-done){
     opacity: 0;
   } 
 
   &:global(.enter-active) {
-    opacity: 1 !important; 
+    opacity: 1; 
   }
 
   &:global(.exit-active) {
-    opacity: 0 !important;
+    opacity: 0;
   }
 
   &:global(.exit-active),

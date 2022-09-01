@@ -6,7 +6,7 @@ type Params = {
   callback: () => void;
 };
 
-const useScrollLoader = (params: Params) => {
+const useWindowScrollLoader = (params: Params) => {
   const { hasMore, callback } = params;
 
   useEffect(() => {
@@ -24,4 +24,4 @@ const useScrollLoader = (params: Params) => {
   }, [callback, hasMore]);
 };
 
-export { useScrollLoader };
+export { useWindowScrollLoader };

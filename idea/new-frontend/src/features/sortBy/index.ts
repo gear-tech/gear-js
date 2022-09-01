@@ -1,3 +1,4 @@
-import { SortBy } from './SortBy';
+import { Sort } from './model/consts';
+import { SortBy } from './ui/SortBy';
 
-export { SortBy };
+export { Sort, SortBy };

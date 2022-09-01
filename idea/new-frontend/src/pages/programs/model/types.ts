@@ -1,10 +1,15 @@
-import { FormValues } from 'features/filters';
+import { Sort } from 'features/sortBy';
 import { ProgramStatus } from 'entities/program';
 
-type FiltersValues = FormValues & {
+type FiltersValues = {
   owner: string;
   status: ProgramStatus[];
   createAt: string;
 };
 
-export type { FiltersValues };
+type RequestParams = Partial<FiltersValues> & {
+  query?: string;
+  sortBy?: Sort;
+};
+
+export type { FiltersValues, RequestParams };

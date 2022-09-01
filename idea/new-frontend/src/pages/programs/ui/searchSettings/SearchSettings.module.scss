@@ -1,0 +1,43 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+@keyframes ownerFilterAppearance {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+    margin-bottom: 0;
+  }
+  40% {
+    opacity: 0;
+    transform: scaleY(1);
+    margin-bottom: toRem(8);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+    margin-bottom: toRem(8);
+  }
+}
+
+.searchSettings {
+  position: sticky;
+  flex: 0.3 1;
+  top: toRem(28);
+
+  .searchFieldWrapper {
+    margin-bottom: toRem(11);
+  }
+
+  .ownerFilter {
+    &:global(.appear) {
+      opacity: 0;
+      transform: scaleY(0);
+      margin-bottom: 0;
+    }
+  
+    &:global(.appear-active) {
+      animation: $mediumTimeout linear sendMessageAppearance;
+    }
+  }
+}

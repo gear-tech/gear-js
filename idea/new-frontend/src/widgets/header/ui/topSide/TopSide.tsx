@@ -1,15 +1,16 @@
 import { useRef, useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import clsx from 'clsx';
 import { GearKeyring } from '@gear-js/api';
 import { useApi, useAlert, Account } from '@gear-js/react-hooks';
-import { Button, TooltipWrapper } from '@gear-js/ui';
+import { TooltipWrapper, buttonStyles } from '@gear-js/ui';
 
 import { getTestBalance } from 'api';
 import { useBalanceTransfer } from 'hooks';
 import { isDevChain } from 'shared/helpers';
 import { HCAPTCHA_SITE_KEY, AnimationTimeout } from 'shared/config';
-import testBalanceSVG from 'shared/assets/images/actions/testBalance.svg';
+import { ReactComponent as TestBalanceSVG } from 'shared/assets/images/actions/testBalance.svg';
 
 import styles from './TopSide.module.scss';
 import { Wallet } from '../wallet';
@@ -76,6 +77,8 @@ const TopSide = ({ account }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [captchaToken]);
 
+  const btnClasses = clsx(buttonStyles.button, buttonStyles.medium, buttonStyles.noText, styles.testBalanceBtn);
+
   return (
     <>
       <div className={styles.topSide}>
@@ -86,10 +89,12 @@ const TopSide = ({ account }: Props) => {
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
               <div className={styles.privateContent}>
                 <TooltipWrapper text="Get test balance">
-                  <Button
-                    icon={testBalanceSVG}
-                    onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}
-                  />
+                  <button
+                    type="button"
+                    className={btnClasses}
+                    onClick={isDevChain() ? handleTransferBalanceFromAlice : handleTestBalanceClick}>
+                    <TestBalanceSVG />
+                  </button>
                 </TooltipWrapper>
                 <BalanceInfo balance={account.balance} />
               </div>

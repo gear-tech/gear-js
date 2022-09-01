@@ -1,7 +1,8 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
 
-.filters {
+.form {
   padding: toRem(16) toRem(24);
   background: linear-gradient(0deg, $indigo005, $indigo005), $bgColorSecondary;
   box-shadow: 0px 4px 4px $bgColor;
@@ -22,6 +23,8 @@
     }
 
     .clearAllBtn {
+      @include fade();
+
       font-family: 'Kanit';
       font-size: $fontSizeSmall;
       font-weight: 400;
