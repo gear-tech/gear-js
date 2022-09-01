@@ -1,7 +1,13 @@
 import { Start } from './start';
+import { Create } from './create';
 
 function Home() {
-  return <Start />;
+  return (
+    <>
+      {/* <Start /> */}
+      <Create />
+    </>
+  );
 }
 
 export { Home };
