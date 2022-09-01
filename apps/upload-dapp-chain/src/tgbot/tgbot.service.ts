@@ -101,6 +101,10 @@ export class TgbotService {
     const uploadProgramActions = getUploadProgramByName(dappName);
     const uploadedPrograms: UploadProgramResult[] = [];
 
+    if(!uploadProgramActions) {
+      return TBErrorMessage.INVALID_DAPP_NAME;
+    }
+
     for (const action of uploadProgramActions.actions) {
       const { payload, acc, value, program, command } = action;
       const uploadProgramData = getUploadProgramData(program);
