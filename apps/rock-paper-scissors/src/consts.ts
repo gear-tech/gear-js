@@ -6,4 +6,11 @@ const LOCAL_STORAGE = {
   ACCOUNT: 'account',
 };
 
-export { ADDRESS, LOCAL_STORAGE };
+const EMPTY_GAMES = [
+  { name: '', players: '', bet: '', game: '', round: '', stage: '', action: '' },
+  { name: '', players: '', bet: '', game: '', round: '', stage: '', action: '' },
+  { name: '', players: '', bet: '', game: '', round: '', stage: '', action: '' },
+  { name: '', players: '', bet: '', game: '', round: '', stage: '', action: '' },
+];
+
+export { ADDRESS, LOCAL_STORAGE, EMPTY_GAMES };

@@ -4,8 +4,8 @@ import { Create } from './create';
 function Home() {
   return (
     <>
-      {/* <Start /> */}
-      <Create />
+      <Start />
+      {/* <Create /> */}
     </>
   );
 }

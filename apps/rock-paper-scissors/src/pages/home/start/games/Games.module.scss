@@ -1,0 +1,83 @@
+@use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
+@use 'assets/styles/shared' as *;
+
+.games {
+  max-width: 1000px;
+
+  &:not(:last-child) {
+    margin-bottom: 48px;
+  }
+}
+
+.heading {
+  @extend %h3;
+  margin-bottom: 40px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #bcbcbc;
+}
+
+.header {
+  color: rgba(#fff, 0.5);
+}
+
+.body {
+  position: relative;
+  height: 235px;
+  overflow-y: auto;
+
+  .row {
+    background-color: rgba(#282828, 0.5);
+
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+
+  &::-webkit-scrollbar {
+    width: 3px;
+
+    &-thumb {
+      background-color: #fff;
+      border-radius: 1px;
+    }
+
+    &-track {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid transparent;
+      background-clip: content-box;
+    }
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  min-height: 40px;
+  padding: 10px 20px;
+}
+
+.stage {
+  padding: 1px 7px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 8px;
+
+  &.preparation {
+    background-color: #f2c94c;
+  }
+
+  &.reveal {
+    background-color: $tertiaryColor;
+  }
+
+  &.progress {
+    background-color: $successColor;
+  }
+}
+
+.empty {
+  @extend %absoluteCenter;
+  color: $textColorSecondary;
+}

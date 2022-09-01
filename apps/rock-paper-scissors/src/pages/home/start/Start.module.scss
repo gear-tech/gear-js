@@ -8,12 +8,7 @@
   text-transform: uppercase;
 }
 
-.buttons {
+.button {
   max-width: 285px;
-  display: flex;
-  flex-direction: column;
-
-  & > *:not(:last-child) {
-    margin-bottom: 28px;
-  }
+  margin-bottom: 48px;
 }
