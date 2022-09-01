@@ -3,7 +3,7 @@ import isString from 'lodash.isstring';
 import { GearApi } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 
-import { DEVELOPMENT_CHAIN, ACCOUNT_ERRORS, ANIMATION_TIMEOUT, FileTypes, LocalStorage } from 'shared/config';
+import { DEVELOPMENT_CHAIN, ACCOUNT_ERRORS, FileTypes, LocalStorage } from 'shared/config';
 
 const checkWallet = (account?: Account) => {
   if (!account) {
@@ -78,8 +78,6 @@ const getShortName = (filename: string, maxLength = 24) => {
     : transformedFileName;
 };
 
-const getAnimationTimeout = (delayTick = 0, delay = 50) => ANIMATION_TIMEOUT + delayTick * delay;
-
 const getPreformattedText = (data: unknown) => JSON.stringify(data, null, 4);
 
 const getExtrinsicFailedMessage = (api: GearApi, event: Event) => {
@@ -112,7 +110,6 @@ export {
   getShortName,
   generateRandomId,
   getPreformattedText,
-  getAnimationTimeout,
   getExtrinsicFailedMessage,
   isHex,
   isDevChain,

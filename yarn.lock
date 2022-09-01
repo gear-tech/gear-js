@@ -6785,6 +6785,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.isequal@npm:^4.5.6":
+  version: 4.5.6
+  resolution: "@types/lodash.isequal@npm:4.5.6"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 0f065989408a9e0584e6c27495be2cd4602e62650f55266aa195812582444463c0c8570c674ae84f947c11748f49ab43fd5b482fa120e08eeee4c23b162edc38
+  languageName: node
+  linkType: hard
+
 "@types/lodash.isobject@npm:3.0.6":
   version: 3.0.6
   resolution: "@types/lodash.isobject@npm:3.0.6"
@@ -17136,6 +17145,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.isequal@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.isequal@npm:4.5.0"
+  checksum: da27515dc5230eb1140ba65ff8de3613649620e8656b19a6270afe4866b7bd461d9ba2ac8a48dcc57f7adac4ee80e1de9f965d89d4d81a0ad52bb3eec2609644
+  languageName: node
+  linkType: hard
+
 "lodash.isobject@npm:3.0.2":
   version: 3.0.2
   resolution: "lodash.isobject@npm:3.0.2"
@@ -18042,6 +18058,7 @@ __metadata:
     "@testing-library/react": ^13.3.0
     "@testing-library/user-event": ^13.5.0
     "@types/jest": ^27.5.2
+    "@types/lodash.isequal": ^4.5.6
     "@types/lodash.throttle": ^4.1.7
     "@types/node": ^16.11.54
     "@types/react": ^18.0.17
@@ -18061,6 +18078,7 @@ __metadata:
     formik: ^2.2.9
     ky: ^0.31.1
     localforage: ^1.10.0
+    lodash.isequal: ^4.5.0
     lodash.isplainobject: ^4.0.6
     lodash.isstring: ^4.0.1
     lodash.throttle: ^4.1.1

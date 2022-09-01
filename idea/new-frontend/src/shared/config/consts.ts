@@ -15,8 +15,6 @@ const EXAMPLES_HREF = 'https://www.gear-tech.io/developers';
 const MIN_GAS_LIMIT = 1_000_000_000;
 const GEAR_BALANCE_TRANSFER_VALUE = 10_000_000_000;
 
-const ANIMATION_TIMEOUT = 250;
-
 const DEFAULT_LIMIT = 20;
 
 const ACCOUNT_ERRORS = {
@@ -87,6 +85,12 @@ enum FileTypes {
   Json = 'application/json',
 }
 
+enum AnimationTimeout {
+  Default = 250,
+  Medium = 400,
+  Big = 1000,
+}
+
 export {
   API_URL,
   NODE_ADDRESS,
@@ -98,7 +102,6 @@ export {
   NODE_ADRESS_URL_PARAM,
   MIN_GAS_LIMIT,
   EXAMPLES_HREF,
-  ANIMATION_TIMEOUT,
   DEFAULT_LIMIT,
   GEAR_BALANCE_TRANSFER_VALUE,
   ACCOUNT_ERRORS,
@@ -109,4 +112,5 @@ export {
   TransactionStatus,
   RpcMethods,
   FileTypes,
+  AnimationTimeout,
 };

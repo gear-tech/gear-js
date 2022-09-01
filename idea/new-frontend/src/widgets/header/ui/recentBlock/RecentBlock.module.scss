@@ -7,7 +7,7 @@
   position: absolute;
   align-items: center;
   top: toRem(-6);
-  left: toRem(22);
+  left: toRem(45);
   z-index: 10;
   background: linear-gradient(180deg, #29292B 65.67%, $bgColorSecondary 100%);
   border-radius: 24px; 
@@ -120,6 +120,6 @@
   padding-right: toRem(10);
   
   .listItem {
-    @include fade(0ms, getAnimationTimeout(15));
+    @include fade(0ms, $bigTimeout);
   }
 }

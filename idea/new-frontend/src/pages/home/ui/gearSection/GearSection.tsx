@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 
-import { LocalStorage, ANIMATION_TIMEOUT } from 'shared/config';
+import { LocalStorage, AnimationTimeout } from 'shared/config';
 import { ReactComponent as AppSVG } from 'shared/assets/images/indicators/app.svg';
 import { ReactComponent as PulseSVG } from 'shared/assets/images/indicators/pulse.svg';
 import { ReactComponent as GlobusSVG } from 'shared/assets/images/indicators/globus.svg';
@@ -45,7 +45,7 @@ const GearSection = ({ isLoggedIn }: Props) => {
   const isLoading = programsCount === null;
   return (
     <section className={styles.gearSection}>
-      <CSSTransition in={!isBannerHidden} timeout={ANIMATION_TIMEOUT} unmountOnExit>
+      <CSSTransition in={!isBannerHidden} timeout={AnimationTimeout.Default} unmountOnExit>
         <WelcomeBanner className={styles.welcomeBanner} onClose={closeBanner} />
       </CSSTransition>
       <div className={styles.indicators}>

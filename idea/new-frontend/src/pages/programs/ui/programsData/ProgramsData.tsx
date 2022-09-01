@@ -24,7 +24,7 @@ const ProgramsData = ({ count, programs, isLoading, isLoggedIn }: Props) => {
           <ProgramsPlaceholder isEmpty={isEmpty} isLoading={isLoading} />
         ) : (
           programs.map((program) => (
-            <RenderIfVisible key={program.id} initialVisible defaultHeight={100} rootElementClass={styles.programItem}>
+            <RenderIfVisible key={program.id} initialVisible defaultHeight={110} rootElementClass={styles.programItem}>
               <HorizontalProgramCard program={program} withSendMessage={isLoggedIn} />
             </RenderIfVisible>
           ))

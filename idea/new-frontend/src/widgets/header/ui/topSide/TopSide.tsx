@@ -8,7 +8,7 @@ import { Button, TooltipWrapper } from '@gear-js/ui';
 import { getTestBalance } from 'api';
 import { useBalanceTransfer } from 'hooks';
 import { isDevChain } from 'shared/helpers';
-import { HCAPTCHA_SITE_KEY, ANIMATION_TIMEOUT } from 'shared/config';
+import { HCAPTCHA_SITE_KEY, AnimationTimeout } from 'shared/config';
 import testBalanceSVG from 'shared/assets/images/actions/testBalance.svg';
 
 import styles from './TopSide.module.scss';
@@ -83,7 +83,7 @@ const TopSide = ({ account }: Props) => {
         <RecentBlock />
         <div className={styles.rightSide}>
           {account && (
-            <CSSTransition in appear timeout={ANIMATION_TIMEOUT}>
+            <CSSTransition in appear timeout={AnimationTimeout.Default}>
               <div className={styles.privateContent}>
                 <TooltipWrapper text="Get test balance">
                   <Button

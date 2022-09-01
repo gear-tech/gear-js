@@ -1,6 +1,5 @@
 @use '@gear-js/ui/mixins' as *;
 @use './variables' as *;
-@use './shared' as *;
 
 @keyframes loading {
   from {
@@ -11,17 +10,8 @@
   }
 }
 
-@keyframes svgFade {
-  from {
-    fill-opacity: 0.1;
-  }
-  to {
-    fill-opacity: 0.2;
-  }
-}
-
 //for css transition
-@mixin fade($delay: 0ms, $duration: $animationTimeout, $triming-function: linear) {
+@mixin fade($fadeDelay: 0ms, $fadeDuration: $timeout, $triming-function: linear) {
   &:global(.exit),
   &:global(.enter-done) {
     opacity: 1;
@@ -42,12 +32,12 @@
 
   &:global(.exit-active),
   &:global(.enter-active){ 
-    transition: opacity $duration $triming-function $delay;
+    transition: opacity $fadeDuration $triming-function $fadeDelay;
   }
 }
 
 //for css transition
-@mixin fadeAppear($delay: 0ms, $duration: $animationTimeout, $triming-function: linear) {
+@mixin fadeAppear($fadeDelay: 0ms, $fadeDuration: $timeout, $triming-function: linear) {
   &:global(.appear) {
     opacity: 0;
   } 
@@ -61,8 +51,8 @@
     opacity: 1 !important; 
   }
 
-  &:global(.appear-active){ 
-    transition: opacity $duration $triming-function $delay;
+  &:global(.appear-active) { 
+    transition: opacity $fadeDuration $triming-function $fadeDelay;
   }
 }
 
@@ -75,10 +65,6 @@
     position: absolute;
     inset: 0 -150%;
     background: linear-gradient(90deg, rgba($bgColorSecondary, 0.1) 25%,rgba($bgColorTertiary, 0.24) 37%,rgba($bgColorSecondary, 0.1) 63%);
-    animation: loading getAnimationTimeout(15) ease infinite;
+    animation: loading $bigTimeout ease infinite;
   }
-}
-
-@mixin svgLoading {
-  animation: svgFade getAnimationTimeout(15) ease-in infinite alternate;
 }

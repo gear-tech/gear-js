@@ -1,6 +1,6 @@
 import { CSSTransition } from 'react-transition-group';
 
-import { EXAMPLES_HREF, ANIMATION_TIMEOUT } from 'shared/config';
+import { EXAMPLES_HREF, AnimationTimeout } from 'shared/config';
 import { ReactComponent as AppSVG } from 'shared/assets/images/indicators/app.svg';
 import { ReactComponent as ExternalResourceSVG } from 'shared/assets/images/actions/externalResource.svg';
 
@@ -15,11 +15,11 @@ const AppExamplesLink = ({ isFullWidth }: Props) => (
     <span className={styles.icon}>
       <AppSVG />
     </span>
-    <CSSTransition in={isFullWidth} timeout={ANIMATION_TIMEOUT} className={styles.linkContent} unmountOnExit>
-      <span>
+    <CSSTransition in={isFullWidth} timeout={AnimationTimeout.Default}>
+      <div className={styles.linkContent}>
         <span className={styles.linkText}>App Examples</span>
         <ExternalResourceSVG />
-      </span>
+      </div>
     </CSSTransition>
   </a>
 );

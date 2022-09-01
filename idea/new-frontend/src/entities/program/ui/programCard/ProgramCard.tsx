@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-import { getAnimationTimeout } from 'shared/helpers';
+import { AnimationTimeout } from 'shared/config';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 import readSVG from 'shared/assets/images/actions/read.svg';
 import { IdBlock } from 'shared/ui/idBlock';
@@ -33,7 +33,7 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
         </div>
       </div>
       <div className={styles.actions}>
-        <CSSTransition in={withSendMessage} exit={false} timeout={getAnimationTimeout(1)} unmountOnExit>
+        <CSSTransition in={withSendMessage} exit={false} timeout={AnimationTimeout.Medium} unmountOnExit>
           <ProgramActionLink to="/" icon={sendSVG} text="Send Message" className={styles.sendMessage} />
         </CSSTransition>
         <ProgramActionLink to="/" icon={readSVG} text="Read State" />

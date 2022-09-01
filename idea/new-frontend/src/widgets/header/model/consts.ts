@@ -1,7 +1,4 @@
-import { getAnimationTimeout } from 'shared/helpers';
 import { routes } from 'shared/config';
-
-const BLOCK_ANIMATION_TIMEOUT = getAnimationTimeout(15);
 
 const CODE_MODAL_PROPS = {
   name: 'code',
@@ -13,4 +10,4 @@ const PROGRAM_MODAL_PROPS = {
   redirectTo: routes.uploadProgram,
 };
 
-export { CODE_MODAL_PROPS, PROGRAM_MODAL_PROPS, BLOCK_ANIMATION_TIMEOUT };
+export { CODE_MODAL_PROPS, PROGRAM_MODAL_PROPS };

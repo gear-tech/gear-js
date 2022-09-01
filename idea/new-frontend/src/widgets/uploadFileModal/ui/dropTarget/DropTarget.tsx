@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { NativeTypes } from 'react-dnd-html5-backend';
 
-import { ANIMATION_TIMEOUT } from 'shared/config';
+import { AnimationTimeout } from 'shared/config';
 
 import styles from './DropTarget.module.scss';
 
@@ -37,7 +37,7 @@ const DropTarget = ({ onUpload }: Props) => {
   const isActive = canDrop && isOver;
 
   return (
-    <CSSTransition in={isActive} timeout={ANIMATION_TIMEOUT}>
+    <CSSTransition in={isActive} timeout={AnimationTimeout.Default}>
       <div ref={drop} className={styles.dropTarget}>
         <p className={styles.message}>Or drag and drop your .wasm files here</p>
       </div>

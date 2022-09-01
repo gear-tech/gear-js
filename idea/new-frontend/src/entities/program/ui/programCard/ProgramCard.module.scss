@@ -90,7 +90,7 @@
     }
 
     &:global(.enter-active) {
-      animation: getAnimationTimeout(1) linear sendMessageAppearance;
+      animation: $mediumTimeout linear sendMessageAppearance;
     }
   }
 }

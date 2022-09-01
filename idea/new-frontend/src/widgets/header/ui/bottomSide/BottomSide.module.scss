@@ -37,6 +37,6 @@
   }
 
   &:global(.enter-active) {
-    animation: getAnimationTimeout(1) linear bottomSideAppearance;
+    animation: $mediumTimeout linear bottomSideAppearance;
   }
 }

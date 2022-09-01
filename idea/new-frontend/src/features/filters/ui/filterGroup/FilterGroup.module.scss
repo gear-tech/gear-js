@@ -1,0 +1,43 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+%textStyles {
+  font-size: $fontSizeSmall;
+  font-family: 'Kanit';
+  font-weight: 400;
+  line-height: toRem(18);
+  letter-spacing: 0.08em;
+}
+
+.filterGroup {
+  @include childrenMargin(toRem(8));
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .header {
+    @include childrenMargin(toRem(8), right);
+  
+    display: flex;
+    align-items: center;
+    margin-bottom: toRem(16);
+  
+    .title {
+      @extend %textStyles;
+      
+      color: $gray600;
+    }
+    
+    .clearBtn {
+      @include fade();
+
+      @extend %textStyles;
+
+      opacity: 0;
+      color: $successColor;
+    }
+  }
+}
+

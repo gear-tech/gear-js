@@ -27,10 +27,6 @@
   @return ($value / 14) + rem;
 }
 
-@function getAnimationTimeout($delayTick: 0, $delay: 50) {
-  @return (250 + $delayTick * $delay) + ms;
-}
-
 @mixin childrenMargin($margin, $direction: bottom) {
   & > *:not(:last-child) {
     @if $direction == bottom {

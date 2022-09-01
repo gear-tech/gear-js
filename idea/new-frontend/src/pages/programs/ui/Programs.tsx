@@ -4,8 +4,8 @@ import { useAccount } from '@gear-js/react-hooks';
 import { usePrograms } from 'hooks';
 
 import styles from './Programs.module.scss';
-import { Filters } from './filters';
 import { ProgramsData } from './programsData';
+import { ProgramsFilters } from './programsFilters';
 
 const Programs = () => {
   const { account } = useAccount();
@@ -17,12 +17,14 @@ const Programs = () => {
   }, []);
 
   const isLoggedIn = Boolean(account);
+  const decodedAddress = account?.decodedAddress;
+
   const { count, programs } = programsData;
 
   return (
     <div className={styles.pageWrapper}>
       <ProgramsData count={count} programs={programs} isLoading={isLoading} isLoggedIn={isLoggedIn} />
-      <Filters />
+      <ProgramsFilters decodedAddress={decodedAddress} />
     </div>
   );
 };

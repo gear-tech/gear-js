@@ -4,12 +4,12 @@ import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
 import { useBlocks, useOutsideClick } from 'hooks';
+import { AnimationTimeout } from 'shared/config';
 import { IChainBlock } from 'entities/chainBlock';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 
 import styles from './RecentBlock.module.scss';
 import headerStyles from '../Header.module.scss';
-import { BLOCK_ANIMATION_TIMEOUT } from '../../model/consts';
 import { Graph } from '../graph';
 import { RecentBlockItem } from '../recentBlockItem';
 
@@ -74,7 +74,7 @@ const RecentBlock = () => {
         {isOpen && (
           <TransitionGroup component="ul" className={styles.blocksList}>
             {blocks.map((item) => (
-              <CSSTransition key={item.number} timeout={BLOCK_ANIMATION_TIMEOUT} exit={false}>
+              <CSSTransition key={item.number} timeout={AnimationTimeout.Big} exit={false}>
                 <RecentBlockItem block={item} className={styles.listItem} />
               </CSSTransition>
             ))}

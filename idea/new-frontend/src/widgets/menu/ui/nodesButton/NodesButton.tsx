@@ -2,7 +2,7 @@ import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
-import { ANIMATION_TIMEOUT } from 'shared/config';
+import { AnimationTimeout } from 'shared/config';
 import connectSVG from 'shared/assets/images/menu/connect.svg';
 
 import styles from './NodesButton.module.scss';
@@ -22,7 +22,7 @@ const NodesButton = ({ name, chain, version, isOpen, isApiReady }: Props) => (
     <p className={styles.menuIconWrapper}>
       <img src={connectSVG} alt="connect" className={buttonStyles.icon} />
     </p>
-    <CSSTransition in={isOpen} timeout={ANIMATION_TIMEOUT} className={styles.nodeInfo} unmountOnExit>
+    <CSSTransition in={isOpen} timeout={AnimationTimeout.Default} className={styles.nodeInfo} unmountOnExit>
       <p>
         {isApiReady ? (
           <>

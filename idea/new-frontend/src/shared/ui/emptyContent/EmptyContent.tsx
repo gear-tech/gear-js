@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import styles from './EmptyContent.module.scss';
-import { ANIMATION_TIMEOUT } from '../../config';
+import { AnimationTimeout } from '../../config';
 
 type Props = {
   title: string;
@@ -11,7 +11,7 @@ type Props = {
 };
 
 const EmptyContent = ({ title, children, description }: Props) => (
-  <CSSTransition in appear timeout={ANIMATION_TIMEOUT}>
+  <CSSTransition in appear timeout={AnimationTimeout.Default}>
     <div className={styles.emptyContent}>
       <div className={styles.textContent}>
         <h2 className={styles.title}>{title}</h2>

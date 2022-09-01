@@ -66,12 +66,8 @@
       margin-right: toRem(15);
     }
 
-    .tooltip {
-      background-color: $bgColorSecondary;
-
-      &::after {
-        top: calc(100% + 4px);
-      }
+    .tooltip::after {
+      top: calc(100% + 4px);
     }
   }
 
@@ -98,7 +94,7 @@
     }
 
     &:global(.enter-active) {
-      animation: getAnimationTimeout(1) linear sendMessageAppearance;
+      animation: $mediumTimeout linear sendMessageAppearance;
     }
   }
 }

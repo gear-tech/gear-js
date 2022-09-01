@@ -63,7 +63,7 @@
 
   & > img {
     position: absolute;
-    transition: all getAnimationTimeout(3) ease-in;
+    transition: all $mediumTimeout ease-in;
   }
 
   .gear1 {
@@ -94,7 +94,7 @@
   &::before {
     content: '';
     position: absolute;
-    transition: all getAnimationTimeout(3) ease-in;
+    transition: all $mediumTimeout ease-in;
   }
 
   &::after {

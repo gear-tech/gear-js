@@ -2,7 +2,7 @@ import { memo, ReactNode } from 'react';
 import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
 
-import { ANIMATION_TIMEOUT } from 'shared/config';
+import { AnimationTimeout } from 'shared/config';
 
 import styles from './GearIndicator.module.scss';
 
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const GearIndicator = memo(({ icon, name, value, isLoading = false }: Props) => (
-  <CSSTransition in={!isLoading} timeout={ANIMATION_TIMEOUT} exit={false}>
+  <CSSTransition in={!isLoading} timeout={AnimationTimeout.Default} exit={false}>
     <article className={clsx(styles.gearIndicator, isLoading && styles.loading)}>
       <p className={styles.textContent}>
         <span className={styles.icon}>{icon}</span>

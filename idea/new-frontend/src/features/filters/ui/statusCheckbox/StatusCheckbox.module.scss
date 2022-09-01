@@ -1,0 +1,15 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.statusCheckbox {
+  display: flex;
+  align-items: center;
+
+  .text {
+    font-size: $fontSize;
+    font-family: 'Kanit';
+    font-weight: 400;
+    line-height: toRem(20);
+    letter-spacing: 0.08em;
+  }
+}

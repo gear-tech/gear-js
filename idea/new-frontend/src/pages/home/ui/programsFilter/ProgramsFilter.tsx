@@ -3,8 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import { Button } from '@gear-js/ui';
 
-import { ANIMATION_TIMEOUT } from 'shared/config';
-import { getAnimationTimeout } from 'shared/helpers';
+import { AnimationTimeout } from 'shared/config';
 
 import styles from './ProgramsFilter.module.scss';
 import { Filter } from '../../model/consts';
@@ -21,7 +20,7 @@ const ProgramsFilter = memo(({ value, onClick }: Props) => {
 
   return (
     <div className={styles.filters}>
-      <CSSTransition in appear timeout={ANIMATION_TIMEOUT}>
+      <CSSTransition in appear timeout={AnimationTimeout.Default}>
         <Button
           size="small"
           text="All"
@@ -30,7 +29,7 @@ const ProgramsFilter = memo(({ value, onClick }: Props) => {
           onClick={handleClick(Filter.AllPrograms)}
         />
       </CSSTransition>
-      <CSSTransition in appear timeout={getAnimationTimeout(1)}>
+      <CSSTransition in appear timeout={AnimationTimeout.Default + 50}>
         <Button
           size="small"
           text="My programs"

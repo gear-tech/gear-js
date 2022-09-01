@@ -28,7 +28,7 @@
 
     &:last-child {
       &:global(.appear-active) {
-        transition-delay: $animationDelay;
+        transition-delay: 50ms;
       }
     }
   }
