@@ -1,0 +1,19 @@
+@use '@gear-js/ui/headings' as *;
+
+.heading {
+  @extend %h1;
+  max-width: 750px;
+  margin: 0 auto 25px;
+  text-align: center;
+}
+
+.buttons {
+  max-width: 285px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+  & > *:not(:last-child) {
+    margin-bottom: 28px;
+  }
+}
