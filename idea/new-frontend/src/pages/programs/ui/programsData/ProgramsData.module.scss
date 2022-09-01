@@ -2,14 +2,16 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .programsSection {
-  flex: 0 1 70%;
+  flex: 1 1;
 }
 
 .programs {
-  position: relative;
-  padding-right: toRem(15);
+  @include childrenMargin(toRem(12));
 
-  & > *:not(:last-child) {
-    margin-bottom: toRem(12);
-  }
+  @extend %customScroll;
+
+  
+  position: relative;
+  margin-top: toRem(16);
+  padding-right: toRem(15);
 }

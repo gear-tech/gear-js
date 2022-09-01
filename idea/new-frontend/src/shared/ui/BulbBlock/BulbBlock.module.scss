@@ -17,6 +17,7 @@
 
   &.error::before {
     background-color: $errorColor;
+    box-shadow: 0px 0px 10px $errorColor;
   }
   
   &.success::before {
@@ -25,7 +26,8 @@
   }
   
   &.loading::before {
-    background-color: #3975e9;
+    background-color: $blue;
+    box-shadow: 0px 0px 10px $blue;
   }
 }
 

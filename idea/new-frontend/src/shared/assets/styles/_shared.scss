@@ -30,3 +30,19 @@
 @function getAnimationTimeout($delayTick: 0, $delay: 50) {
   @return (250 + $delayTick * $delay) + ms;
 }
+
+@mixin childrenMargin($margin, $direction: bottom) {
+  & > *:not(:last-child) {
+    @if $direction == bottom {
+      margin-bottom: $margin;
+    } @else if $direction == top {
+      margin-top: $margin; 
+    } @else if $direction == left {
+      margin-left: $margin;
+    } @else if $direction == right {
+      margin-right: $margin;
+    }
+
+    @content
+  }
+}

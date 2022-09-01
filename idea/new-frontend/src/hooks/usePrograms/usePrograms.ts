@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useAlert } from '@gear-js/react-hooks';
 
-import { getUserPrograms } from 'api';
-import { FetchUserProgramsParams, ProgramPaginationModel } from 'api/program/types';
+import { getPrograms } from 'api';
+import { FetchProgramsParams, ProgramPaginationModel } from 'api/program/types';
 import { DEFAULT_LIMIT } from 'shared/config';
 
 import { INIT_STATE } from './consts';
@@ -13,11 +13,11 @@ const usePrograms = (initLoading = true) => {
   const [isLoading, setIsLoading] = useState(initLoading);
   const [programsData, setProgramsData] = useState<ProgramPaginationModel>(INIT_STATE);
 
-  const fetchPrograms = (params?: FetchUserProgramsParams) => {
+  const fetchPrograms = (params?: FetchProgramsParams) => {
     setIsLoading(true);
     setProgramsData(INIT_STATE);
 
-    getUserPrograms({
+    getPrograms({
       limit: DEFAULT_LIMIT,
       ...params,
     })

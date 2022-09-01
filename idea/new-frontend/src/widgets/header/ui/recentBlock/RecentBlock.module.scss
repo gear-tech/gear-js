@@ -111,16 +111,14 @@
 }
 
 .blocksList {
+  @include childrenMargin(toRem(5));
+
   @extend %customScroll;
 
   overflow-y: auto;
   margin-top: toRem(20);
   padding-right: toRem(10);
-
-  & > *:not(:last-child) {
-    margin-bottom: toRem(5);
-  }
-
+  
   .listItem {
     @include fade(0ms, getAnimationTimeout(15));
   }

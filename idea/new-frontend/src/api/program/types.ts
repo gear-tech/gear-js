@@ -1,6 +1,6 @@
 import { IProgram } from 'entities/program';
 
-type FetchUserProgramsParams = {
+type FetchProgramsParams = {
   owner?: string | null;
   limit?: number;
   offset?: number;
@@ -12,4 +12,4 @@ type ProgramPaginationModel = {
   programs: IProgram[];
 };
 
-export type { FetchUserProgramsParams, ProgramPaginationModel };
+export type { FetchProgramsParams, ProgramPaginationModel };

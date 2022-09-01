@@ -2,15 +2,13 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .link {
+  @include childrenMargin(toRem(10), right);
+
   background-color: $bgColorTertiary;
 
   .text {
     color: $textColor;
   }
-
-  & > *:not(:last-child) {
-    margin-right: toRem(10);
-  } 
 
   &:hover{
     background-color: $bgColorTertiary;

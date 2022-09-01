@@ -1,10 +1,9 @@
 @use '@gear-js/ui/breakpoints' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
-.accountList {  
-  & > *:not(:last-child) {
-    margin-bottom: 16px;
-  }
+.accountList {
+  @include childrenMargin(toRem(16));  
 }
 
 .accountButton {

@@ -10,11 +10,11 @@ type Props = {
 const TotalIssuance = ({ totalIssuance }: Props) => (
   <section className={styles.totalIssuance}>
     <h2 className={headerStyles.title}>Total issuance</h2>
-    <p className={headerStyles.content}>
+    <div className={headerStyles.content}>
       <span className={headerStyles.value}>{totalIssuance}</span>
       <span>MUnit</span>
       <Tooltip text="Total issuance" className={styles.tooltip} />
-    </p>
+    </div>
   </section>
 );
 

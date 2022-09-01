@@ -31,6 +31,11 @@
   overflow: hidden;
   position: relative;
 
+  & > * {
+    position: relative;
+    z-index: 2;
+  }
+  
   &::after {
     content: '';
     position: absolute;
@@ -38,7 +43,7 @@
     bottom: -100%;
     width: 100%;
     height: 200%;
-    background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.2) 10%, rgba(24, 24, 27, 0) 100%);
+    background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.23) 0%, rgba(24, 24, 27, 0) 100%);
   }
 
   .otherInfo,
@@ -50,7 +55,7 @@
     margin-bottom: toRem(10);
     
     .name {      
-      max-width: 400px;
+      max-width: 60%;
       overflow: hidden;
       text-overflow: ellipsis;
       color: $textColor;
@@ -71,9 +76,7 @@
   }
 
   .otherInfo {
-    & > *:not(:last-child) {
-      margin-right: toRem(16);
-    }
+    @include childrenMargin(toRem(16), right);
   }
 }
 

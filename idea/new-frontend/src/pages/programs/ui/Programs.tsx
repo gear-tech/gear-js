@@ -4,6 +4,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { usePrograms } from 'hooks';
 
 import styles from './Programs.module.scss';
+import { Filters } from './filters';
 import { ProgramsData } from './programsData';
 
 const Programs = () => {
@@ -21,6 +22,7 @@ const Programs = () => {
   return (
     <div className={styles.pageWrapper}>
       <ProgramsData count={count} programs={programs} isLoading={isLoading} isLoggedIn={isLoggedIn} />
+      <Filters />
     </div>
   );
 };

@@ -2,9 +2,8 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .pageWrapper {
-  display: flex;
+  @include childrenMargin(toRem(22), right);
 
-  & > *:not(:last-child) {
-    margin-right: toRem(22);
-  }
+  display: flex;
+  align-items: flex-start;
 }

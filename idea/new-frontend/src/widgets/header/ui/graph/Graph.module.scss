@@ -2,14 +2,12 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .graph {
+  @include childrenMargin(toRem(4), right);
+
   display: flex;
   align-items: flex-end;
   width: toRem(74);
   height: toRem(32);
-
-  & > *:not(:last-child) {
-    margin-right: toRem(4);
-  }
 }
 
 .line {

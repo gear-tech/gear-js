@@ -8,11 +8,14 @@
 }
 
 html {
-  font-size: 14px;
+  font-size: 100%;
 }
 
 body {
-  background: $bgColor;
+  background-color: $bgColor;
+  background-image: url('/shared/assets/images/placeholders/greenShadowBg.png');
+  background-repeat: no-repeat;
+  background-position: right -150px top -50px;
 }
 
 #root {
@@ -26,20 +29,8 @@ body {
 
 .content {
   flex: 1 1;
-  padding: 0 toRem(32) toRem(16) toRem(48);
   position: relative;
-  overflow: hidden;
-
-  &::after{
-    content: "";
-    z-index: -1;
-    position: absolute;
-    top: toRem(-190);
-    right: toRem(-150);
-    width: toRem(500);
-    height: toRem(300);
-    background: radial-gradient(50% 50% at 50% 50%,rgba($successColor, 0.45) 20%, rgba($bgColor, 0) 100%);
-  }
+  padding: 0 toRem(32) 0 toRem(48);
 }
 
 button {

@@ -1,3 +1,4 @@
+@use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
 %textStyle {
@@ -71,11 +72,9 @@
 }
 
 .contentButtons {
-  display: flex;
+  @include childrenMargin(toRem(10), right);
 
-  & > *:not(:last-child) {
-    margin-right: 10px;
-  }
+  display: flex;
 
   .actionButton {
     flex: 1 1 50%; 

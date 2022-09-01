@@ -98,13 +98,7 @@
 }
 
 .formButtons {
-  display: flex;
-  margin-top: 5px;
-  margin-left: 200px;
-
-  & > *:not(:last-child) {
-    margin-right: 24px;
-
+  @include childrenMargin(toRem(24), right) {
     @include md {
       margin-right: 0;
       margin-bottom: 24px;
@@ -115,6 +109,10 @@
     margin-left: 0;
     flex-direction: column;
   }
+
+  display: flex;
+  margin-top: 5px;
+  margin-left: 200px;
 }
 
 .error {

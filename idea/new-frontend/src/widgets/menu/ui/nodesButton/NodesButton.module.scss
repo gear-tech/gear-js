@@ -3,6 +3,8 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .nodeInfoButton {
+  @include childrenMargin(toRem(16), right);
+
   margin-top: auto;
   align-self: flex-start;
   justify-content: flex-start;
@@ -12,11 +14,7 @@
   box-shadow: inset 0px 1px 0px rgba($textColor, .05);
   border-radius: 0px 8px 8px 0px;
   min-height: toRem(58);
-
-  & > *:not(:last-child) {
-    margin-right: toRem(16);
-  }
-
+  
   &.fullWidth {
     padding-left: toRem(34);
   }
