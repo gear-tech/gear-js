@@ -25,7 +25,7 @@ export class TgbotService {
   public async addAccessUser(commandArguments: string, userId: number): Promise<string> {
     const [, id] = commandArguments.split(" ");
 
-    if (!await this.userService.isAdmin(String(userId))) {
+    if (await this.userService.isAdmin(String(userId))) {
       if (!id) {
         return TBErrorMessage.COMMAND_ARGUMENTS_REQUIRED;
       }
