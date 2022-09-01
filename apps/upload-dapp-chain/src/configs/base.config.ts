@@ -11,7 +11,7 @@ export default () => ({
     TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
   },
   workflow: {
-    WORKFLOW_PATH: process.env.GEAR_WS_PROVIDER,
+    WORKFLOW_PATH: process.env.WORKFLOW_PATH,
   },
   gear: {
     GEAR_WS_PROVIDER: process.env.GEAR_WS_PROVIDER,
