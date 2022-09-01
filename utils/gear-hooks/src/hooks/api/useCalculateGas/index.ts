@@ -5,17 +5,17 @@ import { AccountContext, ApiContext } from 'context';
 import { CalculateGas, HandleOptions, InitOptions } from './types';
 
 function useCalculateGas(
-  programBuffer: Buffer | undefined,
+  codeBuffer: Buffer | undefined,
   metadata?: Metadata | undefined,
   options?: InitOptions,
 ): CalculateGas;
 function useCalculateGas(
-  programIdOrBuffer: Hex | Buffer | undefined,
+  codeIdOrBuffer: Hex | Buffer | undefined,
   metadata?: Metadata | undefined,
   options?: HandleOptions,
 ): CalculateGas;
 function useCalculateGas(
-  programIdOrBuffer: Hex | Buffer | undefined,
+  codeIdOrBuffer: Hex | Buffer | undefined,
   metadata?: Metadata | undefined,
   options?: InitOptions | HandleOptions,
 ): CalculateGas {
@@ -24,7 +24,7 @@ function useCalculateGas(
 
   const calculateGas = (initPayload: AnyJson): Promise<GasInfo> => {
     if (!account) return Promise.reject(new Error('No account address'));
-    if (!programIdOrBuffer) return Promise.reject(new Error('No program source'));
+    if (!codeIdOrBuffer) return Promise.reject(new Error('No program source'));
 
     const { decodedAddress } = account;
     const { method = 'handle', value = 0, isOtherPanicsAllowed = false } = options || {};
@@ -32,7 +32,7 @@ function useCalculateGas(
     // @ts-ignore
     return api.program.calculateGas[method](
       decodedAddress,
-      programIdOrBuffer,
+      codeIdOrBuffer,
       initPayload,
       value,
       isOtherPanicsAllowed,
