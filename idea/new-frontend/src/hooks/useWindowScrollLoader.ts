@@ -1,14 +1,7 @@
 import { useEffect } from 'react';
 import throttle from 'lodash.throttle';
 
-type Params = {
-  hasMore: boolean;
-  callback: () => void;
-};
-
-const useWindowScrollLoader = (params: Params) => {
-  const { hasMore, callback } = params;
-
+const useWindowScrollLoader = (callback: () => void, hasMore: boolean) => {
   useEffect(() => {
     const handleScroll = throttle(() => {
       const loadMore = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight;

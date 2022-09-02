@@ -9,19 +9,19 @@ import { DEFAULT_LIMIT } from 'shared/config';
 const usePrograms = (initLoading = true) => {
   const alert = useAlert();
 
-  const [count, setCount] = useState(0);
   const [programs, setPrograms] = useState<IProgram[]>([]);
   const [isLoading, setIsLoading] = useState(initLoading);
+  const [totalCount, setTotalCount] = useState(0);
 
   const setProgramsData = (data: ProgramPaginationModel, isReset: boolean) => {
-    setCount(data.count);
+    setTotalCount(data.count);
     // such an implementation to support StrictMode
     setPrograms((prevState) => (isReset ? data.programs : prevState.concat(data.programs)));
   };
 
   const fetchPrograms = (params?: FetchProgramsParams, isReset = false) => {
     if (isReset) {
-      setCount(0);
+      setTotalCount(0);
       setPrograms([]);
     }
 
@@ -39,7 +39,7 @@ const usePrograms = (initLoading = true) => {
       .finally(() => setIsLoading(false));
   };
 
-  return { count, programs, isLoading, fetchPrograms };
+  return { programs, isLoading, totalCount, fetchPrograms };
 };
 
 export { usePrograms };

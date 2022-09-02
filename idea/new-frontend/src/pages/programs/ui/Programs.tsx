@@ -1,8 +1,7 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 
-import { usePrograms, useWindowScrollLoader } from 'hooks';
-import { DEFAULT_LIMIT } from 'shared/config';
+import { usePrograms, useDataLoading, useWindowScrollLoader } from 'hooks';
 
 import styles from './Programs.module.scss';
 import { RequestParams } from '../model/types';
@@ -12,56 +11,25 @@ import { SearchSettings } from './searchSettings';
 
 const Programs = () => {
   const { account } = useAccount();
-  const { count, programs, isLoading, fetchPrograms } = usePrograms();
+  const { programs, isLoading, totalCount, fetchPrograms } = usePrograms();
 
-  const offset = useRef(0);
-  const [hasMore, setHasMore] = useState(false);
-  const [requestParams, setRequestParams] = useState(DEFAULT_REQUEST_PARAMS);
-
-  const loadPrograms = useCallback(
-    (isReset = false) => {
-      const { owner, query } = requestParams;
-
-      if (isReset) {
-        offset.current = 0;
-      }
-
-      setHasMore(false);
-      fetchPrograms(
-        {
-          query,
-          owner: owner || undefined,
-          offset: offset.current,
-        },
-        isReset,
-      ).then(() => {
-        offset.current += DEFAULT_LIMIT;
-      });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [requestParams],
-  );
+  const { hasMore, loadData, changeParams } = useDataLoading<RequestParams>({
+    totalCount,
+    currentCount: programs.length,
+    defaultParams: DEFAULT_REQUEST_PARAMS,
+    fetchData: fetchPrograms,
+  });
 
   const handleParamsChange = useCallback(
-    (params: RequestParams) =>
-      setRequestParams((prevState) => ({
-        ...prevState,
-        ...params,
-      })),
-    [],
+    ({ query, owner }: RequestParams) =>
+      changeParams({
+        query,
+        owner: owner || undefined,
+      }),
+    [changeParams],
   );
 
-  useEffect(() => {
-    setHasMore(programs.length < count);
-  }, [count, programs]);
-
-  useEffect(() => {
-    window.scrollTo({ top: 0 });
-    loadPrograms(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadPrograms]);
-
-  useWindowScrollLoader({ hasMore, callback: loadPrograms });
+  useWindowScrollLoader(loadData, hasMore);
 
   const isLoggedIn = Boolean(account);
   const decodedAddress = account?.decodedAddress;
@@ -69,9 +37,9 @@ const Programs = () => {
   return (
     <div className={styles.pageWrapper}>
       <ProgramsData
-        count={count}
+        count={totalCount}
         programs={programs}
-        isLoading={!count && isLoading}
+        isLoading={!totalCount && isLoading}
         isLoggedIn={isLoggedIn}
         onParamsChange={handleParamsChange}
       />
