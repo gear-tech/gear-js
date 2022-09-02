@@ -34,6 +34,7 @@ jobs:
       escrow_changed: ${{ steps.check_file_changed.outputs.escrow_changed }}
       auction_changed: ${{ steps.check_file_changed.outputs.auction_changed }}
       staking_changed: ${{ steps.check_file_changed.outputs.staking_changed }}
+      upload_changed: ${{ steps.check_file_changed.outputs.upload_changed }}
 
     steps:
     - uses: actions/checkout@v2
@@ -70,6 +71,10 @@ jobs:
         $SourceDiffStaking = $diff | Where-Object { $_ -match '^apps/staking/' }
         $HasDiffStaking = $SourceDiffStaking.Length -gt 0
 
+        # Check if a file under upload-dapp-chain/ has changed (added, modified, deleted)
+        $SourceDiffUpload = $diff | Where-Object { $_ -match '^apps/upload-dapp-chain/' }
+        $HasDiffUpload = $SourceDiffUpload.Length -gt 0
+
 
         # Set the output named "nft_changed"
         Write-Host "::set-output name=nft_changed::$HasDiffNft"
@@ -78,6 +83,7 @@ jobs:
         Write-Host "::set-output name=escrow_changed::$HasDiffEscrow"
         Write-Host "::set-output name=auction_changed::$HasDiffAuction"
         Write-Host "::set-output name=staking_changed::$HasDiffStaking"
+        Write-Host "::set-output name=upload_changed::$HasDiffUpload"
 
 
   build-and-push-marketplace-image:
@@ -267,7 +273,37 @@ jobs:
             REACT_APP_FTOKEN_CONTRACT_ADDRESS=${{ secrets.REACT_APP_FTOKEN_CONTRACT_ADDRESS }}
             REACT_APP_STAKING_CONTRACT_ADDRESS=${{ secrets.REACT_APP_STAKING_CONTRACT_ADDRESS }}
 
-       
+
+    build-and-push-upload-image:
+    runs-on: ubuntu-latest
+    needs: [wait-previous-run,conditional_job_check_files]
+    if: needs.conditional_job_check_files.outputs.upload_changed == 'True'
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+        # Checkout as many commits as needed for the diff
+          fetch-depth: 0
+
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Upload Dapp Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: apps/upload-dapp-chain/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-upload:prod
+
+
   deploy-marketplace-k8s:
     needs: [ build-and-push-marketplace-image, wait-previous-run]
     runs-on: ubuntu-latest
@@ -394,6 +430,29 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
           args: rollout restart deployment staking -n $KUBE_NAMESPACE
+
+      - name: Check k8s deployments
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
+
+
+  deploy-staking-k8s:
+    needs: [ build-and-push-upload-image, wait-previous-run]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to k8s
+        uses: sergeyfilyanin/kubectl-aws-eks@master
+        with:
+          args: rollout restart deployment upload-dappchain -n $KUBE_NAMESPACE
 
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
