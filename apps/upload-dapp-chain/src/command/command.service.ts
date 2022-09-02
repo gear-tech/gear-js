@@ -6,7 +6,7 @@ import { SendMessageInput, UploadProgramInput, UploadProgramResult } from "./typ
 import { gearService } from "../gear/gear-service";
 
 @Injectable()
-export class WorkflowCommandService {
+export class CommandService {
   private logger: Logger = new Logger("WorkflowCommandService");
   private gearApi: GearApi = gearService.getApi();
 

@@ -23,20 +23,17 @@ export class DappDataRepo {
     });
   }
 
-  public async getByNameAndRepo(name: string, repo: string): Promise<DappData> {
-    return this.dappDataRepository.findOne({
-      where: {
-        name,
-        repo,
-      },
-    });
-  }
-
   public async getByName(name: string): Promise<DappData> {
     return this.dappDataRepository.findOne({
       where: {
         name,
       },
     });
+  }
+
+  public async getByNames(names: string[]): Promise<DappData[]> {
+    return this.dappDataRepository.find({
+      where: names.map(name => ({name}))
+    })
   }
 }

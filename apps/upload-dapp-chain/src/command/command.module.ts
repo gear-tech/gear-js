@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 
-import { WorkflowCommandService } from "./workflow-command.service";
+import { CommandService } from "./command.service";
 
 @Module({
   controllers: [],
-  providers: [WorkflowCommandService],
-  exports: [WorkflowCommandService],
+  providers: [CommandService],
+  exports: [CommandService],
 })
-export class WorkflowCommandModule {}
+export class CommandModule {}
