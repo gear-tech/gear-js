@@ -436,8 +436,7 @@ jobs:
         with:
           args: get deployment -o name -n $KUBE_NAMESPACE | xargs -n1 -t kubectl rollout status -n $KUBE_NAMESPACE --timeout=120s
 
-
-  deploy-staking-k8s:
+  deploy-upload-k8s:
     needs: [ build-and-push-upload-image, wait-previous-run]
     runs-on: ubuntu-latest
 
