@@ -21,7 +21,7 @@
     "nodemon": "^2.0.16",
     "pg": "^8.7.1",
     "postgres": "^1.0.2",
-    "typeorm": "^0.3.6",
+    "typeorm": "^0.3.9",
     "winston": "^3.3.3"
   },
   "devDependencies": {

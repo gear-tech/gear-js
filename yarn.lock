@@ -2555,7 +2555,7 @@ __metadata:
     pg: ^8.7.1
     postgres: ^1.0.2
     ts-node-dev: 2.0.0
-    typeorm: ^0.3.6
+    typeorm: ^0.3.9
     typescript: 4.7.4
     winston: ^3.3.3
   languageName: unknown
@@ -21981,7 +21981,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typeorm@npm:^0.3.6, typeorm@npm:^0.3.7":
+"typeorm@npm:^0.3.7, typeorm@npm:^0.3.9":
   version: 0.3.9
   resolution: "typeorm@npm:0.3.9"
   dependencies:
