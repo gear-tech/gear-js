@@ -2533,6 +2533,51 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@gear-js/supply-chain@workspace:apps/supply-chain":
+  version: 0.0.0-use.local
+  resolution: "@gear-js/supply-chain@workspace:apps/supply-chain"
+  dependencies:
+    "@gear-js/api": ^0.25.2
+    "@gear-js/react-hooks": ^0.2.19
+    "@gear-js/ui": ^0.4.0
+    "@mantine/form": ^4.2.12
+    "@polkadot/api": ^9.2.2
+    "@polkadot/extension-dapp": ^0.43.3
+    "@polkadot/react-identicon": ^2.9.3
+    "@polkadot/types": ^9.2.2
+    "@polkadot/util": ^9.7.2
+    "@polkadot/wasm-crypto": ^6.3.1
+    "@testing-library/jest-dom": ^5.16.4
+    "@testing-library/react": ^13.3.0
+    "@testing-library/user-event": ^13.5.0
+    "@types/jest": ^27.5.2
+    "@types/node": ^16.11.47
+    "@types/react": ^18.0.15
+    "@types/react-dom": ^18.0.6
+    "@typescript-eslint/eslint-plugin": ^5.31.0
+    "@typescript-eslint/parser": ^5.31.0
+    buffer: ^6.0.3
+    clsx: ^1.2.1
+    eslint: ^8.21.0
+    eslint-config-airbnb: ^19.0.4
+    eslint-config-airbnb-typescript: ^17.0.0
+    eslint-config-prettier: ^8.5.0
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-jsx-a11y: ^6.6.1
+    eslint-plugin-react: ^7.30.1
+    eslint-plugin-react-hooks: ^4.6.0
+    react: ^18.2.0
+    react-app-rewired: ^2.2.1
+    react-dom: ^18.2.0
+    react-router-dom: ^6.3.0
+    react-scripts: ^5.0.1
+    react-transition-group: ^4.4.5
+    sass: ^1.54.0
+    typescript: ^4.7.4
+    web-vitals: ^2.1.4
+  languageName: unknown
+  linkType: soft
+
 "@gear-js/test-balance@workspace:idea/test-balance":
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:idea/test-balance"
@@ -20756,51 +20801,6 @@ __metadata:
   checksum: f2ddc4f3ba467a5c4036dd4aad41351e4b60eb13c39ecf5233ccd2ebb425504073b2b7036c973a70c7047f5c6bc1b9fef096b7bbff114d357cbe80654441db23
   languageName: node
   linkType: hard
-
-"supply-chain@workspace:apps/supply-chain":
-  version: 0.0.0-use.local
-  resolution: "supply-chain@workspace:apps/supply-chain"
-  dependencies:
-    "@gear-js/api": ^0.25.2
-    "@gear-js/react-hooks": ^0.2.19
-    "@gear-js/ui": ^0.4.0
-    "@mantine/form": ^4.2.12
-    "@polkadot/api": ^9.2.2
-    "@polkadot/extension-dapp": ^0.43.3
-    "@polkadot/react-identicon": ^2.9.3
-    "@polkadot/types": ^9.2.2
-    "@polkadot/util": ^9.7.2
-    "@polkadot/wasm-crypto": ^6.3.1
-    "@testing-library/jest-dom": ^5.16.4
-    "@testing-library/react": ^13.3.0
-    "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.2
-    "@types/node": ^16.11.47
-    "@types/react": ^18.0.15
-    "@types/react-dom": ^18.0.6
-    "@typescript-eslint/eslint-plugin": ^5.31.0
-    "@typescript-eslint/parser": ^5.31.0
-    buffer: ^6.0.3
-    clsx: ^1.2.1
-    eslint: ^8.21.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^17.0.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsx-a11y: ^6.6.1
-    eslint-plugin-react: ^7.30.1
-    eslint-plugin-react-hooks: ^4.6.0
-    react: ^18.2.0
-    react-app-rewired: ^2.2.1
-    react-dom: ^18.2.0
-    react-router-dom: ^6.3.0
-    react-scripts: ^5.0.1
-    react-transition-group: ^4.4.5
-    sass: ^1.54.0
-    typescript: ^4.7.4
-    web-vitals: ^2.1.4
-  languageName: unknown
-  linkType: soft
 
 "supports-color@npm:^2.0.0":
   version: 2.0.0
