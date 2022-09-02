@@ -1,10 +1,10 @@
-import Identicon from '@polkadot/react-identicon';
 import clsx from 'clsx';
 import { useAccounts, Account } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 
 import { useModal } from 'hooks';
 import { LocalStorage } from 'shared/config';
+import { AccountButton } from 'shared/ui/accountButton';
 import polkadotSVG from 'shared/assets/images/logos/polkadotLogo.svg';
 
 import { useState } from 'react';
@@ -32,15 +32,17 @@ const Wallet = ({ account }: Props) => {
     }
   };
 
-  const accountBtnClasses = clsx(buttonStyles.button, buttonStyles.medium, styles.accountBtn, styles.fixSize);
+  const accountBtnClasses = clsx(buttonStyles.medium, styles.accountBtn, styles.fixSize);
 
   return (
     <div className={styles.walletWrapper}>
       {account ? (
-        <button type="button" className={accountBtnClasses} onClick={handleClick}>
-          <Identicon value={account.address} size={28} theme="polkadot" className={styles.avatar} />
-          {account.meta.name}
-        </button>
+        <AccountButton
+          name={account.meta.name}
+          address={account.address}
+          className={accountBtnClasses}
+          onClick={handleClick}
+        />
       ) : (
         <Button icon={polkadotSVG} text="Connect" color="primary" className={styles.fixSize} onClick={handleClick} />
       )}

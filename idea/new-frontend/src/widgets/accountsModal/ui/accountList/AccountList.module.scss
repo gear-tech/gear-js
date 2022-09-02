@@ -22,13 +22,8 @@
   padding: 0 5px;
 }
 
-.accountIcon,
-.accountAddress {
+.accountIcon {
   @include md {
     display: none !important;
   }
-}
-
-.accountAddress{
-  font-size: $fontSize;
 }

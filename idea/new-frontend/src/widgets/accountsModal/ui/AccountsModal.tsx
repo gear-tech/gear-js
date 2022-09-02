@@ -1,6 +1,7 @@
+import { useCallback } from 'react';
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { GearKeyring } from '@gear-js/api';
+import { decodeAddress } from '@gear-js/api';
 import { Button, Modal } from '@gear-js/ui';
 
 import { ModalProps } from 'entities/modal';
@@ -18,16 +19,6 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
   const alert = useAlert();
   const { logout, switchAccount, account } = useAccount();
 
-  const selectAccount = (newAccount: InjectedAccountWithMeta) => {
-    switchAccount(newAccount);
-
-    localStorage.setItem(LocalStorage.PublicKeyRaw, GearKeyring.decodeAddress(newAccount.address));
-
-    onClose();
-
-    alert.success('Account successfully changed');
-  };
-
   const handleLogout = () => {
     logout();
 
@@ -36,15 +27,29 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
     onClose();
   };
 
+  const selectAccount = useCallback(
+    (newAccount: InjectedAccountWithMeta) => {
+      switchAccount(newAccount);
+
+      localStorage.setItem(LocalStorage.PublicKeyRaw, decodeAddress(newAccount.address));
+
+      onClose();
+
+      alert.success('Account successfully changed');
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [onClose],
+  );
+
   return (
-    <Modal heading="Connect" className={styles.modal} close={onClose}>
+    <Modal heading="Connect Account" close={onClose}>
       {accounts ? (
         <>
           <AccountList list={accounts} address={account?.address} toggleAccount={selectAccount} />
           <Button
             icon={logoutSVG}
+            text="Logout"
             color="transparent"
-            aria-label="Logout"
             className={styles.logoutButton}
             onClick={handleLogout}
           />

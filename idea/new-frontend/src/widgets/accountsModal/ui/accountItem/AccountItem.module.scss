@@ -1,0 +1,23 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.accountItem {
+  @include childrenMargin(toRem(10), right);
+
+  display: flex;
+  align-items: center;
+
+  .accountButton {
+    flex: 1 1;
+  
+    &.active {
+      cursor: default;
+      background-color: $successColor;
+  
+      &:hover {
+        background-color: $successColor;
+      }
+    }
+  }
+}
+

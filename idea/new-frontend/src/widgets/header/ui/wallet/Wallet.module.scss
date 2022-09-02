@@ -1,4 +1,3 @@
-@use '@gear-js/ui/mixins' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
@@ -7,29 +6,20 @@
   margin-left: toRem(16);
 }
 
-.avatar {
-  margin-right: toRem(10);
-  // hacky, but need to override Identicon's 'cursor: copy'
-  cursor: inherit !important;
-}
-
 .fixSize {
   width: toRem(183);
   min-height: toRem(52); 
 }
 
 .accountBtn {
-  @include transition(background-color);
-
-  display: inline-block;
-  overflow: hidden;
-  font-weight: 600;
-  font-family: 'Kanit';
-  white-space: nowrap;
-  text-overflow: ellipsis;
   background-color: $bgColorSecondary;
 
   &:hover {
     background-color: $bgColorTertiary;
+  }
+
+  & > div {
+    // hacky, but need to override Identicon's 'cursor: copy'
+    cursor: inherit !important;
   }
 }
