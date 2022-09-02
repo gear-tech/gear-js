@@ -274,7 +274,7 @@ jobs:
             REACT_APP_STAKING_CONTRACT_ADDRESS=${{ secrets.REACT_APP_STAKING_CONTRACT_ADDRESS }}
 
 
-    build-and-push-upload-image:
+  build-and-push-upload-image:
     runs-on: ubuntu-latest
     needs: [wait-previous-run,conditional_job_check_files]
     if: needs.conditional_job_check_files.outputs.upload_changed == 'True'
