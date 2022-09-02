@@ -18,6 +18,8 @@
     "build:lottery": "yarn workspace @gear-js/lottery build",
     "build:auction": "yarn workspace @gear-js/auction build",
     "build:staking": "yarn workspace @gear-js/staking build",
+    "build:upload-dappChain": "yarn workspace @gear-js/upload-dappChain build",
+    "build:supply-chain": "yarn workspace @gear-js/supply-chain build",
     "postinstall": "husky install"
   },
   "devDependencies": {
