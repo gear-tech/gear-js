@@ -4,6 +4,7 @@ import { InputProps } from '../../types';
 import { useClearButton } from '../../hooks';
 import { Button } from '../Button/Button';
 import { InputWrapper } from '../utils';
+import search from './images/search.svg';
 import styles from './Input.module.scss';
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
@@ -25,7 +26,9 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     ...attrs
   } = props;
 
-  const { readOnly, disabled } = attrs;
+  const { readOnly, disabled, type } = attrs;
+
+  const isSearch = type === 'search';
 
   const wrapperClassName = clsx(
     styles.wrapper,
@@ -53,6 +56,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
       <div className={wrapperClassName} data-testid="wrapper">
         {icon && <img src={icon} alt="input icon" className={styles.icon} />}
         <input
+          type={type}
           id={id}
           className={inputClassName}
           ref={inputRef}
@@ -69,6 +73,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
             className={styles.clearButton}
           />
         )}
+        {isSearch && <Button type="submit" icon={search} color="transparent" className={styles.searchButton} />}
       </div>
     </InputWrapper>
   );
