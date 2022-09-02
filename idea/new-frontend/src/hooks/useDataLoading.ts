@@ -45,12 +45,11 @@ const useDataLoading = <T>({ totalCount, currentCount, defaultParams, fetchData 
   }, [totalCount, currentCount]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0 });
     loadData(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadData]);
 
-  return { hasMore, loadData, changeParams: setParams };
+  return { params, hasMore, loadData, changeParams: setParams };
 };
 
 export { useDataLoading };

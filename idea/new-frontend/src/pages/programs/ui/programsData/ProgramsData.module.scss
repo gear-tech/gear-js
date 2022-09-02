@@ -1,4 +1,5 @@
 @use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .programsSection {
@@ -6,10 +7,20 @@
 }
 
 .programs {
-  display: grid;
-  grid-auto-flow: row;
-  grid-auto-rows: min-content;
-  grid-row-gap: toRem(12);
   position: relative;
   margin-top: toRem(16);
+  
+  .simpleBar {
+    @include customSimplebar;
+
+    height: calc(100vh - $headerHeight - $footerHeight);
+
+    :global(.simplebar-content) {
+      display: grid;
+      grid-auto-flow: row;
+      grid-auto-rows: min-content;
+      grid-row-gap: toRem(12);
+      margin-right: toRem(15);
+    }
+  }
 }

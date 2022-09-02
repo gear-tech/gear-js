@@ -1,5 +1,6 @@
 @use '@gear-js/ui/mixins' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 @use 'shared/assets/styles/_animations.scss' as *;
 
@@ -17,7 +18,7 @@
 }
 
 %enterDoneStyles {
-  max-height: toRem(558);
+  max-height: 558px;
 
   .graph > hr { 
     background-color: $successColor;
@@ -51,7 +52,7 @@
   &:global(.enter) {
     @extend %enterStyles;
 
-    .blocksList { 
+    .simpleBar { 
       overflow: hidden;
     }
   }
@@ -110,16 +111,20 @@
   }
 }
 
-.blocksList {
-  @include childrenMargin(toRem(5));
-
-  @extend %customScroll;
-
-  overflow-y: auto;
-  margin-top: toRem(20);
-  padding-right: toRem(10);
+.simpleBar {
+  @include customSimplebar;
   
-  .listItem {
-    @include fade(0ms, $bigTimeout);
+  width: 100%;
+  margin-top: toRem(20);
+  max-height: 463px;
+  
+  .blockList {
+    @include childrenMargin(toRem(5));
+
+    padding-right: toRem(10);
+
+    .listItem {
+      @include fade(0ms, $bigTimeout);
+    }
   }
 }

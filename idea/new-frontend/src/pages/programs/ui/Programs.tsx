@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 
-import { usePrograms, useDataLoading, useWindowScrollLoader } from 'hooks';
+import { usePrograms, useDataLoading } from 'hooks';
 
 import styles from './Programs.module.scss';
 import { RequestParams } from '../model/types';
@@ -13,26 +13,41 @@ const Programs = () => {
   const { account } = useAccount();
   const { programs, isLoading, totalCount, fetchPrograms } = usePrograms();
 
-  const { hasMore, loadData, changeParams } = useDataLoading<RequestParams>({
+  const { params, hasMore, loadData, changeParams } = useDataLoading<RequestParams>({
     totalCount,
     currentCount: programs.length,
     defaultParams: DEFAULT_REQUEST_PARAMS,
     fetchData: fetchPrograms,
   });
 
+  const decodedAddress = account?.decodedAddress;
+
   const handleParamsChange = useCallback(
-    ({ query, owner }: RequestParams) =>
+    ({ query, owner }: RequestParams) => {
+      console.log(owner);
       changeParams({
         query,
-        owner: owner || undefined,
-      }),
-    [changeParams],
+        owner: owner !== 'all' ? decodedAddress : undefined,
+      });
+    },
+    [changeParams, decodedAddress],
   );
 
-  useWindowScrollLoader(loadData, hasMore);
+  useEffect(
+    () => {
+      if (!(params.owner && decodedAddress)) {
+        return;
+      }
+
+      changeParams({ owner: decodedAddress });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [decodedAddress],
+  );
+
+  // useWindowScrollLoader(loadData, hasMore);
 
   const isLoggedIn = Boolean(account);
-  const decodedAddress = account?.decodedAddress;
 
   return (
     <div className={styles.pageWrapper}>
@@ -43,7 +58,7 @@ const Programs = () => {
         isLoggedIn={isLoggedIn}
         onParamsChange={handleParamsChange}
       />
-      <SearchSettings decodedAddress={decodedAddress} onParamsChange={handleParamsChange} />
+      <SearchSettings requestParams={params} decodedAddress={decodedAddress} onParamsChange={handleParamsChange} />
     </div>
   );
 };

@@ -1,12 +1,6 @@
 // import { Sort } from 'features/sortBy';
 
-import { RequestParams, FiltersValues } from './types';
-
-const FILTERS_INITIAL_VALUES: FiltersValues = {
-  owner: '',
-  status: [],
-  createAt: '',
-};
+import { RequestParams } from './types';
 
 const DEFAULT_REQUEST_PARAMS: RequestParams = {
   query: '',
@@ -16,4 +10,4 @@ const DEFAULT_REQUEST_PARAMS: RequestParams = {
   // createAt: '',
 };
 
-export { FILTERS_INITIAL_VALUES, DEFAULT_REQUEST_PARAMS };
+export { DEFAULT_REQUEST_PARAMS };

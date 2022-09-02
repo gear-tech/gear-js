@@ -1,4 +1,4 @@
-import { KeyboardEvent } from 'react';
+import { KeyboardEvent, useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Input } from '@gear-js/ui';
 
@@ -8,15 +8,21 @@ import { AnimationTimeout } from 'shared/config';
 import { BulbStatus } from 'shared/ui/bulbBlock';
 
 import styles from './SearchSettings.module.scss';
-import { RequestParams } from '../../model/types';
-import { FILTERS_INITIAL_VALUES } from '../../model/consts';
+import { RequestParams, FiltersValues } from '../../model/types';
 
 type Props = {
+  requestParams: RequestParams;
   decodedAddress?: string;
   onParamsChange: (params: RequestParams) => void;
 };
 
-const SearchSettings = ({ decodedAddress, onParamsChange }: Props) => {
+const SearchSettings = ({ requestParams, decodedAddress, onParamsChange }: Props) => {
+  const [initialValues, setInitialValues] = useState<FiltersValues>({
+    owner: requestParams.owner || 'all',
+    status: requestParams.status || [],
+    createAt: requestParams.createAt || '',
+  });
+
   const handleEnterClick = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       // @ts-ignore
@@ -24,12 +30,26 @@ const SearchSettings = ({ decodedAddress, onParamsChange }: Props) => {
     }
   };
 
+  useEffect(
+    () => () => {
+      if (decodedAddress) {
+        setInitialValues({
+          owner: 'all',
+          status: requestParams.status || [],
+          createAt: requestParams.createAt || '',
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [decodedAddress],
+  );
+
   return (
     <section className={styles.searchSettings}>
       <div className={styles.searchFieldWrapper}>
         <Input placeholder="Search by name, id..." onKeyDown={handleEnterClick} />
       </div>
-      <Filters initialValues={FILTERS_INITIAL_VALUES} onSubmit={onParamsChange}>
+      <Filters initialValues={initialValues} enableReinitialize onSubmit={onParamsChange}>
         <Filters.Group name="owner">
           <CSSTransition
             in={!!decodedAddress}
@@ -37,9 +57,9 @@ const SearchSettings = ({ decodedAddress, onParamsChange }: Props) => {
             timeout={AnimationTimeout.Medium}
             mountOnEnter
             unmountOnExit>
-            <Filters.Radio name="owner" value={decodedAddress} label="My programs" className={styles.ownerFilter} />
+            <Filters.Radio name="owner" value="owner" label="My programs" className={styles.ownerFilter} />
           </CSSTransition>
-          <Filters.Radio name="owner" value="" label="All programs" defaultChecked />
+          <Filters.Radio name="owner" value="all" label="All programs" />
         </Filters.Group>
         <Filters.Group name="create" title="Created at">
           <Input name="create" type="date" />

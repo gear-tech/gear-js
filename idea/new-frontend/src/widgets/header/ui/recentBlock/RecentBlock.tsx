@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import SimpleBar from 'simplebar-react';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
@@ -72,13 +73,15 @@ const RecentBlock = () => {
           </button>
         </div>
         {isOpen && (
-          <TransitionGroup component="ul" className={styles.blocksList}>
-            {blocks.map((item) => (
-              <CSSTransition key={item.number} timeout={AnimationTimeout.Big} exit={false}>
-                <RecentBlockItem block={item} className={styles.listItem} />
-              </CSSTransition>
-            ))}
-          </TransitionGroup>
+          <SimpleBar className={styles.simpleBar}>
+            <TransitionGroup component="ul" className={styles.blockList}>
+              {blocks.map((item) => (
+                <CSSTransition key={item.number} timeout={AnimationTimeout.Big} exit={false}>
+                  <RecentBlockItem block={item} className={styles.listItem} />
+                </CSSTransition>
+              ))}
+            </TransitionGroup>
+          </SimpleBar>
         )}
       </section>
     </CSSTransition>

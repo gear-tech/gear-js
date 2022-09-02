@@ -1,4 +1,4 @@
-import RenderIfVisible from 'react-render-if-visible';
+import SimpleBar from 'simplebar-react';
 
 import { Sort, SortBy } from 'features/sortBy';
 import { IProgram, HorizontalProgramCard } from 'entities/program';
@@ -24,15 +24,15 @@ const ProgramsData = ({ count, programs, isLoading, isLoggedIn, onParamsChange }
     <section className={styles.programsSection}>
       <SortBy title="programs" count={count} onChange={handleSortChange} />
       <div className={styles.programs}>
-        {isEmpty || isLoading ? (
-          <ProgramsPlaceholder isEmpty={isEmpty} isLoading={isLoading} />
-        ) : (
-          programs.map((program) => (
-            <RenderIfVisible key={program.id} initialVisible defaultHeight={110} rootElementClass={styles.programItem}>
-              <HorizontalProgramCard program={program} withSendMessage={isLoggedIn} />
-            </RenderIfVisible>
-          ))
-        )}
+        <SimpleBar className={styles.simpleBar}>
+          {isEmpty || isLoading ? (
+            <ProgramsPlaceholder isEmpty={isEmpty} isLoading={isLoading} />
+          ) : (
+            programs.map((program) => (
+              <HorizontalProgramCard key={program.id} program={program} withSendMessage={isLoggedIn} />
+            ))
+          )}
+        </SimpleBar>
       </div>
     </section>
   );

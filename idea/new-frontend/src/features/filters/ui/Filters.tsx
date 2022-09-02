@@ -6,13 +6,14 @@ import { FiltersForm } from './filtersForm';
 import { FilterGroup } from './filterGroup';
 import { StatusCheckbox } from './statusCheckbox';
 
-type Props<T> = Pick<FormikProps<T>, 'initialValues'> & {
+type Props<T> = Pick<FormikProps<T>, 'enableReinitialize' | 'initialValues'> & {
   children: ReactNode;
   onSubmit: (values: T) => void;
 };
 
-const Filters = <T,>({ children, initialValues, onSubmit }: Props<T>) => (
-  <Formik initialValues={initialValues} onSubmit={onSubmit}>
+const Filters = <T,>({ children, initialValues, enableReinitialize, onSubmit }: Props<T>) => (
+  /* @ts-ignore */
+  <Formik initialValues={initialValues} enableReinitialize={enableReinitialize} onSubmit={onSubmit}>
     {(props) => (
       // eslint-disable-next-line react/jsx-props-no-spreading
       <FiltersForm {...props}>{children}</FiltersForm>

@@ -1,4 +1,5 @@
-import { useField } from 'formik';
+/* eslint-disable react/jsx-props-no-spreading */
+import { Field, FieldProps } from 'formik';
 import clsx from 'clsx';
 import { Radio as UIRadio, RadioProps } from '@gear-js/ui';
 
@@ -8,23 +9,10 @@ type Props = Omit<RadioProps, 'name' | 'onChange'> & {
   name: string;
 };
 
-const Radio = (props: Props) => {
-  const { name, value, label, className, defaultChecked } = props;
-
-  const [{ checked, onBlur, onChange }] = useField(name);
-
-  return (
-    <UIRadio
-      name={name}
-      value={value}
-      label={label}
-      checked={checked}
-      className={clsx(styles.radio, className)}
-      defaultChecked={defaultChecked}
-      onBlur={onBlur}
-      onChange={onChange}
-    />
-  );
-};
+const Radio = ({ name, value, label, className }: Props) => (
+  <Field type="radio" name={name} value={value}>
+    {({ field }: FieldProps) => <UIRadio label={label} className={clsx(styles.radio, className)} {...field} />}
+  </Field>
+);
 
 export { Radio };

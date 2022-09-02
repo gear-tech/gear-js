@@ -1,4 +1,5 @@
 import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
+import 'simplebar-react/dist/simplebar.min.css';
 
 import { useAccountSubscriptions } from 'hooks';
 import { Menu } from 'widgets/menu';

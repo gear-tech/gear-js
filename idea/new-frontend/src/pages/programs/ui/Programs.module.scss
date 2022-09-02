@@ -1,7 +1,8 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 
 .pageWrapper {
-  @include childrenMargin(toRem(36), right);
+  @include childrenMargin(toRem(22), right);
 
   display: flex;
   align-items: flex-start;
