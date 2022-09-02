@@ -1,4 +1,6 @@
 FROM node:16-alpine
+MAINTAINER gear
+
 WORKDIR /src
 COPY package.json .
 COPY yarn.lock .
