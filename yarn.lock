@@ -2072,7 +2072,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.25.2, @gear-js/api@npm:^0.25.0, @gear-js/api@npm:^0.25.2":
+"@gear-js/api@npm:0.25.2, @gear-js/api@npm:^0.25.2":
   version: 0.25.2
   resolution: "@gear-js/api@npm:0.25.2"
   peerDependencies:
@@ -20177,7 +20177,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "social@workspace:apps/social"
   dependencies:
-    "@gear-js/api": ^0.25.0
+    "@gear-js/api": ^0.25.2
     "@gear-js/react-hooks": ^0.2.17
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
