@@ -7,6 +7,7 @@ interface BaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'large' | 'medium' | 'small';
   block?: boolean;
   noWrap?: boolean;
+  tooltip?: string;
 }
 
 interface TextProps extends BaseProps {

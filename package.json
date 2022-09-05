@@ -18,11 +18,13 @@
     "build:lottery": "yarn workspace @gear-js/lottery build",
     "build:auction": "yarn workspace @gear-js/auction build",
     "build:staking": "yarn workspace @gear-js/staking build",
+    "build:upload-dappChain": "yarn workspace @gear-js/upload-dappChain build",
+    "build:supply-chain": "yarn workspace @gear-js/supply-chain build",
     "postinstall": "husky install"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "5.33.1",
-    "@typescript-eslint/parser": "5.33.1",
+    "@typescript-eslint/eslint-plugin": "5.36.1",
+    "@typescript-eslint/parser": "5.36.1",
     "eslint": "8.22.0",
     "husky": "8.0.1",
     "lint-staged": "12.5.0"
@@ -38,6 +40,6 @@
   "resolutions": {
     "@types/react": "17.0.44"
   },
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@3.2.3",
   "version": "1.2.0"
 }

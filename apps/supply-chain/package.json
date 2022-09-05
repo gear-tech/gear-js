@@ -1,5 +1,5 @@
 {
-  "name": "supply-chain",
+  "name": "@gear-js/supply-chain",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -1,25 +1,30 @@
-@mixin heading($size, $height) {
-  font-family: Syncopate, sans-serif;
+%headingFont {
+  font-family: Kanit, sans-serif;
+}
+
+@mixin heading($size: 14px, $height: 21px, $weight: 400) {
+  @extend %headingFont;
   font-size: $size;
+  font-weight: $weight;
   line-height: $height;
 }
 
 %h1 {
-  @include heading(36px, 48px);
+  @include heading(72px, 86px, 700);
 }
 
 %h2 {
-  @include heading(32px, 40px);
+  @include heading(40px, 48px, 700);
 }
 
 %h3 {
-  @include heading(28px, 36px);
+  @include heading(28px, 31px, 600);
 }
 
 %h4 {
-  @include heading(24px, 32px);
+  @include heading(24px, 32px, 600);
 }
 
 %h5 {
-  @include heading(22px, 30px);
+  @include heading(20px, 24px, 600);
 }
