@@ -2072,7 +2072,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.25.2, @gear-js/api@npm:^0.25.0, @gear-js/api@npm:^0.25.2":
+"@gear-js/api@npm:0.25.2, @gear-js/api@npm:^0.25.2":
   version: 0.25.2
   resolution: "@gear-js/api@npm:0.25.2"
   peerDependencies:
@@ -2584,7 +2584,7 @@ __metadata:
   dependencies:
     "@gear-js/api": 0.25.0
     "@gear-js/common": "workspace:^"
-    "@polkadot/api": ^9.0.1
+    "@polkadot/api": ^9.2.4
     "@types/express": 4.17.13
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
@@ -2600,7 +2600,7 @@ __metadata:
     pg: ^8.7.1
     postgres: ^1.0.2
     ts-node-dev: 2.0.0
-    typeorm: ^0.3.6
+    typeorm: ^0.3.9
     typescript: 4.7.4
     winston: ^3.3.3
   languageName: unknown
@@ -4181,7 +4181,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:9.2.4, @polkadot/api@npm:^9.0.1, @polkadot/api@npm:^9.2.2, @polkadot/api@npm:^9.2.4":
+"@polkadot/api@npm:9.2.4, @polkadot/api@npm:^9.2.2, @polkadot/api@npm:^9.2.4":
   version: 9.2.4
   resolution: "@polkadot/api@npm:9.2.4"
   dependencies:
@@ -20104,7 +20104,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "social@workspace:apps/social"
   dependencies:
-    "@gear-js/api": ^0.25.0
+    "@gear-js/api": ^0.25.2
     "@gear-js/react-hooks": ^0.2.17
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
@@ -21901,7 +21901,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typeorm@npm:^0.3.6, typeorm@npm:^0.3.7":
+"typeorm@npm:^0.3.7, typeorm@npm:^0.3.9":
   version: 0.3.9
   resolution: "typeorm@npm:0.3.9"
   dependencies:
