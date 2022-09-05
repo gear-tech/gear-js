@@ -1,14 +1,16 @@
-import { memo } from 'react';
+import { memo, MouseEvent } from 'react';
+import { Link, generatePath } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 
-import { AnimationTimeout } from 'shared/config';
-import sendSVG from 'shared/assets/images/actions/send.svg';
-import readSVG from 'shared/assets/images/actions/read.svg';
+import { absoluteRoutes, AnimationTimeout } from 'shared/config';
 import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
 import { ProgramActionLink } from 'shared/ui/programActionLink';
+import readSVG from 'shared/assets/images/actions/read.svg';
+import sendSVG from 'shared/assets/images/actions/send.svg';
 
+import clsx from 'clsx';
 import styles from './ProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';
 import { IProgram } from '../../model/types';
@@ -19,14 +21,18 @@ type Props = {
 };
 
 const ProgramCard = memo(({ program, withSendMessage }: Props) => {
-  const { id, name, initStatus, timestamp } = program;
+  const { id: programId, name, initStatus, timestamp } = program;
+
+  const stopPropagation = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.stopPropagation();
+  };
 
   return (
     <article className={styles.programCard}>
       <div className={styles.cardContent}>
         <h1 className={styles.title}>Program name</h1>
         <h2 className={styles.name}>{name}</h2>
-        <IdBlock id={id} className={styles.idBlock} />
+        <IdBlock id={programId} className={styles.idBlock} />
         <div className={styles.otherInfo}>
           <BulbBlock text={initStatus} status={getBulbStatus(initStatus)} className={styles.bulbBlock} />
           <TimestampBlock timestamp={timestamp} />
@@ -34,10 +40,17 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
       </div>
       <div className={styles.actions}>
         <CSSTransition in={withSendMessage} exit={false} timeout={AnimationTimeout.Medium} unmountOnExit>
-          <ProgramActionLink to="/" icon={sendSVG} text="Send Message" className={styles.sendMessage} />
+          <ProgramActionLink
+            to="/"
+            icon={sendSVG}
+            text="Send Message"
+            className={styles.sendMessage}
+            onClick={stopPropagation}
+          />
         </CSSTransition>
-        <ProgramActionLink to="/" icon={readSVG} text="Read State" />
+        <ProgramActionLink to="/" icon={readSVG} text="Read State" onClick={stopPropagation} />
       </div>
+      <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.cardLink} />
     </article>
   );
 });

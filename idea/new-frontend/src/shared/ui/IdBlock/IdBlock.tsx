@@ -1,3 +1,4 @@
+import { MouseEvent } from 'react';
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
 import { Button } from '@gear-js/ui';
@@ -16,7 +17,11 @@ type Props = {
 const IdBlock = ({ id, className }: Props) => {
   const alert = useAlert();
 
-  const handleCopy = () => copyToClipboard(id, alert);
+  const handleCopy = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+
+    copyToClipboard(id, alert);
+  };
 
   return (
     <div className={clsx(styles.idBlock, className)}>

@@ -2,20 +2,19 @@ import { useEffect, useCallback } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 
 import { usePrograms, useDataLoading } from 'hooks';
+import { Sort, SortBy } from 'features/sortBy';
 
 import styles from './Programs.module.scss';
 import { RequestParams } from '../model/types';
 import { DEFAULT_REQUEST_PARAMS } from '../model/consts';
-import { ProgramsData } from './programsData';
+import { ProgramsList } from './programsList';
 import { SearchSettings } from './searchSettings';
 
 const Programs = () => {
   const { account } = useAccount();
   const { programs, isLoading, totalCount, fetchPrograms } = usePrograms();
 
-  const { params, hasMore, loadData, changeParams } = useDataLoading<RequestParams>({
-    totalCount,
-    currentCount: programs.length,
+  const { params, loadData, changeParams } = useDataLoading<RequestParams>({
     defaultParams: DEFAULT_REQUEST_PARAMS,
     fetchData: fetchPrograms,
   });
@@ -33,6 +32,8 @@ const Programs = () => {
     [changeParams, decodedAddress],
   );
 
+  const handleSortChange = (sortBy: Sort) => changeParams({ sortBy });
+
   useEffect(
     () => {
       if (!(params.owner && decodedAddress)) {
@@ -45,19 +46,18 @@ const Programs = () => {
     [decodedAddress],
   );
 
-  // useWindowScrollLoader(loadData, hasMore);
-
-  const isLoggedIn = Boolean(account);
-
   return (
     <div className={styles.pageWrapper}>
-      <ProgramsData
-        count={totalCount}
-        programs={programs}
-        isLoading={!totalCount && isLoading}
-        isLoggedIn={isLoggedIn}
-        onParamsChange={handleParamsChange}
-      />
+      <section className={styles.programsSection}>
+        <SortBy title="programs" count={totalCount} onChange={handleSortChange} />
+        <ProgramsList
+          programs={programs}
+          totalCount={totalCount}
+          isLoading={isLoading}
+          isLoggedIn={Boolean(account)}
+          loadMorePrograms={loadData}
+        />
+      </section>
       <SearchSettings requestParams={params} decodedAddress={decodedAddress} onParamsChange={handleParamsChange} />
     </div>
   );

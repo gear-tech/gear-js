@@ -1,8 +1,9 @@
-import { memo } from 'react';
+import { memo, MouseEvent } from 'react';
+import { Link, generatePath } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import { TooltipWrapper } from '@gear-js/ui';
 
-import { AnimationTimeout } from 'shared/config';
+import { absoluteRoutes, AnimationTimeout } from 'shared/config';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 import readSVG from 'shared/assets/images/actions/read.svg';
 import { IdBlock } from 'shared/ui/idBlock';
@@ -21,7 +22,11 @@ type Props = {
 };
 
 const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
-  const { id, name, initStatus, timestamp } = program;
+  const { id: programId, name, initStatus, timestamp } = program;
+
+  const stopPropagation = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.stopPropagation();
+  };
 
   return (
     <article className={styles.horizontalProgramCard}>
@@ -33,17 +38,24 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
           </TooltipWrapper>
         </div>
         <div className={styles.otherInfo}>
-          <IdBlock id={id} />
+          <IdBlock id={programId} />
           <BulbBlock text={initStatus} status={getBulbStatus(initStatus)} />
           <TimestampBlock timestamp={timestamp} />
         </div>
       </div>
       <div className={styles.actions}>
         <CSSTransition in={withSendMessage} exit={false} timeout={AnimationTimeout.Medium} unmountOnExit>
-          <ProgramActionLink to="/" icon={sendSVG} text="Send Message" className={styles.sendMessage} />
+          <ProgramActionLink
+            to="/"
+            icon={sendSVG}
+            text="Send Message"
+            className={styles.sendMessage}
+            onClick={stopPropagation}
+          />
         </CSSTransition>
-        <ProgramActionLink to="/" icon={readSVG} text="Read State" />
+        <ProgramActionLink to="/" icon={readSVG} text="Read State" onClick={stopPropagation} />
       </div>
+      <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.cardLink} />
     </article>
   );
 });

@@ -57,7 +57,7 @@ const RecentProgramsSection = ({ account }: Props) => {
       </header>
       <div className={styles.programsWrapper}>
         {isEmpty || isLoading ? (
-          <ProgramsPlaceholder isEmpty={isEmpty} isLoading={isLoading} />
+          <ProgramsPlaceholder isEmpty={isEmpty} />
         ) : (
           programs.map((program) => (
             <ProgramCard key={program.id} program={program} withSendMessage={Boolean(account)} />

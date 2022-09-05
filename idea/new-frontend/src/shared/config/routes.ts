@@ -13,13 +13,20 @@ const routes = {
   termsOfUse: '/terms-of-use',
   privacyPolicy: '/privacy-policy',
   code: '/code/:codeId',
+  state: '/state/:programId',
   program: '/program/:programId',
   message: '/message/:messageId',
-  state: '/state/:programId',
   send: '/send',
   sendMessage: 'message/:programId',
   reply: 'reply/:messageId',
   meta: '/meta/:programId',
 };
 
-export { routes };
+const absoluteRoutes = {
+  code: `${routes.codes}/:codeId`,
+  meta: `/meta/:programId`,
+  program: `${routes.programs}/:programId`,
+  message: `${routes.messages}/:messageId`,
+};
+
+export { routes, absoluteRoutes };

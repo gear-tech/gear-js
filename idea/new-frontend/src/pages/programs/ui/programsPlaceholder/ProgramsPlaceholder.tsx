@@ -8,11 +8,10 @@ import styles from './ProgramsPlaceholder.module.scss';
 
 type Props = {
   isEmpty: boolean;
-  isLoading: boolean;
 };
 
-const ProgramsPlaceholder = ({ isEmpty, isLoading }: Props) => {
-  const loaderClasses = clsx(styles.block, isLoading && styles.loading);
+const ProgramsPlaceholder = ({ isEmpty }: Props) => {
+  const loaderClasses = clsx(styles.block, !isEmpty && styles.loading);
 
   const renderBlocks = () => {
     const result = [];

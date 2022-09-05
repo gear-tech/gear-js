@@ -16,6 +16,8 @@
   }
 
   .copyBtn {
+    position: relative;
+    z-index: 4;  
     margin-left: toRem(2);
   }
 }

@@ -10,7 +10,7 @@ type Props = LinkProps & {
 };
 
 const ProgramActionLink = ({ to, icon, text, className }: Props) => {
-  const linkClasses = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.transparent, className);
+  const linkClasses = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.transparent, styles.link, className);
 
   return (
     <Link to={to} className={linkClasses}>

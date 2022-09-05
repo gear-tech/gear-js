@@ -17,7 +17,7 @@ import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
 import { usePrevious } from './usePrevious';
 import { useDataLoading } from './useDataLoading';
-import { useWindowScrollLoader } from './useWindowScrollLoader';
+import { useScrollLoader } from './useScrollLoader';
 
 export {
   useModal,
@@ -33,11 +33,11 @@ export {
   useOutsideClick,
   useChangeEffect,
   useSidebarNodes,
+  useScrollLoader,
   useMessageClaim,
   useGasCalculate,
   useProgramActions,
   useMetadataUplaod,
   useBalanceTransfer,
-  useWindowScrollLoader,
   useAccountSubscriptions,
 };

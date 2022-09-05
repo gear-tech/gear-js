@@ -16,11 +16,13 @@ body {
   background-image: url('/shared/assets/images/placeholders/greenShadowBg.png');
   background-repeat: no-repeat;
   background-position: right -150px top -50px;
+  min-height: 100vh;
+  height: 1px;
 }
 
 #root {
-  min-height: 100vh;
   position: relative;
+  height: 100%;
 }
 
 .main {

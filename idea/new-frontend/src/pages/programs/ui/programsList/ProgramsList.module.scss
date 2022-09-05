@@ -2,24 +2,18 @@
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
-.programsSection {
-  flex: 1 1;
-}
-
-.programs {
+.programsList {
   position: relative;
   margin-top: toRem(16);
   
   .simpleBar {
     @include customSimplebar;
 
-    height: calc(100vh - $headerHeight - $footerHeight);
+    //height: calc(100vh - $headerTopSideHeight + $footerHeight);
 
     :global(.simplebar-content) {
-      display: grid;
-      grid-auto-flow: row;
-      grid-auto-rows: min-content;
-      grid-row-gap: toRem(12);
+      @include childrenMargin(toRem(12));
+
       margin-right: toRem(15);
     }
   }

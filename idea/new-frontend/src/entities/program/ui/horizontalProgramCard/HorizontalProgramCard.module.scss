@@ -22,6 +22,7 @@
 
 .horizontalProgramCard {
   display: flex;
+  position: relative;
   border-radius: toRem(16);
   background-color: $bgColorQuaternary;
 }
@@ -31,11 +32,6 @@
   padding: toRem(24);
   overflow: hidden;
   position: relative;
-
-  & > * {
-    position: relative;
-    z-index: 2;
-  }
   
   &::after {
     content: '';
@@ -50,9 +46,11 @@
   .otherInfo,
   .programName {
     display: flex;
+    position: relative;
   }
 
   .programName {
+    z-index: 2;
     margin-bottom: toRem(10);
     
     .name {      
@@ -74,6 +72,8 @@
 
   .otherInfo {
     @include childrenMargin(toRem(16), right);
+    
+    z-index: 4;
   }
 }
 
@@ -98,4 +98,13 @@
       animation: $mediumTimeout linear sendMessageAppearance;
     }
   }
+}
+
+.cardLink {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
 }
