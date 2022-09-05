@@ -1,6 +1,4 @@
-import clsx from 'clsx';
 import {
-  InputHTMLAttributes,
   useRef,
   MouseEvent,
   forwardRef,
@@ -8,66 +6,92 @@ import {
   useImperativeHandle,
   useState,
   ChangeEvent,
+  useId,
+  InputHTMLAttributes,
 } from 'react';
+import { InputProps } from '../../types';
+import { getFileSize } from '../../utils';
 import { Button } from '../Button/Button';
-import trashSVG from './images/trash.svg';
+import remove from './images/remove.svg';
+import select from './images/select.svg';
 import styles from './FileInput.module.scss';
+import { InputWrapper } from '../utils';
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-}
+type Props = InputHTMLAttributes<HTMLInputElement> &
+  Omit<InputProps, 'color'> & {
+    label?: string;
+    error?: string;
+  };
 
-const FileInput = forwardRef(
-  ({ label, className, onChange, ...attrs }: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
-    const [name, setName] = useState('');
-    const ref = useRef<HTMLInputElement>(null);
-    const labelClassName = clsx(styles.label, className);
+const FileInput = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElement>) => {
+  const { label, className, gap, error, tooltip, onChange, direction = 'x', size = 'normal', ...attrs } = props;
+  const { disabled } = attrs;
 
-    // TODO: figure out what's wrong
-    // @ts-ignore
-    useImperativeHandle(forwardedRef, () => ref.current);
+  const [name, setName] = useState('');
+  const ref = useRef<HTMLInputElement>(null);
 
-    const handleButtonClick = () => {
-      ref.current?.click();
-    };
+  // TODO: figure out what's wrong
+  // @ts-ignore
+  useImperativeHandle(forwardedRef, () => ref.current);
+  const id = useId();
 
-    const resetValue = () => {
-      if (ref.current) {
-        ref.current.value = '';
-      }
-    };
+  const handleButtonClick = () => {
+    ref.current?.click();
+  };
 
-    const handleRemoveButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
+  const resetValue = () => {
+    if (ref.current) {
+      ref.current.value = '';
+    }
+  };
 
-      if (ref.current) {
-        resetValue();
-        const changeEvent = new Event('change', { bubbles: true });
-        ref.current.dispatchEvent(changeEvent);
-      }
-    };
+  const handleRemoveButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setName(e.target.files?.[0]?.name || '');
+    if (ref.current) {
+      resetValue();
+      const changeEvent = new Event('change', { bubbles: true });
+      ref.current.dispatchEvent(changeEvent);
+    }
+  };
 
-      if (onChange) onChange(e);
-    };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.files?.[0]?.name || '');
 
-    return (
-      <label className={labelClassName}>
-        {label && <span className={styles.text}>{label}</span>}
-        <input type="file" className={styles.input} ref={ref} onChange={handleChange} {...attrs} />
-        {name ? (
-          <span className={styles.file}>
+    if (onChange) onChange(e);
+  };
+
+  return (
+    <InputWrapper
+      id={id}
+      className={className}
+      label={label}
+      error={error}
+      direction={direction}
+      size={size}
+      gap={gap}
+      disabled={disabled}
+      tooltip={tooltip}>
+      <input id={id} type="file" className={styles.input} ref={ref} onChange={handleChange} {...attrs} />
+      {name ? (
+        <>
+          <div className={styles.file}>
             <Button text={name} color="transparent" size="small" className={styles.name} onClick={handleButtonClick} />
-            <Button icon={trashSVG} color="transparent" onClick={handleRemoveButtonClick} />
-          </span>
-        ) : (
-          <Button text="Select file" color="secondary" size="small" onClick={handleButtonClick} />
-        )}
-      </label>
-    );
-  },
-);
+            <Button icon={remove} color="transparent" onClick={handleRemoveButtonClick} />
+          </div>
+          {!error && <span className={styles.size}>Size: {getFileSize(ref.current?.files?.[0].size as number)}</span>}
+        </>
+      ) : (
+        <Button
+          text="Select file"
+          icon={select}
+          color="light"
+          size={size === 'normal' ? 'medium' : 'large'}
+          onClick={handleButtonClick}
+        />
+      )}
+    </InputWrapper>
+  );
+});
 
 export { FileInput, Props as FileInputProps, styles as fileInputStyles };

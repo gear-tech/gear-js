@@ -23,5 +23,4 @@ const Button = forwardRef((props: Props, ref: ForwardedRef<HTMLButtonElement>) =
   );
 });
 
-// , Props as ButtonProps
-export { Button, styles as buttonStyles };
+export { Button, Props as ButtonProps, styles as buttonStyles };
