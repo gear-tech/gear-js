@@ -1,0 +1,56 @@
+type Account @entity {
+  id: ID!
+  tokens: [Token!]! @derivedFrom(field: "owner")
+}
+
+type NftContract @entity {
+  id: ID!
+  tokens: [Token!] @derivedFrom(field: "nftContract")
+}
+
+type Bid @entity {
+  auction: Auction!
+  price: BigInt!
+}
+
+type Auction @entity{
+  token: Token! @index
+  ftContract: String
+  finishAt: BigInt!
+  price: BigInt!
+  bids: [Bid!]! @derivedFrom(field: "auction")
+  isOpened: Boolean!
+}
+
+type Token @entity{
+  id: ID!
+  tokenId: ID!
+  nftContract: NftContract! @index
+  owner: Account! @index
+  name: String!
+  description: String!
+  media: String!
+  reference: String!
+  auction: Auction
+  isListed: Boolean!
+  price: BigInt
+  transfers: [Transfer!]! @derivedFrom(field: "token")
+  offers: [Offer!]! @derivedFrom(field: "token")
+  burnt: Boolean!
+}
+
+type Transfer @entity{
+  token: Token! @index
+  from: Account!
+  to: Account!
+  timestamp: BigInt!
+  price: BigInt
+}
+
+type Offer @entity{
+  token: Token! @index
+  price: BigInt!
+  account: Account! @index
+  accepted: Boolean!
+  cancelled: Boolean!
+}
