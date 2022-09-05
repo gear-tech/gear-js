@@ -1,0 +1,20 @@
+@use '@gear-js/ui/variables' as *;
+
+.stage {
+  padding: 1px 7px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 8px;
+
+  &.preparation {
+    background-color: #f2c94c;
+  }
+
+  &.reveal {
+    background-color: $tertiaryColor;
+  }
+
+  &.progress {
+    background-color: $successColor;
+  }
+}

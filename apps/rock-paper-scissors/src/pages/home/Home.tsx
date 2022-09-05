@@ -1,10 +1,12 @@
 import { Start } from './start';
 import { Create } from './create';
+import { Game } from './game';
 
 function Home() {
   return (
     <>
-      <Start />
+      <Game name="name" stage="progress" bet="bet" game="game" round="round" />
+      {/* <Start /> */}
       {/* <Create /> */}
     </>
   );

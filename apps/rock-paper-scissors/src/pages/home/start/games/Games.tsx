@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { Stage } from 'components';
 import { EMPTY_GAMES } from 'consts';
 import styles from './Games.module.scss';
 
@@ -14,23 +15,19 @@ function Games({ heading, list }: Props) {
   const headerClassName = clsx(styles.row, styles.header);
 
   const getGames = () =>
-    games.map(({ name, players, bet, game, round, stage, action }) => {
-      const stageClassName = clsx(styles.stage, styles[stage]);
-
-      return (
-        <li className={styles.row}>
-          <span>{name}</span>
-          <span>{players}</span>
-          <span>{bet}</span>
-          <span>{game}</span>
-          <span>{round}</span>
-          <div>
-            <span className={stageClassName}>{stage}</span>
-          </div>
-          <span>{action}</span>
-        </li>
-      );
-    });
+    games.map(({ name, players, bet, game, round, stage, action }) => (
+      <li className={styles.row}>
+        <span>{name}</span>
+        <span>{players}</span>
+        <span>{bet}</span>
+        <span>{game}</span>
+        <span>{round}</span>
+        <div>
+          <Stage value={stage} />
+        </div>
+        <span>{action}</span>
+      </li>
+    ));
 
   return (
     <div className={styles.games}>
