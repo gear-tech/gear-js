@@ -10,7 +10,6 @@ import { ProgramActionLink } from 'shared/ui/programActionLink';
 import readSVG from 'shared/assets/images/actions/read.svg';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 
-import clsx from 'clsx';
 import styles from './ProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';
 import { IProgram } from '../../model/types';

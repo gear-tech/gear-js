@@ -1,5 +1,5 @@
-import { ReactNode, useMemo } from 'react';
-import { useFormikContext } from 'formik';
+import { ReactNode, useMemo, useRef } from 'react';
+import { useForm, useFormState } from 'react-final-form';
 import { CSSTransition } from 'react-transition-group';
 import isEqual from 'lodash.isequal';
 import { Button } from '@gear-js/ui';
@@ -16,19 +16,20 @@ type Props = {
 };
 
 const FilterGroup = ({ name, title, withReset = false, children }: Props) => {
-  const { values, initialValues, setFieldValue } = useFormikContext<any>();
+  const { change } = useForm();
+  const { values } = useFormState();
 
   const value = values[name];
-  const initialValue = initialValues[name];
+  const defaultValue = useRef(value);
 
-  const handleFilterReset = () => setFieldValue(name, initialValue);
+  const handleFilterReset = () => change(name, defaultValue.current);
 
   const isResetVisible = useMemo(() => {
     if (!withReset) {
       return false;
     }
 
-    return !isEqual(value, initialValue);
+    return !isEqual(value, defaultValue.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, withReset]);
 

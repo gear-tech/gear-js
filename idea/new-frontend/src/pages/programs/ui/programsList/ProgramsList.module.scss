@@ -1,6 +1,5 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
 
 .programsList {
   position: relative;
@@ -9,7 +8,8 @@
   .simpleBar {
     @include customSimplebar;
 
-    //height: calc(100vh - $headerTopSideHeight + $footerHeight);
+    // TODO: fix this
+    height: calc(66vh);
 
     :global(.simplebar-content) {
       @include childrenMargin(toRem(12));

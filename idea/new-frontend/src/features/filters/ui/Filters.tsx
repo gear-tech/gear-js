@@ -1,28 +1,23 @@
 import { ReactNode } from 'react';
-import { Formik, FormikProps } from 'formik';
+import { Form, FormProps } from 'react-final-form';
 
-import { Radio } from './radio';
-import { FiltersForm } from './filtersForm';
-import { FilterGroup } from './filterGroup';
-import { StatusCheckbox } from './statusCheckbox';
+import styles from './Filters.module.scss';
+import { FilterHeader } from './filterHeader';
 
-type Props<T> = Pick<FormikProps<T>, 'enableReinitialize' | 'initialValues'> & {
+type Props<T> = FormProps<T> & {
   children: ReactNode;
-  onSubmit: (values: T) => void;
 };
 
-const Filters = <T,>({ children, initialValues, enableReinitialize, onSubmit }: Props<T>) => (
-  /* @ts-ignore */
-  <Formik initialValues={initialValues} enableReinitialize={enableReinitialize} onSubmit={onSubmit}>
-    {(props) => (
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      <FiltersForm {...props}>{children}</FiltersForm>
+const Filters = <T,>({ children, ...formProps }: Props<T>) => (
+  // eslint-disable-next-line react/jsx-props-no-spreading
+  <Form {...formProps}>
+    {({ handleSubmit }) => (
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <FilterHeader />
+        <div className={styles.mainFilters}>{children}</div>
+      </form>
     )}
-  </Formik>
+  </Form>
 );
-
-Filters.Radio = Radio;
-Filters.Group = FilterGroup;
-Filters.StatusCheckbox = StatusCheckbox;
 
 export { Filters };

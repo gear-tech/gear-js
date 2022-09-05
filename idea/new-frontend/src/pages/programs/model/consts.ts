@@ -1,6 +1,12 @@
 // import { Sort } from 'features/sortBy';
 
-import { RequestParams } from './types';
+import { RequestParams, FiltersValues, Owner } from './types';
+
+const DEFAULT_FILTER_VALUES: FiltersValues = {
+  owner: Owner.All,
+  status: [],
+  createAt: '',
+};
 
 const DEFAULT_REQUEST_PARAMS: RequestParams = {
   query: '',
@@ -10,4 +16,4 @@ const DEFAULT_REQUEST_PARAMS: RequestParams = {
   // createAt: '',
 };
 
-export { DEFAULT_REQUEST_PARAMS };
+export { Owner, DEFAULT_REQUEST_PARAMS, DEFAULT_FILTER_VALUES };

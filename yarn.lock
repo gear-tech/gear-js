@@ -1800,7 +1800,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.17.9, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.18.6, @babel/runtime@npm:^7.18.9, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.10.0, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.17.9, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.18.6, @babel/runtime@npm:^7.18.9, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.18.9
   resolution: "@babel/runtime@npm:7.18.9"
   dependencies:
@@ -13183,6 +13183,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"final-form@npm:^4.20.7":
+  version: 4.20.7
+  resolution: "final-form@npm:4.20.7"
+  dependencies:
+    "@babel/runtime": ^7.10.0
+  checksum: 0e2a9a9cf70814e1099da38e8a79ff6dc2862f07217dae041ba70c5a4bcc8284c74b0500f00b4935331f5fbe7dc119f63ca4776495ecc8c486c939daa23598ec
+  languageName: node
+  linkType: hard
+
 "finalhandler@npm:1.2.0":
   version: 1.2.0
   resolution: "finalhandler@npm:1.2.0"
@@ -18096,6 +18105,7 @@ __metadata:
     eslint-plugin-jsx-a11y: ^6.6.1
     eslint-plugin-react: ^7.30.1
     eslint-plugin-react-hooks: ^4.6.0
+    final-form: ^4.20.7
     formik: ^2.2.9
     ky: ^0.31.1
     localforage: ^1.10.0
@@ -18109,6 +18119,7 @@ __metadata:
     react-dnd: ^16.0.1
     react-dnd-html5-backend: ^16.0.1
     react-dom: ^18.2.0
+    react-final-form: ^6.5.9
     react-number-format: ^4.9.3
     react-render-if-visible: ^2.1.0
     react-router-dom: ^6.3.0
@@ -20742,6 +20753,18 @@ __metadata:
   peerDependencies:
     react: ^16.8.6 || ^17
   checksum: 8535541c1041ba9ce02e1b6fe4425dc6857030ae2223d89fa2aa1faf82b04e542c863b267ee7ba5961d22fe3216f43241200a5807d8a8df48a96485ac8b68bf7
+  languageName: node
+  linkType: hard
+
+"react-final-form@npm:^6.5.9":
+  version: 6.5.9
+  resolution: "react-final-form@npm:6.5.9"
+  dependencies:
+    "@babel/runtime": ^7.15.4
+  peerDependencies:
+    final-form: ^4.20.4
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 2ab79b1b0230545af1b93b324e2ce61992087beda344f762e1c1306867c177ca6258651e992515fa6681a790f94380a388c18e898ffb20468562e62c83c6b289
   languageName: node
   linkType: hard
 
