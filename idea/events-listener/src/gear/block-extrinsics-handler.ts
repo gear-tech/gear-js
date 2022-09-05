@@ -7,7 +7,7 @@ import { UpdateBlockExtrinsics } from './types';
 export function handleBlockExtrinsics(data: UpdateBlockExtrinsics): UpdateMessageData[] {
   const { signedBlock, events, status, genesis } = data;
 
-  const eventMethods = ['sendMessage', 'submitProgram', 'sendReply'];
+  const eventMethods = ['sendMessage', 'uploadProgram', 'createProgram', 'sendReply'];
   const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) => eventMethods.includes(method));
 
   const result = extrinsics.map((extrinsic) => {
