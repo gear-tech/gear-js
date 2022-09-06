@@ -1,12 +1,14 @@
 import { useAccount, useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { AnyJson } from '@polkadot/types/types';
-import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
-import { ADDRESS } from 'consts';
 import { useMemo } from 'react';
 import { NFTState, OwnersNFTState } from 'types';
+import { useWasm } from './context';
 
 function useNftState<T>(payload: AnyJson) {
-  return useReadState<T>(ADDRESS.NFT_CONTRACT, nftMetaWasm, payload);
+  const { nft } = useWasm();
+  const { programId, metaBuffer } = nft || {};
+
+  return useReadState<T>(programId, metaBuffer, payload);
 }
 
 function useNft(tokenId: string) {
@@ -27,7 +29,10 @@ function useOwnersNft() {
 }
 
 function useNftMessage() {
-  return useSendMessage(ADDRESS.NFT_CONTRACT, nftMetaWasm);
+  const { nft } = useWasm();
+  const { programId, meta } = nft || {};
+
+  return useSendMessage(programId || '0x00', meta);
 }
 
 export { useNft, useOwnersNft, useNftMessage };
