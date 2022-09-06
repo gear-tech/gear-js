@@ -1,10 +1,9 @@
 import { useAccount, useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { useMemo } from 'react';
-import { nftMetaWasm } from 'assets';
-import { ADDRESS } from 'consts';
 import { Params, Token } from 'types';
 import { useParams } from 'react-router-dom';
 import { AnyJson } from '@polkadot/types/types';
+import { useWasm } from './context';
 
 type TokenState = { Token: { token: Token } };
 type TokensState = { AllTokens: { tokens: Token[] } };
@@ -12,7 +11,10 @@ type OwnerTokensState = { TokensForOwner: { tokens: Token[] } };
 type ApprovedTokensState = { ApprovedTokens: { tokens: Token[] } };
 
 function useNFTState<T>(payload: AnyJson) {
-  return useReadState<T>(ADDRESS.NFT_CONTRACT, nftMetaWasm, payload);
+  const nft = useWasm();
+  const { programId, metaBuffer } = nft || {};
+
+  return useReadState<T>(programId, metaBuffer, payload);
 }
 
 function useNFT() {
@@ -53,7 +55,10 @@ function useApprovedNFTs() {
 }
 
 function useSendNFTMessage() {
-  return useSendMessage(ADDRESS.NFT_CONTRACT, nftMetaWasm);
+  const nft = useWasm();
+  const { programId, meta } = nft || {};
+
+  return useSendMessage(programId || '0x00', meta);
 }
 
 export { useNFT, useNFTs, useOwnerNFTs, useApprovedNFTs, useSendNFTMessage };
