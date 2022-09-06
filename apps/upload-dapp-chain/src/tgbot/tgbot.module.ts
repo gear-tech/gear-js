@@ -6,13 +6,13 @@ import { TgbotService } from "./tgbot.service";
 import { DappDataModule } from "../dapp-data/dapp-data.module";
 import { UserModule } from "../user/user.module";
 import { TgbotController } from "./tgbot.controller";
-import { WorkflowCommandModule } from "../workflow-command/workflow-command.module";
+import { CommandModule } from "../command/command.module";
 
 @Module({
   imports: [
     DappDataModule,
     UserModule,
-    WorkflowCommandModule,
+    CommandModule,
     TelegrafModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

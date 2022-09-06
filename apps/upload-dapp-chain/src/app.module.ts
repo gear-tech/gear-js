@@ -9,7 +9,7 @@ import { DappData } from "./dapp-data/entities/dapp-data.entity";
 import { User } from "./user/entities/user.entity";
 import { TgbotModule } from "./tgbot/tgbot.module";
 import { UserModule } from "./user/user.module";
-import { WorkflowCommandModule } from "./workflow-command/workflow-command.module";
+import { CommandModule } from "./command/command.module";
 
 const entities = [DappData, User];
 
@@ -38,7 +38,7 @@ const entities = [DappData, User];
     TypeOrmModule.forFeature(entities),
     TgbotModule,
     UserModule,
-    WorkflowCommandModule,
+    CommandModule,
   ],
   controllers: [],
   providers: [],

@@ -7,4 +7,14 @@ const getLabelGap = (gap: Gap) => {
   return { gridTemplateColumns };
 };
 
-export { getLabelGap };
+const getFileSize = (bytes: number) => {
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const unitIndex = bytes ? Math.floor(Math.log(bytes) / Math.log(1024)) : 0;
+
+  const size = bytes ? (bytes / 1024 ** unitIndex).toFixed(2) : '0';
+  const unit = units[unitIndex];
+
+  return `${size} ${unit}`;
+};
+
+export { getLabelGap, getFileSize };

@@ -9,5 +9,5 @@ COPY .yarn .yarn
 COPY .yarnrc.yml .
 COPY ./apps/upload-dapp-chain/ apps/upload-dapp-chain/
 RUN yarn install
-RUN yarn build:upload-dappChain
+RUN yarn build:upload-dapp-chain
 CMD ["node", "/src/apps/upload-dapp-chain/dist/main.js"]

@@ -1,4 +1,4 @@
-import { findByText, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { findByText, fireEvent, getByRole, render, screen, waitFor } from '@testing-library/react';
 import { Input } from './Input';
 import styles from './Input.module.scss';
 
@@ -13,6 +13,7 @@ describe('input tests', () => {
 
   it('renders input with label', async () => {
     const { rerender } = render(<Input label="label" />);
+
     const input = screen.getByLabelText('label');
     expect(input).toBeInTheDocument();
 
@@ -44,6 +45,26 @@ describe('input tests', () => {
 
     expect(wrapper).toContainElement(icon);
     expect(icon).toHaveAttribute('src', arrowIcon);
+  });
+
+  it('renders search input', () => {
+    const onSubmitMock = jest.fn((e) => e.preventDefault());
+
+    render(
+      <form onSubmit={onSubmitMock}>
+        <Input label="label" type="search" />
+      </form>,
+    );
+
+    const input = screen.getByLabelText('label');
+    expect(input).toBeInTheDocument();
+
+    fireEvent.focus(input);
+
+    const [, searchButton] = screen.getAllByRole('button');
+
+    fireEvent.click(searchButton);
+    expect(onSubmitMock).toBeCalled();
   });
 
   it('applies className to wrapper', () => {

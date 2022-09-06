@@ -1,4 +1,5 @@
 @use '../../assets/styles/variables' as *;
+@use '../../assets/styles/headings' as *;
 
 .label {
   display: flex;
@@ -22,6 +23,17 @@
 }
 
 .name {
-  margin-right: 10px;
+  @extend %headingFont;
+  margin-right: 8px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
+
+  &.error {
+    color: $errorColor;
+  }
+}
+
+.size {
+  color: rgba(#fff, 0.4);
 }

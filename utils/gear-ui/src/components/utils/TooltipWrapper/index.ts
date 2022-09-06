@@ -1,3 +1,3 @@
-import { TooltipWrapper } from './TooltipWrapper';
+import { TooltipWrapper, TooltipWrapperProps, TooltipWrapperStyles } from './TooltipWrapper';
 
-export { TooltipWrapper };
+export { TooltipWrapper, TooltipWrapperProps, TooltipWrapperStyles };

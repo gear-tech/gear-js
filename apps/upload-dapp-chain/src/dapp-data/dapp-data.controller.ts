@@ -12,12 +12,12 @@ export class DappDataController {
   ) {}
 
   @Get(":id")
-  public getDappDataById(@Param("id") id: string): Promise<DappData> {
+  public async getDappDataById(@Param("id") id: string): Promise<DappData> {
     return this.dappDataRepository.get(id);
   }
 
   @Get()
-  public async getDappDataByName(@Query("name") name: string): Promise<DappData> {
-    return  this.dappDataRepository.getByName(name);
+  public async getDappDataByNames(@Query("name") name: string | string[]): Promise<DappData | DappData[]> {
+    return this.dappDataService.getDappDataByNames(name)
   }
 }

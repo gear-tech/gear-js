@@ -1,5 +1,5 @@
 {
-  "name": "@gear-js/upload-dappChain",
+  "name": "@gear-js/upload-dapp-chain",
   "version": "--",
   "private": true,
   "scripts": {
@@ -30,7 +30,6 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "js-yaml": "^4.1.0",
-    "mysql2": "^2.3.3",
     "nestjs-telegraf": "^2.6.0",
     "node-fetch": "^2.6.7",
     "pg": "^8.7.3",
