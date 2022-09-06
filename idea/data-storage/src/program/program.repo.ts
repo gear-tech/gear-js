@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Program } from '../database/entities';
 import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
-import { PAGINATION_LIMIT } from '../config/configuration';
+import { PAGINATION_LIMIT } from '../common/constants';
 
 @Injectable()
 export class ProgramRepo {

@@ -4,9 +4,10 @@ import { Response } from 'express';
 const status = {
   kafka: false,
   database: false,
+  gearWSProvider: false
 };
 
-export const changeStatus = (service: 'kafka' | 'database') => {
+export const changeStatus = (service: 'kafka' | 'database' | 'gearWSProvider') => {
   status[service] = !status[service];
 };
 
@@ -21,6 +22,11 @@ export class HealthcheckController {
 
   @Get('database')
   database(@Res() response: Response) {
+    return response.status(status.database ? 200 : 500).json({ connected: status.database });
+  }
+
+  @Get('gear_ws_provider')
+  gearWSProvider(@Res() response: Response) {
     return response.status(status.database ? 200 : 500).json({ connected: status.database });
   }
 
