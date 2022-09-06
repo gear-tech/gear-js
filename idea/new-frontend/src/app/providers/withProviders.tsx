@@ -2,6 +2,7 @@ import { ComponentType } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AccountProvider } from '@gear-js/react-hooks';
 
+import { AppProvider } from './app';
 import { ApiProvider } from './api';
 import { AlertProvider } from './alert';
 import { BlocksProvider } from './blocks';
@@ -10,6 +11,7 @@ import { EventsProvider } from './events';
 
 const providers = [
   BrowserRouter,
+  AppProvider,
   AlertProvider,
   ApiProvider,
   AccountProvider,

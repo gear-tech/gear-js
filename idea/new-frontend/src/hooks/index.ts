@@ -1,3 +1,4 @@
+import { useApp } from './useApp';
 import { useModal } from './useModal';
 import { useEvents } from './useEvents';
 import { useBlocks } from './useBlocks';
@@ -12,7 +13,7 @@ import { useProgramActions } from './useProgramActions';
 import { useMetadataUplaod } from './useMetadataUpload';
 import { useBalanceTransfer } from './useBalanceTransfer';
 import { useAccountSubscriptions } from './useAccountSubscriptions';
-import { useSidebarNodes } from './useSidebarNodes';
+import { useNodes } from './useNodes';
 import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
 import { usePrevious } from './usePrevious';
@@ -20,7 +21,9 @@ import { useDataLoading } from './useDataLoading';
 import { useScrollLoader } from './useScrollLoader';
 
 export {
+  useApp,
   useModal,
+  useNodes,
   useBlocks,
   useEvents,
   useMessage,
@@ -32,7 +35,6 @@ export {
   useDataLoading,
   useOutsideClick,
   useChangeEffect,
-  useSidebarNodes,
   useScrollLoader,
   useMessageClaim,
   useGasCalculate,

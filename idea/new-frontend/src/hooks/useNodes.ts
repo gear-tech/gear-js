@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useAlert } from '@gear-js/react-hooks';
 
+import { NodeSection } from 'entities/node';
 import { DEFAULT_NODES_URL } from 'shared/config';
-import { GetDefaultNodesResponse } from 'shared/types/api';
 
-const useSidebarNodes = () => {
+const useNodes = () => {
   const alert = useAlert();
 
-  const [nodeSections, setNodeSections] = useState<GetDefaultNodesResponse>([]);
+  const [nodeSections, setNodeSections] = useState<NodeSection[]>([]);
 
   useEffect(() => {
     fetch(DEFAULT_NODES_URL)
@@ -20,4 +20,4 @@ const useSidebarNodes = () => {
   return nodeSections;
 };
 
-export { useSidebarNodes };
+export { useNodes };

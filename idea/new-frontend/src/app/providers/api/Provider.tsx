@@ -1,9 +1,11 @@
 import { ProviderProps, ApiProvider as GearApiProvider } from '@gear-js/react-hooks';
 
-import { NODE_ADDRESS } from 'shared/config';
+import { useApp } from 'hooks';
 
-const ApiProvider = ({ children }: ProviderProps) => (
-  <GearApiProvider providerAddress={NODE_ADDRESS}>{children}</GearApiProvider>
-);
+const ApiProvider = ({ children }: ProviderProps) => {
+  const { nodeAddress } = useApp();
+
+  return <GearApiProvider providerAddress={nodeAddress}>{children}</GearApiProvider>;
+};
 
 export { ApiProvider };

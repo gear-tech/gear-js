@@ -1,0 +1,12 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.form {
+  @include childrenMargin(16px);
+
+  .addNetworkBtn {
+    width: 100%;
+  }
+}

@@ -1,17 +1,5 @@
 import { Hex } from '@gear-js/api';
 
-type Node = {
-  isCustom: boolean;
-  address: string;
-};
-
-type NodeSection = {
-  caption: string;
-  nodes: Node[];
-};
-
-type GetDefaultNodesResponse = NodeSection[];
-
 type MailMessage = {
   id: Hex;
   source: Hex;
@@ -47,4 +35,4 @@ type HumanMailboxItem = [MailMessage, Interval];
 
 type HumanWaitlistItem = [WaitlistContent, Interval];
 
-export type { HumanMailboxItem, HumanWaitlistItem, GetDefaultNodesResponse };
+export type { HumanMailboxItem, HumanWaitlistItem };

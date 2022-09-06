@@ -20,14 +20,16 @@ const ProgramsList = (props: Props) => {
 
   const hasMore = !isLoading && programs.length < totalCount;
   const isEmpty = !(isLoading || totalCount);
-  const isInitLoading = !totalCount && isLoading;
+  const isLoaderShowing = isEmpty || (!totalCount && isLoading);
 
   const scrollableNodeRef = useScrollLoader<HTMLDivElement>(loadMorePrograms, hasMore);
 
   return (
     <div className={styles.programsList}>
-      <SimpleBar className={styles.simpleBar} scrollableNodeProps={{ ref: scrollableNodeRef }}>
-        {isEmpty || isInitLoading ? (
+      <SimpleBar
+        className={clsx(styles.simpleBar, isLoaderShowing && styles.noOverflow)}
+        scrollableNodeProps={{ ref: scrollableNodeRef }}>
+        {isLoaderShowing ? (
           <ProgramsPlaceholder isEmpty={isEmpty} />
         ) : (
           programs.map((program) => (

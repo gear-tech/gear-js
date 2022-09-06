@@ -6,6 +6,7 @@
 .menu {
   position: sticky;
   top: 0;
+  z-index: 8;
   height: calc(100vh - $footerHeight);
 }
 
@@ -65,7 +66,6 @@
   justify-content: center;
   gap: 3px;
   width: 18px;
-  z-index: 2;
   padding: 10px 5px;
   position: absolute;
   top: 50%;

@@ -1,0 +1,54 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+$popupWidth: 305px;
+
+.nodesPopup {
+  @include fade();
+
+  display: flex;
+  flex-direction: column;
+  padding: toRem(32) toRem(24) toRem(32) toRem(32);
+  position: absolute;
+  width: $popupWidth;
+  height: 630px;
+  z-index: 2;
+  right: -$popupWidth;
+  bottom: 0;
+  background: radial-gradient(34.1% 16.48% at -1.97% 102.53%, rgba(43, 208, 113, 0.2) 0%, rgba(43, 208, 113, 0) 100%) #242529;
+  box-shadow: inset 0px 1px 0px $gray005;
+  border-radius: 16px;
+
+  .chain {
+    font-family: 'Kanit';
+    font-weight: 600;
+    font-size: toRem(24);
+    line-height: toRem(31);
+    color: $textColor;
+    margin-bottom: 24px;
+  }
+
+  .actions {
+    @include childrenMargin(toRem(16), right);
+
+    position: relative;
+    z-index: 1;
+    margin-top: 26px;
+  }
+}
+  
+.simpleBar {
+  @include customSimplebar; 
+
+  flex: 1 1 440px;
+  // needed for scrolling with flex
+  min-height: 1px;
+  
+  .list {
+    @include childrenMargin(toRem(24));
+
+    padding-right: toRem(22);
+  }
+}

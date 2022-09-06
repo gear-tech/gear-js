@@ -1,4 +1,4 @@
-import { KeyboardEvent } from 'react';
+import { FormEvent } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { Input } from '@gear-js/ui';
 
@@ -17,18 +17,17 @@ type Props = {
 };
 
 const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
-  const handleEnterClick = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      // @ts-ignore
-      onSubmit({ query: event.target.value });
-    }
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    // @ts-ignore
+    onSubmit({ query: event.target.search.value });
   };
 
   return (
     <section className={styles.searchSettings}>
-      <div className={styles.searchFieldWrapper}>
-        <Input placeholder="Search by name, id..." onKeyDown={handleEnterClick} />
-      </div>
+      <form className={styles.searchForm} onSubmit={handleSubmit}>
+        <Input name="search" type="search" placeholder="Search by name, id..." />
+      </form>
       <Filters initialValues={initialValues} onSubmit={onSubmit}>
         <FilterGroup name="owner">
           <CSSTransition in={isLoggedIn} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>

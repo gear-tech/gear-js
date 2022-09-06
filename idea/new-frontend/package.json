@@ -5,7 +5,7 @@
   "dependencies": {
     "@gear-js/api": "^0.25.2",
     "@gear-js/react-hooks": "^0.2.19",
-    "@gear-js/ui": "^0.5.3",
+    "@gear-js/ui": "^0.5.4",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@polkadot/api": "^9.2.3",
     "@polkadot/extension-dapp": "^0.43.3",
