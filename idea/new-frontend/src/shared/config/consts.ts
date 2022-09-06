@@ -37,7 +37,6 @@ enum LocalStorage {
   Account = 'account',
   Genesis = 'genesis',
   NewUser = 'new_user',
-  NodeAddress = 'node_address',
   PublicKeyRaw = 'public_key_raw',
   HideWelcomeBanner = 'hide_welcome_banner',
 }

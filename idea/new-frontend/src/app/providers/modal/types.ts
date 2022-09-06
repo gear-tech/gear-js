@@ -4,12 +4,13 @@ import { ModalProps } from 'entities/modal';
 
 import { MODALS } from './consts';
 
-export type ModalName = keyof typeof MODALS;
+type ModalName = keyof typeof MODALS;
 
-export type ModalProperties<T extends ModalName> = Omit<ComponentProps<typeof MODALS[T]>, 'onClose'> &
-  Partial<ModalProps>;
+type ModalProperties<T extends ModalName> = Omit<ComponentProps<typeof MODALS[T]>, 'onClose'> & Partial<ModalProps>;
 
-export type ModalContainerFactory = {
+type ModalContainerFactory = {
   showModal: <K extends ModalName>(name: K, props?: ModalProperties<K>) => void;
   closeModal: () => void;
 };
+
+export type { ModalName, ModalProperties, ModalContainerFactory };

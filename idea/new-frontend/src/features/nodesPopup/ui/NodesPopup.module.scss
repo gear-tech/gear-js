@@ -1,15 +1,13 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
-@use 'shared/assets/styles/_animations.scss' as *;
 
 $popupWidth: 305px;
 
 .nodesPopup {
-  @include fade();
-
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   padding: toRem(32) toRem(24) toRem(32) toRem(32);
   position: absolute;
   width: $popupWidth;

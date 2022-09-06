@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Node, NodeSection } from 'entities/node';
 
 import styles from './Section.module.scss';
@@ -12,7 +13,7 @@ type Props = {
   removeLocalNode: (address: string) => void;
 };
 
-const Section = (props: Props) => {
+const Section = memo((props: Props) => {
   const { section, localNodes, nodeAddress, selectedNode, selectNode, removeLocalNode } = props;
   const { caption, nodes } = section;
 
@@ -38,6 +39,6 @@ const Section = (props: Props) => {
       <ul className={styles.sectionList}>{getNodes()}</ul>
     </li>
   );
-};
+});
 
 export { Section };

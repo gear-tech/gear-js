@@ -14,21 +14,26 @@ const ModalProvider = ({ children }: Props) => {
   const [modalName, setModalName] = useState<ModalName | null>(null);
   const [modalProps, setModalProps] = useState<any>(null);
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      modalProps.onClose();
+    }
+  };
+
   const closeModal = useCallback(() => {
     setModalName(null);
     setModalProps(null);
   }, []);
 
-  const showModal = useCallback(<K extends ModalName>(name: K, props?: ModalProperties<K>) => {
-    setModalName(name);
-    setModalProps(props ?? {});
-  }, []);
+  const showModal = useCallback(
+    <K extends ModalName>(name: K, props?: ModalProperties<K>) => {
+      const defaultProps = { onClose: closeModal };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      closeModal();
-    }
-  };
+      setModalName(name);
+      setModalProps(Object.assign(defaultProps, props));
+    },
+    [closeModal],
+  );
 
   const value = useMemo(
     () => ({
@@ -39,7 +44,7 @@ const ModalProvider = ({ children }: Props) => {
   );
 
   useEffect(() => {
-    if (!modalName) {
+    if (!(modalName && modalProps)) {
       return;
     }
 
@@ -51,16 +56,15 @@ const ModalProvider = ({ children }: Props) => {
       document.removeEventListener('keydown', handleKeyDown, false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modalName]);
+  }, [modalName, modalProps]);
 
   const currentModal = useMemo(() => {
     if (modalName && modalProps) {
       const ModalComponent = MODALS[modalName];
-
       // eslint-disable-next-line react/jsx-props-no-spreading
-      return <ModalComponent onClose={closeModal} {...modalProps} />;
+      return <ModalComponent {...modalProps} />;
     }
-  }, [modalName, modalProps, closeModal]);
+  }, [modalName, modalProps]);
 
   return (
     <Provider value={value}>

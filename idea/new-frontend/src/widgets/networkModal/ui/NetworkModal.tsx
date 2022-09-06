@@ -47,7 +47,6 @@ const NetworkModal = ({ localNodes, nodeSections, addNetwork, onClose }: Props) 
     }
 
     addNetwork(trimmedAddress);
-    onClose();
   };
 
   return (

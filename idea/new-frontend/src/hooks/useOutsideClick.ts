@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const useOutsideClick = <TElement extends Element>(callback: () => void, isActive = true) => {
+const useOutsideClick = <TElement extends Element>(callback: (event: MouseEvent) => void, isActive = true) => {
   const ref = useRef<TElement>(null);
 
   const handleClick = (event: MouseEvent) => {
@@ -10,7 +10,7 @@ const useOutsideClick = <TElement extends Element>(callback: () => void, isActiv
       const isElementClicked = event.path.includes(ref.current);
 
       if (!isElementClicked) {
-        callback();
+        callback(event);
       }
     }
   };

@@ -28,7 +28,7 @@ const Node = ({ address, isCustom, nodeAddress, selectedNode, selectNode, remove
   const isCurrentNode = nodeAddress === address;
 
   return (
-    <li className={styles.node}>
+    <li id={address} className={styles.node}>
       <Radio
         name="node"
         label={address}

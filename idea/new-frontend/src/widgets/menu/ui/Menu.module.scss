@@ -155,3 +155,7 @@
     text-transform: capitalize
   }
 }
+
+.nodePopup {
+  @include fade();
+}
