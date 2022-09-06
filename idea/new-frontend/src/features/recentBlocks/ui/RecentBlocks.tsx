@@ -5,16 +5,15 @@ import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
 import { useBlocks, useOutsideClick } from 'hooks';
-import { AnimationTimeout } from 'shared/config';
 import { IChainBlock } from 'entities/chainBlock';
+import { AnimationTimeout } from 'shared/config';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 
-import styles from './RecentBlock.module.scss';
-import headerStyles from '../Header.module.scss';
-import { Graph } from '../graph';
-import { RecentBlockItem } from '../recentBlockItem';
+import styles from './RecentBlocks.module.scss';
+import { Graph } from './graph';
+import { RecentBlockItem } from './recentBlockItem';
 
-const RecentBlock = () => {
+const RecentBlocks = () => {
   const blocks = useBlocks();
 
   const [block, setBlock] = useState<IChainBlock>();
@@ -56,14 +55,14 @@ const RecentBlock = () => {
   const buttonClasses = clsx(buttonStyles.button, buttonStyles.transparent, buttonStyles.noText, styles.blocksBtn);
 
   return (
-    <CSSTransition in={isOpen} timeout={300}>
+    <CSSTransition in={isOpen} timeout={AnimationTimeout.Default}>
       <section ref={sectionRef} className={styles.recentBlock}>
         <div className={styles.content}>
           <Graph blocks={blocks} className={styles.graph} />
           <div className={styles.blockInfo}>
-            <h2 className={clsx(headerStyles.title, styles.title)}>Recent block</h2>
-            <p className={headerStyles.content}>
-              <span className={clsx(headerStyles.value, styles.value)}>{blockNumber}</span>
+            <h2 className={styles.title}>Recent block</h2>
+            <p className={styles.indicators}>
+              <span className={styles.value}>{blockNumber}</span>
               <span className={styles.point} />
               <span className={styles.time}>{time}</span>
             </p>
@@ -88,4 +87,4 @@ const RecentBlock = () => {
   );
 };
 
-export { RecentBlock };
+export { RecentBlocks };

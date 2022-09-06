@@ -8,13 +8,13 @@ import { TooltipWrapper, buttonStyles } from '@gear-js/ui';
 
 import { getTestBalance } from 'api';
 import { useBalanceTransfer } from 'hooks';
+import { RecentBlocks } from 'features/recentBlocks';
 import { isDevChain } from 'shared/helpers';
 import { HCAPTCHA_SITE_KEY, AnimationTimeout } from 'shared/config';
 import { ReactComponent as TestBalanceSVG } from 'shared/assets/images/actions/testBalance.svg';
 
 import styles from './TopSide.module.scss';
 import { Wallet } from '../wallet';
-import { RecentBlock } from '../recentBlock';
 import { BalanceInfo } from '../balanceInfo';
 import { TotalIssuance } from '../totalIssuance';
 
@@ -83,7 +83,7 @@ const TopSide = ({ account }: Props) => {
     <>
       <div className={styles.topSide}>
         <TotalIssuance totalIssuance={totalIssuance} />
-        <RecentBlock />
+        <RecentBlocks />
         <div className={styles.rightSide}>
           {account && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>
