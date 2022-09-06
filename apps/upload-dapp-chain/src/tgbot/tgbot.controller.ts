@@ -21,15 +21,15 @@ export class TgbotController {
       ctx.reply("hello there! Welcome to 📢😎 Gear upload dapp telegram bot.");
       ctx.reply("commands", Markup
         .keyboard([
-          ["/listCommands", "😎 Popular"],
+          ["/commands", "😎 Popular"],
         ])
         .oneTime()
         .resize());
     }
 
-    @Command("listCommands")
-    public async listCommands(ctx: Context): Promise<void> {
-      const res = await this.tgbotService.listCommands(ctx.from.id);
+    @Command("commands")
+    public async commands(ctx: Context): Promise<void> {
+      const res = await this.tgbotService.commands(ctx.from.id);
 
       ctx.reply(res);
     }

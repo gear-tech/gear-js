@@ -12,6 +12,7 @@ interface SendMessageInput {
 interface UploadProgramResult extends Program {
     programId: string
     metaWasmBase64: string
+    optWasmBase64: string
 }
 
 export { UploadProgramInput, SendMessageInput, UploadProgramResult };
