@@ -6,8 +6,8 @@ import {
   GetMessagesParams,
   IMessage,
   IMessagesDispatchedKafkaValue,
-  InitStatus,
-  MESSAGE_READ_STATUS,
+  ProgramStatus,
+  MessageReadReason,
   UpdateMessageData,
 } from '@gear-js/common';
 
@@ -17,6 +17,7 @@ import { MessageNotFound } from '../common/errors';
 import { sleep } from '../utils/sleep';
 import { MessageRepo } from './message.repo';
 import { CreateMessageInput } from './types';
+import { MessageEntryPoing } from '../common/enums';
 
 @Injectable()
 export class MessageService {
@@ -73,8 +74,8 @@ export class MessageService {
 
       if (statuses[messageId] === 'Failed') {
         const message = await this.messageRepository.get(messageId);
-        if (message.entry === 'Init') {
-          this.programService.setStatus(message.destination, genesis, InitStatus.FAILED);
+        if (message.entry === MessageEntryPoing.INIT) {
+          await this.programService.setStatus(message.destination, genesis, ProgramStatus.INIT_FAILED);
         }
       }
     }
@@ -92,9 +93,9 @@ export class MessageService {
     }
   }
 
-  public async updateReadStatus(id: string, readStatus: MESSAGE_READ_STATUS): Promise<void> {
+  public async updateReadStatus(id: string, readReason: MessageReadReason): Promise<void> {
     try {
-      await this.messageRepository.update({ id }, { readStatus });
+      await this.messageRepository.update({ id }, { readReason });
     } catch (error) {
       this.logger.error(error, error.stack);
     }

@@ -1,8 +1,10 @@
-import { Column, Entity, JoinColumn, Index, OneToOne, PrimaryColumn } from 'typeorm';
-import { InitStatus, IProgram } from '@gear-js/common';
+import { Column, Entity, JoinColumn, Index, PrimaryColumn, OneToMany, ManyToOne } from 'typeorm';
+import { ProgramStatus, IProgram } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
 import { Meta } from './meta.entity';
+import { Message } from './message.entity';
+import { Code } from './code.entity';
 
 @Entity()
 export class Program extends BaseEntity implements IProgram {
@@ -16,13 +18,22 @@ export class Program extends BaseEntity implements IProgram {
   @Column()
     name: string;
 
-  @OneToOne(() => Meta, { nullable: true, onDelete: 'CASCADE' })
-  @JoinColumn()
-    meta: Meta;
-
   @Column({ nullable: true })
     title: string;
 
-  @Column({ type: 'enum', enum: InitStatus, default: InitStatus.PROGRESS })
-    initStatus: InitStatus;
+  @Column({ type: 'enum', enum: ProgramStatus, default: ProgramStatus.UNKNOWN })
+    status: ProgramStatus;
+
+  @ManyToOne(() => Code, (code) => code.programs)
+  @JoinColumn({ name: 'code_id' })
+    code: Code;
+
+  @ManyToOne(() => Meta, (meta) => meta.programs, {
+    nullable: true, onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'meta_id' })
+    meta: Meta;
+
+  @OneToMany(() => Message, (message) => message.program)
+    messages: Message[];
 }

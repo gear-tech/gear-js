@@ -3,7 +3,7 @@ import {
   AddMetaParams,
   AddMetaResult,
   AllMessagesResult,
-  CODE_STATUS,
+  CodeStatus,
   FindMessageParams,
   FindProgramParams,
   GetAllCodeParams,
@@ -21,11 +21,11 @@ import {
   IMessage,
   IMessageEnqueuedKafkaValue,
   IMessagesDispatchedKafkaValue,
-  InitStatus,
+  ProgramStatus,
   IProgramChangedKafkaValue,
   IUserMessageReadKafkaValue,
   IUserMessageSentKafkaValue,
-  MESSAGE_TYPE,
+  MessageType,
   ProgramDataResult,
   UpdateMessageData,
 } from '@gear-js/common';
@@ -51,7 +51,7 @@ export class ConsumerService {
   events = {
     UserMessageSent: async (value: IUserMessageSentKafkaValue) => {
       await sleep(1000);
-      this.messageService.createMessage({ ...value, type: MESSAGE_TYPE.USER_MESS_SENT });
+      this.messageService.createMessage({ ...value, type: MessageType.USER_MESS_SENT });
     },
     MessageEnqueued: ({
       id,
@@ -82,18 +82,18 @@ export class ConsumerService {
         genesis: genesis,
         blockHash: blockHash,
         timestamp: timestamp,
-        type: MESSAGE_TYPE.ENQUEUED,
+        type: MessageType.ENQUEUED,
       });
     },
     ProgramChanged: (value: IProgramChangedKafkaValue) => {
       if (value.isActive) {
-        this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS);
+        this.programService.setStatus(value.id, value.genesis, ProgramStatus.TERMINATED);
       }
     },
     CodeChanged: (value: ICodeChangedKafkaValue) => {
       const updateCodeInput: UpdateCodeInput = {
         ...value,
-        status: value.change as CODE_STATUS,
+        status: value.change as CodeStatus,
       };
       this.codeService.updateCode(updateCodeInput);
     },

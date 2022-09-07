@@ -1,15 +1,15 @@
 import { UserMessageReadData } from '@gear-js/api';
-import { MESSAGE_READ_STATUS } from '@gear-js/common';
+import { MessageReadReason } from '@gear-js/common';
 
-function getMessageReadStatus(data: UserMessageReadData): MESSAGE_READ_STATUS | null {
+function getMessageReadStatus(data: UserMessageReadData): MessageReadReason | null {
   if (data.reason.isSystem && data.reason.asSystem.isOutOfRent) {
-    return MESSAGE_READ_STATUS.OUT_OF_RENT;
+    return MessageReadReason.OUT_OF_RENT;
   }
   if (data.reason.isRuntime && data.reason.asRuntime.isMessageClaimed) {
-    return MESSAGE_READ_STATUS.CLAIMED;
+    return MessageReadReason.CLAIMED;
   }
   if (data.reason.isRuntime && data.reason.asRuntime.isMessageReplied) {
-    return MESSAGE_READ_STATUS.REPLIED;
+    return MessageReadReason.REPLIED;
   }
   return null;
 }

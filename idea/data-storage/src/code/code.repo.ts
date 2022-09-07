@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
-import { CODE_STATUS, GetAllCodeParams } from '@gear-js/common';
+import { CodeStatus, GetAllCodeParams } from '@gear-js/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { Code } from '../database/entities';
@@ -20,7 +20,7 @@ export class CodeRepo {
       where: {
         id,
         genesis,
-        status: CODE_STATUS.ACTIVE,
+        status: CodeStatus.ACTIVE,
       },
     });
   }
@@ -28,7 +28,7 @@ export class CodeRepo {
   public async listPaginationByGenesis(params: GetAllCodeParams): Promise<[Code[], number]> {
     const { genesis, query, limit, offset } = params;
     return this.codeRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis, status: CODE_STATUS.ACTIVE }, query, ['id', 'name']),
+      where: sqlWhereWithILike({ genesis, status: CodeStatus.ACTIVE }, query, ['id', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
       order: {

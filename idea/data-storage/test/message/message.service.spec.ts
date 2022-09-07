@@ -1,5 +1,10 @@
 import { Test } from '@nestjs/testing';
-import { FindMessageParams, GetMessagesParams, MESSAGE_TYPE, MESSAGE_READ_STATUS } from '@gear-js/common';
+import {
+  FindMessageParams,
+  GetMessagesParams,
+  MessageType,
+  MessageReadReason,
+} from '@gear-js/common';
 
 import { MessageService } from '../../src/message/message.service';
 import { mockMessageRepository } from '../mock/message/message-repository.mock';
@@ -42,7 +47,7 @@ describe('Message service', () => {
       blockHash: '0x0000000000000000',
       destination: '0xFFFF',
       source: '0x0000',
-      type: MESSAGE_TYPE.ENQUEUED,
+      type: MessageType.ENQUEUED,
     };
 
     const message = await messageService.createMessage(createMessageInput);
@@ -53,10 +58,10 @@ describe('Message service', () => {
 
   it('should be successfully update readStatus the message', async () => {
     const updateMessageId = MESSAGE_DB_MOCK[1].id;
-    const updateMessageStatus = MESSAGE_READ_STATUS.REPLIED;
+    const updateMessageStatus = MessageReadReason.REPLIED;
 
     await messageService.updateReadStatus(updateMessageId, updateMessageStatus);
-    expect(MESSAGE_DB_MOCK[1].readStatus).toEqual(updateMessageStatus);
+    expect(MESSAGE_DB_MOCK[1].readReason).toEqual(updateMessageStatus);
     expect(mockMessageRepository.update).toHaveBeenCalled();
   });
 

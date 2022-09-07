@@ -1,8 +1,8 @@
-import { CODE_STATUS } from '@gear-js/common';
+import { CodeStatus } from '@gear-js/common';
 
 interface UpdateCodeInput {
   id: string;
-  status: CODE_STATUS;
+  status: CodeStatus;
   genesis: string;
   timestamp: number;
   blockHash: string;

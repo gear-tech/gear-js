@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { CODE_STATUS, GetAllCodeParams, GetCodeParams } from '@gear-js/common';
+import { CodeStatus, GetAllCodeParams, GetCodeParams } from '@gear-js/common';
 import { UpdateResult } from 'typeorm';
 
 import { Code } from '../../src/database/entities';
@@ -34,7 +34,7 @@ describe('Code service', () => {
       genesis: '0x07357',
       timestamp: 0,
       blockHash: '0x0000000000000000',
-      status: CODE_STATUS.ACTIVE,
+      status: CodeStatus.ACTIVE,
       expiration: 111,
     };
 

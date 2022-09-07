@@ -1,7 +1,7 @@
-import { IUserMessageSentKafkaValue, MESSAGE_TYPE } from '@gear-js/common';
+import { IUserMessageSentKafkaValue, MessageType } from '@gear-js/common';
 
 interface CreateMessageInput extends IUserMessageSentKafkaValue {
-  type: MESSAGE_TYPE;
+  type: MessageType;
 }
 
 export { CreateMessageInput };

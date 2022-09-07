@@ -1,18 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
 import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
   GetAllUserProgramsParams,
-  InitStatus,
+  ProgramStatus,
   IProgram,
 } from '@gear-js/common';
 
 import { sleep } from '../utils/sleep';
 import { ProgramNotFound } from '../common/errors';
-import { Program } from '../database/entities/program.entity';
+import { Program } from '../database/entities';
 import { CreateProgramInput, UpdateProgramDataInput } from './types';
-import { plainToClass } from 'class-transformer';
 import { ProgramRepo } from './program.repo';
 
 @Injectable()
@@ -81,10 +81,10 @@ export class ProgramService {
     return program;
   }
 
-  async setStatus(id: string, genesis: string, status: InitStatus): Promise<IProgram> {
+  async setStatus(id: string, genesis: string, status: ProgramStatus): Promise<IProgram> {
     await sleep(2000);
     const program = await this.programRepository.getByIdAndGenesis(id, genesis);
-    program.initStatus = status;
+    program.status = status;
     return this.programRepository.save(program);
   }
 

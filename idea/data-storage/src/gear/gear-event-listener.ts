@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MessageEnqueuedData } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
-import { InitStatus, Keys, MESSAGE_TYPE, UpdateMessageData } from '@gear-js/common';
+import { ProgramStatus, Keys, MessageType, UpdateMessageData } from '@gear-js/common';
 
 import { gearService } from './gear-service';
 import { ProgramService } from '../program/program.service';
@@ -26,6 +26,7 @@ export class GearEventListener {
   public async listen(){
     // eslint-disable-next-line no-constant-condition
     while (true) {
+      await gearService.connect();
       await this.listener();
     }
   }
@@ -54,7 +55,7 @@ export class GearEventListener {
       } of events) {
         try {
           const payload = getPayloadByGearEvent(method, data as GenericEventData);
-          if(payload !== null) await this.handleEvents(method, { ...payload, ...base });
+          if (payload !== null) await this.handleEvents(method, { ...payload, ...base });
         } catch (error) {
           console.error(error);
           this.logger.log({ method, data: data.toHuman() });
@@ -97,18 +98,18 @@ export class GearEventListener {
           genesis,
           blockHash,
           timestamp,
-          type: MESSAGE_TYPE.ENQUEUED,
+          type: MessageType.ENQUEUED,
         });
       },
       [Keys.UserMessageSent]: async () => {
         await this.messageService.createMessage({
           ...payload,
-          type: MESSAGE_TYPE.USER_MESS_SENT
+          type: MessageType.USER_MESS_SENT
         });
       },
       [Keys.ProgramChanged]: async () => {
         const { id, genesis } = payload;
-        if(payload.isActive) await this.programService.setStatus(id, genesis, InitStatus.SUCCESS);
+        if(payload.isActive) await this.programService.setStatus(id, genesis, ProgramStatus.ACTIVE);
       },
       [Keys.MessagesDispatched]: async () => {
         await this.messageService.setDispatchedStatus(payload);
@@ -126,7 +127,7 @@ export class GearEventListener {
     };
 
     try {
-      await eventsMethod[method]();
+      method in eventsMethod && await eventsMethod[method]();
     } catch (error) {
       this.logger.error(error);
     }

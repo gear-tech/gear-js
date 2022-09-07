@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { GetAllProgramsParams, GetAllUserProgramsParams, InitStatus } from '@gear-js/common';
+import { GetAllProgramsParams, GetAllUserProgramsParams, ProgramStatus } from '@gear-js/common';
 
 import { ProgramService } from '../../src/program/program.service';
 import { ProgramRepo } from '../../src/program/program.repo';
@@ -96,21 +96,21 @@ describe('Program service', () => {
     expect(mockProgramRepository.listPaginationByGenesis).toHaveBeenCalled();
   });
 
-  it('should successfully update program status to PROGRESS', async () => {
+  it('should successfully update program status to ACTIVE', async () => {
     const { id, genesis } = PROGRAM_DB_MOCK[2];
     const updateProgramStatusInput = {
       id,
       genesis,
-      status: InitStatus.PROGRESS,
+      status: ProgramStatus.ACTIVE,
     };
     const program = await programService.setStatus(
       updateProgramStatusInput.id,
       updateProgramStatusInput.genesis,
       updateProgramStatusInput.status,
     );
-    expect(program.initStatus).toEqual(updateProgramStatusInput.status);
-    expect(program.initStatus).not.toEqual(InitStatus.SUCCESS);
-    expect(program.initStatus).not.toEqual(InitStatus.FAILED);
+    expect(program.status).toEqual(updateProgramStatusInput.status);
+    expect(program.status).not.toEqual(ProgramStatus.INIT_FAILED);
+    expect(program.status).not.toEqual(ProgramStatus.PAUSED);
     expect(mockProgramRepository.save).toHaveBeenCalled();
   });
 
