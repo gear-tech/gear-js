@@ -10,7 +10,7 @@ import { getWorkflowCommands } from "../common/helpers/get-workflow-commands";
 import { SendMessageInput, UploadProgramResult } from "../command/types";
 import { getUploadProgramData } from "../common/helpers/get-upload-program-data";
 import { DappData } from "../dapp-data/entities/dapp-data.entity";
-import { FlowCommand, Payload, Program } from '../common/types';
+import { FlowCommand, Payload } from "../common/types";
 import { getUploadProgramByName } from "../common/helpers/get-upload-program-by-name";
 
 @Injectable()
@@ -42,7 +42,7 @@ export class TgbotService {
     return TBErrorMessage.ACCESS_DENIED;
   }
 
-  public async listCommands(userId: number): Promise<string> {
+  public async commands(userId: number): Promise<string> {
     if (await this.userService.validate(String(userId))) {
       return getTgCommands();
     }
@@ -59,14 +59,14 @@ export class TgbotService {
     }
 
     for (const commandInfo of workflow) {
-      const uploadedProgram = await this.handleCommand(commandInfo, uploadedPrograms)
+      const uploadedProgram = await this.handleCommand(commandInfo, uploadedPrograms);
 
-      if (uploadedProgram) uploadedPrograms.push(uploadedProgram)
+      if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
     }
 
     const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
 
-    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long" }));
+    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
   }
 
   public async uploadDapp(userId: number, commandArguments: string): Promise<DappData[] | string> {
@@ -82,19 +82,19 @@ export class TgbotService {
     const uploadProgramActions = getUploadProgramByName(dappName);
     const uploadedPrograms: UploadProgramResult[] = [];
 
-    if(!uploadProgramActions) {
+    if (!uploadProgramActions) {
       return TBErrorMessage.INVALID_DAPP_NAME;
     }
 
     for (const action of uploadProgramActions.actions) {
-      const uploadedProgram = await this.handleCommand(action, uploadedPrograms)
+      const uploadedProgram = await this.handleCommand(action, uploadedPrograms);
 
-      if (uploadedProgram) uploadedPrograms.push(uploadedProgram)
+      if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
     }
 
     const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
 
-    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long" }));
+    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
   }
 
   private async handleCommand(
@@ -115,13 +115,13 @@ export class TgbotService {
         };
 
         await this.commandService.sendMessage(sendMessageInput, uploadedPrograms);
-        return
+        return;
       }
 
       if (command === "uploadProgram") {
         const uploadedProgramData = await this.commandService.uploadProgram(uploadProgramData);
 
-        return uploadedProgramData
+        return uploadedProgramData;
       }
     } catch (error) {
       console.log(error);

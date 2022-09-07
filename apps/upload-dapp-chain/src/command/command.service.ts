@@ -56,7 +56,8 @@ export class CommandService {
 
       return { ...uploadProgramInput,
         programId: data.programId,
-        metaWasmBase64: metaWasmBuff.toString("base64") };
+        metaWasmBase64: metaWasmBuff.toString("base64"),
+        optWasmBase64: optWasmBuff.toString("base64") };
     } catch (error) {
       console.log(error);
       this.logger.error(error);
