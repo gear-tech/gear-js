@@ -1,7 +1,7 @@
 import { getWasmMetadata, Hex, Metadata } from '@gear-js/api';
-import { ProviderProps } from '@gear-js/react-hooks';
-import { ADDRESS } from 'consts';
+import { ProviderProps, useAlert } from '@gear-js/react-hooks';
 import { createContext, useEffect, useState } from 'react';
+import { ADDRESS } from 'consts';
 
 type Result = {
   id: Hex;
@@ -20,17 +20,20 @@ type Program = {
 const WasmContext = createContext<Program | undefined>({} as Program);
 
 function useWasmRequest(name: string) {
+  const alert = useAlert();
   const [program, setProgram] = useState<Program>();
 
   useEffect(() => {
-    const params = new URLSearchParams({ name: encodeURIComponent(name) });
+    const params = new URLSearchParams({ name });
     const url = `${ADDRESS.DAPPS_API}?${params}`;
 
     fetch(url)
       .then((response) => response.json() as Promise<Result>)
       .then(({ metaWasmBase64, id }) => ({ metaBuffer: Buffer.from(metaWasmBase64, 'base64'), programId: id }))
       .then(async ({ metaBuffer, programId }) => ({ metaBuffer, programId, meta: await getWasmMetadata(metaBuffer) }))
-      .then((result) => setProgram(result));
+      .then((result) => setProgram(result))
+      .catch(({ message }: Error) => alert.error(message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   return program;
