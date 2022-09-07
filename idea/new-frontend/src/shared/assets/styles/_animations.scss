@@ -75,8 +75,8 @@
   }
 }
 
-@mixin expand($startHeight) {
-  $endHeight: calc(var(--offset-height) + $startHeight);
+@mixin expand($startHeight, $contentHeight: var(--offset-height)) {
+  $endHeight: calc($contentHeight + $startHeight);
 
   height: $startHeight;
   overflow: hidden;
