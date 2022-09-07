@@ -1,0 +1,21 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.table {
+  & > *:first-child {
+    border-radius: 16px 16px 0 0;
+  }
+
+  & > *:last-child {
+    border-radius: 0 0 16px 16px;
+  }
+
+  & > *:nth-child(odd) {
+    background-color: $bgColor5;
+  }
+
+  & > *:nth-child(even) {
+    background-color: $bgColor4;
+  }
+}

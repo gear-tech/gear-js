@@ -28,7 +28,7 @@ const StatusCheckbox = ({ name, label, value, status }: Props) => {
     <label htmlFor={input.name} className={checkboxStyles.label}>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <input {...input} className={inputClasses} onChange={handleChange} />
-      <BulbBlock status={status} text={label} className={styles.text} />
+      <BulbBlock size="large" color="primary" status={status} text={label} className={styles.status} />
     </label>
   );
 };

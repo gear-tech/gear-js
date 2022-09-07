@@ -38,9 +38,9 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
           </TooltipWrapper>
         </div>
         <div className={styles.otherInfo}>
-          <IdBlock id={programId} />
-          <BulbBlock text={initStatus} status={getBulbStatus(initStatus)} />
-          <TimestampBlock timestamp={timestamp} />
+          <IdBlock id={programId} size="medium" withIcon color="light" />
+          <BulbBlock color="light" text={initStatus} status={getBulbStatus(initStatus)} />
+          <TimestampBlock color="light" withIcon timestamp={timestamp} />
         </div>
       </div>
       <div className={styles.actions}>

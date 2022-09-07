@@ -14,7 +14,7 @@ const routes = {
   privacyPolicy: '/privacy-policy',
   code: '/code/:codeId',
   state: '/state/:programId',
-  program: '/program/:programId',
+  program: ':programId',
   message: '/message/:messageId',
   send: '/send',
   sendMessage: 'message/:programId',
@@ -25,7 +25,7 @@ const routes = {
 const absoluteRoutes = {
   code: `${routes.codes}/:codeId`,
   meta: `/meta/:programId`,
-  program: `${routes.programs}/:programId`,
+  program: `${routes.programs}/${routes.program}`,
   message: `${routes.messages}/:messageId`,
 };
 

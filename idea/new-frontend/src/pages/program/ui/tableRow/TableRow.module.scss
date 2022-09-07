@@ -1,0 +1,17 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.tableRow {
+  display: grid;
+  grid-template-columns: minmax(toRem(125), 0.2fr) 0.7fr 0.1fr;
+  grid-template-rows: min-content;
+  padding: toRem(16) toRem(24);
+  gap: 30px;
+  
+  .rowName {
+    font-size: $fontSizeSmall;
+    line-height: 1.3;
+    color: $gray600;
+  }
+}

@@ -31,10 +31,10 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
       <div className={styles.cardContent}>
         <h1 className={styles.title}>Program name</h1>
         <h2 className={styles.name}>{name}</h2>
-        <IdBlock id={programId} className={styles.idBlock} />
+        <IdBlock id={programId} size="small" color="light" withIcon className={styles.idBlock} />
         <div className={styles.otherInfo}>
-          <BulbBlock text={initStatus} status={getBulbStatus(initStatus)} className={styles.bulbBlock} />
-          <TimestampBlock timestamp={timestamp} />
+          <BulbBlock text={initStatus} color="light" status={getBulbStatus(initStatus)} className={styles.bulbBlock} />
+          <TimestampBlock color="light" withIcon timestamp={timestamp} />
         </div>
       </div>
       <div className={styles.actions}>
