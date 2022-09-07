@@ -18,7 +18,7 @@ type Program = {
 };
 
 type Programs = {
-  [key in 'nft' | 'marketplace']: Program | undefined;
+  [key in 'nft' | 'marketplace']: Program;
 };
 
 const WasmContext = createContext<Programs>({} as Programs);
@@ -49,7 +49,7 @@ function WasmProvider({ children }: ProviderProps) {
 
   const { Provider } = WasmContext;
 
-  return <Provider value={{ nft, marketplace }}>{children}</Provider>;
+  return <Provider value={{ nft, marketplace } as Programs}>{children}</Provider>;
 }
 
 export { WasmContext, WasmProvider };

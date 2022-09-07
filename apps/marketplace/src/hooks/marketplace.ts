@@ -21,7 +21,7 @@ function useMarketplace() {
 
 function useGetMarketNftPayload() {
   const { nft } = useWasm();
-  const nftContractId = nft?.programId;
+  const nftContractId = nft.programId;
 
   return (tokenId: string) => ({ ItemInfo: { nftContractId, tokenId } });
 }
@@ -39,16 +39,16 @@ function useMarketNft(tokenId: string) {
 
 function useMarketplaceMessage() {
   const { marketplace } = useWasm();
-  const { programId, meta } = marketplace || {};
+  const { programId, meta } = marketplace;
 
-  return useSendMessage(programId || '0x00', meta);
+  return useSendMessage(programId, meta);
 }
 
 function useMarketplaceActions(tokenId: string, price: MarketNFT['price'] | undefined) {
   const sendMessage = useMarketplaceMessage();
   const { nft } = useWasm();
 
-  const nftContractId = nft?.programId;
+  const nftContractId = nft.programId;
   const ftContractId = null;
 
   const buy = (onSuccess: () => void) => {

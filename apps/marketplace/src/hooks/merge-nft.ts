@@ -10,17 +10,16 @@ function useMergedNFTs() {
   const alert = useAlert();
 
   const { nft } = useWasm();
-  const nftMetaBuffer = nft?.metaBuffer;
   const { NFTs: marketNFTs } = useMarketplace();
 
   const [NFTs, setNFTs] = useState<NFT[]>([]);
   const [isEachNFTRead, setIsEachNFTRead] = useState(false);
 
   useEffect(() => {
-    if (marketNFTs && nftMetaBuffer) {
+    if (marketNFTs) {
       const combinedNFTs = marketNFTs.map((marketNft) =>
         api.programState
-          .read(nft?.programId, nftMetaBuffer, { Token: { tokenId: marketNft.tokenId } })
+          .read(nft.programId, nft.metaBuffer, { Token: { tokenId: marketNft.tokenId } })
           .then((state) => state.toHuman() as NFTState)
           .then((state) => state.Token.token)
           .then((baseNft) => ({ ...marketNft, ...baseNft })),
@@ -34,7 +33,7 @@ function useMergedNFTs() {
         .catch(({ message }: Error) => alert.error(message));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [marketNFTs, nftMetaBuffer]);
+  }, [marketNFTs]);
 
   return { NFTs, isEachNFTRead };
 }
@@ -44,8 +43,6 @@ function useMergedOwnerNFTs() {
   const alert = useAlert();
 
   const { marketplace } = useWasm();
-  const marketMetaBuffer = marketplace?.metaBuffer;
-
   const { NFTs: ownerNFTs } = useOwnersNft();
   const getMarketNFTPayload = useGetMarketNftPayload();
 
@@ -53,11 +50,11 @@ function useMergedOwnerNFTs() {
   const [isEachNFTRead, setIsEachNFTRead] = useState(false);
 
   useEffect(() => {
-    if (ownerNFTs && marketMetaBuffer) {
+    if (ownerNFTs) {
       const combinedNFTs = ownerNFTs.map(
         (baseNft) =>
           api.programState
-            .read(marketplace?.programId, marketMetaBuffer, getMarketNFTPayload(baseNft.id))
+            .read(marketplace.programId, marketplace.metaBuffer, getMarketNFTPayload(baseNft.id))
             .then((state) => state.toHuman() as MarketNFTState)
             .then((state) => state.ItemInfo)
             .then((marketNft) => ({ ...marketNft, ...baseNft })), // order is important
@@ -71,7 +68,7 @@ function useMergedOwnerNFTs() {
         .catch(({ message }: Error) => alert.error(message));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ownerNFTs, marketMetaBuffer]);
+  }, [ownerNFTs]);
 
   return { NFTs, isEachNFTRead };
 }

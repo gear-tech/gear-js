@@ -39,7 +39,7 @@ function Offer({ bid, bidder, listingOwner, hash }: Props) {
   };
 
   const accept = () => {
-    const payload = { AcceptOffer: { nftContractId: nft?.programId, tokenId: id, offerHash: hash } };
+    const payload = { AcceptOffer: { nftContractId: nft.programId, tokenId: id, offerHash: hash } };
     sendMessage(payload, { onSuccess: closeModal });
   };
 

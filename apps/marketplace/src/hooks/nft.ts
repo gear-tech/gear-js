@@ -6,7 +6,7 @@ import { useWasm } from './context';
 
 function useNftState<T>(payload: AnyJson) {
   const { nft } = useWasm();
-  const { programId, metaBuffer } = nft || {};
+  const { programId, metaBuffer } = nft;
 
   return useReadState<T>(programId, metaBuffer, payload);
 }
@@ -30,9 +30,9 @@ function useOwnersNft() {
 
 function useNftMessage() {
   const { nft } = useWasm();
-  const { programId, meta } = nft || {};
+  const { programId, meta } = nft;
 
-  return useSendMessage(programId || '0x00', meta);
+  return useSendMessage(programId, meta);
 }
 
 export { useNft, useOwnersNft, useNftMessage };
