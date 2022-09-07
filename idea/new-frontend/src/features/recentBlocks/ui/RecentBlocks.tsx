@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import SimpleBar from 'simplebar-react';
+import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
@@ -11,7 +10,7 @@ import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRi
 
 import styles from './RecentBlocks.module.scss';
 import { Graph } from './graph';
-import { RecentBlockItem } from './recentBlockItem';
+import { RecentBlocksList } from './recentBlocksList';
 
 const RecentBlocks = () => {
   const blocks = useBlocks();
@@ -56,7 +55,7 @@ const RecentBlocks = () => {
 
   return (
     <CSSTransition in={isOpen} timeout={AnimationTimeout.Default}>
-      <section ref={sectionRef} className={styles.recentBlock}>
+      <section ref={sectionRef} className={styles.recentBlocks}>
         <div className={styles.content}>
           <Graph blocks={blocks} className={styles.graph} />
           <div className={styles.blockInfo}>
@@ -71,17 +70,9 @@ const RecentBlocks = () => {
             <ArrowSVG />
           </button>
         </div>
-        {isOpen && (
-          <SimpleBar className={styles.simpleBar}>
-            <TransitionGroup component="ul" className={styles.blockList}>
-              {blocks.map((item) => (
-                <CSSTransition key={item.number} timeout={AnimationTimeout.Big} exit={false}>
-                  <RecentBlockItem block={item} className={styles.listItem} />
-                </CSSTransition>
-              ))}
-            </TransitionGroup>
-          </SimpleBar>
-        )}
+        <CSSTransition in={isOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
+          <RecentBlocksList blocks={blocks} className={styles.recentBlocksList} />
+        </CSSTransition>
       </section>
     </CSSTransition>
   );

@@ -14,7 +14,27 @@
   border-radius: 24px; 
   width: toRem(432);
   padding: toRem(14) toRem(12) toRem(24) toRem(24);
-  max-height: toRem(36);
+  max-height: 0;
+}
+
+%hideOverflow {
+  .recentBlocksList { 
+    overflow: hidden;
+  }
+}
+
+%contentTransition {
+  @include transition();
+
+  .time,
+  .title,
+  .value,
+  .point,
+  .graph > hr,
+  .blocksBtn svg, 
+  .blocksBtn svg path {
+    @include transition();
+  }
 }
 
 %enterDoneStyles {
@@ -45,42 +65,66 @@
   } 
 }
 
-.recentBlock {
+%exitDoneStyles {
+  max-height: 0;
+  
+  .graph > hr { 
+    background-color: $indigo;
+  }
+
+  .blockInfo {
+    .title {
+      color: $indigo800;
+    }
+
+    .value {
+      color: $indigo;
+    }
+    
+    .time,
+    .point {
+      background-color: $indigo700;
+    }  
+  }
+
+  .blocksBtn svg {
+    transform: rotate(90deg);
+
+    path {
+      fill: $indigo;
+    }
+  } 
+}
+
+.recentBlocks {
   display: flex;
   flex-direction: column;
 
   &:global(.enter) {
     @extend %enterStyles;
-
-    .simpleBar { 
-      overflow: hidden;
-    }
+    @extend %hideOverflow;
   }
 
   &:global(.enter-active) {
-    @include transition(max-height);
     @extend %enterDoneStyles;
-
-    .time,
-    .title,
-    .value,
-    .point,
-    .graph > hr,
-    .blocksBtn svg path {
-      @include transition();
-    }
+    @extend %contentTransition;
   }
 
   &:global(.enter-done) {
     @extend %enterStyles;
     @extend %enterDoneStyles;
   }
-}
 
-.title {
-  color: $indigo800;
-  line-height: 1.3;
-  font-size: $fontSizeTiny;
+  &:global(.exit) {
+    @extend %enterStyles;
+    @extend %hideOverflow;
+    @extend %enterDoneStyles;
+  }
+
+  &:global(.exit-active) {
+    @extend %exitDoneStyles;
+    @extend %contentTransition;
+  }
 }
 
 .indicators {
@@ -103,6 +147,12 @@
 .content {
   display: flex;
 
+  .title {
+    color: $indigo800;
+    line-height: 1.3;
+    font-size: $fontSizeTiny;
+  }
+
   .blockInfo {
     position: relative;
     margin-left: toRem(12);
@@ -119,35 +169,21 @@
       background-color: $indigo;
     }  
   }
+}
 
-  .blocksBtn {
-    align-self: center;
-    margin-left: toRem(4);
+.blocksBtn {
+  align-self: center;
+  margin-left: toRem(4);
 
-    svg {
-      transform: rotate(90deg);
+  svg {
+    transform: rotate(90deg);
 
-      path {
-        fill: $indigo;
-      }
+    path {
+      fill: $indigo;
     }
   }
 }
 
-.simpleBar {
-  @include customSimplebar;
-  
-  width: 100%;
-  margin-top: toRem(20);
-  max-height: 463px;
-  
-  .blockList {
-    @include childrenMargin(toRem(5));
-
-    padding-right: toRem(10);
-
-    .listItem {
-      @include fade(0ms, $bigTimeout);
-    }
-  }
+.recentBlocksList { 
+  @include fade();
 }

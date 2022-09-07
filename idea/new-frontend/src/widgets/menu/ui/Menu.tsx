@@ -20,6 +20,7 @@ const Menu = () => {
   const [isNodesOpen, setIsNodesOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen((prevState) => !prevState);
+
   const toggleNodesPopup = (event?: MouseEvent) => {
     event?.stopPropagation();
 
