@@ -3,10 +3,4 @@ enum MESSAGE_TYPE {
   ENQUEUED = 'MessageEnqueued',
 }
 
-enum MESSAGE_READ_STATUS {
-  OUT_OF_RENT = 'OutOfRent',
-  CLAIMED = 'Claimed',
-  REPLIED = 'Replied',
-}
-
-export { MESSAGE_TYPE, MESSAGE_READ_STATUS };
+export { MESSAGE_TYPE };
