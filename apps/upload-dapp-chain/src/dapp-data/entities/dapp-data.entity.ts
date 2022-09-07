@@ -15,5 +15,8 @@ export class DappData {
   metaWasmBase64: string;
 
   @Column({ nullable: true })
+  optWasmBase64: string;
+
+  @Column({ nullable: true })
   updatedAt: Date;
 }
