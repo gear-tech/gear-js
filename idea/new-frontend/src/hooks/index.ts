@@ -19,6 +19,7 @@ import { useStateRead } from './useStateRead';
 import { usePrevious } from './usePrevious';
 import { useDataLoading } from './useDataLoading';
 import { useScrollLoader } from './useScrollLoader';
+import { useElementSizes } from './useElementSizes';
 
 export {
   useApp,
@@ -37,6 +38,7 @@ export {
   useChangeEffect,
   useScrollLoader,
   useMessageClaim,
+  useElementSizes,
   useGasCalculate,
   useProgramActions,
   useMetadataUplaod,

@@ -1,15 +1,15 @@
 import { ReactNode } from 'react';
 
-import styles from './TableRow.module.scss';
+import styles from '../Table.module.scss';
 
 type Props = {
-  rowName: string;
+  name: string;
   children: ReactNode;
 };
 
-const TableRow = ({ rowName, children }: Props) => (
+const TableRow = ({ name, children }: Props) => (
   <div className={styles.tableRow}>
-    <span className={styles.rowName}>{rowName}</span>
+    <span className={styles.name}>{name}</span>
     <div>{children}</div>
   </div>
 );

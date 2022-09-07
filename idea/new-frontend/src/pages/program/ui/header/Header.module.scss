@@ -26,5 +26,9 @@
 
     white-space: nowrap;
     margin-left: 24px;
+
+    .fixWidth {
+      min-width: toRem(180)
+    }
   }
 }

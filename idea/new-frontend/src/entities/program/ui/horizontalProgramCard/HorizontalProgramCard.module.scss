@@ -1,3 +1,4 @@
+@use '@gear-js/ui/mixins' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
@@ -21,10 +22,20 @@
 }
 
 .horizontalProgramCard {
+  @include transition(background-color);
+
   display: flex;
   position: relative;
   border-radius: toRem(16);
   background-color: $bgColor4;
+  
+  &:hover {
+    background-color: $gray100;
+
+    .content::after {
+      background: radial-gradient(50% 50% at 50% 50%, rgba($successColor, 0.45) 25%, rgba(24, 24, 27, 0) 100%);
+    }
+  }
 }
 
 .content {
@@ -34,6 +45,8 @@
   position: relative;
   
   &::after {
+    @include transition(background);
+
     content: '';
     position: absolute;
     right: -40%;

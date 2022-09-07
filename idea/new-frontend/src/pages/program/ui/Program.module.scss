@@ -3,5 +3,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .content {
-
+  @include childrenMargin(24px);
+  
+  margin-top: 24px;
 }
