@@ -19,7 +19,7 @@ import {
 import { GenericEventData } from '@polkadot/types';
 import { getMessageReadStatus } from './get-message-read-status';
 
-function messageEnqueuedHandler(data: MessageEnqueuedData): NewEventData<Keys.MessageEnqueued, IMessageEnqueuedData> {
+function messageEnqueuedPayload(data: MessageEnqueuedData): NewEventData<Keys.MessageEnqueued, IMessageEnqueuedData> {
   const { id, source, destination, entry } = data;
   return {
     key: Keys.MessageEnqueued,
@@ -32,7 +32,7 @@ function messageEnqueuedHandler(data: MessageEnqueuedData): NewEventData<Keys.Me
   };
 }
 
-function userMessageSentHandler(data: UserMessageSentData): NewEventData<Keys.UserMessageSent, IMessage> {
+function userMessageSentPayload(data: UserMessageSentData): NewEventData<Keys.UserMessageSent, IMessage> {
   const { id, source, destination, payload, value, reply } = data.message;
   return {
     key: Keys.UserMessageSent,
@@ -48,7 +48,7 @@ function userMessageSentHandler(data: UserMessageSentData): NewEventData<Keys.Us
   };
 }
 
-function userMessageReadHandler(data: UserMessageReadData): NewEventData<Keys.UserMessageRead, IUserMessageReadData> {
+function userMessageReadPayload(data: UserMessageReadData): NewEventData<Keys.UserMessageRead, IUserMessageReadData> {
   return {
     key: Keys.UserMessageRead,
     value: {
@@ -58,7 +58,7 @@ function userMessageReadHandler(data: UserMessageReadData): NewEventData<Keys.Us
   };
 }
 
-function programChangedHandler(
+function programChangedPayload(
   data: ProgramChangedData,
 ): NewEventData<Keys.ProgramChanged, IProgramChangedData> | null {
   const { id, change } = data;
@@ -74,7 +74,7 @@ function programChangedHandler(
   return null;
 }
 
-function messagesDispatchedHandler(
+function messagesDispatchedPayload(
   data: MessagesDispatchedData,
 ): NewEventData<Keys.MessagesDispatched, IMessagesDispatchedData> | null {
   const { statuses } = data;
@@ -84,7 +84,7 @@ function messagesDispatchedHandler(
   return null;
 }
 
-function codeChangedHandler(data: CodeChangedData): NewEventData<Keys.CodeChanged, ICodeChangedData> | null {
+function codeChangedPayload(data: CodeChangedData): NewEventData<Keys.CodeChanged, ICodeChangedData> | null {
   const { id, change } = data;
   const status = change.isActive ? 'Active' : change.isInactive ? 'Inactive' : null;
   const expiration = change.isActive ? change.asActive.expiration.toHuman() : null;
@@ -94,26 +94,26 @@ function codeChangedHandler(data: CodeChangedData): NewEventData<Keys.CodeChange
   return { key: Keys.CodeChanged, value: { id: id.toHex(), change: status, expiration } as ICodeChangedData };
 }
 
-function dataBaseWipedHandler(): NewEventData<Keys.DatabaseWiped, unknown> {
+function dataBaseWipedPayload(): NewEventData<Keys.DatabaseWiped, unknown> {
   return { key: Keys.DatabaseWiped, value: {} };
 }
 
 export const getPayloadByGearEvent = (method: string, data: GenericEventData): { key: Keys; value: any } | null => {
   switch (method) {
     case Keys.MessageEnqueued:
-      return messageEnqueuedHandler(data as MessageEnqueuedData);
+      return messageEnqueuedPayload(data as MessageEnqueuedData);
     case Keys.UserMessageSent:
-      return userMessageSentHandler(data as UserMessageSentData);
+      return userMessageSentPayload(data as UserMessageSentData);
     case Keys.UserMessageRead:
-      return userMessageReadHandler(data as UserMessageReadData);
+      return userMessageReadPayload(data as UserMessageReadData);
     case Keys.ProgramChanged:
-      return programChangedHandler(data as ProgramChangedData);
+      return programChangedPayload(data as ProgramChangedData);
     case Keys.MessagesDispatched:
-      return messagesDispatchedHandler(data as MessagesDispatchedData);
+      return messagesDispatchedPayload(data as MessagesDispatchedData);
     case Keys.CodeChanged:
-      return codeChangedHandler(data as CodeChangedData);
+      return codeChangedPayload(data as CodeChangedData);
     case Keys.DatabaseWiped:
-      return dataBaseWipedHandler();
+      return dataBaseWipedPayload();
     default:
       return null;
   }
