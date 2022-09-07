@@ -17,7 +17,7 @@ type Program = {
   meta: Metadata;
 };
 
-const WasmContext = createContext<Program | undefined>({} as Program);
+const WasmContext = createContext<Program>({} as Program);
 
 function useWasmRequest(name: string) {
   const alert = useAlert();
@@ -43,7 +43,7 @@ function WasmProvider({ children }: ProviderProps) {
   const program = useWasmRequest('lottery');
   const { Provider } = WasmContext;
 
-  return <Provider value={program}>{children}</Provider>;
+  return <Provider value={program as Program}>{children}</Provider>;
 }
 
 export { WasmContext, WasmProvider };

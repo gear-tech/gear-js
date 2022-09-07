@@ -8,7 +8,7 @@ type LotteryState = { LotteryState: Lottery };
 
 function useLotteryState<T>(payload: AnyJson) {
   const lottery = useWasm();
-  const { programId, metaBuffer } = lottery || {};
+  const { programId, metaBuffer } = lottery;
 
   return useReadState<T>(programId, metaBuffer, payload);
 }
@@ -22,9 +22,9 @@ function useLottery() {
 
 function useLotteryMessage() {
   const lottery = useWasm();
-  const { programId, meta } = lottery || {};
+  const { programId, meta } = lottery;
 
-  return useSendMessage(programId || '0x00', meta);
+  return useSendMessage(programId, meta);
 }
 
 export { useLottery, useLotteryMessage };
