@@ -12,7 +12,7 @@ type ApprovedTokensState = { ApprovedTokens: { tokens: Token[] } };
 
 function useNFTState<T>(payload: AnyJson) {
   const nft = useWasm();
-  const { programId, metaBuffer } = nft || {};
+  const { programId, metaBuffer } = nft;
 
   return useReadState<T>(programId, metaBuffer, payload);
 }
@@ -56,9 +56,9 @@ function useApprovedNFTs() {
 
 function useSendNFTMessage() {
   const nft = useWasm();
-  const { programId, meta } = nft || {};
+  const { programId, meta } = nft;
 
-  return useSendMessage(programId || '0x00', meta);
+  return useSendMessage(programId, meta);
 }
 
 export { useNFT, useNFTs, useOwnerNFTs, useApprovedNFTs, useSendNFTMessage };
