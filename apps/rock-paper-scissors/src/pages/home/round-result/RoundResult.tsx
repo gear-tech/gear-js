@@ -1,4 +1,5 @@
 import { Hex } from '@gear-js/api';
+import { Button } from '@gear-js/ui';
 import { Players } from 'components';
 import styles from './RoundResult.module.scss';
 
@@ -6,11 +7,11 @@ type Props = {
   name: string;
   game: string;
   round: string;
+  winners: Hex[];
+  loosers: Hex[];
 };
 
-const players = ['0x00', '0x00', '0x00', '0x00'];
-
-function RoundResult({ name, game, round }: Props) {
+function RoundResult({ name, game, round, winners, loosers }: Props) {
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>
@@ -18,8 +19,9 @@ function RoundResult({ name, game, round }: Props) {
         <span>Game #{game}</span>
       </h2>
       <h3 className={styles.subheading}>Round {round} result</h3>
-      <Players heading="Advance to the next round" list={players as Hex[]} className={styles.players} center />
-      <Players heading="Losers" list={players as Hex[]} center />
+      <Players heading="Advance to the next round" list={winners} className={styles.players} center />
+      <Players heading="Losers" list={loosers} center />
+      <Button text="Close" size="large" className={styles.button} />
     </div>
   );
 }
