@@ -35,6 +35,9 @@ export class GearEvents {
     });
   }
 
+  /**
+   * @deprecated Use api.blocks.subscribeNewHeads instead
+   */
   subscribeToNewBlocks(callback: IBlocksCallback): UnsubscribePromise {
     return this.api.rpc.chain.subscribeNewHeads((header) => {
       callback(header);
