@@ -5,13 +5,13 @@ import { MetadataTable } from 'entities/metadata';
 import { Subheader } from '../subheader';
 
 type Props = {
-  metadata: Metadata;
+  metadata?: Metadata;
 };
 
 const MetadataDetails = ({ metadata }: Props) => (
   <article>
     <Subheader title="Metadata" />
-    <MetadataTable metadata={metadata} />
+    {metadata && <MetadataTable metadata={metadata} />}
   </article>
 );
 

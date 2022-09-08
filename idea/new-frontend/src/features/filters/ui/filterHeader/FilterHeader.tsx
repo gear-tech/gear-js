@@ -9,12 +9,15 @@ import { AnimationTimeout } from 'shared/config';
 import styles from './FilterHeader.module.scss';
 
 const FilterHeader = () => {
-  const { reset } = useForm();
+  const { reset, submit } = useForm();
   const { values, initialValues } = useFormState();
 
   const defaultValues = useRef(initialValues);
 
-  const handleClick = () => reset(defaultValues.current);
+  const handleClick = () => {
+    reset(defaultValues.current);
+    submit();
+  };
 
   const isDirty = useMemo(() => !isEqual(values, defaultValues.current), [values]);
 

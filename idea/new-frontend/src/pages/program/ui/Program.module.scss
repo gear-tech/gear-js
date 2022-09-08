@@ -1,9 +1,14 @@
 @use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
 
 .content {
-  @include childrenMargin(24px);
-  
+  @include childrenMargin(40px, right);
+
+  display: flex;
   margin-top: 24px;
+  
+  .leftSide {
+    @include childrenMargin(24px);
+
+    flex: 2 1;
+  }
 }

@@ -69,7 +69,7 @@ const RecentBlocks = () => {
             <div className={styles.blockInfo}>
               <h2 className={styles.title}>Recent block</h2>
               <p className={styles.indicators}>
-                <span style={getMinWidth(block?.number)} className={styles.value}>
+                <span style={getMinWidth(blockNumber)} className={styles.value}>
                   {blockNumber}
                 </span>
                 <span className={styles.point} />

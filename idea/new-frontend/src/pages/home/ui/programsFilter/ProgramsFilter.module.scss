@@ -1,5 +1,4 @@
 @use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .filters {
@@ -7,24 +6,6 @@
   
   .filterBtn {
     @include fadeAppear();
-
-    color: $gray300;
-    padding: toRem(6) toRem(12);
-    font-size: $fontSizeSmall;
-    font-weight: 700;
-    font-family: 'Kanit';
-    line-height: toRem(14);
-    letter-spacing: 0.08em;
-
-    &:hover {
-      color: $successColor;
-      opacity: 1;
-    }
-
-    &.active {
-      color: $successColor;
-      background-color: $green007;
-    }
 
     &:last-child {
       &:global(.appear-active) {

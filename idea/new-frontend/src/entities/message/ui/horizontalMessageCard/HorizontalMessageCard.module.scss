@@ -1,0 +1,14 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.horizontalMessageCard {
+  display: grid;
+  grid-template-rows: minmax(max-content, 1fr);
+  grid-template-columns: minmax(min-content, 1fr);
+  gap: 30px;
+  padding: toRem(20) toRem(24);
+  background: $bgColorSecondary;
+  box-shadow: 0px 4px 4px $bgColor;
+  border-radius: 16px;
+}

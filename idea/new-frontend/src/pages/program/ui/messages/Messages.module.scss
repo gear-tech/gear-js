@@ -1,0 +1,9 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+
+.messages {
+  flex: 1 1;
+
+  .filters {
+    @include childrenMargin(5px, right);
+  }
+}

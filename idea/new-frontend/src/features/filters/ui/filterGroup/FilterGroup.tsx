@@ -16,13 +16,16 @@ type Props = {
 };
 
 const FilterGroup = ({ name, title, withReset = false, children }: Props) => {
-  const { change } = useForm();
+  const { change, submit } = useForm();
   const { values } = useFormState();
 
   const value = values[name];
   const defaultValue = useRef(value);
 
-  const handleFilterReset = () => change(name, defaultValue.current);
+  const handleFilterReset = () => {
+    change(name, defaultValue.current);
+    submit();
+  };
 
   const isResetVisible = useMemo(() => {
     if (!withReset) {
