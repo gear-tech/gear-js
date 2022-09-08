@@ -6,13 +6,15 @@ import { Game } from './game';
 import { Details } from './details';
 import { RoundResult } from './round-result';
 import { GameResult } from './game-result';
+import { Move } from './move';
 
 const players = ['0x00', '0x00', '0x00', '0x00'] as Hex[];
 
 function Home() {
   return (
     <>
-      <RoundResult name="name" game="2" round="3" winners={players} loosers={players} />
+      <Move value="Paper" />
+      {/* <RoundResult name="name" game="2" round="3" winners={players} loosers={players} /> */}
       {/* <GameResult name="name" game="2" winner="0x00" loosers={players} /> */}
       {/* <Details
         heading="name"
