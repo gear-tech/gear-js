@@ -1,5 +1,6 @@
 @use '@gear-js/ui/mixins' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 @use 'shared/assets/styles/_animations.scss' as *;
 
@@ -8,6 +9,14 @@
   position: relative;
   align-items: center;
   min-height: $headerTopSideHeight;
+}
+
+.leftSide {
+  @include fadeAppear();
+  @include childrenMargin(40px, right);
+
+  display: flex;
+  align-items: center;
 }
 
 .rightSide {

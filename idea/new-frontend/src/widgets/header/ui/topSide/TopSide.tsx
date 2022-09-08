@@ -24,7 +24,7 @@ type Props = {
 
 const TopSide = ({ account }: Props) => {
   const alert = useAlert();
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
 
   const captchaRef = useRef<HCaptcha>(null);
 
@@ -45,13 +45,13 @@ const TopSide = ({ account }: Props) => {
   };
 
   const handleTestBalanceClick = () => {
-    if (!captchaToken) {
-      captchaRef.current?.execute();
+    if (captchaToken) {
+      handleTransferBalance();
 
       return;
     }
 
-    handleTransferBalance();
+    captchaRef.current?.execute();
   };
 
   const handleTransferBalanceFromAlice = async () => {
@@ -64,11 +64,13 @@ const TopSide = ({ account }: Props) => {
 
   const handleExpire = () => setCaptchaToken('');
 
-  useEffect(() => handleExpire, [address]);
+  useEffect(handleExpire, [address]);
 
   useEffect(() => {
-    api.totalIssuance().then((result) => setTotalIssuance(result.slice(0, 5)));
-  }, [api]);
+    if (isApiReady) {
+      api.totalIssuance().then((result) => setTotalIssuance(result.slice(0, 5)));
+    }
+  }, [api, isApiReady]);
 
   useEffect(() => {
     if (captchaToken) {
@@ -82,8 +84,14 @@ const TopSide = ({ account }: Props) => {
   return (
     <>
       <div className={styles.topSide}>
-        <TotalIssuance totalIssuance={totalIssuance} />
-        <RecentBlocks />
+        {isApiReady && (
+          <CSSTransition in appear timeout={AnimationTimeout.Default}>
+            <div className={styles.leftSide}>
+              <TotalIssuance totalIssuance={totalIssuance} />
+              <RecentBlocks />
+            </div>
+          </CSSTransition>
+        )}
         <div className={styles.rightSide}>
           {account && (
             <CSSTransition in appear timeout={AnimationTimeout.Default}>

@@ -1,21 +1,13 @@
 @use 'shared/assets/styles/_shared' as *;
+@use 'shared/assets/styles/_mixins' as *;
 @use 'shared/assets/styles/_variables' as *;
 
-@keyframes spinTop {
-  0% {
+@keyframes rotateGear {
+  from {
     transform: rotate(0deg);
   }
-  100% {
+  to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes spinBottom {
-  0% {
-    transform: rotate(360deg);
-  }
-  100% {
-    transform: rotate(0deg);
   }
 }
 
@@ -24,83 +16,94 @@
     width: 0;
   }
   100% {
-    width: 100%;
+    width: 32px;
   }
+}
+
+%gearStyle {
+  position: absolute;
+  animation-name: rotateGear;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 .loader {
   @extend %absoluteCenter;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  width: 200px;
-  height: 200px;
-
-  %overlay {
-    position: absolute;
-    background: $bgColor;
-    z-index: 2;
-    height: 55px;
-    width: 100%;
-  }
-
-  .overlayTop {
-    @extend %overlay;
-
-    top: 3px;
-  }
-
-  .overlayBottom {
-    @extend %overlay;
-
-    bottom: 54px;
-  }
-
-  .images {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .gears {
     position: relative;
-    top: 5px;
+    width: 105px;
+    height: 100px;
+
+    .gear1 {
+      @extend %gearStyle;
+
+      top: 0;
+      left: 0;
+      animation-duration: 6s;
+    }
+
+    .gear2 {
+      @extend %gearStyle;
+
+      top: 37px;
+      right: 0;
+      animation-duration: 3.8s;
+      animation-direction: reverse;
+    }
+
+    .gear3 {
+      @extend %gearStyle;
+
+      left: 25px;
+      bottom: 0;
+      animation-duration: 2.4s;
+    }
+  }
+
+  .loaderLine {
+    @include childrenMargin(4px, right);
+    
+    display: flex;
+    min-width: 176px;
+    margin-top: 24px;
     margin-bottom: 10px;
 
-    .upGear,
-    .downGear {
-      width: 70px;
-    }
+    .line {
+      border: none;
+      height: 2px;
+      background: $successColor;
+      border-radius: 2px;
+      animation: 4s linear forwards progressLine;
 
-    .upGear {
-      animation: spinTop 8s linear infinite;
-    }
+      &:nth-child(2) {
+        animation-delay: 4s;
+      }
 
-    .downGear {
-      animation: spinBottom 8s linear infinite;
-      margin-right: 7px;
-      margin-top: -3px;
-    }
-  }
+      &:nth-child(3) {
+        animation-delay: 8s;
+      }
 
-  .block {
-    margin-top: -25px;
-    position: relative;
-    z-index: 1000;
-
-    .text {
-      display: block;
-      color: $textColor;
-      line-height: 1.3;
-      font-size: $fontSizeMedium;
-      margin-top: toRem(16);
-      text-align: center;
+      &:nth-child(4) {
+        animation-delay: 12s;
+      }
+      
+      &:nth-child(5) {
+        animation-delay: 16s;
+      }
     }
   }
-}
 
-.progressBar {
-  width: 100%;
-  background-color: $bgColor;
-
-  .indicator {
-    animation: progressLine 20s linear 1;
-    background-color: $successColor;
-    height: 1px;
+  .text {
+    display: flex;
+    font-family: 'Kanit';
+    font-weight: 500;
+    font-size: $fontSize;
+    line-height: 1.3;
+    color: $textColorTertiary;
   }
 }

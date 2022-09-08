@@ -8,7 +8,7 @@ type Props = {
 };
 
 const TotalIssuance = ({ totalIssuance }: Props) => (
-  <section className={styles.totalIssuance}>
+  <section>
     <h2 className={headerStyles.title}>Total issuance</h2>
     <div className={headerStyles.content}>
       <span className={headerStyles.value}>{totalIssuance}</span>

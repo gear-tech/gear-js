@@ -21,18 +21,19 @@ body {
 }
 
 #root {
-  position: relative;
   height: 100%;
+  position: relative;
 }
 
 .main {
   display: flex;
+  min-height: calc(100% - $footerHeight);
 }
 
 .content {
   flex: 1 1;
-  position: relative;
   padding: 0 toRem(32) 0 toRem(48);
+  position: relative;
 }
 
 button {

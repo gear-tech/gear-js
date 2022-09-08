@@ -41,17 +41,13 @@ const App = withProviders(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
-  if (!(isApiReady && isLoginReady)) {
-    return <Loader />;
-  }
-
   return (
     <>
       <main className="main">
         <Menu />
         <div className="content">
           <Header />
-          <Routing />
+          {isApiReady && isLoginReady ? <Routing /> : <Loader />}
         </div>
       </main>
       <Footer />
