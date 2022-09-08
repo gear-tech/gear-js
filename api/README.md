@@ -467,6 +467,7 @@ gearApi.query.system.events((events) => {
 ### Subscribe to specific gear events
 <details>
 <summary>Example</summary>
+
 - Subscribe to messages sent from a program
 
 ```javascript
@@ -503,7 +504,7 @@ const unsub = api.gearEvents.subscribeToGearEvent('MessageEnqueued', ({ data: { 
 unsub();
 ```
 
-Subscribe to Transfer events
+- Subscribe to Transfer events
 
 ```javascript
 const unsub = await gearApi.gearEvents.subscribeToTransferEvents(({ data: { from, to, amount } }) => {
@@ -518,7 +519,7 @@ const unsub = await gearApi.gearEvents.subscribeToTransferEvents(({ data: { from
 unsub();
 ```
 
-Subscribe to new blocks
+- Subscribe to new blocks
 
 ```javascript
 const unsub = await gearApi.gearEvents.subscribeToNewBlocks((header) => {
