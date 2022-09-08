@@ -1,5 +1,5 @@
-@use '@gear-js/ui/headings' as *;
 @use '@gear-js/ui/variables' as *;
+@use '@gear-js/ui/headings' as *;
 
 .container {
   max-width: 1100px;
@@ -24,13 +24,6 @@
   text-transform: uppercase;
 }
 
-.label {
-  @extend %headingFont;
-  font-weight: 500;
-  text-transform: uppercase;
-  color: #858585;
-}
-
 .summary {
   &Main {
     display: grid;
@@ -45,18 +38,6 @@
 
 .time {
   grid-area: a;
-  display: flex;
-  align-items: center;
-
-  &Label {
-    margin-right: 20px;
-  }
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
 }
 
 .stage {
