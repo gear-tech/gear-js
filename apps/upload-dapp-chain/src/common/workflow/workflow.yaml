@@ -61,8 +61,7 @@ programs:
     optDownloadUrl: 'https://github.com/gear-dapps/escrow/releases/download/build/escrow.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/escrow/releases/download/build/escrow.meta.wasm'
     acc: 'alice'
-    payload:
-      ftProgramId: '0xf3167da91b16e61bd7e92435a338f88853f6993b3ffb6ec4e3840e67798de141'
+    payload: '0x'
     value: NULL
 
   7:
@@ -71,12 +70,7 @@ programs:
     optDownloadUrl: 'https://github.com/gear-dapps/supply-chain/releases/download/build/supply_chain.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/supply-chain/releases/download/build/supply_chain.meta.wasm'
     acc: 'alice'
-    payload:
-      producers: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
-      distributors: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
-      retailers: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
-      ftProgram: '0xf3167da91b16e61bd7e92435a338f88853f6993b3ffb6ec4e3840e67798de141'
-      nftProgram: '0x3c8c7e31f701683d589ed900efc223b2082c8f4fc74d83f254eefd72076bd2ad'
+    payload: '0x'
     value: NULL
 
   8:
@@ -85,12 +79,7 @@ programs:
     optDownloadUrl: 'https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.meta.wasm'
     acc: 'alice'
-    payload:
-      betSize: '1000'
-      playersCountLimit: '10'
-      entryTimeoutMs: '10000000'
-      moveTimeoutMs: '10000000'
-      revealTimeoutMs: '10000000'
+    payload: '0x'
     value: NULL
 
   9:
@@ -99,11 +88,7 @@ programs:
     optDownloadUrl: 'https://github.com/gear-dapps/staking/releases/download/build/staking.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/staking/releases/download/build/staking.meta.wasm'
     acc: 'alice'
-    payload:
-      stakingTokenAddress: '0xf3167da91b16e61bd7e92435a338f88853f6993b3ffb6ec4e3840e67798de141'
-      rewardTokenAddress: '0xf3167da91b16e61bd7e92435a338f88853f6993b3ffb6ec4e3840e67798de141'
-      distributionTime: '1000000'
-      rewardTotal: '1000'
+    payload: '0x'
     value: NULL
 
 workflow:

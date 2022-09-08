@@ -128,7 +128,8 @@ export class CommandService {
 
       return {
         ...submitCodeInput,
-        programId: codeHash,
+        programId: "",
+        codeHash,
         metaWasmBase64: metaWasmBuff.toString("base64"),
         optWasmBase64: optWasmBuff.toString("base64"),
       };
