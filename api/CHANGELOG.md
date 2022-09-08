@@ -1,3 +1,12 @@
+## 0.25.3
+_09/08/2022_
+
+https://github.com/gear-tech/gear-js/pull/979
+### Changes
+
+- Add `waited` field to `GasInfo` type according to https://github.com/gear-tech/gear/pull/1276
+- Add rpc call to calculate gas for create_program extrinsic according to https://github.com/gear-tech/gear/pull/1330
+- 
 ## 0.25.2
 _08/17/2022_
 
