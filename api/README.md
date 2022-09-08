@@ -27,7 +27,7 @@ yarn add @gear-js/api
 
 ## Getting started
 
-Start an API connection to a running node on localhost
+Start an API connection to a running node on localhost:
 
 ```javascript
 import { GearApi } from '@gear-js/api';
@@ -35,13 +35,13 @@ import { GearApi } from '@gear-js/api';
 const gearApi = await GearApi.create();
 ```
 
-You can also connect to a different node
+You can also connect to a different node:
 
 ```javascript
 const gearApi = await GearApi.create({ providerAddress: 'wss://someIP:somePort' });
 ```
 
-Getting node info
+Getting node info:
 
 ```javascript
 const chain = await gearApi.chain();
@@ -102,7 +102,7 @@ const meta = await getWasmMetadata(fileBuffer);
 
 ## Gear extrinsics
 
-***Extrinsics are used to interact with programs on the Gear blockchain***
+***Extrinsics are used to interact with programs running on blockchain networks powered by Gear Protocol***
 
 ### Upload program
 Use `api.program.upload` method to create `upload_program` extrinsic
@@ -163,7 +163,7 @@ gearApi.code.signAndSend(alice, () => {
 ### Create program from uploaded code on chain
 Use `api.program.create` method to create `create_program` extrinsic
 <details>
-<summary>Code example</summary>
+<summary>Example</summary>
 
 ```javascript
 const codeId = '0x...'
@@ -188,7 +188,7 @@ await extrinsic.signAndSend(keyring, (event) => {
 Use `api.message.send` method to create `send_message` extrinsic
 
 <details>
-<summary>Code example</summary>
+<summary>Example</summary>
 
 ```javascript
 try {
@@ -218,7 +218,7 @@ try {
 ### Send reply message
 Use `api.message.reply` method to create `send_reply` extrinsic
 <details>
-<summary>Code example</summary>
+<summary>Example</summary>
 
 ```javascript
 try {
@@ -273,7 +273,7 @@ Gas calculation returns GasInfo object contains 3 parameters:
 - `may_be_returned` - value that can be returned in some cases
 - `waited` - notifies that the message will be added to waitlist
 
-#### Init (for upload_program extrinsic)
+### Init (for upload_program extrinsic)
 <details>
 <summary>Example</summary>
 
@@ -292,7 +292,7 @@ console.log(gas.toHuman());
 ```
 </details>
 
-#### Init (for create_program extrinsic)
+### Init (for create_program extrinsic)
 <details>
 <summary>Example</summary>
 
@@ -311,7 +311,7 @@ console.log(gas.toHuman());
 ```
 </details>
 
-#### Handle
+### Handle message 
 <details>
 <summary>Example</summary>
 
@@ -335,7 +335,7 @@ console.log(gas.toHuman());
 ```
 </details>
 
-#### Reply
+### Reply to a message
 <details>
 <summary>Example</summary>
 
@@ -360,7 +360,7 @@ console.log(gas.toHuman());
 ## Work with programs and blockchain state
 
 ### Check that the address belongs to some program
-Find out if an address belongs to a program using the `api.program.exists` method.
+To find out if an address belongs to a program use the `api.program.exists` method.
 <details>
 <summary>Example</summary>
 
@@ -388,7 +388,7 @@ const state = await gearApi.programState.read(programId, metaWasm, inputValue);
 </details>
 
 ### Mailbox
-The mailbox contains messages that are waiting for your actions.
+The mailbox contains messages that are waiting for user action.
 #### Read
 To read the mailbox use `api.mailbox.read` method.
 <details>
@@ -467,7 +467,7 @@ gearApi.query.system.events((events) => {
 ### Subscribe to specific gear events
 <details>
 <summary>Example</summary>
-- Subscribe to messages from program
+- Subscribe to messages sent from a program
 
 ```javascript
 const unsub = api.gearEvents.subscribeToGearEvent(
@@ -488,7 +488,7 @@ const unsub = api.gearEvents.subscribeToGearEvent(
 unsub();
 ```
 
-- Subscribe to messages to program
+- Subscribe to messages intended for a program
 
 ```javascript
 const unsub = api.gearEvents.subscribeToGearEvent('MessageEnqueued', ({ data: { id, source, destination, entry } }) => {
@@ -664,6 +664,7 @@ const signature = GearKeyring.sign(keyring, message);
 ```
 
 2. Validate signature
+
 ```javascript
 import { signatureIsValid } from '@gear-js/api';
 const publicKey = keyring.address;
