@@ -3,29 +3,27 @@ import { useAlert } from '@gear-js/react-hooks';
 import { Modal, Input, Button } from '@gear-js/ui';
 
 import { ModalProps } from 'entities/modal';
-import { Node, NodeSection } from 'entities/node';
+import { NodeSection } from 'entities/node';
 import { isNodeAddressValid } from 'shared/helpers';
 import plusSVG from 'shared/assets/images/actions/plus.svg';
 
 import styles from './NetworkModal.module.scss';
 
 type Props = ModalProps & {
-  localNodes: Node[];
   nodeSections: NodeSection[];
   addNetwork: (address: string) => void;
 };
 // TODO: use Final Form
-const NetworkModal = ({ localNodes, nodeSections, addNetwork, onClose }: Props) => {
+const NetworkModal = ({ nodeSections, addNetwork, onClose }: Props) => {
   const alert = useAlert();
 
-  const isNodeExist = (address: string) => {
-    const nodes = nodeSections.flatMap((section) => section.nodes);
-    const concatedNodes = [...nodes, ...localNodes];
-
-    return concatedNodes.some((node) => node.address === address.trim());
-  };
-
   const [address, setAddress] = useState('');
+
+  const isNodeExist = (nodeAddress: string) => {
+    const nodes = nodeSections.flatMap((section) => section.nodes);
+
+    return nodes.some((node) => node.address === nodeAddress);
+  };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => setAddress(event.target.value);
 

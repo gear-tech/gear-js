@@ -13,7 +13,6 @@ import { useProgramActions } from './useProgramActions';
 import { useMetadataUplaod } from './useMetadataUpload';
 import { useBalanceTransfer } from './useBalanceTransfer';
 import { useAccountSubscriptions } from './useAccountSubscriptions';
-import { useNodes } from './useNodes';
 import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
 import { usePrevious } from './usePrevious';
@@ -24,7 +23,6 @@ import { useElementSizes } from './useElementSizes';
 export {
   useApp,
   useModal,
-  useNodes,
   useBlocks,
   useEvents,
   useMessage,

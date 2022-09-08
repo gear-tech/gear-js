@@ -1,12 +1,11 @@
 import { memo } from 'react';
-import { Node, NodeSection } from 'entities/node';
+import { NodeSection } from 'entities/node';
 
 import styles from './Section.module.scss';
 import { Node as NodeItem } from '../node';
 
 type Props = {
   section: NodeSection;
-  localNodes: Node[];
   nodeAddress: string;
   selectedNode: string;
   selectNode: (address: string) => void;
@@ -14,13 +13,10 @@ type Props = {
 };
 
 const Section = memo((props: Props) => {
-  const { section, localNodes, nodeAddress, selectedNode, selectNode, removeLocalNode } = props;
-  const { caption, nodes } = section;
-
-  const concatedNodes = caption === 'development' ? [...nodes, ...localNodes] : nodes;
+  const { section, nodeAddress, selectedNode, selectNode, removeLocalNode } = props;
 
   const getNodes = () =>
-    concatedNodes.map((node, index) => (
+    section.nodes.map((node, index) => (
       <NodeItem
         // eslint-disable-next-line react/no-array-index-key
         key={`${node.address}-${index}`}
@@ -35,7 +31,7 @@ const Section = memo((props: Props) => {
 
   return (
     <li>
-      <h2 className={styles.caption}>{caption}</h2>
+      <h2 className={styles.caption}>{section.caption}</h2>
       <ul className={styles.sectionList}>{getNodes()}</ul>
     </li>
   );

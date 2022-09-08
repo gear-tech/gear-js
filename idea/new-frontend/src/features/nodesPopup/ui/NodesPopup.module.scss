@@ -1,6 +1,7 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
 
 $popupWidth: 305px;
 
@@ -8,16 +9,36 @@ $popupWidth: 305px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: toRem(32) toRem(24) toRem(32) toRem(32);
   position: absolute;
   width: $popupWidth;
-  height: 630px;
   z-index: 2;
   right: -$popupWidth;
   bottom: 0;
-  background: radial-gradient(34.1% 16.48% at -1.97% 102.53%, rgba(43, 208, 113, 0.2) 0%, rgba(43, 208, 113, 0) 100%) #242529;
+  background: radial-gradient(34.1% 16.48% at -1.97% 102.53%, $green200 0%, rgba(43, 208, 113, 0) 100%) $bgColor6;
   box-shadow: inset 0px 1px 0px $gray005;
   border-radius: 16px;
+  height: 630px;
+
+  &.loading {
+    @include loading();
+
+    background: $bgColor6;
+  }
+
+  .closeBtn {
+    position: absolute;
+    top: 15px;
+    right: 13px;
+  }
+}
+
+.content {
+  @include fade();
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: toRem(32) toRem(24) toRem(32) toRem(32);
 
   .chain {
     font-family: 'Kanit';
@@ -34,19 +55,5 @@ $popupWidth: 305px;
     position: relative;
     z-index: 1;
     margin-top: 26px;
-  }
-}
-  
-.simpleBar {
-  @include customSimplebar; 
-
-  flex: 1 1 440px;
-  // needed for scrolling with flex
-  min-height: 1px;
-  
-  .list {
-    @include childrenMargin(toRem(24));
-
-    padding-right: toRem(22);
   }
 }

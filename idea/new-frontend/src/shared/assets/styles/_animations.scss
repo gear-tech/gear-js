@@ -63,7 +63,6 @@
 }
 
 @mixin loading($colorFrom: $bgColorSecondary, $colorTo: $bgColorTertiary) {
-  position: relative;
   overflow: hidden;
   
   &::after {

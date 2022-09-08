@@ -12,5 +12,7 @@
   
   &.loading {
     @include loading();
+
+    position: relative;
   }
 }

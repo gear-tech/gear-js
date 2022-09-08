@@ -17,6 +17,10 @@
     input {
       flex-shrink: 0;
     }
+
+    &.current {
+      color: $successColor;
+    }
   }
 
   .buttons {

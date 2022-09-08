@@ -3,18 +3,18 @@ import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
 import { useApi } from '@gear-js/react-hooks';
 
-import { useNodes } from 'hooks';
 import { NodesPopup } from 'features/nodesPopup';
 import { AnimationTimeout } from 'shared/config';
 
 import styles from './Menu.module.scss';
+import { useNodes } from '../helpers/useNodes';
 import { Logo } from './logo';
 import { Navigation } from './navigation';
 import { NodesButton } from './nodesButton';
 
 const Menu = () => {
-  const nodeSections = useNodes();
   const { api, isApiReady } = useApi();
+  const { nodeSections, isNodesLoading, addLocalNode, removeLocalNode } = useNodes();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isNodesOpen, setIsNodesOpen] = useState(false);
@@ -48,7 +48,15 @@ const Menu = () => {
       {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
       <button type="button" className={styles.menuBtn} onClick={toggleMenu} />
       <CSSTransition in={isNodesOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
-        <NodesPopup chain={chain} className={styles.nodePopup} nodeSections={nodeSections} onClose={toggleNodesPopup} />
+        <NodesPopup
+          chain={chain}
+          isLoading={isNodesLoading}
+          className={styles.nodePopup}
+          nodeSections={nodeSections}
+          onClose={toggleNodesPopup}
+          onLocalNodeAdd={addLocalNode}
+          onLocalNodeRemove={removeLocalNode}
+        />
       </CSSTransition>
     </menu>
   );

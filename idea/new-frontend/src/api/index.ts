@@ -1,3 +1,5 @@
+import { NodeSection } from 'entities/node';
+import { DEFAULT_NODES_URL } from 'shared/config';
 import { isDevChain } from 'shared/helpers';
 
 import { fetchCode, fetchCodes } from './code';
@@ -13,7 +15,10 @@ const getPrograms = (params: FetchProgramsParams) => (isDevChain() ? getLocalPro
 
 const getMetadata = (programId: string) => (isDevChain() ? getLocalProgramMeta(programId) : fetchMetadata(programId));
 
+const getNodes = (): Promise<NodeSection[]> => fetch(DEFAULT_NODES_URL).then((result) => result.json());
+
 export {
+  getNodes,
   getProgram,
   getPrograms,
   getMetadata,

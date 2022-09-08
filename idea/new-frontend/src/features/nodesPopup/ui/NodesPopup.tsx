@@ -1,35 +1,38 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
 import clsx from 'clsx';
-import SimpleBar from 'simplebar-react';
 import { Button } from '@gear-js/ui';
 
 import { useApp, useModal, useOutsideClick } from 'hooks';
-import { Node, NodeSection } from 'entities/node';
-import { LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
+import { NodeSection } from 'entities/node';
+import { AnimationTimeout, NODE_ADRESS_URL_PARAM } from 'shared/config';
 import plusSVG from 'shared/assets/images/actions/plus.svg';
+import closeSVG from 'shared/assets/images/actions/close.svg';
 import switchSVG from 'shared/assets/images/actions/switch.svg';
 
 import styles from './NodesPopup.module.scss';
-import { getLocalNodes } from '../helpers';
-import { Section } from './section';
+
+import { NodesList } from './nodesList';
 
 type Props = {
-  chain: string;
+  chain?: string;
+  isLoading: boolean;
   className?: string;
   nodeSections: NodeSection[];
   onClose: () => void;
+  onLocalNodeAdd: (address: string) => void;
+  onLocalNodeRemove: (address: string) => void;
 };
 
 const NodesPopup = (props: Props) => {
-  const { chain, className, nodeSections, onClose } = props;
+  const { chain, isLoading, className, nodeSections, onClose, onLocalNodeAdd, onLocalNodeRemove } = props;
 
   const { nodeAddress } = useApp();
   const { showModal, closeModal } = useModal();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [localNodes, setLocalNodes] = useState<Node[]>(getLocalNodes);
   const [selectedNode, setSelectedNode] = useState(nodeAddress);
   const [isModalHide, setIsModalHidden] = useState(true);
 
@@ -42,8 +45,9 @@ const NodesPopup = (props: Props) => {
   };
 
   const addLocalNode = (address: string) => {
-    setLocalNodes((prevNodes) => prevNodes.concat({ address, isCustom: true }));
+    onLocalNodeAdd(address);
     setSelectedNode(address);
+
     closeNetworkModal();
 
     setTimeout(() => document.getElementById(address)?.scrollIntoView(false), 10);
@@ -51,13 +55,13 @@ const NodesPopup = (props: Props) => {
 
   const removeLocalNode = useCallback(
     (address: string) => {
-      setLocalNodes((prevNodes) => prevNodes.filter((node) => node.address !== address));
+      onLocalNodeRemove(address);
 
-      if (selectedNode === address) {
+      if (address === selectedNode) {
         setSelectedNode(nodeAddress);
       }
     },
-    [selectedNode, nodeAddress],
+    [selectedNode, nodeAddress, onLocalNodeRemove],
   );
 
   const switchNode = () => {
@@ -72,47 +76,33 @@ const NodesPopup = (props: Props) => {
     setIsModalHidden(false);
 
     showModal('network', {
-      localNodes,
       nodeSections,
       addNetwork: addLocalNode,
       onClose: closeNetworkModal,
     });
   };
 
-  useEffect(() => {
-    localStorage.setItem(LocalStorage.Nodes, JSON.stringify(localNodes));
-  }, [localNodes]);
-
-  useEffect(() => {
-    document.getElementById(selectedNode)?.scrollIntoView(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const isCurrentNode = selectedNode === nodeAddress;
 
   return (
-    <aside ref={ref} className={clsx(styles.nodesPopup, className)}>
-      <h1 className={styles.chain}>{chain}</h1>
-      <SimpleBar className={styles.simpleBar}>
-        <ul className={styles.list}>
-          {nodeSections.map((section, index) => (
-            <Section
-              // eslint-disable-next-line react/no-array-index-key
-              key={`${section.caption}-${index}`}
-              section={section}
-              localNodes={localNodes}
-              nodeAddress={nodeAddress}
-              selectedNode={selectedNode}
-              selectNode={setSelectedNode}
-              removeLocalNode={removeLocalNode}
-            />
-          ))}
-        </ul>
-      </SimpleBar>
-      <div className={styles.actions}>
-        <Button icon={switchSVG} text="Switch" disabled={isCurrentNode} onClick={switchNode} />
-        <Button icon={plusSVG} color="secondary" onClick={showAddNodeModal} />
-      </div>
+    <aside ref={ref} className={clsx(styles.nodesPopup, isLoading && styles.loading, className)}>
+      <CSSTransition in={!isLoading} timeout={AnimationTimeout.Default} mountOnEnter>
+        <div className={styles.content}>
+          <h1 className={styles.chain}>{chain}</h1>
+          <NodesList
+            nodeAddress={nodeAddress}
+            nodeSections={nodeSections}
+            selectedNode={selectedNode}
+            selectNode={setSelectedNode}
+            removeLocalNode={removeLocalNode}
+          />
+          <div className={styles.actions}>
+            <Button icon={switchSVG} text="Switch" disabled={isCurrentNode} onClick={switchNode} />
+            <Button icon={plusSVG} color="secondary" onClick={showAddNodeModal} />
+          </div>
+        </div>
+      </CSSTransition>
+      <Button icon={closeSVG} color="transparent" className={styles.closeBtn} onClick={onClose} />
     </aside>
   );
 };

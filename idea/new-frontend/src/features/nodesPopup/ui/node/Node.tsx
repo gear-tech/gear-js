@@ -5,6 +5,7 @@ import { copyToClipboard } from 'shared/helpers';
 import trashSVG from 'shared/assets/images/actions/trash.svg';
 import copyGreenSVG from 'shared/assets/images/actions/copyGreen.svg';
 
+import clsx from 'clsx';
 import styles from './Node.module.scss';
 
 type Props = {
@@ -19,20 +20,26 @@ type Props = {
 const Node = ({ address, isCustom, nodeAddress, selectedNode, selectNode, removeLocalNode }: Props) => {
   const alert = useAlert();
 
+  const isCurrentNode = nodeAddress === address;
+
   const handleCopy = () => copyToClipboard(address, alert, 'Node address copied');
 
   const handleChange = () => selectNode(address);
 
-  const handleRemove = () => removeLocalNode(address);
+  const handleRemove = () => {
+    if (isCurrentNode) {
+      return;
+    }
 
-  const isCurrentNode = nodeAddress === address;
+    removeLocalNode(address);
+  };
 
   return (
     <li id={address} className={styles.node}>
       <Radio
         name="node"
         label={address}
-        className={styles.radio}
+        className={clsx(styles.radio, isCurrentNode && styles.current)}
         checked={selectedNode === address}
         onChange={handleChange}
       />
