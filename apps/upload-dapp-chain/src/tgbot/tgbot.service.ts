@@ -86,6 +86,10 @@ export class TgbotService {
       return TBErrorMessage.INVALID_DAPP_NAME;
     }
 
+    if (uploadProgramActions && uploadProgramActions.actions.find(action => action.command === "submitCode")) {
+      return TBErrorMessage.INVALID_DAPP_NAME;
+    }
+
     for (const action of uploadProgramActions.actions) {
       const uploadedProgram = await this.handleCommand(action, uploadedPrograms);
 
