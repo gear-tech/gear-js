@@ -22,7 +22,7 @@ function Detail({ label, className, children, text, direction = 'y' }: Props) {
   return (
     <div className={detailClassName}>
       <span className={labelClassName}>{label}:</span>
-      {children || text}
+      {children || <span>{text}</span>}
     </div>
   );
 }
