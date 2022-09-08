@@ -274,11 +274,10 @@ Gas calculation returns GasInfo object contains 3 parameters:
 - `waited` - notifies that the message will be added to waitlist
 
 #### Init (for upload_program extrinsic)
-<details>
-<summary>Example</summary>
 
 ```javascript
 const code = fs.readFileSync('demo_ping.opt.wasm');
+
 const gas = await gearApi.program.calculateGas.initUpload(
   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
   code,
@@ -286,9 +285,9 @@ const gas = await gearApi.program.calculateGas.initUpload(
   0, //value
   true, // allow other panics
 );
+
 console.log(gas.toHuman());
 ```
-</details>
 
 #### Init (for create_program extrinsic)
 <details>
