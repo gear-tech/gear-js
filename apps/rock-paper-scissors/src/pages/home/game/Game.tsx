@@ -1,9 +1,8 @@
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
-import { BackButton, Detail, Stage } from 'components';
+import { BackButton, Detail, Players, Stage } from 'components';
 import { StageType } from 'types';
 import { Countdown } from './countdown';
-import { Players } from './players';
 import styles from './Game.module.scss';
 
 type Props = {
@@ -21,7 +20,7 @@ function Game({ heading, stage, bet, game, round }: Props) {
     <div className={styles.container}>
       <div className={styles.players}>
         <BackButton />
-        <Players list={players as Hex[]} />
+        <Players list={players as Hex[]} heading="Current players" />
         <Button text="Reveal" size="large" className={styles.actionButton} />
       </div>
       <div className={styles.summary}>

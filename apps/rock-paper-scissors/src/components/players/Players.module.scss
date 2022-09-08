@@ -5,6 +5,10 @@
   @extend %h4;
   margin-bottom: 20px;
   text-transform: uppercase;
+
+  &.center {
+    text-align: center;
+  }
 }
 
 .header {

@@ -1,3 +1,4 @@
+@use '@gear-js/ui/variables' as *;
 @use '@gear-js/ui/headings' as *;
 
 .container {
@@ -57,6 +58,11 @@
 
 .bet {
   grid-area: e;
+
+  &Text {
+    font-weight: 600;
+    color: $successColor;
+  }
 }
 
 .entry {

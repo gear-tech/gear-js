@@ -1,7 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { BackButton, Detail } from 'components';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, SVGProps } from 'react';
 import styles from './Details.module.scss';
 
 type Props = {
@@ -14,11 +14,7 @@ type Props = {
   entry: string;
   move: string;
   reveal: string;
-  SVG: FunctionComponent<
-    React.SVGProps<SVGSVGElement> & {
-      title?: string | undefined;
-    }
-  >;
+  SVG: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
 };
 
 function Details({ heading, game, round, contract, players, bet, entry, move, reveal, SVG }: Props) {
@@ -37,7 +33,9 @@ function Details({ heading, game, round, contract, players, bet, entry, move, re
             <span className={styles.contractText}>{contract}</span>
           </Detail>
           <Detail label="Players" text={players} className={styles.players} />
-          <Detail label="Bet size" text={bet} className={styles.bet} />
+          <Detail label="Bet size" className={styles.bet}>
+            <span className={styles.betText}>{bet}</span>
+          </Detail>
           <Detail label="Entry timeout" text={entry} className={styles.entry} />
           <Detail label="Move timeout" text={move} className={styles.move} />
           <Detail label="Reveal timeout" text={reveal} className={styles.reveal} />
