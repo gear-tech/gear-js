@@ -10,7 +10,7 @@
 
 ## Description
 
-A JavaScript library that provides functionality to connect GEAR Component APIs.
+The Gear-JS API provides a set of utilities, libraries and tools that enable JavaScript applications to interact with smart contracts running in the Gear network via queries to a Gear node.
 
 ## Installation
 
@@ -56,7 +56,7 @@ const genesis = gearApi.genesisHash.toHex();
 
 ### Encode / decode payloads
 *It's necessary to send only bytes to interact with programs on blockchain.*
-*For that purpose we use the `scale-codec` implementaion from `@polkadot-js`*
+*For that purpose we use the `scale-codec` implementation from `@polkadot-js`*
 
 You can use static `CreateType.create` method to encode and decode data 
 
@@ -246,7 +246,7 @@ try {
 
 
 ### Get transaction fee
-To get transaction fee before sending transaction you can use `paymentInfo` method.
+To get a transaction fee before sending a transaction you can use paymentInfo method.
 <details>
 <summary>Example</summary>
 
@@ -274,6 +274,8 @@ Gas calculation returns GasInfo object contains 3 parameters:
 - `waited` - notifies that the message will be added to waitlist
 
 #### Init (for upload_program extrinsic)
+<details>
+<summary>Example</summary>
 
 ```javascript
 const code = fs.readFileSync('demo_ping.opt.wasm');
@@ -288,6 +290,7 @@ const gas = await gearApi.program.calculateGas.initUpload(
 
 console.log(gas.toHuman());
 ```
+</details>
 
 #### Init (for create_program extrinsic)
 <details>
@@ -370,7 +373,8 @@ console.log(`Program with address ${programId} ${programExists ? 'exists' : "doe
 </details>
 
 ### Read state of program
-To read state of the program you must have `.meta.wasm` file of that program.
+
+To read the state of the program you must have a .meta.wasm file of that program.
 
 <details>
 <summary>Example</summary>
@@ -398,7 +402,7 @@ console.log(mailbox);
 </details>
 
 ### Claim value
-To claim value from message in mailbox use `api.mailbox.claimValue.submit` method.
+To claim value from a message in the mailbox use `api.mailbox.claimValue.submit` method.
 <details>
 <summary>Example</summary>
 
@@ -410,7 +414,7 @@ await api.mailbox.claimValue.signAndSend(...);
 </details>
 
 ### Waitlist
-To read program's waitlist use `api.waitlist.read` method.
+To read the program's waitlist use `api.waitlist.read` method.
 <details>
 <summary>Example</summary>
 
