@@ -1,23 +1,6 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
-
-@keyframes sendMessageAppearance {
-  0% {
-    width: 0;
-    opacity: 0;
-    margin-right: 0;
-  }
-  40% {
-    width: toRem(114.5);
-    opacity: 0;
-    margin-right: toRem(16);
-  }
-  100% {
-    width: toRem(114.5);
-    opacity: 1;
-    margin-right: toRem(16);
-  }
-}
+@use 'shared/assets/styles/_animations.scss' as *;
 
 .programCard {
   position: relative;
@@ -81,18 +64,9 @@
   padding: toRem(12) toRem(24);
 
   .sendMessage {
+    @include fade();
+
     margin-right: toRem(16);
-
-    &:global(.enter) {
-      width: 0;
-      opacity: 0;
-      margin-right: 0;
-      white-space: nowrap;
-    }
-
-    &:global(.enter-active) {
-      animation: $mediumTimeout linear sendMessageAppearance;
-    }
   }
 }
 

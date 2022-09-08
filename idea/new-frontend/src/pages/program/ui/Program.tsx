@@ -3,6 +3,7 @@ import { Hex } from '@gear-js/api';
 
 import { useProgram } from 'hooks';
 import { PathParams } from 'shared/types';
+import { Loader } from 'shared/ui/loader';
 
 import styles from './Program.module.scss';
 import { Header } from './header';
@@ -16,7 +17,7 @@ const Program = () => {
   const { program, metadata } = useProgram(programId);
 
   if (!program) {
-    return null;
+    return <Loader />;
   }
 
   return (

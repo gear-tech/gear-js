@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 import { Account } from '@gear-js/react-hooks';
 
 import { usePrograms } from 'hooks';
 import { ProgramCard } from 'entities/program';
 import { ReactComponent as ArrowSVG } from 'shared/assets/images/actions/arrowRight.svg';
 
+import { AnimationTimeout } from 'shared/config';
 import styles from './RecentProgramsSection.module.scss';
 import { Filter, PROGRAMS_LIMIT } from '../../model/consts';
 import { ProgramsFilter } from '../programsFilter';
@@ -53,7 +55,9 @@ const RecentProgramsSection = ({ account }: Props) => {
       <header className={styles.header}>
         <h1 className={styles.title}>Programs</h1>
         <ArrowSVG />
-        {account && <ProgramsFilter value={activeFilter} onClick={setActiveFilter} />}
+        <CSSTransition in={Boolean(account)} timeout={AnimationTimeout.Default} exit={false} mountOnEnter unmountOnExit>
+          <ProgramsFilter value={activeFilter} onClick={setActiveFilter} />
+        </CSSTransition>
       </header>
       <div className={styles.programsWrapper}>
         {isEmpty || isLoading ? (

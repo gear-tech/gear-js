@@ -38,7 +38,7 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
         </div>
       </div>
       <div className={styles.actions}>
-        <CSSTransition in={withSendMessage} exit={false} timeout={AnimationTimeout.Medium} unmountOnExit>
+        <CSSTransition in={withSendMessage} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
           <ProgramActionLink
             to="/"
             icon={sendSVG}

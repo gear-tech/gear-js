@@ -3,17 +3,12 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 @keyframes ownerFilterAppearance {
-  0% {
+  from {
     opacity: 0;
     transform: scaleY(0);
     margin-bottom: 0;
   }
-  40% {
-    opacity: 0;
-    transform: scaleY(1);
-    margin-bottom: toRem(8);
-  }
-  100% {
+  to {
     opacity: 1;
     transform: scaleY(1);
     margin-bottom: toRem(8);
@@ -37,7 +32,7 @@
     }
   
     &:global(.appear-active) {
-      animation: $mediumTimeout linear sendMessageAppearance;
+      animation: $timeout linear sendMessageAppearance;
     }
   }
 }

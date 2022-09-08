@@ -2,24 +2,7 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
-
-@keyframes sendMessageAppearance {
-  0% {
-    opacity: 0;
-    transform: scaleY(0);
-    margin-bottom: 0;
-  }
-  40% {
-    opacity: 0;
-    transform: scaleY(1);
-    margin-bottom: toRem(6);
-  }
-  100% {
-    opacity: 1;
-    transform: scaleY(1);
-    margin-bottom: toRem(6);
-  }
-}
+@use 'shared/assets/styles/_animations.scss' as *;
 
 .horizontalProgramCard {
   @include transition(background-color);
@@ -45,8 +28,6 @@
   position: relative;
   
   &::after {
-    @include transition(background);
-
     content: '';
     position: absolute;
     right: -40%;
@@ -99,17 +80,9 @@
   padding: toRem(12) toRem(24);
 
   .sendMessage {
+    @include fade();
+
     margin-bottom: toRem(6);
-
-    &:global(.enter) {
-      opacity: 0;
-      transform: scaleY(0);
-      margin-bottom: 0;
-    }
-
-    &:global(.enter-active) {
-      animation: $mediumTimeout linear sendMessageAppearance;
-    }
   }
 }
 

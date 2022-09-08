@@ -43,6 +43,7 @@ const GearSection = ({ isLoggedIn }: Props) => {
   }, [isLoggedIn]);
 
   const isLoading = programsCount === null;
+
   return (
     <section className={styles.gearSection}>
       <CSSTransition in={!isBannerHidden} timeout={AnimationTimeout.Default} unmountOnExit>

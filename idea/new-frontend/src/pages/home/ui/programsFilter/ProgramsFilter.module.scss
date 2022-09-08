@@ -2,15 +2,7 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .filters {
-  margin-left: toRem(18);
-  
-  .filterBtn {
-    @include fadeAppear();
+  @include fade();
 
-    &:last-child {
-      &:global(.appear-active) {
-        transition-delay: 50ms;
-      }
-    }
-  }
+  margin-left: toRem(18);
 }

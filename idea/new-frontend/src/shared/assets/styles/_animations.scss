@@ -74,32 +74,42 @@
   }
 }
 
-@mixin expand($startHeight, $contentHeight: var(--offset-height)) {
+@mixin expand($startHeight, $contentHeight: var(--offset-height), $duration: $timeout) {
   $endHeight: calc($contentHeight + $startHeight);
 
   height: $startHeight;
   overflow: hidden;
 
-  &:global(.exit),
-  &:global(.enter-done) {
+  &:global(.enter) {
+    height: $startHeight;
+    overflow: hidden;
+  }
+
+  &:global(.enter-active) {
     height: $endHeight
+  }
+
+  &:global(.enter-done) {
+    height: $endHeight;
+    overflow: unset;
+  }
+
+  &:global(.exit) {
+    height: $endHeight;
+    overflow: hidden;
+  }
+
+  &:global(.exit-active) {
+    height: $startHeight;
+  }
+  
+  &:global(.exit-done) {
+    height: $startHeight;
+    overflow: unset;
   }
 
   &:global(.exit-active),
   &:global(.enter-active) {
     @include transition();
-  }
-  
-  &:global(.enter-active) {
-    height: $endHeight
-  }
-
-  &:global(.exit-done),
-  &:global(.exit-active) {
-    height: $startHeight;
-  }
-
-  &:global(.enter-done) {
-    overflow: auto;
-  }
+  } 
 }
