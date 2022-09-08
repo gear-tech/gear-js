@@ -86,7 +86,7 @@ result.toJSON(); // - converts the value to JSON
 ### Getting metadata
 
 It's possible to get the definition of program types from the `.meta.wasm` file obtained after building the program.
-Use the `getWasmMetadata` function for these purpose
+Use the `getWasmMetadata` function for this purpose
 
 <details>
 <summary>Example</summary>
@@ -145,12 +145,14 @@ Use `api.code.upload` method to create `upload_code` extrinsic
 
 ```javascript
 const code = fs.readFileSync('path/to/program.opt.wasm');
-const { codeHash } = gearApi.code.upload(code);
+
+const { codeHash } = await gearApi.code.upload(code);
+
 gearApi.code.signAndSend(alice, () => {
   events.forEach(({ event: { method, data } }) => {
     if (method === 'ExtrinsicFailed') {
       throw new Error(data.toString());
-    } else if (method === 'CodeSaved') {
+    } else if (method === 'CodeChanged') {
       console.log(data.toHuman());
     }
   });
@@ -173,19 +175,11 @@ const program = {
   initPayload: somePayload,
 };
 
-try {
-  const { programId, salt, extrinsic } = gearApi.program.create(program, meta);
-} catch (error) {
-  console.error(`${error.name}: ${error.message}`);
-}
+const { programId, salt, extrinsic } = gearApi.program.create(program, meta);
 
-try {
-  await extrinsic.signAndSend(keyring, (event) => {
-    console.log(event.toHuman());
-  });
-} catch (error) {
-  console.error(`${error.name}: ${error.message}`);
-}
+await extrinsic.signAndSend(keyring, (event) => {
+  console.log(event.toHuman());
+});
 ```
 </details>
 
@@ -269,8 +263,7 @@ consolg.log(transactionFee);
 
 
 ### Calculate gas for messages
-It's possible to find out the minimum gasLimit value to specify when sending extrinsic.
-The `gearApi.program.calculateGas.[method]` will help.
+To find out the minimum gas amount to send extrinsic, use `gearApi.program.calculateGas.[method]`.
 
 Gas calculation returns GasInfo object contains 3 parameters:
 
@@ -303,6 +296,7 @@ console.log(gas.toHuman());
 
 ```javascript
 const codeId = '0x...';
+
 const gas = await gearApi.program.calculateGas.initCreate(
   '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d', // source id
   codeId,
@@ -310,6 +304,7 @@ const gas = await gearApi.program.calculateGas.initCreate(
   0, //value
   true, // allow other panics
 );
+
 console.log(gas.toHuman());
 ```
 </details>
@@ -363,13 +358,14 @@ console.log(gas.toHuman());
 ## Work with programs and blockchain state
 
 ### Check that the address belongs to some program
-If you need to know if an address belongs to a program or not, you can use the `api.program.exists` method.
+Find out if an address belongs to a program using the `api.program.exists` method.
 <details>
 <summary>Example</summary>
 
 ```javascript
-const programId = '0x0000000000000000000000000000000000000000000000000000000000000000';
+const programId = '0x...';
 const programExists = await api.program.exists(programId);
+
 console.log(`Program with address ${programId} ${programExists ? 'exists' : "doesn't exist"}`);
 ```
 </details>
@@ -656,7 +652,7 @@ const { seed } = GearKeyring.generateSeed(mnemonic);
 <details>
 <summary>Example</summary>
 
-1. Creating signature
+1. Create signature
 
 ```javascript
 import { GearKeyring } from '@gear-js/api';
