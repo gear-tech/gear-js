@@ -7,7 +7,7 @@ import { gearService } from "../gear/gear-service";
 
 @Injectable()
 export class CommandService {
-  private logger: Logger = new Logger("WorkflowCommandService");
+  private logger: Logger = new Logger("CommandService");
   private gearApi: GearApi = gearService.getApi();
 
   constructor() {}

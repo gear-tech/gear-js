@@ -56,7 +56,7 @@ programs:
     value: NULL
 
   6:
-    app: 'escrow'
+    dapp: 'escrow'
     repo: 'escrow'
     optDownloadUrl: 'https://github.com/gear-dapps/escrow/releases/download/build/escrow.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/escrow/releases/download/build/escrow.meta.wasm'
@@ -65,8 +65,8 @@ programs:
       ftProgramId: '0xf3167da91b16e61bd7e92435a338f88853f6993b3ffb6ec4e3840e67798de141'
     value: NULL
 
-  7:
-    app: 'supply_chain'
+  7: # NOT_WORK
+    dapp: 'supply_chain'
     repo: 'supply-chain'
     optDownloadUrl: 'https://github.com/gear-dapps/supply-chain/releases/download/build/supply_chain.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/supply-chain/releases/download/build/supply_chain.meta.wasm'
@@ -80,7 +80,7 @@ programs:
     value: NULL
 
   8:
-    app: 'rock_paper_scissors'
+    dapp: 'rock_paper_scissors'
     repo: 'rock-paper-scissors'
     optDownloadUrl: 'https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.meta.wasm'
@@ -93,8 +93,8 @@ programs:
       revealTimeoutMs: '10000000'
     value: NULL
 
-  9:
-    app: 'staking'
+  9: # NOT_WORK
+    dapp: 'staking'
     repo: 'staking'
     optDownloadUrl: 'https://github.com/gear-dapps/staking/releases/download/build/staking.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/staking/releases/download/build/staking.meta.wasm'
@@ -132,13 +132,13 @@ workflow:
   - command: uploadProgram
     program: 6
 
-  - command: uploadProgram
+  - command: uploadProgram # NOT_WORK
     program: 7
 
   - command: uploadProgram
     program: 8
 
-  - command: uploadProgram
+  - command: uploadProgram # NOT_WORK
     program: 9
 
 workflowSingleDapp:
@@ -171,3 +171,23 @@ workflowSingleDapp:
     actions:
       - command: uploadProgram
         program: 5
+
+  escrow:
+    actions:
+      - command: uploadProgram
+        program: 6
+
+  supply_chain:
+    actions:
+      - command: uploadProgram
+        program: 7
+
+  rock_paper_scissors:
+    actions:
+      - command: uploadProgram
+        program: 8
+
+  staking:
+    actions:
+      - command: uploadProgram
+        program: 9

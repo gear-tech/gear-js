@@ -33,7 +33,7 @@ export class DappDataRepo {
 
   public async getByNames(names: string[]): Promise<DappData[]> {
     return this.dappDataRepository.find({
-      where: names.map(name => ({name}))
-    })
+      where: names.map(name => ({ name })),
+    });
   }
 }
