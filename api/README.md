@@ -52,9 +52,9 @@ const genesis = gearApi.genesisHash.toHex();
 
 ---
 
-### Payloads and metadata
+## Payloads and metadata
 
-#### Encode / decode payloads
+### Encode / decode payloads
 *It's necessary to send only bytes to interact with programs on blockchain.*
 *For that purpose we use the `scale-codec` implementaion from `@polkadot-js`*
 
@@ -83,7 +83,7 @@ result.toJSON(); // - converts the value to JSON
 ```
 </details>
 
-#### Getting metadata
+### Getting metadata
 
 It's possible to get the definition of program types from the `.meta.wasm` file obtained after building the program.
 Use the `getWasmMetadata` function for these purpose
@@ -100,11 +100,11 @@ const meta = await getWasmMetadata(fileBuffer);
 
 ---
 
-### Gear extrinsics
+## Gear extrinsics
 
 ***Extrinsics are used to interact with programs on the Gear blockchain***
 
-#### Upload program
+### Upload program
 Use `api.program.upload` method to create `upload_program` extrinsic
 
 <details>
@@ -137,7 +137,7 @@ try {
 </details>
 
 
-#### Upload code
+### Upload code
 Use `api.code.upload` method to create `upload_code` extrinsic
 
 <details>
@@ -158,7 +158,7 @@ gearApi.code.signAndSend(alice, () => {
 ```
 </details>
 
-#### Create program from uploaded code on chain
+### Create program from uploaded code on chain
 Use `api.program.create` method to create `create_program` extrinsic
 <details>
 <summary>Code example</summary>
@@ -190,7 +190,7 @@ try {
 </details>
 
 
-#### Send message
+### Send message
 Use `api.message.send` method to create `send_message` extrinsic
 
 <details>
@@ -221,7 +221,7 @@ try {
 ```
 </details>
 
-#### Send reply message
+### Send reply message
 Use `api.message.reply` method to create `send_reply` extrinsic
 <details>
 <summary>Code example</summary>
@@ -251,7 +251,7 @@ try {
 </details>
 
 
-#### Get transaction fee
+### Get transaction fee
 To get transaction fee before sending transaction you can use `paymentInfo` method.
 <details>
 <summary>Example</summary>
@@ -268,7 +268,7 @@ consolg.log(transactionFee);
 
 
 
-#### Calculate gas for messages
+### Calculate gas for messages
 It's possible to find out the minimum gasLimit value to specify when sending extrinsic.
 The `gearApi.program.calculateGas.[method]` will help.
 
@@ -280,7 +280,7 @@ Gas calculation returns GasInfo object contains 3 parameters:
 - `may_be_returned` - value that can be returned in some cases
 - `waited` - notifies that the message will be added to waitlist
 
-##### Init (for upload_program extrinsic)
+#### Init (for upload_program extrinsic)
 <details>
 <summary>Example</summary>
 
@@ -297,7 +297,7 @@ console.log(gas.toHuman());
 ```
 </details>
 
-##### Init (for create_program extrinsic)
+#### Init (for create_program extrinsic)
 <details>
 <summary>Example</summary>
 
@@ -314,7 +314,7 @@ console.log(gas.toHuman());
 ```
 </details>
 
-##### Handle
+#### Handle
 <details>
 <summary>Example</summary>
 
@@ -338,7 +338,7 @@ console.log(gas.toHuman());
 ```
 </details>
 
-##### Reply
+#### Reply
 <details>
 <summary>Example</summary>
 
@@ -360,9 +360,9 @@ console.log(gas.toHuman());
 
 ---
 
-### Work with programs and blockchain state
+## Work with programs and blockchain state
 
-#### Check that the address belongs to some program
+### Check that the address belongs to some program
 If you need to know if an address belongs to a program or not, you can use the `api.program.exists` method.
 <details>
 <summary>Example</summary>
@@ -374,7 +374,7 @@ console.log(`Program with address ${programId} ${programExists ? 'exists' : "doe
 ```
 </details>
 
-#### Read state of program
+### Read state of program
 To read state of the program you must have `.meta.wasm` file of that program.
 
 <details>
@@ -388,9 +388,9 @@ const state = await gearApi.programState.read(programId, metaWasm, inputValue);
 ```
 </details>
 
-#### Mailbox
+### Mailbox
 The mailbox contains messages that are waiting for your actions.
-##### Read
+#### Read
 To read the mailbox use `api.mailbox.read` method.
 <details>
 <summary>Example</summary>
@@ -402,7 +402,7 @@ console.log(mailbox);
 ```
 </details>
 
-#### Claim value
+### Claim value
 To claim value from message in mailbox use `api.mailbox.claimValue.submit` method.
 <details>
 <summary>Example</summary>
@@ -414,7 +414,7 @@ await api.mailbox.claimValue.signAndSend(...);
 ```
 </details>
 
-#### Waitlist
+### Waitlist
 To read program's waitlist use `api.waitlist.read` method.
 <details>
 <summary>Example</summary>
@@ -429,9 +429,9 @@ console.log(waitlist);
 
 ---
 
-### Events
+## Events
 
-#### Subscribe to all events
+### Subscribe to all events
 <details>
 <summary>Example</summary>
 
@@ -444,7 +444,7 @@ unsub();
 ```
 </details>
 
-#### Check what the event is
+### Check what the event is
 <details>
 <summary>Example</summary>
 
@@ -465,7 +465,7 @@ gearApi.query.system.events((events) => {
 ```
 </details>
 
-#### Subscribe to specific gear events
+### Subscribe to specific gear events
 <details>
 <summary>Example</summary>
 - Subscribe to messages from program
@@ -531,8 +531,8 @@ unsub();
 </details>
 
 ---
-### Blocks
-#### Get block data
+## Blocks
+### Get block data
 <details>
 <summary>Example</summary>
 
@@ -542,7 +542,7 @@ console.log(data.toHuman());
 ```
 </details>
 
-#### Get block timestamp
+### Get block timestamp
 <details>
 <summary>Example</summary>
 
@@ -552,7 +552,7 @@ console.log(ts.toNumber());
 ```
 </details>
 
-#### Get blockHash by block number
+### Get blockHash by block number
 <details>
 <summary>Example</summary>
 
@@ -562,7 +562,7 @@ console.log(hash.toHex());
 ```
 </details>
 
-#### Get block number by blockhash
+### Get block number by blockhash
 <details>
 <summary>Example</summary>
 
@@ -572,7 +572,7 @@ console.log(hash.toNumber());
 ```
 </details>
 
-#### Get all block's events
+### Get all block's events
 <details>
 <summary>Example</summary>
 
@@ -584,7 +584,7 @@ events.forEach((event) => {
 ```
 </details>
 
-#### Get all block's extrinsics
+### Get all block's extrinsics
 <details>
 <summary>Example</summary>
 
@@ -598,9 +598,9 @@ extrinsics.forEach((extrinsic) => {
 
 ---
 
-### Keyring
+## Keyring
 
-#### Create keyring
+### Create keyring
 To create keyring you can use static methods of `GearKeyring` class.
 
 <details>
@@ -651,7 +651,7 @@ const { seed } = GearKeyring.generateSeed(mnemonic);
 
 </details>
 
-#### Sign data
+### Sign data
 
 <details>
 <summary>Example</summary>
@@ -673,7 +673,7 @@ const verified = signatureIsValid(publicKey, signature, message);
 
 </details>
 
-#### Convert public keys into ss58 format and back
+### Convert public keys into ss58 format and back
 
 Use `encodeAddress` and `decodeAddress` functions to convert the public key into ss58 format and back.
 
