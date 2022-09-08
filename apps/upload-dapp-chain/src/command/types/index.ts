@@ -2,6 +2,8 @@ import { Program } from "../../common/types";
 
 interface UploadProgramInput extends Program{}
 
+interface SubmitCodeInput extends Program{}
+
 interface SendMessageInput {
     program: Program
     acc: string
@@ -15,4 +17,4 @@ interface UploadProgramResult extends Program {
     optWasmBase64: string
 }
 
-export { UploadProgramInput, SendMessageInput, UploadProgramResult };
+export { UploadProgramInput, SendMessageInput, UploadProgramResult, SubmitCodeInput };

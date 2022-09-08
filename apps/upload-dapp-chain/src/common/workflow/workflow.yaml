@@ -65,7 +65,7 @@ programs:
       ftProgramId: '0xf3167da91b16e61bd7e92435a338f88853f6993b3ffb6ec4e3840e67798de141'
     value: NULL
 
-  7: # NOT_WORK
+  7:
     dapp: 'supply_chain'
     repo: 'supply-chain'
     optDownloadUrl: 'https://github.com/gear-dapps/supply-chain/releases/download/build/supply_chain.opt.wasm'
@@ -93,7 +93,7 @@ programs:
       revealTimeoutMs: '10000000'
     value: NULL
 
-  9: # NOT_WORK
+  9:
     dapp: 'staking'
     repo: 'staking'
     optDownloadUrl: 'https://github.com/gear-dapps/staking/releases/download/build/staking.opt.wasm'
@@ -129,18 +129,6 @@ workflow:
   - command: uploadProgram # dutch auction
     program: 5
 
-  - command: uploadProgram
-    program: 6
-
-  - command: uploadProgram # NOT_WORK
-    program: 7
-
-  - command: uploadProgram
-    program: 8
-
-  - command: uploadProgram # NOT_WORK
-    program: 9
-
 workflowSingleDapp:
   nft:
     actions:
@@ -174,20 +162,20 @@ workflowSingleDapp:
 
   escrow:
     actions:
-      - command: uploadProgram
+      - command: submitCode
         program: 6
 
   supply_chain:
     actions:
-      - command: uploadProgram
+      - command: submitCode
         program: 7
 
   rock_paper_scissors:
     actions:
-      - command: uploadProgram
+      - command: submitCode
         program: 8
 
   staking:
     actions:
-      - command: uploadProgram
+      - command: submitCode
         program: 9

@@ -2,7 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { decodeAddress, GearApi, getWasmMetadata, Hex, IMessageSendOptions } from "@gear-js/api";
 
 import { checkInitProgram, getAccount, getOptAndMetaWasm, sendTransaction } from "../common/helpers";
-import { SendMessageInput, UploadProgramInput, UploadProgramResult } from "./types";
+import { SendMessageInput, SubmitCodeInput, UploadProgramInput, UploadProgramResult } from "./types";
 import { gearService } from "../gear/gear-service";
 
 @Injectable()
@@ -10,7 +10,8 @@ export class CommandService {
   private logger: Logger = new Logger("CommandService");
   private gearApi: GearApi = gearService.getApi();
 
-  constructor() {}
+  constructor() {
+  }
 
   public async uploadProgram(uploadProgramInput: UploadProgramInput): Promise<UploadProgramResult> {
     const { metaDownloadUrl, optDownloadUrl, acc, payload } = uploadProgramInput;
@@ -54,11 +55,15 @@ export class CommandService {
 
       await status;
 
-      return { ...uploadProgramInput,
+      return {
+        ...uploadProgramInput,
         programId: data.programId,
         metaWasmBase64: metaWasmBuff.toString("base64"),
-        optWasmBase64: optWasmBuff.toString("base64") };
+        optWasmBase64: optWasmBuff.toString("base64"),
+      };
     } catch (error) {
+      console.log("____>optWasmBuff", optWasmBuff);
+      console.log("____>metaWasmBuff", metaWasmBuff);
       console.log(error);
       this.logger.error(error);
     }
@@ -79,11 +84,11 @@ export class CommandService {
 
       const gas = await this.gearApi.program.calculateGas.handle(
         sourceId,
-          uploadedProgram.programId as Hex,
-          payload,
-          value,
-          true,
-          meta,
+        uploadedProgram.programId as Hex,
+        payload,
+        value,
+        true,
+        meta,
       );
 
       const message: IMessageSendOptions = {
@@ -98,6 +103,39 @@ export class CommandService {
       await sendTransaction(extrinsic, account, "MessageEnqueued");
     } catch (error) {
       console.error(error);
+      this.logger.error(error);
+    }
+  }
+
+  public async submitCode(submitCodeInput: SubmitCodeInput): Promise<UploadProgramResult> {
+    const { metaDownloadUrl, optDownloadUrl, acc } = submitCodeInput;
+
+    const [optWasmData, metaWasmData] = await getOptAndMetaWasm(
+      optDownloadUrl,
+      metaDownloadUrl,
+    );
+
+    const [optWasmBuff, metaWasmBuff] = await Promise.all([
+      optWasmData.buffer(),
+      metaWasmData.buffer(),
+    ]);
+
+    try {
+      const account = await getAccount(acc);
+      const { codeHash } = await this.gearApi.code.upload(optWasmBuff);
+
+      await sendTransaction(this.gearApi.code, account, "CodeChanged");
+
+      return {
+        ...submitCodeInput,
+        programId: codeHash,
+        metaWasmBase64: metaWasmBuff.toString("base64"),
+        optWasmBase64: optWasmBuff.toString("base64"),
+      };
+    } catch (error) {
+      console.log("____>optWasmBuff", optWasmBuff);
+      console.log("____>metaWasmBuff", metaWasmBuff);
+      console.log(error);
       this.logger.error(error);
     }
   }
