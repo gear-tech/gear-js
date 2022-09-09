@@ -1,1 +1,0 @@
-export { connectToGearNode } from './connection';
