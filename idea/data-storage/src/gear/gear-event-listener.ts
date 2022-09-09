@@ -1,8 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { MessageEnqueuedData } from '@gear-js/api';
+import { Hex, MessageEnqueuedData } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
-import { ProgramStatus, Keys, MessageType, UpdateMessageData } from '@gear-js/common';
+import {
+  Keys
+} from '@gear-js/common';
+import { plainToClass } from 'class-transformer';
 
 import { gearService } from './gear-service';
 import { ProgramService } from '../program/program.service';
@@ -11,6 +14,8 @@ import { MetadataService } from '../metadata/metadata.service';
 import { CodeService } from '../code/code.service';
 import { getPayloadByGearEvent, getUpdateMessageData } from '../common/helpers';
 import { HandleExtrinsicsData } from './types';
+import { Message } from '../database/entities';
+import { MessageEntryPoing, MessageType, ProgramStatus } from '../common/enums';
 
 
 @Injectable()
@@ -20,8 +25,7 @@ export class GearEventListener {
   constructor(private programService: ProgramService,
               private messageService: MessageService,
               private metaService: MetadataService,
-              private codeService: CodeService) {
-  }
+              private codeService: CodeService) {}
 
   public async listen(){
     // eslint-disable-next-line no-constant-condition
@@ -67,7 +71,8 @@ export class GearEventListener {
         genesis,
         events,
         status: extrinsicStatus,
-        signedBlock: block
+        signedBlock: block,
+        timestamp: blockTimestamp.toNumber()
       });
     });
   }
@@ -85,37 +90,23 @@ export class GearEventListener {
             timestamp,
             blockHash,
           });
-          return;
         }
-        await this.messageService.createMessage({
-          id,
-          destination,
-          source,
-          entry,
-          payload: null,
-          replyToMessageId: null,
-          exitCode: null,
-          genesis,
-          blockHash,
-          timestamp,
-          type: MessageType.ENQUEUED,
-        });
       },
       [Keys.UserMessageSent]: async () => {
-        await this.messageService.createMessage({
+        const createMessageDBType = plainToClass(Message, {
           ...payload,
           type: MessageType.USER_MESS_SENT
         });
+        await this.messageService.createMessages([createMessageDBType]);
       },
       [Keys.ProgramChanged]: async () => {
-        const { id, genesis } = payload;
-        if(payload.isActive) await this.programService.setStatus(id, genesis, ProgramStatus.ACTIVE);
+        if (payload.isActive) await this.programService.setStatus(id, genesis, ProgramStatus.ACTIVE);
       },
       [Keys.MessagesDispatched]: async () => {
         await this.messageService.setDispatchedStatus(payload);
       },
       [Keys.UserMessageRead]: async () => {
-        await this.messageService.updateReadStatus(payload.id, payload.reason);
+        await this.messageService.updateReadStatus(id, payload.reason);
       },
       [Keys.DatabaseWiped]: async () => {
         await Promise.all([
@@ -134,12 +125,27 @@ export class GearEventListener {
   }
 
   private async handleExtrinsics(handleExtrinsicsData: HandleExtrinsicsData): Promise<void> {
-    const { signedBlock, events, status, genesis } = handleExtrinsicsData;
+    const { signedBlock, events, status, genesis, timestamp } = handleExtrinsicsData;
+    const createMessagesMap = new Map<Hex, Message>();
+
+    events.forEach(({ event: { data, method } }) => {
+      const { id, source, destination, entry } = data as MessageEnqueuedData;
+
+      if (method === Keys.MessageEnqueued) {
+        createMessagesMap.set(id.toHex(), plainToClass(Message, {
+          id: id.toHex(),
+          destination: destination.toHex(),
+          source: source.toHex(),
+          entry: entry.isInit ? MessageEntryPoing.INIT : entry.isHandle
+            ? MessageEntryPoing.HANDLE : MessageEntryPoing.REPLY
+        }));
+      }
+    });
 
     const eventMethods = ['sendMessage', 'submitProgram', 'sendReply'];
     const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) => eventMethods.includes(method));
 
-    const result = extrinsics.map((extrinsic) => {
+    const createMessagesDBType = extrinsics.map((extrinsic) => {
       const {
         hash,
         args,
@@ -153,13 +159,20 @@ export class GearEventListener {
       const eventData = filteredEvents[0].event.data as MessageEnqueuedData;
 
       const messageId = eventData.id.toHex();
+      const messageDBType = createMessagesMap.get(messageId);
+
       const [payload, value] = getUpdateMessageData(args, method);
 
-      return { messageId, payload, genesis, value } as UpdateMessageData;
+      messageDBType.payload = payload;
+      messageDBType.value = value;
+      messageDBType.genesis = genesis;
+      messageDBType.timestamp = new Date(timestamp);
+
+      return  messageDBType;
     });
 
     try {
-      await this.messageService.updateMessagesData(result);
+      await this.messageService.createMessages(createMessagesDBType);
     } catch (error) {
       this.logger.error(error);
     }

@@ -1,10 +1,11 @@
 import { Column, Entity, JoinColumn, Index, PrimaryColumn, OneToMany, ManyToOne } from 'typeorm';
-import { ProgramStatus, IProgram } from '@gear-js/common';
+import { IProgram } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
 import { Meta } from './meta.entity';
 import { Message } from './message.entity';
 import { Code } from './code.entity';
+import { ProgramStatus } from '../../common/enums';
 
 @Entity()
 export class Program extends BaseEntity implements IProgram {

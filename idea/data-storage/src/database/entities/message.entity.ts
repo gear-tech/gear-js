@@ -1,9 +1,9 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { IMessage, MessageReadReason, MessageType } from '@gear-js/common';
+import { IMessage } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
 import { Program } from './program.entity';
-import { MessageEntryPoing } from '../../common/enums';
+import { MessageEntryPoing, MessageType, MessageReadReason } from '../../common/enums';
 
 @Entity()
 export class Message extends BaseEntity implements IMessage {

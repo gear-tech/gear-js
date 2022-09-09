@@ -3,7 +3,6 @@ import {
   AddMetaParams,
   AddMetaResult,
   AllMessagesResult,
-  CodeStatus,
   FindMessageParams,
   FindProgramParams,
   GetAllCodeParams,
@@ -16,18 +15,8 @@ import {
   GetMetaParams,
   GetMetaResult,
   ICode,
-  ICodeChangedKafkaValue,
-  IGenesis,
   IMessage,
-  IMessageEnqueuedKafkaValue,
-  IMessagesDispatchedKafkaValue,
-  ProgramStatus,
-  IProgramChangedKafkaValue,
-  IUserMessageReadKafkaValue,
-  IUserMessageSentKafkaValue,
-  MessageType,
   ProgramDataResult,
-  UpdateMessageData,
 } from '@gear-js/common';
 
 import { Result } from './types';
@@ -36,8 +25,7 @@ import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
 import { FormResponse } from '../middleware/formResponse';
 import { CodeService } from '../code/code.service';
-import { UpdateCodeInput } from '../code/types';
-import { sleep } from '../utils/sleep';
+
 
 @Injectable()
 export class ConsumerService {
@@ -47,74 +35,6 @@ export class ConsumerService {
     private metaService: MetadataService,
     private codeService: CodeService,
   ) {}
-
-  events = {
-    UserMessageSent: async (value: IUserMessageSentKafkaValue) => {
-      await sleep(1000);
-      this.messageService.createMessage({ ...value, type: MessageType.USER_MESS_SENT });
-    },
-    MessageEnqueued: ({
-      id,
-      destination,
-      source,
-      entry,
-      genesis,
-      timestamp,
-      blockHash,
-    }: IMessageEnqueuedKafkaValue) => {
-      if (entry === 'Init') {
-        this.programService.createProgram({
-          id: destination,
-          owner: source,
-          genesis: genesis,
-          timestamp: timestamp,
-          blockHash: blockHash,
-        });
-      }
-      this.messageService.createMessage({
-        id: id,
-        destination: destination,
-        source: source,
-        entry,
-        payload: null,
-        replyToMessageId: null,
-        exitCode: null,
-        genesis: genesis,
-        blockHash: blockHash,
-        timestamp: timestamp,
-        type: MessageType.ENQUEUED,
-      });
-    },
-    ProgramChanged: (value: IProgramChangedKafkaValue) => {
-      if (value.isActive) {
-        this.programService.setStatus(value.id, value.genesis, ProgramStatus.TERMINATED);
-      }
-    },
-    CodeChanged: (value: ICodeChangedKafkaValue) => {
-      const updateCodeInput: UpdateCodeInput = {
-        ...value,
-        status: value.change as CodeStatus,
-      };
-      this.codeService.updateCode(updateCodeInput);
-    },
-    MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
-      this.messageService.setDispatchedStatus(value);
-    },
-    UserMessageRead: async (value: IUserMessageReadKafkaValue) => {
-      this.messageService.updateReadStatus(value.id, value.reason);
-    },
-    DatabaseWiped: async (value: IGenesis) => {
-      await Promise.all([
-        this.messageService.deleteRecords(value.genesis),
-        this.programService.deleteRecords(value.genesis),
-        this.codeService.deleteRecords(value.genesis),
-      ]);
-    },
-  };
-
-  async updateMessages(params: UpdateMessageData[]): Result<void> {
-    await this.messageService.updateMessagesData(params);
-  }
 
   @FormResponse
   async programData(params: FindProgramParams): Result<ProgramDataResult> {

@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { CodeStatus, GetAllCodeParams, GetCodeParams } from '@gear-js/common';
+import { GetAllCodeParams, GetCodeParams } from '@gear-js/common';
 import { UpdateResult } from 'typeorm';
 
 import { Code } from '../../src/database/entities';
@@ -8,6 +8,7 @@ import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 import { CodeRepo } from '../../src/code/code.repo';
 import { CodeService } from '../../src/code/code.service';
 import { UpdateCodeInput } from '../../src/code/types';
+import { CodeStatus } from '../../src/common/enums';
 
 const CODE_ENTITY_ID = '0x7357';
 

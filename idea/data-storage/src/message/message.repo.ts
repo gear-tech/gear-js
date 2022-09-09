@@ -15,10 +15,6 @@ export class MessageRepo {
     private messageRepo: Repository<Message>,
   ) {}
 
-  public async save(message: Message): Promise<Message> {
-    return this.messageRepo.save(message);
-  }
-
   public async listByIdAndSourceAndDestination(params: GetMessagesParams): Promise<[Message[], number]> {
     const { genesis, source, query, destination, limit, offset } = params;
     const strictParams = { genesis };
@@ -59,6 +55,10 @@ export class MessageRepo {
         genesis,
       },
     });
+  }
+
+  public async save(messages: Message[]): Promise<Message[]> {
+    return this.messageRepo.save(messages);
   }
 
   public async remove(messages: Message[]): Promise<Message[]> {

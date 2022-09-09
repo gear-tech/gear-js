@@ -1,23 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
 import {
   AllMessagesResult,
   FindMessageParams,
   GetMessagesParams,
   IMessage,
-  IMessagesDispatchedKafkaValue,
-  ProgramStatus,
-  MessageReadReason,
   UpdateMessageData,
 } from '@gear-js/common';
 
-import { Message } from '../database/entities/message.entity';
+import { Message } from '../database/entities';
 import { ProgramService } from '../program/program.service';
 import { MessageNotFound } from '../common/errors';
 import { sleep } from '../utils/sleep';
 import { MessageRepo } from './message.repo';
-import { CreateMessageInput } from './types';
-import { MessageEntryPoing } from '../common/enums';
+import { MessageEntryPoing, MessageReadReason, ProgramStatus } from '../common/enums';
+import { MessageDispatchedDataInput } from './types/message-dispatched-data.input';
 
 @Injectable()
 export class MessageService {
@@ -42,25 +38,15 @@ export class MessageService {
     return message;
   }
 
-  public async createMessage({ timestamp, ...params }: CreateMessageInput): Promise<IMessage> {
+  public async createMessages(createMessagesDBType: Message[]): Promise<IMessage[]> {
     try {
-      const messageTypeDB = plainToClass(Message, {
-        ...params,
-        timestamp: new Date(timestamp),
-      });
-
-      if (params.replyToMessageId) {
-        const { entry } = await this.messageRepository.get(params.replyToMessageId);
-        messageTypeDB.entry = entry;
-      }
-
-      return this.messageRepository.save(messageTypeDB);
+      return this.messageRepository.save(createMessagesDBType);
     } catch (error) {
       this.logger.error(error, error.stack);
     }
   }
 
-  public async setDispatchedStatus({ statuses, genesis }: IMessagesDispatchedKafkaValue): Promise<void> {
+  public async setDispatchedStatus({ statuses, genesis }: MessageDispatchedDataInput): Promise<void> {
     await sleep(1000);
     for (const messageId of Object.keys(statuses)) {
       try {

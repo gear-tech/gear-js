@@ -1,9 +1,7 @@
 import { Test } from '@nestjs/testing';
 import {
   FindMessageParams,
-  GetMessagesParams,
-  MessageType,
-  MessageReadReason,
+  GetMessagesParams
 } from '@gear-js/common';
 
 import { MessageService } from '../../src/message/message.service';
@@ -13,7 +11,9 @@ import { MESSAGE_DB_MOCK } from '../mock/message/message-db.mock';
 import { ProgramService } from '../../src/program/program.service';
 import { ProgramRepo } from '../../src/program/program.repo';
 import { mockProgramRepository } from '../mock/program/program-repository.mock';
-import { CreateMessageInput } from '../../src/message/types';
+import { MessageType, MessageReadReason } from '../../src/common/enums';
+import { Message } from '../../src/database/entities';
+import { plainToClass } from 'class-transformer';
 
 const MESSAGE_ENTITY_ID = '0x7357';
 
@@ -40,7 +40,7 @@ describe('Message service', () => {
   });
 
   it('should be successfully create message', async () => {
-    const createMessageInput: CreateMessageInput = {
+    const createMessageInput = {
       id: MESSAGE_ENTITY_ID,
       genesis: '0x07357',
       timestamp: 0,
@@ -50,9 +50,13 @@ describe('Message service', () => {
       type: MessageType.ENQUEUED,
     };
 
-    const message = await messageService.createMessage(createMessageInput);
+    const messageDBType = plainToClass(Message, {
+      ...createMessageInput
+    });
 
-    expect(message.id).toEqual(createMessageInput.id);
+    const message = await messageService.createMessages([messageDBType]);
+
+    expect(message[0].id).toEqual(createMessageInput.id);
     expect(mockMessageRepository.save).toHaveBeenCalled();
   });
 

@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
-import { CodeStatus, GetAllCodeParams } from '@gear-js/common';
+import { GetAllCodeParams } from '@gear-js/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { Code } from '../database/entities';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
 import { PAGINATION_LIMIT } from '../common/constants';
+import { CodeStatus } from '../common/enums';
 
 @Injectable()
 export class CodeRepo {

@@ -1,5 +1,6 @@
 import { UserMessageReadData } from '@gear-js/api';
-import { MessageReadReason } from '@gear-js/common';
+import { MessageReadReason } from '../enums';
+
 
 function getMessageReadStatus(data: UserMessageReadData): MessageReadReason | null {
   if (data.reason.isSystem && data.reason.asSystem.isOutOfRent) {

@@ -5,7 +5,6 @@ import {
   GetAllProgramsParams,
   GetAllProgramsResult,
   GetAllUserProgramsParams,
-  ProgramStatus,
   IProgram,
 } from '@gear-js/common';
 
@@ -14,6 +13,7 @@ import { ProgramNotFound } from '../common/errors';
 import { Program } from '../database/entities';
 import { CreateProgramInput, UpdateProgramDataInput } from './types';
 import { ProgramRepo } from './program.repo';
+import { ProgramStatus } from '../common/enums';
 
 @Injectable()
 export class ProgramService {
