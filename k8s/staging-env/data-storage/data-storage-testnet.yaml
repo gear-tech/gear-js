@@ -2,21 +2,21 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   namespace: dev-1
-  name: data-storage
+  name: data-storage-testnet
   labels:
-    app: data-storage
+    app: data-storage-testnet
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: data-storage
+      app: data-storage-testnet
   template:
     metadata:
       labels:
-        app: data-storage
+        app: data-storage-testnet
     spec:
       containers:
-        - name: data-storage
+        - name: data-storage-testnet
           image: ghcr.io/gear-tech/gear-js-data-storage:dev
           env:
             - name: DB_NAME
@@ -52,5 +52,7 @@ spec:
                 secretKeyRef:
                   name: kafka-secrets
                   key: password
+            - name: GEAR_WS_PROVIDER
+              value: wss://rpc-node.gear-tech.io:443
           imagePullPolicy: Always
 
