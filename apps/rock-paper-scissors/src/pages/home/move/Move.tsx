@@ -1,6 +1,5 @@
 import { Button, Input } from '@gear-js/ui';
-import clsx from 'clsx';
-import { BackButton } from 'components';
+import { ActionButton, BackButton } from 'components';
 import { ReactComponent as RockSVG } from 'assets/images/actions/rock.svg';
 import { ReactComponent as PaperSVG } from 'assets/images/actions/paper.svg';
 import { ReactComponent as ScissorsSVG } from 'assets/images/actions/scissors.svg';
@@ -22,21 +21,11 @@ type Props = {
 
 function Move({ value }: Props) {
   const getActions = () =>
-    ACTIONS.map(({ name, SVG }) => {
-      const isActive = name === value;
-
-      const className = clsx(styles.action, isActive && styles.active);
-      const logoClassName = clsx(styles.logo, isActive && styles.active);
-
-      return (
-        <li className={className}>
-          <span className={logoClassName}>
-            <SVG />
-          </span>
-          {name}
-        </li>
-      );
-    });
+    ACTIONS.map(({ name, SVG }) => (
+      <li key={name}>
+        <ActionButton name={name} SVG={SVG} isActive={name === value} />
+      </li>
+    ));
 
   return (
     <div className={styles.container}>

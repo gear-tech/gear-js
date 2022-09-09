@@ -1,7 +1,7 @@
 import { Hex } from '@gear-js/api';
 import { Button } from '@gear-js/ui';
 import { BackButton, Detail } from 'components';
-import { FunctionComponent, SVGProps } from 'react';
+import { SVGType } from 'types';
 import styles from './Details.module.scss';
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
   entry: string;
   move: string;
   reveal: string;
-  SVG: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
+  SVG: SVGType;
 };
 
 function Details({ heading, game, round, contract, players, bet, entry, move, reveal, SVG }: Props) {

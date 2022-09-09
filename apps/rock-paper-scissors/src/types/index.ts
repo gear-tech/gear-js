@@ -1,3 +1,7 @@
+import { FunctionComponent, SVGProps } from 'react';
+
 type StageType = 'preparation' | 'progress' | 'reveal';
 
-export type { StageType };
+type SVGType = FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined }>;
+
+export type { StageType, SVGType };
