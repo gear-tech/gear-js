@@ -1,3 +1,11 @@
+## 0.25.3
+_09/08/2022_
+
+https://github.com/gear-tech/gear-js/pull/979
+### Changes
+
+- Use api.derive to subscription to new blocks
+
 ## 0.25.2
 _08/17/2022_
 

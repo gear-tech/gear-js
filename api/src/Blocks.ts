@@ -1,15 +1,23 @@
+import { HeaderExtended } from '@polkadot/api-derive/types';
+import { PromiseResult } from '@polkadot/api/types';
 import { u64, Compact, GenericExtrinsic, Vec } from '@polkadot/types';
 import { SignedBlock, BlockNumber, BlockHash } from '@polkadot/types/interfaces';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { AnyTuple, AnyNumber } from '@polkadot/types/types';
 import { isHex, isU8a, isNumber } from '@polkadot/util';
+import { Observable } from 'rxjs';
 
 import { CreateType } from './create-type';
 import { GetBlockError } from './errors';
 import { GearApi } from './GearApi';
 import { Hex } from './types';
+
 export class GearBlock {
-  constructor(private api: GearApi) {}
+  subscribeNewHeads: PromiseResult<() => Observable<HeaderExtended>>;
+
+  constructor(private api: GearApi) {
+    this.subscribeNewHeads = api.derive.chain.subscribeNewHeads;
+  }
 
   /**
    * Get data of particular block by blockHash
