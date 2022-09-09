@@ -63,6 +63,21 @@ export class TgbotController {
       ctx.reply(res);
     }
 
+  @Command("uploadCode")
+  public async uploadCode(ctx: Context): Promise<void> {
+    // @ts-ignore
+    const res = await this.tgbotService.uploadCode(ctx.from.id, ctx.message.text);
+
+    if (Array.isArray(res)) {
+      for (const uploadDapp of res) {
+        ctx.reply(JSON.stringify(uploadDapp));
+      }
+      return;
+    }
+
+    ctx.reply(res);
+  }
+
     @Command("getUserId")
   public async getUserId(ctx: Context): Promise<void> {
     const tgUserData = { username: ctx.from.username, id: ctx.from.id.toString() };

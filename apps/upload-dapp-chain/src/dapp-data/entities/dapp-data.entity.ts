@@ -12,6 +12,9 @@ export class DappData {
   repo: string;
 
   @Column({ nullable: true })
+  codeHash: string;
+
+  @Column({ nullable: true })
   metaWasmBase64: string;
 
   @Column({ nullable: true })
