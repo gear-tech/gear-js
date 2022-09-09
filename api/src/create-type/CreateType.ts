@@ -1,34 +1,25 @@
 import { isHex, isU8a } from '@polkadot/util';
-import { Registry, Codec } from '@polkadot/types/types';
+import { Codec, Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
 import { RegistryTypes } from '@polkadot/types-codec/types/registry';
 
-import { GearApi } from '../GearApi';
-import { Metadata } from '../types/interfaces';
 import { toJSON, isJSON } from '../utils/json';
-import { Hex } from '../types';
-import { checkTypeAndPayload, getTypesFromTypeDef, setNamespaces, typeIsString } from './utils';
+import { Hex, Metadata } from '../types';
+import { checkTypeAndPayload, typeIsString } from './utils';
+import { TypeInfoRegistry } from './TypeInfoReg';
 
 export class CreateType {
   registry: Registry;
-  namespaces: Map<string, string>;
 
-  constructor(gearApi?: GearApi) {
-    this.registry = gearApi?.registry || new TypeRegistry();
-    this.namespaces = undefined;
-  }
-
-  private createRegistry(types?: Hex | object | Uint8Array): Map<string, string> {
-    if (!types) {
-      return null;
+  constructor(registryOrRegistryTypes?: TypeRegistry | Registry | Hex | Uint8Array) {
+    if (!registryOrRegistryTypes) {
+      this.registry = new TypeRegistry();
+    } else if (isHex(registryOrRegistryTypes) || isU8a(registryOrRegistryTypes)) {
+      const typeInfoReg = new TypeInfoRegistry(registryOrRegistryTypes);
+      this.registry = typeInfoReg.registry;
+    } else if (registryOrRegistryTypes) {
+      this.registry = registryOrRegistryTypes;
     }
-    if (isHex(types) || isU8a(types)) {
-      const { typesFromTypeDef, namespaces } = getTypesFromTypeDef(types, this.registry);
-      types = typesFromTypeDef;
-      this.namespaces = namespaces;
-    }
-    this.registerTypes(types as RegistryTypes);
-    return this.namespaces;
   }
 
   /**
@@ -58,11 +49,13 @@ export class CreateType {
     this.registry.register({ ...types });
   }
 
+  public create(type: string, payload: unknown, metadata?: Metadata): Codec;
+
   /**
    *
    * @param type `TypeName` to encode or decode payload
    * @param payload `Payload` that have to be encoded or decoded
-   * @param meta `Metadata` if type isn't standart rust Type
+   * @param registryTypes Types encoded by TypeInfo
    * @returns Codec
    * @example
    * ```javascript
@@ -79,21 +72,27 @@ export class CreateType {
    * console.log(encoded.toHex());
    * ```
    */
-  public create(type: string, payload: unknown, meta?: Metadata): Codec {
-    type = checkTypeAndPayload(type, payload);
-    const namespaces = meta?.types ? this.createRegistry(meta.types) : this.createRegistry();
+  public create(type: string, payload: unknown, registryTypes?: Hex | Uint8Array): Codec;
 
-    return this.createType(
-      namespaces ? setNamespaces(type, namespaces) : type,
-      isJSON(payload) ? toJSON(payload) : payload,
-    );
+  public create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec {
+    type = checkTypeAndPayload(type, payload);
+    if (registryTypesOrMetadata) {
+      const registryTypes =
+        isHex(registryTypesOrMetadata) || isU8a(registryTypesOrMetadata)
+          ? registryTypesOrMetadata
+          : registryTypesOrMetadata.types;
+      const typeInfoReg = new TypeInfoRegistry(registryTypes);
+      this.registry = typeInfoReg.registry;
+      type = typeInfoReg.getShortName(type);
+    }
+    return this.createType(type, isJSON(payload) ? toJSON(payload) : payload);
   }
 
   /**
    *
    * @param type `TypeName` to encode or decode payload
    * @param payload `Payload` that have to be encoded or decoded
-   * @param meta `Metadata` if type isn't standart rust Type
+   * @param registryTypes `Hex | Uint8Array`
    * @returns Codec
    * @example
    * ```javascript
@@ -101,9 +100,14 @@ export class CreateType {
    * console.log(encoded.toHex()); // 0x48656c6c6f2c20576f726c6421
    * ```
    */
-  static create(type: string, payload: unknown, meta?: Metadata): Codec {
-    const createType = new CreateType();
-    return createType.create(type, payload, meta);
+  static create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec {
+    const registryTypes = !registryTypesOrMetadata
+      ? undefined
+      : isHex(registryTypesOrMetadata) || isU8a(registryTypesOrMetadata)
+      ? registryTypesOrMetadata
+      : registryTypesOrMetadata.types;
+    const createType = new CreateType(registryTypes);
+    return createType.create(type, payload);
   }
 
   private createType(type: string, data: unknown): Codec {
@@ -117,7 +121,12 @@ export class CreateType {
       }
       return this.registry.createType('Bytes', data);
     } else {
-      return this.registry.createType(type, data);
+      try {
+        return this.registry.createType(type, data);
+      } catch (error) {
+        console.log(type);
+        console.log(JSON.stringify(this.registry.knownTypes, undefined, 2));
+      }
     }
   }
 }

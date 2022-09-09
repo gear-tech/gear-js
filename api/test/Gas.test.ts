@@ -33,7 +33,7 @@ afterAll(async () => {
 });
 
 describe('Calculate gas', () => {
-  test.only('Get init gas spent (upload)', async () => {
+  test('Get init gas spent (upload)', async () => {
     const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, '0x00', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');

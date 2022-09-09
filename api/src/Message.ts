@@ -34,7 +34,7 @@ export class GearMessage extends GearTransaction {
     validateValue(message.value, this._api);
     validateGasLimit(message.gasLimit, this._api);
 
-    const payload = createPayload(this._createType, messageType || meta?.handle_input, message.payload, meta);
+    const payload = createPayload(messageType || meta?.handle_input, message.payload, meta?.types);
     try {
       this.extrinsic = this._api.tx.gear.sendMessage(
         message.destination,
@@ -77,10 +77,9 @@ export class GearMessage extends GearTransaction {
     validateGasLimit(message.gasLimit, this._api);
 
     const payload = createPayload(
-      this._createType,
       messageType || meta?.async_handle_input || meta?.async_init_input,
       message.payload,
-      meta,
+      meta?.types,
     );
 
     try {

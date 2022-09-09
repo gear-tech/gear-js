@@ -46,7 +46,7 @@
   },
   "license": "GPL-3.0",
   "peerDependencies": {
-    "@polkadot/api": "^9.2.2",
+    "@polkadot/api": "^9.3.3",
     "@polkadot/wasm-crypto": "^6.3.1",
     "rxjs": "^7.5.5"
   },

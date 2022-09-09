@@ -3,16 +3,12 @@ import { Codec } from '@polkadot/types/types';
 
 import { ActiveProgram, IGearPages, IProgram, Hex } from './types';
 import { GPAGES_HEX, GPROG_HEX, SEPARATOR } from './utils';
-import { CreateType } from './create-type';
 import { ProgramTerminatedError, ReadStateError } from './errors';
 import { GearApi } from './GearApi';
 
 export class GearStorage {
-  protected _createType: CreateType;
+  constructor(protected _api: GearApi) {}
 
-  constructor(protected _api: GearApi) {
-    this._createType = new CreateType(_api);
-  }
   /**
    * Get program from chain
    * @param programId

@@ -5,16 +5,12 @@ import { isFunction } from '@polkadot/util';
 
 import { TransactionStatusCb } from './types';
 import { TransactionError } from './errors';
-import { CreateType } from './create-type';
 import { GearApi } from './GearApi';
 
 export class GearTransaction {
-  protected _createType: CreateType;
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
-  constructor(protected _api: GearApi) {
-    this._createType = new CreateType(_api);
-  }
+  constructor(protected _api: GearApi) {}
 
   signAndSend(account: AddressOrPair, callback: TransactionStatusCb): Promise<() => void>;
 

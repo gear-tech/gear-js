@@ -50,8 +50,8 @@ export class GearProgram extends GearTransaction {
     validateGasLimit(program.gasLimit, this._api);
 
     const salt = program.salt || randomAsHex(20);
-    const code = this._createType.create('bytes', Array.from(program.code)) as Bytes;
-    const payload = createPayload(this._createType, messageType || meta?.init_input, program.initPayload, meta);
+    const code = this._api.createType('Bytes', Array.from(program.code)) as Bytes;
+    const payload = createPayload(messageType || meta?.init_input, program.initPayload, meta?.types);
     const codeId = generateCodeId(code);
     const programId = generateProgramId(code, salt);
 
@@ -87,7 +87,7 @@ export class GearProgram extends GearTransaction {
     validateGasLimit(program.gasLimit, this._api);
 
     const salt = program.salt || randomAsHex(20);
-    const payload = createPayload(this._createType, messageType || meta?.init_input, program.initPayload, meta);
+    const payload = createPayload(messageType || meta?.init_input, program.initPayload, meta?.types);
     const programId = generateProgramId(program.codeId, salt);
 
     try {

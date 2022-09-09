@@ -1,13 +1,7 @@
-import { getTypesFromTypeDef, replaceNamespaces } from './utils';
-import { hexToU8a } from '@polkadot/util';
-import { isJSON } from '../utils';
+import { Hex } from '../types';
+import { TypeInfoRegistry } from './TypeInfoReg';
 
-export function decodeHexTypes(hexTypes: string) {
-  const { typesFromTypeDef, namespaces } = getTypesFromTypeDef(hexToU8a(hexTypes));
-  const result = {};
-  namespaces.forEach((value, key) => {
-    const replaced = replaceNamespaces(typesFromTypeDef[value], namespaces);
-    result[key] = isJSON(replaced) ? JSON.parse(replaced) : replaced;
-  });
-  return result;
+export function decodeHexTypes(hexTypes: Hex | Uint8Array) {
+  const typeInfoReg = new TypeInfoRegistry(hexTypes);
+  return typeInfoReg.getTypes();
 }

@@ -1,30 +1,23 @@
-import { isHex, isString, isU8a, u8aToHex } from '@polkadot/util';
+import { isHex, isString, isU8a } from '@polkadot/util';
 import { Codec } from '@polkadot/types-codec/types';
 
 import { GetGasSpentError } from './errors/program.errors';
 import { Hex, PayloadType, Value } from './types';
 import { Metadata } from './types/interfaces';
-import { CreateType } from './create-type';
 import { createPayload } from './utils';
 import { GearApi } from './GearApi';
 import { GasInfo } from './types';
 
 export class GearGas {
-  #createType: CreateType;
-
-  constructor(private _api: GearApi) {
-    this.#createType = new CreateType(_api);
-  }
+  constructor(private _api: GearApi) {}
 
   private getPayload(
     payload: PayloadType,
     metaOrTypeOfPayload: string | Metadata,
     meta_type: string,
   ): Hex | Uint8Array | Codec {
-    if (isHex(payload)) {
+    if (isHex(payload) || isU8a(payload)) {
       return payload;
-    } else if (isU8a(payload)) {
-      return u8aToHex(payload);
     }
     if (!metaOrTypeOfPayload) {
       throw new GetGasSpentError('Impossible to create bytes from payload without specified type or meta');
@@ -32,7 +25,7 @@ export class GearGas {
     const [type, meta] = isString(metaOrTypeOfPayload)
       ? [metaOrTypeOfPayload, undefined]
       : [metaOrTypeOfPayload[meta_type], metaOrTypeOfPayload];
-    return createPayload(this.#createType, type, payload, meta);
+    return createPayload(type, payload, meta?.types);
   }
 
   /**
@@ -131,7 +124,7 @@ export class GearGas {
   ): Promise<GasInfo> {
     return this._api.rpc['gear'].calculateInitUploadGas(
       sourceId,
-      isHex(code) ? code : this.#createType.create('bytes', Array.from(code)).toHex(),
+      isHex(code) ? code : this._api.createType('Bytes', Array.from(code)).toHex(),
       this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
       value || 0,
       allowOtherPanics || true,
