@@ -80,7 +80,9 @@ export class init1662551370476 implements MigrationInterface {
     await queryRunner.query('DROP INDEX "public"."IDX_415b62539db7e5df16641549ba"');
     await queryRunner.query('DROP TABLE "message"');
     await queryRunner.query('DROP TYPE "public"."message_readreason_enum"');
+    await queryRunner.query('DROP TYPE "public"."code_status_enum"');
     await queryRunner.query('DROP TYPE "public"."message_entry_enum"');
+    await queryRunner.query('DROP TYPE "public"."message_type_enum"');
     await queryRunner.query('DROP INDEX "public"."IDX_a8dbdd1e11aad73e620bcefbb9"');
     await queryRunner.query('DROP INDEX "public"."IDX_634f57814226ec9e93ea5e5da9"');
     await queryRunner.query('DROP TABLE "program"');
