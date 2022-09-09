@@ -86,6 +86,43 @@ export class TgbotService {
       return TBErrorMessage.INVALID_DAPP_NAME;
     }
 
+    if (uploadProgramActions.actions.find(action => action.command === "uploadCode")) {
+      return TBErrorMessage.INVALID_DAPP_NAME;
+    }
+
+    for (const action of uploadProgramActions.actions) {
+      const uploadedProgram = await this.handleCommand(action, uploadedPrograms);
+
+      if (uploadedProgram) uploadedPrograms.push(uploadedProgram);
+    }
+
+    const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
+
+    return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
+  }
+
+  public async uploadCode(userId: number, commandArguments: string): Promise<DappData[] | string> {
+    const [, dappName] = commandArguments.split(" ");
+
+    if (!await this.userService.validate(String(userId))) {
+      return TBErrorMessage.ACCESS_DENIED;
+    }
+
+    if (!dappName) {
+      return TBErrorMessage.COMMAND_ARGUMENTS_REQUIRED;
+    }
+
+    const uploadProgramActions = getUploadProgramByName(dappName);
+    const uploadedPrograms: UploadProgramResult[] = [];
+
+    if (!uploadProgramActions) {
+      return TBErrorMessage.INVALID_DAPP_NAME;
+    }
+
+    if (uploadProgramActions.actions.find(action => action.command !== "uploadCode")) {
+      return TBErrorMessage.INVALID_DAPP_NAME;
+    }
+
     for (const action of uploadProgramActions.actions) {
       const uploadedProgram = await this.handleCommand(action, uploadedPrograms);
 
@@ -119,9 +156,11 @@ export class TgbotService {
       }
 
       if (command === "uploadProgram") {
-        const uploadedProgramData = await this.commandService.uploadProgram(uploadProgramData);
+        return this.commandService.uploadProgram(uploadProgramData);
+      }
 
-        return uploadedProgramData;
+      if (command === "uploadCode") {
+        return this.commandService.uploadCode(uploadProgramData);
       }
     } catch (error) {
       console.log(error);

@@ -8,10 +8,10 @@ import { GearTransaction } from './Transaction';
 
 export class GearCode extends GearTransaction {
   /**
-   * Submit code without initialization
-   * @param code
-   * @returns Code hash
-   */
+	 * Submit code without initialization
+	 * @param code
+	 * @returns Code hash
+	 */
   async upload(
     code: Buffer | Uint8Array,
   ): Promise<{ codeHash: Hex; submitted: SubmittableExtrinsic<'promise', ISubmittableResult> }> {
@@ -24,29 +24,29 @@ export class GearCode extends GearTransaction {
   }
 
   /**
-   * Check that codeId exists on chain
-   * @param codeId
-   * @returns
-   */
+	 * Check that codeId exists on chain
+	 * @param codeId
+	 * @returns
+	 */
   async exists(codeId: string) {
     const codeMetadata = (await this._api.query.gearProgram.metadataStorage(codeId)) as Option<CodeMetadata>;
     return codeMetadata.isSome;
   }
 
   /**
-   * Get code storage
-   * @param codeId
-   * @returns
-   */
+	 * Get code storage
+	 * @param codeId
+	 * @returns
+	 */
   async storage(codeId: Hex): Promise<CodeStorage> {
     return this._api.query.gearProgram.codeStorage(codeId) as unknown as CodeStorage;
   }
 
   /**
-   * Get static pages of code
-   * @param codeId
-   * @returns
-   */
+	 * Get static pages of code
+	 * @param codeId
+	 * @returns
+	 */
   async staticPages(codeId: Hex): Promise<number | null> {
     const storage = await this.storage(codeId);
     return storage.isSome ? storage.unwrap().staticPages.toNumber() : null;
