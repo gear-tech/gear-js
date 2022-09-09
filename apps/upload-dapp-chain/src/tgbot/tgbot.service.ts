@@ -86,7 +86,7 @@ export class TgbotService {
       return TBErrorMessage.INVALID_DAPP_NAME;
     }
 
-    if (uploadProgramActions && uploadProgramActions.actions.find(action => action.command === "submitCode")) {
+    if (uploadProgramActions.actions.find(action => action.command === "uploadCode")) {
       return TBErrorMessage.INVALID_DAPP_NAME;
     }
 
@@ -119,7 +119,7 @@ export class TgbotService {
       return TBErrorMessage.INVALID_DAPP_NAME;
     }
 
-    if (uploadProgramActions && uploadProgramActions.actions.find(action => action.command !== "submitCode")) {
+    if (uploadProgramActions.actions.find(action => action.command !== "uploadCode")) {
       return TBErrorMessage.INVALID_DAPP_NAME;
     }
 
@@ -159,8 +159,8 @@ export class TgbotService {
         return this.commandService.uploadProgram(uploadProgramData);
       }
 
-      if (command === "submitCode") {
-        return this.commandService.submitCode(uploadProgramData);
+      if (command === "uploadCode") {
+        return this.commandService.uploadCode(uploadProgramData);
       }
     } catch (error) {
       console.log(error);

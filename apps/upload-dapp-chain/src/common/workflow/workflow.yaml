@@ -61,7 +61,6 @@ programs:
     optDownloadUrl: 'https://github.com/gear-dapps/escrow/releases/download/build/escrow.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/escrow/releases/download/build/escrow.meta.wasm'
     acc: 'alice'
-    payload: '0x'
     value: NULL
 
   7:
@@ -70,7 +69,6 @@ programs:
     optDownloadUrl: 'https://github.com/gear-dapps/supply-chain/releases/download/build/supply_chain.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/supply-chain/releases/download/build/supply_chain.meta.wasm'
     acc: 'alice'
-    payload: '0x'
     value: NULL
 
   8:
@@ -79,7 +77,6 @@ programs:
     optDownloadUrl: 'https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.meta.wasm'
     acc: 'alice'
-    payload: '0x'
     value: NULL
 
   9:
@@ -88,7 +85,6 @@ programs:
     optDownloadUrl: 'https://github.com/gear-dapps/staking/releases/download/build/staking.opt.wasm'
     metaDownloadUrl: 'https://github.com/gear-dapps/staking/releases/download/build/staking.meta.wasm'
     acc: 'alice'
-    payload: '0x'
     value: NULL
 
 workflow:
@@ -147,20 +143,20 @@ workflowSingleDapp:
 
   escrow:
     actions:
-      - command: submitCode
+      - command: uploadCode
         program: 6
 
   supply_chain:
     actions:
-      - command: submitCode
+      - command: uploadCode
         program: 7
 
   rock_paper_scissors:
     actions:
-      - command: submitCode
+      - command: uploadCode
         program: 8
 
   staking:
     actions:
-      - command: submitCode
+      - command: uploadCode
         program: 9

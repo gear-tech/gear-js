@@ -107,7 +107,7 @@ export class CommandService {
     }
   }
 
-  public async submitCode(submitCodeInput: SubmitCodeInput): Promise<UploadProgramResult> {
+  public async uploadCode(submitCodeInput: SubmitCodeInput): Promise<UploadProgramResult> {
     const { metaDownloadUrl, optDownloadUrl, acc } = submitCodeInput;
 
     const [optWasmData, metaWasmData] = await getOptAndMetaWasm(
