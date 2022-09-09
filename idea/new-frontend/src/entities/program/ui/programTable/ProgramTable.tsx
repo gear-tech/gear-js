@@ -16,7 +16,7 @@ const ProgramTable = ({ program }: Props) => {
   return (
     <Table>
       <TableRow name="Progran ID">
-        <IdBlock id={id} size="large" />
+        <IdBlock id={id} size="big" />
       </TableRow>
       <TableRow name="Status">
         <BulbBlock size="large" text={initStatus} status={getBulbStatus(initStatus)} />

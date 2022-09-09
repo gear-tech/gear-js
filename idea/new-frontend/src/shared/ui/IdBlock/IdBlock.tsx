@@ -11,7 +11,7 @@ import idSVG from '../../assets/images/indicators/id.svg';
 
 type Props = {
   id: string;
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'big' | 'large';
   color?: 'light' | 'primary';
   withIcon?: boolean;
   maxCharts?: number;

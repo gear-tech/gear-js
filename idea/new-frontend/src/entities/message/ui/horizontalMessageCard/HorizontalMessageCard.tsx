@@ -13,8 +13,8 @@ const HorizontalMessageCard = ({ message }: Props) => {
 
   return (
     <article className={styles.horizontalMessageCard}>
-      <IdBlock id={id} size="medium" withIcon />
-      <TimestampBlock timestamp={timestamp} withIcon />
+      <IdBlock id={id} size="large" withIcon maxCharts={18} />
+      <TimestampBlock size="medium" color="light" timestamp={timestamp} withIcon />
     </article>
   );
 };

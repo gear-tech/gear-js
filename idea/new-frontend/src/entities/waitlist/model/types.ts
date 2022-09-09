@@ -31,8 +31,6 @@ type WaitlistContent = {
   kind: string;
 };
 
-type HumanMailboxItem = [MailMessage, Interval];
-
 type HumanWaitlistItem = [WaitlistContent, Interval];
 
-export type { HumanMailboxItem, HumanWaitlistItem };
+export type { WaitlistContent, Interval, HumanWaitlistItem };

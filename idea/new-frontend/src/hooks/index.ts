@@ -19,6 +19,8 @@ import { usePrevious } from './usePrevious';
 import { useDataLoading } from './useDataLoading';
 import { useScrollLoader } from './useScrollLoader';
 import { useElementSizes } from './useElementSizes';
+import { useMessages } from './useMessages';
+import { useWaitlist } from './useWaitlist';
 
 export {
   useApp,
@@ -28,6 +30,8 @@ export {
   useMessage,
   useProgram,
   usePrograms,
+  useMessages,
+  useWaitlist,
   usePrevious,
   useStateRead,
   useCodeUpload,

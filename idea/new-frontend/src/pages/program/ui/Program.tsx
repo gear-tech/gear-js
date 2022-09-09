@@ -2,12 +2,12 @@ import { useParams } from 'react-router-dom';
 import { Hex } from '@gear-js/api';
 
 import { useProgram } from 'hooks';
+import { ProgramMessages } from 'widgets/programMessages';
 import { PathParams } from 'shared/types';
 import { Loader } from 'shared/ui/loader';
 
 import styles from './Program.module.scss';
 import { Header } from './header';
-import { Messages } from './messages';
 import { ProgramDetails } from './programDetails';
 import { MetadataDetails } from './metadataDetails';
 
@@ -28,7 +28,7 @@ const Program = () => {
           <ProgramDetails program={program} />
           <MetadataDetails metadata={metadata} />
         </div>
-        <Messages programId={programId as Hex} />
+        <ProgramMessages programId={programId as Hex} />
       </div>
     </div>
   );

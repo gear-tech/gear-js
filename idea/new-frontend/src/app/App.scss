@@ -7,6 +7,10 @@
   padding: 0;
 }
 
+:root {
+  --header-height: toRem(103);
+}
+
 html {
   font-size: 100%;
 }
@@ -17,23 +21,22 @@ body {
   background-repeat: no-repeat;
   background-position: right -150px top -50px;
   min-height: 100vh;
-  height: 1px;
 }
 
 #root {
-  height: 100%;
   position: relative;
 }
 
 .main {
   display: flex;
-  min-height: calc(100% - $footerHeight);
+  min-height: calc(100vh - $footerHeight);
 }
 
 .content {
   flex: 1 1;
   padding: 0 toRem(32) 0 toRem(48);
   position: relative;
+  min-height: $contentHeight;
 }
 
 button {

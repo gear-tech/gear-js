@@ -20,6 +20,11 @@
       font-size: $fontSizeTiny;
     }
 
+    &.medium {
+      font-size: $fontSizeSmall;
+      font-weight: 500;
+    }
+
     &.large {
       font-size: $fontSize;
       font-family: 'Kanit';

@@ -1,6 +1,6 @@
 import { IProgram, ProgramTable } from 'entities/program';
 
-import { Subheader } from '../subheader';
+import { Subheader } from '../../../../shared/ui/subheader';
 
 type Props = {
   program: IProgram;

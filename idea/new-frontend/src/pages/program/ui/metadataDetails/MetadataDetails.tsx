@@ -2,7 +2,7 @@ import { Metadata } from '@gear-js/api';
 
 import { MetadataTable } from 'entities/metadata';
 
-import { Subheader } from '../subheader';
+import { Subheader } from '../../../../shared/ui/subheader';
 
 type Props = {
   metadata?: Metadata;

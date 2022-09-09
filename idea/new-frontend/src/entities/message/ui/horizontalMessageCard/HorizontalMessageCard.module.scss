@@ -5,8 +5,9 @@
 .horizontalMessageCard {
   display: grid;
   grid-template-rows: minmax(max-content, 1fr);
-  grid-template-columns: minmax(min-content, 1fr);
+  grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 0.3fr);
   gap: 30px;
+  align-items: center;
   padding: toRem(20) toRem(24);
   background: $bgColorSecondary;
   box-shadow: 0px 4px 4px $bgColor;

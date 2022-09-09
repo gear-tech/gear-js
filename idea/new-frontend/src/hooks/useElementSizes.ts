@@ -5,9 +5,15 @@ const useElementSizes = <T extends HTMLElement>() => {
 
   const element = elementRef.current;
 
-  const elementStyles = { '--offset-height': `${element?.offsetHeight || 0}px` } as CSSProperties;
+  const clientHeight = element?.clientHeight ?? 0;
+  const offsetHeight = element?.offsetHeight ?? 0;
 
-  return { elementRef, elementStyles };
+  const elementStyles = {
+    '--offset-height': `${offsetHeight}px`,
+    '--client-height': `${clientHeight}px`,
+  } as CSSProperties;
+
+  return { elementRef, elementStyles, clientHeight, offsetHeight };
 };
 
 export { useElementSizes };

@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { EmptyContent } from 'shared/ui/emptyContent';
 import { ExamplesLink } from 'shared/ui/examplesLink';
-import { ReactComponent as EmptyBlockSVG } from 'shared/assets/images/placeholders/secondEmptyBlock.svg';
+import { ReactComponent as HorizontalProgramCardSVG } from 'shared/assets/images/placeholders/horizontalProgramCard.svg';
 
 import styles from './ProgramsPlaceholder.module.scss';
 
@@ -19,7 +19,7 @@ const ProgramsPlaceholder = ({ isEmpty }: Props) => {
     for (let i = 0; i < 6; i++) {
       result.push(
         <div key={i} className={loaderClasses}>
-          <EmptyBlockSVG />
+          <HorizontalProgramCardSVG />
         </div>,
       );
     }

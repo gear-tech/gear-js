@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { useLocation, matchPath } from 'react-router-dom';
 import { useAccount } from '@gear-js/react-hooks';
@@ -6,7 +6,7 @@ import { useAccount } from '@gear-js/react-hooks';
 import { AnimationTimeout } from 'shared/config';
 
 import styles from './Header.module.scss';
-import { PATHS_WITHOUT_BOTTOM_SIDE } from '../model/consts';
+import { FULL_HEADER_HEIGHT, SHORT_HEADER_HEIGHT, PATHS_WITHOUT_BOTTOM_SIDE } from '../model/consts';
 import { TopSide } from './topSide';
 import { BottomSide } from './bottomSide';
 
@@ -21,20 +21,24 @@ const Header = () => {
 
   const isBottomSideVisible = withBottomSide && Boolean(account);
 
+  useEffect(() => {
+    const currentHeight = isBottomSideVisible ? FULL_HEADER_HEIGHT : SHORT_HEADER_HEIGHT;
+
+    document.documentElement.style.setProperty('--header-height', currentHeight);
+  }, [isBottomSideVisible]);
+
   return (
-    <CSSTransition in={isBottomSideVisible} exit={withBottomSide} timeout={AnimationTimeout.Default}>
-      <header className={styles.header}>
-        <TopSide account={account} />
-        <CSSTransition
-          in={isBottomSideVisible}
-          exit={false}
-          timeout={AnimationTimeout.Default}
-          mountOnEnter
-          unmountOnExit>
-          <BottomSide />
-        </CSSTransition>
-      </header>
-    </CSSTransition>
+    <header className={styles.header}>
+      <TopSide account={account} />
+      <CSSTransition
+        in={isBottomSideVisible}
+        exit={withBottomSide}
+        timeout={AnimationTimeout.Default}
+        mountOnEnter
+        unmountOnExit>
+        <BottomSide />
+      </CSSTransition>
+    </header>
   );
 };
 

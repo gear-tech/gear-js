@@ -1,6 +1,11 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
+%iconSize20 {
+  width: toRem(20);
+  height: toRem(20);
+}
+
 .idBlock {
   display: flex;
   align-items: center;
@@ -42,7 +47,7 @@
     }
   }
 
-  &.large {
+  &.big {
     .value {
       font-size: $fontSize;
       font-weight: 600;
@@ -50,8 +55,19 @@
     }
 
     .copyIcon {
-      width: toRem(20);
-      height: toRem(20);
+      @extend %iconSize20;
+    }
+  }
+
+  &.large {
+    .value {
+      font-size: $fontSizeMedium;
+      font-weight: 500;
+      font-family: 'Kanit';
+    }
+
+    .copyIcon {
+      @extend %iconSize20;
     }
   }
 }

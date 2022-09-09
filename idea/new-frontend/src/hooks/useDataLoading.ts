@@ -3,11 +3,12 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { DEFAULT_LIMIT } from 'shared/config';
 
 type Props<T> = {
+  initLoad?: boolean;
   fetchData: (params: T, isReset?: boolean) => Promise<void>;
   defaultParams: T;
 };
 
-const useDataLoading = <T>({ defaultParams, fetchData }: Props<T>) => {
+const useDataLoading = <T>({ initLoad = true, defaultParams, fetchData }: Props<T>) => {
   const offset = useRef(0);
   const [params, setParams] = useState(defaultParams);
 
@@ -32,7 +33,9 @@ const useDataLoading = <T>({ defaultParams, fetchData }: Props<T>) => {
   );
 
   useEffect(() => {
-    loadData(true);
+    if (initLoad) {
+      loadData(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadData]);
 

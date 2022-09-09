@@ -5,7 +5,7 @@ import { formatDate } from '../../helpers';
 import timeSVG from '../../assets/images/indicators/time.svg';
 
 type Props = {
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium' | 'large';
   color?: 'light' | 'primary';
   withIcon?: boolean;
   timestamp: string;

@@ -1,6 +1,5 @@
 enum MessageFilter {
-  Sent = 'sent',
-  Recieved = 'recieved',
+  Messages = 'messages',
   Waitlist = 'waitlist',
 }
 

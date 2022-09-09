@@ -1,0 +1,17 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
+
+.block {
+  border-radius: toRem(16);
+
+  svg {
+    width: 100%;
+    height: toRem(60.8);
+  }
+  
+  &.loading {
+    @include loading();
+
+    position: relative;
+  }
+}

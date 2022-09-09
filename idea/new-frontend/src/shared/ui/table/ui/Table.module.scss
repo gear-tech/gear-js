@@ -24,9 +24,10 @@
 
 .tableRow {
   display: grid;
-  grid-template-columns: minmax(toRem(125), 0.2fr) 0.7fr 0.1fr;
+  grid-template-columns: minmax(toRem(125), 0.2fr) 0.7fr auto;
   grid-template-rows: min-content;
   padding: toRem(16) toRem(28) toRem(16) toRem(24);
+  justify-content: space-between;
   gap: 30px;
   align-items: center;
 

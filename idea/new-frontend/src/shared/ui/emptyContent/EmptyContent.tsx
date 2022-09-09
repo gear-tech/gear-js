@@ -7,7 +7,7 @@ import { AnimationTimeout } from '../../config';
 type Props = {
   title: string;
   children?: ReactNode;
-  description: string;
+  description?: string;
 };
 
 const EmptyContent = ({ title, children, description }: Props) => (
@@ -15,7 +15,7 @@ const EmptyContent = ({ title, children, description }: Props) => (
     <div className={styles.emptyContent}>
       <div className={styles.textContent}>
         <h2 className={styles.title}>{title}</h2>
-        <p className={styles.description}>{description}</p>
+        {description && <p className={styles.description}>{description}</p>}
         {children}
       </div>
     </div>

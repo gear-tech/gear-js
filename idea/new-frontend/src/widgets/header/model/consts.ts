@@ -1,5 +1,8 @@
 import { routes, absoluteRoutes } from 'shared/config';
 
+const SHORT_HEADER_HEIGHT = '6.4375rem';
+const FULL_HEADER_HEIGHT = '10.28125rem';
+
 const CODE_MODAL_PROPS = {
   name: 'code',
   redirectTo: routes.uploadCode,
@@ -17,4 +20,4 @@ const PATHS_WITHOUT_BOTTOM_SIDE = [
   absoluteRoutes.program,
 ];
 
-export { CODE_MODAL_PROPS, PROGRAM_MODAL_PROPS, PATHS_WITHOUT_BOTTOM_SIDE };
+export { SHORT_HEADER_HEIGHT, FULL_HEADER_HEIGHT, CODE_MODAL_PROPS, PROGRAM_MODAL_PROPS, PATHS_WITHOUT_BOTTOM_SIDE };

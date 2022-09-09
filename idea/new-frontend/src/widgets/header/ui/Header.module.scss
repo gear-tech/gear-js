@@ -4,10 +4,7 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .header {
-  @include expand($headerShortHeight, $headerBottomSideHeight);
-
-  padding-top: toRem(21);
-  margin-bottom: 30px;
+  padding: toRem(21) 0 toRem(30) 0;
 }
 
 .title {

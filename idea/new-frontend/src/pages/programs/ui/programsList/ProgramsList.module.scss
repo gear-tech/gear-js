@@ -1,15 +1,15 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
 
 .programsList {
   position: relative;
-  margin-top: toRem(16);
+  margin-top: 16px;
   
   .simpleBar {
     @include customSimplebar;
 
-    // TODO: fix this
-    height: calc(66vh);
+    height: calc($contentHeight - toRem(31.19) - 16px);
 
     :global(.simplebar-content) {
       @include childrenMargin(toRem(12));

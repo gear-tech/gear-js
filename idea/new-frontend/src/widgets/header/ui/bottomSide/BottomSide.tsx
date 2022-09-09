@@ -27,7 +27,7 @@ const BottomSide = () => {
         onClick={handleUploadProgramClick}
       />
       <Button icon={uploadCodeSVG} text="Upload Code" className={styles.fixSize} onClick={handleUploadCodeClick} />
-      <Link to="/" className={linkClasses} onClick={handleUploadCodeClick}>
+      <Link to="/" className={linkClasses}>
         <img src={sendMessageSVG} alt="send" className={buttonStyles.icon} />
         Send Message
       </Link>

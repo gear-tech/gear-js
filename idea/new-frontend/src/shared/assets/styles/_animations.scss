@@ -91,7 +91,6 @@
 
   &:global(.enter-done) {
     height: $endHeight;
-    overflow: unset;
   }
 
   &:global(.exit) {
@@ -105,7 +104,6 @@
   
   &:global(.exit-done) {
     height: $startHeight;
-    overflow: unset;
   }
 
   &:global(.exit-active),
