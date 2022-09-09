@@ -1,33 +1,21 @@
-import { isHex, isString, isU8a } from '@polkadot/util';
-import { Codec } from '@polkadot/types-codec/types';
+import { isHex, isString } from '@polkadot/util';
 
-import { GetGasSpentError } from './errors/program.errors';
 import { Hex, PayloadType, Value } from './types';
 import { Metadata } from './types/interfaces';
-import { createPayload } from './utils';
+import { createPayload } from './create-type';
 import { GearApi } from './GearApi';
 import { GasInfo } from './types';
 
 export class GearGas {
   constructor(private _api: GearApi) {}
 
-  private getPayload(
-    payload: PayloadType,
-    metaOrTypeOfPayload: string | Metadata,
-    meta_type: string,
-  ): Hex | Uint8Array | Codec {
-    if (isHex(payload) || isU8a(payload)) {
-      return payload;
+  #getTypeAndMeta(metaOrTypeOfPayload: Metadata | string, type: string): [string, Metadata | undefined] {
+    if (isString(metaOrTypeOfPayload)) {
+      return [metaOrTypeOfPayload, undefined];
+    } else {
+      return [metaOrTypeOfPayload[type], metaOrTypeOfPayload];
     }
-    if (!metaOrTypeOfPayload) {
-      throw new GetGasSpentError('Impossible to create bytes from payload without specified type or meta');
-    }
-    const [type, meta] = isString(metaOrTypeOfPayload)
-      ? [metaOrTypeOfPayload, undefined]
-      : [metaOrTypeOfPayload[meta_type], metaOrTypeOfPayload];
-    return createPayload(type, payload, meta?.types);
   }
-
   /**
    * ### Get gas spent of init message using upload_program extrinsic
    * @param sourceId Account id
@@ -122,10 +110,11 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
+    const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'init_input');
     return this._api.rpc['gear'].calculateInitUploadGas(
       sourceId,
       isHex(code) ? code : this._api.createType('Bytes', Array.from(code)).toHex(),
-      this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
+      createPayload(payload, type, meta?.types),
       value || 0,
       allowOtherPanics || true,
     );
@@ -225,10 +214,11 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
+    const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'init_input');
     return this._api.rpc['gear'].calculateInitCreateGas(
       sourceId,
       codeId,
-      this.getPayload(payload, metaOrTypeOfPayload, 'init_input'),
+      createPayload(payload, type, meta?.types),
       value || 0,
       allowOtherPanics || true,
     );
@@ -331,10 +321,11 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
+    const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'handle_input');
     return this._api.rpc['gear'].calculateHandleGas(
       sourceId,
       destinationId,
-      this.getPayload(payload, metaOrTypeOfPayload, 'handle_input'),
+      createPayload(payload, type, meta?.types),
       value || 0,
       allowOtherPanics || true,
     );
@@ -442,11 +433,12 @@ export class GearGas {
     allowOtherPanics?: boolean,
     metaOrTypeOfPayload?: string | Metadata,
   ): Promise<GasInfo> {
+    const [type, meta] = this.#getTypeAndMeta(metaOrTypeOfPayload, 'handle_input');
     return this._api.rpc['gear'].calculateReplyGas(
       sourceId,
       messageId,
       exitCode,
-      this.getPayload(payload, metaOrTypeOfPayload, 'async_handle_input'),
+      createPayload(payload, type, meta?.types),
       value || 0,
       allowOtherPanics || true,
     );

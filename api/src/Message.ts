@@ -2,9 +2,10 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { IMessageSendOptions, IMessageSendReplyOptions, Metadata } from './types';
-import { GearTransaction } from './Transaction';
 import { SendMessageError, SendReplyError } from './errors';
-import { createPayload, validateGasLimit, validateValue } from './utils';
+import { validateGasLimit, validateValue } from './utils';
+import { GearTransaction } from './Transaction';
+import { createPayload } from './create-type';
 
 export class GearMessage extends GearTransaction {
   /**
@@ -34,7 +35,7 @@ export class GearMessage extends GearTransaction {
     validateValue(message.value, this._api);
     validateGasLimit(message.gasLimit, this._api);
 
-    const payload = createPayload(messageType || meta?.handle_input, message.payload, meta?.types);
+    const payload = createPayload(message.payload, messageType || meta?.handle_input, meta?.types);
     try {
       this.extrinsic = this._api.tx.gear.sendMessage(
         message.destination,
@@ -77,8 +78,8 @@ export class GearMessage extends GearTransaction {
     validateGasLimit(message.gasLimit, this._api);
 
     const payload = createPayload(
-      messageType || meta?.async_handle_input || meta?.async_init_input,
       message.payload,
+      messageType || meta?.async_handle_input || meta?.async_init_input,
       meta?.types,
     );
 

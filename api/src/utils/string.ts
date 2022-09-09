@@ -22,3 +22,7 @@ export function splitByCommas(str: string) {
   result.push(str.slice(lastTypeIndex).trim());
   return result;
 }
+
+export function typeIsString(type: string): boolean {
+  return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase());
+}

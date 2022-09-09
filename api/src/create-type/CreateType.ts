@@ -5,7 +5,7 @@ import { RegistryTypes } from '@polkadot/types-codec/types/registry';
 
 import { toJSON, isJSON } from '../utils/json';
 import { Hex, Metadata } from '../types';
-import { checkTypeAndPayload, typeIsString } from './utils';
+import { checkTypeAndPayload, typeIsGeneric, typeIsString } from '../utils';
 import { TypeInfoRegistry } from './TypeInfoReg';
 
 export class CreateType {
@@ -74,6 +74,8 @@ export class CreateType {
    */
   public create(type: string, payload: unknown, registryTypes?: Hex | Uint8Array): Codec;
 
+  public create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec;
+
   public create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec {
     type = checkTypeAndPayload(type, payload);
     if (registryTypesOrMetadata) {
@@ -83,7 +85,7 @@ export class CreateType {
           : registryTypesOrMetadata.types;
       const typeInfoReg = new TypeInfoRegistry(registryTypes);
       this.registry = typeInfoReg.registry;
-      type = typeInfoReg.getShortName(type);
+      type = typeIsGeneric(type) ? typeInfoReg.getGenericName(type) : typeInfoReg.getShortName(type);
     }
     return this.createType(type, isJSON(payload) ? toJSON(payload) : payload);
   }
@@ -92,7 +94,7 @@ export class CreateType {
    *
    * @param type `TypeName` to encode or decode payload
    * @param payload `Payload` that have to be encoded or decoded
-   * @param registryTypes `Hex | Uint8Array`
+   * @param registryTypesOrMetadata
    * @returns Codec
    * @example
    * ```javascript
@@ -101,13 +103,8 @@ export class CreateType {
    * ```
    */
   static create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec {
-    const registryTypes = !registryTypesOrMetadata
-      ? undefined
-      : isHex(registryTypesOrMetadata) || isU8a(registryTypesOrMetadata)
-      ? registryTypesOrMetadata
-      : registryTypesOrMetadata.types;
-    const createType = new CreateType(registryTypes);
-    return createType.create(type, payload);
+    const createType = new CreateType();
+    return createType.create(type, payload, registryTypesOrMetadata);
   }
 
   private createType(type: string, data: unknown): Codec {
@@ -121,12 +118,7 @@ export class CreateType {
       }
       return this.registry.createType('Bytes', data);
     } else {
-      try {
-        return this.registry.createType(type, data);
-      } catch (error) {
-        console.log(type);
-        console.log(JSON.stringify(this.registry.knownTypes, undefined, 2));
-      }
+      return this.registry.createType(type, data);
     }
   }
 }

@@ -2,8 +2,7 @@ import { Hex } from '@gear-js/api';
 import { TypeRegistry, PortableRegistry } from '@polkadot/types';
 import { hexToU8a, isHex } from '@polkadot/util';
 
-import { isJSON, toJSON } from '../utils';
-import { joinTypePath } from './utils';
+import { REGULAR_EXP, isJSON, toJSON, joinTypePath } from '../utils';
 
 function getName(path: string[], name: string, slice = -1) {
   if (name.endsWith(joinTypePath(path.slice(slice)))) {
@@ -133,5 +132,16 @@ export class TypeInfoRegistry {
 
   createType(typeName: string, data: any) {
     return this.registry.createType(typeName, data);
+  }
+
+  getGenericName(type: string) {
+    const matches = type.match(REGULAR_EXP.endWord);
+    const typeName = this.getShortName(matches[0]);
+    for (const match of matches.slice(1)) {
+      if (`${typeName}${match}` in this.#finalTypeDefinition) {
+        return `${typeName}${match}${type.slice(typeName.length)}`;
+      }
+    }
+    return type;
   }
 }

@@ -1,15 +1,8 @@
 import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
-import { isHex, isU8a, u8aToU8a } from '@polkadot/util';
+import { u8aToU8a } from '@polkadot/util';
 
 import { Hex } from '../types';
 import { CreateType } from '../create-type';
-
-export function createPayload(type: string, data: unknown, types?: Hex | Uint8Array): Hex | Uint8Array {
-  if (data === undefined) {
-    return '0x';
-  }
-  return isHex(data) ? data : isU8a(data) ? data : CreateType.create(type, data, types).toU8a();
-}
 
 export function generateCodeId(code: Buffer | Uint8Array): Hex {
   return blake2AsHex(code, 256);

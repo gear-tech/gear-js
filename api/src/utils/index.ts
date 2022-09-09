@@ -7,3 +7,4 @@ export * from './separator';
 export * from './validate';
 export * from './address';
 export * from './signature';
+export * from './regexp';
