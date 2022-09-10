@@ -7021,7 +7021,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-transition-group@npm:^4.4.4":
+"@types/react-transition-group@npm:^4.4.4, @types/react-transition-group@npm:^4.4.5":
   version: 4.4.5
   resolution: "@types/react-transition-group@npm:4.4.5"
   dependencies:
@@ -18066,6 +18066,7 @@ __metadata:
     "@types/node": ^16.11.54
     "@types/react": ^18.0.17
     "@types/react-dom": ^18.0.6
+    "@types/react-transition-group": ^4.4.5
     "@typescript-eslint/eslint-plugin": ^5.34.0
     "@typescript-eslint/parser": ^5.34.0
     buffer: ^6.0.3
