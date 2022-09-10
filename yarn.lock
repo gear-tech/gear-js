@@ -6831,6 +6831,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.isstring@npm:^4.0.7":
+  version: 4.0.7
+  resolution: "@types/lodash.isstring@npm:4.0.7"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 0718eadc1c53c830dde7133dca5cf13a46444512d8a80ffd98ba29a06f2eb926317b22b0eafe066b70a13844356063640be1e441a22d19518a1991eba250e677
+  languageName: node
+  linkType: hard
+
 "@types/lodash.throttle@npm:^4.1.7":
   version: 4.1.7
   resolution: "@types/lodash.throttle@npm:4.1.7"
@@ -18062,6 +18071,8 @@ __metadata:
     "@testing-library/user-event": ^13.5.0
     "@types/jest": ^27.5.2
     "@types/lodash.isequal": ^4.5.6
+    "@types/lodash.isplainobject": ^4.0.7
+    "@types/lodash.isstring": ^4.0.7
     "@types/lodash.throttle": ^4.1.7
     "@types/node": ^16.11.54
     "@types/react": ^18.0.17
