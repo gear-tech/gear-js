@@ -25,8 +25,8 @@ const Waitlist = ({ waitlist, isLoading, totalCount }: Props) => {
     });
 
   return (
-    <SimpleBar className={clsx(styles.simpleBar, styles.loading)}>
-      <div className={styles.messagesList}>{isLoaderShowing ? <Placeholder isEmpty={isEmpty} /> : renderItems()}</div>
+    <SimpleBar className={clsx(styles.simpleBar, isLoaderShowing && styles.noOverflow)}>
+      {isLoaderShowing ? <Placeholder isEmpty={isEmpty} /> : renderItems()}
     </SimpleBar>
   );
 };

@@ -1,6 +1,7 @@
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
 
 .header {
   display: flex;
@@ -9,10 +10,15 @@
   padding: 0 0 toRem(28) 0;
   border-bottom: 1px solid $gray007;
   
+  &.loading {
+    justify-content: flex-end;
+  }
+  
   .programName {
+    @include fadeAppear();
+
     flex: 1 1;
     overflow-wrap: anywhere;
-
     color: $textColor;
     font-size: toRem(40);
     font-family: 'Kanit';
@@ -26,6 +32,7 @@
 
     white-space: nowrap;
     margin-left: 24px;
+    justify-self: flex-end;
 
     .fixWidth {
       min-width: toRem(180)

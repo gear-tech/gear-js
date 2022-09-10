@@ -33,7 +33,7 @@ const Header = () => {
       <CSSTransition
         in={isBottomSideVisible}
         exit={withBottomSide}
-        timeout={AnimationTimeout.Default}
+        timeout={AnimationTimeout.Small}
         mountOnEnter
         unmountOnExit>
         <BottomSide />

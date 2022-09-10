@@ -17,7 +17,6 @@
 }
 
 .bottomSide {
-  @include fade();
   @include childrenMargin(16px, right);
 
   &:global(.enter),
@@ -29,7 +28,7 @@
   }
 
   &:global(.enter-active) {
-    animation: $timeout linear forwards bottomSide;
+    animation: $smallTimeout linear forwards bottomSide;
   }
 
   &:global(.exit),
@@ -44,7 +43,7 @@
   }
 
   &:global(.exit-active) {
-    animation: $timeout linear reverse forwards bottomSide;
+    animation: $smallTimeout linear reverse forwards bottomSide;
   }
 
   .fixSize {

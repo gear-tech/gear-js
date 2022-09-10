@@ -16,7 +16,7 @@ const Placeholder = ({ isEmpty }: Props) => {
     const result = [];
 
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 8; i++) {
       result.push(
         <div key={i} className={loaderClasses}>
           <HorizontalMessageCardSVG />
@@ -30,7 +30,7 @@ const Placeholder = ({ isEmpty }: Props) => {
   return (
     <>
       {renderBlocks()}
-      {isEmpty && <EmptyContent title="There is no messages yet" />}
+      <EmptyContent title="There is no messages yet" isVisible={isEmpty} />
     </>
   );
 };

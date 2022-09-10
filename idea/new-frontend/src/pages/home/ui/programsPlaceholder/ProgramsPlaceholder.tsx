@@ -31,13 +31,12 @@ const ProgramsPlaceholder = ({ isEmpty }: Props) => {
   return (
     <>
       {renderBlocks()}
-      {isEmpty && (
-        <EmptyContent
-          title="There is no program yet"
-          description="You can start experimenting right now or try to build from examples. Let's Rock!">
-          <ExamplesLink />
-        </EmptyContent>
-      )}
+      <EmptyContent
+        title="There is no program yet"
+        isVisible={isEmpty}
+        description="You can start experimenting right now or try to build from examples. Let's Rock!">
+        <ExamplesLink />
+      </EmptyContent>
     </>
   );
 };

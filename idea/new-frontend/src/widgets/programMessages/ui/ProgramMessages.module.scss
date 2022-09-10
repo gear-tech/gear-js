@@ -23,13 +23,13 @@
 .simpleBar {
   @include customSimplebar;
 
-  height: calc($contentHeight - toRem(77.5) - 24px - toRem(26) - 16px);
-  
-  &.loading {
+  height: calc($contentHeight - toRem(77.5) - 60px - toRem(26));
+
+  &.noOverflow {
     overflow: hidden;
   }
 
-  .messagesList {
+  :global(.simplebar-content) {
     @include childrenMargin(8px);
 
     margin-right: 12px;

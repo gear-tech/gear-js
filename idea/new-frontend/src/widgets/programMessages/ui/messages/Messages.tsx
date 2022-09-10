@@ -17,17 +17,15 @@ type Props = {
 const Messages = ({ messages, isLoading, totalCount, loadMoreMessages }: Props) => {
   const hasMore = !isLoading && messages.length < totalCount;
   const isEmpty = !(isLoading || totalCount);
-  const isLoaderShowing = isEmpty || isLoading;
+  const isLoaderShowing = isEmpty || (isLoading && !totalCount);
 
   const ref = useScrollLoader(loadMoreMessages, hasMore);
 
   const renderMessages = () => messages.map((message) => <HorizontalMessageCard key={message.id} message={message} />);
 
   return (
-    <SimpleBar id="data-test-iddd" scrollableNodeProps={{ ref }} className={clsx(styles.simpleBar, styles.loading)}>
-      <div className={styles.messagesList}>
-        {isLoaderShowing ? <Placeholder isEmpty={isEmpty} /> : renderMessages()}
-      </div>
+    <SimpleBar scrollableNodeProps={{ ref }} className={clsx(styles.simpleBar, isLoaderShowing && styles.noOverflow)}>
+      {isLoaderShowing ? <Placeholder isEmpty={isEmpty} /> : renderMessages()}
     </SimpleBar>
   );
 };

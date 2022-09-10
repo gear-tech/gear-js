@@ -83,6 +83,7 @@ enum FileTypes {
 }
 
 enum AnimationTimeout {
+  Small = 150,
   Default = 250,
   Medium = 400,
   Big = 1000,

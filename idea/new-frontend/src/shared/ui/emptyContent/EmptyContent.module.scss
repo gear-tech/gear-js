@@ -3,7 +3,7 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .emptyContent {
-  @include fadeAppear();
+  @include fade();
 
   position: absolute;
   top: 0;
@@ -18,7 +18,7 @@
 }
 
 .textContent {
-  max-width: toRem(550);
+  max-width: 550px;
   text-align: center;
 
   .title {

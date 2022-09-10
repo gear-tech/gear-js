@@ -7,11 +7,12 @@ import { AnimationTimeout } from '../../config';
 type Props = {
   title: string;
   children?: ReactNode;
+  isVisible: boolean;
   description?: string;
 };
 
-const EmptyContent = ({ title, children, description }: Props) => (
-  <CSSTransition in appear timeout={AnimationTimeout.Default}>
+const EmptyContent = ({ title, children, isVisible, description }: Props) => (
+  <CSSTransition in={isVisible} timeout={AnimationTimeout.Default} exit={false} mountOnEnter unmountOnExit>
     <div className={styles.emptyContent}>
       <div className={styles.textContent}>
         <h2 className={styles.title}>{title}</h2>
