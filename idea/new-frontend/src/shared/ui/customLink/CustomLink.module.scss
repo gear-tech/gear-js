@@ -1,0 +1,11 @@
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.customLink {
+  color: $textColor;
+  font-size: $fontSize;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

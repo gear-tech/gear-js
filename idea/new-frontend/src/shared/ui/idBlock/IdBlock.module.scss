@@ -1,0 +1,74 @@
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+%iconSize20 {
+  width: toRem(20);
+  height: toRem(20);
+}
+
+.idBlock {
+  display: flex;
+  align-items: center;
+
+  .value {
+    font-size: $fontSizeTiny;
+    line-height: 1.3;
+
+    &.light {
+      color: $gray600;
+    }
+
+    &.primary {
+      color: $textColor;
+    }
+  }
+
+  .icon {
+    margin-right: toRem(8);
+  }
+
+  .copyBtn {
+    position: relative;
+    z-index: 4;  
+    margin-left: toRem(2);
+  }
+
+  &.small {
+    .copyIcon {
+      width: toRem(12);
+      height: toRem(12);
+    }
+  }
+
+  &.medium {
+    .copyIcon {
+      width: toRem(16);
+      height: toRem(16);
+    }
+  }
+
+  &.big {
+    .value {
+      font-size: $fontSize;
+      font-weight: 600;
+      font-family: 'Kanit';
+    }
+
+    .copyIcon {
+      @extend %iconSize20;
+    }
+  }
+
+  &.large {
+    .value {
+      font-size: $fontSizeMedium;
+      font-weight: 500;
+      font-family: 'Kanit';
+    }
+
+    .copyIcon {
+      @extend %iconSize20;
+    }
+  }
+}
+
