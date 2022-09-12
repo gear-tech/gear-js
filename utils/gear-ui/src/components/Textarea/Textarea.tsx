@@ -24,7 +24,13 @@ const Textarea = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLTextAr
 
   const { disabled, readOnly } = attrs;
 
-  const wrapperClassName = clsx(styles.wrapper, styles[color], styles[size], error && styles.error);
+  const wrapperClassName = clsx(
+    styles.wrapper,
+    readOnly && styles.readOnly,
+    styles[color],
+    styles[size],
+    error && styles.error,
+  );
   const textareaClassName = clsx(styles.textarea, styles[color]);
 
   const id = useId();

@@ -44,6 +44,16 @@ describe('textarea tests', () => {
     expect(textarea).not.toHaveClass('className');
   });
 
+  it('renders read only textarea', () => {
+    render(<Textarea readOnly />);
+
+    const wrapper = screen.getByTestId('wrapper');
+    const input = screen.getByRole('textbox');
+
+    expect(wrapper).toHaveClass(styles.readOnly);
+    expect(input).toHaveAttribute('readOnly');
+  });
+
   it('renders disabled textarea', () => {
     render(<Textarea className="className" disabled />);
 
