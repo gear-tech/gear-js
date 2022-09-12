@@ -1,6 +1,4 @@
 @use 'shared/assets/styles/_mixins.scss' as *;
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
 
 .uploadProgramPage {
   @include childrenMargin(32px, right);
@@ -11,7 +9,4 @@
 
 .pageSection {
   flex: 1 1;
-  padding: toRem(14) toRem(24) toRem(20) toRem(24);
-  border-radius: $borderRadius;
-  background-color: $bgColor4;
 }

@@ -132,14 +132,11 @@
 .linkContent {
   @include fade();
 
-  margin-left: 0;
-  visibility: hidden;
+  margin-left: 16px;
   
-  &:global(.exit),
-  &:global(.enter),
-  &:global(.enter-done) {
-    visibility: visible;
-    margin-left: toRem(16);
+  &:global(.exit-done) {
+    visibility: hidden;
+    margin-left: 0;
   }
 
   .linkText {

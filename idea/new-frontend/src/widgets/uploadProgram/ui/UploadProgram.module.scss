@@ -1,7 +1,7 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
-.uploadMetadata {
+.lining {
   padding: toRem(14) toRem(24) toRem(20) toRem(24);
   border-radius: $borderRadius;
   background-color: $bgColor4;

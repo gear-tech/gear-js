@@ -1,5 +1,8 @@
 import { useField } from 'react-final-form';
 import { Textarea, TextareaProps } from '@gear-js/ui';
+import clsx from 'clsx';
+
+import styles from '../Form.module.scss';
 
 type Props = TextareaProps & {
   name: string;
@@ -11,8 +14,18 @@ const FormTextarea = (props: Props) => {
   const { input, meta } = useField(name);
 
   const error = meta.invalid && meta.touched ? meta.error : undefined;
-  // @ts-ignore
-  return <Textarea {...other} {...input} label={label} error={error} direction="y" className={className} />;
+
+  return (
+    // @ts-ignore
+    <Textarea
+      {...other}
+      {...input}
+      label={label}
+      error={error}
+      direction="y"
+      className={clsx(styles.field, className)}
+    />
+  );
 };
 
 export { FormTextarea };

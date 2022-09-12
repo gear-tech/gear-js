@@ -10,7 +10,7 @@ const CODE_MODAL_PROPS = {
 
 const PROGRAM_MODAL_PROPS = {
   name: 'program',
-  redirectTo: routes.uploadProgram,
+  redirectTo: absoluteRoutes.uploadProgram,
 };
 
 const PATHS_WITHOUT_BOTTOM_SIDE = [

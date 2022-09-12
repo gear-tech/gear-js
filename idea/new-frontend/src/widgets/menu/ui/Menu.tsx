@@ -16,7 +16,7 @@ const Menu = () => {
   const { api, isApiReady } = useApi();
   const { nodeSections, isNodesLoading, addLocalNode, removeLocalNode } = useNodes();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isNodesOpen, setIsNodesOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen((prevState) => !prevState);

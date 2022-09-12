@@ -13,22 +13,21 @@ import { AuthorizationTooltip } from '../authorizationTooltip';
 
 type Props = {
   account?: Account;
+  isApiReady: boolean;
 };
 
-const Wallet = ({ account }: Props) => {
+const Wallet = ({ account, isApiReady }: Props) => {
   const { accounts } = useAccounts();
   const { showModal } = useModal();
 
-  const [isTooltipShowing, setIsTooltipShowing] = useState(
-    !(account || Number(localStorage.getItem(LocalStorage.NewUser))),
-  );
+  const [isTooltipShowing, setIsTooltipShowing] = useState(!localStorage.getItem(LocalStorage.NewUser));
 
   const handleClick = () => {
     showModal('accounts', { accounts });
 
     if (isTooltipShowing) {
       setIsTooltipShowing(false);
-      localStorage.setItem(LocalStorage.NewUser, '1');
+      localStorage.setItem(LocalStorage.NewUser, 'false');
     }
   };
 
@@ -46,7 +45,7 @@ const Wallet = ({ account }: Props) => {
       ) : (
         <Button icon={polkadotSVG} text="Connect" color="primary" className={styles.fixSize} onClick={handleClick} />
       )}
-      {isTooltipShowing && <AuthorizationTooltip />}
+      {isApiReady && isTooltipShowing && <AuthorizationTooltip />}
     </div>
   );
 };

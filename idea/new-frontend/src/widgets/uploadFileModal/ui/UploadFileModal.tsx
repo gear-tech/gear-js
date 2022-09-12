@@ -48,12 +48,10 @@ const UploadFileModal = ({ name, redirectTo, onClose }: Props) => {
     handleUploadFile(file);
   };
 
-  const heading = `Upload new ${name}`;
-
   const labelStyles = clsx(buttonStyles.button, buttonStyles.medium, buttonStyles.primary, styles.fileLabel);
 
   return (
-    <Modal heading={heading} className={styles.modalContent} close={onClose}>
+    <Modal heading={`Upload new ${name}`} className={styles.modalContent} close={onClose}>
       <label htmlFor={FILE_INPUT_ID} className={labelStyles}>
         <img src={uploadFileSVG} alt="file" className={buttonStyles.icon} />
         Select File

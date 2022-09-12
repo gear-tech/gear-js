@@ -70,6 +70,7 @@ const TopSide = ({ account }: Props) => {
     if (isApiReady) {
       api.totalIssuance().then((result) => setTotalIssuance(result.slice(0, 5)));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, isApiReady]);
 
   useEffect(() => {
@@ -108,7 +109,7 @@ const TopSide = ({ account }: Props) => {
               </div>
             </CSSTransition>
           )}
-          <Wallet account={account} />
+          <Wallet account={account} isApiReady={isApiReady} />
         </div>
       </div>
       <HCaptcha

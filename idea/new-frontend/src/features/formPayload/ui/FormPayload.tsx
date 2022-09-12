@@ -8,7 +8,7 @@ import { useChangeEffect } from 'hooks';
 import { PayloadValue } from 'entities/formPayload';
 import { checkFileFormat, readFileAsync } from 'shared/helpers';
 import { FileTypes } from 'shared/config';
-import formStyles from 'shared/ui/form/Form.module.scss';
+import { formStyles } from 'shared/ui/form';
 
 import styles from './FormPayload.module.scss';
 import { FormPayloadValues } from '../model/types';
@@ -114,6 +114,7 @@ const FormPayload = ({ name, label, values }: Props) => {
               id={name}
               rows={15}
               value={input.value as string}
+              className={styles.field}
               placeholder="// Enter your payload here"
             />
             {values && (

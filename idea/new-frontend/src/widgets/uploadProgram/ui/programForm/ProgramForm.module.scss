@@ -1,0 +1,7 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+
+.formContent {
+  @include childrenMargin(24px);
+
+  margin-bottom: 32px;
+}

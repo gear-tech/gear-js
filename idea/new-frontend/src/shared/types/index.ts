@@ -1,3 +1,3 @@
-import { PathParams } from './routes';
+import { PathParams, StateWithFile } from './routes';
 
-export type { PathParams };
+export type { PathParams, StateWithFile };

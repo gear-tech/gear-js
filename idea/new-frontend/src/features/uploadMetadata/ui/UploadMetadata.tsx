@@ -5,7 +5,7 @@ import { FileInput } from '@gear-js/ui';
 
 import { usePrevious } from 'hooks';
 import { checkFileFormat, readFileAsync } from 'shared/helpers';
-import { FormText } from 'shared/ui/form';
+import { FormText, formStyles } from 'shared/ui/form';
 
 import styles from './UploadMetadata.module.scss';
 import { UploadData } from '../model';
@@ -82,12 +82,14 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
   }, [metadata]);
 
   return (
-    <div>
+    <div className={styles.uploadMetadata}>
       <FileInput
         ref={inputRef}
+        // @ts-ignore
+        size="large"
         label="Metadata file:"
         direction="y"
-        className={styles.fileInput}
+        className={formStyles.field}
         data-testid="metaFileInput"
         onChange={handleUploadMetaFile}
       />

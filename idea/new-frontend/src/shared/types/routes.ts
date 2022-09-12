@@ -2,4 +2,8 @@ type PathParams = {
   programId: string;
 };
 
-export type { PathParams };
+type StateWithFile = {
+  file?: File;
+};
+
+export type { StateWithFile, PathParams };

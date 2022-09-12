@@ -1,38 +1,58 @@
-import { useState, useMemo, useRef, ReactNode } from 'react';
+import { useState, useMemo, useRef, useEffect, ReactNode, ChangeEvent } from 'react';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
 import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
+import { FileInput } from '@gear-js/ui';
 
 import { useChangeEffect } from 'hooks';
 import { Payload } from 'hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from 'features/formPayload';
+import { FormPayloadType } from 'features/formPayloadType';
 import { getValidation } from 'shared/helpers';
-import { FormInput, FormPayloadType, FormNumberFormat, formStyles } from 'shared/ui/form';
+import { FormInput, FormNumberFormat, formStyles } from 'shared/ui/form';
 
 import styles from './ProgramForm.module.scss';
-import { getValidationSchema } from '../helpers';
-import { INITIAL_VALUES, FormValues, PropsToRenderButtons, Helpers } from '../model';
+import widgetStyles from '../UploadProgram.module.scss';
+import { getValidationSchema } from '../../helpers';
+import { INITIAL_VALUES, FormValues, PropsToRenderButtons, Helpers } from '../../model';
 
 type Props = {
-  name: string;
+  file: File;
   label: string;
   metadata?: Metadata;
   metadataBuffer?: string;
   onSubmit: (payload: Payload, helpers: Helpers) => Promise<void> | void;
+  onFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
   renderButtons: (props: PropsToRenderButtons) => ReactNode;
 };
 
-const ProgramForm = ({ name, label, metadata, metadataBuffer, onSubmit, renderButtons }: Props) => {
+const ProgramForm = (props: Props) => {
+  const { file, label, metadata, metadataBuffer, onSubmit, onFileChange, renderButtons } = props;
+
   const { api } = useApi();
 
   const formApi = useRef<FormApi<FormValues>>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setIsDisables] = useState(false);
 
-  const handleResetForm = (resetForm: () => void) => () => {
-    // dropMetaFile();
-    resetForm();
+  const changeProgramName = (meta: Metadata) => formApi.current?.change('programName', meta?.title ?? '');
+
+  const setFileInputValue = () => {
+    const target = fileInputRef.current;
+
+    if (target) {
+      const dataTransfer = new DataTransfer();
+
+      dataTransfer.items.add(file);
+      target.files = dataTransfer.files;
+      target.dispatchEvent(new Event('change', { bubbles: true }));
+      // Help Safari out
+      if (target.webkitEntries.length) {
+        target.dataset.file = `${dataTransfer.files[0].name}`;
+      }
+    }
   };
 
   const handleSubmitForm = (values: FormValues, form: FormApi<FormValues, FormValues>) => {
@@ -52,7 +72,7 @@ const ProgramForm = ({ name, label, metadata, metadataBuffer, onSubmit, renderBu
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    onSubmit(data, { resetForm: handleResetForm(form.restart), finishSubmitting });
+    onSubmit(data, { resetForm: form.restart, finishSubmitting });
   };
 
   const encodeType = metadata?.init_input;
@@ -72,9 +92,18 @@ const ProgramForm = ({ name, label, metadata, metadataBuffer, onSubmit, renderBu
     [metadata, encodeType],
   );
 
+  useEffect(() => {
+    if (metadata) {
+      changeProgramName(metadata);
+    }
+
+    setFileInputValue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useChangeEffect(() => {
     if (metadata) {
-      formApi.current?.change('programName', metadata?.title ?? '');
+      changeProgramName(metadata);
     } else {
       formApi.current?.restart();
     }
@@ -89,29 +118,30 @@ const ProgramForm = ({ name, label, metadata, metadataBuffer, onSubmit, renderBu
 
         return (
           <form onSubmit={handleSubmit}>
-            <div className={styles.formContent}>
-              <div className={styles.program}>
-                <div className={clsx(formStyles.formItem, styles.file)}>
-                  <span className={formStyles.fieldLabel}>{label}</span>
-                  <span className={clsx(formStyles.fieldContent, styles.fileName)}>{name}</span>
-                </div>
+            <div className={clsx(styles.formContent, widgetStyles.lining)}>
+              <FileInput
+                ref={fileInputRef}
+                label={label}
+                direction="y"
+                onChange={onFileChange}
+                className={formStyles.field}
+              />
 
-                <FormInput name="programName" label="Name" placeholder="Name" />
+              <FormInput size="large" name="programName" label="Name" placeholder="Name" />
 
-                <FormNumberFormat
-                  name="gasLimit"
-                  label="Gas limit"
-                  placeholder="1,000,000,000"
-                  thousandSeparator
-                  allowNegative={false}
-                />
+              <FormNumberFormat
+                name="gasLimit"
+                label="Gas limit"
+                placeholder="1,000,000,000"
+                thousandSeparator
+                allowNegative={false}
+              />
 
-                <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
+              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
 
-                <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
+              <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
 
-                {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
-              </div>
+              {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
             </div>
 
             <div className={styles.buttons}>{renderButtons({ isDisabled, values, metadata })}</div>
