@@ -77,7 +77,7 @@ export class CreateType {
   public create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec;
 
   public create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec {
-    type = checkTypeAndPayload(type, payload);
+    checkTypeAndPayload(type, payload);
     if (registryTypesOrMetadata) {
       const registryTypes =
         isHex(registryTypesOrMetadata) || isU8a(registryTypesOrMetadata)

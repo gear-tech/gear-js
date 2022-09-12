@@ -24,9 +24,11 @@ export function typeIsString(type: string): boolean {
   return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase());
 }
 
-export function checkTypeAndPayload(type: string, payload: unknown): string {
+export function checkTypeAndPayload(type: string, payload: unknown) {
   if (payload === undefined) {
     throw new CreateTypeError('Payload is not specified');
   }
-  return type || 'Bytes';
+  if (type === undefined) {
+    throw new CreateTypeError('Type is not specified');
+  }
 }

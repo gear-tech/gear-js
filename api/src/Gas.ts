@@ -13,7 +13,6 @@ export class GearGas {
     if (!metaOrTypeOfPayload) {
       return [undefined, undefined];
     }
-    console.log(metaOrTypeOfPayload);
     if (isString(metaOrTypeOfPayload)) {
       return [metaOrTypeOfPayload, undefined];
     } else {
