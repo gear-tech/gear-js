@@ -1,11 +1,10 @@
-import { mnemonicGenerate, mnemonicToMiniSecret, signatureVerify } from '@polkadot/util-crypto';
+import { mnemonicGenerate, mnemonicToMiniSecret } from '@polkadot/util-crypto';
 import { hexToU8a, isU8a, stringToU8a, isString, u8aToHex } from '@polkadot/util';
 import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types';
 import { Keypair } from '@polkadot/util-crypto/types';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { Keyring } from '@polkadot/api';
 
-import { Hex } from './types';
 import { decodeAddress } from './utils';
 
 export class GearKeyring {
@@ -54,11 +53,11 @@ export class GearKeyring {
     name: string,
     passphrase?: string,
   ): Promise<{
-		keyring: KeyringPair;
-		mnemonic: string;
-		seed: string;
-		json: KeyringPair$Json;
-	}> {
+    keyring: KeyringPair;
+    mnemonic: string;
+    seed: string;
+    json: KeyringPair$Json;
+  }> {
     const mnemonic = mnemonicGenerate();
     const seed = mnemonicToMiniSecret(mnemonic);
     const keyring = await GearKeyring.fromSeed(seed, name);

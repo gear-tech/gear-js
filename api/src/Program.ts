@@ -3,16 +3,9 @@ import { u8aToHex } from '@polkadot/util';
 import { Bytes } from '@polkadot/types';
 
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult, Hex } from './types';
-import {
-  createPayload,
-  generateCodeId,
-  generateProgramId,
-  GPROG,
-  GPROG_HEX,
-  validateGasLimit,
-  validateValue,
-} from './utils';
+import { generateCodeId, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
 import { GearTransaction } from './Transaction';
+import { createPayload } from './create-type';
 import { Metadata } from './types/interfaces';
 import { SubmitProgramError } from './errors';
 import { GearApi } from './GearApi';
@@ -50,8 +43,8 @@ export class GearProgram extends GearTransaction {
     validateGasLimit(program.gasLimit, this._api);
 
     const salt = program.salt || randomAsHex(20);
-    const code = this._createType.create('bytes', Array.from(program.code)) as Bytes;
-    const payload = createPayload(this._createType, messageType || meta?.init_input, program.initPayload, meta);
+    const code = this._api.createType('Bytes', Array.from(program.code)) as Bytes;
+    const payload = createPayload(program.initPayload, messageType || meta?.init_input, meta?.types);
     const codeId = generateCodeId(code);
     const programId = generateProgramId(code, salt);
 
@@ -87,7 +80,7 @@ export class GearProgram extends GearTransaction {
     validateGasLimit(program.gasLimit, this._api);
 
     const salt = program.salt || randomAsHex(20);
-    const payload = createPayload(this._createType, messageType || meta?.init_input, program.initPayload, meta);
+    const payload = createPayload(program.initPayload, messageType || meta?.init_input, meta?.types);
     const programId = generateProgramId(program.codeId, salt);
 
     try {

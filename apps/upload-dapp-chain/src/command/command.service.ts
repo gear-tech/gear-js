@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { decodeAddress, GearApi, getWasmMetadata, Hex, IMessageSendOptions } from "@gear-js/api";
+import { decodeAddress, GearApi, generateCodeId, getWasmMetadata, Hex, IMessageSendOptions } from "@gear-js/api";
 
 import { checkInitProgram, getAccount, getOptAndMetaWasm, sendTransaction } from "../common/helpers";
 import { SendMessageInput, SubmitCodeInput, UploadProgramInput, UploadProgramResult } from "./types";
@@ -120,24 +120,30 @@ export class CommandService {
       metaWasmData.buffer(),
     ]);
 
+    const result = {
+      ...submitCodeInput,
+      codeHash: "",
+      programId: "",
+      metaWasmBase64: metaWasmBuff.toString("base64"),
+      optWasmBase64: optWasmBuff.toString("base64"),
+    };
+
     try {
       const account = await getAccount(acc);
       const { codeHash } = await this.gearApi.code.upload(optWasmBuff);
 
       await sendTransaction(this.gearApi.code, account, "CodeChanged");
+      result.codeHash = codeHash;
 
-      return {
-        ...submitCodeInput,
-        programId: "",
-        codeHash,
-        metaWasmBase64: metaWasmBuff.toString("base64"),
-        optWasmBase64: optWasmBuff.toString("base64"),
-      };
+      return result;
     } catch (error) {
       console.log("____>optWasmBuff", optWasmBuff);
       console.log("____>metaWasmBuff", metaWasmBuff);
       console.log(error);
       this.logger.error(error);
+
+      result.codeHash = generateCodeId(optWasmBuff);
+      return result;
     }
   }
 }
