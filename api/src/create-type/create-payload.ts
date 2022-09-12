@@ -14,5 +14,5 @@ export function createPayload(payload: unknown, type: string, types: Hex | Uint8
   if (isU8a(payload)) {
     return u8aToHex(payload);
   }
-  return CreateType.create(type, payload, types);
+  return CreateType.create(type, payload, types).toHex();
 }

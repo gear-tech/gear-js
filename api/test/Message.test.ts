@@ -52,7 +52,7 @@ describe('Gear Message', () => {
     const meta = await getWasmMetadata(metaWasm);
 
     for (const message of messages) {
-      api.message.send(
+      const tx = api.message.send(
         {
           destination: guestbookId,
           payload: message.payload,
@@ -63,7 +63,7 @@ describe('Gear Message', () => {
       );
       const waitForReply = message.reply ? listenToUserMessageSent(api, guestbookId) : undefined;
 
-      const transactionData = await sendTransaction(api.message, alice, 'MessageEnqueued');
+      const transactionData = await sendTransaction(tx, alice, 'MessageEnqueued');
       expect(transactionData).toBeDefined();
 
       if (waitForReply) {
