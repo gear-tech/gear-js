@@ -12,7 +12,7 @@ function useCreateHandler(codeId: Hex | undefined, metadata?: Metadata | undefin
   const createProgram = useCreateProgram(codeId, metadata);
   const calculateGas = useCreateCalculateGas(codeId, metadata);
 
-  return (initPayload: AnyJson, options: Options) => {
+  return (initPayload: AnyJson, options?: Options) => {
     calculateGas(initPayload)
       .then(getAutoGasLimit)
       .then((gasLimit) => createProgram(initPayload, gasLimit, options))
