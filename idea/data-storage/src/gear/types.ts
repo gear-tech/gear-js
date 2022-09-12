@@ -1,4 +1,5 @@
 import { ExtrinsicStatus, SignedBlock } from '@polkadot/types/interfaces';
+import { MessageEnqueuedData } from '@gear-js/api';
 
 interface HandleExtrinsicsData {
   signedBlock: SignedBlock;
@@ -6,6 +7,14 @@ interface HandleExtrinsicsData {
   status: ExtrinsicStatus;
   genesis: string;
   timestamp: number;
+  blockHash: any;
 }
 
-export { HandleExtrinsicsData };
+interface CreateProgramByExtrinsicMethod {
+  genesis: string;
+  timestamp: number;
+  blockHash: any;
+  eventData: MessageEnqueuedData
+}
+
+export { HandleExtrinsicsData, CreateProgramByExtrinsicMethod };

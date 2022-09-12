@@ -1,4 +1,4 @@
-import { Meta } from '../database/entities';
+import { Code, Meta } from '../database/entities';
 
 interface CreateProgramInput {
   id: string;
@@ -6,6 +6,7 @@ interface CreateProgramInput {
   genesis: string;
   timestamp: number;
   blockHash: string;
+  code: Code
 }
 
 interface UpdateProgramDataInput {

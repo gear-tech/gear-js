@@ -2361,33 +2361,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/event-listener@workspace:idea/events-listener":
-  version: 0.0.0-use.local
-  resolution: "@gear-js/event-listener@workspace:idea/events-listener"
-  dependencies:
-    "@gear-js/api": 0.25.0
-    "@gear-js/common": "workspace:^"
-    "@polkadot/api": 9.2.2
-    "@types/express": 4.17.13
-    "@types/node": 17.0.21
-    "@types/nodemon": 1.19.2
-    "@typescript-eslint/eslint-plugin": 4.33.0
-    "@typescript-eslint/parser": 4.33.0
-    avsc: ^5.7.3
-    chalk: ^4.1.2
-    dotenv: ^10.0.0
-    eslint: 7.32.0
-    eslint-config-prettier: 8.5.0
-    eslint-plugin-prettier: 3.4.1
-    express: ^4.18.1
-    kafkajs: ^1.15.0
-    nodemon: 2.0.19
-    ts-node: 10.9.1
-    ts-node-dev: 1.1.8
-    typescript: 4.7.4
-  languageName: unknown
-  linkType: soft
-
 "@gear-js/frontend@workspace:idea/frontend":
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
@@ -8343,13 +8316,6 @@ __metadata:
   version: 1.0.5
   resolution: "available-typed-arrays@npm:1.0.5"
   checksum: 20eb47b3cefd7db027b9bbb993c658abd36d4edd3fe1060e83699a03ee275b0c9b216cc076ff3f2db29073225fb70e7613987af14269ac1fe2a19803ccc97f1a
-  languageName: node
-  linkType: hard
-
-"avsc@npm:^5.7.3":
-  version: 5.7.5
-  resolution: "avsc@npm:5.7.5"
-  checksum: acbbbaa2d609f220d8c2f78ae11fba1949c47503f87396414bc43abdf571baa51832543bd6674d6ef77a1efb78203c3fffefcba233949ec674e8f4b41d1f9920
   languageName: node
   linkType: hard
 
@@ -17531,7 +17497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:1.2.6, minimist@npm:^1.2.0, minimist@npm:^1.2.5, minimist@npm:^1.2.6":
+"minimist@npm:1.2.6, minimist@npm:^1.2.0, minimist@npm:^1.2.6":
   version: 1.2.6
   resolution: "minimist@npm:1.2.6"
   checksum: d15428cd1e11eb14e1233bcfb88ae07ed7a147de251441d61158619dfb32c4d7e9061d09cab4825fdee18ecd6fce323228c8c47b5ba7cd20af378ca4048fb3fb
@@ -23180,33 +23146,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node-dev@npm:1.1.8":
-  version: 1.1.8
-  resolution: "ts-node-dev@npm:1.1.8"
-  dependencies:
-    chokidar: ^3.5.1
-    dynamic-dedupe: ^0.3.0
-    minimist: ^1.2.5
-    mkdirp: ^1.0.4
-    resolve: ^1.0.0
-    rimraf: ^2.6.1
-    source-map-support: ^0.5.12
-    tree-kill: ^1.2.2
-    ts-node: ^9.0.0
-    tsconfig: ^7.0.0
-  peerDependencies:
-    node-notifier: "*"
-    typescript: "*"
-  peerDependenciesMeta:
-    node-notifier:
-      optional: true
-  bin:
-    ts-node-dev: lib/bin.js
-    tsnd: lib/bin.js
-  checksum: 768a5806215ca78694d39b85ec6877ba41d33b5affcbedc8208f0e4befd5ba1cffbcc505d5d8eca82ea23a4517a79be5f5de6350cb6e249425c832f4ddf10a0f
-  languageName: node
-  linkType: hard
-
 "ts-node-dev@npm:2.0.0":
   version: 2.0.0
   resolution: "ts-node-dev@npm:2.0.0"
@@ -23292,7 +23231,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:9.1.1, ts-node@npm:^9.0.0":
+"ts-node@npm:9.1.1":
   version: 9.1.1
   resolution: "ts-node@npm:9.1.1"
   dependencies:

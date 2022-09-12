@@ -1,10 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Hex, MessageEnqueuedData } from '@gear-js/api';
+import { MessageEnqueuedData } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
-import {
-  Keys
-} from '@gear-js/common';
+import { Keys } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
 import { gearService } from './gear-service';
@@ -13,9 +11,10 @@ import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
 import { CodeService } from '../code/code.service';
 import { getPayloadByGearEvent, getUpdateMessageData } from '../common/helpers';
-import { HandleExtrinsicsData } from './types';
-import { Message } from '../database/entities';
+import { CreateProgramByExtrinsicMethod, HandleExtrinsicsData } from './types';
+import { Message, Program } from '../database/entities';
 import { MessageEntryPoing, MessageType, ProgramStatus } from '../common/enums';
+import { CodeRepo } from '../code/code.repo';
 
 
 @Injectable()
@@ -25,9 +24,11 @@ export class GearEventListener {
   constructor(private programService: ProgramService,
               private messageService: MessageService,
               private metaService: MetadataService,
-              private codeService: CodeService) {}
+              private codeService: CodeService,
+              private codeRepository: CodeRepo) {
+  }
 
-  public async listen(){
+  public async listen() {
     // eslint-disable-next-line no-constant-condition
     while (true) {
       await gearService.connect();
@@ -54,9 +55,16 @@ export class GearEventListener {
         timestamp: blockTimestamp.toNumber(),
       };
 
-      for (const {
-        event: { data, method },
-      } of events) {
+      await this.handleExtrinsics({
+        genesis,
+        events,
+        status: extrinsicStatus,
+        signedBlock: block,
+        timestamp: blockTimestamp.toNumber(),
+        blockHash,
+      });
+
+      for (const { event: { data, method } } of events) {
         try {
           const payload = getPayloadByGearEvent(method, data as GenericEventData);
           if (payload !== null) await this.handleEvents(method, { ...payload, ...base });
@@ -66,32 +74,13 @@ export class GearEventListener {
           this.logger.log('--------------END_ERROR--------------');
         }
       }
-
-      await this.handleExtrinsics({
-        genesis,
-        events,
-        status: extrinsicStatus,
-        signedBlock: block,
-        timestamp: blockTimestamp.toNumber()
-      });
     });
   }
 
   private async handleEvents(method: string, payload: any): Promise<void> {
     const { id, genesis } = payload;
+
     const eventsMethod = {
-      [Keys.MessageEnqueued]: async () => {
-        const { destination, source, timestamp, blockHash, entry } = payload;
-        if (entry === 'Init') {
-          await this.programService.createProgram({
-            id: destination,
-            owner: source,
-            genesis,
-            timestamp,
-            blockHash,
-          });
-        }
-      },
       [Keys.UserMessageSent]: async () => {
         const createMessageDBType = plainToClass(Message, {
           ...payload,
@@ -125,32 +114,14 @@ export class GearEventListener {
   }
 
   private async handleExtrinsics(handleExtrinsicsData: HandleExtrinsicsData): Promise<void> {
-    const { signedBlock, events, status, genesis, timestamp } = handleExtrinsicsData;
-    const createMessagesMap = new Map<Hex, Message>();
+    const { signedBlock, events, status, genesis, timestamp, blockHash } = handleExtrinsicsData;
 
-    events.forEach(({ event: { data, method } }) => {
-      const { id, source, destination, entry } = data as MessageEnqueuedData;
-
-      if (method === Keys.MessageEnqueued) {
-        createMessagesMap.set(id.toHex(), plainToClass(Message, {
-          id: id.toHex(),
-          destination: destination.toHex(),
-          source: source.toHex(),
-          entry: entry.isInit ? MessageEntryPoing.INIT : entry.isHandle
-            ? MessageEntryPoing.HANDLE : MessageEntryPoing.REPLY
-        }));
-      }
-    });
-
-    const eventMethods = ['sendMessage', 'submitProgram', 'sendReply'];
+    const eventMethods = ['sendMessage', 'uploadProgram', 'createProgram', 'sendReply'];
     const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) => eventMethods.includes(method));
+    let createMessagesDBType = [];
 
-    const createMessagesDBType = extrinsics.map((extrinsic) => {
-      const {
-        hash,
-        args,
-        method: { method },
-      } = extrinsic;
+    for (const extrinsic of extrinsics) {
+      const { hash, args, method: { method } } = extrinsic;
 
       const filteredEvents = filterEvents(hash, signedBlock, events, status).events!.filter(
         ({ event: { method } }) => method === Keys.MessageEnqueued,
@@ -158,23 +129,57 @@ export class GearEventListener {
 
       const eventData = filteredEvents[0].event.data as MessageEnqueuedData;
 
-      const messageId = eventData.id.toHex();
-      const messageDBType = createMessagesMap.get(messageId);
-
       const [payload, value] = getUpdateMessageData(args, method);
+      const creatProgramByExtrinsicMethod: CreateProgramByExtrinsicMethod = {
+        eventData,
+        genesis,
+        timestamp,
+        blockHash
+      };
 
-      messageDBType.payload = payload;
-      messageDBType.value = value;
-      messageDBType.genesis = genesis;
-      messageDBType.timestamp = new Date(timestamp);
+      const messageDBType = plainToClass(Message, {
+        id: eventData.id.toHex(),
+        destination: eventData.destination.toHex(),
+        source: eventData.source.toHex(),
+        entry: eventData.entry.isInit ? MessageEntryPoing.INIT : eventData.entry.isHandle
+          ? MessageEntryPoing.HANDLE : MessageEntryPoing.REPLY,
+        payload,
+        value,
+        timestamp: new Date(timestamp),
+        genesis,
+        program: await this.createProgramByExtrinsicMethod(method, creatProgramByExtrinsicMethod),
+      });
 
-      return  messageDBType;
-    });
+      createMessagesDBType = [...createMessagesDBType, messageDBType];
+    }
 
     try {
       await this.messageService.createMessages(createMessagesDBType);
     } catch (error) {
       this.logger.error(error);
     }
+  }
+
+  private async createProgramByExtrinsicMethod(
+    method: string, createProgramByExtrinsicMethod: CreateProgramByExtrinsicMethod,
+  ): Promise<Program | null> {
+    if (!['uploadProgram', 'createProgram'].includes(method)) {
+      return null;
+    }
+
+    const { eventData, timestamp, blockHash, genesis } = createProgramByExtrinsicMethod;
+
+    const codeHash = await gearService.getApi().program.codeHash(eventData.destination.toHex());
+
+    const code = await this.codeRepository.get(codeHash);
+
+    return this.programService.createProgram({
+      id: eventData.destination.toHex(),
+      owner: eventData.source.toHex(),
+      genesis,
+      timestamp,
+      blockHash,
+      code,
+    });
   }
 }

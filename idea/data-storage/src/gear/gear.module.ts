@@ -5,6 +5,7 @@ import { MetadataModule } from '../metadata/metadata.module';
 import { ProgramModule } from '../program/program.module';
 import { MessageModule } from '../message/message.module';
 import { CodeModule } from '../code/code.module';
+import { CodeRepo } from '../code/code.repo';
 
 
 @Module({
@@ -13,6 +14,7 @@ import { CodeModule } from '../code/code.module';
     ProgramModule,
     MessageModule,
     CodeModule,
+    CodeRepo,
   ],
   providers: [GearEventListener],
   exports: [GearEventListener],

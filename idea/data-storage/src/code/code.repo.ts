@@ -52,4 +52,10 @@ export class CodeRepo {
   public async removeByGenesis(genesis: string): Promise<void> {
     await this.codeRepo.delete({ genesis });
   }
+
+  public async get(id: string): Promise<Code> {
+    return this.codeRepo.findOne({
+      where: { id }
+    });
+  }
 }

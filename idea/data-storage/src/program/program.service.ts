@@ -20,7 +20,7 @@ export class ProgramService {
   private logger: Logger = new Logger('ProgramService');
   constructor(private programRepository: ProgramRepo) {}
 
-  public async createProgram(createProgramInput: CreateProgramInput): Promise<IProgram> {
+  public async createProgram(createProgramInput: CreateProgramInput): Promise<Program> {
     const programTypeDB = plainToClass(Program, {
       ...createProgramInput,
       name: createProgramInput.id,
