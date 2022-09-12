@@ -3,15 +3,28 @@ import { GasLimit, Metadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
-import { TransactionName, SingAndSendParams, UploadOptions, Code } from './types';
+import { TransactionName, SingAndSendParams, Options, Code, CodeId, UseProgram } from './types';
 import { useHandlers } from './useHandlers';
 import { waitForProgramInit } from './utils';
 
-const useUploadProgram = (
+function useProgram(
+  method: 'upload',
   code: Code | undefined,
   metadata?: Metadata | undefined,
   payloadType?: string | undefined,
-) => {
+): UseProgram;
+function useProgram(
+  method: 'create',
+  codeId: CodeId | undefined,
+  metadata?: Metadata | undefined,
+  payloadType?: string | undefined,
+): UseProgram;
+function useProgram(
+  method: 'upload' | 'create',
+  codeOrCodeId: Code | CodeId | undefined,
+  metadata?: Metadata | undefined,
+  payloadType?: string | undefined,
+): UseProgram {
   const alert = useContext(AlertContext); // сircular dependency fix
   const { api } = useContext(ApiContext);
   const { account } = useContext(AccountContext);
@@ -24,21 +37,26 @@ const useUploadProgram = (
     return api.program.signAndSend(address, { signer }, (result) => handleSignStatus({ result, ...signHandlerParams }));
   };
 
-  const uploadProgram = (initPayload: AnyJson, gasLimit: GasLimit, options?: UploadOptions) => {
+  const action = (initPayload: AnyJson, gasLimit: GasLimit, options?: Options) => {
     if (!account) return Promise.reject(new Error('No account address'));
-    if (!code) return Promise.reject(new Error('No program buffer'));
+    if (!codeOrCodeId) return Promise.reject(new Error('No program buffer'));
 
     const { value = 0, salt, onSuccess, onError } = options || {};
 
-    const program = { code, initPayload, gasLimit, value, salt };
+    const isUpload = method === 'upload';
+    const codeKey = isUpload ? 'code' : 'codeId';
+    const title = isUpload ? TransactionName.UploadProgram : TransactionName.CreateProgram;
+
+    const program = { [codeKey]: codeOrCodeId, initPayload, gasLimit, value, salt };
     const callbacks = { onSuccess, onError };
 
     const { meta, address } = account;
     const { source } = meta;
 
-    const { programId } = api.program.upload(program, metadata, payloadType);
+    // @ts-ignore
+    const { programId } = api.program[method](program, metadata, payloadType);
 
-    const alertId = alert.loading('SignIn', { title: TransactionName.UploadProgram });
+    const alertId = alert.loading('SignIn', { title });
     const initialization = waitForProgramInit(api, programId);
 
     return web3FromSource(source)
@@ -48,7 +66,19 @@ const useUploadProgram = (
       .catch(({ message }: Error) => handleError({ message, alertId, onError }));
   };
 
-  return uploadProgram;
-};
+  return action;
+}
 
-export { useUploadProgram };
+function useUploadProgram(code: Code | undefined, metadata?: Metadata | undefined, payloadType?: string | undefined) {
+  return useProgram('upload', code, metadata, payloadType);
+}
+
+function useCreateProgram(
+  codeId: CodeId | undefined,
+  metadata?: Metadata | undefined,
+  payloadType?: string | undefined,
+) {
+  return useProgram('create', codeId, metadata, payloadType);
+}
+
+export { useUploadProgram, useCreateProgram };

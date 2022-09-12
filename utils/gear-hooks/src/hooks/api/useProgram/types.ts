@@ -1,5 +1,5 @@
-import { Hex, IProgramUploadOptions, Value } from '@gear-js/api';
-import { ISubmittableResult, Signer } from '@polkadot/types/types';
+import { GasLimit, Hex, IProgramCreateOptions, IProgramUploadOptions, Value } from '@gear-js/api';
+import { AnyJson, ISubmittableResult, Signer } from '@polkadot/types/types';
 
 enum Method {
   Transfer = 'Transfer',
@@ -77,7 +77,7 @@ type HandleSignStatusParams = {
   callbacks?: Callbacks;
 };
 
-type UploadOptions = {
+type Options = {
   onSuccess?: Callbacks['onSuccess'];
   onError?: Callbacks['onError'];
   value?: Value;
@@ -85,6 +85,9 @@ type UploadOptions = {
 };
 
 type Code = IProgramUploadOptions['code'];
+type CodeId = IProgramCreateOptions['codeId'];
+
+type UseProgram = (initPayload: AnyJson, gasLimit: GasLimit, options?: Options) => Promise<void>;
 
 export { Method, TransactionStatus, ProgramStatus, TransactionName, ProgramError };
 export type {
@@ -93,6 +96,8 @@ export type {
   HandleInitParams,
   HandleErrorParams,
   HandleSignStatusParams,
-  UploadOptions,
+  Options,
   Code,
+  CodeId,
+  UseProgram,
 };
