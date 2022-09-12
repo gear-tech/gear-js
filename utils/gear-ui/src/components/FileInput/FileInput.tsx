@@ -12,12 +12,12 @@ import {
 import { InputProps } from '../../types';
 import { getFileSize } from '../../utils';
 import { Button } from '../Button/Button';
+import { InputWrapper } from '../utils';
 import remove from './images/remove.svg';
 import select from './images/select.svg';
 import styles from './FileInput.module.scss';
-import { InputWrapper } from '../utils';
 
-type Props = InputHTMLAttributes<HTMLInputElement> &
+type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
   Omit<InputProps, 'color'> & {
     label?: string;
     error?: string;
