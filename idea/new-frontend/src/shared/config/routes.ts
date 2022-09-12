@@ -4,7 +4,7 @@ const routes = {
   programs: '/programs',
   messages: '/messages',
   uploadCode: '/upload-code',
-  uploadProgram: '/upload-program',
+  uploadProgram: 'upload',
   uploadedPrograms: '/uploaded-programs',
   editor: '/editor',
   mailbox: '/mailbox',
@@ -26,6 +26,7 @@ const absoluteRoutes = {
   code: `${routes.codes}/:codeId`,
   meta: `/meta/:programId`,
   program: `${routes.programs}/${routes.program}`,
+  uploadProgram: `${routes.programs}/${routes.uploadProgram}`,
   message: `${routes.messages}/:messageId`,
 };
 

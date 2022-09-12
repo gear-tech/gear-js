@@ -1,7 +1,7 @@
 import { Fieldset } from 'shared/ui/fieldset';
 
-import styles from '../../FormPayload.module.scss';
-import { PayloadItemProps } from '../../model/types';
+import styles from '../FormPayload.module.scss';
+import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName } from '../../helpers';
 
 const StructItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {

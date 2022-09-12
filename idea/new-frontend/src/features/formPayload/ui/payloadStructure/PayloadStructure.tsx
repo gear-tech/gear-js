@@ -2,7 +2,7 @@ import { VFC, useCallback } from 'react';
 
 import { ValueType } from 'entities/formPayload';
 
-import { PayloadItemProps, PayloadStructureProps } from '../../model/types';
+import { PayloadItemProps, PayloadStructureProps } from '../../model';
 import { VecItem } from '../vecItem';
 import { EnumItem } from '../enumItem';
 import { TupleItem } from '../tupleItem';

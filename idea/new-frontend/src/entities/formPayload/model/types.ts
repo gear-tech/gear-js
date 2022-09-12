@@ -30,4 +30,11 @@ type PayloadSchemaModel = {
   maxGasLimit: number;
 };
 
-export type { TypeStructure, PayloadValue, PayloadSchemaModel };
+type PayloadSchemaParams = {
+  type?: string;
+  deposit: number;
+  metadata?: Metadata;
+  maxGasLimit: number;
+};
+
+export type { TypeStructure, PayloadValue, PayloadSchemaModel, PayloadSchemaParams };

@@ -1,4 +1,6 @@
 import { Event } from '@polkadot/types/interfaces';
+import { AnySchema, ValidationError } from 'yup';
+import { setIn } from 'final-form';
 import isString from 'lodash.isstring';
 import { GearApi } from '@gear-js/api';
 import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
@@ -110,6 +112,21 @@ const getNodeAddressFromUrl = () => {
   }
 };
 
+const getValidation =
+  <T>(schema: AnySchema) =>
+  async (values: T) => {
+    try {
+      await schema.validate(values, { abortEarly: false });
+    } catch (error: unknown) {
+      const errors = (error as ValidationError).inner.reduce(
+        (formError, innerError) => setIn(formError, innerError.path ?? '', innerError.message),
+        {},
+      );
+
+      return errors;
+    }
+  };
+
 export {
   checkWallet,
   formatDate,
@@ -117,6 +134,7 @@ export {
   copyToClipboard,
   checkFileFormat,
   getShortName,
+  getValidation,
   generateRandomId,
   getPreformattedText,
   getNodeAddressFromUrl,

@@ -1,5 +1,4 @@
-import clsx from 'clsx';
-import { useField } from 'formik';
+import { useForm, useField } from 'react-final-form';
 import { inputStyles } from '@gear-js/ui';
 import NumberFormat, { NumberFormatProps, NumberFormatValues } from 'react-number-format';
 
@@ -13,29 +12,30 @@ type Props = Omit<NumberFormatProps, 'name' | 'value' | 'onValueChange'> & {
 const FormNumberFormat = (props: Props) => {
   const { name, label, className, ...other } = props;
 
-  const [field, meta, helpers] = useField(name);
+  const { change } = useForm();
+  const { input, meta } = useField(name);
 
-  const handleChange = ({ floatValue }: NumberFormatValues) => helpers.setValue(floatValue);
+  const handleChange = ({ floatValue }: NumberFormatValues) => change(name, floatValue);
 
-  const classes = clsx(inputStyles.label, styles.field, styles.uiField, className);
-  const showError = meta.error && meta.touched;
+  const error = meta.invalid && meta.touched ? meta.error : undefined;
 
   return (
     <div className={styles.formItem}>
-      <label htmlFor={field.name} className={classes}>
+      <label htmlFor={name}>
         <span className={inputStyles.text}>{label}</span>
         <div className={inputStyles.wrapper}>
           <NumberFormat
             {...other}
-            name={field.name}
-            value={field.value}
+            name={name}
+            value={input.value}
             className={inputStyles.input}
-            onBlur={field.onBlur}
+            onBlur={input.onBlur}
+            onFocus={input.onFocus}
             onValueChange={handleChange}
           />
         </div>
       </label>
-      {showError && <div className={styles.error}>{meta.error}</div>}
+      {error && <div className={styles.error}>{meta.error}</div>}
     </div>
   );
 };

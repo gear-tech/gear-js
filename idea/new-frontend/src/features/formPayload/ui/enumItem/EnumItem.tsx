@@ -1,12 +1,12 @@
 import { useState, useMemo, ChangeEvent } from 'react';
-import { useField } from 'formik';
+import { useForm } from 'react-final-form';
 import { Select } from '@gear-js/ui';
 
 import { useChangeEffect } from 'hooks';
 import { Fieldset } from 'shared/ui/fieldset';
 
 import styles from '../FormPayload.module.scss';
-import { PayloadItemProps } from '../../model/types';
+import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName, getPayloadValue } from '../../helpers';
 
 const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
@@ -14,7 +14,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
 
   const options = useMemo(() => Object.keys(value).map((key) => ({ value: key, label: key })), [value]);
 
-  const [, , helpers] = useField(levelName);
+  const { change } = useForm(levelName);
   const [selected, setSelected] = useState(options[0].value);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => setSelected(event.target.value);
@@ -26,8 +26,7 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
     // @ts-ignore
     const parsedStructure = getPayloadValue(value[selected]);
 
-    helpers.setError(undefined);
-    helpers.setValue({ [selected]: parsedStructure }, false);
+    change(levelName, { [selected]: parsedStructure });
   }, [selected]);
 
   return (

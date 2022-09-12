@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Tooltip } from '@gear-js/ui';
 
 import { IdBlock } from 'shared/ui/idBlock';
@@ -22,6 +23,7 @@ const HorizontalWaitlistItem = ({ content, interval }: Props) => (
       </span>
       <Tooltip text="Start block - finish block" className={styles.tooltip} />
     </div>
+    <Link to="/" className={styles.link} />
   </article>
 );
 

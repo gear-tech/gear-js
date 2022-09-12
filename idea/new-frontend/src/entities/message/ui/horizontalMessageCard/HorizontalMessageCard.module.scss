@@ -8,8 +8,18 @@
   grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 0.3fr);
   gap: 30px;
   align-items: center;
+  position: relative;
   padding: toRem(20) toRem(24);
   background: $bgColorSecondary;
   box-shadow: 0px 4px 4px $bgColor;
   border-radius: 16px;
+
+  .link {
+    position: absolute;
+    border: inherit;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 }

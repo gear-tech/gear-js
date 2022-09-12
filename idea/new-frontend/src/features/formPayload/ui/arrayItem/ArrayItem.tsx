@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Fieldset } from 'shared/ui/fieldset';
 
 import styles from '../FormPayload.module.scss';
-import { PayloadItemProps } from '../../model/types';
+import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName } from '../../helpers';
 
 const ArrayItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {

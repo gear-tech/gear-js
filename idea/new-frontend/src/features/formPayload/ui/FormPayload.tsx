@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, ChangeEvent } from 'react';
-import { useField } from 'formik';
+import { useForm, useField } from 'react-final-form';
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
 import { Checkbox, FileInput, Textarea } from '@gear-js/ui';
@@ -8,9 +8,9 @@ import { useChangeEffect } from 'hooks';
 import { PayloadValue } from 'entities/formPayload';
 import { checkFileFormat, readFileAsync } from 'shared/helpers';
 import { FileTypes } from 'shared/config';
+import formStyles from 'shared/ui/form/Form.module.scss';
 
 import styles from './FormPayload.module.scss';
-import formStyles from '../Form.module.scss';
 import { FormPayloadValues } from '../model/types';
 import { PayloadStructure } from './payloadStructure';
 
@@ -20,22 +20,17 @@ type Props = {
   values?: FormPayloadValues;
 };
 
-const FormPayload = (props: Props) => {
-  const { name, label, values } = props;
-
+const FormPayload = ({ name, label, values }: Props) => {
   const alert = useAlert();
-
-  const [field, meta, helpers] = useField<PayloadValue>(name);
+  const { change } = useForm();
+  const { input, meta } = useField<PayloadValue>(name);
 
   const jsonManualPayload = useRef<string>();
 
   const [isManualView, setIsManualView] = useState(!values);
   const [manualPayloadFile, setManualPayloadFile] = useState<File>();
 
-  const changeValue = (value: PayloadValue) => {
-    helpers.setError(undefined);
-    helpers.setValue(value, false);
-  };
+  const changeValue = (value: PayloadValue) => change(name, value);
 
   const handleViewChange = () => setIsManualView((prevState) => !prevState);
 
@@ -115,10 +110,10 @@ const FormPayload = (props: Props) => {
         ) : (
           <>
             <Textarea
-              {...field}
+              {...input}
               id={name}
               rows={15}
-              value={field.value as string}
+              value={input.value as string}
               placeholder="// Enter your payload here"
             />
             {values && (

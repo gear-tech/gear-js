@@ -5,6 +5,7 @@ import { routes } from 'shared/config';
 import { Home } from './home';
 import { Program } from './program';
 import { Programs } from './programs';
+import { UploadProgram } from './uploadProgram';
 import { NotFound } from './notFound';
 
 const Routing = () => (
@@ -13,6 +14,7 @@ const Routing = () => (
 
     <Route path={routes.programs}>
       <Route index element={<Programs />} />
+      <Route path={routes.uploadProgram} element={<UploadProgram />} />
       <Route path={routes.program} element={<Program />} />
     </Route>
 

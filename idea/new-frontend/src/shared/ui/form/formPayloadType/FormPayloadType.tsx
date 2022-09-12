@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, useEffect } from 'react';
-import { useField } from 'formik';
+import { useForm, useField } from 'react-final-form';
 import clsx from 'clsx';
 import { Input, Checkbox } from '@gear-js/ui';
 
@@ -11,9 +11,13 @@ type Props = {
 };
 
 const FormPayloadType = ({ name, label }: Props) => {
+  const { resetFieldState } = useForm();
+  const { input, meta } = useField(name);
+
   const [isChecked, setIsChecked] = useState(false);
 
-  const [field, { touched, initialValue, error }, helpers] = useField(name);
+  const { invalid, touched, error } = meta;
+  // const [field, { touched, initialValue, error }, helpers] = useField(name);
 
   const toggleSwitch = (event: ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked;
@@ -23,17 +27,16 @@ const FormPayloadType = ({ name, label }: Props) => {
 
   useEffect(() => {
     if (!isChecked && touched) {
-      helpers.setValue(initialValue);
-      helpers.setTouched(false);
+      resetFieldState(name);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked, touched]);
 
-  const showError = error && touched;
+  const fieldError = invalid && touched ? error : undefined;
 
   return (
     <div className={clsx(styles.formItem, styles.field)}>
-      <label htmlFor={field.name} className={styles.fieldLabel}>
+      <label htmlFor={name} className={styles.fieldLabel}>
         {label}
       </label>
       <div className={clsx(styles.payloadType, styles.fieldContent)}>
@@ -44,9 +47,9 @@ const FormPayloadType = ({ name, label }: Props) => {
           className={styles.checkbox}
           onChange={toggleSwitch}
         />
-        <Input {...field} id={field.name} disabled={!isChecked} />
+        <Input {...input} id={name} disabled={!isChecked} />
       </div>
-      {showError && <div className={styles.error}>{error}</div>}
+      {fieldError && <div className={styles.error}>{fieldError}</div>}
     </div>
   );
 };

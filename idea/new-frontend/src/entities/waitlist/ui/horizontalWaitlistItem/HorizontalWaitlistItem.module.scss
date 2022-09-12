@@ -13,6 +13,7 @@
   grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 1.5fr) minmax(max-content, 0.5fr) ;
   gap: 30px;
   align-items: center;
+  position: relative;
   padding: toRem(20) toRem(24);
   background: $bgColorSecondary;
   box-shadow: 0px 4px 4px $bgColor;
@@ -34,9 +35,22 @@
     font-weight: 500;
     line-height: toRem(18);
 
-    .tooltip::after {
-      left: 100%;
-      transform: translateX(-100%);
+    .tooltip {
+      z-index: 2;
+
+      &::after {
+        left: 100%;
+        transform: translateX(-100%);
+      }
     }
+  }
+
+  .link {
+    position: absolute;
+    border: inherit;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 }
