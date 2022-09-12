@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { AlertContext } from 'context';
 import { useCreateProgram, useCreateCalculateGas } from '../api';
 import { Options } from '../api/useProgram/types';
+import { getAutoGasLimit } from 'utils';
 
 function useCreateHandler(codeId: Hex | undefined, metadata?: Metadata | undefined) {
   const alert = useContext(AlertContext); // сircular dependency fix
@@ -13,7 +14,8 @@ function useCreateHandler(codeId: Hex | undefined, metadata?: Metadata | undefin
 
   return (initPayload: AnyJson, options: Options) => {
     calculateGas(initPayload)
-      .then(({ min_limit: gasLimit }) => createProgram(initPayload, gasLimit, options))
+      .then(getAutoGasLimit)
+      .then((gasLimit) => createProgram(initPayload, gasLimit, options))
       .catch(({ message }: Error) => alert.error(message));
   };
 }
