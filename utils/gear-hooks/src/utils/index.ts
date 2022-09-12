@@ -1,5 +1,5 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { GearKeyring } from '@gear-js/api';
+import { GasInfo, GearKeyring } from '@gear-js/api';
 import { Balance } from '@polkadot/types/interfaces';
 import { Account } from 'types';
 

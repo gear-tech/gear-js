@@ -3,7 +3,12 @@ import { useMetadata } from './useMetadata';
 import { useReadState } from './useReadState';
 import { useSendMessage } from './useSendMessage';
 import { useUploadProgram, useCreateProgram } from './useProgram';
-import { useCalculateGas } from './useCalculateGas';
+import {
+  useUploadCalculateGas,
+  useCreateCalculateGas,
+  useHandleCalculateGas,
+  useReplyCalculateGas,
+} from './useCalculateGas';
 
 export {
   useBalanceSubscription,
@@ -12,5 +17,8 @@ export {
   useSendMessage,
   useUploadProgram,
   useCreateProgram,
-  useCalculateGas,
+  useUploadCalculateGas,
+  useCreateCalculateGas,
+  useHandleCalculateGas,
+  useReplyCalculateGas,
 };

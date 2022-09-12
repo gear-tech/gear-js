@@ -6,10 +6,13 @@ import {
   useSendMessage,
   useUploadProgram,
   useCreateProgram,
-  useCalculateGas,
+  useUploadCalculateGas,
+  useCreateCalculateGas,
+  useHandleCalculateGas,
+  useReplyCalculateGas,
 } from './api';
 import { useAccount, useAlert, useApi } from './context';
-import { useOpt, useUploadHandler } from './handlers';
+import { useCreateHandler } from './handlers';
 
 export {
   useAccounts,
@@ -20,10 +23,12 @@ export {
   useSendMessage,
   useUploadProgram,
   useCreateProgram,
-  useCalculateGas,
+  useUploadCalculateGas,
+  useCreateCalculateGas,
+  useHandleCalculateGas,
+  useReplyCalculateGas,
   useAccount,
   useAlert,
   useApi,
-  useOpt,
-  useUploadHandler,
+  useCreateHandler,
 };

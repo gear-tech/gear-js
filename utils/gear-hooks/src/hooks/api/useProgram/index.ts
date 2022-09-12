@@ -1,5 +1,5 @@
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { GasLimit, IProgramCreateOptions, Metadata } from '@gear-js/api';
+import { GasLimit, Metadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
