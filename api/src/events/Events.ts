@@ -32,10 +32,10 @@ export class GearEvents {
     return false;
   }
 
-  subscribeToUserMessageSent(options: { from?: Hex; to?: Hex }, callback: (event: UserMessageSent) => void) {
+  subscribeToUserMessageSentByActor(options: { from?: Hex; to?: Hex }, callback: (event: UserMessageSent) => void) {
     return this.api.query.system.events((events) => {
       events
-        .filter(({ event }) => ['UserMessageSent', 'MessageEnqueued'].includes(event.method))
+        .filter(({ event }) => event.method === 'UserMessageSent')
         .forEach(({ event }) => {
           if (this.#umsActorsMatch(options.from, options.to, event as UserMessageSent)) {
             callback(event as UserMessageSent);
