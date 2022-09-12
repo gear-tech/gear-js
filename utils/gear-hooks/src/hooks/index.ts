@@ -5,6 +5,7 @@ import {
   useReadState,
   useSendMessage,
   useUploadProgram,
+  useCreateProgram,
   useCalculateGas,
 } from './api';
 import { useAccount, useAlert, useApi } from './context';
@@ -18,6 +19,7 @@ export {
   useReadState,
   useSendMessage,
   useUploadProgram,
+  useCreateProgram,
   useCalculateGas,
   useAccount,
   useAlert,
