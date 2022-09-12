@@ -1,8 +1,10 @@
-import { Hex } from '@gear-js/api';
+import { Hex } from '../types';
 import { TypeRegistry, PortableRegistry } from '@polkadot/types';
 import { hexToU8a, isHex } from '@polkadot/util';
 
-import { REGULAR_EXP, isJSON, toJSON, joinTypePath } from '../utils';
+import { isJSON, toJSON } from '../utils/json';
+import { joinTypePath } from '../utils/types';
+import { REGULAR_EXP } from '../utils/regexp';
 
 function getName(path: string[], name: string, slice = -1) {
   if (name.endsWith(joinTypePath(path.slice(slice)))) {

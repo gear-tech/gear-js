@@ -3,10 +3,10 @@ import { Codec, Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
 import { RegistryTypes } from '@polkadot/types-codec/types/registry';
 
+import { checkTypeAndPayload, typeIsGeneric, typeIsString } from '../utils/types';
+import { TypeInfoRegistry } from './TypeInfoReg';
 import { toJSON, isJSON } from '../utils/json';
 import { Hex, Metadata } from '../types';
-import { checkTypeAndPayload, typeIsGeneric, typeIsString } from '../utils';
-import { TypeInfoRegistry } from './TypeInfoReg';
 
 export class CreateType {
   registry: Registry;

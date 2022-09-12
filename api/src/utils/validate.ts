@@ -2,7 +2,7 @@ import { BN, u8aToBigInt } from '@polkadot/util';
 import { u128, u64 } from '@polkadot/types';
 
 import { GasLimit, Hex, Value } from '../types';
-import { CreateTypeError, ValidationError } from '../errors';
+import { ValidationError } from '../errors';
 import { GearApi } from '../GearApi';
 
 export function validateValue(value: Value | undefined, api: GearApi) {
@@ -39,11 +39,4 @@ export async function validateCodeId(codeId: Hex, api: GearApi) {
   if (await api.code.exists(codeId)) {
     throw new ValidationError('Code already exists');
   }
-}
-
-export function checkTypeAndPayload(type: string, payload: unknown): string {
-  if (payload === undefined) {
-    throw new CreateTypeError('Payload is not specified');
-  }
-  return type || 'Bytes';
 }

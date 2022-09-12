@@ -2,7 +2,7 @@ import { blake2AsHex, blake2AsU8a } from '@polkadot/util-crypto';
 import { u8aToU8a } from '@polkadot/util';
 
 import { Hex } from '../types';
-import { CreateType } from '../create-type';
+import { CreateType } from '../create-type/CreateType';
 
 export function generateCodeId(code: Buffer | Uint8Array): Hex {
   return blake2AsHex(code, 256);
