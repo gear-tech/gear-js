@@ -51,7 +51,7 @@ describe('Calculate gas', () => {
     programId = program.programId;
     codeId = program.codeId;
     const initStatus = checkInit(api, programId);
-    api.program.signAndSend(alice, () => {});
+    await sendTransaction(program.extrinsic, alice, 'MessageEnqueued');
     expect(await initStatus()).toBe('success');
   });
 
@@ -69,9 +69,10 @@ describe('Calculate gas', () => {
 
   test('Create program', async () => {
     expect(gasLimits.init).toBeDefined();
-    api.program.create({ codeId, gasLimit: gasLimits.init as u64 });
+    const program = api.program.create({ codeId, gasLimit: gasLimits.init as u64 });
+    programId = program.programId;
     const initStatus = checkInit(api, programId);
-    api.program.signAndSend(alice, () => {});
+    await sendTransaction(program.extrinsic, alice, 'MessageEnqueued');
     expect(await initStatus()).toBe('success');
   });
 
@@ -90,14 +91,14 @@ describe('Calculate gas', () => {
 
   test('Send message', async () => {
     expect(gasLimits.handle).toBeDefined();
-    api.message.send({
+    const tx = api.message.send({
       destination: programId,
       payload: '0x50494e47',
-      gasLimit: gasLimits.handle as u64, // TODO remove `* 1.5` when expiration_block will work
+      gasLimit: (gasLimits.handle as u64).muln(1.5),
       value: 1000,
     });
     const waitForReply = listenToUserMessageSent(api, programId);
-    await sendTransaction(api.message, alice, 'MessageEnqueued');
+    await sendTransaction(tx, alice, 'MessageEnqueued');
     const { message } = await waitForReply(null);
     expect(message.id).toBeDefined();
     messageId = message.id.toHex();

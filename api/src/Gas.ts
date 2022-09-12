@@ -9,11 +9,15 @@ import { GasInfo } from './types';
 export class GearGas {
   constructor(private _api: GearApi) {}
 
-  #getTypeAndMeta(metaOrTypeOfPayload: Metadata | string, type: string): [string, Metadata | undefined] {
+  #getTypeAndMeta(metaOrTypeOfPayload: Metadata | string, metaType: string): [string, Metadata | undefined] {
+    if (!metaOrTypeOfPayload) {
+      return [undefined, undefined];
+    }
+    console.log(metaOrTypeOfPayload);
     if (isString(metaOrTypeOfPayload)) {
       return [metaOrTypeOfPayload, undefined];
     } else {
-      return [metaOrTypeOfPayload[type], metaOrTypeOfPayload];
+      return [metaOrTypeOfPayload[metaType], metaOrTypeOfPayload];
     }
   }
   /**

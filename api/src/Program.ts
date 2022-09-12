@@ -4,8 +4,8 @@ import { Bytes } from '@polkadot/types';
 
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult, Hex } from './types';
 import { generateCodeId, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
-import { createPayload } from './create-type';
 import { GearTransaction } from './Transaction';
+import { createPayload } from './create-type';
 import { Metadata } from './types/interfaces';
 import { SubmitProgramError } from './errors';
 import { GearApi } from './GearApi';
