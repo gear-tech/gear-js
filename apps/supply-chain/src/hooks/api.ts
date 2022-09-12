@@ -1,12 +1,10 @@
 import { Hex } from '@gear-js/api';
-import { useAccount, useMetadata, useReadState, useSendMessage } from '@gear-js/react-hooks';
+import { useAccount, useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { AnyJson } from '@polkadot/types/types';
-import { useEffect, useMemo, useState } from 'react';
-import supplyChainOptWasm from 'assets/wasm/supply_chain.opt.wasm';
-import supplyChainMetaWasm from 'assets/wasm/supply_chain.meta.wasm';
-import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
+import { useMemo } from 'react';
 import { LOCAL_STORAGE } from 'consts';
 import { Item, Items, Token } from 'types';
+import { useWasm } from './context';
 
 type ItemState = { ItemInfo: Item };
 type ItemsState = { ExistingItems: Items };
@@ -14,28 +12,11 @@ type RolesState = { Roles: string[] };
 type NFTProgramState = { NFTProgram: Hex };
 type NFTState = { Token: { token: Token } };
 
-function useSupplyChainOpt() {
-  const [uintArray, setUintArray] = useState<Uint8Array>();
-  const [buffer, setBuffer] = useState<Buffer>();
-
-  useEffect(() => {
-    fetch(supplyChainOptWasm)
-      .then((response) => response.arrayBuffer())
-      .then((arrayBuffer) => {
-        setUintArray(new Uint8Array(arrayBuffer));
-        setBuffer(Buffer.from(arrayBuffer));
-      });
-  }, []);
-
-  return { uintArray, buffer };
-}
-
-function useSupplyChainMeta() {
-  return useMetadata(supplyChainMetaWasm);
-}
-
 function useSupplyChainState<T>(payload: AnyJson) {
-  return useReadState<T>(localStorage[LOCAL_STORAGE.PROGRAM], supplyChainMetaWasm, payload);
+  const { supplyChain } = useWasm();
+  const { metaBuffer } = supplyChain;
+
+  return useReadState<T>(localStorage[LOCAL_STORAGE.PROGRAM], metaBuffer, payload);
 }
 
 function useItem(itemId: string) {
@@ -71,15 +52,19 @@ function useNftProgramId() {
 
 function useNft(tokenId: string) {
   const nftProgramId = useNftProgramId();
+  const { nft } = useWasm();
 
   const payload = useMemo(() => (tokenId ? { Token: { tokenId } } : undefined), [tokenId]);
-  const { state, isStateRead } = useReadState<NFTState>(nftProgramId, nftMetaWasm, payload);
+  const { state, isStateRead } = useReadState<NFTState>(nftProgramId, nft.metaBuffer, payload);
 
   return { nft: state?.Token.token, isNftRead: isStateRead };
 }
 
 function useSupplyChainMessage() {
-  return useSendMessage(localStorage[LOCAL_STORAGE.PROGRAM], supplyChainMetaWasm);
+  const { supplyChain } = useWasm();
+  const { meta } = supplyChain;
+
+  return useSendMessage(localStorage[LOCAL_STORAGE.PROGRAM], meta);
 }
 
-export { useSupplyChainOpt, useSupplyChainMeta, useItem, useItems, useRoles, useNft, useSupplyChainMessage };
+export { useItem, useItems, useRoles, useNft, useSupplyChainMessage };

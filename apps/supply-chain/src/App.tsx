@@ -2,18 +2,22 @@ import { useApi, useBalanceSubscription, useLoggedInAccount } from '@gear-js/rea
 import { Routing } from 'pages';
 import { Header, Footer, ApiLoader } from 'components';
 import { withProviders } from 'hocs';
+import { useWasm } from 'hooks';
 import 'App.scss';
 
 function Component() {
   const { isApiReady } = useApi();
   const { isLoginReady } = useLoggedInAccount();
 
+  const { supplyChain, nft } = useWasm();
+  const isEachWasmReady = supplyChain && nft;
+
   useBalanceSubscription();
 
   return (
     <>
       <Header isAccountVisible={isLoginReady} />
-      <main>{isApiReady && isLoginReady ? <Routing /> : <ApiLoader />}</main>
+      <main>{isApiReady && isLoginReady && isEachWasmReady ? <Routing /> : <ApiLoader />}</main>
       <Footer />
     </>
   );
