@@ -3,7 +3,7 @@ import { Codec, Registry } from '@polkadot/types/types';
 import { Bytes, TypeRegistry } from '@polkadot/types';
 import { RegistryTypes } from '@polkadot/types-codec/types/registry';
 
-import { checkTypeAndPayload, typeIsGeneric, typeIsString } from '../utils/types';
+import { getTypeAndPayload, typeIsGeneric, typeIsString } from '../utils/types';
 import { TypeInfoRegistry } from './TypeInfoReg';
 import { toJSON, isJSON } from '../utils/json';
 import { Hex, Metadata } from '../types';
@@ -77,7 +77,7 @@ export class CreateType {
   public create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec;
 
   public create(type: string, payload: unknown, registryTypesOrMetadata?: Hex | Uint8Array | Metadata): Codec {
-    checkTypeAndPayload(type, payload);
+    [type, payload] = getTypeAndPayload(type, payload);
     if (registryTypesOrMetadata) {
       const registryTypes =
         isHex(registryTypesOrMetadata) || isU8a(registryTypesOrMetadata)

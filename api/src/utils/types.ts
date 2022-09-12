@@ -1,6 +1,5 @@
 import { stringCamelCase } from '@polkadot/util';
 import { REGULAR_EXP } from './regexp';
-import { CreateTypeError } from '../errors';
 
 export function transformTypes(types: object): { [key: string]: object } {
   return Object.values(types).reduce((res, types): object => ({ ...res, ...types }), {});
@@ -24,11 +23,12 @@ export function typeIsString(type: string): boolean {
   return ['string', 'utf8', 'utf-8', 'text'].includes(type.toLowerCase());
 }
 
-export function checkTypeAndPayload(type: string, payload: unknown) {
+export function getTypeAndPayload(type: string, payload: unknown): [string, unknown] {
   if (payload === undefined) {
-    throw new CreateTypeError('Payload is not specified');
+    payload = '0x';
   }
   if (type === undefined) {
-    throw new CreateTypeError('Type is not specified');
+    type = 'Bytes';
   }
+  return [type, payload];
 }
