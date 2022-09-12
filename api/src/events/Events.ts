@@ -1,9 +1,9 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-import { ISystemAccountInfo, IBalanceCallback, IBlocksCallback } from '../types';
+import { ISystemAccountInfo, IBalanceCallback, IBlocksCallback, Hex } from '../types';
 import { IGearEvent } from './types';
 import { GearApi } from '../GearApi';
-import { Transfer } from './GearEvents';
+import { Transfer, UserMessageSent } from './GearEvents';
 
 export class GearEvents {
   private api: GearApi;
@@ -21,6 +21,25 @@ export class GearEvents {
         .filter(({ event }) => event.method === method)
         .forEach(({ event }) => {
           callback(event as IGearEvent[M]);
+        });
+    });
+  }
+
+  #umsActorsMatch(from: Hex, to: Hex, event: UserMessageSent): boolean {
+    if (event.data.message.source.eq(from) || event.data.message.destination.eq(to)) {
+      return true;
+    }
+    return false;
+  }
+
+  subscribeToUserMessageSent(options: { from?: Hex; to?: Hex }, callback: (event: UserMessageSent) => void) {
+    return this.api.query.system.events((events) => {
+      events
+        .filter(({ event }) => ['UserMessageSent', 'MessageEnqueued'].includes(event.method))
+        .forEach(({ event }) => {
+          if (this.#umsActorsMatch(options.from, options.to, event as UserMessageSent)) {
+            callback(event as UserMessageSent);
+          }
         });
     });
   }
