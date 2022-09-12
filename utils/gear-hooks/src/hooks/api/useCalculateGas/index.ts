@@ -2,12 +2,12 @@ import { GasInfo, Hex, Metadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { useContext } from 'react';
 import { AccountContext, ApiContext } from 'context';
-import { InitUploadOptions, InitCreateOptions, HandleOptions, ReplyOptions } from './types';
+import { Options } from './types';
 
 function useUploadCalculateGas(
   code: Hex | Buffer | undefined,
   metaOrPayloadType?: Metadata | string | undefined,
-  options?: InitUploadOptions,
+  options?: Options,
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
@@ -35,7 +35,7 @@ function useUploadCalculateGas(
 function useCreateCalculateGas(
   codeId: Hex | undefined,
   metaOrPayloadType?: Metadata | string | undefined,
-  options?: InitCreateOptions,
+  options?: Options,
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
@@ -63,7 +63,7 @@ function useCreateCalculateGas(
 function useHandleCalculateGas(
   destinationId: Hex | Buffer | undefined,
   metaOrPayloadType?: Metadata | string | undefined,
-  options?: HandleOptions,
+  options?: Options,
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);
@@ -92,7 +92,7 @@ function useReplyCalculateGas(
   messageId: Hex | undefined,
   exitCode: number | undefined,
   metaOrPayloadType?: Metadata | string | undefined,
-  options?: ReplyOptions,
+  options?: Options,
 ) {
   const { api } = useContext(ApiContext); // сircular dependency fix
   const { account } = useContext(AccountContext);

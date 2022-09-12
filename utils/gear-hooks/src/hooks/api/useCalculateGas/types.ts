@@ -8,9 +8,4 @@ type Options = {
   isOtherPanicsAllowed?: boolean;
 };
 
-type InitUploadOptions = Options & { method: 'initUpload' };
-type InitCreateOptions = Options & { method: 'initCreate' };
-type HandleOptions = Options & { method: 'handle' };
-type ReplyOptions = Options & { method: 'reply'; exitCode: number };
-
-export type { CalculateGas, InitUploadOptions, InitCreateOptions, HandleOptions, ReplyOptions };
+export type { CalculateGas, Options };
