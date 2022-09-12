@@ -1,12 +1,12 @@
 import { UserMessageSent, CreateType } from '@gear-js/api';
-import { useAccount, useApi, useMetadata } from '@gear-js/react-hooks';
+import { useAccount, useApi } from '@gear-js/react-hooks';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { u8, Vec } from '@polkadot/types';
 import { useEffect, useState } from 'react';
 import isPlainObject from 'lodash.isplainobject';
-import escrowMetaWasm from 'assets/wasm/escrow.meta.wasm';
 import { LOCAL_STORAGE } from 'consts';
 import { getProgramId } from 'utils';
+import { useWasm } from './context';
 
 const initWalletId = (localStorage[LOCAL_STORAGE.WALLET] as string) || '';
 
@@ -16,7 +16,7 @@ function useWalletId() {
   const { account } = useAccount();
   const decodedAddress = account?.decodedAddress;
 
-  const { metadata } = useMetadata(escrowMetaWasm);
+  const { meta } = useWasm();
 
   const [walletId, setWalletId] = useState(initWalletId);
 
@@ -24,8 +24,8 @@ function useWalletId() {
 
   const getDecodedPayload = (payload: Vec<u8>) => {
     // handle_output is specific for escrow contract
-    if (metadata && metadata.handle_output) {
-      return new CreateType().create(metadata.handle_output, payload, metadata).toHuman();
+    if (meta.handle_output) {
+      return new CreateType().create(meta.handle_output, payload, meta).toHuman();
     }
   };
 
@@ -53,7 +53,7 @@ function useWalletId() {
   useEffect(() => {
     let unsub: UnsubscribePromise | undefined;
 
-    if (api && decodedAddress && metadata) {
+    if (api && decodedAddress) {
       unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', handleEvents);
     }
 
@@ -61,7 +61,7 @@ function useWalletId() {
       if (unsub) unsub.then((unsubCallback) => unsubCallback());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, decodedAddress, metadata]);
+  }, [api, decodedAddress]);
 
   return { walletId, setWalletId, resetWalletId };
 }
