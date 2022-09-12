@@ -1,5 +1,5 @@
 import { web3FromSource } from '@polkadot/extension-dapp';
-import { GasLimit, Metadata } from '@gear-js/api';
+import { GasLimit, IProgramCreateOptions, Metadata } from '@gear-js/api';
 import { AnyJson } from '@polkadot/types/types';
 import { useContext } from 'react';
 import { AccountContext, AlertContext, ApiContext } from 'context';
@@ -51,4 +51,48 @@ const useUploadProgram = (
   return uploadProgram;
 };
 
-export { useUploadProgram };
+const useCreateProgram = (
+  codeId: IProgramCreateOptions['codeId'] | undefined,
+  metadata?: Metadata | undefined,
+  payloadType?: string | undefined,
+) => {
+  const alert = useContext(AlertContext); // сircular dependency fix
+  const { api } = useContext(ApiContext);
+  const { account } = useContext(AccountContext);
+
+  const { handleSignStatus, handleInitStatus, handleError } = useHandlers();
+
+  const signAndSend = (params: SingAndSendParams) => {
+    const { address, signer, ...signHandlerParams } = params;
+
+    return api.program.signAndSend(address, { signer }, (result) => handleSignStatus({ result, ...signHandlerParams }));
+  };
+
+  const createProgram = (initPayload: AnyJson, gasLimit: GasLimit, options?: UploadOptions) => {
+    if (!account) return Promise.reject(new Error('No account address'));
+    if (!codeId) return Promise.reject(new Error('No program buffer'));
+
+    const { value = 0, salt, onSuccess, onError } = options || {};
+
+    const program = { codeId, initPayload, gasLimit, value, salt };
+    const callbacks = { onSuccess, onError };
+
+    const { meta, address } = account;
+    const { source } = meta;
+
+    const { programId } = api.program.create(program, metadata, payloadType);
+
+    const alertId = alert.loading('SignIn', { title: TransactionName.CreateProgram });
+    const initialization = waitForProgramInit(api, programId);
+
+    return web3FromSource(source)
+      .then(({ signer }) => signAndSend({ address, signer, callbacks, alertId, programId }))
+      .then(() => initialization)
+      .then((status) => handleInitStatus({ status, programId, onError }))
+      .catch(({ message }: Error) => handleError({ message, alertId, onError }));
+  };
+
+  return createProgram;
+};
+
+export { useUploadProgram, useCreateProgram };
