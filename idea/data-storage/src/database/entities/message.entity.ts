@@ -45,7 +45,9 @@ export class Message extends BaseEntity implements IMessage {
   @Column({ type: 'enum', enum: MessageReadReason, nullable: true })
     readReason: MessageReadReason;
 
-  @ManyToOne(() => Program, (program) => program.messages)
+  @ManyToOne(() => Program, (program) => program.messages, {
+    nullable: true
+  })
   @JoinColumn({ name: 'program_id' })
     program: Program;
 }

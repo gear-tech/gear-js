@@ -23,6 +23,8 @@ export class Code extends BaseEntity implements ICode {
   @OneToOne(() => Meta, (meta) => meta.code)
     meta: Meta;
 
-  @OneToMany(() => Program, (program) => program.code)
+  @OneToMany(() => Program, (program) => program.code, {
+    nullable: true
+  })
     programs: Program[];
 }
