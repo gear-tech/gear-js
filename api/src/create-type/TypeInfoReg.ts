@@ -1,6 +1,7 @@
 import { Hex } from '../types';
 import { TypeRegistry, PortableRegistry } from '@polkadot/types';
 import { hexToU8a, isHex } from '@polkadot/util';
+import { Codec } from '@polkadot/types/types';
 
 import { isJSON, toJSON } from '../utils/json';
 import { joinTypePath } from '../utils/types';
@@ -132,7 +133,7 @@ export class TypeInfoRegistry {
     return this.#finalTypeDefinition;
   }
 
-  createType(typeName: string, data: any) {
+  createType(typeName: string, data: any): Codec {
     return this.registry.createType(typeName, data);
   }
 

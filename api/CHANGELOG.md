@@ -1,3 +1,10 @@
+## 0.25.5
+_09/12/2022_
+
+https://github.com/gear-tech/gear-js/pull/982
+### Changes
+
+- Add method to subscribe to `UserMessageSent` events by actorId
 ## 0.25.4
 _09/12/2022_
 
