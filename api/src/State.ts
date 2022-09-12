@@ -4,6 +4,7 @@ import { getWasmMetadata, readState } from './wasm';
 import { ReadStateError } from './errors';
 import { Metadata, Hex } from './types';
 import { GearStorage } from './Storage';
+import { CreateType } from './create-type';
 
 export class GearProgramState extends GearStorage {
   /**
@@ -17,7 +18,7 @@ export class GearProgramState extends GearStorage {
       throw new ReadStateError('Unable to read state. meta_state function is not specified in metadata');
     }
     const bytes = this._api.createType('Bytes', Array.from(state));
-    const decoded = this._createType.create(meta.meta_state_output, bytes, meta);
+    const decoded = CreateType.create(meta.meta_state_output, bytes, meta.types);
     return decoded;
   }
 
@@ -28,7 +29,7 @@ export class GearProgramState extends GearStorage {
    * @returns ArrayBuffer with encoded data
    */
   encodeInput(meta: Metadata, inputValue: AnyJson): Uint8Array {
-    const encoded = this._createType.create(meta.meta_state_input, inputValue, meta);
+    const encoded = CreateType.create(meta.meta_state_input, inputValue, meta.types);
     return encoded.toU8a();
   }
 

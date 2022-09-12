@@ -3,4 +3,5 @@ export const REGULAR_EXP = {
   angleBracket: /<.+>/,
   roundBracket: /^\(.+\)$/,
   squareBracket: /^\[.+\]$/,
+  generic: /\b\w+</g,
 };
