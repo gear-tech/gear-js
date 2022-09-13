@@ -190,21 +190,23 @@ export class GearEventListener {
 
     const extrinsic = signedBlock.block.extrinsics.find(({ method: { method } }) => method === 'uploadCode');
 
-    const filteredEvents = filterEvents(extrinsic.hash, signedBlock, events, status).events!.filter(
-      ({ event: { method } }) => method === Keys.CodeChanged,
-    );
+    if (extrinsic){
+      const filteredEvents = filterEvents(extrinsic.hash, signedBlock, events, status).events!.filter(
+        ({ event: { method } }) => method === Keys.CodeChanged,
+      );
 
-    const {  change, id  } = filteredEvents[0].event.data as CodeChangedData;
+      const {  change, id  } = filteredEvents[0].event.data as CodeChangedData;
 
-    const updateCodeInput: UpdateCodeInput = {
-      id: id.toHex(),
-      genesis,
-      status: change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null,
-      timestamp,
-      blockHash,
-      expiration:  change.isActive ? change.asActive.expiration.toHuman() as number : null,
-    };
+      const updateCodeInput: UpdateCodeInput = {
+        id: id.toHex(),
+        genesis,
+        status: change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null,
+        timestamp,
+        blockHash,
+        expiration:  change.isActive ? change.asActive.expiration.toHuman() as number : null,
+      };
 
-    await this.codeService.updateCode(updateCodeInput);
+      await this.codeService.updateCode(updateCodeInput);
+    }
   }
 }
