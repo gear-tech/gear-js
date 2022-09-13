@@ -1,6 +1,4 @@
 import {
-  useAccounts,
-  useLoggedInAccount,
   useBalanceSubscription,
   useMetadata,
   useReadState,
@@ -41,8 +39,6 @@ import {
 } from 'types';
 
 export {
-  useAccounts,
-  useLoggedInAccount,
   useBalanceSubscription,
   useMetadata,
   useReadState,

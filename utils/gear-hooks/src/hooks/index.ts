@@ -1,4 +1,3 @@
-import { useAccounts, useLoggedInAccount } from './accounts';
 import {
   useBalanceSubscription,
   useMetadata,
@@ -15,8 +14,6 @@ import { useAccount, useAlert, useApi } from './context';
 import { useCreateHandler } from './handlers';
 
 export {
-  useAccounts,
-  useLoggedInAccount,
   useBalanceSubscription,
   useMetadata,
   useReadState,
