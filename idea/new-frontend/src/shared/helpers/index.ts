@@ -116,7 +116,7 @@ const getValidation =
   <T>(schema: AnySchema) =>
   async (values: T) => {
     try {
-      await schema.validate(values, { abortEarly: false });
+      schema.validateSync(values, { abortEarly: false });
     } catch (error: unknown) {
       const errors = (error as ValidationError).inner.reduce(
         (formError, innerError) => setIn(formError, innerError.path ?? '', innerError.message),

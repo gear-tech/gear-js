@@ -90,7 +90,8 @@ const FormPayload = ({ name, label, values }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values]);
 
-  const error = meta.touched && meta.invalid ? meta.error : undefined;
+  // TODO: meta.error is object - final-form bug
+  const error = meta.invalid ? 'Invalid payload' : undefined;
 
   return (
     <InputWrapper

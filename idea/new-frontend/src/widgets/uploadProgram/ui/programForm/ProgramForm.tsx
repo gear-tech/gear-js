@@ -1,43 +1,53 @@
-import { useState, useMemo, useRef, useEffect, ReactNode, ChangeEvent } from 'react';
+import { useState, useMemo, useRef, useEffect, ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
 import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
-import { FileInput } from '@gear-js/ui';
+import { FileInput, Button } from '@gear-js/ui';
 
-import { useChangeEffect } from 'hooks';
+import { useProgramActions, useGasCalculate, useChangeEffect } from 'hooks';
+import { Result } from 'hooks/useGasCalculate/types';
 import { Payload } from 'hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from 'features/formPayload';
 import { FormPayloadType } from 'features/formPayloadType';
 import { GasField } from 'features/gasField';
+import { GasInfoCard } from 'entities/gasInfo';
+import { GasMethod } from 'shared/config';
 import { getValidation } from 'shared/helpers';
 import { FormInput, formStyles } from 'shared/ui/form';
+import plusSVG from 'shared/assets/images/actions/plus.svg';
+import closeSVG from 'shared/assets/images/actions/close.svg';
 
 import styles from './ProgramForm.module.scss';
 import widgetStyles from '../UploadProgram.module.scss';
 import { getValidationSchema } from '../../helpers';
-import { INITIAL_VALUES, FormValues, PropsToRenderButtons, Helpers } from '../../model';
+import { INITIAL_VALUES, FormValues } from '../../model';
 
 type Props = {
   file: File;
-  label: string;
+  fileBuffer: Buffer;
   metadata?: Metadata;
   metadataBuffer?: string;
-  onSubmit: (payload: Payload, helpers: Helpers) => Promise<void> | void;
   onFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  renderButtons: (props: PropsToRenderButtons) => ReactNode;
 };
 
-const ProgramForm = (props: Props) => {
-  const { file, label, metadata, metadataBuffer, onSubmit, onFileChange, renderButtons } = props;
-
+const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange }: Props) => {
   const { api } = useApi();
+  const navigate = useNavigate();
 
   const formApi = useRef<FormApi<FormValues>>();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isDisabled, setIsDisables] = useState(false);
 
+  const [gasInfo, setGasinfo] = useState<Result>();
+  const [isDisabled, setIsDisables] = useState(false);
+  const [isGasDisabled, setIsGasDisabled] = useState(false);
+
+  const calculateGas = useGasCalculate();
+  const { uploadProgram } = useProgramActions();
+
+  const goBack = () => navigate(-1);
   const changeProgramName = (meta: Metadata) => formApi.current?.change('programName', meta?.title ?? '');
 
   const setFileInputValue = () => {
@@ -56,7 +66,27 @@ const ProgramForm = (props: Props) => {
     }
   };
 
-  const handleSubmitForm = (values: FormValues, form: FormApi<FormValues, FormValues>) => {
+  const handleGasCalculate = async () => {
+    if (!formApi.current) {
+      return;
+    }
+
+    setIsGasDisabled(true);
+
+    const { values } = formApi.current.getState();
+    const preparedValues = { ...values, payload: getSubmitPayload(values.payload) };
+
+    try {
+      const info = await calculateGas(GasMethod.InitUpdate, preparedValues, fileBuffer, metadata);
+
+      formApi.current.change('gasLimit', info.limit);
+      setGasinfo(info);
+    } finally {
+      setIsGasDisabled(false);
+    }
+  };
+
+  const handleSubmitForm = (values: FormValues) => {
     setIsDisables(true);
 
     const { value, payload, gasLimit, programName, payloadType } = values;
@@ -73,7 +103,12 @@ const ProgramForm = (props: Props) => {
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    onSubmit(data, { resetForm: form.restart, finishSubmitting });
+    uploadProgram({
+      file,
+      payload: data,
+      reject: finishSubmitting,
+      resolve: finishSubmitting,
+    });
   };
 
   const encodeType = metadata?.init_input;
@@ -113,8 +148,6 @@ const ProgramForm = (props: Props) => {
   return (
     <Form validateOnBlur initialValues={INITIAL_VALUES} validate={validation} onSubmit={handleSubmitForm}>
       {({ form, handleSubmit }) => {
-        const { values } = form.getState();
-
         formApi.current = form;
 
         return (
@@ -122,7 +155,7 @@ const ProgramForm = (props: Props) => {
             <div className={clsx(styles.formContent, widgetStyles.lining)}>
               <FileInput
                 ref={fileInputRef}
-                label={label}
+                label="Program file"
                 direction="y"
                 onChange={onFileChange}
                 className={clsx(formStyles.field, formStyles.gap16)}
@@ -134,12 +167,23 @@ const ProgramForm = (props: Props) => {
 
               {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
 
-              <GasField name="gasLimit" label="Gas limit" placeholder="0" onGasCalculate={() => {}} />
+              <GasField
+                name="gasLimit"
+                label="Gas limit"
+                placeholder="0"
+                disabled={isGasDisabled}
+                onGasCalculate={handleGasCalculate}
+              />
+
+              {gasInfo && <GasInfoCard gasInfo={gasInfo} />}
 
               <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
             </div>
 
-            <div className={styles.buttons}>{renderButtons({ isDisabled, values, metadata })}</div>
+            <div className={styles.buttons}>
+              <Button icon={plusSVG} type="submit" text="Upload Program" disabled={isDisabled} />
+              <Button icon={closeSVG} text="Cancel Upload" color="light" onClick={goBack} />
+            </div>
           </form>
         );
       }}

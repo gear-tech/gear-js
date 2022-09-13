@@ -10,15 +10,10 @@ type FormValues = {
   payloadType: string;
 };
 
-type PropsToRenderButtons = {
-  values: FormValues;
+type UploadProgramProps = {
+  file?: File;
   metadata?: Metadata;
-  isDisabled: boolean;
+  metadataBuffer?: string;
 };
 
-type Helpers = {
-  resetForm: () => void;
-  finishSubmitting: () => void;
-};
-
-export type { FormValues, PropsToRenderButtons, Helpers };
+export type { UploadProgramProps, FormValues };

@@ -1,32 +1,38 @@
-import { useState, ReactNode, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { FileInput } from '@gear-js/ui';
 
-import { Payload } from 'hooks/useProgramActions/types';
-import { checkFileFormat } from 'shared/helpers';
+import { checkFileFormat, readFileAsync } from 'shared/helpers';
 import { formStyles } from 'shared/ui/form';
 
 import styles from './UploadProgram.module.scss';
-import { PropsToRenderButtons, Helpers } from '../model';
 import { ProgramForm } from './programForm';
 
 type Props = {
   file?: File;
-  label: string;
   metadata?: Metadata;
   metadataBuffer?: string;
-  onSubmit: (payload: Payload, helpers: Helpers) => Promise<void> | void;
-  renderButtons: (props: PropsToRenderButtons) => ReactNode;
 };
 
-const UploadProgram = (props: Props) => {
+const UploadProgram = ({ file, metadata, metadataBuffer }: Props) => {
   const alert = useAlert();
 
-  const { file, label, metadata, metadataBuffer, onSubmit, renderButtons } = props;
-
+  const [fileBuffer, setFileBuffer] = useState<Buffer>();
   const [selectedFile, setSelectedFile] = useState<File | undefined>(file);
+
+  const getFileBuffer = async (currentFile: File) => {
+    try {
+      const buffer = await readFileAsync(currentFile, 'buffer');
+
+      setFileBuffer(Buffer.from(new Uint8Array(buffer)));
+    } catch (error) {
+      const message = (error as Error).message;
+
+      alert.error(message);
+    }
+  };
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     const currentFile = event.target.files?.[0];
@@ -46,16 +52,21 @@ const UploadProgram = (props: Props) => {
     setSelectedFile(currentFile);
   };
 
-  if (selectedFile) {
+  useEffect(() => {
+    if (selectedFile) {
+      getFileBuffer(selectedFile);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFile]);
+
+  if (selectedFile && fileBuffer) {
     return (
       <ProgramForm
         file={selectedFile}
-        label={label}
+        fileBuffer={fileBuffer}
         metadata={metadata}
         metadataBuffer={metadataBuffer}
-        onSubmit={onSubmit}
         onFileChange={handleChangeFile}
-        renderButtons={renderButtons}
       />
     );
   }
@@ -65,7 +76,7 @@ const UploadProgram = (props: Props) => {
       {/* @ts-ignore */}
       <FileInput
         size="large"
-        label={label}
+        label="Program file"
         direction="y"
         className={clsx(formStyles.field, formStyles.gap16)}
         onChange={handleChangeFile}

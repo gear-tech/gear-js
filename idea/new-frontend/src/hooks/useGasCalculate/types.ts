@@ -1,14 +1,18 @@
-import { Hex } from '@gear-js/api';
+import { Hex, PayloadType } from '@gear-js/api';
 
-import { PayloadValue } from 'entities/formPayload';
+import { IGasInfo } from 'entities/gasInfo';
 import { GasMethod } from 'shared/config';
 
 type Values = {
   value: number;
-  payload: PayloadValue;
+  payload: PayloadType;
   payloadType: string;
 };
 
 type Code<T> = T extends GasMethod.InitUpdate ? Buffer : T extends GasMethod.InitCreate ? Hex : null;
 
-export type { Values, Code };
+type Result = IGasInfo & {
+  limit: number;
+};
+
+export type { Values, Code, Result };

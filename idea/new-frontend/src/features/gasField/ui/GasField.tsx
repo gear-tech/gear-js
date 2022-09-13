@@ -14,7 +14,7 @@ type Props = Omit<NumberFormatProps & InputProps, 'name' | 'value' | 'onValueCha
 };
 
 const GasField = (props: Props) => {
-  const { name, label, className, onGasCalculate, ...other } = props;
+  const { name, label, disabled, className, onGasCalculate, ...other } = props;
 
   const { change } = useForm();
   const { input, meta } = useField(name);
@@ -53,7 +53,7 @@ const GasField = (props: Props) => {
             +10%
           </button>
         </div>
-        <Button icon={calculatorSVG} text="Calculate gas" color="light" onClick={onGasCalculate} />
+        <Button icon={calculatorSVG} text="Calculate gas" color="light" disabled={disabled} onClick={onGasCalculate} />
       </div>
     </InputWrapper>
   );

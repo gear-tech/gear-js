@@ -1,5 +1,5 @@
-import { FormValues, PropsToRenderButtons, Helpers } from './types';
+import { FormValues, UploadProgramProps } from './types';
 import { INITIAL_VALUES } from './consts';
 
 export { INITIAL_VALUES };
-export type { FormValues, PropsToRenderButtons, Helpers };
+export type { FormValues, UploadProgramProps };
