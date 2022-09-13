@@ -8,6 +8,7 @@ import { ProgramStatus } from '../../src/common/enums';
 
 import { mockProgramRepository } from '../mock/program/program-repository.mock';
 import { PROGRAM_DB_MOCK } from '../mock/program/program-db.mock';
+import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 
 const PROGRAM_ENTITY_ID = '0x7357';
 
@@ -29,12 +30,14 @@ describe('Program service', () => {
   });
 
   it('should be successfully created new program', async () => {
+    const code = CODE_DB_MOCK[0];
     const program = await programService.createProgram({
       id: PROGRAM_ENTITY_ID,
       genesis: '0x07357',
       owner: '0x7357',
       blockHash: '0x1234',
       timestamp: 0,
+      code
     });
 
     expect(program.id).toEqual(PROGRAM_ENTITY_ID);
