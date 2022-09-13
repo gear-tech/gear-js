@@ -4,18 +4,18 @@ import { Input, inputStyles, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
 import clsx from 'clsx';
-import { ADDRESS, MULTIPLIER } from 'consts';
+import { MULTIPLIER } from 'consts';
 import { useAuctionMessage, useNftMessage, useWasm } from 'hooks';
 import styles from './Form.module.scss';
 
 const initialValues = {
-  nftContractActorId: '0x2cb1532754e0883ce06b175c208d4e780da81f543106cdd45a01201c4c04808b',
-  tokenId: '1',
-  startingPrice: '1000',
-  discountRate: '5',
-  hours: '00',
-  minutes: '00',
-  seconds: '01',
+  nftContractActorId: '',
+  tokenId: '',
+  startingPrice: '',
+  discountRate: '',
+  hours: '',
+  minutes: '',
+  seconds: '',
 };
 
 const validate = {
