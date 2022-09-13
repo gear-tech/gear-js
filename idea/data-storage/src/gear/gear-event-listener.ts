@@ -26,8 +26,7 @@ export class GearEventListener {
               private messageService: MessageService,
               private metaService: MetadataService,
               private codeService: CodeService,
-              private codeRepository: CodeRepo) {
-  }
+              private codeRepository: CodeRepo) {}
 
   public async listen() {
     // eslint-disable-next-line no-constant-condition
