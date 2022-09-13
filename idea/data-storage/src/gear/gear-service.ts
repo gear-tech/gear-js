@@ -9,10 +9,23 @@ const { gear } = configuration();
 export const gearService = {
   async connect(): Promise<void> {
     try {
-      gearApi = await GearApi.create({
+      gearApi = new GearApi({
         providerAddress: gear.wsProvider,
         throwOnConnect: true,
       });
+
+      gearApi.isReadyOrError.catch(console.error);
+      try {
+        await gearApi.isReady;
+      } catch (error) {
+        console.log('api.isReady', error);
+      }
+
+      const chain = await gearApi.chain();
+      const genesis = gearApi.genesisHash.toHex();
+      const version = gearApi.runtimeVersion.specVersion.toHuman();
+
+      console.log('______>chain | genesis | version', chain, genesis, version);
     } catch (error) {
       console.log('api.isReady', error);
     }
