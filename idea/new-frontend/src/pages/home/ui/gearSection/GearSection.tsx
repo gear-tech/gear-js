@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
 import { useAlert, useApi } from '@gear-js/react-hooks';
 
@@ -19,14 +20,14 @@ const GearSection = ({ isLoggedIn }: Props) => {
   const { api } = useApi();
   const alert = useAlert();
 
-  const isHidden = isLoggedIn || !!Number(localStorage.getItem(LocalStorage.HideWelcomeBanner));
+  const isVisible = !(isLoggedIn || Boolean(localStorage.getItem(LocalStorage.HideWelcomeBanner)));
 
   const [programsCount, setProgramsCount] = useState<number | null>(null);
-  const [isBannerHidden, setIsBannerHidden] = useState(isHidden);
+  const [isBannerVisible, setIsBannerVisible] = useState(isVisible);
 
   const closeBanner = () => {
-    setIsBannerHidden(true);
-    localStorage.setItem(LocalStorage.HideWelcomeBanner, '1');
+    setIsBannerVisible(false);
+    localStorage.setItem(LocalStorage.HideWelcomeBanner, 'true');
   };
 
   useEffect(() => {
@@ -38,28 +39,30 @@ const GearSection = ({ isLoggedIn }: Props) => {
   }, [api]);
 
   useEffect(() => {
-    setIsBannerHidden(isHidden);
+    setIsBannerVisible(isVisible);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   const isLoading = programsCount === null;
 
   return (
-    <section className={styles.gearSection}>
-      <CSSTransition in={!isBannerHidden} timeout={AnimationTimeout.Default} unmountOnExit>
-        <WelcomeBanner className={styles.welcomeBanner} onClose={closeBanner} />
-      </CSSTransition>
-      <div className={styles.indicators}>
-        <GearIndicator icon={<AppSVG />} name="App Examples" value="31" isLoading={isLoading} />
-        <GearIndicator
-          icon={<PulseSVG />}
-          name="Active Programs Count"
-          value={String(programsCount)}
-          isLoading={isLoading}
-        />
-        <GearIndicator icon={<GlobusSVG />} name="Nodes Count" value="1032" isLoading={isLoading} />
-      </div>
-    </section>
+    <CSSTransition in={isBannerVisible} timeout={AnimationTimeout.Default}>
+      <section className={clsx(styles.gearSection, isBannerVisible && styles.withBanner)}>
+        <CSSTransition in={isBannerVisible} timeout={AnimationTimeout.Default} unmountOnExit>
+          <WelcomeBanner className={styles.welcomeBanner} onClose={closeBanner} />
+        </CSSTransition>
+        <div className={styles.indicators}>
+          <GearIndicator icon={<AppSVG />} name="App Examples" value="31" isLoading={isLoading} />
+          <GearIndicator
+            icon={<PulseSVG />}
+            name="Active Programs Count"
+            value={String(programsCount)}
+            isLoading={isLoading}
+          />
+          <GearIndicator icon={<GlobusSVG />} name="Nodes Count" value="1032" isLoading={isLoading} />
+        </div>
+      </section>
+    </CSSTransition>
   );
 };
 

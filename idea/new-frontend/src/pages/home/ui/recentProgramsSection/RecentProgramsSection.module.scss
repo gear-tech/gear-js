@@ -1,3 +1,4 @@
+@use '@gear-js/ui/breakpoints' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
@@ -24,4 +25,8 @@
   grid-template-columns: repeat(4, minmax(toRem(308), 1fr));
   gap: toRem(24);
   grid-auto-flow: row dense;
+
+  @media (max-width: 1625px) {
+    grid-template-columns: repeat(3, minmax(toRem(308), 1fr));
+  }
 }

@@ -49,6 +49,8 @@
 .expandedTableRow {
   @include expand(toRem(52));
 
+  height: toRem(52);
+
   .content {
     @include fade();
 

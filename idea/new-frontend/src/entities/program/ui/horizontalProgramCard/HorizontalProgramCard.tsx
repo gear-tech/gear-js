@@ -14,7 +14,7 @@ import { ProgramActionLink } from 'shared/ui/programActionLink';
 
 import styles from './HorizontalProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';
-import { IProgram } from '../../model/types';
+import { IProgram, PROGRAM_STATUS_NAME } from '../../model';
 
 type Props = {
   program: IProgram;
@@ -28,6 +28,8 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
     event.stopPropagation();
   };
 
+  const statusName = PROGRAM_STATUS_NAME[initStatus];
+
   return (
     <article className={styles.horizontalProgramCard}>
       <div className={styles.content}>
@@ -39,7 +41,7 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
         </div>
         <div className={styles.otherInfo}>
           <IdBlock id={programId} size="medium" withIcon color="light" />
-          <BulbBlock color="light" text={initStatus} status={getBulbStatus(initStatus)} />
+          <BulbBlock color="light" text={statusName} status={getBulbStatus(initStatus)} />
           <TimestampBlock color="light" withIcon timestamp={timestamp} />
         </div>
       </div>

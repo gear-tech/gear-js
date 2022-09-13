@@ -12,7 +12,7 @@ import sendSVG from 'shared/assets/images/actions/send.svg';
 
 import styles from './ProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';
-import { IProgram } from '../../model/types';
+import { IProgram, PROGRAM_STATUS_NAME } from '../../model';
 
 type Props = {
   program: IProgram;
@@ -26,6 +26,8 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
     event.stopPropagation();
   };
 
+  const statusName = PROGRAM_STATUS_NAME[initStatus];
+
   return (
     <article className={styles.programCard}>
       <div className={styles.cardContent}>
@@ -33,7 +35,7 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
         <h2 className={styles.name}>{name}</h2>
         <IdBlock id={programId} size="small" color="light" withIcon className={styles.idBlock} />
         <div className={styles.otherInfo}>
-          <BulbBlock text={initStatus} color="light" status={getBulbStatus(initStatus)} className={styles.bulbBlock} />
+          <BulbBlock text={statusName} color="light" status={getBulbStatus(initStatus)} className={styles.bulbBlock} />
           <TimestampBlock color="light" withIcon timestamp={timestamp} />
         </div>
       </div>

@@ -4,4 +4,10 @@ enum ProgramStatus {
   InProgress = 'in progress',
 }
 
-export { ProgramStatus };
+const PROGRAM_STATUS_NAME = {
+  [ProgramStatus.Success as const]: 'Active',
+  [ProgramStatus.Failed as const]: 'Terminated',
+  [ProgramStatus.InProgress as const]: 'Paused',
+};
+
+export { ProgramStatus, PROGRAM_STATUS_NAME };

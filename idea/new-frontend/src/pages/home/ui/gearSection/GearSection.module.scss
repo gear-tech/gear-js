@@ -5,12 +5,16 @@
 .gearSection {
   position: relative;
   margin-bottom: $marginBig;
-  min-height: toRem(320);
-  
+
+  &.withBanner {
+    height: toRem(320);
+  }
+  // overwrites the height when a banner exist
+  @include expand(toRem(200), toRem(120));
+
   .indicators {
     display: flex;
     width: 100%;
-    min-height: inherit;
     
     & > * {
       flex: 1 1;

@@ -1,6 +1,3 @@
-import { Tooltip } from '@gear-js/ui';
-
-import styles from './TotalIssuance.module.scss';
 import headerStyles from '../Header.module.scss';
 
 type Props = {
@@ -13,7 +10,6 @@ const TotalIssuance = ({ totalIssuance }: Props) => (
     <div className={headerStyles.content}>
       <span className={headerStyles.value}>{totalIssuance}</span>
       <span>MUnit</span>
-      <Tooltip text="Total issuance" className={styles.tooltip} />
     </div>
   </section>
 );

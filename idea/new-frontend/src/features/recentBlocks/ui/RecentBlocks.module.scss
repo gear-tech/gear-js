@@ -82,6 +82,7 @@
   @include expand(toRem(36), 522px);
 
   display: flex;
+  height: toRem(36);
   flex-direction: column;
 
   &:global(.enter) {

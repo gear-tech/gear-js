@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import { Input } from '@gear-js/ui';
 
 import { Filters, FilterGroup, Radio, StatusCheckbox } from 'features/filters';
-import { ProgramStatus } from 'entities/program';
+import { ProgramStatus, PROGRAM_STATUS_NAME } from 'entities/program';
 import { AnimationTimeout } from 'shared/config';
 import { BulbStatus } from 'shared/ui/bulbBlock';
 
@@ -42,19 +42,19 @@ const SearchSettings = ({ isLoggedIn, initialValues, onSubmit }: Props) => {
           <StatusCheckbox
             name="status"
             value={ProgramStatus.Success}
-            label={BulbStatus.Success}
+            label={PROGRAM_STATUS_NAME[ProgramStatus.Success]}
             status={BulbStatus.Success}
           />
           <StatusCheckbox
             name="status"
             value={ProgramStatus.InProgress}
-            label={BulbStatus.Loading}
+            label={PROGRAM_STATUS_NAME[ProgramStatus.InProgress]}
             status={BulbStatus.Loading}
           />
           <StatusCheckbox
             name="status"
             value={ProgramStatus.Failed}
-            label={BulbStatus.Error}
+            label={PROGRAM_STATUS_NAME[ProgramStatus.Failed]}
             status={BulbStatus.Error}
           />
         </FilterGroup>

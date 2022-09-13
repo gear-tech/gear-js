@@ -5,6 +5,7 @@ import { useApi } from '@gear-js/react-hooks';
 
 import { NodesPopup } from 'features/nodesPopup';
 import { AnimationTimeout } from 'shared/config';
+import { ReactComponent as MenuButtonSVG } from 'shared/assets/images/menu/menuButton.svg';
 
 import styles from './Menu.module.scss';
 import { useNodes } from '../helpers/useNodes';
@@ -45,8 +46,9 @@ const Menu = () => {
           onClick={toggleNodesPopup}
         />
       </div>
-      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-      <button type="button" className={styles.menuBtn} onClick={toggleMenu} />
+      <button type="button" className={clsx(styles.menuBtn, !isOpen && styles.rotated)} onClick={toggleMenu}>
+        <MenuButtonSVG />
+      </button>
       <CSSTransition in={isNodesOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
         <NodesPopup
           chain={chain}

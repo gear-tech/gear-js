@@ -76,8 +76,7 @@
 
 @mixin expand($startHeight, $contentHeight: var(--offset-height), $duration: $timeout) {
   $endHeight: calc($contentHeight + $startHeight);
-
-  height: $startHeight;
+  
   overflow: hidden;
 
   &:global(.enter) {
