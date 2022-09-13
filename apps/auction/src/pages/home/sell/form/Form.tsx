@@ -5,7 +5,7 @@ import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
 import clsx from 'clsx';
 import { ADDRESS, MULTIPLIER } from 'consts';
-import { useAuctionMessage, useNftMessage } from 'hooks';
+import { useAuctionMessage, useNftMessage, useWasm } from 'hooks';
 import styles from './Form.module.scss';
 
 const initialValues = {
@@ -35,11 +35,13 @@ function Form() {
   const { nftContractActorId, tokenId, hours, minutes, seconds } = values;
 
   const sendAuctionMessage = useAuctionMessage();
+  const { auction } = useWasm();
+
   const sendNftMessage = useNftMessage(nftContractActorId as Hex);
 
   const createAuction = () => sendAuctionMessage({ Create: { duration: { hours, minutes, seconds }, ...values } });
   const approveTokenAndCreateAuction = () =>
-    sendNftMessage({ Approve: { to: ADDRESS.AUCTION_CONTRACT, tokenId } }, { onSuccess: createAuction });
+    sendNftMessage({ Approve: { to: auction.programId, tokenId } }, { onSuccess: createAuction });
 
   const getSeconds = () => {
     const hourSeconds = +hours * MULTIPLIER.MINUTES * MULTIPLIER.SECONDS;
