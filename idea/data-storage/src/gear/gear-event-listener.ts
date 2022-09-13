@@ -156,7 +156,7 @@ export class GearEventListener {
     }
 
     try {
-      await this.messageService.createMessages(createMessagesDBType);
+      if (createMessagesDBType.length >= 1) await this.messageService.createMessages(createMessagesDBType);
     } catch (error) {
       this.logger.error(error);
     }
