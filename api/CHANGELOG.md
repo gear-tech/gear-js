@@ -5,7 +5,7 @@ https://github.com/gear-tech/gear-js/pull/988
 ### Changes
 
 - Add function to convert type name
-- 
+
 ## 0.25.5
 _09/12/2022_
 
