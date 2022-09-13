@@ -16,8 +16,10 @@ describe('input tests', () => {
 
     const input = screen.getByLabelText('label');
     expect(input).toBeInTheDocument();
+    expect(input).not.toHaveAttribute('type');
 
-    rerender(<Input label="label" direction="y" />);
+    rerender(<Input label="label" type="number" direction="y" />);
+    expect(input).toHaveAttribute('type', 'number');
 
     const inputWrapper = screen.getByTestId('inputWrapper');
     expect(inputWrapper).not.toHaveClass(styles.x);
@@ -58,6 +60,7 @@ describe('input tests', () => {
 
     const input = screen.getByLabelText('label');
     expect(input).toBeInTheDocument();
+    expect(input).not.toHaveAttribute('type');
 
     fireEvent.focus(input);
 

@@ -1,6 +1,7 @@
+import { decodeAddress, GasInfo } from '@gear-js/api';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { GearKeyring } from '@gear-js/api';
 import { Balance } from '@polkadot/types/interfaces';
+import { bnToBn } from '@polkadot/util';
 import { Account } from 'types';
 
 const getBalance = (balance: Balance) => {
@@ -11,7 +12,10 @@ const getBalance = (balance: Balance) => {
 const getAccount = (account: InjectedAccountWithMeta, balance: Balance): Account => ({
   ...account,
   balance: getBalance(balance),
-  decodedAddress: GearKeyring.decodeAddress(account.address),
+  decodedAddress: decodeAddress(account.address),
 });
 
-export { getBalance, getAccount };
+const getAutoGasLimit = ({ waited, min_limit }: GasInfo) =>
+  waited ? min_limit.add(min_limit.mul(bnToBn(0.1))) : min_limit;
+
+export { getBalance, getAccount, getAutoGasLimit };

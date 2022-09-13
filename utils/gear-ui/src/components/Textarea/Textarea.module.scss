@@ -12,16 +12,15 @@
 .wrapper {
   @extend %inputWrapper;
   align-items: flex-start;
+
+  &.readOnly {
+    @extend %readOnlyInputWrapper;
+  }
 }
 
 .textarea {
   @extend .resets;
   @extend %input;
-
-  // using attribute selector instead of :read-only pseudo-class cuz latter selects disabled inputs too
-  &[readonly] {
-    @extend %readOnlyInputWrapper;
-  }
 }
 
 .clearButton {

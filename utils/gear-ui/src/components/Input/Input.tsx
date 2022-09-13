@@ -20,13 +20,14 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     error,
     gap,
     tooltip,
+    type,
     size = 'normal',
     color = 'dark',
     direction = 'x',
     ...attrs
   } = props;
 
-  const { readOnly, disabled, type } = attrs;
+  const { readOnly, disabled } = attrs;
 
   const isSearch = type === 'search';
 
@@ -56,7 +57,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
       <div className={wrapperClassName} data-testid="wrapper">
         {icon && <img src={icon} alt="input icon" className={styles.icon} />}
         <input
-          type={type}
+          type={isSearch ? undefined : type}
           id={id}
           className={inputClassName}
           ref={inputRef}
