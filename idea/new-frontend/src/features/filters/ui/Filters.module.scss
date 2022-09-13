@@ -11,12 +11,12 @@
 }
 
 .mainFilters {
-  @include childrenMargin(toRem(24));
+  @include childrenMargin($marginMedium);
 
-  margin-top: toRem(16);
+  margin-top: $margin;
 
   .filtersGroup {
-    @include childrenMargin(toRem(8));
+    @include childrenMargin($marginSmall);
 
     display: flex;
     flex-direction: column;

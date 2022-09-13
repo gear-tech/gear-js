@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@gear-js/api": "^0.25.2",
-    "@gear-js/react-hooks": "^0.2.19",
-    "@gear-js/ui": "^0.5.4",
+    "@gear-js/api": "^0.25.3",
+    "@gear-js/react-hooks": "^0.2.23",
+    "@gear-js/ui": "^0.5.5",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@polkadot/api": "^9.2.3",
     "@polkadot/extension-dapp": "^0.43.3",

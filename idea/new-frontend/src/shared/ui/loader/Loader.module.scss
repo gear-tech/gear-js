@@ -66,11 +66,11 @@
   }
 
   .loaderLine {
-    @include childrenMargin(4px, right);
+    @include childrenMargin($marginTiny, right);
     
     display: flex;
     min-width: 176px;
-    margin-top: 24px;
+    margin-top: $marginMedium;
     margin-bottom: 10px;
 
     .line {

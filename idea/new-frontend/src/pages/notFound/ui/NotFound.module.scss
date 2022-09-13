@@ -127,7 +127,7 @@
       .img {
         position: absolute;
         max-width: toRem(500);
-        margin-bottom: toRem(70);
+        margin-bottom: 70px;
         top: 0;
         left: 50%;
         animation: blink 12s none infinite;
@@ -190,7 +190,7 @@
         .heading {
           font-size: 1.5em;
           text-transform: uppercase;
-          margin-bottom: toRem(20);
+          margin-bottom: $marginMedium;
 
           &:nth-child(odd) {
             --glitch-translate: 8px;
@@ -203,7 +203,7 @@
       }
 
       .link {
-        margin-top: toRem(20);
+        margin-top: $marginMedium;
       }
     }
   }

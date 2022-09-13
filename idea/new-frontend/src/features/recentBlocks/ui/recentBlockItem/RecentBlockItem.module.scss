@@ -16,7 +16,7 @@
   }
 
   .content {
-    @include childrenMargin(toRem(24), right);
+    @include childrenMargin($marginMedium, right);
 
     .otherInfo {
       color: $gray600;
@@ -25,7 +25,7 @@
       vertical-align: middle;
 
       & > img {
-        margin-right: toRem(8);
+        margin-right: $marginSmall;
       }
     }
   }

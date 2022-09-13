@@ -1,7 +1,8 @@
 @use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
 
 .uploadProgramPage {
-  @include childrenMargin(32px, right);
+  @include childrenMargin($marginBig, right);
 
   display: flex;
   align-items: flex-start;

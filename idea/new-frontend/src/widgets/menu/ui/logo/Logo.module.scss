@@ -1,3 +1,5 @@
+@use 'shared/assets/styles/_variables.scss' as *;
+
 .logoWrapper {
   display: flex;
   align-items: center;
@@ -30,11 +32,11 @@
   
   .gearsLogo {    
     margin-left: 5px;
-    margin-right: 8px;  
+    margin-right: $marginSmall;  
   }
 
   .gearLogo {
-    margin-top: 4px;
+    margin-top: $marginTiny;
 
     &:global(.enter-active) {
       path[data-letter="G"] {

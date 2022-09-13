@@ -4,7 +4,7 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .header {
-  @include childrenMargin(toRem(16), right);
+  @include childrenMargin($margin, right);
 
   display: flex;
   align-items: center;

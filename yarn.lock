@@ -2205,6 +2205,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/api@npm:^0.25.3":
+  version: 0.25.5
+  resolution: "@gear-js/api@npm:0.25.5"
+  peerDependencies:
+    "@polkadot/api": ^9.3.3
+    "@polkadot/wasm-crypto": ^6.3.1
+    rxjs: ^7.5.5
+  checksum: d86b53f8483e0d87aee3c58ccd164aa9d5ae950c40b777a4aa6169cbfd0540ee65fa8e519df626322d15c64dfcefe7a42baa3432040187db63669578fde5a30c
+  languageName: node
+  linkType: hard
+
 "@gear-js/auction@workspace:apps/auction":
   version: 0.0.0-use.local
   resolution: "@gear-js/auction@workspace:apps/auction"
@@ -2610,6 +2621,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gear-js/react-hooks@npm:^0.2.23":
+  version: 0.2.23
+  resolution: "@gear-js/react-hooks@npm:0.2.23"
+  peerDependencies:
+    "@gear-js/api": ^0.25.5
+    "@polkadot/extension-dapp": ^0.43.2
+    react: ">=17.0.2"
+    react-dom: ">=17.0.2"
+    react-transition-group: ^4.4.2
+  checksum: 6f8044336137b2ec1bcc64170882477c9c7e7f059bf14526cfe10e4a3e733b4e8fdb2115729423ce2ef9abf0f38d58f5e023f7ab25494f1f253d32e9c49a5a74
+  languageName: node
+  linkType: hard
+
 "@gear-js/staking@workspace:apps/staking":
   version: 0.0.0-use.local
   resolution: "@gear-js/staking@workspace:apps/staking"
@@ -2738,13 +2762,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/ui@npm:^0.5.4":
-  version: 0.5.4
-  resolution: "@gear-js/ui@npm:0.5.4"
+"@gear-js/ui@npm:^0.5.5":
+  version: 0.5.5
+  resolution: "@gear-js/ui@npm:0.5.5"
   peerDependencies:
     react: 18.2.0
     sass: 1.49.9
-  checksum: b3d4dbe018b9cd4eaeb03e122bdff96216fa566c7746e1264f63ea31150e478bf2961efb07721bd08406f0f36ec1b5d921b14533769b58a36d723ec990c09f5e
+  checksum: 9bb80e9ee1569a3b0db6bb5cbc0048b26af422e2a68d2a8d9339f7f5d1fbd6b9dd8ca6235d7d9c17ba2ff35c8c2fce76631df4039a180ae7e2bd4c2e5165a541
   languageName: node
   linkType: hard
 
@@ -18056,9 +18080,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "new-frontend@workspace:idea/new-frontend"
   dependencies:
-    "@gear-js/api": ^0.25.2
-    "@gear-js/react-hooks": ^0.2.19
-    "@gear-js/ui": ^0.5.4
+    "@gear-js/api": ^0.25.3
+    "@gear-js/react-hooks": ^0.2.23
+    "@gear-js/ui": ^0.5.5
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@polkadot/api": ^9.2.3
     "@polkadot/extension-dapp": ^0.43.3

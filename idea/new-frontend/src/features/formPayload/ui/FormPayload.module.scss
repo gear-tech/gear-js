@@ -1,2 +1,11 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
+.fileInput {
+  margin-top: $marginMedium;
+}
+
+.field {
+  label {
+    font-size: $fontSize;
+  }
+}

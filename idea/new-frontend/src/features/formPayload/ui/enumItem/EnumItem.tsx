@@ -5,7 +5,6 @@ import { Select } from '@gear-js/ui';
 import { useChangeEffect } from 'hooks';
 import { Fieldset } from 'shared/ui/fieldset';
 
-import styles from '../FormPayload.module.scss';
 import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName, getPayloadValue } from '../../helpers';
 
@@ -30,8 +29,8 @@ const EnumItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadIt
   }, [selected]);
 
   return (
-    <Fieldset legend={itemLabel} className={styles.fieldset}>
-      <Select options={options} className={styles.select} onChange={handleChange} />
+    <Fieldset legend={itemLabel}>
+      <Select options={options} onChange={handleChange} />
       {renderNextItem({
         levelName: nextLevelName,
         // @ts-ignore

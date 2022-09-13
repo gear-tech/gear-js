@@ -11,7 +11,7 @@
 
 .logoutButton {
   display: block;
-  margin: toRem(32) auto 0;
+  margin: $marginBig auto 0;
   line-height: toRem(16);
   letter-spacing: 0.08em;
 }

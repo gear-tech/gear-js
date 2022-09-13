@@ -1,13 +1,66 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+
+%labelStyles {
+  color: $gray700;
+  font-family: 'Kanit';
+
+  &::after {
+    content: ':';
+  }
+}
 
 .field {
   label {
-    color: $gray700;
-    font-family: 'Kanit';
-    font-size: $fontSizeMedium;
-
-    &::after {
-      content: ':';
-    }
+    @extend %labelStyles;
   }
+}
+
+.text {
+  @extend %labelStyles;
+
+  font-size: $fontSizeMedium;
+  font-weight: 500;
+}
+
+.fixedSizes {
+  @include customSimplebar();
+
+  width: 100%;
+  min-height: 100px;
+  max-height: 400px;
+
+  .preformatted {
+    white-space: pre;
+    overflow-wrap: initial;
+  }
+}
+
+.preformatted {
+  display: inline;
+  font-family: 'Kanit';
+  font-size: $fontSize;
+  font-weight: 400;
+  line-height: toRem(20);
+  overflow-wrap: anywhere;
+  white-space: break-spaces;
+}
+
+.gap16 {
+  gap: $margin !important;
+}
+
+.checkbox {
+  color: $textColor !important;
+  font-size: $fontSize;
+  line-height: toRem(14);
+
+  &::after {
+    content: '';
+  }
+}
+
+.content {
+  margin-top: 10px;
 }

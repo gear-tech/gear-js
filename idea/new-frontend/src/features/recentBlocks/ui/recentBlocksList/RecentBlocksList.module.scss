@@ -8,11 +8,11 @@
   @include customSimplebar;
   
   width: 100%;
-  margin-top: toRem(20);
+  margin-top: 20px;
   max-height: 463px;
   
   .blockList {
-    @include childrenMargin(toRem(5));
+    @include childrenMargin(5px);
 
     padding-right: toRem(10);
 

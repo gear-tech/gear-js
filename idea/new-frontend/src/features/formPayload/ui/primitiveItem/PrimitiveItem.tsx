@@ -11,7 +11,7 @@ const PrimitiveItem = ({ title, levelName, typeStructure }: PayloadItemProps) =>
 
   const itemLabel = getItemLabel(typeStructure.name, title);
 
-  return <Input {...input} value={input.value || ''} label={itemLabel} className={styles.field} />;
+  return <Input {...input} label={itemLabel} direction="y" className={styles.field} />;
 };
 
 export { PrimitiveItem };

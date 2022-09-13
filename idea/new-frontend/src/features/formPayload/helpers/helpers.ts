@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
-import { decodeHexTypes, createPayloadTypeStructure, toJSON } from '@gear-js/api';
+import { decodeHexTypes, createPayloadTypeStructure, toJSON, Hex } from '@gear-js/api';
 
 import { ValueType, TypeStructure, PayloadValue } from 'entities/formPayload';
 import { getPreformattedText } from 'shared/helpers';
@@ -107,7 +107,7 @@ const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
   }
 };
 
-const getPayloadFormValues = (types?: string, typeName?: string): FormPayloadValues | undefined => {
+const getPayloadFormValues = (types?: Hex, typeName?: string): FormPayloadValues | undefined => {
   if (types && typeName) {
     const decodedTypes = decodeHexTypes(types);
 

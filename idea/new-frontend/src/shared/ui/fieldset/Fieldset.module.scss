@@ -1,13 +1,22 @@
+@use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .fieldset {
-  border: 1px solid $lineColor;
+  background: $gray002;
+  box-shadow: inset 0px 1px 0px $gray150;
   border-radius: $borderRadius;
-  padding: 16px;
+  border: none;
+  padding: toRem(24);
 
   .legend {
     color: $textColor;
     font-size: $fontSize;
     padding: 0 5px;
+    font-weight: 500;
+    line-height: toRem(20);
   }
+
+  & > *:not(legend):not(:last-child) {
+    margin-bottom: $margin;
+  } 
 }

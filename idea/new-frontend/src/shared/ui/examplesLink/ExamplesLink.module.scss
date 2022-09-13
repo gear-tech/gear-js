@@ -3,7 +3,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .link {
-  @include childrenMargin(toRem(10), right);
+  @include childrenMargin(10px, right);
 
   background-color: $bgColorTertiary;
 

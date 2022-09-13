@@ -4,7 +4,7 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .nodeInfoButton {
-  @include childrenMargin(toRem(16), right);
+  @include childrenMargin($margin, right);
 
   margin-top: auto;
   align-self: flex-start;
@@ -60,7 +60,7 @@
   .chain {
     font-family: 'Kanit';
     font-weight: 500;
-    margin-bottom: toRem(2);
+    margin-bottom: 2px;
   }
 
   .otherInfo {

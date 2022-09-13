@@ -2,7 +2,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .balanceSection {
-  margin-left: toRem(16);
+  margin-left: $margin;
 
   .title {
     color: $gray800;

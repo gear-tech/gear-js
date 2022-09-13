@@ -31,6 +31,9 @@ $bgColor6: #242529;
 $lineColor: #333333;
 $lineColorSecondary: #e2e6ea1a;
 
+$borderColor: #3a3d4d;
+$borderColor2: #898b94;;
+
 $indigo800: rgba($indigo, 0.8);
 $indigo700: rgba($indigo, 0.7);
 $indigo120: rgba($indigo, 0.12);
@@ -79,6 +82,7 @@ $fontSizeTiny: toRem(10);
 // size
 
 $borderRadius: 16px;
+$borderRadiusMedium: 20px;
 
 // animation 
 
@@ -87,3 +91,12 @@ $smallTimeout: 150ms;
 $timeout: 250ms;
 $mediumTimeout: 400ms;
 $bigTimeout: 1000ms;
+
+// margin 
+
+$marginTiny: 4px;
+$marginSmall: 8px;
+$margin: 16px;
+$marginMedium: 24px;
+$marginBig: 32px;
+$margineLarge: 40px;

@@ -1,5 +1,4 @@
 import { useField } from 'react-final-form';
-import clsx from 'clsx';
 import { Textarea } from '@gear-js/ui';
 
 import styles from '../FormPayload.module.scss';
@@ -11,15 +10,7 @@ const VecItem = ({ title, levelName, typeStructure }: PayloadItemProps) => {
 
   const itemLabel = getItemLabel(typeStructure.name, title);
 
-  return (
-    <Textarea
-      {...input}
-      value={input.value || ''}
-      rows={8}
-      label={itemLabel}
-      className={clsx(styles.field, styles.textarea)}
-    />
-  );
+  return <Textarea {...input} rows={8} label={itemLabel} direction="y" className={styles.field} />;
 };
 
 export { VecItem };

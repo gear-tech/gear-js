@@ -45,7 +45,7 @@
 
   .programName {
     z-index: 2;
-    margin-bottom: toRem(10);
+    margin-bottom: 10px;
     
     .name {      
       max-width: 60%;
@@ -56,7 +56,7 @@
       font-family: 'Kanit';
       font-weight: 600;
       line-height: 1.3;
-      margin-right: toRem(15);
+      margin-right: $margin;
     }
 
     .tooltip::after {
@@ -65,7 +65,7 @@
   }
 
   .otherInfo {
-    @include childrenMargin(toRem(16), right);
+    @include childrenMargin($margin, right);
     
     z-index: 4;
   }
@@ -82,7 +82,7 @@
   .sendMessage {
     @include fade();
 
-    margin-bottom: toRem(6);
+    margin-bottom: 6px;
   }
 }
 

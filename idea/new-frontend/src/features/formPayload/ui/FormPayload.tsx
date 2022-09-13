@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { useForm, useField } from 'react-final-form';
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
-import { Checkbox, FileInput, Textarea } from '@gear-js/ui';
+import { Checkbox, FileInput, Textarea, InputWrapper } from '@gear-js/ui';
 
 import { useChangeEffect } from 'hooks';
 import { PayloadValue } from 'entities/formPayload';
@@ -90,21 +90,26 @@ const FormPayload = ({ name, label, values }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values]);
 
+  const error = meta.touched && meta.invalid ? meta.error : undefined;
+
   return (
-    <div className={clsx(formStyles.formItem, formStyles.field)}>
-      <label htmlFor={name} className={formStyles.fieldLabel}>
-        {label}
-      </label>
-      <div className={formStyles.fieldContent}>
-        {values && (
-          <Checkbox
-            type="switch"
-            label="Manual input"
-            checked={isManualView}
-            className={styles.viewCheckbox}
-            onChange={handleViewChange}
-          />
-        )}
+    <InputWrapper
+      id={name}
+      size="normal"
+      label={label}
+      error={error}
+      direction="y"
+      className={clsx(formStyles.field, values && formStyles.gap16)}>
+      {values && (
+        <Checkbox
+          type="switch"
+          label="Manual input"
+          checked={isManualView}
+          className={formStyles.checkbox}
+          onChange={handleViewChange}
+        />
+      )}
+      <div className={formStyles.content}>
         {!isManualView && values ? (
           <PayloadStructure levelName={name} typeStructure={values.typeStructure} />
         ) : (
@@ -114,22 +119,20 @@ const FormPayload = ({ name, label, values }: Props) => {
               id={name}
               rows={15}
               value={input.value as string}
-              className={styles.field}
               placeholder="// Enter your payload here"
             />
             {values && (
               <FileInput
-                data-testid="payloadFileInput"
                 accept={FileTypes.Json}
                 className={styles.fileInput}
+                data-testid="payloadFileInput"
                 onChange={handleUploadManualPayload}
               />
             )}
           </>
         )}
       </div>
-      {meta.error && <div className={formStyles.error}>{meta.error}</div>}
-    </div>
+    </InputWrapper>
   );
 };
 

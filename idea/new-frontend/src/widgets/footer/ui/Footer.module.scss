@@ -12,7 +12,7 @@
   color: $textColorSecondary;
 
   @include md {
-    @include childrenMargin(toRem(32));
+    @include childrenMargin($marginBig);
 
     flex-direction: column;
   }

@@ -1,0 +1,55 @@
+@use '@gear-js/ui/mixins' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+
+.content {
+  @include childrenMargin($margin, right);
+
+  display: flex;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1 1;
+  border: 1px solid $borderColor; 
+  border-radius: $borderRadiusMedium;  
+
+  &:focus-within {
+    border-color: $borderColor2;
+  }
+
+  &.error {
+    border: 1px solid $errorColor;
+  }
+
+  .inputWrapper {
+    flex: 1 1;
+    padding: toRem(10) toRem(16);
+
+    .field {
+      width: 100%;
+    }
+  }
+
+  .addButton {
+    @include transition();
+
+    align-self: stretch;
+    color: $gray600;
+    padding: toRem(8) toRem(12);
+    font-size: $fontSize;
+    font-weight: 500;
+    font-family: 'Kanit';
+    line-height: toRem(20);
+    background-color: $bgColorTertiary;
+    border-radius: 0 20px 20px 0;
+
+    &:hover {
+      background-color: $gray300;
+    }
+  }
+}
+
+

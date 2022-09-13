@@ -3,7 +3,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .pageWrapper {
-  @include childrenMargin(toRem(22), right);
+  @include childrenMargin(22px, right);
 
   display: flex;
 

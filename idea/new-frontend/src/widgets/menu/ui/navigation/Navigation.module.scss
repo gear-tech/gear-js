@@ -3,11 +3,11 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .navigation {
-  @include childrenMargin(toRem(6));
+  @include childrenMargin(6px);
 
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 0 toRem(15);
-  margin-top: toRem(96);
+  margin-top: 96px;
 }

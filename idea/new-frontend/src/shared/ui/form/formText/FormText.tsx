@@ -1,5 +1,6 @@
+import SimpleBar from 'simplebar-react';
 import clsx from 'clsx';
-import { inputStyles } from '@gear-js/ui';
+import { inputStyles, inputWrapperStyles } from '@gear-js/ui';
 
 import styles from '../Form.module.scss';
 
@@ -10,13 +11,19 @@ type Props = {
 };
 
 const FormText = ({ text, label, isTextarea = false }: Props) => {
-  const labelClass = isTextarea ? styles.topPadding : styles.center;
+  const wrapperClasses = clsx(inputStyles.wrapper, inputStyles.normal, inputStyles.dark, inputStyles.readOnly);
 
   return (
-    <div className={clsx(styles.formItem, styles.field)}>
-      <span className={clsx(styles.fieldLabel, labelClass)}>{label}</span>
-      <div className={clsx(inputStyles.wrapper, inputStyles.readOnly, isTextarea && styles.textarea)}>
-        <pre className={styles.text}>{text}</pre>
+    <div className={clsx(inputWrapperStyles.wrapper, inputWrapperStyles.y)}>
+      <span className={styles.text}>{label}</span>
+      <div className={wrapperClasses}>
+        {isTextarea ? (
+          <SimpleBar className={styles.fixedSizes}>
+            <pre className={styles.preformatted}>{text}</pre>
+          </SimpleBar>
+        ) : (
+          <pre className={styles.preformatted}>{text}</pre>
+        )}
       </div>
     </div>
   );

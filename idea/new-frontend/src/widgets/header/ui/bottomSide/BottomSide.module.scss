@@ -12,12 +12,12 @@
   to {
     height: $headerBottomSideHeight;
     opacity: 0;
-    margin-top: 16px;
+    margin-top: $margin;
   }
 }
 
 .bottomSide {
-  @include childrenMargin(16px, right);
+  @include childrenMargin($margin, right);
 
   &:global(.enter),
   &:global(.exit-done) {
@@ -35,7 +35,7 @@
   &:global(.enter-done) {
     height: $headerBottomSideHeight;
     opacity: 1;
-    margin-top: 16px;
+    margin-top: $margin;
   }
 
   &:global(.exit) {

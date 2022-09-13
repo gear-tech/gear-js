@@ -5,8 +5,6 @@ import { Checkbox, InputWrapper, inputStyles } from '@gear-js/ui';
 
 import { formStyles } from 'shared/ui/form';
 
-import styles from './FormPayloadType.module.scss';
-
 type Props = {
   name: string;
   label: string;
@@ -40,17 +38,24 @@ const FormPayloadType = ({ name, label }: Props) => {
     inputStyles.wrapper,
     inputStyles.normal,
     inputStyles.dark,
+    formStyles.content,
     error && inputStyles.error,
     isDisabled && inputStyles.readOnly,
   );
 
   return (
-    <InputWrapper id={name} size="normal" label={label} error={fieldError} direction="y" className={formStyles.field}>
+    <InputWrapper
+      id={name}
+      size="normal"
+      label={label}
+      error={fieldError}
+      direction="y"
+      className={clsx(formStyles.field, formStyles.gap16)}>
       <Checkbox
         type="switch"
         label="Enter type"
         checked={isChecked}
-        className={styles.checkbox}
+        className={formStyles.checkbox}
         onChange={toggleSwitch}
       />
       <div className={wrapperClassName}>

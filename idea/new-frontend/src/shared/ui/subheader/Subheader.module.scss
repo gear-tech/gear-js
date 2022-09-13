@@ -9,7 +9,7 @@
   width: 100%;
 
   &.medium {
-    margin-bottom: 16px;
+    margin-bottom: $margin;
 
     .title {
       font-size: toRem(18);
@@ -18,7 +18,7 @@
   }
 
   &.big {
-    margin-bottom: 30px;
+    margin-bottom: $marginBig;
 
     .title {
       font-size: toRem(24);

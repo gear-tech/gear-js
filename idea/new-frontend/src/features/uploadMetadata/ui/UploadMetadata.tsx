@@ -1,4 +1,5 @@
 import { useRef, useEffect, ChangeEvent } from 'react';
+import clsx from 'clsx';
 import { Metadata, getWasmMetadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { FileInput } from '@gear-js/ui';
@@ -85,15 +86,14 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
     <div className={styles.uploadMetadata}>
       <FileInput
         ref={inputRef}
-        // @ts-ignore
         size="large"
-        label="Metadata file:"
+        label="Metadata file"
         direction="y"
-        className={formStyles.field}
+        className={clsx(formStyles.field, formStyles.gap16)}
         data-testid="metaFileInput"
         onChange={handleUploadMetaFile}
       />
-      <div>{metadata ? renderMetadataProperties(metadata) : null}</div>
+      {metadata ? renderMetadataProperties(metadata) : null}
     </div>
   );
 };

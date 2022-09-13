@@ -10,8 +10,9 @@ import { useChangeEffect } from 'hooks';
 import { Payload } from 'hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from 'features/formPayload';
 import { FormPayloadType } from 'features/formPayloadType';
+import { GasField } from 'features/gasField';
 import { getValidation } from 'shared/helpers';
-import { FormInput, FormNumberFormat, formStyles } from 'shared/ui/form';
+import { FormInput, formStyles } from 'shared/ui/form';
 
 import styles from './ProgramForm.module.scss';
 import widgetStyles from '../UploadProgram.module.scss';
@@ -124,24 +125,18 @@ const ProgramForm = (props: Props) => {
                 label={label}
                 direction="y"
                 onChange={onFileChange}
-                className={formStyles.field}
+                className={clsx(formStyles.field, formStyles.gap16)}
               />
 
-              <FormInput size="large" name="programName" label="Name" placeholder="Name" />
-
-              <FormNumberFormat
-                name="gasLimit"
-                label="Gas limit"
-                placeholder="1,000,000,000"
-                thousandSeparator
-                allowNegative={false}
-              />
-
-              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
+              <FormInput name="programName" label="Name" placeholder="Enter program name" />
 
               <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
 
               {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
+
+              <GasField name="gasLimit" label="Gas limit" placeholder="0" onGasCalculate={() => {}} />
+
+              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
             </div>
 
             <div className={styles.buttons}>{renderButtons({ isDisabled, values, metadata })}</div>

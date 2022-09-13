@@ -112,7 +112,7 @@
 }
 
 .indicators {
-  @include childrenMargin(toRem(4), right);
+  @include childrenMargin($marginTiny, right);
 
   display: flex;
   color: $indigo700;
@@ -139,7 +139,7 @@
 
   .blockInfo {
     position: relative;
-    margin-left: toRem(12);
+    margin-left: 12px;
 
     .time {
       min-width: toRem(50);
@@ -157,7 +157,7 @@
 
 .blocksBtn {
   align-self: center;
-  margin-left: toRem(4);
+  margin-left: $marginTiny;
 
   svg {
     transform: rotate(90deg);

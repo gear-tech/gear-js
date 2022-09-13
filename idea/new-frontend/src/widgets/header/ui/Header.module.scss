@@ -14,7 +14,7 @@
 }
 
 .content {
-  @include childrenMargin(toRem(4), right);
+  @include childrenMargin($marginTiny, right);
 
   display: flex;
   color: $indigo700;

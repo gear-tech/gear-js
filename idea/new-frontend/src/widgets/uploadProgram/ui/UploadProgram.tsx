@@ -1,4 +1,5 @@
 import { useState, ReactNode, ChangeEvent } from 'react';
+import clsx from 'clsx';
 import { Metadata } from '@gear-js/api';
 import { useAlert } from '@gear-js/react-hooks';
 import { FileInput } from '@gear-js/ui';
@@ -62,7 +63,13 @@ const UploadProgram = (props: Props) => {
   return (
     <div className={styles.lining}>
       {/* @ts-ignore */}
-      <FileInput size="large" label={label} direction="y" className={formStyles.field} onChange={handleChangeFile} />
+      <FileInput
+        size="large"
+        label={label}
+        direction="y"
+        className={clsx(formStyles.field, formStyles.gap16)}
+        onChange={handleChangeFile}
+      />
     </div>
   );
 };

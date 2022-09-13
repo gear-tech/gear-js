@@ -30,7 +30,7 @@
   }
 
   :global(.simplebar-content) {
-    @include childrenMargin(8px);
+    @include childrenMargin($marginSmall);
 
     margin-right: 12px;
   }

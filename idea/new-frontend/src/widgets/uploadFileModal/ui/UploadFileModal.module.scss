@@ -1,8 +1,9 @@
 @use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
 
 .fileLabel {
   width: 100%;
-  margin-bottom: toRem(32);
+  margin-bottom: $marginBig;
 
   .fileInput {
     display: none;

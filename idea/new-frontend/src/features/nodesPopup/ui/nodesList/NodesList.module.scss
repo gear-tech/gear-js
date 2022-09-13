@@ -1,5 +1,6 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
 
 .simpleBar {
   @include customSimplebar; 
@@ -9,7 +10,7 @@
   min-height: 1px;
   
   .list {
-    @include childrenMargin(toRem(24));
+    @include childrenMargin($marginMedium);
 
     padding-right: toRem(22);
   }

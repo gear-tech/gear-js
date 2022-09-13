@@ -46,11 +46,11 @@ $popupWidth: 305px;
     font-size: toRem(24);
     line-height: toRem(31);
     color: $textColor;
-    margin-bottom: 24px;
+    margin-bottom: $marginMedium;
   }
 
   .actions {
-    @include childrenMargin(toRem(16), right);
+    @include childrenMargin($margin, right);
 
     position: relative;
     z-index: 1;

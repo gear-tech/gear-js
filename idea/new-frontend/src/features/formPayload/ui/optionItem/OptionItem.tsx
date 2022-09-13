@@ -5,10 +5,8 @@ import { Select } from '@gear-js/ui';
 import { useChangeEffect } from 'hooks';
 import { Fieldset } from 'shared/ui/fieldset';
 
-import styles from '../FormPayload.module.scss';
-import { OPTION_ITEM_OPTIONS, DEFAULT_OPTION_VALUE } from '../../model/consts';
-import { PayloadItemProps } from '../../model';
 import { getItemLabel, getPayloadValue } from '../../helpers';
+import { PayloadItemProps, OPTION_ITEM_OPTIONS, DEFAULT_OPTION_VALUE } from '../../model';
 
 const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: PayloadItemProps) => {
   const { name, value } = typeStructure;
@@ -30,8 +28,8 @@ const OptionItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
   }, [isNone]);
 
   return (
-    <Fieldset legend={itemLabel} className={styles.fieldset}>
-      <Select options={OPTION_ITEM_OPTIONS} className={styles.select} onChange={handleChange} />
+    <Fieldset legend={itemLabel}>
+      <Select options={OPTION_ITEM_OPTIONS} onChange={handleChange} />
       {renderNextItem({
         levelName,
         // @ts-ignore

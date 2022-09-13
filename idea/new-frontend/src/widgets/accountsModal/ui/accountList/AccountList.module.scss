@@ -4,7 +4,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .accountList {
-  @include childrenMargin(toRem(16));  
+  @include childrenMargin($margin);  
 }
 
 .accountButton {

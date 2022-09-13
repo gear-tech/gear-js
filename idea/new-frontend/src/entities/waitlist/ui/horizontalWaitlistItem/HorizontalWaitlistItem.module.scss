@@ -27,7 +27,7 @@
   }
 
   .interval {
-    @include childrenMargin(8px, right);
+    @include childrenMargin($marginSmall, right);
     @extend %textStyles;
 
     display: flex;

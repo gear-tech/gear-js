@@ -4,7 +4,7 @@
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .form {
-  @include childrenMargin(16px);
+  @include childrenMargin($margin);
 
   .addNetworkBtn {
     width: 100%;

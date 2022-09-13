@@ -35,7 +35,7 @@
 .content {
   flex: 1 1;
   position: relative;
-  margin-right: toRem(5);
+  margin-right: 5px;
   z-index: 2;
 
   .title {
@@ -45,14 +45,14 @@
     line-height: 1.1;
     font-weight: 700;
     letter-spacing: 0.01em;
-    margin-bottom: toRem(16);
+    margin-bottom: $margin;
   }
 
   .description {
     font-size: $fontSize;
     line-height: 1.6;
     font-feature-settings: 'salt' on, 'liga' off;
-    margin-bottom: toRem(40);
+    margin-bottom: 40px;
   }
 }
 

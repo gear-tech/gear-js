@@ -132,7 +132,7 @@
 .linkContent {
   @include fade();
 
-  margin-left: 16px;
+  margin-left: $margin;
   
   &:global(.exit-done) {
     visibility: hidden;
@@ -142,7 +142,7 @@
   .linkText {
     @include transition(color);
     
-    margin-right: toRem(14);
+    margin-right: 14px;
     font-family: 'Kanit';
     color: $gray800;
     font-size: $fontSize;

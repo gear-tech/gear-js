@@ -1,6 +1,5 @@
 import { Fieldset } from 'shared/ui/fieldset';
 
-import styles from '../FormPayload.module.scss';
 import { PayloadItemProps } from '../../model';
 import { getItemLabel, getNextLevelName } from '../../helpers';
 
@@ -8,7 +7,7 @@ const StructItem = ({ title, levelName, typeStructure, renderNextItem }: Payload
   const itemLabel = getItemLabel(typeStructure.name, title);
 
   return (
-    <Fieldset legend={itemLabel} className={styles.fieldset}>
+    <Fieldset legend={itemLabel}>
       {Object.entries(typeStructure.value).map((item) => {
         const [key, value] = item;
 

@@ -4,17 +4,17 @@
 
 .programsList {
   position: relative;
-  margin-top: 16px;
+  margin-top: $margin;
   
   .simpleBar {
     @include customSimplebar;
 
-    height: calc($contentHeight - toRem(31.19) - 16px);
+    height: calc($contentHeight - toRem(31.19) - $margin);
 
     :global(.simplebar-content) {
-      @include childrenMargin(toRem(12));
+      @include childrenMargin(12px);
 
-      margin-right: toRem(15);
+      margin-right: $margin;
     }
 
     &.noOverflow {

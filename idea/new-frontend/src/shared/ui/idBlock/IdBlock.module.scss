@@ -24,13 +24,13 @@
   }
 
   .icon {
-    margin-right: toRem(8);
+    margin-right: $marginTiny;
   }
 
   .copyBtn {
     position: relative;
     z-index: 4;  
-    margin-left: toRem(2);
+    margin-left: 2px;
   }
 
   &.small {

@@ -12,7 +12,7 @@
 
 .leftSide {
   @include fadeAppear();
-  @include childrenMargin(40px, right);
+  @include childrenMargin($margineLarge, right);
 
   display: flex;
   align-items: center;

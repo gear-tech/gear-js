@@ -12,18 +12,18 @@
 }
 
 .filterGroup {
-  @include childrenMargin(toRem(8));
+  @include childrenMargin($marginSmall);
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 
   .header {
-    @include childrenMargin(toRem(8), right);
+    @include childrenMargin($marginSmall, right);
   
     display: flex;
     align-items: center;
-    margin-bottom: toRem(16);
+    margin-bottom: $margin;
   
     .title {
       @extend %textStyles;

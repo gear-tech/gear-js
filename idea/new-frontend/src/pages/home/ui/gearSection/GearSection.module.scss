@@ -1,9 +1,10 @@
 @use 'shared/assets/styles/_shared.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
 @use 'shared/assets/styles/_animations.scss' as *;
 
 .gearSection {
   position: relative;
-  margin-bottom: toRem(32);
+  margin-bottom: $marginBig;
   min-height: toRem(320);
   
   .indicators {
@@ -15,7 +16,7 @@
       flex: 1 1;
 
       &:not(:last-child) {
-        margin-right: toRem(24);
+        margin-right: $marginMedium;
       }
     }
   }

@@ -3,7 +3,7 @@
 @use 'shared/assets/styles/_variables.scss' as *;
 
 .graph {
-  @include childrenMargin(toRem(4), right);
+  @include childrenMargin($marginTiny, right);
 
   display: flex;
   align-items: flex-end;

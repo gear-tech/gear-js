@@ -9,9 +9,9 @@
   line-height: 1.5;
   color: $textColor;
   text-transform: capitalize;
-  margin-bottom: 4px;
+  margin-bottom: $marginTiny;
 }
 
 .sectionList {
-  @include childrenMargin(toRem(10))
+  @include childrenMargin(10px)
 }
