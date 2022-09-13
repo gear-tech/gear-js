@@ -84,16 +84,6 @@ function messagesDispatchedPayload(
   return null;
 }
 
-function codeChangedPayload(data: CodeChangedData): NewEventData<Keys.CodeChanged, ICodeChangedData> | null {
-  const { id, change } = data;
-  const status = change.isActive ? 'Active' : change.isInactive ? 'Inactive' : null;
-  const expiration = change.isActive ? change.asActive.expiration.toHuman() : null;
-  if (!status) {
-    return null;
-  }
-  return { key: Keys.CodeChanged, value: { id: id.toHex(), change: status, expiration } as ICodeChangedData };
-}
-
 function dataBaseWipedPayload(): NewEventData<Keys.DatabaseWiped, unknown> {
   return { key: Keys.DatabaseWiped, value: {} };
 }
@@ -110,8 +100,6 @@ export const getPayloadByGearEvent = (method: string, data: GenericEventData): {
       return programChangedPayload(data as ProgramChangedData);
     case Keys.MessagesDispatched:
       return messagesDispatchedPayload(data as MessagesDispatchedData);
-    case Keys.CodeChanged:
-      return codeChangedPayload(data as CodeChangedData);
     case Keys.DatabaseWiped:
       return dataBaseWipedPayload();
     default:

@@ -2,11 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/common';
 
-import { UpdateCodeInput } from './types';
 import { Code } from '../database/entities';
 import { CodeRepo } from './code.repo';
 import { CodeNotFound } from '../common/errors';
 import { UpdateResult } from 'typeorm';
+import { UpdateCodeInput } from './types';
 
 @Injectable()
 export class CodeService {
