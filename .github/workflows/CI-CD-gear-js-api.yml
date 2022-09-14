@@ -12,7 +12,7 @@ on:
 jobs:
   test:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Cancel previous workflow runs
         uses: styfle/cancel-workflow-action@0.4.0
@@ -46,16 +46,9 @@ jobs:
           tar -xvf examples.tar.gz
 
       - name: Run tests
-        continue-on-error: true
         working-directory: api
         run: npm test
         
-      - name: Check node state
-        continue-on-error: true
-        run: |
-          netstat -nlp | grep 9944
-          ps aux | grep gear
-
       - name: Build examples
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
         working-directory: api/examples
