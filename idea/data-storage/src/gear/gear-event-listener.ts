@@ -16,6 +16,7 @@ import { Message, Program } from '../database/entities';
 import { CodeStatus, MessageEntryPoing, MessageType, ProgramStatus } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
 import { UpdateCodeInput } from '../code/types';
+import { changeStatus } from '../healthcheck/healthcheck.controller';
 
 
 @Injectable()
@@ -31,8 +32,15 @@ export class GearEventListener {
   public async listen() {
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      await gearService.connect();
-      await this.listener();
+      const unsub = await this.listener();
+
+      return new Promise((resolve) => {
+        gearService.getApi().on('error', (error) => {
+          unsub();
+          changeStatus('gearWSProvider');
+          resolve(error);
+        });
+      });
     }
   }
 
@@ -40,7 +48,7 @@ export class GearEventListener {
     const gearApi = gearService.getApi();
     const genesis = gearApi.genesisHash.toHex();
 
-    gearApi.query.system.events(async (events) => {
+    return gearApi.query.system.events(async (events) => {
       const blockHash = events.createdAtHash!.toHex();
 
       const [blockTimestamp, block, extrinsicStatus] = await Promise.all([

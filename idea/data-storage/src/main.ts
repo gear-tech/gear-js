@@ -25,7 +25,6 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, { cors: true });
   await app.listen(healthcheck.port);
-  await gearService.connect();
   dataStorageLogger.info(`HealthCheck app is running on ${healthcheck.port} 🚀`);
 
   app.connectMicroservice<MicroserviceOptions>({
@@ -54,6 +53,7 @@ async function bootstrap() {
 
   await AppDataSource.destroy();
 
+  await gearService.connect();
   const gearEventListener = app.get(GearEventListener);
   await gearEventListener.listen();
 }
