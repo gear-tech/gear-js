@@ -5,7 +5,7 @@ import { GearApi, DebugMode } from '../src';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
-const api = new GearApi({ throwOnConnect: true });
+const api = new GearApi();
 let alice: KeyringPair;
 
 beforeAll(async () => {
@@ -18,7 +18,7 @@ afterAll(async () => {
   await sleep(2000);
 });
 
-describe.skip('DebugMode', () => {
+describe('DebugMode', () => {
   const debug = new DebugMode(api);
 
   test('enable debug mode', async () => {
