@@ -36,13 +36,12 @@ jobs:
         run: |
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
           chmod +x gear-node
-          nohup ./gear-node --dev --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
+          nohup ./gear-node --dev --tmp --ws-port 9955 --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
           
       - name: install wscat 
         run: |
-          npm install -g wscat
-          sleep 300s
-          wscat -c ws://0.0.0.0:9944
+          netstat -nlp | grep 9955
+          ps aux | grep gear
 
       - name: Download gear examples
         working-directory: api/test/wasm
