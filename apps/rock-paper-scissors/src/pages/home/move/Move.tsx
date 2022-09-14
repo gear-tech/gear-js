@@ -37,7 +37,7 @@ function Move({ value }: Props) {
         <p> At the reveal stage you will need to repeat it.</p>
       </div>
       <div className={styles.buttons}>
-        <BackButton />
+        <BackButton onClick={() => {}} />
         <Button text="Done" size="large" />
       </div>
     </div>

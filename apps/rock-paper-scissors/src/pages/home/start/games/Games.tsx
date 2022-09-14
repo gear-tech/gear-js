@@ -15,8 +15,9 @@ function Games({ heading, list }: Props) {
   const headerClassName = clsx(styles.row, styles.header);
 
   const getGames = () =>
-    games.map(({ name, players, bet, game, round, stage, action }) => (
-      <li className={styles.row}>
+    games.map(({ name, players, bet, game, round, stage, action }, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <li key={index} className={styles.row}>
         <span>{name}</span>
         <span>{players}</span>
         <span>{bet}</span>

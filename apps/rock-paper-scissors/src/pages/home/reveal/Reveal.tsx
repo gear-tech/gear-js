@@ -18,7 +18,7 @@ function Reveal({ move }: Props) {
         <ActionButton name={name} SVG={SVG} isActive />
       </div>
       <div className={styles.buttons}>
-        <BackButton />
+        <BackButton onClick={() => {}} />
         <Button text="Done" size="large" />
       </div>
     </div>

@@ -19,7 +19,7 @@ function Game({ heading, stage, bet, game, round }: Props) {
   return (
     <div className={styles.container}>
       <div className={styles.players}>
-        <BackButton />
+        <BackButton onClick={() => {}} />
         <Players list={players as Hex[]} heading="Current players" />
         <Button text="Reveal" size="large" className={styles.actionButton} />
       </div>

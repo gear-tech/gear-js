@@ -3,10 +3,12 @@ import { Routing } from 'pages';
 import { Header, Footer, ApiLoader } from 'components';
 import { withProviders } from 'hocs';
 import 'App.scss';
+import { useWasm } from 'hooks';
 
 function Component() {
   const { isApiReady } = useApi();
   const { isLoginReady } = useLoggedInAccount();
+  const wasm = useWasm();
 
   useBalanceSubscription();
 
@@ -16,7 +18,7 @@ function Component() {
       <main>
         <Routing />
       </main>
-      {/* <main>{isApiReady && isLoginReady ? <Routing /> : <ApiLoader />}</main> */}
+      {/* <main>{isApiReady && isLoginReady && wasm ? <Routing /> : <ApiLoader />}</main> */}
       <Footer />
     </>
   );

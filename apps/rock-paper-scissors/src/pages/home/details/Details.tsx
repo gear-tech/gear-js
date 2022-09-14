@@ -21,7 +21,7 @@ function Details({ heading, game, round, contract, players, bet, entry, move, re
   return (
     <div className={styles.container}>
       <div className={styles.visual}>
-        <BackButton />
+        <BackButton onClick={() => {}} />
         <SVG className={styles.svg} />
       </div>
       <div>
