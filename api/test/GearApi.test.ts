@@ -1,10 +1,10 @@
 import { GearApi } from '../src';
 import { sleep } from './utilsFunctions';
 
-const api = new GearApi();
+const api = new GearApi({ providerAddress: 'wss://node-workshop.gear.rs' });
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   await sleep(2000);
 });
 
