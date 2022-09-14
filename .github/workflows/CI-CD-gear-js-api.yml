@@ -12,7 +12,8 @@ on:
 jobs:
   test:
     if: github.event_name == 'pull_request'
-    runs-on: static-runner
+#    runs-on: static-runner
+    runs-on: ubuntu-latest
     steps:
       - name: Cancel previous workflow runs
         uses: styfle/cancel-workflow-action@0.4.0
@@ -36,6 +37,11 @@ jobs:
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
           chmod +x gear-node
           nohup ./gear-node --dev --tmp --pruning archive --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
+          
+      - name: install wscat 
+        run: |
+          npm install -g wscat
+          wsact -c ws://0.0.0.0:9944
 
       - name: Download gear examples
         working-directory: api/test/wasm
