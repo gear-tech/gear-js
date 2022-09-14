@@ -59,13 +59,7 @@ jobs:
           ls -ltr
           cd api/test/programs
           ls -ltr
-        
-
-      - name: Additional steps
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release
+          cargo build --release --manifest-path Cargo.toml
  
       - name: Run tests
         working-directory: api
