@@ -15,7 +15,7 @@ let messageId: Hex;
 let messageWaited: (messageId: Hex) => Promise<MessageWaitedData>;
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   const code = readFileSync(CODE_PATH);
   alice = (await getAccount())[0];
   programId = api.program.upload({ code, gasLimit: 2_000_000_000 }).programId;

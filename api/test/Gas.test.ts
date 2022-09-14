@@ -22,7 +22,7 @@ const gasLimits: { init: u64 | undefined; handle: u64 | undefined; reply: u64 | 
   reply: undefined,
 };
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   [alice] = await getAccount();
   aliceRaw = decodeAddress(alice.address);
 });

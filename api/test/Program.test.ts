@@ -13,7 +13,7 @@ let alice: KeyringPair;
 let codeId: Hex;
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   [alice] = await getAccount();
 });
 

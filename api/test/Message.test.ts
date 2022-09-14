@@ -14,7 +14,7 @@ let guestbookId: Hex;
 let messageToClaim: Hex;
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   [alice] = await getAccount();
 });
 

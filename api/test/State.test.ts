@@ -21,7 +21,7 @@ const syscalls_test = {
 };
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   const [alice] = await getAccount();
 
   syscalls_test.id = api.program.upload({
