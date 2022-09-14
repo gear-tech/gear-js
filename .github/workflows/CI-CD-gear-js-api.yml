@@ -57,7 +57,7 @@ jobs:
       - name: go to specific dirs
         run: |
           ls -ltr
-          cd api/
+          cd api/test/programs
           ls -ltr
         
 
