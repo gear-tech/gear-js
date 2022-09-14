@@ -45,13 +45,6 @@ jobs:
           components: clippy, rustfmt
           target: wasm32-unknown-unknown
           
-      - name: "Install: Set cargo path"
-        run: echo "/tmp/cargo/bin" >> $GITHUB_PATH
-          
-      - name: Run cargo check
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
 
       - name: Download gear examples
         working-directory: api/test/wasm
@@ -60,12 +53,13 @@ jobs:
           cd examples
           wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           tar -xvf examples.tar.gz
+          cd api/test/programs
 
       - name: Additional steps
-        working-directory: api/test/programs
-        run: |
-          cargo build --release
-          cp target/wasm32-unknown-unknown/release/*.{opt,meta}.wasm ../wasm
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
  
       - name: Run tests
         working-directory: api
