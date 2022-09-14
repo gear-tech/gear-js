@@ -53,7 +53,7 @@ jobs:
           cd examples
           wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           tar -xvf examples.tar.gz
-          cd api/test/programs
+          cd ../programs
 
       - name: Additional steps
         uses: actions-rs/cargo@v1
