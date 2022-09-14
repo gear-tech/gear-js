@@ -55,9 +55,7 @@ jobs:
           tar -xvf examples.tar.gz
           
       - name: go to specific dirs
-        run: |
-          cd /api
-          ls -ltr
+        run: ls -ltr
         
 
       - name: Additional steps
