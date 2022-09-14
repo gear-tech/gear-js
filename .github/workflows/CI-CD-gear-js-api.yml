@@ -41,6 +41,7 @@ jobs:
       - name: install wscat 
         run: |
           npm install -g wscat
+          sleep 300s
           wscat -c ws://0.0.0.0:9944
 
       - name: Download gear examples
