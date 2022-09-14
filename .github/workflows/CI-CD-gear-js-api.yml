@@ -12,8 +12,8 @@ on:
 jobs:
   test:
     if: github.event_name == 'pull_request'
-#    runs-on: static-runner
-    runs-on: ubuntu-20.04
+    runs-on: static-runner
+#    runs-on: ubuntu-20.04
     steps:
       - name: Cancel previous workflow runs
         uses: styfle/cancel-workflow-action@0.4.0
@@ -37,11 +37,13 @@ jobs:
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
           chmod +x gear-node
           nohup ./gear-node --dev --tmp --ws-port 9955 --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
-          
-      - name: install wscat 
-        run: |
-          netstat -nlp | grep 9955
-          ps aux | grep gear
+
+      - name: "Install: Nightly toolchain"
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          components: clippy, rustfmt
+          target: wasm32-unknown-unknown
 
       - name: Download gear examples
         working-directory: api/test/wasm
@@ -51,6 +53,12 @@ jobs:
           wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           tar -xvf examples.tar.gz
 
+      - name: Additional steps
+        run: |
+          cd api/test/programs
+          cargo build —release
+          cp target/wasm32-unknown-unknown/release/*.{opt,meta}.wasm ../wasm
+ 
       - name: Run tests
         working-directory: api
         run: npm test
