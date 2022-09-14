@@ -1,10 +1,10 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Balance } from '@polkadot/types/interfaces';
-import { web3Enable } from '@polkadot/extension-dapp';
+import { web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
 import { useState, createContext, useContext, useEffect } from 'react';
 import { Account, ProviderProps } from 'types';
 import { LOCAL_STORAGE } from 'consts';
-import { getBalance, getAccount, getAccounts, isLoggedIn } from 'utils';
+import { getBalance, getAccount, isLoggedIn } from 'utils';
 import { ApiContext } from './Api';
 import { AlertContext } from './Alert';
 
@@ -14,7 +14,7 @@ type Value = {
   switchAccount: (account: InjectedAccountWithMeta) => Promise<string | void>;
   updateBalance: (balance: Balance) => void;
   logout: () => void;
-  initAccounts: () => Promise<string | void>;
+  isAccountReady: boolean;
 };
 
 const AccountContext = createContext({} as Value);
@@ -25,6 +25,9 @@ function AccountProvider({ children }: ProviderProps) {
 
   const [account, setAccount] = useState<Account>();
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>();
+
+  const [isExtensionReady, setIsExtensionReady] = useState(false);
+  const [isAccountReady, setIsAccountReady] = useState(false);
 
   const login = (_account: Account) => {
     localStorage.setItem(LOCAL_STORAGE.ACCOUNT, _account.address);
@@ -48,20 +51,26 @@ function AccountProvider({ children }: ProviderProps) {
     setAccount(undefined);
   };
 
-  const initAccounts = () => web3Enable('Gear App').then(getAccounts).then(setAccounts).catch(handleError);
-  // .finally(() => setIsExtensionReady(true));
-
   useEffect(() => {
-    if (isApiReady) initAccounts();
+    if (isApiReady)
+      web3Enable('Gear App')
+        .then(() => web3AccountsSubscribe(setAccounts))
+        .catch(handleError)
+        .finally(() => setIsExtensionReady(true));
   }, [isApiReady]);
 
   useEffect(() => {
-    const loggedInAccount = accounts?.find(isLoggedIn);
-    if (loggedInAccount) switchAccount(loggedInAccount);
-  }, [accounts]);
+    if (isExtensionReady) {
+      const loggedInAccount = accounts?.find(isLoggedIn);
+
+      if (loggedInAccount) {
+        switchAccount(loggedInAccount).finally(() => setIsAccountReady(true));
+      } else setIsAccountReady(true);
+    }
+  }, [isExtensionReady]);
 
   const { Provider } = AccountContext;
-  const value = { account, accounts, switchAccount, updateBalance, logout, initAccounts };
+  const value = { account, accounts, switchAccount, updateBalance, logout, isAccountReady };
 
   return <Provider value={value}>{children}</Provider>;
 }
