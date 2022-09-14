@@ -1,5 +1,4 @@
 import {
-  useBalanceSubscription,
   useMetadata,
   useReadState,
   useSendMessage,
@@ -14,7 +13,6 @@ import { useAccount, useAlert, useApi } from './context';
 import { useCreateHandler } from './handlers';
 
 export {
-  useBalanceSubscription,
   useMetadata,
   useReadState,
   useSendMessage,

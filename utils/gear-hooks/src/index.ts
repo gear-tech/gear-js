@@ -1,5 +1,4 @@
 import {
-  useBalanceSubscription,
   useMetadata,
   useReadState,
   useSendMessage,
@@ -39,7 +38,6 @@ import {
 } from 'types';
 
 export {
-  useBalanceSubscription,
   useMetadata,
   useReadState,
   useSendMessage,

@@ -1,6 +1,7 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Balance } from '@polkadot/types/interfaces';
 import { web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
+import { UnsubscribePromise } from '@polkadot/api/types';
 import { useState, createContext, useContext, useEffect } from 'react';
 import { Account, ProviderProps } from 'types';
 import { LOCAL_STORAGE } from 'consts';
@@ -24,6 +25,8 @@ function AccountProvider({ children }: ProviderProps) {
   const alert = useContext(AlertContext);
 
   const [account, setAccount] = useState<Account>();
+  const { address } = account || {};
+
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>();
 
   const [isExtensionReady, setIsExtensionReady] = useState(false);
@@ -42,9 +45,6 @@ function AccountProvider({ children }: ProviderProps) {
       .then((balance) => getAccount(_account, balance))
       .then(login)
       .catch(handleError);
-
-  const updateBalance = (balance: Balance) =>
-    setAccount((prevAccount) => (prevAccount ? { ...prevAccount, balance: getBalance(balance) } : prevAccount));
 
   const logout = () => {
     localStorage.removeItem(LOCAL_STORAGE.ACCOUNT);
@@ -68,6 +68,22 @@ function AccountProvider({ children }: ProviderProps) {
       } else setIsAccountReady(true);
     }
   }, [isExtensionReady]);
+
+  const updateBalance = (balance: Balance) =>
+    setAccount((prevAccount) => (prevAccount ? { ...prevAccount, balance: getBalance(balance) } : prevAccount));
+
+  useEffect(() => {
+    let unsub: UnsubscribePromise | undefined;
+
+    if (address) {
+      unsub = api?.gearEvents.subscribeToBalanceChange(address, updateBalance);
+    }
+
+    return () => {
+      if (unsub) unsub.then((callback) => callback());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, address]);
 
   const { Provider } = AccountContext;
   const value = { account, accounts, switchAccount, updateBalance, logout, isAccountReady };
