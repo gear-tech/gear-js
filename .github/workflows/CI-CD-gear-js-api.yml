@@ -35,7 +35,7 @@ jobs:
         run: |
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
           chmod +x gear-node
-          ./gear-node --dev --tmp --pruning archive --unsafe-ws-external --rpc-methods Unsafe  --rpc-cors all & sleep 10
+          ./gear-node --dev --tmp --pruning archive --unsafe-ws-external --rpc-cors all
 
       - name: Download gear examples
         working-directory: api/test/wasm
