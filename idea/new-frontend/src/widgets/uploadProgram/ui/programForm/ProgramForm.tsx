@@ -14,7 +14,7 @@ import { FormPayload, getSubmitPayload, getPayloadFormValues } from 'features/fo
 import { FormPayloadType } from 'features/formPayloadType';
 import { GasField } from 'features/gasField';
 import { GasInfoCard } from 'entities/gasInfo';
-import { GasMethod } from 'shared/config';
+import { GasMethod, routes } from 'shared/config';
 import { getValidation } from 'shared/helpers';
 import { FormInput, formStyles } from 'shared/ui/form';
 import plusSVG from 'shared/assets/images/actions/plus.svg';
@@ -91,8 +91,6 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
 
     const { value, payload, gasLimit, programName, payloadType } = values;
 
-    const finishSubmitting = () => setIsDisables(false);
-
     const data: Payload = {
       value,
       gasLimit,
@@ -106,8 +104,8 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
     uploadProgram({
       file,
       payload: data,
-      reject: finishSubmitting,
-      resolve: finishSubmitting,
+      reject: () => setIsDisables(false),
+      resolve: () => navigate(routes.programs),
     });
   };
 
@@ -142,6 +140,7 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
       changeProgramName(metadata);
     } else {
       formApi.current?.restart();
+      setGasinfo(undefined);
     }
   }, [metadata]);
 

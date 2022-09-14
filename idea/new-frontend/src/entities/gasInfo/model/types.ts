@@ -1,8 +1,9 @@
 interface IGasInfo {
   burned: string;
   waited: boolean;
-  reserved: string;
   minLimit: string;
+  reserved: string;
+  mayBeReturned: string;
 }
 
 export type { IGasInfo };

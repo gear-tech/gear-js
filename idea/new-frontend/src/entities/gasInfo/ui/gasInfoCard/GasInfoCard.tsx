@@ -16,10 +16,12 @@ type Props = {
 const GasInfoCard = ({ gasInfo }: Props) => (
   <CSSTransition in appear timeout={AnimationTimeout.Default}>
     <div className={styles.gasInfoCard}>
-      <p className={styles.info}>
-        <img src={loadingSVG} alt="loading" />
-        <span className={styles.text}>Added to waitlist...</span>
-      </p>
+      {gasInfo.waited && (
+        <p className={styles.info}>
+          <img src={loadingSVG} alt="loading" />
+          <span className={styles.text}>Added to waitlist...</span>
+        </p>
+      )}
       <p className={styles.info}>
         <img src={shieldSVG} alt="shield" />
         <span className={styles.text}>Reserved:</span>
@@ -28,7 +30,7 @@ const GasInfoCard = ({ gasInfo }: Props) => (
       <p className={styles.info}>
         <img src={shareSVG} alt="share" />
         <span className={styles.text}>Maybe returned:</span>
-        <span className={clsx(styles.value, styles.blue)}>{gasInfo.burned}</span>
+        <span className={clsx(styles.value, styles.blue)}>{gasInfo.mayBeReturned}</span>
       </p>
     </div>
   </CSSTransition>
