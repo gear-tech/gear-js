@@ -5,11 +5,11 @@ import { GearApi, DebugMode } from '../src';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
-const api = new GearApi();
+const api = new GearApi({ throwOnConnect: true });
 let alice: KeyringPair;
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   [alice] = await getAccount();
 });
 
