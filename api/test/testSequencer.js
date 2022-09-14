@@ -5,7 +5,7 @@ export default class CustomSequencer extends Sequencer.default.default {
     const copyTests = Array.from(tests);
     const result = new Array(copyTests.length);
 
-    let counter = 1;
+    let counter = 0;
 
     for (const test of copyTests) {
       if (test.path.includes('DebugMode')) {
@@ -13,6 +13,7 @@ export default class CustomSequencer extends Sequencer.default.default {
         continue;
       } else if (test.path.includes('GearApi')) {
         result[0] = test;
+        counter++;
         continue;
       } else {
         result[counter] = test;

@@ -34,7 +34,7 @@ afterAll(async () => {
 });
 
 describe('Calculate gas', () => {
-  test('Get init gas spent (upload)', async () => {
+  test.only('Get init gas spent (upload)', async () => {
     const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, '0x00', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
@@ -46,7 +46,7 @@ describe('Calculate gas', () => {
     expect(gas.toHuman()).toHaveProperty('waited');
   });
 
-  test('Upload program', async () => {
+  test.only('Upload program', async () => {
     expect(gasLimits.init).toBeDefined();
     const program = api.program.upload({ code, gasLimit: gasLimits.init as u64 });
     programId = program.programId;
