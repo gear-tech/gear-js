@@ -54,9 +54,9 @@ jobs:
           tar -xvf examples.tar.gz
 
       - name: Additional steps
+        working-directory: api/test/programs
         run: |
-          cd api/test/programs
-          cargo build —release
+          cargo build --release
           cp target/wasm32-unknown-unknown/release/*.{opt,meta}.wasm ../wasm
  
       - name: Run tests
