@@ -1,5 +1,4 @@
 import {
-  ICodeChangedData,
   IMessage,
   IMessageEnqueuedData, IMessagesDispatchedData,
   IProgramChangedData,
@@ -9,7 +8,6 @@ import {
 } from '@gear-js/common';
 
 import {
-  CodeChangedData,
   MessageEnqueuedData,
   MessagesDispatchedData,
   ProgramChangedData,
