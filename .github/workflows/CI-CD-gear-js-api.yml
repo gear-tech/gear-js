@@ -51,6 +51,7 @@ jobs:
         run: npm test
         
       - name: Check node state
+        continue-on-error: true
         run: |
           netstat -nlp | grep 9944
           ps aux | grep gear
