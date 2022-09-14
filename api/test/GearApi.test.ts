@@ -5,7 +5,6 @@ const api = new GearApi();
 
 beforeAll(async () => {
   await api.isReadyOrError;
-  await sleep(2000);
 });
 
 afterAll(async () => {

@@ -16,11 +16,12 @@ let codeId: Hex;
 let messageId: Hex;
 let exitCode: number;
 const code = readFileSync(join(TEST_WASM_DIR, 'test_gas.opt.wasm'));
-const gasLimits: { init: u64 | undefined; handle: u64 | undefined; reply: u64 | undefined } = {
+const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
   init: undefined,
   handle: undefined,
   reply: undefined,
 };
+
 beforeAll(async () => {
   await api.isReadyOrError;
   [alice] = await getAccount();
