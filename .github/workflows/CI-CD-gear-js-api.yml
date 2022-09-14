@@ -12,7 +12,7 @@ on:
 jobs:
   test:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-22.04
+    runs-on: k8s-runner
     steps:
       - name: Cancel previous workflow runs
         uses: styfle/cancel-workflow-action@0.4.0
@@ -58,7 +58,7 @@ jobs:
 
   publish-to-npm:
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: k8s-runner
     steps:
       - uses: actions/checkout@v2
 
