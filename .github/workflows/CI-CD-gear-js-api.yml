@@ -46,8 +46,14 @@ jobs:
           tar -xvf examples.tar.gz
 
       - name: Run tests
+        continue-on-error: true
         working-directory: api
         run: npm test
+        
+      - name: Check node state
+        run: |
+          netstat -nlp | grep 9944
+          ps aux | grep gear
 
       - name: Build examples
         if: ${{ contains(github.event.*.labels.*.name, 'api') }}
