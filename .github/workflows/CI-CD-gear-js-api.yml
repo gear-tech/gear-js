@@ -36,7 +36,7 @@ jobs:
         run: |
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
           chmod +x gear-node
-          nohup ./gear-node --dev --tmp --ws-port 9955 --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
+          nohup ./gear-node --dev --tmp --ws-port 9955 --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
           
       - name: install wscat 
         run: |
@@ -64,7 +64,8 @@ jobs:
 
   publish-to-npm:
     if: github.event_name == 'push'
-    runs-on: static-runner
+#    runs-on: static-runner
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
 
