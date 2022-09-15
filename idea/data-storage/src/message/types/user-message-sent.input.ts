@@ -1,14 +1,13 @@
+import { Hex } from '@gear-js/api';
+
 export interface UserMessageSentInput {
-  id: string;
-  destination: string;
-  source: string;
-  payload?: string;
+  id: Hex;
+  destination: Hex;
+  source: Hex;
+  payload?: Hex;
   value?: string;
   entry?: string;
   replyToMessageId?: string | null;
   exitCode?: number | null;
   expiration?: number | null;
-  genesis: string;
-  blockHash: string;
-  timestamp: number;
 }

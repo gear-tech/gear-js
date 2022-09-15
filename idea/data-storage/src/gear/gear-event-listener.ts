@@ -75,9 +75,7 @@ export class GearEventListener {
       for (const { event: { data, method } } of events) {
         try {
           const payload = getPayloadByGearEvent(method, data as GenericEventData);
-          if (payload !== null && payload !== undefined) {
-            await this.handleEvents(method, { ...payload.value, ...base });
-          }
+          if (payload !== null) await this.handleEvents(method, { ...payload, ...base });
         } catch (error) {
           console.error(error);
           this.logger.log({ method, data: data.toHuman() });
@@ -119,6 +117,7 @@ export class GearEventListener {
     try {
       method in eventsMethod && await eventsMethod[method]();
     } catch (error) {
+      console.log(error);
       this.logger.error(error);
     }
   }
