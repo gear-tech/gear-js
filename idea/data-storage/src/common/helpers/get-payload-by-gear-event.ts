@@ -1,10 +1,5 @@
 import { Keys } from '@gear-js/common';
-import {
-  MessagesDispatchedData,
-  ProgramChangedData,
-  UserMessageReadData,
-  UserMessageSentData,
-} from '@gear-js/api';
+import { MessagesDispatchedData, ProgramChangedData, UserMessageReadData, UserMessageSentData } from '@gear-js/api';
 
 import { GenericEventData } from '@polkadot/types';
 import { getMessageReadStatus } from './get-message-read-status';
@@ -58,7 +53,7 @@ function messagesDispatchedPayload(
   return null;
 }
 
-export function getPayloadByGearEvent (method: string, data: GenericEventData) : GearEventPayload {
+export function getPayloadByGearEvent (method: string, data: GenericEventData): GearEventPayload {
   const payloads = {
     [Keys.UserMessageSent]: (data: UserMessageSentData):UserMessageSentInput => {
       return userMessageSentPayload(data);
@@ -72,8 +67,14 @@ export function getPayloadByGearEvent (method: string, data: GenericEventData) :
     [Keys.MessagesDispatched]: (data: MessagesDispatchedData): MessageDispatchedDataInput => {
       return messagesDispatchedPayload(data);
     },
-    [Keys.DatabaseWiped]: () => {}
+    [Keys.DatabaseWiped]: () => {
+      return {};
+    }
   };
 
-  return payloads[method](data) || null;
+  if(method in payloads){
+    return payloads[method](data);
+  } else {
+    return null;
+  }
 }
