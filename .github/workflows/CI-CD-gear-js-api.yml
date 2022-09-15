@@ -56,10 +56,9 @@ jobs:
           
       - name: go to specific dirs
         run: |
-          ls -ltr
           cd api/test/programs
-          ls -ltr
-          cargo build --release --manifest-path Cargo.toml
+          cargo build --release
+          cp target/wasm32-unknown-unknown/release/*.{opt,meta}.wasm ../wasm
  
       - name: Run tests
         working-directory: api
