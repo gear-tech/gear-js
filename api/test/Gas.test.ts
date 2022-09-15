@@ -9,7 +9,7 @@ import { GasInfo, Hex } from '../src/types';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
 import { TARGET } from './config';
 
-let api: GearApi;
+const api = new GearApi();
 let alice: KeyringPair;
 let aliceRaw: Hex;
 let programId: Hex;
@@ -24,7 +24,7 @@ const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
 };
 
 beforeAll(async () => {
-  api = await GearApi.create();
+  await api.isReadyOrError;
   [alice] = await getAccount();
   aliceRaw = decodeAddress(alice.address);
 });
@@ -35,7 +35,7 @@ afterAll(async () => {
 });
 
 describe('Calculate gas', () => {
-  test.only('Get init gas spent (upload)', async () => {
+  test('Get init gas spent (upload)', async () => {
     const gas: GasInfo = await api.program.calculateGas.initUpload(aliceRaw, code, '0x00', 0, true);
     expect(gas).toBeDefined();
     expect(gas.toHuman()).toHaveProperty('min_limit');
@@ -47,7 +47,7 @@ describe('Calculate gas', () => {
     expect(gas.toHuman()).toHaveProperty('waited');
   });
 
-  test.only('Upload program', async () => {
+  test('Upload program', async () => {
     expect(gasLimits.init).toBeDefined();
     const program = api.program.upload({ code, gasLimit: gasLimits.init as u64 });
     programId = program.programId;
