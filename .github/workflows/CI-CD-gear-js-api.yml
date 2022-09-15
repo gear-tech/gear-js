@@ -56,7 +56,7 @@ jobs:
         run: |
           wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
           chmod +x gear-node
-          ./gear-node --dev --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all >> /tmp/gear.log
+          nohup ./gear-node --dev --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all > /tmp/gear-log.txt 2>&1 &
  
       - name: Run tests
         working-directory: api
