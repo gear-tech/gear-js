@@ -2,10 +2,11 @@ import SimpleBar from 'simplebar-react';
 import clsx from 'clsx';
 import { WaitlistItem } from '@gear-js/api';
 
+import { Placeholder } from 'entities/placeholder';
 import { HorizontalWaitlistItem, HumanWaitlistItem } from 'entities/waitlist';
+import { ReactComponent as HorizontalMessageCardSVG } from 'shared/assets/images/placeholders/horizontalMessageCard.svg';
 
 import styles from '../ProgramMessages.module.scss';
-import { Placeholder } from '../placeholder';
 
 type Props = {
   waitlist: WaitlistItem[];
@@ -26,7 +27,16 @@ const Waitlist = ({ waitlist, isLoading, totalCount }: Props) => {
 
   return (
     <SimpleBar className={clsx(styles.simpleBar, isLoaderShowing && styles.noOverflow)}>
-      {isLoaderShowing ? <Placeholder isEmpty={isEmpty} /> : renderItems()}
+      {isLoaderShowing ? (
+        <Placeholder
+          block={<HorizontalMessageCardSVG className={styles.placeholderBlock} />}
+          title="There is no messages yet"
+          isEmpty={isEmpty}
+          blocksCount={8}
+        />
+      ) : (
+        renderItems()
+      )}
     </SimpleBar>
   );
 };

@@ -19,7 +19,6 @@
     "buffer": "^6.0.3",
     "clsx": "^1.2.1",
     "final-form": "^4.20.7",
-    "formik": "^2.2.9",
     "ky": "^0.31.1",
     "localforage": "^1.10.0",
     "lodash.isequal": "^4.5.0",

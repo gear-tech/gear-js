@@ -1,19 +1,19 @@
 import { OwnerFilter } from 'api/consts';
 import { Sort } from 'features/sortBy';
-import { ProgramStatus } from 'entities/program';
+import { Type } from 'entities/message';
 
 type FiltersValues = {
-  owner: OwnerFilter;
-  status: ProgramStatus[];
   createAt: string;
+  location: Type[];
+  destination: OwnerFilter;
 };
 
 type RequestParams = {
-  owner?: string;
-  status?: ProgramStatus[];
   query?: string;
   sortBy?: Sort;
+  location?: Type[];
   createAt?: string;
+  destination?: string;
 };
 
 export type { FiltersValues, RequestParams };

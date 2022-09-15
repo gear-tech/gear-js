@@ -1,6 +1,6 @@
 import { IMessage } from './model/types';
-import { Entry } from './model/consts';
+import { Type, Entry, ReadReason } from './model/consts';
 import { HorizontalMessageCard } from './ui/horizontalMessageCard';
 
-export { Entry, HorizontalMessageCard };
+export { Type, Entry, ReadReason, HorizontalMessageCard };
 export type { IMessage };

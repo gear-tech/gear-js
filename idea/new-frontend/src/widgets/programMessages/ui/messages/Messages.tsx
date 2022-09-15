@@ -2,10 +2,11 @@ import SimpleBar from 'simplebar-react';
 import clsx from 'clsx';
 
 import { useScrollLoader } from 'hooks';
+import { Placeholder } from 'entities/placeholder';
 import { IMessage, HorizontalMessageCard } from 'entities/message';
+import { ReactComponent as HorizontalMessageCardSVG } from 'shared/assets/images/placeholders/horizontalMessageCard.svg';
 
 import styles from '../ProgramMessages.module.scss';
-import { Placeholder } from '../placeholder';
 
 type Props = {
   messages: IMessage[];
@@ -25,7 +26,16 @@ const Messages = ({ messages, isLoading, totalCount, loadMoreMessages }: Props) 
 
   return (
     <SimpleBar scrollableNodeProps={{ ref }} className={clsx(styles.simpleBar, isLoaderShowing && styles.noOverflow)}>
-      {isLoaderShowing ? <Placeholder isEmpty={isEmpty} /> : renderMessages()}
+      {isLoaderShowing ? (
+        <Placeholder
+          block={<HorizontalMessageCardSVG className={styles.placeholderBlock} />}
+          title="There is no messages yet"
+          isEmpty={isEmpty}
+          blocksCount={8}
+        />
+      ) : (
+        renderMessages()
+      )}
     </SimpleBar>
   );
 };

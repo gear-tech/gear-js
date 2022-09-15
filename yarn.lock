@@ -13445,7 +13445,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"formik@npm:2.2.9, formik@npm:^2.2.9":
+"formik@npm:2.2.9":
   version: 2.2.9
   resolution: "formik@npm:2.2.9"
   dependencies:
@@ -18115,7 +18115,6 @@ __metadata:
     eslint-plugin-react: ^7.30.1
     eslint-plugin-react-hooks: ^4.6.0
     final-form: ^4.20.7
-    formik: ^2.2.9
     ky: ^0.31.1
     localforage: ^1.10.0
     lodash.isequal: ^4.5.0

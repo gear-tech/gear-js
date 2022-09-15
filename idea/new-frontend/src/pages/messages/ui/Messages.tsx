@@ -2,22 +2,22 @@ import { useEffect, useCallback, useState } from 'react';
 import { useAccount } from '@gear-js/react-hooks';
 
 import { OwnerFilter } from 'api/consts';
-import { usePrograms, useDataLoading } from 'hooks';
+import { useMessages, useDataLoading } from 'hooks';
 import { Sort, SortBy } from 'features/sortBy';
 
-import styles from './Programs.module.scss';
+import styles from './Messages.module.scss';
 import { RequestParams } from '../model/types';
 import { DEFAULT_REQUEST_PARAMS, DEFAULT_FILTER_VALUES } from '../model/consts';
-import { ProgramsList } from './programsList';
+import { MessagesList } from './messagesList';
 import { SearchSettings } from './searchSettings';
 
-const Programs = () => {
+const Messages = () => {
   const { account } = useAccount();
 
-  const { programs, isLoading, totalCount, fetchPrograms } = usePrograms();
+  const { messages, isLoading, totalCount, fetchMessages } = useMessages();
   const { params, loadData, changeParams } = useDataLoading<RequestParams>({
     defaultParams: DEFAULT_REQUEST_PARAMS,
-    fetchData: fetchPrograms,
+    fetchData: fetchMessages,
   });
 
   const [initialValues, setInitialValues] = useState(DEFAULT_FILTER_VALUES);
@@ -25,10 +25,10 @@ const Programs = () => {
   const decodedAddress = account?.decodedAddress;
 
   const handleParamsChange = useCallback(
-    ({ query, owner }: RequestParams) =>
+    ({ query, destination }: RequestParams) =>
       changeParams({
         query,
-        owner: owner === OwnerFilter.All ? undefined : decodedAddress,
+        destination: destination === OwnerFilter.All ? undefined : decodedAddress,
       }),
     [changeParams, decodedAddress],
   );
@@ -37,19 +37,19 @@ const Programs = () => {
 
   useEffect(
     () => {
-      const { owner, createAt = '', status = [] } = params;
+      const { destination, createAt = '', location = [] } = params;
 
-      if (!owner) {
+      if (!destination) {
         return;
       }
 
-      changeParams({ owner: decodedAddress || undefined });
+      changeParams({ destination: decodedAddress || undefined });
 
       if (!decodedAddress) {
         setInitialValues({
-          owner: OwnerFilter.All,
-          status,
           createAt,
+          location,
+          destination: OwnerFilter.All,
         });
       }
     },
@@ -61,19 +61,13 @@ const Programs = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <section className={styles.programsSection}>
-        <SortBy title="programs" count={totalCount} onChange={handleSortChange} />
-        <ProgramsList
-          programs={programs}
-          totalCount={totalCount}
-          isLoading={isLoading}
-          isLoggedIn={isLoggedIn}
-          loadMorePrograms={loadData}
-        />
+      <section className={styles.messagesSection}>
+        <SortBy title="Messages" count={totalCount} onChange={handleSortChange} />
+        <MessagesList messages={messages} totalCount={totalCount} isLoading={isLoading} loadMorePrograms={loadData} />
       </section>
       <SearchSettings isLoggedIn={isLoggedIn} initialValues={initialValues} onSubmit={handleParamsChange} />
     </div>
   );
 };
 
-export { Programs };
+export { Messages };

@@ -1,12 +1,12 @@
-// import { Sort } from 'features/sortBy';
 import { OwnerFilter } from 'api/consts';
+// import { Sort } from 'features/sortBy';
 
 import { RequestParams, FiltersValues } from './types';
 
 const DEFAULT_FILTER_VALUES: FiltersValues = {
-  owner: OwnerFilter.All,
-  status: [],
   createAt: '',
+  location: [],
+  destination: OwnerFilter.All,
 };
 
 const DEFAULT_REQUEST_PARAMS: RequestParams = {
@@ -17,4 +17,4 @@ const DEFAULT_REQUEST_PARAMS: RequestParams = {
   // createAt: '',
 };
 
-export { DEFAULT_REQUEST_PARAMS, DEFAULT_FILTER_VALUES };
+export { OwnerFilter, DEFAULT_REQUEST_PARAMS, DEFAULT_FILTER_VALUES };

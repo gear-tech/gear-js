@@ -1,11 +1,13 @@
 import SimpleBar from 'simplebar-react';
 
 import { useScrollLoader } from 'hooks';
+import { Placeholder } from 'entities/placeholder';
 import { IProgram, HorizontalProgramCard } from 'entities/program';
+import { ExamplesLink } from 'shared/ui/examplesLink';
+import { ReactComponent as HorizontalProgramCardSVG } from 'shared/assets/images/placeholders/horizontalProgramCard.svg';
 
 import clsx from 'clsx';
 import styles from './ProgramsList.module.scss';
-import { ProgramsPlaceholder } from '../programsPlaceholder';
 
 type Props = {
   programs: IProgram[];
@@ -30,7 +32,14 @@ const ProgramsList = (props: Props) => {
         className={clsx(styles.simpleBar, isLoaderShowing && styles.noOverflow)}
         scrollableNodeProps={{ ref: scrollableNodeRef }}>
         {isLoaderShowing ? (
-          <ProgramsPlaceholder isEmpty={isEmpty} />
+          <Placeholder
+            block={<HorizontalProgramCardSVG className={styles.placeholderBlock} />}
+            title="There is no program yet"
+            description="You can start experimenting right now or try to build from examples. Let's Rock!"
+            isEmpty={isEmpty}
+            blocksCount={6}>
+            <ExamplesLink />
+          </Placeholder>
         ) : (
           programs.map((program) => (
             <HorizontalProgramCard key={program.id} program={program} withSendMessage={isLoggedIn} />

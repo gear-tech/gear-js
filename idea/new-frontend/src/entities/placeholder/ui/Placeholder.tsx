@@ -1,25 +1,29 @@
+import { ReactNode } from 'react';
 import clsx from 'clsx';
 
 import { EmptyContent } from 'shared/ui/emptyContent';
-import { ReactComponent as HorizontalMessageCardSVG } from 'shared/assets/images/placeholders/horizontalMessageCard.svg';
 
 import styles from './Placeholder.module.scss';
 
 type Props = {
+  title: string;
+  block: ReactNode;
   isEmpty: boolean;
+  children?: ReactNode;
+  blocksCount: number;
+  description?: string;
 };
 
-const Placeholder = ({ isEmpty }: Props) => {
+const Placeholder = ({ title, block, isEmpty, children, blocksCount, description }: Props) => {
   const loaderClasses = clsx(styles.block, !isEmpty && styles.loading);
 
   const renderBlocks = () => {
     const result = [];
-
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < blocksCount; i++) {
       result.push(
         <div key={i} className={loaderClasses}>
-          <HorizontalMessageCardSVG />
+          {block}
         </div>,
       );
     }
@@ -30,7 +34,9 @@ const Placeholder = ({ isEmpty }: Props) => {
   return (
     <>
       {renderBlocks()}
-      <EmptyContent title="There is no messages yet" isVisible={isEmpty} />
+      <EmptyContent title={title} description={description} isVisible={isEmpty}>
+        {children}
+      </EmptyContent>
     </>
   );
 };

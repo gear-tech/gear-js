@@ -1,10 +1,10 @@
 import { ChangeEvent } from 'react';
 import { useField, useForm } from 'react-final-form';
+import clsx from 'clsx';
 import { CheckboxProps, checkboxStyles } from '@gear-js/ui';
 
 import { BulbBlock, BulbStatus } from 'shared/ui/bulbBlock';
 
-import clsx from 'clsx';
 import styles from './StatusCheckbox.module.scss';
 
 type Props = Omit<CheckboxProps, 'name' | 'value' | 'onChange'> & {
