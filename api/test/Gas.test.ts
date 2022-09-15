@@ -9,7 +9,7 @@ import { GasInfo, Hex } from '../src/types';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
 import { TARGET } from './config';
 
-const api = new GearApi();
+let api: GearApi;
 let alice: KeyringPair;
 let aliceRaw: Hex;
 let programId: Hex;
@@ -24,7 +24,7 @@ const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
 };
 
 beforeAll(async () => {
-  await api.isReadyOrError;
+  api = await GearApi.create();
   [alice] = await getAccount();
   aliceRaw = decodeAddress(alice.address);
 });
