@@ -1,13 +1,15 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
-import { GearKeyring } from '@gear-js/api';
+import * as gearApi from '@gear-js/api';
 import { BrowserRouter } from 'react-router-dom';
 
 import { renderWithProviders, textMatcher } from './utils';
-import { useApiMock, useAccountMock, useAccountsMock, TEST_API, TEST_ACCOUNT_1 } from './mocks/hooks';
+import { useApiMock, useAccountMock, TEST_API, TEST_ACCOUNT_1 } from './mocks/hooks';
 
 import * as helpers from 'helpers';
 import { Header } from 'components/blocks/Header';
 import menuStyles from 'components/blocks/Header/children/Menu/Menu.module.scss';
+
+const { GearKeyring } = gearApi;
 
 const accounts = [
   {
@@ -55,7 +57,7 @@ const fixReactError = async () => {
 describe('header tests', () => {
   it('renders logo and menu', async () => {
     useApiMock();
-    useAccountsMock();
+    useAccountMock();
 
     renderWithProviders(<HeaderComponent />);
 
@@ -157,7 +159,7 @@ describe('header tests', () => {
 
   it('renders sidebar button, opens/closes sidebar, adds/copies/removes/switches node', async () => {
     useApiMock();
-    useAccountsMock();
+    useAccountMock();
 
     const { rerender } = renderWithProviders(<HeaderComponent />);
 
@@ -359,11 +361,10 @@ describe('account switch tests', () => {
     TEST_API.nodeVersion.mockResolvedValue('1-1777cdb0cfa');
 
     useApiMock(TEST_API);
-    useAccountMock();
-    useAccountsMock(accounts);
+    useAccountMock(undefined, accounts);
 
     // mocking raw public key get since it gets saved in localstorage on account switch
-    jest.spyOn(GearKeyring, 'decodeAddress').mockImplementation(() => '0x00');
+    jest.spyOn(gearApi, 'decodeAddress').mockImplementation(() => '0x00');
 
     const { rerender } = renderWithProviders(<HeaderComponent />);
 
@@ -465,7 +466,7 @@ describe('account switch tests', () => {
 
   it('logins without accounts', async () => {
     useApiMock();
-    useAccountsMock([]);
+    useAccountMock(undefined, []);
 
     renderWithProviders(<HeaderComponent />);
 
