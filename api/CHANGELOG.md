@@ -1,3 +1,11 @@
+## 0.25.6
+_09/13/2022_
+
+https://github.com/gear-tech/gear-js/pull/988
+### Changes
+
+- Add function to convert type name
+
 ## 0.25.5
 _09/12/2022_
 
@@ -5,6 +13,7 @@ https://github.com/gear-tech/gear-js/pull/982
 ### Changes
 
 - Add method to subscribe to `UserMessageSent` events by actorId
+
 ## 0.25.4
 _09/12/2022_
 

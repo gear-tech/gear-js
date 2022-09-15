@@ -9,7 +9,7 @@ const api = new GearApi();
 let alice: KeyringPair;
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   [alice] = await getAccount();
 });
 
@@ -45,7 +45,7 @@ describe('DebugMode', () => {
       expect(snapshot[0]).toHaveProperty('dispatchQueue');
       expect(snapshot[0]).toHaveProperty('programs');
     }
-    expect(snapshots[0][0].programs).toHaveLength(1);
+    expect(snapshots[0][0].programs.length).toBeGreaterThanOrEqual(1);
     expect(snapshots[0][0].programs[0]).toHaveProperty('state');
     expect(snapshots[0][0].programs[0].state.isActive).toBeTruthy();
     for (const prop of ['codeHash', 'persistentPages', 'staticPages']) {

@@ -3,11 +3,11 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { RegistryError } from '@polkadot/types-codec/types';
 import { getAccount, sleep } from './utilsFunctions';
 
-let api: GearApi;
+const api = new GearApi();
 let alice: KeyringPair;
 
 beforeAll(async () => {
-  api = await GearApi.create();
+  await api.isReadyOrError;
   [alice] = await getAccount();
 });
 

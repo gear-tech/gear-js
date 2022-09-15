@@ -10,7 +10,7 @@ const accounts = {};
 const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_sum.opt.wasm'));
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   [accounts['alice']] = await getAccount();
 });
 
