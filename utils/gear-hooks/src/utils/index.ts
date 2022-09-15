@@ -15,7 +15,9 @@ const getAccount = (account: InjectedAccountWithMeta, balance: Balance): Account
   decodedAddress: decodeAddress(account.address),
 });
 
+const isLoggedIn = ({ address }: InjectedAccountWithMeta) => localStorage.account === address;
+
 const getAutoGasLimit = ({ waited, min_limit }: GasInfo) =>
   waited ? min_limit.add(min_limit.mul(bnToBn(0.1))) : min_limit;
 
-export { getBalance, getAccount, getAutoGasLimit };
+export { getBalance, getAccount, isLoggedIn, getAutoGasLimit };
