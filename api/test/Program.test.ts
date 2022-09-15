@@ -3,7 +3,7 @@ import { join } from 'path';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
-import { checkInit, getAccount, sendTransaction, sleep, testif } from './utilsFunctions';
+import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { Hex } from '../src/types';
 import { GearApi } from '../src';
 
@@ -40,7 +40,8 @@ describe('Upload program', () => {
     expect(await status()).toBe('success');
   });
 
-  testif(!!codeId)('Сreate program', async () => {
+  test('Сreate program', async () => {
+    expect(codeId).toBeDefined();
     const { programId, salt } = api.program.create({
       codeId,
       gasLimit: 2_000_000_000,
