@@ -2205,14 +2205,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.25.5":
-  version: 0.25.5
-  resolution: "@gear-js/api@npm:0.25.5"
+"@gear-js/api@npm:^0.25.6":
+  version: 0.25.6
+  resolution: "@gear-js/api@npm:0.25.6"
   peerDependencies:
     "@polkadot/api": ^9.3.3
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
-  checksum: d86b53f8483e0d87aee3c58ccd164aa9d5ae950c40b777a4aa6169cbfd0540ee65fa8e519df626322d15c64dfcefe7a42baa3432040187db63669578fde5a30c
+  checksum: 9c340fd021587c5d87d9b9f63922737ec1fe7f19f4ae20576ea98206d18147502ca754e7db973ecaa164e0ab98e25490e509f5845cf18caff41aca274143fa1e
   languageName: node
   linkType: hard
 
@@ -2220,8 +2220,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/auction@workspace:apps/auction"
   dependencies:
-    "@gear-js/api": ^0.25.5
-    "@gear-js/react-hooks": ^0.2.23
+    "@gear-js/api": ^0.25.6
+    "@gear-js/react-hooks": ^0.3.0
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
     "@polkadot/api": ^9.3.3
@@ -2329,8 +2329,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/escrow@workspace:apps/escrow"
   dependencies:
-    "@gear-js/api": ^0.25.5
-    "@gear-js/react-hooks": ^0.2.23
+    "@gear-js/api": ^0.25.6
+    "@gear-js/react-hooks": ^0.3.0
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
     "@polkadot/api": ^9.3.3
@@ -2476,8 +2476,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/lottery@workspace:apps/lottery"
   dependencies:
-    "@gear-js/api": ^0.25.5
-    "@gear-js/react-hooks": ^0.2.23
+    "@gear-js/api": ^0.25.6
+    "@gear-js/react-hooks": ^0.3.0
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.9
     "@polkadot/api": ^9.3.3
@@ -2521,8 +2521,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/marketplace@workspace:apps/marketplace"
   dependencies:
-    "@gear-js/api": ^0.25.5
-    "@gear-js/react-hooks": ^0.2.23
+    "@gear-js/api": ^0.25.6
+    "@gear-js/react-hooks": ^0.3.0
     "@gear-js/ui": ^0.4.0
     "@polkadot/api": ^9.3.3
     "@polkadot/extension-dapp": ^0.43.3
@@ -2566,8 +2566,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/nft@workspace:apps/nft"
   dependencies:
-    "@gear-js/api": ^0.25.5
-    "@gear-js/react-hooks": ^0.2.23
+    "@gear-js/api": ^0.25.6
+    "@gear-js/react-hooks": ^0.3.0
     "@gear-js/ui": ^0.4.0
     "@polkadot/api": ^9.3.3
     "@polkadot/extension-dapp": ^0.43.2
@@ -2621,16 +2621,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/react-hooks@npm:^0.2.23":
-  version: 0.2.23
-  resolution: "@gear-js/react-hooks@npm:0.2.23"
+"@gear-js/react-hooks@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@gear-js/react-hooks@npm:0.3.0"
   peerDependencies:
-    "@gear-js/api": ^0.25.5
+    "@gear-js/api": ^0.25.6
     "@polkadot/extension-dapp": ^0.43.2
     react: ">=17.0.2"
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
-  checksum: 6f8044336137b2ec1bcc64170882477c9c7e7f059bf14526cfe10e4a3e733b4e8fdb2115729423ce2ef9abf0f38d58f5e023f7ab25494f1f253d32e9c49a5a74
+  checksum: 8eb1bfeff7c836bee9a16c454097db78cb294dfd8f3befbdcbdcf167c61823b55416bdd7e789fe3f25ca18e195028cba8cbccd3fd11537bf6b126ee7e8487991
   languageName: node
   linkType: hard
 
@@ -2683,8 +2683,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/supply-chain@workspace:apps/supply-chain"
   dependencies:
-    "@gear-js/api": ^0.25.5
-    "@gear-js/react-hooks": ^0.2.23
+    "@gear-js/api": ^0.25.6
+    "@gear-js/react-hooks": ^0.3.0
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
     "@polkadot/api": ^9.3.3

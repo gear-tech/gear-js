@@ -22,8 +22,8 @@
     ]
   },
   "dependencies": {
-    "@gear-js/api": "^0.25.5",
-    "@gear-js/react-hooks": "^0.2.23",
+    "@gear-js/api": "^0.25.6",
+    "@gear-js/react-hooks": "^0.3.0",
     "@gear-js/ui": "^0.4.0",
     "@polkadot/api": "^9.3.3",
     "@polkadot/extension-dapp": "^0.43.2",

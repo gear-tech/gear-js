@@ -1,4 +1,4 @@
-import { useApi, useBalanceSubscription, useLoggedInAccount } from '@gear-js/react-hooks';
+import { useApi, useAccount } from '@gear-js/react-hooks';
 import { Routing } from 'pages';
 import { Header, Footer, ApiLoader } from 'components';
 import { withProviders } from 'hocs';
@@ -7,17 +7,15 @@ import 'App.scss';
 
 function Component() {
   const { isApiReady } = useApi();
-  const { isLoginReady } = useLoggedInAccount();
+  const { isAccountReady } = useAccount();
 
   const { supplyChain, nft } = useWasm();
   const isEachWasmReady = supplyChain && nft;
 
-  useBalanceSubscription();
-
   return (
     <>
-      <Header isAccountVisible={isLoginReady} />
-      <main>{isApiReady && isLoginReady && isEachWasmReady ? <Routing /> : <ApiLoader />}</main>
+      <Header isAccountVisible={isAccountReady} />
+      <main>{isApiReady && isAccountReady && isEachWasmReady ? <Routing /> : <ApiLoader />}</main>
       <Footer />
     </>
   );
