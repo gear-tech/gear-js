@@ -3,5 +3,8 @@ import { MessageType } from './message-type.enum';
 import { ProgramStatus } from './program-status.enum';
 import { MessageReadReason } from './message-read-reason.enum';
 import { CodeStatus } from './code-status.enum';
+import { MessageStatus } from './message-status.enum';
 
-export { CodeStatus, MessageEntryPoing, MessageType, ProgramStatus, MessageReadReason };
+
+
+export { MessageStatus ,CodeStatus, MessageEntryPoing, MessageType, ProgramStatus, MessageReadReason };
