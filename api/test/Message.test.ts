@@ -3,7 +3,7 @@ import { join } from 'path';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 import { TARGET } from './config';
-import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
+import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep, testif } from './utilsFunctions';
 import { Hex } from '../src/types';
 import { GearApi, getWasmMetadata } from '../src';
 import { decodeAddress } from '../src/utils';
@@ -26,17 +26,18 @@ afterAll(async () => {
 describe('Gear Message', () => {
   test('upload test_mailbox', async () => {
     const code = readFileSync(join(TARGET, 'test_mailbox.opt.wasm'));
-    guestbookId = api.program.upload({
+    const { programId } = api.program.upload({
       code,
       gasLimit: 2_000_000_000,
-    }).programId;
-    const status = checkInit(api, guestbookId);
+    });
+    const status = checkInit(api, programId);
     const transactionData = await sendTransaction(api.program, alice, 'MessageEnqueued');
-    expect(transactionData.destination).toBe(guestbookId);
+    expect(transactionData.destination).toBe(programId);
     expect(await status()).toBe('success');
+    guestbookId = programId;
   });
 
-  test('send messages', async () => {
+  testif(!!guestbookId)('send messages', async () => {
     const messages = [
       {
         payload: {
@@ -78,7 +79,7 @@ describe('Gear Message', () => {
     }
   });
 
-  test('Read mailbox', async () => {
+  testif(!!guestbookId && !!messageToClaim)('Read mailbox', async () => {
     const mailbox = await api.mailbox.read(decodeAddress(alice.address));
     const filteredMB = mailbox.filter((value) => value[0].id.eq(messageToClaim));
     expect(filteredMB).toHaveLength(1);
@@ -89,7 +90,7 @@ describe('Gear Message', () => {
     expect(filteredMB).toHaveProperty([0, 1, 'start']);
   });
 
-  test('Read mailbox with message id', async () => {
+  testif(!!guestbookId && !!messageToClaim)('Read mailbox with message id', async () => {
     const mailbox = await api.mailbox.read(decodeAddress(alice.address), messageToClaim);
     expect(mailbox).toHaveProperty([0, 'toHuman']);
     expect(mailbox.toHuman()).toHaveLength(2);
@@ -99,7 +100,7 @@ describe('Gear Message', () => {
     expect(mailbox).toHaveProperty([1, 'start']);
   });
 
-  test('Claim value from mailbox', async () => {
+  testif(!!guestbookId && !!messageToClaim)('Claim value from mailbox', async () => {
     const submitted = api.claimValueFromMailbox.submit(messageToClaim);
     const transactionData = await sendTransaction(submitted, alice, 'UserMessageRead');
     expect(transactionData.id).toBe(messageToClaim);
