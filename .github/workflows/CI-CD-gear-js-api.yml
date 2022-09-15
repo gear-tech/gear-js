@@ -26,25 +26,18 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Install dependencies and build @gear-js/api
-        working-directory: api
-        run: |
-          npm ci
-          npm run build
-
-      - name: Prepare
-        run: |
-          wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
-          chmod +x gear-node
-          nohup ./gear-node --dev --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
-
       - name: "Install: Nightly toolchain"
         uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
           components: clippy, rustfmt
           target: wasm32-unknown-unknown
-          
+
+      - name: Install dependencies and build @gear-js/api
+        working-directory: api
+        run: |
+          npm ci
+          npm run build
 
       - name: Download gear examples
         working-directory: api/test/wasm
@@ -54,11 +47,17 @@ jobs:
           wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
           tar -xvf examples.tar.gz
           
-      - name: go to specific dirs
+      - name: Build test programs
         run: |
           cd api/test/programs
           cargo build --release
           cp target/wasm32-unknown-unknown/release/*.{opt,meta}.wasm ../wasm
+
+      - name: Prepare
+        run: |
+          wget -O ./gear-node https://github.com/gear-tech/gear/releases/download/build/gear-node
+          chmod +x gear-node
+          nohup ./gear-node --dev --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
  
       - name: Run tests
         working-directory: api
