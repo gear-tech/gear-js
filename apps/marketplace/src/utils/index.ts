@@ -1,7 +1,7 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { ADDRESS, LOCAL_STORAGE } from 'consts';
 import { getMintDetails, getMintPayload } from './form';
-import { getAuctionDate, getListingProps, getMarketNFTPayload, getNFTProps } from './nft';
+import { getAuctionDate, getListingProps, getNFTProps } from './nft';
 
 const isLoggedIn = ({ address }: InjectedAccountWithMeta) => localStorage[LOCAL_STORAGE.ACCOUNT] === address;
 
@@ -21,7 +21,6 @@ export {
   getMintDetails,
   getMintPayload,
   getIpfsAddress,
-  getMarketNFTPayload,
   getNFTProps,
   getAuctionDate,
   getListingProps,

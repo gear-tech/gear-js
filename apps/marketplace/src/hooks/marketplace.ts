@@ -1,13 +1,15 @@
 import { useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { AnyJson } from '@polkadot/types/types';
 import { useMemo } from 'react';
-import marketplaceMetaWasm from 'assets/wasm/marketplace.meta.wasm';
-import { ADDRESS } from 'consts';
 import { AuctionFormValues, MarketNFT, MarketNFTState, MarketplaceState } from 'types';
-import { getMarketNFTPayload, getMilliseconds } from 'utils';
+import { getMilliseconds } from 'utils';
+import { useWasm } from './context';
 
 function useMarketplaceState<T>(payload: AnyJson) {
-  return useReadState<T>(ADDRESS.MARKETPLACE_CONTRACT, marketplaceMetaWasm, payload);
+  const { marketplace } = useWasm();
+  const { programId, metaBuffer } = marketplace || {};
+
+  return useReadState<T>(programId, metaBuffer, payload);
 }
 
 function useMarketplace() {
@@ -17,21 +19,36 @@ function useMarketplace() {
   return { NFTs: state?.AllItems, isEachNFTRead: isStateRead };
 }
 
+function useGetMarketNftPayload() {
+  const { nft } = useWasm();
+  const nftContractId = nft.programId;
+
+  return (tokenId: string) => ({ ItemInfo: { nftContractId, tokenId } });
+}
+
 function useMarketNft(tokenId: string) {
+  const getMarketNFTPayload = useGetMarketNftPayload();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const payload = useMemo(() => getMarketNFTPayload(tokenId), [tokenId]);
+
   const { state } = useMarketplaceState<MarketNFTState>(payload);
 
   return state?.ItemInfo;
 }
 
 function useMarketplaceMessage() {
-  return useSendMessage(ADDRESS.MARKETPLACE_CONTRACT, marketplaceMetaWasm);
+  const { marketplace } = useWasm();
+  const { programId, meta } = marketplace;
+
+  return useSendMessage(programId, meta);
 }
 
 function useMarketplaceActions(tokenId: string, price: MarketNFT['price'] | undefined) {
   const sendMessage = useMarketplaceMessage();
+  const { nft } = useWasm();
 
-  const nftContractId = ADDRESS.NFT_CONTRACT;
+  const nftContractId = nft.programId;
   const ftContractId = null;
 
   const buy = (onSuccess: () => void) => {
@@ -76,4 +93,11 @@ function useMarketplaceActions(tokenId: string, price: MarketNFT['price'] | unde
   return { buy, offer, bid, settle, startSale, startAuction };
 }
 
-export { useMarketplaceState, useMarketNft, useMarketplace, useMarketplaceMessage, useMarketplaceActions };
+export {
+  useMarketplaceState,
+  useGetMarketNftPayload,
+  useMarketNft,
+  useMarketplace,
+  useMarketplaceMessage,
+  useMarketplaceActions,
+};

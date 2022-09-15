@@ -1,33 +1,14 @@
-import { useMetadata, useReadState, useSendMessage } from '@gear-js/react-hooks';
+import { useReadState, useSendMessage } from '@gear-js/react-hooks';
 import { AnyJson } from '@polkadot/types/types';
-import { useEffect, useMemo, useState } from 'react';
-import escrowOptWasm from 'assets/wasm/escrow.opt.wasm';
-import escrowMetaWasm from 'assets/wasm/escrow.meta.wasm';
+import { useMemo } from 'react';
 import { EscrowState, WalletsState } from 'types';
 import { getProgramId } from 'utils';
-
-function useEscrowOpt() {
-  const [uintArray, setUintArray] = useState<Uint8Array>();
-  const [buffer, setBuffer] = useState<Buffer>();
-
-  useEffect(() => {
-    fetch(escrowOptWasm)
-      .then((response) => response.arrayBuffer())
-      .then((arrayBuffer) => {
-        setUintArray(new Uint8Array(arrayBuffer));
-        setBuffer(Buffer.from(arrayBuffer));
-      });
-  }, []);
-
-  return { uintArray, buffer };
-}
-
-function useEscrowMeta() {
-  return useMetadata(escrowMetaWasm);
-}
+import { useWasm } from './context';
 
 function useEscrowState<T>(payload: AnyJson, isReadOnError?: boolean) {
-  return useReadState<T>(getProgramId(), escrowMetaWasm, payload, isReadOnError);
+  const { metaBuffer } = useWasm();
+
+  return useReadState<T>(getProgramId(), metaBuffer, payload, isReadOnError);
 }
 
 function useEscrow(id: string) {
@@ -48,7 +29,9 @@ function useWallets() {
 }
 
 function useEscrowMessage() {
-  return useSendMessage(getProgramId(), escrowMetaWasm);
+  const { meta } = useWasm();
+
+  return useSendMessage(getProgramId(), meta);
 }
 
-export { useEscrowMeta, useEscrowOpt, useEscrow, useWallets, useEscrowMessage };
+export { useEscrow, useWallets, useEscrowMessage };

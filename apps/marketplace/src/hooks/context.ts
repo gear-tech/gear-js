@@ -1,6 +1,7 @@
 import { useContext } from 'react';
-import { IPFSContext } from 'context';
+import { IPFSContext, WasmContext } from 'context';
 
 const useIPFS = () => useContext(IPFSContext);
+const useWasm = () => useContext(WasmContext);
 
-export { useIPFS };
+export { useIPFS, useWasm };
