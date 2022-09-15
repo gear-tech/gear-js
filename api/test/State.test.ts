@@ -1,7 +1,7 @@
 import { GearApi, getWasmMetadata } from '../src';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { checkInit, getAccount, sleep } from './utilsFunctions';
+import { checkInit, getAccount, sleep, testif } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR, TARGET } from './config';
 import { Hex } from '../src/types';
 
@@ -24,15 +24,16 @@ beforeAll(async () => {
   await api.isReadyOrError;
   const [alice] = await getAccount();
 
-  syscalls_test.id = api.program.upload({
+  let programId = api.program.upload({
     code: syscalls_test.code,
     gasLimit: 2_000_000_000,
   }).programId;
   let initStatus = checkInit(api, syscalls_test.id);
   api.program.signAndSend(alice, () => {});
   expect(await initStatus()).toBe('success');
+  syscalls_test.id = programId;
 
-  demo_meta_test.id = api.program.upload(
+  programId = api.program.upload(
     {
       code: demo_meta_test.code,
       initPayload: { amount: 8, currency: 'GRT' },
@@ -47,6 +48,7 @@ beforeAll(async () => {
     }
   });
   expect(await initStatus()).toBe('success');
+  demo_meta_test.id = programId;
 });
 
 afterAll(async () => {
@@ -55,7 +57,7 @@ afterAll(async () => {
 });
 
 describe('Read State', () => {
-  test('Get program from storage', async () => {
+  testif(!!demo_meta_test.id)('Get program from storage', async () => {
     const gProg = await api.storage.gProg(demo_meta_test.id);
     expect(gProg).toBeDefined();
     expect(gProg).toHaveProperty('allocations');
@@ -64,19 +66,19 @@ describe('Read State', () => {
     expect(gProg).toHaveProperty('state');
   });
 
-  test('Get program pages from storage', async () => {
+  testif(!!demo_meta_test.id)('Get program pages from storage', async () => {
     const gProg = await api.storage.gProg(demo_meta_test.id);
     const gPages = await api.storage.gPages(demo_meta_test.id, gProg);
     expect(gPages).toBeDefined();
   });
 
-  test('Get codeHash', async () => {
+  testif(!!demo_meta_test.id)('Get codeHash', async () => {
     demo_meta_test.codeHash = await api.program.codeHash(demo_meta_test.id);
     expect(demo_meta_test.codeHash).toBeDefined();
     expect(demo_meta_test.codeHash.startsWith('0x')).toBeTruthy();
   });
 
-  test('Get code storage', async () => {
+  testif(!!demo_meta_test.id)('Get code storage', async () => {
     const codeStorage = await api.code.storage(demo_meta_test.codeHash);
     expect(codeStorage.isSome).toBeTruthy();
     const unwrappedCodeStorage = codeStorage.unwrap().toHuman();
@@ -94,21 +96,21 @@ describe('Read State', () => {
     );
   });
 
-  test('Tests read demo_meta state with None input', async () => {
+  testif(!!demo_meta_test.id)('Tests read demo_meta state with None input', async () => {
     const state = await api.programState.read(demo_meta_test.id, demo_meta_test.meta, null);
     expect(state.toHex()).toBe(
       '0x08010000000000000004012c536f6d655375726e616d6520536f6d654e616d6502000000000000000402244f746865724e616d65304f746865725375726e616d65',
     );
   });
 
-  test('Tests read demo_meta state with Some input', async () => {
+  testif(!!demo_meta_test.id)('Tests read demo_meta state with Some input', async () => {
     const state = await api.programState.read(demo_meta_test.id, demo_meta_test.meta, { decimal: 1, hex: [1] });
     expect(state.toHex()).toBe('0x04010000000000000004012c536f6d655375726e616d6520536f6d654e616d65');
   });
 });
 
 describe('Syscalls in meta_state function', () => {
-  test('Test syscalls in meta_state', async () => {
+  testif(!!syscalls_test.id)('Test syscalls in meta_state', async () => {
     const state = await api.programState.read(syscalls_test.id, syscalls_test.meta);
     expect(state).toBeDefined();
     expect(state[0]).toBeDefined();
@@ -118,7 +120,7 @@ describe('Syscalls in meta_state function', () => {
   });
 });
 describe('Events related to state change', () => {
-  test('stateChanges should be in MessagesDispatched event data', async () => {
+  testif(!!demo_meta_test.uploadBlock)('stateChanges should be in MessagesDispatched event data', async () => {
     const apiAt = await api.at(demo_meta_test.uploadBlock);
     const events = await apiAt.query.system.events();
     const messagesDispatchedEvents = events.filter(({ event }) => api.events.gear.MessagesDispatched.is(event));
