@@ -2,11 +2,12 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { u64 } from '@polkadot/types-codec';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+
 import { GearApi } from '../src';
 import { decodeAddress } from '../src/utils';
 import { GasInfo, Hex } from '../src/types';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
-import { TEST_WASM_DIR } from './config';
+import { TARGET } from './config';
 
 const api = new GearApi();
 let alice: KeyringPair;
@@ -15,7 +16,7 @@ let programId: Hex;
 let codeId: Hex;
 let messageId: Hex;
 let exitCode: number;
-const code = readFileSync(join(TEST_WASM_DIR, 'test_gas.opt.wasm'));
+const code = readFileSync(join(TARGET, 'test_gas.opt.wasm'));
 const gasLimits: { init?: u64; handle?: u64; reply?: u64 } = {
   init: undefined,
   handle: undefined,

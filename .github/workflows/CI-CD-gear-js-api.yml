@@ -51,7 +51,6 @@ jobs:
         run: |
           cd api/test/programs
           cargo build --release
-          cp target/wasm32-unknown-unknown/release/*.{opt,meta}.wasm ../wasm
 
       - name: Prepare
         run: |

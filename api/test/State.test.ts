@@ -2,7 +2,7 @@ import { GearApi, getWasmMetadata } from '../src';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
-import { GEAR_EXAMPLES_WASM_DIR, TEST_WASM_DIR } from './config';
+import { GEAR_EXAMPLES_WASM_DIR, TARGET } from './config';
 import { Hex } from '../src/types';
 
 const api = new GearApi();
@@ -15,8 +15,8 @@ const demo_meta_test = {
   codeHash: '0x' as Hex,
 };
 const syscalls_test = {
-  code: readFileSync(join(TEST_WASM_DIR, 'test_syscall_in_state.opt.wasm')),
-  meta: readFileSync(join(TEST_WASM_DIR, 'test_syscall_in_state.meta.wasm')),
+  code: readFileSync(join(TARGET, 'test_syscall_in_state.opt.wasm')),
+  meta: readFileSync(join(TARGET, 'test_syscall_in_state.meta.wasm')),
   id: '0x' as Hex,
 };
 

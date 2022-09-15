@@ -2,13 +2,13 @@ import { CreateType, GearApi, MessageWaitedData } from '../src';
 import { Hex } from '../src/types';
 import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
 import { readFileSync } from 'fs';
-import { TEST_WASM_DIR } from './config';
+import { TARGET } from './config';
 import { join } from 'path';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 const api = new GearApi();
 
-const CODE_PATH = join(TEST_WASM_DIR, 'test_waitlist.opt.wasm');
+const CODE_PATH = join(TARGET, 'test_waitlist.opt.wasm');
 let alice: KeyringPair;
 let programId: Hex;
 let messageId: Hex;
