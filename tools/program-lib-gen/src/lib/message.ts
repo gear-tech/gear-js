@@ -1,5 +1,4 @@
-export function getBaseTemplate() {
-  return `import { TypeInfoRegistry, GearApi, Hex, MessageEnqueuedData, GasInfo } from '@gear-js/api';
+import { TypeInfoRegistry, GearApi, Hex, MessageEnqueuedData, GasInfo } from '@gear-js/api';
 import { AddressOrPair, SignerOptions, SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
 import { Codec, ISubmittableResult } from '@polkadot/types/types';
 
@@ -75,7 +74,7 @@ export class BaseMessage<PayloadType = null, ResultType = null> {
 
   protected async _waitForReply(): Promise<
     (messageId: Hex) => { payloadAndExitCode: Promise<[string, number]>; unsub: VoidFn }
-> {
+  > {
     const messages = new Map<Hex, [string, number]>();
 
     let _payloadResolve: (value: [string, number]) => void;
@@ -134,13 +133,11 @@ export class BaseMessage<PayloadType = null, ResultType = null> {
     const _payload = this._enumVariant ? { [this._enumVariant]: value } : value;
     this._payload = this._payloadType
       ? (this._registry.createType(this._payloadType, _payload) as unknown as Codec).toHex()
-      : (value as Hex);
+      : (value as unknown as Hex);
     return this;
   }
 
   public setProgramId(id: Hex) {
     this._programId = id;
   }
-  }  
-`;
 }

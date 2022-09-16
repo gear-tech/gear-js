@@ -10,7 +10,7 @@ program
   .argument('<path>', 'Path to scheme.json')
   .option('-o --output-dir <out>', 'Path to output directory', path.resolve())
   .action((path, options) => {
-    const out = options.out;
+    const out = options.outputDir;
     generate(path, out);
   });
 

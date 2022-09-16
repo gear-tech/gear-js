@@ -1,6 +1,5 @@
-export function getReplyTemplate() {
-  return `import { Hex } from '@gear-js/api';
-import { BaseMessage, ISignOptions } from './base.entry';
+import { Hex } from '@gear-js/api';
+import { BaseMessage, ISignOptions } from './message';
 
 export class Reply<PayloadType, ResultType = null> extends BaseMessage<PayloadType, ResultType> {
   #messageId: Hex;
@@ -10,7 +9,7 @@ export class Reply<PayloadType, ResultType = null> extends BaseMessage<PayloadTy
     return this;
   }
 
-  async calculateGas(source: Hex, exitCode: number = 0, value: bigint | number = 0, allowOtherPanics = true) {
+  async calculateGas(source: Hex, exitCode = 0, value: bigint | number = 0, allowOtherPanics = true) {
     this._gas = await this.api.program.calculateGas.reply(
       source,
       this.#messageId,
@@ -54,6 +53,4 @@ export class Reply<PayloadType, ResultType = null> extends BaseMessage<PayloadTy
       return null;
     }
   }
-}
-`;
 }

@@ -1,6 +1,5 @@
-export function getInitTemplate() {
-  return `import { GearApi, Hex, TypeInfoRegistry } from '@gear-js/api';
-import { BaseMessage, ISignOptions } from './base.entry';
+import { GearApi, Hex, TypeInfoRegistry } from '@gear-js/api';
+import { BaseMessage, ISignOptions } from './message';
 
 export class UploadProgram<PayloadType, ResultType = null> extends BaseMessage<PayloadType, ResultType> {
   code: Buffer;
@@ -144,6 +143,4 @@ export class CreateProgram<PayloadType, ResultType = null> extends BaseMessage<P
       return { reply: null, programId };
     }
   }
-}
-`;
 }

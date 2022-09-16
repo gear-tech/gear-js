@@ -15,7 +15,8 @@
     "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": false,
     "skipDefaultLibCheck": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declaration": true
   },
   "include": ["src/"]
 }

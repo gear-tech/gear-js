@@ -35,8 +35,8 @@ export class CodeGen {
     if (!this.scheme.init) {
       return;
     }
-    this.#out.import('./entries/init.entry', 'UploadProgram');
-    this.#out.import('./entries/init.entry', 'CreateProgram');
+    this.#out.import('@gear-js/program', 'UploadProgram');
+    this.#out.import('@gear-js/program', 'CreateProgram');
     this.#templates.add('init');
     this.#templates.add('base');
     this.#out.line();
@@ -88,7 +88,7 @@ export class CodeGen {
       return;
     }
 
-    this.#out.import('./entries/reply.entry', 'Reply');
+    this.#out.import('@gear-js/program', 'Reply');
     this.#templates.add('reply');
     this.#templates.add('base');
     this.#out.line();
@@ -128,7 +128,7 @@ export class CodeGen {
     if (!this.scheme.handle) {
       return;
     }
-    this.#out.import('./entries/handle.entry', 'Handle');
+    this.#out.import('@gear-js/program', 'Handle');
     this.#templates.add('handle');
     this.#templates.add('base');
     this.#out.line();

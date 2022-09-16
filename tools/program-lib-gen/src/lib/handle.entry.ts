@@ -1,6 +1,5 @@
-export function getHandleTemplate() {
-  return `import { Hex } from '@gear-js/api';
-import { BaseMessage, ISignOptions } from './base.entry';
+import { Hex } from '@gear-js/api';
+import { BaseMessage, ISignOptions } from './message';
 
 export class Handle<PayloadType = null, ResultType = null> extends BaseMessage<PayloadType, ResultType> {
   async calculateGas(source: Hex, value: bigint | number = 0, allowOtherPanics = true) {
@@ -56,6 +55,4 @@ export class Handle<PayloadType = null, ResultType = null> extends BaseMessage<P
       return null;
     }
   }
-  }
-`;
 }
