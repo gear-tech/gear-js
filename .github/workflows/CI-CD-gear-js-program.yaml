@@ -1,14 +1,14 @@
-name: 'CI-CD @gear-js/gear-meta'
+name: 'CI-CD @gear-js/program'
 
 on:
   pull_request:
     branches: [main]
     paths:
-      - tools/meta-cli/**
+      - tools/program-lib-gen/**
   push:
     branches: [main]
     paths:
-      - tools/meta-cli/**
+      - tools/program-lib-gen/**
 
 jobs:
   test:
@@ -27,22 +27,13 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Prepare
-        run: |
-          mkdir tools/meta-cli/test/wasm
-          wget -O tools/meta-cli/test/wasm/examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
-
       - name: Install dependencies
-        working-directory: tools/meta-cli
+        working-directory: tools/program-lib-gen
         run: yarn install
 
-      - name: Run tests
-        working-directory: tools/meta-cli
-        run: |
-          cd test/wasm
-          tar -xvf examples.tar.gz
-          cd ../..
-          yarn test
+      - name: Build pkg
+        working-directory: tools/program-lib-gen
+        run: yarn build
 
   publish-to-npm:
     if: github.event_name == 'push'
@@ -59,13 +50,13 @@ jobs:
         uses: EndBug/version-check@v1
         id: check
         with:
-          file-name: tools/meta-cli/package.json
-          file-url: https://unpkg.com/@gear-js/gear-meta@latest/package.json
+          file-name: tools/program-lib-gen/package.json
+          file-url: https://unpkg.com/@gear-js/program@latest/package.json
           static-checking: localIsNew
 
       - name: Publish
         if: steps.check.outputs.changed == 'true'
-        working-directory: tools/meta-cli
+        working-directory: tools/program-lib-gen
         run: |
           export token=$(printenv $(printenv GITHUB_ACTOR))
           npm config set //registry.npmjs.org/:_authToken=$token
