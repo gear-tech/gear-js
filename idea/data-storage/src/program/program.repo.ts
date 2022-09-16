@@ -21,18 +21,7 @@ export class ProgramRepo {
   public async getByIdAndGenesis(id: string, genesis: string): Promise<Program> {
     return this.programRepo.findOne({
       where: { id, genesis },
-      select: {
-        id: true,
-        genesis: true,
-        blockHash: true,
-        timestamp: true,
-        owner: true,
-        name: true,
-        status: true,
-        title: true,
-        meta: { meta: true },
-      },
-      relations: ['meta'],
+      relations: ['meta', 'messages', 'code'],
     });
   }
 
@@ -43,18 +32,7 @@ export class ProgramRepo {
         genesis,
         owner,
       },
-      select: {
-        id: true,
-        genesis: true,
-        blockHash: true,
-        timestamp: true,
-        owner: true,
-        name: true,
-        status: true,
-        title: true,
-        meta: { meta: true },
-      },
-      relations: ['meta'],
+      relations: ['meta', 'messages', 'code'],
     });
   }
 
@@ -64,6 +42,7 @@ export class ProgramRepo {
       where: sqlWhereWithILike({ genesis, owner }, query, ['id', 'title', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
+      relations: ['meta', 'messages', 'code'],
       order: {
         timestamp: 'DESC',
       },
@@ -76,6 +55,7 @@ export class ProgramRepo {
       where: sqlWhereWithILike({ genesis }, query, ['id', 'title', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
+      relations: ['meta', 'messages', 'code'],
       order: {
         timestamp: 'DESC',
       },
@@ -92,5 +72,11 @@ export class ProgramRepo {
 
   public async remove(programs: Program[]): Promise<Program[]> {
     return this.programRepo.remove(programs);
+  }
+
+  public async get(id: string): Promise<Program> {
+    return this.programRepo.findOne({
+      where: { id }
+    });
   }
 }

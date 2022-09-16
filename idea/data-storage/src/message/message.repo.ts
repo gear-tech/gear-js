@@ -28,6 +28,7 @@ export class MessageRepo {
       where: sqlWhereWithILike(strictParams, query, ['id', 'source', 'destination']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
+      relations: ['program'],
       order: {
         timestamp: 'DESC',
       },

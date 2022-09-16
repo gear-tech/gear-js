@@ -23,6 +23,7 @@ export class CodeRepo {
         genesis,
         status: CodeStatus.ACTIVE,
       },
+      relations: ['programs', 'meta']
     });
   }
 

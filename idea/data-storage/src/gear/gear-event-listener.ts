@@ -17,6 +17,7 @@ import { CodeStatus, MessageEntryPoing, MessageType, ProgramStatus } from '../co
 import { CodeRepo } from '../code/code.repo';
 import { UpdateCodeInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
+import { ProgramRepo } from '../program/program.repo';
 
 
 @Injectable()
@@ -24,6 +25,7 @@ export class GearEventListener {
   private logger: Logger = new Logger('GearEventListener');
 
   constructor(private programService: ProgramService,
+              private programRepository: ProgramRepo,
               private messageService: MessageService,
               private metaService: MetadataService,
               private codeService: CodeService,
@@ -88,12 +90,13 @@ export class GearEventListener {
   }
 
   private async handleEvents(method: string, payload: any): Promise<void> {
-    const { id, genesis } = payload;
+    const { id, genesis, timestamp } = payload;
 
     const eventsMethod = {
       [Keys.UserMessageSent]: async () => {
         const createMessageDBType = plainToClass(Message, {
           ...payload,
+          timestamp: new Date(timestamp),
           type: MessageType.USER_MESS_SENT
         });
         await this.messageService.createMessages([createMessageDBType]);
@@ -130,10 +133,10 @@ export class GearEventListener {
     await this.uploadCodeByExtrinsic(handleExtrinsicsData);
 
     const eventMethods = ['sendMessage', 'uploadProgram', 'createProgram', 'sendReply'];
-    const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) => eventMethods.includes(method));
+    const extrinsic = signedBlock.block.extrinsics.find(({ method: { method } }) => eventMethods.includes(method));
     let createMessagesDBType = [];
 
-    for (const extrinsic of extrinsics) {
+    if (extrinsic) {
       const { hash, args, method: { method } } = extrinsic;
 
       const filteredEvents = filterEvents(hash, signedBlock, events, status).events!.filter(
@@ -142,13 +145,16 @@ export class GearEventListener {
 
       const eventData = filteredEvents[0].event.data as MessageEnqueuedData;
 
-      const [payload, value] = getUpdateMessageData(args, method);
       const creatProgramByExtrinsicMethod: CreateProgramByExtrinsicInput = {
         eventData,
         genesis,
         timestamp,
         blockHash
       };
+
+      await this.createProgramByExtrinsic(method ,creatProgramByExtrinsicMethod);
+
+      const [payload, value] = getUpdateMessageData(args, method);
 
       const messageDBType = plainToClass(Message, {
         id: eventData.id.toHex(),
@@ -160,7 +166,7 @@ export class GearEventListener {
         value,
         timestamp: new Date(timestamp),
         genesis,
-        program: await this.createProgramByExtrinsic(method, creatProgramByExtrinsicMethod),
+        program: await this.programRepository.get(eventData.destination.toHex())
       });
 
       createMessagesDBType = [...createMessagesDBType, messageDBType];

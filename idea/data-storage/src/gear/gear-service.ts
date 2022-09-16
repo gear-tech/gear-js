@@ -10,8 +10,8 @@ export const gearService = {
   async connect(): Promise<void> {
     try {
       gearApi = await GearApi.create({
-        providerAddress: gear.wsProvider,
-        throwOnConnect: true,
+        // providerAddress: gear.wsProvider,
+        // throwOnConnect: true,
       });
 
       const chain = await gearApi.chain();

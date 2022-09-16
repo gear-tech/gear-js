@@ -9,6 +9,6 @@ export abstract class BaseEntity implements IBaseDBRecord<Date> {
   @Column({ nullable: true })
     blockHash: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'timestamp' })
     timestamp: Date;
 }
