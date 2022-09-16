@@ -6,7 +6,7 @@ import { IMessage, HorizontalMessageCard } from 'entities/message';
 import { ReactComponent as HorizontalMessageCardSVG } from 'shared/assets/images/placeholders/horizontalMessageCard.svg';
 
 import clsx from 'clsx';
-import styles from './ProgramsList.module.scss';
+import styles from './MessagesList.module.scss';
 
 type Props = {
   messages: IMessage[];

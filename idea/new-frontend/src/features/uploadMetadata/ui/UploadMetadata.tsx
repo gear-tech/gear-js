@@ -64,7 +64,7 @@ const UploadMetadata = ({ metadata, onReset, onUpload }: Props) => {
     const metadataProperties = getMetadataProperties(meta);
 
     return Object.entries(metadataProperties).map(([name, value]) => (
-      <FormText key={name} text={value} label={name} isTextarea={name === 'types'} />
+      <FormText key={name} text={value} label={name} direction="y" isTextarea={name === 'types'} />
     ));
   };
 

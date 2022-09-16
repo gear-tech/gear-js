@@ -9,7 +9,7 @@ interface IMessage {
   value: string;
   source: string;
   genesis: string;
-  payload: string;
+  payload: string | null;
   exitCode: number | null;
   blockHash: string;
   timestamp: string;

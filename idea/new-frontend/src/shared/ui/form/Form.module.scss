@@ -1,6 +1,7 @@
 @use 'shared/assets/styles/_mixins.scss' as *;
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_animations.scss' as *;
 
 %labelStyles {
   color: $gray700;
@@ -24,17 +25,35 @@
   font-weight: 500;
 }
 
-.fixedSizes {
+.textContent {
+  min-height: toRem(42);
+
+  &.loading {
+    @include loading();
+
+    position: relative;
+  }
+
+  &.fixedSizes {
+    min-height: 100px;
+    max-height: 400px;
+  
+    .preformatted {
+      white-space: pre;
+      overflow-wrap: initial;
+    }
+  }
+
+  &:focus-within {
+    border: none;
+  }
+}
+
+.simpleBar {
   @include customSimplebar();
 
   width: 100%;
-  min-height: 100px;
-  max-height: 400px;
-
-  .preformatted {
-    white-space: pre;
-    overflow-wrap: initial;
-  }
+  height: 100%;
 }
 
 .preformatted {

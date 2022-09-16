@@ -22,7 +22,7 @@ type Props = {
 
 const FormPayload = ({ name, label, values }: Props) => {
   const alert = useAlert();
-  const { change } = useForm();
+  const { change, resetFieldState } = useForm();
   const { input, meta } = useField<PayloadValue>(name);
 
   const jsonManualPayload = useRef<string>();
@@ -30,7 +30,10 @@ const FormPayload = ({ name, label, values }: Props) => {
   const [isManualView, setIsManualView] = useState(!values);
   const [manualPayloadFile, setManualPayloadFile] = useState<File>();
 
-  const changeValue = (value: PayloadValue) => change(name, value);
+  const changeValue = (value: PayloadValue) => {
+    change(name, value);
+    resetFieldState(name);
+  };
 
   const handleViewChange = () => setIsManualView((prevState) => !prevState);
 

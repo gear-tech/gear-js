@@ -15,7 +15,7 @@ const getNextLevelName = (currentLevelName: string, nextLevelName: string | numb
 
 const getSubmitPayload = (payload: PayloadValue): any => {
   if (isString(payload)) {
-    return toJSON(payload);
+    return toJSON(payload.trim());
   }
 
   if (isPlainObject(payload)) {

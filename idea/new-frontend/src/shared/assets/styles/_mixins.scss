@@ -1,6 +1,10 @@
 @use './variables' as *;
 
 @mixin customSimplebar {
+  :global(.simplebar-content-wrapper) {
+    outline: none;
+  }
+
   :global(.simplebar-track) {
     overflow: visible;
     background-color: $gray100;

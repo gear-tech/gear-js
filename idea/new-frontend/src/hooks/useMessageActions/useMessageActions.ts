@@ -11,7 +11,7 @@ import { PROGRAM_ERRORS, TransactionStatus, TransactionName } from 'shared/confi
 
 import { ParamsToSendMessage, ParamsToSignAndSend, PatamsToReplyMessage } from './types';
 
-const useMessage = () => {
+const useMessageActions = () => {
   const alert = useAlert();
   const { api } = useApi();
   const { account } = useAccount();
@@ -137,4 +137,4 @@ const useMessage = () => {
   return { sendMessage, replyMessage };
 };
 
-export { useMessage };
+export { useMessageActions };

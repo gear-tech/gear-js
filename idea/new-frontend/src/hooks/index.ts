@@ -2,10 +2,11 @@ import { useApp } from './useApp';
 import { useModal } from './useModal';
 import { useEvents } from './useEvents';
 import { useBlocks } from './useBlocks';
+import { useMessage } from './useMessage';
 import { useOutsideClick } from './useOutsideClick';
 import { useChangeEffect } from './useChangeEffect';
 import { useProgram } from './useProgram';
-import { useMessage } from './useMessage';
+import { useMessageActions } from './useMessageActions';
 import { usePrograms } from './usePrograms';
 import { useCodeUpload } from './useCodeUpload';
 import { useMessageClaim } from './useMessageClaim';
@@ -27,9 +28,9 @@ export {
   useModal,
   useBlocks,
   useEvents,
-  useMessage,
   useProgram,
   usePrograms,
+  useMessage,
   useMessages,
   useWaitlist,
   usePrevious,
@@ -43,6 +44,7 @@ export {
   useElementSizes,
   useGasCalculate,
   useProgramActions,
+  useMessageActions,
   useMetadataUplaod,
   useBalanceTransfer,
   useAccountSubscriptions,
