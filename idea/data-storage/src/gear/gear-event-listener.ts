@@ -12,7 +12,7 @@ import { MetadataService } from '../metadata/metadata.service';
 import { CodeService } from '../code/code.service';
 import { getPayloadByGearEvent, getUpdateMessageData } from '../common/helpers';
 import { CreateProgramByExtrinsicInput, HandleExtrinsicsDataInput } from './types';
-import { Code, Message, Program } from '../database/entities';
+import { Message, Program } from '../database/entities';
 import { CodeStatus, MessageEntryPoing, MessageType, ProgramStatus } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
 import { UpdateCodeInput } from '../code/types';
