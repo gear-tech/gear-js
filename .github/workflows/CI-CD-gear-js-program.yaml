@@ -29,11 +29,11 @@ jobs:
 
       - name: Install dependencies
         working-directory: tools/program-lib-gen
-        run: yarn install
+        run: npm install
 
       - name: Build pkg
         working-directory: tools/program-lib-gen
-        run: yarn build
+        run: npm run build
 
   publish-to-npm:
     if: github.event_name == 'push'
