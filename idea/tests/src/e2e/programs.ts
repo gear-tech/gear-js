@@ -32,9 +32,10 @@ export async function getProgramData(genesis: string, programId: string): Promis
     'timestamp',
     'meta',
     'title',
-    'initStatus',
+    'status',
+    'code',
+    'messages'
   );
-  expect(response.result.meta).to.have.all.keys('meta');
   return true;
 }
 
@@ -65,7 +66,7 @@ export async function getMeta(genesis: string, programId: string): Promise<Passe
   };
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('program', 'meta', 'metaFile');
+  expect(response.result).to.have.all.keys('program', 'meta', 'metaWasm');
   return true;
 }
 

@@ -30,7 +30,9 @@ export async function getMessageData(genesis: string, messageId: Hex) {
     'processedWithPanic',
     'value',
     'type',
-    'readStatus',
+    'readReason',
+    'program_id',
+    'program'
   ]);
   return true;
 }

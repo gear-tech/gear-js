@@ -23,6 +23,8 @@ async function getCodeData(genesis: string, codeId: Hex) {
     'genesis',
     'blockHash',
     'timestamp',
+    'programs',
+    'meta'
   ]);
   return true;
 }
