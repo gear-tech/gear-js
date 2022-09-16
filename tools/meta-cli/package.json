@@ -4,11 +4,11 @@
   "type": "module",
   "bin": "src/app.js",
   "main": "src/app.js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "preferGlobal": true,
   "dependencies": {
-    "@gear-js/api": "0.20.0",
-    "@polkadot/api": "7.15.1",
+    "@gear-js/api": "0.25.6",
+    "@polkadot/api": "9.3.3",
     "chalk": "5.0.1",
     "commander": "9.3.0",
     "inquirer": "8.2.4"
