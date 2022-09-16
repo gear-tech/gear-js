@@ -1,6 +1,6 @@
 {
   "name": "@gear-js/program",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Gear Technologies",
   "main": "build/lib/index.js",
   "bin": {
