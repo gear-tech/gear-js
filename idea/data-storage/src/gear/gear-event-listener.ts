@@ -12,7 +12,7 @@ import { MetadataService } from '../metadata/metadata.service';
 import { CodeService } from '../code/code.service';
 import { getPayloadByGearEvent, getUpdateMessageData } from '../common/helpers';
 import { CreateProgramByExtrinsicInput, HandleExtrinsicsDataInput } from './types';
-import { Message, Program } from '../database/entities';
+import { Code, Message, Program } from '../database/entities';
 import { CodeStatus, MessageEntryPoing, MessageType, ProgramStatus } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
 import { UpdateCodeInput } from '../code/types';
@@ -143,16 +143,35 @@ export class GearEventListener {
         ({ event: { method } }) => method === Keys.MessageEnqueued,
       );
 
+      const filteredEventsCodeChange = filterEvents(hash, signedBlock, events, status).events!.filter(
+        ({ event: { method } }) => method === Keys.CodeChanged,
+      );
+
+
       const eventData = filteredEvents[0].event.data as MessageEnqueuedData;
+      const codeChangeEventData = filteredEventsCodeChange[0].event.data as CodeChangedData;
+
+      const updateCodeInput: UpdateCodeInput = {
+        id: codeChangeEventData.id.toHex(),
+        genesis,
+        status: codeChangeEventData.change.isActive ? CodeStatus.ACTIVE : codeChangeEventData.change.isInactive
+          ? CodeStatus.INACTIVE : null,
+        timestamp,
+        blockHash,
+        expiration:  codeChangeEventData.change.isActive ?
+          codeChangeEventData.change.asActive.expiration.toHuman() as number : null,
+      };
+
+      await this.codeService.updateCode(updateCodeInput);
 
       const creatProgramByExtrinsicMethod: CreateProgramByExtrinsicInput = {
         eventData,
         genesis,
         timestamp,
-        blockHash
+        blockHash,
       };
 
-      await this.createProgramByExtrinsic(method ,creatProgramByExtrinsicMethod);
+      await this.createProgramByExtrinsic(method, creatProgramByExtrinsicMethod);
 
       const [payload, value] = getUpdateMessageData(args, method);
 
