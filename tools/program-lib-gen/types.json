@@ -1,0 +1,68 @@
+[
+  "{\n  name: string,\n  symbol: string,\n  baseUri: string,\n  royalties: Royalties | null\n}",
+  "{\n  accounts: Map<ActorId, u128>,\n  percent: u16\n}",
+  {
+    "kind": "enum",
+    "def": {
+      "namespaceName": "NFTActionEnum",
+      "enumTypeDef": [
+        "NFTActionEnum.Mint",
+        "NFTActionEnum.Burn",
+        "NFTActionEnum.Transfer",
+        "NFTActionEnum.TransferPayout",
+        "NFTActionEnum.Approve",
+        "NFTActionEnum.DelegatedApprove",
+        "NFTActionEnum.Owner",
+        "NFTActionEnum.IsApproved"
+      ],
+      "namespaceTypes": {
+        "MintData": "{\n  tokenMetadata: TokenMetadata\n}",
+        "Mint": "MintData",
+        "BurnData": "{\n  tokenId: U256\n}",
+        "Burn": "BurnData",
+        "TransferData": "{\n  to: ActorId,\n  tokenId: U256\n}",
+        "Transfer": "TransferData",
+        "TransferPayoutData": "{\n  to: ActorId,\n  tokenId: U256,\n  amount: u128\n}",
+        "TransferPayout": "TransferPayoutData",
+        "ApproveData": "{\n  to: ActorId,\n  tokenId: U256\n}",
+        "Approve": "ApproveData",
+        "DelegatedApproveData": "{\n  message: DelegatedApproveMessage,\n  signature: `0x${string}` | Uint8Array\n}",
+        "DelegatedApprove": "DelegatedApproveData",
+        "OwnerData": "{\n  tokenId: U256\n}",
+        "Owner": "OwnerData",
+        "IsApprovedData": "{\n  to: ActorId,\n  tokenId: U256\n}",
+        "IsApproved": "IsApprovedData"
+      }
+    }
+  },
+  "{\n  name: string,\n  description: string,\n  media: string,\n  reference: string\n}",
+  "{\n  tokenOwnerId: ActorId,\n  approvedActorId: ActorId,\n  nftProgramId: ActorId,\n  tokenId: U256,\n  expirationTimestamp: u64\n}",
+  {
+    "kind": "enum",
+    "def": {
+      "namespaceName": "NFTEventEnum",
+      "enumTypeDef": [
+        "NFTEventEnum.Transfer",
+        "NFTEventEnum.TransferPayout",
+        "NFTEventEnum.Approval",
+        "NFTEventEnum.Owner",
+        "NFTEventEnum.IsApproved"
+      ],
+      "namespaceTypes": {
+        "TransferData": "NFTTransfer",
+        "Transfer": "TransferData",
+        "TransferPayoutData": "NFTTransferPayout",
+        "TransferPayout": "TransferPayoutData",
+        "ApprovalData": "NFTApproval",
+        "Approval": "ApprovalData",
+        "OwnerData": "{\n  owner: ActorId,\n  tokenId: U256\n}",
+        "Owner": "OwnerData",
+        "IsApprovedData": "{\n  to: ActorId,\n  tokenId: U256,\n  approved: bool\n}",
+        "IsApproved": "IsApprovedData"
+      }
+    }
+  },
+  "{\n  from: ActorId,\n  to: ActorId,\n  tokenId: U256\n}",
+  "{\n  from: ActorId,\n  to: ActorId,\n  tokenId: U256,\n  payouts: Map<ActorId, u128>\n}",
+  "{\n  owner: ActorId,\n  approvedAccount: ActorId,\n  tokenId: U256\n}"
+]
