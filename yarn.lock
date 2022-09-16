@@ -2194,18 +2194,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.25.2, @gear-js/api@npm:^0.25.2":
-  version: 0.25.2
-  resolution: "@gear-js/api@npm:0.25.2"
-  peerDependencies:
-    "@polkadot/api": ^9.2.2
-    "@polkadot/wasm-crypto": ^6.3.1
-    rxjs: ^7.5.5
-  checksum: 53f2b9759bf3fe3559961bcb38381b5d502694514776026d722b5aa3194a048c261f5796e45ca504bed3e374a71dee4e89d980fd9ef4256edf5abe38b4b92c34
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:^0.25.6":
+"@gear-js/api@npm:0.25.6, @gear-js/api@npm:^0.25.6":
   version: 0.25.6
   resolution: "@gear-js/api@npm:0.25.6"
   peerDependencies:
@@ -2213,6 +2202,17 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
   checksum: 9c340fd021587c5d87d9b9f63922737ec1fe7f19f4ae20576ea98206d18147502ca754e7db973ecaa164e0ab98e25490e509f5845cf18caff41aca274143fa1e
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:^0.25.2":
+  version: 0.25.2
+  resolution: "@gear-js/api@npm:0.25.2"
+  peerDependencies:
+    "@polkadot/api": ^9.2.2
+    "@polkadot/wasm-crypto": ^6.3.1
+    rxjs: ^7.5.5
+  checksum: 53f2b9759bf3fe3559961bcb38381b5d502694514776026d722b5aa3194a048c261f5796e45ca504bed3e374a71dee4e89d980fd9ef4256edf5abe38b4b92c34
   languageName: node
   linkType: hard
 
@@ -2404,15 +2404,15 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.25.2
-    "@gear-js/react-hooks": ^0.2.17
+    "@gear-js/api": 0.25.6
+    "@gear-js/react-hooks": ^0.3.0
     "@gear-js/ui": 0.4.0
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
-    "@polkadot/api": ^8.13.1
+    "@polkadot/api": ^9.3.3
     "@polkadot/extension-dapp": 0.43.1
     "@polkadot/react-identicon": 2.0.1
-    "@polkadot/types": ^8.13.1
+    "@polkadot/types": ^9.3.3
     "@polkadot/wasm-crypto": ^6.2.3
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 12.1.5

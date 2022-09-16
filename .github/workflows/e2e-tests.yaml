@@ -87,9 +87,9 @@ jobs:
         if: steps.check_file_changed.outputs.dataStorage_changed == 'True'
         run: yarn test:data-storage
 
-      - name: Run frontend tests
-        if: steps.check_file_changed.outputs.frontend_changed == 'True'
-        run: yarn test:frontend
+      # - name: Run frontend tests
+      #   if: steps.check_file_changed.outputs.frontend_changed == 'True'
+      #   run: yarn test:frontend
 
   wait-previous-run:
     needs: [run-unit-tests]
