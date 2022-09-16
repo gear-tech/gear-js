@@ -11,7 +11,6 @@ export const useAccountMock = (account?: Account, accounts?: Account[]) => {
     account,
     accounts,
     switchAccount: jest.fn(),
-    updateBalance: jest.fn(),
     logout: jest.fn(),
     isAccountReady: Boolean(accounts),
   });
