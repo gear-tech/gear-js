@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import path from 'path';
 import generate from './generate/generate.js';
 
 export const program = new Command();
 
 program
   .argument('<path>', 'Path to scheme.json')
-  .option('-o --output-dir <out>')
+  .option('-o --output-dir <out>', 'Path to output directory', path.resolve())
   .action((path, options) => {
-    const out = options.out || './';
+    const out = options.out;
     generate(path, out);
   });
 
