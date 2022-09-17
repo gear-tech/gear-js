@@ -8,28 +8,27 @@ import { plainToClass } from 'class-transformer';
 import { gearService } from './gear-service';
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
-import { MetadataService } from '../metadata/metadata.service';
 import { CodeService } from '../code/code.service';
 import { getPayloadByGearEvent, getUpdateMessageData } from '../common/helpers';
-import { CreateProgramByExtrinsicInput, HandleExtrinsicsDataInput } from './types';
-import { Message, Program } from '../database/entities';
+import { HandleExtrinsicsDataInput } from './types';
+import { Message } from '../database/entities';
 import { CodeStatus, MessageEntryPoing, MessageType, ProgramStatus } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
 import { UpdateCodeInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
 
-
 @Injectable()
 export class GearEventListener {
   private logger: Logger = new Logger('GearEventListener');
 
-  constructor(private programService: ProgramService,
-              private programRepository: ProgramRepo,
-              private messageService: MessageService,
-              private metaService: MetadataService,
-              private codeService: CodeService,
-              private codeRepository: CodeRepo) {}
+  constructor(
+    private programService: ProgramService,
+    private programRepository: ProgramRepo,
+    private messageService: MessageService,
+    private codeService: CodeService,
+    private codeRepository: CodeRepo,
+  ) {}
 
   public async listen() {
     // eslint-disable-next-line no-constant-condition
@@ -74,7 +73,9 @@ export class GearEventListener {
         blockHash,
       });
 
-      for (const { event: { data, method } } of events) {
+      for (const {
+        event: { data, method },
+      } of events) {
         try {
           const payload = getPayloadByGearEvent(method, data as GenericEventData);
           if (payload !== null && payload !== undefined) {
@@ -97,7 +98,7 @@ export class GearEventListener {
         const createMessageDBType = plainToClass(Message, {
           ...payload,
           timestamp: new Date(timestamp),
-          type: MessageType.USER_MESS_SENT
+          type: MessageType.USER_MESS_SENT,
         });
         await this.messageService.createMessages([createMessageDBType]);
       },
@@ -116,11 +117,11 @@ export class GearEventListener {
           this.programService.deleteRecords(genesis),
           this.codeService.deleteRecords(genesis),
         ]);
-      }
+      },
     };
 
     try {
-      method in eventsMethod && await eventsMethod[method]();
+      method in eventsMethod && (await eventsMethod[method]());
     } catch (error) {
       console.log(error);
       this.logger.error(error);
@@ -130,48 +131,22 @@ export class GearEventListener {
   private async handleExtrinsics(handleExtrinsicsData: HandleExtrinsicsDataInput): Promise<void> {
     const { signedBlock, events, status, genesis, timestamp, blockHash } = handleExtrinsicsData;
 
-    await this.uploadCodeByExtrinsic(handleExtrinsicsData);
+    await this.findAndCreateCodes(handleExtrinsicsData);
+    await this.findAndCreatePrograms(handleExtrinsicsData);
 
-    const eventMethods = ['sendMessage', 'uploadProgram', 'createProgram', 'sendReply'];
-    const extrinsic = signedBlock.block.extrinsics.find(({ method: { method } }) => eventMethods.includes(method));
-    let createMessagesDBType = [];
+    const txMethods = ['sendMessage', 'uploadProgram', 'createProgram', 'sendReply'];
+    for (const {
+      hash,
+      args,
+      method: { method },
+    } of signedBlock.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method))) {
+      let createMessagesDBType = [];
 
-    if (extrinsic) {
-      const { hash, args, method: { method } } = extrinsic;
-
-      const filteredEvents = filterEvents(hash, signedBlock, events, status).events!.filter(
+      const filteredEvents = filterEvents(hash, signedBlock, events, status).events!.find(
         ({ event: { method } }) => method === Keys.MessageEnqueued,
       );
 
-      const filteredEventsCodeChange = filterEvents(hash, signedBlock, events, status).events!.filter(
-        ({ event: { method } }) => method === Keys.CodeChanged,
-      );
-
-
-      const eventData = filteredEvents[0].event.data as MessageEnqueuedData;
-      const codeChangeEventData = filteredEventsCodeChange[0].event.data as CodeChangedData;
-
-      const updateCodeInput: UpdateCodeInput = {
-        id: codeChangeEventData.id.toHex(),
-        genesis,
-        status: codeChangeEventData.change.isActive ? CodeStatus.ACTIVE : codeChangeEventData.change.isInactive
-          ? CodeStatus.INACTIVE : null,
-        timestamp,
-        blockHash,
-        expiration:  codeChangeEventData.change.isActive ?
-          codeChangeEventData.change.asActive.expiration.toHuman() as number : null,
-      };
-
-      await this.codeService.updateCode(updateCodeInput);
-
-      const creatProgramByExtrinsicMethod: CreateProgramByExtrinsicInput = {
-        eventData,
-        genesis,
-        timestamp,
-        blockHash,
-      };
-
-      await this.createProgramByExtrinsic(method, creatProgramByExtrinsicMethod);
+      const eventData = filteredEvents.event.data as MessageEnqueuedData;
 
       const [payload, value] = getUpdateMessageData(args, method);
 
@@ -179,59 +154,75 @@ export class GearEventListener {
         id: eventData.id.toHex(),
         destination: eventData.destination.toHex(),
         source: eventData.source.toHex(),
-        entry: eventData.entry.isInit ? MessageEntryPoing.INIT : eventData.entry.isHandle
-          ? MessageEntryPoing.HANDLE : MessageEntryPoing.REPLY,
+        entry: eventData.entry.isInit
+          ? MessageEntryPoing.INIT
+          : eventData.entry.isHandle
+            ? MessageEntryPoing.HANDLE
+            : MessageEntryPoing.REPLY,
         payload,
         value,
         timestamp: new Date(timestamp),
         genesis,
-        program: await this.programRepository.get(eventData.destination.toHex())
+        program: await this.programRepository.get(eventData.destination.toHex()),
       });
 
       createMessagesDBType = [...createMessagesDBType, messageDBType];
-    }
 
-    try {
-      if (createMessagesDBType.length >= 1) await this.messageService.createMessages(createMessagesDBType);
-    } catch (error) {
-      this.logger.error(error);
+      try {
+        if (createMessagesDBType.length >= 1) await this.messageService.createMessages(createMessagesDBType);
+      } catch (error) {
+        this.logger.error(error);
+      }
     }
   }
 
-  private async createProgramByExtrinsic(
-    method: string, createProgramByExtrinsicInput: CreateProgramByExtrinsicInput,
-  ): Promise<Program | null> {
-    if (!['uploadProgram', 'createProgram'].includes(method)) {
-      return null;
-    }
-
-    const { eventData, timestamp, blockHash, genesis } = createProgramByExtrinsicInput;
-
-    const codeHash = await gearService.getApi().program.codeHash(eventData.destination.toHex());
-
-    const code = await this.codeRepository.get(codeHash);
-
-    return this.programService.createProgram({
-      id: eventData.destination.toHex(),
-      owner: eventData.source.toHex(),
-      genesis,
-      timestamp,
-      blockHash,
-      code,
-    });
-  }
-
-  private async uploadCodeByExtrinsic(handleExtrinsicsData: HandleExtrinsicsDataInput): Promise<void> {
+  private async findAndCreatePrograms(handleExtrinsicsData: HandleExtrinsicsDataInput) {
     const { signedBlock, events, status, genesis, timestamp, blockHash } = handleExtrinsicsData;
 
-    const extrinsic = signedBlock.block.extrinsics.find(({ method: { method } }) => method === 'uploadCode');
+    const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) =>
+      ['uploadProgram', 'createProgram'].includes(method),
+    );
 
-    if (extrinsic){
-      const filteredEvents = filterEvents(extrinsic.hash, signedBlock, events, status).events!.filter(
+    for (const extrinsic of extrinsics) {
+      const filteredEvents = filterEvents(extrinsic.hash, signedBlock, events, status).events!.find(
+        ({ event: { method } }) => method === Keys.MessageEnqueued,
+      );
+      if (!filteredEvents) {
+        continue;
+      }
+
+      const { source, destination } = filteredEvents.event.data as MessageEnqueuedData;
+
+      const codeId = await gearService.getApi().program.codeHash(destination.toHex());
+      const code = await this.codeRepository.get(codeId);
+
+      return this.programService.createProgram({
+        id: destination.toHex(),
+        owner: source.toHex(),
+        genesis,
+        timestamp,
+        blockHash,
+        code,
+      });
+    }
+  }
+
+  private async findAndCreateCodes(handleExtrinsicsData: HandleExtrinsicsDataInput): Promise<void> {
+    const { signedBlock, events, status, genesis, timestamp, blockHash } = handleExtrinsicsData;
+
+    const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) =>
+      ['uploadCode', 'uploadProgram'].includes(method),
+    );
+
+    for (const extrinsic of extrinsics) {
+      const filteredEvents = filterEvents(extrinsic.hash, signedBlock, events, status).events!.find(
         ({ event: { method } }) => method === Keys.CodeChanged,
       );
+      if (!filteredEvents) {
+        continue;
+      }
 
-      const {  change, id  } = filteredEvents[0].event.data as CodeChangedData;
+      const { change, id } = filteredEvents.event.data as CodeChangedData;
 
       const updateCodeInput: UpdateCodeInput = {
         id: id.toHex(),
@@ -239,7 +230,7 @@ export class GearEventListener {
         status: change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null,
         timestamp,
         blockHash,
-        expiration:  change.isActive ? change.asActive.expiration.toHuman() as number : null,
+        expiration: change.isActive ? (change.asActive.expiration.toHuman() as number) : null,
       };
 
       await this.codeService.updateCode(updateCodeInput);

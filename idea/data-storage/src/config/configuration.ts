@@ -3,8 +3,11 @@ import { strict as assert } from 'assert';
 
 config();
 
-export const checkEnv = (envName: string) => {
+export const checkEnv = (envName: string, defaultValue?: string) => {
   const env = process.env[envName];
+  if (!env && defaultValue) {
+    return defaultValue;
+  }
   assert.notStrictEqual(env, undefined, `${envName} is not specified`);
   return env as string;
 };
@@ -30,6 +33,6 @@ export default () => ({
     port: Number(process.env.HEALTHCHECK_PORT || '3001'),
   },
   gear: {
-    wsProvider: checkEnv('GEAR_WS_PROVIDER')
-  }
+    wsProvider: checkEnv('GEAR_WS_PROVIDER', 'ws://127.0.0.1:9944'),
+  },
 });
