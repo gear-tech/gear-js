@@ -3,7 +3,7 @@ import { Codec } from '@polkadot/types/types';
 
 import { ActiveProgram, IGearPages, IProgram, Hex } from './types';
 import { GPAGES_HEX, GPROG_HEX, SEPARATOR } from './utils';
-import { ProgramTerminatedError, ReadStateError } from './errors';
+import { ProgramExitedError, ProgramTerminatedError, ReadStorageError } from './errors';
 import { GearApi } from './GearApi';
 
 export class GearStorage {
@@ -17,11 +17,13 @@ export class GearStorage {
   async gProg(programId: Hex): Promise<ActiveProgram> {
     const storage = (await this._api.rpc.state.getStorage(`0x${GPROG_HEX}${programId.slice(2)}`)) as Option<Raw>;
     if (storage.isNone) {
-      throw new ReadStateError(`Program with id ${programId} was not found in the storage`);
+      throw new ReadStorageError(`Program with id ${programId} was not found in the storage`);
     }
     const program = this._api.createType('Program', storage.unwrap()) as IProgram;
 
-    if (program.isTerminated) throw new ProgramTerminatedError();
+    if (program.isTerminated) throw new ProgramTerminatedError(program.asTerminated.toHex());
+
+    if (program.isExited) throw new ProgramExitedError(program.asExited.toHex());
 
     return program.asActive;
   }
