@@ -1,5 +1,5 @@
 {
-  "name": "social",
+  "name": "@gear-js/social",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
