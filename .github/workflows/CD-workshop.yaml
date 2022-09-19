@@ -17,7 +17,7 @@ env:
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
 jobs:
-  build:
+  build-social-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,7 +43,7 @@ jobs:
             REACT_APP_META_STORAGE_API=${{ secrets.REACT_APP_META_STORAGE_API }}
 
   deploy-to-k8s-prod:
-    needs: build-new-frontend-image-staging
+    needs: build-social-image
     runs-on: ubuntu-latest
 
     steps:
