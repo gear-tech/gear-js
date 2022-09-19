@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 import { ICode } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
@@ -14,17 +14,16 @@ export class Code extends BaseEntity implements ICode {
   @Column()
     name: string;
 
-  @Column({ name: 'type', type: 'enum', enum: CodeStatus, nullable: true, default: null })
+  @Column({ type: 'enum', enum: CodeStatus, nullable: true, default: null })
     status: CodeStatus;
 
   @Column({ nullable: true })
     expiration: number;
 
   @OneToOne(() => Meta, (meta) => meta.code)
+  @JoinColumn({ name: 'mata_id' })
     meta: Meta;
 
-  @OneToMany(() => Program, (program) => program.code, {
-    nullable: true
-  })
+  @OneToMany(() => Program, (program) => program.code)
     programs: Program[];
 }
