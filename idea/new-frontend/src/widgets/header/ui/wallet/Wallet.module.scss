@@ -1,14 +1,16 @@
 @use 'shared/assets/styles/_shared.scss' as *;
 @use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/animations' as *;
 
 .walletWrapper {
+  @include fadeAppear();
   position: relative;
   margin-left: $margin;
 }
 
 .fixSize {
   width: toRem(183);
-  min-height: toRem(52); 
+  min-height: toRem(52);
 }
 
 .accountBtn {

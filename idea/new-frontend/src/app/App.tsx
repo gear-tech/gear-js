@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
+import { useAccount, useApi } from '@gear-js/react-hooks';
 import 'simplebar-react/dist/simplebar.min.css';
 
-import { useApp, useAccountSubscriptions } from 'hooks';
+import { useApp, useEventSubscriptions } from 'hooks';
 import { Menu } from 'widgets/menu';
 import { Header } from 'widgets/header';
 import { Footer } from 'widgets/footer';
@@ -18,11 +18,11 @@ import { withProviders } from './providers';
 const App = withProviders(() => {
   const { nodeAddress } = useApp();
   const { api, isApiReady } = useApi();
-  const { isLoginReady } = useLoggedInAccount();
+  const { isAccountReady } = useAccount();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  useAccountSubscriptions();
+  useEventSubscriptions();
 
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
@@ -48,7 +48,7 @@ const App = withProviders(() => {
         <Menu />
         <div className="content">
           <Header />
-          {isApiReady && isLoginReady ? <Routing /> : <Loader />}
+          {isApiReady && isAccountReady ? <Routing /> : <Loader />}
         </div>
       </main>
       <Footer />

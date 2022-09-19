@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import clsx from 'clsx';
 import { GearKeyring } from '@gear-js/api';
-import { useApi, useAlert, Account } from '@gear-js/react-hooks';
+import { useApi, useAlert, Account, useAccount } from '@gear-js/react-hooks';
 import { TooltipWrapper, buttonStyles } from '@gear-js/ui';
 
 import { getTestBalance } from 'api';
@@ -25,6 +25,7 @@ type Props = {
 const TopSide = ({ account }: Props) => {
   const alert = useAlert();
   const { api, isApiReady } = useApi();
+  const { isAccountReady } = useAccount();
 
   const captchaRef = useRef<HCaptcha>(null);
 
@@ -109,7 +110,11 @@ const TopSide = ({ account }: Props) => {
               </div>
             </CSSTransition>
           )}
-          <Wallet account={account} isApiReady={isApiReady} />
+          {isAccountReady && (
+            <CSSTransition in appear timeout={AnimationTimeout.Default}>
+              <Wallet account={account} isApiReady={isApiReady} />
+            </CSSTransition>
+          )}
         </div>
       </div>
       <HCaptcha

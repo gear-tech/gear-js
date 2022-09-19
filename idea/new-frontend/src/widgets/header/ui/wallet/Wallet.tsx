@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useAccounts, Account } from '@gear-js/react-hooks';
+import { Account, useAccount } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 
 import { useModal } from 'hooks';
@@ -17,7 +17,7 @@ type Props = {
 };
 
 const Wallet = ({ account, isApiReady }: Props) => {
-  const { accounts } = useAccounts();
+  const { accounts } = useAccount();
   const { showModal } = useModal();
 
   const [isTooltipShowing, setIsTooltipShowing] = useState(!localStorage.getItem(LocalStorage.NewUser));

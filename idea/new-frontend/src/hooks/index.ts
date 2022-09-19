@@ -13,7 +13,7 @@ import { useMessageClaim } from './useMessageClaim';
 import { useProgramActions } from './useProgramActions';
 import { useMetadataUplaod } from './useMetadataUpload';
 import { useBalanceTransfer } from './useBalanceTransfer';
-import { useAccountSubscriptions } from './useAccountSubscriptions';
+import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
 import { usePrevious } from './usePrevious';
@@ -47,5 +47,5 @@ export {
   useMessageActions,
   useMetadataUplaod,
   useBalanceTransfer,
-  useAccountSubscriptions,
+  useEventSubscriptions,
 };
