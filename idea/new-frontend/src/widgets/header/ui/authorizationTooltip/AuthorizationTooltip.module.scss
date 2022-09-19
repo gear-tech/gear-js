@@ -11,18 +11,18 @@
   background-color: $oceanBlue;
   border-radius: 10px;
   z-index: 10;
+  top: 95%;
   right: 54%;
-  top: 86%;
-}
 
-.triangle {
-  position: absolute;
-  width: toRem(8.5);
-  height: toRem(7.5);
-  clip-path: polygon(0 1%, 0% 100%, 100% 100%);
-  top: toRem(-7.5);
-  right: toRem(16);
-  background-color: $oceanBlue;
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: toRem(16);
+    border-style: solid;
+    border-width: toRem(8.5) 0 0 toRem(8.5);
+    border-color: transparent transparent transparent $oceanBlue;
+  }
 }
 
 .text {
