@@ -1,28 +1,28 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class init1663060799679 implements MigrationInterface {
-  name = 'init1663060799679';
+export class init1663577608052 implements MigrationInterface {
+  name = 'init1663577608052';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       'CREATE TYPE "public"."code_status_enum" AS ENUM(\'Active\', \'Inactive\')');
     await queryRunner.query(`CREATE TABLE "code" (
-         "genesis" character varying NOT NULL, 
-         "blockHash" character varying, 
-         "timestamp" TIMESTAMP, 
-         "id" character varying NOT NULL, 
-         "name" character varying NOT NULL, 
-         "status" "public"."code_status_enum", 
-         "expiration" integer, CONSTRAINT "PK_367e70f79a9106b8e802e1a9825" PRIMARY KEY ("id"))`);
+        "genesis" character varying NOT NULL,  
+        "blockHash" character varying, 
+        "timestamp" TIMESTAMP, 
+        "id" character varying NOT NULL, 
+        "name" character varying NOT NULL, 
+        "status" "public"."code_status_enum", 
+        "expiration" integer, CONSTRAINT "PK_367e70f79a9106b8e802e1a9825" PRIMARY KEY ("id"))`);
     await queryRunner.query('CREATE INDEX "IDX_0d3d98dbcf0d87b240911ce6e3" ON "code" ("genesis") ');
     await queryRunner.query(`CREATE TABLE "meta" (
-         "id" SERIAL NOT NULL, 
-         "program" character varying NOT NULL, 
-         "owner" character varying NOT NULL, 
-         "meta" character varying, 
-         "metaWasm" character varying, 
-         "code_id" character varying, CONSTRAINT "REL_b38826a2ce85817720d6e9ca1a" UNIQUE ("code_id"), 
-         CONSTRAINT "PK_c4c17a6c2bd7651338b60fc590b" PRIMARY KEY ("id"))`);
+        "id" SERIAL NOT NULL, 
+        "program" character varying NOT NULL, 
+        "owner" character varying NOT NULL, 
+        "meta" character varying, 
+        "metaWasm" character varying, 
+        "code_id" character varying, CONSTRAINT "REL_b38826a2ce85817720d6e9ca1a" UNIQUE ("code_id"), 
+        CONSTRAINT "PK_c4c17a6c2bd7651338b60fc590b" PRIMARY KEY ("id"))`);
     await queryRunner.query(
       'CREATE TYPE "public"."program_status_enum" AS ENUM(\'unknown\', \'active\', \'terminated\', \'init_failed\', \'paused\')');
     await queryRunner.query(`CREATE TABLE "program" (
@@ -32,10 +32,9 @@ export class init1663060799679 implements MigrationInterface {
         "id" character varying NOT NULL, 
         "owner" character varying NOT NULL, 
         "name" character varying NOT NULL, 
-        "title" character varying, 
-        "status" "public"."program_status_enum" NOT NULL DEFAULT 'unknown', 
-        "code_id" character varying, 
-        "meta_id" integer, CONSTRAINT "PK_3bade5945afbafefdd26a3a29fb" PRIMARY KEY ("id"))`);
+        "title" character varying, "status" "public"."program_status_enum" NOT NULL DEFAULT 'unknown', 
+        "code_id" character varying, "meta_id" integer, 
+        CONSTRAINT "PK_3bade5945afbafefdd26a3a29fb" PRIMARY KEY ("id"))`);
     await queryRunner.query('CREATE INDEX "IDX_634f57814226ec9e93ea5e5da9" ON "program" ("genesis") ');
     await queryRunner.query('CREATE INDEX "IDX_a8dbdd1e11aad73e620bcefbb9" ON "program" ("owner") ');
     await queryRunner.query('CREATE TYPE "public"."message_readreason_enum" AS ENUM(\'OutOfRent\', \'Claimed\', \'Replied\')');
@@ -52,8 +51,8 @@ export class init1663060799679 implements MigrationInterface {
         "value" character varying NOT NULL DEFAULT '0', "exitCode" integer, 
         "replyToMessageId" character varying, 
         "processedWithPanic" boolean, 
-        "entry" "public"."message_entry_enum", "expiration" integer, "type" "public"."message_type_enum", 
-        "readReason" "public"."message_readreason_enum", 
+        "entry" "public"."message_entry_enum", 
+        "expiration" integer, "type" "public"."message_type_enum", "readReason" "public"."message_readreason_enum", 
         "program_id" character varying, CONSTRAINT "PK_ba01f0a3e0123651915008bc578" PRIMARY KEY ("id"))`);
     await queryRunner.query('CREATE INDEX "IDX_415b62539db7e5df16641549ba" ON "message" ("genesis") ');
     await queryRunner.query('CREATE INDEX "IDX_2b0c43ce7cf7b69fcce6dc3450" ON "message" ("destination") ');

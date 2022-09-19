@@ -25,7 +25,9 @@ export class Program extends BaseEntity implements IProgram {
   @Column({ type: 'enum', enum: ProgramStatus, default: ProgramStatus.UNKNOWN })
     status: ProgramStatus;
 
-  @ManyToOne(() => Code, (code) => code.programs)
+  @ManyToOne(() => Code, (code) => code.programs, {
+    nullable: true
+  })
   @JoinColumn({ name: 'code_id' })
     code: Code;
 
