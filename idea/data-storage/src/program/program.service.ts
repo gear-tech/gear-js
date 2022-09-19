@@ -20,15 +20,18 @@ export class ProgramService {
   private logger: Logger = new Logger('ProgramService');
   constructor(private programRepository: ProgramRepo) {}
 
-  public async createProgram(createProgramInput: CreateProgramInput): Promise<Program> {
-    const programTypeDB = plainToClass(Program, {
-      ...createProgramInput,
-      name: createProgramInput.id,
-      timestamp: new Date(createProgramInput.timestamp),
+  public async createPrograms(createProgramsInput: CreateProgramInput[]): Promise<Program[]> {
+
+    const createProgramsDBType = createProgramsInput.map((createProgramInput) => {
+      return plainToClass(Program, {
+        ...createProgramInput,
+        name: createProgramInput.id,
+        timestamp: new Date(createProgramInput.timestamp),
+      });
     });
 
     try {
-      return await this.programRepository.save(programTypeDB);
+      return this.programRepository.save(createProgramsDBType);
     } catch (error) {
       this.logger.error(error, error.stack);
       return;
@@ -46,7 +49,15 @@ export class ProgramService {
     program.name = name;
     program.title = title;
     program.meta = meta;
-    return this.programRepository.save(program);
+
+    try {
+      const programs = await this.programRepository.save([program]);
+
+      return programs[0];
+    } catch (error) {
+      console.log(error);
+      this.logger.error(error);
+    }
   }
 
   public async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
@@ -82,10 +93,23 @@ export class ProgramService {
   }
 
   async setStatus(id: string, genesis: string, status: ProgramStatus): Promise<IProgram> {
-    await sleep(2000);
+    // await sleep(2000);
+    console.log('__________>setStatus', id, genesis, status);
     const program = await this.programRepository.getByIdAndGenesis(id, genesis);
+
+    if (!program) {
+      throw new ProgramNotFound();
+    }
     program.status = status;
-    return this.programRepository.save(program);
+
+    try {
+      const programs = await this.programRepository.save([program]);
+
+      return programs[0];
+    } catch (error) {
+      console.log(error);
+      this.logger.error(error);
+    }
   }
 
   public async deleteRecords(genesis: string): Promise<Program[]> {

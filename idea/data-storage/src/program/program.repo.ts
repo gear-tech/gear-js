@@ -14,8 +14,8 @@ export class ProgramRepo {
     private programRepo: Repository<Program>,
   ) {}
 
-  public async save(program: Program): Promise<Program> {
-    return this.programRepo.save(program);
+  public async save(programs: Program[]): Promise<Program[]> {
+    return this.programRepo.save(programs);
   }
 
   public async getByIdAndGenesis(id: string, genesis: string): Promise<Program> {

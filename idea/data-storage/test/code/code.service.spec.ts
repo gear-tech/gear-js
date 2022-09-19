@@ -39,12 +39,10 @@ describe('Code service', () => {
       expiration: 111,
     };
 
-    const code = await codeService.updateCode(updateCodeInput);
+    const codes = await codeService.updateCodes([updateCodeInput]);
 
-    if (!(code instanceof UpdateResult)) {
-      expect(code.id).toEqual(updateCodeInput.id);
-      expect(code.status).toEqual(updateCodeInput.status);
-    }
+    expect(codes[0].id).toEqual(updateCodeInput.id);
+    expect(codes[0].status).toEqual(updateCodeInput.status);
     expect(mockCodeRepository.save).toHaveBeenCalled();
   });
 
