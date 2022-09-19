@@ -34,7 +34,7 @@ jobs:
       - name: Build and push Social Docker image
         uses: docker/build-push-action@master
         with:
-          context: apps/social
+          file: apps/social/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-social:latest
           build-args: |
