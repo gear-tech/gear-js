@@ -57,4 +57,4 @@ jobs:
       - name: Deploy to k8s
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
-          args: rollout restart deployment social-workshop -n dev-1
+          args: rollout restart deployment social-workshop -n prod-gear-apps
