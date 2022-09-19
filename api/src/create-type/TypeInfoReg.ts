@@ -54,16 +54,21 @@ export class TypeInfoRegistry {
     for (const { id, type } of this.#portableReg.types) {
       const path = type.path.toHuman() as string[];
       const typeDef = this.#portableReg.getTypeDef(id);
-      const name = this.#portableReg.getName(id);
+      const regName = this.#portableReg.getName(id);
 
-      if (name) {
+      if (regName) {
+        let name = joinTypePath(path);
+        if (name.length !== regName.length) {
+          name = name + regName.slice(name.length);
+        }
+
         let slicedName = getName(path, name);
         if (this.#typesDefinition.has(slicedName)) {
           this.#restrictedNames.push(slicedName);
           this.#typesDefinition.get(slicedName).changeName = true;
           slicedName = this.#getSlicedName(path, name, slicedName);
         }
-        this.#typesDefinition.set(slicedName, { changeName: false, type: typeDef.type, fullName: name, path });
+        this.#typesDefinition.set(slicedName, { changeName: false, type: typeDef.type, fullName: regName, path });
       }
     }
 

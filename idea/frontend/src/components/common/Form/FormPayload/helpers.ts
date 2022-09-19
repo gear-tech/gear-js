@@ -1,6 +1,6 @@
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
-import { decodeHexTypes, createPayloadTypeStructure, toJSON } from '@gear-js/api';
+import { decodeHexTypes, createPayloadTypeStructure, toJSON, Hex } from '@gear-js/api';
 
 import { ValueType, TypeStructure, PayloadValue, FormPayloadValues } from './types';
 
@@ -107,7 +107,7 @@ export const getPayloadValue = (typeStructure: TypeStructure): PayloadValue => {
   }
 };
 
-export const getPayloadFormValues = (types?: string, typeName?: string): FormPayloadValues | undefined => {
+export const getPayloadFormValues = (types?: Hex, typeName?: string): FormPayloadValues | undefined => {
   if (types && typeName) {
     const decodedTypes = decodeHexTypes(types);
 

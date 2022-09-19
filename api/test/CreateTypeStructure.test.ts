@@ -1,7 +1,4 @@
-import { createPayloadTypeStructure, CreateType, decodeHexTypes, getWasmMetadata, Hex, Metadata } from '../src';
-import { TEST_WASM_DIR } from './config';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { createPayloadTypeStructure, CreateType, decodeHexTypes, Hex } from '../src';
 
 describe('Create type structure test', () => {
   const types = {
@@ -414,14 +411,11 @@ describe('Create a type that differs from existing one in the registry', () => {
 });
 
 describe('BTreeSet test', () => {
-  const metaWasm = readFileSync(join(TEST_WASM_DIR, 'btreeset.meta.wasm'));
-  let metadata: Metadata;
-
-  test('getWasmMetadata will not fail', async () => {
-    metadata = await getWasmMetadata(metaWasm);
-    expect(metadata).toBeDefined();
-    expect(metadata.handle_input).toBe('TestBTreeSet');
-  });
+  const metadata = {
+    types:
+      '0x200008206274726565736574305465737442547265655365740000080114666972737404014442547265655365743c4163746f7249643e0001187365636f6e6418013042547265655365743c75383e000004042042547265655365740404540108000400140000000810106773746418636f6d6d6f6e287072696d6974697665731c4163746f724964000004000c01205b75383b2033325d00000c000003200000001000100000050300140000020800180420425472656553657404045401100004001c0000001c0000021000',
+    handle_input: 'TestBTreeSet',
+  };
 
   test('decodeHexTypes will not fail', () => {
     expect(decodeHexTypes(metadata.types as Hex)).toEqual({
@@ -441,7 +435,7 @@ describe('BTreeSet test', () => {
           ]),
           second: new Set([1, 2, 3, 3]),
         },
-        metadata,
+        metadata.types as Hex,
       ).toHuman(),
     ).toEqual({
       first: ['0xd7540ae9da85e33b47276e2cb4efc2f0b58fef1227834f21ddc8c7cb551cced6'],

@@ -18,7 +18,7 @@ export { useMessageClaim } from './useMessageClaim';
 export { useProgramActions } from './useProgramActions';
 export { useMetadataUplaod } from './useMetadataUpload';
 export { useBalanceTransfer } from './useBalanceTransfer';
-export { useAccountSubscriptions } from './useAccountSubscriptions';
+export { useEventSubscriptions } from './useEventSubscriptions';
 export { useSidebarNodes } from './useSidebarNodes';
 export { useGasCalculate } from './useGasCalculate';
 export { useStateRead } from './useStateRead';

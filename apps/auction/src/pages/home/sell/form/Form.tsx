@@ -4,18 +4,18 @@ import { Input, inputStyles, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
 import { isHex } from '@polkadot/util';
 import clsx from 'clsx';
-import { ADDRESS, MULTIPLIER } from 'consts';
-import { useAuctionMessage, useNftMessage } from 'hooks';
+import { MULTIPLIER } from 'consts';
+import { useAuctionMessage, useNftMessage, useWasm } from 'hooks';
 import styles from './Form.module.scss';
 
 const initialValues = {
-  nftContractActorId: '0x2cb1532754e0883ce06b175c208d4e780da81f543106cdd45a01201c4c04808b',
-  tokenId: '1',
-  startingPrice: '1000',
-  discountRate: '5',
-  hours: '00',
-  minutes: '00',
-  seconds: '01',
+  nftContractActorId: '',
+  tokenId: '',
+  startingPrice: '',
+  discountRate: '',
+  hours: '',
+  minutes: '',
+  seconds: '',
 };
 
 const validate = {
@@ -35,11 +35,13 @@ function Form() {
   const { nftContractActorId, tokenId, hours, minutes, seconds } = values;
 
   const sendAuctionMessage = useAuctionMessage();
+  const { auction } = useWasm();
+
   const sendNftMessage = useNftMessage(nftContractActorId as Hex);
 
   const createAuction = () => sendAuctionMessage({ Create: { duration: { hours, minutes, seconds }, ...values } });
   const approveTokenAndCreateAuction = () =>
-    sendNftMessage({ Approve: { to: ADDRESS.AUCTION_CONTRACT, tokenId } }, { onSuccess: createAuction });
+    sendNftMessage({ Approve: { to: auction.programId, tokenId } }, { onSuccess: createAuction });
 
   const getSeconds = () => {
     const hourSeconds = +hours * MULTIPLIER.MINUTES * MULTIPLIER.SECONDS;

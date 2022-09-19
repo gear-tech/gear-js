@@ -4,8 +4,11 @@ import { sleep } from './utilsFunctions';
 const api = new GearApi();
 
 beforeAll(async () => {
-  await api.isReady;
-  await sleep(2000);
+  try {
+    await api.isReadyOrError;
+  } catch (error) {
+    process.exit(1);
+  }
 });
 
 afterAll(async () => {

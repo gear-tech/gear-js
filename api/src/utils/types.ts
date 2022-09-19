@@ -1,13 +1,19 @@
-import { stringCamelCase } from '@polkadot/util';
 import { REGULAR_EXP } from './regexp';
 
 export function transformTypes(types: object): { [key: string]: object } {
   return Object.values(types).reduce((res, types): object => ({ ...res, ...types }), {});
 }
 
+export function convertString(string: string) {
+  const wordsArray = string
+    .replace(/[_:, .]+/g, ' ')
+    .trim()
+    .split(' ');
+  return wordsArray.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join('');
+}
+
 export function joinTypePath(path: string[]) {
-  const camelCased = stringCamelCase(path.join('_'));
-  return camelCased.slice(0, 1).toUpperCase() + camelCased.slice(1);
+  return convertString(path.join('_'));
 }
 
 export function typeIsGeneric(type: string) {

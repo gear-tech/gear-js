@@ -9,6 +9,7 @@ const config: Config.InitialOptions = {
   testSequencer: './test/testSequencer.js',
   preset: 'ts-jest/presets/js-with-babel',
   testTimeout: 15000,
+  forceExit: true,
 };
 
 export default config;

@@ -1,6 +1,6 @@
 import { useAlert, useAccount } from '@gear-js/react-hooks';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { GearKeyring } from '@gear-js/api';
+import { decodeAddress } from '@gear-js/api';
 import { Button, Modal } from '@gear-js/ui';
 
 import styles from './AccountsModal.module.scss';
@@ -21,7 +21,7 @@ const AccountsModal = ({ accounts, onClose }: Props) => {
   const selectAccount = (newAccount: InjectedAccountWithMeta) => {
     switchAccount(newAccount);
 
-    localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, GearKeyring.decodeAddress(newAccount.address));
+    localStorage.setItem(LOCAL_STORAGE.PUBLIC_KEY_RAW, decodeAddress(newAccount.address));
 
     onClose();
 

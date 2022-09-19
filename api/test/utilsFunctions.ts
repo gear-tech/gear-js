@@ -12,6 +12,7 @@ import {
   GearTransaction,
 } from '../src';
 import { Hex } from '../src/types';
+
 export const checkInit = (api: GearApi, programId: string) => {
   let unsub: UnsubscribePromise;
   let messageId: Hex;

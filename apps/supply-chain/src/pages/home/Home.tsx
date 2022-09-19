@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Hex } from '@gear-js/api';
-import { useSupplyChainUpload } from 'hooks';
+import { useCreateSupplyChain } from 'hooks';
 import { FORM, LOCAL_STORAGE } from 'consts';
 import { Create } from './create';
 import { Use } from './use';
@@ -13,7 +13,7 @@ function Home() {
   const [form, setForm] = useState('');
 
   const [programId, setProgramId] = useState(initProgramId);
-  const uploadSupplyChain = useSupplyChainUpload(setProgramId);
+  const createSupplyChain = useCreateSupplyChain(setProgramId);
 
   const openUseForm = () => setForm(FORM.USE);
   const openCreateForm = () => setForm(FORM.CREATE);
@@ -23,7 +23,7 @@ function Home() {
   const getForm = () => {
     switch (form) {
       case FORM.CREATE:
-        return <Create onCancel={closeForm} onSubmit={uploadSupplyChain} />;
+        return <Create onCancel={closeForm} onSubmit={createSupplyChain} />;
       case FORM.USE:
         return <Use onCancel={closeForm} onSubmit={setProgramId} />;
       default:

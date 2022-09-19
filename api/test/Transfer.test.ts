@@ -5,7 +5,7 @@ const api = new GearApi();
 let alice, bob;
 
 beforeAll(async () => {
-  await api.isReady;
+  await api.isReadyOrError;
   [alice, bob] = await getAccount();
 });
 

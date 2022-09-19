@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Identicon from '@polkadot/react-identicon';
-import { useAccount, useAccounts } from '@gear-js/react-hooks';
+import { useAccount } from '@gear-js/react-hooks';
 import { Button, buttonStyles } from '@gear-js/ui';
 
 import styles from './Wallet.module.scss';
@@ -8,8 +8,7 @@ import styles from './Wallet.module.scss';
 import { useModal } from 'hooks';
 
 const Wallet = () => {
-  const { account } = useAccount();
-  const { accounts } = useAccounts();
+  const { account, accounts } = useAccount();
   const { showModal } = useModal();
 
   const openModal = () => showModal('accounts', { accounts });

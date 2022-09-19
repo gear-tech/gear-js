@@ -1,5 +1,5 @@
 import { generatePath } from 'react-router-dom';
-import { Hex, UserMessageSent, Transfer, GearKeyring } from '@gear-js/api';
+import { Hex, UserMessageSent, Transfer, encodeAddress } from '@gear-js/api';
 import { AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { routes } from 'routes';
@@ -38,7 +38,7 @@ export const transferEventsHandler = (event: Transfer, address: Hex, alert: Aler
     return;
   }
 
-  const message = `TRANSFER BALANCE\n FROM:${GearKeyring.encodeAddress(from.toHex())}\n VALUE:${amount.toString()}`;
+  const message = `TRANSFER BALANCE\n FROM:${encodeAddress(from.toHex())}\n VALUE:${amount.toString()}`;
 
   alert.info(message, { title: `${section}.${method}` });
 };

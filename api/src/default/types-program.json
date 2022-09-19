@@ -4,7 +4,8 @@
     "Program": {
       "_enum": {
         "Active": "ActiveProgram",
-        "Terminated": "Null"
+        "Exited": "ProgramId",
+        "Terminated": "ProgramId"
       }
     },
     "WasmPageNumber": "u32",
