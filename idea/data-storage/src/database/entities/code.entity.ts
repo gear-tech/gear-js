@@ -14,7 +14,7 @@ export class Code extends BaseEntity implements ICode {
   @Column()
     name: string;
 
-  @Column({ type: 'enum', enum: CodeStatus, nullable: true })
+  @Column({ name: 'type', type: 'enum', enum: CodeStatus, nullable: true, default: null })
     status: CodeStatus;
 
   @Column({ nullable: true })

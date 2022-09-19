@@ -33,16 +33,16 @@ export class Message extends BaseEntity implements IMessage {
   @Column({ nullable: true })
     processedWithPanic: boolean;
 
-  @Column({ type: 'enum', enum: MessageEntryPoing, nullable: true })
+  @Column({ name: 'type', type: 'enum', enum: MessageEntryPoing, nullable: true, default: null })
     entry: MessageEntryPoing;
 
   @Column({ nullable: true })
     expiration: number;
 
-  @Column({ type: 'enum', enum: MessageType, nullable: true })
+  @Column({ name: 'type', type: 'enum', enum: MessageType, nullable: true, default: null })
     type: MessageType;
 
-  @Column({ type: 'enum', enum: MessageReadReason, nullable: true })
+  @Column({ name: 'type', type: 'enum', enum: MessageReadReason, nullable: true, default: null })
     readReason: MessageReadReason;
 
   @ManyToOne(() => Program, (program) => program.messages, {

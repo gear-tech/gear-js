@@ -22,7 +22,7 @@ export class Program extends BaseEntity implements IProgram {
   @Column({ nullable: true })
     title: string;
 
-  @Column({ type: 'enum', enum: ProgramStatus, default: ProgramStatus.UNKNOWN })
+  @Column({ name: 'type', type: 'enum', enum: ProgramStatus, default: ProgramStatus.UNKNOWN })
     status: ProgramStatus;
 
   @ManyToOne(() => Code, (code) => code.programs, {
