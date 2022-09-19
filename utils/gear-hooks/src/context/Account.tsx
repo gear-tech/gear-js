@@ -62,12 +62,12 @@ function AccountProvider({ children }: ProviderProps) {
   useEffect(() => {
     let unsub: UnsubscribePromise | undefined;
 
-    if (isWeb3Injected && !unsub) web3AccountsSubscribe((accs) => setAccounts(accs));
+    if (isWeb3Injected && isExtensionReady) web3AccountsSubscribe((accs) => setAccounts(accs));
 
     return () => {
       unsub?.then((unsubCallback) => unsubCallback());
     };
-  }, [isWeb3Injected]);
+  }, [isWeb3Injected, isExtensionReady]);
 
   useEffect(() => {
     if (isExtensionReady) {
