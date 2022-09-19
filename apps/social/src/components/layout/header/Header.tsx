@@ -1,4 +1,3 @@
-import { useApi } from '@gear-js/react-hooks';
 import { Logo } from './logo';
 import { Menu } from './menu';
 import { Account } from './account';

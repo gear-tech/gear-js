@@ -2225,17 +2225,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.25.7":
-  version: 0.25.7
-  resolution: "@gear-js/api@npm:0.25.7"
-  peerDependencies:
-    "@polkadot/api": ^9.3.3
-    "@polkadot/wasm-crypto": ^6.3.1
-    rxjs: ^7.5.5
-  checksum: de29e0768c226f4f22c69252822dc7cb22315c94ed9cf531c9f1d38f80ab0525f9a3ba26d6c4bcf8a06f704f3fe9c07e05025b10b07a08e3c1bb3110449e0013
-  languageName: node
-  linkType: hard
-
 "@gear-js/auction@workspace:apps/auction":
   version: 0.0.0-use.local
   resolution: "@gear-js/auction@workspace:apps/auction"
@@ -22285,7 +22274,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "social@workspace:apps/social"
   dependencies:
-    "@gear-js/api": ^0.25.7
+    "@gear-js/api": ^0.25.6
     "@gear-js/react-hooks": ^0.3.1
     "@gear-js/ui": ^0.4.0
     "@mantine/form": ^4.2.12
