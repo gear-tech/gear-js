@@ -1,0 +1,22 @@
+FROM node:16-alpine
+
+ARG REACT_APP_NODE_ADDRESS  \
+    REACT_APP_ROUTER_CONTRACT_ADDRESS \
+    REACT_APP_META_STORAGE_API 
+ENV REACT_APP_NODE_ADDRESS=${REACT_APP_NODE_ADDRESS} \
+    REACT_APP_ROUTER_CONTRACT_ADDRESS=${REACT_APP_ROUTER_CONTRACT_ADDRESS} \
+    REACT_APP_META_STORAGE_API=${REACT_APP_META_STORAGE_API}
+
+WORKDIR /src
+
+COPY package.json .
+COPY yarn.lock .
+COPY tsconfig.json .
+COPY .yarn .yarn
+COPY .yarnrc.yml .
+COPY ./apps/social apps/social
+
+RUN yarn install
+RUN yarn build
+
+CMD ["yarn", "start"]
