@@ -52,7 +52,7 @@ export class init1663580863108 implements MigrationInterface {
         "expiration" integer, 
         "type" "public"."message_type_enum", 
         "type" "public"."message_type_enum", 
-        "program_id" character varying, CONSTRAINT "PK_ba01f0a3e0123651915008bc578" PRIMARY KEY ("id"))`);
+        "program_id" charactercodme  varying, CONSTRAINT "PK_ba01f0a3e0123651915008bc578" PRIMARY KEY ("id"))`);
     await queryRunner.query('CREATE INDEX "IDX_415b62539db7e5df16641549ba" ON "message" ("genesis") ');
     await queryRunner.query('CREATE INDEX "IDX_2b0c43ce7cf7b69fcce6dc3450" ON "message" ("destination") ');
     await queryRunner.query('CREATE INDEX "IDX_1cad381e4d31baf6327cab90f1" ON "message" ("source") ');
