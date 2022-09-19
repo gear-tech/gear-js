@@ -41,6 +41,7 @@ export class MessageRepo {
         id,
         genesis,
       },
+      relations: ['program'],
     });
   }
 

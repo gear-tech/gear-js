@@ -8,7 +8,6 @@ import {
   IProgram,
 } from '@gear-js/common';
 
-import { sleep } from '../utils/sleep';
 import { ProgramNotFound } from '../common/errors';
 import { Program } from '../database/entities';
 import { CreateProgramInput, UpdateProgramDataInput } from './types';
@@ -93,8 +92,6 @@ export class ProgramService {
   }
 
   async setStatus(id: string, genesis: string, status: ProgramStatus): Promise<IProgram> {
-    // await sleep(2000);
-    console.log('__________>setStatus', id, genesis, status);
     const program = await this.programRepository.getByIdAndGenesis(id, genesis);
 
     if (!program) {
