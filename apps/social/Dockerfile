@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:16-alpine AS builder
 
 ARG REACT_APP_NODE_ADDRESS  \
     REACT_APP_ROUTER_CONTRACT_ADDRESS \
@@ -19,4 +19,6 @@ COPY ./apps/social apps/social
 RUN yarn install
 RUN yarn build:social
 
-CMD ["yarn", "start"]
+FROM nginx:alpine
+RUN rm -vf /usr/share/nginx/html/*
+COPY --from=builder /src/apps/social/build /usr/share/nginx/html
