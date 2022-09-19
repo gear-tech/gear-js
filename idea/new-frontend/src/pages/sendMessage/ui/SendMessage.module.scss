@@ -1,0 +1,16 @@
+@use '@gear-js/ui/headings' as *;
+@use 'shared/assets/styles/mixins' as *;
+
+.heading {
+  @extend %h4;
+  margin-bottom: 30px;
+}
+
+.body {
+  @include childrenMargin(30px);
+  margin-bottom: 32px;
+}
+
+.button {
+  margin-right: 16px;
+}

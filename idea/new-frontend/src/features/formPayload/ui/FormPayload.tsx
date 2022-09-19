@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { useForm, useField } from 'react-final-form';
 import clsx from 'clsx';
 import { useAlert } from '@gear-js/react-hooks';
-import { Checkbox, FileInput, Textarea, InputWrapper } from '@gear-js/ui';
+import { Checkbox, FileInput, Textarea, InputWrapper, InputProps } from '@gear-js/ui';
 
 import { useChangeEffect } from 'hooks';
 import { PayloadValue } from 'entities/formPayload';
@@ -17,10 +17,12 @@ import { PayloadStructure } from './payloadStructure';
 type Props = {
   name: string;
   label: string;
+  direction?: InputProps['direction'];
+  gap?: InputProps['gap'];
   values?: FormPayloadValues;
 };
 
-const FormPayload = ({ name, label, values }: Props) => {
+const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
   const alert = useAlert();
   const { change, resetFieldState } = useForm();
   const { input, meta } = useField<PayloadValue>(name);
@@ -102,7 +104,8 @@ const FormPayload = ({ name, label, values }: Props) => {
       size="normal"
       label={label}
       error={error}
-      direction="y"
+      direction={direction}
+      gap={gap}
       className={clsx(formStyles.field, values && formStyles.gap16)}>
       {values && (
         <Checkbox

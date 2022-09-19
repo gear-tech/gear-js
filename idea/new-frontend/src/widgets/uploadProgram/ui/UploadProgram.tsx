@@ -6,8 +6,8 @@ import { FileInput } from '@gear-js/ui';
 
 import { checkFileFormat, readFileAsync } from 'shared/helpers';
 import { formStyles } from 'shared/ui/form';
+import { Box } from 'shared/ui/box';
 
-import styles from './UploadProgram.module.scss';
 import { ProgramForm } from './programForm';
 
 type Props = {
@@ -72,8 +72,7 @@ const UploadProgram = ({ file, metadata, metadataBuffer }: Props) => {
   }
 
   return (
-    <div className={styles.lining}>
-      {/* @ts-ignore */}
+    <Box>
       <FileInput
         size="large"
         label="Program file"
@@ -81,7 +80,7 @@ const UploadProgram = ({ file, metadata, metadataBuffer }: Props) => {
         className={clsx(formStyles.field, formStyles.gap16)}
         onChange={handleChangeFile}
       />
-    </div>
+    </Box>
   );
 };
 

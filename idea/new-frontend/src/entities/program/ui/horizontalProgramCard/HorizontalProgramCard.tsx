@@ -48,7 +48,7 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
       <div className={styles.actions}>
         <CSSTransition in={withSendMessage} exit={false} timeout={AnimationTimeout.Medium} unmountOnExit>
           <ProgramActionLink
-            to="/"
+            to={generatePath(absoluteRoutes.sendMessage, { programId })}
             icon={sendSVG}
             text="Send Message"
             className={styles.sendMessage}

@@ -14,7 +14,7 @@ type Props = Omit<NumberFormatProps & InputProps, 'name' | 'value' | 'onValueCha
 };
 
 const GasField = (props: Props) => {
-  const { name, label, disabled, className, onGasCalculate, ...other } = props;
+  const { name, label, disabled, className, onGasCalculate, direction = 'x', gap, ...other } = props;
 
   const { change } = useForm();
   const { input, meta } = useField(name);
@@ -32,7 +32,14 @@ const GasField = (props: Props) => {
   const inputClassName = clsx(inputStyles.input, inputStyles.dark, styles.field);
 
   return (
-    <InputWrapper id={name} label={label} size="normal" error={error} direction="y" className={formStyles.field}>
+    <InputWrapper
+      id={name}
+      label={label}
+      size="normal"
+      error={error}
+      direction={direction}
+      gap={gap}
+      className={formStyles.field}>
       <div className={styles.content}>
         <div className={clsx(styles.wrapper, error && styles.error)}>
           <div className={styles.inputWrapper}>

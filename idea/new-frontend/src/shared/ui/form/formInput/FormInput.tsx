@@ -17,7 +17,7 @@ const FormInput = (props: Props) => {
 
   return (
     // @ts-ignore
-    <Input {...other} {...input} label={label} error={error} direction="y" className={clsx(styles.field, className)} />
+    <Input {...other} {...input} label={label} error={error} className={clsx(styles.field, className)} />
   );
 };
 

@@ -25,19 +25,25 @@
   "rules": {
     "react/require-default-props": "off", // we don"t use prop-types
 
-    "react/function-component-definition": [2, {
-      "namedComponents": "arrow-function",
-      "unnamedComponents": "arrow-function"
-    }],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
 
     "import/prefer-default-export": "off", // force named exports
     "import/no-default-export": "error",
-    
+
     "@typescript-eslint/no-unused-vars": "warn", // "error" is not convinient in development
-    
+
     "prefer-destructuring": "off",
     "consistent-return": "off", // we want functions to have different return behavior
 
-    "react/jsx-props-no-spreading": ["error", { "exceptions": ["Input", "FileInput", "Textarea", "Select", "NumberFormat"] }] // disable for form elements, cuz @mantine/form input props needs to be desctructured
+    "react/jsx-props-no-spreading": [
+      "error",
+      { "exceptions": ["Input", "FileInput", "Textarea", "Select", "NumberFormat"] }
+    ] // disable for form elements, cuz @mantine/form input props needs to be desctructured
   }
 }

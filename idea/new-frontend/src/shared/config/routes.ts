@@ -27,6 +27,7 @@ const absoluteRoutes = {
   program: `${routes.programs}/${routes.program}`,
   uploadProgram: `${routes.programs}/${routes.uploadProgram}`,
   message: `${routes.messages}/${routes.message}`,
+  sendMessage: `${routes.send}/${routes.sendMessage}`,
 };
 
 export { routes, absoluteRoutes };

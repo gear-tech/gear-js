@@ -17,11 +17,11 @@ import { GasInfoCard } from 'entities/gasInfo';
 import { GasMethod, routes } from 'shared/config';
 import { getValidation } from 'shared/helpers';
 import { FormInput, formStyles } from 'shared/ui/form';
+import { Box } from 'shared/ui/box';
 import plusSVG from 'shared/assets/images/actions/plus.svg';
 import closeSVG from 'shared/assets/images/actions/close.svg';
 
 import styles from './ProgramForm.module.scss';
-import widgetStyles from '../UploadProgram.module.scss';
 import { getValidationSchema } from '../../helpers';
 import { INITIAL_VALUES, FormValues } from '../../model';
 
@@ -151,7 +151,7 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
 
         return (
           <form onSubmit={handleSubmit}>
-            <div className={clsx(styles.formContent, widgetStyles.lining)}>
+            <Box className={styles.formContent}>
               <FileInput
                 ref={fileInputRef}
                 label="Program file"
@@ -160,9 +160,9 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
                 className={clsx(formStyles.field, formStyles.gap16)}
               />
 
-              <FormInput name="programName" label="Name" placeholder="Enter program name" />
+              <FormInput name="programName" label="Name" placeholder="Enter program name" direction="y" />
 
-              <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
+              <FormPayload name="payload" label="Initial payload" values={payloadFormValues} direction="y" />
 
               {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
 
@@ -172,12 +172,13 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
                 placeholder="0"
                 disabled={isGasDisabled}
                 onGasCalculate={handleGasCalculate}
+                direction="y"
               />
 
               {gasInfo && <GasInfoCard gasInfo={gasInfo} />}
 
               <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
-            </div>
+            </Box>
 
             <div className={styles.buttons}>
               <Button icon={plusSVG} type="submit" text="Upload Program" disabled={isDisabled} />

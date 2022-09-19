@@ -9,6 +9,7 @@ import { Message } from './message';
 import { Messages } from './messages';
 import { UploadProgram } from './uploadProgram';
 import { NotFound } from './notFound';
+import { SendMessage } from './sendMessage';
 
 const Routing = () => (
   <Routes>
@@ -23,6 +24,10 @@ const Routing = () => (
     <Route path={routes.messages}>
       <Route index element={<Messages />} />
       <Route path={routes.message} element={<Message />} />
+    </Route>
+
+    <Route path={routes.send}>
+      <Route path={routes.sendMessage} element={<SendMessage />} />
     </Route>
 
     <Route path="*" element={<NotFound />} />
