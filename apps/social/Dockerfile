@@ -17,6 +17,6 @@ COPY .yarnrc.yml .
 COPY ./apps/social apps/social
 
 RUN yarn install
-RUN yarn build
+RUN yarn build:social
 
 CMD ["yarn", "start"]
