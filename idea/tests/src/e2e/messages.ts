@@ -31,7 +31,6 @@ export async function getMessageData(genesis: string, messageId: Hex) {
     'value',
     'type',
     'readReason',
-    'program_id',
     'program'
   ]);
   return true;

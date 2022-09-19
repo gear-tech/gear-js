@@ -37,6 +37,7 @@ export async function getProgramData(genesis: string, programId: string): Promis
     'messages'
   );
   return true;
+
 }
 
 export async function uploadMeta(genesis: string, program: IPreparedProgram): Promise<Passed> {
@@ -47,7 +48,7 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
     genesis,
     programId: program.id,
     meta,
-    metaFile: metaFile ? metaFile.toString('base64') : null,
+    metaWasm: metaFile ? metaFile.toString('base64') : null,
     name: program.spec.name,
     title: `Test ${program.spec.name}`,
     signature: u8aToHex(accs[program.spec.account].sign(meta)),
@@ -75,10 +76,10 @@ export async function checkInitStatus(genesis: string, programId: string, init: 
     genesis,
     id: programId,
   };
-  const status = init ? 'success' : 'failed';
+  const status = init ? 'active' : 'init_failed';
   const response = await request('program.data', data);
   expect(response).to.have.property('result');
 
-  expect(response.result.initStatus).to.eq(status);
+  expect(response.result.status).to.eq(status);
   return true;
 }

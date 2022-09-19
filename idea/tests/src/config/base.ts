@@ -10,7 +10,7 @@ function checkEnv(name: string): string {
 
 export default {
   gear: {
-    wsProvider: checkEnv('WS_PROVIDER'),
+    // wsProvider: checkEnv('WS_PROVIDER'),
     api: checkEnv('API_ENDPOINT'),
   },
   db: {
