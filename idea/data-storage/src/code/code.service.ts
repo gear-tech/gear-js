@@ -48,7 +48,6 @@ export class CodeService {
   private async create(updateCodeInput: UpdateCodeInput): Promise<Code> {
     const codeTypeDB = plainToClass(Code, {
       ...updateCodeInput,
-      id: `${updateCodeInput.id}_${updateCodeInput.genesis}`,
       name: updateCodeInput.id,
       timestamp: new Date(updateCodeInput.timestamp),
     });
