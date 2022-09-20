@@ -1,11 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CodeChangedData, MessageEnqueuedData } from '@gear-js/api';
+import { CodeChangedData, GearApi, MessageEnqueuedData } from '@gear-js/api';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { Keys } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
 
-import { gearService } from './gear-service';
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
@@ -18,10 +17,14 @@ import { UpdateCodeInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateProgramInput } from '../program/types';
+import configuration from '../config/configuration';
+
+const { gear } = configuration();
 
 @Injectable()
 export class GearEventListener {
   private logger: Logger = new Logger('GearEventListener');
+  private gearApi: GearApi;
 
   constructor(
     private programService: ProgramService,
@@ -34,20 +37,43 @@ export class GearEventListener {
   public async listen() {
     // eslint-disable-next-line no-constant-condition
     while (true) {
+      await this.connectGearNode();
       const unsub = await this.listener();
 
-      return new Promise((resolve) => {
-        gearService.getApi().on('error', (error) => {
+      await new Promise((resolve) => {
+        this.gearApi.on('error', (error) => {
           unsub();
           changeStatus('gearWSProvider');
           resolve(error);
         });
       });
+
+      console.log('_________RECONNECTION_NODE__________');
+    }
+  }
+
+  private async connectGearNode(): Promise<void>{
+    try {
+      this.gearApi = await GearApi.create({
+        providerAddress: gear.wsProvider,
+        throwOnConnect: true,
+      });
+
+      const chain = await this.gearApi.chain();
+      const genesis = this.gearApi.genesisHash.toHex();
+      const version = this.gearApi.runtimeVersion.specVersion.toHuman();
+
+      console.log('_________CONNECTION_NODE_DATA_________');
+      console.log(`CHAIN --- ${chain}\n GENESIS --- ${genesis}\n VERSION --- ${version}`);
+
+      changeStatus('gearWSProvider');
+    } catch (error) {
+      console.log('api.isReady', error);
     }
   }
 
   private async listener() {
-    const gearApi = gearService.getApi();
+    const gearApi = this.gearApi;
     const genesis = gearApi.genesisHash.toHex();
 
     return gearApi.query.system.events(async (events) => {
@@ -191,7 +217,7 @@ export class GearEventListener {
         let code;
 
         try {
-          const codeId = await gearService.getApi().program.codeHash(destination.toHex());
+          const codeId = await this.gearApi.program.codeHash(destination.toHex());
           code = await this.codeRepository.get(codeId);
         } catch (error) {
           console.log('_______________CODE_NOT_EXISTED_ERROR______________');

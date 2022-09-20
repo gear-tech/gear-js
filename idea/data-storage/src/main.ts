@@ -9,7 +9,6 @@ import { changeStatus } from './healthcheck/healthcheck.controller';
 import { dataStorageLogger } from './common/data-storage.logger';
 import { AppDataSource } from './data-source';
 import { GearEventListener } from './gear/gear-event-listener';
-import { gearService } from './gear/gear-service';
 
 async function bootstrap() {
   const { kafka, healthcheck } = configuration();
@@ -52,7 +51,6 @@ async function bootstrap() {
 
   await AppDataSource.destroy();
 
-  await gearService.connect();
   const gearEventListener = app.get(GearEventListener);
   await gearEventListener.listen();
   await app.listen(healthcheck.port);
