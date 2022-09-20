@@ -17,8 +17,7 @@ let api: GearApi;
 jest.setTimeout(30_000);
 
 beforeAll(async () => {
-  // api = await GearApi.create({ providerAddress: base.gear.wsProvider });
-  api = await GearApi.create({ });
+  api = await GearApi.create({ providerAddress: base.gear.wsProvider });
   genesis = api.genesisHash.toHex();
   await waitReady();
   try {
