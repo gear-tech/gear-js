@@ -11,10 +11,12 @@ export async function testBalanceMiddleware(req: Request, res: Response, next: N
 
     if (testBalance && !(await verifyCaptcha(testBalance.params.token))) {
       res.send(getResponse(body, JSONRPC_ERRORS.Forbidden.name));
+      return;
     }
   } else {
     if (body.method === API_METHODS.TEST_BALANCE_GET && !(await verifyCaptcha(body.params['token']))) {
       res.send(getResponse(body, JSONRPC_ERRORS.Forbidden.name));
+      return;
     }
   }
   next();
