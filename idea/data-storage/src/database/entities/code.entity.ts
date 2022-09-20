@@ -1,11 +1,14 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CODE_STATUS, ICode } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
 
 @Entity()
 export class Code extends BaseEntity implements ICode {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
+    _id: string;
+
+  @Column()
     id: string;
 
   @Column()
