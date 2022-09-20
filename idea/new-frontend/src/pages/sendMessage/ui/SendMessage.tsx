@@ -46,6 +46,7 @@ const SendMessage = () => {
                   disabled={false}
                   onGasCalculate={() => {}}
                   gap="1/4"
+                  className={styles.gas}
                 />
 
                 <FormInput name="value" label="Value" gap="1/4" />

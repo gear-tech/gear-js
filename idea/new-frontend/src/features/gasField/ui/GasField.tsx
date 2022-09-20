@@ -11,10 +11,11 @@ import styles from './GasField.module.scss';
 type Props = Omit<NumberFormatProps & InputProps, 'name' | 'value' | 'onValueChange' | 'onChange'> & {
   name: string;
   onGasCalculate: () => void;
+  block?: boolean;
 };
 
 const GasField = (props: Props) => {
-  const { name, label, disabled, className, onGasCalculate, direction = 'x', gap, ...other } = props;
+  const { name, label, disabled, className, onGasCalculate, direction = 'x', gap, block, ...other } = props;
 
   const { change } = useForm();
   const { input, meta } = useField(name);
@@ -40,7 +41,7 @@ const GasField = (props: Props) => {
       direction={direction}
       gap={gap}
       className={formStyles.field}>
-      <div className={styles.content}>
+      <div className={clsx(styles.content, block && styles.block)}>
         <div className={clsx(styles.wrapper, error && styles.error)}>
           <div className={styles.inputWrapper}>
             <NumberFormat

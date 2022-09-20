@@ -2630,16 +2630,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/react-hooks@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "@gear-js/react-hooks@npm:0.3.1"
+"@gear-js/react-hooks@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "@gear-js/react-hooks@npm:0.3.2"
   peerDependencies:
     "@gear-js/api": ^0.25.6
     "@polkadot/extension-dapp": ^0.43.2
     react: ">=17.0.2"
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
-  checksum: 05f31bca0af8f73c6eb7a8cb7a3d6a8d0668de19c4874dd79603a068387a6580f8362306081eac75c7c6c2ebfc7427b7f4cbc39e9de24eb5157cdb5ef7d95e5a
+  checksum: c668efe52d10ba7617b7607684477c3d76103af3c5302653f2134c4526c426b94110feda3e7dd6f9efaa1a93a5af0f3f06472d41025a73bd41bcfd9c8484aa49
   languageName: node
   linkType: hard
 
@@ -2771,13 +2771,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/ui@npm:^0.5.5":
-  version: 0.5.5
-  resolution: "@gear-js/ui@npm:0.5.5"
+"@gear-js/ui@npm:^0.5.6":
+  version: 0.5.6
+  resolution: "@gear-js/ui@npm:0.5.6"
   peerDependencies:
     react: 18.2.0
     sass: 1.49.9
-  checksum: 9bb80e9ee1569a3b0db6bb5cbc0048b26af422e2a68d2a8d9339f7f5d1fbd6b9dd8ca6235d7d9c17ba2ff35c8c2fce76631df4039a180ae7e2bd4c2e5165a541
+  checksum: dce9fd3ff72ba2ece0b23227677d0a3346b22adee3b32ee09c87815c2ff1a9b052798f2c7a0870029dffb38a545e2965faf3d70957cd01a962e6640c63627fa3
   languageName: node
   linkType: hard
 
@@ -18452,8 +18452,8 @@ __metadata:
   resolution: "new-frontend@workspace:idea/new-frontend"
   dependencies:
     "@gear-js/api": ^0.25.6
-    "@gear-js/react-hooks": ^0.3.1
-    "@gear-js/ui": ^0.5.5
+    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/ui": ^0.5.6
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@polkadot/api": ^9.3.3
     "@polkadot/extension-dapp": ^0.43.3

@@ -5,17 +5,20 @@
 
 .content {
   @include childrenMargin($margin, right);
-
   display: flex;
+
+  &:not(.block) {
+    max-width: 450px;
+  }
 }
 
 .wrapper {
   display: flex;
   align-items: center;
   flex: 1 1;
-  border: 1px solid $borderColor; 
+  border: 1px solid $borderColor;
   overflow: hidden;
-  border-radius: $borderRadiusMedium;  
+  border-radius: $borderRadiusMedium;
 
   &:focus-within {
     border-color: $borderColor2;
@@ -51,5 +54,3 @@
     }
   }
 }
-
-
