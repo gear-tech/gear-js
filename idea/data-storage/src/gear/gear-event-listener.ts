@@ -135,11 +135,9 @@ export class GearEventListener {
     await this.createPrograms(handleExtrinsicsData);
 
     const txMethods = ['sendMessage', 'uploadProgram', 'createProgram', 'sendReply'];
-    for (const {
-      hash,
-      args,
-      method: { method },
-    } of signedBlock.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method))) {
+    const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) => txMethods.includes(method));
+
+    for (const { hash, args, method: { method }, } of extrinsics) {
       let createMessagesDBType = [];
 
       const filteredEvents = filterEvents(hash, signedBlock, events, status).events!.find(
