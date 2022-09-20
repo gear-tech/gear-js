@@ -51,7 +51,7 @@ export class ConsumerService {
   events = {
     UserMessageSent: async (value: IUserMessageSentKafkaValue) => {
       await sleep(1000);
-      this.messageService.createMessage({ ...value, type: MESSAGE_TYPE.USER_MESS_SENT });
+      this.messageService.createMessage({ ...value, type: MESSAGE_TYPE.USER_MESS_SENT }).catch(console.log);
     },
     MessageEnqueued: ({
       id,
@@ -63,31 +63,35 @@ export class ConsumerService {
       blockHash,
     }: IMessageEnqueuedKafkaValue) => {
       if (entry === 'Init') {
-        this.programService.createProgram({
-          id: destination,
-          owner: source,
-          genesis: genesis,
-          timestamp: timestamp,
-          blockHash: blockHash,
-        });
+        this.programService
+          .createProgram({
+            id: destination,
+            owner: source,
+            genesis: genesis,
+            timestamp: timestamp,
+            blockHash: blockHash,
+          })
+          .catch(console.log);
       }
-      this.messageService.createMessage({
-        id: id,
-        destination: destination,
-        source: source,
-        entry,
-        payload: null,
-        replyToMessageId: null,
-        exitCode: null,
-        genesis: genesis,
-        blockHash: blockHash,
-        timestamp: timestamp,
-        type: MESSAGE_TYPE.ENQUEUED,
-      });
+      this.messageService
+        .createMessage({
+          id: id,
+          destination: destination,
+          source: source,
+          entry,
+          payload: null,
+          replyToMessageId: null,
+          exitCode: null,
+          genesis: genesis,
+          blockHash: blockHash,
+          timestamp: timestamp,
+          type: MESSAGE_TYPE.ENQUEUED,
+        })
+        .catch(console.log);
     },
     ProgramChanged: (value: IProgramChangedKafkaValue) => {
       if (value.isActive) {
-        this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS);
+        this.programService.setStatus(value.id, value.genesis, InitStatus.SUCCESS).catch(console.log);
       }
     },
     CodeChanged: (value: ICodeChangedKafkaValue) => {
@@ -95,13 +99,13 @@ export class ConsumerService {
         ...value,
         status: value.change as CODE_STATUS,
       };
-      this.codeService.updateCode(updateCodeInput);
+      this.codeService.updateCode(updateCodeInput).catch(console.log);
     },
     MessagesDispatched: (value: IMessagesDispatchedKafkaValue) => {
-      this.messageService.setDispatchedStatus(value);
+      this.messageService.setDispatchedStatus(value).catch(console.log);
     },
     UserMessageRead: async (value: IUserMessageReadKafkaValue) => {
-      this.messageService.updateReadStatus(value.id, value.reason);
+      this.messageService.updateReadStatus(value.id, value.reason).catch(console.log);
     },
     DatabaseWiped: async (value: IGenesis) => {
       await Promise.all([
