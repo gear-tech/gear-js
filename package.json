@@ -16,6 +16,7 @@
     "build:marketplace": "yarn workspace @gear-js/marketplace build",
     "build:lottery": "yarn workspace @gear-js/lottery build",
     "build:auction": "yarn workspace @gear-js/auction build",
+    "build:social": "yarn workspace @gear-js/social build",
     "build:staking": "yarn workspace @gear-js/staking build",
     "build:upload-dapp-chain": "yarn workspace @gear-js/upload-dapp-chain build",
     "build:supply-chain": "yarn workspace @gear-js/supply-chain build",
