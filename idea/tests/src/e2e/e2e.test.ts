@@ -28,10 +28,9 @@ beforeAll(async () => {
   }
 });
 
-afterAll(async (done) => {
+afterAll(async () => {
   await api.disconnect();
   await sleep();
-  done();
 });
 
 describe('program methods', () => {
