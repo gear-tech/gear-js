@@ -83,23 +83,9 @@ const SendMessage = () => {
     // } else {
     const message = { ...commonValues, destination: programId };
 
-    console.log('LOG VALUES');
-
     sendMessage({ message, metadata, payloadType, reject: finishSubmitting, resolve });
     // }
   };
-
-  // const handleCalculateGas = (values: FormValues, setFieldValue: SetFieldValue) => async () => {
-  //   try {
-  //     const gasLimit = await calculateGas(method, values, null, metadata, id);
-
-  //     setFieldValue('gasLimit', gasLimit);
-  //   } catch (error) {
-  //     const message = (error as Error).message;
-
-  //     alert.error(message);
-  //   }
-  // };
 
   const handleGasCalculate = async () => {
     if (!formApi.current) return;
@@ -108,8 +94,6 @@ const SendMessage = () => {
 
     const { values } = formApi.current.getState();
     const preparedValues = { ...values, payload: getSubmitPayload(values.payload) };
-
-    console.log('LOG VALUES');
 
     try {
       const info = await calculateGas(method, preparedValues, null, metadata, programId);
@@ -138,18 +122,7 @@ const SendMessage = () => {
               <Box className={styles.body}>
                 <Input label="Destination" gap="1/5" value={programId} readOnly />
                 <FormPayload name="payload" label="Payload" values={payloadFormValues} gap="1/5" />
-
-                <GasField
-                  name="gasLimit"
-                  label="Gas limit"
-                  placeholder="0"
-                  disabled={isGasDisabled}
-                  onGasCalculate={handleGasCalculate}
-                  gap="1/5"
-                />
-
-                {/* GAS INFO */}
-
+                <GasField info={gasInfo} disabled={isGasDisabled} onGasCalculate={handleGasCalculate} gap="1/5" />
                 <FormInput name="value" label="Value" gap="1/5" />
               </Box>
 

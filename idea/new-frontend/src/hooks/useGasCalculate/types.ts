@@ -1,6 +1,5 @@
 import { Hex, PayloadType } from '@gear-js/api';
 
-import { IGasInfo } from 'entities/gasInfo';
 import { GasMethod } from 'shared/config';
 
 type Values = {
@@ -10,6 +9,14 @@ type Values = {
 };
 
 type Code<T> = T extends GasMethod.InitUpdate ? Buffer : T extends GasMethod.InitCreate ? Hex : null;
+
+interface IGasInfo {
+  burned: string;
+  waited: boolean;
+  minLimit: string;
+  reserved: string;
+  mayBeReturned: string;
+}
 
 type Result = IGasInfo & {
   limit: number;

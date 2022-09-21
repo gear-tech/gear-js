@@ -127,6 +127,7 @@ const FormPayload = ({ name, label, values, direction = 'x', gap }: Props) => {
               rows={15}
               value={input.value as string}
               placeholder="// Enter your payload here"
+              block
             />
             {values && (
               <FileInput

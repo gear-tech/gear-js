@@ -12,31 +12,31 @@
   border-radius: $borderRadius;
   flex-direction: column;
   background-color: $bgColor7;
+}
 
-  .info {
-    @include childrenMargin($marginSmall, right);
+.info {
+  @include childrenMargin($marginSmall, right);
 
-    display: flex;
-    align-items: center;
-    color: $textColor;
-    font-family: 'Kanit';
-    line-height: toRem(26);
+  display: flex;
+  align-items: center;
+  color: $textColor;
+  font-family: 'Kanit';
+  line-height: toRem(26);
 
-    .text {
-      font-size: $fontSizeMedium;
+  .text {
+    font-size: $fontSizeMedium;
+  }
+
+  .value {
+    font-size: $fontSizeBig;
+    font-weight: 500;
+
+    &.green {
+      color: $successColor;
     }
 
-    .value {
-      font-size: $fontSizeBig;
-      font-weight: 500;
-
-      &.green {
-        color: $successColor;
-      }
-
-      &.blue {
-        color: $blue;
-      }
+    &.blue {
+      color: $blue;
     }
   }
 }

@@ -13,7 +13,6 @@ import { Payload } from 'hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from 'features/formPayload';
 import { FormPayloadType } from 'features/formPayloadType';
 import { GasField } from 'features/gasField';
-import { GasInfoCard } from 'entities/gasInfo';
 import { GasMethod, routes } from 'shared/config';
 import { getValidation } from 'shared/helpers';
 import { FormInput, formStyles } from 'shared/ui/form';
@@ -161,22 +160,11 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
               />
 
               <FormInput name="programName" label="Name" placeholder="Enter program name" direction="y" />
-
               <FormPayload name="payload" label="Initial payload" values={payloadFormValues} direction="y" />
 
               {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
 
-              <GasField
-                name="gasLimit"
-                label="Gas limit"
-                placeholder="0"
-                disabled={isGasDisabled}
-                onGasCalculate={handleGasCalculate}
-                direction="y"
-              />
-
-              {gasInfo && <GasInfoCard gasInfo={gasInfo} />}
-
+              <GasField info={gasInfo} disabled={isGasDisabled} onGasCalculate={handleGasCalculate} direction="y" />
               <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
             </Box>
 
