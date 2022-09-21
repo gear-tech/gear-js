@@ -1,9 +1,8 @@
 import * as yup from 'yup';
-
-import { PayloadSchemaParams, PayloadValue } from 'entities/formPayload';
-
 import isString from 'lodash.isstring';
 import isPlainObject from 'lodash.isplainobject';
+
+import { PayloadSchemaParams, PayloadValue } from 'entities/formPayload';
 
 const getValidationSchema = ({ type, deposit, metadata, maxGasLimit }: PayloadSchemaParams) =>
   yup.object().shape({

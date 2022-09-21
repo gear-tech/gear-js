@@ -17,7 +17,7 @@ import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/fo
 import { useGasCalculate, useMessageActions, useProgram } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
 
-import { getValidationSchema } from '../helpers';
+import { getValidationSchema, resetPayloadValue } from '../helpers';
 import { FormValues, INITIAL_VALUES } from '../model';
 import styles from './SendMessage.module.scss';
 
@@ -36,7 +36,7 @@ const SendMessage = () => {
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
-  const [gasInfo, setGasinfo] = useState<Result>();
+  const [gasInfo, setGasInfo] = useState<Result>();
 
   const formApi = useRef<FormApi<FormValues>>();
 
@@ -57,8 +57,23 @@ const SendMessage = () => {
     [metadata, encodeType],
   );
 
+  const disableSubmitButton = () => setIsDisabled(true);
+  const enableSubmitButton = () => setIsDisabled(false);
+
+  const resetForm = () => {
+    if (!formApi.current) return;
+
+    const { values } = formApi.current.getState();
+
+    formApi.current.reset();
+    formApi.current.change('payload', resetPayloadValue(values.payload));
+
+    enableSubmitButton();
+    setGasInfo(undefined);
+  };
+
   const handleSubmitForm = (values: FormValues) => {
-    setIsDisabled(true);
+    disableSubmitButton();
 
     const payloadType = metadata ? undefined : values.payloadType;
 
@@ -68,22 +83,13 @@ const SendMessage = () => {
       gasLimit: values.gasLimit.toString(),
     };
 
-    const finishSubmitting = () => setIsDisabled(false);
-
-    const resolve = () => {
-      // RESET MANUAL PAYLOAD
-
-      formApi.current?.reset();
-      finishSubmitting();
-    };
-
     // if (isReply) {
     //   const reply: IMessageSendReplyOptions = { ...commonValues, replyToId: id };
     //   replyMessage({ reply, metadata, payloadType, reject: finishSubmitting, resolve });
     // } else {
     const message = { ...commonValues, destination: programId };
 
-    sendMessage({ message, metadata, payloadType, reject: finishSubmitting, resolve });
+    sendMessage({ message, metadata, payloadType, reject: enableSubmitButton, resolve: resetForm });
     // }
   };
 
@@ -99,7 +105,7 @@ const SendMessage = () => {
       const info = await calculateGas(method, preparedValues, null, metadata, programId);
 
       formApi.current.change('gasLimit', info.limit);
-      setGasinfo(info);
+      setGasInfo(info);
     } catch (error) {
       const message = (error as Error).message;
       alert.error(message);
