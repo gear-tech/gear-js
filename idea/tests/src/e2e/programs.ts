@@ -32,10 +32,12 @@ export async function getProgramData(genesis: string, programId: string): Promis
     'timestamp',
     'meta',
     'title',
-    'initStatus',
+    'status',
+    'code',
+    'messages'
   );
-  expect(response.result.meta).to.have.all.keys('meta');
   return true;
+
 }
 
 export async function uploadMeta(genesis: string, program: IPreparedProgram): Promise<Passed> {
@@ -46,7 +48,7 @@ export async function uploadMeta(genesis: string, program: IPreparedProgram): Pr
     genesis,
     programId: program.id,
     meta,
-    metaFile: metaFile ? metaFile.toString('base64') : null,
+    metaWasm: metaFile ? metaFile.toString('base64') : null,
     name: program.spec.name,
     title: `Test ${program.spec.name}`,
     signature: u8aToHex(accs[program.spec.account].sign(meta)),
@@ -65,7 +67,7 @@ export async function getMeta(genesis: string, programId: string): Promise<Passe
   };
   const response = await request('program.meta.get', data);
   expect(response).to.have.property('result');
-  expect(response.result).to.have.all.keys('program', 'meta', 'metaFile');
+  expect(response.result).to.have.all.keys('program', 'meta', 'metaWasm');
   return true;
 }
 
@@ -74,10 +76,10 @@ export async function checkInitStatus(genesis: string, programId: string, init: 
     genesis,
     id: programId,
   };
-  const status = init ? 'success' : 'failed';
+  const status = init ? 'active' : 'init_failed';
   const response = await request('program.data', data);
   expect(response).to.have.property('result');
 
-  expect(response.result.initStatus).to.eq(status);
+  expect(response.result.status).to.eq(status);
   return true;
 }

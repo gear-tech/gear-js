@@ -1,10 +1,10 @@
-import { GearKeyring } from '@gear-js/api';
+import { signatureIsValid } from '@gear-js/api';
 import { Injectable } from '@nestjs/common';
 import { AddMetaParams, AddMetaResult, GetMetaParams, GetMetaResult } from '@gear-js/common';
 
 import { SignatureNotVerified, MetadataNotFound } from '../common/errors';
 import { ProgramService } from '../program/program.service';
-import { Meta } from '../database/entities/meta.entity';
+import { Meta } from '../database/entities';
 import { sleep } from '../utils/sleep';
 import { MetadataRepo } from './metadata.repo';
 import { ProgramRepo } from '../program/program.repo';
@@ -24,7 +24,7 @@ export class MetadataService {
     const [_, program] = await Promise.all([sleep(1000), this.programRepository.getByIdAndGenesis(programId, genesis)]);
 
     try {
-      if (!GearKeyring.checkSign(program.owner, signature, meta)) {
+      if (!signatureIsValid(program.owner, signature, meta)) {
         throw new SignatureNotVerified();
       }
     } catch (err) {

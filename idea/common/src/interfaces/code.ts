@@ -1,9 +1,9 @@
-import { CODE_STATUS } from '../enums';
+import { CodeStatus } from '../enums';
 
 interface ICode {
   id: string;
   name: string;
-  status: CODE_STATUS;
+  status: CodeStatus;
   expiration?: number | null;
 }
 

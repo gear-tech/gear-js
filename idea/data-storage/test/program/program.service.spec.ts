@@ -1,12 +1,14 @@
 import { Test } from '@nestjs/testing';
-import { GetAllProgramsParams, GetAllUserProgramsParams, InitStatus } from '@gear-js/common';
+import { GetAllProgramsParams, GetAllUserProgramsParams } from '@gear-js/common';
 
 import { ProgramService } from '../../src/program/program.service';
 import { ProgramRepo } from '../../src/program/program.repo';
-import { UpdateProgramDataInput } from '../../src/program/types';
+import { CreateProgramInput, UpdateProgramDataInput } from '../../src/program/types';
+import { ProgramStatus } from '../../src/common/enums';
 
 import { mockProgramRepository } from '../mock/program/program-repository.mock';
 import { PROGRAM_DB_MOCK } from '../mock/program/program-db.mock';
+import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 
 const PROGRAM_ENTITY_ID = '0x7357';
 
@@ -28,15 +30,19 @@ describe('Program service', () => {
   });
 
   it('should be successfully created new program', async () => {
-    const program = await programService.createProgram({
+    const code = CODE_DB_MOCK[0];
+
+    const createProgramInput: CreateProgramInput = {
       id: PROGRAM_ENTITY_ID,
       genesis: '0x07357',
       owner: '0x7357',
       blockHash: '0x1234',
       timestamp: 0,
-    });
+      code
+    };
+    const programs = await programService.createPrograms([createProgramInput]);
 
-    expect(program.id).toEqual(PROGRAM_ENTITY_ID);
+    expect(programs[0].id).toEqual(PROGRAM_ENTITY_ID);
     expect(mockProgramRepository.save).toHaveBeenCalled();
   });
 
@@ -96,21 +102,21 @@ describe('Program service', () => {
     expect(mockProgramRepository.listPaginationByGenesis).toHaveBeenCalled();
   });
 
-  it('should successfully update program status to PROGRESS', async () => {
+  it('should successfully update program status to ACTIVE', async () => {
     const { id, genesis } = PROGRAM_DB_MOCK[2];
     const updateProgramStatusInput = {
       id,
       genesis,
-      status: InitStatus.PROGRESS,
+      status: ProgramStatus.ACTIVE,
     };
     const program = await programService.setStatus(
       updateProgramStatusInput.id,
       updateProgramStatusInput.genesis,
       updateProgramStatusInput.status,
     );
-    expect(program.initStatus).toEqual(updateProgramStatusInput.status);
-    expect(program.initStatus).not.toEqual(InitStatus.SUCCESS);
-    expect(program.initStatus).not.toEqual(InitStatus.FAILED);
+    expect(program.status).toEqual(updateProgramStatusInput.status);
+    expect(program.status).not.toEqual(ProgramStatus.INIT_FAILED);
+    expect(program.status).not.toEqual(ProgramStatus.PAUSED);
     expect(mockProgramRepository.save).toHaveBeenCalled();
   });
 

@@ -12,6 +12,7 @@ import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import configurations from './config/configuration';
 import { Code, Message, Meta, Program } from './database/entities';
 import { ProducerModule } from './producer/producer.module';
+import { GearModule } from './gear/gear.module';
 
 const entities = [Meta, Message, Program, Code];
 
@@ -39,6 +40,7 @@ const entities = [Meta, Message, Program, Code];
     ProgramModule,
     MessageModule,
     MetadataModule,
+    GearModule,
     HealthcheckModule,
     CodeModule,
     ProducerModule,

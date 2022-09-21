@@ -16,7 +16,6 @@ async function getCodeData(genesis: string, codeId: Hex) {
   const response = await request('code.data', { genesis, codeId });
   expect(response).to.have.own.property('result');
   expect(response.result).to.have.all.keys([
-    '_id',
     'id',
     'name',
     'status',
@@ -24,6 +23,8 @@ async function getCodeData(genesis: string, codeId: Hex) {
     'genesis',
     'blockHash',
     'timestamp',
+    'programs',
+    'meta'
   ]);
   return true;
 }

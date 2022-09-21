@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
-import { CODE_STATUS, GetAllCodeParams } from '@gear-js/common';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { Repository } from 'typeorm';
+import { GetAllCodeParams } from '@gear-js/common';
 
 import { Code } from '../database/entities';
 import { sqlWhereWithILike } from '../utils/sql-where-with-ilike';
-import { PAGINATION_LIMIT } from '../config/configuration';
+import { PAGINATION_LIMIT } from '../common/constants';
+import { CodeStatus } from '../common/enums';
 
 @Injectable()
 export class CodeRepo {
@@ -20,15 +20,16 @@ export class CodeRepo {
       where: {
         id,
         genesis,
-        status: CODE_STATUS.ACTIVE,
+        status: CodeStatus.ACTIVE,
       },
+      relations: ['programs', 'meta']
     });
   }
 
   public async listPaginationByGenesis(params: GetAllCodeParams): Promise<[Code[], number]> {
     const { genesis, query, limit, offset } = params;
     return this.codeRepo.findAndCount({
-      where: sqlWhereWithILike({ genesis, status: CODE_STATUS.ACTIVE }, query, ['id', 'name']),
+      where: sqlWhereWithILike({ genesis, status: CodeStatus.ACTIVE }, query, ['id', 'name']),
       take: limit || PAGINATION_LIMIT,
       skip: offset || 0,
       order: {
@@ -37,15 +38,14 @@ export class CodeRepo {
     });
   }
 
-  public async save(code: Code): Promise<Code> {
-    return this.codeRepo.save(code);
+  public async get(id: string): Promise<Code> {
+    return this.codeRepo.findOne({
+      where: { id }
+    });
   }
 
-  public async update(
-    where: FindOptionsWhere<Code>,
-    partialEntity: QueryDeepPartialEntity<Code>,
-  ): Promise<UpdateResult> {
-    return this.codeRepo.update(where, partialEntity);
+  public async save(codes: Code[]): Promise<Code[]> {
+    return this.codeRepo.save(codes);
   }
 
   public async removeByGenesis(genesis: string): Promise<void> {

@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { CODE_STATUS, GetAllCodeParams, GetCodeParams } from '@gear-js/common';
+import { GetAllCodeParams, GetCodeParams } from '@gear-js/common';
 import { UpdateResult } from 'typeorm';
 
 import { Code } from '../../src/database/entities';
@@ -8,6 +8,7 @@ import { CODE_DB_MOCK } from '../mock/code/code-db.mock';
 import { CodeRepo } from '../../src/code/code.repo';
 import { CodeService } from '../../src/code/code.service';
 import { UpdateCodeInput } from '../../src/code/types';
+import { CodeStatus } from '../../src/common/enums';
 
 const CODE_ENTITY_ID = '0x7357';
 
@@ -34,16 +35,14 @@ describe('Code service', () => {
       genesis: '0x07357',
       timestamp: 0,
       blockHash: '0x0000000000000000',
-      status: CODE_STATUS.ACTIVE,
+      status: CodeStatus.ACTIVE,
       expiration: 111,
     };
 
-    const code = await codeService.updateCode(updateCodeInput);
+    const codes = await codeService.updateCodes([updateCodeInput]);
 
-    if (!(code instanceof UpdateResult)) {
-      expect(code.id).toEqual(updateCodeInput.id);
-      expect(code.status).toEqual(updateCodeInput.status);
-    }
+    expect(codes[0].id).toEqual(updateCodeInput.id);
+    expect(codes[0].status).toEqual(updateCodeInput.status);
     expect(mockCodeRepository.save).toHaveBeenCalled();
   });
 

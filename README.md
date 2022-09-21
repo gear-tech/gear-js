@@ -40,13 +40,9 @@ Source code of [idea.gear-tech.io](https://idea.gear-tech.io/) and backend micro
 
 React application that serves as a get-familiar with Gear to help developers write, test and upload smart contracts to a test network as well as manage accounts, balances, events and more
 
-#### [events-listener](https://github.com/gear-tech/gear-js/tree/master/idea/events-listener)
-
-Microservice listens to all the events occuring in the Gear node and sends to the data-storage to store the information about them
-
 #### [data-storage](https://github.com/gear-tech/gear-js/tree/master/idea/data-storage)
 
-Microservice is responsible for storing metadata of uploaded programs and information about events
+Microservice is responsible for storing metadata of uploaded programs and information about events and listens to all the events occuring in the Gear node and sends to the data-storage to store the information about them
 
 #### [api-gateway](https://github.com/gear-tech/gear-js/tree/master/idea/api-gateway)
 

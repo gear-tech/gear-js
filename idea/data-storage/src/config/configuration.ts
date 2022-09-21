@@ -1,9 +1,13 @@
-import { strict as assert } from 'assert';
 import { config } from 'dotenv';
+import { strict as assert } from 'assert';
+
 config();
 
-const checkEnv = (envName: string) => {
+export const checkEnv = (envName: string, defaultValue?: string) => {
   const env = process.env[envName];
+  if (!env && defaultValue) {
+    return defaultValue;
+  }
   assert.notStrictEqual(env, undefined, `${envName} is not specified`);
   return env as string;
 };
@@ -28,6 +32,7 @@ export default () => ({
   healthcheck: {
     port: Number(process.env.HEALTHCHECK_PORT || '3001'),
   },
+  gear: {
+    wsProvider: checkEnv('GEAR_WS_PROVIDER', 'ws://127.0.0.1:9944'),
+  },
 });
-
-export const PAGINATION_LIMIT = 20;

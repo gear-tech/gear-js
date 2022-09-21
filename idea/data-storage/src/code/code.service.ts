@@ -2,11 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/common';
 
-import { UpdateCodeInput } from './types';
 import { Code } from '../database/entities';
 import { CodeRepo } from './code.repo';
 import { CodeNotFound } from '../common/errors';
-import { UpdateResult } from 'typeorm';
+import { UpdateCodeInput } from './types';
 
 @Injectable()
 export class CodeService {
@@ -30,44 +29,39 @@ export class CodeService {
     return code;
   }
 
-  public async updateCode(updateCodeInput: UpdateCodeInput): Promise<Code | UpdateResult> {
-    const { id, genesis } = updateCodeInput;
-    const code = await this.codeRepository.getByIdAndGenesis(id, genesis);
+  public async updateCodes(updateCodesInput: UpdateCodeInput[]): Promise<Code[]> {
+    let updateCodes = [];
 
-    if (code) {
-      return this.updateCodeData(code, updateCodeInput);
-    } else {
-      return this.create(updateCodeInput);
+    for(const updateCodeInput of updateCodesInput){
+      const { id, genesis } = updateCodeInput;
+      const code = await this.codeRepository.getByIdAndGenesis(id, genesis);
+
+      if(code) {
+        const updateCode = plainToClass(Code, {
+          ...code,
+          status: updateCodeInput.status,
+          expiration: updateCodeInput.expiration,
+        });
+        updateCodes = [...updateCodes, updateCode];
+      } else {
+        const createCode =  plainToClass(Code, {
+          ...updateCodeInput,
+          name: updateCodeInput.id,
+          timestamp: new Date(updateCodeInput.timestamp),
+        });
+        updateCodes = [...updateCodes, createCode];
+      }
+    }
+
+    try {
+      return this.codeRepository.save(updateCodes);
+    } catch (error) {
+      this.logger.error(error);
+      console.log(error);
     }
   }
 
   public async deleteRecords(genesis: string): Promise<void> {
     await this.codeRepository.removeByGenesis(genesis);
-  }
-
-  private async create(updateCodeInput: UpdateCodeInput): Promise<Code> {
-    const codeTypeDB = plainToClass(Code, {
-      ...updateCodeInput,
-      name: updateCodeInput.id,
-      timestamp: new Date(updateCodeInput.timestamp),
-    });
-
-    try {
-      return await this.codeRepository.save(codeTypeDB);
-    } catch (error) {
-      this.logger.error(error, error.stack);
-    }
-  }
-
-  private async updateCodeData(codeEntityDB: Code, updateCodeInput: UpdateCodeInput): Promise<UpdateResult> {
-    const { id, genesis } = updateCodeInput;
-
-    return this.codeRepository.update(
-      { id, genesis },
-      {
-        status: updateCodeInput.status,
-        expiration: updateCodeInput.expiration,
-      },
-    );
   }
 }

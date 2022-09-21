@@ -1,34 +1,36 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
 import {
   FindProgramParams,
   GetAllProgramsParams,
   GetAllProgramsResult,
   GetAllUserProgramsParams,
-  InitStatus,
   IProgram,
 } from '@gear-js/common';
 
-import { sleep } from '../utils/sleep';
 import { ProgramNotFound } from '../common/errors';
-import { Program } from '../database/entities/program.entity';
+import { Program } from '../database/entities';
 import { CreateProgramInput, UpdateProgramDataInput } from './types';
-import { plainToClass } from 'class-transformer';
 import { ProgramRepo } from './program.repo';
+import { ProgramStatus } from '../common/enums';
 
 @Injectable()
 export class ProgramService {
   private logger: Logger = new Logger('ProgramService');
   constructor(private programRepository: ProgramRepo) {}
 
-  public async createProgram(createProgramInput: CreateProgramInput): Promise<IProgram> {
-    const programTypeDB = plainToClass(Program, {
-      ...createProgramInput,
-      name: createProgramInput.id,
-      timestamp: new Date(createProgramInput.timestamp),
+  public async createPrograms(createProgramsInput: CreateProgramInput[]): Promise<Program[]> {
+
+    const createProgramsDBType = createProgramsInput.map((createProgramInput) => {
+      return plainToClass(Program, {
+        ...createProgramInput,
+        name: createProgramInput.id,
+        timestamp: new Date(createProgramInput.timestamp),
+      });
     });
 
     try {
-      return await this.programRepository.save(programTypeDB);
+      return this.programRepository.save(createProgramsDBType);
     } catch (error) {
       this.logger.error(error, error.stack);
       return;
@@ -46,7 +48,15 @@ export class ProgramService {
     program.name = name;
     program.title = title;
     program.meta = meta;
-    return this.programRepository.save(program);
+
+    try {
+      const programs = await this.programRepository.save([program]);
+
+      return programs[0];
+    } catch (error) {
+      console.log(error);
+      this.logger.error(error);
+    }
   }
 
   public async getAllUserPrograms(params: GetAllUserProgramsParams): Promise<GetAllProgramsResult> {
@@ -81,11 +91,22 @@ export class ProgramService {
     return program;
   }
 
-  async setStatus(id: string, genesis: string, status: InitStatus): Promise<IProgram> {
-    await sleep(2000);
+  async setStatus(id: string, genesis: string, status: ProgramStatus): Promise<IProgram> {
     const program = await this.programRepository.getByIdAndGenesis(id, genesis);
-    program.initStatus = status;
-    return this.programRepository.save(program);
+
+    if (!program) {
+      throw new ProgramNotFound();
+    }
+    program.status = status;
+
+    try {
+      const programs = await this.programRepository.save([program]);
+
+      return programs[0];
+    } catch (error) {
+      console.log(error);
+      this.logger.error(error);
+    }
   }
 
   public async deleteRecords(genesis: string): Promise<Program[]> {

@@ -1,6 +1,6 @@
 import { IMeta } from './meta';
 import { IBaseDBRecord } from './common';
-import { InitStatus } from '../enums';
+import { ProgramStatus } from '../enums';
 
 interface IProgram extends IBaseDBRecord<number | Date> {
   id: string;
@@ -8,7 +8,7 @@ interface IProgram extends IBaseDBRecord<number | Date> {
   name?: string;
   meta?: IMeta;
   title?: string;
-  initStatus: InitStatus;
+  status: ProgramStatus;
 }
 
 interface IProgramChangedData {
