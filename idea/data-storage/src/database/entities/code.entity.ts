@@ -1,5 +1,4 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
-import { ICode } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
 import { Program } from './program.entity';
@@ -7,7 +6,7 @@ import { Meta } from './meta.entity';
 import { CodeStatus } from '../../common/enums';
 
 @Entity()
-export class Code extends BaseEntity implements ICode {
+export class Code extends BaseEntity {
   @PrimaryColumn()
     id: string;
 
