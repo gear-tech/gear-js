@@ -17,7 +17,7 @@ const Program = () => {
 
   return (
     <div>
-      <Header name={program?.name || programId} isLoading={isLoading} />
+      <Header name={program?.name || programId} programId={programId} isLoading={isLoading} />
       <div className={styles.content}>
         <div className={styles.leftSide}>
           <ProgramDetails program={program} isLoading={isLoading} />

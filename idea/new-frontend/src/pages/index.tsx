@@ -9,7 +9,7 @@ import { Message } from './message';
 import { Messages } from './messages';
 import { UploadProgram } from './uploadProgram';
 import { NotFound } from './notFound';
-import { SendMessage } from './sendMessage';
+import { Send } from './send';
 import { Codes } from './codes';
 import { InitializeProgram } from './initializeProgram';
 
@@ -29,7 +29,8 @@ const Routing = () => (
     </Route>
 
     <Route path={routes.send}>
-      <Route path={routes.sendMessage} element={<SendMessage />} />
+      <Route path={routes.reply} element={<Send />} />
+      <Route path={routes.sendMessage} element={<Send />} />
     </Route>
 
     <Route path={routes.codes}>

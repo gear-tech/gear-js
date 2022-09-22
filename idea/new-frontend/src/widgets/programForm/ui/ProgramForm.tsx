@@ -121,9 +121,9 @@ const ProgramForm = (props: Props) => {
         return (
           <form onSubmit={handleSubmit}>
             <div className={styles.formContent}>
-              <FormInput name="programName" label="Name" placeholder="Enter program name" />
+              <FormInput name="programName" label="Name" direction="y" placeholder="Enter program name" block />
 
-              <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
+              <FormPayload name="payload" label="Initial payload" direction="y" values={payloadFormValues} />
 
               {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
 
@@ -133,10 +133,12 @@ const ProgramForm = (props: Props) => {
                 placeholder="0"
                 disabled={isGasDisabled}
                 onGasCalculate={handleGasCalculate}
+                direction="y"
                 info={gasInfo}
+                block
               />
 
-              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
+              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" direction="y" block />
             </div>
 
             <div className={styles.buttons}>{renderButtons({ isDisabled })}</div>

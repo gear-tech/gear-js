@@ -19,6 +19,7 @@ const PATHS_WITHOUT_BOTTOM_SIDE = [
   absoluteRoutes.meta,
   absoluteRoutes.program,
   absoluteRoutes.sendMessage,
+  absoluteRoutes.reply,
 ];
 
 export { SHORT_HEADER_HEIGHT, FULL_HEADER_HEIGHT, CODE_MODAL_PROPS, PROGRAM_MODAL_PROPS, PATHS_WITHOUT_BOTTOM_SIDE };

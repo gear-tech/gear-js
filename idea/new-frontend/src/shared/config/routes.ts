@@ -30,6 +30,7 @@ const absoluteRoutes = {
   initializeProgram: `${routes.codes}/${routes.initializeProgram}`,
   message: `${routes.messages}/${routes.message}`,
   sendMessage: `${routes.send}/${routes.sendMessage}`,
+  reply: `${routes.send}/${routes.reply}`,
 };
 
 export { routes, absoluteRoutes };

@@ -38,6 +38,7 @@ const FormPayloadType = ({ name, label }: Props) => {
     inputStyles.wrapper,
     inputStyles.normal,
     inputStyles.dark,
+    inputStyles.block,
     formStyles.content,
     error && inputStyles.error,
     isDisabled && inputStyles.readOnly,

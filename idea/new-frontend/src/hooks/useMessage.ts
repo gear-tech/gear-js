@@ -4,11 +4,11 @@ import { useAlert } from '@gear-js/react-hooks';
 import { getMessage } from 'api';
 import { IMessage } from 'entities/message';
 
-const useMessage = (id?: string, initLoading = false) => {
+const useMessage = (id: string | undefined, isInitLoading = false) => {
   const alert = useAlert();
 
   const [message, setMessage] = useState<IMessage>();
-  const [isLoading, setIsLoading] = useState(initLoading);
+  const [isLoading, setIsLoading] = useState(isInitLoading);
 
   useEffect(() => {
     if (id) {
@@ -16,11 +16,11 @@ const useMessage = (id?: string, initLoading = false) => {
 
       getMessage(id)
         .then(({ result }) => setMessage(result))
-        .catch((error) => alert.error(error.message))
+        .catch((error: Error) => alert.error(error.message))
         .finally(() => setIsLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   return { message, isLoading };
 };

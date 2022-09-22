@@ -12,8 +12,8 @@ import { GasMethod, routes } from 'shared/config';
 import { readFileAsync, checkFileFormat } from 'shared/helpers';
 import { Subheader } from 'shared/ui/subheader';
 import { formStyles } from 'shared/ui/form';
+import { BackButton } from 'shared/ui/backButton';
 import plusSVG from 'shared/assets/images/actions/plus.svg';
-import closeSVG from 'shared/assets/images/actions/close.svg';
 
 import styles from '../UploadProgram.module.scss';
 
@@ -32,8 +32,6 @@ const ProgramSection = ({ file, metadata, metadataBuffer }: Props) => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>(file);
 
   const { uploadProgram } = useProgramActions();
-
-  const goBack = () => navigate(-1);
 
   const getFileBuffer = async (currentFile: File) => {
     try {
@@ -91,8 +89,8 @@ const ProgramSection = ({ file, metadata, metadataBuffer }: Props) => {
 
   const renderButtons = ({ isDisabled }: RenderButtonsProps) => (
     <>
-      <Button icon={plusSVG} type="submit" text="Upload Program" disabled={isDisabled} />
-      <Button icon={closeSVG} text="Cancel Upload" color="light" onClick={goBack} />
+      <Button icon={plusSVG} type="submit" text="Upload Program" size="large" disabled={isDisabled} />
+      <BackButton />
     </>
   );
 

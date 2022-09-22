@@ -1,10 +1,11 @@
 import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
+import { generatePath } from 'react-router-dom';
 import { Button } from '@gear-js/ui';
 
 import { useModal } from 'hooks';
 import { getShortName } from 'shared/helpers';
-import { AnimationTimeout } from 'shared/config';
+import { absoluteRoutes, AnimationTimeout } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 import readSVG from 'shared/assets/images/actions/read.svg';
@@ -14,10 +15,11 @@ import styles from './Header.module.scss';
 
 type Props = {
   name: string;
+  programId: string;
   isLoading: boolean;
 };
 
-const Header = ({ name, isLoading }: Props) => {
+const Header = ({ name, programId, isLoading }: Props) => {
   const { showModal } = useModal();
 
   const showMetadataModal = () =>
@@ -34,7 +36,13 @@ const Header = ({ name, isLoading }: Props) => {
         </CSSTransition>
       )}
       <div className={styles.links}>
-        <UILink to="/" icon={sendSVG} text="Send Message" color="secondary" className={styles.fixWidth} />
+        <UILink
+          to={generatePath(absoluteRoutes.sendMessage, { programId })}
+          icon={sendSVG}
+          text="Send Message"
+          color="secondary"
+          className={styles.fixWidth}
+        />
         <UILink to="/" icon={readSVG} text="Read State" color="secondary" className={styles.fixWidth} />
         <Button
           icon={addMetadataSVG}
