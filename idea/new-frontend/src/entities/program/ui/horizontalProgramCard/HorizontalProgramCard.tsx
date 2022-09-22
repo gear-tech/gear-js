@@ -10,7 +10,7 @@ import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { Indicator } from 'shared/ui/indicator';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
-import { ProgramActionLink } from 'shared/ui/programActionLink';
+import { ActionLink } from 'shared/ui/ActionLink';
 
 import styles from './HorizontalProgramCard.module.scss';
 import { getBulbStatus } from '../../helpers';
@@ -47,7 +47,7 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
       </div>
       <div className={styles.actions}>
         <CSSTransition in={withSendMessage} exit={false} timeout={AnimationTimeout.Medium} unmountOnExit>
-          <ProgramActionLink
+          <ActionLink
             to={generatePath(absoluteRoutes.sendMessage, { programId })}
             icon={sendSVG}
             text="Send Message"
@@ -55,7 +55,7 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
             onClick={stopPropagation}
           />
         </CSSTransition>
-        <ProgramActionLink to="/" icon={readSVG} text="Read State" onClick={stopPropagation} />
+        <ActionLink to="/" icon={readSVG} text="Read State" onClick={stopPropagation} />
       </div>
       <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.cardLink} />
     </article>

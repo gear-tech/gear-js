@@ -2,14 +2,14 @@ import { Link, LinkProps } from 'react-router-dom';
 import clsx from 'clsx';
 import { buttonStyles } from '@gear-js/ui';
 
-import styles from './ProgramActionLink.module.scss';
+import styles from './ActionLink.module.scss';
 
 type Props = LinkProps & {
   icon: string;
   text: string;
 };
 
-const ProgramActionLink = ({ to, icon, text, className }: Props) => {
+const ActionLink = ({ to, icon, text, className }: Props) => {
   const linkClasses = clsx(buttonStyles.button, buttonStyles.small, buttonStyles.transparent, styles.link, className);
 
   return (
@@ -20,4 +20,4 @@ const ProgramActionLink = ({ to, icon, text, className }: Props) => {
   );
 };
 
-export { ProgramActionLink };
+export { ActionLink };

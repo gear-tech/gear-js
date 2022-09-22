@@ -1,69 +1,46 @@
-import { useState, useMemo, useRef, useEffect, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo, useRef, useEffect, ReactChild } from 'react';
 import { FormApi } from 'final-form';
 import { Form } from 'react-final-form';
-import clsx from 'clsx';
-import { Metadata } from '@gear-js/api';
+import { Metadata, Hex } from '@gear-js/api';
 import { useApi } from '@gear-js/react-hooks';
-import { FileInput, Button } from '@gear-js/ui';
 
-import { useProgramActions, useGasCalculate, useChangeEffect } from 'hooks';
+import { useGasCalculate, useChangeEffect } from 'hooks';
 import { Result } from 'hooks/useGasCalculate/types';
 import { Payload } from 'hooks/useProgramActions/types';
 import { FormPayload, getSubmitPayload, getPayloadFormValues } from 'features/formPayload';
 import { FormPayloadType } from 'features/formPayloadType';
 import { GasField } from 'features/gasField';
-import { GasMethod, routes } from 'shared/config';
+import { GasMethod } from 'shared/config';
 import { getValidation } from 'shared/helpers';
-import { FormInput, formStyles } from 'shared/ui/form';
-import { Box } from 'shared/ui/box';
-import plusSVG from 'shared/assets/images/actions/plus.svg';
-import closeSVG from 'shared/assets/images/actions/close.svg';
+import { FormInput } from 'shared/ui/form';
 
 import styles from './ProgramForm.module.scss';
-import { getValidationSchema } from '../../helpers';
-import { INITIAL_VALUES, FormValues } from '../../model';
+import { getValidationSchema } from '../helpers';
+import { INITIAL_VALUES, FormValues, RenderButtonsProps, SubmitHelpers } from '../model';
 
 type Props = {
-  file: File;
-  fileBuffer: Buffer;
+  source: Buffer | Hex;
   metadata?: Metadata;
+  gasMethod: GasMethod;
   metadataBuffer?: string;
-  onFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  renderButtons: (props: RenderButtonsProps) => ReactChild;
+  onSubmit: (values: Payload, helpers: SubmitHelpers) => void;
 };
 
-const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange }: Props) => {
+const ProgramForm = (props: Props) => {
+  const { gasMethod, metadata, source, metadataBuffer, renderButtons, onSubmit } = props;
+
   const { api } = useApi();
-  const navigate = useNavigate();
 
   const formApi = useRef<FormApi<FormValues>>();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [gasInfo, setGasinfo] = useState<Result>();
   const [isDisabled, setIsDisables] = useState(false);
   const [isGasDisabled, setIsGasDisabled] = useState(false);
 
   const calculateGas = useGasCalculate();
-  const { uploadProgram } = useProgramActions();
 
-  const goBack = () => navigate(-1);
   const changeProgramName = (meta: Metadata) => formApi.current?.change('programName', meta?.title ?? '');
-
-  const setFileInputValue = () => {
-    const target = fileInputRef.current;
-
-    if (target) {
-      const dataTransfer = new DataTransfer();
-
-      dataTransfer.items.add(file);
-      target.files = dataTransfer.files;
-      target.dispatchEvent(new Event('change', { bubbles: true }));
-      // Help Safari out
-      if (target.webkitEntries.length) {
-        target.dataset.file = `${dataTransfer.files[0].name}`;
-      }
-    }
-  };
 
   const handleGasCalculate = async () => {
     if (!formApi.current) {
@@ -76,7 +53,7 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
     const preparedValues = { ...values, payload: getSubmitPayload(values.payload) };
 
     try {
-      const info = await calculateGas(GasMethod.InitUpdate, preparedValues, fileBuffer, metadata);
+      const info = await calculateGas(gasMethod, preparedValues, source, metadata);
 
       formApi.current.change('gasLimit', info.limit);
       setGasinfo(info);
@@ -100,12 +77,7 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
       initPayload: metadata ? getSubmitPayload(payload) : payload,
     };
 
-    uploadProgram({
-      file,
-      payload: data,
-      reject: () => setIsDisables(false),
-      resolve: () => navigate(routes.programs),
-    });
+    onSubmit(data, { enableButtons: () => setIsDisables(false) });
   };
 
   const encodeType = metadata?.init_input;
@@ -129,8 +101,6 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
     if (metadata) {
       changeProgramName(metadata);
     }
-
-    setFileInputValue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -150,28 +120,26 @@ const ProgramForm = ({ file, fileBuffer, metadata, metadataBuffer, onFileChange 
 
         return (
           <form onSubmit={handleSubmit}>
-            <Box className={styles.formContent}>
-              <FileInput
-                ref={fileInputRef}
-                label="Program file"
-                direction="y"
-                onChange={onFileChange}
-                className={clsx(formStyles.field, formStyles.gap16)}
-              />
+            <div className={styles.formContent}>
+              <FormInput name="programName" label="Name" placeholder="Enter program name" />
 
-              <FormInput name="programName" label="Name" placeholder="Enter program name" direction="y" />
-              <FormPayload name="payload" label="Initial payload" values={payloadFormValues} direction="y" />
+              <FormPayload name="payload" label="Initial payload" values={payloadFormValues} />
 
               {!metadata && <FormPayloadType name="payloadType" label="Initial payload type" />}
 
-              <GasField info={gasInfo} disabled={isGasDisabled} onGasCalculate={handleGasCalculate} direction="y" />
-              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
-            </Box>
+              <GasField
+                name="gasLimit"
+                label="Gas limit"
+                placeholder="0"
+                disabled={isGasDisabled}
+                onGasCalculate={handleGasCalculate}
+                info={gasInfo}
+              />
 
-            <div className={styles.buttons}>
-              <Button icon={plusSVG} type="submit" text="Upload Program" disabled={isDisabled} />
-              <Button icon={closeSVG} text="Cancel Upload" color="light" onClick={goBack} />
+              <FormInput min={0} type="number" name="value" label="Initial value" placeholder="0" />
             </div>
+
+            <div className={styles.buttons}>{renderButtons({ isDisabled })}</div>
           </form>
         );
       }}

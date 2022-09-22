@@ -6,7 +6,7 @@ import { absoluteRoutes, AnimationTimeout } from 'shared/config';
 import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
-import { ProgramActionLink } from 'shared/ui/programActionLink';
+import { ActionLink } from 'shared/ui/ActionLink';
 import readSVG from 'shared/assets/images/actions/read.svg';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 
@@ -41,7 +41,7 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
       </div>
       <div className={styles.actions}>
         <CSSTransition in={withSendMessage} exit={false} timeout={AnimationTimeout.Medium} mountOnEnter unmountOnExit>
-          <ProgramActionLink
+          <ActionLink
             to="/"
             icon={sendSVG}
             text="Send Message"
@@ -49,7 +49,7 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
             onClick={stopPropagation}
           />
         </CSSTransition>
-        <ProgramActionLink to="/" icon={readSVG} text="Read State" onClick={stopPropagation} />
+        <ActionLink to="/" icon={readSVG} text="Read State" onClick={stopPropagation} />
       </div>
       <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.cardLink} />
     </article>

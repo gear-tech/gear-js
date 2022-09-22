@@ -1,0 +1,11 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+
+.pageWrapper {
+  @include childrenMargin(22px, right);
+
+  display: flex;
+
+  .codesSection {
+    flex: 1 1;
+  }
+}

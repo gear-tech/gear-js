@@ -1,5 +1,3 @@
-import { Metadata } from '@gear-js/api';
-
 import { PayloadValue } from 'entities/formPayload';
 
 type FormValues = {
@@ -10,10 +8,12 @@ type FormValues = {
   payloadType: string;
 };
 
-type UploadProgramProps = {
-  file?: File;
-  metadata?: Metadata;
-  metadataBuffer?: string;
+type RenderButtonsProps = {
+  isDisabled: boolean;
 };
 
-export type { UploadProgramProps, FormValues };
+type SubmitHelpers = {
+  enableButtons: () => void;
+};
+
+export type { FormValues, SubmitHelpers, RenderButtonsProps };

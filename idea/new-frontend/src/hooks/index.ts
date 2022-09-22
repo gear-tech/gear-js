@@ -22,6 +22,7 @@ import { useScrollLoader } from './useScrollLoader';
 import { useElementSizes } from './useElementSizes';
 import { useMessages } from './useMessages';
 import { useWaitlist } from './useWaitlist';
+import { useCodes } from './useCodes';
 
 export {
   useApp,
@@ -48,4 +49,5 @@ export {
   useMetadataUplaod,
   useBalanceTransfer,
   useEventSubscriptions,
+  useCodes,
 };
