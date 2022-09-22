@@ -1,34 +1,15 @@
-import { Module } from '@nestjs/common';
-import { ProducerService } from './producer.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import configuration from '../config/configuration';
+import { Inject, Module } from '@nestjs/common';
 
-const configKafka = configuration().kafka;
+import { ProducerService } from './producer.service';
+import { KafkaProducerProvider } from './producer.provider';
+import { Producer } from 'kafkajs';
 
 @Module({
-  imports: [
-    ClientsModule.register([
-      {
-        name: 'DATA_STORAGE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: configKafka.clientId,
-            brokers: configKafka.brokers,
-            sasl: {
-              mechanism: 'plain',
-              username: configKafka.sasl.username,
-              password: configKafka.sasl.password,
-            },
-          },
-          consumer: {
-            groupId: configKafka.groupId,
-          },
-        },
-      },
-    ]),
-  ],
+  imports: [],
   controllers: [],
-  providers: [ProducerService],
+  providers: [ProducerService, KafkaProducerProvider],
+  exports: [ProducerService]
 })
-export class ProducerModule {}
+export class ProducerModule{
+  constructor(@Inject('DATA_STORAGE_KAFKA_PRODUCER') private kafkaProducer: Producer) {}
+}

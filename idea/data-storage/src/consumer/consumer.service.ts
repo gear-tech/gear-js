@@ -18,6 +18,7 @@ import {
   IMessage,
   ProgramDataResult,
 } from '@gear-js/common';
+import { Message } from 'kafkajs';
 
 import { Result } from './types';
 import { ProgramService } from '../program/program.service';
@@ -25,7 +26,8 @@ import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
 import { FormResponse } from '../middleware/formResponse';
 import { CodeService } from '../code/code.service';
-
+import { kafkaEventMap } from '../common/kafka-event.map';
+import { SERVICE_DATA } from '../common/service-data';
 
 @Injectable()
 export class ConsumerService {
@@ -82,5 +84,18 @@ export class ConsumerService {
   @FormResponse
   async code(params: GetCodeParams): Result<ICode> {
     return await this.codeService.getByIdAndGenesis(params);
+  }
+
+  @FormResponse
+  async servicesPartition(): Result<string> {
+    return SERVICE_DATA.partition;
+  }
+
+  async servicePartitionGet(params: Message): Result<void> {
+    const correlationId = params.headers.kafka_correlationId.toString();
+    const resultFromService = kafkaEventMap.get(correlationId);
+
+    if (resultFromService) await resultFromService(JSON.parse(params.value.toString()));
+    kafkaEventMap.delete(correlationId);
   }
 }

@@ -1,24 +1,31 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Producer } from 'kafkajs';
+import { Message, Producer } from 'kafkajs';
+import { nanoid } from 'nanoid';
+
+import { KAFKA_TOPICS } from '@gear-js/common';
+import { kafkaEventMap } from '../common/kafka-event.map';
+import { SERVICE_DATA } from '../common/service-data';
 
 @Injectable()
 export class ProducerService {
-  constructor(
-    @Inject('DATA_STORAGE') private kafkaProducer: Producer
-  ) {}
+  constructor(@Inject('DATA_STORAGE_KAFKA_PRODUCER') private kafkaProducer: Producer) {}
 
-  async onModuleDestroy(): Promise<void> {
-    await this.kafkaProducer.disconnect();
-  }
+  public async getPartitionServiceMessage(): Promise<void> {
+    const correlationId = nanoid();
 
-  async sendMessage() {
-    return this.kafkaProducer.send({
-      topic: 'service.reply',
-      messages: [
-        {
-          value: JSON.stringify('data_storage'),
-        },
-      ],
+    const message: Message = { value: JSON.stringify(SERVICE_DATA.genesis), headers: {
+      kafka_correlationId: correlationId,
+    } };
+
+    await this.kafkaProducer.send({
+      topic: `${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`,
+      messages: [message],
     });
+
+    let topicEvent;
+    const res: Promise<any> = new Promise((resolve) => (topicEvent = resolve));
+    kafkaEventMap.set(correlationId, topicEvent);
+
+    SERVICE_DATA.partition = await res;
   }
 }

@@ -36,7 +36,6 @@ const entities = [Meta, Message, Program, Code];
       inject: [ConfigService],
     }),
     ConsumerModule,
-    ProducerModule,
     ProgramModule,
     MessageModule,
     MetadataModule,

@@ -1,4 +1,4 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   AddMetaParams,
@@ -13,8 +13,11 @@ import {
   KAFKA_TOPICS,
   KafkaPayload,
 } from '@gear-js/common';
+import { Message } from 'kafkajs';
 
 import { ConsumerService } from './consumer.service';
+import { ExecutionError } from '../common/errors';
+
 
 @Controller()
 export class ConsumerController {
@@ -72,5 +75,15 @@ export class ConsumerController {
   async allCode(@Payload() payload: KafkaPayload<GetAllCodeParams>): Promise<string> {
     const result = await this.consumerService.allCode(payload.value);
     return JSON.stringify(result);
+  }
+
+  @MessagePattern(KAFKA_TOPICS.SERVICE_PARTITION_GET)
+  async servicePartitionGet(@Payload() payload: Message): Promise<void> {
+    await this.consumerService.servicePartitionGet(payload);
+  }
+
+  @MessagePattern(KAFKA_TOPICS.SERVICES_PARTITION)
+  async servicesPartition(): Promise<ExecutionError | string> {
+    return await this.consumerService.servicesPartition();
   }
 }

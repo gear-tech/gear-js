@@ -18,6 +18,8 @@ import { changeStatus } from '../healthcheck/healthcheck.controller';
 import { ProgramRepo } from '../program/program.repo';
 import { CreateProgramInput } from '../program/types';
 import configuration from '../config/configuration';
+import { SERVICE_DATA } from '../common/service-data';
+import { ProducerService } from '../producer/producer.service';
 
 const { gear } = configuration();
 
@@ -32,6 +34,7 @@ export class GearEventListener {
     private messageService: MessageService,
     private codeService: CodeService,
     private codeRepository: CodeRepo,
+    private producerService: ProducerService,
   ) {}
 
   public async listen() {
@@ -40,6 +43,7 @@ export class GearEventListener {
       await this.connectGearNode();
       const unsub = await this.listener();
 
+      await this.producerService.getPartitionServiceMessage();
       await new Promise((resolve) => {
         this.gearApi.on('error', (error) => {
           unsub();
@@ -65,6 +69,8 @@ export class GearEventListener {
 
       console.log('_________CONNECTION_NODE_DATA_________');
       console.log(`CHAIN --- ${chain}\n GENESIS --- ${genesis}\n VERSION --- ${version}`);
+
+      SERVICE_DATA.genesis = genesis;
 
       changeStatus('gearWSProvider');
     } catch (error) {
