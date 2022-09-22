@@ -15,12 +15,12 @@ import {
   GetMetaParams,
   GetMetaResult,
   ICode,
-  IMessage,
+  IMessage, KAFKA_TOPICS,
   ProgramDataResult,
 } from '@gear-js/common';
 import { Message } from 'kafkajs';
 
-import { Result } from './types';
+import { Result, ServicePartitionData } from './types';
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
@@ -28,6 +28,7 @@ import { FormResponse } from '../middleware/formResponse';
 import { CodeService } from '../code/code.service';
 import { kafkaEventMap } from '../common/kafka-event.map';
 import { SERVICE_DATA } from '../common/service-data';
+import { ProducerService } from '../producer/producer.service';
 
 @Injectable()
 export class ConsumerService {
@@ -36,6 +37,7 @@ export class ConsumerService {
     private messageService: MessageService,
     private metaService: MetadataService,
     private codeService: CodeService,
+    private producerService: ProducerService,
   ) {}
 
   @FormResponse
@@ -87,8 +89,10 @@ export class ConsumerService {
   }
 
   @FormResponse
-  async servicesPartition(): Result<string> {
-    return SERVICE_DATA.partition;
+  async servicesPartition(): Promise<void> {
+    const params = { partition: SERVICE_DATA.partition, genesis: SERVICE_DATA.genesis };
+
+    await this.producerService.sendByTopic(KAFKA_TOPICS.SERVICES_PARTITION, params);
   }
 
   async servicePartitionGet(params: Message): Result<void> {

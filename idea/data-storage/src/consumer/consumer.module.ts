@@ -8,10 +8,12 @@ import { ProgramModule } from '../program/program.module';
 import { MessageModule } from '../message/message.module';
 import { ConsumerService } from './consumer.service';
 import { CodeModule } from '../code/code.module';
+import { ProducerModule } from '../producer/producer.module';
 
 const configKafka = configuration().kafka;
 @Module({
   imports: [
+    ProducerModule,
     ClientsModule.register([
       {
         name: 'DATA_STORAGE',

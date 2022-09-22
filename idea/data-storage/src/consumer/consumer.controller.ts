@@ -16,7 +16,6 @@ import {
 import { Message } from 'kafkajs';
 
 import { ConsumerService } from './consumer.service';
-import { ExecutionError } from '../common/errors';
 
 
 @Controller()
@@ -83,7 +82,7 @@ export class ConsumerController {
   }
 
   @MessagePattern(KAFKA_TOPICS.SERVICES_PARTITION)
-  async servicesPartition(): Promise<ExecutionError | string> {
-    return await this.consumerService.servicesPartition();
+  async servicesPartition(@Payload() payload: Message): Promise<void> {
+    this.consumerService.servicesPartition();
   }
 }
