@@ -23,6 +23,7 @@ import { useElementSizes } from './useElementSizes';
 import { useMessages } from './useMessages';
 import { useWaitlist } from './useWaitlist';
 import { useCodes } from './useCodes';
+import { useIsProgramExists } from './useIsProgramExists';
 
 export {
   useApp,
@@ -50,4 +51,5 @@ export {
   useBalanceTransfer,
   useEventSubscriptions,
   useCodes,
+  useIsProgramExists,
 };

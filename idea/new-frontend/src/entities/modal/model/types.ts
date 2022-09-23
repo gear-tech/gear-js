@@ -1,5 +1,5 @@
 type ModalProps = {
-  onClose: () => void;
+  onClose: () => void; // TODO: there is 'close' prop from @gear-js/ui
 };
 
 export type { ModalProps };
