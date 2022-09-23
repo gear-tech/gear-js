@@ -65,7 +65,7 @@ async function messageProcessing(message: KafkaMessage, topic: string): Promise<
   }
 }
 
-async function sendServicePartition(message: KafkaMessage, topic: string): Promise<any>{
+async function sendServicePartition(message: KafkaMessage, topic: string): Promise<void>{
   const serviceGenesis = JSON.parse(message.value.toString());
   const correlationId = message.headers.kafka_correlationId.toString();
   const partitionServiceByGenesis = servicesPartitionMap.get(serviceGenesis);
@@ -85,7 +85,7 @@ async function sendServicePartition(message: KafkaMessage, topic: string): Promi
   const apiMethods: string[] = [...Object.values(API_METHODS)];
 
   const topicPartitions = getTopicsForPartition(apiMethods).map(topic => {
-    return { topic, count: partitionService, assignments: [] };
+    return { topic, count: partitionService };
   });
 
   await admin.createPartitions({ topicPartitions });
