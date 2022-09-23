@@ -20,7 +20,7 @@ import {
 } from '@gear-js/common';
 import { Message } from 'kafkajs';
 
-import { Result, ServicePartitionData } from './types';
+import { Result } from './types';
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { MetadataService } from '../metadata/metadata.service';
