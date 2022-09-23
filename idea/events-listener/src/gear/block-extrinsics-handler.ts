@@ -10,24 +10,32 @@ export function handleBlockExtrinsics(data: UpdateBlockExtrinsics): UpdateMessag
   const eventMethods = ['sendMessage', 'uploadProgram', 'createProgram', 'sendReply'];
   const extrinsics = signedBlock.block.extrinsics.filter(({ method: { method } }) => eventMethods.includes(method));
 
-  const result = extrinsics.map((extrinsic) => {
+  const result: UpdateMessageData[] = [];
+
+  for (const extrinsic of extrinsics) {
     const {
       hash,
       args,
       method: { method },
     } = extrinsic;
 
-    const filteredEvents = filterEvents(hash, signedBlock, events, status).events!.filter(
+    const foundEvent = filterEvents(hash, signedBlock, events, status).events!.find(
       ({ event: { method } }) => method === Keys.MessageEnqueued,
     );
 
-    const eventData = filteredEvents[0].event.data as MessageEnqueuedData;
+    if (!foundEvent) {
+      console.log(`MessageEnquqed event related to ${method} extrinsic not found`);
+      console.log(args.map((arg) => arg.toHuman()));
+      continue;
+    }
+
+    const eventData = foundEvent.event.data as MessageEnqueuedData;
 
     const messageId = eventData.id.toHex();
     const [payload, value] = getUpdateMessageData(args, method);
 
-    return { messageId, payload, genesis, value } as UpdateMessageData;
-  });
+    result.push({ messageId, payload, genesis, value });
+  }
 
   return result;
 }
