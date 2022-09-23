@@ -1,4 +1,5 @@
 import { getServicesPartition } from './get-services-partition';
-import { getTopicsForPartition } from './get-topics-for-partition';
+import { sendServicePartition } from './send-service-partition';
+import { setServicePartition } from './set-service-partition';
 
-export { getServicesPartition, getTopicsForPartition };
+export { getServicesPartition, sendServicePartition, setServicePartition };
