@@ -2,7 +2,7 @@ import { memo, MouseEvent } from 'react';
 import { Link, generatePath } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 
-import { absoluteRoutes, AnimationTimeout } from 'shared/config';
+import { absoluteRoutes, AnimationTimeout, routes } from 'shared/config';
 import { IdBlock } from 'shared/ui/idBlock';
 import { BulbBlock } from 'shared/ui/bulbBlock';
 import { TimestampBlock } from 'shared/ui/timestampBlock';
@@ -49,7 +49,12 @@ const ProgramCard = memo(({ program, withSendMessage }: Props) => {
             onClick={stopPropagation}
           />
         </CSSTransition>
-        <ActionLink to="/" icon={readSVG} text="Read State" onClick={stopPropagation} />
+        <ActionLink
+          to={generatePath(routes.state, { programId })}
+          icon={readSVG}
+          text="Read State"
+          onClick={stopPropagation}
+        />
       </div>
       <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.cardLink} />
     </article>

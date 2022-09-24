@@ -5,7 +5,7 @@ import { Button } from '@gear-js/ui';
 
 import { useModal } from 'hooks';
 import { getShortName } from 'shared/helpers';
-import { absoluteRoutes, AnimationTimeout } from 'shared/config';
+import { absoluteRoutes, AnimationTimeout, routes } from 'shared/config';
 import { UILink } from 'shared/ui/uiLink';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 import readSVG from 'shared/assets/images/actions/read.svg';
@@ -43,7 +43,13 @@ const Header = ({ name, programId, isLoading }: Props) => {
           color="secondary"
           className={styles.fixWidth}
         />
-        <UILink to="/" icon={readSVG} text="Read State" color="secondary" className={styles.fixWidth} />
+        <UILink
+          to={generatePath(routes.state, { programId })}
+          icon={readSVG}
+          text="Read State"
+          color="secondary"
+          className={styles.fixWidth}
+        />
         <Button
           icon={addMetadataSVG}
           text="Add Metadata"

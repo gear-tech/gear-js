@@ -3,7 +3,7 @@ import { Link, generatePath } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import { TooltipWrapper } from '@gear-js/ui';
 
-import { absoluteRoutes, AnimationTimeout } from 'shared/config';
+import { absoluteRoutes, AnimationTimeout, routes } from 'shared/config';
 import sendSVG from 'shared/assets/images/actions/send.svg';
 import readSVG from 'shared/assets/images/actions/read.svg';
 import { IdBlock } from 'shared/ui/idBlock';
@@ -55,7 +55,12 @@ const HorizontalProgramCard = memo(({ program, withSendMessage }: Props) => {
             onClick={stopPropagation}
           />
         </CSSTransition>
-        <ActionLink to="/" icon={readSVG} text="Read State" onClick={stopPropagation} />
+        <ActionLink
+          to={generatePath(routes.state, { programId })}
+          icon={readSVG}
+          text="Read State"
+          onClick={stopPropagation}
+        />
       </div>
       <Link to={generatePath(absoluteRoutes.program, { programId })} className={styles.cardLink} />
     </article>

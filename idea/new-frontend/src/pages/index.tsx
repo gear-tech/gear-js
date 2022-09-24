@@ -12,6 +12,7 @@ import { NotFound } from './notFound';
 import { Send } from './send';
 import { Codes } from './codes';
 import { InitializeProgram } from './initializeProgram';
+import { State } from './state';
 
 const Routing = () => (
   <Routes>
@@ -37,6 +38,8 @@ const Routing = () => (
       <Route index element={<Codes />} />
       <Route path={routes.initializeProgram} element={<InitializeProgram />} />
     </Route>
+
+    <Route path={routes.state} element={<State />} />
 
     <Route path="*" element={<NotFound />} />
   </Routes>
