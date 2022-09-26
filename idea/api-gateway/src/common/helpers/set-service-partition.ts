@@ -4,14 +4,16 @@ import { KAFKA_TOPICS } from '@gear-js/common';
 import { servicesPartitionMap } from '../services-partition-map';
 
 export async function setServicePartition(message: KafkaMessage): Promise<void> {
-  const { partition, genesis } = JSON.parse(message.value.toString());
+  const value = JSON.parse(message.value.toString());
 
-  if(!partition && !genesis) return;
+  if(!('genesis' in value) || !('partition' in value)) return;
+
+  const partitionNum = Number(value.partition);
 
   const admin = initKafka.admin();
   const topicOffsets = await admin.fetchTopicOffsets(`${KAFKA_TOPICS.SERVICE_PARTITION_GET}.reply`);
 
-  const topicOffset = topicOffsets.find(topicData => topicData.partition === partition);
+  const topicOffset = topicOffsets.find(topicData => topicData.partition === partitionNum);
 
-  servicesPartitionMap.set(genesis, String(topicOffset.partition));
+  servicesPartitionMap.set(value.genesis, String(topicOffset.partition));
 }

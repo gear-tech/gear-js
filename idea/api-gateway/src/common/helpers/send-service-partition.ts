@@ -14,8 +14,8 @@ export async function sendServicePartition(message: KafkaMessage,topic: string):
     return;
   }
 
-  const partitionNewService = getNewServicePartition(topic);
+  const partitionNewService = await getNewServicePartition(topic);
 
-  await servicesPartitionMap.set(serviceGenesis, String(partitionNewService));
+  servicesPartitionMap.set(serviceGenesis, String(partitionNewService));
   await kafkaProducer.sendByTopic(KAFKA_TOPICS.SERVICE_PARTITION_GET, String(partitionNewService), correlationId);
 }
