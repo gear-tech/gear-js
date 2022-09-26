@@ -29,7 +29,6 @@ import { CodeService } from '../code/code.service';
 import { kafkaEventMap } from '../common/kafka-event.map';
 import { SERVICE_DATA } from '../common/service-data';
 import { ProducerService } from '../producer/producer.service';
-import { log } from 'util';
 
 @Injectable()
 export class ConsumerService {
