@@ -35,6 +35,6 @@ export class ProducerService {
     const res: Promise<any> = new Promise((resolve) => (topicEvent = resolve));
     kafkaEventMap.set(correlationId, topicEvent);
 
-    SERVICE_DATA.partition = await res;
+    SERVICE_DATA.partition = Number(await res);
   }
 }

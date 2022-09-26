@@ -44,6 +44,7 @@ export class GearEventListener {
       const unsub = await this.listener();
 
       await this.producerService.getPartitionServiceMessage();
+
       await new Promise((resolve) => {
         this.gearApi.on('error', (error) => {
           unsub();
