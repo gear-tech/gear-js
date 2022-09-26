@@ -1,0 +1,23 @@
+@use 'shared/assets/styles/_mixins.scss' as *;
+@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/_shared.scss' as *;
+
+.simpleBar {
+  @include customSimplebar;
+
+  height: calc($contentHeight - toRem(42.6) - $marginMedium);
+
+  :global(.simplebar-content) {
+    @include childrenMargin(24px);
+  }
+
+  &.noOverflow {
+    overflow: hidden;
+  }
+
+  &:not(.noOverflow) {
+    :global(.simplebar-content) {
+      margin-right: $margin;
+    }
+  }
+}

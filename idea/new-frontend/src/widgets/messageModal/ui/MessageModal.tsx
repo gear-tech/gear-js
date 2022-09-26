@@ -1,17 +1,17 @@
 import { Hex } from '@gear-js/api';
 import { Modal, Input, Button } from '@gear-js/ui';
 import { useForm } from '@mantine/form';
-import { isHex } from '@polkadot/util';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import { ModalProps } from 'entities/modal';
 import { absoluteRoutes } from 'shared/config';
+import { isHexValid } from 'shared/helpers';
 import { useIsProgramExists } from 'hooks';
 
 import styles from './MessageModal.module.scss';
 
 const initialValues = { programId: '' as Hex };
-const validate = { programId: (value: string) => (isHex(value) ? null : 'Value should be hex') };
+const validate = { programId: isHexValid };
 const initForm = { initialValues, validate };
 
 const MessageModal = ({ onClose }: ModalProps) => {

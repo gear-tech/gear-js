@@ -13,6 +13,7 @@ import { Send } from './send';
 import { Codes } from './codes';
 import { InitializeProgram } from './initializeProgram';
 import { State } from './state';
+import { Mailbox } from './mailbox';
 
 const Routing = () => (
   <Routes>
@@ -40,6 +41,7 @@ const Routing = () => (
     </Route>
 
     <Route path={routes.state} element={<State />} />
+    <Route path={routes.mailbox} element={<Mailbox />} />
 
     <Route path="*" element={<NotFound />} />
   </Routes>

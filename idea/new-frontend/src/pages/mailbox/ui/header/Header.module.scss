@@ -1,0 +1,17 @@
+@use '@gear-js/ui/headings' as *;
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.heading {
+  @extend %h4;
+}
+
+.form {
+  // TODO: get rid after @gear-js/ui update
+  width: 450px;
+  margin-left: auto;
+}

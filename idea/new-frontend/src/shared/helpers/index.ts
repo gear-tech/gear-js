@@ -7,6 +7,8 @@ import { Account, AlertContainerFactory } from '@gear-js/react-hooks';
 
 import { DEVELOPMENT_CHAIN, ACCOUNT_ERRORS, NODE_ADRESS_URL_PARAM, FileTypes, LocalStorage } from 'shared/config';
 
+import { isHexValid } from './form';
+
 const checkWallet = (account?: Account) => {
   if (!account) {
     throw new Error(ACCOUNT_ERRORS.WALLET_NOT_CONNECTED);
@@ -142,4 +144,5 @@ export {
   isHex,
   isDevChain,
   isNodeAddressValid,
+  isHexValid,
 };
