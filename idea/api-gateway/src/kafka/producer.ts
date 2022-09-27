@@ -4,6 +4,7 @@ import { Message } from 'kafkajs';
 import { initKafka } from './init-kafka';
 import { KafkaParams } from './types';
 import { transformToSting } from '../utils';
+import { servicesPartitionMap } from '../common/services-partition-map';
 
 const producer = initKafka.producer();
 
@@ -13,7 +14,7 @@ async function connect(): Promise<void> {
 
 async function sendByTopic(
   topic: API_METHODS | string,
-  params: KafkaParams | string,
+  params: KafkaParams,
   correlationId?: string): Promise<void> {
   await producer.send({
     topic,
@@ -21,8 +22,17 @@ async function sendByTopic(
   });
 }
 
-function createMessageBody(topic: string, params: KafkaParams | string, correlationId?: string): Message {
+function createMessageBody(topic: string, params: KafkaParams, correlationId?: string): Message {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  const sendMessagePartition = servicesPartitionMap.get(params.genesis);
   const result: Message = { value: transformToSting(params), headers: {} };
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  if(params.genesis && sendMessagePartition) {
+    result.partition = Number(sendMessagePartition);
+  }
 
   if (correlationId) {
     result.headers = {  kafka_correlationId: correlationId,   kafka_replyTopic: `${topic}.reply` };

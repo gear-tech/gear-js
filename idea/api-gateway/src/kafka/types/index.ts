@@ -25,4 +25,5 @@ export type KafkaParams =
   | GetTestBalanceParams
   | GetAllUserProgramsParams
   | GetAllProgramsResult
-  | ProgramDataResult;
+  | ProgramDataResult
+  | string

@@ -2304,12 +2304,13 @@ __metadata:
     "@nestjs/common": 8.4.7
     "@nestjs/config": 1.2.1
     "@nestjs/core": 8.4.7
+    "@nestjs/mapped-types": "*"
     "@nestjs/microservices": 8.4.7
     "@nestjs/platform-express": 8.4.7
     "@nestjs/schematics": 8.0.11
     "@nestjs/testing": 8.4.7
     "@nestjs/typeorm": 8.1.4
-    "@polkadot/api": ^9.3.3
+    "@polkadot/api": ^9.4.1
     "@types/express": 4.17.13
     "@types/jest": 27.5.2
     "@types/js-yaml": 4.0.5
@@ -2328,6 +2329,7 @@ __metadata:
     jest: 27.5.1
     js-yaml: 4.1.0
     kafkajs: 1.16.0
+    nanoid: ^3.0.0
     pg: 8.7.3
     prettier: 2.7.1
     reflect-metadata: 0.1.13
@@ -3978,17 +3980,17 @@ __metadata:
   linkType: hard
 
 "@multiformats/multiaddr-to-uri@npm:^9.0.1":
-  version: 9.0.1
-  resolution: "@multiformats/multiaddr-to-uri@npm:9.0.1"
+  version: 9.0.2
+  resolution: "@multiformats/multiaddr-to-uri@npm:9.0.2"
   dependencies:
-    "@multiformats/multiaddr": ^10.1.1
-  checksum: 3aaa63aad599490f3eaeec9ff60f19d4e0aa3a2d22fd5cfa17398d20d35910f7bb55efebeeb8ceae0fc1e1a89a097f249940076394ef0ea3f3d6fa20b58d5e54
+    "@multiformats/multiaddr": ^11.0.0
+  checksum: 99a86fb6385f5407669672a4fa8c2c8d6b480cfbfa013a6efb60475603f5b0c53e6c0ab3f35c2ef2629f3374df66d67d1148d697340ae85cee5035e83c336dee
   languageName: node
   linkType: hard
 
-"@multiformats/multiaddr@npm:^10.0.0, @multiformats/multiaddr@npm:^10.1.1, @multiformats/multiaddr@npm:^10.1.5":
-  version: 10.4.3
-  resolution: "@multiformats/multiaddr@npm:10.4.3"
+"@multiformats/multiaddr@npm:^10.0.0, @multiformats/multiaddr@npm:^10.1.5":
+  version: 10.5.0
+  resolution: "@multiformats/multiaddr@npm:10.5.0"
   dependencies:
     dns-over-http-resolver: ^2.1.0
     err-code: ^3.0.1
@@ -3996,7 +3998,21 @@ __metadata:
     multiformats: ^9.4.5
     uint8arrays: ^3.0.0
     varint: ^6.0.0
-  checksum: c6f3c54b7a1bcc5d032b323259a295128e424148646cbe2baabce84e904b84087f93ef643d7dabb44e471801ca2fa41f2b08593123031b8cbed98bcc45b1a92f
+  checksum: 9ed158df80ac3611f53b91d0de4a75a761bc749ae0026b303c4779a49fe680fd7d3626fa3ffaaa82e38a5f421f2b09af8a6d855a8465242107055fcb2a547678
+  languageName: node
+  linkType: hard
+
+"@multiformats/multiaddr@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "@multiformats/multiaddr@npm:11.0.0"
+  dependencies:
+    dns-over-http-resolver: ^2.1.0
+    err-code: ^3.0.1
+    is-ip: ^5.0.0
+    multiformats: ^9.4.5
+    uint8arrays: ^3.0.0
+    varint: ^6.0.0
+  checksum: 2f2650dd11fc2d732b1665ad819fc46ee8fbab9330243dc5096a85feacf1fb5cbe1c653676e24e7d17e7b6fa46c167b62c5087064c6a6539183987a8fd5b8431
   languageName: node
   linkType: hard
 
@@ -10001,7 +10017,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000844, caniuse-lite@npm:^1.0.30001399, caniuse-lite@npm:^1.0.30001400":
+"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000844, caniuse-lite@npm:^1.0.30001400":
+  version: 1.0.30001409
+  resolution: "caniuse-lite@npm:1.0.30001409"
+  checksum: d8581693491295ad8716db7ad6dccf74de970fc3ef4723b38bbc03b972862d363a9710c2a7582abcb741e1619164ddceca1df4dcf3d53d550e74829a9cb5ca82
+  languageName: node
+  linkType: hard
+
+"caniuse-lite@npm:^1.0.30001399":
   version: 1.0.30001406
   resolution: "caniuse-lite@npm:1.0.30001406"
   checksum: 1ae9701f0c58462f93add1236ed88f51ce3d7939f57afcde720763d1b18f78aa9afb0bfda620d47a32f5e14661e506037835e441ca4437cb821f4bba7bd7bcf8
@@ -14510,9 +14533,9 @@ __metadata:
   linkType: hard
 
 "idb@npm:^7.0.1":
-  version: 7.0.2
-  resolution: "idb@npm:7.0.2"
-  checksum: 60ebe6d5c25d9d82d400fa90e769045a9a3f44dfbc3094b105f8666f025d84f2a779e5416211572fc51f6057f8e130cb1bbfaa06cfd6f196701a8fca9f0eda17
+  version: 7.1.0
+  resolution: "idb@npm:7.1.0"
+  checksum: 1ae62bcf9f0545390b39ce82a5162720ffeb4cf461a6e64e8bb595df6a4fe94a7f73bba8412ac683e291e5614bab1c6659d961dd4175cb1fa3ee29c1c8631549
   languageName: node
   linkType: hard
 
@@ -18360,7 +18383,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:3.3.4, nanoid@npm:^3.0.2, nanoid@npm:^3.1.20, nanoid@npm:^3.1.23, nanoid@npm:^3.3.4":
+"nanoid@npm:3.3.4, nanoid@npm:^3.0.0, nanoid@npm:^3.0.2, nanoid@npm:^3.1.20, nanoid@npm:^3.1.23, nanoid@npm:^3.3.4":
   version: 3.3.4
   resolution: "nanoid@npm:3.3.4"
   bin:
@@ -18409,8 +18432,8 @@ __metadata:
   linkType: hard
 
 "nestjs-telegraf@npm:^2.6.0":
-  version: 2.6.1
-  resolution: "nestjs-telegraf@npm:2.6.1"
+  version: 2.6.2
+  resolution: "nestjs-telegraf@npm:2.6.2"
   dependencies:
     lodash: ^4.17.21
   peerDependencies:
@@ -18418,8 +18441,8 @@ __metadata:
     "@nestjs/core": ^8.0.0 || ^9.0.0
     reflect-metadata: ^0.1.13
     telegraf: ^4.0.0
-    typescript: <=4.4.4
-  checksum: f61fc2277f718a384f13f6d705cefee342bce7bbf01ffcd3d68b4f9e7bcdb7bf7fefaa251b8172883d4c1c210af98c08567dfd0ab9b20e2c5d4c670b743cbf3b
+    typescript: ^4.1.2
+  checksum: 9161cb0c7b404b18eaa8733fe4c1aad8232bbab3d9cd1d1647409bacf7caac74d422a24cf4f9734a7db3b147b5a164ef80ededaac38240c2cdbd312e24b06587
   languageName: node
   linkType: hard
 
