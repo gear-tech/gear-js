@@ -16,13 +16,6 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
 
-jobs:
-  wait-previous-run:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: mktcode/consecutive-workflow-action@v1 # please read security note
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   wait-previous-run:
@@ -139,8 +132,8 @@ jobs:
       - name: Prepare&Run Tests
         working-directory: idea/tests
         env:
-          #API_ENDPOINT: ${{ secrets.API_ADDRESS_URL_TEST }}
-          #WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_TEST }}
+          #API_ENDPOINT: ${{ secrets.API_ADDRESS_URL_NEW_BE }}
+          #WS_PROVIDER: ${{ secrets.WS_PROVIDER_URL_NEW_BE }}
           TEST_ENV: ${{ secrets.TEST_ENV }}
         run: |
           YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
