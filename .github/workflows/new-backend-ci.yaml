@@ -25,7 +25,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-  build-data-storage-image-staging:
+  build-data-storage-image:
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
     environment: staging
@@ -51,7 +51,7 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:new
 
-  build-api-gateway-image-staging:
+  build-api-gateway-image:
     runs-on: ubuntu-latest
     needs: [wait-previous-run]
     environment: staging
@@ -115,7 +115,6 @@ jobs:
           args: rollout status deployment data-storage -n $KUBE_NAMESPACE --timeout=120s
 
   run-e2e-tests:
-    if: github.event.pull_request.draft == false
     needs: [purge-k8s-test-env, wait-previous-run]
     runs-on: ubuntu-latest
     environment: dev
