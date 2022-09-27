@@ -80,8 +80,8 @@ jobs:
   purge-k8s-test-env:
     needs:
       [
-        build-and-push-data-storage-image,
-        build-and-push-api-gateway-image,
+        build-data-storage-image,
+        build-api-gateway-image,
         wait-previous-run,
       ]
     runs-on: ubuntu-latest
