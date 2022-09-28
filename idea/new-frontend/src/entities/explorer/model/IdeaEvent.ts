@@ -12,14 +12,14 @@ class IdeaEvent extends GenericEvent {
     super(event.registry, event.toU8a());
 
     this._id = `${hash}-${generateRandomId()}`;
-    this._caption = `${section}.${method}`;
+    this._heading = `${section}.${method}`;
     this._description = String(docs.toHuman());
     this._blockNumber = blockNumber ? String(blockNumber.toHuman()) : undefined;
   }
 
   private _id: string;
 
-  private _caption: string;
+  private _heading: string;
 
   private _description: string;
 
@@ -29,8 +29,8 @@ class IdeaEvent extends GenericEvent {
     return this._id;
   }
 
-  get caption() {
-    return this._caption;
+  get heading() {
+    return this._heading;
   }
 
   get description() {

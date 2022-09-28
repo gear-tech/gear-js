@@ -1,7 +1,6 @@
 import { useMemo, ReactNode } from 'react';
 import { Metadata, createPayloadTypeStructure, decodeHexTypes } from '@gear-js/api';
 
-import { getPreformattedText } from 'shared/helpers';
 import { Table, ExpandedTableRow } from 'shared/ui/table';
 import { PreformattedBlock } from 'shared/ui/preformattedBlock';
 
@@ -22,7 +21,7 @@ const MetadataTable = ({ metadata }: Props) => {
 
           items.push(
             <ExpandedTableRow key={key} name={key} value={value}>
-              <PreformattedBlock text={getPreformattedText(type)} />
+              <PreformattedBlock text={type} />
             </ExpandedTableRow>,
           );
         }

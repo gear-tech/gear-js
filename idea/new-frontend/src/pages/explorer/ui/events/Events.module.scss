@@ -7,7 +7,7 @@
   height: calc($contentHeight - toRem(42.6) - $marginMedium);
 
   :global(.simplebar-content) {
-    @include childrenMargin(24px);
+    @include childrenMargin(16px);
   }
 
   &.noOverflow {

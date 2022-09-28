@@ -1,9 +1,11 @@
-@use 'shared/assets/styles/_shared.scss' as *;
-@use 'shared/assets/styles/_variables.scss' as *;
+@use 'shared/assets/styles/shared' as *;
+@use 'shared/assets/styles/variables' as *;
+@use 'shared/assets/styles/mixins' as *;
 
-.preformattedBlock {
+.simpleBar {
+  @include customSimplebar;
   padding: toRem(16) toRem(24);
-  box-shadow: inset 0px 1px 0px $gray150;
-  background-color: $gray002;
-  border-radius: 16px;
+  color: $borderColor2;
+  background-color: $gray003;
+  border-radius: $borderRadius;
 }

@@ -11,29 +11,29 @@ $contentHeight: calc(100vh - $footerHeight - $headerHeight);
 
 $textColor: #fff;
 $textColorSecondary: #858585;
-$textColorTertiary: #D1D1D1;
+$textColorTertiary: #d1d1d1;
 
-$blue: #1852FF;
-$indigo: #6E7CA9;
+$blue: #1852ff;
+$indigo: #6e7ca9;
 $oceanBlue: #3975e9;
-$lightGray:  #EBECF2;
+$lightGray: #ebecf2;
 
 $errorColor: #f24a4a;
 $successColor: #2bd071;
 
-$bgColor: #18181B;
+$bgColor: #18181b;
 $bgColorSecondary: #202022;
 $bgColorTertiary: #414141;
 $bgColor4: #222225;
-$bgColor5: #2B2B2E;
+$bgColor5: #2b2b2e;
 $bgColor6: #242529;
-$bgColor7:  rgba(217, 217, 217, 0.05);
+$bgColor7: rgba(217, 217, 217, 0.05);
 
 $lineColor: #333333;
 $lineColorSecondary: #e2e6ea1a;
 
 $borderColor: #3a3d4d;
-$borderColor2: #898b94;;
+$borderColor2: #898b94;
 
 $indigo800: rgba($indigo, 0.8);
 $indigo700: rgba($indigo, 0.7);
@@ -50,6 +50,7 @@ $gray009: rgba($textColor, 0.09);
 $gray007: rgba($textColor, 0.07);
 $gray005: rgba($textColor, 0.05);
 $gray004: rgba($textColor, 0.04);
+$gray003: rgba($textColor, 0.03);
 $gray002: rgba($textColor, 0.02);
 
 $green300: rgba($successColor, 0.3);
@@ -85,7 +86,7 @@ $fontSizeTiny: toRem(10);
 $borderRadius: 16px;
 $borderRadiusMedium: 20px;
 
-// animation 
+// animation
 
 $delay: 50ms;
 $smallTimeout: 150ms;
@@ -93,7 +94,7 @@ $timeout: 250ms;
 $mediumTimeout: 400ms;
 $bigTimeout: 1000ms;
 
-// margin 
+// margin
 
 $marginTiny: 4px;
 $marginSmall: 8px;

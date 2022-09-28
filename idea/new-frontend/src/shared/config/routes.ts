@@ -20,6 +20,7 @@ const routes = {
   sendMessage: 'message/:programId',
   reply: 'reply/:messageId',
   meta: '/meta/:programId',
+  block: ':blockId',
 };
 
 const absoluteRoutes = {
@@ -31,6 +32,7 @@ const absoluteRoutes = {
   message: `${routes.messages}/${routes.message}`,
   sendMessage: `${routes.send}/${routes.sendMessage}`,
   reply: `${routes.send}/${routes.reply}`,
+  block: `${routes.explorer}/${routes.block}`,
 };
 
 export { routes, absoluteRoutes };
