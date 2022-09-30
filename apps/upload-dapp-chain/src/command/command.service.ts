@@ -50,7 +50,9 @@ export class CommandService {
       };
 
       const data = this.gearApi.program.upload(program, meta);
-      const status = checkInitProgram(this.gearApi, data.programId);
+      const status = checkInitProgram(this.gearApi, data.programId)
+        .catch(error => console.error("___CHECK_INIT_PROGRAM_ERROR___", error));
+
       await sendTransaction(data.extrinsic, account, "MessageEnqueued");
 
       await status;
