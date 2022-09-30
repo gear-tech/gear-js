@@ -9,7 +9,7 @@ pub unsafe extern "C" fn init() {
 
 #[gstd::async_main]
 async fn main() {
-    let _response = msg::send_bytes_with_gas_for_reply(msg::source(), b"PING", 1000000, 0)
+    let _response = msg::send_bytes_for_reply(msg::source(), b"PING", 0)
         .expect("")
         .await
         .expect("Error in async");
