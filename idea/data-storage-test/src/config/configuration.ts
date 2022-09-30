@@ -34,7 +34,7 @@ export default () => ({
     },
   },
   healthcheck: {
-    port: Number(process.env.HEALTHCHECK_PORT || '3001'),
+    port: Number(process.env.HEALTHCHECK_PORT || '3010'),
   },
   gear: {
     wsProvider: checkEnv('GEAR_WS_PROVIDER', 'ws://127.0.0.1:9944'),

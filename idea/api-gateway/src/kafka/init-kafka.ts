@@ -9,11 +9,11 @@ const initKafka: Kafka = new Kafka({
   clientId: configKafka.clientId,
   brokers: configKafka.brokers,
   logCreator: kafkaLogger,
-  sasl: {
-    mechanism: 'plain',
-    username: configKafka.sasl.username,
-    password: configKafka.sasl.password,
-  },
+  // sasl: {
+  //   mechanism: 'plain',
+  //   username: configKafka.sasl.username,
+  //   password: configKafka.sasl.password,
+  // },
 });
 
 export { initKafka };

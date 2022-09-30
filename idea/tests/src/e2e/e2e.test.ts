@@ -2,8 +2,8 @@ import { GearApi, Hex } from '@gear-js/api';
 import { waitReady } from '@polkadot/wasm-crypto';
 
 import { checkInitStatus, getAllPrograms, getMeta, getProgramData, uploadMeta } from './programs';
-import { processPrepare } from '../prepare';
-import { IPrepared, IPreparedProgram } from '../interfaces';
+import { processPrepare, processPrepareVara } from '../prepare';
+import { IPrepared, IPreparedProgram, IPreparedVara } from '../interfaces';
 import { sleep } from '../utils';
 import { getAllMessages, getMessageData, getMessagePayload } from './messages';
 import { getTestBalance, testBalanceAvailable } from './testBalance';
@@ -13,6 +13,10 @@ import base from '../config/base';
 let genesis: Hex;
 let prepared: IPrepared;
 let api: GearApi;
+
+let preparedVARA: IPreparedVara;
+let genesisVARA: Hex;
+let apiVARA: GearApi;
 
 jest.setTimeout(30_000);
 
@@ -102,5 +106,31 @@ describe('testBalance', () => {
   });
   test('testBalance.available request', async () => {
     expect(await testBalanceAvailable(genesis)).toBeTruthy();
+  });
+});
+
+
+beforeAll(async () => {
+  apiVARA = await GearApi.create({ providerAddress: base.gear.wsProviderVara });
+  genesisVARA = apiVARA.genesisHash.toHex();
+  await waitReady();
+  try {
+    preparedVARA = await processPrepareVara(apiVARA);
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
+});
+
+afterAll(async () => {
+  await apiVARA.disconnect();
+  await sleep();
+});
+
+describe('program methods __VARA_NODE__', () => {
+  test('program.data method', async () => {
+    for (const id_ of Object.keys(preparedVARA.programs)) {
+      expect(await getProgramData(genesisVARA, id_)).toBeTruthy();
+    }
   });
 });
