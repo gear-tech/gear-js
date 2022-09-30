@@ -1,11 +1,11 @@
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Balance } from '@polkadot/types/interfaces';
-import { web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
+import { isWeb3Injected, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp';
 import { UnsubscribePromise } from '@polkadot/api/types';
 import { useState, createContext, useContext, useEffect } from 'react';
 import { Account, ProviderProps } from 'types';
 import { LOCAL_STORAGE } from 'consts';
-import { getBalance, getAccount, isLoggedIn } from 'utils';
+import { getBalance, getAccount, isLoggedIn, getAccounts } from 'utils';
 import { ApiContext } from './Api';
 import { AlertContext } from './Alert';
 
@@ -13,7 +13,6 @@ type Value = {
   account: Account | undefined;
   accounts: InjectedAccountWithMeta[] | undefined;
   switchAccount: (account: InjectedAccountWithMeta) => Promise<string | void>;
-  updateBalance: (balance: Balance) => void;
   logout: () => void;
   isAccountReady: boolean;
 };
@@ -54,10 +53,21 @@ function AccountProvider({ children }: ProviderProps) {
   useEffect(() => {
     if (isApiReady)
       web3Enable('Gear App')
-        .then(() => web3AccountsSubscribe(setAccounts))
+        .then(getAccounts)
+        .then(setAccounts)
         .catch(handleError)
         .finally(() => setIsExtensionReady(true));
   }, [isApiReady]);
+
+  useEffect(() => {
+    let unsub: UnsubscribePromise | undefined;
+
+    if (isWeb3Injected && isExtensionReady) web3AccountsSubscribe((accs) => setAccounts(accs));
+
+    return () => {
+      unsub?.then((unsubCallback) => unsubCallback());
+    };
+  }, [isWeb3Injected, isExtensionReady]);
 
   useEffect(() => {
     if (isExtensionReady) {
@@ -86,7 +96,7 @@ function AccountProvider({ children }: ProviderProps) {
   }, [api, address]);
 
   const { Provider } = AccountContext;
-  const value = { account, accounts, switchAccount, updateBalance, logout, isAccountReady };
+  const value = { account, accounts, switchAccount, logout, isAccountReady };
 
   return <Provider value={value}>{children}</Provider>;
 }

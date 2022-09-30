@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useApi, useLoggedInAccount } from '@gear-js/react-hooks';
+import { useAccount, useApi } from '@gear-js/react-hooks';
 
 import './App.scss';
 import 'yup-extended';
 import { AppRoutes } from './children/AppRoutes';
 
-import { useAccountSubscriptions } from 'hooks';
+import { useEventSubscriptions } from 'hooks';
 import { withProviders } from 'context';
 import { NODE_API_ADDRESS } from 'context/api/const';
 import { NODE_ADRESS_URL_PARAM, LOCAL_STORAGE } from 'consts';
@@ -24,9 +24,9 @@ const Component = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { isLoginReady } = useLoggedInAccount();
+  const { isAccountReady } = useAccount();
 
-  useAccountSubscriptions();
+  useEventSubscriptions();
 
   useEffect(() => {
     const urlNodeAddress = searchParams.get(NODE_ADRESS_URL_PARAM);
@@ -45,7 +45,7 @@ const Component = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApiReady]);
 
-  const isInitLoaded = isApiReady && isLoginReady;
+  const isInitLoaded = isApiReady && isAccountReady;
 
   return (
     <>

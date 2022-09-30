@@ -1,14 +1,15 @@
 import { useReadState, useSendMessage } from '@gear-js/react-hooks';
-import { useMemo } from 'react';
-import auctionMetaWasm from 'assets/wasm/dutch_auction.meta.wasm';
-import nftMetaWasm from 'assets/wasm/nft.meta.wasm';
-import { ADDRESS } from 'consts';
-import { AuctionState, NFTState } from 'types';
 import { Hex } from '@gear-js/api';
+import { useMemo } from 'react';
+import { AuctionState, NFTState } from 'types';
+import { useWasm } from './context';
 
 function useAuction() {
+  const { auction } = useWasm();
+  const { programId, metaBuffer } = auction;
+
   const payload = useMemo(() => ({ Info: null }), []);
-  const { state } = useReadState<AuctionState>(ADDRESS.AUCTION_CONTRACT, auctionMetaWasm, payload);
+  const { state } = useReadState<AuctionState>(programId, metaBuffer, payload);
 
   return state?.Info;
 }
@@ -16,18 +17,27 @@ function useAuction() {
 function useNft(address: Hex | undefined, tokenId: string | undefined) {
   const isAddress = !address?.startsWith('0x00');
 
+  const { nft } = useWasm();
+  const { metaBuffer } = nft;
+
   const payload = useMemo(() => ({ Token: { tokenId } }), [tokenId]);
-  const { state, isStateRead } = useReadState<NFTState>(isAddress ? address : undefined, nftMetaWasm, payload);
+  const { state, isStateRead } = useReadState<NFTState>(isAddress ? address : undefined, metaBuffer, payload);
 
   return { nft: state?.Token.token, isNftStateRead: isStateRead };
 }
 
 function useAuctionMessage() {
-  return useSendMessage(ADDRESS.AUCTION_CONTRACT, auctionMetaWasm);
+  const { auction } = useWasm();
+  const { programId, meta } = auction;
+
+  return useSendMessage(programId, meta);
 }
 
 function useNftMessage(address: Hex) {
-  return useSendMessage(address, nftMetaWasm);
+  const { nft } = useWasm();
+  const { meta } = nft;
+
+  return useSendMessage(address, meta);
 }
 
 export { useAuction, useNft, useAuctionMessage, useNftMessage };

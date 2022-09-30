@@ -6,10 +6,10 @@ import { transferEventsHandler, messageSentEventsHandler } from './helpers';
 
 import { Method } from 'types/explorer';
 
-const useAccountSubscriptions = () => {
+const useEventSubscriptions = () => {
   const alert = useAlert();
   const { api, isApiReady } = useApi();
-  const { account, updateBalance } = useAccount();
+  const { account } = useAccount();
 
   const { address, decodedAddress } = account || {};
 
@@ -21,7 +21,6 @@ const useAccountSubscriptions = () => {
     const unsubs: UnsubscribePromise[] = [];
 
     unsubs.push(
-      api.gearEvents.subscribeToBalanceChange(address, updateBalance),
       api.gearEvents.subscribeToGearEvent(Method.UserMessageSent, (event) =>
         messageSentEventsHandler(event, decodedAddress, alert)
       ),
@@ -39,4 +38,4 @@ const useAccountSubscriptions = () => {
   }, [decodedAddress, address, isApiReady]);
 };
 
-export { useAccountSubscriptions };
+export { useEventSubscriptions };

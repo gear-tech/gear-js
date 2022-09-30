@@ -7,6 +7,7 @@ type BaseInputProps = {
   color?: 'light' | 'dark';
   error?: ReactNode;
   tooltip?: string;
+  block?: boolean;
 };
 
 type XDirectionProps = BaseInputProps & { label?: string; direction?: 'x'; gap?: Gap };

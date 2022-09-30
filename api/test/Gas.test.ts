@@ -96,7 +96,7 @@ describe('Calculate gas', () => {
     const tx = api.message.send({
       destination: programId,
       payload: '0x50494e47',
-      gasLimit: (gasLimits.handle as u64).muln(1.5),
+      gasLimit: (gasLimits.handle as u64).muln(2),
       value: 1000,
     });
     const waitForReply = listenToUserMessageSent(api, programId);

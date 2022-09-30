@@ -1,13 +1,14 @@
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { Modal } from '@gear-js/ui';
+import { useAccount } from '@gear-js/react-hooks';
 import { Accounts } from '../accounts';
 
 type Props = {
-  accounts: InjectedAccountWithMeta[] | undefined;
   close: () => void;
 };
 
-function AccountsModal({ accounts, close }: Props) {
+function AccountsModal({ close }: Props) {
+  const { accounts } = useAccount();
+
   return (
     <Modal heading="Connect" close={close}>
       {accounts ? (

@@ -1,3 +1,11 @@
+## 0.25.7
+_09/17/2022_
+
+https://github.com/gear-tech/gear-js/pull/996
+### Changes
+
+- Add Exited variant to Program enum
+
 ## 0.25.6
 _09/13/2022_
 

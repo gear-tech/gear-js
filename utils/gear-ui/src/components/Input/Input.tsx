@@ -21,6 +21,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     gap,
     tooltip,
     type,
+    block,
     size = 'normal',
     color = 'dark',
     direction = 'x',
@@ -37,6 +38,7 @@ const Input = forwardRef((props: Props, forwardedRef: ForwardedRef<HTMLInputElem
     styles[size],
     styles[color],
     error && styles.error,
+    block && styles.block,
   );
   const inputClassName = clsx(styles.input, styles[color]);
 

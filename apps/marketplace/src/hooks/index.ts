@@ -1,4 +1,4 @@
-import { useIPFS } from './context';
+import { useIPFS, useWasm } from './context';
 import { useNft, useOwnersNft, useNftMessage } from './nft';
 import {
   useMarketplaceState,
@@ -11,6 +11,7 @@ import { useMergedNFTs, useMergedOwnerNFTs } from './merge-nft';
 
 export {
   useIPFS,
+  useWasm,
   useNft,
   useOwnersNft,
   useNftMessage,

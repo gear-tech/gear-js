@@ -123,6 +123,7 @@ jobs:
             REACT_APP_MARKETPLACE_NFT_CONTRACT_ADDRESS=${{ secrets.REACT_APP_MARKETPLACE_NFT_CONTRACT_ADDRESS }}
             REACT_APP_MARKETPLACE_CONTRACT_ADDRESS=${{ secrets.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS }}
             REACT_APP_IPFS_GATEWAY_ADDRESS=${{ secrets.REACT_APP_IPFS_GATEWAY_ADDRESS }}
+            REACT_APP_DAPPS_API_ADDRESS=${{ secrets.REACT_APP_DAPPS_API_ADDRESS}}
 
   build-and-push-nft-image:
     runs-on: ubuntu-latest
@@ -154,6 +155,7 @@ jobs:
             REACT_APP_IPFS_ADDRESS=${{ secrets.REACT_APP_IPFS_ADDRESS }}
             REACT_APP_NFT_CONTRACT_ADDRESS=${{ secrets.REACT_APP_NFT_CONTRACT_ADDRESS }}
             REACT_APP_IPFS_GATEWAY_ADDRESS=${{ secrets.REACT_APP_IPFS_GATEWAY_ADDRESS }}
+            REACT_APP_DAPPS_API_ADDRESS=${{ secrets.REACT_APP_DAPPS_API_ADDRESS}}
 
 
   build-and-push-lottery-image:
@@ -184,6 +186,7 @@ jobs:
           build-args: |
             REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             REACT_APP_LOTTERY_CONTRACT_ADDRESS=${{ secrets.REACT_APP_LOTTERY_CONTRACT_ADDRESS }}
+            REACT_APP_DAPPS_API_ADDRESS=${{ secrets.REACT_APP_DAPPS_API_ADDRESS}}
 
   build-and-push-escrow-image:
     runs-on: ubuntu-latest
@@ -212,6 +215,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-escrow:prod
           build-args: |
             REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_DAPPS_API_ADDRESS=${{ secrets.REACT_APP_DAPPS_API_ADDRESS}}
 
   build-and-push-supply-chain-image:
     runs-on: ubuntu-latest
@@ -240,6 +244,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-supply-chain:prod
           build-args: |
             REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_DAPPS_API_ADDRESS=${{ secrets.REACT_APP_DAPPS_API_ADDRESS}}
 
 
   build-and-push-auction-image:
@@ -274,6 +279,7 @@ jobs:
             REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             REACT_APP_IPFS_GATEWAY_ADDRESS=${{ secrets.REACT_APP_IPFS_GATEWAY_ADDRESS }}
             REACT_APP_AUCTION_CONTRACT_ADDRESS=${{ secrets.REACT_APP_AUCTION_CONTRACT_ADDRESS }}
+            REACT_APP_DAPPS_API_ADDRESS=${{ secrets.REACT_APP_DAPPS_API_ADDRESS}}
 
   build-and-push-staking-image:
     runs-on: ubuntu-latest
@@ -307,6 +313,7 @@ jobs:
             REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
             REACT_APP_FTOKEN_CONTRACT_ADDRESS=${{ secrets.REACT_APP_FTOKEN_CONTRACT_ADDRESS }}
             REACT_APP_STAKING_CONTRACT_ADDRESS=${{ secrets.REACT_APP_STAKING_CONTRACT_ADDRESS }}
+            REACT_APP_DAPPS_API_ADDRESS=${{ secrets.REACT_APP_DAPPS_API_ADDRESS}}
 
 
   build-and-push-upload-image:
