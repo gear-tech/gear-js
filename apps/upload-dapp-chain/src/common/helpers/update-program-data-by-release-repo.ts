@@ -6,8 +6,7 @@ import * as yaml from "js-yaml";
 import "dotenv/config";
 
 import { getLatestReleaseByRepo } from "./get-latest-release-by-repo";
-import { WorkflowYamlData } from "../types";
-import { Asset } from "../types/asset";
+import { WorkflowYamlData, Asset } from "../types";
 
 function getOptAndMetaDownloadUrl(dapp: string, repoAssets: Asset[]): string[] {
   const res = [];
