@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
+import { HttpModule } from "@nestjs/axios";
 import baseConfig from "./configs/base.config";
 
 import { DappDataModule } from "./dapp-data/dapp-data.module";
@@ -10,6 +11,7 @@ import { User } from "./user/entities/user.entity";
 import { TgbotModule } from "./tgbot/tgbot.module";
 import { UserModule } from "./user/user.module";
 import { CommandModule } from "./command/command.module";
+import { TasksModule } from "./tasks/tasks.module";
 
 const entities = [DappData, User];
 
@@ -35,10 +37,24 @@ const entities = [DappData, User];
       }),
       inject: [ConfigService],
     }),
+    HttpModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        headers: {
+          "Content-Type": "application/json",
+          Accept: configService.get<string>("github.GITHUB_API_ACCEPT"),
+          Authorization: `token ${configService.get<string>(
+            "github.GITHUB_ACCESS_TOKEN",
+          )}`,
+        },
+      }),
+      inject: [ConfigService],
+    }),
     TypeOrmModule.forFeature(entities),
     TgbotModule,
     UserModule,
     CommandModule,
+    TasksModule,
   ],
   controllers: [],
   providers: [],
