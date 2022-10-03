@@ -211,38 +211,38 @@ jobs:
           INITIAL_VERSION: '1.0.0'
           WITH_IDEA: true
 
-#  build-frontend-image-prod:
-#    runs-on: ubuntu-latest
-#    if: contains(github.event.head_commit.message, 'idea-release')
-#    needs: [tag-prod-version]
-#    environment: production
-#    permissions:
-#      contents: read
-#      packages: write
+  build-frontend-image-prod:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'idea-release')
+    needs: [tag-prod-version]
+    environment: production
+    permissions:
+      contents: read
+      packages: write
 
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-#      - name: Log in to the github container registry
-#        uses: docker/login-action@master
-#        with:
-#          registry: ${{ env.REGISTRY }}
-#          username: ${{ github.actor }}
-#          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Build and push Frontend Docker image
-#        uses: docker/build-push-action@master
-#        with:
-#          context: idea/frontend
-#          push: true
-#          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:prod
-#          build-args: |
-#            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
-#            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
-#            REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
-#            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
-#            REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
+      - name: Build and push Frontend Docker image
+        uses: docker/build-push-action@master
+        with:
+          context: idea/frontend
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:prod
+          build-args: |
+            REACT_APP_NODE_ADDRESS=${{ secrets.REACT_APP_NODE_ADDRESS }}
+            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
+            REACT_APP_WASM_COMPILER_URL=${{ secrets.REACT_APP_WASM_COMPILER_URL }}
+            REACT_APP_DEFAULT_NODES_URL=${{ secrets.REACT_APP_DEFAULT_NODES_URL }}
+            REACT_APP_HCAPTCHA_SITE_KEY=${{ secrets.REACT_APP_HCAPTCHA_SITE_KEY }}
 
 #  build-data-storage-image-prod:
 #    runs-on: ubuntu-latest
@@ -270,31 +270,31 @@ jobs:
 #          push: true
 #          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-data-storage:prod
 
-#  build-api-gateway-image-prod:
-#    runs-on: ubuntu-latest
-#    if: contains(github.event.head_commit.message, 'idea-release')
-#    needs: [tag-prod-version]
-#    permissions:
-#      contents: read
-#      packages: write
+  build-api-gateway-image-prod:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'idea-release')
+    needs: [tag-prod-version]
+    permissions:
+      contents: read
+      packages: write
 
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-#      - name: Log in to the github container registry
-#        uses: docker/login-action@master
-#        with:
-#          registry: ${{ env.REGISTRY }}
-#          username: ${{ github.actor }}
-#          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to the github container registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-#     - name: Build and push Api Gateway Docker image
-#        uses: docker/build-push-action@master
-#        with:
-#          file: idea/api-gateway/Dockerfile
-#          push: true
-#          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:prod
+     - name: Build and push Api Gateway Docker image
+        uses: docker/build-push-action@master
+        with:
+          file: idea/api-gateway/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api-gateway:prod
 
   build-event-listeners-image-prod:
     runs-on: ubuntu-latest
@@ -353,6 +353,9 @@ jobs:
       [
         build-event-listeners-image-prod,
         build-test-balance-image-prod,
+        build-api-gateway-image-prod,
+        build-frontend-image-prod
+        
       ]
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'idea-release')
@@ -369,7 +372,7 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
 #          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node test-balance-testnet-node events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
-          args: rollout restart deployment events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
+          args: rollout restart deployment api-gateway frontend-nginx  events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
           
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
