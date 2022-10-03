@@ -17,6 +17,8 @@ type Props = {
   value: IdeaEvent | IdeaEvent[];
 };
 
+// TODO: use ExpansionPanel?
+
 const Event = ({ value }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen((prevValue) => !prevValue);
@@ -52,9 +54,11 @@ const Event = ({ value }: Props) => {
           </div>
           {counter && counter > 1 && <span className={styles.counter}>{`x${counter}`}</span>}
         </div>
-        <Link to={generatePath(absoluteRoutes.block, { blockId })} className={styles.blockNumber}>
-          {blockNumber}
-        </Link>
+        {blockId && (
+          <Link to={generatePath(absoluteRoutes.block, { blockId })} className={styles.blockNumber}>
+            {blockNumber}
+          </Link>
+        )}
       </header>
       {isOpen && <div className={styles.body}>{getBody()}</div>}
     </div>

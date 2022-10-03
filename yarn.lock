@@ -3731,6 +3731,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mantine/form@npm:^5.4.0":
+  version: 5.4.0
+  resolution: "@mantine/form@npm:5.4.0"
+  dependencies:
+    fast-deep-equal: ^3.1.3
+    klona: ^2.0.5
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 2baee93b0a7182969a56b888fe889ce664a9ef96d3f33caabfd2985c997de3bace62592fcf1275ee4c51408a0a05a5bdd0db5e2507db6ea955f1b65cf8952ec8
+  languageName: node
+  linkType: hard
+
 "@monaco-editor/loader@npm:^1.3.0":
   version: 1.3.2
   resolution: "@monaco-editor/loader@npm:1.3.2"
@@ -18455,6 +18467,7 @@ __metadata:
     "@gear-js/react-hooks": ^0.3.2
     "@gear-js/ui": ^0.5.6
     "@hcaptcha/react-hcaptcha": ^1.4.4
+    "@mantine/form": ^5.4.0
     "@polkadot/api": ^9.3.3
     "@polkadot/extension-dapp": ^0.43.3
     "@polkadot/react-identicon": ^2.9.6

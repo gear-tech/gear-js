@@ -1,14 +1,67 @@
 @use '@gear-js/ui/headings' as *;
-@use 'shared/assets/styles/variables' as *;
+@use '@gear-js/ui/variables' as *;
+@use 'shared/assets/styles/variables' as shared;
 
 .explorer {
   display: grid;
   grid-template-columns: 7fr 3fr;
-  gap: 12px 32px;
+  gap: 32px;
 }
 
 .heading {
   @extend %h4;
-  color: $gray800;
+  color: shared.$gray800;
   align-self: center;
+}
+
+//
+
+.header,
+.row {
+  padding: 0 10px;
+  display: grid;
+
+  > * {
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.header {
+  font-weight: 600;
+  text-transform: uppercase;
+
+  > * {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+.row {
+  font-weight: 500;
+  color: #898b94;
+
+  > * {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  &:nth-child(even) {
+    background-color: #2b2b2e;
+  }
+
+  &:nth-child(odd) {
+    background-color: #222225;
+  }
+}
+
+.body {
+  border-radius: $borderRadius;
+  overflow: hidden;
+}
+
+.alignRight {
+  text-align: right;
 }

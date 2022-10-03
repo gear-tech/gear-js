@@ -1,0 +1,21 @@
+@use '@gear-js/ui/variables' as *;
+
+.layout {
+  grid-template-columns: 1fr repeat(4, 2fr);
+}
+
+.number {
+  white-space: nowrap;
+
+  > *:first-child {
+    margin-right: 10px;
+  }
+}
+
+.link {
+  color: $textColor;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

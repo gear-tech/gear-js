@@ -6,13 +6,18 @@
 
 .event {
   @include childrenMargin(16px);
+
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
 }
 
 .header {
   display: grid;
-  grid-template-columns: 8.5fr 1.5fr;
+  grid-template-columns: 8.5fr auto;
   background-color: shared.$bgColor4;
   border-radius: shared.$borderRadius;
+  overflow: hidden;
 }
 
 .innerHeader {
@@ -72,6 +77,7 @@
 
 .blockNumber {
   @include transition;
+  padding: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
