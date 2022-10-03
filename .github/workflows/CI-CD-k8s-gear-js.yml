@@ -315,7 +315,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Events Listener Docker image
+      - name: Build and push Events Listeners Docker image
         uses: docker/build-push-action@master
         with:
           file: idea/events-listener/Dockerfile
@@ -372,7 +372,7 @@ jobs:
         uses: sergeyfilyanin/kubectl-aws-eks@master
         with:
 #          args: rollout restart deployment api-gateway data-storage frontend-nginx test-balance-workshop-node test-balance-testnet-node events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
-          args: rollout restart deployment api-gateway frontend-nginx  events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
+          args: rollout restart deployment api-gateway frontend-nginx events-listener-workshop-node events-listener-rpc-testnet events-listener-vara-testnet -n prod-gear-js
           
       - name: Check k8s deployments
         uses: sergeyfilyanin/kubectl-aws-eks@master
