@@ -2203,14 +2203,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:0.25.6, @gear-js/api@npm:^0.25.6":
-  version: 0.25.6
-  resolution: "@gear-js/api@npm:0.25.6"
+"@gear-js/api@npm:0.25.8":
+  version: 0.25.8
+  resolution: "@gear-js/api@npm:0.25.8"
   peerDependencies:
     "@polkadot/api": ^9.3.3
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
-  checksum: 9c340fd021587c5d87d9b9f63922737ec1fe7f19f4ae20576ea98206d18147502ca754e7db973ecaa164e0ab98e25490e509f5845cf18caff41aca274143fa1e
+  checksum: 8ed56d5705dc80441bd5a480e48377b54f018e26b90931cabf837a64e96f0544827c7f180e7b5cec3c1b189e6c7b2201fafb764e2041c0eb4320592c12e8ae5f
   languageName: node
   linkType: hard
 
@@ -2222,6 +2222,17 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.3.1
     rxjs: ^7.5.5
   checksum: 53f2b9759bf3fe3559961bcb38381b5d502694514776026d722b5aa3194a048c261f5796e45ca504bed3e374a71dee4e89d980fd9ef4256edf5abe38b4b92c34
+  languageName: node
+  linkType: hard
+
+"@gear-js/api@npm:^0.25.6":
+  version: 0.25.6
+  resolution: "@gear-js/api@npm:0.25.6"
+  peerDependencies:
+    "@polkadot/api": ^9.3.3
+    "@polkadot/wasm-crypto": ^6.3.1
+    rxjs: ^7.5.5
+  checksum: 9c340fd021587c5d87d9b9f63922737ec1fe7f19f4ae20576ea98206d18147502ca754e7db973ecaa164e0ab98e25490e509f5845cf18caff41aca274143fa1e
   languageName: node
   linkType: hard
 
@@ -2424,8 +2435,8 @@ __metadata:
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
     "@craco/craco": 6.4.3
-    "@gear-js/api": 0.25.6
-    "@gear-js/react-hooks": ^0.3.2
+    "@gear-js/api": 0.25.8
+    "@gear-js/react-hooks": ^0.3.3
     "@gear-js/ui": 0.4.0
     "@hcaptcha/react-hcaptcha": 1.2.0
     "@monaco-editor/react": 4.4.2
@@ -2651,6 +2662,19 @@ __metadata:
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
   checksum: c668efe52d10ba7617b7607684477c3d76103af3c5302653f2134c4526c426b94110feda3e7dd6f9efaa1a93a5af0f3f06472d41025a73bd41bcfd9c8484aa49
+  languageName: node
+  linkType: hard
+
+"@gear-js/react-hooks@npm:^0.3.3":
+  version: 0.3.3
+  resolution: "@gear-js/react-hooks@npm:0.3.3"
+  peerDependencies:
+    "@gear-js/api": ^0.25.8
+    "@polkadot/extension-dapp": ^0.43.2
+    react: ">=17.0.2"
+    react-dom: ">=17.0.2"
+    react-transition-group: ^4.4.2
+  checksum: 3bf9b8b082979d95d7c3e712e409365f110bf00f9da071502ab14ff0d212b6338339afb81953613b20f999df4268a365250388972d5c8f4caf12f287f5fb7db4
   languageName: node
   linkType: hard
 
