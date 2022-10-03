@@ -28,7 +28,10 @@
     "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
+    "@gear-js/api": "^0.25.8",
     "@polkadot/api": "^9.3.3",
+    "@polkadot/extension-dapp": "^0.44.6",
+    "@polkadot/extension-inject": "^0.44.6",
     "@polkadot/types": "^9.3.3",
     "@polkadot/util": "^10.1.6",
     "@rollup/plugin-commonjs": "^22.0.0",
