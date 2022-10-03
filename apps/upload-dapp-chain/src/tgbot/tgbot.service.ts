@@ -67,9 +67,11 @@ export class TgbotService {
     try {
       const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
 
+      console.log("________>dapps", dapps);
+
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_____________________uploadDapps_____________________");
+      this.logger.error("_________UPLOAD_DAPPS_ERROR_________");
       console.log(error);
     }
   }
@@ -104,9 +106,11 @@ export class TgbotService {
     try {
       const dapps = await this.dappDataService.createDappsData(uploadedPrograms);
 
+      console.log("________>", dapps);
+
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_____________________uploadDapp_____________________");
+      this.logger.error("_________UPLOAD_DAPP_ERROR_________");
       console.log(error);
     }
   }
@@ -144,7 +148,7 @@ export class TgbotService {
 
       return dapps.map(dapp => ({ ...dapp, metaWasmBase64: "long", optWasmBase64: "long" }));
     } catch (error) {
-      this.logger.error("_____________________uploadCode_____________________");
+      this.logger.error("_________UPLOAD_CODE_ERROR_________");
       console.log(error);
     }
   }
@@ -178,7 +182,7 @@ export class TgbotService {
         return this.commandService.uploadCode(uploadProgramData);
       }
     } catch (error) {
-      this.logger.error("_____________________handleCommand_____________________");
+      this.logger.error("_________HANDLE_COMMAND_________");
       console.log(error);
     }
   }
