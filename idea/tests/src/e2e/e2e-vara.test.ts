@@ -6,7 +6,6 @@ import { processPrepare } from '../prepare';
 import { IPrepared, IPreparedProgram } from '../interfaces';
 import { sleep } from '../utils';
 import { getAllMessages, getMessageData, getMessagePayload } from './messages';
-import { getTestBalance, testBalanceAvailable } from './testBalance';
 import { getCodeData, getListCode } from './code';
 import base from '../config/base';
 
@@ -17,7 +16,7 @@ let api: GearApi;
 jest.setTimeout(30_000);
 
 beforeAll(async () => {
-  api = await GearApi.create({ providerAddress: base.gear.wsProvider });
+  api = await GearApi.create({ providerAddress: base.gear.wsProviderVara });
   genesis = api.genesisHash.toHex();
   await waitReady();
   try {
@@ -33,7 +32,7 @@ afterAll(async () => {
   await sleep();
 });
 
-describe('program methods', () => {
+describe('VARA_NODE program methods', () => {
   test('program.all request', async () => {
     expect(await getAllPrograms(genesis, Object.keys(prepared.programs) as Hex[])).toBeTruthy();
   });
@@ -64,7 +63,7 @@ describe('program methods', () => {
   });
 });
 
-describe('message methods', () => {
+describe('VARA_NODE message methods', () => {
   test('message.all request', async () => {
     const messages = Array.from(prepared.messages.log.keys()).concat(
       Array.from(prepared.messages.sent.values()).map(({ id }) => id),
@@ -83,7 +82,7 @@ describe('message methods', () => {
   });
 });
 
-describe('code methods', () => {
+describe('VARA_NODE code methods', () => {
   test('code.all request', async () => {
     const codeIds = Array.from(prepared.collectionCode.keys());
     expect(await getListCode(genesis, codeIds)).toBeTruthy();
@@ -93,14 +92,5 @@ describe('code methods', () => {
     const codeIndex = 0;
     const codeId = Array.from(prepared.collectionCode.keys())[codeIndex];
     expect(await getCodeData(genesis, codeId)).toBeTruthy();
-  });
-});
-
-describe('testBalance', () => {
-  test('testBalance.get request', async () => {
-    expect(await getTestBalance(genesis)).toBeTruthy();
-  });
-  test('testBalance.available request', async () => {
-    expect(await testBalanceAvailable(genesis)).toBeTruthy();
   });
 });

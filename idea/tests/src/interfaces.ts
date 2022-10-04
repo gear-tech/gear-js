@@ -66,10 +66,6 @@ interface IPrepared {
   collectionCode: IPreparedCollectionCode;
 }
 
-interface IPreparedVara {
-  programs: IPreparedPrograms;
-}
-
 export type Passed = boolean;
 
 export {
@@ -82,5 +78,4 @@ export {
   IPreparedMessages,
   IPrepared,
   IPreparedCollectionCode,
-  IPreparedVara,
 };
