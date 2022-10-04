@@ -92,16 +92,12 @@ export class ConsumerService {
   async servicesPartition(): Promise<void> {
     const params = { partition: SERVICE_DATA.partition, genesis: SERVICE_DATA.genesis };
 
-    console.log('____________>servicesPartition', params);
-
     await this.producerService.sendByTopic(KAFKA_TOPICS.SERVICES_PARTITION, params);
   }
 
   async servicePartitionGet(params: Message): Result<void> {
     const correlationId = params.headers.kafka_correlationId.toString();
     const resultFromService = kafkaEventMap.get(correlationId);
-
-    console.log('__________>servicePartitionGet', resultFromService);
 
     if (resultFromService) await resultFromService(JSON.parse(params.value.toString()));
     kafkaEventMap.delete(correlationId);

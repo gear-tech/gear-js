@@ -13,14 +13,14 @@ export class Code extends BaseEntity {
   @Column()
     name: string;
 
-  @Column({ type: 'enum', enum: CodeStatus, nullable: true, default: null })
+  @Column({ type: 'enum', enum: CodeStatus,  })
     status: CodeStatus;
 
   @Column({ nullable: true })
     expiration: number;
 
   @OneToOne(() => Meta, (meta) => meta.code)
-  @JoinColumn({ name: 'mata_id' })
+  @JoinColumn({ name: 'meta_id' })
     meta: Meta;
 
   @OneToMany(() => Program, (program) => program.code)

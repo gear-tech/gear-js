@@ -56,7 +56,7 @@ export class CodeService {
     try {
       return this.codeRepository.save(updateCodes);
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error('_________UPDATE_CODES_ERROR_________');
       console.log(error);
     }
   }

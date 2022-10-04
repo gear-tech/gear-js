@@ -11,7 +11,7 @@ import { CodeService } from '../code/code.service';
 import { getPayloadByGearEvent, getUpdateMessageData } from '../common/helpers';
 import { HandleExtrinsicsDataInput } from './types';
 import { Code, Message, Program } from '../database/entities';
-import { CodeStatus, MessageEntryPoing, MessageType, ProgramStatus } from '../common/enums';
+import { CodeStatus, MessageEntryPoint, MessageType, ProgramStatus } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
 import { UpdateCodeInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
@@ -66,10 +66,8 @@ export class GearEventListener {
 
       const chain = await this.gearApi.chain();
       const genesis = this.gearApi.genesisHash.toHex();
-      const version = this.gearApi.runtimeVersion.specVersion.toHuman();
 
-      console.log('_________CONNECTION_NODE_DATA_________');
-      console.log(`CHAIN --- ${chain}\n GENESIS --- ${genesis}\n VERSION --- ${version}`);
+      this.logger.log(`⚙️ Connected to ${chain} with genesis ${genesis}`);
 
       SERVICE_DATA.genesis = genesis;
 
@@ -116,7 +114,7 @@ export class GearEventListener {
         } catch (error) {
           console.error(error);
           this.logger.warn({ method, data: data.toHuman() });
-          this.logger.error('--------------END_ERROR--------------');
+          this.logger.error('_________END_ERROR_________');
         }
       }
     });
@@ -155,9 +153,8 @@ export class GearEventListener {
     try {
       method in eventsMethod && (await eventsMethod[method]());
     } catch (error) {
-      console.log('______________HANDLE_EVENTS_ERROR______________');
+      this.logger.error('_________HANDLE_EVENTS_ERROR_________');
       console.log(error);
-      this.logger.error(error);
     }
   }
 
@@ -186,8 +183,8 @@ export class GearEventListener {
           id: eventData.id.toHex(),
           destination: eventData.destination.toHex(),
           source: eventData.source.toHex(),
-          entry: eventData.entry.isInit ? MessageEntryPoing.INIT : eventData.entry.isHandle
-            ? MessageEntryPoing.HANDLE : MessageEntryPoing.REPLY,
+          entry: eventData.entry.isInit ? MessageEntryPoint.INIT : eventData.entry.isHandle
+            ? MessageEntryPoint.HANDLE : MessageEntryPoint.REPLY,
           payload,
           value,
           timestamp: new Date(timestamp),
@@ -201,7 +198,8 @@ export class GearEventListener {
       try {
         if (createMessagesDBType.length >= 1) await this.messageService.createMessages(createMessagesDBType);
       } catch (error) {
-        this.logger.error(error);
+        this.logger.error('_________HANDLE_EXTRINSICS_ERROR_________');
+        console.log(error);
       }
     }
   }
@@ -227,8 +225,8 @@ export class GearEventListener {
           const codeId = await this.gearApi.program.codeHash(destination.toHex());
           code = await this.codeRepository.get(codeId);
         } catch (error) {
-          console.log('_______________CODE_NOT_EXISTED_ERROR______________');
-          console.log('_______________CODE_DESTINATION>', destination.toHex());
+          console.log('_________CODE_NOT_EXISTED_ERROR_________');
+          console.log('_________CODE_DESTINATION>', destination.toHex());
           code = null;
         }
 
@@ -248,7 +246,7 @@ export class GearEventListener {
     try {
       return this.programService.createPrograms(createProgramsInput);
     } catch (error) {
-      console.log('______________CREATE_PROGRAMS_ERROR______________');
+      this.logger.error('_________CREATE_PROGRAMS_ERROR_________');
       console.log(error);
     }
 
@@ -286,8 +284,7 @@ export class GearEventListener {
     try {
       return this.codeService.updateCodes(updateCodesInput);
     } catch (error){
-      console.log('______________CREATE_CODES_ERROR______________');
-      this.logger.error(error);
+      this.logger.error('_________CREATE_CODES_ERROR__________');
       console.log(error);
     }
   }

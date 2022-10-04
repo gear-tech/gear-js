@@ -3,7 +3,7 @@ import { IMessage } from '@gear-js/common';
 
 import { BaseEntity } from './base.entity';
 import { Program } from './program.entity';
-import { MessageEntryPoing, MessageType, MessageReadReason } from '../../common/enums';
+import { MessageEntryPoint, MessageType, MessageReadReason } from '../../common/enums';
 
 @Entity()
 export class Message extends BaseEntity implements IMessage {
@@ -28,13 +28,13 @@ export class Message extends BaseEntity implements IMessage {
     exitCode: number;
 
   @Column({ nullable: true })
-    replyToMessageId: string;1;
+    replyToMessageId: string;
 
   @Column({ nullable: true })
     processedWithPanic: boolean;
 
-  @Column({ type: 'enum', enum: MessageEntryPoing, nullable: true, default: null })
-    entry: MessageEntryPoing;
+  @Column({ type: 'enum', enum: MessageEntryPoint, nullable: true, default: null })
+    entry: MessageEntryPoint;
 
   @Column({ nullable: true })
     expiration: number;

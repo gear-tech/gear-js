@@ -12,7 +12,7 @@ import { ProgramService } from '../program/program.service';
 import { MessageNotFound } from '../common/errors';
 import { sleep } from '../utils/sleep';
 import { MessageRepo } from './message.repo';
-import { MessageEntryPoing, MessageReadReason, ProgramStatus } from '../common/enums';
+import { MessageEntryPoint, MessageReadReason, ProgramStatus } from '../common/enums';
 import { MessageDispatchedDataInput } from './types/message-dispatched-data.input';
 
 @Injectable()
@@ -60,7 +60,7 @@ export class MessageService {
 
       if (statuses[messageId] === 'Failed') {
         const message = await this.messageRepository.get(messageId);
-        if (message.entry === MessageEntryPoing.INIT) {
+        if (message.entry === MessageEntryPoint.INIT) {
           await this.programService.setStatus(message.destination, genesis, ProgramStatus.INIT_FAILED);
         }
       }
