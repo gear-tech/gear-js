@@ -39,8 +39,6 @@ async function getNewServicePartition (topic: string): Promise<number> {
 
     return partitionNewService;
   }
-
-  return 1;
 }
 
 export { servicesPartitionMap, getNewServicePartition };
