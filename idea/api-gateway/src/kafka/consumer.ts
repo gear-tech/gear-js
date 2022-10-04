@@ -16,10 +16,7 @@ async function connect(): Promise<void> {
 }
 async function run(): Promise<void> {
   await consumer.run({
-    eachMessage: async ({ message, topic, partition }) => {
-      console.log('___________> topic', topic);
-      console.log('___________> message', message);
-      console.log('___________> partition', partition);
+    eachMessage: async ({ message, topic }) => {
       try {
         await messageProcessing(message, topic);
       } catch (error){
