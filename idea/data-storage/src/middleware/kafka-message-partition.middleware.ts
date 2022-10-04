@@ -1,7 +1,7 @@
 import { SERVICE_DATA } from '../common/service-data';
 import { Message } from 'kafkajs';
 
-export function ValidateKafkaEventPartition(
+export function KafkaMessagePartition(
   target: unknown,
   propertyKey: string,
   descriptor: TypedPropertyDescriptor<any> ) {

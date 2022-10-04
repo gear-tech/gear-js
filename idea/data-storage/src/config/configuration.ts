@@ -20,11 +20,9 @@ export default () => ({
     password: checkEnv('DB_PASSWORD'),
     name: checkEnv('DB_NAME'),
   },
-  redis: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: Number(process.env.REDIS_PORT || '6379'),
-  },
   kafka: {
+    consumerName: checkEnv('KAFKA_CONSUMER_REGISTER_NAME'),
+    producerName: checkEnv('KAFKA_PRODUCER_REGISTER_NAME'),
     clientId: checkEnv('KAFKA_CLIENT_ID'),
     groupId: checkEnv('KAFKA_GROUP_ID'),
     brokers: checkEnv('KAFKA_BROKERS').split(','),

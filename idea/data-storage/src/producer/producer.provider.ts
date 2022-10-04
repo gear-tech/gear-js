@@ -6,7 +6,7 @@ import configuration from '../config/configuration';
 const configKafka = configuration().kafka;
 
 export const KafkaProducerProvider = {
-  provide: 'DATA_STORAGE_KAFKA_PRODUCER',
+  provide: configKafka.producerName,
   useFactory: (): Promise<Producer> => {
     const kafkaClient = ClientProxyFactory.create({
       transport: Transport.KAFKA,
@@ -14,11 +14,11 @@ export const KafkaProducerProvider = {
         client: {
           clientId: configKafka.clientId,
           brokers: configKafka.brokers,
-          // sasl: {
-          //   mechanism: 'plain',
-          //   username: configKafka.sasl.username,
-          //   password: configKafka.sasl.password,
-          // },
+          sasl: {
+            mechanism: 'plain',
+            username: configKafka.sasl.username,
+            password: configKafka.sasl.password,
+          },
         },
         producer: {
           allowAutoTopicCreation: true,

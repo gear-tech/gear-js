@@ -5,13 +5,16 @@ import { KAFKA_TOPICS } from '@gear-js/common';
 
 import { kafkaEventMap } from '../common/kafka-event.map';
 import { SERVICE_DATA } from '../common/service-data';
+import configuration from '../config/configuration';
+
+const configKafka = configuration().kafka;
 
 @Injectable()
 export class ProducerService {
-  constructor(@Inject('DATA_STORAGE_KAFKA_PRODUCER') private kafkaProducer: Producer) {}
+  constructor(@Inject(configKafka.producerName) private kafkaProducer: Producer) {}
 
   public async sendByTopic(topic: string, params: any): Promise<void> {
-    const message: Message = { value: JSON.stringify(params) };
+    const message: Message = { value: JSON.stringify(params), partition: SERVICE_DATA.partition };
 
     await this.kafkaProducer.send({
       topic:  `${KAFKA_TOPICS.SERVICES_PARTITION}.reply`,
@@ -19,7 +22,7 @@ export class ProducerService {
     });
   }
 
-  public async getPartitionServiceMessage(): Promise<void> {
+  public async getKafkaPartitionService(): Promise<void> {
     const correlationId = nanoid();
 
     const message: Message = { value: JSON.stringify(SERVICE_DATA.genesis), headers: {

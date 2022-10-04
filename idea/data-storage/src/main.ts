@@ -31,11 +31,11 @@ async function bootstrap() {
         clientId: kafka.clientId,
         brokers: kafka.brokers,
         logCreator: kafkaLogger,
-        // sasl: {
-        //   mechanism: 'plain',
-        //   username: kafka.sasl.username,
-        //   password: kafka.sasl.password,
-        // },
+        sasl: {
+          mechanism: 'plain',
+          username: kafka.sasl.username,
+          password: kafka.sasl.password,
+        },
       },
       consumer: {
         groupId: kafka.groupId,

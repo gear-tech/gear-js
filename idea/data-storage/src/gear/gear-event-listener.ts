@@ -43,7 +43,7 @@ export class GearEventListener {
       await this.connectGearNode();
       const unsub = await this.listener();
 
-      await this.producerService.getPartitionServiceMessage();
+      await this.producerService.getKafkaPartitionService();
 
       await new Promise((resolve) => {
         this.gearApi.on('error', (error) => {

@@ -11,22 +11,23 @@ import { CodeModule } from '../code/code.module';
 import { ProducerModule } from '../producer/producer.module';
 
 const configKafka = configuration().kafka;
+
 @Module({
   imports: [
     ProducerModule,
     ClientsModule.register([
       {
-        name: 'DATA_STORAGE',
+        name: configKafka.consumerName,
         transport: Transport.KAFKA,
         options: {
           client: {
             clientId: configKafka.clientId,
             brokers: configKafka.brokers,
-            // sasl: {
-            //   mechanism: 'plain',
-            //   username: configKafka.sasl.username,
-            //   password: configKafka.sasl.password,
-            // },
+            sasl: {
+              mechanism: 'plain',
+              username: configKafka.sasl.username,
+              password: configKafka.sasl.password,
+            },
           },
           consumer: {
             groupId: configKafka.groupId,

@@ -1,8 +1,11 @@
 import { Inject, Module } from '@nestjs/common';
+import { Producer } from 'kafkajs';
 
 import { ProducerService } from './producer.service';
+import configuration from '../config/configuration';
 import { KafkaProducerProvider } from './producer.provider';
-import { Producer } from 'kafkajs';
+
+const configKafka = configuration().kafka;
 
 @Module({
   imports: [],
@@ -11,5 +14,5 @@ import { Producer } from 'kafkajs';
   exports: [ProducerService]
 })
 export class ProducerModule{
-  constructor(@Inject('DATA_STORAGE_KAFKA_PRODUCER') private kafkaProducer: Producer) {}
+  constructor(@Inject(configKafka.producerName) private kafkaProducer: Producer) {}
 }

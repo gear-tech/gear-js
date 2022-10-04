@@ -16,73 +16,73 @@ import {
 import { Message } from 'kafkajs';
 
 import { ConsumerService } from './consumer.service';
-import { ValidateKafkaEventPartition } from '../middleware/validate-kafka-event-partition.middleware';
+import { KafkaMessagePartition } from '../middleware/kafka-message-partition.middleware';
 
 @Controller()
 export class ConsumerController {
   constructor(private consumerService: ConsumerService) {}
 
   @MessagePattern(KAFKA_TOPICS.PROGRAM_DATA)
-  @ValidateKafkaEventPartition
+  @KafkaMessagePartition
   async programData(@Payload() payload: KafkaPayload<FindProgramParams>): Promise<string> {
     const result = await this.consumerService.programData(payload.value);
-    return JSON.stringify(result);
+    return JSON.stringify({ ...result, partition: payload.partition });
   }
 
   @MessagePattern(KAFKA_TOPICS.PROGRAM_ALL)
-  @ValidateKafkaEventPartition
+  @KafkaMessagePartition
   async allPrograms(@Payload() payload: KafkaPayload<GetAllProgramsParams>): Promise<string> {
     const result = await this.consumerService.allPrograms(payload.value);
-    return JSON.stringify(result);
+    return JSON.stringify({ ...result, partition: payload.partition });
   }
 
   @MessagePattern(KAFKA_TOPICS.PROGRAM_ALL_USER)
-  @ValidateKafkaEventPartition
+  @KafkaMessagePartition
   async allUserPrograms(@Payload() payload: KafkaPayload<GetAllUserProgramsParams>): Promise<string> {
     const result = await this.consumerService.allUserPrograms(payload.value);
-    return JSON.stringify(result);
+    return JSON.stringify({ ...result, partition: payload.partition });
   }
 
   @MessagePattern(KAFKA_TOPICS.PROGRAM_META_ADD)
-  @ValidateKafkaEventPartition
+  @KafkaMessagePartition
   async addMeta(@Payload() payload: KafkaPayload<AddMetaParams>): Promise<string> {
     const result = await this.consumerService.addMeta(payload.value);
-    return JSON.stringify(result);
+    return JSON.stringify({ ...result, partition: payload.partition });
   }
 
   @MessagePattern(KAFKA_TOPICS.PROGRAM_META_GET)
-  @ValidateKafkaEventPartition
+  @KafkaMessagePartition
   async getMeta(@Payload() payload: KafkaPayload<GetMetaParams>): Promise<string> {
     const result = await this.consumerService.getMeta(payload.value);
-    return JSON.stringify(result);
+    return JSON.stringify({ ...result, partition: payload.partition });
   }
 
   @MessagePattern(KAFKA_TOPICS.MESSAGE_ALL)
-  @ValidateKafkaEventPartition
+  @KafkaMessagePartition
   async allMessages(@Payload() payload: KafkaPayload<GetMessagesParams>): Promise<string> {
     const result = await this.consumerService.allMessages(payload.value);
-    return JSON.stringify(result);
+    return JSON.stringify({ ...result, partition: payload.partition });
   }
 
   @MessagePattern(KAFKA_TOPICS.MESSAGE_DATA)
-  @ValidateKafkaEventPartition
+  @KafkaMessagePartition
   async messageData(@Payload() payload: KafkaPayload<FindMessageParams>): Promise<string> {
     const result = await this.consumerService.message(payload.value);
-    return JSON.stringify(result);
+    return JSON.stringify({ ...result, partition: payload.partition });
   }
 
   @MessagePattern(KAFKA_TOPICS.CODE_DATA)
-  @ValidateKafkaEventPartition
+  @KafkaMessagePartition
   async codeData(@Payload() payload: KafkaPayload<GetCodeParams>): Promise<string> {
     const result = await this.consumerService.code(payload.value);
-    return JSON.stringify(result);
+    return JSON.stringify({ ...result, partition: payload.partition });
   }
 
   @MessagePattern(KAFKA_TOPICS.CODE_ALL)
-  @ValidateKafkaEventPartition
+  @KafkaMessagePartition
   async allCode(@Payload() payload: KafkaPayload<GetAllCodeParams>): Promise<string> {
     const result = await this.consumerService.allCode(payload.value);
-    return JSON.stringify(result);
+    return JSON.stringify({ ...result, partition: payload.partition });
   }
 
   @MessagePattern(KAFKA_TOPICS.SERVICE_PARTITION_GET)
