@@ -34,7 +34,7 @@ const useCodeUpload = () => {
 
       if (method === Method.ExtrinsicFailed) {
         alert.error(getExtrinsicFailedMessage(api, event), alertOptions);
-      } else if (method === Method.CodeSaved) {
+      } else if (method === Method.CodeChanged) {
         alert.success(<CopiedInfo title="Code hash" info={codeHash} />, alertOptions);
       }
     });

@@ -1,5 +1,4 @@
 import { ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import clsx from 'clsx';
@@ -16,27 +15,21 @@ import { DropTarget } from './dropTarget';
 
 type Props = ModalProps & {
   name: string;
-  redirectTo: string;
+  onUpload: (file: File) => void;
 };
 
-const UploadFileModal = ({ name, redirectTo, onClose }: Props) => {
+const UploadFileModal = ({ name, onClose, onUpload }: Props) => {
   const alert = useAlert();
-  const navigate = useNavigate();
 
-  const handleUploadFile = (file?: File) => {
+  const handleUploadFile = (file: File | undefined) => {
     try {
-      if (!file) {
-        throw new Error('Empty file!');
-      }
+      if (!file) throw new Error('Empty file!');
+      if (!checkFileFormat(file)) throw new Error('Wrong file format');
 
-      if (!checkFileFormat(file)) {
-        throw new Error('Wrong file format');
-      }
-
-      navigate(redirectTo, { state: { file } });
+      onUpload(file);
       onClose();
     } catch (error) {
-      const message = (error as Error).message;
+      const { message } = error as Error;
 
       alert.error(message);
     }

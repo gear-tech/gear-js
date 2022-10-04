@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { CSSTransition } from 'react-transition-group';
-import { generatePath } from 'react-router-dom';
+import { generatePath, useNavigate } from 'react-router-dom';
 import { Button } from '@gear-js/ui';
 
 import { useModal } from 'hooks';
@@ -21,12 +21,10 @@ type Props = {
 
 const Header = ({ name, programId, isLoading }: Props) => {
   const { showModal } = useModal();
+  const navigate = useNavigate();
 
-  const showMetadataModal = () =>
-    showModal('uploadFile', {
-      name: 'metadata',
-      redirectTo: '/',
-    });
+  const onMetadataUpload = (file: File) => navigate('/', { state: { file } });
+  const showMetadataModal = () => showModal('uploadFile', { name: 'metadata', onUpload: onMetadataUpload });
 
   return (
     <section className={clsx(styles.header, isLoading && styles.loading)}>

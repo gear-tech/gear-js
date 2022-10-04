@@ -4,7 +4,7 @@ enum Section {
 
 enum Method {
   Transfer = 'Transfer',
-  CodeSaved = 'CodeSaved',
+  CodeChanged = 'CodeChanged',
   ProgramChanged = 'ProgramChanged',
   UserMessageSent = 'UserMessageSent',
   UserMessageRead = 'UserMessageRead',
