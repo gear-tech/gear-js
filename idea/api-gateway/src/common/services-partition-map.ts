@@ -13,8 +13,7 @@ async function getNewServicePartition (topic: string): Promise<number> {
     return acc + topicData.partition;
   }, 1 as number);
 
-  for(const servicePartition of servicesPartitionMap){
-    const [_, partition] = servicePartition;
+  for(const [_, partition] of servicesPartitionMap){
     const numPartition = Number(partition);
 
     sumPartitionsInApiGatewayService += numPartition;

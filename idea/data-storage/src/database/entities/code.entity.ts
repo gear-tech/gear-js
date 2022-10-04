@@ -13,7 +13,7 @@ export class Code extends BaseEntity {
   @Column()
     name: string;
 
-  @Column({ type: 'enum', enum: CodeStatus,  })
+  @Column({ type: 'enum', enum: CodeStatus })
     status: CodeStatus;
 
   @Column({ nullable: true })
