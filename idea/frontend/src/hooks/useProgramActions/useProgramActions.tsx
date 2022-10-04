@@ -6,7 +6,7 @@ import { Hex } from '@gear-js/api';
 import { useApi, useAccount, useAlert, DEFAULT_ERROR_OPTIONS, DEFAULT_SUCCESS_OPTIONS } from '@gear-js/react-hooks';
 
 import { useModal } from '../index';
-import { useMetadataUplaod } from '../useMetadataUpload';
+import { useMetadataUpload } from '../useMetadataUpload';
 import { ALERT_OPTIONS } from './consts';
 import { waitForProgramInit } from './helpers';
 import { Payload, ParamsToCreate, ParamsToUpload, ParamsToSignAndUpload } from './types';
@@ -26,7 +26,7 @@ const useProgramActions = () => {
   const { account } = useAccount();
 
   const { showModal } = useModal();
-  const uploadMetadata = useMetadataUplaod();
+  const uploadMetadata = useMetadataUpload();
 
   const getProgramMessage = (programId: string) => (
     <p>

@@ -52,7 +52,7 @@ const UploadForm = ({ droppedFile, onReset }: Props) => {
   );
 
   return (
-    <FormWrapper header="Uplaod new program">
+    <FormWrapper header="Upload new program">
       <ProgramForm
         name={droppedFile.name}
         label="File"

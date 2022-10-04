@@ -7,7 +7,7 @@ import { Button } from '@gear-js/ui';
 import { Schema } from './Shema';
 import { FormValues } from './types';
 
-import { useMetadataUplaod } from 'hooks';
+import { useMetadataUpload } from 'hooks';
 import { FormInput, formStyles } from 'components/common/Form';
 import { UploadMeta, UploadData } from 'components/blocks/UploadMeta';
 
@@ -19,7 +19,7 @@ type Props = {
 const UploadMetaForm = ({ programId, programName }: Props) => {
   const alert = useAlert();
 
-  const uploadMetadata = useMetadataUplaod();
+  const uploadMetadata = useMetadataUpload();
 
   const [metadata, setMetadata] = useState<Metadata>();
   const [metadataBuffer, setMetadataBuffer] = useState<string>();
