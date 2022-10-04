@@ -8,7 +8,7 @@ export async function setServicePartition(message: KafkaMessage): Promise<void> 
 
   if(!('genesis' in value) || !('partition' in value)) return;
 
-  if(!value.genesis || !value.partition) return;
+  if(!value.genesis) return;
 
   const partitionNum = Number(value.partition);
 
