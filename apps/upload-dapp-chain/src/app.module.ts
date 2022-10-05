@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { ScheduleModule } from "@nestjs/schedule";
 
 import { HttpModule } from "@nestjs/axios";
 import baseConfig from "./configs/base.config";
@@ -8,7 +9,8 @@ import baseConfig from "./configs/base.config";
 import { DappDataModule } from "./dapp-data/dapp-data.module";
 import { DappData } from "./dapp-data/entities/dapp-data.entity";
 import { User } from "./user/entities/user.entity";
-import { TgbotModule } from "./tgbot/tgbot.module";
+import { BotModule } from "./bot/bot.module";
+
 import { UserModule } from "./user/user.module";
 import { CommandModule } from "./command/command.module";
 import { TasksModule } from "./tasks/tasks.module";
@@ -17,6 +19,7 @@ const entities = [DappData, User];
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     DappDataModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -51,7 +54,7 @@ const entities = [DappData, User];
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature(entities),
-    TgbotModule,
+    BotModule,
     UserModule,
     CommandModule,
     TasksModule,

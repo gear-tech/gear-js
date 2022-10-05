@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TelegrafModule } from "nestjs-telegraf";
 
-import { TgbotService } from "./tgbot.service";
+import { BotService } from "./bot.service";
 import { DappDataModule } from "../dapp-data/dapp-data.module";
 import { UserModule } from "../user/user.module";
-import { TgbotController } from "./tgbot.controller";
+import { BotController } from "./bot.controller";
 import { CommandModule } from "../command/command.module";
 
 @Module({
@@ -22,7 +22,7 @@ import { CommandModule } from "../command/command.module";
     }),
   ],
   controllers: [],
-  providers: [TgbotService, TgbotController],
+  providers: [BotService, BotController],
   exports: [],
 })
-export class TgbotModule {}
+export class BotModule {}

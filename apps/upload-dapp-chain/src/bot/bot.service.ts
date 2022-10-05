@@ -5,7 +5,7 @@ import { DappDataService } from "../dapp-data/dapp-data.service";
 import { Role, TBErrorMessage } from "../common/enums";
 import { UserService } from "../user/user.service";
 import { UserRepo } from "../user/user.repo";
-import { getTgCommands } from "../common/helpers";
+import { getTgCommands, updateProgramDataByReleaseRepo } from "../common/helpers";
 import { getWorkflowCommands } from "../common/helpers/get-workflow-commands";
 import { SendMessageInput, UploadProgramResult } from "../command/types";
 import { getUploadProgramData } from "../common/helpers/get-upload-program-data";
@@ -14,8 +14,8 @@ import { FlowCommand, Payload } from "../common/types";
 import { getUploadProgramByName } from "../common/helpers/get-upload-program-by-name";
 
 @Injectable()
-export class TgbotService {
-  private logger: Logger = new Logger("TgbotService");
+export class BotService {
+  private logger: Logger = new Logger(BotService.name);
   constructor(
       private commandService: CommandService,
       private dappDataService: DappDataService,
@@ -147,6 +147,22 @@ export class TgbotService {
       this.logger.error("_____________________uploadCode_____________________");
       console.log(error);
     }
+  }
+
+  public async updateWorkflowProgramsData(userId: number): Promise<string> {
+    if (await this.userService.isAdmin(String(userId))) {
+      try {
+        await updateProgramDataByReleaseRepo();
+
+        return "✅ Successfully updated programs META__OPT.wasm download urls";
+      } catch (error) {
+        this.logger.error("_________UPDATE_WORKFLOW_PROGRAMS_DATA_ERROR_________");
+        console.log(error);
+        return JSON.stringify(error);
+      }
+    }
+
+    return TBErrorMessage.ACCESS_DENIED;
   }
 
   private async handleCommand(

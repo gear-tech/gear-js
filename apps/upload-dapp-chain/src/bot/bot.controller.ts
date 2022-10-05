@@ -2,16 +2,16 @@ import { Command, Update } from "nestjs-telegraf";
 import { Markup } from "telegraf";
 
 import { Context } from "./types";
-import { TgbotService } from "./tgbot.service";
+import { BotService } from "./bot.service";
 
 @Update()
-export class TgbotController {
-  constructor(private tgbotService: TgbotService) {}
+export class BotController {
+  constructor(private botService: BotService) {}
 
     @Command("addAccessUser")
   public async addAccessUser(ctx: Context): Promise<void> {
     // @ts-ignore
-    const res = await this.tgbotService.addAccessUser(ctx.message.text, ctx.from.id);
+    const res = await this.botService.addAccessUser(ctx.message.text, ctx.from.id);
 
     ctx.reply(res);
   }
@@ -29,14 +29,14 @@ export class TgbotController {
 
     @Command("commands")
     public async commands(ctx: Context): Promise<void> {
-      const res = await this.tgbotService.commands(ctx.from.id);
+      const res = await this.botService.commands(ctx.from.id);
 
       ctx.reply(res);
     }
 
     @Command("uploadDapps")
     public async uploadDapps(ctx: Context): Promise<void> {
-      const res = await this.tgbotService.uploadDapps(ctx.from.id);
+      const res = await this.botService.uploadDapps(ctx.from.id);
 
       if (Array.isArray(res)) {
         for (const uploadDapp of res) {
@@ -51,7 +51,7 @@ export class TgbotController {
   @Command("uploadDapp")
     public async uploadDapp(ctx: Context): Promise<void> {
     // @ts-ignore
-      const res = await this.tgbotService.uploadDapp(ctx.from.id, ctx.message.text);
+      const res = await this.botService.uploadDapp(ctx.from.id, ctx.message.text);
 
       if (Array.isArray(res)) {
         for (const uploadDapp of res) {
@@ -66,7 +66,7 @@ export class TgbotController {
   @Command("uploadCode")
   public async uploadCode(ctx: Context): Promise<void> {
     // @ts-ignore
-    const res = await this.tgbotService.uploadCode(ctx.from.id, ctx.message.text);
+    const res = await this.botService.uploadCode(ctx.from.id, ctx.message.text);
 
     if (Array.isArray(res)) {
       for (const uploadDapp of res) {
@@ -76,6 +76,12 @@ export class TgbotController {
     }
 
     ctx.reply(res);
+  }
+
+  @Command("updateWorkflowProgramsData")
+  public async updateProgramUrls(ctx: Context): Promise<void> {
+    const res = await this.botService.updateWorkflowProgramsData(ctx.from.id);
+    ctx.reply(JSON.stringify(res));
   }
 
     @Command("getUserId")

@@ -1,161 +1,155 @@
 programs:
-  1:
-    dapp: 'nft_marketplace'
-    repo: 'non-fungible-token'
-    optDownloadUrl: 'https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft_marketplace.opt.wasm'
-    metaDownloadUrl: 'https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft_marketplace.meta.wasm'
-    acc: 'alice'
+  '1':
+    dapp: nft_marketplace
+    repo: non-fungible-token
+    optDownloadUrl: >-
+      https://github.com/gear-dapps/non-fungible-token/releases/download/0.2.1/nft_marketplace-0.2.1.opt.wasm
+    metaDownloadUrl: >-
+      https://github.com/gear-dapps/non-fungible-token/releases/download/0.2.1/nft_marketplace-0.2.1.meta.wasm
+    acc: alice
     payload:
       adminId: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
       treasuryId: '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
       treasuryFee: '1'
-    value: NULL
-
-  2:
-    dapp: 'nft'
-    repo: 'non-fungible-token'
-    optDownloadUrl: 'https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft.opt.wasm'
-    metaDownloadUrl: 'https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft.meta.wasm'
-    acc: 'alice'
+    value: null
+  '2':
+    dapp: nft
+    repo: non-fungible-token
+    optDownloadUrl: >-
+      https://github.com/gear-dapps/non-fungible-token/releases/download/0.2.1/nft-0.2.1.opt.wasm
+    metaDownloadUrl: >-
+      https://github.com/gear-dapps/non-fungible-token/releases/download/0.2.1/nft-0.2.1.meta.wasm
+    acc: alice
     payload:
-      name: 'test'
-      symbol: 'test'
-      baseUrl: 'test'
-      royalties: NULL
-    value: NULL
-
-  3:
+      name: test
+      symbol: test
+      baseUrl: test
+      royalties: null
+    value: null
+  '3':
     dapp: '#nft'
-    repo: 'non-fungible-token'
-    optDownloadUrl: 'https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft.opt.wasm'
-    metaDownloadUrl: 'https://github.com/gear-dapps/non-fungible-token/releases/download/build/nft.meta.wasm'
-    acc: 'alice'
+    repo: non-fungible-token
+    optDownloadUrl: >-
+      https://github.com/gear-dapps/non-fungible-token/releases/download/0.2.1/nft-0.2.1.opt.wasm
+    metaDownloadUrl: >-
+      https://github.com/gear-dapps/non-fungible-token/releases/download/0.2.1/nft-0.2.1.meta.wasm
+    acc: alice
     payload:
-      name: 'test'
-      symbol: 'test'
-      baseUrl: 'test'
-      royalties: NULL
-    value: NULL
-
-  4:
-    dapp: 'lottery'
-    repo: 'lottery'
-    optDownloadUrl: 'https://github.com/gear-dapps/lottery/releases/download/build/lottery.opt.wasm'
-    metaDownloadUrl: 'https://github.com/gear-dapps/lottery/releases/download/build/lottery.meta.wasm'
-    acc: 'alice'
-    payload: '0x'
-    value: NULL
-
-  5:
-    dapp: 'dutch_auction'
-    repo: 'dutch-auction'
-    optDownloadUrl: 'https://github.com/gear-dapps/dutch-auction/releases/download/build/dutch_auction.opt.wasm'
-    metaDownloadUrl: 'https://github.com/gear-dapps/dutch-auction/releases/download/build/dutch_auction.meta.wasm'
-    acc: 'alice'
-    payload: '0x'
-    value: NULL
-
-  6:
-    dapp: 'escrow'
-    repo: 'escrow'
-    optDownloadUrl: 'https://github.com/gear-dapps/escrow/releases/download/build/escrow.opt.wasm'
-    metaDownloadUrl: 'https://github.com/gear-dapps/escrow/releases/download/build/escrow.meta.wasm'
-    acc: 'alice'
-    value: NULL
-
-  7:
-    dapp: 'supply_chain'
-    repo: 'supply-chain'
-    optDownloadUrl: 'https://github.com/gear-dapps/supply-chain/releases/download/build/supply_chain.opt.wasm'
-    metaDownloadUrl: 'https://github.com/gear-dapps/supply-chain/releases/download/build/supply_chain.meta.wasm'
-    acc: 'alice'
-    value: NULL
-
-  8:
-    dapp: 'rock_paper_scissors'
-    repo: 'rock-paper-scissors'
-    optDownloadUrl: 'https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.opt.wasm'
-    metaDownloadUrl: 'https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.meta.wasm'
-    acc: 'alice'
-    value: NULL
-
-  9:
-    dapp: 'staking'
-    repo: 'staking'
-    optDownloadUrl: 'https://github.com/gear-dapps/staking/releases/download/build/staking.opt.wasm'
-    metaDownloadUrl: 'https://github.com/gear-dapps/staking/releases/download/build/staking.meta.wasm'
-    acc: 'alice'
-    value: NULL
-
+      name: test
+      symbol: test
+      baseUrl: test
+      royalties: null
+    value: null
+  '4':
+    dapp: lottery
+    repo: lottery
+    optDownloadUrl: >-
+      https://github.com/gear-dapps/lottery/releases/download/0.1.0/lottery-0.1.0.opt.wasm
+    metaDownloadUrl: >-
+      https://github.com/gear-dapps/lottery/releases/download/0.1.0/lottery-0.1.0.meta.wasm
+    acc: alice
+    payload: 0x
+    value: null
+  '5':
+    dapp: dutch_auction
+    repo: dutch-auction
+    optDownloadUrl: >-
+      https://github.com/gear-dapps/dutch-auction/releases/download/build/dutch_auction.opt.wasm
+    metaDownloadUrl: >-
+      https://github.com/gear-dapps/dutch-auction/releases/download/build/dutch_auction.meta.wasm
+    acc: alice
+    payload: 0x
+    value: null
+  '6':
+    dapp: escrow
+    repo: escrow
+    optDownloadUrl: >-
+      https://github.com/gear-dapps/escrow/releases/download/0.1.0/escrow-0.1.0.opt.wasm
+    metaDownloadUrl: >-
+      https://github.com/gear-dapps/escrow/releases/download/0.1.0/escrow-0.1.0.meta.wasm
+    acc: alice
+    value: null
+  '7':
+    dapp: supply_chain
+    repo: supply-chain
+    optDownloadUrl: >-
+      https://github.com/gear-dapps/supply-chain/releases/download/0.1.0/supply_chain-0.1.0.opt.wasm
+    metaDownloadUrl: >-
+      https://github.com/gear-dapps/supply-chain/releases/download/0.1.0/supply_chain-0.1.0.meta.wasm
+    acc: alice
+    value: null
+  '8':
+    dapp: rock_paper_scissors
+    repo: rock-paper-scissors
+    optDownloadUrl: >-
+      https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.opt.wasm
+    metaDownloadUrl: >-
+      https://github.com/gear-dapps/rock-paper-scissors/releases/download/build/rock_paper_scissors.meta.wasm
+    acc: alice
+    value: null
+  '9':
+    dapp: staking
+    repo: staking
+    optDownloadUrl: >-
+      https://github.com/gear-dapps/staking/releases/download/0.1.0/staking-0.1.0.opt.wasm
+    metaDownloadUrl: >-
+      https://github.com/gear-dapps/staking/releases/download/0.1.0/staking-0.1.0.meta.wasm
+    acc: alice
+    value: null
 workflow:
-  - command: uploadProgram # nft
+  - command: uploadProgram
     program: 1
-
-  - command: uploadProgram # marketplace
+  - command: uploadProgram
     program: 3
-
   - command: sendMessage
     program: 1
-    acc: 'alice'
+    acc: alice
     payload:
       AddNftContract: 3
-    value: NULL
-
+    value: null
   - command: uploadProgram
     program: 2
-
-  - command: uploadProgram # lottery
+  - command: uploadProgram
     program: 4
-
-  - command: uploadProgram # dutch auction
+  - command: uploadProgram
     program: 5
-
 workflowSingleDapp:
   nft:
     actions:
       - command: uploadProgram
         program: 2
-
   nft_marketplace:
     actions:
       - command: uploadProgram
         program: 1
-
       - command: uploadProgram
         program: 3
-
       - command: sendMessage
         program: 1
-        acc: 'alice'
+        acc: alice
         payload:
           AddNftContract: 3
-        value: NULL
-
+        value: null
   lottery:
     actions:
       - command: uploadProgram
         program: 4
-
   dutch_auction:
     actions:
       - command: uploadProgram
         program: 5
-
   escrow:
     actions:
       - command: uploadCode
         program: 6
-
   supply_chain:
     actions:
       - command: uploadCode
         program: 7
-
   rock_paper_scissors:
     actions:
       - command: uploadCode
         program: 8
-
   staking:
     actions:
       - command: uploadCode
