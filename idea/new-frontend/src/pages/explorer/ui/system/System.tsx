@@ -35,7 +35,7 @@ const System = ({ eventRecords, isError }: Props) => {
             block={<EventPlaceholderSVG />}
             title={isError ? '' : 'No system events'}
             isEmpty={isListEmpty || isError}
-            blocksCount={1}
+            blocksCount={2}
           />
         )}
       </div>
