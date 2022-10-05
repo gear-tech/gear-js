@@ -47,7 +47,6 @@ export class MessageService {
   }
 
   public async setDispatchedStatus({ statuses, genesis }: MessageDispatchedDataInput): Promise<void> {
-    await sleep(1000);
     for (const messageId of Object.keys(statuses)) {
       try {
         await this.messageRepository.update(
